@@ -9,7 +9,7 @@ rule "Pre Init Attribute Change"
      then    
         rules.setDrools(drools);
         rules.header();
-        rules.println("RULE INIT ATTRIBUTE_CHANGE: "+m);
+        rules.println("RULE INIT ATTRIBUTE_CHANGE: ");
 
         rules.setState("LOOP_ATTRIBUTE_CHANGE");
 
