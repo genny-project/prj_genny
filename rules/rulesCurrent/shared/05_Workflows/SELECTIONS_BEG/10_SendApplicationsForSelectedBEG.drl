@@ -77,7 +77,7 @@ rule "Send Applications For Selected BEG"
         }
         
         /* setting this state so that project-specific rules can follow up on this state */
-        rules.setState("SELECTED_BEG_PROPERTY");
+        rules.setState("BEG_SELECTED");
 
 	 	rules.footer();      
 end
