@@ -75,6 +75,9 @@ rule "Send Applications For Selected BEG"
 		        rules.publishBaseEntityByCode(apps, parent, linkCode, recipients, "APPLICATION", false, false, 2);
 		    }
         }
+        
+        /* setting this state so that project-specific rules can follow up on this state */
+        rules.setState("SELECTED_BEG_PROPERTY");
 
 	 	rules.footer();      
 end
