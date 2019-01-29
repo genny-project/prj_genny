@@ -31,7 +31,7 @@ rule "Send Applications For Selected BEG"
             for(BaseEntity application: applications) {
             		
             		/* we get the parent */
-            		BaseEntity parent = rules.baseEntity.getParent(application.getCode(), "LNK_CORE");
+            		BaseEntity parent = rules.baseEntity.getParent(application.getCode(), "LNK_CORE", "GRP_");
             		if(parent != null) {
             			
             			/* we add the application in the message */
@@ -67,9 +67,12 @@ rule "Send Applications For Selected BEG"
 		    		rules.println("apps ::"+apps);
 		    		
 		        it.remove(); /* avoids a ConcurrentModificationException */
+
+				/* we get the attribute current being used to link BEG -> APP */
+				String linkCode = rules.getProject().getValue("PRI_APPLICATION_LINK_CODE", "LNK_APP");
 		        
 		        /* we publish the applications */
-		        rules.publishBaseEntityByCode(apps, parent, "LNK_APP", recipients, "APPLICATION", false, true, 2);
+		        rules.publishBaseEntityByCode(apps, parent, linkCode, recipients, "APPLICATION", false, false, 2);
 		    }
         }
 
