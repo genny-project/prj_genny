@@ -32,6 +32,7 @@ rule "Send Applications For Selected BEG"
             		
             		/* we get the parent */
             		BaseEntity parent = rules.baseEntity.getParent(application.getCode(), "LNK_CORE", "GRP_");
+            		rules.println("parent ::"+parent.getCode());
             		if(parent != null) {
             			
             			/* we add the application in the message */
@@ -70,6 +71,9 @@ rule "Send Applications For Selected BEG"
 
 				/* we get the attribute current being used to link BEG -> APP */
 				String linkCode = rules.getProject().getValue("PRI_APPLICATION_LINK_CODE", "LNK_APP");
+				
+				/* Clear the Buckets */
+				rules.publishBaseEntityByCode("GRP_APPLICATIONS", true, 2);
 		        
 		        /* we publish the applications */
 		        rules.publishBaseEntityByCode(apps, parent, linkCode, recipients, "APPLICATION", false, false, 2);
