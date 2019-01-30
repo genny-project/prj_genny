@@ -32,6 +32,7 @@ rule "Send Applications For Selected BEG"
             		
             		/* we get the parent */
             		BaseEntity parent = rules.baseEntity.getParent(application.getCode(), "LNK_CORE", "GRP_");
+            		rules.println("parent ::"+parent.getCode());
             		if(parent != null) {
             			
             			/* we add the application in the message */
@@ -45,6 +46,9 @@ rule "Send Applications For Selected BEG"
             			parents.put(parent.getCode(), parentApplications);
             		}
             }
+            
+            /* Clear the Buckets */
+			rules.publishBaseEntityByCode("GRP_APPLICATIONS", true, 2);
 
 			/* we replace GRP_APPLICATIONS buckets */
 			List<BaseEntity> branches = rules.baseEntity.getLinkedBaseEntities("GRP_APPLICATIONS", "LNK_CORE");
@@ -56,6 +60,7 @@ rule "Send Applications For Selected BEG"
             
             /* we iterate through our messages */
             Iterator it = parents.entrySet().iterator();
+            
 		    while (it.hasNext()) {
 		        
 		    		Map.Entry pair = (Map.Entry)it.next();
