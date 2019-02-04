@@ -3,6 +3,7 @@ package life.genny.rules;
 import life.genny.rules.QRules;
 import life.genny.qwanda.message.QEventMessage;
 import io.vertx.core.json.JsonObject;
+import life.genny.qwanda.message.QBaseMSGMessageType;
 
 rule "User-Profile Submit"
     when
@@ -26,7 +27,7 @@ rule "User-Profile Submit"
            String[] recipients  = {userCode};    */ 
           /* rules.sendNotification("success", recipientCodes, "Profile Updated!"); */
           /* Sending toast message */
-      /*      rules.sendMessage(recipients, contextMap, "TST_PROFILE_UPDATED", "TOAST");  */
+      /*      rules.sendMessage(recipients, contextMap, "TST_PROFILE_UPDATED", QBaseMSGMessageType.TOAST);  */
            
        /*  }  */
 
