@@ -1,0 +1,28 @@
+package life.genny.rules;
+import life.genny.rules.QRules;
+
+rule "20_SendNotes_After_Delete"
+	when
+		rules: QRules(  isState("SEND_NOTES_AFTER_DELETE") &&
+						!isState("LOOP_SEND_NOTES_AFTER_DELETE") )
+	 then
+	 	rules.header();
+		rules.setState("LOOP_SEND_NOTES_AFTER_DELETE");
+
+        List<BaseEntity> notesStakeholders = rules.getAsBaseEntitys("notesStakeholders");
+		
+		/* lopp through all stakeholder and send the notes again */
+		for (BaseEntity stakeHolder : notesStakeholders) {
+			rules.sendNotes(stakeHolder.getCode());
+		}
+		
+		/* send a toast notification to user */
+		rules.sendToastNotification("Note deleted.");
+		
+		/* state to trigger further project-specific workflows */
+		rules.setState("NOTE_DELETED");
+		
+	 	rules.footer();
+end
+
+

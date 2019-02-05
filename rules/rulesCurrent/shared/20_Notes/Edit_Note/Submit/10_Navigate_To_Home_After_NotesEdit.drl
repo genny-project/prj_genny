@@ -1,0 +1,20 @@
+package life.genny.rules;
+import life.genny.rules.QRules;
+
+/* this rule can be over-written with the same filename if the projects requires different navigation after notes-editing */
+rule "10_Navigate_To_Home_After_NotesEdit"
+	when
+		rules: QRules(  isState("NAVIGATE_TO_HOME_AFTER_NOTES_EDITED") &&
+						!isState("LOOP_NAVIGATE_TO_HOME_AFTER_NOTES_EDITED")) 
+	then
+	 	rules.header();
+		rules.setState("LOOP_NAVIGATE_TO_HOME_AFTER_NOTES_EDITED");
+				
+		/* navigate to home */
+		rules.navigateTo("/home");
+		
+		/* state to trigger further project-specific workflows */
+		rules.setState("NOTE_EDITED");
+
+	 	rules.footer();      
+end

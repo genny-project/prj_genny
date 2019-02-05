@@ -1,0 +1,39 @@
+package life.genny.rules;
+import life.genny.rules.QRules;
+
+rule "Unlink Note from Grp Notes"
+	when
+		rules: QRules(  isState("UNLINK_NOTE_FROM_GRP_NOTES") &&
+						!isState("LOOP_UNLINK_NOTE_FROM_GRP_NOTES") )
+	 then
+	 	rules.header();
+		rules.setState("LOOP_UNLINK_NOTE_FROM_GRP_NOTES");
+
+        String noteCode = rules.getAsString("itemCode");
+		if(noteCode == null) {
+			rules.setState("SEND_TOAST_SOMETHING_WENT_WRONG");
+			return;
+		}
+        
+        rules.baseEntity.removeLink("GRP_NOTES", noteCode, "LNK_CORE", "NOTE");
+		List<BaseEntity> stakeHolders = rules.baseEntity.getLinkedBaseEntities(noteCode, "LNK_MESSAGES");
+		if (stakeHolders != null) {
+			for (BaseEntity stakeHolder : stakeHolders) {
+				rules.baseEntity.removeLink(noteCode, stakeHolder.getCode(), "LNK_MESSAGES", "CONTEXT");
+			}
+		}
+		
+		/* save the value of stakeholders in state */
+		rules.set("notesStakeholders", stakeHolders);
+
+		String[] recipient = {rules.getUser().getCode()};
+		/*  clear note from the FrontEnd */
+		rules.clearBaseEntity(noteCode, "GRP_NOTES", recipient);
+		
+		/* republishing the notes after the delete */
+		rules.setState("SEND_NOTES_AFTER_DELETE");
+		
+	 	rules.footer();
+end
+
+

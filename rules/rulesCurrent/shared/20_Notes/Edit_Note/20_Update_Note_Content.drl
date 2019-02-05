@@ -1,0 +1,25 @@
+package life.genny.rules;
+import life.genny.rules.QRules;
+
+rule "Update Note Content"
+	when
+		rules: QRules(  isState("EVENT_ANSWER") &&
+						isState("PRI_CONTENT") &&
+						!isState("LOOP_UPDATE_NOTE_CONTENT") )
+	 then
+	 	rules.header();
+		rules.setState("LOOP_UPDATE_NOTE_CONTENT");
+
+        String noteCode = rules.getAsString("targetCode");
+		if(noteCode == null) {
+            rules.println("noteCode not in the state");
+			rules.setState("SEND_TOAST_SOMETHING_WENT_WRONG");
+			return;
+		}
+        
+        /* Send Note to update in the frontEnd  */
+        rules.publishBaseEntityByCode(noteCode, "GRP_NOTES", "LNK_MESSAGES");
+	 	rules.footer();
+end
+
+
