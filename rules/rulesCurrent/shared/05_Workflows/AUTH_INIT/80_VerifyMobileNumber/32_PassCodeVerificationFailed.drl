@@ -1,5 +1,6 @@
 package life.genny.rules;
 import life.genny.rules.QRules;
+import life.genny.qwanda.message.QBaseMSGMessageType;
 
 rule "Passcode Verification Failed"
 	when
@@ -17,7 +18,7 @@ rule "Passcode Verification Failed"
 				contextMap.put("USER", userCode);		
 				rules.println("The String Array is ::" + Arrays.toString(recipients));
 				/* Sending sms message to user */
-				rules.sendMessage(recipients, contextMap, "GNY_PASSCODE_VERIFICATION_FAILURE", "TOAST");
+				rules.sendMessage(recipients, contextMap, "GNY_PASSCODE_VERIFICATION_FAILURE", QBaseMSGMessageType.TOAST);
 				rules.setState("ERROR_MESSAGE_SENT");
 		    }else{
 		    		rules.println("Error!! userCode is null");
