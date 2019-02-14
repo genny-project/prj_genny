@@ -30,6 +30,6 @@ rule "SBE_STAKEHOLDER_ITEMS"
   	     .setPageStart(0)
   	     .setPageSize(10000);
   	       	     
-  		 VertxUtils.writeCachedJson(drools.getRule().getName(), JsonUtils.toJson(searchBE));
+  		 rules.writeCachedJson(drools.getRule().getName(), JsonUtils.toJson(searchBE));
    		 rules.footer();
 end
