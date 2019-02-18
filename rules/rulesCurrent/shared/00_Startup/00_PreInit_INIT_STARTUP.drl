@@ -1,6 +1,7 @@
 package life.genny.rules;
 
 import life.genny.rules.QRules;
+import life.genny.qwandautils.GennySettings;
 
 rule "Pre Init Startup"
 	no-loop true
@@ -29,7 +30,9 @@ rule "Pre Init Startup"
 			    drools.setFocus("GenerateReports");
 
 	            drools.setFocus("GenerateTree");
-	            drools.setFocus("GenerateLayouts");
+	            if (!GennySettings.disableLayoutLoading) {
+	            	drools.setFocus("GenerateLayouts");
+	            }
 	            drools.setFocus("GenerateCaches");
 	            drools.setFocus("GenerateLayouts");
 	            drools.setFocus("GenerateBucketCaches");
