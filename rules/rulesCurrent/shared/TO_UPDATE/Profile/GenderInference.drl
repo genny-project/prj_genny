@@ -8,7 +8,7 @@ import life.genny.rules.QRules;
 rule "Inference Gender Change"
     when
         $m: QEventAttributeValueChangeMessage( event_type == "EVT_ATTRIBUTE_VALUE_CHANGE" && data.code == "PRI_FIRSTNAME" )
-        rules: QRules()
+        rules: QRules( isState("LOOP_ATTRIBUTE_CHANGE") )
 
      then
         rules.header();
