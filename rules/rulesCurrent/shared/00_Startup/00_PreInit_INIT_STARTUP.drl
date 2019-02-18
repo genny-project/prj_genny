@@ -30,9 +30,8 @@ rule "Pre Init Startup"
 			    drools.setFocus("GenerateReports");
 
 	            drools.setFocus("GenerateTree");
-	            if (!GennySettings.disableLayoutLoading) {
-	            	drools.setFocus("GenerateLayouts");
-	            }
+	            drools.setFocus("GenerateLayouts");
+
 	            drools.setFocus("GenerateCaches");
 	            drools.setFocus("GenerateLayouts");
 	            drools.setFocus("GenerateBucketCaches");
