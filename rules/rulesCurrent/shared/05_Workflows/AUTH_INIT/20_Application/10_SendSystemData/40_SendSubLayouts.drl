@@ -10,6 +10,6 @@ rule "Send Sub Layouts To Frontend"
         rules.header();
         rules.setState("LOOP_SEND_SUB_LAYOUTS");
   		rules.sendAllLayouts();		
-		rules.setState("SENT_SUB_LAYOUTS");
+		rules.setState("SEND_MAIN_FRAME");
 	    rules.footer();     		      
 end
