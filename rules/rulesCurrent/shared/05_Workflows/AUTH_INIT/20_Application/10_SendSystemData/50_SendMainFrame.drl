@@ -29,6 +29,6 @@ rule "Send Main Frame To Frontend"
         /* send message */
         rules.publishCmd(message);
 
-		rules.setState("TRIGGER_SEND_SYSTEM_LAYOUTS");
+		rules.setState("SEND_HEADER_QUESTIONS");
 	    rules.footer();     		      
 end
