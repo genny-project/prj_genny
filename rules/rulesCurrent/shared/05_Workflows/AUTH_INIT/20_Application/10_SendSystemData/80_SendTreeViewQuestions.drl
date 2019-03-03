@@ -1,0 +1,22 @@
+package life.genny.rules;
+import life.genny.rules.QRules;
+import life.genny.utils.Layout.LayoutPosition;
+
+rule "Send TreeView Questions"
+    when
+        rules: QRules(  isState("SEND_TREEVIEW_QUESTIONS") && 
+                        !isState("LOOP_SEND_TREEVIEW_QUESTIONS")  ) 
+     then
+
+        rules.header();
+        rules.setState("LOOP_SEND_TREEVIEW_QUESTIONS");
+        
+        /* gets the project baseentity */
+        BaseEntity user = rules.getUser();
+  		
+  		/* sends questions for treeview and positions it in the sidebar frame */
+       	rules.askQuestions(user.getCode(), user.getCode(), "QUE_ROOT_GRP", false, "FRM_SIDEBAR", LayoutPosition.CENTRE);
+       	
+		rules.setState("TRIGGER_SEND_SYSTEM_LAYOUTS");
+	    rules.footer();     		      
+end
