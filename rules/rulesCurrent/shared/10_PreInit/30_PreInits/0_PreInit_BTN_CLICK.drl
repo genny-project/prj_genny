@@ -22,6 +22,9 @@ rule "Pre Init Btn Click"
 
         try {
 
+          rules.println("btnCode   ::   " + btnCode);
+          rules.println("quesCode   ::   " + quesCode);
+ 
           JsonObject dataJson = new JsonObject(dataString);
 
           /* Get targetCode */
