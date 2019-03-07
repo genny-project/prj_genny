@@ -13,10 +13,13 @@ rule "Send TreeView Questions"
         
         /* gets the project baseentity */
         BaseEntity user = rules.getUser();
+        
+        /* sending tree-data */
+        rules.sendTreeData();
   		
   		/* sends questions for treeview and positions it in the sidebar frame */
-       	rules.askQuestions(user.getCode(), user.getCode(), "QUE_ROOT_GRP", false, "FRM_SIDEBAR", LayoutPosition.CENTRE);
-       	
+       	/* rules.askQuestions(user.getCode(), user.getCode(), "QUE_GRP_ROOT_GRP", false, "FRM_SIDEBAR", LayoutPosition.CENTRE); */
+       	    	
 		rules.setState("TRIGGER_SEND_SYSTEM_LAYOUTS");
 	    rules.footer();     		      
 end
