@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.ArrayList;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.utils.VertxUtils;
+import life.genny.qwandautils.GennySettings;
 
 rule "Generate Layouts"
 
@@ -23,8 +24,10 @@ rule "Generate Layouts"
     rules.header();
 
         rules.setState("GENERATE_LAYOUTS");
-		rules.println("Generating layouts");
-		rules.layoutUtils.getAllLayouts();
+        if (!GennySettings.disableLayoutLoading) { 
+			rules.println("Generating layouts");
+			rules.layoutUtils.getAllLayouts();
+		} 
 
     rules.footer();
 
