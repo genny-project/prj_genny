@@ -12,6 +12,8 @@ rule "Send TreeView Questions"
         
         /* sending tree-data */
         rules.sendTreeData();
+        
+        rules.setState("SEND_USER_PROFILE_SELECTION_QUESTIONS");
   		       	    	
 	    rules.footer();     		      
 end
