@@ -1,0 +1,25 @@
+package life.genny.rules;
+import life.genny.rules.QRules;
+import life.genny.utils.Layout.LayoutPosition;
+
+rule "Send Add Item Selection Questions"
+    when
+        rules: QRules(  isState("SEND_ADD_ITEM_SELECTION_QUESTIONS") && 
+                        !isState("LOOP_SEND_ADD_ITEM_SELECTION_QUESTIONS")  ) 
+     then
+
+        rules.header();
+        rules.setState("LOOP_SEND_ADD_ITEM_SELECTION_QUESTIONS");
+        
+        /* getting user */
+        BaseEntity user = rules.getUser();
+        
+        /* send required data */
+        rules.publishBaseEntityByCode("GRP_ADD_ITEMS");
+              
+        /* sending user profile selection questions */
+        rules.askQuestions(user.getCode(), rules.getProject().getCode(), "QUE_ADD_ITEMS_GRP", false, "FRM_HEADER", LayoutPosition.CENTRE);
+  		       	    	
+		rules.setState("TRIGGER_SEND_SYSTEM_LAYOUTS");
+	    rules.footer();     		      
+end
