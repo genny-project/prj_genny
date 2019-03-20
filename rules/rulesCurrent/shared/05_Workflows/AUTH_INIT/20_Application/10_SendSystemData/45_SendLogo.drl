@@ -12,10 +12,9 @@ rule "Send Logo Questions"
         rules.header();
         rules.setState("LOOP_SEND_LOGO_QUESTIONS");
 
-        
         /* sends questions for LOGO and positions it in the sidebar frame */
 		rules.askQuestions(rules.getUser().getCode(), rules.getProject().getCode(), "QUE_PROJECT_SIDEBAR_GRP", false, "FRM_SIDEBAR", LayoutPosition.NORTH);
   		       	    	
-		rules.setState("SEND_TREEVIEW_QUESTIONS");
+		rules.setState("SEND_USER_PROFILE_SELECTION_QUESTIONS");
 	    rules.footer();     		      
 end

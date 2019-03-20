@@ -22,6 +22,6 @@ rule "Send User Profile Selection Questions"
         /* sending user profile selection questions */
         rules.askQuestions(user.getCode(), rules.getProject().getCode(), "QUE_PROJECT_USER_OPTIONS_GRP", false, "FRM_HEADER", LayoutPosition.EAST);
   		       	    	
-		rules.setState("TRIGGER_SEND_SYSTEM_LAYOUTS");
+		rules.setState("EXIT_APPLICATION_SETUP");
 	    rules.footer();     		      
 end
