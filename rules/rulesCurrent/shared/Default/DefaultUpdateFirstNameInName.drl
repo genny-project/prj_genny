@@ -24,10 +24,11 @@ rule "Default update full name : FirstName"
             if( baseEntity != null){
 
                 String lastName = baseEntity.getValue("PRI_LASTNAME", null);
-                String fullName = value + lastName;
+                String fullName = value + " " + lastName;
                 
                 /* updating the full name when Firstname is being Updated*/
                 rules.baseEntity.updateBaseEntityAttribute( rules.getUser().getCode(), targetBeCode, "PRI_NAME", fullName);
+                rules.publishBaseEntityByCode(targetBeCode);
             }
 		}
 			
