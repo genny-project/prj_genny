@@ -23,16 +23,16 @@ rule "Generate internmatch Tree Roles"
 		
 		/* Roles related to TreeView Root */
         rules.baseEntity.saveAnswer(new Answer("GRP_ROOT", "GRP_ROOT", "GRP_DASHBOARD", "PRI_IS_AGENT,PRI_IS_SELLER,PRI_IS_BUYER,PRI_IS_EDU_PROVIDER_STAFF")); // referrer
-        rules.baseEntity.saveAnswer(new Answer("GRP_ROOT", "GRP_ROOT", "GRP_INTERNS", "PRI_IS_ADMIN,PRI_IS_EDU_PROVIDER_STAFF"));
+        rules.baseEntity.saveAnswer(new Answer("GRP_ROOT", "GRP_ROOT", "GRP_INTERNS", "PRI_IS_SUPERVISOR,PRI_IS_EDU_PROVIDER_STAFF"));
         rules.baseEntity.saveAnswer(new Answer("GRP_ROOT", "GRP_ROOT", "GRP_COMPANIES", "PRI_IS_AGENT")); // referrer
         rules.baseEntity.saveAnswer(new Answer("GRP_ROOT", "GRP_ROOT", "GRP_INTERNSHIPS", "PRI_IS_AGENT,PRI_IS_BUYER,PRI_IS_EDU_PROVIDER_STAFF")); // referrer
         rules.baseEntity.saveAnswer(new Answer("GRP_ROOT", "GRP_ROOT", "GRP_CONTACTS", "PRI_IS_AGENT,PRI_IS_BUYER,PRI_IS_EDU_PROVIDER_STAFF")); // referrer
 
         /* contacts */
-        rules.baseEntity.saveAnswer(new Answer("GRP_CONTACTS", "GRP_CONTACTS", "GRP_INTERNS", "PRI_IS_ADMIN,PRI_IS_BUYER,PRI_IS_EDU_PROVIDER_STAFF")); // referrer
+        rules.baseEntity.saveAnswer(new Answer("GRP_CONTACTS", "GRP_CONTACTS", "GRP_INTERNS", "PRI_IS_SUPERVISOR,PRI_IS_BUYER,PRI_IS_EDU_PROVIDER_STAFF")); // referrer
         rules.baseEntity.saveAnswer(new Answer("GRP_CONTACTS", "GRP_CONTACTS", "GRP_HOST_COMPANY_REPRESENTATIVES", "PRI_IS_AGENT")); // referrer
-        rules.baseEntity.saveAnswer(new Answer("GRP_CONTACTS", "GRP_CONTACTS", "GRP_EDU_PROVIDER_REPRESENTATIVES", "PRI_IS_ADMIN"));
-        rules.baseEntity.saveAnswer(new Answer("GRP_CONTACTS", "GRP_CONTACTS", "GRP_AGENTS", "PRI_IS_ADMIN"));
+        rules.baseEntity.saveAnswer(new Answer("GRP_CONTACTS", "GRP_CONTACTS", "GRP_EDU_PROVIDER_REPRESENTATIVES", "PRI_IS_SUPERVISOR"));
+        rules.baseEntity.saveAnswer(new Answer("GRP_CONTACTS", "GRP_CONTACTS", "GRP_AGENTS", "PRI_IS_SUPERVISOR"));
 
 
         /* Roles related to Bucket GRP_INTERNSHIPS */
@@ -44,8 +44,8 @@ rule "Generate internmatch Tree Roles"
 
         /* Roles related to TreeView Companies */
         rules.baseEntity.saveAnswer(new Answer("GRP_COMPANIES", "GRP_COMPANIES", "GRP_HOST_COMPANIES", "PRI_IS_AGENT")); // referrer
-        rules.baseEntity.saveAnswer(new Answer("GRP_COMPANIES", "GRP_COMPANIES", "GRP_EDU_PROVIDERS", "PRI_IS_ADMIN"));
-        rules.baseEntity.saveAnswer(new Answer("GRP_COMPANIES", "GRP_COMPANIES", "GRP_AGENCIES", "PRI_IS_ADMIN"));
+        rules.baseEntity.saveAnswer(new Answer("GRP_COMPANIES", "GRP_COMPANIES", "GRP_EDU_PROVIDERS", "PRI_IS_SUPERVISOR"));
+        rules.baseEntity.saveAnswer(new Answer("GRP_COMPANIES", "GRP_COMPANIES", "GRP_AGENCIES", "PRI_IS_SUPERVISOR"));
 
 
         /* Roles related to Bucket GRP_APPLICATIONS */
