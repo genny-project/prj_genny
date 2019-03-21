@@ -1,6 +1,9 @@
 package life.genny.rules;
 import life.genny.rules.QRules;
 import life.genny.utils.Layout.LayoutPosition;
+import life.genny.qwanda.entity.SearchEntity;
+import life.genny.qwanda.entity.SearchEntity.StringFilter;
+import java.io.IOException;
 
 rule "Ask User Role"
     when
@@ -9,18 +12,10 @@ rule "Ask User Role"
      then
      	rules.header();
         rules.setState("LOOP_ASK_USER_ROLE");
+              
+        rules.sendQuestions(rules.getUser().getCode(), rules.getUser().getCode(), "QUE_BUYER_GRP");
         
-        String rolesSelectionUri = "pages/registration/role/";
-        
-        BaseEntity layout = rules.getLayout(rolesSelectionUri);
-        
-        /* creating a link between the main-frame and the layout */
-        if(layout != null) {
-        		rules.baseEntity.createLink("FRM_MAIN", layout.getCode(), "LNK_LAYOUT", "CENTRE", 1.0);
-        }
-        
-        /* ask the role group questions */                    
-        rules.askQuestions(rules.getUser().getCode(), rules.getUser().getCode(), "QUE_BUYER_GRP", false, "FRM_CONTENT", LayoutPosition.CENTRE); 
+        rules.navigateTo("/registration/role");
         
     	rules.footer();
 end
