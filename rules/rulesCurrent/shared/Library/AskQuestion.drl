@@ -11,6 +11,7 @@ rule "Ask Question"
         String questionTargetCode = rules.getAsString("questionTargetCode");
         String questionGroupCode = rules.getAsString("questionGroupCode");
         Boolean questionIsPopup = rules.getAsBoolean("questionIsPopup");
+        Boolean questionSendData = rules.getAsBoolean("questionSendData");
 
  		if(questionSourceCode == null) {
              rules.println("Ask Question: missing questionSourceCode");
@@ -25,7 +26,8 @@ rule "Ask Question"
             rules.askQuestions( questionSourceCode,
                                 questionTargetCode,
                                 questionGroupCode,
-                                questionIsPopup );
+                                questionIsPopup,
+                                questionSendData );
  		    rules.setState("ASKED_QUESTION");
         }
 
