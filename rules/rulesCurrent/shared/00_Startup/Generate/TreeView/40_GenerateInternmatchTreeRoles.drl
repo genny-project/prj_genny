@@ -59,6 +59,15 @@ rule "Generate internmatch Tree Roles"
 
         /* Roles related to Bucket GRP_BEGS */
         rules.baseEntity.saveAnswer(new Answer("GRP_BEGS", "GRP_BEGS", "GRP_NEW_ITEMS", "PRI_IS_AGENT,PRI_IS_SELLER,PRI_IS_BUYER,PRI_IS_REFERRER,PRI_IS_EDU_PROVIDER_STAFF"));
+        
+        /* Roles related to GRP_INTERNS */
+        rules.baseEntity.saveAnswer(new Answer("GRP_INTERNS", "GRP_INTERNS", "GRP_NOT_APPLIED", "PRI_IS_AGENT"));
+        rules.baseEntity.saveAnswer(new Answer("GRP_INTERNS", "GRP_INTERNS", "GRP_APPLIED", "PRI_IS_AGENT"));
+        rules.baseEntity.saveAnswer(new Answer("GRP_INTERNS", "GRP_INTERNS", "GRP_SHORTLISTED", "PRI_IS_AGENT"));
+        rules.baseEntity.saveAnswer(new Answer("GRP_INTERNS", "GRP_INTERNS", "GRP_INTERVIEWS", "PRI_IS_AGENT"));
+        rules.baseEntity.saveAnswer(new Answer("GRP_INTERNS", "GRP_INTERNS", "GRP_OFFERED", "PRI_IS_AGENT"));
+        rules.baseEntity.saveAnswer(new Answer("GRP_INTERNS", "GRP_INTERNS", "GRP_PLACED", "PRI_IS_AGENT"));
+        rules.baseEntity.saveAnswer(new Answer("GRP_INTERNS", "GRP_INTERNS", "GRP_IN_PROGRESS", "PRI_IS_AGENT"));
 
         rules.footer();
 end
