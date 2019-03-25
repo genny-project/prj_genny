@@ -15,8 +15,6 @@ rule "Send User Profile Selection Questions"
         BaseEntity user = rules.getUser();
         
         /* send required data */
-        List<BaseEntity> userOptions = rules.baseEntity.getLinkedBaseEntities("GRP_USER_OPTIONS", "LNK_CORE");
-        rules.println("userOptions size :: "+userOptions.size());
         rules.publishBaseEntityByCode("GRP_USER_OPTIONS");
               
         /* sending user profile selection questions */
