@@ -29,12 +29,12 @@ rule "Pre Init Btn Click"
       }
 
       if(parentCode != null) {
-        rules.setState(parentCode);
+        rules.setState("PARENT_" + parentCode);
         rules.set("parentCode", parentCode);
       }
 
       if(rootCode != null) {
-        rules.setState(rootCode);
+        rules.setState("ROOT_" + rootCode);
         rules.set("rootCode", rootCode);
       }
         
