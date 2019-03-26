@@ -1,7 +1,6 @@
 package life.genny.rules;
 import life.genny.rules.QRules;
 import life.genny.utils.Layout.LayoutPosition;
-import life.genny.qwanda.message.QDataBaseEntityMessage;
 
 rule "Send Logo Questions"
     when
@@ -11,9 +10,24 @@ rule "Send Logo Questions"
 
         rules.header();
         rules.setState("LOOP_SEND_LOGO_QUESTIONS");
-
+        
+         /* get the background-gray theme baseentity */
+        BaseEntity imageFitTheme = rules.baseEntity.getBaseEntityByCode("THM_IMAGE_FIT");
+        
+        HashMap<String, List<Context>> themesForQuestions = new HashMap();
+        
+        /* creating context for theme */
+        Context imageFitContext = new Context("THEME", imageFitTheme);
+        
+        /* adding themes to the list */
+        List<Context> themeList = new ArrayList<>();
+        themeList.add(imageFitContext);
+        
+        /* attaching the themes to the question group and putting it in a map */
+        themesForQuestions.put("QUE_LOGO", themeList);
+        
         /* sends questions for LOGO and positions it in the sidebar frame */
-		rules.askQuestions(rules.getUser().getCode(), rules.getProject().getCode(), "QUE_PROJECT_SIDEBAR_GRP", false, "FRM_SIDEBAR", LayoutPosition.NORTH);
+		rules.askQuestions(rules.getUser().getCode(), rules.getProject().getCode(), "QUE_PROJECT_SIDEBAR_GRP", false, "FRM_SIDEBAR", LayoutPosition.NORTH, themesForQuestions);
   		       	    	
 		rules.setState("SEND_USER_PROFILE_SELECTION_QUESTIONS");
 	    rules.footer();     		      
