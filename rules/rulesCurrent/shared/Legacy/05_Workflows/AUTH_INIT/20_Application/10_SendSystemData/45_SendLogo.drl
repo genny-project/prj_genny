@@ -14,7 +14,7 @@ rule "Send Logo Questions"
          /* get the background-gray theme baseentity */
         BaseEntity imageFitTheme = rules.baseEntity.getBaseEntityByCode("THM_IMAGE_FIT");
         
-        HashMap<String, List<Context>> themesForQuestions = new HashMap();
+        Map<String, List<Context>> themesForQuestions = new HashMap();
         
         /* creating context for theme */
         Context imageFitContext = new Context("THEME", imageFitTheme);
@@ -27,7 +27,7 @@ rule "Send Logo Questions"
         themesForQuestions.put("QUE_LOGO", themeList);
         
         /* sends questions for LOGO and positions it in the sidebar frame */
-		rules.askQuestions(rules.getUser().getCode(), rules.getProject().getCode(), "QUE_PROJECT_SIDEBAR_GRP", false, "FRM_SIDEBAR", LayoutPosition.NORTH, themesForQuestions);
+		rules.askQuestions(rules.getUser().getCode(), rules.getProject().getCode(), "QUE_PROJECT_SIDEBAR_GRP", "FRM_SIDEBAR", LayoutPosition.NORTH, themesForQuestions);
   		       	    	
 		rules.setState("SEND_USER_PROFILE_SELECTION_QUESTIONS");
 	    rules.footer();     		      

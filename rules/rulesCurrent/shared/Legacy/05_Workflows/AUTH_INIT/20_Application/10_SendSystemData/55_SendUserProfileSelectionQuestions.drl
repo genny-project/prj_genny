@@ -12,30 +12,9 @@ rule "Send User Profile Selection Questions"
 
         rules.header();
         rules.setState("LOOP_SEND_USER_PROFILE_SELECTION_QUESTIONS");
-        
-        /* getting user */
-        BaseEntity user = rules.getUser();
-        
-        /* get the color-red theme baseentity */
-        BaseEntity redColorThemeBe = rules.baseEntity.getBaseEntityByCode("THM_COLOR_RED");
-        
-         /* get the background-gray theme baseentity */
-        BaseEntity grayBackgroundThemeBe = rules.baseEntity.getBaseEntityByCode("THM_BACKGROUND_GRAY");
-        
-        HashMap<String, List<Context>> themesForQuestions = new HashMap();
-        Context redColorTheme = new Context("THEME", redColorThemeBe);
-        Context grayBackgroundTheme = new Context("THEME", grayBackgroundThemeBe);
-        
-        List<Context> themeList = new ArrayList<>();
-        themeList.add(redColorTheme);
-        themeList.add(grayBackgroundTheme);
-        
-        themesForQuestions.put("QUE_USER_OPTIONS", themeList);
-        
-        rules.println("themelist ::"+themeList.toString());
-              
+      
         /* sending user profile selection questions */
-        rules.askQuestions(user.getCode(), rules.getProject().getCode(), "QUE_PROJECT_USER_OPTIONS_GRP", false, "FRM_HEADER", LayoutPosition.EAST, themesForQuestions);
+        rules.askQuestions(rules.getUser().getCode(), rules.getProject().getCode(), "QUE_PROJECT_USER_OPTIONS_GRP", false, "FRM_HEADER", LayoutPosition.EAST);
   		       	    	
 		rules.setState("EXIT_APPLICATION_SETUP");
 	    rules.footer();     		      
