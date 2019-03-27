@@ -21,6 +21,12 @@ rule "Pre Init Btn Click"
       rules.println("code         ::   " + code);
       rules.println("parentCode   ::   " + parentCode);
       rules.println("rootCode     ::   " + rootCode);
+      
+      rules.println("========= STATES ===========");
+
+      rules.println("rootCode     ::   " + "ROOT_" + rootCode);
+      rules.println("parentCode   ::   " + "PARENT_" + parentCode);
+      rules.println("code         ::   " + code);
 
 
       if(code != null) {
