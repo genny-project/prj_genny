@@ -26,7 +26,7 @@ rule "Submit Add Note - STEP 2"
 			return;
 
 		}else{
-			rules.publishBaseEntityByCode(note.getCode(), application.getCode(), "LNK_APP", recipient);
+			rules.publishBaseEntityByCode(note.getCode(), application.getCode(), "LNK_APP", "NOTE", recipient);
 			rules.setState("VIEW_APPLICATION_DETAILS");
 			rules.baseEntity.saveAnswer(new Answer(rules.getUser().getCode(), note.getCode(), "PRI_CREATED_DATE", rules.getCurrentLocalDateTime()));
 			rules.baseEntity.saveAnswer(new Answer(rules.getUser().getCode(), note.getCode(), "PRI_CREATOR_NAME", rules.getUser().getName()));

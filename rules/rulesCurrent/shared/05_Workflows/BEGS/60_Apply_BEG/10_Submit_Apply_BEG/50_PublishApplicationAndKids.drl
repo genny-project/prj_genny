@@ -32,10 +32,10 @@ rule "Submit Apply BEG - Step 5"
 		        
 		        rules.reloadCache();
                 
-                rules.publishBaseEntityByCode(beg.getCode(), "GRP_NEW_ITEMS", "LNK_CORE", recipient);
-                rules.publishBaseEntityByCode(application.getCode(), beg.getCode(), "LNK_BEG", recipient);
-                rules.publishBaseEntityByCode(application.getCode(), "GRP_APPLIED", "LNK_CORE", recipient);
-                rules.publishBaseEntityByCode(rules.getUser().getCode(), application.getCode(), "LNK_APP", recipient);
+                rules.publishBaseEntityByCode(beg.getCode(), "GRP_NEW_ITEMS", "LNK_CORE", "BEG", recipient);
+                rules.publishBaseEntityByCode(application.getCode(), beg.getCode(), "LNK_BEG", "APPLICATION", recipient);
+                rules.publishBaseEntityByCode(application.getCode(), "GRP_APPLIED", "LNK_CORE", "APPLICATION", recipient);
+                rules.publishBaseEntityByCode(rules.getUser().getCode(), application.getCode(), "LNK_APP", "APPLICATION", recipient);
                 rules.setState("PUBLISHED_APPLICATION_AND_KIDS");
 
                 

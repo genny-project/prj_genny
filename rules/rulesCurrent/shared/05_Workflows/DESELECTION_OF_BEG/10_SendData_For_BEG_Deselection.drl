@@ -29,7 +29,7 @@ rule "10_SendData_For_BEG_Deselection"
 				if (searchEntityResults != null && searchEntityResults.size() > 0) {
 						rules.println("bucket name ::"+bucket.getCode()+", number of applications ::"+searchEntityResults.size());
 
-						rules.publishBaseEntityByCode(searchEntityResults, bucket.getCode(), "LNK_APPLICATION", recipients, "APPLICATION", false, true, 2);		
+						rules.publishBaseEntityByCode(searchEntityResults, bucket.getCode(), "LNK_APPLICATION", "APPLICATION", recipients, false, true, 2);		
 				}
 
 			} catch (IOException e) {

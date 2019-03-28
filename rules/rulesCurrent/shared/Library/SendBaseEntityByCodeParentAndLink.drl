@@ -24,7 +24,7 @@ rule "Send BaseEntity By Code Parent And Link"
             rules.println("Send BaseEntity By Code: missing attributeCode");
         }
         else {
-            rules.publishBaseEntityByCode(beCode, parentCode, linkCode, recipientCodes);
+            rules.publishBaseEntityByCode(beCode, parentCode, linkCode, "LINK", recipientCodes);
         }
 
         rules.setState("SENT_BASE_ENTITY");

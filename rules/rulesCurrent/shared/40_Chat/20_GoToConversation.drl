@@ -16,7 +16,7 @@ rule "Trigger Create Chat - Step 3"
 		BaseEntity conversation = rules.getAsBaseEntity("conversationBe");
 
 		/* we publish the conversation */
-		rules.publishBaseEntityByCode(conversation, "GRP_MESSAGES", "LNK_CHAT");
+		rules.publishBaseEntityByCode(conversation.getCode(), "GRP_MESSAGES", "LNK_CHAT", "CONVERSATION");
 
 		/* we send the messages of the conversation */
 		SearchEntity messageSearch = new SearchEntity("SBE_CHATMESSAGES", "Messages")
@@ -27,7 +27,7 @@ rule "Trigger Create Chat - Step 3"
 		.setPageSize(10000);
 
 		List<BaseEntity> messages = rules.getSearchResultsAsList(messageSearch, RulesUtils.generateServiceToken(rules.realm()));
-		rules.publishBaseEntityByCode(messages, conversation.getCode(), "LNK_CHAT");
+		rules.publishBaseEntityByCode(messages, conversation.getCode(), "LNK_CHAT", "CONVERSATION");
 
 		/* we get parameters for the route change if any. could be null! */
 		JsonObject params = (JsonObject) rules.get("params");
