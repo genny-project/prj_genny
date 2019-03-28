@@ -32,8 +32,7 @@ rule "Create BaseEntity"
             rules.setState("CREATED_BASE_ENTITY");
             rules.setState(bePrefix);
 
-            String[] begRecipients = {rules.getUser().getCode()};
-            rules.publishBaseEntityByCode(be.getCode(), null , null , begRecipients);
+            rules.publishBaseEntityByCode(be.getCode());
         }
 		rules.clearState("CREATE_BASE_ENTITY");
 	    rules.footer();
