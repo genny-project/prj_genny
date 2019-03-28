@@ -48,3 +48,4 @@ rule "Pre Init Btn Click"
       rules.setState("EVENT_BTN_CLICK");
       rules.footer();
 end
+
