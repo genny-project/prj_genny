@@ -25,6 +25,7 @@ rule "Generate internmatch Tree Roles"
         rules.baseEntity.saveAnswer(new Answer("GRP_ROOT", "GRP_ROOT", "GRP_COMPANIES", "PRI_IS_AGENT")); /* referrer */
         rules.baseEntity.saveAnswer(new Answer("GRP_ROOT", "GRP_ROOT", "GRP_INTERNSHIPS", "PRI_IS_AGENT,PRI_IS_BUYER,PRI_IS_EDU_PROVIDER_STAFF")); /* referrer */
         rules.baseEntity.saveAnswer(new Answer("GRP_ROOT", "GRP_ROOT", "GRP_CONTACTS", "PRI_IS_AGENT,PRI_IS_BUYER,PRI_IS_EDU_PROVIDER_STAFF")); /* referrer */
+        rules.baseEntity.saveAnswer(new Answer("GRP_ROOT", "GRP_ROOT", "GRP_PREFERENCES", "PRI_IS_AGENT,PRI_IS_SUPERVISOR")); /* referrer */
 
         /* contacts */
         rules.baseEntity.saveAnswer(new Answer("GRP_CONTACTS", "GRP_CONTACTS", "GRP_INTERNS", "PRI_IS_SUPERVISOR,PRI_IS_BUYER,PRI_IS_EDU_PROVIDER_STAFF")); /* referrer */
@@ -54,6 +55,9 @@ rule "Generate internmatch Tree Roles"
         rules.baseEntity.saveAnswer(new Answer("GRP_APPLICATIONS", "GRP_APPLICATIONS", "GRP_OFFERED", "PRI_IS_AGENT,PRI_IS_SELLER,PRI_IS_BUYER,PRI_IS_EDU_PROVIDER_STAFF")); /* referrer */
         rules.baseEntity.saveAnswer(new Answer("GRP_APPLICATIONS", "GRP_APPLICATIONS", "GRP_PLACED", "PRI_IS_AGENT,PRI_IS_SELLER,PRI_IS_BUYER,PRI_IS_EDU_PROVIDER_STAFF")); /* referrer */
         rules.baseEntity.saveAnswer(new Answer("GRP_APPLICATIONS", "GRP_APPLICATIONS", "GRP_IN_PROGRESS", "PRI_IS_AGENT,PRI_IS_SELLER,PRI_IS_BUYER,PRI_IS_EDU_PROVIDER_STAFF")); /* referrer */
+
+        /* Preferences */
+        rules.baseEntity.saveAnswer(new Answer("GRP_PREFERENCES", "GRP_PREFERENCES", "GRP_INTERNSHIP_TEMPLATES", "PRI_IS_SUPERVISOR,PRI_IS_AGENT")); /* referrer */
 
         /* Roles related to Bucket GRP_BEGS */
         rules.baseEntity.saveAnswer(new Answer("GRP_BEGS", "GRP_BEGS", "GRP_NEW_ITEMS", "PRI_IS_AGENT,PRI_IS_SELLER,PRI_IS_BUYER,PRI_IS_EDU_PROVIDER_STAFF")); /* referrer */

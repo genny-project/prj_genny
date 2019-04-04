@@ -17,6 +17,8 @@ rule "User Logout"
  		rules: QRules( isState("EVENT_USER_LOGOUT") ) 
     then
         rules.header();
+        rules.println("Starting Logout Workflow");
+        rules.startWorkflow("Logout Process");
          rules.logout(); 
         rules.logoutCleanup();
 		rules.footer();      

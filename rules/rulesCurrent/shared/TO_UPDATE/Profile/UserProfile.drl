@@ -18,7 +18,6 @@ rule "User-Default-Profile"
 
         BaseEntity project = rules.getProject();
         if (project != null) {
-
             String profileQuestionGroup = project.getValue(rules.loadUserRole() + "_PROFILE_GRP", "QUE_DEFAULT_PROFILE_GRP");
             rules.askQuestions(rules.getUser().getCode(), rules.getUser().getCode(), profileQuestionGroup, true);
         }
