@@ -1,4 +1,14 @@
 package life.genny.rules;
+
+
+
+
+
+
+
+
+
+
 import life.genny.rules.QRules;
 
 rule "Ask Question"
@@ -23,6 +33,11 @@ rule "Ask Question"
             rules.println("Ask Question: missing questionGroupCode");
         }
         else {
+
+            if(questionSendData == null) {
+                questionSendData = true;
+            }
+            
             rules.askQuestions( questionSourceCode,
                                 questionTargetCode,
                                 questionGroupCode,

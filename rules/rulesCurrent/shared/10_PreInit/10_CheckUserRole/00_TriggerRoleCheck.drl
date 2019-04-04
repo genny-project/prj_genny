@@ -10,6 +10,8 @@ rule "Setting user role"
 		rules.setState("LOOP_TRIGGER_ROLE_CHECK");
 
         rules.loadUserRole();
-      	rules.setState("GET_ROLES_FROM_KEYCLOAK");
+        rules.setState("EXIT_ROLE_CHECK");
+
+        
       	rules.footer();
 end

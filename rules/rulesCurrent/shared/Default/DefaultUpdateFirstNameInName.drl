@@ -1,0 +1,39 @@
+package life.genny.rules;
+
+import life.genny.qwanda.entity.BaseEntity;
+import life.genny.rules.QRules;
+import life.genny.qwanda.Answer;
+
+/* updating the PRI_NAME when PRI_FIRSTNAME is updated */
+rule "Default update full name : FirstName"
+    when
+        answer : Answer( attributeCode == "PRI_FIRSTNAME")
+        rules : QRules( isState("EVENT_ANSWER")  && 
+                        !isState("LOOP_DEFAULT_COMPANY_LEGAL_NAME") )
+     then    
+      	rules.header();
+		rules.setState("LOOP_DEFAULT_COMPANY_LEGAL_NAME");
+		
+		String targetBeCode = rules.getAsString("targetCode");
+
+        /* Getting new value from answer */
+        String value = answer.getValue();
+		
+		if(targetBeCode != null ){
+
+            BaseEntity baseEntity = rules.baseEntity.getBaseEntityByCode(targetBeCode);
+
+            if( baseEntity != null){
+
+                String lastName = baseEntity.getValue("PRI_LASTNAME", null);
+                String fullName = value + " " + lastName;
+                
+                /* updating the full name when Firstname is being Updated*/
+                rules.baseEntity.updateBaseEntityAttribute( rules.getUser().getCode(), targetBeCode, "PRI_NAME", fullName);
+                rules.publishBaseEntityByCode(targetBeCode);
+            }
+		}
+			
+   	    rules.footer();
+  
+end

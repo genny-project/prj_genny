@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>life.genny.jbpm</groupId>
+  <artifactId>prj_genny</artifactId>
+  <version>release-2.0.6</version>
+
+  <name>jBPM Genny </name>
+  <description>jBPM Genny Maven project</description>
+
+  <properties>
+    <runtime.version>7.1.0.Final</runtime.version>
+		<genny-verticle.version>2.0.6</genny-verticle.version>
+		<genny-rules.version>2.0.6</genny-rules.version>
+		
+		<vertx.version>3.5.1</vertx.version>
+		<hazelcast.version>3.8.2</hazelcast.version>
+		<javax-cache.version>1.1.0</javax-cache.version>
+		<log4j-core-version>2.5</log4j-core-version>
+		<weld-vertx.version>1.2.0.Final</weld-vertx.version>
+		<jar.finalName>${project.name}</jar.finalName>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<!--java version -->
+		<java-version>1.8</java-version>
+		<!-- plugin versions -->
+		<ejb-plugin-version>2.3</ejb-plugin-version>
+		<war-plugin-version>2.4</war-plugin-version>
+		<ear-plugin-version>2.9</ear-plugin-version>
+		<compiler-plugin-version>3.1</compiler-plugin-version>
+		<version.maven-jar-plugin>3.0.2</version.maven-jar-plugin>
+		<version.maven-source-plugin>3.0.1</version.maven-source-plugin>
+		<dropwizard.version>3.5.1</dropwizard.version>
+		<vertx-concurrent.version>1.0.0</vertx-concurrent.version>
+		<kie.version>7.1.0.Final</kie.version>
+		<junit-version>4.12</junit-version>
+
+  </properties>
+
+  <repositories>
+    <repository>
+      <id>jboss-public-repository-group</id>
+      <name>JBoss Public Repository Group</name>
+      <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>never</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+      </snapshots>
+    </repository>
+  </repositories>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.kie</groupId>
+      <artifactId>kie-api</artifactId>
+      <version>${runtime.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jbpm</groupId>
+      <artifactId>jbpm-test</artifactId>
+      <version>${runtime.version}</version>
+    </dependency>
+    
+    		<dependency>
+			<groupId>life.genny</groupId>
+			<artifactId>genny-rules</artifactId>
+			<version>${genny-rules.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.hazelcast</groupId>
+					<artifactId>hazelcast</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>io.vertx</groupId>
+					<artifactId>vertx-hazelcast</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.hazelcast</groupId>
+					<artifactId>hazelcast-client</artifactId>
+				</exclusion>
+			</exclusions>
+
+		</dependency>
+
+		<dependency>
+			<groupId>life.genny</groupId>
+			<artifactId>genny-verticle-rules</artifactId>
+			<version>${genny-verticle.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.hazelcast</groupId>
+					<artifactId>hazelcast</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>io.vertx</groupId>
+					<artifactId>vertx-hazelcast</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.hazelcast</groupId>
+					<artifactId>hazelcast-client</artifactId>
+				</exclusion>
+			</exclusions>
+
+		</dependency>
+  </dependencies>
+</project>

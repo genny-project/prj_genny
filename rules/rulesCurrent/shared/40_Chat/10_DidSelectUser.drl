@@ -1,4 +1,10 @@
 package life.genny.rules;
+
+import java.util.ArrayList;
+
+import life.genny.qwanda.entity.SearchEntity;
+import life.genny.utils.RulesUtils;
+import life.genny.qwanda.entity.SearchEntity.StringFilter.*;
 import life.genny.rules.QRules;
 
 rule "Trigger Create Chat - Step 1 - Did Select User"
