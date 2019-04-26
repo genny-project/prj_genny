@@ -53,11 +53,20 @@ rule "Answer"
 			else {
 				answersToSave.addAll(rules.processAnswer($m));
 			}
+		} 
+		
+		if(answers != null && answers.length > 0) {
+			Answer answer = answers[0];
+			String targetCode = answer.getTargetCode();
+			if(!targetCode.startsWith("SBE_")) {
+				rules.baseEntity.saveAnswers(answersToSave);
+			} else {
+				rules.println("Search answer");
+				rules.println("seach target ::"+rules.getAsString("targetCode"));
+				rules.setState("SBE_ANSWER");
+			}
 		}
-
-	   rules.baseEntity.saveAnswers(answersToSave);
-
-
+	   
        rules.footer();
 
 end
