@@ -1,25 +1,5 @@
 package life.genny.rules;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import life.genny.rules.QRules;
 import life.genny.qwanda.message.QEventMessage;
 import io.vertx.core.json.JsonObject;
@@ -27,10 +7,15 @@ import io.vertx.core.json.JsonObject;
 rule "Pre Init Redirect Event"
     when
 		m : QEventMessage( event_type == "REDIRECT_EVENT" )
-		rules: QRules(isState("PRE_INIT_READY") && !isState("STARTED")) 
-     then   
+		rules: QRules(isState("PRE_INIT_READY") && !isState("STARTED"))
+     then
         rules.setDrools(drools);
         rules.header();
+
+        // rules.set("m",m);
+        // rules.startWorkflow("com.sample.bpmn.redirectevt");
+
+
         rules.setState("STARTED");
 
         rules.println("RULE INIT REDIRECT_EVT: "+m);
@@ -48,5 +33,8 @@ rule "Pre Init Redirect Event"
 			rules.set("dataCode", dataCode);
 			rules.set("valueCode", valueCode);
 		}
+
+
+
 		rules.footer();
 end

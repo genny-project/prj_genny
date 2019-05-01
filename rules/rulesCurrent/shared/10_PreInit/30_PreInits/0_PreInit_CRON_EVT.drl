@@ -1,15 +1,5 @@
 package life.genny.rules;
 
-
-
-
-
-
-
-
-
-
-
 import life.genny.rules.QRules;
 import life.genny.qwanda.message.QEventCronMessage;
 import io.vertx.core.json.JsonObject;
