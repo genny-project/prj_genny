@@ -1,15 +1,5 @@
 package life.genny.rules;
 
-
-
-
-
-
-
-
-
-
-
 import life.genny.rules.QRules;
 
 rule "Pre Init Menu Profile"
@@ -18,11 +8,13 @@ rule "Pre Init Menu Profile"
                             data.code == "PROFILE" )
           rules: QRules(isState("PRE_INIT_READY") && !isState("STARTED")) 
      then    
+
         rules.setDrools(drools);
         rules.header();
         rules.println("RULE INIT MENU_PROFILE: "+m);
+        rules.startWorkflow("com.genny.bpmn.profileworkflow");
+        rules.println("Finished Profile Workflow");
         rules.setState("STARTED");
  
-        rules.setState("EVENT_MENU_PROFILE");
         rules.footer();
 end

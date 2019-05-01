@@ -67,36 +67,42 @@ rule "Pre Init Answer"
 
 		rules.setState("PREINIT_ANSWER_LOOP");
 		
-		/* we grab the data associated to the answers */
-		 Answer[] answers = m.getItems();
-		 if(answers.length > 0) {
+		rules.set("message",m);
+		
+		//rules.startWorkflow("com.genny.bpmn.answerworkflow");
+		
+
+		// /* we grab the data associated to the answers */
+		//  Answer[] answers = m.getItems();
+		//  if(answers.length > 0) {
 		 	
-		 	/* TODO: update to handle multiple answers */
-		 	Answer firstAnswer = answers[0];
-		 	String sourceCode = firstAnswer.getSourceCode();
-		 	String targetCode = firstAnswer.getTargetCode();
-		 	String attributeCode = firstAnswer.getAttributeCode();
-		 	String value = firstAnswer.getValue();
+		//  	/* TODO: update to handle multiple answers */
+		//  	Answer firstAnswer = answers[0];
+		//  	String sourceCode = firstAnswer.getSourceCode();
+		//  	String targetCode = firstAnswer.getTargetCode();
+		//  	String attributeCode = firstAnswer.getAttributeCode();
+		//  	String value = firstAnswer.getValue();
 		 	
-		 	if(sourceCode != null && targetCode != null && attributeCode != null && value != null ){
-		 	    rules.set("sourceCode", sourceCode);
-		 		rules.set("targetCode", targetCode);
-		 	    rules.set("attributeCode", attributeCode);
-		 	    rules.set("value", value);
+		//  	if(sourceCode != null && targetCode != null && attributeCode != null && value != null ){
+		//  	    rules.set("sourceCode", sourceCode);
+		//  		rules.set("targetCode", targetCode);
+		//  	    rules.set("attributeCode", attributeCode);
+		//  	    rules.set("value", value);
 		 	    
-		 	    rules.setState(attributeCode);
-		 	    rules.set(attributeCode, firstAnswer);
-		 	}	 	
-		 }
+		//  	    rules.setState(attributeCode);
+		//  	    rules.set(attributeCode, firstAnswer);
+		//  	}	 	
+		//  }
+
 	
-        rules.setState("STARTED");
-        rules.setState("EVENT_ANSWER"); /* other rules listening for thos state */
-        rules.setState("DATA_ANSWER");
-        rules.setState("ANSWER");
+        // rules.setState("STARTED");
+        // rules.setState("EVENT_ANSWER"); /* other rules listening for thos state */
+        // rules.setState("DATA_ANSWER");
+        // rules.setState("ANSWER");
         
         if (StringUtils.isBlank(m.getAliasCode())) {
             drools.setFocus("Answer");
         } 
-        rules.processAnswers(answers);
+         //rules.processAnswers(answers);
         rules.footer();
 end

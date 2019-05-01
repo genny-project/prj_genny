@@ -1,0 +1,20 @@
+package life.genny.rules;
+import life.genny.rules.QRules;
+
+rule "Pre Init Answer example for workflow mate"
+    when
+        rules: QRules( isState("BULLSHIT") && !isState("LOOP_BULLSHIT")
+        
+        			)
+     then
+        rules.setDrools(drools);
+        rules.header();
+        
+        rules.setState("LOOP_BULLSHIT");
+        String beg =  rules.getAsString("beg");
+        rules.println("beg from WF ::   " + beg);
+        
+        rules.println("Hello Pepole this is first Time. Safal");
+        
+        rules.footer();
+end	
