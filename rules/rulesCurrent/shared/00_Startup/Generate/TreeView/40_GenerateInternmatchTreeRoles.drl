@@ -29,7 +29,7 @@ rule "Generate internmatch Tree Roles"
 
         /* contacts */
         rules.baseEntity.saveAnswer(new Answer("GRP_CONTACTS", "GRP_CONTACTS", "GRP_INTERNS", "PRI_IS_SUPERVISOR,PRI_IS_BUYER,PRI_IS_EDU_PROVIDER_STAFF")); /* referrer */
-        rules.baseEntity.saveAnswer(new Answer("GRP_CONTACTS", "GRP_CONTACTS", "GRP_HOST_COMPANY_REPRESENTATIVES", "PRI_IS_AGENT")); /* referrer */
+        rules.baseEntity.saveAnswer(new Answer("GRP_CONTACTS", "GRP_CONTACTS", "GRP_HOST_COMPANY_REPRESENTATIVES", "PRI_IS_AGENT,PRI_IS_SUPERVISOR")); /* referrer */
         rules.baseEntity.saveAnswer(new Answer("GRP_CONTACTS", "GRP_CONTACTS", "GRP_EDU_PROVIDER_REPRESENTATIVES", "PRI_IS_SUPERVISOR"));
         rules.baseEntity.saveAnswer(new Answer("GRP_CONTACTS", "GRP_CONTACTS", "GRP_AGENTS", "PRI_IS_SUPERVISOR"));
 
