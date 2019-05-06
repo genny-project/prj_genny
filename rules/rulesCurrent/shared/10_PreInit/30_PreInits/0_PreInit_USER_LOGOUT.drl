@@ -24,6 +24,7 @@ rule "Pre Init User Logout"
         rules.setState("EVENT_USER_LOGOUT");
         rules.setState("STARTED");
 
-        drools.setFocus("UserLogout");
+     /*   drools.setFocus("UserLogout"); */
+        rules.startWorkflow("life.genny.bpmn.logout");
         rules.footer();
 end
