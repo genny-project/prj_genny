@@ -11,13 +11,15 @@ rule "Pre Init Cron Event"
      then
         rules.setDrools(drools);
         rules.header();
-        rules.println("RULE INIT CRON_EVT: "+m);
-        rules.setState("STARTED");
-        rules.setState("CRON_EVENT");
 
-        String dataCode = m.getData().getCode();
-    		if(dataCode != null) {
-     	 		rules.setState(dataCode);
-    		}
+        rules.startWorkflow("com.sample.bpmn.cronEventWorkflow");
+        // rules.println("RULE INIT CRON_EVT: "+m);
+        // rules.setState("STARTED");
+        // rules.setState("CRON_EVENT");
+
+        // String dataCode = m.getData().getCode();
+    		// if(dataCode != null) {
+     	 	// 	rules.setState(dataCode);
+    		// }
     		rules.footer();
 end
