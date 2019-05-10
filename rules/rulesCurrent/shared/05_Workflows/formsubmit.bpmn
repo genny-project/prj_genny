@@ -243,7 +243,7 @@ rules.println(&quot;FORM SUMBIT EVENT END&quot;);</bpmn2:script>
         <bpmndi:BPMNLabel id="BPMNLabel_2"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_1" bpmnElement="_3">
-        <dc:Bounds height="48.0" width="48.0" x="780.0" y="320.0"/>
+        <dc:Bounds height="48.0" width="48.0" x="613.0" y="742.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_3"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_4" bpmnElement="ScriptTask_2" isExpanded="true">
@@ -445,8 +445,8 @@ rules.println(&quot;FORM SUMBIT EVENT END&quot;);</bpmn2:script>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_21" bpmnElement="SequenceFlow_20" sourceElement="BPMNShape_ScriptTask_7" targetElement="BPMNShape_EndEvent_1">
         <di:waypoint xsi:type="dc:Point" x="432.0" y="765.0"/>
-        <di:waypoint xsi:type="dc:Point" x="804.0" y="765.0"/>
-        <di:waypoint xsi:type="dc:Point" x="804.0" y="368.0"/>
+        <di:waypoint xsi:type="dc:Point" x="522.0" y="765.0"/>
+        <di:waypoint xsi:type="dc:Point" x="613.0" y="766.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_34"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_22" bpmnElement="SequenceFlow_21" sourceElement="BPMNShape_ExclusiveGateway_4" targetElement="BPMNShape_ExclusiveGateway_6">

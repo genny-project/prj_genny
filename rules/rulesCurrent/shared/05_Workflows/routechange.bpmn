@@ -40,10 +40,10 @@ System.out.println(&quot;Route Change from Workflows $$$$$&quot;);
       <bpmn2:terminateEventDefinition id="TerminateEventDefinition_1"/>
     </bpmn2:endEvent>
     <bpmn2:sequenceFlow id="_1-_2" sourceRef="_1" targetRef="_2"/>
-    <bpmn2:scriptTask id="ScriptTask_2" name="Script Task 2" scriptFormat="http://www.java.com/java">
+    <bpmn2:scriptTask id="ScriptTask_2" name="Route change script" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>
         <tns:metaData name="elementname">
-          <tns:metaValue><![CDATA[Script Task 2]]></tns:metaValue>
+          <tns:metaValue><![CDATA[Route change script]]></tns:metaValue>
         </tns:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
@@ -79,43 +79,43 @@ System.out.println(&quot;Route Change from Workflows $$$$$&quot;);
     <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="com.sample.bpmn.routechange">
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_1" bpmnElement="_2">
         <dc:Bounds height="48.0" width="80.0" x="170.0" y="101.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_1">
           <dc:Bounds height="33.0" width="72.0" x="174.0" y="108.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_1" bpmnElement="_1">
         <dc:Bounds height="48.0" width="48.0" x="16.0" y="17.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_2"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_1" bpmnElement="_3">
         <dc:Bounds height="48.0" width="48.0" x="640.0" y="101.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_3"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_4" bpmnElement="ScriptTask_2" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="380.0" y="95.0"/>
-        <bpmndi:BPMNLabel>
-          <dc:Bounds height="11.0" width="52.0" x="409.0" y="114.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_4">
+          <dc:Bounds height="11.0" width="81.0" x="394.0" y="114.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="_1-_2" sourceElement="BPMNShape_StartEvent_1" targetElement="BPMNShape_ScriptTask_1">
         <di:waypoint xsi:type="dc:Point" x="40.0" y="65.0"/>
         <di:waypoint xsi:type="dc:Point" x="40.0" y="125.0"/>
         <di:waypoint xsi:type="dc:Point" x="170.0" y="125.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_5"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_7" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_ScriptTask_4">
         <di:waypoint xsi:type="dc:Point" x="210.0" y="149.0"/>
         <di:waypoint xsi:type="dc:Point" x="210.0" y="159.0"/>
         <di:waypoint xsi:type="dc:Point" x="435.0" y="159.0"/>
         <di:waypoint xsi:type="dc:Point" x="435.0" y="145.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_6"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_8" bpmnElement="SequenceFlow_4" sourceElement="BPMNShape_ScriptTask_4" targetElement="BPMNShape_EndEvent_1">
         <di:waypoint xsi:type="dc:Point" x="490.0" y="120.0"/>
         <di:waypoint xsi:type="dc:Point" x="565.0" y="120.0"/>
         <di:waypoint xsi:type="dc:Point" x="565.0" y="125.0"/>
         <di:waypoint xsi:type="dc:Point" x="640.0" y="125.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_7"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

@@ -12,8 +12,8 @@ rule "Reload Cache - Cron"
         rules.header();
 
         rules.setState("RELOADED_CACHE");
-        
+
         rules.reloadCache();
-        
+
         rules.footer();
 end

@@ -12,25 +12,25 @@ rule "Pre Init EVT_TV_SELECT"
         rules.header();
 
         // Start workflow
-        rules.set("m",m);
-        rules.startWorkflow("com.sample.bpmn.tveventselect");
+        // rules.set("m",m);
+        // rules.startWorkflow("com.sample.bpmn.tveventselect");
 
-        // rules.println("RULE INIT TV_SELECT: "+m);
-        // rules.setState("STARTED");
-        // rules.setState("EVENT_TV_SELECT");
+        rules.println("RULE INIT TV_SELECT: "+m);
+        rules.setState("STARTED");
+        rules.setState("EVENT_TV_SELECT");
 
-        // String tvSelectCode = m.getData().getCode();
-        // String tvSelectValue = m.getData().getValue();
+        String tvSelectCode = m.getData().getCode();
+        String tvSelectValue = m.getData().getValue();
 
-        // if(tvSelectCode != null){
-        //   rules.set("tvSelectCode", tvSelectCode);
-        //   rules.setState("PARENT_" +tvSelectCode);
-        // }
+        if(tvSelectCode != null){
+          rules.set("tvSelectCode", tvSelectCode);
+          rules.setState("PARENT_" +tvSelectCode);
+        }
 
-        // if(tvSelectValue != null){
-        //   rules.set("tvSelectValue", tvSelectValue);
-        //   rules.setState(tvSelectValue);
-        // }
+        if(tvSelectValue != null){
+          rules.set("tvSelectValue", tvSelectValue);
+          rules.setState(tvSelectValue);
+        }
 
         drools.setFocus("TV_SELECT"); /* Set focus to group of rules handling TreeView item selections */
         rules.footer();

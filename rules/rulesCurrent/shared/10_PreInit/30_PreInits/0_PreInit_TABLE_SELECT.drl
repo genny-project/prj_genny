@@ -1,15 +1,5 @@
 package life.genny.rules;
 
-
-
-
-
-
-
-
-
-
-
 import life.genny.rules.QRules;
 import life.genny.qwanda.message.QEventMessage;
 import io.vertx.core.json.JsonObject;
@@ -43,7 +33,7 @@ rule "Pre Init Table Select"
             /* Get hintCode */
             String hintCode = dataJson.getString("hint");
             rules.println("hintCode   ::   " + hintCode);
-            
+
             /* Get messageCode */
             String messageCode = dataJson.getString("message");
             rules.println("messageCode   ::   " + messageCode);
