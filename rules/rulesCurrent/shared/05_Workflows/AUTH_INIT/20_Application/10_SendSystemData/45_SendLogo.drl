@@ -2,6 +2,7 @@ package life.genny.rules;
 import life.genny.rules.QRules;
 import life.genny.utils.Layout.LayoutPosition;
 import life.genny.qwanda.Context;
+import life.genny.qwanda.ContextType;
 
 rule "Send Logo Questions"
     when
@@ -18,7 +19,7 @@ rule "Send Logo Questions"
         Map<String, List<Context>> themesForQuestions = new HashMap();
         
         /* creating context for theme */
-        Context imageFitContext = new Context("THEME", imageFitTheme);
+        Context imageFitContext = new Context(ContextType.THEME, imageFitTheme);
         
         /* adding themes to the list */
         List<Context> themeList = new ArrayList<>();
