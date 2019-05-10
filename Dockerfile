@@ -1,4 +1,4 @@
-FROM gennyproject/checkrules:release-2.0.6 
+FROM gennyproject/checkrules: v2.3.0
 COPY ./rules /rules 
 ENTRYPOINT ["/app.sh"]
 CMD []
