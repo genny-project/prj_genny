@@ -1,54 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.omg.org/bpmn20" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" id="_rgjd0GkSEeGLXa7Rf4_OXA" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" targetNamespace="http://www.omg.org/bpmn20">
-  <bpmn2:import importType="http://www.java.com/javaTypes" location="life.genny.qwanda.message.QEventMessage" namespace="http://life.genny.qwanda.message"/>
-  <bpmn2:import importType="http://www.java.com/javaTypes" location="life.genny.rules.QRules" namespace="http://life.genny.rules"/>
-  <bpmn2:import importType="http://www.java.com/javaTypes" location="life.genny.qwanda.entity.BaseEntity" namespace="http://life.genny.qwanda.entity"/>
+<!-- origin at X=0.0 Y=0.0 -->
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmn20="http://www.omg.org/bpmn20" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="_rgjd0GkSEeGLXa7Rf4_OXA" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.4.3.Final-v20180418-1358-B1" name="auth_init" targetNamespace="http://www.omg.org/bpmn20">
   <bpmn2:itemDefinition id="ItemDefinition_1" isCollection="false" structureRef="life.genny.qwanda.message.QEventMessage"/>
-  <bpmn2:itemDefinition id="ItemDefinition_220" isCollection="false" structureRef="life.genny.rules.QRules"/>
-  <bpmn2:itemDefinition id="ItemDefinition_1319" isCollection="false" structureRef="life.genny.qwanda.entity.BaseEntity"/>
+  <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false" structureRef="life.genny.rules.QRules"/>
+  <bpmn2:itemDefinition id="ItemDefinition_3" isCollection="false" structureRef="java.lang.String"/>
   <bpmn2:process id="auth_init" name="Auth Init" isExecutable="true">
-    <bpmn2:startEvent id="StartEvent_1" name="Start Event 1">
+    <bpmn2:extensionElements>
+      <drools:import name="life.genny.qwanda.message.QEventMessage"/>
+      <drools:import name="life.genny.rules.QRules"/>
+      <drools:global identifier="msg" type="life.genny.qwanda.message.QEventMessage"/>
+      <drools:import name="java.lang.String"/>
+    </bpmn2:extensionElements>
+    <bpmn2:property id="rules" itemSubjectRef="ItemDefinition_2" name="rules"/>
+    <bpmn2:property id="name" itemSubjectRef="ItemDefinition_3" name="name"/>
+    <bpmn2:startEvent id="StartEvent_1" name="AuthInit">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[AuthInit]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
       <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
-       <bpmn2:conditionalEventDefinition id="ConditionalEventDefinition_2">
+      <bpmn2:conditionalEventDefinition id="ConditionalEventDefinition_2">
         <bpmn2:condition xsi:type="bpmn2:tFormalExpression" id="FormalExpression_2" language="http://www.java.com/java">life.genny.qwanda.message.QEventMessage( data.code == &quot;AUTH_INIT&quot;)</bpmn2:condition>
       </bpmn2:conditionalEventDefinition>
     </bpmn2:startEvent>
     <bpmn2:endEvent id="EndEvent_1" name="End Event 1">
-      <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[End Event 1]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
     </bpmn2:endEvent>
-    <bpmn2:scriptTask id="ScriptTask_1" name="Init" scriptFormat="Java">
+    <bpmn2:scriptTask id="ScriptTask_1" name="Init" scriptFormat="http://www.java.com/java">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Init]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;Auth Init&quot;);
+      <bpmn2:script>System.out.println(&quot;Auth Init Start&quot;);
+System.out.println(&quot;QRules Object &quot;+kcontext.getVariable(&quot;rules&quot;));
+System.out.println(&quot;String Object &quot;+name);
+
 </bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_2" sourceRef="StartEvent_1" targetRef="ScriptTask_1"/>
     <bpmn2:scriptTask id="ScriptTask_2" name="Send Attributes" scriptFormat="Java">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Send Attributes]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;Send Attributes!&quot;);</bpmn2:script>
+      <bpmn2:script>System.out.println(&quot;Send Attributes!&quot;);
+//qrules.sendAllAttributes();</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_1" sourceRef="ScriptTask_1" targetRef="ScriptTask_2"/>
     <bpmn2:scriptTask id="ScriptTask_3" name="Send Roles" scriptFormat="Java">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Send Roles]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
       <bpmn2:script>System.out.println(&quot;Send Roles&quot;);</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_5" sourceRef="ScriptTask_2" targetRef="ScriptTask_3"/>
     <bpmn2:scriptTask id="ScriptTask_4" name="Send Project" scriptFormat="Java">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Send Project]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
       <bpmn2:script>System.out.println(&quot;Send Project&quot;);</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_7" sourceRef="ScriptTask_3" targetRef="ScriptTask_4"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_8" sourceRef="ScriptTask_4" targetRef="EndEvent_1"/>
-   </bpmn2:process>
+    <bpmn2:scriptTask id="ScriptTask_5" name="Send User" scriptFormat="http://www.java.com/java">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Send User]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
+      <bpmn2:script>System.out.println(&quot;Send User&quot;);</bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_3" drools:priority="1" sourceRef="ScriptTask_4" targetRef="ScriptTask_5"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_4" drools:priority="1" sourceRef="ScriptTask_5" targetRef="EndEvent_1"/>
+  </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Process Diagram">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="auth_init">
       <bpmndi:BPMNShape id="BPMNShape_1" bpmnElement="StartEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="30.0" y="104.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="53.0" x="22.0" y="140.0"/>
+          <dc:Bounds height="11.0" width="31.0" x="32.0" y="140.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_2" bpmnElement="EndEvent_1">
@@ -76,9 +127,15 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_4" bpmnElement="ScriptTask_4" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="390.0" y="97.0"/>
+        <dc:Bounds height="50.0" width="81.0" x="390.0" y="97.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_12" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="52.0" x="419.0" y="116.0"/>
+          <dc:Bounds height="11.0" width="52.0" x="404.0" y="116.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_5" bpmnElement="ScriptTask_5" isExpanded="true">
+        <dc:Bounds height="50.0" width="51.0" x="515.0" y="97.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_5" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="11.0" width="43.0" x="519.0" y="116.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_1" targetElement="BPMNShape_ScriptTask_1">
@@ -107,11 +164,17 @@
         <di:waypoint xsi:type="dc:Point" x="390.0" y="122.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_13"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_8" bpmnElement="SequenceFlow_8" sourceElement="BPMNShape_ScriptTask_4" targetElement="BPMNShape_2">
-        <di:waypoint xsi:type="dc:Point" x="500.0" y="122.0"/>
-        <di:waypoint xsi:type="dc:Point" x="635.0" y="122.0"/>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_ScriptTask_4" targetElement="BPMNShape_ScriptTask_5">
+        <di:waypoint xsi:type="dc:Point" x="471.0" y="122.0"/>
+        <di:waypoint xsi:type="dc:Point" x="493.0" y="122.0"/>
+        <di:waypoint xsi:type="dc:Point" x="515.0" y="122.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_6"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="SequenceFlow_4" sourceElement="BPMNShape_ScriptTask_5" targetElement="BPMNShape_2">
+        <di:waypoint xsi:type="dc:Point" x="566.0" y="122.0"/>
+        <di:waypoint xsi:type="dc:Point" x="668.0" y="122.0"/>
         <di:waypoint xsi:type="dc:Point" x="770.0" y="122.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_14"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_8"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
