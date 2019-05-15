@@ -36,7 +36,7 @@
 		<version.maven-source-plugin>3.0.1</version.maven-source-plugin>
 		<dropwizard.version>3.5.1</dropwizard.version>
 		<vertx-concurrent.version>1.0.0</vertx-concurrent.version>
-		<kie.version>7.20.0.Final</kie.version>
+		<kie.version>7.21.0.Final</kie.version>
 		<junit-version>4.12</junit-version>
 
 		<jar.finalName>${project.name}</jar.finalName>
@@ -98,6 +98,8 @@
 		</repository>
 	</repositories>
 
+
+
 	<dependencies>
 		<dependency>
 			<groupId>org.eclipse.persistence</groupId>
@@ -126,6 +128,29 @@
 			<artifactId>jbpm-test</artifactId>
 			<version>${runtime.version}</version>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.jbpm/jbpm-test-util -->
+		<dependency>
+			<groupId>org.jbpm</groupId>
+			<artifactId>jbpm-test-util</artifactId>
+			<version>${runtime.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.assertj/assertj-core -->
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>3.12.2</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.26</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>life.genny</groupId>
@@ -381,6 +406,19 @@
 		</dependency>
 	</dependencies>
 	<build>
+		
+		<testResources>
+            <testResource>
+                <directory>src/test/resources/META-INF</directory>
+            </testResource>
+
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+            <testResource>
+                <directory>rules</directory>
+            </testResource>
+        </testResources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
