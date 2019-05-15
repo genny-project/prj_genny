@@ -4,15 +4,23 @@
   <bpmn2:itemDefinition id="ItemDefinition_1" isCollection="false" structureRef="life.genny.qwanda.message.QEventMessage"/>
   <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false" structureRef="life.genny.rules.QRules"/>
   <bpmn2:itemDefinition id="ItemDefinition_3" isCollection="false" structureRef="java.lang.String"/>
+  <bpmn2:itemDefinition id="ItemDefinition_6" isCollection="false" structureRef="org.kie.api.runtime.process.WorkflowProcessInstance"/>
+  <bpmn2:itemDefinition id="ItemDefinition_7" isCollection="false" structureRef="life.genny.eventbus.EventBusInterface"/>
+  <bpmn2:itemDefinition id="ItemDefinition_9" isCollection="false" structureRef="life.genny.eventbus.VertxCache"/>
+  <bpmn2:itemDefinition id="ItemDefinition_11" isCollection="false" structureRef="life.genny.eventbus.WildflyCacheInterface"/>
   <bpmn2:process id="auth_init" name="Auth Init" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.qwanda.message.QEventMessage"/>
       <drools:import name="life.genny.rules.QRules"/>
-      <drools:global identifier="msg" type="life.genny.qwanda.message.QEventMessage"/>
       <drools:import name="java.lang.String"/>
+      <drools:import name="org.kie.api.runtime.process.WorkflowProcessInstance"/>
+      <drools:import name="life.genny.eventbus.EventBusInterface"/>
+      <drools:import name="life.genny.eventbus.VertxCache"/>
+      <drools:import name="life.genny.eventbus.WildflyCacheInterface"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="rules" itemSubjectRef="ItemDefinition_2" name="rules"/>
-    <bpmn2:property id="name" itemSubjectRef="ItemDefinition_3" name="name"/>
+    <bpmn2:property id="message" itemSubjectRef="ItemDefinition_1" name="message"/>
+    <bpmn2:property id="eb" itemSubjectRef="ItemDefinition_7" name="eb"/>
     <bpmn2:startEvent id="StartEvent_1" name="AuthInit">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -41,9 +49,22 @@
       <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
       <bpmn2:script>System.out.println(&quot;Auth Init Start&quot;);
-System.out.println(&quot;QRules Object &quot;+kcontext.getVariable(&quot;rules&quot;));
-System.out.println(&quot;String Object &quot;+name);
+System.out.println(&quot;processInstanceId = &quot;+kcontext.getProcessInstance().getId());
 
+kcontext.getKieRuntime().getEntryPoint(&quot;DEFAULT&quot;).getObjects().forEach(obj -> {
+	if(obj instanceof QEventMessage){
+		kcontext.setVariable(&quot;message&quot;, (QEventMessage)obj);
+System.out.println(&quot;FOUND QEVENTMESSAGE&quot;);
+	} else if (obj instanceof QRules){
+		kcontext.setVariable(&quot;rules&quot;, (QRules)obj);
+		System.out.println(&quot;FOUND QRULE&quot;);
+	}  else if (obj instanceof EventBusInterface){
+		kcontext.setVariable(&quot;eb&quot;, (EventBusInterface)obj);
+		System.out.println(&quot;FOUND EVENTBUS&quot;);
+	}
+    });
+
+System.out.println(&quot;QRules=&quot;+kcontext.getVariable(&quot;rules&quot;));
 </bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_2" sourceRef="StartEvent_1" targetRef="ScriptTask_1"/>

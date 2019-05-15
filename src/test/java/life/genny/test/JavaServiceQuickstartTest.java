@@ -144,8 +144,16 @@ public class JavaServiceQuickstartTest extends JbpmJUnitBaseTestCase {
 		cmds.add(getCommands().newInsert(msg));
 		QRules qRules = getQRules(realm, "user1","Barry Allan", "hero"); // defaults to user anyway
 		cmds.add(CommandFactory.newInsert(qRules, "rules"));
+		cmds.add(CommandFactory.newInsert(qRules, "qrules2"));
 		cmds.add(CommandFactory.newInsert(msg, "msg"));
 		cmds.add(CommandFactory.newInsert("GADA", "name"));
+		
+		EventBusInterface eventBusMock = new EventBusMock();
+		GennyCacheInterface vertxCache = new MockCache();
+		VertxUtils.init(eventBusMock, vertxCache);
+
+		cmds.add(CommandFactory.newInsert(eventBusMock, "eb"));
+		
 		// cmds.add( CommandFactory.newQuery( "Get Msg" "getMsg" );
 
 		ExecutionResults results = kieSession.execute(CommandFactory.newBatchExecution(cmds));
