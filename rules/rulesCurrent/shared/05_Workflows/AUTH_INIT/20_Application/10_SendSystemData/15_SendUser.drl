@@ -11,10 +11,10 @@ rule "Send User"
 
      	rules.setState("LOOP_SEND_USER");
         
-        BaseEntity user = rules.getUser();
+       /* BaseEntity user = rules.getUser();
         if(user != null) {
             rules.publishCmd(user, "USER");
-        }
+        } */
          
         rules.setState("SENT_USER");		
 	    rules.footer();     		      

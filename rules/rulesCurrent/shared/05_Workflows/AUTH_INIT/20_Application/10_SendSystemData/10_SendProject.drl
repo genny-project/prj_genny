@@ -10,12 +10,12 @@ rule "Send Project"
      	rules.header();
         rules.setState("LOOP_SEND_PROJECT");
 
-     	BaseEntity project = rules.getProject();
+     /*	BaseEntity project = rules.getProject();
 
         if(project != null) {
         rules.println("Sending project - "+project.getCode());
             rules.publishCmd(project, "PROJECT");
-        }
+        } */
 
         rules.setState("SENT_PROJECT");	
 	    rules.footer();      		      

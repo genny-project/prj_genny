@@ -3,12 +3,15 @@ package life.genny.test;
 import java.io.FileNotFoundException;
 import java.lang.invoke.MethodHandles;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import javax.persistence.EntityManager;
@@ -59,10 +62,14 @@ import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.MockCache;
 import life.genny.eventbus.VertxCache;
+import life.genny.models.GennyToken;
+import life.genny.qwanda.attribute.Attribute;
+import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.Person;
 import life.genny.qwanda.message.QEventMessage;
 import life.genny.qwandautils.GennyCacheInterface;
 import life.genny.qwandautils.GennySettings;
+import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.KeycloakUtils;
 import life.genny.qwandautils.SecurityUtils;
 import life.genny.rules.QRules;
@@ -141,22 +148,57 @@ public class JavaServiceQuickstartTest extends JbpmJUnitBaseTestCase {
 		QEventMessage msg = new QEventMessage("EVT_MSG", "AUTH_INIT");
 
 		List<Command<?>> cmds = new ArrayList<Command<?>>();
-		cmds.add(getCommands().newInsert(msg));
-		QRules qRules = getQRules(realm, "user1","Barry Allan", "hero"); // defaults to user anyway
-		cmds.add(CommandFactory.newInsert(qRules, "rules"));
-		cmds.add(CommandFactory.newInsert(qRules, "qrules2"));
+		
+		GennyToken token = getToken(realm, "user1","Barry Allan", "hero");
+		QRules qRules = getQRules(token); // defaults to user anyway
+	
+		cmds.add(CommandFactory.newInsert(qRules,"qRules"));
 		cmds.add(CommandFactory.newInsert(msg, "msg"));
 		cmds.add(CommandFactory.newInsert("GADA", "name"));
 		
 		EventBusInterface eventBusMock = new EventBusMock();
 		GennyCacheInterface vertxCache = new MockCache();
 		VertxUtils.init(eventBusMock, vertxCache);
+		
+		// Set up Cache
+
+		setUpCache("internmatch",token);
 
 		cmds.add(CommandFactory.newInsert(eventBusMock, "eb"));
 		
-		// cmds.add( CommandFactory.newQuery( "Get Msg" "getMsg" );
 
 		ExecutionResults results = kieSession.execute(CommandFactory.newBatchExecution(cmds));
+		
+		
+		
+		
+		
+		
+//		cmds.add(getCommands().newInsert(msg));
+//		QRules qRules = getQRules(realm, "user1","Barry Allan", "hero"); // defaults to user anyway
+//		cmds.add(getCommands().newInsert(qRules));
+//	//	cmds.add(CommandFactory.newInsert(qRules, "qrules2"));
+//	//	cmds.add(CommandFactory.newInsert(msg, "msg"));
+//		cmds.add(getCommands().newInsert("GADA"));
+//		
+//		EventBusInterface eventBusMock = new EventBusMock();
+//		GennyCacheInterface vertxCache = new MockCache();
+//		VertxUtils.init(eventBusMock, vertxCache);
+//
+//		cmds.add(getCommands().newInsert(eventBusMock, "eb"));
+//		
+//		// cmds.add( CommandFactory.newQuery( "Get Msg" "getMsg" );
+//		
+//	//	kieSession.getKieRuntime(ProcessInstance.class).getProcess().getMetaData()
+//
+//		ExecutionResults results = kieSession.execute(getCommands().newBatchExecution(cmds));
+//		System.out.println("QRules pid about to be read");
+
+//		ProcessInstance pid = kieSession.getProcessInstance(1L);
+//		WorkflowProcessInstance wpi = (WorkflowProcessInstance)kieSession.getProcessInstance(pid.getId());
+//		wpi.getVariable(name)
+//		QRules rs = (QRules) wpi.getVariable("rules");
+//		System.out.println("QRules pid "+rs);
 		// results.getValue( "list1" ); // returns the ArrayList
 		results.getValue("msg"); // returns the inserted fact Msg
 		results.getValue("rules"); // returns the inserted fact QRules
@@ -421,40 +463,68 @@ public class JavaServiceQuickstartTest extends JbpmJUnitBaseTestCase {
 		return getServices().getCommands();
 	}
 
-	private QRules getQRules(final String realm, final String username, final String name, final String role) {
+	private QRules getQRules(final GennyToken token) {
 
 		List<Tuple2<String, Object>> globals = new ArrayList<Tuple2<String, Object>>();
 		Map<String, String> keyValueMap = new HashMap<String, String>();
 
 		globals = RulesLoader.getStandardGlobals();
 
-		Map<String, Object> adecodedTokenMap = new HashMap<String, Object>();
-		adecodedTokenMap.put("preferred_username",username);
-		adecodedTokenMap.put("name", name);
-		adecodedTokenMap.put("realm", realm);
-		adecodedTokenMap.put("realm_access", "[user," + role + "]");
-
-		Set<String> auserRoles = KeycloakUtils.getRoleSet(adecodedTokenMap.get("realm_access").toString());
-
-		String realm2 = adecodedTokenMap.get("realm").toString();
-		if ("genny".equalsIgnoreCase(realm2)) {
-			realm2 = GennySettings.mainrealm;
-			adecodedTokenMap.put("realm", GennySettings.mainrealm);
-		}
-		String jwtToken = null;
-
-		jwtToken = SecurityUtils.createJwt("ABBCD", "Genny Project", "Test JWT", 100000, "IamASecret",
-				adecodedTokenMap);
 
 		EventBusInterface eventBusMock = new EventBusMock();
 		GennyCacheInterface vertxCache = new MockCache();
 		VertxUtils.init(eventBusMock, vertxCache);
 
-		QRules qRules = new QRules(eventBusMock, jwtToken, adecodedTokenMap);
+		QRules qRules = new QRules(eventBusMock, token.getToken(), token.getAdecodedTokenMap());
 		qRules.set("realm", realm);
 
 		return qRules;
 
+	}
+	
+	private BaseEntity getProject(final String realm) 
+	{
+		BaseEntity project=null;
+		
+        final String code = "PRJ_" + realm.toUpperCase();
+        final String name = realm;
+        final Date date = new Date(); // *1000 is to convert seconds to milliseconds
+        final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z"); // the format of
+                                                                                    // your date
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT+10")); // give a timezone reference for formating
+        sdf.format(date);
+//        final Attribute firstNameAtt = service.findAttributeByCode("PRI_FIRSTNAME");
+//        final Attribute lastNameAtt = service.findAttributeByCode("PRI_LASTNAME");
+//        final Attribute nameAtt = service.findAttributeByCode("PRI_NAME");
+//        final Attribute emailAtt = service.findAttributeByCode("PRI_EMAIL");
+//        final Attribute uuidAtt = service.findAttributeByCode("PRI_UUID");
+//        final Attribute usernameAtt = service.findAttributeByCode("PRI_USERNAME");
+//
+       try {
+           project = new BaseEntity(code, name);
+//
+//          project.addAttribute(firstNameAtt, 0.0, firstName);
+//          project.addAttribute(lastNameAtt, 0.0, lastName);
+//          project.addAttribute(nameAtt, 0.0, name);
+//          project.addAttribute(emailAtt, 0.0, email);
+//          project.addAttribute(uuidAtt, 0.0, id);
+//          project.addAttribute(usernameAtt, 0.0, username);
+       } catch (Exception e) {
+    	   
+       }
+       return project;
+	}
+	
+	private void setUpCache(final String realm, GennyToken token)
+	{
+		BaseEntity project = getProject(realm);
+		String json = JsonUtils.toJson(project);
+		VertxUtils.writeCachedJson(realm, project.getCode(), json, token.getToken());
+	}
+	
+	private GennyToken getToken(final String realm, String username, String name, String role)
+	{
+		return new GennyToken(realm,username,name,role);
 	}
 
 }

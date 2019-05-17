@@ -10,10 +10,10 @@ rule "Send User Company"
      	rules.header();
      	rules.setState("LOOP_SEND_USER_COMPANY");
 
-     	String userCode = rules.getUser().getCode();
+  /*   	String userCode = rules.getUser().getCode(); */
 
      	/*  Get Company Code of the current user   */
-        BaseEntity company = rules.baseEntity.getParent(userCode, "LNK_STAFF");
+       /* BaseEntity company = rules.baseEntity.getParent(userCode, "LNK_STAFF");
 
         if(company != null)
         {
@@ -21,6 +21,7 @@ rule "Send User Company"
             rules.publishCmd(company, "USER_COMPANY");
 
         }
+        */
 
         rules.setState("SENT_USER_COMPANY");
 	    rules.footer();

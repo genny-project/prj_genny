@@ -8,13 +8,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_7" isCollection="false" structureRef="life.genny.eventbus.EventBusInterface"/>
   <bpmn2:itemDefinition id="ItemDefinition_9" isCollection="false" structureRef="life.genny.eventbus.VertxCache"/>
   <bpmn2:itemDefinition id="ItemDefinition_11" isCollection="false" structureRef="life.genny.eventbus.WildflyCacheInterface"/>
-  <bpmn2:itemDefinition id="ItemDefinition_12" isCollection="false" structureRef="life.genny.eventbus.EventBusMock"/>
-  <bpmn2:itemDefinition id="ItemDefinition_5" isCollection="false" structureRef="life.genny.qwanda.message.QDataBaseEntityMessage"/>
-  <bpmn2:itemDefinition id="ItemDefinition_13" isCollection="false" structureRef="life.genny.utils.VertxUtils.ESubscriptionType"/>
-  <bpmn2:itemDefinition id="ItemDefinition_14" isCollection="false" structureRef="life.genny.utils.VertxUtils"/>
-  <bpmn2:itemDefinition id="ItemDefinition_16" isCollection="false" structureRef="life.genny.qwanda.entity.BaseEntity"/>
-  <bpmn2:itemDefinition id="ItemDefinition_18" isCollection="false" structureRef="java.util.List"/>
-  <bpmn2:process id="auth_init" drools:packageName="life.genny.jbpm" name="Auth Init" isExecutable="true">
+  <bpmn2:process id="auth_init" name="Auth Init" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.qwanda.message.QEventMessage"/>
       <drools:import name="life.genny.rules.QRules"/>
@@ -23,18 +17,10 @@
       <drools:import name="life.genny.eventbus.EventBusInterface"/>
       <drools:import name="life.genny.eventbus.VertxCache"/>
       <drools:import name="life.genny.eventbus.WildflyCacheInterface"/>
-      <drools:import name="life.genny.eventbus.EventBusMock"/>
-      <drools:global identifier="processInstance" type="org.kie.api.runtime.process.WorkflowProcessInstance"/>
-      <drools:global identifier="rules" type="life.genny.rules.QRules"/>
-      <drools:import name="life.genny.qwanda.message.QDataBaseEntityMessage"/>
-      <drools:import name="life.genny.utils.VertxUtils"/>
-      <drools:import name="life.genny.utils.VertxUtils.ESubscriptionType"/>
-      <drools:import name="life.genny.qwanda.entity.BaseEntity"/>
-      <drools:import name="java.util.List"/>
     </bpmn2:extensionElements>
+    <bpmn2:property id="rules" itemSubjectRef="ItemDefinition_2" name="rules"/>
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_1" name="message"/>
-    <bpmn2:property id="eb" itemSubjectRef="ItemDefinition_12" name="eb"/>
-    <bpmn2:property id="name" itemSubjectRef="ItemDefinition_3" name="name"/>
+    <bpmn2:property id="eb" itemSubjectRef="ItemDefinition_7" name="eb"/>
     <bpmn2:startEvent id="StartEvent_1" name="AuthInit">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -52,7 +38,7 @@
           <drools:metaValue><![CDATA[End Event 1]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_10</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
     </bpmn2:endEvent>
     <bpmn2:scriptTask id="ScriptTask_1" name="Init" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>
@@ -62,39 +48,14 @@
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;Auth Init Start&quot;);
-processInstance = (WorkflowProcessInstance)kcontext.getProcessInstance();
-System.out.println(&quot;workprocessInstanceId = &quot;+processInstance.getId());
-
-kcontext.getKieRuntime().getEntryPoint(&quot;DEFAULT&quot;).getObjects().forEach(obj -> {
-	//System.out.println(obj);
-if(obj instanceof String){
-		kcontext.setVariable(&quot;name&quot;, (String)obj);
-System.out.println(&quot;FOUND STRING&quot;);
-	} else if(obj instanceof QEventMessage){
-		kcontext.setVariable(&quot;message&quot;, (QEventMessage)obj);
-System.out.println(&quot;FOUND QEVENTMESSAGE&quot;);
-	} else if (obj instanceof QRules){
-		kcontext.setVariable(&quot;rules&quot;, (QRules)obj);
-		System.out.println(&quot;FOUND QRULE &quot;);
-		
-	}  else if (obj instanceof EventBusInterface){
-		kcontext.setVariable(&quot;eb&quot;, (EventBusInterface)obj);
-		System.out.println(&quot;FOUND EVENTBUS&quot;);
-	}
-    });
-
-QRules rs = ((QRules)kcontext.getVariable(&quot;rules&quot;));
-if (rs != null ){
-   System.out.println(&quot;JBPM QRules=&quot;+rs.realm());
-} else {
-   System.out.println(&quot;rs is null&quot;);
-}
-
-</bpmn2:script>
+      <bpmn2:script>System.out.println(&quot;Auth Init StartHII&quot;);
+System.out.println(&quot;processInstanceId = &quot;+kcontext.getProcessInstance().getId());
+        kcontext.getKieRuntime().getEntryPoint(&quot;DEFAULT&quot;).getObjects().forEach(obj->{
+            System.out.println(obj);
+        });</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_2" sourceRef="StartEvent_1" targetRef="ScriptTask_1"/>
-    <bpmn2:scriptTask id="ScriptTask_2" name="Send Attributes" scriptFormat="http://www.java.com/java">
+    <bpmn2:scriptTask id="ScriptTask_2" name="Send Attributes" scriptFormat="Java">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
           <drools:metaValue><![CDATA[Send Attributes]]></drools:metaValue>
@@ -103,14 +64,7 @@ if (rs != null ){
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
       <bpmn2:script>System.out.println(&quot;Send Attributes!&quot;);
-life.genny.rules.QRules rules3 = (QRules) kcontext.getVariable(&quot;rules&quot;);
-if (rules3 != null) {
-	System.out.println(&quot;Send Attributes QRule &quot;+rules3.realm());
-	rules3.sendAllAttributes();
-} else {
-	System.out.println(&quot;rules3 is null&quot;);
-}
-</bpmn2:script>
+//qrules.sendAllAttributes();</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_1" sourceRef="ScriptTask_1" targetRef="ScriptTask_2"/>
     <bpmn2:scriptTask id="ScriptTask_3" name="Send Roles" scriptFormat="Java">
@@ -121,15 +75,7 @@ if (rules3 != null) {
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;Send Roles&quot;);
-life.genny.rules.QRules rules3 = (QRules) kcontext.getVariable(&quot;rules&quot;);
-
-     	life.genny.qwanda.message.QDataBaseEntityMessage rolesMsg = VertxUtils.getObject(rules3.realm(), &quot;ROLES&quot;, rules3.realm(), QDataBaseEntityMessage.class);
-
-        if(rolesMsg != null) {
-       	   rules3.println(&quot;Sending &quot;+rolesMsg.getItems().length +&quot; Roles  &quot;);
-            rules3.publishCmd(rolesMsg);
-        }</bpmn2:script>
+      <bpmn2:script>System.out.println(&quot;Send Roles&quot;);</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_5" sourceRef="ScriptTask_2" targetRef="ScriptTask_3"/>
     <bpmn2:scriptTask id="ScriptTask_4" name="Send Project" scriptFormat="Java">
@@ -140,15 +86,7 @@ life.genny.rules.QRules rules3 = (QRules) kcontext.getVariable(&quot;rules&quot;
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;Send Project&quot;);
-life.genny.rules.QRules rules3 = (QRules) kcontext.getVariable(&quot;rules&quot;);
-
-	life.genny.qwanda.entity.BaseEntity project = rules3.getProject();
-
-        if(project != null) {
-            rules3.println(&quot;Sending project - &quot;+project.getCode());
-            rules3.publishCmd(project, &quot;PROJECT&quot;);
-        }</bpmn2:script>
+      <bpmn2:script>System.out.println(&quot;Send Project&quot;);</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_7" sourceRef="ScriptTask_3" targetRef="ScriptTask_4"/>
     <bpmn2:scriptTask id="ScriptTask_5" name="Send User" scriptFormat="http://www.java.com/java">
@@ -158,73 +96,11 @@ life.genny.rules.QRules rules3 = (QRules) kcontext.getVariable(&quot;rules&quot;
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;Send User&quot;);
-life.genny.rules.QRules rules3 = (QRules) kcontext.getVariable(&quot;rules&quot;);
-
-	life.genny.qwanda.entity.BaseEntity user= rules3.getUser();
-
-
-        if(user != null) {
-            rules3.publishCmd(user, &quot;USER&quot;);
-        }</bpmn2:script>
+      <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
+      <bpmn2:script>System.out.println(&quot;Send User&quot;);</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_3" drools:priority="1" sourceRef="ScriptTask_4" targetRef="ScriptTask_5"/>
-    <bpmn2:scriptTask id="ScriptTask_6" name="Send User Company" scriptFormat="http://www.java.com/java">
-      <bpmn2:extensionElements>
-        <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Send User Company]]></drools:metaValue>
-        </drools:metaData>
-      </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;Send User Company&quot;);
-life.genny.rules.QRules rules3 = (QRules) kcontext.getVariable(&quot;rules&quot;);
-
-String userCode = rules3.getUser().getCode();
-
-     	/*  Get Company Code of the current user   */
-        life.genny.qwanda.entity.BaseEntity company = rules3.baseEntity.getParent(userCode, &quot;LNK_STAFF&quot;);
-
-        if(company != null)
-        {
-            rules3.publishCmd(company, &quot;USER_COMPANY&quot;);
-        }
-</bpmn2:script>
-    </bpmn2:scriptTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_6" drools:priority="1" sourceRef="ScriptTask_5" targetRef="ScriptTask_6"/>
-    <bpmn2:scriptTask id="ScriptTask_7" name="Send MainFrame" scriptFormat="http://www.java.com/java">
-      <bpmn2:extensionElements>
-        <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Send MainFrame]]></drools:metaValue>
-        </drools:metaData>
-      </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_10</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;Send Main Frame&quot;);
-life.genny.rules.QRules rules3 = (QRules) kcontext.getVariable(&quot;rules&quot;);     
-  
-/* get the root frame base entity */
-        life.genny.qwanda.entity.BaseEntity rootFrame = rules3.baseEntity.getBaseEntityByCode(&quot;FRM_ROOT&quot;);
-
-        /* get its children (frames) */
-        List&lt;BaseEntity> children = rules3.baseEntity.getLinkedBaseEntities(rootFrame.getCode(), null, null, 3);
-
-        /* create message */
-        life.genny.qwanda.message.QDataBaseEntityMessage messageMF = new QDataBaseEntityMessage(children);
-
-        /* add parent as an item */
-        messageMF.add(rootFrame);
-
-        /* set parent */
-        messageMF.setParentCode(rootFrame.getCode());
-        
-        /* send message */
-        rules3.publishCmd(messageMF);
-</bpmn2:script>
-    </bpmn2:scriptTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_9" drools:priority="1" sourceRef="ScriptTask_6" targetRef="ScriptTask_7"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_10" drools:priority="1" sourceRef="ScriptTask_7" targetRef="EndEvent_1"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_4" drools:priority="1" sourceRef="ScriptTask_5" targetRef="EndEvent_1"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Process Diagram">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="auth_init">
@@ -235,9 +111,9 @@ life.genny.rules.QRules rules3 = (QRules) kcontext.getVariable(&quot;rules&quot;
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_2" bpmnElement="EndEvent_1">
-        <dc:Bounds height="36.0" width="36.0" x="643.0" y="477.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="770.0" y="104.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_3" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="50.0" x="636.0" y="513.0"/>
+          <dc:Bounds height="11.0" width="50.0" x="763.0" y="140.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_1" bpmnElement="ScriptTask_1" isExpanded="true">
@@ -268,18 +144,6 @@ life.genny.rules.QRules rules3 = (QRules) kcontext.getVariable(&quot;rules&quot;
         <dc:Bounds height="50.0" width="51.0" x="515.0" y="97.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_5" labelStyle="BPMNLabelStyle_1">
           <dc:Bounds height="11.0" width="43.0" x="519.0" y="116.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_6" bpmnElement="ScriptTask_6" isExpanded="true">
-        <dc:Bounds height="50.0" width="81.0" x="620.0" y="97.0"/>
-        <bpmndi:BPMNLabel>
-          <dc:Bounds height="22.0" width="51.0" x="635.0" y="111.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_7" bpmnElement="ScriptTask_7" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="606.0" y="200.0"/>
-        <bpmndi:BPMNLabel>
-          <dc:Bounds height="11.0" width="70.0" x="626.0" y="219.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_1" targetElement="BPMNShape_ScriptTask_1">
@@ -314,23 +178,11 @@ life.genny.rules.QRules rules3 = (QRules) kcontext.getVariable(&quot;rules&quot;
         <di:waypoint xsi:type="dc:Point" x="515.0" y="122.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_6"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="BPMNShape_ScriptTask_5" targetElement="BPMNShape_ScriptTask_6">
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="SequenceFlow_4" sourceElement="BPMNShape_ScriptTask_5" targetElement="BPMNShape_2">
         <di:waypoint xsi:type="dc:Point" x="566.0" y="122.0"/>
-        <di:waypoint xsi:type="dc:Point" x="593.0" y="122.0"/>
-        <di:waypoint xsi:type="dc:Point" x="620.0" y="122.0"/>
-        <bpmndi:BPMNLabel/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_9" bpmnElement="SequenceFlow_9" sourceElement="BPMNShape_ScriptTask_6" targetElement="BPMNShape_ScriptTask_7">
-        <di:waypoint xsi:type="dc:Point" x="660.0" y="147.0"/>
-        <di:waypoint xsi:type="dc:Point" x="660.0" y="173.0"/>
-        <di:waypoint xsi:type="dc:Point" x="661.0" y="200.0"/>
-        <bpmndi:BPMNLabel/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_10" bpmnElement="SequenceFlow_10" sourceElement="BPMNShape_ScriptTask_7" targetElement="BPMNShape_2">
-        <di:waypoint xsi:type="dc:Point" x="661.0" y="250.0"/>
-        <di:waypoint xsi:type="dc:Point" x="661.0" y="363.0"/>
-        <di:waypoint xsi:type="dc:Point" x="661.0" y="477.0"/>
-        <bpmndi:BPMNLabel/>
+        <di:waypoint xsi:type="dc:Point" x="668.0" y="122.0"/>
+        <di:waypoint xsi:type="dc:Point" x="770.0" y="122.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_8"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
