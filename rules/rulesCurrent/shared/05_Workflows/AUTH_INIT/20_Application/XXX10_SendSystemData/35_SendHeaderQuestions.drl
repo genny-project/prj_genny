@@ -12,10 +12,10 @@ rule "Send Header Questions"
         rules.setState("LOOP_SEND_HEADER_QUESTIONS");
         
         /* gets the project baseentity */
-        BaseEntity project = rules.getProject();
+       /* BaseEntity project = rules.getProject(); */
   		
   		/* sends questions for project-name and positions it in the left side of the header frame */
-       	rules.askQuestions(rules.getUser().getCode(), project.getCode(), "QUE_FULLNAME_GRP", false, "FRM_HEADER", LayoutPosition.WEST);
+    /*   	rules.askQuestions(rules.getUser().getCode(), project.getCode(), "QUE_FULLNAME_GRP", false, "FRM_HEADER", LayoutPosition.WEST); */
        	
 		rules.setState("SEND_FOOTER_QUESTIONS");
 	    rules.footer();     		      
