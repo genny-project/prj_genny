@@ -8,7 +8,6 @@
   <bpmn2:itemDefinition id="ItemDefinition_7" isCollection="false" structureRef="life.genny.eventbus.EventBusInterface"/>
   <bpmn2:itemDefinition id="ItemDefinition_9" isCollection="false" structureRef="life.genny.eventbus.VertxCache"/>
   <bpmn2:itemDefinition id="ItemDefinition_11" isCollection="false" structureRef="life.genny.eventbus.WildflyCacheInterface"/>
-  <bpmn2:itemDefinition id="ItemDefinition_12" isCollection="false" structureRef="life.genny.eventbus.EventBusMock"/>
   <bpmn2:itemDefinition id="ItemDefinition_5" isCollection="false" structureRef="life.genny.qwanda.message.QDataBaseEntityMessage"/>
   <bpmn2:itemDefinition id="ItemDefinition_13" isCollection="false" structureRef="life.genny.utils.VertxUtils.ESubscriptionType"/>
   <bpmn2:itemDefinition id="ItemDefinition_14" isCollection="false" structureRef="life.genny.utils.VertxUtils"/>
@@ -34,7 +33,6 @@
       <drools:import name="life.genny.eventbus.EventBusInterface"/>
       <drools:import name="life.genny.eventbus.VertxCache"/>
       <drools:import name="life.genny.eventbus.WildflyCacheInterface"/>
-      <drools:import name="life.genny.eventbus.EventBusMock"/>
       <drools:global identifier="processInstance" type="org.kie.api.runtime.process.WorkflowProcessInstance"/>
       <drools:import name="life.genny.qwanda.message.QDataBaseEntityMessage"/>
       <drools:import name="life.genny.utils.VertxUtils"/>
@@ -54,7 +52,6 @@
       <drools:import name="life.genny.qwanda.ContextType"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_1" name="message"/>
-    <bpmn2:property id="eb" itemSubjectRef="ItemDefinition_12" name="eb"/>
     <bpmn2:property id="name" itemSubjectRef="ItemDefinition_3" name="name"/>
     <bpmn2:property id="rules" itemSubjectRef="ItemDefinition_2" name="rules"/>
     <bpmn2:startEvent id="StartEvent_1" name="AuthInit">
@@ -129,6 +126,7 @@ life.genny.rules.QRules rules3 = (QRules) kcontext.getVariable(&quot;rules&quot;
 if (rules3 != null) {
 	System.out.println(&quot;Send Attributes QRule &quot;+rules3.realm());
 	rules3.sendAllAttributes();
+	System.out.println(&quot;Sent attributes&quot;);
 } else {
 	System.out.println(&quot;rules3 is null&quot;);
 }
@@ -204,7 +202,7 @@ life.genny.rules.QRules rules3 = (QRules) kcontext.getVariable(&quot;rules&quot;
 life.genny.rules.QRules rules3 = (QRules) kcontext.getVariable(&quot;rules&quot;);
 
 String userCode = rules3.getUser().getCode();
-
+System.out.println(&quot;userCode=&quot;+userCode);
      	/*  Get Company Code of the current user   */
         life.genny.qwanda.entity.BaseEntity company = rules3.baseEntity.getParent(userCode, &quot;LNK_STAFF&quot;);
 

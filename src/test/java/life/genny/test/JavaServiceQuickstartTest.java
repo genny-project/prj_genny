@@ -1,6 +1,7 @@
 package life.genny.test;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -18,6 +19,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.logging.log4j.Logger;
 import org.drools.core.base.MapGlobalResolver;
 import org.drools.core.command.runtime.process.SignalEventCommand;
@@ -28,6 +31,7 @@ import org.jbpm.ruleflow.core.RuleFlowProcess;
 import org.jbpm.ruleflow.core.RuleFlowProcessFactory;
 import org.jbpm.test.JbpmJUnitBaseTestCase;
 import org.jbpm.test.JbpmJUnitTestCase;
+import org.json.JSONObject;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.kie.api.KieBase;
@@ -58,6 +62,7 @@ import org.kie.internal.runtime.StatefulKnowledgeSession;
 
 import io.vavr.Tuple2;
 import io.vavr.Tuple3;
+import io.vertx.core.json.JsonObject;
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.MockCache;
@@ -71,6 +76,7 @@ import life.genny.qwandautils.GennyCacheInterface;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.KeycloakUtils;
+import life.genny.qwandautils.QwandaUtils;
 import life.genny.qwandautils.SecurityUtils;
 import life.genny.rules.QRules;
 import life.genny.rules.RulesLoader;
@@ -98,7 +104,53 @@ public class JavaServiceQuickstartTest extends JbpmJUnitBaseTestCase {
 	protected static String realm = GennySettings.mainrealm;
 	protected static Set<String> realms;
 
-	private static final String CONDITIONAL_ID = "org.jbpm.test.functional.event.StartEvent-conditional";
+	
+	@Test(timeout = 60000)
+	public void testPersistentProcess() {
+		System.out.println("Persistent Timer Test");
+		KieSession kieSession = createKSession("rulesCurrent/shared/00_Startup/TimerStart2.bpmn");
+		long startTime = System.nanoTime();
+	
+		  ProcessInstance pInstance = kieSession.startProcess("DelayTimerEventProcess");
+		    long pInstanceId = pInstance.getId();
+
+		    PseudoClockScheduler sessionClock = kieSession.getSessionClock();
+		    // Only advancing time by 10 seconds, so process should still be waiting.
+		//    sessionClock.advanceTime(20, TimeUnit.SECONDS);
+		    
+            int sleep = 20000;
+            logger.debug("Sleeping {} seconds", sleep / 1000);
+            try {
+				Thread.sleep(sleep);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		List<Command<?>> cmds = new ArrayList<Command<?>>();
+//		
+//		GennyToken token = getToken(realm, "user1","Barry Allan", "hero");
+//		QRules qRules = getQRules(token); // defaults to user anyway
+//	//	System.out.println(qRules.getToken());
+//		cmds.add(CommandFactory.newInsert(qRules,"qRules"));
+//		
+//		EventBusInterface eventBusMock = new EventBusMock();
+//		GennyCacheInterface vertxCache = new MockCache();
+//		VertxUtils.init(eventBusMock, vertxCache);
+//		
+//		// Set up Cache
+//
+//		setUpCache(GennySettings.mainrealm,token);
+
+		
+	//	ExecutionResults results = kieSession.execute(CommandFactory.newBatchExecution(cmds));
+		long endTime = System.nanoTime();
+		double difference = (endTime - startTime) / 1e6; // get ms		
+
+		kieSession.dispose();
+		System.out.println("Persistent BPMN completed in "+difference+" ms");
+
+	}
 
 	@BeforeClass
 	public static void init() throws FileNotFoundException, SQLException {
@@ -138,12 +190,14 @@ public class JavaServiceQuickstartTest extends JbpmJUnitBaseTestCase {
 		// super(false);
 	}
 
-	@Test(timeout = 30000)
+//	@Test(timeout = 30000)
 	public void testProcess() {
 
 		KieSession kieSession = createKSession("rulesCurrent/shared/00_Startup/auth_init.bpmn");
 //		KieSession kieSession = setupSession("/rulesCurrent/shared/00_Startup",true);
 
+		String bridgeUrl = GennySettings.bridgeServiceUrl;
+		System.out.println("BridgeUrl="+bridgeUrl);
 //
 		QEventMessage msg = new QEventMessage("EVT_MSG", "AUTH_INIT");
 
@@ -151,7 +205,7 @@ public class JavaServiceQuickstartTest extends JbpmJUnitBaseTestCase {
 		
 		GennyToken token = getToken(realm, "user1","Barry Allan", "hero");
 		QRules qRules = getQRules(token); // defaults to user anyway
-	
+		System.out.println(qRules.getToken());
 		cmds.add(CommandFactory.newInsert(qRules,"qRules"));
 		cmds.add(CommandFactory.newInsert(msg, "msg"));
 		cmds.add(CommandFactory.newInsert("GADA", "name"));
@@ -162,12 +216,14 @@ public class JavaServiceQuickstartTest extends JbpmJUnitBaseTestCase {
 		
 		// Set up Cache
 
-		setUpCache("internmatch",token);
+		setUpCache(GennySettings.mainrealm,token);
 
 		cmds.add(CommandFactory.newInsert(eventBusMock, "eb"));
 		
-
+		long startTime = System.nanoTime();
 		ExecutionResults results = kieSession.execute(CommandFactory.newBatchExecution(cmds));
+		long endTime = System.nanoTime();
+		double difference = (endTime - startTime) / 1e6; // get ms
 		
 		
 		
@@ -205,7 +261,7 @@ public class JavaServiceQuickstartTest extends JbpmJUnitBaseTestCase {
 		// results.getValue( "Get People" );// returns the query as a QueryResults
 		// instance.
 		System.out.println(results.getValue("msg"));
-		System.out.println(results.getValue("rules"));
+		System.out.println(results.getValue("qRules"));
 //	        SignalEventCommand signalEventCommand = new SignalEventCommand();
 //
 //	        signalEventCommand.setProcessInstanceId(1001);
@@ -230,6 +286,7 @@ public class JavaServiceQuickstartTest extends JbpmJUnitBaseTestCase {
 		// assertNodeTriggered(pid.getId(), "StartProcess", "Hello", "EndProcess");
 
 		kieSession.dispose();
+		System.out.println("BPMN completed in "+difference+" ms");
 
 	}
 
@@ -322,7 +379,7 @@ public class JavaServiceQuickstartTest extends JbpmJUnitBaseTestCase {
 
 	}
 
-	@Test
+//	@Test
 	public void testTimerActivated() {
 //	    ProcessInstance pInstance = kieSession.startProcess("sample-process");
 //	    long pInstanceId = pInstance.getId();
@@ -524,7 +581,76 @@ public class JavaServiceQuickstartTest extends JbpmJUnitBaseTestCase {
 	
 	private GennyToken getToken(final String realm, String username, String name, String role)
 	{
-		return new GennyToken(realm,username,name,role);
+		GennyToken gennyToken = null;
+		// Test if local token available from background system
+		String cacheToken;
+		JsonObject cache = null;
+		try {
+			
+			String kToken = getKeycloakToken(realm);
+			if (kToken != null) {
+				Map<String,Object> adecodedTokenMap = RulesLoader.getDecodedTokenMap(kToken);
+
+				gennyToken =  new GennyToken(realm,(String)adecodedTokenMap.get("preferred_username"),name,role);
+				gennyToken.setToken(kToken);
+				gennyToken.setAdecodedTokenMap(adecodedTokenMap);
+				
+			} else {
+			
+			cacheToken = QwandaUtils.apiGet("http://alyson7.genny.life/read/"+realm+"/CACHE:SERVICE_TOKEN", "DUMMY");
+			cacheToken = cacheToken.replaceAll("\\\\\"", "");
+			cache = new JsonObject(cacheToken);
+			if ("ok".equals(cache.getString("status"))) {
+				String token = cache.getString("value");
+				Map<String,Object> adecodedTokenMap = RulesLoader.getDecodedTokenMap(token);
+				gennyToken =  new GennyToken(realm,(String)adecodedTokenMap.get("preferred_username"),name,role);
+				gennyToken.setToken(token);
+				gennyToken.setAdecodedTokenMap(adecodedTokenMap);
+			} else {
+				gennyToken =  new GennyToken(realm,username,name,role);
+				VertxUtils.writeCachedJson(realm,"CACHE:SERVICE_TOKEN",gennyToken.getToken());
+			}
+			}
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			gennyToken =  new GennyToken(realm,username,name,role);
+			VertxUtils.writeCachedJson(realm,"CACHE:SERVICE_TOKEN",gennyToken.getToken());
+		}
+	
+
+	
+		
+		return gennyToken;
+	}
+	
+	private String getKeycloakToken(String realm)
+	{
+		String apiUrl = "http://alyson7.genny.life/api/events/init?url=http://"+realm+".genny.life";
+		System.out.println("Fetching setup info from "+apiUrl);
+		try {
+			String keycloakJson = QwandaUtils.apiGet(apiUrl, "DUMMY");
+			JsonObject json = new JsonObject(keycloakJson);
+			String authServer = json.getString("auth-server-url");
+			authServer = StringUtils.removeEnd(authServer, "/auth");
+			JsonObject credentials = json.getJsonObject("credentials");
+			String secret = credentials.getString("secret");
+			String username = System.getenv("USERNAME");
+			String password = System.getenv("PASSWORD");
+			String token = KeycloakUtils.getAccessToken(authServer, realm, realm, secret, username, password);
+			System.out.println(keycloakJson);
+			return token;
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	//	KeycloakUtils.getAccessToken(keycloakUrl, realm, clientId, secret, username, password);
+		return "DUMMY";
 	}
 
 }
