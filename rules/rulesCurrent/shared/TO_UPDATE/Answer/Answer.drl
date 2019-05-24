@@ -54,7 +54,7 @@ rule "Answer"
 				answersToSave.addAll(rules.processAnswer($m));
 			}
 		}
-		
+
 		/* If the target code of an answer is "Search", then we don't want to persist it */
 		/* All other types of answers are persisted */
 		if(answers != null && answers.length > 0) {
