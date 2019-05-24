@@ -105,7 +105,7 @@ public class JavaServiceQuickstartTest extends JbpmJUnitBaseTestCase {
 	protected static Set<String> realms;
 
 	
-	@Test(timeout = 60000)
+	//@Test(timeout = 60000)
 	public void testPersistentProcess() {
 		System.out.println("Persistent Timer Test");
 		KieSession kieSession = createKSession("rulesCurrent/shared/00_Startup/TimerStart2.bpmn");

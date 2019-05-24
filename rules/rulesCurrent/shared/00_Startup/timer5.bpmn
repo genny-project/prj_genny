@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
 <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.4.3.Final-v20180418-1358-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
-  <bpmn2:process id="rulescurrent.shared.00_Startup.timer6" name="Hello jBPM World" isExecutable="true" processType="Private">
+  <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false" structureRef="java.util.Date"/>
+  <bpmn2:process id="timer5" name="Hello jBPM World" isExecutable="true" processType="Private">
+    <bpmn2:extensionElements>
+      <drools:import name="java.util.Date"/>
+    </bpmn2:extensionElements>
     <bpmn2:startEvent id="startEventId">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -10,7 +14,7 @@
       </bpmn2:extensionElements>
       <bpmn2:outgoing>startEvent-scriptTask</bpmn2:outgoing>
       <bpmn2:timerEventDefinition id="TimerEventDefinition_1">
-        <bpmn2:timeCycle xsi:type="bpmn2:tFormalExpression" id="FormalExpression_1" language="http://www.java.com/java">0s###1s</bpmn2:timeCycle>
+        <bpmn2:timeCycle xsi:type="bpmn2:tFormalExpression" id="FormalExpression_1" language="http://www.java.com/java">0s###2s</bpmn2:timeCycle>
       </bpmn2:timerEventDefinition>
     </bpmn2:startEvent>
     <bpmn2:scriptTask id="scriptTaskId" name="Hello">
@@ -21,7 +25,7 @@
       </bpmn2:extensionElements>
       <bpmn2:incoming>startEvent-scriptTask</bpmn2:incoming>
       <bpmn2:outgoing>scriptTask-endEvent</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;Hello jBPM World2!!!&quot;);</bpmn2:script>
+      <bpmn2:script>System.out.println(&quot;Hello jBPM World2!!!&quot;+(new Date()));</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:endEvent id="endEventId">
       <bpmn2:extensionElements>
@@ -36,7 +40,7 @@
     <bpmn2:sequenceFlow id="scriptTask-endEvent" sourceRef="scriptTaskId" targetRef="endEventId"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="rulescurrent.shared.00_Startup.timer6">
+    <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="timer5">
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_1" bpmnElement="scriptTaskId">
         <dc:Bounds height="48.0" width="80.0" x="270.0" y="16.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1">
