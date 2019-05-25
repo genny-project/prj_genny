@@ -97,10 +97,7 @@ System.out.println(&quot;FOUND QEVENTMESSAGE&quot;);
 		kcontext.setVariable(&quot;rules&quot;, (QRules)obj);
 		System.out.println(&quot;FOUND QRULE &quot;);
 		
-	}  else if (obj instanceof EventBusInterface){
-		kcontext.setVariable(&quot;eb&quot;, (EventBusInterface)obj);
-		System.out.println(&quot;FOUND EVENTBUS&quot;);
-	}
+	}  
     });
 
 QRules rs = ((QRules)kcontext.getVariable(&quot;rules&quot;));
@@ -145,6 +142,7 @@ if (rules3 != null) {
 life.genny.rules.QRules rules3 = (QRules) kcontext.getVariable(&quot;rules&quot;);
 
      	life.genny.qwanda.message.QDataBaseEntityMessage rolesMsg = VertxUtils.getObject(rules3.realm(), &quot;ROLES&quot;, rules3.realm(), QDataBaseEntityMessage.class);
+	rules3.loadUserRole();
 
         if(rolesMsg != null) {
        	   rules3.println(&quot;Sending &quot;+rolesMsg.getItems().length +&quot; Roles  &quot;);
