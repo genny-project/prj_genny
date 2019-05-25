@@ -11,22 +11,25 @@ rule "Pre Init Btn Click"
     then
       rules.setDrools(drools);
       rules.header();
-      
+
       rules.setState("LOOP_PREINIT_BUTTON");
       rules.println("RULE INIT BTN_CLICK: " + m);
 
-      String code = m.getData().getCode(); 
-      String parentCode = m.getData().getParentCode(); 
+      String code = m.getData().getCode();
+      String parentCode = m.getData().getParentCode();
       String rootCode = m.getData().getRootCode();
+      String targetCode = m.getData().getTargetCode();
 
       rules.println("code         ::   " + code);
       rules.println("parentCode   ::   " + parentCode);
       rules.println("rootCode     ::   " + rootCode);
-      
+      rules.println("targetCode     ::   " + targetCode);
+
       rules.println("========= STATES ===========");
 
       rules.println("rootCode     ::   " + "ROOT_" + rootCode);
       rules.println("parentCode   ::   " + "PARENT_" + parentCode);
+      rules.println("targetCode   ::   " + "TARGET_" + targetCode);
       rules.println("code         ::   " + code);
 
 
@@ -44,7 +47,12 @@ rule "Pre Init Btn Click"
         rules.setState("ROOT_" + rootCode);
         rules.set("rootCode", rootCode);
       }
-        
+
+      if(targetCode != null) {
+        rules.setState("ROOT_" + targetCode);
+        rules.set("targetCode", targetCode);
+      }
+
       rules.setState("STARTED");
       rules.setState("EVENT_BTN_CLICK");
       rules.footer();
