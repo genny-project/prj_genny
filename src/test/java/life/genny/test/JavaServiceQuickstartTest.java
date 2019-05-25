@@ -110,7 +110,7 @@ public class JavaServiceQuickstartTest extends JbpmJUnitBaseTestCase {
 	@Test(timeout = 60000)
 	public void testPersistentProcess() {
 		System.out.println("Persistent Timer Test");
-		KieSession kieSession = createKSession("rulesCurrent/shared/00_Startup/TimerStart2.bpmn");
+		KieSession kieSession = createKSession("rulesCurrent/shared/_BPMN_WORKFLOWS/TimerStart2.bpmn");
 		long startTime = System.nanoTime();
 	
 		  ProcessInstance pInstance = kieSession.startProcess("DelayTimerEventProcess");
@@ -195,7 +195,7 @@ public class JavaServiceQuickstartTest extends JbpmJUnitBaseTestCase {
 //	@Test(timeout = 30000)
 	public void testProcess() {
 
-		KieSession kieSession = createKSession("rulesCurrent/shared/00_Startup/auth_init.bpmn");
+		KieSession kieSession = createKSession("rulesCurrent/shared/_BPMN_WORKFLOWS/auth_init.bpmn");
 //		KieSession kieSession = setupSession("/rulesCurrent/shared/00_Startup",true);
 
 		String bridgeUrl = GennySettings.bridgeServiceUrl;
@@ -331,7 +331,7 @@ public class JavaServiceQuickstartTest extends JbpmJUnitBaseTestCase {
 	// @Test(timeout = 30000)
 	public void testTimerProcess() {
 
-		KieSession kieSession = createKSession("rulesCurrent/shared/00_Startup/process_2.bpmn");
+		KieSession kieSession = createKSession("rulesCurrent/shared/_BPMN_WORKFLOWS/process_2.bpmn");
 		// KieSession kieSession =
 		// setupSession("/rulesCurrent/shared/00_Startup/process_2.bpmn",true);
 

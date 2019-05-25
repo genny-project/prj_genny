@@ -76,7 +76,7 @@ public class PersistentTests  extends JbpmJUnitBaseTestCase {
 	    public void test() {
 	        PersistentTests.LOG.debug("jBPM unit test sample");
 
-	        final RuntimeManager runtimeManager = createRuntimeManager("rulescurrent/shared/00_Startup/sample.bpmn");
+	        final RuntimeManager runtimeManager = createRuntimeManager("rulescurrent/shared/_BPMN_WORKFLOWS/sample.bpmn");
 	        final RuntimeEngine runtimeEngine = getRuntimeEngine(null);
 	        final KieSession kieSession = runtimeEngine.getKieSession();
 
@@ -93,7 +93,7 @@ public class PersistentTests  extends JbpmJUnitBaseTestCase {
 //	    public void timerTest() {
 //	        PersistentTests.LOG.debug("********************* jBPM unit test Timer Test ************************");
 //
-//	        final RuntimeManager runtimeManager = createRuntimeManager("rulescurrent/shared/00_Startup/timer5.bpmn");
+//	        final RuntimeManager runtimeManager = createRuntimeManager("rulescurrent/shared/_BPMN_WORKFLOWS/timer5.bpmn");
 //	        final RuntimeEngine runtimeEngine = getRuntimeEngine(null);
 //	        final KieSession kieSession = runtimeEngine.getKieSession();
 //
