@@ -89,30 +89,32 @@ public class PersistentTests  extends JbpmJUnitBaseTestCase {
 	        runtimeManager.close();
 	    }
 	   
-	   @Test
-	    public void timerTest() {
-	        PersistentTests.LOG.debug("jBPM unit test Timer Test");
+//	   @Test
+//	    public void timerTest() {
+//	        PersistentTests.LOG.debug("********************* jBPM unit test Timer Test ************************");
+//
+//	        final RuntimeManager runtimeManager = createRuntimeManager("rulescurrent/shared/00_Startup/timer5.bpmn");
+//	        final RuntimeEngine runtimeEngine = getRuntimeEngine(null);
+//	        final KieSession kieSession = runtimeEngine.getKieSession();
+//
+//	        final ProcessInstance processInstance = kieSession.startProcess("timer5");
+//
+//	        assertProcessInstanceNotActive(processInstance.getId(), kieSession);
+//	        
+//            int sleep = 20000;
+//            LOG.debug("Sleeping {} seconds", sleep / 1000);
+//            try {
+//				Thread.sleep(sleep);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//
+//	    //    assertNodeTriggered(processInstance.getId(), "Hello");
+//
+//	        runtimeManager.disposeRuntimeEngine(runtimeEngine);
+//	        runtimeManager.close();
+//	    }
+//	   
 
-	        final RuntimeManager runtimeManager = createRuntimeManager("rulescurrent/shared/00_Startup/timer5.bpmn");
-	        final RuntimeEngine runtimeEngine = getRuntimeEngine(null);
-	        final KieSession kieSession = runtimeEngine.getKieSession();
-
-	        final ProcessInstance processInstance = kieSession.startProcess("timer5");
-
-	        assertProcessInstanceNotActive(processInstance.getId(), kieSession);
-	        
-            int sleep = 20000;
-            LOG.debug("Sleeping {} seconds", sleep / 1000);
-            try {
-				Thread.sleep(sleep);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-	    //    assertNodeTriggered(processInstance.getId(), "Hello");
-
-	        runtimeManager.disposeRuntimeEngine(runtimeEngine);
-	        runtimeManager.close();
-	    }
 }

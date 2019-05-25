@@ -53,6 +53,8 @@ import org.kie.api.runtime.ExecutionResults;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.KieSessionConfiguration;
 import org.kie.api.runtime.conf.TimedRuleExecutionOption;
+import org.kie.api.runtime.manager.RuntimeEngine;
+import org.kie.api.runtime.manager.RuntimeManager;
 import org.kie.api.runtime.process.NodeInstance;
 import org.kie.api.runtime.process.ProcessInstance;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
@@ -104,8 +106,8 @@ public class JavaServiceQuickstartTest extends JbpmJUnitBaseTestCase {
 	protected static String realm = GennySettings.mainrealm;
 	protected static Set<String> realms;
 
-	
-	//@Test(timeout = 60000)
+
+	@Test(timeout = 60000)
 	public void testPersistentProcess() {
 		System.out.println("Persistent Timer Test");
 		KieSession kieSession = createKSession("rulesCurrent/shared/00_Startup/TimerStart2.bpmn");
@@ -155,22 +157,22 @@ public class JavaServiceQuickstartTest extends JbpmJUnitBaseTestCase {
 	@BeforeClass
 	public static void init() throws FileNotFoundException, SQLException {
 		System.out.println("Setting up EntityManagerFactory");
-		try {
-			emf = Persistence.createEntityManagerFactory("h2-pu");
-			env = EnvironmentFactory.newEnvironment(); // KnowledgeBaseFactory.newEnvironment();
-			env.set(EnvironmentName.ENTITY_MANAGER_FACTORY, emf);
-			// env.set(EnvironmentName.TRANSACTION_MANAGER,
-			// TransactionManagerServices.getTransactionManager());
-			env.set(EnvironmentName.GLOBALS, new MapGlobalResolver());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if (emf == null) {
-			log.error("EMF is null");
-		} else {
-			System.out.println("Setting up EntityManager");
-			em = emf.createEntityManager();
-		}
+//		try {
+//			emf = Persistence.createEntityManagerFactory("h2-pu");
+//			env = EnvironmentFactory.newEnvironment(); // KnowledgeBaseFactory.newEnvironment();
+//			env.set(EnvironmentName.ENTITY_MANAGER_FACTORY, emf);
+//			// env.set(EnvironmentName.TRANSACTION_MANAGER,
+//			// TransactionManagerServices.getTransactionManager());
+//			env.set(EnvironmentName.GLOBALS, new MapGlobalResolver());
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		if (emf == null) {
+//			log.error("EMF is null");
+//		} else {
+//			System.out.println("Setting up EntityManager");
+//			em = emf.createEntityManager();
+//		}
 
 		// Set up realm
 		realms = new HashSet<String>();
@@ -187,7 +189,7 @@ public class JavaServiceQuickstartTest extends JbpmJUnitBaseTestCase {
 	public JavaServiceQuickstartTest() {
 		// configure this tests to not use persistence in this case
 
-		// super(false);
+		 super(true,true);
 	}
 
 //	@Test(timeout = 30000)
