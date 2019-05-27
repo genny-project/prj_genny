@@ -142,7 +142,7 @@ if (rules3 != null) {
 life.genny.rules.QRules rules3 = (QRules) kcontext.getVariable(&quot;rules&quot;);
 
      	life.genny.qwanda.message.QDataBaseEntityMessage rolesMsg = VertxUtils.getObject(rules3.realm(), &quot;ROLES&quot;, rules3.realm(), QDataBaseEntityMessage.class);
-	rules3.loadUserRole();
+	//rules3.loadUserRole();
 
         if(rolesMsg != null) {
        	   rules3.println(&quot;Sending &quot;+rolesMsg.getItems().length +&quot; Roles  &quot;);
@@ -425,7 +425,7 @@ rules3.sendTreeData();</bpmn2:script>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_12" bpmnElement="ScriptTask_12" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="606.0" y="580.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_14">
           <dc:Bounds height="11.0" width="64.0" x="629.0" y="599.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -501,13 +501,13 @@ rules3.sendTreeData();</bpmn2:script>
         <di:waypoint xsi:type="dc:Point" x="661.0" y="545.0"/>
         <di:waypoint xsi:type="dc:Point" x="661.0" y="562.0"/>
         <di:waypoint xsi:type="dc:Point" x="661.0" y="580.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_20"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_8" bpmnElement="SequenceFlow_8" sourceElement="BPMNShape_ScriptTask_12" targetElement="BPMNShape_2">
         <di:waypoint xsi:type="dc:Point" x="661.0" y="630.0"/>
         <di:waypoint xsi:type="dc:Point" x="661.0" y="643.0"/>
         <di:waypoint xsi:type="dc:Point" x="661.0" y="656.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_21"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
