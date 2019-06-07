@@ -21,7 +21,7 @@ import javax.persistence.Persistence;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.logging.log4j.Logger;
+
 import org.drools.core.base.MapGlobalResolver;
 import org.drools.core.command.runtime.process.SignalEventCommand;
 import org.drools.core.command.runtime.process.StartProcessCommand;
@@ -61,7 +61,10 @@ import org.kie.api.runtime.process.WorkflowProcessInstance;
 import org.kie.internal.command.CommandFactory;
 import org.kie.internal.persistence.jpa.JPAKnowledgeService;
 import org.kie.internal.runtime.StatefulKnowledgeSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import ch.qos.logback.classic.Level;
 import io.vavr.Tuple2;
 import io.vavr.Tuple3;
 import io.vertx.core.json.JsonObject;
@@ -91,109 +94,32 @@ import org.kie.api.runtime.KieSession;
 
 import static org.junit.Assert.*;
 
-import org.slf4j.LoggerFactory;
 
 public class JavaServiceQuickstartTest extends JbpmJUnitBaseTestCase {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager
-			.getLogger(MethodHandles.lookup().lookupClass().getCanonicalName());
+//	private static final Logger log = org.apache.logging.log4j.LogManager
+//			.getLogger(MethodHandles.lookup().lookupClass().getCanonicalName());
+	
+	private static final Logger log
+    = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getCanonicalName());
+//	static ch.qos.logback.classic.Logger logger = 
+//			  (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getCanonicalName());
 
-	protected final org.slf4j.Logger logger = LoggerFactory.getLogger(getClass());
+
+//	protected final org.slf4j.Logger logger = LoggerFactory.getLogger(getClass());
 
 	protected static EntityManagerFactory emf;
 	protected static EntityManager em;
 
 	protected static String realm = GennySettings.mainrealm;
 	protected static Set<String> realms;
-
-
-	@Test(timeout = 60000)
-	public void testPersistentProcess() {
-		System.out.println("Persistent Timer Test");
-		KieSession kieSession = createKSession("rulesCurrent/shared/_BPMN_WORKFLOWS/TimerStart2.bpmn");
-		long startTime = System.nanoTime();
 	
-		  ProcessInstance pInstance = kieSession.startProcess("DelayTimerEventProcess");
-		    long pInstanceId = pInstance.getId();
+	protected static EventBusInterface eventBusMock;
+	protected static GennyCacheInterface vertxCache;
 
-		    PseudoClockScheduler sessionClock = kieSession.getSessionClock();
-		    // Only advancing time by 10 seconds, so process should still be waiting.
-		//    sessionClock.advanceTime(20, TimeUnit.SECONDS);
-		    
-            int sleep = 20000;
-            logger.debug("Sleeping {} seconds", sleep / 1000);
-            try {
-				Thread.sleep(sleep);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 
-		List<Command<?>> cmds = new ArrayList<Command<?>>();
-//		
-//		GennyToken token = getToken(realm, "user1","Barry Allan", "hero");
-//		QRules qRules = getQRules(token); // defaults to user anyway
-//	//	System.out.println(qRules.getToken());
-//		cmds.add(CommandFactory.newInsert(qRules,"qRules"));
-//		
-//		EventBusInterface eventBusMock = new EventBusMock();
-//		GennyCacheInterface vertxCache = new MockCache();
-//		VertxUtils.init(eventBusMock, vertxCache);
-//		
-//		// Set up Cache
-//
-//		setUpCache(GennySettings.mainrealm,token);
-
-		
-	//	ExecutionResults results = kieSession.execute(CommandFactory.newBatchExecution(cmds));
-		long endTime = System.nanoTime();
-		double difference = (endTime - startTime) / 1e6; // get ms		
-
-		kieSession.dispose();
-		System.out.println("Persistent BPMN completed in "+difference+" ms");
-
-	}
-
-	@BeforeClass
-	public static void init() throws FileNotFoundException, SQLException {
-		System.out.println("Setting up EntityManagerFactory");
-//		try {
-//			emf = Persistence.createEntityManagerFactory("h2-pu");
-//			env = EnvironmentFactory.newEnvironment(); // KnowledgeBaseFactory.newEnvironment();
-//			env.set(EnvironmentName.ENTITY_MANAGER_FACTORY, emf);
-//			// env.set(EnvironmentName.TRANSACTION_MANAGER,
-//			// TransactionManagerServices.getTransactionManager());
-//			env.set(EnvironmentName.GLOBALS, new MapGlobalResolver());
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		if (emf == null) {
-//			log.error("EMF is null");
-//		} else {
-//			System.out.println("Setting up EntityManager");
-//			em = emf.createEntityManager();
-//		}
-
-		// Set up realm
-		realms = new HashSet<String>();
-		realms.add(realm);
-		realms.stream().forEach(System.out::println);
-		realms.remove("genny");
-
-		// Enable the PseudoClock using the following system property.
-		System.setProperty("drools.clockType", "pseudo");
-	}
-
-	static Environment env; // drools persistence
-
-	public JavaServiceQuickstartTest() {
-		// configure this tests to not use persistence in this case
-
-		 super(true,true);
-	}
-
-//	@Test(timeout = 30000)
-	public void testProcess() {
+	@Test //(timeout = 30000)
+	public void testAuthInit() {
 
 		KieSession kieSession = createKSession("rulesCurrent/shared/_BPMN_WORKFLOWS/auth_init.bpmn");
 //		KieSession kieSession = setupSession("/rulesCurrent/shared/00_Startup",true);
@@ -212,9 +138,6 @@ public class JavaServiceQuickstartTest extends JbpmJUnitBaseTestCase {
 		cmds.add(CommandFactory.newInsert(msg, "msg"));
 		cmds.add(CommandFactory.newInsert("GADA", "name"));
 		
-		EventBusInterface eventBusMock = new EventBusMock();
-		GennyCacheInterface vertxCache = new MockCache();
-		VertxUtils.init(eventBusMock, vertxCache);
 		
 		// Set up Cache
 
@@ -291,6 +214,101 @@ public class JavaServiceQuickstartTest extends JbpmJUnitBaseTestCase {
 		System.out.println("BPMN completed in "+difference+" ms");
 
 	}
+
+//	@Test(timeout = 60000)
+	public void testPersistentProcess() {
+		System.out.println("Persistent Timer Test");
+		KieSession kieSession = createKSession("rulesCurrent/shared/_BPMN_WORKFLOWS/TimerStart2.bpmn");
+		long startTime = System.nanoTime();
+	
+		  ProcessInstance pInstance = kieSession.startProcess("DelayTimerEventProcess");
+		    long pInstanceId = pInstance.getId();
+
+		    PseudoClockScheduler sessionClock = kieSession.getSessionClock();
+		    // Only advancing time by 10 seconds, so process should still be waiting.
+		//    sessionClock.advanceTime(20, TimeUnit.SECONDS);
+		    
+            int sleep = 20000;
+            log.debug("Sleeping {} seconds", sleep / 1000);
+            try {
+				Thread.sleep(sleep);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		List<Command<?>> cmds = new ArrayList<Command<?>>();
+//		
+//		GennyToken token = getToken(realm, "user1","Barry Allan", "hero");
+//		QRules qRules = getQRules(token); // defaults to user anyway
+//	//	System.out.println(qRules.getToken());
+//		cmds.add(CommandFactory.newInsert(qRules,"qRules"));
+//		
+//		EventBusInterface eventBusMock = new EventBusMock();
+//		GennyCacheInterface vertxCache = new MockCache();
+//		VertxUtils.init(eventBusMock, vertxCache);
+//		
+//		// Set up Cache
+//
+//		setUpCache(GennySettings.mainrealm,token);
+
+		
+	//	ExecutionResults results = kieSession.execute(CommandFactory.newBatchExecution(cmds));
+		long endTime = System.nanoTime();
+		double difference = (endTime - startTime) / 1e6; // get ms		
+
+		kieSession.dispose();
+		System.out.println("Persistent BPMN completed in "+difference+" ms");
+
+	}
+
+	@BeforeClass
+	public static void init() throws FileNotFoundException, SQLException {
+				 
+
+				
+		log.info("Setting up EntityManagerFactory");
+//		try {
+//			emf = Persistence.createEntityManagerFactory("h2-pu");
+//			env = EnvironmentFactory.newEnvironment(); // KnowledgeBaseFactory.newEnvironment();
+//			env.set(EnvironmentName.ENTITY_MANAGER_FACTORY, emf);
+//			// env.set(EnvironmentName.TRANSACTION_MANAGER,
+//			// TransactionManagerServices.getTransactionManager());
+//			env.set(EnvironmentName.GLOBALS, new MapGlobalResolver());
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		if (emf == null) {
+//			log.error("EMF is null");
+//		} else {
+//			System.out.println("Setting up EntityManager");
+//			em = emf.createEntityManager();
+//		}
+
+		// Set up realm
+		realms = new HashSet<String>();
+		realms.add(realm);
+		realms.stream().forEach(System.out::println);
+		realms.remove("genny");
+
+		// Enable the PseudoClock using the following system property.
+		System.setProperty("drools.clockType", "pseudo");
+		
+		eventBusMock = new EventBusMock();
+		vertxCache = new VertxCache();  // MockCache
+		VertxUtils.init(eventBusMock, vertxCache);
+
+	}
+
+	static Environment env; // drools persistence
+
+	public JavaServiceQuickstartTest() {
+		// configure this tests to not use persistence in this case
+
+		 super(true,true);
+	}
+
+
 
 	// @Test
 	public void basicTest() {
@@ -530,9 +548,6 @@ public class JavaServiceQuickstartTest extends JbpmJUnitBaseTestCase {
 		globals = RulesLoader.getStandardGlobals();
 
 
-		EventBusInterface eventBusMock = new EventBusMock();
-		GennyCacheInterface vertxCache = new MockCache();
-		VertxUtils.init(eventBusMock, vertxCache);
 
 		QRules qRules = new QRules(eventBusMock, token.getToken(), token.getAdecodedTokenMap());
 		qRules.set("realm", realm);
@@ -640,8 +655,23 @@ public class JavaServiceQuickstartTest extends JbpmJUnitBaseTestCase {
 			String secret = credentials.getString("secret");
 			String username = System.getenv("USERNAME");
 			String password = System.getenv("PASSWORD");
+
 			String token = KeycloakUtils.getAccessToken(authServer, realm, realm, secret, username, password);
+
+			// check if user token already exists
+			String userCode = "PER_"+QwandaUtils.getNormalisedUsername(username);
+			JsonObject cacheJson = VertxUtils.readCachedJson(realm, "TOKEN:"+userCode,token);
+			String status = cacheJson.getString("status");
+				
+			if ("ok".equals(status)) {
+				String userToken = cacheJson.getString("value");
+				return userToken;
+			}
+			
 			System.out.println(keycloakJson);
+			
+			
+			
 			return token;
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
