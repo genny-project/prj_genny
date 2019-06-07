@@ -1,0 +1,65 @@
+package life.genny.rules;
+
+import life.genny.qwanda.Ask;
+import life.genny.qwanda.Link;
+import life.genny.rules.QRules;
+import life.genny.qwanda.Answer;
+import java.util.HashSet;
+import life.genny.qwanda.ContextList;
+import life.genny.qwanda.Question;
+import life.genny.qwanda.validation.Validation;
+import life.genny.qwanda.validation.ValidationList;
+import life.genny.qwanda.ContextType;
+import life.genny.qwanda.Context;
+
+rule "Sort Table"
+    when
+        rules : QRules( isState("EVENT_BTN_CLICK")  &&
+			            isState("ROOT_QUE_TABLE_HEADER_GRP") &&
+                        getAsString("targetCode").startsWith("SBE_") &&
+                        getAsString("code").startsWith("QUE_SORT_") &&
+			            !isState("LOOP_SORT_TABLE") )
+     then
+      	rules.header();
+        List<String> list = new ArrayList<String>();
+
+		rules.setState("LOOP_SORT_TABLE");
+
+		String searchCode = rules.getAsString("targetCode");
+        rules.println("targetCode" + searchCode);
+        if(searchCode == null){
+            rules.println("searchCode is null");
+            return;
+        }
+
+        String code = rules.getAsString("code");
+        rules.println("code" + code);
+        if(code == null){
+            rules.println("code is null");
+            return;
+        }
+
+        String sortCode = code.split("QUE_SORT_")[1];
+        rules.println("sortCode" + sortCode);
+
+        /* Sort only for attribute columns not for actions column */
+        if(!sortCode.startsWith("QUE_")){
+
+            SearchEntity searchBe = rules.baseEntity.getSearchEntityByCode(searchCode);
+            rules.println("search" + searchBe.getCode());
+
+            searchBe.addSort(sortCode, "Sort", SearchEntity.Sort.ASC);
+            rules.set("searchBe", searchBe);
+
+            /* create a bulk msg */
+            QBulkMessage bulkMsg = new QBulkMessage();
+            rules.set("bulkMsg", bulkMsg);
+
+            rules.setState("GENERATE_TABLE_CONTENT");
+            rules.setState("LOOP_GENERATE_TABLE_FOOTER");
+            rules.setState("SEND_SEARCH_RESULTS");
+        }
+
+        rules.footer();
+end
+

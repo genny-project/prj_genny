@@ -24,13 +24,6 @@ rule "Pre Init Btn Click"
       rules.println("parentCode   ::   " + parentCode);
       rules.println("rootCode     ::   " + rootCode);
       rules.println("targetCode     ::   " + targetCode);
-      rules.println("targetCode     ::   " + targetCode);
-      rules.println("targetCode     ::   " + targetCode);
-      rules.println("targetCode     ::   " + targetCode);
-      rules.println("targetCode     ::   " + targetCode);
-      rules.println("targetCode     ::   " + targetCode);
-      rules.println("targetCode     ::   " + targetCode);
-      rules.println("helloooooooooooo");
 
       rules.println("========= STATES ===========");
 

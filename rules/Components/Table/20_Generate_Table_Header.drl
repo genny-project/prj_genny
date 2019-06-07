@@ -1,0 +1,93 @@
+package life.genny.rules;
+
+import life.genny.qwanda.Ask;
+import life.genny.qwanda.Link;
+import java.util.HashSet;
+import life.genny.rules.QRules;
+import life.genny.utils.ContextUtils;
+import life.genny.qwanda.ContextType;
+import life.genny.qwanda.Context.VisualControlType;
+
+rule "Generate Table Header"
+	when
+		rules: QRules(  isState("GENERATE_TABLE_HEADER") &&
+						!isState("LOOP_GENERATE_TABLE_HEADER"))
+	 then
+	 	rules.header();
+		rules.setState("LOOP_GENERATE_TABLE_HEADER");
+
+        /* we get the searchEntity object */
+        SearchEntity searchBe = rules.getAsSearchEntity("searchBe");
+        if(searchBe == null){
+			rules.println("searchBe not in the state");
+			return;
+		}
+
+        /* we get the bulk message */
+        QBulkMessage bulkMsg = (QBulkMessage) rules.get("bulkMsg");
+
+        /* generate table header asks */
+        Ask ask = rules.generateTableHeaderAsks(searchBe);
+
+        /* we get the full-width theme and horizontal Theme */
+		BaseEntity fullWidthTheme = ContextUtils.getFullWidthTheme();
+		BaseEntity horizontalTheme = rules.baseEntity.getBaseEntityByCode("THM_DISPLAY_HORIZONTAL");
+		BaseEntity tableHeaderLabelTheme = ContextUtils.getTableHeaderLabelTheme();
+		BaseEntity tableCellUnInheritableTheme = rules.baseEntity.getBaseEntityByCode("THM_TABLE_CELL_UNINHERITABLE");
+		BaseEntity tableInputDefaultTheme = rules.baseEntity.getBaseEntityByCode("THM_TABLE_INPUT_DEFAULT");
+
+        QDataBaseEntityMessage tableCellUnInheritableThemeMsg = new QDataBaseEntityMessage(tableCellUnInheritableTheme);
+		bulkMsg.add(tableCellUnInheritableThemeMsg);
+
+        QDataBaseEntityMessage tableInputDefaultThemeMsg = new QDataBaseEntityMessage(tableInputDefaultTheme);
+		bulkMsg.add(tableInputDefaultThemeMsg);
+
+        QDataBaseEntityMessage fullWidthThemeMsg = new QDataBaseEntityMessage(fullWidthTheme);
+		bulkMsg.add(fullWidthThemeMsg);
+
+        QDataBaseEntityMessage tableHeaderLabelThemeMsg = new QDataBaseEntityMessage(tableHeaderLabelTheme);
+		bulkMsg.add(tableHeaderLabelThemeMsg);
+
+        List<BaseEntity> tableHeaderThemes = new ArrayList<>();
+		tableHeaderThemes.add(fullWidthTheme);
+		tableHeaderThemes.add(horizontalTheme);
+
+        /* apply themes to table-header */
+        rules.createVirtualContext(ask, tableHeaderThemes, ContextType.THEME);
+
+        /* set the contexts to the table-header ask */
+		rules.createVirtualContext(ask, tableHeaderLabelTheme, ContextType.THEME, VisualControlType.LABEL);
+		rules.createVirtualContext(ask, tableInputDefaultTheme, ContextType.THEME, VisualControlType.INPUT);
+
+        Ask[] childAsksArr = ask.getChildAsks();
+        List<Ask> childAsksList = new ArrayList<Ask>(Arrays.asList(childAsksArr));
+
+        for(Ask childAsk : childAsksList ){
+		    rules.createVirtualContext(childAsk, tableCellUnInheritableTheme, ContextType.THEME);
+        }
+
+        /* Sending Ask Message */
+        Ask[] asksArr = { ask };
+        QDataAskMessage askMsg = new QDataAskMessage(asksArr);
+        askMsg.setReplace(true);
+        rules.publishCmd(askMsg);
+
+        /* we add it to the bulk */
+        /* bulkMsg.add(askMsg); */
+
+        /* Sending Table Header Message */
+        BaseEntity frameTableHeaderBe = rules.baseEntity.getBaseEntityByCode("FRM_TABLE_HEADER");
+        frameTableHeaderBe = rules.createVirtualLink(frameTableHeaderBe.getCode(), ask, "LNK_ASK", "NORTH");
+
+        QDataBaseEntityMessage frameTableHeaderMsg = new QDataBaseEntityMessage(frameTableHeaderBe);
+        frameTableHeaderMsg.setReplace(true);
+
+        /* we add it to the bulk */
+        bulkMsg.add(frameTableHeaderMsg);
+        rules.set("bulkMsg", bulkMsg);
+
+		rules.setState("GENERATE_TABLE_CONTENT");
+
+        rules.setState("GENERATED_TABLE_HEADER");
+        rules.footer();
+    end
