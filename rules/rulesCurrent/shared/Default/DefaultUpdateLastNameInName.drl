@@ -6,17 +6,17 @@ import life.genny.qwanda.Answer;
 rule "Default update full name : LastName"
     when
         answer : Answer( attributeCode == "PRI_LASTNAME")
-        rules : QRules( isState("EVENT_ANSWER")  && 
+        rules : QRules( isState("EVENT_ANSWER")  &&
                         !isState("LOOP_DEFAULT_COMPANY_LEGAL_NAME") )
-     then    
+     then
       	rules.header();
 		rules.setState("LOOP_DEFAULT_COMPANY_LEGAL_NAME");
-		
+
 		String targetBeCode = rules.getAsString("targetCode");
 
         /* Getting new value from answer */
         String value = answer.getValue();
-		
+
 		if(targetBeCode != null ){
 
             BaseEntity baseEntity = rules.baseEntity.getBaseEntityByCode(targetBeCode);
@@ -31,7 +31,6 @@ rule "Default update full name : LastName"
                 rules.publishBaseEntityByCode(targetBeCode);
             }
 		}
-			
    	    rules.footer();
-  
+
 end

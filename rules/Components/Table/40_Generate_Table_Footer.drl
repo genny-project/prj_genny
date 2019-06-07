@@ -1,0 +1,106 @@
+package life.genny.rules;
+
+import life.genny.qwanda.Ask;
+import life.genny.qwanda.Link;
+import java.util.HashSet;
+import life.genny.rules.QRules;
+import life.genny.utils.ContextUtils;
+import life.genny.qwanda.ContextType;
+import life.genny.qwanda.Context.VisualControlType;
+import life.genny.qwanda.attribute.Attribute;
+import life.genny.utils.RulesUtils;
+
+rule "Generate Table Footer"
+	when
+		rules: QRules(  isState("GENERATE_TABLE_FOOTER") &&
+						!isState("LOOP_GENERATE_TABLE_FOOTER"))
+	 then
+	 	rules.footer();
+		rules.setState("LOOP_GENERATE_TABLE_FOOTER");
+
+        /* we get the searchEntity object */
+        SearchEntity searchBe = rules.getAsSearchEntity("searchBe");
+        if(searchBe == null){
+			rules.println("searchBe not in the state");
+			return;
+		}
+
+        /* we get the bulk message */
+        QBulkMessage bulkMsg = (QBulkMessage) rules.get("bulkMsg");
+
+		/* get attributes for generating asks */
+		Attribute previousAttribute = RulesUtils.attributeMap.get("PRI_PREVIOUS_BTN");
+		Attribute nextAttribute = RulesUtils.attributeMap.get("PRI_NEXT_BTN");
+		Attribute pageSizeAttribute = RulesUtils.attributeMap.get("SCH_PAGE_SIZE");
+		Attribute questionAttribute = RulesUtils.attributeMap.get("QQQ_QUESTION_GROUP");
+
+		/* Construct a table footer Ask */
+		Question tableFooterQues = new Question("QUE_TABLE_FOOTER_GRP", "Table Footer", questionAttribute, true);
+		Ask tableFooterAsk = new Ask(tableFooterQues, rules.getUser().getCode(), searchBe.getCode(), false, 1.0, false, false, true);
+
+		/* question for previous, next, buttons and no. of items */
+		Question previousQuestion = new Question("QUE_TABLE_PREVIOUS", "Previous", previousAttribute, false);
+		Question nextQuestion = new Question("QUE_TABLE_NEXT", "Next", nextAttribute, false);
+		Question pageSizeQuestion = new Question("QUE_TABLE_PAGE_SIZE", "No. Of Items", pageSizeAttribute, false);
+
+		List<Question> questions = new ArrayList<>();
+		questions.add(previousQuestion);
+		questions.add(pageSizeQuestion);
+		questions.add(nextQuestion);
+
+		List<Ask> tableFooterChildAsks = new ArrayList<>();
+
+		Double count = 1.0;
+		for (Question question : questions) {
+			Ask footerAsk = new Ask(question, rules.getUser().getCode(), searchBe.getCode());
+			footerAsk.setWeight(count);
+			count++;
+			tableFooterChildAsks.add(footerAsk);
+		}
+
+		/* Convert ask list to Array */
+		Ask[] tableFooterChildAsksArray = tableFooterChildAsks.toArray(new Ask[0]);
+
+		/* set the child asks to Table Footer */
+		tableFooterAsk.setChildAsks(tableFooterChildAsksArray);
+
+		/* we get the full-width theme and horizontal Theme */
+		BaseEntity fullWidthTheme = ContextUtils.getFullWidthTheme();
+		BaseEntity horizontalTheme = rules.baseEntity.getBaseEntityByCode("THM_DISPLAY_HORIZONTAL");
+		BaseEntity tableHeaderLabelTheme = ContextUtils.getTableHeaderLabelTheme();
+
+		QDataBaseEntityMessage tableHeaderLabelThemeMsg = new QDataBaseEntityMessage(tableHeaderLabelTheme);
+		bulkMsg.add(tableHeaderLabelThemeMsg);
+
+
+		List<BaseEntity> tableFooterThemes = new ArrayList<>();
+		tableFooterThemes.add(fullWidthTheme);
+		tableFooterThemes.add(horizontalTheme);
+
+        /* apply themes to table-footer */
+        rules.createVirtualContext(tableFooterAsk, tableFooterThemes, ContextType.THEME);
+
+        /* apply context to table-footer */
+		rules.createVirtualContext(tableFooterAsk, tableHeaderLabelTheme, ContextType.THEME, VisualControlType.LABEL);
+
+		/* Creating AskMessage for tableFooterAsk */
+		Ask[] tableFooterAskArr = { tableFooterAsk };
+		QDataAskMessage tableFooterAskMsg = new QDataAskMessage(tableFooterAskArr);
+		rules.publishCmd(tableFooterAskMsg);
+
+		/* Get Frame Table Footer */
+        BaseEntity frameTableFooterBe = rules.baseEntity.getBaseEntityByCode("FRM_TABLE_FOOTER");
+
+		/* Link Table footer Frame and Table footer Ask */
+        frameTableFooterBe = rules.createVirtualLink(frameTableFooterBe.getCode(), tableFooterAsk, "LNK_ASK", "NORTH");
+
+		QDataBaseEntityMessage frameTableFooterMsg = new QDataBaseEntityMessage(frameTableFooterBe);
+		frameTableFooterMsg.setReplace(true);
+
+		/* add frameTableFooterMsg to bulk */
+		bulkMsg.add(frameTableFooterMsg);
+		rules.publishCmd(bulkMsg);
+
+		rules.setState("GENERATED_TABLE_FOOTER");
+		rules.footer();
+    end

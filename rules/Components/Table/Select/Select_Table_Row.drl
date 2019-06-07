@@ -1,0 +1,127 @@
+package life.genny.rules;
+
+import life.genny.qwanda.Ask;
+import life.genny.qwanda.Link;
+import life.genny.rules.QRules;
+import life.genny.qwanda.Answer;
+import java.util.HashSet;
+import life.genny.qwanda.ContextList;
+import life.genny.qwanda.Question;
+import life.genny.qwanda.validation.Validation;
+import life.genny.qwanda.validation.ValidationList;
+import life.genny.qwanda.ContextType;
+import life.genny.qwanda.Context;
+
+rule "Select Table Row"
+    when
+        rules : QRules( isState("EVENT_BTN_CLICK")  &&
+                        getAsString("parentCode").startsWith("QUE_SBE_") &&
+			            !isState("LOOP_SELECT_TABLE_ITEM") )
+     then
+      	rules.header();
+		rules.setState("LOOP_SELECT_TABLE_ITEM");
+
+        String questionCode = rules.getAsString("code");
+		String beCode = rules.getAsString("targetCode");
+        String parentCode = rules.getAsString("parentCode");
+
+        rules.println("questionCode" + questionCode);
+        rules.println("beCode" + beCode);
+        rules.println("parentCode" + parentCode);
+
+        if(beCode == null){
+            rules.println("targetCode is null");
+            return;
+        }
+
+        if(questionCode == null){
+            rules.println("questionCode is null");
+            return;
+        }
+
+        if(parentCode == null){
+            rules.println("parentCode is null");
+            return;
+        }
+
+        /* retrieve searchBeCode from questionCode */
+        String sessionSearchCode = (parentCode.split("QUE_")[1]).split("_GRP")[0];
+        rules.println("sessionSearchCode :: " + sessionSearchCode);
+
+        String searchCode = sessionSearchCode.split(rules.getAsString("session_state").toUpperCase())[0];
+        rules.println("searchCode :: " + searchCode);
+
+        SearchEntity searchBe = rules.baseEntity.getSearchEntityByCode(searchCode);
+        rules.println("search is here :: " + searchBe.getCode());
+
+        String searchString = JsonUtils.toJson(searchBe);
+		JsonObject searchJson = new JsonObject(searchString);
+
+		JsonArray arr = searchJson.getJsonArray("baseEntityAttributes");
+        Integer selectSize = 2;
+
+		for (int i = 0; i < arr.size(); i++) {
+			JsonObject obj = arr.getJsonObject(i);
+			String attributeCode = obj.getString("attributeCode");
+
+            if (attributeCode.equals("SCH_SELECT_SIZE")) {
+                selectSize = obj.getInteger("valueInteger");
+                break;
+            }
+        }
+
+        /* initialize empty list of quesCodes */
+        List<String> quesCodes = new ArrayList<String>();
+
+        try {
+			JsonObject cachedJsonObject = VertxUtils.readCachedJson(rules.realm(), parentCode, rules.getToken());
+            if (cachedJsonObject != null) {
+
+                String data = cachedJsonObject.getString("value");
+				if (data != null) {
+
+                    quesCodes = JsonUtils.fromJson(data, ArrayList.class);
+                }
+            }
+		} catch (Exception e) {}
+
+        /* DESELECT */
+        /* remove the code if it's in the list */
+        if(quesCodes.contains(questionCode)){
+            quesCodes.remove(questionCode);
+
+        /* SELECT */
+        /* add the code if it's not in the list */
+        }else{
+            if(selectSize > 1){
+                quesCodes.add(questionCode);
+            }else{
+                quesCodes.removeAll(quesCodes);
+                quesCodes.add(questionCode);
+            }
+        }
+
+        /* we cache the questionCodes */
+        VertxUtils.writeCachedJson(rules.realm(), parentCode, JsonUtils.toJson(quesCodes), rules.getToken());
+
+        BaseEntity be = rules.baseEntity.getBaseEntityByCode(beCode);
+
+        /* we get the selected item theme */
+		BaseEntity selectedItemTheme = rules.baseEntity.getBaseEntityByCode("THM_SELECTED_ITEM");
+        rules.publishBaseEntityByCode(selectedItemTheme.getCode());
+
+        /* we send out the  AskContextChange msg */
+	    List<Context> contexts = new ArrayList<>();
+        Context context = new Context(ContextType.THEME, selectedItemTheme, VisualControlType.DEFAULT);
+        contexts.add(context);
+        ContextList contextList = new ContextList(contexts);
+        QCmdMessage msg =new QCmdMessage("AskContextChange", parentCode);
+		msg.setContextList(contextList);
+        msg.setTargetCodes(quesCodes);
+
+        rules.println("AskContextChange Message   ::   " + msg);
+
+        /* we publish the  */
+        rules.publishCmd(msg);
+        rules.footer();
+end

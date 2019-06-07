@@ -1,0 +1,221 @@
+package life.genny.rules;
+
+import life.genny.qwanda.Ask;
+import life.genny.qwanda.Link;
+import java.util.HashSet;
+import life.genny.rules.QRules;
+import life.genny.utils.ContextUtils;
+import life.genny.qwanda.ContextType;
+import life.genny.qwanda.Context.VisualControlType;
+import life.genny.qwanda.attribute.Attribute;
+
+rule "Generate Table Content"
+	when
+		rules: QRules(  isState("GENERATE_TABLE_CONTENT") &&
+						!isState("LOOP_GENERATE_TABLE_CONTENT"))
+	 then
+	 	rules.header();
+		rules.setState("LOOP_GENERATE_TABLE_CONTENT");
+
+		/* we get the bulk message */
+        QBulkMessage bulkMsg = (QBulkMessage) rules.get("bulkMsg");
+
+        /* we get the searchEntity object */
+        SearchEntity searchBe = rules.getAsSearchEntity("searchBe");
+        if(searchBe == null){
+			rules.println("searchBe not in the state");
+			return;
+		}
+
+		/* we get the data from SearchEntity  */
+		List<BaseEntity> bes = rules.getSearchResultsAsList(searchBe, true);
+		rules.printList("search results   ::   ", bes);
+		if (bes != null && bes.isEmpty() == false) {
+
+			QDataBaseEntityMessage beMsg = new QDataBaseEntityMessage(bes);
+
+			/* we add it to the bulk */
+			bulkMsg.add(beMsg);
+		}
+
+
+        /* get the vertical and horizontal theme baseentity */
+		BaseEntity horizontalTheme = rules.baseEntity.getBaseEntityByCode("THM_DISPLAY_HORIZONTAL");
+
+		/* get the theme contexts */
+		BaseEntity evenColumnTheme = ContextUtils.getThemeForEvenTableContent();
+		BaseEntity oddColoumnTheme = ContextUtils.getThemeForOddTableContent();
+
+		/* getting border theme */
+		BaseEntity borderTheme = ContextUtils.getBorderThemeForTableContent();
+
+		/* getting full-width theme */
+		BaseEntity fullWidthTheme = ContextUtils.getFullWidthTheme();
+
+		/* getting table-scroll theme */
+		BaseEntity tableScrollTheme = ContextUtils.getThemeForTableScroll();
+
+		/* getting table-hover theme */
+		BaseEntity tableRowHoverTheme = rules.baseEntity.getBaseEntityByCode("THM_TABLE_ROW_HOVER");
+
+		/* getting transparent theme */
+		BaseEntity noBackgroundTheme = ContextUtils.getNoBackgroundTheme();
+
+		/* getting icon theme */
+		BaseEntity iconColorTheme = ContextUtils.getTableIconColorTheme();
+
+		/* getting table-cell theme */
+		/* BaseEntity tableCellDefaultTheme = ContextUtils.getTableCellDefaultTheme();
+		BaseEntity tableCellUnInheritableTheme = ContextUtils.getTableCellUnInheritableTheme(); */
+
+		BaseEntity tableCellDefaultTheme = rules.baseEntity.getBaseEntityByCode("THM_TABLE_CELL_DEFAULT");
+		BaseEntity tableCellUnInheritableTheme = rules.baseEntity.getBaseEntityByCode("THM_TABLE_CELL_UNINHERITABLE");
+		BaseEntity tableInputDefaultTheme = rules.baseEntity.getBaseEntityByCode("THM_TABLE_INPUT_DEFAULT");
+
+
+
+		/* Publishing BaseEntity of the theme-contexts */
+		QDataBaseEntityMessage evenColumnThemeMsg = new QDataBaseEntityMessage(evenColumnTheme);
+		QDataBaseEntityMessage oddColumnThemeMsg = new QDataBaseEntityMessage(oddColoumnTheme);
+		QDataBaseEntityMessage borderThemeMsg = new QDataBaseEntityMessage(borderTheme);
+		QDataBaseEntityMessage tableScrollThemeMsg = new QDataBaseEntityMessage(tableScrollTheme);
+		QDataBaseEntityMessage tableRowHoverThemeMsg = new QDataBaseEntityMessage(tableRowHoverTheme);
+		QDataBaseEntityMessage noBackgroundThemeMsg = new QDataBaseEntityMessage(noBackgroundTheme);
+		QDataBaseEntityMessage iconColorThemeMsg = new QDataBaseEntityMessage(iconColorTheme);
+		QDataBaseEntityMessage tableCellDefaultThemeMsg = new QDataBaseEntityMessage(tableCellDefaultTheme);
+		QDataBaseEntityMessage tableCellUnInheritableThemeMsg = new QDataBaseEntityMessage(tableCellUnInheritableTheme);
+		QDataBaseEntityMessage tableInputDefaultThemeMsg = new QDataBaseEntityMessage(tableInputDefaultTheme);
+
+		bulkMsg.add(evenColumnThemeMsg);
+		bulkMsg.add(oddColumnThemeMsg);
+		bulkMsg.add(borderThemeMsg);
+		bulkMsg.add(tableScrollThemeMsg);
+		bulkMsg.add(tableRowHoverThemeMsg);
+		bulkMsg.add(noBackgroundThemeMsg);
+		bulkMsg.add(iconColorThemeMsg);
+		bulkMsg.add(tableCellDefaultThemeMsg);
+		bulkMsg.add(tableCellUnInheritableThemeMsg);
+		bulkMsg.add(tableInputDefaultThemeMsg);
+
+		/* creating theme list for odd-column */
+		List<BaseEntity> oddColumnThemes = new ArrayList<>();
+		oddColumnThemes.add(oddColoumnTheme);
+		oddColumnThemes.add(borderTheme);
+		oddColumnThemes.add(horizontalTheme);
+		oddColumnThemes.add(fullWidthTheme);
+		//oddColumnThemes.add(noBackgroundTheme);
+
+		/* creating theme list for odd-column */
+		List<BaseEntity> evenColumnThemes = new ArrayList<>();
+		evenColumnThemes.add(oddColoumnTheme);
+		evenColumnThemes.add(borderTheme);
+		evenColumnThemes.add(horizontalTheme);
+		evenColumnThemes.add(fullWidthTheme);
+		//evenColumnThemes.add(noBackgroundTheme);
+
+		/* create contextList */
+		Context horizontalThemeContext = new Context(ContextType.THEME, horizontalTheme);
+		List<Context> horizontalThemeContextList = new ArrayList<>();
+		horizontalThemeContextList.add(horizontalThemeContext);
+		ContextList contextList = new ContextList(horizontalThemeContextList);
+
+        /* we get the frame for table-content */
+		BaseEntity frameTableContentBe = rules.baseEntity.getBaseEntityByCode("FRM_TABLE_CONTENT");
+
+		/* we generate asks from the searchEntity */
+		List<Ask> asks = rules.generateQuestions(searchBe, searchBe.getCode());
+
+		/* get the table delimiter */
+		BaseEntity tableDelimiterTheme = rules.baseEntity.getBaseEntityByCode("THM_TABLE_COLUMN_DELIMITER");
+		rules.publishBaseEntityByCode(tableDelimiterTheme.getCode());
+
+		/* get the table cell wrapper theme */
+		BaseEntity tableCellWrapperTheme = rules.baseEntity.getBaseEntityByCode("THM_TABLE_CELL_WRAPPER");
+		rules.publishBaseEntityByCode(tableCellWrapperTheme.getCode());
+
+
+		for(Ask ask : asks ){
+
+        	/* set the delimiter to each ask */
+			rules.createVirtualContext(ask, tableDelimiterTheme, ContextType.THEME, VisualControlType.DELIMITER);
+
+			/* set the table-row hover theme to each ask */
+			rules.createVirtualContext(ask, tableRowHoverTheme, ContextType.THEME, VisualControlType.DEFAULT);
+
+			/* set the table cell wrapper to each ask */
+			rules.createVirtualContext(ask, tableCellWrapperTheme, ContextType.THEME, VisualControlType.WRAPPER);
+
+			/* set the table cell theme to each ask */
+			rules.createVirtualContext(ask, tableCellDefaultTheme, ContextType.THEME, VisualControlType.WRAPPER);
+
+
+			/* adding themes to each table-row ask */
+			/* setting even theme */
+			if(ask.getWeight()%2==0) {
+				rules.createVirtualContext(ask, evenColumnThemes, ContextType.THEME);
+			}else { /* setting odd theme */
+				rules.createVirtualContext(ask, oddColumnThemes, ContextType.THEME);
+			}
+
+			/* Creating AskMessage for each baseEntity ask */
+			Ask[] beAskArr = { ask };
+			QDataAskMessage totalAskMsg = new QDataAskMessage(beAskArr);
+			rules.publishCmd(totalAskMsg);
+
+            /* we add it to the bulk */
+            /* bulkMsg.add(totalAskMsg); */
+		}
+
+		/* apply scroll theme to table-content frame */
+		frameTableContentBe = rules.createVirtualLink(frameTableContentBe, tableScrollTheme, "LNK_THEME", "NORTH", 1.0);
+		QDataBaseEntityMessage frameTableContentMsg1 = new QDataBaseEntityMessage(frameTableContentBe);
+		frameTableContentMsg1.setReplace(true);
+		rules.publishCmd(frameTableContentMsg1);
+
+		/* link all the content asks to table-content frame */
+		//frameTableContentBe = rules.createVirtualLink(frameTableContentBe.getCode(), asks, "LNK_ASK", "NORTH");
+
+		/* converting content asks list to array */
+		Ask[] asksArr = asks.stream().toArray(Ask[]::new);
+
+		/* generate top-level question-group for searchBe */
+		Attribute quesAttribute = RulesUtils.attributeMap.get("QQQ_QUESTION_GROUP");
+		Question contentQuesGrp = new Question("QUE_" + searchBe.getCode() + "_GRP", searchBe.getName() , quesAttribute, true);
+
+		/* set content asks as child of searchBe ques Grp */
+		Ask contentAskGrp = new Ask(contentQuesGrp, rules.getUser().getCode(), searchBe.getCode());
+
+		/* apply full-width theme to searchBe question-group */
+		rules.createVirtualContext(contentAskGrp, fullWidthTheme, ContextType.THEME, VisualControlType.DEFAULT);
+
+		/* apply icon-theme to searchBe question-group */
+		rules.createVirtualContext(contentAskGrp, iconColorTheme, ContextType.THEME, VisualControlType.ICON);
+
+		/* apply table-input-default-theme to searchBe question-group */
+		rules.createVirtualContext(contentAskGrp, tableInputDefaultTheme, ContextType.THEME, VisualControlType.INPUT);
+
+		contentAskGrp.setChildAsks(asksArr);
+
+		/* Creating AskMessage for contentAskGrp */
+		Ask[] contentAskGrpArr = { contentAskGrp };
+		QDataAskMessage contentAskGrpMsg = new QDataAskMessage(contentAskGrpArr);
+		rules.publishCmd(contentAskGrpMsg);
+
+		/* link all the content asks to table-content frame */
+		frameTableContentBe = rules.createVirtualLink(frameTableContentBe.getCode(), contentAskGrp, "LNK_ASK", "NORTH");
+
+
+        /* Sending Table Content Message */
+		QDataBaseEntityMessage frameTableContentMsg = new QDataBaseEntityMessage(frameTableContentBe);
+		//frameTableContentMsg.setReplace(true);
+		rules.publishCmd(frameTableContentMsg);
+
+        /* we add it to the bulk */
+        //bulkMsg.add(frameTableContentMsg);
+        rules.set("bulkMsg", bulkMsg);
+
+		rules.setState("GENERATED_TABLE_CONTENT");
+
+		rules.setState("GENERATE_TABLE_FOOTER");
+        rules.footer();
+    end
