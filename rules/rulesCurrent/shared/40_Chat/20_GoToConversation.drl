@@ -30,7 +30,7 @@ rule "Trigger Create Chat - Step 3"
 		.setPageStart(0)
 		.setPageSize(10000);
 
-		List<BaseEntity> messages = rules.getSearchResultsAsList(messageSearch, RulesUtils.generateServiceToken(rules.realm()));
+		List<BaseEntity> messages = rules.getSearchResultsAsList(messageSearch, RulesUtils.generateServiceToken(rules.realm(), rules.getToken()));
 		rules.publishBaseEntityByCode(messages, conversation.getCode(), "LNK_CHAT", "CONVERSATION");
 
 		/* we get parameters for the route change if any. could be null! */
