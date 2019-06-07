@@ -121,8 +121,8 @@ public class JavaServiceQuickstartTest extends JbpmJUnitBaseTestCase {
 	@Test //(timeout = 30000)
 	public void testAuthInit() {
 
-		KieSession kieSession = createKSession("rulesCurrent/shared/_BPMN_WORKFLOWS/auth_init.bpmn");
-//		KieSession kieSession = setupSession("/rulesCurrent/shared/00_Startup",true);
+		KieSession kieSession = createKSession("rulesCurrent/shared/_BPMN_WORKFLOWS/auth_init.bpmn",
+				"rulesCurrent/shared/_BPMN_WORKFLOWS/send_forms.bpmn");
 
 		String bridgeUrl = GennySettings.bridgeServiceUrl;
 		System.out.println("BridgeUrl="+bridgeUrl);
@@ -268,22 +268,22 @@ public class JavaServiceQuickstartTest extends JbpmJUnitBaseTestCase {
 
 				
 		log.info("Setting up EntityManagerFactory");
-//		try {
-//			emf = Persistence.createEntityManagerFactory("h2-pu");
-//			env = EnvironmentFactory.newEnvironment(); // KnowledgeBaseFactory.newEnvironment();
-//			env.set(EnvironmentName.ENTITY_MANAGER_FACTORY, emf);
-//			// env.set(EnvironmentName.TRANSACTION_MANAGER,
-//			// TransactionManagerServices.getTransactionManager());
-//			env.set(EnvironmentName.GLOBALS, new MapGlobalResolver());
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		if (emf == null) {
-//			log.error("EMF is null");
-//		} else {
-//			System.out.println("Setting up EntityManager");
-//			em = emf.createEntityManager();
-//		}
+		try {
+			emf = Persistence.createEntityManagerFactory("h2-pu");
+			env = EnvironmentFactory.newEnvironment(); // KnowledgeBaseFactory.newEnvironment();
+			env.set(EnvironmentName.ENTITY_MANAGER_FACTORY, emf);
+			// env.set(EnvironmentName.TRANSACTION_MANAGER,
+			// TransactionManagerServices.getTransactionManager());
+			env.set(EnvironmentName.GLOBALS, new MapGlobalResolver());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (emf == null) {
+			log.error("EMF is null");
+		} else {
+			System.out.println("Setting up EntityManager");
+			em = emf.createEntityManager();
+		}
 
 		// Set up realm
 		realms = new HashSet<String>();
@@ -304,8 +304,8 @@ public class JavaServiceQuickstartTest extends JbpmJUnitBaseTestCase {
 
 	public JavaServiceQuickstartTest() {
 		// configure this tests to not use persistence in this case
-
-		 super(true,true);
+		super();
+		// super(true,true);
 	}
 
 
