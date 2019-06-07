@@ -86,7 +86,7 @@ processInstance = (WorkflowProcessInstance)kcontext.getProcessInstance();
 System.out.println(&quot;workprocessInstanceId = &quot;+processInstance.getId());
 
 kcontext.getKieRuntime().getEntryPoint(&quot;DEFAULT&quot;).getObjects().forEach(obj -> {
-	//System.out.println(obj);
+	/* System.out.println(obj); */
 if(obj instanceof String){
 		kcontext.setVariable(&quot;name&quot;, (String)obj);
 System.out.println(&quot;FOUND STRING&quot;);
@@ -142,7 +142,7 @@ if (rules3 != null) {
 life.genny.rules.QRules rules3 = (QRules) kcontext.getVariable(&quot;rules&quot;);
 
      	life.genny.qwanda.message.QDataBaseEntityMessage rolesMsg = VertxUtils.getObject(rules3.realm(), &quot;ROLES&quot;, rules3.realm(), QDataBaseEntityMessage.class,rules3.getToken());
-	//rules3.loadUserRole();
+	/* rules3.loadUserRole(); */
 
         if(rolesMsg != null) {
        	   rules3.println(&quot;Sending &quot;+rolesMsg.getItems().length +&quot; Roles  &quot;);

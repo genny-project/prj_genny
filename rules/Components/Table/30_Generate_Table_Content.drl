@@ -103,7 +103,7 @@ rule "Generate Table Content"
 		oddColumnThemes.add(borderTheme);
 		oddColumnThemes.add(horizontalTheme);
 		oddColumnThemes.add(fullWidthTheme);
-		//oddColumnThemes.add(noBackgroundTheme);
+		/* oddColumnThemes.add(noBackgroundTheme); */
 
 		/* creating theme list for odd-column */
 		List<BaseEntity> evenColumnThemes = new ArrayList<>();
@@ -111,7 +111,7 @@ rule "Generate Table Content"
 		evenColumnThemes.add(borderTheme);
 		evenColumnThemes.add(horizontalTheme);
 		evenColumnThemes.add(fullWidthTheme);
-		//evenColumnThemes.add(noBackgroundTheme);
+		/*evenColumnThemes.add(noBackgroundTheme); */
 
 		/* create contextList */
 		Context horizontalThemeContext = new Context(ContextType.THEME, horizontalTheme);
@@ -173,7 +173,7 @@ rule "Generate Table Content"
 		rules.publishCmd(frameTableContentMsg1);
 
 		/* link all the content asks to table-content frame */
-		//frameTableContentBe = rules.createVirtualLink(frameTableContentBe.getCode(), asks, "LNK_ASK", "NORTH");
+		/*frameTableContentBe = rules.createVirtualLink(frameTableContentBe.getCode(), asks, "LNK_ASK", "NORTH");*/
 
 		/* converting content asks list to array */
 		Ask[] asksArr = asks.stream().toArray(Ask[]::new);
@@ -207,11 +207,11 @@ rule "Generate Table Content"
 
         /* Sending Table Content Message */
 		QDataBaseEntityMessage frameTableContentMsg = new QDataBaseEntityMessage(frameTableContentBe);
-		//frameTableContentMsg.setReplace(true);
+		/*frameTableContentMsg.setReplace(true);*/
 		rules.publishCmd(frameTableContentMsg);
 
         /* we add it to the bulk */
-        //bulkMsg.add(frameTableContentMsg);
+        /*bulkMsg.add(frameTableContentMsg);*/
         rules.set("bulkMsg", bulkMsg);
 
 		rules.setState("GENERATED_TABLE_CONTENT");

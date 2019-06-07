@@ -89,7 +89,7 @@ processInstance = (WorkflowProcessInstance)kcontext.getProcessInstance();
 System.out.println(&quot;workprocessInstanceId = &quot;+processInstance.getId());
 
 kcontext.getKieRuntime().getEntryPoint(&quot;DEFAULT&quot;).getObjects().forEach(obj -> {
-	//System.out.println(obj);
+	/* System.out.println(obj); */
 if(obj instanceof String){
 		kcontext.setVariable(&quot;name&quot;, (String)obj);
 System.out.println(&quot;FOUND STRING&quot;);
