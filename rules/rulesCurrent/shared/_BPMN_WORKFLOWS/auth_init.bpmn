@@ -71,7 +71,7 @@
           <drools:metaValue><![CDATA[End Event 1]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_15</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_16</bpmn2:incoming>
     </bpmn2:endEvent>
     <bpmn2:scriptTask id="ScriptTask_1" name="Init" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>
@@ -84,12 +84,14 @@
       <bpmn2:script>System.out.println(&quot;Auth Init Start&quot;);
 processInstance = (WorkflowProcessInstance)kcontext.getProcessInstance();
 System.out.println(&quot;workprocessInstanceId = &quot;+processInstance.getId());
+Integer count = kcontext.getKieRuntime().getEntryPoint(&quot;DEFAULT&quot;).getObjects().size();
+System.out.println(&quot;count=&quot;+count);
 
 kcontext.getKieRuntime().getEntryPoint(&quot;DEFAULT&quot;).getObjects().forEach(obj -> {
-	/* System.out.println(obj); */
+	
 if(obj instanceof String){
 		kcontext.setVariable(&quot;name&quot;, (String)obj);
-System.out.println(&quot;FOUND STRING&quot;);
+	System.out.println(&quot;FOUND STRING&quot;);
 	} else if(obj instanceof QEventMessage){
 		kcontext.setVariable(&quot;message&quot;, (QEventMessage)obj);
 System.out.println(&quot;FOUND QEVENTMESSAGE&quot;);
@@ -358,10 +360,61 @@ rules3.sendTreeData();</bpmn2:script>
         </drools:onExit-script>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_10</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_15</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
     </bpmn2:callActivity>
     <bpmn2:sequenceFlow id="SequenceFlow_10" drools:priority="1" sourceRef="ScriptTask_12" targetRef="CallActivity_2"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_15" drools:priority="1" sourceRef="CallActivity_2" targetRef="EndEvent_1"/>
+    <bpmn2:task id="Task_1" drools:taskName="Notification" drools:displayName="Notification" drools:icon="icons/notification.gif" name="Notification">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Notification]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_16</bpmn2:outgoing>
+      <bpmn2:ioSpecification id="InputOutputSpecification_1">
+        <bpmn2:dataInput id="DataInput_1" itemSubjectRef="ItemDefinition_1" name="Message"/>
+        <bpmn2:dataInput id="DataInput_2" name="From"/>
+        <bpmn2:dataInput id="DataInput_3" name="To"/>
+        <bpmn2:dataInput id="DataInput_4" name="Priority"/>
+        <bpmn2:inputSet id="_InputSet_2">
+          <bpmn2:dataInputRefs>DataInput_1</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_2</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_3</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_4</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet id="OutputSet_1" name="Output Set 1"/>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="_DataInputAssociation_2">
+        <bpmn2:targetRef>DataInput_1</bpmn2:targetRef>
+        <bpmn2:assignment id="Assignment_2">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_7">This is a message</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_5">DataInput_1</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_DataInputAssociation_3">
+        <bpmn2:targetRef>DataInput_2</bpmn2:targetRef>
+        <bpmn2:assignment id="Assignment_3">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_10">From!!</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_8">DataInput_2</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_DataInputAssociation_4">
+        <bpmn2:targetRef>DataInput_3</bpmn2:targetRef>
+        <bpmn2:assignment id="Assignment_4">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_13">Shazbot is the Shiz2</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_11">DataInput_3</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_DataInputAssociation_5">
+        <bpmn2:targetRef>DataInput_4</bpmn2:targetRef>
+        <bpmn2:assignment id="Assignment_5">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_16">A priority is here</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_14">DataInput_4</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="SequenceFlow_8" drools:priority="1" sourceRef="CallActivity_2" targetRef="Task_1"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_16" drools:priority="1" sourceRef="Task_1" targetRef="EndEvent_1"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Process Diagram">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="auth_init">
@@ -372,9 +425,9 @@ rules3.sendTreeData();</bpmn2:script>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_2" bpmnElement="EndEvent_1">
-        <dc:Bounds height="36.0" width="36.0" x="643.0" y="692.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="643.0" y="738.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_3" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="50.0" x="636.0" y="728.0"/>
+          <dc:Bounds height="11.0" width="50.0" x="636.0" y="774.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_1" bpmnElement="ScriptTask_1" isExpanded="true">
@@ -453,6 +506,12 @@ rules3.sendTreeData();</bpmn2:script>
         <dc:Bounds height="50.0" width="110.0" x="603.0" y="630.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_15">
           <dc:Bounds height="11.0" width="47.0" x="634.0" y="649.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_Task_1" bpmnElement="Task_1" isExpanded="true">
+        <dc:Bounds height="50.0" width="110.0" x="685.0" y="685.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_16">
+          <dc:Bounds height="11.0" width="45.0" x="717.0" y="704.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_1" targetElement="BPMNShape_ScriptTask_1">
@@ -536,12 +595,17 @@ rules3.sendTreeData();</bpmn2:script>
         <di:waypoint xsi:type="dc:Point" x="658.0" y="630.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_21"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_15" bpmnElement="SequenceFlow_15" sourceElement="BPMNShape_CallActivity_2" targetElement="BPMNShape_2">
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_8" bpmnElement="SequenceFlow_8" sourceElement="BPMNShape_CallActivity_2" targetElement="BPMNShape_Task_1">
         <di:waypoint xsi:type="dc:Point" x="658.0" y="680.0"/>
-        <di:waypoint xsi:type="dc:Point" x="658.0" y="686.0"/>
-        <di:waypoint xsi:type="dc:Point" x="661.0" y="686.0"/>
-        <di:waypoint xsi:type="dc:Point" x="661.0" y="692.0"/>
+        <di:waypoint xsi:type="dc:Point" x="658.0" y="710.0"/>
+        <di:waypoint xsi:type="dc:Point" x="685.0" y="710.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_22"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_16" bpmnElement="SequenceFlow_16" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_2">
+        <di:waypoint xsi:type="dc:Point" x="685.0" y="718.0"/>
+        <di:waypoint xsi:type="dc:Point" x="661.0" y="718.0"/>
+        <di:waypoint xsi:type="dc:Point" x="661.0" y="738.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_23"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
