@@ -1,0 +1,31 @@
+package life.genny.rules;
+
+import life.genny.qwanda.message.QCmdMessage;
+import life.genny.qwanda.message.QBulkMessage;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.qwanda.message.QEventMessage;
+import life.genny.rules.QRules;
+import io.vertx.core.json.JsonObject;
+import java.util.List;
+import java.util.ArrayList;
+import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.entity.SearchEntity;
+import life.genny.utils.VertxUtils;
+import life.genny.utils.BaseEntityUtils;
+import life.genny.models.GennyToken;
+import org.kie.api.runtime.process.WorkflowProcessInstance;
+
+rule "TEST_RULE_1"
+    ruleflow-group 'TestRule'
+    /* no-loop true */
+    when
+        $process : WorkflowProcessInstance( )
+     then
+     System.out.println("In TEST RULES!!!!");
+ 
+	GennyToken gennyToken = (GennyToken)$process.getVariable("serviceToken");
+	System.out.println("Genny Token Service Code2 = "+gennyToken.getCode());
+	$process.setVariable( "dynamicGroupId","analyst" );
+	retract($process);
+
+end

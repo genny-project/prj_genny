@@ -7,7 +7,7 @@ rule "Pre Init Startup"
 	no-loop true
 	ruleflow-group 'Init'
     when
-       m : QEventMessage( event_type == "EVT_MSG" && "INIT_STARTUP" == data.code)
+       m : QEventMessage( event_type == "EVT_MSG" && "INIT_STARTUP" == data.code && false)
        rules: QRules( !isState("STARTED") )
      then
          
@@ -35,7 +35,7 @@ rule "Pre Init Startup"
 	            drools.setFocus("GenerateCaches");
 	            drools.setFocus("GenerateBucketCaches");
 	            drools.setFocus("GenerateArchiveCaches");
-	            drools.setFocus("GenerateSearches");
+	           /* drools.setFocus("GenerateSearches"); */
 
 	       }
 
