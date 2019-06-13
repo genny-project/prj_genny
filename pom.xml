@@ -7,15 +7,15 @@
 
 	<groupId>life.genny.jbpm</groupId>
 	<artifactId>prj_genny</artifactId>
-	<version>2.3.0</version>
+	<version>2.4.0</version>
 
 	<name>jBPM Genny </name>
 	<description>jBPM Genny Maven project</description>
 
 	<properties>
-		<runtime.version>7.20.0.Final</runtime.version>
-		<genny-verticle.version>2.3.0</genny-verticle.version>
-		<genny-rules.version>2.3.0</genny-rules.version>
+		<runtime.version>7.21.0.Final</runtime.version>
+		<genny-verticle.version>2.4.0</genny-verticle.version>
+		<genny-rules.version>2.4.0</genny-rules.version>
 
 		<vertx.version>3.5.1</vertx.version>
 		<hazelcast.version>3.8.2</hazelcast.version>
