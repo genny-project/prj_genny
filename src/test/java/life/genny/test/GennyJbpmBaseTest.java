@@ -47,6 +47,7 @@ import io.vavr.Tuple3;
 import io.vertx.core.json.JsonObject;
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
+import life.genny.eventbus.EventBusVertx;
 import life.genny.eventbus.VertxCache;
 import life.genny.jbpm.customworkitemhandlers.AwesomeHandler;
 import life.genny.jbpm.customworkitemhandlers.NotificationWorkItemHandler;

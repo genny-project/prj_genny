@@ -17,14 +17,14 @@ import org.kie.api.runtime.process.WorkflowProcessInstance;
 
 rule "TEST_RULE_1"
     ruleflow-group 'TestRule'
-    /* no-loop true */
+    no-loop true
     when
         $process : WorkflowProcessInstance( )
      then
      System.out.println("In TEST RULES!!!!");
  
-	GennyToken gennyToken = (GennyToken)$process.getVariable("serviceToken");
-	System.out.println("Genny Token Service Code2 = "+gennyToken.getCode());
+	GennyToken serviceToken = (GennyToken)$process.getVariable("serviceToken");
+	System.out.println("Genny Token Service Code2 = "+serviceToken.getCode());
 	$process.setVariable( "dynamicGroupId","analyst" );
 	retract($process);
 

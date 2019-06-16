@@ -42,6 +42,7 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 	}
 
 	@Test
+
 	public void testAuthInit() {
 
 		KieSession kieSession = createKSession(WFE_AUTH_INIT,WFE_SEND_FORMS);

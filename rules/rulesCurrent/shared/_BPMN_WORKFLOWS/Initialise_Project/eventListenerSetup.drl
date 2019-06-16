@@ -1,0 +1,21 @@
+package life.genny.rules;
+
+import life.genny.rules.JbpmInitListener;
+/* import org.kie.api.runtime.process.WorkflowProcessInstance; */
+import life.genny.models.GennyToken;
+
+
+
+rule "eventListenerSetup"
+salience 1000
+    no-loop true
+    when
+    gennyToken: GennyToken()
+    then
+     System.out.println("Setup Listener");
+    kcontext.getKnowledgeRuntime().addEventListener(new JbpmInitListener(gennyToken)); 
+
+end
+
+
+
