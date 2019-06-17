@@ -93,10 +93,10 @@
       <bpmn2:outgoing>SequenceFlow_15</bpmn2:outgoing>
       <bpmn2:script>log.info(&quot;Show Form!!&quot;);
 QEventBtnClickMessage m = (QEventBtnClickMessage) kcontext.getVariable(&quot;message&quot;);
-System.out.println(&quot;TEST BUTTON CLICK message = &quot;+m+&quot; : &quot;+m.getData().getCode());
+log.info(&quot;TEST BUTTON CLICK message = &quot;+m+&quot; : &quot;+m.getData().getCode());
 String questionCode = m.getData().getCode().substring(&quot;QUE_&quot;.length());
 
-System.out.println(&quot;Fixed QuestionCode = [&quot;+questionCode+&quot;]&quot;);
+log.info(&quot;Fixed QuestionCode = [&quot;+questionCode+&quot;]&quot;);
       String code = m.getData().getCode();
       String parentCode = m.getData().getParentCode();
       String rootCode = m.getData().getRootCode();
@@ -113,7 +113,7 @@ System.out.println(&quot;Fixed QuestionCode = [&quot;+questionCode+&quot;]&quot;
       rules.println(&quot;parentCode   ::   &quot; + &quot;PARENT_&quot; + parentCode);
       rules.println(&quot;targetCode   ::   &quot; + &quot;TARGET_&quot; + targetCode);
       rules.println(&quot;code         ::   &quot; + code);
-rules.sendForm(questionCode, rules3.getUser().getCode(), rules3.getUser().getCode()); 
+rules.sendForm(questionCode, rules.getUser().getCode(), rules.getUser().getCode()); 
 </bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_15" drools:priority="1" sourceRef="ScriptTask_2" targetRef="EndEvent_1"/>

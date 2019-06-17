@@ -28,6 +28,7 @@ import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.rules.QRules;
+import life.genny.rules.listeners.JbpmInitListener;
 import life.genny.utils.QuestionUtils;
 
 public class AuthInitTest extends GennyJbpmBaseTest {
@@ -35,8 +36,14 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getCanonicalName());
 	
 	private static final String WFE_SEND_FORMS = "rulesCurrent/shared/_BPMN_WORKFLOWS/send_forms.bpmn";
+	private static final String WFE_SHOW_FORM = "rulesCurrent/shared/_BPMN_WORKFLOWS/show_form.bpmn";
 	private static final String WFE_AUTH_INIT =  "rulesCurrent/shared/_BPMN_WORKFLOWS/auth_init.bpmn";
-
+	private static final String DRL_PROJECT =  "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/project.drl";
+	private static final String DRL_USER_COMPANY =  "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/user_company.drl";
+	private static final String DRL_USER =  "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/user.drl";
+	private static final String DRL_EVENT_LISTENER_SERVICE_SETUP =  "rulesCurrent/shared/_BPMN_WORKFLOWS/Initialise_Project/eventListenerServiceSetup.drl";
+	private static final String DRL_EVENT_LISTENER_USER_SETUP =  "rulesCurrent/shared/_BPMN_WORKFLOWS/Initialise_Project/eventListenerUserSetup.drl";
+	
 	public AuthInitTest() {
 		super(false);
 	}
@@ -45,7 +52,8 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 
 	public void testAuthInit() {
 
-		KieSession kieSession = createKSession(WFE_AUTH_INIT,WFE_SEND_FORMS);
+		KieSession kieSession = createKSession(WFE_AUTH_INIT,WFE_SEND_FORMS,WFE_SHOW_FORM);
+//		KieSession kieSession = createKSession(WFE_AUTH_INIT,WFE_SEND_FORMS,WFE_SHOW_FORM,DRL_PROJECT,DRL_USER_COMPANY,DRL_USER,DRL_EVENT_LISTENER_SERVICE_SETUP,DRL_EVENT_LISTENER_USER_SETUP);
 		
 
 		QEventMessage msg = new QEventMessage("EVT_MSG", "AUTH_INIT");
@@ -58,12 +66,15 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		cmds.add(CommandFactory.newInsert(qRules, "qRules"));
 		cmds.add(CommandFactory.newInsert(msg, "msg"));
 		cmds.add(CommandFactory.newInsert(userToken,"userToken"));
-
+		cmds.add(CommandFactory.newInsert(new GennyToken("serviceUser",qRules.getServiceToken()),"serviceToken"));
 		// Set up Cache
 
 		setUpCache(GennySettings.mainrealm, userToken);
 
 		cmds.add(CommandFactory.newInsert(eventBusMock, "eb"));
+		
+		kieSession.addEventListener(new JbpmInitListener(userToken));
+
 
 		try {
 		long startTime = System.nanoTime();
