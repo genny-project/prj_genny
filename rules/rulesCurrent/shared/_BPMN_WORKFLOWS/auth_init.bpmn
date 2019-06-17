@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmn20="http://www.omg.org/bpmn20" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="_rgjd0GkSEeGLXa7Rf4_OXA" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.0.Final-v20180515-1642-B1" name="auth_init" targetNamespace="http://www.omg.org/bpmn20">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmn20="http://www.omg.org/bpmn20" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="_rgjd0GkSEeGLXa7Rf4_OXA" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.4.3.Final-v20180418-1358-B1" name="auth_init" targetNamespace="http://www.omg.org/bpmn20">
   <bpmn2:itemDefinition id="ItemDefinition_1" isCollection="false" structureRef="life.genny.qwanda.message.QEventMessage"/>
   <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false" structureRef="life.genny.rules.QRules"/>
   <bpmn2:itemDefinition id="ItemDefinition_3" isCollection="false" structureRef="java.lang.String"/>
@@ -24,9 +24,8 @@
   <bpmn2:itemDefinition id="ItemDefinition_36" isCollection="false" structureRef="life.genny.utils.Layout.LayoutUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_38_1" isCollection="false" structureRef="life.genny.utils.Layout.LayoutPosition"/>
   <bpmn2:itemDefinition id="ItemDefinition_38" isCollection="false" structureRef="life.genny.qwanda.ContextType"/>
-  <bpmn2:itemDefinition id="ItemDefinition_8" isCollection="false" structureRef="org.apache.logging.log4j.Logger"/>
-  <bpmn2:itemDefinition id="ItemDefinition_12" isCollection="false" structureRef="life.genny.models.GennyToken"/>
-  <bpmn2:itemDefinition id="ItemDefinition_15" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_4" isCollection="false" structureRef="java.lang.Integer"/>
+  <bpmn2:itemDefinition id="ItemDefinition_8" isCollection="false" structureRef="java.lang.Boolean"/>
   <bpmn2:process id="auth_init" drools:packageName="life.genny.jbpm" name="Auth Init" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.qwanda.message.QEventMessage"/>
@@ -53,14 +52,10 @@
       <drools:import name="life.genny.utils.Layout.LayoutUtils"/>
       <drools:import name="life.genny.utils.Layout.LayoutPosition"/>
       <drools:import name="life.genny.qwanda.ContextType"/>
-      <drools:import name="org.apache.logging.log4j.Logger"/>
-      <drools:import name="life.genny.models.GennyToken"/>
-      <drools:global identifier="log" type="org.apache.logging.log4j.Logger"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_1" name="message"/>
+    <bpmn2:property id="name" itemSubjectRef="ItemDefinition_3" name="name"/>
     <bpmn2:property id="rules" itemSubjectRef="ItemDefinition_2" name="rules"/>
-    <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_12" name="userToken"/>
-    <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_12" name="serviceToken"/>
     <bpmn2:startEvent id="StartEvent_1" name="AuthInit">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -80,235 +75,6 @@
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_16</bpmn2:incoming>
     </bpmn2:endEvent>
-    <bpmn2:scriptTask id="ScriptTask_2" name="Send Attributes" scriptFormat="http://www.java.com/java">
-      <bpmn2:extensionElements>
-        <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Send Attributes]]></drools:metaValue>
-        </drools:metaData>
-      </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_15</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
-      <bpmn2:script>log.info(&quot;Send Attributes!!&quot;);
-
-if (rules != null) {
-	rules.sendAllAttributes();
-	log.info(&quot;Sent attributes&quot;);
-} else {
-	log.error(&quot;rules is null&quot;);
-}
-</bpmn2:script>
-    </bpmn2:scriptTask>
-    <bpmn2:scriptTask id="ScriptTask_3" name="Send Roles" scriptFormat="Java">
-      <bpmn2:extensionElements>
-        <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Send Roles]]></drools:metaValue>
-        </drools:metaData>
-      </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
-      <bpmn2:script>log.info(&quot;Send Roles&quot;);
-
-
-     	life.genny.qwanda.message.QDataBaseEntityMessage rolesMsg = VertxUtils.getObject(rules.realm(), &quot;ROLES&quot;, rules.realm(), QDataBaseEntityMessage.class,rules.getToken());
-	rules.loadUserRole(); 
-
-        if(rolesMsg != null) {
-       	   rules.println(&quot;Sending &quot;+rolesMsg.getItems().length +&quot; Roles  &quot;);
-            rules.publishCmd(rolesMsg);
-        }</bpmn2:script>
-    </bpmn2:scriptTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_5" sourceRef="ScriptTask_2" targetRef="ScriptTask_3"/>
-    <bpmn2:scriptTask id="ScriptTask_4" name="Send Project" scriptFormat="Java">
-      <bpmn2:extensionElements>
-        <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Send Project]]></drools:metaValue>
-        </drools:metaData>
-      </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
-      <bpmn2:script>log.info(&quot;Send Project&quot;);
-
-
-	life.genny.qwanda.entity.BaseEntity project = rules.getProject();
-
-        if(project != null) {
-            rules.println(&quot;Sending project - &quot;+project.getCode());
-            rules.publishCmd(project, &quot;PROJECT&quot;);
-        }</bpmn2:script>
-    </bpmn2:scriptTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_7" sourceRef="ScriptTask_3" targetRef="ScriptTask_4"/>
-    <bpmn2:scriptTask id="ScriptTask_5" name="Send User" scriptFormat="http://www.java.com/java">
-      <bpmn2:extensionElements>
-        <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Send User]]></drools:metaValue>
-        </drools:metaData>
-      </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
-      <bpmn2:script>log.info(&quot;Send User&quot;);
-
-
-	life.genny.qwanda.entity.BaseEntity user= rules.getUser();
-
-
-        if(user != null) {
-            rules.publishCmd(user, &quot;USER&quot;);
-        }</bpmn2:script>
-    </bpmn2:scriptTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_3" drools:priority="1" sourceRef="ScriptTask_4" targetRef="ScriptTask_5"/>
-    <bpmn2:scriptTask id="ScriptTask_6" name="Send User Company" scriptFormat="http://www.java.com/java">
-      <bpmn2:extensionElements>
-        <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Send User Company]]></drools:metaValue>
-        </drools:metaData>
-      </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
-      <bpmn2:script>log.info(&quot;Send User Company&quot;);
-
-if (rules.getUser() != null) {
-String userCode = rules.getUser().getCode();
-System.out.println(&quot;userCode=&quot;+userCode);
-     	/*  Get Company Code of the current user   */
-        life.genny.qwanda.entity.BaseEntity company = rules.baseEntity.getParent(userCode, &quot;LNK_STAFF&quot;);
-
-        if(company != null)
-        {
-            rules.publishCmd(company, &quot;USER_COMPANY&quot;);
-        }
-}
-</bpmn2:script>
-    </bpmn2:scriptTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_6" drools:priority="1" sourceRef="ScriptTask_5" targetRef="ScriptTask_6"/>
-    <bpmn2:scriptTask id="ScriptTask_7" name="Send MainFrame" scriptFormat="http://www.java.com/java">
-      <bpmn2:extensionElements>
-        <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Send MainFrame]]></drools:metaValue>
-        </drools:metaData>
-      </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_11</bpmn2:outgoing>
-      <bpmn2:script>log.info(&quot;Send Main Frame&quot;);
-
-  
-/* get the root frame base entity */
-        life.genny.qwanda.entity.BaseEntity rootFrame = rules.baseEntity.getBaseEntityByCode(&quot;FRM_ROOT&quot;);
-
-        /* get its children (frames) */
-        List&lt;BaseEntity> children = rules.baseEntity.getLinkedBaseEntities(rootFrame.getCode(), null, null, 3);
-
-        /* create message */
-        life.genny.qwanda.message.QDataBaseEntityMessage messageMF = new QDataBaseEntityMessage(children);
-
-        /* add parent as an item */
-        messageMF.add(rootFrame);
-
-        /* set parent */
-        messageMF.setParentCode(rootFrame.getCode());
-        
-        /* send message */
-        rules.publishCmd(messageMF);
-</bpmn2:script>
-    </bpmn2:scriptTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_9" drools:priority="1" sourceRef="ScriptTask_6" targetRef="ScriptTask_7"/>
-    <bpmn2:scriptTask id="ScriptTask_8" name="Send Header Questions" scriptFormat="http://www.java.com/java">
-      <bpmn2:extensionElements>
-        <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Send Header Questions]]></drools:metaValue>
-        </drools:metaData>
-      </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_11</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
-      <bpmn2:script>log.info(&quot;Send Header Questions&quot;);
- 
-  
-       /* gets the project baseentity */
-        life.genny.qwanda.entity.BaseEntity project = rules.getProject();
-  		
-  		/* sends questions for project-name and positions it in the left side of the header frame */
-       	rules.askQuestions(rules.getUser().getCode(), project.getCode(), &quot;QUE_FULLNAME_GRP&quot;, false, &quot;FRM_HEADER&quot;, LayoutPosition.WEST);
-</bpmn2:script>
-    </bpmn2:scriptTask>
-    <bpmn2:scriptTask id="ScriptTask_9" name="Send Footer Questions" scriptFormat="http://www.java.com/java">
-      <bpmn2:extensionElements>
-        <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Send Footer Questions]]></drools:metaValue>
-        </drools:metaData>
-      </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_12</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_13</bpmn2:outgoing>
-      <bpmn2:script>log.info(&quot;Send Footer Questions&quot;);   
-  
-        /* gets the project baseentity */
-        life.genny.qwanda.entity.BaseEntity project = rules.getProject();
-  		
-  		/* sends questions for project-powered-by and positions it in the right side of the footer frame */
-       	rules.askQuestions(rules.getUser().getCode(), project.getCode(), &quot;QUE_POWERED_BY_GRP&quot;, false, &quot;FRM_FOOTER&quot;, LayoutPosition.EAST);
-</bpmn2:script>
-    </bpmn2:scriptTask>
-    <bpmn2:scriptTask id="ScriptTask_10" name="Send Logo" scriptFormat="http://www.java.com/java">
-      <bpmn2:extensionElements>
-        <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Send Logo]]></drools:metaValue>
-        </drools:metaData>
-      </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_14</bpmn2:outgoing>
-      <bpmn2:script>log.info(&quot;Send Logo&quot;);
-  
-  
-         /* get the background-gray theme baseentity */
-        life.genny.qwanda.entity.BaseEntity imageFitTheme = rules.baseEntity.getBaseEntityByCode(&quot;THM_IMAGE_FIT&quot;);
-        
-        java.util.Map&lt;String, List&lt;Context>> themesForQuestions = new HashMap();
-        
-        /* creating context for theme */
-        life.genny.qwanda.Context imageFitContext = new Context(ContextType.THEME, imageFitTheme);
-        
-        /* adding themes to the list */
-        java.util.List&lt;Context> themeList = new ArrayList&lt;>();
-        themeList.add(imageFitContext);
-        
-        /* attaching the themes to the question group and putting it in a map */
-        themesForQuestions.put(&quot;QUE_LOGO&quot;, themeList);
-        
-        /* sends questions for LOGO and positions it in the sidebar frame */
-		rules.askQuestions(rules.getUser().getCode(), rules.getProject().getCode(), &quot;QUE_PROJECT_SIDEBAR_GRP&quot;, &quot;FRM_SIDEBAR&quot;, LayoutPosition.NORTH, themesForQuestions);
-</bpmn2:script>
-    </bpmn2:scriptTask>
-    <bpmn2:scriptTask id="ScriptTask_11" name="Send User Profile Selection Questions" scriptFormat="http://www.java.com/java">
-      <bpmn2:extensionElements>
-        <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Send User Profile Selection Questions]]></drools:metaValue>
-        </drools:metaData>
-      </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_14</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
-      <bpmn2:script>log.info(&quot;Send User Profile Selection Questions&quot;);
- 
-  
-        /* sending user profile selection questions */
-        rules.askQuestions(rules.getUser().getCode(), rules.getProject().getCode(), &quot;QUE_PROJECT_USER_OPTIONS_GRP&quot;, false, &quot;FRM_HEADER&quot;, LayoutPosition.EAST);
-</bpmn2:script>
-    </bpmn2:scriptTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_11" drools:priority="1" sourceRef="ScriptTask_7" targetRef="ScriptTask_8"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_12" drools:priority="1" sourceRef="ScriptTask_8" targetRef="ScriptTask_9"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_13" drools:priority="1" sourceRef="ScriptTask_9" targetRef="ScriptTask_10"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_14" drools:priority="1" sourceRef="ScriptTask_10" targetRef="ScriptTask_11"/>
-    <bpmn2:scriptTask id="ScriptTask_12" name="Send Tree Data" scriptFormat="http://www.java.com/java">
-      <bpmn2:extensionElements>
-        <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Send Tree Data]]></drools:metaValue>
-        </drools:metaData>
-      </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_10</bpmn2:outgoing>
-      <bpmn2:script>log.info(&quot;Send Tree Data&quot;);
-
-
-rules.sendTreeData();</bpmn2:script>
-    </bpmn2:scriptTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_4" drools:priority="1" sourceRef="ScriptTask_11" targetRef="ScriptTask_12"/>
     <bpmn2:callActivity id="CallActivity_2" drools:waitForCompletion="true" drools:independent="true" name="SendForms" calledElement="send_forms">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -318,22 +84,18 @@ rules.sendTreeData();</bpmn2:script>
           <drools:metaValue><![CDATA[true]]></drools:metaValue>
         </drools:metaData>
         <drools:onEntry-script scriptFormat="http://www.java.com/java">
-          <drools:script>log.info(&quot;Entering Sending Forms - Genny&quot;);</drools:script>
+          <drools:script>System.out.println(&quot;Entering Sending Forms - Genny&quot;);</drools:script>
         </drools:onEntry-script>
         <drools:onExit-script scriptFormat="http://www.java.com/java">
-          <drools:script>log.info(&quot;Exiting Sending Forms - Genny&quot;);</drools:script>
+          <drools:script>System.out.println(&quot;Exiting Sending Forms - Genny&quot;);</drools:script>
         </drools:onExit-script>
       </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_10</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_29</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
       <bpmn2:ioSpecification id="InputOutputSpecification_3">
         <bpmn2:dataInput id="DataInput_5" itemSubjectRef="ItemDefinition_2" name="rules"/>
-        <bpmn2:dataInput id="DataInput_6" itemSubjectRef="ItemDefinition_12" name="userToken"/>
-        <bpmn2:dataInput id="DataInput_7" itemSubjectRef="ItemDefinition_12" name="serviceToken"/>
         <bpmn2:inputSet id="InputSet_2" name="Input Set 2">
           <bpmn2:dataInputRefs>DataInput_5</bpmn2:dataInputRefs>
-          <bpmn2:dataInputRefs>DataInput_6</bpmn2:dataInputRefs>
-          <bpmn2:dataInputRefs>DataInput_7</bpmn2:dataInputRefs>
         </bpmn2:inputSet>
         <bpmn2:outputSet id="OutputSet_3" name="Output Set 3"/>
       </bpmn2:ioSpecification>
@@ -341,16 +103,7 @@ rules.sendTreeData();</bpmn2:script>
         <bpmn2:sourceRef>rules</bpmn2:sourceRef>
         <bpmn2:targetRef>DataInput_5</bpmn2:targetRef>
       </bpmn2:dataInputAssociation>
-      <bpmn2:dataInputAssociation id="DataInputAssociation_2">
-        <bpmn2:sourceRef>userToken</bpmn2:sourceRef>
-        <bpmn2:targetRef>DataInput_6</bpmn2:targetRef>
-      </bpmn2:dataInputAssociation>
-      <bpmn2:dataInputAssociation id="DataInputAssociation_3">
-        <bpmn2:sourceRef>serviceToken</bpmn2:sourceRef>
-        <bpmn2:targetRef>DataInput_7</bpmn2:targetRef>
-      </bpmn2:dataInputAssociation>
     </bpmn2:callActivity>
-    <bpmn2:sequenceFlow id="SequenceFlow_10" drools:priority="1" sourceRef="ScriptTask_12" targetRef="CallActivity_2"/>
     <bpmn2:task id="Task_1" drools:taskName="Notification" drools:displayName="Notification" drools:icon="icons/notification.gif" name="Notification">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -403,186 +156,484 @@ rules.sendTreeData();</bpmn2:script>
     </bpmn2:task>
     <bpmn2:sequenceFlow id="SequenceFlow_8" drools:priority="1" sourceRef="CallActivity_2" targetRef="Task_1"/>
     <bpmn2:sequenceFlow id="SequenceFlow_16" drools:priority="1" sourceRef="Task_1" targetRef="EndEvent_1"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_15" drools:priority="1" sourceRef="StartEvent_1" targetRef="ScriptTask_2"/>
+    <bpmn2:scriptTask id="ScriptTask_13" name="&#xA;Init&#xA;">
+      <bpmn2:documentation id="Documentation_3"><![CDATA[System.out.println("Auth Init Start");
+processInstance = (WorkflowProcessInstance)kcontext.getProcessInstance();
+System.out.println("workprocessInstanceId = "+processInstance.getId());
+Integer count = kcontext.getKieRuntime().getEntryPoint("DEFAULT").getObjects().size();
+System.out.println("count="+count);
+
+kcontext.getKieRuntime().getEntryPoint("DEFAULT").getObjects().forEach(obj -> {
+	
+if(obj instanceof String){
+		kcontext.setVariable("name", (String)obj);
+	System.out.println("FOUND STRING");
+	} else if(obj instanceof QEventMessage){
+		kcontext.setVariable("message", (QEventMessage)obj);
+System.out.println("FOUND QEVENTMESSAGE");
+	} else if (obj instanceof QRules){
+		kcontext.setVariable("rules", (QRules)obj);
+		System.out.println("FOUND QRULE ");
+		
+	}  
+    });
+
+QRules rs = ((QRules)kcontext.getVariable("rules"));
+if (rs != null ){
+   System.out.println("JBPM QRules="+rs.realm());
+} else {
+   System.out.println("rs is null");
+}
+
+]]></bpmn2:documentation>
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[
+Init
+]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_15</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_17</bpmn2:outgoing>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_15" drools:priority="1" sourceRef="StartEvent_1" targetRef="ScriptTask_13"/>
+    <bpmn2:scriptTask id="ScriptTask_14" name="&#xA;Send Attributes" scriptFormat="http://www.java.com/java">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[
+Send Attributes]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_17</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_18</bpmn2:outgoing>
+      <bpmn2:script>System.out.println(&quot;Send Attributes!!&quot;);
+
+if (rules != null) {
+	System.out.println(&quot;Send Attributes QRule &quot;+rules.realm());
+	rules.sendAllAttributes();
+	System.out.println(&quot;Sent attributes&quot;);
+} else {
+	System.out.println(&quot;rules is null&quot;);
+}
+</bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_17" drools:priority="1" sourceRef="ScriptTask_13" targetRef="ScriptTask_14"/>
+    <bpmn2:scriptTask id="ScriptTask_15" name="&#xA;Send Roles&#xA;" scriptFormat="http://www.java.com/java">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[
+Send Roles
+]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_18</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_19</bpmn2:outgoing>
+      <bpmn2:script>System.out.println(&quot;Send Roles&quot;);
+
+
+     	life.genny.qwanda.message.QDataBaseEntityMessage rolesMsg = VertxUtils.getObject(rules.realm(), &quot;ROLES&quot;, rules.realm(), QDataBaseEntityMessage.class,rules.getToken());
+	rules.loadUserRole(); 
+
+        if(rolesMsg != null) {
+       	   rules.println(&quot;Sending &quot;+rolesMsg.getItems().length +&quot; Roles  &quot;);
+            rules.publishCmd(rolesMsg);
+        }</bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_18" drools:priority="1" sourceRef="ScriptTask_14" targetRef="ScriptTask_15"/>
+    <bpmn2:scriptTask id="ScriptTask_16" name="&#xA;Send Project" scriptFormat="http://www.java.com/java">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[
+Send Project]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_19</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_20</bpmn2:outgoing>
+      <bpmn2:script>System.out.println(&quot;Send Project&quot;);
+
+
+	life.genny.qwanda.entity.BaseEntity project = rules.getProject();
+
+        if(project != null) {
+            rules.println(&quot;Sending project - &quot;+project.getCode());
+            rules.publishCmd(project, &quot;PROJECT&quot;);
+        }</bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_19" drools:priority="1" sourceRef="ScriptTask_15" targetRef="ScriptTask_16"/>
+    <bpmn2:scriptTask id="ScriptTask_17" name="&#xA;Send User" scriptFormat="http://www.java.com/java">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[
+Send User]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_20</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_21</bpmn2:outgoing>
+      <bpmn2:script>System.out.println(&quot;Send User&quot;);
+
+
+	life.genny.qwanda.entity.BaseEntity user= rules.getUser();
+
+
+        if(user != null) {
+            rules.publishCmd(user, &quot;USER&quot;);
+        }</bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_20" drools:priority="1" sourceRef="ScriptTask_16" targetRef="ScriptTask_17"/>
+    <bpmn2:scriptTask id="ScriptTask_18" name="&#xA;Send User Company&#xA;" scriptFormat="http://www.java.com/java">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[
+Send User Company
+]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_21</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_22</bpmn2:outgoing>
+      <bpmn2:script>System.out.println(&quot;Send User Company&quot;);
+
+if (rules.getUser() != null) {
+String userCode = rules.getUser().getCode();
+System.out.println(&quot;userCode=&quot;+userCode);
+     	/*  Get Company Code of the current user   */
+        life.genny.qwanda.entity.BaseEntity company = rules.baseEntity.getParent(userCode, &quot;LNK_STAFF&quot;);
+
+        if(company != null)
+        {
+            rules.publishCmd(company, &quot;USER_COMPANY&quot;);
+        }
+}
+</bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_21" drools:priority="1" sourceRef="ScriptTask_17" targetRef="ScriptTask_18"/>
+    <bpmn2:scriptTask id="ScriptTask_19" name="&#xA;Send MainFrame" scriptFormat="http://www.java.com/java">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[
+Send MainFrame]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_22</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_23</bpmn2:outgoing>
+      <bpmn2:script>System.out.println(&quot;Send Main Frame&quot;);
+
+  
+/* get the root frame base entity */
+        life.genny.qwanda.entity.BaseEntity rootFrame = rules.baseEntity.getBaseEntityByCode(&quot;FRM_ROOT&quot;);
+
+        /* get its children (frames) */
+        List&lt;BaseEntity> children = rules.baseEntity.getLinkedBaseEntities(rootFrame.getCode(), null, null, 3);
+
+        /* create message */
+        life.genny.qwanda.message.QDataBaseEntityMessage messageMF = new QDataBaseEntityMessage(children);
+
+        /* add parent as an item */
+        messageMF.add(rootFrame);
+
+        /* set parent */
+        messageMF.setParentCode(rootFrame.getCode());
+        
+        /* send message */
+        rules.publishCmd(messageMF);
+</bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_22" drools:priority="1" sourceRef="ScriptTask_18" targetRef="ScriptTask_19"/>
+    <bpmn2:scriptTask id="ScriptTask_20" name="&#xA;Send Header Questions&#xA;" scriptFormat="http://www.java.com/java">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[
+Send Header Questions
+]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_23</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_24</bpmn2:outgoing>
+      <bpmn2:script>System.out.println(&quot;Send Header Questions&quot;);
+ 
+  
+       /* gets the project baseentity */
+        life.genny.qwanda.entity.BaseEntity project = rules.getProject();
+  		
+  		/* sends questions for project-name and positions it in the left side of the header frame */
+       	rules.askQuestions(rules.getUser().getCode(), project.getCode(), &quot;QUE_FULLNAME_GRP&quot;, false, &quot;FRM_HEADER&quot;, LayoutPosition.WEST);
+</bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_23" drools:priority="1" sourceRef="ScriptTask_19" targetRef="ScriptTask_20"/>
+    <bpmn2:scriptTask id="ScriptTask_21" name="&#xA;Send Footer Questions&#xA;" scriptFormat="http://www.java.com/java">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[
+Send Footer Questions
+]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_24</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_25</bpmn2:outgoing>
+      <bpmn2:script>System.out.println(&quot;Send Footer Questions&quot;);   
+  
+        /* gets the project baseentity */
+        life.genny.qwanda.entity.BaseEntity project = rules.getProject();
+  		
+  		/* sends questions for project-powered-by and positions it in the right side of the footer frame */
+       	rules.askQuestions(rules.getUser().getCode(), project.getCode(), &quot;QUE_POWERED_BY_GRP&quot;, false, &quot;FRM_FOOTER&quot;, LayoutPosition.EAST);
+</bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_24" drools:priority="1" sourceRef="ScriptTask_20" targetRef="ScriptTask_21"/>
+    <bpmn2:scriptTask id="ScriptTask_22" name="&#xA;Send Logo" scriptFormat="http://www.java.com/java">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[
+Send Logo]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_25</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_26</bpmn2:outgoing>
+      <bpmn2:script>System.out.println(&quot;Send Logo&quot;);
+  
+  
+         /* get the background-gray theme baseentity */
+        life.genny.qwanda.entity.BaseEntity imageFitTheme = rules.baseEntity.getBaseEntityByCode(&quot;THM_IMAGE_FIT&quot;);
+        
+        java.util.Map&lt;String, List&lt;Context>> themesForQuestions = new HashMap();
+        
+        /* creating context for theme */
+        life.genny.qwanda.Context imageFitContext = new Context(ContextType.THEME, imageFitTheme);
+        
+        /* adding themes to the list */
+        java.util.List&lt;Context> themeList = new ArrayList&lt;>();
+        themeList.add(imageFitContext);
+        
+        /* attaching the themes to the question group and putting it in a map */
+        themesForQuestions.put(&quot;QUE_LOGO&quot;, themeList);
+        
+        /* sends questions for LOGO and positions it in the sidebar frame */
+		rules.askQuestions(rules.getUser().getCode(), rules.getProject().getCode(), &quot;QUE_PROJECT_SIDEBAR_GRP&quot;, &quot;FRM_SIDEBAR&quot;, LayoutPosition.NORTH, themesForQuestions);
+</bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_25" drools:priority="1" sourceRef="ScriptTask_21" targetRef="ScriptTask_22"/>
+    <bpmn2:scriptTask id="ScriptTask_23" name="&#xA;Send User Profile Selection Question&#xA;" scriptFormat="http://www.java.com/java">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[
+Send User Profile Selection Question
+]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_26</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_27</bpmn2:outgoing>
+      <bpmn2:script>System.out.println(&quot;Send User Profile Selection Questions&quot;);
+ 
+  
+        /* sending user profile selection questions */
+        rules.askQuestions(rules.getUser().getCode(), rules.getProject().getCode(), &quot;QUE_PROJECT_USER_OPTIONS_GRP&quot;, false, &quot;FRM_HEADER&quot;, LayoutPosition.EAST);
+  rules.askQuestions(rules.getUser().getCode(), rules.getProject().getCode(), &quot;QUE_PROJECT_USER_OPTIONS_GRP&quot;, false, &quot;FRM_HEADER&quot;, LayoutPosition.EAST);</bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_26" drools:priority="1" sourceRef="ScriptTask_22" targetRef="ScriptTask_23"/>
+    <bpmn2:scriptTask id="ScriptTask_24" name="&#xA;Send Tree Data&#xA;" scriptFormat="http://www.java.com/java">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[
+Send Tree Data
+]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_27</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_29</bpmn2:outgoing>
+      <bpmn2:script>System.out.println(&quot;Send Tree Data&quot;);
+
+
+rules.sendTreeData();</bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_27" drools:priority="1" sourceRef="ScriptTask_23" targetRef="ScriptTask_24"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_29" drools:priority="1" sourceRef="ScriptTask_24" targetRef="CallActivity_2"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Process Diagram">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="auth_init">
       <bpmndi:BPMNShape id="BPMNShape_1" bpmnElement="StartEvent_1">
-        <dc:Bounds height="36.0" width="36.0" x="62.0" y="104.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="55.0" y="104.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="31.0" x="64.0" y="140.0"/>
+          <dc:Bounds height="11.0" width="31.0" x="57.0" y="140.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_2" bpmnElement="EndEvent_1">
-        <dc:Bounds height="36.0" width="36.0" x="643.0" y="738.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="647.0" y="115.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_3" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="50.0" x="636.0" y="774.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_2" bpmnElement="ScriptTask_2" isExpanded="true">
-        <dc:Bounds height="50.0" width="86.0" x="174.0" y="97.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_2" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="62.0" x="186.0" y="116.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_3" bpmnElement="ScriptTask_3" isExpanded="true">
-        <dc:Bounds height="50.0" width="81.0" x="274.0" y="95.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_9" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="47.0" x="291.0" y="114.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_4" bpmnElement="ScriptTask_4" isExpanded="true">
-        <dc:Bounds height="50.0" width="81.0" x="390.0" y="97.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_12" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="52.0" x="404.0" y="116.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_5" bpmnElement="ScriptTask_5" isExpanded="true">
-        <dc:Bounds height="50.0" width="51.0" x="515.0" y="97.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_5" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="43.0" x="519.0" y="116.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_6" bpmnElement="ScriptTask_6" isExpanded="true">
-        <dc:Bounds height="50.0" width="81.0" x="620.0" y="97.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_6">
-          <dc:Bounds height="22.0" width="51.0" x="635.0" y="111.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_7" bpmnElement="ScriptTask_7" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="606.0" y="200.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_7">
-          <dc:Bounds height="11.0" width="70.0" x="626.0" y="219.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_8" bpmnElement="ScriptTask_8" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="606.0" y="280.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_8">
-          <dc:Bounds height="11.0" width="97.0" x="612.0" y="299.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_9" bpmnElement="ScriptTask_9" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="606.0" y="350.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_10">
-          <dc:Bounds height="11.0" width="93.0" x="614.0" y="369.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_10" bpmnElement="ScriptTask_10" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="606.0" y="420.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_11">
-          <dc:Bounds height="11.0" width="44.0" x="639.0" y="439.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_11" bpmnElement="ScriptTask_11" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="606.0" y="495.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_13">
-          <dc:Bounds height="22.0" width="83.0" x="619.0" y="509.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_12" bpmnElement="ScriptTask_12" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="606.0" y="560.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_14">
-          <dc:Bounds height="11.0" width="64.0" x="629.0" y="579.0"/>
+          <dc:Bounds height="11.0" width="50.0" x="640.0" y="151.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_CallActivity_2" bpmnElement="CallActivity_2" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="603.0" y="630.0"/>
+        <dc:Bounds height="50.0" width="110.0" x="610.0" y="499.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_15">
-          <dc:Bounds height="11.0" width="47.0" x="634.0" y="649.0"/>
+          <dc:Bounds height="11.0" width="47.0" x="641.0" y="518.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_1" bpmnElement="Task_1" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="685.0" y="685.0"/>
+        <dc:Bounds height="50.0" width="110.0" x="610.0" y="400.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_16">
-          <dc:Bounds height="11.0" width="45.0" x="717.0" y="704.0"/>
+          <dc:Bounds height="11.0" width="45.0" x="642.0" y="419.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_5" sourceElement="BPMNShape_ScriptTask_2" targetElement="BPMNShape_ScriptTask_3">
-        <di:waypoint xsi:type="dc:Point" x="260.0" y="122.0"/>
-        <di:waypoint xsi:type="dc:Point" x="267.0" y="122.0"/>
-        <di:waypoint xsi:type="dc:Point" x="267.0" y="120.0"/>
-        <di:waypoint xsi:type="dc:Point" x="274.0" y="120.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_10"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_7" bpmnElement="SequenceFlow_7" sourceElement="BPMNShape_ScriptTask_3" targetElement="BPMNShape_ScriptTask_4">
-        <di:waypoint xsi:type="dc:Point" x="355.0" y="120.0"/>
-        <di:waypoint xsi:type="dc:Point" x="372.0" y="120.0"/>
-        <di:waypoint xsi:type="dc:Point" x="372.0" y="122.0"/>
-        <di:waypoint xsi:type="dc:Point" x="390.0" y="122.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_13"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_ScriptTask_4" targetElement="BPMNShape_ScriptTask_5">
-        <di:waypoint xsi:type="dc:Point" x="471.0" y="122.0"/>
-        <di:waypoint xsi:type="dc:Point" x="493.0" y="122.0"/>
-        <di:waypoint xsi:type="dc:Point" x="515.0" y="122.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_6"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="BPMNShape_ScriptTask_5" targetElement="BPMNShape_ScriptTask_6">
-        <di:waypoint xsi:type="dc:Point" x="566.0" y="122.0"/>
-        <di:waypoint xsi:type="dc:Point" x="593.0" y="122.0"/>
-        <di:waypoint xsi:type="dc:Point" x="620.0" y="122.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_14"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_9" bpmnElement="SequenceFlow_9" sourceElement="BPMNShape_ScriptTask_6" targetElement="BPMNShape_ScriptTask_7">
-        <di:waypoint xsi:type="dc:Point" x="660.0" y="147.0"/>
-        <di:waypoint xsi:type="dc:Point" x="660.0" y="173.0"/>
-        <di:waypoint xsi:type="dc:Point" x="661.0" y="200.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_15"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_11" bpmnElement="SequenceFlow_11" sourceElement="BPMNShape_ScriptTask_7" targetElement="BPMNShape_ScriptTask_8">
-        <di:waypoint xsi:type="dc:Point" x="661.0" y="250.0"/>
-        <di:waypoint xsi:type="dc:Point" x="661.0" y="265.0"/>
-        <di:waypoint xsi:type="dc:Point" x="661.0" y="280.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_16"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_12" bpmnElement="SequenceFlow_12" sourceElement="BPMNShape_ScriptTask_8" targetElement="BPMNShape_ScriptTask_9">
-        <di:waypoint xsi:type="dc:Point" x="661.0" y="330.0"/>
-        <di:waypoint xsi:type="dc:Point" x="661.0" y="340.0"/>
-        <di:waypoint xsi:type="dc:Point" x="661.0" y="350.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_17"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_13" bpmnElement="SequenceFlow_13" sourceElement="BPMNShape_ScriptTask_9" targetElement="BPMNShape_ScriptTask_10">
-        <di:waypoint xsi:type="dc:Point" x="661.0" y="400.0"/>
-        <di:waypoint xsi:type="dc:Point" x="661.0" y="410.0"/>
-        <di:waypoint xsi:type="dc:Point" x="661.0" y="420.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_18"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_14" bpmnElement="SequenceFlow_14" sourceElement="BPMNShape_ScriptTask_10" targetElement="BPMNShape_ScriptTask_11">
-        <di:waypoint xsi:type="dc:Point" x="661.0" y="470.0"/>
-        <di:waypoint xsi:type="dc:Point" x="661.0" y="482.0"/>
-        <di:waypoint xsi:type="dc:Point" x="661.0" y="495.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_19"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="SequenceFlow_4" sourceElement="BPMNShape_ScriptTask_11" targetElement="BPMNShape_ScriptTask_12">
-        <di:waypoint xsi:type="dc:Point" x="661.0" y="545.0"/>
-        <di:waypoint xsi:type="dc:Point" x="661.0" y="552.0"/>
-        <di:waypoint xsi:type="dc:Point" x="661.0" y="560.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_20"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_10" bpmnElement="SequenceFlow_10" sourceElement="BPMNShape_ScriptTask_12" targetElement="BPMNShape_CallActivity_2">
-        <di:waypoint xsi:type="dc:Point" x="661.0" y="610.0"/>
-        <di:waypoint xsi:type="dc:Point" x="661.0" y="620.0"/>
-        <di:waypoint xsi:type="dc:Point" x="658.0" y="620.0"/>
-        <di:waypoint xsi:type="dc:Point" x="658.0" y="630.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_21"/>
-      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_13" bpmnElement="ScriptTask_13" isExpanded="true">
+        <dc:Bounds height="33.0" width="104.0" x="21.0" y="195.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_2">
+          <dc:Bounds height="22.0" width="13.0" x="66.0" y="200.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_14" bpmnElement="ScriptTask_14" isExpanded="true">
+        <dc:Bounds height="50.0" width="110.0" x="18.0" y="297.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_4">
+          <dc:Bounds height="22.0" width="62.0" x="42.0" y="311.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_15" bpmnElement="ScriptTask_15" isExpanded="true">
+        <dc:Bounds height="50.0" width="110.0" x="18.0" y="400.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_5">
+          <dc:Bounds height="22.0" width="47.0" x="49.0" y="414.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_16" bpmnElement="ScriptTask_16" isExpanded="true">
+        <dc:Bounds height="50.0" width="110.0" x="18.0" y="499.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_6">
+          <dc:Bounds height="22.0" width="52.0" x="47.0" y="513.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_17" bpmnElement="ScriptTask_17" isExpanded="true">
+        <dc:Bounds height="50.0" width="110.0" x="210.0" y="499.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_7">
+          <dc:Bounds height="22.0" width="43.0" x="243.0" y="513.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_18" bpmnElement="ScriptTask_18" isExpanded="true">
+        <dc:Bounds height="50.0" width="110.0" x="210.0" y="400.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_8">
+          <dc:Bounds height="22.0" width="84.0" x="223.0" y="414.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_19" bpmnElement="ScriptTask_19" isExpanded="true">
+        <dc:Bounds height="50.0" width="110.0" x="210.0" y="297.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_9">
+          <dc:Bounds height="22.0" width="70.0" x="230.0" y="311.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_20" bpmnElement="ScriptTask_20" isExpanded="true">
+        <dc:Bounds height="50.0" width="110.0" x="210.0" y="186.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_10">
+          <dc:Bounds height="22.0" width="97.0" x="216.0" y="200.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_21" bpmnElement="ScriptTask_21" isExpanded="true">
+        <dc:Bounds height="50.0" width="110.0" x="410.0" y="187.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_11">
+          <dc:Bounds height="22.0" width="93.0" x="418.0" y="201.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_22" bpmnElement="ScriptTask_22" isExpanded="true">
+        <dc:Bounds height="50.0" width="110.0" x="410.0" y="297.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_12">
+          <dc:Bounds height="22.0" width="44.0" x="443.0" y="311.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_23" bpmnElement="ScriptTask_23" isExpanded="true">
+        <dc:Bounds height="63.0" width="110.0" x="409.0" y="400.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_13">
+          <dc:Bounds height="22.0" width="86.0" x="421.0" y="420.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_24" bpmnElement="ScriptTask_24" isExpanded="true">
+        <dc:Bounds height="50.0" width="110.0" x="410.0" y="499.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_14">
+          <dc:Bounds height="22.0" width="64.0" x="433.0" y="513.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_8" bpmnElement="SequenceFlow_8" sourceElement="BPMNShape_CallActivity_2" targetElement="BPMNShape_Task_1">
-        <di:waypoint xsi:type="dc:Point" x="658.0" y="680.0"/>
-        <di:waypoint xsi:type="dc:Point" x="658.0" y="710.0"/>
-        <di:waypoint xsi:type="dc:Point" x="685.0" y="710.0"/>
+        <di:waypoint xsi:type="dc:Point" x="665.0" y="499.0"/>
+        <di:waypoint xsi:type="dc:Point" x="665.0" y="475.0"/>
+        <di:waypoint xsi:type="dc:Point" x="665.0" y="450.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_22"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_16" bpmnElement="SequenceFlow_16" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_2">
-        <di:waypoint xsi:type="dc:Point" x="685.0" y="718.0"/>
-        <di:waypoint xsi:type="dc:Point" x="661.0" y="718.0"/>
-        <di:waypoint xsi:type="dc:Point" x="661.0" y="738.0"/>
+        <di:waypoint xsi:type="dc:Point" x="665.0" y="400.0"/>
+        <di:waypoint xsi:type="dc:Point" x="665.0" y="276.0"/>
+        <di:waypoint xsi:type="dc:Point" x="665.0" y="151.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_23"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_15" bpmnElement="SequenceFlow_15" sourceElement="BPMNShape_1" targetElement="BPMNShape_ScriptTask_2">
-        <di:waypoint xsi:type="dc:Point" x="98.0" y="122.0"/>
-        <di:waypoint xsi:type="dc:Point" x="136.0" y="122.0"/>
-        <di:waypoint xsi:type="dc:Point" x="174.0" y="122.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_4"/>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_15" bpmnElement="SequenceFlow_15" sourceElement="BPMNShape_1" targetElement="BPMNShape_ScriptTask_13">
+        <di:waypoint xsi:type="dc:Point" x="73.0" y="140.0"/>
+        <di:waypoint xsi:type="dc:Point" x="73.0" y="167.0"/>
+        <di:waypoint xsi:type="dc:Point" x="73.0" y="195.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_17"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_17" bpmnElement="SequenceFlow_17" sourceElement="BPMNShape_ScriptTask_13" targetElement="BPMNShape_ScriptTask_14">
+        <di:waypoint xsi:type="dc:Point" x="73.0" y="228.0"/>
+        <di:waypoint xsi:type="dc:Point" x="73.0" y="262.0"/>
+        <di:waypoint xsi:type="dc:Point" x="73.0" y="297.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_18"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_18" bpmnElement="SequenceFlow_18" sourceElement="BPMNShape_ScriptTask_14" targetElement="BPMNShape_ScriptTask_15">
+        <di:waypoint xsi:type="dc:Point" x="73.0" y="347.0"/>
+        <di:waypoint xsi:type="dc:Point" x="73.0" y="373.0"/>
+        <di:waypoint xsi:type="dc:Point" x="73.0" y="400.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_19"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_19" bpmnElement="SequenceFlow_19" sourceElement="BPMNShape_ScriptTask_15" targetElement="BPMNShape_ScriptTask_16">
+        <di:waypoint xsi:type="dc:Point" x="73.0" y="450.0"/>
+        <di:waypoint xsi:type="dc:Point" x="73.0" y="474.0"/>
+        <di:waypoint xsi:type="dc:Point" x="73.0" y="499.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_20"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_20" bpmnElement="SequenceFlow_20" sourceElement="BPMNShape_ScriptTask_16" targetElement="BPMNShape_ScriptTask_17">
+        <di:waypoint xsi:type="dc:Point" x="128.0" y="524.0"/>
+        <di:waypoint xsi:type="dc:Point" x="169.0" y="524.0"/>
+        <di:waypoint xsi:type="dc:Point" x="210.0" y="524.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_21"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_21" bpmnElement="SequenceFlow_21" sourceElement="BPMNShape_ScriptTask_17" targetElement="BPMNShape_ScriptTask_18">
+        <di:waypoint xsi:type="dc:Point" x="265.0" y="499.0"/>
+        <di:waypoint xsi:type="dc:Point" x="265.0" y="475.0"/>
+        <di:waypoint xsi:type="dc:Point" x="265.0" y="450.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_24"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_22" bpmnElement="SequenceFlow_22" sourceElement="BPMNShape_ScriptTask_18" targetElement="BPMNShape_ScriptTask_19">
+        <di:waypoint xsi:type="dc:Point" x="265.0" y="400.0"/>
+        <di:waypoint xsi:type="dc:Point" x="265.0" y="374.0"/>
+        <di:waypoint xsi:type="dc:Point" x="265.0" y="347.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_25"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_23" bpmnElement="SequenceFlow_23" sourceElement="BPMNShape_ScriptTask_19" targetElement="BPMNShape_ScriptTask_20">
+        <di:waypoint xsi:type="dc:Point" x="265.0" y="297.0"/>
+        <di:waypoint xsi:type="dc:Point" x="265.0" y="267.0"/>
+        <di:waypoint xsi:type="dc:Point" x="265.0" y="236.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_26"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_24" bpmnElement="SequenceFlow_24" sourceElement="BPMNShape_ScriptTask_20" targetElement="BPMNShape_ScriptTask_21">
+        <di:waypoint xsi:type="dc:Point" x="320.0" y="211.0"/>
+        <di:waypoint xsi:type="dc:Point" x="365.0" y="211.0"/>
+        <di:waypoint xsi:type="dc:Point" x="410.0" y="212.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_27"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_25" bpmnElement="SequenceFlow_25" sourceElement="BPMNShape_ScriptTask_21" targetElement="BPMNShape_ScriptTask_22">
+        <di:waypoint xsi:type="dc:Point" x="465.0" y="237.0"/>
+        <di:waypoint xsi:type="dc:Point" x="465.0" y="267.0"/>
+        <di:waypoint xsi:type="dc:Point" x="465.0" y="297.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_28"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_26" bpmnElement="SequenceFlow_26" sourceElement="BPMNShape_ScriptTask_22" targetElement="BPMNShape_ScriptTask_23">
+        <di:waypoint xsi:type="dc:Point" x="465.0" y="347.0"/>
+        <di:waypoint xsi:type="dc:Point" x="465.0" y="373.0"/>
+        <di:waypoint xsi:type="dc:Point" x="464.0" y="400.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_29"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_27" bpmnElement="SequenceFlow_27" sourceElement="BPMNShape_ScriptTask_23" targetElement="BPMNShape_ScriptTask_24">
+        <di:waypoint xsi:type="dc:Point" x="464.0" y="463.0"/>
+        <di:waypoint xsi:type="dc:Point" x="464.0" y="481.0"/>
+        <di:waypoint xsi:type="dc:Point" x="465.0" y="499.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_30"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_29" bpmnElement="SequenceFlow_29" sourceElement="BPMNShape_ScriptTask_24" targetElement="BPMNShape_CallActivity_2">
+        <di:waypoint xsi:type="dc:Point" x="520.0" y="524.0"/>
+        <di:waypoint xsi:type="dc:Point" x="565.0" y="524.0"/>
+        <di:waypoint xsi:type="dc:Point" x="610.0" y="524.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_31"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
