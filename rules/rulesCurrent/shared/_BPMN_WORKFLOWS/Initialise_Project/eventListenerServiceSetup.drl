@@ -1,0 +1,23 @@
+package life.genny.rules;
+
+global org.apache.logging.log4j.Logger log;
+import life.genny.rules.listeners.JbpmInitListener;
+/* import org.kie.api.runtime.process.WorkflowProcessInstance; */
+import life.genny.models.GennyToken;
+
+
+
+
+rule "eventListenerServiceSetup"
+salience 10000
+    no-loop true
+    when
+    serviceToken: GennyToken(code == "serviceToken" )
+    msg: QEventMessage( event_type == "EVT_MSG" && "INIT_STARTUP" == data.code)
+    then
+     log.info("Setup Startup Listener for serviceToken!");
+     kcontext.getKnowledgeRuntime().addEventListener(new JbpmInitListener(serviceToken)); 
+
+end
+
+

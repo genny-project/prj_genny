@@ -25,6 +25,8 @@
   <bpmn2:itemDefinition id="ItemDefinition_38_1" isCollection="false" structureRef="life.genny.utils.Layout.LayoutPosition"/>
   <bpmn2:itemDefinition id="ItemDefinition_38" isCollection="false" structureRef="life.genny.qwanda.ContextType"/>
   <bpmn2:itemDefinition id="ItemDefinition_8" isCollection="false" structureRef="life.genny.models.GennyToken"/>
+  <bpmn2:itemDefinition id="ItemDefinition_17" isCollection="false" structureRef="life.genny.rules.listeners.JbpmInitListener"/>
+  <bpmn2:itemDefinition id="ItemDefinition_20" isCollection="false" structureRef="org.apache.logging.log4j.Logger"/>
   <bpmn2:process id="init_project" drools:packageName="life.genny.jbpm" name="Initialise Project" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.qwanda.message.QEventMessage"/>
@@ -34,7 +36,6 @@
       <drools:import name="life.genny.eventbus.EventBusInterface"/>
       <drools:import name="life.genny.eventbus.VertxCache"/>
       <drools:import name="life.genny.eventbus.WildflyCacheInterface"/>
-      <drools:global identifier="processInstance" type="org.kie.api.runtime.process.WorkflowProcessInstance"/>
       <drools:import name="life.genny.qwanda.message.QDataBaseEntityMessage"/>
       <drools:import name="life.genny.utils.VertxUtils"/>
       <drools:import name="life.genny.utils.VertxUtils.ESubscriptionType"/>
@@ -52,6 +53,9 @@
       <drools:import name="life.genny.utils.Layout.LayoutPosition"/>
       <drools:import name="life.genny.qwanda.ContextType"/>
       <drools:import name="life.genny.models.GennyToken"/>
+      <drools:import name="life.genny.rules.listeners.JbpmInitListener"/>
+      <drools:global identifier="log" type="org.apache.logging.log4j.Logger"/>
+      <drools:import name="org.apache.logging.log4j.Logger"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_1" name="message"/>
     <bpmn2:property id="rules" itemSubjectRef="ItemDefinition_2" name="rules"/>
@@ -62,54 +66,11 @@
           <drools:metaValue><![CDATA[InitProject]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
-      <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
       <bpmn2:conditionalEventDefinition id="ConditionalEventDefinition_2">
         <bpmn2:condition xsi:type="bpmn2:tFormalExpression" id="FormalExpression_2" language="http://www.java.com/java">life.genny.qwanda.message.QEventMessage( event_type == &quot;EVT_MSG&quot; &amp;&amp; &quot;INIT_STARTUP&quot; == data.code)</bpmn2:condition>
       </bpmn2:conditionalEventDefinition>
     </bpmn2:startEvent>
-    <bpmn2:scriptTask id="ScriptTask_1" name="Init" scriptFormat="http://www.java.com/java">
-      <bpmn2:extensionElements>
-        <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Init]]></drools:metaValue>
-        </drools:metaData>
-      </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_15</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;Auth Init Start&quot;);
-processInstance = (WorkflowProcessInstance)kcontext.getProcessInstance();
-System.out.println(&quot;workprocessInstanceId = &quot;+processInstance.getId());
-Integer count = kcontext.getKieRuntime().getEntryPoint(&quot;DEFAULT&quot;).getObjects().size();
-System.out.println(&quot;count=&quot;+count);
-
-kcontext.getKieRuntime().getEntryPoint(&quot;DEFAULT&quot;).getObjects().forEach(obj -> {
-	
-if(obj instanceof String){
-		kcontext.setVariable(&quot;name&quot;, (String)obj);
-	System.out.println(&quot;FOUND STRING&quot;);
-	} else if(obj instanceof QEventMessage){
-		kcontext.setVariable(&quot;message&quot;, (QEventMessage)obj);
-System.out.println(&quot;FOUND QEVENTMESSAGE&quot;);
-	} else if (obj instanceof QRules){
-		kcontext.setVariable(&quot;rules&quot;, (QRules)obj);
-		System.out.println(&quot;FOUND QRULE &quot;);
-		
-	}  else if (obj instanceof GennyToken){
-		kcontext.setVariable(&quot;serviceToken&quot;, (GennyToken)obj);
-		System.out.println(&quot;FOUND SERVICE TOKEN &quot;);
-		
-	}  
-    });
-
-QRules rs = ((QRules)kcontext.getVariable(&quot;rules&quot;));
-if (rs != null ){
-   System.out.println(&quot;JBPM QRules=&quot;+rs.realm());
-} else {
-   System.out.println(&quot;rs is null&quot;);
-}
-
-</bpmn2:script>
-    </bpmn2:scriptTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_2" sourceRef="StartEvent_1" targetRef="ScriptTask_1"/>
     <bpmn2:endEvent id="EndEvent_2" name="End of Project Initialisation">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -124,22 +85,25 @@ if (rs != null ){
           <drools:metaValue><![CDATA[Generate Searches]]></drools:metaValue>
         </drools:metaData>
         <drools:onEntry-script scriptFormat="http://www.java.com/java">
-          <drools:script>System.out.println(&quot;Generate Searches - Start&quot;);
-life.genny.models.GennyToken gennyToken = (GennyToken)kcontext.getVariable(&quot;serviceToken&quot;);
-System.out.println(&quot;Genny Token Service Code = &quot;+gennyToken.getCode());
+          <drools:script>log.info(&quot;Generate Searches - Start &quot;); 
+log.info(&quot;QRules Realm=&quot;+rules.realm());
+log.info(&quot;Genny Token Service Code = &quot;+serviceToken.getCode());
+kcontext.getKnowledgeRuntime().insert(serviceToken);
 kcontext.getKnowledgeRuntime().insert(kcontext.getProcessInstance());
-kcontext.getKnowledgeRuntime().insert(gennyToken);</drools:script>
+</drools:script>
         </drools:onEntry-script>
         <drools:onExit-script scriptFormat="http://www.java.com/java">
-          <drools:script>System.out.println(&quot;Generate Searches - Completed&quot;);</drools:script>
+          <drools:script>log.info(&quot;Generate Searches - Completed&quot;);</drools:script>
         </drools:onExit-script>
       </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_15</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_17</bpmn2:outgoing>
       <bpmn2:ioSpecification id="InputOutputSpecification_2">
         <bpmn2:dataInput id="DataInput_5" itemSubjectRef="ItemDefinition_8" name="serviceToken"/>
+        <bpmn2:dataInput id="DataInput_1" itemSubjectRef="ItemDefinition_2" name="rules"/>
         <bpmn2:inputSet id="InputSet_1" name="Input Set 1">
           <bpmn2:dataInputRefs>DataInput_5</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_1</bpmn2:dataInputRefs>
         </bpmn2:inputSet>
         <bpmn2:outputSet id="OutputSet_2" name="Output Set 2"/>
       </bpmn2:ioSpecification>
@@ -147,54 +111,45 @@ kcontext.getKnowledgeRuntime().insert(gennyToken);</drools:script>
         <bpmn2:sourceRef>serviceToken</bpmn2:sourceRef>
         <bpmn2:targetRef>DataInput_5</bpmn2:targetRef>
       </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_2">
+        <bpmn2:sourceRef>rules</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_1</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
     </bpmn2:businessRuleTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_15" drools:priority="1" sourceRef="ScriptTask_1" targetRef="BusinessRuleTask_1"/>
     <bpmn2:sequenceFlow id="SequenceFlow_17" drools:priority="1" sourceRef="BusinessRuleTask_1" targetRef="EndEvent_2"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_1" drools:priority="1" sourceRef="StartEvent_1" targetRef="BusinessRuleTask_1"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Process Diagram">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="init_project">
       <bpmndi:BPMNShape id="BPMNShape_1" bpmnElement="StartEvent_1">
-        <dc:Bounds height="36.0" width="36.0" x="30.0" y="104.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="63.0" y="102.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="41.0" x="28.0" y="140.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_1" bpmnElement="ScriptTask_1" isExpanded="true">
-        <dc:Bounds height="50.0" width="42.0" x="110.0" y="97.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_4" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="13.0" x="124.0" y="116.0"/>
+          <dc:Bounds height="11.0" width="41.0" x="61.0" y="138.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_1" bpmnElement="EndEvent_2">
-        <dc:Bounds height="36.0" width="36.0" x="632.0" y="102.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="770.0" y="102.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_2">
-          <dc:Bounds height="22.0" width="67.0" x="617.0" y="138.0"/>
+          <dc:Bounds height="22.0" width="67.0" x="755.0" y="138.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_BusinessRuleTask_1" bpmnElement="BusinessRuleTask_1" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="345.0" y="95.0"/>
+        <dc:Bounds height="50.0" width="110.0" x="230.0" y="95.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_3">
-          <dc:Bounds height="11.0" width="79.0" x="360.0" y="114.0"/>
+          <dc:Bounds height="11.0" width="79.0" x="245.0" y="114.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_1" targetElement="BPMNShape_ScriptTask_1">
-        <di:waypoint xsi:type="dc:Point" x="66.0" y="122.0"/>
-        <di:waypoint xsi:type="dc:Point" x="88.0" y="122.0"/>
-        <di:waypoint xsi:type="dc:Point" x="110.0" y="122.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_5"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_15" bpmnElement="SequenceFlow_15" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_BusinessRuleTask_1">
-        <di:waypoint xsi:type="dc:Point" x="152.0" y="122.0"/>
-        <di:waypoint xsi:type="dc:Point" x="248.0" y="122.0"/>
-        <di:waypoint xsi:type="dc:Point" x="248.0" y="120.0"/>
-        <di:waypoint xsi:type="dc:Point" x="345.0" y="120.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_6"/>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_17" bpmnElement="SequenceFlow_17" sourceElement="BPMNShape_BusinessRuleTask_1" targetElement="BPMNShape_EndEvent_1">
-        <di:waypoint xsi:type="dc:Point" x="455.0" y="120.0"/>
-        <di:waypoint xsi:type="dc:Point" x="543.0" y="120.0"/>
-        <di:waypoint xsi:type="dc:Point" x="632.0" y="120.0"/>
+        <di:waypoint xsi:type="dc:Point" x="340.0" y="120.0"/>
+        <di:waypoint xsi:type="dc:Point" x="555.0" y="120.0"/>
+        <di:waypoint xsi:type="dc:Point" x="770.0" y="120.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_7"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="BPMNShape_1" targetElement="BPMNShape_BusinessRuleTask_1">
+        <di:waypoint xsi:type="dc:Point" x="99.0" y="120.0"/>
+        <di:waypoint xsi:type="dc:Point" x="164.0" y="120.0"/>
+        <di:waypoint xsi:type="dc:Point" x="230.0" y="120.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_4"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">

@@ -13,7 +13,7 @@
 	<description>jBPM Genny Maven project</description>
 
 	<properties>
-		<runtime.version>7.21.0.Final</runtime.version>
+		<runtime.version>7.22.0.Final</runtime.version>
 		<genny-verticle.version>2.4.0</genny-verticle.version>
 		<genny-rules.version>2.4.0</genny-rules.version>
 
@@ -36,7 +36,7 @@
 		<version.maven-source-plugin>3.0.1</version.maven-source-plugin>
 		<dropwizard.version>3.5.1</dropwizard.version>
 		<vertx-concurrent.version>1.0.0</vertx-concurrent.version>
-		<kie.version>7.21.0.Final</kie.version>
+		<kie.version>7.22.0.Final</kie.version>
 		<junit-version>4.12</junit-version>
 
 		<jar.finalName>${project.name}</jar.finalName>

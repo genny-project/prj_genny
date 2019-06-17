@@ -47,6 +47,7 @@ import io.vavr.Tuple3;
 import io.vertx.core.json.JsonObject;
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
+import life.genny.eventbus.EventBusVertx;
 import life.genny.eventbus.VertxCache;
 import life.genny.jbpm.customworkitemhandlers.AwesomeHandler;
 import life.genny.jbpm.customworkitemhandlers.NotificationWorkItemHandler;
@@ -81,6 +82,9 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 	protected static JsonObject projectParms;
 	
 	protected static Optional<Boolean> isUsingRemote = Optional.empty();
+	
+	protected  GennyToken userToken;
+	protected  GennyToken serviceToken;
 
 
 	@BeforeClass
@@ -382,6 +386,7 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 				gennyToken =  new GennyToken(normalisedUsername,realm,(String)adecodedTokenMap.get("preferred_username"),name,role);
 				gennyToken.setToken(kToken);
 				gennyToken.setAdecodedTokenMap(adecodedTokenMap);
+				this.userToken = gennyToken;
 				
 			} else {
 			
@@ -394,6 +399,7 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 				gennyToken =  new GennyToken(normalisedUsername,realm,(String)adecodedTokenMap.get("preferred_username"),name,role);
 				gennyToken.setToken(token);
 				gennyToken.setAdecodedTokenMap(adecodedTokenMap);
+				this.serviceToken = gennyToken;
 			} else {
 				gennyToken =  new GennyToken(normalisedUsername,realm,username,name,role);
 				VertxUtils.writeCachedJson(realm,"CACHE:SERVICE_TOKEN",gennyToken.getToken());
