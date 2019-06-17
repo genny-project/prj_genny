@@ -1,5 +1,8 @@
 package life.genny.rules;
 
+
+global org.apache.logging.log4j.Logger log;
+
 import life.genny.qwanda.message.QCmdMessage;
 import life.genny.qwanda.message.QBulkMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
@@ -19,13 +22,13 @@ rule "TEST_RULE_1"
     ruleflow-group 'TestRule'
     no-loop true
     when
-        $process : WorkflowProcessInstance( )
+      $process : WorkflowProcessInstance( ) 
      then
-     System.out.println("In TEST RULES!!!!");
+     log.info("In TEST RULES!!!!");
  
-	GennyToken serviceToken = (GennyToken)$process.getVariable("serviceToken");
-	System.out.println("Genny Token Service Code2 = "+serviceToken.getCode());
-	$process.setVariable( "dynamicGroupId","analyst" );
-	retract($process);
+	GennyToken serviceToken = (GennyToken)$process.getVariable("serviceToken"); 
+	log.info("Genny Token Service Code2 = "+serviceToken.getCode());
+/*	$process.setVariable( "dynamicGroupId","analyst" ); 
+	retract($process); */
 
 end

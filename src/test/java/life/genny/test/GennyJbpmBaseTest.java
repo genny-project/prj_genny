@@ -82,6 +82,9 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 	protected static JsonObject projectParms;
 	
 	protected static Optional<Boolean> isUsingRemote = Optional.empty();
+	
+	protected  GennyToken userToken;
+	protected  GennyToken serviceToken;
 
 
 	@BeforeClass
@@ -383,6 +386,7 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 				gennyToken =  new GennyToken(normalisedUsername,realm,(String)adecodedTokenMap.get("preferred_username"),name,role);
 				gennyToken.setToken(kToken);
 				gennyToken.setAdecodedTokenMap(adecodedTokenMap);
+				this.userToken = gennyToken;
 				
 			} else {
 			
@@ -395,6 +399,7 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 				gennyToken =  new GennyToken(normalisedUsername,realm,(String)adecodedTokenMap.get("preferred_username"),name,role);
 				gennyToken.setToken(token);
 				gennyToken.setAdecodedTokenMap(adecodedTokenMap);
+				this.serviceToken = gennyToken;
 			} else {
 				gennyToken =  new GennyToken(normalisedUsername,realm,username,name,role);
 				VertxUtils.writeCachedJson(realm,"CACHE:SERVICE_TOKEN",gennyToken.getToken());
