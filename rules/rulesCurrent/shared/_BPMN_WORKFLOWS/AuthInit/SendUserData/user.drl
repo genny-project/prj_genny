@@ -20,15 +20,15 @@ import org.kie.api.runtime.process.WorkflowProcessInstance;
 
 rule "User"
     ruleflow-group 'SendUserData'
-    no-loop true
+    lock-on-active true
     when
       $process : WorkflowProcessInstance( ) 
      then
-     log.info("Send User");
+     	log.info("Send User");
  
-	QRules rules = (QRules)$process.getVariable("rules"); 
+		QRules rules = (QRules)$process.getVariable("rules"); 
 
-	BaseEntity user= rules.getUser();
+		BaseEntity user= rules.getUser();
 
 
         if(user != null) {

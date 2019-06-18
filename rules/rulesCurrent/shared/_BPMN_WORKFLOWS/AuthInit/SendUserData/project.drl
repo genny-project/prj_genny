@@ -20,13 +20,14 @@ import org.kie.api.runtime.process.WorkflowProcessInstance;
 
 rule "Project"
     ruleflow-group 'SendUserData'
-    no-loop true
+    lock-on-active true
     when
       $process : WorkflowProcessInstance( ) 
+
      then
      log.info("Send Project");
  
-	QRules rules = (QRules)$process.getVariable("rules"); 
+	QRules rules = (QRules)$process.getVariable("rules");  
 	BaseEntity project = rules.getProject();
 
         if(project != null) {

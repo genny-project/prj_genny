@@ -20,24 +20,24 @@ import org.kie.api.runtime.process.WorkflowProcessInstance;
 
 rule "UserCompany"
     ruleflow-group 'SendUserData'
-    no-loop true
+    lock-on-active true
     when
       $process : WorkflowProcessInstance( ) 
      then
-     log.info("Send User Company");
+     	log.info("Send User Company");
  
-	QRules rules = (QRules)$process.getVariable("rules"); 
+		QRules rules = (QRules)$process.getVariable("rules"); 
 
-if (rules.getUser() != null) {
-String userCode = rules.getUser().getCode();
-log.info("userCode="+userCode);
-     	/*  Get Company Code of the current user   */
-        BaseEntity company = rules.baseEntity.getParent(userCode, "LNK_STAFF");
+		if (rules.getUser() != null) {
+			String userCode = rules.getUser().getCode();
+			log.info("userCode="+userCode);
+     		/*  Get Company Code of the current user   */
+        	BaseEntity company = rules.baseEntity.getParent(userCode, "LNK_STAFF");
 
-        if(company != null)
-        {
-            rules.publishCmd(company, "USER_COMPANY");
-        }
-}
+        	if(company != null)
+        	{
+            	rules.publishCmd(company, "USER_COMPANY");
+        	}
+		}
 
 end

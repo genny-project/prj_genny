@@ -222,7 +222,7 @@ kcontext.getKnowledgeRuntime().insert(kcontext.getProcessInstance());</drools:sc
       <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
       <bpmn2:ioSpecification id="InputOutputSpecification_2">
-        <bpmn2:dataInput id="DataInput_6" itemSubjectRef="ItemDefinition_2" name="rules"/>
+        <bpmn2:dataInput id="DataInput_6" itemSubjectRef="ItemDefinition_2" name="_rules"/>
         <bpmn2:inputSet id="InputSet_1" name="Input Set 1">
           <bpmn2:dataInputRefs>DataInput_6</bpmn2:dataInputRefs>
         </bpmn2:inputSet>
