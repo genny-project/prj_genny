@@ -1,0 +1,96 @@
+package life.genny.rules;
+import life.genny.rules.QRules;
+
+rule "Generate Tab Frames"
+	when
+		rules: QRules(  isState("GENERATE_TAB_FRAMES") &&
+						!isState("LOOP_GENERATE_TAB_FRAMES"))
+	 then
+	 	rules.header();
+		rules.setState("LOOP_GENERATE_TAB_FRAMES");
+
+		/* we get the SearchEntity  */
+		SearchEntity searchBe = rules.getAsSearchEntity("searchBe");
+		if(searchBe == null){
+			rules.println("searchBe not in the state");
+			return;
+		}
+
+		/* we create a bulk message */
+        QBulkMessage bulkMsg = new QBulkMessage();
+
+        /* we get the frame-tabs, frame-tab-header, frame-tabs-content frames */
+        BaseEntity frameTabsBe = new BaseEntity("FRM_TABS", "frame-tabs");
+        BaseEntity frameTabHeaderBe = new BaseEntity("FRM_TAB_HEADER", "frame-tab-header");
+        BaseEntity frameTabContentBe = new BaseEntity("FRM_TAB_CONTENT", "frame-tabs-content");
+
+        /* we get the table-frame and frame-content */
+        BaseEntity frameContentBe = new BaseEntity("FRM_CONTENT", "frame-content");
+		BaseEntity frameTableBe = rules.baseEntity.getBaseEntityByCode("FRM_TABLE");
+
+		/* we link the frames */
+		frameContentBe = rules.createVirtualLink(frameContentBe, frameTabsBe, "LNK_FRAME", "CENTRE", 1.0);
+		frameTabsBe = rules.createVirtualLink(frameTabsBe, frameTabHeaderBe, "LNK_FRAME", "NORTH", 1.0);
+		frameTabsBe = rules.createVirtualLink(frameTabsBe, frameTabContentBe, "LNK_FRAME", "CENTRE", 1.0);
+		frameTabContentBe = rules.createVirtualLink(frameTabContentBe, frameTableBe, "LNK_FRAME", "CENTRE", 1.0);
+
+		/* creating tab-header questions */
+		Attribute quesGrpAttr = RulesUtils.attributeMap.get("QQQ_QUESTION_GROUP");
+		Question tabHeaderQues = new Question("QUE_TAB_HEADER_GRP", "Tab Header", quesGrpAttr, true);
+		Ask tabHeaderAsk = new Ask(tabHeaderQues, rules.getUser().getCode(), searchBe.getCode());
+
+		/* creating questions for tabs */
+		Attribute actionAttribute = RulesUtils.attributeMap.get("PRI_EVENT");
+		List<Ask> childAsks = new ArrayList<>();
+
+		for(int i=1; i <= 7; i++){
+			Question tab = new Question("QUE_TAB_" + i, "Tab" + i, actionAttribute, true);
+			Ask ask= new Ask(tab, rules.getUser().getCode(), searchBe.getCode());
+			childAsks.add(ask);
+		}
+
+		/* setting child asks */
+		Ask[] childAsksArr = childAsks.stream().toArray(Ask[]::new);
+		tabHeaderAsk.setChildAsks(childAsksArr);
+
+		/* apply themes to tab-header ask */
+		BaseEntity horizontalTheme = rules.baseEntity.getBaseEntityByCode("THM_DISPLAY_HORIZONTAL");
+		rules.publishBaseEntityByCode(horizontalTheme.getCode());
+
+		rules.createVirtualContext(tabHeaderAsk, horizontalTheme, ContextType.THEME);
+
+		/* Sending Ask Message */
+		Ask[] tabHeaderAskArr = { tabHeaderAsk };
+		QDataAskMessage tabHeaderAskMsg = new QDataAskMessage(tabHeaderAskArr);
+        tabHeaderAskMsg.setReplace(true);
+        rules.publishCmd(tabHeaderAskMsg);
+
+		/* link tab-header frame to ta-header questions */
+        frameTabHeaderBe = rules.createVirtualLink(frameTabHeaderBe, tabHeaderAsk, "LNK_ASK", "WEST");
+
+		QDataBaseEntityMessage frameContentBeMsg = new QDataBaseEntityMessage(frameContentBe);
+		frameContentBeMsg.setReplace(true);
+		QDataBaseEntityMessage frameTabsBeMsg = new QDataBaseEntityMessage(frameTabsBe);
+		frameTabsBeMsg.setReplace(true);
+		QDataBaseEntityMessage frameTabHeaderBeMsg = new QDataBaseEntityMessage(frameTabHeaderBe);
+		frameTabHeaderBeMsg.setReplace(true);
+		QDataBaseEntityMessage frameTabContentBeMsg = new QDataBaseEntityMessage(frameTabContentBe);
+		frameTabContentBeMsg.setReplace(true);
+		QDataBaseEntityMessage frameTableBeMsg = new QDataBaseEntityMessage(frameTableBe);
+		frameTableBeMsg.setReplace(true);
+
+        /* we add it to the bulk */
+        bulkMsg.add(frameContentBeMsg);
+        bulkMsg.add(frameTabsBeMsg);
+        bulkMsg.add(frameTabHeaderBeMsg);
+        bulkMsg.add(frameTabContentBeMsg);
+        bulkMsg.add(frameTableBeMsg);
+
+		/* we store the bulk */
+		/* rules.set("bulkMsg", bulkMsg); */
+		rules.publishCmd(bulkMsg);
+		rules.setState("GENERATED_TAB_FRAMES");
+
+		/* rules.setState("TRIGGER_SEND_TABLE"); */
+        rules.footer();
+    end
