@@ -30,6 +30,7 @@ import life.genny.qwandautils.QwandaUtils;
 import life.genny.rules.QRules;
 import life.genny.rules.listeners.JbpmInitListener;
 import life.genny.utils.QuestionUtils;
+import life.genny.utils.Layout.LayoutPosition;
 
 public class AuthInitTest extends GennyJbpmBaseTest {
 
@@ -48,7 +49,51 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		super(false);
 	}
 
+	
 	@Test
+	public void testInit()
+	{
+
+		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
+		QRules rules = getQRules(userToken); // defaults to user anyway
+		System.out.println(rules.getToken());
+
+		setUpCache(GennySettings.mainrealm, userToken);
+
+//		/* get the root frame base entity */
+//        life.genny.qwanda.entity.BaseEntity rootFrame = rules.baseEntity.getBaseEntityByCode("FRM_ROOT");
+//
+//        /* get its children (frames) */
+//        List<BaseEntity> children = rules.baseEntity.getLinkedBaseEntities(rootFrame.getCode(), null, null, 3);
+//
+//        /* create message */
+//        life.genny.qwanda.message.QDataBaseEntityMessage messageMF = new QDataBaseEntityMessage(children);
+//
+//        /* add parent as an item */
+//        messageMF.add(rootFrame);
+//
+//        /* set parent */
+//        messageMF.setParentCode(rootFrame.getCode());
+//        
+//        /* send message */
+//        rules.publishCmd(messageMF);
+//        
+//        /* gets the project baseentity */
+//        life.genny.qwanda.entity.BaseEntity project = rules.getProject();
+//  		
+  		/* sends questions for project-name and positions it in the left side of the header frame */
+      // 	rules.askQuestions(rules.getUser().getCode(), project.getCode(), "QUE_FULLNAME_GRP", false, "FRM_HEADER", LayoutPosition.WEST);
+
+       	
+    	rules.sendQuestions("PER_USER1", "PRJ_INTERNMATCH", "QUE_FULLNAME_GRP", "PER_USER1",
+    			true, rules.getToken());
+
+       	
+	}
+	
+	
+	
+	//@Test
 
 	public void testAuthInit() {
 
