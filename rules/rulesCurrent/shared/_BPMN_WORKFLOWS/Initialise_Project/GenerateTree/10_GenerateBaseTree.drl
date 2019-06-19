@@ -34,7 +34,7 @@ rule "Generate Base Tree"
 
       List<Answer> answers = new ArrayList<Answer>();
 
-      answers.add(new Answer("GRP_ROOT", "GRP_ROOT", "GRP_DASHBOARD", "PRI_IS_ADMIN,  PRI_IS_JOHN_HOLLAND"));
+      answers.add(new Answer("GRP_ROOT", "GRP_ROOT", "GRP_DASHBOARD", "PRI_IS_ADMIN"));
 
       rules.baseEntity.saveAnswers(answers,false);
 end
