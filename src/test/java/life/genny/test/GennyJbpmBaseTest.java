@@ -61,6 +61,7 @@ import life.genny.qwandautils.KeycloakUtils;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.rules.QRules;
 import life.genny.rules.RulesLoader;
+import life.genny.rules.listeners.JbpmInitListener;
 import life.genny.utils.VertxUtils;
 
 
@@ -280,6 +281,7 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 		KieSession kieSession = getRuntimeEngine().getKieSession();
 		//Register handlers
 		addWorkItemHandlers(kieSession);
+		kieSession.addEventListener(new JbpmInitListener(userToken));
 		return kieSession;
 	}
 
@@ -383,8 +385,8 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 			if (kToken != null) {
 				Map<String,Object> adecodedTokenMap = RulesLoader.getDecodedTokenMap(kToken);
 
-				gennyToken =  new GennyToken(normalisedUsername,realm,(String)adecodedTokenMap.get("preferred_username"),name,role);
-				gennyToken.setToken(kToken);
+				gennyToken =  new GennyToken(kToken);
+				new GennyToken(normalisedUsername,realm,(String)adecodedTokenMap.get("preferred_username"),name,role);
 				gennyToken.setAdecodedTokenMap(adecodedTokenMap);
 				this.userToken = gennyToken;
 				
@@ -396,8 +398,8 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 			if ("ok".equals(cache.getString("status"))) {
 				String token = cache.getString("value");
 				Map<String,Object> adecodedTokenMap = RulesLoader.getDecodedTokenMap(token);
-				gennyToken =  new GennyToken(normalisedUsername,realm,(String)adecodedTokenMap.get("preferred_username"),name,role);
-				gennyToken.setToken(token);
+				gennyToken =  new GennyToken(kToken);
+				new GennyToken(normalisedUsername,realm,(String)adecodedTokenMap.get("preferred_username"),name,role);
 				gennyToken.setAdecodedTokenMap(adecodedTokenMap);
 				this.serviceToken = gennyToken;
 			} else {

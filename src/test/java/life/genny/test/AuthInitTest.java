@@ -38,7 +38,8 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 	
 	private static final String WFE_SEND_FORMS = "rulesCurrent/shared/_BPMN_WORKFLOWS/send_forms.bpmn";
 	private static final String WFE_SHOW_FORM = "rulesCurrent/shared/_BPMN_WORKFLOWS/show_form.bpmn";
-	private static final String WFE_AUTH_INIT =  "rulesCurrent/shared/_BPMN_WORKFLOWS/auth_init.bpmn";
+	private static final String WFE_AUTH_INIT =  "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/auth_init.bpmn";
+	private static final String WFE_SEND_LLAMA =  "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/send_llama.bpmn";
 	private static final String DRL_PROJECT =  "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/project.drl";
 	private static final String DRL_USER_COMPANY =  "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/user_company.drl";
 	private static final String DRL_USER =  "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/user.drl";
@@ -50,7 +51,7 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 	}
 
 	
-	@Test
+	//@Test
 	public void testInit()
 	{
 
@@ -82,7 +83,7 @@ public class AuthInitTest extends GennyJbpmBaseTest {
         life.genny.qwanda.entity.BaseEntity project = rules.getProject();
   		
   		/* sends questions for project-name and positions it in the left side of the header frame */
-      	rules.askQuestions(rules.getUser().getCode(), project.getCode(), "QUE_FULLNAME_GRP", false, "FRM_HEADER", LayoutPosition.WEST);
+      	rules.askQuestions(rules.getUser().getCode(), project.getCode(), "QUE_FULLNAME_GRP", false, "FRM_HEADER", LayoutPosition.EAST);
 
        	
 //    	rules.sendQuestions("PER_USER1", "PRJ_INTERNMATCH", "QUE_FULLNAME_GRP", "PER_USER1",
@@ -93,11 +94,11 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 	
 	
 	
-	//@Test
+	@Test
 
 	public void testAuthInit() {
 
-		KieSession kieSession = createKSession(WFE_AUTH_INIT,WFE_SEND_FORMS,WFE_SHOW_FORM);
+		KieSession kieSession = createKSession(WFE_AUTH_INIT,WFE_SEND_FORMS,WFE_SHOW_FORM,WFE_SEND_LLAMA);
 //		KieSession kieSession = createKSession(WFE_AUTH_INIT,WFE_SEND_FORMS,WFE_SHOW_FORM,DRL_PROJECT,DRL_USER_COMPANY,DRL_USER,DRL_EVENT_LISTENER_SERVICE_SETUP,DRL_EVENT_LISTENER_USER_SETUP);
 		
 
@@ -118,28 +119,32 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 
 		cmds.add(CommandFactory.newInsert(eventBusMock, "eb"));
 		
-		kieSession.addEventListener(new JbpmInitListener(userToken));
-
-
-		try {
-		long startTime = System.nanoTime();
-		ExecutionResults results = kieSession.execute(CommandFactory.newBatchExecution(cmds));
-		long endTime = System.nanoTime();
-		double difference = (endTime - startTime) / 1e6; // get ms
-
-
-		results.getValue("msg"); // returns the inserted fact Msg
-		QRules rules  = (QRules) results.getValue("qRules"); // returns the inserted fact QRules
-		System.out.println(results.getValue("msg"));
-		System.out.println(rules);
 		
+	
 
-		System.out.println("BPMN completed in " + difference + " ms");
+
+		long startTime = System.nanoTime();
+		ExecutionResults results = null;
+	try {
+		results = kieSession.execute(CommandFactory.newBatchExecution(cmds));
 		} catch (Exception ee) {
 			
 		}
 		finally {
-			
+			long endTime = System.nanoTime();
+			double difference = (endTime - startTime) / 1e6; // get ms
+
+			if (results != null) {
+				results.getValue("msg"); // returns the inserted fact Msg
+				QRules rules  = (QRules) results.getValue("qRules"); // returns the inserted fact QRules
+				System.out.println(results.getValue("msg"));
+				System.out.println(rules);
+			} else {
+				System.out.println("NO RESULTS");
+			}
+
+			System.out.println("BPMN completed in " + difference + " ms");
+
 			kieSession.dispose();
 		}
 		
