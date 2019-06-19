@@ -30,7 +30,7 @@ rule "Generate Base Tree"
     then
 
       QRules rules = (QRules)$process.getVariable("rules");
-      rules.println("RAHUL TEST: Generating Base Tree for " + rules.realm());
+      rules.println("Generating Base Tree for " + rules.realm());
 
       List<Answer> answers = new ArrayList<Answer>();
 
