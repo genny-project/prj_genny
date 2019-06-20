@@ -18,17 +18,23 @@ import life.genny.utils.BaseEntityUtils;
 import life.genny.models.GennyToken;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
 
-rule "TREE_1"
-    ruleflow-group 'GenerateTree'
-    no-loop true
-    when
-      $process : WorkflowProcessInstance( ) 
-     then
-     log.info("Generate Tree 1 Rule");
- 
-	GennyToken serviceToken = (GennyToken)$process.getVariable("serviceToken"); 
-	log.info("Genny Token Service Code2 = "+serviceToken.getCode());
-/*	$process.setVariable( "dynamicGroupId","analyst" ); 
-	retract($process); */
+rule "Generate Base Tree"
 
+    ruleflow-group 'GenerateTree'
+    salience 700
+
+    when
+
+      $process : WorkflowProcessInstance( )
+
+    then
+
+      QRules rules = (QRules)$process.getVariable("rules");
+      rules.println("Generating Base Tree for " + rules.realm());
+
+      List<Answer> answers = new ArrayList<Answer>();
+
+      answers.add(new Answer("GRP_ROOT", "GRP_ROOT", "GRP_DASHBOARD", "PRI_IS_ADMIN"));
+
+      rules.baseEntity.saveAnswers(answers,false);
 end
