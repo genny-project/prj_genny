@@ -3,12 +3,17 @@ package life.genny.test;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.jbpm.test.JbpmJUnitBaseTestCase.Strategy;
 import org.junit.Test;
 import org.kie.api.command.Command;
+import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.ExecutionResults;
 import org.kie.api.runtime.KieSession;
+import org.kie.api.runtime.manager.RuntimeManager;
 import org.kie.internal.command.CommandFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +26,10 @@ import life.genny.models.GennyToken;
 import life.genny.qwanda.Ask;
 import life.genny.qwanda.ContextType;
 import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.llama.Frame;
+import life.genny.qwanda.llama.Frame.ThemeAttribute;
+import life.genny.qwanda.llama.Llama;
+import life.genny.qwanda.message.QBulkMessage;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventMessage;
@@ -29,6 +38,7 @@ import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.rules.QRules;
 import life.genny.rules.listeners.JbpmInitListener;
+import life.genny.utils.FrameUtils;
 import life.genny.utils.QuestionUtils;
 import life.genny.utils.Layout.LayoutPosition;
 
@@ -51,7 +61,7 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 	}
 
 	
-	//@Test
+	@Test
 	public void testInit()
 	{
 
@@ -60,30 +70,69 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		System.out.println(rules.getToken());
 
 		setUpCache(GennySettings.mainrealm, userToken);
+		
+		Frame profile = Frame.Builder.newInstance("FRM_PROFILE")
+						.addTheme("THM_DISPLAY_HORIZONTAL",ThemeAttribute.flexDirection,"row")
+						.build();
+		
+    	Frame header = Frame.Builder.newInstance("FRM_HEADER")
+    					.addFrame(profile,Frame.FramePosition.EAST)
+    					.build();
+		
+		Frame sidebar = Frame.Builder.newInstance("FRM_SIDEBAR")
+						.addTheme("THM_WIDTH_300",ThemeAttribute.width,300)
+						.addTheme("THM_DISPLAY_VERTICAL",ThemeAttribute.flexDirection, "column")
+						.addTheme("THM_DISPLAY_VERTICAL",ThemeAttribute.justifyContent,"flex-start")
+						.build();
+		
+		
+		Frame footer = Frame.Builder.newInstance("FRM_FOOTER")
+						.build();
+		
+		
+		Frame mainFrame = Frame.Builder.newInstance("FRM_MAIN").addTheme("THM_COLOR_WHITE")
+		    	.addFrame(header,Frame.FramePosition.NORTH)
+		    	.addFrame(sidebar,Frame.FramePosition.WEST)
+		    	.addFrame(footer,Frame.FramePosition.SOUTH)
+		    	.build();
+		
+		Frame desktop = Frame.Builder.newInstance("FRM_ROOT") 
+                .addTheme("THM_BACKGROUND_GRAY",Frame.ThemeAttribute.backgroundColor,"gray") 
+                .addTheme("THM_BACKGROUND_INTERNMATCH",Frame.ThemeAttribute.backgroundColor,"#233a4e") 
+                .addTheme("THM_COLOR_WHITE",Frame.ThemeAttribute.backgroundColor,"white") 
+                .addTheme("THM_COLOR_BLACK",Frame.ThemeAttribute.backgroundColor,"black") 
+                .addFrame(mainFrame)
+                      
+                .build(); 
 
+
+		QBulkMessage desktopMessage = FrameUtils.toMessage(desktop,userToken);
+		
+		
+		
 		/* get the root frame base entity */
-        life.genny.qwanda.entity.BaseEntity rootFrame = rules.baseEntity.getBaseEntityByCode("FRM_ROOT");
+     //   life.genny.qwanda.entity.BaseEntity rootFrame = rules.baseEntity.getBaseEntityByCode("FRM_ROOT");
 
         /* get its children (frames) */
-        List<BaseEntity> children = rules.baseEntity.getLinkedBaseEntities(rootFrame.getCode(), null, null, 3);
+     //   List<BaseEntity> children = rules.baseEntity.getLinkedBaseEntities(rootFrame.getCode(), null, null, 3);
 
         /* create message */
-        life.genny.qwanda.message.QDataBaseEntityMessage messageMF = new QDataBaseEntityMessage(children);
+     //   life.genny.qwanda.message.QDataBaseEntityMessage messageMF = new QDataBaseEntityMessage(children);
 
         /* add parent as an item */
-        messageMF.add(rootFrame);
+     //   messageMF.add(rootFrame);
 
         /* set parent */
-        messageMF.setParentCode(rootFrame.getCode());
+      //  messageMF.setParentCode(rootFrame.getCode());
         
         /* send message */
-        rules.publishCmd(messageMF);
+ //       rules.publishCmd(desktopMessage);
         
         /* gets the project baseentity */
-        life.genny.qwanda.entity.BaseEntity project = rules.getProject();
+    //    life.genny.qwanda.entity.BaseEntity project = rules.getProject();
   		
   		/* sends questions for project-name and positions it in the left side of the header frame */
-      	rules.askQuestions(rules.getUser().getCode(), project.getCode(), "QUE_FULLNAME_GRP", false, "FRM_HEADER", LayoutPosition.EAST);
+      //	rules.askQuestions(rules.getUser().getCode(), project.getCode(), "QUE_FULLNAME_GRP", false, "FRM_HEADER", LayoutPosition.EAST);
 
        	
 //    	rules.sendQuestions("PER_USER1", "PRJ_INTERNMATCH", "QUE_FULLNAME_GRP", "PER_USER1",
@@ -94,12 +143,24 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 	
 	
 	
-	@Test
+	//@Test
 
 	public void testAuthInit() {
 
-		KieSession kieSession = createKSession(WFE_AUTH_INIT,WFE_SEND_FORMS,WFE_SHOW_FORM,WFE_SEND_LLAMA);
-//		KieSession kieSession = createKSession(WFE_AUTH_INIT,WFE_SEND_FORMS,WFE_SHOW_FORM,DRL_PROJECT,DRL_USER_COMPANY,DRL_USER,DRL_EVENT_LISTENER_SERVICE_SETUP,DRL_EVENT_LISTENER_USER_SETUP);
+	       Map<String, ResourceType> resources = new HashMap<String, ResourceType>();
+	     String[] jbpms = {WFE_AUTH_INIT,WFE_SEND_FORMS,WFE_SHOW_FORM,WFE_SEND_LLAMA};
+	     String[] drls = {DRL_PROJECT,DRL_USER_COMPANY,DRL_USER,DRL_EVENT_LISTENER_SERVICE_SETUP,DRL_EVENT_LISTENER_USER_SETUP};
+        for (String p : jbpms) {
+            resources.put(p, ResourceType.BPMN2);
+        }
+        for (String p : drls) {
+            resources.put(p, ResourceType.DRL);
+        }
+        createRuntimeManager(Strategy.SINGLETON, resources, null);
+		KieSession kieSession = getRuntimeEngine().getKieSession();
+		//Register handlers
+		addWorkItemHandlers(kieSession);
+		kieSession.addEventListener(new JbpmInitListener(userToken));
 		
 
 		QEventMessage msg = new QEventMessage("EVT_MSG", "AUTH_INIT");
@@ -119,10 +180,6 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 
 		cmds.add(CommandFactory.newInsert(eventBusMock, "eb"));
 		
-		
-	
-
-
 		long startTime = System.nanoTime();
 		ExecutionResults results = null;
 	try {
