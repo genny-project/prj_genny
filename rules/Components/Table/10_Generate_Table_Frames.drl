@@ -34,12 +34,16 @@ rule "Generate Table Frames"
 
 		QDataBaseEntityMessage frameTableBodyBeMsg = new QDataBaseEntityMessage(frameTableBodyBe);
 		frameTableBodyBeMsg.setReplace(true);
+		rules.publishCmd(frameTableBodyBeMsg);
 
 		QDataBaseEntityMessage frameTableBeMsg = new QDataBaseEntityMessage(frameTableBe);
 		frameTableBeMsg.setReplace(true);
+		rules.publishCmd(frameTableBeMsg);
 
+		rules.println("sending frame content msg");
 		QDataBaseEntityMessage frameContentMsg = new QDataBaseEntityMessage(frameContentBe);
 		frameContentMsg.setReplace(true);
+		rules.publishCmd(frameContentMsg);
 
         /* we add it to the bulk */
         bulkMsg.add(frameTableBodyBeMsg);

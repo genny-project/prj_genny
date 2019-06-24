@@ -22,13 +22,13 @@ rule "TEST_RULE_1"
     ruleflow-group 'TestRule'
     no-loop true
     when
-      $process : WorkflowProcessInstance( ) 
+      $process : WorkflowProcessInstance( )
      then
      log.info("In TEST RULES!!!!");
- 
-	GennyToken serviceToken = (GennyToken)$process.getVariable("serviceToken"); 
+
+	GennyToken serviceToken = (GennyToken)$process.getVariable("serviceToken");
 	log.info("Genny Token Service Code2 = "+serviceToken.getCode());
-/*	$process.setVariable( "dynamicGroupId","analyst" ); 
+/*	$process.setVariable( "dynamicGroupId","analyst" );
 	retract($process); */
 
 end
