@@ -150,7 +150,7 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 //    	rules.sendQuestions("PER_USER1", "PRJ_INTERNMATCH", "QUE_FULLNAME_GRP", "PER_USER1",
 //    			true, rules.getToken());
 
-       	
+       	System.out.println("Sent");
 	}
 	
 	
