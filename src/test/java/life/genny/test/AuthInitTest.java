@@ -72,7 +72,7 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		setUpCache(GennySettings.mainrealm, userToken);
 		
 		Frame profile = Frame.Builder.newInstance("FRM_PROFILE")
-						.addTheme("THM_DISPLAY_HORIZONTAL",ThemeAttribute.flexDirection,"row")
+						.addTheme("THM_DISPLAY_HORIZONTAL","flexDirection","row")
 						.build();
 		
     	Frame header = Frame.Builder.newInstance("FRM_HEADER")
@@ -80,9 +80,9 @@ public class AuthInitTest extends GennyJbpmBaseTest {
     					.build();
 		
 		Frame sidebar = Frame.Builder.newInstance("FRM_SIDEBAR")
-						.addTheme("THM_WIDTH_300",ThemeAttribute.width,300)
-						.addTheme("THM_DISPLAY_VERTICAL",ThemeAttribute.flexDirection, "column")
-						.addTheme("THM_DISPLAY_VERTICAL",ThemeAttribute.justifyContent,"flex-start")
+						.addTheme("THM_WIDTH_300","width",300)
+						.addTheme("THM_DISPLAY_VERTICAL","flexDirection", "column")
+						.addTheme("THM_DISPLAY_VERTICAL","justifyContent","flex-start")
 						.build();
 		
 		
@@ -97,16 +97,15 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		    	.build();
 		
 		Frame desktop = Frame.Builder.newInstance("FRM_ROOT") 
-                .addTheme("THM_BACKGROUND_GRAY",Frame.ThemeAttribute.backgroundColor,"gray") 
-                .addTheme("THM_BACKGROUND_INTERNMATCH",Frame.ThemeAttribute.backgroundColor,"#233a4e") 
-                .addTheme("THM_COLOR_WHITE",Frame.ThemeAttribute.backgroundColor,"white") 
-                .addTheme("THM_COLOR_BLACK",Frame.ThemeAttribute.backgroundColor,"black") 
-                .addFrame(mainFrame)
-                      
+                .addTheme("THM_BACKGROUND_GRAY","backgroundColor","gray") 
+                .addTheme("THM_BACKGROUND_INTERNMATCH","backgroundColor","#233a4e") 
+                .addTheme("THM_COLOR_WHITE","backgroundColor","white") 
+                .addTheme("THM_COLOR_BLACK",ThemeAttribute.PRI_CONTENT,"backgroundColor","black") 
+                .addFrame(mainFrame)                      
                 .build(); 
 
 
-		QBulkMessage desktopMessage = FrameUtils.toMessage(desktop,userToken);
+		QDataBaseEntityMessage desktopMessage = FrameUtils.toMessage(desktop,userToken);
 		
 		
 		
@@ -126,7 +125,7 @@ public class AuthInitTest extends GennyJbpmBaseTest {
       //  messageMF.setParentCode(rootFrame.getCode());
         
         /* send message */
- //       rules.publishCmd(desktopMessage);
+        rules.publishCmd(desktopMessage);
         
         /* gets the project baseentity */
     //    life.genny.qwanda.entity.BaseEntity project = rules.getProject();
