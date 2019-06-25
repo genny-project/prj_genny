@@ -61,6 +61,19 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 	}
 
 	
+	//@Test
+	public void fixJson()
+	{
+		String json = ",\"valueString\":\"{\\\"flexDirection\\\":\\\"column\\\",\\\"justifyContent\\\":\\\"flex-start\\\"}\",\"weight\":998.0,\"";
+
+		json = json.replace("\\\"","\"");
+		json = json.replace("\"{\"","{\"");
+		json = json.replace("\"}\"","\"}");
+
+		System.out.println(json);
+	
+	}
+	
 	@Test
 	public void testInit()
 	{
@@ -105,7 +118,7 @@ public class AuthInitTest extends GennyJbpmBaseTest {
                 .build(); 
 
 
-		QDataBaseEntityMessage desktopMessage = FrameUtils.toMessage(desktop,userToken);
+		QDataBaseEntityMessage desktopMessage = FrameUtils2.toMessage(desktop,userToken);
 		
 		
 		
