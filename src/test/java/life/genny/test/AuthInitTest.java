@@ -20,6 +20,8 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.reflect.TypeToken;
 
+import io.vavr.Tuple2;
+import io.vertx.core.json.JsonObject;
 import life.genny.jbpm.customworkitemhandlers.AwesomeHandler;
 import life.genny.jbpm.customworkitemhandlers.NotificationWorkItemHandler;
 import life.genny.models.GennyToken;
@@ -61,94 +63,77 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 	}
 
 	
-	//@Test
-	public void fixJson()
-	{
-		String json = ",\"valueString\":\"{\\\"flexDirection\\\":\\\"column\\\",\\\"justifyContent\\\":\\\"flex-start\\\"}\",\"weight\":998.0,\"";
 
-		json = json.replace("\\\"","\"");
-		json = json.replace("\"{\"","{\"");
-		json = json.replace("\"}\"","\"}");
-
-		System.out.println(json);
-	
-	}
 	
 	@Test
-	public void testInit()
+	public void testDesktopPageDisplay()
 	{
 
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 		QRules rules = getQRules(userToken); // defaults to user anyway
-		System.out.println(rules.getToken());
+		GennyToken serviceToken = new GennyToken("serviceToken",rules.getServiceToken());
 
 		setUpCache(GennySettings.mainrealm, userToken);
 		
-		Frame profile = Frame.Builder.newInstance("FRM_PROFILE")
+		Frame2 centre = Frame2.Builder.newInstance("FRM_CENTRE")
+				.build();
+
+		Frame2 profile = Frame2.Builder.newInstance("FRM_PROFILE")
 						.addTheme("THM_DISPLAY_HORIZONTAL","flexDirection","row")
+						.addTheme("THM_BACKGROUND_RED","backgroundColor","red") 
 						.build();
 		
-    	Frame header = Frame.Builder.newInstance("FRM_HEADER")
-    					.addFrame(profile,Frame.FramePosition.EAST)
+    	Frame2 header = Frame2.Builder.newInstance("FRM_HEADER")
+    					.addFrame(profile,Frame2.FramePosition.EAST)
     					.build();
 		
-		Frame sidebar = Frame.Builder.newInstance("FRM_SIDEBAR")
+		Frame2 sidebar = Frame2.Builder.newInstance("FRM_SIDEBAR")
 						.addTheme("THM_WIDTH_300","width",300)
 						.addTheme("THM_DISPLAY_VERTICAL","flexDirection", "column")
 						.addTheme("THM_DISPLAY_VERTICAL","justifyContent","flex-start")
+						.setQuestion("QUE_USER_PROFILE_GRP")
 						.build();
+
+		Frame2 notes = Frame2.Builder.newInstance("FRM_NOTES")
+				.addTheme("THM_WIDTH_300","width",300)
+				.addTheme("THM_DISPLAY_VERTICAL","flexDirection", "column")
+				.addTheme("THM_DISPLAY_VERTICAL","justifyContent","flex-start")
+				.build();
+
 		
-		
-		Frame footer = Frame.Builder.newInstance("FRM_FOOTER")
+		Frame2 footer = Frame2.Builder.newInstance("FRM_FOOTER")
 						.build();
+
+
 		
-		
-		Frame mainFrame = Frame.Builder.newInstance("FRM_MAIN").addTheme("THM_COLOR_WHITE")
-		    	.addFrame(header,Frame.FramePosition.NORTH)
-		    	.addFrame(sidebar,Frame.FramePosition.WEST)
-		    	.addFrame(footer,Frame.FramePosition.SOUTH)
+		Frame2 mainFrame = Frame2.Builder.newInstance("FRM_MAIN").addTheme("THM_COLOR_WHITE")
+		    	.addFrame(header,Frame2.FramePosition.NORTH)
+		    	.addFrame(sidebar,Frame2.FramePosition.WEST)
+		    	.addFrame(footer,Frame2.FramePosition.SOUTH)
+		    	.addFrame(centre,Frame2.FramePosition.CENTRE)
 		    	.build();
 		
-		Frame desktop = Frame.Builder.newInstance("FRM_ROOT") 
+		Frame2 desktop = Frame2.Builder.newInstance("FRM_ROOT") 
                 .addTheme("THM_BACKGROUND_GRAY","backgroundColor","gray") 
                 .addTheme("THM_BACKGROUND_INTERNMATCH","backgroundColor","#233a4e") 
                 .addTheme("THM_COLOR_WHITE","backgroundColor","white") 
-                .addTheme("THM_COLOR_BLACK",ThemeAttribute.PRI_CONTENT,"backgroundColor","black") 
+                .addTheme("THM_COLOR_BLACK",Frame2.ThemeAttribute.PRI_CONTENT,"backgroundColor","black") 
+                
                 .addFrame(mainFrame)                      
                 .build(); 
 
 
-		QDataBaseEntityMessage desktopMessage = FrameUtils2.toMessage(desktop,userToken);
+		ArrayList<QDataAskMessage> askMsgs = new ArrayList<QDataAskMessage>();
 		
+		QDataBaseEntityMessage msg = FrameUtils2.toMessage(desktop,serviceToken,askMsgs);
 		
-		
-		/* get the root frame base entity */
-     //   life.genny.qwanda.entity.BaseEntity rootFrame = rules.baseEntity.getBaseEntityByCode("FRM_ROOT");
-
-        /* get its children (frames) */
-     //   List<BaseEntity> children = rules.baseEntity.getLinkedBaseEntities(rootFrame.getCode(), null, null, 3);
-
-        /* create message */
-     //   life.genny.qwanda.message.QDataBaseEntityMessage messageMF = new QDataBaseEntityMessage(children);
-
-        /* add parent as an item */
-     //   messageMF.add(rootFrame);
-
-        /* set parent */
-      //  messageMF.setParentCode(rootFrame.getCode());
-        
         /* send message */
-        rules.publishCmd(desktopMessage);
+        rules.publishCmd(msg);  // Send QDataBaseEntityMessage
         
-        /* gets the project baseentity */
-    //    life.genny.qwanda.entity.BaseEntity project = rules.getProject();
-  		
-  		/* sends questions for project-name and positions it in the left side of the header frame */
-      //	rules.askQuestions(rules.getUser().getCode(), project.getCode(), "QUE_FULLNAME_GRP", false, "FRM_HEADER", LayoutPosition.EAST);
-
-       	
-//    	rules.sendQuestions("PER_USER1", "PRJ_INTERNMATCH", "QUE_FULLNAME_GRP", "PER_USER1",
-//    			true, rules.getToken());
+        for (QDataAskMessage askMsg : askMsgs) {
+         	rules.publishCmd(askMsg,serviceToken.getUserCode(),userToken.getUserCode());  // Send associated QDataAskMessage
+        }
+        
 
        	System.out.println("Sent");
 	}

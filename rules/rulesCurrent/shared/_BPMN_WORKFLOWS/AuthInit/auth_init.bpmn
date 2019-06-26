@@ -160,7 +160,7 @@ rules.sendAllAttributes();
           <drools:script>log.info(&quot;Completed Send Llama&quot;);</drools:script>
         </drools:onExit-script>
       </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
       <bpmn2:ioSpecification id="InputOutputSpecification_3">
         <bpmn2:dataInput id="DataInput_5" itemSubjectRef="ItemDefinition_2" name="rules"/>
@@ -193,7 +193,7 @@ rules.sendAllAttributes();
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
       <bpmn2:script>BaseEntity project = rules.getProject();
 log.info(&quot;Sending project - &quot;+project.getCode());
 rules.publishCmd(project, &quot;PROJECT&quot;);
@@ -213,8 +213,28 @@ rules.publishCmd(company, &quot;USER_COMPANY&quot;);
 </bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_4" drools:priority="1" sourceRef="ScriptTask_14" targetRef="ScriptTask_1"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_7" drools:priority="1" sourceRef="ScriptTask_1" targetRef="CallActivity_1"/>
     <bpmn2:sequenceFlow id="SequenceFlow_3" drools:priority="1" sourceRef="CallActivity_1" targetRef="ScriptTask_2"/>
+    <bpmn2:endEvent id="EndEvent_2" name="End Event 2">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[End Event 2]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="SequenceFlow_1" drools:priority="1" sourceRef="ScriptTask_1" targetRef="EndEvent_2"/>
+    <bpmn2:startEvent id="StartEvent_2" name="Start Event 2">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Start Event 2]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
+      <bpmn2:timerEventDefinition id="TimerEventDefinition_1">
+        <bpmn2:timeDuration xsi:type="bpmn2:tFormalExpression" id="FormalExpression_3" language="http://www.java.com/java">500s</bpmn2:timeDuration>
+      </bpmn2:timerEventDefinition>
+    </bpmn2:startEvent>
+    <bpmn2:sequenceFlow id="SequenceFlow_5" drools:priority="1" sourceRef="StartEvent_2" targetRef="CallActivity_1"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Process Diagram">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="auth_init">
@@ -249,15 +269,27 @@ rules.publishCmd(company, &quot;USER_COMPANY&quot;);
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_CallActivity_1" bpmnElement="CallActivity_1" isExpanded="true">
-        <dc:Bounds height="64.0" width="151.0" x="500.0" y="90.0"/>
+        <dc:Bounds height="64.0" width="151.0" x="661.0" y="90.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_6">
-          <dc:Bounds height="11.0" width="49.0" x="551.0" y="116.0"/>
+          <dc:Bounds height="11.0" width="49.0" x="712.0" y="116.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_1" bpmnElement="ScriptTask_1" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="350.0" y="97.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_7">
           <dc:Bounds height="11.0" width="60.0" x="375.0" y="116.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_EndEvent_1" bpmnElement="EndEvent_2">
+        <dc:Bounds height="36.0" width="36.0" x="500.0" y="104.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_8">
+          <dc:Bounds height="11.0" width="50.0" x="493.0" y="140.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_StartEvent_1" bpmnElement="StartEvent_2">
+        <dc:Bounds height="36.0" width="36.0" x="570.0" y="104.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_9">
+          <dc:Bounds height="11.0" width="53.0" x="562.0" y="140.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_15" bpmnElement="SequenceFlow_15" sourceElement="BPMNShape_1" targetElement="BPMNShape_ScriptTask_13">
@@ -284,17 +316,23 @@ rules.publishCmd(company, &quot;USER_COMPANY&quot;);
         <di:waypoint xsi:type="dc:Point" x="350.0" y="122.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_9"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_7" bpmnElement="SequenceFlow_7" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_CallActivity_1">
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_CallActivity_1" targetElement="BPMNShape_ScriptTask_2">
+        <di:waypoint xsi:type="dc:Point" x="812.0" y="122.0"/>
+        <di:waypoint xsi:type="dc:Point" x="858.0" y="122.0"/>
+        <di:waypoint xsi:type="dc:Point" x="904.0" y="122.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_8"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_EndEvent_1">
         <di:waypoint xsi:type="dc:Point" x="460.0" y="122.0"/>
         <di:waypoint xsi:type="dc:Point" x="480.0" y="122.0"/>
         <di:waypoint xsi:type="dc:Point" x="500.0" y="122.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_10"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_CallActivity_1" targetElement="BPMNShape_ScriptTask_2">
-        <di:waypoint xsi:type="dc:Point" x="651.0" y="122.0"/>
-        <di:waypoint xsi:type="dc:Point" x="777.0" y="122.0"/>
-        <di:waypoint xsi:type="dc:Point" x="904.0" y="122.0"/>
-        <bpmndi:BPMNLabel/>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_5" sourceElement="BPMNShape_StartEvent_1" targetElement="BPMNShape_CallActivity_1">
+        <di:waypoint xsi:type="dc:Point" x="606.0" y="122.0"/>
+        <di:waypoint xsi:type="dc:Point" x="633.0" y="122.0"/>
+        <di:waypoint xsi:type="dc:Point" x="661.0" y="122.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_11"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">

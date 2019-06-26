@@ -6,65 +6,83 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.vavr.Tuple;
+import io.vavr.Tuple2;
 import io.vavr.Tuple3;
 import io.vavr.Tuple4;
+import io.vertx.core.json.JsonObject;
 import life.genny.models.GennyToken;
+import life.genny.qwanda.Ask;
+import life.genny.qwanda.ContextType;
+import life.genny.qwanda.Link;
+import life.genny.qwanda.Question;
 import life.genny.qwanda.attribute.Attribute;
 import life.genny.qwanda.attribute.AttributeLink;
 import life.genny.qwanda.attribute.EntityAttribute;
 import life.genny.qwanda.datatype.DataType;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.EntityEntity;
+import life.genny.qwanda.entity.EntityQuestion;
 import life.genny.qwanda.exception.BadDataException;
 import life.genny.qwanda.llama.Frame;
+import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwandautils.GennySettings;
+import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.QwandaUtils;
+import life.genny.utils.QuestionUtils;
 import life.genny.utils.VertxUtils;
 
 public class FrameUtils2 {
 
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getCanonicalName());
 
-	
-	
-	static public QDataBaseEntityMessage toMessage(final Frame rootFrame, GennyToken gennyToken) {
-		
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
+	static public QDataBaseEntityMessage toMessage(final Frame2 rootFrame, GennyToken serviceToken, List<QDataAskMessage> asks) {
 
-		BaseEntity root = getBaseEntity(rootFrame, gennyToken);
+		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
+		List<Ask> askList = new ArrayList<>();
+
+
+		BaseEntity root = getBaseEntity(rootFrame, serviceToken);
 
 		log.info(root.toString());
 
 		baseEntityList.add(root);
-		
+
 		// Traverse the frame tree and build BaseEntitys and links
-		processFrames(rootFrame, gennyToken, baseEntityList, root);
+		processFrames(rootFrame, serviceToken, baseEntityList, root, askList);
 
 		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntityList);
-
+		msg.setTotal(msg.getReturnCount());  // fudge the total.
+		msg.setReplace(true);
+		
+		for (Ask ask : askList) {
+			QDataAskMessage askMsg = QuestionUtils.getAsks(serviceToken.getUserCode(), serviceToken.getUserCode(), ask.getQuestionCode(), serviceToken.getToken());
+			asks.add(askMsg);
+		}
 		return msg;
 	}
 
-	private static BaseEntity getBaseEntity(final Frame rootFrame, final GennyToken gennyToken) {
-		return getBaseEntity(rootFrame.getCode(), rootFrame.getName(), gennyToken);
+	private static BaseEntity getBaseEntity(final Frame2 rootFrame, final GennyToken serviceToken) {
+		return getBaseEntity(rootFrame.getCode(), rootFrame.getName(), serviceToken);
 
 	}
 
-	private static BaseEntity getBaseEntity(final String beCode, final String beName, final GennyToken gennyToken) {
-		BaseEntity be = VertxUtils.getObject(gennyToken.getRealm(), "", beCode, BaseEntity.class,
-				gennyToken.getToken());
+	private static BaseEntity getBaseEntity(final String beCode, final String beName, final GennyToken serviceToken) {
+		BaseEntity be = VertxUtils.getObject(serviceToken.getRealm(), "", beCode, BaseEntity.class,
+				serviceToken.getToken());
 		if (be == null) {
 			try {
-				be = QwandaUtils.getBaseEntityByCodeWithAttributes(beCode, gennyToken.getToken());
+				be = QwandaUtils.getBaseEntityByCodeWithAttributes(beCode, serviceToken.getToken());
 				if (be == null) {
 					be = QwandaUtils.createBaseEntityByCode(beCode, beName, GennySettings.qwandaServiceUrl,
-							gennyToken.getToken());
+							serviceToken.getToken());
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -76,25 +94,48 @@ public class FrameUtils2 {
 
 	}
 
+	private static Question getQuestion(final String questionCode, final GennyToken serviceToken) {
+		JsonObject qJson = VertxUtils.readCachedJson(serviceToken.getRealm(),questionCode,serviceToken.getToken());
+		Question q = JsonUtils.fromJson(qJson.getString("value"), Question.class);
+		if ((q != null)) {
+			try {
+				String questionStr = QwandaUtils.apiGet(
+						GennySettings.qwandaServiceUrl + "/qwanda/questions/" + questionCode, serviceToken.getToken());
+				if (questionStr == null) {
+					log.error("Question Code :" + questionCode + " does not exist");
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return q;
+
+	}
+
 	/**
 	 * @param frame
 	 * @param gennyToken
 	 * @param messages
 	 * @param root
 	 */
-	private static void processFrames(final Frame frame, GennyToken gennyToken, List<BaseEntity> baseEntityList,
-			BaseEntity parent) {
-		// Go through the frames and fetch them
+	private static void processFrames(final Frame2 frame, GennyToken serviceToken, List<BaseEntity> baseEntityList,
+			BaseEntity parent, List<Ask> askList) {
+		
 
-		for (Tuple3<Frame, Frame.FramePosition, Double> frameTuple3 : frame.getFrames()) {
-			System.out.println("Process Frame " + frameTuple3._1.getCode());
-			Frame childFrame = frameTuple3._1;
-			Frame.FramePosition position = frameTuple3._2;
+
+		// Go through the frames and fetch them
+		for (Tuple3<Frame2, Frame2.FramePosition, Double> frameTuple3 : frame.getFrames()) {
+			System.out.println("Processing Frame     " + frameTuple3._1.getCode());
+			Frame2 childFrame = frameTuple3._1;
+			Frame2.FramePosition position = frameTuple3._2;
 			Double weight = frameTuple3._3;
 
 			childFrame.setParent(parent); // Set the parent sop that we can link the childs themes to it.
 
-			BaseEntity childBe = getBaseEntity(childFrame, gennyToken);
+			BaseEntity childBe = getBaseEntity(childFrame, serviceToken);
+
+
 
 			// link to the parent
 			EntityEntity link = null;
@@ -107,14 +148,34 @@ public class FrameUtils2 {
 
 			// Traverse the frame tree and build BaseEntitys and links
 			if (!childFrame.getFrames().isEmpty()) {
-				processFrames(childFrame, gennyToken, baseEntityList, childBe);
+				processFrames(childFrame, serviceToken, baseEntityList, childBe,askList);
 			}
 
 			if (!childFrame.getThemeObjects().isEmpty()) {
-				processThemes(childFrame, position, gennyToken, baseEntityList, childBe);
+				processThemes(childFrame, position, serviceToken, baseEntityList, childBe);
 			}
 
-			System.out.println("Processed " + frame.getCode());
+			if (childFrame.getQuestionCode() != null) {
+				System.out.println("Processing Question  " + childFrame.getQuestionCode());
+				/* create an ask */
+					BaseEntity askBe = new BaseEntity(childFrame.getQuestionCode(), childFrame.getQuestionCode());
+
+					Ask ask = QuestionUtils.createQuestionForBaseEntity2(askBe, true, serviceToken);
+					Set<EntityQuestion> entityQuestionList = askBe.getQuestions();
+
+					Link linkAsk = new Link(frame.getCode(), childFrame.getQuestionCode(), "LNK_ASK", Frame2.FramePosition.CENTRE.name());
+					linkAsk.setWeight(ask.getWeight());
+					EntityQuestion ee = new EntityQuestion(linkAsk);
+					entityQuestionList.add(ee);
+
+					childBe.setQuestions(entityQuestionList);
+					baseEntityList.add(askBe);
+					
+					askList.add(ask); // add to the ask list
+
+					
+			}
+			
 
 		}
 	}
@@ -125,13 +186,13 @@ public class FrameUtils2 {
 	 * @param messages
 	 * @param root
 	 */
-	private static void processThemes(final Frame frame, Frame.FramePosition position, GennyToken gennyToken,
+	private static void processThemes(final Frame2 frame, Frame2.FramePosition position, GennyToken gennyToken,
 			List<BaseEntity> baseEntityList, BaseEntity parent) {
 		// Go through the theme codes and fetch the
-		for (Tuple4<String, Frame.ThemeAttribute, JSONObject, Double> themeTuple4 : frame.getThemeObjects()) {
-			System.out.println("Process Theme " + themeTuple4._1);
+		for (Tuple4<String, Frame2.ThemeAttribute, JSONObject, Double> themeTuple4 : frame.getThemeObjects()) {
+			System.out.println("Processing Theme     " + themeTuple4._1);
 			String themeCode = themeTuple4._1;
-			Frame.ThemeAttribute themeAttribute = themeTuple4._2;
+			Frame2.ThemeAttribute themeAttribute = themeTuple4._2;
 			if (!themeAttribute.name().equalsIgnoreCase("codeOnly")) {
 				JSONObject themeJson = themeTuple4._3;
 				Double weight = themeTuple4._4;
@@ -172,9 +233,12 @@ public class FrameUtils2 {
 					frame.getParent().getLinks().add(link);
 				}
 				baseEntityList.add(childBe);
+				
 
 			}
 		}
+
+
 	}
 
 }
