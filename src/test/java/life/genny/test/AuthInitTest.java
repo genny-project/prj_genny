@@ -62,10 +62,130 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		super(false);
 	}
 
-	
+	@Test
+	public void testTheme()
+	{
+		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
+		QRules rules = getQRules(userToken); // defaults to user anyway
+		GennyToken serviceToken = new GennyToken("serviceToken",rules.getServiceToken());
+
+		Theme THM_DISPLAY_VERTICAL = Theme.builder("THM_DISPLAY_VERTICAL")
+			    .name("Display Visual Controls Vertically") /* Optional - defaults to the code */
+			    .addAttribute(ThemeAttributeType.PRI_CONTENT)
+			    	.flexDirection("column")
+			        .shadowOffset()
+			        	.height(5)
+			        	.width(5)
+			        	.maxWidth(600)
+			        	.padding(10)
+			        	.end()
+			        .end()
+			    .addAttribute()  /* defaults to ThemeAttributeType.PRI_CONTENT */
+			        .justifyContent("flex-start")
+			        .end()
+			    .build();
+
+		Theme THM_DISPLAY_HORIZONTAL = Theme.builder("THM_DISPLAY_HORIZONTAL")
+			    .addAttribute()
+			    	.flexDirection("row")
+			        .end()
+			    .build();
+
+		Theme THM_BACKGROUND_WHITE = Theme.builder("THM_BACKGROUND_WHITE")
+			    .addAttribute()
+			    	.backgroundColor("white")
+			        .end()
+			    .build();
+
+		Theme THM_BACKGROUND_RED = Theme.builder("THM_BACKGROUND_RED")
+			    .addAttribute()
+			    	.backgroundColor("red")
+			        .end()
+			    .build();
+
+		Theme THM_BACKGROUND_GRAY = Theme.builder("THM_BACKGROUND_GRAY")
+			    .addAttribute().backgroundColor("gray").end().build();
+
+		Theme THM_BACKGROUND_BLACK = Theme.builder("THM_BACKGROUND_BLACK")
+			    .addAttribute().backgroundColor("black").end().build();
+
+		Theme THM_BACKGROUND_INTERNMATCH = Theme.builder("THM_BACKGROUND_INTERNMATCH")
+			    .addAttribute().backgroundColor("#233a4e").end().build();
+
+		Theme THM_WIDTH_300 = Theme.builder("THM_WIDTH_300")
+			    .addAttribute()
+			    	.width(300)
+			        .end()
+			    .build();
+
+		Frame2 centre = Frame2.Builder.newInstance("FRM_CENTRE")
+				.build();
+
+		Frame2 profile = Frame2.Builder.newInstance("FRM_PROFILE")
+						.addTheme(THM_DISPLAY_HORIZONTAL)
+						.addTheme(THM_BACKGROUND_RED) 
+						.build();
+		
+    	Frame2 header = Frame2.Builder.newInstance("FRM_HEADER")
+    					.addFrame(profile,FramePosition.EAST)
+    					.build();
+		
+		Frame2 sidebar = Frame2.Builder.newInstance("FRM_SIDEBAR")
+						.addTheme(THM_WIDTH_300)
+						.addTheme(THM_DISPLAY_VERTICAL)
+						.addTheme(THM_BACKGROUND_RED) 
+						.setQuestion("QUE_USER_PROFILE_GRP")
+						.build();
+
+		Frame2 notes = Frame2.Builder.newInstance("FRM_NOTES")
+				.addTheme(THM_WIDTH_300)
+				.addTheme(THM_DISPLAY_VERTICAL)
+				.build();
+
+		
+		Frame2 footer = Frame2.Builder.newInstance("FRM_FOOTER")
+						.build();
+
+
+		
+		Frame2 mainFrame = Frame2.Builder.newInstance("FRM_MAIN").addTheme("THM_COLOR_WHITE")
+                
+                .addTheme(THM_BACKGROUND_INTERNMATCH) 
+                .addTheme(THM_BACKGROUND_WHITE) 
+                .addTheme(THM_BACKGROUND_BLACK) 
+                .addTheme(THM_BACKGROUND_GRAY) 
+		    	.addFrame(header,FramePosition.NORTH)
+		    	.addFrame(sidebar,FramePosition.EAST)
+		    	.addFrame(footer,FramePosition.SOUTH)
+		    	.addFrame(centre,FramePosition.CENTRE)
+		    	.build();
+		
+		Frame2 desktop = Frame2.Builder.newInstance("FRM_ROOT") 
+                
+                .addFrame(mainFrame)                      
+                .build(); 
+
+
+		ArrayList<QDataAskMessage> askMsgs = new ArrayList<QDataAskMessage>();
+		
+		QDataBaseEntityMessage msg = FrameUtils2.toMessage(desktop,serviceToken,askMsgs);
+		
+        /* send message */
+        rules.publishCmd(msg);  // Send QDataBaseEntityMessage
+        
+        for (QDataAskMessage askMsg : askMsgs) {
+         	rules.publishCmd(askMsg,serviceToken.getUserCode(),userToken.getUserCode());  // Send associated QDataAskMessage
+        }
+        
+
+       	System.out.println("Sent");
+	}
 
 	
-	@Test
+	
+	
+	
+	//@Test
 	public void testDesktopPageDisplay()
 	{
 
@@ -84,13 +204,14 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 						.build();
 		
     	Frame2 header = Frame2.Builder.newInstance("FRM_HEADER")
-    					.addFrame(profile,Frame2.FramePosition.EAST)
+    					.addFrame(profile,FramePosition.EAST)
     					.build();
 		
 		Frame2 sidebar = Frame2.Builder.newInstance("FRM_SIDEBAR")
 						.addTheme("THM_WIDTH_300","width",300)
 						.addTheme("THM_DISPLAY_VERTICAL","flexDirection", "column")
 						.addTheme("THM_DISPLAY_VERTICAL","justifyContent","flex-start")
+						.addTheme("THM_BACKGROUND_RED","backgroundColor","red") 
 						.setQuestion("QUE_USER_PROFILE_GRP")
 						.build();
 
@@ -107,17 +228,17 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 
 		
 		Frame2 mainFrame = Frame2.Builder.newInstance("FRM_MAIN").addTheme("THM_COLOR_WHITE")
-		    	.addFrame(header,Frame2.FramePosition.NORTH)
-		    	.addFrame(sidebar,Frame2.FramePosition.WEST)
-		    	.addFrame(footer,Frame2.FramePosition.SOUTH)
-		    	.addFrame(centre,Frame2.FramePosition.CENTRE)
+		    	.addFrame(header,FramePosition.NORTH)
+		    	.addFrame(sidebar,FramePosition.EAST)
+		    	.addFrame(footer,FramePosition.SOUTH)
+		    	.addFrame(centre,FramePosition.CENTRE)
 		    	.build();
 		
 		Frame2 desktop = Frame2.Builder.newInstance("FRM_ROOT") 
                 .addTheme("THM_BACKGROUND_GRAY","backgroundColor","gray") 
                 .addTheme("THM_BACKGROUND_INTERNMATCH","backgroundColor","#233a4e") 
                 .addTheme("THM_COLOR_WHITE","backgroundColor","white") 
-                .addTheme("THM_COLOR_BLACK",Frame2.ThemeAttribute.PRI_CONTENT,"backgroundColor","black") 
+                .addTheme("THM_COLOR_BLACK",ThemeAttributeType.PRI_CONTENT,"backgroundColor","black") 
                 
                 .addFrame(mainFrame)                      
                 .build(); 
