@@ -160,22 +160,22 @@ Send MainFrame]]></drools:metaValue>
 
   
 /* get the root frame base entity */
-        life.genny.qwanda.entity.BaseEntity rootFrame = rules.baseEntity.getBaseEntityByCode(&quot;FRM_ROOT&quot;);
+     life.genny.qwanda.entity.BaseEntity rootFrame = rules.baseEntity.getBaseEntityByCode(&quot;FRM_ROOT&quot;); 
 
         /* get its children (frames) */
-        List&lt;BaseEntity> children = rules.baseEntity.getLinkedBaseEntities(rootFrame.getCode(), null, null, 3);
+       List&lt;BaseEntity> children = rules.baseEntity.getLinkedBaseEntities(rootFrame.getCode(), null, null, 3);
 
         /* create message */
-        life.genny.qwanda.message.QDataBaseEntityMessage messageMF = new QDataBaseEntityMessage(children);
+       life.genny.qwanda.message.QDataBaseEntityMessage messageMF = new QDataBaseEntityMessage(children); 
 
         /* add parent as an item */
-        messageMF.add(rootFrame);
+       messageMF.add(rootFrame); 
 
         /* set parent */
-        messageMF.setParentCode(rootFrame.getCode());
+   /*     messageMF.setParentCode(rootFrame.getCode()); */
         
         /* send message */
-        rules.publishCmd(messageMF);
+  /*      rules.publishCmd(messageMF); */
 </bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:scriptTask id="ScriptTask_20" name="&#xA;Send Header Questions&#xA;" scriptFormat="http://www.java.com/java">
@@ -192,10 +192,10 @@ Send Header Questions
  
   
        /* gets the project baseentity */
-        life.genny.qwanda.entity.BaseEntity project = rules.getProject();
+        life.genny.qwanda.entity.BaseEntity project = rules.getProject(); 
   		
   		/* sends questions for project-name and positions it in the left side of the header frame */
-       	rules.askQuestions(rules.getUser().getCode(), project.getCode(), &quot;QUE_FULLNAME_GRP&quot;, false, &quot;FRM_HEADER&quot;, LayoutPosition.WEST);
+      	rules.askQuestions(rules.getUser().getCode(), project.getCode(), &quot;QUE_FULLNAME_GRP&quot;, false, &quot;FRM_HEADER&quot;, LayoutPosition.WEST); 
 </bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_23" drools:priority="1" sourceRef="ScriptTask_19" targetRef="ScriptTask_20"/>
@@ -212,10 +212,10 @@ Send Footer Questions
       <bpmn2:script>log.info(&quot;Send Footer Questions&quot;);   
   
         /* gets the project baseentity */
-        life.genny.qwanda.entity.BaseEntity project = rules.getProject();
+        life.genny.qwanda.entity.BaseEntity project = rules.getProject(); 
   		
   		/* sends questions for project-powered-by and positions it in the right side of the footer frame */
-       	rules.askQuestions(rules.getUser().getCode(), project.getCode(), &quot;QUE_POWERED_BY_GRP&quot;, false, &quot;FRM_FOOTER&quot;, LayoutPosition.EAST);
+      	rules.askQuestions(rules.getUser().getCode(), project.getCode(), &quot;QUE_POWERED_BY_GRP&quot;, false, &quot;FRM_FOOTER&quot;, LayoutPosition.EAST); 
 </bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_24" drools:priority="1" sourceRef="ScriptTask_20" targetRef="ScriptTask_21"/>
@@ -234,7 +234,7 @@ Send Logo]]></drools:metaValue>
          /* get the background-gray theme baseentity */
         life.genny.qwanda.entity.BaseEntity imageFitTheme = rules.baseEntity.getBaseEntityByCode(&quot;THM_IMAGE_FIT&quot;);
         
-        java.util.Map&lt;String, List&lt;Context>> themesForQuestions = new HashMap();
+        java.util.Map&lt;String, List&lt;Context>> themesForQuestions = new HashMap(); 
         
         /* creating context for theme */
         life.genny.qwanda.Context imageFitContext = new Context(ContextType.THEME, imageFitTheme);
@@ -265,7 +265,7 @@ Send User Profile Selection Question
  
   
         /* sending user profile selection questions */
-        rules.askQuestions(rules.getUser().getCode(), rules.getProject().getCode(), &quot;QUE_PROJECT_USER_OPTIONS_GRP&quot;, false, &quot;FRM_HEADER&quot;, LayoutPosition.EAST);
+        rules.askQuestions(rules.getUser().getCode(), rules.getProject().getCode(), &quot;QUE_PROJECT_USER_OPTIONS_GRP&quot;, false, &quot;FRM_HEADER&quot;, LayoutPosition.EAST); 
     </bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_26" drools:priority="1" sourceRef="ScriptTask_22" targetRef="ScriptTask_23"/>
@@ -282,7 +282,7 @@ Send Tree Data
       <bpmn2:script>log.info(&quot;Send Tree Data&quot;);
 
 
-rules.sendTreeData();</bpmn2:script>
+ rules.sendTreeData(); </bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_27" drools:priority="1" sourceRef="ScriptTask_23" targetRef="ScriptTask_24"/>
     <bpmn2:sequenceFlow id="SequenceFlow_29" drools:priority="1" sourceRef="ScriptTask_24" targetRef="CallActivity_2"/>
