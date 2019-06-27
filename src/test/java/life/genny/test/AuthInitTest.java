@@ -104,7 +104,7 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 			    .build();
 
 		Theme THM_BACKGROUND_GRAY = Theme.builder("THM_BACKGROUND_GRAY")
-			    .addAttribute().backgroundColor("red").end().build();
+			    .addAttribute().backgroundColor("gray").end().build();
 
 		Theme THM_BACKGROUND_BLACK = Theme.builder("THM_BACKGROUND_BLACK")
 			    .addAttribute().backgroundColor("black").end().build();
@@ -149,10 +149,11 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 
 		
 		Frame2 mainFrame = Frame2.Builder.newInstance("FRM_MAIN").addTheme("THM_COLOR_WHITE")
-                .addTheme(THM_BACKGROUND_GRAY) 
+                
                 .addTheme(THM_BACKGROUND_INTERNMATCH) 
                 .addTheme(THM_BACKGROUND_WHITE) 
                 .addTheme(THM_BACKGROUND_BLACK) 
+                .addTheme(THM_BACKGROUND_GRAY) 
 		    	.addFrame(header,FramePosition.NORTH)
 		    	.addFrame(sidebar,FramePosition.EAST)
 		    	.addFrame(footer,FramePosition.SOUTH)
