@@ -49,7 +49,7 @@ rule "Pre Init Btn Click"
       }
 
       if(targetCode != null) {
-        rules.setState("ROOT_" + targetCode);
+        rules.setState("TARGET_" + targetCode);
         rules.set("targetCode", targetCode);
       }
 
