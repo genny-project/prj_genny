@@ -492,7 +492,8 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 				
 			if ("ok".equals(status)) {
 				String userToken = cacheJson.getString("value");
-				System.out.println("User "+username+" is logged in!");;
+				GennyToken userGennyToken = new GennyToken("userToken",userToken);
+				System.out.println("User "+username+" is logged in! "+userGennyToken.getAdecodedTokenMap().get("session_state"));;
 				projectParms.put("userToken", userToken);
 			} else {
 				log.error("User "+username+" is NOT LOGGED IN!");;

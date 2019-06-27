@@ -6,15 +6,11 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
-import com.google.gson.JsonObject;
-
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import io.vavr.Tuple3;
 import io.vavr.Tuple4;
-import io.vavr.Tuple5;
 import life.genny.qwanda.entity.BaseEntity;
-import life.genny.qwanda.llama.Frame.ThemeAttribute;
 
 /* Llama class implements the frame of base entities 
  */
@@ -27,58 +23,14 @@ public class Frame2 extends BaseEntity {
 	private String questionCode;
 	private FramePosition position;
 	private BaseEntity parent;
-	private List<Tuple4<String, Frame2.ThemeAttribute,  JSONObject, Double>> themeObjects = new ArrayList<Tuple4<String, Frame2.ThemeAttribute, JSONObject, Double>>();
-
+	private List<Tuple4<String, ThemeAttributeType,  JSONObject, Double>> themeObjects = new ArrayList<Tuple4<String, ThemeAttributeType, JSONObject, Double>>();
+	private List<Tuple2<Theme,Double>> themes = new ArrayList<Tuple2<Theme,Double>>();
+	
 	private List<Tuple3<String, FramePosition, Double>> frameCodes = new ArrayList<Tuple3<String, FramePosition, Double>>();
 	private List<Tuple3<Frame2, FramePosition, Double>> frames = new ArrayList<Tuple3<Frame2, FramePosition, Double>>();
 
-	public enum ThemeAttribute {
-		PRI_CONTENT("PRI_CONTENT"), PRI_CONTENT_HOVER("PRI_CONTENT_HOVER"), PRI_CONTENT_ACTIVE("PRI_CONTENT_ACTIVE"),
-		PRI_CONTENT_DISABLED("PRI_CONTENT_DISABLED"), PRI_CONTENT_CLOSED("PRI_CONTENT_CLOSED"),
-		PRI_IS_INHERITABLE("PRI_IS_INHERITABLE"), PRI_IS_EXPANDABLE("PRI_IS_EXPANDABLE"),
-		PRI_HAS_QUESTION_GRP_INPUT("PRI_HAS_QUESTION_GRP_INPUT"), PRI_HAS_LABEL("PRI_HAS_LABEL"),
-		PRI_HAS_REQUIRED("PRI_HAS_REQUIRED"), PRI_HAS_HINT("PRI_HAS_HINT"), PRI_HAS_DESCRIPTION("PRI_HAS_DESCRIPTION"),
-		PRI_HAS_ICON("PRI_HAS_ICON"),
-
-		codeOnly("codeOnly"); // used to pass an existing theme
-
-		private final String name;
-
-		private ThemeAttribute(String s) {
-			name = s;
-		}
-
-		public boolean equalsName(String otherName) {
-			// (otherName == null) check is not needed because name.equals(null) returns
-			// false
-			return name.equals(otherName);
-		}
-
-		public String toString() {
-			return this.name;
-		}
-	}
 
 
-	public enum FramePosition {
-		NORTH("NORTH"), EAST("EAST"), WEST("WEST"), SOUTH("SOUTH"), CENTRE("CENTRE");
-
-		private final String name;
-
-		private FramePosition(String s) {
-			name = s;
-		}
-
-		public boolean equalsName(String otherName) {
-			// (otherName == null) check is not needed because name.equals(null) returns
-			// false
-			return name.equals(otherName);
-		}
-
-		public String toString() {
-			return this.name;
-		}
-	}
 
 	private Frame2() {
 
@@ -91,6 +43,7 @@ public class Frame2 extends BaseEntity {
 
 		//
 		this.themeObjects = builder.themeObjects;
+		this.themes = builder.themes;
 		this.frames = builder.frames;
 		this.questionCode = builder.questionCode;
 	}
@@ -105,7 +58,8 @@ public class Frame2 extends BaseEntity {
 		private String code;
 		private String name;
 		private FramePosition position;
-		List<Tuple4<String, Frame2.ThemeAttribute,  JSONObject, Double>> themeObjects = new ArrayList<Tuple4<String, Frame2.ThemeAttribute, JSONObject, Double>>();;
+		List<Tuple4<String, ThemeAttributeType,  JSONObject, Double>> themeObjects = new ArrayList<Tuple4<String, ThemeAttributeType, JSONObject, Double>>();;
+		private List<Tuple2<Theme,Double>> themes = new ArrayList<Tuple2<Theme,Double>>();
 
 		List<Tuple3<Frame2, FramePosition, Double>> frames = new ArrayList<Tuple3<Frame2, FramePosition, Double>>();
 
@@ -135,17 +89,25 @@ public class Frame2 extends BaseEntity {
 			this.questionCode = questionCode;
 			return this;
 		}
+	
+		public Builder addTheme(final Theme theme) {
+			themes.add(Tuple.of(theme,themeWeight));
+			themeWeight = themeWeight - 1.0;
+			
+			return this;
+		}
+
 		
 		public Builder addTheme(final String themeCode, String property, Object value) {
-			return addTheme(themeCode,ThemeAttribute.PRI_CONTENT,property,value);
+			return addTheme(themeCode,ThemeAttributeType.PRI_CONTENT,property,value);
 		}
 		
-		public Builder addTheme(final String themeCode, Frame2.ThemeAttribute attributeCode, String property, Object value) {
+		public Builder addTheme(final String themeCode, ThemeAttributeType attributeCode, String property, Object value) {
 			JSONObject keyValue = new JSONObject();
 			
 			keyValue.put(property, value);
 			
-			Tuple4<String, Frame2.ThemeAttribute, JSONObject, Double> theme = Tuple.of(themeCode, attributeCode, keyValue,
+			Tuple4<String, ThemeAttributeType, JSONObject, Double> theme = Tuple.of(themeCode, attributeCode, keyValue,
 					themeWeight);
 			themeObjects.add(theme);
 			themeWeight = themeWeight - 1.0;
@@ -153,8 +115,8 @@ public class Frame2 extends BaseEntity {
 		}
 
 		public Builder addTheme(final String themeCode) {
-			Frame2.ThemeAttribute codeOnly = Frame2.ThemeAttribute.codeOnly;
-			Tuple4<String, Frame2.ThemeAttribute, JSONObject, Double> theme = Tuple.of(themeCode, codeOnly, new JSONObject("{\"codeOnly\":true}"),
+			ThemeAttributeType codeOnly = ThemeAttributeType.codeOnly;
+			Tuple4<String, ThemeAttributeType, JSONObject, Double> theme = Tuple.of(themeCode, codeOnly, new JSONObject("{\"codeOnly\":true}"),
 					themeWeight);
 			themeObjects.add(theme);
 			themeWeight = themeWeight - 1.0;
@@ -170,16 +132,16 @@ public class Frame2 extends BaseEntity {
 		}
 
 		public Builder addFrame(final Frame2 frame) {
-			return this.addFrame(frame, Frame2.FramePosition.CENTRE);
+			return this.addFrame(frame, FramePosition.CENTRE);
 		}
 
 		public Builder addFrame(final String frameCode) {
-			return this.addFrame(frameCode, Frame2.FramePosition.CENTRE);
+			return this.addFrame(frameCode, FramePosition.CENTRE);
 		}
 
 		public Builder addFrame(final String frameCode, FramePosition position) {
 			Frame2 frame = new Frame2.Builder(frameCode).build();
-			Tuple3<Frame2, FramePosition, Double> frameTuple = Tuple.of(frame, Frame2.FramePosition.CENTRE, frameWeight);
+			Tuple3<Frame2, FramePosition, Double> frameTuple = Tuple.of(frame, FramePosition.CENTRE, frameWeight);
 			frames.add(frameTuple);
 			frameWeight = frameWeight + 1.0;
 			return this;
@@ -230,7 +192,7 @@ public class Frame2 extends BaseEntity {
 	/**
 	 * @return the themeObjects
 	 */
-	public List<Tuple4<String, Frame2.ThemeAttribute, JSONObject, Double>> getThemeObjects() {
+	public List<Tuple4<String, ThemeAttributeType, JSONObject, Double>> getThemeObjects() {
 		return themeObjects;
 	}
 
@@ -260,6 +222,20 @@ public class Frame2 extends BaseEntity {
 	 */
 	public void setQuestionCode(String questionCode) {
 		this.questionCode = questionCode;
+	}
+
+	/**
+	 * @return the themes
+	 */
+	public List<Tuple2<Theme, Double>> getThemes() {
+		return themes;
+	}
+
+	/**
+	 * @param themes the themes to set
+	 */
+	public void setThemes(List<Tuple2<Theme, Double>> themes) {
+		this.themes = themes;
 	}
 
 	
