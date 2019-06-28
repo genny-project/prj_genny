@@ -11,8 +11,10 @@ import life.genny.test.ThemeAttribute.Builder;
 
 @Immutable
 public final class ShadowOffset {
+
 	private Optional<Integer> width = Optional.empty();
 	private Optional<Integer> height = Optional.empty();
+
 
 	/**
 	 * static factory method for builder
@@ -68,10 +70,10 @@ public final class ShadowOffset {
 
 	public JSONObject getJsonObject() {
 		JSONObject json = new JSONObject();
-		if (width.isPresent())
-			json.put("width", width.get());
-		if (height.isPresent())
-			json.put("height", height.get());
+
+		if (width.isPresent()) json.put("width", width.get());
+		if (height.isPresent()) json.put("height", height.get());
+		
 
 		return json;
 	}

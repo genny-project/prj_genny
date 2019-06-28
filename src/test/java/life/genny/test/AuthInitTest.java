@@ -161,12 +161,18 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		Frame2 footer = Frame2.Builder.newInstance("FRM_FOOTER").build();
 
 		Frame2 mainFrame = Frame2.Builder.newInstance("FRM_MAIN").addTheme("THM_COLOR_WHITE")
-
-				.addTheme(THM_BACKGROUND_INTERNMATCH).addTheme(THM_BACKGROUND_WHITE).addTheme(THM_BACKGROUND_BLACK)
-				.addTheme(THM_BACKGROUND_GRAY).addFrame(header, FramePosition.NORTH)
-				.addFrame(sidebar, FramePosition.EAST).addFrame(footer, FramePosition.SOUTH)
-				.addFrame(centre, FramePosition.CENTRE).build();
-
+                
+                .addTheme(THM_BACKGROUND_INTERNMATCH) 
+                .addTheme(THM_BACKGROUND_BLACK) 
+                .addTheme(THM_BACKGROUND_GRAY) 
+                .addTheme(THM_BACKGROUND_WHITE) 
+		    	.addFrame(header,FramePosition.NORTH)
+		    	.addFrame(sidebar,FramePosition.WEST)
+		    	.addFrame(sidebar,FramePosition.EAST)
+		    	.addFrame(footer,FramePosition.SOUTH)
+		    	.addFrame(centre,FramePosition.CENTRE)
+		    	.build();
+		
 		Frame2 desktop = Frame2.Builder.newInstance("FRM_ROOT")
 
 				.addFrame(mainFrame).build();
