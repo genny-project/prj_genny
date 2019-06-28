@@ -47,106 +47,119 @@ import life.genny.utils.Layout.LayoutPosition;
 public class AuthInitTest extends GennyJbpmBaseTest {
 
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getCanonicalName());
-	
+
 	private static final String WFE_SEND_FORMS = "rulesCurrent/shared/_BPMN_WORKFLOWS/send_forms.bpmn";
 	private static final String WFE_SHOW_FORM = "rulesCurrent/shared/_BPMN_WORKFLOWS/show_form.bpmn";
-	private static final String WFE_AUTH_INIT =  "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/auth_init.bpmn";
-	private static final String WFE_SEND_LLAMA =  "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/send_llama.bpmn";
-	private static final String DRL_PROJECT =  "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/project.drl";
-	private static final String DRL_USER_COMPANY =  "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/user_company.drl";
-	private static final String DRL_USER =  "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/user.drl";
-	private static final String DRL_EVENT_LISTENER_SERVICE_SETUP =  "rulesCurrent/shared/_BPMN_WORKFLOWS/Initialise_Project/eventListenerServiceSetup.drl";
-	private static final String DRL_EVENT_LISTENER_USER_SETUP =  "rulesCurrent/shared/_BPMN_WORKFLOWS/Initialise_Project/eventListenerUserSetup.drl";
-	
+	private static final String WFE_AUTH_INIT = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/auth_init.bpmn";
+	private static final String WFE_SEND_LLAMA = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/send_llama.bpmn";
+	private static final String DRL_PROJECT = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/project.drl";
+	private static final String DRL_USER_COMPANY = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/user_company.drl";
+	private static final String DRL_USER = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/user.drl";
+	private static final String DRL_EVENT_LISTENER_SERVICE_SETUP = "rulesCurrent/shared/_BPMN_WORKFLOWS/Initialise_Project/eventListenerServiceSetup.drl";
+	private static final String DRL_EVENT_LISTENER_USER_SETUP = "rulesCurrent/shared/_BPMN_WORKFLOWS/Initialise_Project/eventListenerUserSetup.drl";
+
 	public AuthInitTest() {
 		super(false);
 	}
 
-	@Test
-	public void testTheme()
-	{
+	// @Test
+	public void displayGermanFlag() {
+
+		/* token stuff */
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 		QRules rules = getQRules(userToken); // defaults to user anyway
-		GennyToken serviceToken = new GennyToken("serviceToken",rules.getServiceToken());
+		GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
+
+		/* create theme */
+		Theme THM_COLOR_GREY = Theme.builder("THM_COLOR_GREY").addAttribute().backgroundColor("grey").end().build();
+		Theme THM_DUMMY = Theme.builder("THM_DUMMY").addAttribute().height(100).end().addAttribute().width(100).end()
+				.build();
+
+		Theme THM_COLOR_RED = Theme.builder("THM_COLOR_RED").addAttribute().backgroundColor("red").end().build();
+		Theme THM_COLOR_GREEN = Theme.builder("THM_COLOR_GREEN").addAttribute().backgroundColor("green").end().build();
+		Theme THM_COLOR_YELLOW = Theme.builder("THM_COLOR_YELLOW").addAttribute().backgroundColor("yellow").end()
+				.build();
+		Theme THM_COLOR_BLUE = Theme.builder("THM_COLOR_BLUE").addAttribute().backgroundColor("blue").end().build();
+		Theme THM_COLOR_BLACK = Theme.builder("THM_COLOR_BLACK").addAttribute().backgroundColor("black").end().build();
+
+		/* create frames */
+
+		Frame2 frameDummy = Frame2.Builder.newInstance("FRM_DUMMY").addTheme(THM_DUMMY).build();
+
+		Frame2 frameEast = Frame2.Builder.newInstance("FRM_EAST").addTheme(THM_COLOR_RED)
+				.addFrame(frameDummy, FramePosition.CENTRE).build();
+		Frame2 frameWest = Frame2.Builder.newInstance("FRM_WEST").addTheme(THM_COLOR_GREEN)
+				.addFrame(frameDummy, FramePosition.CENTRE).build();
+		Frame2 frameNorth = Frame2.Builder.newInstance("FRM_NORTH").addTheme(THM_COLOR_YELLOW)
+				.addFrame(frameDummy, FramePosition.CENTRE).build();
+		Frame2 frameSouth = Frame2.Builder.newInstance("FRM_SOUTH").addTheme(THM_COLOR_BLUE)
+				.addFrame(frameDummy, FramePosition.CENTRE).build();
+		Frame2 frameCentre = Frame2.Builder.newInstance("FRM_CENTRE").addTheme(THM_COLOR_BLACK)
+				.addFrame(frameDummy, FramePosition.CENTRE).build();
+
+		Frame2 frameTest = Frame2.Builder.newInstance("FRM_TEST").addTheme(THM_COLOR_GREY)
+				.addFrame(frameEast, FramePosition.EAST).addFrame(frameWest, FramePosition.WEST)
+				.addFrame(frameNorth, FramePosition.NORTH).addFrame(frameSouth, FramePosition.SOUTH)
+				.addFrame(frameCentre, FramePosition.CENTRE).build();
+
+		Frame2 frameRoot = Frame2.Builder.newInstance("FRM_ROOT").addFrame(frameTest).build();
+
+		/* send message */
+		ArrayList<QDataAskMessage> askMsgs = new ArrayList<QDataAskMessage>();
+		QDataBaseEntityMessage msg = FrameUtils2.toMessage(frameRoot, serviceToken, askMsgs);
+		rules.publishCmd(msg);
+		System.out.println("Sent");
+
+	}
+
+	// @Test
+	public void testTheme() {
+		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
+		QRules rules = getQRules(userToken); // defaults to user anyway
+		GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
 
 		Theme THM_DISPLAY_VERTICAL = Theme.builder("THM_DISPLAY_VERTICAL")
-			    .name("Display Visual Controls Vertically") /* Optional - defaults to the code */
-			    .addAttribute(ThemeAttributeType.PRI_CONTENT)
-			    	.flexDirection("column")
-			    	.shadowColour("blue")
-			        .shadowOffset()
-			        	.height(0)
-			        	.width(1)
-			        	.end()
-			        .end()
-			    .addAttribute()  /* defaults to ThemeAttributeType.PRI_CONTENT */
-			        .justifyContent("flex-start")
-			        .end()
-			    .build();
+				.name("Display Visual Controls Vertically") /* Optional - defaults to the code */
+				.addAttribute(ThemeAttributeType.PRI_CONTENT).flexDirection("column").shadowOffset().height(5).width(5)
+				.end().maxWidth(600).padding(10).end().addAttribute() /* defaults to ThemeAttributeType.PRI_CONTENT */
+				.justifyContent("flex-start").end().build();
 
-		Theme THM_DISPLAY_HORIZONTAL = Theme.builder("THM_DISPLAY_HORIZONTAL")
-			    .addAttribute()
-			    	.flexDirection("row")
-			        .end()
-			    .build();
-
-		Theme THM_BACKGROUND_WHITE = Theme.builder("THM_BACKGROUND_WHITE")
-			    .addAttribute()
-			    	.backgroundColor("white")
-			        .end()
-			    .build();
-
-		Theme THM_BACKGROUND_RED = Theme.builder("THM_BACKGROUND_RED")
-			    .addAttribute()
-			    	.backgroundColor("red")
-			        .end()
-			    .build();
-
-		Theme THM_BACKGROUND_GRAY = Theme.builder("THM_BACKGROUND_GRAY")
-			    .addAttribute().backgroundColor("gray").end().build();
-
-		Theme THM_BACKGROUND_BLACK = Theme.builder("THM_BACKGROUND_BLACK")
-			    .addAttribute().backgroundColor("black").end().build();
-
-		Theme THM_BACKGROUND_INTERNMATCH = Theme.builder("THM_BACKGROUND_INTERNMATCH")
-			    .addAttribute().backgroundColor("#233a4e").end().build();
-
-		Theme THM_WIDTH_300 = Theme.builder("THM_WIDTH_300")
-			    .addAttribute()
-			    	.width(300)
-			        .end()
-			    .build();
-
-		Frame2 centre = Frame2.Builder.newInstance("FRM_CENTRE")
+		Theme THM_DISPLAY_HORIZONTAL = Theme.builder("THM_DISPLAY_HORIZONTAL").addAttribute().flexDirection("row").end()
 				.build();
 
-		Frame2 profile = Frame2.Builder.newInstance("FRM_PROFILE")
-						.addTheme(THM_DISPLAY_HORIZONTAL)
-						.addTheme(THM_BACKGROUND_RED) 
-						.build();
-		
-    	Frame2 header = Frame2.Builder.newInstance("FRM_HEADER")
-    					.addFrame(profile,FramePosition.EAST)
-    					.build();
-		
-		Frame2 sidebar = Frame2.Builder.newInstance("FRM_SIDEBAR")
-						.addTheme(THM_WIDTH_300)
-						.addTheme(THM_DISPLAY_VERTICAL)
-						.addTheme(THM_BACKGROUND_RED) 
-						.setQuestion("QUE_USER_PROFILE_GRP")
-						.build();
-
-		Frame2 notes = Frame2.Builder.newInstance("FRM_NOTES")
-				.addTheme(THM_WIDTH_300)
-				.addTheme(THM_DISPLAY_VERTICAL)
+		Theme THM_BACKGROUND_WHITE = Theme.builder("THM_BACKGROUND_WHITE").addAttribute().backgroundColor("white").end()
 				.build();
 
-		
-		Frame2 footer = Frame2.Builder.newInstance("FRM_FOOTER")
-						.build();
+		Theme THM_BACKGROUND_RED = Theme.builder("THM_BACKGROUND_RED").addAttribute().backgroundColor("red").end()
+				.build();
 
+		Theme THM_BACKGROUND_GRAY = Theme.builder("THM_BACKGROUND_GRAY").addAttribute().backgroundColor("gray").end()
+				.build();
 
-		
+		Theme THM_BACKGROUND_BLACK = Theme.builder("THM_BACKGROUND_BLACK").addAttribute().backgroundColor("black").end()
+				.build();
+
+		Theme THM_BACKGROUND_INTERNMATCH = Theme.builder("THM_BACKGROUND_INTERNMATCH").addAttribute()
+				.backgroundColor("#233a4e").end().build();
+
+		Theme THM_WIDTH_300 = Theme.builder("THM_WIDTH_300").addAttribute().width(300).end().build();
+
+		Frame2 centre = Frame2.Builder.newInstance("FRM_CENTRE").build();
+
+		Frame2 profile = Frame2.Builder.newInstance("FRM_PROFILE").addTheme(THM_DISPLAY_HORIZONTAL)
+				.addTheme(THM_BACKGROUND_RED).build();
+
+		Frame2 header = Frame2.Builder.newInstance("FRM_HEADER").addFrame(profile, FramePosition.EAST).build();
+
+		Frame2 sidebar = Frame2.Builder.newInstance("FRM_SIDEBAR").addTheme(THM_WIDTH_300)
+				.addTheme(THM_DISPLAY_VERTICAL).addTheme(THM_BACKGROUND_RED).setQuestion("QUE_USER_PROFILE_GRP")
+				.build();
+
+		Frame2 notes = Frame2.Builder.newInstance("FRM_NOTES").addTheme(THM_WIDTH_300).addTheme(THM_DISPLAY_VERTICAL)
+				.build();
+
+		Frame2 footer = Frame2.Builder.newInstance("FRM_FOOTER").build();
+
 		Frame2 mainFrame = Frame2.Builder.newInstance("FRM_MAIN").addTheme("THM_COLOR_WHITE")
                 
                 .addTheme(THM_BACKGROUND_INTERNMATCH) 
@@ -160,126 +173,99 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		    	.addFrame(centre,FramePosition.CENTRE)
 		    	.build();
 		
-		Frame2 desktop = Frame2.Builder.newInstance("FRM_ROOT") 
-                
-                .addFrame(mainFrame)                      
-                .build(); 
+		Frame2 desktop = Frame2.Builder.newInstance("FRM_ROOT")
 
+				.addFrame(mainFrame).build();
 
 		ArrayList<QDataAskMessage> askMsgs = new ArrayList<QDataAskMessage>();
-		
-		QDataBaseEntityMessage msg = FrameUtils2.toMessage(desktop,serviceToken,askMsgs);
-		
-        /* send message */
-        rules.publishCmd(msg);  // Send QDataBaseEntityMessage
-        
-        for (QDataAskMessage askMsg : askMsgs) {
-         	rules.publishCmd(askMsg,serviceToken.getUserCode(),userToken.getUserCode());  // Send associated QDataAskMessage
-        }
-        
 
-       	System.out.println("Sent");
+		QDataBaseEntityMessage msg = FrameUtils2.toMessage(desktop, serviceToken, askMsgs);
+
+		/* send message */
+		rules.publishCmd(msg); // Send QDataBaseEntityMessage
+
+		for (QDataAskMessage askMsg : askMsgs) {
+			rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode()); // Send associated
+																							// QDataAskMessage
+		}
+
+		System.out.println("Sent");
 	}
 
-	
-	
-	
-	
-	//@Test
-	public void testDesktopPageDisplay()
-	{
+	// @Test
+	public void testDesktopPageDisplay() {
 
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 		QRules rules = getQRules(userToken); // defaults to user anyway
-		GennyToken serviceToken = new GennyToken("serviceToken",rules.getServiceToken());
+		GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
 
 		setUpCache(GennySettings.mainrealm, userToken);
-		
-		Frame2 centre = Frame2.Builder.newInstance("FRM_CENTRE")
-				.build();
+
+		Frame2 centre = Frame2.Builder.newInstance("FRM_CENTRE").build();
 
 		Frame2 profile = Frame2.Builder.newInstance("FRM_PROFILE")
-						.addTheme("THM_DISPLAY_HORIZONTAL","flexDirection","row")
-						.addTheme("THM_BACKGROUND_RED","backgroundColor","red") 
-						.build();
-		
-    	Frame2 header = Frame2.Builder.newInstance("FRM_HEADER")
-    					.addFrame(profile,FramePosition.EAST)
-    					.build();
-		
-		Frame2 sidebar = Frame2.Builder.newInstance("FRM_SIDEBAR")
-						.addTheme("THM_WIDTH_300","width",300)
-						.addTheme("THM_DISPLAY_VERTICAL","flexDirection", "column")
-						.addTheme("THM_DISPLAY_VERTICAL","justifyContent","flex-start")
-						.addTheme("THM_BACKGROUND_RED","backgroundColor","red") 
-						.setQuestion("QUE_USER_PROFILE_GRP")
-						.build();
+				.addTheme("THM_DISPLAY_HORIZONTAL", "flexDirection", "row")
+				.addTheme("THM_BACKGROUND_RED", "backgroundColor", "red").build();
 
-		Frame2 notes = Frame2.Builder.newInstance("FRM_NOTES")
-				.addTheme("THM_WIDTH_300","width",300)
-				.addTheme("THM_DISPLAY_VERTICAL","flexDirection", "column")
-				.addTheme("THM_DISPLAY_VERTICAL","justifyContent","flex-start")
-				.build();
+		Frame2 header = Frame2.Builder.newInstance("FRM_HEADER").addFrame(profile, FramePosition.EAST).build();
 
-		
-		Frame2 footer = Frame2.Builder.newInstance("FRM_FOOTER")
-						.build();
+		Frame2 sidebar = Frame2.Builder.newInstance("FRM_SIDEBAR").addTheme("THM_WIDTH_300", "width", 300)
+				.addTheme("THM_DISPLAY_VERTICAL", "flexDirection", "column")
+				.addTheme("THM_DISPLAY_VERTICAL", "justifyContent", "flex-start")
+				.addTheme("THM_BACKGROUND_RED", "backgroundColor", "red").setQuestion("QUE_USER_PROFILE_GRP").build();
 
+		Frame2 notes = Frame2.Builder.newInstance("FRM_NOTES").addTheme("THM_WIDTH_300", "width", 300)
+				.addTheme("THM_DISPLAY_VERTICAL", "flexDirection", "column")
+				.addTheme("THM_DISPLAY_VERTICAL", "justifyContent", "flex-start").build();
 
-		
+		Frame2 footer = Frame2.Builder.newInstance("FRM_FOOTER").build();
+
 		Frame2 mainFrame = Frame2.Builder.newInstance("FRM_MAIN").addTheme("THM_COLOR_WHITE")
-		    	.addFrame(header,FramePosition.NORTH)
-		    	.addFrame(sidebar,FramePosition.EAST)
-		    	.addFrame(footer,FramePosition.SOUTH)
-		    	.addFrame(centre,FramePosition.CENTRE)
-		    	.build();
-		
-		Frame2 desktop = Frame2.Builder.newInstance("FRM_ROOT") 
-                .addTheme("THM_BACKGROUND_GRAY","backgroundColor","gray") 
-                .addTheme("THM_BACKGROUND_INTERNMATCH","backgroundColor","#233a4e") 
-                .addTheme("THM_COLOR_WHITE","backgroundColor","white") 
-                .addTheme("THM_COLOR_BLACK",ThemeAttributeType.PRI_CONTENT,"backgroundColor","black") 
-                
-                .addFrame(mainFrame)                      
-                .build(); 
+				.addFrame(header, FramePosition.NORTH).addFrame(sidebar, FramePosition.EAST)
+				.addFrame(footer, FramePosition.SOUTH).addFrame(centre, FramePosition.CENTRE).build();
 
+		Frame2 desktop = Frame2.Builder.newInstance("FRM_ROOT")
+				.addTheme("THM_BACKGROUND_GRAY", "backgroundColor", "gray")
+				.addTheme("THM_BACKGROUND_INTERNMATCH", "backgroundColor", "#233a4e")
+				.addTheme("THM_COLOR_WHITE", "backgroundColor", "white")
+				.addTheme("THM_COLOR_BLACK", ThemeAttributeType.PRI_CONTENT, "backgroundColor", "black")
+
+				.addFrame(mainFrame).build();
 
 		ArrayList<QDataAskMessage> askMsgs = new ArrayList<QDataAskMessage>();
-		
-		QDataBaseEntityMessage msg = FrameUtils2.toMessage(desktop,serviceToken,askMsgs);
-		
-        /* send message */
-        rules.publishCmd(msg);  // Send QDataBaseEntityMessage
-        
-        for (QDataAskMessage askMsg : askMsgs) {
-         	rules.publishCmd(askMsg,serviceToken.getUserCode(),userToken.getUserCode());  // Send associated QDataAskMessage
-        }
-        
 
-       	System.out.println("Sent");
+		QDataBaseEntityMessage msg = FrameUtils2.toMessage(desktop, serviceToken, askMsgs);
+
+		/* send message */
+		rules.publishCmd(msg); // Send QDataBaseEntityMessage
+
+		for (QDataAskMessage askMsg : askMsgs) {
+			rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode()); // Send associated
+																							// QDataAskMessage
+		}
+
+		System.out.println("Sent");
 	}
-	
-	
-	
-	//@Test
+
+	// @Test
 
 	public void testAuthInit() {
 
-	       Map<String, ResourceType> resources = new HashMap<String, ResourceType>();
-	     String[] jbpms = {WFE_AUTH_INIT,WFE_SEND_FORMS,WFE_SHOW_FORM,WFE_SEND_LLAMA};
-	     String[] drls = {DRL_PROJECT,DRL_USER_COMPANY,DRL_USER,DRL_EVENT_LISTENER_SERVICE_SETUP,DRL_EVENT_LISTENER_USER_SETUP};
-        for (String p : jbpms) {
-            resources.put(p, ResourceType.BPMN2);
-        }
-        for (String p : drls) {
-            resources.put(p, ResourceType.DRL);
-        }
-        createRuntimeManager(Strategy.SINGLETON, resources, null);
+		Map<String, ResourceType> resources = new HashMap<String, ResourceType>();
+		String[] jbpms = { WFE_AUTH_INIT, WFE_SEND_FORMS, WFE_SHOW_FORM, WFE_SEND_LLAMA };
+		String[] drls = { DRL_PROJECT, DRL_USER_COMPANY, DRL_USER, DRL_EVENT_LISTENER_SERVICE_SETUP,
+				DRL_EVENT_LISTENER_USER_SETUP };
+		for (String p : jbpms) {
+			resources.put(p, ResourceType.BPMN2);
+		}
+		for (String p : drls) {
+			resources.put(p, ResourceType.DRL);
+		}
+		createRuntimeManager(Strategy.SINGLETON, resources, null);
 		KieSession kieSession = getRuntimeEngine().getKieSession();
-		//Register handlers
+		// Register handlers
 		addWorkItemHandlers(kieSession);
 		kieSession.addEventListener(new JbpmInitListener(userToken));
-		
 
 		QEventMessage msg = new QEventMessage("EVT_MSG", "AUTH_INIT");
 
@@ -290,28 +276,27 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		System.out.println(qRules.getToken());
 		cmds.add(CommandFactory.newInsert(qRules, "qRules"));
 		cmds.add(CommandFactory.newInsert(msg, "msg"));
-		cmds.add(CommandFactory.newInsert(userToken,"userToken"));
-		cmds.add(CommandFactory.newInsert(new GennyToken("serviceUser",qRules.getServiceToken()),"serviceToken"));
+		cmds.add(CommandFactory.newInsert(userToken, "userToken"));
+		cmds.add(CommandFactory.newInsert(new GennyToken("serviceUser", qRules.getServiceToken()), "serviceToken"));
 		// Set up Cache
 
 		setUpCache(GennySettings.mainrealm, userToken);
 
 		cmds.add(CommandFactory.newInsert(eventBusMock, "eb"));
-		
+
 		long startTime = System.nanoTime();
 		ExecutionResults results = null;
-	try {
-		results = kieSession.execute(CommandFactory.newBatchExecution(cmds));
+		try {
+			results = kieSession.execute(CommandFactory.newBatchExecution(cmds));
 		} catch (Exception ee) {
-			
-		}
-		finally {
+
+		} finally {
 			long endTime = System.nanoTime();
 			double difference = (endTime - startTime) / 1e6; // get ms
 
 			if (results != null) {
 				results.getValue("msg"); // returns the inserted fact Msg
-				QRules rules  = (QRules) results.getValue("qRules"); // returns the inserted fact QRules
+				QRules rules = (QRules) results.getValue("qRules"); // returns the inserted fact QRules
 				System.out.println(results.getValue("msg"));
 				System.out.println(rules);
 			} else {
@@ -322,35 +307,34 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 
 			kieSession.dispose();
 		}
-		
 
 	}
 
-//	@Test
-	public void formsTest()
-	{
-		String apiUrl = GennySettings.qwandaServiceUrl+":8280/service/forms";
-		System.out.println("Fetching setup info from "+apiUrl);
+	// @Test
+	public void formsTest() {
+		String apiUrl = GennySettings.qwandaServiceUrl + ":8280/service/forms";
+		System.out.println("Fetching setup info from " + apiUrl);
 		String userToken = projectParms.getString("userToken");
-		System.out.println("userToken (ensure user has test role) = "+userToken);
+		System.out.println("userToken (ensure user has test role) = " + userToken);
 		try {
 			String jsonFormCodes = QwandaUtils.apiGet(apiUrl, userToken);
 			if (!"You need to be a test.".equals(jsonFormCodes)) {
 				Type type = new TypeToken<List<String>>() {
-	            }.getType();
+				}.getType();
 				List<String> formCodes = JsonUtils.fromJson(jsonFormCodes, type);
-				System.out.println("Form Codes="+formCodes);
-				
+				System.out.println("Form Codes=" + formCodes);
+
 				for (String formCode : formCodes) {
-			//		rules.sendForm("QUE_ADD_HOST_COMPANY_GRP", rules.getUser().getCode(), rules.getUser().getCode());
+					// rules.sendForm("QUE_ADD_HOST_COMPANY_GRP", rules.getUser().getCode(),
+					// rules.getUser().getCode());
 				}
-				
+
 			} else {
 				System.out.println("Ensure that the user you are using has a 'test' role ...");
 			}
-			
+
 		} catch (Exception e) {
-			
+
 		}
 	}
 
