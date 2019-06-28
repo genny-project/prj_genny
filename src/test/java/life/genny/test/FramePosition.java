@@ -1,7 +1,7 @@
 package life.genny.test;
 
 public enum FramePosition {
-	NORTH("NORTH"), EAST("EAST"), WEST("WEST"), SOUTH("SOUTH"), CENTRE("CENTRE");
+	NORTH("NORTH"), EAST("EAST"), WEST("WEST"), SOUTH("SOUTH"), CENTRE("CENTRE"), WRAPPER("WRAPPER");
 
 	private final String name;
 
