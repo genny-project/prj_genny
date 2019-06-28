@@ -73,11 +73,10 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 			    .name("Display Visual Controls Vertically") /* Optional - defaults to the code */
 			    .addAttribute(ThemeAttributeType.PRI_CONTENT)
 			    	.flexDirection("column")
+			    	.shadowColour("blue")
 			        .shadowOffset()
-			        	.height(5)
-			        	.width(5)
-			        	.maxWidth(600)
-			        	.padding(10)
+			        	.height(0)
+			        	.width(1)
 			        	.end()
 			        .end()
 			    .addAttribute()  /* defaults to ThemeAttributeType.PRI_CONTENT */
@@ -151,10 +150,11 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		Frame2 mainFrame = Frame2.Builder.newInstance("FRM_MAIN").addTheme("THM_COLOR_WHITE")
                 
                 .addTheme(THM_BACKGROUND_INTERNMATCH) 
-                .addTheme(THM_BACKGROUND_WHITE) 
                 .addTheme(THM_BACKGROUND_BLACK) 
                 .addTheme(THM_BACKGROUND_GRAY) 
+                .addTheme(THM_BACKGROUND_WHITE) 
 		    	.addFrame(header,FramePosition.NORTH)
+		    	.addFrame(sidebar,FramePosition.WEST)
 		    	.addFrame(sidebar,FramePosition.EAST)
 		    	.addFrame(footer,FramePosition.SOUTH)
 		    	.addFrame(centre,FramePosition.CENTRE)

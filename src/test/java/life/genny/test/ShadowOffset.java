@@ -14,8 +14,7 @@ import life.genny.test.ThemeAttribute.Builder;
 public final class ShadowOffset {
 	private Optional<Integer> width=Optional.empty();
 	private Optional<Integer> height=Optional.empty();
-	private Optional<Integer> maxWidth=Optional.empty();
-	private Optional<Integer> padding=Optional.empty();
+
 
 	/**
 	 * static factory method for builder
@@ -58,15 +57,6 @@ public final class ShadowOffset {
 			return this;
 		}
 
-		public Builder maxWidth(Integer value) {
-			managedInstance.maxWidth = Optional.of(value);
-			return this;
-		}
-
-		public Builder padding(Integer value) {
-			managedInstance.padding = Optional.of(value);
-			return this;
-		}
 			
 		public ShadowOffset build() {
 			return managedInstance;
@@ -91,8 +81,6 @@ public final class ShadowOffset {
 		JSONObject json = new JSONObject();
 		if (width.isPresent()) json.put("width", width.get());
 		if (height.isPresent()) json.put("height", height.get());
-		if (maxWidth.isPresent()) json.put("maxWidth", maxWidth.get());
-		if (padding.isPresent()) json.put("padding", padding.get());
 		
 		return json;
 	}
