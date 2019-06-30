@@ -15,7 +15,7 @@ public class QuestionGroup {
 	private String code;
 	
 
-	private Set<QuestionTheme> questionThemes;
+	private Set<QuestionTheme> questionThemes = new HashSet<QuestionTheme>();
 	private Set<String> themeCodes;
 
 	/**

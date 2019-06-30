@@ -262,7 +262,7 @@ public class AuthInitTest extends GennyJbpmBaseTest {
                 
 		    	.addFrame(sidebar,FramePosition.WEST).end()
 		    //	.addFrame(sidebar2,FramePosition.WEST).end() // not working as expected
-//		    	.addFrame(notes,FramePosition.EAST).end()
+		    	.addFrame(notes,FramePosition.EAST).end()
 		    	.addFrame(footer,FramePosition.SOUTH).end()
 		    	.addFrame(centre,FramePosition.CENTRE).end()
 		    	.addFrame(header,FramePosition.NORTH).end()

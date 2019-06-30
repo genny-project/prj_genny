@@ -64,14 +64,14 @@ public class FrameUtils2 {
 		for (Ask ask : askList) {
 			QDataAskMessage askMsg = QuestionUtils.getAsks(serviceToken.getUserCode(), serviceToken.getUserCode(),
 					ask.getQuestionCode(), serviceToken.getToken());
-			askMsg = processQDataAskMessage(askMsg,ask);
+			askMsg = processQDataAskMessage(askMsg, ask);
 
 			asks.add(askMsg);
 		}
 		return msg;
 	}
 
-	private static QDataAskMessage processQDataAskMessage(QDataAskMessage askMsg,Ask contextAsk) {
+	private static QDataAskMessage processQDataAskMessage(QDataAskMessage askMsg, Ask contextAsk) {
 		for (Ask ask : askMsg.getItems()) {
 			ask.setQuestionCode(ask.getQuestionCode());
 			ask.setContextList(contextAsk.getContextList());
@@ -108,7 +108,6 @@ public class FrameUtils2 {
 		return be;
 
 	}
-
 
 	/**
 	 * @param frame
@@ -155,26 +154,26 @@ public class FrameUtils2 {
 			if (childFrame.getQuestionGroup().isPresent()) {
 				System.out.println("Processing Question  " + childFrame.getQuestionCode());
 
-				Map<ContextType,Set<BaseEntity>> questionThemes = new HashMap<ContextType,Set<BaseEntity>>();
-				
+				/* create an ask */
+				BaseEntity askBe = new BaseEntity(childFrame.getQuestionGroup().get().getCode(),
+						childFrame.getQuestionGroup().get().getCode());
+				askBe.setRealm(parent.getRealm());
+
+				Ask ask = QuestionUtils.createQuestionForBaseEntity2(askBe, true, serviceToken);
+
+				Map<ContextType,Set<BaseEntity>> contextMap = new HashMap<ContextType,Set<BaseEntity>>();
+				Map<ContextType,VisualControlType> vclMap = new HashMap<ContextType,VisualControlType>();
 				/* package up Question Themes */
-				for (QuestionTheme qTheme : childFrame.getQuestionGroup().get().getQuestionThemes()) {
-					System.out.println("Question Theme: " + qTheme.getCode() + ":" + qTheme.getJson());
+				if (!childFrame.getQuestionGroup().get().getQuestionThemes().isEmpty()) {
+					for (QuestionTheme qTheme : childFrame.getQuestionGroup().get().getQuestionThemes()) {
+						System.out.println("Question Theme: " + qTheme.getCode() + ":" + qTheme.getJson());
+						processQuestionThemes(askBe, qTheme, serviceToken, ask, baseEntityList,contextMap,vclMap);
+					}
+					// Now add contexts
+					for (ContextType contextType : contextMap.keySet()) {
+						createVirtualContext(ask, contextMap.get(contextType), contextType, vclMap.get(contextType), weight);
+					}
 
-					/* create an ask */
-					BaseEntity askBe = new BaseEntity(childFrame.getQuestionGroup().get().getCode(),
-							childFrame.getQuestionGroup().get().getCode());
-					askBe.setRealm(parent.getRealm());
-
-					Ask ask = QuestionUtils.createQuestionForBaseEntity2(askBe, true, serviceToken);
-
-					processQuestionThemes(askBe, qTheme, serviceToken,ask,baseEntityList);
-
-					
-					
-					// Now add contexts 
-					
-					
 					Set<EntityQuestion> entityQuestionList = askBe.getQuestions();
 
 					Link linkAsk = new Link(frame.getCode(), childFrame.getQuestionCode(), "LNK_ASK",
@@ -187,9 +186,10 @@ public class FrameUtils2 {
 					baseEntityList.add(askBe);
 
 					askList.add(ask); // add to the ask list
+
+					
+					
 				}
-				
-				
 
 			}
 
@@ -316,7 +316,7 @@ public class FrameUtils2 {
 	 * @param root
 	 */
 	private static void processQuestionThemes(final BaseEntity fquestion, QuestionTheme qTheme, GennyToken gennyToken,
-			Ask ask, Set<BaseEntity> baseEntityList) {
+			Ask ask, Set<BaseEntity> baseEntityList,Map<ContextType,Set<BaseEntity>> contextMap,Map<ContextType,VisualControlType> vclMap) {
 
 		if (qTheme.getTheme().isPresent()) {
 			Theme theme = qTheme.getTheme().get();
@@ -325,7 +325,7 @@ public class FrameUtils2 {
 			Double weight = qTheme.getWeight();
 
 			BaseEntity themeBe = getBaseEntity(theme.getCode(), theme.getCode(), gennyToken);
-			
+
 			for (ThemeAttribute themeAttribute : theme.getAttributes()) {
 				Attribute attribute = new Attribute(themeAttribute.getCode(), themeAttribute.getCode(),
 						new DataType("DTT_THEME"));
@@ -351,24 +351,29 @@ public class FrameUtils2 {
 					e.printStackTrace();
 				}
 			}
-				// link to the parent
-				EntityEntity link = null;
-				Attribute linkFrame = new AttributeLink("LNK_THEME", "theme");
-				link = new EntityEntity(fquestion, themeBe, linkFrame, weight);
-				if (!fquestion.getLinks().contains(link)) {
-					fquestion.getLinks().add(link);
-				}
-				
-				baseEntityList.add(themeBe);
+			// link to the parent
+			EntityEntity link = null;
+			Attribute linkFrame = new AttributeLink("LNK_THEME", "theme");
+			link = new EntityEntity(fquestion, themeBe, linkFrame, weight);
+			if (!fquestion.getLinks().contains(link)) {
+				fquestion.getLinks().add(link);
+			}
 
-				// Add Contexts
-				ContextType contextType = qTheme.getContextType();
-				VisualControlType vcl = qTheme.getVcl();
+			baseEntityList.add(themeBe);
 
-				List<BaseEntity> themeList = new ArrayList<BaseEntity>();
-				themeList.add(themeBe);
-				createVirtualContext(ask, themeList, contextType,
-						vcl,weight);
+			// Add Contexts
+			ContextType contextType = qTheme.getContextType();
+			VisualControlType vcl = qTheme.getVcl();
+
+			List<BaseEntity> themeList = new ArrayList<BaseEntity>();
+			themeList.add(themeBe);
+			
+			if (!contextMap.containsKey(contextType)) {
+				contextMap.put(contextType, new HashSet<BaseEntity>());
+			}
+			contextMap.get(contextType).add(themeBe);
+			vclMap.put(contextType, vcl);
+			
 		}
 
 	}
@@ -383,7 +388,7 @@ public class FrameUtils2 {
 	 * @param weight
 	 * @return
 	 */
-	public static Ask createVirtualContext(Ask ask, List<BaseEntity> themes, ContextType linkCode,
+	public static Ask createVirtualContext(Ask ask, Set<BaseEntity> themes, ContextType linkCode,
 			VisualControlType visualControlType, Double weight) {
 
 		List<Context> completeContext = new ArrayList<>();
