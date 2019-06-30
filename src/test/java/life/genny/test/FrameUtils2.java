@@ -46,7 +46,7 @@ public class FrameUtils2 {
 			Set<QDataAskMessage> asks) {
 
 		Set<BaseEntity> baseEntityList = new HashSet<BaseEntity>();
-		List<Ask> askList = new ArrayList<>();
+		Set<Ask> askList = new HashSet<>();
 
 		BaseEntity root = getBaseEntity(rootFrame, serviceToken);
 
@@ -64,15 +64,17 @@ public class FrameUtils2 {
 		for (Ask ask : askList) {
 			QDataAskMessage askMsg = QuestionUtils.getAsks(serviceToken.getUserCode(), serviceToken.getUserCode(),
 					ask.getQuestionCode(), serviceToken.getToken());
-			askMsg = processQDataAskMessage(askMsg);
+			askMsg = processQDataAskMessage(askMsg,ask);
+
 			asks.add(askMsg);
 		}
 		return msg;
 	}
 
-	private static QDataAskMessage processQDataAskMessage(QDataAskMessage askMsg) {
+	private static QDataAskMessage processQDataAskMessage(QDataAskMessage askMsg,Ask contextAsk) {
 		for (Ask ask : askMsg.getItems()) {
 			ask.setQuestionCode(ask.getQuestionCode());
+			ask.setContextList(contextAsk.getContextList());
 		}
 		return askMsg;
 	}
@@ -115,7 +117,7 @@ public class FrameUtils2 {
 	 * @param root
 	 */
 	private static void processFrames(final Frame3 frame, GennyToken serviceToken, Set<BaseEntity> baseEntityList,
-			BaseEntity parent, List<Ask> askList) {
+			BaseEntity parent, Set<Ask> askList) {
 
 		// Go through the frames and fetch them
 		for (Tuple3<Frame3, FramePosition, Double> frameTuple3 : frame.getFrames()) {
