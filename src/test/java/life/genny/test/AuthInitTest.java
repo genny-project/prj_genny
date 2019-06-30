@@ -7,33 +7,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jbpm.test.JbpmJUnitBaseTestCase.Strategy;
 import org.junit.Test;
 import org.kie.api.command.Command;
 import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.ExecutionResults;
 import org.kie.api.runtime.KieSession;
-import org.kie.api.runtime.manager.RuntimeManager;
 import org.kie.internal.command.CommandFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.reflect.TypeToken;
 
-import io.vavr.Tuple2;
-import io.vertx.core.json.JsonObject;
-import life.genny.jbpm.customworkitemhandlers.AwesomeHandler;
-import life.genny.jbpm.customworkitemhandlers.NotificationWorkItemHandler;
 import life.genny.models.GennyToken;
-import life.genny.qwanda.Ask;
-import life.genny.qwanda.Context;
-import life.genny.qwanda.ContextType;
 import life.genny.qwanda.Context.VisualControlType;
-import life.genny.qwanda.entity.BaseEntity;
-import life.genny.qwanda.llama.Frame;
-import life.genny.qwanda.llama.Frame.ThemeAttribute;
-import life.genny.qwanda.llama.Llama;
-import life.genny.qwanda.message.QBulkMessage;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventMessage;
@@ -42,9 +28,6 @@ import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.rules.QRules;
 import life.genny.rules.listeners.JbpmInitListener;
-import life.genny.utils.FrameUtils;
-import life.genny.utils.QuestionUtils;
-import life.genny.utils.Layout.LayoutPosition;
 
 public class AuthInitTest extends GennyJbpmBaseTest {
 
@@ -64,7 +47,7 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		super(false);
 	}
 
-	// @Test
+	//@Test
 	public void displayGermanFlag() {
 
 		/* token stuff */
@@ -86,25 +69,29 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 
 		/* create frames */
 
-		Frame2 frameDummy = Frame2.Builder.newInstance("FRM_DUMMY").addTheme(THM_DUMMY).build();
+		Frame3 frameDummy = Frame3.builder("FRM_DUMMY").addTheme(THM_DUMMY).end().build();
 
-		Frame2 frameEast = Frame2.Builder.newInstance("FRM_EAST").addTheme(THM_COLOR_RED)
+		Frame3 frameEast = Frame3.builder("FRM_EAST").addTheme(THM_COLOR_RED).end()
 				.addFrame(frameDummy, FramePosition.CENTRE).build();
-		Frame2 frameWest = Frame2.Builder.newInstance("FRM_WEST").addTheme(THM_COLOR_GREEN)
+		Frame3 frameWest = Frame3.builder("FRM_WEST").addTheme(THM_COLOR_GREEN).end()
 				.addFrame(frameDummy, FramePosition.CENTRE).build();
-		Frame2 frameNorth = Frame2.Builder.newInstance("FRM_NORTH").addTheme(THM_COLOR_YELLOW)
+		Frame3 frameNorth = Frame3.builder("FRM_NORTH").addTheme(THM_COLOR_YELLOW).end()
 				.addFrame(frameDummy, FramePosition.CENTRE).build();
-		Frame2 frameSouth = Frame2.Builder.newInstance("FRM_SOUTH").addTheme(THM_COLOR_BLUE)
+		Frame3 frameSouth = Frame3.builder("FRM_SOUTH").addTheme(THM_COLOR_BLUE).end()
 				.addFrame(frameDummy, FramePosition.CENTRE).build();
-		Frame2 frameCentre = Frame2.Builder.newInstance("FRM_CENTRE").addTheme(THM_COLOR_BLACK)
+		Frame3 frameCentre = Frame3.builder("FRM_CENTRE").addTheme(THM_COLOR_BLACK).end()
 				.addFrame(frameDummy, FramePosition.CENTRE).build();
 
-		Frame2 frameTest = Frame2.Builder.newInstance("FRM_TEST").addTheme(THM_COLOR_GREY)
-				.addFrame(frameEast, FramePosition.EAST).addFrame(frameWest, FramePosition.WEST)
-				.addFrame(frameNorth, FramePosition.NORTH).addFrame(frameSouth, FramePosition.SOUTH)
-				.addFrame(frameCentre, FramePosition.CENTRE).build();
+		Frame3 frameTest = Frame3.builder("FRM_TEST")
+				.addTheme(THM_COLOR_GREY).end()
+				.addFrame(frameEast, FramePosition.EAST).end()
+				.addFrame(frameWest, FramePosition.WEST).end()
+				.addFrame(frameNorth, FramePosition.NORTH).end()
+				.addFrame(frameSouth, FramePosition.SOUTH).end()
+				.addFrame(frameCentre, FramePosition.CENTRE).end()
+				.build();
 
-		Frame2 frameRoot = Frame2.Builder.newInstance("FRM_ROOT").addFrame(frameTest).build();
+		Frame3 frameRoot = Frame3.builder("FRM_ROOT").addFrame(frameTest).end().build();
 
 		/* send message */
 		ArrayList<QDataAskMessage> askMsgs = new ArrayList<QDataAskMessage>();
@@ -308,36 +295,36 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 
 		setUpCache(GennySettings.mainrealm, userToken);
 
-		Frame2 centre = Frame2.Builder.newInstance("FRM_CENTRE").build();
+		Frame3 centre = Frame3.builder("FRM_CENTRE").build();
 
-		Frame2 profile = Frame2.Builder.newInstance("FRM_PROFILE")
-				.addTheme("THM_DISPLAY_HORIZONTAL", "flexDirection", "row")
-				.addTheme("THM_BACKGROUND_RED", "backgroundColor", "red").build();
+		Frame3 profile = Frame3.builder("FRM_PROFILE")
+				.addTheme("THM_DISPLAY_HORIZONTAL", "flexDirection", "row").end()
+				.addTheme("THM_BACKGROUND_RED", "backgroundColor", "red").end().build();
 
-		Frame2 header = Frame2.Builder.newInstance("FRM_HEADER").addFrame(profile, FramePosition.EAST).build();
+		Frame3 header = Frame3.builder("FRM_HEADER").addFrame(profile, FramePosition.EAST).build();
 
-		Frame2 sidebar = Frame2.Builder.newInstance("FRM_SIDEBAR").addTheme("THM_WIDTH_300", "width", 300)
-				.addTheme("THM_DISPLAY_VERTICAL", "flexDirection", "column")
-				.addTheme("THM_DISPLAY_VERTICAL", "justifyContent", "flex-start")
-				.addTheme("THM_BACKGROUND_RED", "backgroundColor", "red").setQuestion("QUE_USER_PROFILE_GRP").build();
+		Frame3 sidebar = Frame3.builder("FRM_SIDEBAR").addTheme("THM_WIDTH_300", "width", 300).end()
+				.addTheme("THM_DISPLAY_VERTICAL", "flexDirection", "column").end()
+				.addTheme("THM_DISPLAY_VERTICAL", "justifyContent", "flex-start").end()
+				.addTheme("THM_BACKGROUND_RED", "backgroundColor", "red").end().question("QUE_USER_PROFILE_GRP").end().build();
 
-		Frame2 notes = Frame2.Builder.newInstance("FRM_NOTES").addTheme("THM_WIDTH_300", "width", 300)
-				.addTheme("THM_DISPLAY_VERTICAL", "flexDirection", "column")
-				.addTheme("THM_DISPLAY_VERTICAL", "justifyContent", "flex-start").build();
+		Frame3 notes = Frame3.builder("FRM_NOTES").addTheme("THM_WIDTH_300", "width", 300).end()
+				.addTheme("THM_DISPLAY_VERTICAL", "flexDirection", "column").end()
+				.addTheme("THM_DISPLAY_VERTICAL", "justifyContent", "flex-start").end().build();
 
-		Frame2 footer = Frame2.Builder.newInstance("FRM_FOOTER").build();
+		Frame3 footer = Frame3.builder("FRM_FOOTER").build();
 
-		Frame2 mainFrame = Frame2.Builder.newInstance("FRM_MAIN").addTheme("THM_COLOR_WHITE")
-				.addFrame(header, FramePosition.NORTH).addFrame(sidebar, FramePosition.EAST)
-				.addFrame(footer, FramePosition.SOUTH).addFrame(centre, FramePosition.CENTRE).build();
+		Frame3 mainFrame = Frame3.builder("FRM_MAIN").addTheme("THM_COLOR_WHITE").end()
+				.addFrame(header, FramePosition.NORTH).end().addFrame(sidebar, FramePosition.EAST).end()
+				.addFrame(footer, FramePosition.SOUTH).end().addFrame(centre, FramePosition.CENTRE).end().build();
 
-		Frame2 desktop = Frame2.Builder.newInstance("FRM_ROOT")
-				.addTheme("THM_BACKGROUND_GRAY", "backgroundColor", "gray")
-				.addTheme("THM_BACKGROUND_INTERNMATCH", "backgroundColor", "#233a4e")
-				.addTheme("THM_COLOR_WHITE", "backgroundColor", "white")
-				.addTheme("THM_COLOR_BLACK", ThemeAttributeType.PRI_CONTENT, "backgroundColor", "black")
+		Frame3 desktop = Frame3.builder("FRM_ROOT")
+				.addTheme("THM_BACKGROUND_GRAY", "backgroundColor", "gray").end()
+				.addTheme("THM_BACKGROUND_INTERNMATCH", "backgroundColor", "#233a4e").end()
+				.addTheme("THM_COLOR_WHITE", "backgroundColor", "white").end()
+				.addTheme("THM_COLOR_BLACK", ThemeAttributeType.PRI_CONTENT, "backgroundColor", "black").end()
 
-				.addFrame(mainFrame).build();
+				.addFrame(mainFrame).end().build();
 
 		ArrayList<QDataAskMessage> askMsgs = new ArrayList<QDataAskMessage>();
 
