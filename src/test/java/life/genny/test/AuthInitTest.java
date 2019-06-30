@@ -4,8 +4,10 @@ import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.Test;
 import org.kie.api.command.Command;
@@ -94,7 +96,7 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		Frame3 frameRoot = Frame3.builder("FRM_ROOT").addFrame(frameTest).end().build();
 
 		/* send message */
-		ArrayList<QDataAskMessage> askMsgs = new ArrayList<QDataAskMessage>();
+		Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
 		QDataBaseEntityMessage msg = FrameUtils2.toMessage(frameRoot, serviceToken, askMsgs);
 		rules.publishCmd(msg);
 		System.out.println("Sent");
@@ -270,7 +272,7 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 
 				.addFrame(mainFrame).end().build();
 
-		ArrayList<QDataAskMessage> askMsgs = new ArrayList<QDataAskMessage>();
+		Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
 
 		QDataBaseEntityMessage msg = FrameUtils2.toMessage(desktop, serviceToken, askMsgs);
 
@@ -326,7 +328,7 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 
 				.addFrame(mainFrame).end().build();
 
-		ArrayList<QDataAskMessage> askMsgs = new ArrayList<QDataAskMessage>();
+		Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
 
 		QDataBaseEntityMessage msg = FrameUtils2.toMessage(desktop, serviceToken, askMsgs);
 

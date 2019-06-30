@@ -1,31 +1,28 @@
 package life.genny.test;
 
-import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import io.vavr.Tuple3;
 import io.vavr.Tuple4;
-import io.vertx.core.json.JsonObject;
 import life.genny.models.GennyToken;
 import life.genny.qwanda.Ask;
 import life.genny.qwanda.Context;
+import life.genny.qwanda.Context.VisualControlType;
 import life.genny.qwanda.ContextList;
 import life.genny.qwanda.ContextType;
 import life.genny.qwanda.Link;
-import life.genny.qwanda.Question;
-import life.genny.qwanda.Context.VisualControlType;
 import life.genny.qwanda.attribute.Attribute;
 import life.genny.qwanda.attribute.AttributeLink;
 import life.genny.qwanda.attribute.EntityAttribute;
@@ -34,11 +31,9 @@ import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.EntityEntity;
 import life.genny.qwanda.entity.EntityQuestion;
 import life.genny.qwanda.exception.BadDataException;
-import life.genny.qwanda.llama.Frame;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwandautils.GennySettings;
-import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.utils.QuestionUtils;
 import life.genny.utils.VertxUtils;
@@ -48,9 +43,9 @@ public class FrameUtils2 {
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getCanonicalName());
 
 	static public QDataBaseEntityMessage toMessage(final Frame3 rootFrame, GennyToken serviceToken,
-			List<QDataAskMessage> asks) {
+			Set<QDataAskMessage> asks) {
 
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
+		Set<BaseEntity> baseEntityList = new HashSet<BaseEntity>();
 		List<Ask> askList = new ArrayList<>();
 
 		BaseEntity root = getBaseEntity(rootFrame, serviceToken);
@@ -62,7 +57,7 @@ public class FrameUtils2 {
 		// Traverse the frame tree and build BaseEntitys and links
 		processFrames(rootFrame, serviceToken, baseEntityList, root, askList);
 
-		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntityList);
+		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(new ArrayList<>(baseEntityList));
 		msg.setTotal(msg.getReturnCount()); // fudge the total.
 		msg.setReplace(true);
 
@@ -112,24 +107,6 @@ public class FrameUtils2 {
 
 	}
 
-	private static Question getQuestion(final String questionCode, final GennyToken serviceToken) {
-		JsonObject qJson = VertxUtils.readCachedJson(serviceToken.getRealm(), questionCode, serviceToken.getToken());
-		Question q = JsonUtils.fromJson(qJson.getString("value"), Question.class);
-		if ((q != null)) {
-			try {
-				String questionStr = QwandaUtils.apiGet(
-						GennySettings.qwandaServiceUrl + "/qwanda/questions/" + questionCode, serviceToken.getToken());
-				if (questionStr == null) {
-					log.error("Question Code :" + questionCode + " does not exist");
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return q;
-
-	}
 
 	/**
 	 * @param frame
@@ -137,7 +114,7 @@ public class FrameUtils2 {
 	 * @param messages
 	 * @param root
 	 */
-	private static void processFrames(final Frame3 frame, GennyToken serviceToken, List<BaseEntity> baseEntityList,
+	private static void processFrames(final Frame3 frame, GennyToken serviceToken, Set<BaseEntity> baseEntityList,
 			BaseEntity parent, List<Ask> askList) {
 
 		// Go through the frames and fetch them
@@ -176,6 +153,8 @@ public class FrameUtils2 {
 			if (childFrame.getQuestionGroup().isPresent()) {
 				System.out.println("Processing Question  " + childFrame.getQuestionCode());
 
+				Map<ContextType,Set<BaseEntity>> questionThemes = new HashMap<ContextType,Set<BaseEntity>>();
+				
 				/* package up Question Themes */
 				for (QuestionTheme qTheme : childFrame.getQuestionGroup().get().getQuestionThemes()) {
 					System.out.println("Question Theme: " + qTheme.getCode() + ":" + qTheme.getJson());
@@ -185,9 +164,15 @@ public class FrameUtils2 {
 							childFrame.getQuestionGroup().get().getCode());
 					askBe.setRealm(parent.getRealm());
 
-					processQuestionThemes(askBe, qTheme, serviceToken, baseEntityList, askBe);
-
 					Ask ask = QuestionUtils.createQuestionForBaseEntity2(askBe, true, serviceToken);
+
+					processQuestionThemes(askBe, qTheme, serviceToken,ask,baseEntityList);
+
+					
+					
+					// Now add contexts 
+					
+					
 					Set<EntityQuestion> entityQuestionList = askBe.getQuestions();
 
 					Link linkAsk = new Link(frame.getCode(), childFrame.getQuestionCode(), "LNK_ASK",
@@ -201,6 +186,8 @@ public class FrameUtils2 {
 
 					askList.add(ask); // add to the ask list
 				}
+				
+				
 
 			}
 
@@ -214,7 +201,7 @@ public class FrameUtils2 {
 	 * @param root
 	 */
 	private static void processThemeTuples(final Frame3 frame, FramePosition position, GennyToken gennyToken,
-			List<BaseEntity> baseEntityList, BaseEntity parent) {
+			Set<BaseEntity> baseEntityList, BaseEntity parent) {
 		// Go through the theme codes and fetch the
 		for (Tuple4<String, ThemeAttributeType, JSONObject, Double> themeTuple4 : frame.getThemeObjects()) {
 			System.out.println("Processing Theme     " + themeTuple4._1);
@@ -273,7 +260,7 @@ public class FrameUtils2 {
 	 * @param root
 	 */
 	private static void processThemes(final Frame3 frame, FramePosition position, GennyToken gennyToken,
-			List<BaseEntity> baseEntityList, BaseEntity parent) {
+			Set<BaseEntity> baseEntityList, BaseEntity parent) {
 		// Go through the theme codes and fetch the
 		for (Tuple2<Theme, Double> themeTuple2 : frame.getThemes()) {
 			System.out.println("Processing Theme     " + themeTuple2._1.getCode());
@@ -327,7 +314,7 @@ public class FrameUtils2 {
 	 * @param root
 	 */
 	private static void processQuestionThemes(final BaseEntity fquestion, QuestionTheme qTheme, GennyToken gennyToken,
-			List<BaseEntity> baseEntityList, BaseEntity parent) {
+			Ask ask, Set<BaseEntity> baseEntityList) {
 
 		if (qTheme.getTheme().isPresent()) {
 			Theme theme = qTheme.getTheme().get();
@@ -336,7 +323,7 @@ public class FrameUtils2 {
 			Double weight = qTheme.getWeight();
 
 			BaseEntity themeBe = getBaseEntity(theme.getCode(), theme.getCode(), gennyToken);
-
+			
 			for (ThemeAttribute themeAttribute : theme.getAttributes()) {
 				Attribute attribute = new Attribute(themeAttribute.getCode(), themeAttribute.getCode(),
 						new DataType("DTT_THEME"));
@@ -369,9 +356,17 @@ public class FrameUtils2 {
 				if (!fquestion.getLinks().contains(link)) {
 					fquestion.getLinks().add(link);
 				}
+				
 				baseEntityList.add(themeBe);
 
+				// Add Contexts
+				ContextType contextType = qTheme.getContextType();
+				VisualControlType vcl = qTheme.getVcl();
 
+				List<BaseEntity> themeList = new ArrayList<BaseEntity>();
+				themeList.add(themeBe);
+				createVirtualContext(ask, themeList, contextType,
+						vcl,weight);
 		}
 
 	}
@@ -386,7 +381,7 @@ public class FrameUtils2 {
 	 * @param weight
 	 * @return
 	 */
-	public Ask createVirtualContext(Ask ask, List<BaseEntity> themes, ContextType linkCode,
+	public static Ask createVirtualContext(Ask ask, List<BaseEntity> themes, ContextType linkCode,
 			VisualControlType visualControlType, Double weight) {
 
 		List<Context> completeContext = new ArrayList<>();
