@@ -161,35 +161,33 @@ public class FrameUtils2 {
 
 				Ask ask = QuestionUtils.createQuestionForBaseEntity2(askBe, true, serviceToken);
 
-				Map<ContextType,Set<BaseEntity>> contextMap = new HashMap<ContextType,Set<BaseEntity>>();
-				Map<ContextType,VisualControlType> vclMap = new HashMap<ContextType,VisualControlType>();
+				Map<ContextType, Set<BaseEntity>> contextMap = new HashMap<ContextType, Set<BaseEntity>>();
+				Map<ContextType, VisualControlType> vclMap = new HashMap<ContextType, VisualControlType>();
 				/* package up Question Themes */
 				if (!childFrame.getQuestionGroup().get().getQuestionThemes().isEmpty()) {
 					for (QuestionTheme qTheme : childFrame.getQuestionGroup().get().getQuestionThemes()) {
 						System.out.println("Question Theme: " + qTheme.getCode() + ":" + qTheme.getJson());
-						processQuestionThemes(askBe, qTheme, serviceToken, ask, baseEntityList,contextMap,vclMap);
+						processQuestionThemes(askBe, qTheme, serviceToken, ask, baseEntityList, contextMap, vclMap);
 					}
 					// Now add contexts
 					for (ContextType contextType : contextMap.keySet()) {
-						createVirtualContext(ask, contextMap.get(contextType), contextType, vclMap.get(contextType), weight);
+						createVirtualContext(ask, contextMap.get(contextType), contextType, vclMap.get(contextType),
+								weight);
 					}
 
-					Set<EntityQuestion> entityQuestionList = askBe.getQuestions();
-
-					Link linkAsk = new Link(frame.getCode(), childFrame.getQuestionCode(), "LNK_ASK",
-							FramePosition.CENTRE.name());
-					linkAsk.setWeight(ask.getWeight());
-					EntityQuestion ee = new EntityQuestion(linkAsk);
-					entityQuestionList.add(ee);
-
-					childBe.setQuestions(entityQuestionList);
-					baseEntityList.add(askBe);
-
-					askList.add(ask); // add to the ask list
-
-					
-					
 				}
+				Set<EntityQuestion> entityQuestionList = askBe.getQuestions();
+
+				Link linkAsk = new Link(frame.getCode(), childFrame.getQuestionCode(), "LNK_ASK",
+						FramePosition.CENTRE.name());
+				linkAsk.setWeight(ask.getWeight());
+				EntityQuestion ee = new EntityQuestion(linkAsk);
+				entityQuestionList.add(ee);
+
+				childBe.setQuestions(entityQuestionList);
+				baseEntityList.add(askBe);
+
+				askList.add(ask); // add to the ask list
 
 			}
 
@@ -316,7 +314,8 @@ public class FrameUtils2 {
 	 * @param root
 	 */
 	private static void processQuestionThemes(final BaseEntity fquestion, QuestionTheme qTheme, GennyToken gennyToken,
-			Ask ask, Set<BaseEntity> baseEntityList,Map<ContextType,Set<BaseEntity>> contextMap,Map<ContextType,VisualControlType> vclMap) {
+			Ask ask, Set<BaseEntity> baseEntityList, Map<ContextType, Set<BaseEntity>> contextMap,
+			Map<ContextType, VisualControlType> vclMap) {
 
 		if (qTheme.getTheme().isPresent()) {
 			Theme theme = qTheme.getTheme().get();
@@ -367,13 +366,13 @@ public class FrameUtils2 {
 
 			List<BaseEntity> themeList = new ArrayList<BaseEntity>();
 			themeList.add(themeBe);
-			
+
 			if (!contextMap.containsKey(contextType)) {
 				contextMap.put(contextType, new HashSet<BaseEntity>());
 			}
 			contextMap.get(contextType).add(themeBe);
 			vclMap.put(contextType, vcl);
-			
+
 		}
 
 	}
