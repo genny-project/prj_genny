@@ -255,7 +255,7 @@ public class AuthInitTest extends GennyJbpmBaseTest {
                 .addTheme(THM_BACKGROUND_WHITE).end() 
                 
 		    	.addFrame(sidebar,FramePosition.WEST).end()
-	//	    	.addFrame(notes,FramePosition.EAST).end()
+		    	.addFrame(notes,FramePosition.EAST).end()
 		    	.addFrame(footer,FramePosition.SOUTH).end()
 		    	.addFrame(centre,FramePosition.CENTRE).end()
 		    	.addFrame(header,FramePosition.NORTH).end()
