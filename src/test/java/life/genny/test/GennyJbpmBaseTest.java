@@ -525,4 +525,12 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 		return true;
 	}
 	
+	protected void sleepMS(long ms) {
+    try {
+			Thread.sleep(ms);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

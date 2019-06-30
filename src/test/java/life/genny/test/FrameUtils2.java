@@ -394,6 +394,7 @@ public class FrameUtils2 {
 
 		for (BaseEntity theme : themes) {
 			Context context = new Context(linkCode, theme, visualControlType, weight);
+			context.setRealm(ask.getRealm());
 			completeContext.add(context);
 
 			/* publish the theme baseentity message */

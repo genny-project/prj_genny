@@ -2,17 +2,45 @@ package life.genny.test;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+import org.drools.core.time.impl.PseudoClockScheduler;
+import org.jbpm.test.JbpmJUnitBaseTestCase.Strategy;
+import org.junit.Test;
 import org.kie.api.command.Command;
+import org.kie.api.io.ResourceType;
+import org.kie.api.runtime.ExecutionResults;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.process.ProcessInstance;
+import org.kie.internal.command.CommandFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import life.genny.models.GennyToken;
+import life.genny.qwanda.message.QEventMessage;
+import life.genny.qwandautils.GennySettings;
+import life.genny.rules.QRules;
+import life.genny.rules.listeners.JbpmInitListener;
 
 public class TimerTest extends GennyJbpmBaseTest {
 
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getCanonicalName());
+
+	private static final String WFE_TIMER_INTERVAL = "rulesCurrent/shared/_BPMN_WORKFLOWS/XXXtimer5.bpmn";
+//	private static final String WFE_TIMER_INTERVAL = "rulesCurrent/shared/_BPMN_WORKFLOWS/XXXTimerStart2.bpmn";
+
+	private static final String WFE_SEND_FORMS = "rulesCurrent/shared/_BPMN_WORKFLOWS/send_forms.bpmn";
+	private static final String WFE_SHOW_FORM = "rulesCurrent/shared/_BPMN_WORKFLOWS/show_form.bpmn";
+	private static final String WFE_AUTH_INIT = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/auth_init.bpmn";
+	private static final String WFE_SEND_LLAMA = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/send_llama.bpmn";
+	private static final String DRL_PROJECT = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/project.drl";
+	private static final String DRL_USER_COMPANY = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/user_company.drl";
+	private static final String DRL_USER = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/user.drl";
+	private static final String DRL_EVENT_LISTENER_SERVICE_SETUP = "rulesCurrent/shared/_BPMN_WORKFLOWS/Initialise_Project/eventListenerServiceSetup.drl";
+	private static final String DRL_EVENT_LISTENER_USER_SETUP = "rulesCurrent/shared/_BPMN_WORKFLOWS/Initialise_Project/eventListenerUserSetup.drl";
 
 
 	public TimerTest() {
@@ -21,27 +49,66 @@ public class TimerTest extends GennyJbpmBaseTest {
 
 
 
-	// @Test(timeout = 30000)
+	//@Test(timeout = 30000)
 	public void testTimerProcess() {
+		
+		Map<String, ResourceType> resources = new HashMap<String, ResourceType>();
+		String[] jbpms = { WFE_TIMER_INTERVAL };
+		String[] drls = { DRL_PROJECT, DRL_USER_COMPANY, DRL_USER, DRL_EVENT_LISTENER_SERVICE_SETUP,
+				DRL_EVENT_LISTENER_USER_SETUP };
+		for (String p : jbpms) {
+			resources.put(p, ResourceType.BPMN2);
+		}
+		for (String p : drls) {
+			resources.put(p, ResourceType.DRL);
+		}
+		createRuntimeManager(Strategy.SINGLETON, resources, null);
+		KieSession kieSession = getRuntimeEngine().getKieSession();
+		// Register handlers
+		addWorkItemHandlers(kieSession);
+		kieSession.addEventListener(new JbpmInitListener(userToken));
 
-		KieSession kieSession = createKSession("rulesCurrent/shared/_BPMN_WORKFLOWS/process_2.bpmn");
-		// KieSession kieSession =
-		// setupSession("/rulesCurrent/shared/00_Startup/process_2.bpmn",true);
 
 		List<Command<?>> cmds = new ArrayList<Command<?>>();
 
-		ProcessInstance pid = kieSession.startProcess("process_2", null);
-		// ExecutionResults results = kieSession.execute(
-		// CommandFactory.newBatchExecution( cmds ) );
+		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
+		QRules qRules = getQRules(userToken); // defaults to user anyway
+		System.out.println(qRules.getToken());
+		cmds.add(CommandFactory.newInsert(qRules, "qRules"));
+		cmds.add(CommandFactory.newInsert(userToken, "userToken"));
+		cmds.add(CommandFactory.newInsert(new GennyToken("serviceUser", qRules.getServiceToken()), "serviceToken"));
+		// Set up Cache
 
+		setUpCache(GennySettings.mainrealm, userToken);
+
+		cmds.add(CommandFactory.newInsert(eventBusMock, "eb"));
+
+		long startTime = System.nanoTime();
+		ExecutionResults results = null;
 		try {
-			Thread.sleep(15000);
-		} catch (InterruptedException e) {
+			results = kieSession.execute(CommandFactory.newBatchExecution(cmds));
+			  PseudoClockScheduler sessionClock = kieSession.getSessionClock();
+			    // Timer is set to 60 seconds, so advancing with 70.
+			    sessionClock.advanceTime(70, TimeUnit.SECONDS);
+		//	sleepMS(15000);
+		} catch (Exception ee) {
 
+		} finally {
+			long endTime = System.nanoTime();
+			double difference = (endTime - startTime) / 1e6; // get ms
+
+			if (results != null) {
+				results.getValue("msg"); // returns the inserted fact Msg
+				QRules rules = (QRules) results.getValue("qRules"); // returns the inserted fact QRules
+				System.out.println(rules);
+			} else {
+				System.out.println("NO RESULTS");
+			}
+
+			System.out.println("BPMN completed in " + difference + " ms");
+
+			kieSession.dispose();
 		}
-
-		kieSession.dispose();
-
 	}
 
 	

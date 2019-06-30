@@ -109,7 +109,7 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		QRules rules = getQRules(userToken); // defaults to user anyway
 		GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
 		
-		Theme THM_DUMMY = Theme.builder("THM_DUMMY").addAttribute().height(100).end().addAttribute().width(100).end()
+		Theme THM_DUMMY = Theme.builder("THM_DUMMY").addAttribute().height(100).end().addAttribute().width(90).end()
 				.build();
 
 

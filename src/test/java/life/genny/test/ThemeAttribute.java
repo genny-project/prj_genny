@@ -16,7 +16,8 @@ public final class ThemeAttribute {
 	private Optional<String> backgroundColor=Optional.empty();
 	private Optional<Integer> margin=Optional.empty();
 	private Optional<Integer> marginBottom=Optional.empty();
-	private Optional<String> width=Optional.empty();
+	private Optional<Integer> width=Optional.empty();
+	private Optional<String> widthPercent=Optional.empty();
 	private Optional<Integer> height=Optional.empty();
 	private Optional<Integer> maxWidth=Optional.empty();
 	private Optional<Integer> padding=Optional.empty();
@@ -124,8 +125,19 @@ public final class ThemeAttribute {
 	/**
 	 * @return the width
 	 */
-	public String getWidth() {
-		return width.orElse("0");
+	public Integer getWidth() {
+		return width.orElse(0);
+	}
+	
+	/**
+	 * @return the widthPercent
+	 */
+	public String getWidthPercent() {
+		if (!width.isPresent()) {
+			return widthPercent.orElse("100%");
+		}else {
+			return width.get()+"";
+		}
 	}
 
 	/**
@@ -339,12 +351,12 @@ public final class ThemeAttribute {
 		}
 
 		public Builder width(Integer value) {
-			managedInstance.width = Optional.of(value+"");
+			managedInstance.width = Optional.of(value);
 			return this;
 		}
 		
 		public Builder width(String value) {
-			managedInstance.width = Optional.of(value);  // should check format
+			managedInstance.widthPercent = Optional.of(value);  // should check format
 			return this;
 		}
 
@@ -480,7 +492,10 @@ public final class ThemeAttribute {
 		if (backgroundColor.isPresent()) json.put("backgroundColor", backgroundColor.get());
 		if (shadowColor.isPresent()) json.put("shadowColor", shadowColor.get());
 		if (shadowOpacity.isPresent()) json.put("shadowOpacity", shadowOpacity.get());
-		if (width.isPresent()) json.put("width", width.get());
+		if (width.isPresent()) { json.put("width", width.get()); } else {
+			if (widthPercent.isPresent()) { json.put("width", widthPercent.get()); } 
+		}
+		
 		if (margin.isPresent()) json.put("margin", margin.get());
 		if (height.isPresent()) json.put("height", height.get());
 		if (maxWidth.isPresent()) json.put("maxWidth", maxWidth.get());
