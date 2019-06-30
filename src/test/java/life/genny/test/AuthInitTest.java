@@ -61,8 +61,113 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 	public AuthInitTest() {
 		super(false);
 	}
+	
+	@Test
+	public void displayFooter() {
+//getting the tokens
+		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
+		QRules rules = getQRules(userToken);
+		GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
 
-	// @Test
+//building the themes and the footers
+		Theme THM_COLOR_GREY = Theme.builder("THM_COLOR_RED")
+		.addAttribute()
+		.backgroundColor("red")
+		.end()
+		.build();
+
+		Theme THM_CONTENT= Theme.builder("THM_CONTENT")
+		.addAttribute().width(500).end()
+		.addAttribute().backgroundColor("#ffffff").end()
+		.build();
+
+		Theme THM_MEDIUM= Theme.builder("MEDIUM")
+		.addAttribute().height(100).end()
+		.addAttribute().maxWidth(300).end()
+		.addAttribute().backgroundColor("#ffff00").end()
+		.build();
+
+		Theme THM_COLOR_BLACK = Theme.builder("THM_COLOR_BLACK")
+		.addAttribute()
+		.backgroundColor("black")
+		.end()
+		.build();
+
+		Theme THM_COLOR_BLUE = Theme.builder("THM_COLOR_BLUE")
+		.addAttribute()
+		.backgroundColor("#1183c8").end()
+		.addAttribute().height(100).end()
+		.addAttribute().justifyContent("flex-start").end()
+		.addAttribute().flexDirection("column").end()
+		.build();
+		
+		Frame2 frameContent = Frame2.Builder.newInstance("FRM_CONTENT")
+		.addTheme(THM_CONTENT)
+		.setQuestion("QUE_POWERED_BY_GRP")
+		.build();
+
+		Frame2 mediumFooter = Frame2.Builder.newInstance("FRM_MEDIUMFOOTER")
+		.addTheme(THM_MEDIUM)
+		.build(); 
+
+		Frame2 notes = Frame2.Builder.newInstance("FRM_NOTES")
+		.addTheme(THM_COLOR_BLACK)
+		.build();
+
+		Frame2 sideBar = Frame2.Builder.newInstance("FRM_SIDEBAR")
+		.addTheme(THM_COLOR_BLACK)
+		.build();
+
+		Frame2 header = Frame2.Builder.newInstance("FRM_HEADER")
+		.addTheme(THM_COLOR_BLACK)
+		.build();
+		
+		Frame2 footer = Frame2.Builder.newInstance("FRM_FOOTER")
+		.addTheme(THM_COLOR_BLUE)
+		.addTheme("THM_DISPLAY_VERTICAL", "flexDirection", "column")
+		.addTheme("THM_DISPLAY_VERTICAL", "justifyContent", "flex-start")
+		.addFrame(frameContent,FramePosition.EAST)
+		.addFrame(mediumFooter, FramePosition.CENTRE)
+		.addFrame(mediumFooter, FramePosition.NORTH)
+		.addFrame(mediumFooter, FramePosition.SOUTH)
+		.addFrame(mediumFooter, FramePosition.WEST)
+		.build();
+
+		Frame2 frameCentre = Frame2.Builder.newInstance("FRM_CENTRE")
+		.addTheme(THM_COLOR_BLACK)
+		.build();
+
+		Frame2 frameMain = Frame2.Builder.newInstance("FRM_MAIN")
+		.addTheme(THM_COLOR_GREY)
+		.addFrame(notes, FramePosition.EAST)
+		.addFrame(sideBar, FramePosition.WEST)
+		.addFrame(header, FramePosition.NORTH)
+		.addFrame(footer, FramePosition.SOUTH)
+		.addFrame(frameCentre, FramePosition.CENTRE)
+		.build();
+		
+		Frame2 frameRoot = Frame2.Builder.newInstance("FRM_ROOT")
+		.addFrame(frameMain)
+		.build();
+		
+		//for message
+		ArrayList<QDataAskMessage> askMsgs = new ArrayList<QDataAskMessage>();
+		QDataBaseEntityMessage msg = FrameUtils2.toMessage(frameRoot, serviceToken, askMsgs);
+		rules.publishCmd(msg);
+		for (QDataAskMessage askMsg : askMsgs) {
+			rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode()); // Send associated															// QDataAskMessage
+		}
+
+		BaseEntity user = rules.baseEntity.getBaseEntityByCode(userToken.getUserCode());
+		System.out.println(user.getCode());
+
+		QDataBaseEntityMessage userMsg = new QDataBaseEntityMessage(rules.getUser());
+		rules.publishCmd(userMsg);
+
+		System.out.println("Sent");
+	}
+
+	//@Test
 	public void displayGermanFlag() {
 
 		/* token stuff */
@@ -83,11 +188,10 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		Theme THM_COLOR_BLACK = Theme.builder("THM_COLOR_BLACK").addAttribute().backgroundColor("black").end().build();
 
 		/* create frames */
-
 		Frame2 frameDummy = Frame2.Builder.newInstance("FRM_DUMMY").addTheme(THM_DUMMY).build();
 
 		Frame2 frameEast = Frame2.Builder.newInstance("FRM_EAST").addTheme(THM_COLOR_RED)
-				.addFrame(frameDummy, FramePosition.CENTRE).build();
+				.addFrame(frameDummy, FramePosition.CENTRE).setQuestion("QUE_USER_PROFILE_GRP").build();
 		Frame2 frameWest = Frame2.Builder.newInstance("FRM_WEST").addTheme(THM_COLOR_GREEN)
 				.addFrame(frameDummy, FramePosition.CENTRE).build();
 		Frame2 frameNorth = Frame2.Builder.newInstance("FRM_NORTH").addTheme(THM_COLOR_YELLOW)
@@ -108,11 +212,16 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		ArrayList<QDataAskMessage> askMsgs = new ArrayList<QDataAskMessage>();
 		QDataBaseEntityMessage msg = FrameUtils2.toMessage(frameRoot, serviceToken, askMsgs);
 		rules.publishCmd(msg);
+
+		for (QDataAskMessage askMsg : askMsgs) {
+			rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode()); // Send associated															// QDataAskMessage
+		}
+
 		System.out.println("Sent");
 
 	}
 
-	// @Test
+	//@Test
 	public void testTheme() {
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 		QRules rules = getQRules(userToken); // defaults to user anyway
@@ -189,10 +298,16 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 																							// QDataAskMessage
 		}
 
+		BaseEntity user = rules.baseEntity.getBaseEntityByCode(userToken.getUserCode());
+		System.out.println(user.getCode());
+
+		QDataBaseEntityMessage userMsg = new QDataBaseEntityMessage(rules.getUser());
+		rules.publishCmd(userMsg);
+
 		System.out.println("Sent");
 	}
 
-	// @Test
+	//@Test
 	public void testDesktopPageDisplay() {
 
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
