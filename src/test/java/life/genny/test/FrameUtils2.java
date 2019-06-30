@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -43,6 +44,32 @@ public class FrameUtils2 {
 
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getCanonicalName());
 
+	static public QDataBaseEntityMessage toMessage(final Frame3 rootFrame, GennyToken serviceToken, List<QDataAskMessage> asks) {
+
+		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
+		List<Ask> askList = new ArrayList<>();
+
+
+		BaseEntity root = getBaseEntity(rootFrame, serviceToken);
+
+		log.info(root.toString());
+
+		baseEntityList.add(root);
+
+		// Traverse the frame tree and build BaseEntitys and links
+		processFrames(rootFrame, serviceToken, baseEntityList, root, askList);
+
+		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntityList);
+		msg.setTotal(msg.getReturnCount());  // fudge the total.
+		msg.setReplace(true);
+		
+		for (Ask ask : askList) {
+			QDataAskMessage askMsg = QuestionUtils.getAsks(serviceToken.getUserCode(), serviceToken.getUserCode(), ask.getQuestionCode(), serviceToken.getToken());
+			askMsg = processQDataAskMessage(askMsg);
+			asks.add(askMsg);
+		}
+		return msg;
+	}
 	static public QDataBaseEntityMessage toMessage(final Frame2 rootFrame, GennyToken serviceToken, List<QDataAskMessage> asks) {
 
 		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
@@ -64,12 +91,26 @@ public class FrameUtils2 {
 		
 		for (Ask ask : askList) {
 			QDataAskMessage askMsg = QuestionUtils.getAsks(serviceToken.getUserCode(), serviceToken.getUserCode(), ask.getQuestionCode(), serviceToken.getToken());
+			askMsg = processQDataAskMessage(askMsg);
 			asks.add(askMsg);
 		}
 		return msg;
 	}
 
+	private static QDataAskMessage processQDataAskMessage(QDataAskMessage askMsg) {
+		for (Ask ask : askMsg.getItems()) 
+		{
+			ask.setQuestionCode(ask.getQuestionCode());
+		}
+		return askMsg;
+	}
+
 	private static BaseEntity getBaseEntity(final Frame2 rootFrame, final GennyToken serviceToken) {
+		return getBaseEntity(rootFrame.getCode(), rootFrame.getName(), serviceToken);
+
+	}
+	
+	private static BaseEntity getBaseEntity(final Frame3 rootFrame, final GennyToken serviceToken) {
 		return getBaseEntity(rootFrame.getCode(), rootFrame.getName(), serviceToken);
 
 	}
@@ -164,7 +205,79 @@ public class FrameUtils2 {
 				System.out.println("Processing Question  " + childFrame.getQuestionCode());
 				/* create an ask */
 					BaseEntity askBe = new BaseEntity(childFrame.getQuestionCode(), childFrame.getQuestionCode());
+					askBe.setRealm(parent.getRealm());
+					Ask ask = QuestionUtils.createQuestionForBaseEntity2(askBe, true, serviceToken);
+					Set<EntityQuestion> entityQuestionList = askBe.getQuestions();
 
+					Link linkAsk = new Link(frame.getCode(), childFrame.getQuestionCode(), "LNK_ASK", FramePosition.CENTRE.name());
+					linkAsk.setWeight(ask.getWeight());
+					EntityQuestion ee = new EntityQuestion(linkAsk);
+					entityQuestionList.add(ee);
+
+					childBe.setQuestions(entityQuestionList);
+					baseEntityList.add(askBe);
+					
+					askList.add(ask); // add to the ask list
+
+					
+			}
+			
+
+		}
+	}
+	
+	/**
+	 * @param frame
+	 * @param gennyToken
+	 * @param messages
+	 * @param root
+	 */
+	private static void processFrames(final Frame3 frame, GennyToken serviceToken, List<BaseEntity> baseEntityList,
+			BaseEntity parent, List<Ask> askList) {
+		
+
+
+		// Go through the frames and fetch them
+		for (Tuple3<Frame3, FramePosition, Double> frameTuple3 : frame.getFrames()) {
+			System.out.println("Processing Frame     " + frameTuple3._1.getCode());
+			Frame3 childFrame = frameTuple3._1;
+			FramePosition position = frameTuple3._2;
+			Double weight = frameTuple3._3;
+
+			childFrame.setParent(parent); // Set the parent sop that we can link the childs themes to it.
+
+			BaseEntity childBe = getBaseEntity(childFrame, serviceToken);
+
+
+
+			// link to the parent
+			EntityEntity link = null;
+			Attribute linkFrame = new AttributeLink("LNK_FRAME", "frame");
+			link = new EntityEntity(parent, childBe, linkFrame, position.name(), weight);
+			if (!parent.getLinks().contains(link)) {
+				parent.getLinks().add(link);
+			}
+			baseEntityList.add(childBe);
+
+			// Traverse the frame tree and build BaseEntitys and links
+			if (!childFrame.getFrames().isEmpty()) {
+				processFrames(childFrame, serviceToken, baseEntityList, childBe,askList);
+			}
+
+			if (!childFrame.getThemes().isEmpty()) {
+				processThemes(childFrame, position, serviceToken, baseEntityList, childBe);
+			}
+
+			
+			if (!childFrame.getThemeObjects().isEmpty()) {
+				processThemeTuples(childFrame, position, serviceToken, baseEntityList, childBe);
+			}
+
+			if (childFrame.getQuestionCode() != null) {
+				System.out.println("Processing Question  " + childFrame.getQuestionCode());
+				/* create an ask */
+					BaseEntity askBe = new BaseEntity(childFrame.getQuestionCode(), childFrame.getQuestionCode());
+					askBe.setRealm(parent.getRealm());
 					Ask ask = QuestionUtils.createQuestionForBaseEntity2(askBe, true, serviceToken);
 					Set<EntityQuestion> entityQuestionList = askBe.getQuestions();
 
@@ -185,6 +298,7 @@ public class FrameUtils2 {
 		}
 	}
 
+
 	/**
 	 * @param frame
 	 * @param gennyToken
@@ -202,15 +316,15 @@ public class FrameUtils2 {
 				JSONObject themeJson = themeTuple4._3;
 				Double weight = themeTuple4._4;
 
-				BaseEntity childBe = getBaseEntity(themeCode, themeCode, gennyToken);
+				BaseEntity themeBe = getBaseEntity(themeCode, themeCode, gennyToken);
 
 				// Attribute attribute = RulesUtils.getAttribute(themeAttribute.name(),
 				// gennyToken.getToken());
 				Attribute attribute = new Attribute(themeAttribute.name(), themeAttribute.name(),
 						new DataType("DTT_THEME"));
 				try {
-					if (childBe.containsEntityAttribute(themeAttribute.name())) {
-						EntityAttribute themeEA = childBe.findEntityAttribute(themeAttribute.name()).get();
+					if (themeBe.containsEntityAttribute(themeAttribute.name())) {
+						EntityAttribute themeEA = themeBe.findEntityAttribute(themeAttribute.name()).get();
 						String existingSetValue = themeEA.getAsString();
 						JSONObject json = new JSONObject(existingSetValue);
 						Iterator<String> keys = themeJson.keys();
@@ -224,7 +338,7 @@ public class FrameUtils2 {
 						themeEA.setValue(json.toString());
 						themeEA.setWeight(weight);
 					} else {
-						childBe.addAttribute(new EntityAttribute(childBe, attribute, weight, themeJson.toString()));
+						themeBe.addAttribute(new EntityAttribute(themeBe, attribute, weight, themeJson.toString()));
 					}
 				} catch (BadDataException e) {
 					// TODO Auto-generated catch block
@@ -233,11 +347,72 @@ public class FrameUtils2 {
 				// link to the parent
 				EntityEntity link = null;
 				Attribute linkFrame = new AttributeLink("LNK_THEME", "theme");
-				link = new EntityEntity(frame.getParent(), childBe, linkFrame, position.name(), weight);
+				link = new EntityEntity(frame.getParent(), themeBe, linkFrame, position.name(), weight);
 				if (!frame.getParent().getLinks().contains(link)) {
 					frame.getParent().getLinks().add(link);
 				}
-				baseEntityList.add(childBe);
+				baseEntityList.add(themeBe);
+				
+
+			}
+		}
+
+
+	}
+	
+	/**
+	 * @param frame
+	 * @param gennyToken
+	 * @param messages
+	 * @param root
+	 */
+	private static void processThemeTuples(final Frame3 frame, FramePosition position, GennyToken gennyToken,
+			List<BaseEntity> baseEntityList, BaseEntity parent) {
+		// Go through the theme codes and fetch the
+		for (Tuple4<String, ThemeAttributeType, JSONObject, Double> themeTuple4 : frame.getThemeObjects()) {
+			System.out.println("Processing Theme     " + themeTuple4._1);
+			String themeCode = themeTuple4._1;
+			ThemeAttributeType themeAttribute = themeTuple4._2;
+			if (!themeAttribute.name().equalsIgnoreCase("codeOnly")) {
+				JSONObject themeJson = themeTuple4._3;
+				Double weight = themeTuple4._4;
+
+				BaseEntity themeBe = getBaseEntity(themeCode, themeCode, gennyToken);
+
+				// Attribute attribute = RulesUtils.getAttribute(themeAttribute.name(),
+				// gennyToken.getToken());
+				Attribute attribute = new Attribute(themeAttribute.name(), themeAttribute.name(),
+						new DataType("DTT_THEME"));
+				try {
+					if (themeBe.containsEntityAttribute(themeAttribute.name())) {
+						EntityAttribute themeEA = themeBe.findEntityAttribute(themeAttribute.name()).get();
+						String existingSetValue = themeEA.getAsString();
+						JSONObject json = new JSONObject(existingSetValue);
+						Iterator<String> keys = themeJson.keys();
+
+						while (keys.hasNext()) {
+							String key = keys.next();
+							Object value = json.get(key);
+							json.put(key, value);
+						}
+
+						themeEA.setValue(json.toString());
+						themeEA.setWeight(weight);
+					} else {
+						themeBe.addAttribute(new EntityAttribute(themeBe, attribute, weight, themeJson.toString()));
+					}
+				} catch (BadDataException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				// link to the parent
+				EntityEntity link = null;
+				Attribute linkFrame = new AttributeLink("LNK_THEME", "theme");
+				link = new EntityEntity(frame.getParent(), themeBe, linkFrame, position.name(), weight);
+				if (!frame.getParent().getLinks().contains(link)) {
+					frame.getParent().getLinks().add(link);
+				}
+				baseEntityList.add(themeBe);
 				
 
 			}
@@ -253,6 +428,64 @@ public class FrameUtils2 {
 	 * @param root
 	 */
 	private static void processThemes(final Frame2 frame, FramePosition position, GennyToken gennyToken,
+			List<BaseEntity> baseEntityList, BaseEntity parent) {
+		// Go through the theme codes and fetch the
+		for (Tuple2<Theme, Double> themeTuple2 : frame.getThemes()) {
+			System.out.println("Processing Theme     " + themeTuple2._1.getCode());
+			Theme theme = themeTuple2._1;
+			Double weight = themeTuple2._2;
+			
+			BaseEntity themeBe = getBaseEntity(theme.getCode(), theme.getCode(), gennyToken);
+
+			for (ThemeAttribute themeAttribute : theme.getAttributes()) {
+				Attribute attribute = new Attribute(themeAttribute.getCode(), themeAttribute.getCode(),
+						new DataType("DTT_THEME"));
+
+				
+				try {
+					if (themeBe.containsEntityAttribute(themeAttribute.getCode())) {
+						EntityAttribute themeEA = themeBe.findEntityAttribute(themeAttribute.getCode()).get();
+						String existingSetValue = themeEA.getAsString();
+						JSONObject json = new JSONObject(existingSetValue);
+						JSONObject merged = new JSONObject(json, JSONObject.getNames(json));
+						JSONObject jo = themeAttribute.getJsonObject();
+						for(Object key : jo.names()/*JSONObject.getNames(themeAttribute.getJsonObject())*/)
+						{
+						  merged.put((String)key, themeAttribute.getJsonObject().get((String)key));
+						}
+
+						themeEA.setValue(merged.toString());
+						themeEA.setWeight(weight);
+					} else {
+						themeBe.addAttribute(new EntityAttribute(themeBe, attribute, weight, themeAttribute.getJson()));
+					}
+				} catch (BadDataException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				// link to the parent
+				EntityEntity link = null;
+				Attribute linkFrame = new AttributeLink("LNK_THEME", "theme");
+				link = new EntityEntity(frame.getParent(), themeBe, linkFrame, position.name(), weight);
+				if (!frame.getParent().getLinks().contains(link)) {
+					frame.getParent().getLinks().add(link);
+				}
+				baseEntityList.add(themeBe);
+				
+
+			}
+		}
+
+
+	}
+	
+	/**
+	 * @param frame
+	 * @param gennyToken
+	 * @param messages
+	 * @param root
+	 */
+	private static void processThemes(final Frame3 frame, FramePosition position, GennyToken gennyToken,
 			List<BaseEntity> baseEntityList, BaseEntity parent) {
 		// Go through the theme codes and fetch the
 		for (Tuple2<Theme, Double> themeTuple2 : frame.getThemes()) {

@@ -15,15 +15,34 @@ public final class ThemeAttribute {
 	private Optional<String> justifyContent=Optional.empty();
 	private Optional<String> backgroundColor=Optional.empty();
 	private Optional<Integer> margin=Optional.empty();
-	private Optional<Integer> width=Optional.empty();
+	private Optional<Integer> marginBottom=Optional.empty();
+	private Optional<String> width=Optional.empty();
 	private Optional<Integer> height=Optional.empty();
 	private Optional<Integer> maxWidth=Optional.empty();
 	private Optional<Integer> padding=Optional.empty();
 	private Optional<String> shadowColor=Optional.empty();
-	private Optional<String> shadowOpacity=Optional.empty();
+	private Optional<Double> shadowOpacity=Optional.empty();
 	private Optional<Integer> shadowRadius=Optional.empty();
 	private Optional<ShadowOffset> shadowOffset=Optional.empty();
+	private Optional<Integer> borderBottomWidth=Optional.empty();
+	private Optional<String> placeholderColor=Optional.empty();
+	private Optional<String> borderStyle=Optional.empty();
+	private Optional<String> borderColor=Optional.empty();
+	private Optional<String> color=Optional.empty();
+	private Optional<Integer> size=Optional.empty();
+	private Optional<Boolean> bold=Optional.empty();
+	
+	private Optional<Boolean> PRI_HAS_LABEL=Optional.empty();
+	private Optional<Boolean> PRI_HAS_REQUIRED=Optional.empty();
+	private Optional<Boolean> PRI_HAS_ICON=Optional.empty();
+	
+	private Optional<Boolean> valueBoolean=Optional.empty();
+	private Optional<Integer> valueInteger=Optional.empty();
+	private Optional<String> valueString=Optional.empty();
+	private Optional<Double> valueDouble=Optional.empty();
+	
 
+	
 	/**
 	 * static factory method for builder
 	 */
@@ -76,8 +95,174 @@ public final class ThemeAttribute {
 	/**
 	 * @return the shadowOpacity
 	 */
-	public String getShadowOpacity() {
-		return shadowOpacity.orElse("0.0");
+	public Double getShadowOpacity() {
+		return shadowOpacity.orElse(0.0);
+	}
+
+
+
+
+
+	/**
+	 * @return the borderBottomWidth
+	 */
+	public Integer getBorderBottomWidth() {
+		return borderBottomWidth.orElse(0);
+	}
+
+
+
+
+
+	/**
+	 * @return the margin
+	 */
+	public Integer getMargin() {
+		return margin.orElse(0);
+	}
+
+	/**
+	 * @return the width
+	 */
+	public String getWidth() {
+		return width.orElse("0");
+	}
+
+	/**
+	 * @return the height
+	 */
+	public Integer getHeight() {
+		return height.orElse(0);
+	}
+
+	/**
+	 * @return the maxWidth
+	 */
+	public Integer getMaxWidth() {
+		return maxWidth.orElse(0);
+	}
+
+	/**
+	 * @return the padding
+	 */
+	public Integer getPadding() {
+		return padding.orElse(0);
+	}
+
+	/**
+	 * @return the shadowRadius
+	 */
+	public Integer getShadowRadius() {
+		return shadowRadius.orElse(0);
+	}
+
+	/**
+	 * @return the shadowOffset
+	 */
+	public Optional<ShadowOffset> getShadowOffset() {
+		return shadowOffset;
+	}
+
+	/**
+	 * @return the placeholderColor
+	 */
+	public String getPlaceholderColor() {
+		return placeholderColor.orElse("#888");
+	}
+
+	/**
+	 * @return the borderStyle
+	 */
+	public String getBorderStyle() {
+		return borderStyle.orElse("solid");
+	}
+
+	/**
+	 * @return the borderColor
+	 */
+	public String getBorderColor() {
+		return borderColor.orElse("#ddd");
+	}
+
+	/**
+	 * @return the color
+	 */
+	public String getColor() {
+		return color.orElse("red");
+	}
+
+
+
+
+
+	/**
+	 * @return the marginBottom
+	 */
+	public Optional<Integer> getMarginBottom() {
+		return marginBottom;
+	}
+
+	/**
+	 * @return the size
+	 */
+	public Optional<Integer> getSize() {
+		return size;
+	}
+
+	/**
+	 * @return the bold
+	 */
+	public Optional<Boolean> getBold() {
+		return bold;
+	}
+
+	/**
+	 * @return the pRI_HAS_LABEL
+	 */
+	public Optional<Boolean> getPRI_HAS_LABEL() {
+		return PRI_HAS_LABEL;
+	}
+
+	/**
+	 * @return the pRI_HAS_REQUIRED
+	 */
+	public Optional<Boolean> getPRI_HAS_REQUIRED() {
+		return PRI_HAS_REQUIRED;
+	}
+
+	/**
+	 * @return the pRI_HAS_ICON
+	 */
+	public Optional<Boolean> getPRI_HAS_ICON() {
+		return PRI_HAS_ICON;
+	}
+
+	/**
+	 * @return the valueBoolean
+	 */
+	public Optional<Boolean> getValueBoolean() {
+		return valueBoolean;
+	}
+
+	/**
+	 * @return the valueInteger
+	 */
+	public Optional<Integer> getValueInteger() {
+		return valueInteger;
+	}
+
+	/**
+	 * @return the valueString
+	 */
+	public Optional<String> getValueString() {
+		return valueString;
+	}
+
+	/**
+	 * @return the valueDouble
+	 */
+	public Optional<Double> getValueDouble() {
+		return valueDouble;
 	}
 
 
@@ -97,6 +282,34 @@ public final class ThemeAttribute {
 			managedInstance.code = attributeType.name();
 			parentBuilder = b;
 			callback = c;
+		}
+		
+		public Builder(Theme.Builder b, Consumer<ThemeAttribute> c, ThemeAttributeType attributeType, Boolean value) {
+			managedInstance.code = attributeType.name();
+			parentBuilder = b;
+			callback = c;
+			managedInstance.valueBoolean = Optional.of(value);
+		}
+
+		public Builder(Theme.Builder b, Consumer<ThemeAttribute> c, ThemeAttributeType attributeType, Integer value) {
+			managedInstance.code = attributeType.name();
+			parentBuilder = b;
+			callback = c;
+			managedInstance.valueInteger = Optional.of(value);
+		}
+
+		public Builder(Theme.Builder b, Consumer<ThemeAttribute> c, ThemeAttributeType attributeType, String value) {
+			managedInstance.code = attributeType.name();
+			parentBuilder = b;
+			callback = c;
+			managedInstance.valueString = Optional.of(value);
+		}
+
+		public Builder(Theme.Builder b, Consumer<ThemeAttribute> c, ThemeAttributeType attributeType, Double value) {
+			managedInstance.code = attributeType.name();
+			parentBuilder = b;
+			callback = c;
+			managedInstance.valueDouble = Optional.of(value);
 		}
 
 
@@ -126,9 +339,15 @@ public final class ThemeAttribute {
 		}
 
 		public Builder width(Integer value) {
-			managedInstance.width = Optional.of(value);
+			managedInstance.width = Optional.of(value+"");
 			return this;
 		}
+		
+		public Builder width(String value) {
+			managedInstance.width = Optional.of(value);  // should check format
+			return this;
+		}
+
 
 		public Builder height(Integer value) {
 			managedInstance.height = Optional.of(value);
@@ -160,8 +379,51 @@ public final class ThemeAttribute {
 			return this;
 		}
 
-		public Builder shadowOpacity(String value) {
+		
+		public Builder shadowOpacity(Double value) {
 			managedInstance.shadowOpacity = Optional.of(value);
+			return this;
+		}
+
+
+		public Builder borderBottomWidth(Integer value) {
+			managedInstance.borderBottomWidth = Optional.of(value);
+			return this;
+		}
+
+		public Builder placeholderColor(String value) {
+			managedInstance.placeholderColor = Optional.of(value);
+			return this;
+		}
+
+		public Builder borderStyle(String value) {
+			managedInstance.borderStyle = Optional.of(value);
+			return this;
+		}
+
+		public Builder borderColor(String value) {
+			managedInstance.borderColor = Optional.of(value);
+			return this;
+		}
+
+		public Builder color(String value) {
+			managedInstance.color = Optional.of(value);
+			return this;
+		}
+
+		
+		public Builder bold(Boolean value) {
+			managedInstance.bold = Optional.of(value);
+			return this;
+		}
+		
+		public Builder size(Integer value) {
+			managedInstance.size = Optional.of(value);
+			return this;
+		}
+
+		public Builder marginBottom(Integer value) {
+			managedInstance.marginBottom = Optional.of(value);
 			return this;
 		}
 
@@ -179,6 +441,20 @@ public final class ThemeAttribute {
 			return new ShadowOffset.Builder(this, f);
 		}
 
+		public Builder PRI_HAS_LABEL(Boolean value) {
+			managedInstance.PRI_HAS_LABEL = Optional.of(value);
+			return this;
+		}
+		
+		public Builder PRI_HAS_REQUIRED(Boolean value) {
+			managedInstance.PRI_HAS_REQUIRED = Optional.of(value);
+			return this;
+		}
+
+		public Builder PRI_HAS_ICON(Boolean value) {
+			managedInstance.PRI_HAS_ICON = Optional.of(value);
+			return this;
+		}
 
 
 		public Theme.Builder end() {
@@ -211,7 +487,24 @@ public final class ThemeAttribute {
 		if (padding.isPresent()) json.put("padding", padding.get());
 		if (shadowRadius.isPresent()) json.put("shadowRadius", shadowRadius.get());
 		if (shadowOffset.isPresent()) json.put("shadowOffset", shadowOffset.get().getJsonObject());
+
+		if (borderBottomWidth.isPresent()) json.put("borderBottomWidth", borderBottomWidth.get());
+		if (placeholderColor.isPresent()) json.put("placeholderColor", placeholderColor.get());
+		if (borderStyle.isPresent()) json.put("borderStyle", borderStyle.get());
+		if (borderColor.isPresent()) json.put("borderColor", borderColor.get());
+		if (color.isPresent()) json.put("color", color.get());
+		if (size.isPresent()) json.put("size", size.get());
+		if (bold.isPresent()) json.put("bold", bold.get());
 		
+		if (PRI_HAS_LABEL.isPresent()) json.put("PRI_HAS_LABEL", PRI_HAS_LABEL.get());
+		if (PRI_HAS_REQUIRED.isPresent()) json.put("PRI_HAS_REQUIRED", PRI_HAS_REQUIRED.get());
+		if (PRI_HAS_ICON.isPresent()) json.put("PRI_HAS_ICON", PRI_HAS_ICON.get());
+		
+		if (valueBoolean.isPresent()) json.put("valueBoolean", valueBoolean.get());
+		if (valueInteger.isPresent()) json.put("valueInteger", valueInteger.get());
+		if (valueString.isPresent()) json.put("valueString", valueString.get());
+		if (valueDouble.isPresent()) json.put("valueDouble", valueDouble.get());
+
 		return json;
 	}
 	

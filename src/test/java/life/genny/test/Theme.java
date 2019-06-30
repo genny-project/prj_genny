@@ -48,11 +48,26 @@ public class Theme {
 	 */
 	public static class Builder {
 		private Theme managedInstance = new Theme();
+		private Frame3.Builder parentBuilder;
+		private Consumer<Theme> callback;
+
 		
 		public Builder(final String code) {
 			managedInstance.code = code;
 		}
 
+
+		public Builder(Frame3.Builder b, Consumer<Theme> c, String code) {
+			managedInstance.code = code;
+			parentBuilder = b;
+			callback = c;
+		}
+
+		public Builder(Frame3.Builder b, Consumer<Theme> c, Theme theme) {
+			managedInstance = theme;
+			parentBuilder = b;
+			callback = c;
+		}
 
 		/**
 		 * fluent setter for name
@@ -94,9 +109,71 @@ public class Theme {
 			return new ThemeAttribute.Builder(this, f, attributeType);
 		}
 		
+		/**
+		 * fluent setter for attributes in the list
+		 * 
+		 * @param none
+		 * @return
+		 */
+		public ThemeAttribute.Builder addAttribute(ThemeAttributeType attributeType, Boolean value) {
+			if (managedInstance.attributes == null) {
+				managedInstance.attributes = new HashSet<ThemeAttribute>();
+			}
+			Consumer<ThemeAttribute> f = obj -> { managedInstance.attributes.add(obj);};
+			return new ThemeAttribute.Builder(this, f, attributeType, value);
+		}
+
+		/**
+		 * fluent setter for attributes in the list
+		 * 
+		 * @param none
+		 * @return
+		 */
+		public ThemeAttribute.Builder addAttribute(ThemeAttributeType attributeType, String value) {
+			if (managedInstance.attributes == null) {
+				managedInstance.attributes = new HashSet<ThemeAttribute>();
+			}
+			Consumer<ThemeAttribute> f = obj -> { managedInstance.attributes.add(obj);};
+			return new ThemeAttribute.Builder(this, f, attributeType, value);
+		}
+		
+		/**
+		 * fluent setter for attributes in the list
+		 * 
+		 * @param none
+		 * @return
+		 */
+		public ThemeAttribute.Builder addAttribute(ThemeAttributeType attributeType, Integer value) {
+			if (managedInstance.attributes == null) {
+				managedInstance.attributes = new HashSet<ThemeAttribute>();
+			}
+			Consumer<ThemeAttribute> f = obj -> { managedInstance.attributes.add(obj);};
+			return new ThemeAttribute.Builder(this, f, attributeType, value);
+		}
+		
+		/**
+		 * fluent setter for attributes in the list
+		 * 
+		 * @param none
+		 * @return
+		 */
+		public ThemeAttribute.Builder addAttribute(ThemeAttributeType attributeType, Double value) {
+			if (managedInstance.attributes == null) {
+				managedInstance.attributes = new HashSet<ThemeAttribute>();
+			}
+			Consumer<ThemeAttribute> f = obj -> { managedInstance.attributes.add(obj);};
+			return new ThemeAttribute.Builder(this, f, attributeType, value);
+		}
+		
 		public Theme build() {
 			return managedInstance;
 		}
+		
+		public Frame3.Builder end() {
+			callback.accept(managedInstance);
+			return parentBuilder;
+		}
+
 
 	}
 

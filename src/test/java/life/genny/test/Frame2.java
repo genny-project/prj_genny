@@ -2,6 +2,8 @@ package life.genny.test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
@@ -55,6 +57,7 @@ public class Frame2 extends BaseEntity {
 
 		/// instance fields
 		private String questionCode = null;
+		private Optional<QuestionGroup> questionGroup = Optional.empty();
 		private String code;
 		private String name;
 		private FramePosition position;
@@ -89,6 +92,8 @@ public class Frame2 extends BaseEntity {
 			this.questionCode = questionCode;
 			return this;
 		}
+		
+
 	
 		public Builder addTheme(final Theme theme) {
 			themes.add(Tuple.of(theme,themeWeight));
