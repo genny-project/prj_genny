@@ -119,6 +119,10 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 		QRules rules = getQRules(userToken); // defaults to user anyway
 		GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
+		
+		Theme THM_DUMMY = Theme.builder("THM_DUMMY").addAttribute().height(100).end().addAttribute().width(100).end()
+				.build();
+
 
 		Theme THM_DISPLAY_VERTICAL = Theme.builder("THM_DISPLAY_VERTICAL")
 				.name("Display Visual Controls Vertically") /* Optional - defaults to the code */
@@ -145,6 +149,10 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		Theme THM_BACKGROUND_BLACK = Theme.builder("THM_BACKGROUND_BLACK").addAttribute().backgroundColor("black").end()
 				.build();
 
+		Theme THM_BACKGROUND_BLUE = Theme.builder("THM_BACKGROUND_BLUE").addAttribute().backgroundColor("blue").end()
+				.build();
+
+		
 		Theme THM_BACKGROUND_INTERNMATCH = Theme.builder("THM_BACKGROUND_INTERNMATCH").addAttribute()
 				.backgroundColor("#233a4e").end().build();
 
@@ -200,25 +208,34 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 					.end()
 				.build();	
 		
-		
+		Frame3 frameDummy = Frame3.builder("FRM_DUMMY").addTheme(THM_DUMMY).end().build();
 
-		Frame3 centre = Frame3.builder("FRM_CENTRE").build();
+
+		Frame3 centre = Frame3.builder("FRM_CENTRE").addFrame(frameDummy, FramePosition.CENTRE).end().build();
 
 		Frame3 profile = Frame3.builder("FRM_PROFILE")
 				.addTheme(THM_DISPLAY_HORIZONTAL).end()
 				.addTheme(THM_BACKGROUND_RED).end()
+				.addFrame(frameDummy, FramePosition.CENTRE).end()
 				.build();
 
 		Frame3 header = Frame3.builder("FRM_HEADER").addFrame(profile, FramePosition.EAST).end().build();
 
-		Frame3 sidebar = Frame3.builder("FRM_SIDEBAR")
+		Frame3 notes = Frame3.builder("FRM_NOTES")
 				.addTheme(THM_WIDTH_300).end()
 				.addTheme(THM_DISPLAY_VERTICAL).end()
 				.addTheme(THM_BACKGROUND_RED).end()
+				.question("QUE_USER_COMPANY_GRP").end()
+				.build();
+		Frame3 sidebar2 = Frame3.builder("FRM_SIDEBAR2")
+				.addTheme(THM_WIDTH_300).end()
+				.addTheme(THM_DISPLAY_VERTICAL).end()
+				.addTheme(THM_BACKGROUND_GRAY).end()
 				.question("QUE_USER_PROFILE_GRP").end()
 				.build();
 
-		Frame3 notes = Frame3.builder("FRM_NOTES")
+		
+		Frame3 sidebar = Frame3.builder("FRM_SIDEBAR")
 				.addTheme(THM_WIDTH_300).end()
 				.addTheme(THM_DISPLAY_VERTICAL).end()
 				.addTheme(THM_BACKGROUND_GREEN).end()
@@ -245,7 +262,7 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 					.end()											
 				.build();
 
-		Frame3 footer = Frame3.builder("FRM_FOOTER").build();
+		Frame3 footer = Frame3.builder("FRM_FOOTER").addFrame(frameDummy, FramePosition.CENTRE).end().addTheme(THM_BACKGROUND_BLUE).end().build();
 
 		Frame3 mainFrame = Frame3.builder("FRM_MAIN")		    	
 				.addTheme("THM_COLOR_WHITE").end()               
@@ -255,7 +272,8 @@ public class AuthInitTest extends GennyJbpmBaseTest {
                 .addTheme(THM_BACKGROUND_WHITE).end() 
                 
 		    	.addFrame(sidebar,FramePosition.WEST).end()
-		    	.addFrame(notes,FramePosition.EAST).end()
+		    //	.addFrame(sidebar2,FramePosition.WEST).end() // not working as expected
+//		    	.addFrame(notes,FramePosition.EAST).end()
 		    	.addFrame(footer,FramePosition.SOUTH).end()
 		    	.addFrame(centre,FramePosition.CENTRE).end()
 		    	.addFrame(header,FramePosition.NORTH).end()
