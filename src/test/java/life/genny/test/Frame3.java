@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import javax.annotation.concurrent.Immutable;
@@ -241,6 +242,26 @@ public class Frame3 extends BaseEntity {
 			themeWeight = themeWeight - 1.0;
 
 			return new Theme.Builder(this, f, theme);		
+		}
+		
+		/**
+		 * fluent setter for themes in the list
+		 * 
+		 * @param none
+		 * @return
+		 */
+		public Theme.Builder addTheme() {
+			if (managedInstance.theme3s == null) {
+				managedInstance.theme3s = new ArrayList<Theme>();
+			}
+			Consumer<Theme> f = obj -> { managedInstance.theme3s.add(obj);};
+			String themeCode = UUID.randomUUID().toString().substring(0, 25);
+			Theme theme = Theme.builder(themeCode).build();
+			managedInstance.themes.add(Tuple.of(theme,themeWeight));
+			themeWeight = themeWeight - 1.0;
+
+		
+			return new Theme.Builder(this, f,theme);
 		}
 
 		
