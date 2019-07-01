@@ -8,8 +8,9 @@ import javax.annotation.concurrent.Immutable;
 
 import org.json.JSONObject;
 
-import life.genny.qwanda.Context.VisualControlType;
+
 import life.genny.qwanda.ContextType;
+import life.genny.qwanda.VisualControlType;
 
 @Immutable
 public final class QuestionTheme {
@@ -55,7 +56,7 @@ public final class QuestionTheme {
 	 * @return the vcl
 	 */
 	public VisualControlType getVcl() {
-		return vcl.orElse(VisualControlType.DEFAULT);
+		return vcl.orElse(VisualControlType.VCL_INPUT);
 	}
 
 

@@ -6,7 +6,7 @@ import java.util.HashSet;
 import life.genny.rules.QRules;
 import life.genny.utils.ContextUtils;
 import life.genny.qwanda.ContextType;
-import life.genny.qwanda.Context.VisualControlType;
+import life.genny.qwanda.VisualControlType;
 import life.genny.qwanda.attribute.Attribute;
 
 rule "Generate Table Content"
@@ -137,16 +137,16 @@ rule "Generate Table Content"
 		for(Ask ask : asks ){
 
         	/* set the delimiter to each ask */
-			rules.createVirtualContext(ask, tableDelimiterTheme, ContextType.THEME, VisualControlType.DELIMITER);
+			rules.createVirtualContext(ask, tableDelimiterTheme, ContextType.THEME, VisualControlType.VCL_DELIMITER);
 
 			/* set the table-row hover theme to each ask */
-			rules.createVirtualContext(ask, tableRowHoverTheme, ContextType.THEME, VisualControlType.DEFAULT);
+			rules.createVirtualContext(ask, tableRowHoverTheme, ContextType.THEME, VisualControlType.VCL_INPUT);
 
 			/* set the table cell wrapper to each ask */
-			rules.createVirtualContext(ask, tableCellWrapperTheme, ContextType.THEME, VisualControlType.WRAPPER);
+			rules.createVirtualContext(ask, tableCellWrapperTheme, ContextType.THEME, VisualControlType.VCL_WRAPPER);
 
 			/* set the table cell theme to each ask */
-			rules.createVirtualContext(ask, tableCellDefaultTheme, ContextType.THEME, VisualControlType.WRAPPER);
+			rules.createVirtualContext(ask, tableCellDefaultTheme, ContextType.THEME, VisualControlType.VCL_WRAPPER);
 
 
 			/* adding themes to each table-row ask */
@@ -186,13 +186,13 @@ rule "Generate Table Content"
 		Ask contentAskGrp = new Ask(contentQuesGrp, rules.getUser().getCode(), searchBe.getCode());
 
 		/* apply full-width theme to searchBe question-group */
-		rules.createVirtualContext(contentAskGrp, fullWidthTheme, ContextType.THEME, VisualControlType.DEFAULT);
+		rules.createVirtualContext(contentAskGrp, fullWidthTheme, ContextType.THEME, VisualControlType.VCL_INPUT);
 
 		/* apply icon-theme to searchBe question-group */
-		rules.createVirtualContext(contentAskGrp, iconColorTheme, ContextType.THEME, VisualControlType.ICON);
+		rules.createVirtualContext(contentAskGrp, iconColorTheme, ContextType.THEME, VisualControlType.VCL_ICON);
 
 		/* apply table-input-default-theme to searchBe question-group */
-		rules.createVirtualContext(contentAskGrp, tableInputDefaultTheme, ContextType.THEME, VisualControlType.INPUT);
+		rules.createVirtualContext(contentAskGrp, tableInputDefaultTheme, ContextType.THEME, VisualControlType.VCL_INPUT);
 
 		contentAskGrp.setChildAsks(asksArr);
 
