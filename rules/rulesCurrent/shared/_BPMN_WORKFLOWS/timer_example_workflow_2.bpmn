@@ -5,7 +5,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_10" isCollection="false" structureRef="java.lang.String"/>
   <bpmn2:signal id="Signal_1" name="incomingSignal"/>
   <bpmn2:message id="Message_1" itemRef="ItemDefinition_10" name="message_1"/>
-  <bpmn2:process id="com.sample.bpmn.msg_example_workflow_2" name="Hello World" isExecutable="true" processType="Private">
+  <bpmn2:process id="com.sample.bpmn.timer_example_workflow_2" name="Hello World" isExecutable="true" processType="Private">
     <bpmn2:extensionElements>
       <tns:import name="life.genny.rules.QRules"/>
     </bpmn2:extensionElements>
@@ -79,7 +79,7 @@
     <bpmn2:sequenceFlow id="SequenceFlow_10" tns:priority="1" sourceRef="ScriptTask_1" targetRef="EndEvent_1"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="com.sample.bpmn.msg_example_workflow_2">
+    <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="com.sample.bpmn.timer_example_workflow_2">
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_1" bpmnElement="_2">
         <dc:Bounds height="48.0" width="80.0" x="90.0" y="202.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1" labelStyle="BPMNLabelStyle_1">
