@@ -153,6 +153,11 @@ System.out.println(&quot;Timer_example_workflow_3  ::::  Starting delayed timer 
       <bpmn2:script>System.out.println(&quot;Timer Expired&quot;);</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_1" tns:priority="1" sourceRef="ScriptTask_1" targetRef="EndEvent_1"/>
+    <bpmn2:textAnnotation id="TextAnnotation_1">
+      <bpmn2:text>
+
+Timer Example 3</bpmn2:text>
+    </bpmn2:textAnnotation>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="com.sample.bpmn.timer_example_workflow_3">
@@ -216,6 +221,12 @@ System.out.println(&quot;Timer_example_workflow_3  ::::  Starting delayed timer 
         <dc:Bounds height="50.0" width="110.0" x="309.0" y="553.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_10">
           <dc:Bounds height="11.0" width="52.0" x="338.0" y="572.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_TextAnnotation_1" bpmnElement="TextAnnotation_1">
+        <dc:Bounds height="150.0" width="100.0" x="70.0" y="540.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="144.0" width="88.0" x="76.0" y="540.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="_1-_2" sourceElement="BPMNShape_StartEvent_1" targetElement="BPMNShape_ScriptTask_1">

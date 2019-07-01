@@ -80,6 +80,11 @@ System.out.println(&quot;Timer_example_workflow_1 :::: Item Received ::: &quot; 
       <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
     </bpmn2:endEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_2" tns:priority="1" sourceRef="ScriptTask_1" targetRef="EndEvent_2"/>
+    <bpmn2:textAnnotation id="TextAnnotation_1">
+      <bpmn2:text>
+
+Timer Example 1</bpmn2:text>
+    </bpmn2:textAnnotation>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="com.sample.bpmn.timer_example_workflow_1">
@@ -115,6 +120,12 @@ System.out.println(&quot;Timer_example_workflow_1 :::: Item Received ::: &quot; 
         <dc:Bounds height="36.0" width="36.0" x="481.0" y="22.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_6">
           <dc:Bounds height="11.0" width="50.0" x="474.0" y="58.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_TextAnnotation_1" bpmnElement="TextAnnotation_1">
+        <dc:Bounds height="150.0" width="100.0" x="24.0" y="350.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="144.0" width="88.0" x="30.0" y="350.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="_1-_2" sourceElement="BPMNShape_StartEvent_1" targetElement="BPMNShape_ScriptTask_1">

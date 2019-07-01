@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
 <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:g="http://www.jboss.org/drools/flow/gpd" xmlns:java="http://www.java.com/javaTypes" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.4.3.Final-v20180418-1358-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
-  <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false" structureRef="life.genny.rules.QRules"/>
   <bpmn2:itemDefinition id="ItemDefinition_10" isCollection="false" structureRef="java.lang.String"/>
   <bpmn2:itemDefinition id="ItemDefinition_628" isCollection="false" structureRef="org.kie.internal.runtime.StatefulKnowledgeSession"/>
   <bpmn2:itemDefinition id="ItemDefinition_633" isCollection="false" structureRef="org.kie.api.runtime.process.WorkflowProcessInstance"/>
   <bpmn2:itemDefinition id="ItemDefinition_635" isCollection="false" structureRef="org.jbpm.bpmn2.handler.SendTaskHandler"/>
+  <bpmn2:itemDefinition id="ItemDefinition_239" isCollection="false" structureRef="life.genny.rules.QRules"/>
+  <bpmn2:itemDefinition id="ItemDefinition_523" isCollection="false" structureRef="org.slf4j.Logger"/>
+  <bpmn2:itemDefinition id="ItemDefinition_1329" isCollection="false" structureRef="life.genny.qwanda.message.QEventMessage"/>
   <bpmn2:signal id="Signal_1" name="incomingSignal"/>
   <bpmn2:message id="Message_1" itemRef="ItemDefinition_10" name="message_1"/>
   <bpmn2:process id="com.sample.bpmn.exampleTimerStart" name="Hello World" isExecutable="false" processType="Private">
     <bpmn2:extensionElements>
-      <tns:import name="life.genny.rules.QRules"/>
       <tns:import name="org.kie.internal.runtime.StatefulKnowledgeSession"/>
       <tns:import name="org.kie.api.runtime.process.WorkflowProcessInstance"/>
       <tns:import name="org.jbpm.bpmn2.handler.SendTaskHandler"/>
+      <tns:import name="life.genny.rules.QRules"/>
+      <tns:global identifier="log" type="org.slf4j.Logger"/>
+      <tns:import name="org.slf4j.Logger"/>
+      <tns:import name="life.genny.qwanda.message.QEventMessage"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="itemPassed" itemSubjectRef="ItemDefinition_10" name="itemPassed"/>
+    <bpmn2:property id="rules" itemSubjectRef="ItemDefinition_239" name="rules"/>
     <bpmn2:scriptTask id="_2" name="Hello" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>
         <tns:metaData name="elementname">
@@ -25,8 +31,8 @@
       <bpmn2:incoming>_1-_2</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
       <bpmn2:script>System.out.println(&quot;Starting examples workflows&quot;);
-
-kcontext.setVariable(&quot;itemPassed&quot;,&quot;101011&quot;);
+log.info(&quot;Hello to Adam&quot;);
+rules.set(&quot;value&quot;,&quot;101011&quot;);
 System.out.println(&quot;Sending item Messages '101011'  &quot;);
 </bpmn2:script>
     </bpmn2:scriptTask>
@@ -37,6 +43,9 @@ System.out.println(&quot;Sending item Messages '101011'  &quot;);
         </tns:metaData>
       </bpmn2:extensionElements>
       <bpmn2:outgoing>_1-_2</bpmn2:outgoing>
+      <bpmn2:conditionalEventDefinition id="ConditionalEventDefinition_1">
+        <bpmn2:condition xsi:type="bpmn2:tFormalExpression" id="FormalExpression_1" language="http://www.java.com/java">life.genny.qwanda.message.QEventMessage( data.code == &quot;AUTH_INIT1&quot;);</bpmn2:condition>
+      </bpmn2:conditionalEventDefinition>
     </bpmn2:startEvent>
     <bpmn2:sequenceFlow id="_1-_2" sourceRef="_1" targetRef="_2"/>
     <bpmn2:endEvent id="EndEvent_1" name="End Event 1">
@@ -46,15 +55,15 @@ System.out.println(&quot;Sending item Messages '101011'  &quot;);
         </tns:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
-      <bpmn2:dataInput id="DataInput_3" name="event"/>
-      <bpmn2:dataInputAssociation id="DataInputAssociation_2">
+      <bpmn2:dataInput id="DataInput_2" name="event"/>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_1">
         <bpmn2:sourceRef>itemPassed</bpmn2:sourceRef>
-        <bpmn2:targetRef>DataInput_3</bpmn2:targetRef>
+        <bpmn2:targetRef>DataInput_2</bpmn2:targetRef>
       </bpmn2:dataInputAssociation>
       <bpmn2:inputSet id="InputSet_1" name="Input Set 1">
-        <bpmn2:dataInputRefs>DataInput_3</bpmn2:dataInputRefs>
+        <bpmn2:dataInputRefs>DataInput_2</bpmn2:dataInputRefs>
       </bpmn2:inputSet>
-      <bpmn2:signalEventDefinition id="SignalEventDefinition_1" signalRef="Signal_1"/>
+      <bpmn2:signalEventDefinition id="SignalEventDefinition_2" signalRef="Signal_1"/>
     </bpmn2:endEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_4" tns:priority="1" sourceRef="_2" targetRef="EndEvent_1"/>
   </bpmn2:process>

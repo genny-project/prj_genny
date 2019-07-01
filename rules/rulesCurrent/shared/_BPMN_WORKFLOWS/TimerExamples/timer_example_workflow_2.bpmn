@@ -77,6 +77,12 @@
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_9" tns:priority="1" sourceRef="ExclusiveGateway_1" targetRef="ScriptTask_1"/>
     <bpmn2:sequenceFlow id="SequenceFlow_10" tns:priority="1" sourceRef="ScriptTask_1" targetRef="EndEvent_1"/>
+    <bpmn2:textAnnotation id="TextAnnotation_1">
+      <bpmn2:text>
+
+Timer Example 2
+</bpmn2:text>
+    </bpmn2:textAnnotation>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="com.sample.bpmn.timer_example_workflow_2">
@@ -114,6 +120,12 @@
           <dc:Bounds height="11.0" width="52.0" x="429.0" y="320.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_TextAnnotation_1" bpmnElement="TextAnnotation_1">
+        <dc:Bounds height="121.0" width="271.0" x="24.0" y="420.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="115.0" width="259.0" x="30.0" y="420.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="_1-_2" sourceElement="BPMNShape_StartEvent_1" targetElement="BPMNShape_ScriptTask_1">
         <di:waypoint xsi:type="dc:Point" x="48.0" y="107.0"/>
         <di:waypoint xsi:type="dc:Point" x="48.0" y="226.0"/>
@@ -140,7 +152,9 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_11" bpmnElement="SequenceFlow_10" sourceElement="BPMNShape_ScriptTask_2" targetElement="BPMNShape_EndEvent_2">
         <di:waypoint xsi:type="dc:Point" x="455.0" y="301.0"/>
-        <di:waypoint xsi:type="dc:Point" x="455.0" y="115.0"/>
+        <di:waypoint xsi:type="dc:Point" x="455.0" y="174.0"/>
+        <di:waypoint xsi:type="dc:Point" x="472.0" y="174.0"/>
+        <di:waypoint xsi:type="dc:Point" x="472.0" y="115.0"/>
         <di:waypoint xsi:type="dc:Point" x="482.0" y="115.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_10"/>
       </bpmndi:BPMNEdge>

@@ -53,7 +53,7 @@ public class TimerTest extends GennyJbpmBaseTest {
 
 
 
-	@Test(timeout = 30000)
+	@Test(timeout = 300000)	
 	public void testTimerProcess() {
 		
 		Map<String, ResourceType> resources = new HashMap<String, ResourceType>();
@@ -71,6 +71,14 @@ public class TimerTest extends GennyJbpmBaseTest {
 		// Register handlers
 		addWorkItemHandlers(kieSession);
 		kieSession.addEventListener(new JbpmInitListener(userToken));
+		
+		try {
+			kieSession.setGlobal("log", log);
+		} catch (RuntimeException e) {
+			log.error("kieSession.setGlobal(\"log\", log); has an error "+e.getLocalizedMessage());
+		}
+		
+		QEventMessage msg = new QEventMessage("EVT_MSG", "AUTH_INIT1");
 
 		List<Command<?>> cmds = new ArrayList<Command<?>>();
 
@@ -78,6 +86,7 @@ public class TimerTest extends GennyJbpmBaseTest {
 		QRules qRules = getQRules(userToken); // defaults to user anyway
 		System.out.println(qRules.getToken());
 		cmds.add(CommandFactory.newInsert(qRules, "qRules"));
+		cmds.add(CommandFactory.newInsert(msg, "msg"));
 		cmds.add(CommandFactory.newInsert(userToken, "userToken"));
 		cmds.add(CommandFactory.newInsert(new GennyToken("serviceUser", qRules.getServiceToken()), "serviceToken"));
 		// Set up Cache
@@ -90,7 +99,7 @@ public class TimerTest extends GennyJbpmBaseTest {
 		ExecutionResults results = null;
 		try {
 			results = kieSession.execute(CommandFactory.newBatchExecution(cmds));
-			kieSession.startProcess("com.sample.bpmn.exampleTimerStart");
+			//kieSession.startProcess("com.sample.bpmn.exampleTimerStart");
 			  PseudoClockScheduler sessionClock = kieSession.getSessionClock();
 			    // Timer is set to 60 seconds, so advancing with 70.
 			    sessionClock.advanceTime(70, TimeUnit.SECONDS);
@@ -104,7 +113,7 @@ public class TimerTest extends GennyJbpmBaseTest {
 			if (results != null) {
 				results.getValue("msg"); // returns the inserted fact Msg
 				QRules rules = (QRules) results.getValue("qRules"); // returns the inserted fact QRules
-				System.out.println(results.);
+				System.out.println(rules.getAsString("value"));
 				System.out.println(rules);
 			} else {
 				System.out.println("NO RESULTS");
