@@ -131,7 +131,7 @@ public class AuthInitTest extends GennyJbpmBaseTest {
         rules.publishCmd(msg);  // Send QDataBaseEntityMessage
         
         for (QDataAskMessage askMsg : askMsgs) {
-         	rules.publishCmd(askMsg,serviceToken.getUserCode(),userToken.getUserCode());  // Send associated QDataAskMessage
+         	//rules.publishCmd(askMsg,serviceToken.getUserCode(),userToken.getUserCode());  // Send associated QDataAskMessage
         }
         
 
@@ -140,11 +140,11 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 	
 	
 	
-	//@Test
+	@Test
 
 	public void testAuthInit() {
 
-	       Map<String, ResourceType> resources = new HashMap<String, ResourceType>();
+	     Map<String, ResourceType> resources = new HashMap<String, ResourceType>();
 	     String[] jbpms = {WFE_AUTH_INIT,WFE_SEND_FORMS,WFE_SHOW_FORM,WFE_SEND_LLAMA};
 	     String[] drls = {DRL_PROJECT,DRL_USER_COMPANY,DRL_USER,DRL_EVENT_LISTENER_SERVICE_SETUP,DRL_EVENT_LISTENER_USER_SETUP};
         for (String p : jbpms) {
