@@ -62,7 +62,7 @@ public class FrameUtils2 {
 		msg.setReplace(true);
 
 		for (Ask ask : askList) {
-			QDataAskMessage askMsg = QuestionUtils.getAsks(serviceToken.getUserCode(), serviceToken.getUserCode(),
+			QDataAskMessage askMsg = QuestionUtils.getAsks(serviceToken.getUserCode(),"PRJ_INTERNMATCH",
 					ask.getQuestionCode(), serviceToken.getToken());
 			askMsg = processQDataAskMessage(askMsg, ask);
 
