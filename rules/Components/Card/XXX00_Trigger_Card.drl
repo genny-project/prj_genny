@@ -64,8 +64,8 @@ rule "Trigger Send Card"
 		Ask emailAsk = rules.createVirtualAsk("QUE_EMAIL", "Email", "PRI_EMAIL", rules.getUser().getCode(), rules.getUser().getCode());
 		Ask mobileAsk = rules.createVirtualAsk("QUE_MOBILE", "Mobile", "PRI_MOBILE", rules.getUser().getCode(), rules.getUser().getCode());
 		Ask optionsAsk = rules.createVirtualAsk("QUE_CARD_OPTIONS", "Options", "PRI_EVENT", rules.getUser().getCode(), rules.getUser().getCode());
-		optionsAsk = rules.createVirtualContext(optionsAsk, moreVerticalIconBe, ContextType.ICON, VisualControlType.ICON);
-		optionsAsk = rules.createVirtualContext(optionsAsk, visualBaseEntity, ContextType.THEME, VisualControlType.DEFAULT);
+		optionsAsk = rules.createVirtualContext(optionsAsk, moreVerticalIconBe, ContextType.ICON, VisualControlType.VCL_ICON);
+		optionsAsk = rules.createVirtualContext(optionsAsk, visualBaseEntity, ContextType.THEME, VisualControlType.VCL_INPUT);
 		optionsAsk = rules.createVirtualContext(optionsAsk, expandableThemeBe, ContextType.THEME);
 
 		Ask editAsk = rules.createVirtualAsk("QUE_EDIT", "Edit", "PRI_NAME", rules.getUser().getCode(), rules.getUser().getCode());

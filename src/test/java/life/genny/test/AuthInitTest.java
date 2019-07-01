@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.reflect.TypeToken;
 
 import life.genny.models.GennyToken;
-import life.genny.qwanda.Context.VisualControlType;
+import life.genny.qwanda.VisualControlType;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventMessage;
@@ -154,7 +154,10 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 				.build();
 		
 		Theme THM_FORM_LABEL_DEFAULT = Theme.builder("THM_FORM_LABEL_DEFAULT")
-				.addAttribute().end()		
+				.addAttribute()
+					.bold(true)
+					.size("md")
+				.end()		
 				.build();
 		
 		Theme THM_FORM_WRAPPER_DEFAULT = Theme.builder("THM_FORM_WRAPPER_DEFAULT")
@@ -169,15 +172,16 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		Theme THM_FORM_DEFAULT = Theme.builder("THM_FORM_DEFAULT")
 				.addAttribute().backgroundColor("none").end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE,true).end()
-				.addAttribute(ThemeAttributeType.PRI_HPRI_HAS_QUESTION_GRP_DESCRIPTION,true)
-					.PRI_HAS_LABEL(true)
-					.PRI_HAS_REQUIRED(true)
-					.PRI_HAS_ICON(true)
-					.end()
+				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION,true).end()
+				.addAttribute(ThemeAttributeType.PRI_HAS_LABEL,true).end()
+				.addAttribute(ThemeAttributeType.PRI_HAS_REQUIRED,true).end()
+				.addAttribute(ThemeAttributeType.PRI_HAS_ICON,true).end()
+				
 				.build();
 
 		Theme THM_FORM_CONTAINER_DEFAULT = Theme.builder("THM_FORM_CONTAINER_DEFAULT")
-				.addAttribute().backgroundColor("white")
+				.addAttribute()
+					.backgroundColor("white")
 					.padding(10)
 					.maxWidth(700)
 					.width("100%")
@@ -190,11 +194,8 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 						.end()
 				.end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE,true).end()
-				.addAttribute(ThemeAttributeType.PRI_HPRI_HAS_QUESTION_GRP_DESCRIPTION,true)
-					.PRI_HAS_LABEL(true)
-					.PRI_HAS_REQUIRED(true)
-					.PRI_HAS_ICON(true)
-					.end()
+				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION,true).end()
+				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE,false).end()
 				.build();	
 		
 		Frame3 frameDummy = Frame3.builder("FRM_DUMMY").addTheme(THM_DUMMY).end().build();
@@ -230,17 +231,17 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 				.addTheme(THM_BACKGROUND_GREEN).end()
 				.question("QUE_USER_PROFILE_GRP")
 					.addTheme(THM_FORM_INPUT_DEFAULT)
-						.vcl(VisualControlType.INPUT)
+						.vcl(VisualControlType.VCL_INPUT)
 						.weight(2.0)
 						.end()
 					.addTheme(THM_FORM_LABEL_DEFAULT)
-						.vcl(VisualControlType.LABEL)
+						.vcl(VisualControlType.VCL_LABEL)
 						.end()
 					.addTheme(THM_FORM_WRAPPER_DEFAULT)
-						.vcl(VisualControlType.WRAPPER)
+						.vcl(VisualControlType.VCL_WRAPPER)
 						.end()
 					.addTheme(THM_FORM_ERROR_DEFAULT)
-						.vcl(VisualControlType.ERROR)
+						.vcl(VisualControlType.VCL_ERROR)
 						.end()
 					.addTheme(THM_FORM_DEFAULT)
 						.weight(3.0)

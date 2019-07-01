@@ -8,8 +8,14 @@ import java.util.function.Consumer;
 
 import javax.annotation.concurrent.Immutable;
 
+import life.genny.qwanda.attribute.Attribute;
+import life.genny.qwanda.attribute.AttributeBoolean;
+import life.genny.qwanda.datatype.DataType;
+import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.exception.BadDataException;
+
 @Immutable
-public class Theme {
+public class Theme extends BaseEntity {
 
 	private String code;
 	private String name;
@@ -28,6 +34,7 @@ public class Theme {
 	 * forces use of the Builder
 	 */
 	private Theme() {
+		super();
 	}
 
 	public String getCode() {
@@ -54,11 +61,13 @@ public class Theme {
 		
 		public Builder(final String code) {
 			managedInstance.code = code;
+			managedInstance.name = code;
 		}
 
 
 		public Builder(Frame3.Builder b, Consumer<Theme> c, String code) {
 			managedInstance.code = code;
+			managedInstance.name = code;
 			parentBuilder = b;
 			callback = c;
 		}
@@ -120,7 +129,14 @@ public class Theme {
 				managedInstance.attributes = new HashSet<ThemeAttribute>();
 			}
 			Consumer<ThemeAttribute> f = obj -> { managedInstance.attributes.add(obj);};
-			return new ThemeAttribute.Builder(this, f, attributeType, value);
+			Attribute attribute = new AttributeBoolean(attributeType.name(), attributeType.name());
+			try {
+				managedInstance.addAttribute(attribute, 1.0, value);
+			} catch (BadDataException e) {
+
+			}
+			return new ThemeAttribute.Builder(this, f, attributeType);
+			
 		}
 
 		/**
@@ -182,6 +198,14 @@ public class Theme {
 		return getCode();
 	}
 	
-	
+	public BaseEntity getBaseEntity()
+	{
+		// ugly
+		BaseEntity copy = new BaseEntity(this.getCode(),this.getName());
+		copy.setRealm(this.getRealm());
+		copy.getBaseEntityAttributes().addAll(this.getBaseEntityAttributes());
+		
+		return copy;
+	}
 	
 }
