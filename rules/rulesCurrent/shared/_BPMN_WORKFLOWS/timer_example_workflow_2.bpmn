@@ -10,7 +10,7 @@
       <tns:import name="life.genny.rules.QRules"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="rules" itemSubjectRef="ItemDefinition_2" name="rules"/>
-    <bpmn2:property id="itemPassed" name="itemPassed"/>
+    <bpmn2:property id="itemPassed" itemSubjectRef="ItemDefinition_10" name="itemPassed"/>
     <bpmn2:scriptTask id="_2" name="Hello" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>
         <tns:metaData name="elementname">
@@ -19,7 +19,7 @@
       </bpmn2:extensionElements>
       <bpmn2:incoming>_1-_2</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;Msg_example_workflow_2 :::: Item Received ::: &quot; + itemPassed);</bpmn2:script>
+      <bpmn2:script>System.out.println(&quot;Timer_example_workflow_2 :::: Item Received ::: &quot; + itemPassed);</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:startEvent id="_1">
       <bpmn2:extensionElements>

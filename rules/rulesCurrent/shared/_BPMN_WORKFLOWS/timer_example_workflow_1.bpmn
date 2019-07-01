@@ -20,7 +20,7 @@
       <bpmn2:incoming>_1-_2</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
       <bpmn2:script>
-System.out.println(&quot;Msg_example_workflow_1 :::: Item Received ::: &quot; );</bpmn2:script>
+System.out.println(&quot;Timer_example_workflow_1 :::: Item Received ::: &quot; );</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:startEvent id="_1">
       <bpmn2:extensionElements>
