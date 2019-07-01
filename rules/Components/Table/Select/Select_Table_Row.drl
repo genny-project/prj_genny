@@ -112,7 +112,7 @@ rule "Select Table Row"
 
         /* we send out the  AskContextChange msg */
 	    List<Context> contexts = new ArrayList<>();
-        Context context = new Context(ContextType.THEME, selectedItemTheme, VisualControlType.DEFAULT);
+        Context context = new Context(ContextType.THEME, selectedItemTheme, VisualControlType.VCL_INPUT);
         contexts.add(context);
         ContextList contextList = new ContextList(contexts);
         QCmdMessage msg =new QCmdMessage("AskContextChange", parentCode);

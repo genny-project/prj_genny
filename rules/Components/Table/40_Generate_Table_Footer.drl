@@ -6,7 +6,7 @@ import java.util.HashSet;
 import life.genny.rules.QRules;
 import life.genny.utils.ContextUtils;
 import life.genny.qwanda.ContextType;
-import life.genny.qwanda.Context.VisualControlType;
+import life.genny.qwanda.VisualControlType;
 import life.genny.qwanda.attribute.Attribute;
 import life.genny.utils.RulesUtils;
 
@@ -81,7 +81,7 @@ rule "Generate Table Footer"
         rules.createVirtualContext(tableFooterAsk, tableFooterThemes, ContextType.THEME);
 
         /* apply context to table-footer */
-		rules.createVirtualContext(tableFooterAsk, tableHeaderLabelTheme, ContextType.THEME, VisualControlType.LABEL);
+		rules.createVirtualContext(tableFooterAsk, tableHeaderLabelTheme, ContextType.THEME, VisualControlType.VCL_LABEL);
 
 		/* Creating AskMessage for tableFooterAsk */
 		Ask[] tableFooterAskArr = { tableFooterAsk };

@@ -31,11 +31,9 @@ public final class ThemeAttribute {
 	private Optional<String> borderColor=Optional.empty();
 	private Optional<String> color=Optional.empty();
 	private Optional<Integer> size=Optional.empty();
+	private Optional<String> sizeText=Optional.empty();
 	private Optional<Boolean> bold=Optional.empty();
 	
-	private Optional<Boolean> PRI_HAS_LABEL=Optional.empty();
-	private Optional<Boolean> PRI_HAS_REQUIRED=Optional.empty();
-	private Optional<Boolean> PRI_HAS_ICON=Optional.empty();
 	
 	private Optional<Boolean> valueBoolean=Optional.empty();
 	private Optional<Integer> valueInteger=Optional.empty();
@@ -220,6 +218,17 @@ public final class ThemeAttribute {
 	public Optional<Integer> getSize() {
 		return size;
 	}
+	
+	/**
+	 * @return the textSize
+	 */
+	public String getTextSize() {
+		if (!size.isPresent()) {
+			return sizeText.orElse("md");
+		}else {
+			return size.get()+"";
+		}
+	}
 
 	/**
 	 * @return the bold
@@ -228,26 +237,6 @@ public final class ThemeAttribute {
 		return bold;
 	}
 
-	/**
-	 * @return the pRI_HAS_LABEL
-	 */
-	public Optional<Boolean> getPRI_HAS_LABEL() {
-		return PRI_HAS_LABEL;
-	}
-
-	/**
-	 * @return the pRI_HAS_REQUIRED
-	 */
-	public Optional<Boolean> getPRI_HAS_REQUIRED() {
-		return PRI_HAS_REQUIRED;
-	}
-
-	/**
-	 * @return the pRI_HAS_ICON
-	 */
-	public Optional<Boolean> getPRI_HAS_ICON() {
-		return PRI_HAS_ICON;
-	}
 
 	/**
 	 * @return the valueBoolean
@@ -418,7 +407,17 @@ public final class ThemeAttribute {
 			return this;
 		}
 
+		public Builder borderColour(String value) {
+			managedInstance.borderColor = Optional.of(value);
+			return this;
+		}
+
 		public Builder color(String value) {
+			managedInstance.color = Optional.of(value);
+			return this;
+		}
+
+		public Builder colour(String value) {
 			managedInstance.color = Optional.of(value);
 			return this;
 		}
@@ -434,6 +433,12 @@ public final class ThemeAttribute {
 			return this;
 		}
 
+		public Builder size(String value) {
+			managedInstance.sizeText = Optional.of(value);  // should check format
+			return this;
+		}
+		
+		
 		public Builder marginBottom(Integer value) {
 			managedInstance.marginBottom = Optional.of(value);
 			return this;
@@ -453,20 +458,7 @@ public final class ThemeAttribute {
 			return new ShadowOffset.Builder(this, f);
 		}
 
-		public Builder PRI_HAS_LABEL(Boolean value) {
-			managedInstance.PRI_HAS_LABEL = Optional.of(value);
-			return this;
-		}
-		
-		public Builder PRI_HAS_REQUIRED(Boolean value) {
-			managedInstance.PRI_HAS_REQUIRED = Optional.of(value);
-			return this;
-		}
 
-		public Builder PRI_HAS_ICON(Boolean value) {
-			managedInstance.PRI_HAS_ICON = Optional.of(value);
-			return this;
-		}
 
 
 		public Theme.Builder end() {
@@ -508,12 +500,12 @@ public final class ThemeAttribute {
 		if (borderStyle.isPresent()) json.put("borderStyle", borderStyle.get());
 		if (borderColor.isPresent()) json.put("borderColor", borderColor.get());
 		if (color.isPresent()) json.put("color", color.get());
-		if (size.isPresent()) json.put("size", size.get());
+		if (size.isPresent()) { json.put("size", size.get()); } else {
+			if (sizeText.isPresent()) { json.put("size", sizeText.get()); } 
+		}
+
 		if (bold.isPresent()) json.put("bold", bold.get());
 		
-		if (PRI_HAS_LABEL.isPresent()) json.put("PRI_HAS_LABEL", PRI_HAS_LABEL.get());
-		if (PRI_HAS_REQUIRED.isPresent()) json.put("PRI_HAS_REQUIRED", PRI_HAS_REQUIRED.get());
-		if (PRI_HAS_ICON.isPresent()) json.put("PRI_HAS_ICON", PRI_HAS_ICON.get());
 		
 		if (valueBoolean.isPresent()) json.put("valueBoolean", valueBoolean.get());
 		if (valueInteger.isPresent()) json.put("valueInteger", valueInteger.get());
