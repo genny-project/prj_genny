@@ -144,7 +144,8 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 				.borderColor("#ddd").borderStyle("solid").placeholderColor("#888").end()
 				.addAttribute(ThemeAttributeType.PRI_CONTENT_HOVER).borderColor("#aaa").end()
 				.addAttribute(ThemeAttributeType.PRI_CONTENT_ACTIVE).borderColor("green").end()
-				.addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).borderColor("red").color("red").end().build();
+				.addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).borderColor("red").color("red").end()
+				.build();
 
 		Theme THM_FORM_LABEL_DEFAULT = Theme.builder("THM_FORM_LABEL_DEFAULT").addAttribute().bold(true).size("md")
 				.end().build();
@@ -170,7 +171,8 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 				.shadowRadius(0).shadowOffset().width(0).height(0).end().end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION, true).end()
-				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+				.build();
 
 		Frame3 frameDummy = Frame3.builder("FRM_DUMMY").addTheme(THM_DUMMY).end().build();
 
@@ -233,196 +235,176 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 	}
 
 @Test
-	public void displayFooter() {
-//getting the tokens
-		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
-		QRules rules = getQRules(userToken);
-		GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
+public void displayFooter() {
+	//getting the tokens
+			GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
+			QRules rules = getQRules(userToken);
+			GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
+	
+	//building the themes and the footers
+			Theme THM_COLOR_GREY = Theme.builder("THM_COLOR_RED")
+			.addAttribute()
+			.backgroundColor("red")
+			.end()
+			.build();
+	
 
-//building the themes and the footers
-		Theme THM_COLOR_GREY = Theme.builder("THM_COLOR_RED")
+			Theme THM_SUBMIT= Theme.builder("THM_SUBMIT")
+			.addAttribute().backgroundColor("#1183c8").end()
+			.build();
+
+			Theme THM_CANCEL= Theme.builder("THM_CANCEL")
+			.addAttribute().backgroundColor("#C0C0C0").end()
+			.build();
+	
+			Theme THM_COLOR_BLACK = Theme.builder("THM_COLOR_BLACK")
+			.addAttribute()
+			.backgroundColor("#ffffff")
+			.end()
+			.build();
+	
+	
+			Theme THM_FORM_INPUT_DEFAULT = Theme.builder("THM_FORM_INPUT_DEFAULT").addAttribute().borderBottomWidth(1).borderColor("#ddd").borderStyle("solid").placeholderColor("#888").end()
+			.addAttribute(ThemeAttributeType.PRI_CONTENT_HOVER).borderColor("#aaa").end()
+			.addAttribute(ThemeAttributeType.PRI_CONTENT_ACTIVE).borderColor("green").end()
+			.addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).borderColor("red").color("red").end()			
+			.build();
+	
+			Theme THM_FORM_LABEL_DEFAULT = Theme.builder("THM_FORM_LABEL_DEFAULT")
+			.addAttribute().end()		
+			.build();
+	
+		Theme THM_FORM_WRAPPER_DEFAULT = Theme.builder("THM_FORM_WRAPPER_DEFAULT")
+			.addAttribute().marginBottom(10).padding(10).end()
+			.addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).backgroundColor("#fc8e6").end()
+			.build();
+	
+		Theme THM_FORM_ERROR_DEFAULT = Theme.builder("THM_FORM_ERROR_DEFAULT")
+			.addAttribute().color("red").end()
+			.build();
+	
+	
+			Theme THM_FORM_DEFAULT = Theme.builder("THM_FORM_DEFAULT")
+			.addAttribute().backgroundColor("none").end()
+			.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE,true).end()
+			.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION,true).end()
+			.addAttribute(ThemeAttributeType.PRI_HAS_LABEL,true).end()
+			.addAttribute(ThemeAttributeType.PRI_HAS_REQUIRED,true).end()
+			.addAttribute(ThemeAttributeType.PRI_HAS_ICON,true).end()
+			.build();
+	
+			Theme THM_FORM_CONTAINER_DEFAULT = Theme.builder("THM_FORM_CONTAINER_DEFAULT")
+					.addAttribute()
+						.backgroundColor("white")
+						.padding(10)
+						.maxWidth(700)
+						.width("100%")
+						.shadowColor("#000")
+						.shadowOpacity(0.4)
+						.shadowRadius(5)
+						.shadowOffset()
+							.width(0)
+							.height(0)
+							.end()
+					.end()
+					.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE,true).end()
+					.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION,true).end()
+					.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE,false).end()
+					.build();	
+
+		Theme THM_BUTTONS = Theme.builder("THM_BUTTONS")
 		.addAttribute()
-		.backgroundColor("red")
-		.end()
-		.build();
-
-		Theme THM_CONTENT= Theme.builder("THM_CONTENT")
-		.addAttribute().backgroundColor("#f7931d").end()
-		.build();
-
-		Theme THM_MEDIUM= Theme.builder("MEDIUM")
-		.addAttribute().height(100).end()
-		.addAttribute().maxWidth(300).end()
-		.addAttribute().backgroundColor("#ffff00").end()
-		.build();
-
-		Theme THM_COLOR_BLACK = Theme.builder("THM_COLOR_BLACK")
-		.addAttribute()
-		.backgroundColor("#ffffff")
-		.end()
-		.build();
-
-		Theme THM_COLOR_PURPLE = Theme.builder("THM_COLOR_PURPLE")
-		.addAttribute()
-		.backgroundColor("purple")
-		.end()
-		.build();
-
-		Theme THM_COLOR_TOMATO = Theme.builder("THM_COLOR_TOMATO")
-		.addAttribute()
-		.backgroundColor("#ff6347")
-		.end()
-		.build();
-
-		Theme THM_COLOR_SILVER = Theme.builder("THM_COLOR_SILVER")
-		.addAttribute()
-		.backgroundColor("##C0C0C0	")
-		.end()
-		.build();
-
-		Theme THM_COLOR_BLUE = Theme.builder("THM_COLOR_BLUE")
-		.addAttribute()
-		.backgroundColor("#1183c8").end()
-		.addAttribute().height(100).end()
-		.addAttribute().justifyContent("flex-start").end()
-		.addAttribute().flexDirection("column").end()
-		.build();
-
-		Theme THM_FORM_INPUT_DEFAULT = Theme.builder("THM_FORM_INPUT_DEFAULT").addAttribute().borderBottomWidth(1).borderColor("#ddd").borderStyle("solid").placeholderColor("#888").end()
-		.addAttribute(ThemeAttributeType.PRI_CONTENT_HOVER).borderColor("#aaa").end()
-		.addAttribute(ThemeAttributeType.PRI_CONTENT_ACTIVE).borderColor("green").end()
-		.addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).borderColor("red").color("red").end()			
-		.build();
-
-		Theme THM_FORM_LABEL_DEFAULT = Theme.builder("THM_FORM_LABEL_DEFAULT")
-		.addAttribute().end()		
-		.build();
-
-	Theme THM_FORM_WRAPPER_DEFAULT = Theme.builder("THM_FORM_WRAPPER_DEFAULT")
-		.addAttribute().marginBottom(10).padding(10).end()
-		.addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).backgroundColor("#fc8e6").end()
-		.build();
-
-	Theme THM_FORM_ERROR_DEFAULT = Theme.builder("THM_FORM_ERROR_DEFAULT")
-		.addAttribute().color("red").end()
-		.build();
-
-	Theme THM_FORM_DEFAULT_REPLICA = Theme.builder("THM_FORM_DEFAULT_REPLICA")
-		.addAttribute().backgroundColor("none").end()
-		.addAttribute(ThemeAttributeType.PRI_HAS_LABEL,true)
-		.end()
-		.build();
-
-Theme THM_FORM_CONTAINER_DEFAULT_REPLICA = Theme.builder("THM_FORM_CONTAINER_DEFAULT_REPLICA")
-		.addAttribute().backgroundColor("white")
+			.backgroundColor("#ffffff")
 			.padding(10)
+			.justifyContent("center")
+			.borderColor("#000000")
+			.margin(4)
 			.maxWidth(700)
 			.width("100%")
 			.shadowColor("#000")
-			.shadowOpacity(0.4)
+			.shadowOpacity(0.8)
+			.alignItems("center")
 			.shadowRadius(5)
-			.shadowOffset()
-				.width(0)
-				.height(0)
-				.end()
 		.end()
-		.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE,true).end()
-		.addAttribute(ThemeAttributeType.PRI_HAS_LABEL,true)
-			.end()
 		.build();	
 
-		
-		Frame3 frameContent = Frame3.builder("FRM_CONTENT")
-		.addTheme(THM_CONTENT).end()
-		.question("QUE_POWERED_BY_GRP")
-		.addTheme(THM_FORM_LABEL_DEFAULT)
-			.vcl(VisualControlType.LABEL)
-			.end()
-		.addTheme(THM_FORM_DEFAULT_REPLICA)
-			.weight(3.0)
+
+	Frame3 frameSubmit = Frame3.builder("FRM_SUBMIT")
+		.addTheme(THM_SUBMIT).end()
+			.question("QUE_TABLE_NEXT_BTN")
+			.addTheme(THM_BUTTONS)
+			.vcl(VisualControlType.VCL_INPUT)
+			.weight(2.0)
 			.end()
 		.end()
 		.build();
 
-		Frame3 mediumFooter = Frame3.builder("FRM_MEDIUMFOOTER")
-		.addTheme(THM_MEDIUM).end()
-		.build(); 
-
-		Frame3 notes = Frame3.builder("FRM_NOTES")
-		.addTheme(THM_COLOR_SILVER).end()
-		.question("QUE_ROOT_GRP").end()
-		.build();
-
-		Frame3 sideBar = Frame3.builder("FRM_SIDEBAR")
-		.addTheme(THM_COLOR_PURPLE).end()
-		.question("QUE_ROOT_GRP").end()
-		.build();
-
-		Frame3 header = Frame3.builder("FRM_HEADER")
-		.addTheme(THM_COLOR_TOMATO).end()
-		.question("QUE_ROOT_GRP").end()
-		.build();
-		
-		Frame3 footer = Frame3.builder("FRM_FOOTER")
-		.addTheme(THM_COLOR_BLUE).end()
-		.addFrame(frameContent, FramePosition.EAST).end()
-		.addFrame(mediumFooter, FramePosition.CENTRE).end()
-		.addFrame(mediumFooter, FramePosition.NORTH).end()
-		.addFrame(mediumFooter, FramePosition.SOUTH).end()
-		.addFrame(mediumFooter, FramePosition.WEST).end()
-		.build();
-
-		Frame3 frameCentre = Frame3.builder("FRM_CENTRE")
-		.addTheme(THM_COLOR_BLACK).end()
-		.question("QUE_USER_COMPANY_GRP")
-			.addTheme(THM_FORM_INPUT_DEFAULT)
-						.vcl(VisualControlType.INPUT)
-						.weight(2.0)
-						.end()
-			.addTheme(THM_FORM_LABEL_DEFAULT)
-						.end()
-			.addTheme(THM_FORM_WRAPPER_DEFAULT)
-						.vcl(VisualControlType.WRAPPER)
-						.end()
-			.addTheme(THM_FORM_DEFAULT_REPLICA)
-						.weight(3.0)
-						.end()
-			.addTheme(THM_FORM_CONTAINER_DEFAULT_REPLICA)
-						.weight(2.0)
-						.end()
+	Frame3 frameCancel = Frame3.builder("FRM_CANCEL")
+		.addTheme(THM_CANCEL).end()
+			.question("QUE_CANCEL_BUTTON")
+			.addTheme(THM_BUTTONS)
+			.weight(2.0)
+			.end()
 		.end()
 		.build();
 
-		Frame3 frameMain = Frame3.builder("FRM_MAIN")
-		.addTheme(THM_COLOR_GREY).end()
-		.addFrame(notes, FramePosition.EAST).end()
-		.addFrame(sideBar, FramePosition.WEST).end()
-		.addFrame(header, FramePosition.NORTH).end()
-		.addFrame(footer, FramePosition.SOUTH).end()
-		.addFrame(frameCentre, FramePosition.CENTRE).end()
-		.build();
+	Frame3 frameForm = Frame3.builder("FRM_FORM")
+	.addTheme(THM_COLOR_BLACK).end()
+	.question("QUE_ADD_INTERNSHIP_AGENT_STEP_ONE_GRP")
+	.addTheme(THM_FORM_INPUT_DEFAULT)
+	.vcl(VisualControlType.VCL_INPUT)
+	.weight(2.0)
+	.end()
+.addTheme(THM_FORM_LABEL_DEFAULT)
+	.vcl(VisualControlType.VCL_LABEL)
+	.end()
+.addTheme(THM_FORM_WRAPPER_DEFAULT)
+	.vcl(VisualControlType.VCL_WRAPPER)
+	.end()
+.addTheme(THM_FORM_ERROR_DEFAULT)
+	.vcl(VisualControlType.VCL_ERROR)
+	.end()
+.addTheme(THM_FORM_DEFAULT)
+	.weight(3.0)
+	.end()
+.addTheme(THM_FORM_CONTAINER_DEFAULT)
+	.weight(2.0)
+	.end()
+.end()
+.build();
+
 		
-		Frame3 frameRoot = Frame3.builder("FRM_ROOT")
-		.addFrame(frameMain).end()
-		.build();
-		
-
-		Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
-
-		QDataBaseEntityMessage msg = FrameUtils2.toMessage(frameRoot, serviceToken, askMsgs);
-
-		/* send message */
-		rules.publishCmd(msg); // Send QDataBaseEntityMessage
-
-		System.out.println("Sending Asks");
-		for (QDataAskMessage askMsg : askMsgs) {
-			rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode()); // Send associated
-																							// QDataAskMessage
+			Frame3 frameCentre = Frame3.builder("FRM_CENTRE")
+			.addFrame(frameCancel, FramePosition.SOUTH).end()	
+			.addFrame(frameForm, FramePosition.CENTRE).end()	
+			.addFrame(frameSubmit, FramePosition.SOUTH).end()							
+			.build();
+	
+			Frame3 frameMain = Frame3.builder("FRM_MAIN")
+			.addTheme(THM_COLOR_GREY).end()
+			.addFrame(frameCentre, FramePosition.CENTRE).end()
+			.build();
+			
+			Frame3 frameRoot = Frame3.builder("FRM_ROOT")
+			.addFrame(frameMain).end()
+			.build();
+			
+	
+			Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+	
+			QDataBaseEntityMessage msg = FrameUtils2.toMessage(frameRoot, serviceToken, askMsgs);
+	
+			/* send message */
+			rules.publishCmd(msg); // Send QDataBaseEntityMessage
+	
+			System.out.println("Sending Asks");
+			for (QDataAskMessage askMsg : askMsgs) {
+				rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode()); // Send associated
+																								// QDataAskMessage
+			}
+	
+			System.out.println("Sent");
 		}
-
-		System.out.println("Sent");
-	}
-
 	// @Test
 	public void testDesktopPageDisplay() {
 
