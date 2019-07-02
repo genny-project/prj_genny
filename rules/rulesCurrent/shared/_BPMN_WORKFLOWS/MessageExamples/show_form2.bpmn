@@ -16,7 +16,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_21" isCollection="false" structureRef="java.util.Map.Entry"/>
   <bpmn2:itemDefinition id="ItemDefinition_22" isCollection="false" structureRef="java.util.Map"/>
   <bpmn2:itemDefinition id="ItemDefinition_24" isCollection="false" structureRef="java.util.HashMap"/>
-  <bpmn2:itemDefinition id="ItemDefinition_27" isCollection="false" structureRef="life.genny.qwanda.Context.VisualControlType"/>
+  <bpmn2:itemDefinition id="ItemDefinition_27" isCollection="false" structureRef="life.genny.qwanda.VisualControlType"/>
   <bpmn2:itemDefinition id="ItemDefinition_28" isCollection="false" structureRef="life.genny.qwanda.Context"/>
   <bpmn2:itemDefinition id="ItemDefinition_30" isCollection="false" structureRef="life.genny.qwanda.ContextList"/>
   <bpmn2:itemDefinition id="ItemDefinition_32" isCollection="false" structureRef="java.util.ArrayList"/>
@@ -48,7 +48,7 @@
       <drools:import name="java.util.Map.Entry"/>
       <drools:import name="java.util.HashMap"/>
       <drools:import name="life.genny.qwanda.Context"/>
-      <drools:import name="life.genny.qwanda.Context.VisualControlType"/>
+      <drools:import name="life.genny.qwanda.VisualControlType"/>
       <drools:import name="life.genny.qwanda.ContextList"/>
       <drools:import name="java.util.ArrayList"/>
       <drools:import name="life.genny.qwanda.Layout"/>
