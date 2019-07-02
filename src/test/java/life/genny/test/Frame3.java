@@ -307,11 +307,11 @@ public class Frame3 extends BaseEntity {
 //			return addTheme(themeCode,ThemeAttributeType.PRI_CONTENT,ThemeAttributeType.codeOnly,new JSONObject("{\"codeOnly\":true}"));
 		}
 		
-		public Theme.Builder addTheme(final String themeCode, String property, Object value) {
-			return addTheme(themeCode,ThemeAttributeType.PRI_CONTENT,property,value);
+		public Theme.Builder addThemeParent(final String themeCode, String property, Object value) {
+			return addThemeParent(themeCode,ThemeAttributeType.PRI_CONTENT,property,value);
 		}
 		
-		public Theme.Builder addTheme(final String themeCode, ThemeAttributeType attributeCode, String property, Object value) {
+		public Theme.Builder addThemeParent(final String themeCode, ThemeAttributeType attributeCode, String property, Object value) {
 			if (managedInstance.theme3s == null) {
 				managedInstance.theme3s = new ArrayList<Theme>();
 			}
