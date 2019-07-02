@@ -122,7 +122,10 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 
 		Theme THM_BACKGROUND_GREEN = Theme.builder("THM_BACKGROUND_GREEN").addAttribute().backgroundColor("green").end()
 				.build();
+		Theme THM_BACKGROUND_YELLOW = Theme.builder("THM_BACKGROUND_YELLOW").addAttribute().backgroundColor("yellow").end()
+				.build();
 
+		
 		Theme THM_BACKGROUND_RED = Theme.builder("THM_BACKGROUND_RED").addAttribute().backgroundColor("red").end()
 				.build();
 
@@ -191,6 +194,14 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 				.addTheme(THM_FORM_ERROR_DEFAULT).vcl(VisualControlType.VCL_ERROR).end().addTheme(THM_FORM_DEFAULT)
 				.weight(3.0).end().addTheme(THM_FORM_CONTAINER_DEFAULT).weight(2.0).end().end().build();
 
+		Frame3 sidebar3 = Frame3.builder("FRM_SIDEBAR3")/*.addTheme(THM_WIDTH_300).end()*//*.addTheme(THM_DISPLAY_VERTICAL)
+				.end()*/.addTheme(THM_BACKGROUND_YELLOW).end().question("QUE_USER_PROFILE_GRP")
+				.addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
+				.addTheme(THM_FORM_LABEL_DEFAULT).vcl(VisualControlType.VCL_LABEL).end()
+				.addTheme(THM_FORM_WRAPPER_DEFAULT).vcl(VisualControlType.VCL_WRAPPER).end()
+				.addTheme(THM_FORM_ERROR_DEFAULT).vcl(VisualControlType.VCL_ERROR).end().addTheme(THM_FORM_DEFAULT)
+				.weight(3.0).end().addTheme(THM_FORM_CONTAINER_DEFAULT).weight(2.0).end().end().build();
+
 		Frame3 sidebar = Frame3.builder("FRM_SIDEBAR")
 				// .addTheme(THM_WIDTH_300).end()
 				/*.addTheme().addAttribute().width(400).end().end().addTheme(THM_DISPLAY_VERTICAL).end()*/
@@ -207,7 +218,7 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 
 		Frame3 mainFrame = Frame3.builder("FRM_MAIN")
 				.addTheme(THM_BACKGROUND_WHITE).end()
-				.addFrame(sidebar, FramePosition.WEST).end().addFrame(sidebar2, FramePosition.WEST).end()
+				.addFrame(sidebar, FramePosition.WEST).end().addFrame(sidebar2, FramePosition.WEST).end().addFrame(sidebar3, FramePosition.WEST).end()
 //		    	.addFrame(notes,FramePosition.EAST).end()
 				.addFrame(footer, FramePosition.SOUTH).end().addFrame(centre, FramePosition.CENTRE).end()
 				.addFrame(header, FramePosition.NORTH).end().build();
