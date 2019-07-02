@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:g="http://www.jboss.org/drools/flow/gpd" xmlns:java="http://www.java.com/javaTypes" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.4.3.Final-v20180418-1358-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:g="http://www.jboss.org/drools/flow/gpd" xmlns:java="http://www.java.com/javaTypes" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.0.Final-v20180515-1642-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
   <bpmn2:itemDefinition id="ItemDefinition_10" isCollection="false" structureRef="java.lang.String"/>
   <bpmn2:itemDefinition id="ItemDefinition_628" isCollection="false" structureRef="org.kie.internal.runtime.StatefulKnowledgeSession"/>
   <bpmn2:itemDefinition id="ItemDefinition_633" isCollection="false" structureRef="org.kie.api.runtime.process.WorkflowProcessInstance"/>
   <bpmn2:itemDefinition id="ItemDefinition_635" isCollection="false" structureRef="org.jbpm.bpmn2.handler.SendTaskHandler"/>
   <bpmn2:itemDefinition id="ItemDefinition_239" isCollection="false" structureRef="life.genny.rules.QRules"/>
-  <bpmn2:itemDefinition id="ItemDefinition_523" isCollection="false" structureRef="org.slf4j.Logger"/>
   <bpmn2:itemDefinition id="ItemDefinition_1329" isCollection="false" structureRef="life.genny.qwanda.message.QEventMessage"/>
+  <bpmn2:itemDefinition id="ItemDefinition_2227" isCollection="false" structureRef="org.slf4j.LoggerFactory"/>
+  <bpmn2:itemDefinition id="ItemDefinition_2256" isCollection="false" structureRef="org.slf4j.Logger"/>
   <bpmn2:signal id="Signal_1" name="incomingSignal"/>
   <bpmn2:signal id="Signal_2" name="timerSignal"/>
   <bpmn2:message id="Message_1" itemRef="ItemDefinition_10" name="message_1"/>
@@ -17,9 +18,10 @@
       <tns:import name="org.kie.api.runtime.process.WorkflowProcessInstance"/>
       <tns:import name="org.jbpm.bpmn2.handler.SendTaskHandler"/>
       <tns:import name="life.genny.rules.QRules"/>
-      <tns:global identifier="log" type="org.slf4j.Logger"/>
-      <tns:import name="org.slf4j.Logger"/>
       <tns:import name="life.genny.qwanda.message.QEventMessage"/>
+      <tns:global identifier="logger" type="org.slf4j.Logger"/>
+      <tns:import name="org.slf4j.LoggerFactory"/>
+      <tns:import name="org.slf4j.Logger"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="itemPassed" name="itemPassed"/>
     <bpmn2:property id="rules" itemSubjectRef="ItemDefinition_239" name="rules"/>
@@ -32,9 +34,11 @@
       <bpmn2:incoming>_1-_2</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
       <bpmn2:script>System.out.println(&quot;Starting examples workflows&quot;);
-log.info(&quot;Hello to Adam&quot;);
+
 rules.set(&quot;value&quot;,&quot;101011&quot;);
+logger.info(&quot;Hi Adam&quot;);
 System.out.println(&quot;Sending item Messages '101011'  &quot;);
+
 </bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:startEvent id="_1">
@@ -64,7 +68,7 @@ System.out.println(&quot;Sending item Messages '101011'  &quot;);
       <bpmn2:inputSet id="InputSet_1" name="Input Set 1">
         <bpmn2:dataInputRefs>DataInput_2</bpmn2:dataInputRefs>
       </bpmn2:inputSet>
-      <bpmn2:signalEventDefinition id="SignalEventDefinition_2" signalRef="Signal_2"/>
+      <bpmn2:signalEventDefinition id="SignalEventDefinition_2" signalRef="Signal_1"/>
     </bpmn2:endEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_4" tns:priority="1" sourceRef="_2" targetRef="EndEvent_1"/>
   </bpmn2:process>

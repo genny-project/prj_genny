@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+
 import org.drools.core.time.impl.PseudoClockScheduler;
 import org.jbpm.test.JbpmJUnitBaseTestCase.Strategy;
 import org.junit.Test;
@@ -27,15 +28,15 @@ import life.genny.rules.listeners.JbpmInitListener;
 
 public class TimerTest extends GennyJbpmBaseTest {
 
-	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getCanonicalName());
-
+	 private static final Logger logger = LoggerFactory.getLogger(TimerTest.class);
+	
 	//private static final String WFE_TIMER_INTERVAL = "rulesCurrent/shared/_BPMN_WORKFLOWS/XXXtimer5.bpmn";
 	private static final String WFE_TIMER_EXAMPLE_START = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/example_timer_start.bpmn";
 	private static final String WFE_TIMER_EXAMPLE_4 = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/timer_example_workflow_4.bpmn";
 	private static final String WFE_TIMER_EXAMPLE_1 = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/timer_example_workflow_1.bpmn";
 	private static final String WFE_TIMER_EXAMPLE_2 = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/timer_example_workflow_2.bpmn";
 	private static final String WFE_TIMER_EXAMPLE_3 = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/timer_example_workflow_3.bpmn";
-//	private static final String WFE_TIMER_INTERVAL = "rulesCurrent/shared/_BPMN_WORKFLOWS/XXXTimerStart2.bpmn";
+	private static final String WFE_TIMER_INTERVAL = "rulesCurrent/shared/_BPMN_WORKFLOWS/XXXTimerStart2.bpmn";
 
 	private static final String WFE_SEND_FORMS = "rulesCurrent/shared/_BPMN_WORKFLOWS/send_forms.bpmn";
 	private static final String WFE_SHOW_FORM = "rulesCurrent/shared/_BPMN_WORKFLOWS/show_form.bpmn";
@@ -52,8 +53,42 @@ public class TimerTest extends GennyJbpmBaseTest {
 		super(false);
 	}
 
-	@Test(timeout = 30000000)	
+	
+	@Test
+	public void testTimerActivated2() {
+		Map<String, ResourceType> resources = new HashMap<String, ResourceType>();
+		String[] jbpms = { WFE_TIMER_INTERVAL };
+		String[] drls = { DRL_PROJECT, DRL_USER_COMPANY, DRL_USER, DRL_EVENT_LISTENER_SERVICE_SETUP,
+				DRL_EVENT_LISTENER_USER_SETUP };
+		for (String p : jbpms) {
+			resources.put(p, ResourceType.BPMN2);
+		}
+		for (String p : drls) {
+			resources.put(p, ResourceType.DRL);
+		}
+		createRuntimeManager(Strategy.SINGLETON, resources, null);
+		KieSession kieSession = getRuntimeEngine().getKieSession();
+
+	    ProcessInstance pInstance = kieSession.startProcess("DelayTimerEventProcess");
+	    long pInstanceId = pInstance.getId();
+
+	    PseudoClockScheduler sessionClock = kieSession.getSessionClock();
+	    // Timer is set to 60 seconds, so advancing with 70.
+	    sessionClock.advanceTime(2, TimeUnit.SECONDS);
+
+	    // Test that the timer has triggered.
+	    assertNodeTriggered(pInstanceId, "Goodbye Process");
+	    assertProcessInstanceCompleted(pInstanceId);
+	}
+
+	
+	
+//	@Test(timeout = 30000000)	
 	public void testTimerProcess() {
+		
+		System.setProperty("drools.clockType", "pseudo");
+		
+		
 		
 		Map<String, ResourceType> resources = new HashMap<String, ResourceType>();
 		String[] jbpms = { WFE_TIMER_EXAMPLE_START,WFE_TIMER_EXAMPLE_1,WFE_TIMER_EXAMPLE_2,WFE_TIMER_EXAMPLE_3,WFE_TIMER_EXAMPLE_4 };
@@ -70,12 +105,13 @@ public class TimerTest extends GennyJbpmBaseTest {
 		// Register handlers
 		addWorkItemHandlers(kieSession);
 		kieSession.addEventListener(new JbpmInitListener(userToken));
+		kieSession.setGlobal("logger", logger);
+//		try {
+//			kieSession.setGlobal("log2", log);
+//		} catch (RuntimeException e) {
+//			log.error("kieSession.setGlobal(\"log\", log); has an error "+e.getLocalizedMessage());
+//		}
 		
-		try {
-			kieSession.setGlobal("log", log);
-		} catch (RuntimeException e) {
-			log.error("kieSession.setGlobal(\"log\", log); has an error "+e.getLocalizedMessage());
-		}
 		
 		QEventMessage msg = new QEventMessage("EVT_MSG", "AUTH_INIT1");
 
@@ -99,10 +135,10 @@ public class TimerTest extends GennyJbpmBaseTest {
 		try {
 			results = kieSession.execute(CommandFactory.newBatchExecution(cmds));
 			//kieSession.startProcess("com.sample.bpmn.exampleTimerStart");
-			  PseudoClockScheduler sessionClock = kieSession.getSessionClock();
+			//  PseudoClockScheduler sessionClock = kieSession.getSessionClock();
 			    // Timer is set to 60 seconds, so advancing with 70.
 			    //sessionClock.advanceTime(70, TimeUnit.SECONDS);
-			//sleepMS(15000);
+			sleepMS(15000);
 		} catch (Exception ee) {
 
 		} finally {
