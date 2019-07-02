@@ -1,6 +1,5 @@
 package life.genny.test;
 
-
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -11,54 +10,51 @@ import org.json.JSONObject;
 @Immutable
 public final class ThemeAttribute {
 	private String code;
-	private Optional<String> flexDirection=Optional.empty();
-	private Optional<String> justifyContent=Optional.empty();
-	private Optional<String> backgroundColor=Optional.empty();
-	private Optional<Integer> margin=Optional.empty();
-	private Optional<Integer> marginBottom=Optional.empty();
-	private Optional<Integer> width=Optional.empty();
-	private Optional<String> widthPercent=Optional.empty();
-	private Optional<Integer> height=Optional.empty();
-	private Optional<Integer> maxWidth=Optional.empty();
-	private Optional<Integer> padding=Optional.empty();
-	private Optional<String> shadowColor=Optional.empty();
-	private Optional<Double> shadowOpacity=Optional.empty();
-	private Optional<Integer> shadowRadius=Optional.empty();
-	private Optional<ShadowOffset> shadowOffset=Optional.empty();
-	private Optional<Integer> borderBottomWidth=Optional.empty();
-	private Optional<String> placeholderColor=Optional.empty();
-	private Optional<String> borderStyle=Optional.empty();
-	private Optional<String> borderColor=Optional.empty();
-	private Optional<String> color=Optional.empty();
-	private Optional<Integer> size=Optional.empty();
-	private Optional<String> sizeText=Optional.empty();
-	private Optional<Boolean> bold=Optional.empty();
-	
-	
-	private Optional<Boolean> valueBoolean=Optional.empty();
-	private Optional<Integer> valueInteger=Optional.empty();
-	private Optional<String> valueString=Optional.empty();
-	private Optional<Double> valueDouble=Optional.empty();
-	
+	private Optional<String> flexDirection = Optional.empty();
+	private Optional<String> justifyContent = Optional.empty();
+	private Optional<String> backgroundColor = Optional.empty();
+	private Optional<Integer> margin = Optional.empty();
+	private Optional<Integer> marginBottom = Optional.empty();
+	private Optional<Integer> width = Optional.empty();
+	private Optional<String> widthPercent = Optional.empty();
+	private Optional<Integer> height = Optional.empty();
+	private Optional<Integer> maxWidth = Optional.empty();
+	private Optional<Integer> padding = Optional.empty();
+	private Optional<String> shadowColor = Optional.empty();
+	private Optional<Double> shadowOpacity = Optional.empty();
+	private Optional<Integer> shadowRadius = Optional.empty();
+	private Optional<ShadowOffset> shadowOffset = Optional.empty();
+	private Optional<Integer> borderBottomWidth = Optional.empty();
+	private Optional<String> placeholderColor = Optional.empty();
+	private Optional<String> borderStyle = Optional.empty();
+	private Optional<String> borderColor = Optional.empty();
+	private Optional<String> color = Optional.empty();
+	private Optional<Integer> size = Optional.empty();
+	private Optional<String> sizeText = Optional.empty();
+	private Optional<Boolean> bold = Optional.empty();
+	private Optional<String> fit = Optional.empty();
 
-	
+	private Optional<Boolean> valueBoolean = Optional.empty();
+	private Optional<Integer> valueInteger = Optional.empty();
+	private Optional<String> valueString = Optional.empty();
+	private Optional<Double> valueDouble = Optional.empty();
+
 	/**
 	 * static factory method for builder
 	 */
 	public static Builder builder() {
 		return new ThemeAttribute.Builder();
 	}
-	
+
 	/**
 	 * forces use of the Builder
 	 */
 	private ThemeAttribute() {
 	}
-	
+
 	public String getCode() {
 		return code;
 	}
-
 
 	/**
 	 * @return the flexDirection
@@ -80,9 +76,6 @@ public final class ThemeAttribute {
 	public String getBackgroundColor() {
 		return backgroundColor.orElse("");
 	}
-	
-
-
 
 	/**
 	 * @return the shadowColor
@@ -98,20 +91,12 @@ public final class ThemeAttribute {
 		return shadowOpacity.orElse(0.0);
 	}
 
-
-
-
-
 	/**
 	 * @return the borderBottomWidth
 	 */
 	public Integer getBorderBottomWidth() {
 		return borderBottomWidth.orElse(0);
 	}
-
-
-
-
 
 	/**
 	 * @return the margin
@@ -126,15 +111,15 @@ public final class ThemeAttribute {
 	public Integer getWidth() {
 		return width.orElse(0);
 	}
-	
+
 	/**
 	 * @return the widthPercent
 	 */
 	public String getWidthPercent() {
 		if (!width.isPresent()) {
 			return widthPercent.orElse("100%");
-		}else {
-			return width.get()+"";
+		} else {
+			return width.get() + "";
 		}
 	}
 
@@ -201,10 +186,6 @@ public final class ThemeAttribute {
 		return color.orElse("red");
 	}
 
-
-
-
-
 	/**
 	 * @return the marginBottom
 	 */
@@ -218,15 +199,15 @@ public final class ThemeAttribute {
 	public Optional<Integer> getSize() {
 		return size;
 	}
-	
+
 	/**
 	 * @return the textSize
 	 */
 	public String getTextSize() {
 		if (!size.isPresent()) {
 			return sizeText.orElse("md");
-		}else {
-			return size.get()+"";
+		} else {
+			return size.get() + "";
 		}
 	}
 
@@ -237,6 +218,12 @@ public final class ThemeAttribute {
 		return bold;
 	}
 
+	/**
+	 * @return the fit
+	 */
+	public Optional<String> getFit() {
+		return fit;
+	}
 
 	/**
 	 * @return the valueBoolean
@@ -266,15 +253,10 @@ public final class ThemeAttribute {
 		return valueDouble;
 	}
 
-
-
-
-
 	public static class Builder {
 		private ThemeAttribute managedInstance = new ThemeAttribute();
 		private Theme.Builder parentBuilder;
 		private Consumer<ThemeAttribute> callback;
-
 
 		public Builder() {
 		}
@@ -284,7 +266,7 @@ public final class ThemeAttribute {
 			parentBuilder = b;
 			callback = c;
 		}
-		
+
 		public Builder(Theme.Builder b, Consumer<ThemeAttribute> c, ThemeAttributeType attributeType, Boolean value) {
 			managedInstance.code = attributeType.name();
 			parentBuilder = b;
@@ -313,7 +295,6 @@ public final class ThemeAttribute {
 			managedInstance.valueDouble = Optional.of(value);
 		}
 
-
 		public Builder flexDirection(String value) {
 			managedInstance.flexDirection = Optional.of(value);
 			return this;
@@ -329,7 +310,7 @@ public final class ThemeAttribute {
 			return this;
 		}
 
-		public Builder backgroundColour(String value) { 
+		public Builder backgroundColour(String value) {
 			managedInstance.backgroundColor = Optional.of(value);
 			return this;
 		}
@@ -343,12 +324,11 @@ public final class ThemeAttribute {
 			managedInstance.width = Optional.of(value);
 			return this;
 		}
-		
+
 		public Builder width(String value) {
-			managedInstance.widthPercent = Optional.of(value);  // should check format
+			managedInstance.widthPercent = Optional.of(value); // should check format
 			return this;
 		}
-
 
 		public Builder height(Integer value) {
 			managedInstance.height = Optional.of(value);
@@ -380,12 +360,10 @@ public final class ThemeAttribute {
 			return this;
 		}
 
-		
 		public Builder shadowOpacity(Double value) {
 			managedInstance.shadowOpacity = Optional.of(value);
 			return this;
 		}
-
 
 		public Builder borderBottomWidth(Integer value) {
 			managedInstance.borderBottomWidth = Optional.of(value);
@@ -422,44 +400,46 @@ public final class ThemeAttribute {
 			return this;
 		}
 
-		
 		public Builder bold(Boolean value) {
 			managedInstance.bold = Optional.of(value);
 			return this;
 		}
-		
+
+		public Builder fit(String value) {
+			managedInstance.fit = Optional.of(value);
+			return this;
+		}
+
 		public Builder size(Integer value) {
 			managedInstance.size = Optional.of(value);
 			return this;
 		}
 
 		public Builder size(String value) {
-			managedInstance.sizeText = Optional.of(value);  // should check format
+			managedInstance.sizeText = Optional.of(value); // should check format
 			return this;
 		}
-		
-		
+
 		public Builder marginBottom(Integer value) {
 			managedInstance.marginBottom = Optional.of(value);
 			return this;
 		}
 
-		
 		public ThemeAttribute build() {
 			return managedInstance;
 		}
-		
+
 		/**
 		 * more fluent setter for Supplier
+		 *
 		 * @return
 		 */
 		public ShadowOffset.Builder shadowOffset() {
-			Consumer<ShadowOffset> f = obj -> { managedInstance.shadowOffset = Optional.of(obj);};
+			Consumer<ShadowOffset> f = obj -> {
+				managedInstance.shadowOffset = Optional.of(obj);
+			};
 			return new ShadowOffset.Builder(this, f);
 		}
-
-
-
 
 		public Theme.Builder end() {
 			callback.accept(managedInstance);
@@ -467,57 +447,82 @@ public final class ThemeAttribute {
 		}
 
 	}
-	
-	
-	
-	
+
 	@Override
 	public String toString() {
 		return getJson();
 	}
 
-	public JSONObject getJsonObject()
-	{
+	public JSONObject getJsonObject() {
 		JSONObject json = new JSONObject();
-		if (flexDirection.isPresent()) json.put("flexDirection", flexDirection.get());
-		if (justifyContent.isPresent()) json.put("justifyContent", justifyContent.get());
-		if (backgroundColor.isPresent()) json.put("backgroundColor", backgroundColor.get());
-		if (shadowColor.isPresent()) json.put("shadowColor", shadowColor.get());
-		if (shadowOpacity.isPresent()) json.put("shadowOpacity", shadowOpacity.get());
-		if (width.isPresent()) { json.put("width", width.get()); } else {
-			if (widthPercent.isPresent()) { json.put("width", widthPercent.get()); } 
-		}
-		
-		if (margin.isPresent()) json.put("margin", margin.get());
-		if (height.isPresent()) json.put("height", height.get());
-		if (maxWidth.isPresent()) json.put("maxWidth", maxWidth.get());
-		if (padding.isPresent()) json.put("padding", padding.get());
-		if (shadowRadius.isPresent()) json.put("shadowRadius", shadowRadius.get());
-		if (shadowOffset.isPresent()) json.put("shadowOffset", shadowOffset.get().getJsonObject());
-
-		if (borderBottomWidth.isPresent()) json.put("borderBottomWidth", borderBottomWidth.get());
-		if (placeholderColor.isPresent()) json.put("placeholderColor", placeholderColor.get());
-		if (borderStyle.isPresent()) json.put("borderStyle", borderStyle.get());
-		if (borderColor.isPresent()) json.put("borderColor", borderColor.get());
-		if (color.isPresent()) json.put("color", color.get());
-		if (size.isPresent()) { json.put("size", size.get()); } else {
-			if (sizeText.isPresent()) { json.put("size", sizeText.get()); } 
+		if (fit.isPresent())
+			json.put("fit", fit.get());
+		if (flexDirection.isPresent())
+			json.put("flexDirection", flexDirection.get());
+		if (justifyContent.isPresent())
+			json.put("justifyContent", justifyContent.get());
+		if (backgroundColor.isPresent())
+			json.put("backgroundColor", backgroundColor.get());
+		if (shadowColor.isPresent())
+			json.put("shadowColor", shadowColor.get());
+		if (shadowOpacity.isPresent())
+			json.put("shadowOpacity", shadowOpacity.get());
+		if (width.isPresent()) {
+			json.put("width", width.get());
+		} else {
+			if (widthPercent.isPresent()) {
+				json.put("width", widthPercent.get());
+			}
 		}
 
-		if (bold.isPresent()) json.put("bold", bold.get());
-		
-		
-		if (valueBoolean.isPresent()) json.put("valueBoolean", valueBoolean.get());
-		if (valueInteger.isPresent()) json.put("valueInteger", valueInteger.get());
-		if (valueString.isPresent()) json.put("valueString", valueString.get());
-		if (valueDouble.isPresent()) json.put("valueDouble", valueDouble.get());
+		if (margin.isPresent())
+			json.put("margin", margin.get());
+		if (height.isPresent())
+			json.put("height", height.get());
+		if (maxWidth.isPresent())
+			json.put("maxWidth", maxWidth.get());
+		if (padding.isPresent())
+			json.put("padding", padding.get());
+		if (shadowRadius.isPresent())
+			json.put("shadowRadius", shadowRadius.get());
+		if (shadowOffset.isPresent())
+			json.put("shadowOffset", shadowOffset.get().getJsonObject());
+
+		if (borderBottomWidth.isPresent())
+			json.put("borderBottomWidth", borderBottomWidth.get());
+		if (placeholderColor.isPresent())
+			json.put("placeholderColor", placeholderColor.get());
+		if (borderStyle.isPresent())
+			json.put("borderStyle", borderStyle.get());
+		if (borderColor.isPresent())
+			json.put("borderColor", borderColor.get());
+		if (color.isPresent())
+			json.put("color", color.get());
+		if (size.isPresent()) {
+			json.put("size", size.get());
+		} else {
+			if (sizeText.isPresent()) {
+				json.put("size", sizeText.get());
+			}
+		}
+
+		if (bold.isPresent())
+			json.put("bold", bold.get());
+
+		if (valueBoolean.isPresent())
+			json.put("valueBoolean", valueBoolean.get());
+		if (valueInteger.isPresent())
+			json.put("valueInteger", valueInteger.get());
+		if (valueString.isPresent())
+			json.put("valueString", valueString.get());
+		if (valueDouble.isPresent())
+			json.put("valueDouble", valueDouble.get());
 
 		return json;
 	}
-	
-	public String getJson()
-	{
+
+	public String getJson() {
 		return getJsonObject().toString();
 	}
-	
+
 }
