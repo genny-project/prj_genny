@@ -1,54 +1,5 @@
 package life.genny.rules;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import life.genny.qwanda.message.QDataAnswerMessage;
 
 import org.apache.commons.lang3.StringUtils;
