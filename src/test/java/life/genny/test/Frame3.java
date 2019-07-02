@@ -233,7 +233,7 @@ public class Frame3 extends BaseEntity {
 		 * @param none
 		 * @return
 		 */
-		public Theme.Builder addTheme(Theme theme) {
+		public Theme.Builder addThemeParent(Theme theme) {
 			if (managedInstance.theme3s == null) {
 				managedInstance.theme3s = new ArrayList<Theme>();
 			}
@@ -250,12 +250,30 @@ public class Frame3 extends BaseEntity {
 		 * @param none
 		 * @return
 		 */
-		public Theme.Builder addTheme() {
+		public Theme.Builder addTheme(Theme theme) {
 			if (managedInstance.theme3s == null) {
 				managedInstance.theme3s = new ArrayList<Theme>();
 			}
 			Consumer<Theme> f = obj -> { managedInstance.theme3s.add(obj);};
-			String themeCode = UUID.randomUUID().toString().substring(0, 25);
+			theme.setDirectLink(true);
+			managedInstance.themes.add(Tuple.of(theme,themeWeight));
+			themeWeight = themeWeight - 1.0;
+
+			return new Theme.Builder(this, f, theme);		
+		}
+		
+		/**
+		 * fluent setter for themes in the list
+		 * 
+		 * @param none
+		 * @return
+		 */
+		public Theme.Builder addThemeParent() {
+			if (managedInstance.theme3s == null) {
+				managedInstance.theme3s = new ArrayList<Theme>();
+			}
+			Consumer<Theme> f = obj -> { managedInstance.theme3s.add(obj);};
+			String themeCode = "THM_"+UUID.randomUUID().toString().substring(0, 25);
 			Theme theme = Theme.builder(themeCode).build();
 			managedInstance.themes.add(Tuple.of(theme,themeWeight));
 			themeWeight = themeWeight - 1.0;
@@ -271,7 +289,7 @@ public class Frame3 extends BaseEntity {
 		 * @param none
 		 * @return
 		 */
-		public Theme.Builder addTheme(String themeCode) {
+		public Theme.Builder addThemeParent(String themeCode) {
 			if (managedInstance.theme3s == null) {
 				managedInstance.theme3s = new ArrayList<Theme>();
 			}
