@@ -201,7 +201,7 @@ public class FrameUtils2 {
 				askBe.setRealm(parent.getRealm());
 
 				Ask ask = QuestionUtils.createQuestionForBaseEntity2(askBe,
-						StringUtils.endsWith(askBe.getCode(), "GRP"), serviceToken);
+						StringUtils.endsWith(askBe.getCode(), "GRP"), serviceToken,childFrame.getQuestionGroup().get().getSourceAlias(),childFrame.getQuestionGroup().get().getTargetAlias());
 
 				Map<ContextType, Set<BaseEntity>> contextMap = new HashMap<ContextType, Set<BaseEntity>>();
 				Map<ContextType, life.genny.qwanda.VisualControlType> vclMap = new HashMap<ContextType, VisualControlType>();
@@ -235,6 +235,7 @@ public class FrameUtils2 {
 
 				childBe.setQuestions(entityQuestionList);
 				baseEntityList.add(askBe);
+				/* Set the ask to support any sourceAlias and targetAlias */
 
 				askList.add(ask); // add to the ask list
 
@@ -243,6 +244,8 @@ public class FrameUtils2 {
 		}
 	}
 
+
+	
 	/**
 	 * @param frame
 	 * @param gennyToken

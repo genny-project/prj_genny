@@ -41,7 +41,7 @@ public class TimerTest extends GennyJbpmBaseTest {
 	}
 
 	
-	//@Test
+	@Test
 	public void timerIntervalTest() {
 		
 		
@@ -52,7 +52,6 @@ public class TimerTest extends GennyJbpmBaseTest {
 	
 	     gks.startProcess("TimerTest");
 	    
-	    // Timer is set to 60 seconds, so advancing with 70.
 	    gks.advanceSeconds(20,false);
 
 	    
