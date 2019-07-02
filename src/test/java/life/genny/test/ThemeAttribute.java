@@ -18,6 +18,7 @@ public final class ThemeAttribute {
 	private Optional<Integer> marginBottom=Optional.empty();
 	private Optional<Integer> width=Optional.empty();
 	private Optional<String> widthPercent=Optional.empty();
+	private Optional<String> heightPercent=Optional.empty();
 	private Optional<Integer> height=Optional.empty();
 	private Optional<Integer> maxWidth=Optional.empty();
 	private Optional<Integer> padding=Optional.empty();
@@ -136,6 +137,14 @@ public final class ThemeAttribute {
 	 * @return the widthPercent
 	 */
 	public String getWidthPercent() {
+		if (!width.isPresent()) {
+			return widthPercent.orElse("100%");
+		}else {
+			return width.get()+"";
+		}
+	}
+
+	public String getheightPercent() {
 		if (!width.isPresent()) {
 			return widthPercent.orElse("100%");
 		}else {
@@ -356,6 +365,11 @@ public final class ThemeAttribute {
 		
 		public Builder width(String value) {
 			managedInstance.widthPercent = Optional.of(value);  // should check format
+			return this;
+		}
+
+		public Builder height(String value) {
+			managedInstance.heightPercent = Optional.of(value);  // should check format
 			return this;
 		}
 
