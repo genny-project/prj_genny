@@ -19,7 +19,7 @@ public class Theme extends BaseEntity {
 
 	private String code;
 	private String name;
-
+	private Boolean directLink = false;
 
 	private Set<ThemeAttribute> attributes;
 
@@ -45,6 +45,22 @@ public class Theme extends BaseEntity {
 		return name;
 	}
 
+	
+	
+
+	/**
+	 * @return the directLink
+	 */
+	public Boolean getDirectLink() {
+		return directLink;
+	}
+
+	/**
+	 * @param directLink the directLink to set
+	 */
+	public void setDirectLink(Boolean directLink) {
+		this.directLink = directLink;
+	}
 
 	public Set<ThemeAttribute> getAttributes() {
 		return Collections.unmodifiableSet(attributes);
