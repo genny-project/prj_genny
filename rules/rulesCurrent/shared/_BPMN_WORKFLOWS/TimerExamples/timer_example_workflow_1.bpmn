@@ -18,7 +18,7 @@
         </tns:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>_1-_2</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
       <bpmn2:script>
 System.out.println(&quot;Timer_example_workflow_1 :::: Item Received ::: &quot; );</bpmn2:script>
     </bpmn2:scriptTask>
@@ -48,7 +48,7 @@ System.out.println(&quot;Timer_example_workflow_1 :::: Item Received ::: &quot; 
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
     </bpmn2:endEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_4" tns:priority="1" sourceRef="_2" targetRef="EndEvent_1"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_4" tns:priority="1" sourceRef="ExclusiveGateway_1" targetRef="EndEvent_1"/>
     <bpmn2:startEvent id="StartEvent_1" name="Start Event 1">
       <bpmn2:extensionElements>
         <tns:metaData name="elementname">
@@ -71,15 +71,13 @@ System.out.println(&quot;Timer_example_workflow_1 :::: Item Received ::: &quot; 
       <bpmn2:script>System.out.println(&quot;I am Timer Process from timer_example_1&quot;);</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_1" tns:priority="1" sourceRef="StartEvent_1" targetRef="ScriptTask_1"/>
-    <bpmn2:endEvent id="EndEvent_2" name="End Event 2">
-      <bpmn2:extensionElements>
-        <tns:metaData name="elementname">
-          <tns:metaValue><![CDATA[End Event 2]]></tns:metaValue>
-        </tns:metaData>
-      </bpmn2:extensionElements>
+    <bpmn2:sequenceFlow id="SequenceFlow_2" tns:priority="1" sourceRef="ScriptTask_1" targetRef="ExclusiveGateway_1"/>
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_1" name="Exclusive Gateway 1" gatewayDirection="Converging">
+      <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
       <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
-    </bpmn2:endEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_2" tns:priority="1" sourceRef="ScriptTask_1" targetRef="EndEvent_2"/>
+      <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="SequenceFlow_3" tns:priority="1" sourceRef="_2" targetRef="ExclusiveGateway_1"/>
     <bpmn2:textAnnotation id="TextAnnotation_1">
       <bpmn2:text>
 
@@ -116,16 +114,16 @@ Timer Example 1</bpmn2:text>
           <dc:Bounds height="11.0" width="52.0" x="332.0" y="34.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_EndEvent_3" bpmnElement="EndEvent_2">
-        <dc:Bounds height="36.0" width="36.0" x="481.0" y="22.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_6">
-          <dc:Bounds height="11.0" width="50.0" x="474.0" y="58.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_TextAnnotation_1" bpmnElement="TextAnnotation_1">
         <dc:Bounds height="150.0" width="100.0" x="24.0" y="350.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_7">
           <dc:Bounds height="144.0" width="88.0" x="30.0" y="350.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_1" bpmnElement="ExclusiveGateway_1" isMarkerVisible="true">
+        <dc:Bounds height="50.0" width="50.0" x="337.0" y="301.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="22.0" width="44.0" x="340.0" y="351.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="_1-_2" sourceElement="BPMNShape_StartEvent_1" targetElement="BPMNShape_ScriptTask_1">
@@ -134,10 +132,11 @@ Timer Example 1</bpmn2:text>
         <di:waypoint xsi:type="dc:Point" x="182.0" y="226.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_5"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_4" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_EndEvent_2">
-        <di:waypoint xsi:type="dc:Point" x="262.0" y="226.0"/>
-        <di:waypoint xsi:type="dc:Point" x="296.0" y="226.0"/>
-        <di:waypoint xsi:type="dc:Point" x="330.0" y="226.0"/>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_4" sourceElement="BPMNShape_ExclusiveGateway_1" targetElement="BPMNShape_EndEvent_2">
+        <di:waypoint xsi:type="dc:Point" x="362.0" y="301.0"/>
+        <di:waypoint xsi:type="dc:Point" x="362.0" y="273.0"/>
+        <di:waypoint xsi:type="dc:Point" x="348.0" y="273.0"/>
+        <di:waypoint xsi:type="dc:Point" x="348.0" y="244.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_6"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_1" sourceElement="BPMNShape_StartEvent_2" targetElement="BPMNShape_ScriptTask_2">
@@ -146,11 +145,18 @@ Timer Example 1</bpmn2:text>
         <di:waypoint xsi:type="dc:Point" x="303.0" y="40.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_7"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_ScriptTask_2" targetElement="BPMNShape_EndEvent_3">
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_ScriptTask_2" targetElement="BPMNShape_ExclusiveGateway_1">
         <di:waypoint xsi:type="dc:Point" x="413.0" y="40.0"/>
-        <di:waypoint xsi:type="dc:Point" x="447.0" y="40.0"/>
-        <di:waypoint xsi:type="dc:Point" x="481.0" y="40.0"/>
+        <di:waypoint xsi:type="dc:Point" x="423.0" y="40.0"/>
+        <di:waypoint xsi:type="dc:Point" x="423.0" y="326.0"/>
+        <di:waypoint xsi:type="dc:Point" x="387.0" y="326.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_8"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_ExclusiveGateway_1">
+        <di:waypoint xsi:type="dc:Point" x="222.0" y="250.0"/>
+        <di:waypoint xsi:type="dc:Point" x="222.0" y="326.0"/>
+        <di:waypoint xsi:type="dc:Point" x="337.0" y="326.0"/>
+        <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">

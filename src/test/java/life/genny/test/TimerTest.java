@@ -29,11 +29,12 @@ public class TimerTest extends GennyJbpmBaseTest {
 
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getCanonicalName());
 
-	private static final String WFE_TIMER_INTERVAL = "rulesCurrent/shared/_BPMN_WORKFLOWS/XXXtimer5.bpmn";
-	private static final String WFE_TIMER_EXAMPLE_START = "rulesCurrent/shared/_BPMN_WORKFLOWS/example_timer_start2.bpmn";
-	private static final String WFE_TIMER_EXAMPLE_1 = "rulesCurrent/shared/_BPMN_WORKFLOWS/timer_example_workflow_1.bpmn";
-	private static final String WFE_TIMER_EXAMPLE_2 = "rulesCurrent/shared/_BPMN_WORKFLOWS/timer_example_workflow_2.bpmn";
-	private static final String WFE_TIMER_EXAMPLE_3 = "rulesCurrent/shared/_BPMN_WORKFLOWS/timer_example_workflow_3.bpmn";
+	//private static final String WFE_TIMER_INTERVAL = "rulesCurrent/shared/_BPMN_WORKFLOWS/XXXtimer5.bpmn";
+	private static final String WFE_TIMER_EXAMPLE_START = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/example_timer_start.bpmn";
+	private static final String WFE_TIMER_EXAMPLE_4 = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/timer_example_workflow_4.bpmn";
+	private static final String WFE_TIMER_EXAMPLE_1 = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/timer_example_workflow_1.bpmn";
+	private static final String WFE_TIMER_EXAMPLE_2 = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/timer_example_workflow_2.bpmn";
+	private static final String WFE_TIMER_EXAMPLE_3 = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/timer_example_workflow_3.bpmn";
 //	private static final String WFE_TIMER_INTERVAL = "rulesCurrent/shared/_BPMN_WORKFLOWS/XXXTimerStart2.bpmn";
 
 	private static final String WFE_SEND_FORMS = "rulesCurrent/shared/_BPMN_WORKFLOWS/send_forms.bpmn";
@@ -51,13 +52,11 @@ public class TimerTest extends GennyJbpmBaseTest {
 		super(false);
 	}
 
-
-
-	@Test(timeout = 300000)	
+	@Test(timeout = 30000000)	
 	public void testTimerProcess() {
 		
 		Map<String, ResourceType> resources = new HashMap<String, ResourceType>();
-		String[] jbpms = { WFE_TIMER_INTERVAL,WFE_TIMER_EXAMPLE_START,WFE_TIMER_EXAMPLE_1,WFE_TIMER_EXAMPLE_2,WFE_TIMER_EXAMPLE_3 };
+		String[] jbpms = { WFE_TIMER_EXAMPLE_START,WFE_TIMER_EXAMPLE_1,WFE_TIMER_EXAMPLE_2,WFE_TIMER_EXAMPLE_3,WFE_TIMER_EXAMPLE_4 };
 		String[] drls = { DRL_PROJECT, DRL_USER_COMPANY, DRL_USER, DRL_EVENT_LISTENER_SERVICE_SETUP,
 				DRL_EVENT_LISTENER_USER_SETUP };
 		for (String p : jbpms) {
@@ -102,8 +101,8 @@ public class TimerTest extends GennyJbpmBaseTest {
 			//kieSession.startProcess("com.sample.bpmn.exampleTimerStart");
 			  PseudoClockScheduler sessionClock = kieSession.getSessionClock();
 			    // Timer is set to 60 seconds, so advancing with 70.
-			    sessionClock.advanceTime(70, TimeUnit.SECONDS);
-		//	sleepMS(15000);
+			    //sessionClock.advanceTime(70, TimeUnit.SECONDS);
+			//sleepMS(15000);
 		} catch (Exception ee) {
 
 		} finally {

@@ -9,6 +9,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_523" isCollection="false" structureRef="org.slf4j.Logger"/>
   <bpmn2:itemDefinition id="ItemDefinition_1329" isCollection="false" structureRef="life.genny.qwanda.message.QEventMessage"/>
   <bpmn2:signal id="Signal_1" name="incomingSignal"/>
+  <bpmn2:signal id="Signal_2" name="timerSignal"/>
   <bpmn2:message id="Message_1" itemRef="ItemDefinition_10" name="message_1"/>
   <bpmn2:process id="com.sample.bpmn.exampleTimerStart" name="Hello World" isExecutable="false" processType="Private">
     <bpmn2:extensionElements>
@@ -20,7 +21,7 @@
       <tns:import name="org.slf4j.Logger"/>
       <tns:import name="life.genny.qwanda.message.QEventMessage"/>
     </bpmn2:extensionElements>
-    <bpmn2:property id="itemPassed" itemSubjectRef="ItemDefinition_10" name="itemPassed"/>
+    <bpmn2:property id="itemPassed" name="itemPassed"/>
     <bpmn2:property id="rules" itemSubjectRef="ItemDefinition_239" name="rules"/>
     <bpmn2:scriptTask id="_2" name="Hello" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>
@@ -63,7 +64,7 @@ System.out.println(&quot;Sending item Messages '101011'  &quot;);
       <bpmn2:inputSet id="InputSet_1" name="Input Set 1">
         <bpmn2:dataInputRefs>DataInput_2</bpmn2:dataInputRefs>
       </bpmn2:inputSet>
-      <bpmn2:signalEventDefinition id="SignalEventDefinition_2" signalRef="Signal_1"/>
+      <bpmn2:signalEventDefinition id="SignalEventDefinition_2" signalRef="Signal_2"/>
     </bpmn2:endEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_4" tns:priority="1" sourceRef="_2" targetRef="EndEvent_1"/>
   </bpmn2:process>
