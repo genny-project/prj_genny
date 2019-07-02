@@ -211,7 +211,7 @@ public class FrameUtils2 {
 							themeSet.add(qTheme.getTheme().get().getBaseEntity());
 							// Hack
 							VisualControlType vcl = null;
-							if (!((qTheme.getCode().equals("THM_FORM_DEFAULT"))
+							if (!((qTheme.getCode().equals("THM_FORM_DEFAULT")) || (qTheme.getCode().equals("THM_BUTTONS"))
 									|| (qTheme.getCode().equals("THM_FORM_CONTAINER_DEFAULT")))) {
 								vcl = qTheme.getVcl();
 							}
