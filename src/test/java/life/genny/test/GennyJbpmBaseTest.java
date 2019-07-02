@@ -425,7 +425,7 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 	
 	protected String getKeycloakToken(String realm)
 	{
-		String apiUrl = "http://alyson7.genny.life:8088/api/events/init?url=http://"+realm+".genny.life";
+		String apiUrl = GennySettings.projectUrl+"/api/events/init?url=http://"+realm+".genny.life";
 		System.out.println("Fetching setup info from "+apiUrl);
 		try {
 			String keycloakJson = QwandaUtils.apiGet(apiUrl, "DUMMY");
@@ -471,7 +471,7 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 		if (isUsingRemote.isPresent()) {
 			return isUsingRemote.get();
 		}
-		String apiUrl = GennySettings.projectUrl+":8088/api/events/init?url=http://"+realm+".genny.life";
+		String apiUrl = GennySettings.projectUrl+"/api/events/init?url=http://"+realm+".genny.life";
 		System.out.println("Fetching setup info from "+apiUrl);
 		try {
 			String keycloakJson = QwandaUtils.apiGet(apiUrl, "DUMMY");
