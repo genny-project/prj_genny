@@ -132,6 +132,10 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		Theme THM_BACKGROUND_GRAY = Theme.builder("THM_BACKGROUND_GRAY").addAttribute().backgroundColor("gray").end()
 				.build();
 
+		Theme THM_BACKGROUND_ORANGE = Theme.builder("THM_BACKGROUND_ORANGE").addAttribute().backgroundColor("orange").end()
+				.build();
+
+		
 		Theme THM_BACKGROUND_BLACK = Theme.builder("THM_BACKGROUND_BLACK").addAttribute().backgroundColor("black").end()
 				.build();
 
@@ -205,7 +209,7 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		Frame3 sidebar = Frame3.builder("FRM_SIDEBAR")
 				// .addTheme(THM_WIDTH_300).end()
 				/*.addTheme().addAttribute().width(400).end().end().addTheme(THM_DISPLAY_VERTICAL).end()*/
-				.addTheme(THM_BACKGROUND_GREEN).end().question("QUE_FIRSTNAME")
+				.addTheme(THM_BACKGROUND_RED).end().question("QUE_FIRSTNAME")
 //				.question("QUE_USER_PROFILE_GRP")
 				.addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
 				.addTheme(THM_FORM_LABEL_DEFAULT).vcl(VisualControlType.VCL_LABEL).end()

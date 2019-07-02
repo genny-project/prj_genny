@@ -2,7 +2,7 @@
 <!-- origin at X=0.0 Y=0.0 -->
 <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.0.Final-v20180515-1642-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
   <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false" structureRef="java.util.Date"/>
-  <bpmn2:process id="timer5" name="timer5" isExecutable="true" processType="Private">
+  <bpmn2:process id="TimerTest" name="timer5" isExecutable="true" processType="Private">
     <bpmn2:extensionElements>
       <drools:import name="java.util.Date"/>
     </bpmn2:extensionElements>
@@ -40,7 +40,7 @@
     <bpmn2:sequenceFlow id="scriptTask-endEvent" sourceRef="scriptTaskId" targetRef="endEventId"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="timer5">
+    <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="TimerTest">
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_1" bpmnElement="scriptTaskId">
         <dc:Bounds height="48.0" width="80.0" x="270.0" y="16.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1">
