@@ -1,5 +1,6 @@
 package life.genny.test;
 
+import java.io.File;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,7 +38,7 @@ public class TimerTest extends GennyJbpmBaseTest {
 	private static final String WFE_TIMER_EXAMPLE_2 = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/timer_example_workflow_2.bpmn";
 	private static final String WFE_TIMER_EXAMPLE_3 = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/timer_example_workflow_3.bpmn";
 	private static final String WFE_TIMER_DELAY = "rulesCurrent/shared/_BPMN_WORKFLOWS/XXXTimerStart2.bpmn";
-	private static final String WFE_TIMER_INTERVAL = "rulesCurrent/shared/_BPMN_WORKFLOWS/timer5.bpmn";
+	private static final String WFE_TIMER_INTERVAL = "timer5.bpmn";
 
 	private static final String WFE_SEND_FORMS = "rulesCurrent/shared/_BPMN_WORKFLOWS/send_forms.bpmn";
 	private static final String WFE_SHOW_FORM = "rulesCurrent/shared/_BPMN_WORKFLOWS/show_form.bpmn";
@@ -50,8 +51,8 @@ public class TimerTest extends GennyJbpmBaseTest {
 	}
 
 	
-	//@Test
-	public void testTimerActivated2() {
+	@Test
+	public void timerIntervalTest() {
 		
 		
 		GennyKieSession gks = GennyKieSession.builder()
@@ -59,23 +60,23 @@ public class TimerTest extends GennyJbpmBaseTest {
 				.build();
 		
 	
-	    ProcessInstance pInstance = gks.startProcess("TimerTest");
+	     gks.startProcess("TimerTest");
 	    
 	    // Timer is set to 60 seconds, so advancing with 70.
-	    gks.advanceSeconds(20);
+	    gks.advanceSeconds(20,false);
 
 	    // Test that the timer has triggered.
-	    gks.assertNodeTriggered("Goodbye Process");
-	    gks.assertProcessInstanceCompleted();
+	   // gks.assertNodeTriggered("Goodbye Process");
+	   // gks.assertProcessInstanceCompleted();
+	    
+	    gks.close();
 	}
+	
 
 
 	
-//	@Test(timeout = 30000000)	
+	@Test(timeout = 300000)	
 	public void testTimerProcess() {
-		
-		String[] jbpms = { WFE_TIMER_EXAMPLE_START,WFE_TIMER_EXAMPLE_1,WFE_TIMER_EXAMPLE_2,WFE_TIMER_EXAMPLE_3,WFE_TIMER_EXAMPLE_4 };
-		String[] drls = {};
 		
 		QEventMessage msg = new QEventMessage("EVT_MSG", "AUTH_INIT1");
 
@@ -84,6 +85,9 @@ public class TimerTest extends GennyJbpmBaseTest {
 		
 		GennyKieSession gks = GennyKieSession.builder()
 				.addJbpm("example_timer_start.bpmn")
+				.addJbpm("timer_example_workflow_1.bpmn")
+				.addJbpm("timer_example_workflow_2.bpmn")
+				.addJbpm("timer_example_workflow_3.bpmn")
 				.addJbpm("timer_example_workflow_4.bpmn")
 				.addFact("qRules",qRules)
 				.addFact("msg",msg)
@@ -92,7 +96,14 @@ public class TimerTest extends GennyJbpmBaseTest {
 				.addToken(userToken)
 				.build();
 		
-		
+	   //  gks.startProcess("TimerTest");
+	     gks.start();
+		    
+	    gks.advanceSeconds(20,false);
+
+	    
+	    gks.close();
+	
 
 	}
 
