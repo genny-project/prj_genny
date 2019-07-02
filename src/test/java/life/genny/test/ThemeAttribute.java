@@ -31,6 +31,7 @@ public final class ThemeAttribute {
 	private Optional<String> borderColor=Optional.empty();
 	private Optional<String> color=Optional.empty();
 	private Optional<Integer> size=Optional.empty();
+	private Optional<String> alignItems=Optional.empty();
 	private Optional<String> sizeText=Optional.empty();
 	private Optional<Boolean> bold=Optional.empty();
 	
@@ -65,6 +66,10 @@ public final class ThemeAttribute {
 	 */
 	public String getFlexDirection() {
 		return flexDirection.orElse("");
+	}
+
+	public String getAlignItems() {
+		return alignItems.orElse("");
 	}
 
 	/**
@@ -321,6 +326,11 @@ public final class ThemeAttribute {
 
 		public Builder justifyContent(String value) {
 			managedInstance.justifyContent = Optional.of(value);
+			return this;
+		}
+
+		public Builder alignItems(String value) {
+			managedInstance.alignItems = Optional.of(value);
 			return this;
 		}
 
