@@ -36,7 +36,8 @@ public class TimerTest extends GennyJbpmBaseTest {
 	private static final String WFE_TIMER_EXAMPLE_1 = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/timer_example_workflow_1.bpmn";
 	private static final String WFE_TIMER_EXAMPLE_2 = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/timer_example_workflow_2.bpmn";
 	private static final String WFE_TIMER_EXAMPLE_3 = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/timer_example_workflow_3.bpmn";
-	private static final String WFE_TIMER_INTERVAL = "rulesCurrent/shared/_BPMN_WORKFLOWS/XXXTimerStart2.bpmn";
+	private static final String WFE_TIMER_EXAMPLE_5 = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/timer_example_workflow_5.bpmn";
+	private static final String WFE_TIMER_INTERVAL = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/TimerStart2.bpmn";
 
 	private static final String WFE_SEND_FORMS = "rulesCurrent/shared/_BPMN_WORKFLOWS/send_forms.bpmn";
 	private static final String WFE_SHOW_FORM = "rulesCurrent/shared/_BPMN_WORKFLOWS/show_form.bpmn";
@@ -57,7 +58,7 @@ public class TimerTest extends GennyJbpmBaseTest {
 	@Test
 	public void testTimerActivated2() {
 		Map<String, ResourceType> resources = new HashMap<String, ResourceType>();
-		String[] jbpms = { WFE_TIMER_INTERVAL };
+		String[] jbpms = {WFE_TIMER_EXAMPLE_START, WFE_TIMER_EXAMPLE_5 };
 		String[] drls = { DRL_PROJECT, DRL_USER_COMPANY, DRL_USER, DRL_EVENT_LISTENER_SERVICE_SETUP,
 				DRL_EVENT_LISTENER_USER_SETUP };
 		for (String p : jbpms) {
@@ -69,13 +70,18 @@ public class TimerTest extends GennyJbpmBaseTest {
 		createRuntimeManager(Strategy.SINGLETON, resources, null);
 		KieSession kieSession = getRuntimeEngine().getKieSession();
 
-	    ProcessInstance pInstance = kieSession.startProcess("DelayTimerEventProcess");
+
+	    ProcessInstance pInstance = kieSession.startProcess("com.sample.bpmn.exampleTimerStart");
 	    long pInstanceId = pInstance.getId();
 
 	    PseudoClockScheduler sessionClock = kieSession.getSessionClock();
+	    for (int i = 0; i<20; i++) {
+	    	System.out.println("Clock :::: " + (i+1) + "sec");
+	    	sleepMS(1000);
+	    	sessionClock.advanceTime(1, TimeUnit.SECONDS);
+	    }
 	    // Timer is set to 60 seconds, so advancing with 70.
-	    sessionClock.advanceTime(2, TimeUnit.SECONDS);
-
+	    //
 	    // Test that the timer has triggered.
 	    assertNodeTriggered(pInstanceId, "Goodbye Process");
 	    assertProcessInstanceCompleted(pInstanceId);
@@ -91,7 +97,7 @@ public class TimerTest extends GennyJbpmBaseTest {
 		
 		
 		Map<String, ResourceType> resources = new HashMap<String, ResourceType>();
-		String[] jbpms = { WFE_TIMER_EXAMPLE_START,WFE_TIMER_EXAMPLE_1,WFE_TIMER_EXAMPLE_2,WFE_TIMER_EXAMPLE_3,WFE_TIMER_EXAMPLE_4 };
+		String[] jbpms = { WFE_TIMER_EXAMPLE_START,WFE_TIMER_EXAMPLE_1};
 		String[] drls = { DRL_PROJECT, DRL_USER_COMPANY, DRL_USER, DRL_EVENT_LISTENER_SERVICE_SETUP,
 				DRL_EVENT_LISTENER_USER_SETUP };
 		for (String p : jbpms) {
