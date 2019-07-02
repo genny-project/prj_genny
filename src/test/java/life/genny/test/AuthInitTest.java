@@ -122,7 +122,10 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 
 		Theme THM_BACKGROUND_GREEN = Theme.builder("THM_BACKGROUND_GREEN").addAttribute().backgroundColor("green").end()
 				.build();
+		Theme THM_BACKGROUND_YELLOW = Theme.builder("THM_BACKGROUND_YELLOW").addAttribute().backgroundColor("yellow").end()
+				.build();
 
+		
 		Theme THM_BACKGROUND_RED = Theme.builder("THM_BACKGROUND_RED").addAttribute().backgroundColor("red").end()
 				.build();
 
@@ -177,14 +180,22 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		Frame3 centre = Frame3.builder("FRM_CENTRE").addFrame(frameDummy, FramePosition.CENTRE).end().build();
 
 		Frame3 profile = Frame3.builder("FRM_PROFILE").addTheme(THM_DISPLAY_HORIZONTAL).end()
-				.addThemeDirect(THM_BACKGROUND_RED).end().addFrame(frameDummy, FramePosition.CENTRE).end().build();
+				.addTheme(THM_BACKGROUND_RED).end().addFrame(frameDummy, FramePosition.CENTRE).end().build();
 
 		Frame3 header = Frame3.builder("FRM_HEADER").addFrame(profile, FramePosition.EAST).end().build();
 
 		Frame3 notes = Frame3.builder("FRM_NOTES").addTheme(THM_WIDTH_300).end()/*.addTheme(THM_DISPLAY_VERTICAL).end()*/
 				.addTheme(THM_BACKGROUND_RED).end().question("QUE_USER_COMPANY_GRP").end().build();
 		Frame3 sidebar2 = Frame3.builder("FRM_SIDEBAR2")/*.addTheme(THM_WIDTH_300).end()*//*.addTheme(THM_DISPLAY_VERTICAL)
-				.end()*/.addThemeDirect(THM_BACKGROUND_GRAY).end().question("QUE_USER_PROFILE_GRP")
+				.end()*/.addTheme(THM_BACKGROUND_GRAY).end().question("QUE_USER_PROFILE_GRP")
+				.addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
+				.addTheme(THM_FORM_LABEL_DEFAULT).vcl(VisualControlType.VCL_LABEL).end()
+				.addTheme(THM_FORM_WRAPPER_DEFAULT).vcl(VisualControlType.VCL_WRAPPER).end()
+				.addTheme(THM_FORM_ERROR_DEFAULT).vcl(VisualControlType.VCL_ERROR).end().addTheme(THM_FORM_DEFAULT)
+				.weight(3.0).end().addTheme(THM_FORM_CONTAINER_DEFAULT).weight(2.0).end().end().build();
+
+		Frame3 sidebar3 = Frame3.builder("FRM_SIDEBAR3")/*.addTheme(THM_WIDTH_300).end()*//*.addTheme(THM_DISPLAY_VERTICAL)
+				.end()*/.addTheme(THM_BACKGROUND_YELLOW).end().question("QUE_USER_PROFILE_GRP")
 				.addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
 				.addTheme(THM_FORM_LABEL_DEFAULT).vcl(VisualControlType.VCL_LABEL).end()
 				.addTheme(THM_FORM_WRAPPER_DEFAULT).vcl(VisualControlType.VCL_WRAPPER).end()
@@ -194,7 +205,7 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		Frame3 sidebar = Frame3.builder("FRM_SIDEBAR")
 				// .addTheme(THM_WIDTH_300).end()
 				/*.addTheme().addAttribute().width(400).end().end().addTheme(THM_DISPLAY_VERTICAL).end()*/
-				.addThemeDirect(THM_BACKGROUND_GREEN).end().question("QUE_FIRSTNAME")
+				.addTheme(THM_BACKGROUND_GREEN).end().question("QUE_FIRSTNAME")
 //				.question("QUE_USER_PROFILE_GRP")
 				.addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
 				.addTheme(THM_FORM_LABEL_DEFAULT).vcl(VisualControlType.VCL_LABEL).end()
@@ -205,9 +216,9 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		Frame3 footer = Frame3.builder("FRM_FOOTER").addFrame(frameDummy, FramePosition.CENTRE).end()
 				.addTheme(THM_BACKGROUND_BLUE).end().build();
 
-		Frame3 mainFrame = Frame3.builder("FRM_MAIN").addTheme("THM_COLOR_WHITE").end()
+		Frame3 mainFrame = Frame3.builder("FRM_MAIN")
 				.addTheme(THM_BACKGROUND_WHITE).end()
-				.addFrame(sidebar, FramePosition.WEST).end().addFrame(sidebar2, FramePosition.WEST).end()
+				.addFrame(sidebar, FramePosition.WEST).end().addFrame(sidebar2, FramePosition.WEST).end().addFrame(sidebar3, FramePosition.WEST).end()
 //		    	.addFrame(notes,FramePosition.EAST).end()
 				.addFrame(footer, FramePosition.SOUTH).end().addFrame(centre, FramePosition.CENTRE).end()
 				.addFrame(header, FramePosition.NORTH).end().build();
@@ -243,31 +254,31 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 
 		Frame3 centre = Frame3.builder("FRM_CENTRE").build();
 
-		Frame3 profile = Frame3.builder("FRM_PROFILE").addTheme("THM_DISPLAY_HORIZONTAL", "flexDirection", "row").end()
-				.addTheme("THM_BACKGROUND_RED", "backgroundColor", "red").end().build();
+		Frame3 profile = Frame3.builder("FRM_PROFILE").addThemeParent("THM_DISPLAY_HORIZONTAL", "flexDirection", "row").end()
+				.addThemeParent("THM_BACKGROUND_RED", "backgroundColor", "red").end().build();
 
 		Frame3 header = Frame3.builder("FRM_HEADER").addFrame(profile, FramePosition.EAST).build();
 
-		Frame3 sidebar = Frame3.builder("FRM_SIDEBAR").addTheme("THM_WIDTH_300", "width", 300).end()
-				.addTheme("THM_DISPLAY_VERTICAL", "flexDirection", "column").end()
-				.addTheme("THM_DISPLAY_VERTICAL", "justifyContent", "flex-start").end()
-				.addTheme("THM_BACKGROUND_RED", "backgroundColor", "red").end().question("QUE_USER_PROFILE_GRP").end()
+		Frame3 sidebar = Frame3.builder("FRM_SIDEBAR").addThemeParent("THM_WIDTH_300", "width", 300).end()
+				.addThemeParent("THM_DISPLAY_VERTICAL", "flexDirection", "column").end()
+				.addThemeParent("THM_DISPLAY_VERTICAL", "justifyContent", "flex-start").end()
+				.addThemeParent("THM_BACKGROUND_RED", "backgroundColor", "red").end().question("QUE_USER_PROFILE_GRP").end()
 				.build();
 
-		Frame3 notes = Frame3.builder("FRM_NOTES").addTheme("THM_WIDTH_300", "width", 300).end()
-				.addTheme("THM_DISPLAY_VERTICAL", "flexDirection", "column").end()
-				.addTheme("THM_DISPLAY_VERTICAL", "justifyContent", "flex-start").end().build();
+		Frame3 notes = Frame3.builder("FRM_NOTES").addThemeParent("THM_WIDTH_300", "width", 300).end()
+				.addThemeParent("THM_DISPLAY_VERTICAL", "flexDirection", "column").end()
+				.addThemeParent("THM_DISPLAY_VERTICAL", "justifyContent", "flex-start").end().build();
 
 		Frame3 footer = Frame3.builder("FRM_FOOTER").build();
 
-		Frame3 mainFrame = Frame3.builder("FRM_MAIN").addTheme("THM_COLOR_WHITE").end()
+		Frame3 mainFrame = Frame3.builder("FRM_MAIN")
 				.addFrame(header, FramePosition.NORTH).end().addFrame(sidebar, FramePosition.EAST).end()
 				.addFrame(footer, FramePosition.SOUTH).end().addFrame(centre, FramePosition.CENTRE).end().build();
 
-		Frame3 desktop = Frame3.builder("FRM_ROOT").addTheme("THM_BACKGROUND_GRAY", "backgroundColor", "gray").end()
-				.addTheme("THM_BACKGROUND_INTERNMATCH", "backgroundColor", "#233a4e").end()
-				.addTheme("THM_COLOR_WHITE", "backgroundColor", "white").end()
-				.addTheme("THM_COLOR_BLACK", ThemeAttributeType.PRI_CONTENT, "backgroundColor", "black").end()
+		Frame3 desktop = Frame3.builder("FRM_ROOT").addThemeParent("THM_BACKGROUND_GRAY", "backgroundColor", "gray").end()
+				.addThemeParent("THM_BACKGROUND_INTERNMATCH", "backgroundColor", "#233a4e").end()
+				.addThemeParent("THM_COLOR_WHITE", "backgroundColor", "white").end()
+				.addThemeParent("THM_COLOR_BLACK", ThemeAttributeType.PRI_CONTENT, "backgroundColor", "black").end()
 
 				.addFrame(mainFrame).end().build();
 
