@@ -32,18 +32,8 @@ public class TimerTest extends GennyJbpmBaseTest {
 	 private static final Logger logger = LoggerFactory.getLogger(TimerTest.class);
 	
 	//private static final String WFE_TIMER_INTERVAL = "rulesCurrent/shared/_BPMN_WORKFLOWS/XXXtimer5.bpmn";
-	private static final String WFE_TIMER_EXAMPLE_START = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/example_timer_start.bpmn";
-	private static final String WFE_TIMER_EXAMPLE_4 = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/timer_example_workflow_4.bpmn";
-	private static final String WFE_TIMER_EXAMPLE_1 = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/timer_example_workflow_1.bpmn";
-	private static final String WFE_TIMER_EXAMPLE_2 = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/timer_example_workflow_2.bpmn";
-	private static final String WFE_TIMER_EXAMPLE_3 = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/timer_example_workflow_3.bpmn";
 	private static final String WFE_TIMER_DELAY = "rulesCurrent/shared/_BPMN_WORKFLOWS/XXXTimerStart2.bpmn";
 	private static final String WFE_TIMER_INTERVAL = "timer5.bpmn";
-
-	private static final String WFE_SEND_FORMS = "rulesCurrent/shared/_BPMN_WORKFLOWS/send_forms.bpmn";
-	private static final String WFE_SHOW_FORM = "rulesCurrent/shared/_BPMN_WORKFLOWS/show_form.bpmn";
-	private static final String WFE_AUTH_INIT = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/auth_init.bpmn";
-	private static final String WFE_SEND_LLAMA = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/send_llama.bpmn";
 
 
 	public TimerTest() {
@@ -51,7 +41,7 @@ public class TimerTest extends GennyJbpmBaseTest {
 	}
 
 	
-	@Test
+	//@Test
 	public void timerIntervalTest() {
 		
 		
@@ -65,9 +55,6 @@ public class TimerTest extends GennyJbpmBaseTest {
 	    // Timer is set to 60 seconds, so advancing with 70.
 	    gks.advanceSeconds(20,false);
 
-	    // Test that the timer has triggered.
-	   // gks.assertNodeTriggered("Goodbye Process");
-	   // gks.assertProcessInstanceCompleted();
 	    
 	    gks.close();
 	}
@@ -85,9 +72,7 @@ public class TimerTest extends GennyJbpmBaseTest {
 		
 		GennyKieSession gks = GennyKieSession.builder()
 				.addJbpm("example_timer_start.bpmn")
-				.addJbpm("timer_example_workflow_1.bpmn")
-				.addJbpm("timer_example_workflow_2.bpmn")
-				.addJbpm("timer_example_workflow_3.bpmn")
+				.addJbpm("timer_example_workflow_1.bpmn","timer_example_workflow_2.bpmn","timer_example_workflow_3.bpmn")
 				.addJbpm("timer_example_workflow_4.bpmn")
 				.addFact("qRules",qRules)
 				.addFact("msg",msg)

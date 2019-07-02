@@ -315,31 +315,38 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			 managedInstance = new GennyKieSession(persistence);
 		}
 
+
 		/**
-		 * fluent setter for frameCodes in the list
+		 * fluent setter for jbpms in the list
 		 * 
 		 * @param none
 		 * @return
 		 */
-		public Builder addJbpm(String jbpm) {
+		public Builder addJbpm(String... jbpms) {
 			if (managedInstance.jbpms == null) {
 				managedInstance.jbpms = new ArrayList<String>();
 			}
-			managedInstance.jbpms.add(jbpm);
+			for (String jbpm : jbpms) {
+				managedInstance.jbpms.add(jbpm);
+			}
 			return this;
 		}
-
+		
+		
 		/**
 		 * fluent setter for drls in the list
 		 * 
 		 * @param none
 		 * @return
 		 */
-		public Builder addDrl(String drl) {
+		public Builder addDrl(String... drls) {
 			if (managedInstance.drls == null) {
 				managedInstance.drls = new ArrayList<String>();
 			}
-			managedInstance.drls.add(drl);
+			for (String drl : drls) {
+				managedInstance.drls.add(drl);
+			}
+
 			return this;
 		}
 
@@ -349,11 +356,13 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		 * @param none
 		 * @return
 		 */
-		public Builder addDecisionTable(String dtable) {
+		public Builder addDecisionTable(String... dtables) {
 			if (managedInstance.dtables == null) {
 				managedInstance.dtables = new ArrayList<String>();
 			}
-			managedInstance.dtables.add(dtable);
+			for (String dtable : dtables) {
+				managedInstance.dtables.add(dtable);
+			}
 			return this;
 		}
 

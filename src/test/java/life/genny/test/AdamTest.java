@@ -35,22 +35,14 @@ public class AdamTest extends GennyJbpmBaseTest {
 
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getCanonicalName());
 
-	private static final String WFE_SEND_FORMS = "rulesCurrent/shared/_BPMN_WORKFLOWS/send_forms.bpmn";
-	private static final String WFE_SHOW_FORM = "rulesCurrent/shared/_BPMN_WORKFLOWS/show_form.bpmn";
-	private static final String WFE_AUTH_INIT = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/auth_init.bpmn";
-	private static final String WFE_SEND_LLAMA = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/send_llama.bpmn";
-	private static final String DRL_PROJECT = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/project.drl";
-	private static final String DRL_USER_COMPANY = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/user_company.drl";
-	private static final String DRL_USER = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/user.drl";
-	private static final String DRL_EVENT_LISTENER_SERVICE_SETUP = "rulesCurrent/shared/_BPMN_WORKFLOWS/Initialise_Project/eventListenerServiceSetup.drl";
-	private static final String DRL_EVENT_LISTENER_USER_SETUP = "rulesCurrent/shared/_BPMN_WORKFLOWS/Initialise_Project/eventListenerUserSetup.drl";
+	private static final String WFE_SEND_FORMS = "send_forms.bpmn";
+	private static final String WFE_SHOW_FORM = "show_form.bpmn";
+	private static final String WFE_AUTH_INIT = "auth_init.bpmn";
+	private static final String WFE_SEND_LLAMA = "send_llama.bpmn";
 
 	public AdamTest() {
 		super(false);
 	}
-
-
-
 
 	@Test
 	public void testTheme() {
@@ -84,10 +76,9 @@ public class AdamTest extends GennyJbpmBaseTest {
 		Theme THM_BACKGROUND_GRAY = Theme.builder("THM_BACKGROUND_GRAY").addAttribute().backgroundColor("gray").end()
 				.build();
 
-		Theme THM_BACKGROUND_ORANGE = Theme.builder("THM_BACKGROUND_ORANGE").addAttribute().backgroundColor("orange").end()
-				.build();
+		Theme THM_BACKGROUND_ORANGE = Theme.builder("THM_BACKGROUND_ORANGE").addAttribute().backgroundColor("orange")
+				.end().build();
 
-		
 		Theme THM_BACKGROUND_BLACK = Theme.builder("THM_BACKGROUND_BLACK").addAttribute().backgroundColor("black").end()
 				.build();
 
@@ -210,68 +201,23 @@ public class AdamTest extends GennyJbpmBaseTest {
 		System.out.println("Sent");
 	}
 
-	
-
 	// @Test
 
 	public void testAuthInit() {
 
-		Map<String, ResourceType> resources = new HashMap<String, ResourceType>();
-		String[] jbpms = { WFE_AUTH_INIT, WFE_SEND_FORMS, WFE_SHOW_FORM, WFE_SEND_LLAMA };
-		String[] drls = { DRL_PROJECT, DRL_USER_COMPANY, DRL_USER, DRL_EVENT_LISTENER_SERVICE_SETUP,
-				DRL_EVENT_LISTENER_USER_SETUP };
-		for (String p : jbpms) {
-			resources.put(p, ResourceType.BPMN2);
-		}
-		for (String p : drls) {
-			resources.put(p, ResourceType.DRL);
-		}
-		createRuntimeManager(Strategy.SINGLETON, resources, null);
-		KieSession kieSession = getRuntimeEngine().getKieSession();
-		// Register handlers
-		addWorkItemHandlers(kieSession);
-		kieSession.addEventListener(new JbpmInitListener(userToken));
-
 		QEventMessage msg = new QEventMessage("EVT_MSG", "AUTH_INIT");
-
-		List<Command<?>> cmds = new ArrayList<Command<?>>();
 
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 		QRules qRules = getQRules(userToken); // defaults to user anyway
-		System.out.println(qRules.getToken());
-		cmds.add(CommandFactory.newInsert(qRules, "qRules"));
-		cmds.add(CommandFactory.newInsert(msg, "msg"));
-		cmds.add(CommandFactory.newInsert(userToken, "userToken"));
-		cmds.add(CommandFactory.newInsert(new GennyToken("serviceUser", qRules.getServiceToken()), "serviceToken"));
-		// Set up Cache
 
-		setUpCache(GennySettings.mainrealm, userToken);
+		GennyKieSession gks = GennyKieSession.builder().addJbpm("auth_init.bpmn").addJbpm("show_form.bpmn")
+				.addJbpm("send_forms.bpmn").addJbpm("send_llama.bpmn").addFact("qRules", qRules).addFact("msg", msg)
+				.addFact("eb", eventBusMock).addToken(new GennyToken("serviceUser", qRules.getServiceToken()))
+				.addToken(userToken).build();
 
-		cmds.add(CommandFactory.newInsert(eventBusMock, "eb"));
-
-		long startTime = System.nanoTime();
-		ExecutionResults results = null;
-		try {
-			results = kieSession.execute(CommandFactory.newBatchExecution(cmds));
-		} catch (Exception ee) {
-
-		} finally {
-			long endTime = System.nanoTime();
-			double difference = (endTime - startTime) / 1e6; // get ms
-
-			if (results != null) {
-				results.getValue("msg"); // returns the inserted fact Msg
-				QRules rules = (QRules) results.getValue("qRules"); // returns the inserted fact QRules
-				System.out.println(results.getValue("msg"));
-				System.out.println(rules);
-			} else {
-				System.out.println("NO RESULTS");
-			}
-
-			System.out.println("BPMN completed in " + difference + " ms");
-
-			kieSession.dispose();
-		}
+		gks.start();
+		gks.advanceSeconds(20, false);
+		gks.close();
 
 	}
 
