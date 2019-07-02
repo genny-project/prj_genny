@@ -21,9 +21,11 @@ import javax.persistence.EntityManagerFactory;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.ClientProtocolException;
 import org.jbpm.test.JbpmJUnitBaseTestCase;
+import org.jbpm.test.JbpmJUnitBaseTestCase.Strategy;
 import org.junit.BeforeClass;
 import org.kie.api.KieBase;
 import org.kie.api.KieServices;
+import org.kie.api.command.Command;
 import org.kie.api.command.KieCommands;
 import org.kie.api.event.process.DefaultProcessEventListener;
 import org.kie.api.event.process.ProcessCompletedEvent;
@@ -33,11 +35,13 @@ import org.kie.api.event.process.ProcessStartedEvent;
 import org.kie.api.event.process.ProcessVariableChangedEvent;
 import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.Environment;
+import org.kie.api.runtime.ExecutionResults;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.KieSessionConfiguration;
 import org.kie.api.runtime.conf.TimedRuleExecutionOption;
 import org.kie.api.runtime.process.NodeInstance;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
+import org.kie.internal.command.CommandFactory;
 import org.kie.internal.runtime.StatefulKnowledgeSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,6 +90,13 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 	
 	protected  GennyToken userToken;
 	protected  GennyToken serviceToken;
+	
+	private static final String DRL_PROJECT = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/project.drl";
+	private static final String DRL_USER_COMPANY = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/user_company.drl";
+	private static final String DRL_USER = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/user.drl";
+	private static final String DRL_EVENT_LISTENER_SERVICE_SETUP = "rulesCurrent/shared/_BPMN_WORKFLOWS/Initialise_Project/eventListenerServiceSetup.drl";
+	private static final String DRL_EVENT_LISTENER_USER_SETUP = "rulesCurrent/shared/_BPMN_WORKFLOWS/Initialise_Project/eventListenerUserSetup.drl";
+
 
 
 	@BeforeClass
@@ -532,5 +543,79 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	protected KieSession setupGennyKieSession(String[] jbpms, String[] drls)
+	{
+		System.setProperty("drools.clockType", "pseudo");
+		Map<String, ResourceType> resources = new HashMap<String, ResourceType>();
+
+		for (String p : jbpms) {
+			resources.put(p, ResourceType.BPMN2);
+		}
+		for (String p : drls) {
+			resources.put(p, ResourceType.DRL);
+		}
+		
+		String[] coredrls = { DRL_PROJECT, DRL_USER_COMPANY, DRL_USER, DRL_EVENT_LISTENER_SERVICE_SETUP,
+				DRL_EVENT_LISTENER_USER_SETUP };
+
+		for (String p : coredrls) {
+			resources.put(p, ResourceType.DRL);
+		}
+
+		createRuntimeManager(Strategy.SINGLETON, resources, null);
+		KieSession kieSession = getRuntimeEngine().getKieSession();
+		// Register handlers
+		addWorkItemHandlers(kieSession);
+		kieSession.addEventListener(new JbpmInitListener(userToken));
+		kieSession.setGlobal("log", log);
+
+		return kieSession;
+	}
+	
+	/**
+	 * @param kieSession
+	 * @param cmds
+	 */
+	private long startKieSession(KieSession kieSession, List<Command<?>> cmds) {
+		long startTime = System.nanoTime();
+		ExecutionResults results = null;
+		try {
+			results = kieSession.execute(CommandFactory.newBatchExecution(cmds));
+		} catch (Exception ee) {
+
+		} finally {
+			long endTime = System.nanoTime();
+			double difference = (endTime - startTime) / 1e6; // get ms
+
+			if (results != null) {
+				results.getValue("msg"); // returns the inserted fact Msg
+				QRules rules = (QRules) results.getValue("qRules"); // returns the inserted fact QRules
+				System.out.println(rules.getAsString("value"));
+				System.out.println(rules);
+			} else {
+				System.out.println("NO RESULTS");
+			}
+
+			System.out.println("BPMN completed in " + difference + " ms");
+
+			kieSession.dispose();
+		}
+		return startTime;
+	}
+	
+	/**
+	 * @param kieSession
+	 * @param cmds
+	 */
+	private double finishKieSession(KieSession kieSession,long startTime) {
+
+			long endTime = System.nanoTime();
+			double difference = (endTime - startTime) / 1e6; // get ms
+
+			kieSession.dispose();
+
+		return difference;
 	}
 }
