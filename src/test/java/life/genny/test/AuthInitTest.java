@@ -213,11 +213,7 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 
 	}
 
-<<<<<<< HEAD
-//@Test
-=======
-	// @Test
->>>>>>> c480697d53cfefa52185b6dcb5fcf53ef88b3cc5
+	 //@Test
 	public void testTheme() {
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 		QRules rules = getQRules(userToken); // defaults to user anyway
@@ -317,7 +313,12 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 				.weight(2.0).end().addTheme(THM_FORM_LABEL_DEFAULT).vcl(VisualControlType.VCL_LABEL).end()
 				.addTheme(THM_FORM_WRAPPER_DEFAULT).vcl(VisualControlType.VCL_WRAPPER).end()
 				.addTheme(THM_FORM_ERROR_DEFAULT).vcl(VisualControlType.VCL_ERROR).end().addTheme(THM_FORM_DEFAULT)
-				.weight(3.0).end().addTheme(THM_FORM_CONTAINER_DEFAULT).weight(2.0).end().end().build();
+				.weight(3.0).end()
+				.addTheme(THM_FORM_CONTAINER_DEFAULT)
+				.weight(2.0)
+				.end()
+				.end()
+				.build();
 
 		Frame3 sidebar3 = Frame3.builder("FRM_SIDEBAR3")
 				/* .addTheme(THM_WIDTH_300).end() *//*
@@ -375,7 +376,7 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		System.out.println("Sent");
 	}
 
-@Test
+//@Test
 	public void displayFooter() {
 //getting the tokens
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
@@ -479,7 +480,7 @@ Theme THM_FORM_CONTAINER_DEFAULT_REPLICA = Theme.builder("THM_FORM_CONTAINER_DEF
 		.addTheme(THM_CONTENT).end()
 		.question("QUE_POWERED_BY_GRP")
 		.addTheme(THM_FORM_LABEL_DEFAULT)
-			.vcl(VisualControlType.LABEL)
+			.vcl(VisualControlType.VCL_LABEL)
 			.end()
 		.addTheme(THM_FORM_DEFAULT_REPLICA)
 			.weight(3.0)
@@ -519,13 +520,13 @@ Theme THM_FORM_CONTAINER_DEFAULT_REPLICA = Theme.builder("THM_FORM_CONTAINER_DEF
 		.addTheme(THM_COLOR_BLACK).end()
 		.question("QUE_USER_COMPANY_GRP")
 			.addTheme(THM_FORM_INPUT_DEFAULT)
-						.vcl(VisualControlType.INPUT)
+						.vcl(VisualControlType.VCL_INPUT)
 						.weight(2.0)
 						.end()
 			.addTheme(THM_FORM_LABEL_DEFAULT)
 						.end()
 			.addTheme(THM_FORM_WRAPPER_DEFAULT)
-						.vcl(VisualControlType.WRAPPER)
+						.vcl(VisualControlType.VCL_WRAPPER)
 						.end()
 			.addTheme(THM_FORM_DEFAULT_REPLICA)
 						.weight(3.0)
@@ -566,6 +567,119 @@ Theme THM_FORM_CONTAINER_DEFAULT_REPLICA = Theme.builder("THM_FORM_CONTAINER_DEF
 		System.out.println("Sent");
 	}
 
+	@Test
+	public void addInternshipTwo() {
+		// getting the tokens
+		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
+		QRules rules = getQRules(userToken);
+		GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
+
+		// building the themes and the footers
+		Theme THM_COLOR_GREY = Theme.builder("THM_COLOR_RED").addAttribute().backgroundColor("red").end().build();
+
+		Theme THM_SUBMIT = Theme.builder("THM_SUBMIT").addAttribute().backgroundColor("#1183c8").end().addAttribute()
+				.justifyContent("center").end().build();
+
+		Theme THM_COLOR_BLACK = Theme.builder("THM_COLOR_BLACK").addAttribute().backgroundColor("#ffffff").end().build();
+
+		Theme THM_FORM_INPUT_DEFAULT = Theme.builder("THM_FORM_INPUT_DEFAULT").addAttribute().borderBottomWidth(1)
+				.borderColor("#ddd").borderStyle("solid").placeholderColor("#888").end()
+				.addAttribute(ThemeAttributeType.PRI_CONTENT_HOVER).borderColor("#aaa").end()
+				.addAttribute(ThemeAttributeType.PRI_CONTENT_ACTIVE).borderColor("green").end()
+				.addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).borderColor("red").color("red").end().build();
+
+		Theme THM_FORM_LABEL_DEFAULT = Theme.builder("THM_FORM_LABEL_DEFAULT").addAttribute().end().build();
+
+		Theme THM_FORM_WRAPPER_DEFAULT = Theme.builder("THM_FORM_WRAPPER_DEFAULT").addAttribute().marginBottom(10)
+				.padding(10).end().addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).backgroundColor("#fc8e6").end().build();
+
+		Theme THM_FORM_ERROR_DEFAULT = Theme.builder("THM_FORM_ERROR_DEFAULT").addAttribute().color("red").end().build();
+
+		Theme THM_FORM_DEFAULT = Theme.builder("THM_FORM_DEFAULT").addAttribute().backgroundColor("none").end()
+				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
+				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION, true).end()
+				.addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end()
+				.addAttribute(ThemeAttributeType.PRI_HAS_REQUIRED, true).end()
+				.addAttribute(ThemeAttributeType.PRI_HAS_ICON, true).end().build();
+
+		Theme THM_FORM_CONTAINER_DEFAULT = Theme.builder("THM_FORM_CONTAINER_DEFAULT").addAttribute()
+				.backgroundColor("white").padding(10).maxWidth(700).width("100%").shadowColor("#000").shadowOpacity(0.4)
+				.shadowRadius(5).shadowOffset().width(0).height(0).end().end()
+				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
+				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION, true).end()
+				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+			Theme THM_INHERETABLE_OFF = Theme.builder("THM_INHERETABLE_OFF")
+				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+				Theme THM_BUTTONS = Theme.builder("THM_BUTTONS").
+				addAttribute()
+				.backgroundColor("#f7931d")
+				.justifyContent("center")
+				.borderColor("#000000")
+				.textAlign("center")
+				.maxWidth(700)
+				.padding(15)
+				.width("100%")
+				.shadowColor("#000")
+				.shadowOpacity(0.4).shadowRadius(2).end().build();
+
+
+		Frame3 frameSubmit = Frame3.builder("FRM_SUBMIT")
+				.question("QUE_SUBMIT_BUTTON")
+				.addTheme(THM_BUTTONS)
+				.vcl(VisualControlType.INPUT_WRAPPER)
+				.end()
+				.end()
+				.build();
+
+
+		Frame3 frameForm = Frame3.builder("FRM_FORM")
+				.addTheme(THM_COLOR_BLACK).end()
+				.addTheme(THM_INHERETABLE_OFF).end()
+				.question("QUE_ADD_INTERNSHIP_AGENT_STEP_TWO_GRP")
+				.addTheme(THM_FORM_INPUT_DEFAULT)
+				.vcl(VisualControlType.VCL_INPUT)
+				.weight(2.0)
+				.end()
+				.addTheme(THM_FORM_LABEL_DEFAULT)
+				.vcl(VisualControlType.VCL_LABEL).end()
+				.addTheme(THM_FORM_WRAPPER_DEFAULT)
+				.vcl(VisualControlType.VCL_WRAPPER)
+				.end()
+				.addTheme(THM_FORM_ERROR_DEFAULT).vcl(VisualControlType.VCL_ERROR).end().addTheme(THM_FORM_DEFAULT)
+				.weight(3.0).end().addTheme(THM_FORM_CONTAINER_DEFAULT).weight(2.0).end()
+				.end()				
+				//.addThemeParent("THM_VERTICAL_SCROLL", "overflowY", "auto").end()
+				//.addThemeParent("THM_HEIGHT_FIT", "height", "100%").end()
+				.build();
+
+		Frame3 frameCentre = Frame3.builder("FRM_CENTRE")
+				.addFrame(frameForm, FramePosition.CENTRE).end()
+				.addFrame(frameSubmit, FramePosition.SOUTH).end().build();
+
+		Frame3 frameMain = Frame3.builder("FRM_MAIN")
+		.addTheme(THM_COLOR_GREY).end()
+		.addFrame(frameCentre, FramePosition.CENTRE).end()
+		.build();
+
+		Frame3 frameRoot = Frame3.builder("FRM_ROOT").addFrame(frameMain).end().build();
+
+		Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+
+		QDataBaseEntityMessage msg = FrameUtils2.toMessage(frameRoot, serviceToken, askMsgs);
+
+		/* send message */
+		rules.publishCmd(msg); // Send QDataBaseEntityMessage
+
+		System.out.println("Sending Asks");
+		for (QDataAskMessage askMsg : askMsgs) {
+			rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode()); // Send associated
+			// QDataAskMessage
+		}
+
+		System.out.println("Sent");
+	}
 	// @Test
 	public void testDesktopPageDisplay() {
 
@@ -621,7 +735,6 @@ Theme THM_FORM_CONTAINER_DEFAULT_REPLICA = Theme.builder("THM_FORM_CONTAINER_DEF
 	}
 
 	// @Test
-
 	public void testAuthInit() {
 
 		Map<String, ResourceType> resources = new HashMap<String, ResourceType>();

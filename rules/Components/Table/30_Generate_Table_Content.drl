@@ -148,6 +148,10 @@ rule "Generate Table Content"
 			/* set the table cell theme to each ask */
 			rules.createVirtualContext(ask, tableCellDefaultTheme, ContextType.THEME, VisualControlType.VCL_WRAPPER);
 
+			rules.createVirtualContext(ask, tableCellWrapperTheme, ContextType.THEME, VisualControlType.INPUT_WRAPPER);
+
+			rules.createVirtualContext(ask, tableCellDefaultTheme, ContextType.THEME, VisualControlType.INPUT_WRAPPER);
+
 
 			/* adding themes to each table-row ask */
 			/* setting even theme */

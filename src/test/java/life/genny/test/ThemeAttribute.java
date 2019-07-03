@@ -12,6 +12,8 @@ public final class ThemeAttribute {
 	private String code;
 	private Optional<String> flexDirection = Optional.empty();
 	private Optional<String> justifyContent = Optional.empty();
+	private Optional<String> alignItems = Optional.empty();
+	private Optional<String> textAlign = Optional.empty();
 	private Optional<String> backgroundColor = Optional.empty();
 	private Optional<Integer> margin = Optional.empty();
 	private Optional<Integer> marginBottom = Optional.empty();
@@ -68,6 +70,14 @@ public final class ThemeAttribute {
 	 */
 	public String getJustifyContent() {
 		return justifyContent.orElse("");
+	}
+
+	public String getAlignItems() {
+		return alignItems.orElse("");
+	}
+
+	public String getTextAlign() {
+		return alignItems.orElse("");
 	}
 
 	/**
@@ -305,6 +315,16 @@ public final class ThemeAttribute {
 			return this;
 		}
 
+		public Builder alignItems(String value) {
+			managedInstance.alignItems = Optional.of(value);
+			return this;
+		}
+
+		public Builder textAlign(String value) {
+			managedInstance.textAlign = Optional.of(value);
+			return this;
+		}
+
 		public Builder backgroundColor(String value) { // Accept Spelling errors
 			managedInstance.backgroundColor = Optional.of(value);
 			return this;
@@ -461,6 +481,10 @@ public final class ThemeAttribute {
 			json.put("flexDirection", flexDirection.get());
 		if (justifyContent.isPresent())
 			json.put("justifyContent", justifyContent.get());
+		if (alignItems.isPresent())
+			json.put("alignItems", alignItems.get());
+		if (textAlign.isPresent())
+			json.put("textAlign", textAlign.get());
 		if (backgroundColor.isPresent())
 			json.put("backgroundColor", backgroundColor.get());
 		if (shadowColor.isPresent())
