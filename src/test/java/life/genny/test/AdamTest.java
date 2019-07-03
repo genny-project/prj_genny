@@ -30,6 +30,7 @@ import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.rules.QRules;
 import life.genny.rules.listeners.JbpmInitListener;
+import life.genny.utils.VertxUtils;
 
 public class AdamTest extends GennyJbpmBaseTest {
 
@@ -188,9 +189,13 @@ public class AdamTest extends GennyJbpmBaseTest {
 		Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
 
 		QDataBaseEntityMessage msg = FrameUtils2.toMessage(desktop, serviceToken, askMsgs);
+		
+		VertxUtils.putObject(serviceToken.getRealm(), "", "DESKTOP", msg,serviceToken.getToken());
+		
+		QDataBaseEntityMessage msg2 = VertxUtils.getObject(serviceToken.getRealm(), "", "DESKTOP", QDataBaseEntityMessage.class,serviceToken.getToken()); 
 
 		/* send message */
-		rules.publishCmd(msg); // Send QDataBaseEntityMessage
+		rules.publishCmd(msg2); // Send QDataBaseEntityMessage
 
 		System.out.println("Sending Asks");
 		for (QDataAskMessage askMsg : askMsgs) {

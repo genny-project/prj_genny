@@ -1,38 +1,17 @@
 package life.genny.test;
 
-import java.io.File;
-import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
-
-import org.drools.core.time.impl.PseudoClockScheduler;
-import org.jbpm.test.JbpmJUnitBaseTestCase.Strategy;
 import org.junit.Test;
-import org.kie.api.command.Command;
-import org.kie.api.io.ResourceType;
-import org.kie.api.runtime.ExecutionResults;
-import org.kie.api.runtime.KieSession;
-import org.kie.api.runtime.process.ProcessInstance;
-import org.kie.internal.command.CommandFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import life.genny.models.GennyToken;
 import life.genny.qwanda.message.QEventMessage;
-import life.genny.qwandautils.GennySettings;
 import life.genny.rules.QRules;
-import life.genny.rules.listeners.JbpmInitListener;
 
 public class TimerTest extends GennyJbpmBaseTest {
 
 	 private static final Logger logger = LoggerFactory.getLogger(TimerTest.class);
 	
-	//private static final String WFE_TIMER_INTERVAL = "rulesCurrent/shared/_BPMN_WORKFLOWS/XXXtimer5.bpmn";
-	private static final String WFE_TIMER_DELAY = "rulesCurrent/shared/_BPMN_WORKFLOWS/XXXTimerStart2.bpmn";
 	private static final String WFE_TIMER_INTERVAL = "timer5.bpmn";
 
 
