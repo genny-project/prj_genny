@@ -13,7 +13,9 @@ import javax.annotation.concurrent.Immutable;
 public class QuestionGroup {
 
 	private String code;
-	
+	private Optional<String> sourceAlias = Optional.empty(); // This is used to permit source setting.
+
+	private Optional<String> targetAlias = Optional.empty(); // This is used to permit target setting.
 
 	private Set<QuestionTheme> questionThemes = new HashSet<QuestionTheme>();
 	private Set<String> themeCodes;
@@ -37,6 +39,20 @@ public class QuestionGroup {
 
 
 
+	/**
+	 * @return the sourceAlias
+	 */
+	public Optional<String> getSourceAlias() {
+		return sourceAlias;
+	}
+
+	/**
+	 * @return the targetAlias
+	 */
+	public Optional<String> getTargetAlias() {
+		return targetAlias;
+	}
+
 	public Set<QuestionTheme> getQuestionThemes() {
 		return Collections.unmodifiableSet(questionThemes);
 	}
@@ -58,6 +74,18 @@ public class QuestionGroup {
 			managedInstance.code = code;
 		}
 
+		public Builder sourceAlias(final String aliasCode)
+		{
+			managedInstance.sourceAlias = Optional.of(aliasCode);
+			return this;
+		}
+		
+		public Builder targetAlias(final String aliasCode)
+		{
+			managedInstance.targetAlias = Optional.of(aliasCode);
+			return this;
+		}
+		
 		public Builder(Frame3.Builder b, Consumer<QuestionGroup> c, String code) {
 			managedInstance.code = code;
 			parentBuilder = b;

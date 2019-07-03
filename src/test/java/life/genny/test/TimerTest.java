@@ -1,5 +1,6 @@
 package life.genny.test;
 
+import java.io.File;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,6 +49,7 @@ public class TimerTest extends GennyJbpmBaseTest {
 	private static final String DRL_USER = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/user.drl";
 	private static final String DRL_EVENT_LISTENER_SERVICE_SETUP = "rulesCurrent/shared/_BPMN_WORKFLOWS/Initialise_Project/eventListenerServiceSetup.drl";
 	private static final String DRL_EVENT_LISTENER_USER_SETUP = "rulesCurrent/shared/_BPMN_WORKFLOWS/Initialise_Project/eventListenerUserSetup.drl";
+	private static final String WFE_TIMER_DELAY = "rulesCurrent/shared/_BPMN_WORKFLOWS/XXXTimerStart2.bpmn";
 
 
 	public TimerTest() {
@@ -56,117 +58,61 @@ public class TimerTest extends GennyJbpmBaseTest {
 
 	
 	@Test
-	public void testTimerActivated2() {
-		Map<String, ResourceType> resources = new HashMap<String, ResourceType>();
-		String[] jbpms = {WFE_TIMER_EXAMPLE_START, WFE_TIMER_EXAMPLE_5 };
-		String[] drls = { DRL_PROJECT, DRL_USER_COMPANY, DRL_USER, DRL_EVENT_LISTENER_SERVICE_SETUP,
-				DRL_EVENT_LISTENER_USER_SETUP };
-		for (String p : jbpms) {
-			resources.put(p, ResourceType.BPMN2);
-		}
-		for (String p : drls) {
-			resources.put(p, ResourceType.DRL);
-		}
-		createRuntimeManager(Strategy.SINGLETON, resources, null);
-		KieSession kieSession = getRuntimeEngine().getKieSession();
+	public void timerIntervalTest() {
+		
+		
+		GennyKieSession gks = GennyKieSession.builder()
+				.addJbpm( WFE_TIMER_INTERVAL)
+				.build();
+		
+	
+	     gks.startProcess("TimerTest");
+	     
+	     for (int i = 0; i<20; i++) {
+		    	System.out.println("Clock :::: " + (i+1) + "sec");
+		    	sleepMS(1000);
+		    	gks.advanceSeconds(1,false);
+		    }
+	    
+	   
 
-
-	    ProcessInstance pInstance = kieSession.startProcess("com.sample.bpmn.exampleTimerStart");
-	    long pInstanceId = pInstance.getId();
-
-	    PseudoClockScheduler sessionClock = kieSession.getSessionClock();
-	    for (int i = 0; i<20; i++) {
-	    	System.out.println("Clock :::: " + (i+1) + "sec");
-	    	sleepMS(1000);
-	    	sessionClock.advanceTime(1, TimeUnit.SECONDS);
-	    }
-	    // Timer is set to 60 seconds, so advancing with 70.
-	    //
-	    // Test that the timer has triggered.
-	    assertNodeTriggered(pInstanceId, "Goodbye Process");
-	    assertProcessInstanceCompleted(pInstanceId);
+	    
+	    gks.close();
 	}
+	
+
 
 	
-	
-//	@Test(timeout = 30000000)	
+	@Test(timeout = 300000)	
 	public void testTimerProcess() {
-		
-		System.setProperty("drools.clockType", "pseudo");
-		
-		
-		
-		Map<String, ResourceType> resources = new HashMap<String, ResourceType>();
-		String[] jbpms = { WFE_TIMER_EXAMPLE_START,WFE_TIMER_EXAMPLE_1};
-		String[] drls = { DRL_PROJECT, DRL_USER_COMPANY, DRL_USER, DRL_EVENT_LISTENER_SERVICE_SETUP,
-				DRL_EVENT_LISTENER_USER_SETUP };
-		for (String p : jbpms) {
-			resources.put(p, ResourceType.BPMN2);
-		}
-		for (String p : drls) {
-			resources.put(p, ResourceType.DRL);
-		}
-		createRuntimeManager(Strategy.SINGLETON, resources, null);
-		KieSession kieSession = getRuntimeEngine().getKieSession();
-		// Register handlers
-		addWorkItemHandlers(kieSession);
-		kieSession.addEventListener(new JbpmInitListener(userToken));
-		kieSession.setGlobal("logger", logger);
-//		try {
-//			kieSession.setGlobal("log2", log);
-//		} catch (RuntimeException e) {
-//			log.error("kieSession.setGlobal(\"log\", log); has an error "+e.getLocalizedMessage());
-//		}
-		
 		
 		QEventMessage msg = new QEventMessage("EVT_MSG", "AUTH_INIT1");
 
-		List<Command<?>> cmds = new ArrayList<Command<?>>();
-
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 		QRules qRules = getQRules(userToken); // defaults to user anyway
-		System.out.println(qRules.getToken());
-		cmds.add(CommandFactory.newInsert(qRules, "qRules"));
-		cmds.add(CommandFactory.newInsert(msg, "msg"));
-		cmds.add(CommandFactory.newInsert(userToken, "userToken"));
-		cmds.add(CommandFactory.newInsert(new GennyToken("serviceUser", qRules.getServiceToken()), "serviceToken"));
-		// Set up Cache
+		
+		GennyKieSession gks = GennyKieSession.builder()
+				.addJbpm("example_timer_start.bpmn")
+				.addJbpm("timer_example_workflow_1.bpmn","timer_example_workflow_2.bpmn","timer_example_workflow_3.bpmn")
+				.addJbpm("timer_example_workflow_4.bpmn")
+				.addFact("qRules",qRules)
+				.addFact("msg",msg)
+				.addFact("eb", eventBusMock)
+				.addToken(new GennyToken("serviceUser", qRules.getServiceToken()))
+				.addToken(userToken)
+				.build();
+		
+	   //  gks.startProcess("TimerTest");
+	     gks.start();
+		    
+	    gks.advanceSeconds(20,false);
 
-		setUpCache(GennySettings.mainrealm, userToken);
+	    
+	    gks.close();
 
-		cmds.add(CommandFactory.newInsert(eventBusMock, "eb"));
-
-		long startTime = System.nanoTime();
-		ExecutionResults results = null;
-		try {
-			results = kieSession.execute(CommandFactory.newBatchExecution(cmds));
-			//kieSession.startProcess("com.sample.bpmn.exampleTimerStart");
-			//  PseudoClockScheduler sessionClock = kieSession.getSessionClock();
-			    // Timer is set to 60 seconds, so advancing with 70.
-			    //sessionClock.advanceTime(70, TimeUnit.SECONDS);
-			sleepMS(15000);
-		} catch (Exception ee) {
-
-		} finally {
-			long endTime = System.nanoTime();
-			double difference = (endTime - startTime) / 1e6; // get ms
-
-			if (results != null) {
-				results.getValue("msg"); // returns the inserted fact Msg
-				QRules rules = (QRules) results.getValue("qRules"); // returns the inserted fact QRules
-				System.out.println(rules.getAsString("value"));
-				System.out.println(rules);
-			} else {
-				System.out.println("NO RESULTS");
-			}
-
-			System.out.println("BPMN completed in " + difference + " ms");
-
-			kieSession.dispose();
-		}
 	}
 
-	
+
 
 //	@Test
 	public void testTimerActivated() {

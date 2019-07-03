@@ -67,7 +67,7 @@ public class FrameUtils2 {
 		msg.setReplace(true);
 
 		for (Ask ask : askList) {
-			QDataAskMessage askMsg = QuestionUtils.getAsks(serviceToken.getUserCode(), serviceToken.getUserCode(),
+			QDataAskMessage askMsg = QuestionUtils.getAsks(serviceToken.getUserCode(), "PRJ_INTERNMATCH",
 					ask.getQuestionCode(), serviceToken.getToken());
 			askMsg = processQDataAskMessage(askMsg, ask, serviceToken);
 
@@ -85,35 +85,38 @@ public class FrameUtils2 {
 			ask.setContextList(contextAsk.getContextList());
 
 			// if ask question is not a group then make it a fake group
-//			if (!StringUtils.endsWith(ask.getQuestion().getCode(), "_GRP")) {
-//				String attributeCode = "QQQ_QUESTION_GROUP_INPUT";
-//
-//				/* Get the on-the-fly question attribute */
-//				Attribute attribute = RulesUtils.getAttribute(attributeCode, serviceToken.getToken());
-//
-//				Question fakeQuestionGrp = new Question(ask.getQuestionCode() + "_GRP", ask.getName(), attribute,
-//						false);
-//				fakeQuestionGrp.setMandatory(ask.getMandatory());
-//				fakeQuestionGrp.setRealm(ask.getRealm());
-//				fakeQuestionGrp.setReadonly(ask.getReadonly());
-//				fakeQuestionGrp.setOneshot(ask.getOneshot());
-//
-//				try {
-//					fakeQuestionGrp.addTarget(ask.getQuestion(), 1.0);
-//				} catch (BadDataException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//				Ask newask = new Ask(fakeQuestionGrp, serviceToken.getUserCode(), serviceToken.getUserCode(), false,
-//						1.0, false, false, true);
-//				Ask[] childAsks = new Ask[1];
-//				childAsks[0] = ask;
-//				newask.setChildAsks(childAsks);
-//				asks.add(newask);
-//
-//			} else {
-				asks.add(ask);
-//			}
+			// if (!StringUtils.endsWith(ask.getQuestion().getCode(), "_GRP")) {
+			// String attributeCode = "QQQ_QUESTION_GROUP_INPUT";
+			//
+			// /* Get the on-the-fly question attribute */
+			// Attribute attribute = RulesUtils.getAttribute(attributeCode,
+			// serviceToken.getToken());
+			//
+			// Question fakeQuestionGrp = new Question(ask.getQuestionCode() + "_GRP",
+			// ask.getName(), attribute,
+			// false);
+			// fakeQuestionGrp.setMandatory(ask.getMandatory());
+			// fakeQuestionGrp.setRealm(ask.getRealm());
+			// fakeQuestionGrp.setReadonly(ask.getReadonly());
+			// fakeQuestionGrp.setOneshot(ask.getOneshot());
+			//
+			// try {
+			// fakeQuestionGrp.addTarget(ask.getQuestion(), 1.0);
+			// } catch (BadDataException e) {
+			// // TODO Auto-generated catch block
+			// e.printStackTrace();
+			// }
+			// Ask newask = new Ask(fakeQuestionGrp, serviceToken.getUserCode(),
+			// serviceToken.getUserCode(), false,
+			// 1.0, false, false, true);
+			// Ask[] childAsks = new Ask[1];
+			// childAsks[0] = ask;
+			// newask.setChildAsks(childAsks);
+			// asks.add(newask);
+			//
+			// } else {
+			asks.add(ask);
+			// }
 		}
 		Ask[] itemsArray = new Ask[asks.size()];
 		itemsArray = asks.toArray(itemsArray);
@@ -127,11 +130,12 @@ public class FrameUtils2 {
 	}
 
 	private static BaseEntity getBaseEntity(final String beCode, final String beName, final GennyToken serviceToken) {
-		BaseEntity be = null;//VertxUtils.getObject(serviceToken.getRealm(), "", beCode, BaseEntity.class,
-			//	serviceToken.getToken());
+		BaseEntity be = null;// VertxUtils.getObject(serviceToken.getRealm(), "", beCode, BaseEntity.class,
+		// serviceToken.getToken());
 		if (be == null) {
 			try {
-			//	be = QwandaUtils.getBaseEntityByCodeWithAttributes(beCode, serviceToken.getToken());
+				// be = QwandaUtils.getBaseEntityByCodeWithAttributes(beCode,
+				// serviceToken.getToken());
 				if (be == null) {
 					be = QwandaUtils.createBaseEntityByCode(beCode, beName, GennySettings.qwandaServiceUrl,
 							serviceToken.getToken());
@@ -197,7 +201,7 @@ public class FrameUtils2 {
 				askBe.setRealm(parent.getRealm());
 
 				Ask ask = QuestionUtils.createQuestionForBaseEntity2(askBe,
-						StringUtils.endsWith(askBe.getCode(), "GRP"), serviceToken);
+						StringUtils.endsWith(askBe.getCode(), "GRP"), serviceToken,childFrame.getQuestionGroup().get().getSourceAlias(),childFrame.getQuestionGroup().get().getTargetAlias());
 
 				Map<ContextType, Set<BaseEntity>> contextMap = new HashMap<ContextType, Set<BaseEntity>>();
 				Map<ContextType, life.genny.qwanda.VisualControlType> vclMap = new HashMap<ContextType, VisualControlType>();
@@ -231,6 +235,7 @@ public class FrameUtils2 {
 
 				childBe.setQuestions(entityQuestionList);
 				baseEntityList.add(askBe);
+				/* Set the ask to support any sourceAlias and targetAlias */
 
 				askList.add(ask); // add to the ask list
 
@@ -239,6 +244,8 @@ public class FrameUtils2 {
 		}
 	}
 
+
+	
 	/**
 	 * @param frame
 	 * @param gennyToken
