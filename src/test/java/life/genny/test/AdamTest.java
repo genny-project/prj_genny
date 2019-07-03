@@ -45,7 +45,7 @@ public class AdamTest extends GennyJbpmBaseTest {
 		super(false);
 	}
 
-	@Test
+//	@Test
 	public void testTheme() {
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 		QRules rules = getQRules(userToken); // defaults to user anyway
@@ -121,7 +121,7 @@ public class AdamTest extends GennyJbpmBaseTest {
 				.shadowRadius(0).shadowOffset().width(0).height(0).end().end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION, true).end()
-				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, true).end().build();
 
 		Frame3 frameDummy = Frame3.builder("FRM_DUMMY").addTheme(THM_DUMMY).end().build();
 
@@ -197,14 +197,69 @@ public class AdamTest extends GennyJbpmBaseTest {
 		/* send message */
 		rules.publishCmd(msg2); // Send QDataBaseEntityMessage
 
+		
+
+        
+        String askMsgsStr = JsonUtils.toJson(askMsgs);
+		VertxUtils.putObject(serviceToken.getRealm(), "", "DESKTOP-ASKS", askMsgsStr,serviceToken.getToken());
+
+		
+
+		Type setType = new TypeToken<Set<QDataAskMessage>>() {
+        }.getType();
+        
+        String  askMsgs2Str = VertxUtils.getObject(serviceToken.getRealm(), "", "DESKTOP-ASKS", String.class,serviceToken.getToken()); 
+
+        Set<QDataAskMessage> askMsgs2 = JsonUtils.fromJson(askMsgs2Str, setType);
+  		
 		System.out.println("Sending Asks");
-		for (QDataAskMessage askMsg : askMsgs) {
+		for (QDataAskMessage askMsg : askMsgs2) {
 			rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode()); // Send associated
 																							// QDataAskMessage
 		}
 
 		System.out.println("Sent");
 	}
+	
+	@Test
+	public void testCacheTheme() {
+		
+		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
+		QRules rules = getQRules(userToken); // defaults to user anyway
+		GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
+
+		System.out.println("Starting");
+		
+		QDataBaseEntityMessage msg2 = VertxUtils.getObject(serviceToken.getRealm(), "", "DESKTOP", QDataBaseEntityMessage.class,serviceToken.getToken()); 
+
+		/* send message */
+		rules.publishCmd(msg2); // Send QDataBaseEntityMessage
+
+
+		Type setType = new TypeToken<Set<QDataAskMessage>>() {
+        }.getType();
+        
+        String  askMsgs2Str = VertxUtils.getObject(serviceToken.getRealm(), "", "DESKTOP-ASKS", String.class,serviceToken.getToken()); 
+
+        Set<QDataAskMessage> askMsgs2 = JsonUtils.fromJson(askMsgs2Str, setType);
+  		
+		System.out.println("Sending Asks");
+		for (QDataAskMessage askMsg : askMsgs2) {
+			rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode()); // Send associated
+																							// QDataAskMessage
+		}
+
+		System.out.println("Sent2");
+
+	}
+
+	@Test
+	public void testLogout()
+	{
+		
+		
+	}
+	
 
 	// @Test
 
