@@ -132,13 +132,20 @@ public class FrameUtils2 {
 	private static BaseEntity getBaseEntity(final String beCode, final String beName, final GennyToken serviceToken) {
 		BaseEntity be = null;// VertxUtils.getObject(serviceToken.getRealm(), "", beCode, BaseEntity.class,
 		// serviceToken.getToken());
+		if ("THM_NOT_INHERITBALE".equals(beCode)) {
+			log.info("here");
+		}
 		if (be == null) {
 			try {
 				// be = QwandaUtils.getBaseEntityByCodeWithAttributes(beCode,
 				// serviceToken.getToken());
 				if (be == null) {
-					be = QwandaUtils.createBaseEntityByCode(beCode, beName, GennySettings.qwandaServiceUrl,
-							serviceToken.getToken());
+					try {
+						be = QwandaUtils.createBaseEntityByCode(beCode, beName, GennySettings.qwandaServiceUrl,
+								serviceToken.getToken());
+					} catch (java.lang.NumberFormatException e) {
+						be = new BaseEntity(beCode, beName);
+					}
 				}
 			} catch (Exception e) {
 				be = QwandaUtils.createBaseEntityByCode(beCode, beName, GennySettings.qwandaServiceUrl,

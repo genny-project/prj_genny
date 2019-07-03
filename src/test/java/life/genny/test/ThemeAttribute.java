@@ -296,6 +296,8 @@ public final class ThemeAttribute {
 	public Optional<Double> getValueDouble() {
 		return valueDouble;
 	}
+	
+	
 
 	public static class Builder {
 		private ThemeAttribute managedInstance = new ThemeAttribute();
@@ -519,7 +521,7 @@ public final class ThemeAttribute {
 
 	@Override
 	public String toString() {
-		return getJson();
+		return this.getCode();
 	}
 
 	public JSONObject getJsonObject() {

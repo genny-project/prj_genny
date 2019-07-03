@@ -63,7 +63,11 @@ public class Theme extends BaseEntity {
 	}
 
 	public Set<ThemeAttribute> getAttributes() {
-		return Collections.unmodifiableSet(attributes);
+		if (attributes!=null) {
+			return Collections.unmodifiableSet(attributes);
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -145,12 +149,13 @@ public class Theme extends BaseEntity {
 				managedInstance.attributes = new HashSet<ThemeAttribute>();
 			}
 			Consumer<ThemeAttribute> f = obj -> { managedInstance.attributes.add(obj);};
-			Attribute attribute = new AttributeBoolean(attributeType.name(), attributeType.name());
-			try {
-				managedInstance.addAttribute(attribute, 1.0, value);
-			} catch (BadDataException e) {
-
-			}
+//			Attribute attribute = new AttributeBoolean(attributeType.name(), attributeType.name());
+//			attribute.setRealm(managedInstance.getRealm());
+//			try {
+//				managedInstance.addAttribute(attribute, 1.0, value);
+//			} catch (BadDataException e) {
+//
+//			}
 			return new ThemeAttribute.Builder(this, f, attributeType);
 			
 		}
