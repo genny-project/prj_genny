@@ -109,7 +109,6 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			double difference = (endTime - startTime) / 1e6; // get ms
 			System.out.println("BPMN completed in " + difference + " ms");
 		}
-
 			
 	}
 
@@ -117,9 +116,20 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		return advanceSeconds(amount,false);
 	}
 	
-	public void injectFact(Object object) {
+	public void injectMessage(Object object) {
 		kieSession.insert(object);
 	}
+	
+	public void injectSignalToProcessInstance(String type, Object object, long processInstanceId) {
+		kieSession.signalEvent(type, object, processInstanceId);
+	}
+	
+	public void injectSignal(String type, Object object) {
+		kieSession.signalEvent(type, object);
+	}
+	
+	
+	
 
 	public long advanceSeconds(long amount,boolean humanTime) {
 		long absoluteTime=0;

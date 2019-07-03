@@ -68,7 +68,7 @@ public class TimerTest extends GennyJbpmBaseTest {
 		QRules qRules = getQRules(userToken); // defaults to user anyway
 		
 		GennyKieSession gks = GennyKieSession.builder()
-				.addJbpm("example_message.bpmn")
+				.addJbpm("example_message2.bpmn")
 				.addFact("qRules",qRules)
 				.addFact("msg",msg)
 				.addFact("eb", eventBusMock)
@@ -87,8 +87,9 @@ public class TimerTest extends GennyJbpmBaseTest {
 		    	System.out.println("Clock :::: " + (i+1) + "sec");
 		    	if(i==4) {
 		    		
-		    		QEventMessage event = new QEventMessage("EVT_MSG", "ANSWER_MSG");
-		    		gks.injectFact(event);
+		    		QEventMessage event = new QEventMessage("EVT_MSG", "ANSWER_MSG");	
+		    		//gks.injectFact(event);
+		    		gks.getKieSession().signalEvent("Message_1", "sdgdgd");
 		    	}
 		    	
 		    }
