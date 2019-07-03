@@ -15,6 +15,7 @@ public final class ThemeAttribute {
 	private Optional<String> backgroundColor = Optional.empty();
 	private Optional<Integer> margin = Optional.empty();
 	private Optional<Integer> marginBottom = Optional.empty();
+	private Optional<Integer> marginRight = Optional.empty();
 	private Optional<Integer> width = Optional.empty();
 	private Optional<String> widthPercent = Optional.empty();
 	private Optional<Integer> height = Optional.empty();
@@ -214,6 +215,13 @@ public final class ThemeAttribute {
 	 */
 	public Optional<Integer> getMarginBottom() {
 		return marginBottom;
+	}
+
+	/**
+	 * @return the marginRight
+	 */
+	public Integer getMarginRight() {
+		return marginRight.orElse(0);
 	}
 
 	/**
@@ -494,6 +502,11 @@ public final class ThemeAttribute {
 			return this;
 		}
 
+		public Builder marginRight(Integer value) {
+			managedInstance.marginRight = Optional.of(value);
+			return this;
+		}
+
 		public ThemeAttribute build() {
 			return managedInstance;
 		}
@@ -559,6 +572,8 @@ public final class ThemeAttribute {
 		}
 		if (margin.isPresent())
 			json.put("margin", margin.get());
+		if (marginRight.isPresent())
+			json.put("marginRight", marginRight.get());
 		if (maxWidth.isPresent())
 			json.put("maxWidth", maxWidth.get());
 		if (minWidth.isPresent())
