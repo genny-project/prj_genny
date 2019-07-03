@@ -91,6 +91,8 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	public ProcessInstance startProcess(String processId) {
 		processInstance = kieSession.startProcess(processId);
 		sessionClock = kieSession.getSessionClock();
+		
+		
 
 		return processInstance;
 	}

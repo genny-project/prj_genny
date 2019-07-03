@@ -46,9 +46,10 @@ public class SessionWFTest extends GennyJbpmBaseTest {
 
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 		QRules qRules = getQRules(userToken); // defaults to user anyway
+		String keycloackState = userToken.getCode()
 		
 		GennyKieSession gks = GennyKieSession.builder()
-				.addJbpm("example_message2.bpmn")
+				.addJbpm("session_Workflow.bpmn")
 				.addFact("qRules",qRules)
 				.addFact("msg",msg)
 				.addFact("eb", eventBusMock)
@@ -56,7 +57,9 @@ public class SessionWFTest extends GennyJbpmBaseTest {
 				.addToken(userToken)
 				.build();
 		
-	    gks.startProcess("com.sample.bpmn.exampleMsgStart");
+		
+		
+	    gks.startProcess("com.sample.bpmn.session");
 	      //gks.start();
 	    gks.advanceSeconds(1);
 	      
@@ -67,7 +70,6 @@ public class SessionWFTest extends GennyJbpmBaseTest {
 		    	System.out.println("Clock :::: " + (i+1) + "sec");
 		    	if(i==4) {
 		    		
-		    		QEventMessage event = new QEventMessage("EVT_MSG", "ANSWER_MSG");	
 		    		
 		    	}
 		    	
