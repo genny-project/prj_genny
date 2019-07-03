@@ -6,8 +6,9 @@
   <bpmn2:itemDefinition id="ItemDefinition_475" isCollection="false" structureRef="java.lang.Integer"/>
   <bpmn2:signal id="Signal_2" name="incomingSignal"/>
   <bpmn2:signal id="Signal_1" name="timerSignal"/>
+  <bpmn2:signal id="Signal_3" name="intermediateSignal"/>
   <bpmn2:message id="Message_1" itemRef="ItemDefinition_10" name="message_1"/>
-  <bpmn2:process id="timer_example_workflow_4" name="Hello World4" isExecutable="false" processType="Private">
+  <bpmn2:process id="signal_workflow1" name="Hello World4" isExecutable="false" processType="Private">
     <bpmn2:extensionElements>
       <tns:import name="java.io.PrintStream"/>
       <tns:global identifier="count" type="java.lang.Integer"/>
@@ -37,60 +38,56 @@
         </tns:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
+      <bpmn2:dataInput id="DataInput_2" name="event"/>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_1">
+        <bpmn2:sourceRef>itemPassed</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_2</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:inputSet id="InputSet_1" name="Input Set 1">
+        <bpmn2:dataInputRefs>DataInput_2</bpmn2:dataInputRefs>
+      </bpmn2:inputSet>
+      <bpmn2:signalEventDefinition id="SignalEventDefinition_2" signalRef="Signal_3"/>
     </bpmn2:endEvent>
-    <bpmn2:scriptTask id="ScriptTask_3" name="Script Task 3" scriptFormat="http://www.java.com/java">
+    <bpmn2:scriptTask id="ScriptTask_3" name="Starting" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>
         <tns:metaData name="elementname">
-          <tns:metaValue><![CDATA[Script Task 3]]></tns:metaValue>
+          <tns:metaValue><![CDATA[Starting]]></tns:metaValue>
         </tns:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_12</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;Before the timer listener&quot;);
-kcontext.getKnowledgeRuntime().setGlobal(&quot;count&quot;,0);</bpmn2:script>
+      <bpmn2:script>System.out.println(&quot;Waiting to send the signal&quot;);
+</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_12" tns:priority="1" sourceRef="_1" targetRef="ScriptTask_3"/>
-    <bpmn2:intermediateCatchEvent id="IntermediateCatchEvent_1" name="Intermediate Catch Event 1">
+    <bpmn2:intermediateCatchEvent id="IntermediateCatchEvent_1" name="Wait for 5s">
       <bpmn2:extensionElements>
         <tns:metaData name="elementname">
-          <tns:metaValue><![CDATA[Intermediate Catch Event 1]]></tns:metaValue>
+          <tns:metaValue><![CDATA[Wait for 5s]]></tns:metaValue>
         </tns:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
       <bpmn2:timerEventDefinition id="TimerEventDefinition_1">
-        <bpmn2:timeCycle xsi:type="bpmn2:tFormalExpression" id="FormalExpression_1">R5/PT1s</bpmn2:timeCycle>
+        <bpmn2:timeDuration xsi:type="bpmn2:tFormalExpression" id="FormalExpression_1">PT5s</bpmn2:timeDuration>
       </bpmn2:timerEventDefinition>
     </bpmn2:intermediateCatchEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_1" tns:priority="1" sourceRef="ScriptTask_3" targetRef="IntermediateCatchEvent_1"/>
-    <bpmn2:scriptTask id="ScriptTask_1" name="Script Task 1" scriptFormat="http://www.java.com/java">
+    <bpmn2:scriptTask id="ScriptTask_1" name="Print Message" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>
         <tns:metaData name="elementname">
-          <tns:metaValue><![CDATA[Script Task 1]]></tns:metaValue>
+          <tns:metaValue><![CDATA[Print Message]]></tns:metaValue>
         </tns:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
-      <bpmn2:script>
-kcontext.getKnowledgeRuntime().setGlobal(&quot;count&quot;, count +1);
-System.out.println(&quot;After the timer listener :: Count  &quot; + count);</bpmn2:script>
+      <bpmn2:script>System.out.println(&quot;Sending Signal Now&quot;);</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_2" tns:priority="1" sourceRef="IntermediateCatchEvent_1" targetRef="ScriptTask_1"/>
     <bpmn2:sequenceFlow id="SequenceFlow_3" tns:priority="1" sourceRef="ScriptTask_1" targetRef="EndEvent_1"/>
-    <bpmn2:textAnnotation id="TextAnnotation_1">
-      <bpmn2:text>
-
-Timer Example 1</bpmn2:text>
-    </bpmn2:textAnnotation>
-    <bpmn2:textAnnotation id="TextAnnotation_2">
-      <bpmn2:text>
-
-
-Intermidate Time : Interval </bpmn2:text>
-    </bpmn2:textAnnotation>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="timer_example_workflow_4">
+    <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="signal_workflow1">
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_1" bpmnElement="_1">
         <dc:Bounds height="48.0" width="48.0" x="0.0" y="50.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_2" labelStyle="BPMNLabelStyle_1"/>
@@ -101,34 +98,22 @@ Intermidate Time : Interval </bpmn2:text>
           <dc:Bounds height="11.0" width="50.0" x="613.0" y="92.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_TextAnnotation_1" bpmnElement="TextAnnotation_1">
-        <dc:Bounds height="150.0" width="100.0" x="34.0" y="350.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_7">
-          <dc:Bounds height="144.0" width="88.0" x="40.0" y="350.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_4" bpmnElement="ScriptTask_3" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="160.0" y="60.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_6">
-          <dc:Bounds height="11.0" width="52.0" x="189.0" y="79.0"/>
+          <dc:Bounds height="11.0" width="32.0" x="199.0" y="79.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_IntermediateCatchEvent_1" bpmnElement="IntermediateCatchEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="338.0" y="67.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1">
-          <dc:Bounds height="22.0" width="60.0" x="326.0" y="103.0"/>
+          <dc:Bounds height="11.0" width="43.0" x="335.0" y="103.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_2" bpmnElement="ScriptTask_1" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="479.0" y="60.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_3">
-          <dc:Bounds height="11.0" width="52.0" x="508.0" y="79.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_TextAnnotation_2" bpmnElement="TextAnnotation_2">
-        <dc:Bounds height="150.0" width="100.0" x="140.0" y="180.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_5">
-          <dc:Bounds height="144.0" width="88.0" x="146.0" y="180.0"/>
+          <dc:Bounds height="11.0" width="58.0" x="505.0" y="79.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_13" bpmnElement="SequenceFlow_12" sourceElement="BPMNShape_StartEvent_1" targetElement="BPMNShape_ScriptTask_4">

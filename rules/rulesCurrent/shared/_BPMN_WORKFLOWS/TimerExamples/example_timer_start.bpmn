@@ -23,10 +23,10 @@
       <tns:import name="org.slf4j.Logger"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="itemPassed" name="itemPassed"/>
-    <bpmn2:scriptTask id="_2" name="Hello" scriptFormat="http://www.java.com/java">
+    <bpmn2:scriptTask id="_2" name="Starting" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>
         <tns:metaData name="elementname">
-          <tns:metaValue><![CDATA[Hello]]></tns:metaValue>
+          <tns:metaValue><![CDATA[Starting]]></tns:metaValue>
         </tns:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>_1-_2</bpmn2:incoming>
@@ -69,7 +69,7 @@
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_1" bpmnElement="_2">
         <dc:Bounds height="48.0" width="80.0" x="182.0" y="202.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="21.0" x="211.0" y="220.0"/>
+          <dc:Bounds height="11.0" width="32.0" x="206.0" y="220.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_1" bpmnElement="_1">

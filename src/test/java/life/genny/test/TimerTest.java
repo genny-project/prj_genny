@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-
 import org.drools.core.time.impl.PseudoClockScheduler;
 import org.jbpm.test.JbpmJUnitBaseTestCase.Strategy;
 import org.junit.Test;
@@ -32,56 +31,33 @@ public class TimerTest extends GennyJbpmBaseTest {
 	 private static final Logger logger = LoggerFactory.getLogger(TimerTest.class);
 	
 	//private static final String WFE_TIMER_INTERVAL = "rulesCurrent/shared/_BPMN_WORKFLOWS/XXXtimer5.bpmn";
-	private static final String WFE_TIMER_EXAMPLE_START = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/example_timer_start.bpmn";
-	private static final String WFE_TIMER_EXAMPLE_4 = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/timer_example_workflow_4.bpmn";
-	private static final String WFE_TIMER_EXAMPLE_1 = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/timer_example_workflow_1.bpmn";
-	private static final String WFE_TIMER_EXAMPLE_2 = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/timer_example_workflow_2.bpmn";
-	private static final String WFE_TIMER_EXAMPLE_3 = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/timer_example_workflow_3.bpmn";
-	private static final String WFE_TIMER_EXAMPLE_5 = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/timer_example_workflow_5.bpmn";
-	private static final String WFE_TIMER_INTERVAL = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/TimerStart2.bpmn";
-
-	private static final String WFE_SEND_FORMS = "rulesCurrent/shared/_BPMN_WORKFLOWS/send_forms.bpmn";
-	private static final String WFE_SHOW_FORM = "rulesCurrent/shared/_BPMN_WORKFLOWS/show_form.bpmn";
-	private static final String WFE_AUTH_INIT = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/auth_init.bpmn";
-	private static final String WFE_SEND_LLAMA = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/send_llama.bpmn";
-	private static final String DRL_PROJECT = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/project.drl";
-	private static final String DRL_USER_COMPANY = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/user_company.drl";
-	private static final String DRL_USER = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/user.drl";
-	private static final String DRL_EVENT_LISTENER_SERVICE_SETUP = "rulesCurrent/shared/_BPMN_WORKFLOWS/Initialise_Project/eventListenerServiceSetup.drl";
-	private static final String DRL_EVENT_LISTENER_USER_SETUP = "rulesCurrent/shared/_BPMN_WORKFLOWS/Initialise_Project/eventListenerUserSetup.drl";
-	private static final String WFE_TIMER_DELAY = "rulesCurrent/shared/_BPMN_WORKFLOWS/XXXTimerStart2.bpmn";
+	//private static final String WFE_TIMER_EXAMPLE_START = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/example_timer_start.bpmn";
 
 
 	public TimerTest() {
 		super(false);
 	}
-
 	
-	@Test
+	//@Test
 	public void timerIntervalTest() {
 		
 		
 		GennyKieSession gks = GennyKieSession.builder()
-				.addJbpm( WFE_TIMER_INTERVAL)
+				.addJbpm( "example_timer_start.bpmn")
 				.build();
 		
-	
+		//.addJbpm( WFE_TIMER_EXAMPLE_1)
 	     gks.startProcess("TimerTest");
 	     
-	     for (int i = 0; i<20; i++) {
+	    /* for (int i = 0; i<20; i++) {
 		    	System.out.println("Clock :::: " + (i+1) + "sec");
 		    	sleepMS(1000);
+		    	
 		    	gks.advanceSeconds(1,false);
-		    }
-	    
-	   
-
+		    }*/
 	    
 	    gks.close();
 	}
-	
-
-
 	
 	@Test(timeout = 300000)	
 	public void testTimerProcess() {
@@ -92,9 +68,7 @@ public class TimerTest extends GennyJbpmBaseTest {
 		QRules qRules = getQRules(userToken); // defaults to user anyway
 		
 		GennyKieSession gks = GennyKieSession.builder()
-				.addJbpm("example_timer_start.bpmn")
-				.addJbpm("timer_example_workflow_1.bpmn","timer_example_workflow_2.bpmn","timer_example_workflow_3.bpmn")
-				.addJbpm("timer_example_workflow_4.bpmn")
+				.addJbpm("example_message.bpmn")
 				.addFact("qRules",qRules)
 				.addFact("msg",msg)
 				.addFact("eb", eventBusMock)
@@ -102,10 +76,22 @@ public class TimerTest extends GennyJbpmBaseTest {
 				.addToken(userToken)
 				.build();
 		
-	   //  gks.startProcess("TimerTest");
-	     gks.start();
-		    
-	    gks.advanceSeconds(20,false);
+	     gks.startProcess("com.sample.bpmn.exampleMsgStart");
+	      //gks.start();
+	    gks.advanceSeconds(1);
+	      
+	     for (int i = 0; i<10; i++) {
+		    	
+		    	sleepMS(1000);
+		    	gks.advanceSeconds(1);
+		    	System.out.println("Clock :::: " + (i+1) + "sec");
+		    	if(i==4) {
+		    		
+		    		QEventMessage event = new QEventMessage("EVT_MSG", "ANSWER_MSG");
+		    		gks.injectFact(event);
+		    	}
+		    	
+		    }
 
 	    
 	    gks.close();

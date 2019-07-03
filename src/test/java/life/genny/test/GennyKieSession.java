@@ -116,6 +116,10 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	public long advanceSeconds(long amount) {
 		return advanceSeconds(amount,false);
 	}
+	
+	public void injectFact(Object object) {
+		kieSession.insert(object);
+	}
 
 	public long advanceSeconds(long amount,boolean humanTime) {
 		long absoluteTime=0;
