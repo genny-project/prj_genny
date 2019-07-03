@@ -68,12 +68,13 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 
 		Theme THM_SIDEBAR = Theme.builder("THM_SIDEBAR")
 		.addAttribute().backgroundColor("#065B9A").end()
-		.addAttribute().width(400).end()
+		.addAttribute().minWidth(300).end()
+		.addAttribute().width("100%").end()
 		.build();
 
 		Theme THM_HEADER = Theme.builder("THM_HEADER")
 		.addAttribute().backgroundColor("#18639F").end()
-		.addAttribute().height(100).end()
+		.addAttribute().height(80).end()
 		.build();
 
 		Theme THM_CENTRE = Theme.builder("THM_CENTRE")
@@ -108,8 +109,11 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 					.addThemeParent("THM_PROJECT", "size", "md").end()
 					.addThemeParent("THM_PROJECT_WEIGHT", "bold", true).end()
 					.addThemeParent("THM_PROJECT_COLOR", "color", "white").end()
-					.addTheme(THM_SIDEBAR).end()
-					.question("QUE_NAME_TWO").end()
+					.question("QUE_NAME_TWO")
+						.addTheme(THM_FORM_LABEL_DEFAULT)
+						.vcl(VisualControlType.VCL_LABEL)
+						.end()
+					.end()
 					.addFrame(frameDummy).end()
 					.build();
 
@@ -147,10 +151,12 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 						.addFrame(poweredBy, FramePosition.EAST).end()
 						.build();
 
+		Frame3 bucket = generateBucket();
+
 		Frame3 frameRoot = Frame3.builder("FRM_ROOT")
 						.addFrame(header, FramePosition.NORTH).end()
 						.addFrame(sideBar, FramePosition.WEST).end()
-						.addFrame(centre, FramePosition.CENTRE).end()
+						.addFrame(bucket, FramePosition.CENTRE).end()
 						.addFrame(footer, FramePosition.SOUTH).end()
 						.build();
 
@@ -163,6 +169,121 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		System.out.println("Sent");
 	}
 
+	public Frame3 generateBucket(){
+
+		Theme THM_BUCKET_LABEL = Theme.builder("THM_BUCKET_LABEL")
+		.addAttribute().textAlign("center").end()
+		.addAttribute().margin(0).end()
+		.build();
+
+		Theme THM_BUCKET = Theme.builder("THM_BUCKET")
+		.addAttribute().backgroundColor("#F8F9FA").end()
+		.addAttribute().overflowX("auto").end()
+		.addAttribute().overflowY("auto").end()
+		.addAttribute().width("100%").end()
+		.build();
+
+		Theme THM_NOT_INHERITBALE = Theme.builder("THM_NOT_INHERITBALE")
+				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, true).end()
+				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
+				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION, true).end()
+				.addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end().build();
+
+		Theme THM_BUCKET_COLUMN_HEADER = Theme.builder("THM_BUCKET_COLUMN_HEADER")
+		.addAttribute().backgroundColor("#d1d1d1").end()
+		.addAttribute().height(20).end()
+		.build();
+
+		Theme THM_BUCKET_COLUMN = Theme.builder("THM_BUCKET_COLUMN")
+		.addAttribute().backgroundColor("#EAEAEA").end()
+		.addAttribute().minWidth(300).end()
+		.addAttribute().width("100%").end()
+		.addAttribute().margin(20).end()
+		.addAttribute().textAlign("center").end()
+		.build();
+
+
+		Frame3 columnHeader = Frame3.builder("FRM_BUCKET_COLUMN_HEADER")
+							.addTheme(THM_BUCKET_COLUMN_HEADER).end()
+							.question("QUE_NAME_TWO")
+								.addTheme(THM_BUCKET_LABEL)
+								.vcl(VisualControlType.VCL_LABEL)
+								.end()
+							.end()
+							.build();
+
+		Frame3 bucketColumn1 = Frame3.builder("FRM_BUCKET_COLUMN_ONE")
+							.addTheme(THM_NOT_INHERITBALE).end()
+							.addTheme(THM_BUCKET_COLUMN).end()
+							// .question("QUE_NAME_TWO")
+							// 	.addTheme(THM_BUCKET_LABEL)
+							// 	.vcl(VisualControlType.VCL_LABEL)
+							// 	.end()
+							// .end()
+							.addFrame(columnHeader, FramePosition.NORTH).end()
+							.build();
+		Frame3 bucketColumn2 = Frame3.builder("FRM_BUCKET_COLUMN_TWO")
+							.addTheme(THM_BUCKET_COLUMN).end()
+							// .question("QUE_NAME_TWO")
+							// 	.addTheme(THM_BUCKET_LABEL)
+							// 	.vcl(VisualControlType.VCL_LABEL)
+							// 	.end()
+							// .end()
+							.build();
+		Frame3 bucketColumn3 = Frame3.builder("FRM_BUCKET_COLUMN_THREE")
+							.addTheme(THM_BUCKET_COLUMN).end()
+							// .question("QUE_NAME_TWO")
+							// 	.addTheme(THM_BUCKET_LABEL)
+							// 	.vcl(VisualControlType.VCL_LABEL)
+							// 	.end()
+							// .end()
+							.build();
+		Frame3 bucketColumn4 = Frame3.builder("FRM_BUCKET_COLUMN_FOUR")
+							.addTheme(THM_BUCKET_COLUMN).end()
+							// .question("QUE_NAME_TWO")
+							// 	.addTheme(THM_BUCKET_LABEL)
+							// 	.vcl(VisualControlType.VCL_LABEL)
+							// 	.end()
+							// .end()
+							.build();
+		Frame3 bucketColumn5 = Frame3.builder("FRM_BUCKET_COLUMN_FIVE")
+							.addTheme(THM_BUCKET_COLUMN).end()
+							// .question("QUE_NAME_TWO")
+							// 	.addTheme(THM_BUCKET_LABEL)
+							// 	.vcl(VisualControlType.VCL_LABEL)
+							// 	.end()
+							// .end()
+							.build();
+		Frame3 bucketColumn6 = Frame3.builder("FRM_BUCKET_COLUMN_SIX")
+							.addTheme(THM_BUCKET_COLUMN).end()
+							// .question("QUE_NAME_TWO")
+							// 	.addTheme(THM_BUCKET_LABEL)
+							// 	.vcl(VisualControlType.VCL_LABEL)
+							// 	.end()
+							// .end()
+							.build();
+		Frame3 bucketColumn7 = Frame3.builder("FRM_BUCKET_COLUMN_SEVEN")
+							.addTheme(THM_BUCKET_COLUMN).end()
+							// .question("QUE_NAME_TWO")
+							// 	.addTheme(THM_BUCKET_LABEL)
+							// 	.vcl(VisualControlType.VCL_LABEL)
+							// 	.end()
+							// .end()
+							.build();
+
+		Frame3 bucket = Frame3.builder("FRM_BUCKET")
+						.addTheme(THM_BUCKET).end()
+						.addFrame(bucketColumn1, FramePosition.WEST).end()
+						.addFrame(bucketColumn2, FramePosition.WEST).end()
+						.addFrame(bucketColumn3, FramePosition.WEST).end()
+						.addFrame(bucketColumn4, FramePosition.WEST).end()
+						.addFrame(bucketColumn5, FramePosition.WEST).end()
+						.addFrame(bucketColumn6, FramePosition.WEST).end()
+						.addFrame(bucketColumn7, FramePosition.WEST).end()
+						.build();
+
+		return bucket;
+	}
 	// @Test
 	public void displayGermanFlag() {
 
