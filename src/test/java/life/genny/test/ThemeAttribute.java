@@ -508,6 +508,13 @@ public final class ThemeAttribute {
 			managedInstance.marginRight = Optional.of(value);
 			return this;
 		}
+		
+		public Builder valueBoolean(Boolean value)
+		{
+			// TODO -> This is terrible hack by me
+			managedInstance.valueBoolean = Optional.of(value);
+			return this;
+		}
 
 		public ThemeAttribute build() {
 			return managedInstance;

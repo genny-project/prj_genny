@@ -329,6 +329,15 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 		return getServices().getCommands();
 	}
 
+	protected static QRules createQRules(final GennyToken userToken,final GennyToken serviceToken, EventBusInterface eventBusMock) {
+
+		QRules qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
+		qRules.set("realm", userToken.getRealm());
+		qRules.setServiceToken(serviceToken.getToken());
+		return qRules;
+
+	}
+	
 	protected QRules getQRules(final GennyToken token) {
 
 		List<Tuple2<String, Object>> globals = new ArrayList<Tuple2<String, Object>>();
@@ -536,86 +545,13 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 		return true;
 	}
 	
-	protected void sleepMS(long ms) {
-    try {
-			Thread.sleep(ms);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+
 	
-	protected KieSession setupGennyKieSession(String[] jbpms, String[] drls)
+	public static GennyToken createGennyToken(final String realm, String username, String name, String role)
 	{
-		System.setProperty("drools.clockType", "pseudo");
-		Map<String, ResourceType> resources = new HashMap<String, ResourceType>();
+		String normalisedUsername = "PER_"+username.toUpperCase();
 
-		for (String p : jbpms) {
-			resources.put(p, ResourceType.BPMN2);
-		}
-		for (String p : drls) {
-			resources.put(p, ResourceType.DRL);
-		}
-		
-		String[] coredrls = { DRL_PROJECT, DRL_USER_COMPANY, DRL_USER, DRL_EVENT_LISTENER_SERVICE_SETUP,
-				DRL_EVENT_LISTENER_USER_SETUP };
-
-		for (String p : coredrls) {
-			resources.put(p, ResourceType.DRL);
-		}
-
-		createRuntimeManager(Strategy.SINGLETON, resources, null);
-		KieSession kieSession = getRuntimeEngine().getKieSession();
-		// Register handlers
-		addWorkItemHandlers(kieSession);
-		kieSession.addEventListener(new JbpmInitListener(userToken));
-		kieSession.setGlobal("log", log);
-
-		return kieSession;
-	}
-	
-	/**
-	 * @param kieSession
-	 * @param cmds
-	 */
-	private long startKieSession(KieSession kieSession, List<Command<?>> cmds) {
-		long startTime = System.nanoTime();
-		ExecutionResults results = null;
-		try {
-			results = kieSession.execute(CommandFactory.newBatchExecution(cmds));
-		} catch (Exception ee) {
-
-		} finally {
-			long endTime = System.nanoTime();
-			double difference = (endTime - startTime) / 1e6; // get ms
-
-			if (results != null) {
-				results.getValue("msg"); // returns the inserted fact Msg
-				QRules rules = (QRules) results.getValue("qRules"); // returns the inserted fact QRules
-				System.out.println(rules.getAsString("value"));
-				System.out.println(rules);
-			} else {
-				System.out.println("NO RESULTS");
-			}
-
-			System.out.println("BPMN completed in " + difference + " ms");
-
-			kieSession.dispose();
-		}
-		return startTime;
-	}
-	
-	/**
-	 * @param kieSession
-	 * @param cmds
-	 */
-	private double finishKieSession(KieSession kieSession,long startTime) {
-
-			long endTime = System.nanoTime();
-			double difference = (endTime - startTime) / 1e6; // get ms
-
-			kieSession.dispose();
-
-		return difference;
-	}
+		GennyToken gennyToken = new GennyToken(normalisedUsername,realm,username,name,role);
+		return gennyToken;
+	}			
 }

@@ -10,6 +10,9 @@ import javax.annotation.concurrent.Immutable;
 
 import life.genny.qwanda.attribute.Attribute;
 import life.genny.qwanda.attribute.AttributeBoolean;
+import life.genny.qwanda.attribute.AttributeDouble;
+import life.genny.qwanda.attribute.AttributeInteger;
+import life.genny.qwanda.attribute.AttributeText;
 import life.genny.qwanda.datatype.DataType;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.exception.BadDataException;
@@ -149,14 +152,16 @@ public class Theme extends BaseEntity {
 				managedInstance.attributes = new HashSet<ThemeAttribute>();
 			}
 			Consumer<ThemeAttribute> f = obj -> { managedInstance.attributes.add(obj);};
-//			Attribute attribute = new AttributeBoolean(attributeType.name(), attributeType.name());
-//			attribute.setRealm(managedInstance.getRealm());
-//			try {
-//				managedInstance.addAttribute(attribute, 1.0, value);
-//			} catch (BadDataException e) {
-//
-//			}
-			return new ThemeAttribute.Builder(this, f, attributeType);
+			Attribute attribute = new AttributeBoolean(attributeType.name(), attributeType.name());
+			attribute.setRealm(managedInstance.getRealm());
+			try {
+				managedInstance.addAttribute(attribute, 1.0, value);
+			} catch (BadDataException e) {
+
+			}
+			ThemeAttribute.Builder ret =  new ThemeAttribute.Builder(this, f, attributeType);
+			ret = ret.valueBoolean(value);
+			return ret;
 			
 		}
 
@@ -171,6 +176,14 @@ public class Theme extends BaseEntity {
 				managedInstance.attributes = new HashSet<ThemeAttribute>();
 			}
 			Consumer<ThemeAttribute> f = obj -> { managedInstance.attributes.add(obj);};
+			Attribute attribute = new AttributeText(attributeType.name(), attributeType.name());
+			attribute.setRealm(managedInstance.getRealm());
+			try {
+				managedInstance.addAttribute(attribute, 1.0, value);
+			} catch (BadDataException e) {
+
+			}
+
 			return new ThemeAttribute.Builder(this, f, attributeType, value);
 		}
 		
@@ -185,6 +198,14 @@ public class Theme extends BaseEntity {
 				managedInstance.attributes = new HashSet<ThemeAttribute>();
 			}
 			Consumer<ThemeAttribute> f = obj -> { managedInstance.attributes.add(obj);};
+			Attribute attribute = new AttributeInteger(attributeType.name(), attributeType.name());
+			attribute.setRealm(managedInstance.getRealm());
+			try {
+				managedInstance.addAttribute(attribute, 1.0, value);
+			} catch (BadDataException e) {
+
+			}
+
 			return new ThemeAttribute.Builder(this, f, attributeType, value);
 		}
 		
@@ -199,6 +220,14 @@ public class Theme extends BaseEntity {
 				managedInstance.attributes = new HashSet<ThemeAttribute>();
 			}
 			Consumer<ThemeAttribute> f = obj -> { managedInstance.attributes.add(obj);};
+			Attribute attribute = new AttributeDouble(attributeType.name(), attributeType.name());
+			attribute.setRealm(managedInstance.getRealm());
+			try {
+				managedInstance.addAttribute(attribute, 1.0, value);
+			} catch (BadDataException e) {
+
+			}
+
 			return new ThemeAttribute.Builder(this, f, attributeType, value);
 		}
 		

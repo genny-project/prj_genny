@@ -52,7 +52,11 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 	@Test
 	public void simple()
 	{
-		GennyToken serviceToken = new GennyToken("PER_USER1","internmatch","user1","User1","test");
+		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
+		QRules rules = getQRules(userToken); // defaults to user anyway
+		GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
+
+	//	GennyToken serviceToken = new GennyToken("PER_USER1","internmatch","user1","User1","test");
 		
 		Theme THM_NOT_INHERITBALE = Theme.builder("THM_NOT_INHERITBALE")
 				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE,true).end()				
@@ -61,8 +65,12 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 				.addTheme(THM_NOT_INHERITBALE).end()
 				.build();
 
+		Frame3 frameRoot = Frame3.builder("FRM_ROOT")
+				.addFrame(logo, FramePosition.NORTH).end()
+				.build();
+
 		Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
-		QDataBaseEntityMessage msg = FrameUtils2.toMessage(logo, serviceToken, askMsgs);
+		QDataBaseEntityMessage msg = FrameUtils2.toMessage(frameRoot, serviceToken, askMsgs);
 		
 		String test = JsonUtils.toJson(msg);
 		System.out.println(test);
