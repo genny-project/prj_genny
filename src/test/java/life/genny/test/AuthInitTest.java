@@ -49,7 +49,7 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		super(false);
 	}
 
-	//@Test
+	@Test
 	public void testTree() {
 
 		/* token stuff */
@@ -184,10 +184,11 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		.build();
 
 		Theme THM_NOT_INHERITBALE = Theme.builder("THM_NOT_INHERITBALE")
-				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, true).end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION, true).end()
-				.addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end().build();
+				.addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end()
+				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE,true).end()				
+				.build();
 
 		Theme THM_BUCKET_COLUMN_HEADER = Theme.builder("THM_BUCKET_COLUMN_HEADER")
 		.addAttribute().backgroundColor("#d1d1d1").end()
@@ -213,13 +214,14 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 							.build();
 
 		Frame3 bucketColumn1 = Frame3.builder("FRM_BUCKET_COLUMN_ONE")
-							.addTheme(THM_NOT_INHERITBALE).end()
+						
 							.addTheme(THM_BUCKET_COLUMN).end()
 							// .question("QUE_NAME_TWO")
 							// 	.addTheme(THM_BUCKET_LABEL)
 							// 	.vcl(VisualControlType.VCL_LABEL)
 							// 	.end()
 							// .end()
+							.addTheme(THM_NOT_INHERITBALE).end()
 							.addFrame(columnHeader, FramePosition.NORTH).end()
 							.build();
 		Frame3 bucketColumn2 = Frame3.builder("FRM_BUCKET_COLUMN_TWO")

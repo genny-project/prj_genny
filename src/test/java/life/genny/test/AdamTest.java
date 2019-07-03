@@ -116,9 +116,20 @@ public class AdamTest extends GennyJbpmBaseTest {
 
 				.build();
 
-		Theme THM_FORM_CONTAINER_DEFAULT = Theme.builder("THM_FORM_CONTAINER_DEFAULT").addAttribute()
-				.backgroundColor("none").padding(10).maxWidth(700).width("100%").shadowColor("#000").shadowOpacity(0.4)
-				.shadowRadius(0).shadowOffset().width(0).height(0).end().end()
+		Theme THM_FORM_CONTAINER_DEFAULT = Theme.builder("THM_FORM_CONTAINER_DEFAULT")
+				.addAttribute()
+					.backgroundColor("none")
+					.padding(10)
+					.maxWidth(700)
+					.width("100%")
+					.shadowColor("#000")
+					.shadowOpacity(0.4)
+					.shadowRadius(0)
+					.shadowOffset()
+						.width(0)
+						.height(0)
+						.end()
+					.end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION, true).end()
 				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, true).end().build();
@@ -221,7 +232,7 @@ public class AdamTest extends GennyJbpmBaseTest {
 		System.out.println("Sent");
 	}
 	
-	@Test
+	//@Test
 	public void testCacheTheme() {
 		
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
