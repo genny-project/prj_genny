@@ -130,15 +130,22 @@ public class FrameUtils2 {
 	}
 
 	private static BaseEntity getBaseEntity(final String beCode, final String beName, final GennyToken serviceToken) {
-		BaseEntity be = null;// VertxUtils.getObject(serviceToken.getRealm(), "", beCode, BaseEntity.class,
+		BaseEntity be = null; //VertxUtils.getObject(serviceToken.getRealm(), "", beCode, BaseEntity.class,
 		// serviceToken.getToken());
+		if ("THM_NOT_INHERITBALE".equals(beCode)) {
+			log.info("here");
+		}
 		if (be == null) {
 			try {
-				// be = QwandaUtils.getBaseEntityByCodeWithAttributes(beCode,
-				// serviceToken.getToken());
+				be = QwandaUtils.getBaseEntityByCodeWithAttributes(beCode,
+				 serviceToken.getToken());
 				if (be == null) {
-					be = QwandaUtils.createBaseEntityByCode(beCode, beName, GennySettings.qwandaServiceUrl,
-							serviceToken.getToken());
+					try {
+						be = QwandaUtils.createBaseEntityByCode(beCode, beName, GennySettings.qwandaServiceUrl,
+								serviceToken.getToken());
+					} catch (java.lang.NumberFormatException e) {
+						be = new BaseEntity(beCode, beName);
+					}
 				}
 			} catch (Exception e) {
 				be = QwandaUtils.createBaseEntityByCode(beCode, beName, GennySettings.qwandaServiceUrl,
@@ -323,8 +330,14 @@ public class FrameUtils2 {
 			BaseEntity themeBe = getBaseEntity(theme.getCode(), theme.getCode(), gennyToken);
 
 			for (ThemeAttribute themeAttribute : theme.getAttributes()) {
-				Attribute attribute = new Attribute(themeAttribute.getCode(), themeAttribute.getCode(),
+				Attribute attribute = null;
+				
+				
+				attribute = RulesUtils.getAttribute(themeAttribute.getCode(),gennyToken.getToken());
+				
+				if (attribute == null) { attribute = new Attribute(themeAttribute.getCode(), themeAttribute.getCode(),
 						new DataType("DTT_THEME"));
+				}
 
 				try {
 					if (themeBe.containsEntityAttribute(themeAttribute.getCode())) {
@@ -343,7 +356,16 @@ public class FrameUtils2 {
 						themeEA.setValue(merged.toString());
 						themeEA.setWeight(weight);
 					} else {
-						themeBe.addAttribute(new EntityAttribute(themeBe, attribute, weight, themeAttribute.getJson()));
+						if (attribute.dataType.getClassName().equals(Boolean.class.getCanonicalName())) {
+							themeBe.addAttribute(new EntityAttribute(themeBe, attribute, weight, themeAttribute.getValueBoolean()));
+						} else 	if (attribute.dataType.getClassName().equals(Double.class.getCanonicalName())) {
+							themeBe.addAttribute(new EntityAttribute(themeBe, attribute, weight, themeAttribute.getValueDouble()));
+						} else 	if (attribute.dataType.getClassName().equals(String.class.getCanonicalName())) {
+							themeBe.addAttribute(new EntityAttribute(themeBe, attribute, weight, themeAttribute.getValueString()));
+						} else{
+							themeBe.addAttribute(new EntityAttribute(themeBe,  new Attribute(themeAttribute.getCode(), themeAttribute.getCode(),
+									new DataType("DTT_THEME")), weight, themeAttribute.getJson()));
+						}
 					}
 				} catch (BadDataException e) {
 					// TODO Auto-generated catch block

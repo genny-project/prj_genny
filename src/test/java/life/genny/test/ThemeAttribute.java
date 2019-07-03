@@ -15,10 +15,13 @@ public final class ThemeAttribute {
 	private Optional<String> backgroundColor = Optional.empty();
 	private Optional<Integer> margin = Optional.empty();
 	private Optional<Integer> marginBottom = Optional.empty();
+	private Optional<Integer> marginRight = Optional.empty();
 	private Optional<Integer> width = Optional.empty();
 	private Optional<String> widthPercent = Optional.empty();
 	private Optional<Integer> height = Optional.empty();
+	private Optional<String> heightPercent = Optional.empty();
 	private Optional<Integer> maxWidth = Optional.empty();
+	private Optional<Integer> minWidth = Optional.empty();
 	private Optional<Integer> padding = Optional.empty();
 	private Optional<String> shadowColor = Optional.empty();
 	private Optional<Double> shadowOpacity = Optional.empty();
@@ -33,6 +36,9 @@ public final class ThemeAttribute {
 	private Optional<String> sizeText = Optional.empty();
 	private Optional<Boolean> bold = Optional.empty();
 	private Optional<String> fit = Optional.empty();
+	private Optional<String> overflowX = Optional.empty();
+	private Optional<String> overflowY = Optional.empty();
+	private Optional<String> textAlign = Optional.empty();
 
 	private Optional<Boolean> valueBoolean = Optional.empty();
 	private Optional<Integer> valueInteger = Optional.empty();
@@ -131,10 +137,28 @@ public final class ThemeAttribute {
 	}
 
 	/**
+	 * @return the heightPercent
+	 */
+	public String getHeightPercent() {
+		if (!height.isPresent()) {
+			return heightPercent.orElse("100%");
+		} else {
+			return height.get() + "";
+		}
+	}
+
+	/**
 	 * @return the maxWidth
 	 */
 	public Integer getMaxWidth() {
 		return maxWidth.orElse(0);
+	}
+
+	/**
+	 * @return the minWidth
+	 */
+	public Integer getMinWidth() {
+		return minWidth.orElse(0);
 	}
 
 	/**
@@ -194,6 +218,13 @@ public final class ThemeAttribute {
 	}
 
 	/**
+	 * @return the marginRight
+	 */
+	public Integer getMarginRight() {
+		return marginRight.orElse(0);
+	}
+
+	/**
 	 * @return the size
 	 */
 	public Optional<Integer> getSize() {
@@ -226,6 +257,27 @@ public final class ThemeAttribute {
 	}
 
 	/**
+	 * @return the overflowX
+	 */
+	public Optional<String> getOverflowX() {
+		return overflowX;
+	}
+
+	/**
+	 * @return the overflowY
+	 */
+	public Optional<String> getoverflowY() {
+		return overflowY;
+	}
+
+	/**
+	 * @return the textAlign
+	 */
+	public Optional<String> getTextAlign() {
+		return textAlign;
+	}
+
+	/**
 	 * @return the valueBoolean
 	 */
 	public Optional<Boolean> getValueBoolean() {
@@ -252,6 +304,8 @@ public final class ThemeAttribute {
 	public Optional<Double> getValueDouble() {
 		return valueDouble;
 	}
+	
+	
 
 	public static class Builder {
 		private ThemeAttribute managedInstance = new ThemeAttribute();
@@ -335,8 +389,18 @@ public final class ThemeAttribute {
 			return this;
 		}
 
+		public Builder height(String value) {
+			managedInstance.heightPercent = Optional.of(value); // should check format
+			return this;
+		}
+
 		public Builder maxWidth(Integer value) {
 			managedInstance.maxWidth = Optional.of(value);
+			return this;
+		}
+
+		public Builder minWidth(Integer value) {
+			managedInstance.minWidth = Optional.of(value);
 			return this;
 		}
 
@@ -410,6 +474,21 @@ public final class ThemeAttribute {
 			return this;
 		}
 
+		public Builder overflowX(String value) {
+			managedInstance.overflowX = Optional.of(value);
+			return this;
+		}
+
+		public Builder overflowY(String value) {
+			managedInstance.overflowY = Optional.of(value);
+			return this;
+		}
+
+		public Builder textAlign(String value) {
+			managedInstance.textAlign = Optional.of(value);
+			return this;
+		}
+
 		public Builder size(Integer value) {
 			managedInstance.size = Optional.of(value);
 			return this;
@@ -422,6 +501,18 @@ public final class ThemeAttribute {
 
 		public Builder marginBottom(Integer value) {
 			managedInstance.marginBottom = Optional.of(value);
+			return this;
+		}
+
+		public Builder marginRight(Integer value) {
+			managedInstance.marginRight = Optional.of(value);
+			return this;
+		}
+		
+		public Builder valueBoolean(Boolean value)
+		{
+			// TODO -> This is terrible hack by me
+			managedInstance.valueBoolean = Optional.of(value);
 			return this;
 		}
 
@@ -450,13 +541,19 @@ public final class ThemeAttribute {
 
 	@Override
 	public String toString() {
-		return getJson();
+		return this.getCode();
 	}
 
 	public JSONObject getJsonObject() {
 		JSONObject json = new JSONObject();
 		if (fit.isPresent())
 			json.put("fit", fit.get());
+		if (overflowX.isPresent())
+			json.put("overflowX", overflowX.get());
+		if (overflowY.isPresent())
+			json.put("overflowY", overflowY.get());
+		if (textAlign.isPresent())
+			json.put("textAlign", textAlign.get());
 		if (flexDirection.isPresent())
 			json.put("flexDirection", flexDirection.get());
 		if (justifyContent.isPresent())
@@ -475,12 +572,21 @@ public final class ThemeAttribute {
 			}
 		}
 
+		if (height.isPresent()) {
+			json.put("height", height.get());
+		} else {
+			if (heightPercent.isPresent()) {
+				json.put("height", heightPercent.get());
+			}
+		}
 		if (margin.isPresent())
 			json.put("margin", margin.get());
-		if (height.isPresent())
-			json.put("height", height.get());
+		if (marginRight.isPresent())
+			json.put("marginRight", marginRight.get());
 		if (maxWidth.isPresent())
 			json.put("maxWidth", maxWidth.get());
+		if (minWidth.isPresent())
+			json.put("minWidth", minWidth.get());
 		if (padding.isPresent())
 			json.put("padding", padding.get());
 		if (shadowRadius.isPresent())

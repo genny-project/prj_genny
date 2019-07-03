@@ -23,6 +23,7 @@ import org.kie.api.runtime.KieSessionConfiguration;
 import org.kie.api.runtime.conf.ClockTypeOption;
 import org.kie.api.runtime.process.ProcessInstance;
 import org.kie.api.runtime.process.WorkItemHandler;
+import org.kie.api.runtime.rule.FactHandle;
 import org.kie.internal.command.CommandFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,6 +98,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	
 	public void start()
 	{
+		System.out.println("Started");
 		sessionClock = kieSession.getSessionClock();
 		long startTime = System.nanoTime();
 		ExecutionResults results = null;
@@ -107,10 +109,25 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		} finally {
 			long endTime = System.nanoTime();
 			double difference = (endTime - startTime) / 1e6; // get ms
-			System.out.println("BPMN completed in " + difference + " ms");
+		//	System.out.println("BPMN completed in " + difference + " ms");
 		}
 
 			
+	}
+	
+	public void broadcastSignal(final String type,final Object event)
+	{
+		kieSession.signalEvent(type, event);
+	}
+	
+	public void broadcastSignal(final String type,final Object event, long processInstanceId)
+	{
+		kieSession.signalEvent(type, event, processInstanceId);
+	}
+	
+	public void updateFact(FactHandle handle, Object object)
+	{
+		kieSession.update(handle, object);
 	}
 
 	public long advanceSeconds(long amount) {
@@ -297,6 +314,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	}
 
 	public void close() {
+		System.out.println("Completed");
 		kieSession.dispose();
 	}
 

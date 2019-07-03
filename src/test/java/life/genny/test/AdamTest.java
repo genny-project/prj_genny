@@ -1,17 +1,25 @@
 package life.genny.test;
 
+import java.io.FileNotFoundException;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.kie.api.command.Command;
 import org.kie.api.io.ResourceType;
+import org.kie.api.runtime.Environment;
 import org.kie.api.runtime.ExecutionResults;
 import org.kie.api.runtime.KieSession;
 import org.kie.internal.command.CommandFactory;
@@ -20,20 +28,33 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.reflect.TypeToken;
 
+import io.vertx.core.json.JsonObject;
+import life.genny.eventbus.EventBusInterface;
+import life.genny.eventbus.EventBusMock;
+import life.genny.eventbus.VertxCache;
 import life.genny.models.GennyToken;
 import life.genny.qwanda.VisualControlType;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventMessage;
+import life.genny.qwandautils.GennyCacheInterface;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.rules.QRules;
+import life.genny.rules.RulesLoader;
 import life.genny.rules.listeners.JbpmInitListener;
+import life.genny.utils.VertxUtils;
 
-public class AdamTest extends GennyJbpmBaseTest {
+public class AdamTest {
 
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getCanonicalName());
+
+	protected static String realm = GennySettings.mainrealm;
+	protected static Set<String> realms;
+
+	protected static EventBusInterface eventBusMock;
+	protected static GennyCacheInterface vertxCache;
 
 	private static final String WFE_SEND_FORMS = "send_forms.bpmn";
 	private static final String WFE_SHOW_FORM = "show_form.bpmn";
@@ -41,13 +62,63 @@ public class AdamTest extends GennyJbpmBaseTest {
 	private static final String WFE_SEND_LLAMA = "send_llama.bpmn";
 
 	public AdamTest() {
-		super(false);
+
 	}
 
 	@Test
+	public void quickTest() {
+
+		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+		QRules qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
+		qRules.set("realm", userToken.getRealm());
+		qRules.setServiceToken(serviceToken.getToken());
+
+		System.out.println("session=" + userToken.getSessionCode());
+		System.out.println("userToken=" + userToken.getToken());
+		System.out.println("serviceToken=" + serviceToken.getToken());
+
+		QEventMessage msg = new QEventMessage("EVT_MSG", "AUTH_INIT");
+
+		GennyKieSession gks = null;
+		try {
+			gks = GennyKieSession.builder().addJbpm("adam_test_1.bpmn").addFact("qRules", qRules)
+					.addFact("msg", msg).addToken(serviceToken).addToken(userToken).build();
+
+			gks.start();
+
+			gks.advanceSeconds(10, false);
+			gks.broadcastSignal("inputSignal", "Hello");
+			// gks.getKieSession().getQueryResults(query, arguments)
+			gks.advanceSeconds(1, false);
+		} finally {
+			gks.close();
+		}
+
+	}
+
+	private QRules setupLocalService() {
+		GennyJbpmBaseTest localService = new GennyJbpmBaseTest(false);
+		try {
+			localService.init();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		GennyToken userToken = localService.getToken(realm, "user1", "Barry Allan", "hero");
+		QRules rules = localService.getQRules(userToken); // defaults to user anyway
+
+		return rules;
+	}
+
+//	@Test
 	public void testTheme() {
-		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
-		QRules rules = getQRules(userToken); // defaults to user anyway
+		QRules rules = setupLocalService();
+		GennyToken userToken = new GennyToken("userToken", rules.getToken());
 		GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
 
 		Theme THM_DUMMY = Theme.builder("THM_DUMMY").addAttribute().height(100).end().addAttribute().width(90).end()
@@ -120,7 +191,7 @@ public class AdamTest extends GennyJbpmBaseTest {
 				.shadowRadius(0).shadowOffset().width(0).height(0).end().end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION, true).end()
-				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, true).end().build();
 
 		Frame3 frameDummy = Frame3.builder("FRM_DUMMY").addTheme(THM_DUMMY).end().build();
 
@@ -189,11 +260,27 @@ public class AdamTest extends GennyJbpmBaseTest {
 
 		QDataBaseEntityMessage msg = FrameUtils2.toMessage(desktop, serviceToken, askMsgs);
 
+		VertxUtils.putObject(serviceToken.getRealm(), "", "DESKTOP", msg, serviceToken.getToken());
+
+		QDataBaseEntityMessage msg2 = VertxUtils.getObject(serviceToken.getRealm(), "", "DESKTOP",
+				QDataBaseEntityMessage.class, serviceToken.getToken());
+
 		/* send message */
-		rules.publishCmd(msg); // Send QDataBaseEntityMessage
+		rules.publishCmd(msg2); // Send QDataBaseEntityMessage
+
+		String askMsgsStr = JsonUtils.toJson(askMsgs);
+		VertxUtils.putObject(serviceToken.getRealm(), "", "DESKTOP-ASKS", askMsgsStr, serviceToken.getToken());
+
+		Type setType = new TypeToken<Set<QDataAskMessage>>() {
+		}.getType();
+
+		String askMsgs2Str = VertxUtils.getObject(serviceToken.getRealm(), "", "DESKTOP-ASKS", String.class,
+				serviceToken.getToken());
+
+		Set<QDataAskMessage> askMsgs2 = JsonUtils.fromJson(askMsgs2Str, setType);
 
 		System.out.println("Sending Asks");
-		for (QDataAskMessage askMsg : askMsgs) {
+		for (QDataAskMessage askMsg : askMsgs2) {
 			rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode()); // Send associated
 																							// QDataAskMessage
 		}
@@ -202,33 +289,54 @@ public class AdamTest extends GennyJbpmBaseTest {
 	}
 
 	// @Test
+	public void testCacheTheme() {
 
-	public void testAuthInit() {
+		QRules rules = setupLocalService();
+		GennyToken userToken = new GennyToken("userToken", rules.getToken());
+		GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
 
-		QEventMessage msg = new QEventMessage("EVT_MSG", "AUTH_INIT");
+		System.out.println("Starting");
 
-		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
-		QRules qRules = getQRules(userToken); // defaults to user anyway
+		QDataBaseEntityMessage msg2 = VertxUtils.getObject(serviceToken.getRealm(), "", "DESKTOP",
+				QDataBaseEntityMessage.class, serviceToken.getToken());
 
-		GennyKieSession gks = GennyKieSession.builder().addJbpm("auth_init.bpmn").addJbpm("show_form.bpmn")
-				.addJbpm("send_forms.bpmn").addJbpm("send_llama.bpmn").addFact("qRules", qRules).addFact("msg", msg)
-				.addFact("eb", eventBusMock).addToken(new GennyToken("serviceUser", qRules.getServiceToken()))
-				.addToken(userToken).build();
+		/* send message */
+		rules.publishCmd(msg2); // Send QDataBaseEntityMessage
 
-		gks.start();
-		gks.advanceSeconds(20, false);
-		gks.close();
+		Type setType = new TypeToken<Set<QDataAskMessage>>() {
+		}.getType();
+
+		String askMsgs2Str = VertxUtils.getObject(serviceToken.getRealm(), "", "DESKTOP-ASKS", String.class,
+				serviceToken.getToken());
+
+		Set<QDataAskMessage> askMsgs2 = JsonUtils.fromJson(askMsgs2Str, setType);
+
+		System.out.println("Sending Asks");
+		for (QDataAskMessage askMsg : askMsgs2) {
+			rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode()); // Send associated
+																							// QDataAskMessage
+		}
+
+		System.out.println("Sent2");
+
+	}
+
+	@Test
+	public void testLogout() {
 
 	}
 
 	// @Test
 	public void formsTest() {
+		QRules rules = setupLocalService();
+		GennyToken userToken = new GennyToken("userToken", rules.getToken());
+		GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
+
 		String apiUrl = GennySettings.qwandaServiceUrl + "/service/forms";
 		System.out.println("Fetching setup info from " + apiUrl);
-		String userToken = projectParms.getString("userToken");
 		System.out.println("userToken (ensure user has test role) = " + userToken);
 		try {
-			String jsonFormCodes = QwandaUtils.apiGet(apiUrl, userToken);
+			String jsonFormCodes = QwandaUtils.apiGet(apiUrl, userToken.getToken());
 			if (!"You need to be a test.".equals(jsonFormCodes)) {
 				Type type = new TypeToken<List<String>>() {
 				}.getType();
@@ -247,6 +355,27 @@ public class AdamTest extends GennyJbpmBaseTest {
 		} catch (Exception e) {
 
 		}
+	}
+
+	@BeforeClass
+	public static void init() throws FileNotFoundException, SQLException {
+
+		System.out.println("BridgeUrl=" + GennySettings.bridgeServiceUrl);
+		System.out.println("QwandaUrl=" + GennySettings.qwandaServiceUrl);
+
+		// Set up realm
+		realms = new HashSet<String>();
+		realms.add(realm);
+		realms.stream().forEach(System.out::println);
+		realms.remove("genny");
+
+		// Enable the PseudoClock using the following system property.
+		System.setProperty("drools.clockType", "pseudo");
+
+		eventBusMock = new EventBusMock();
+		vertxCache = new VertxCache(); // MockCache
+		VertxUtils.init(eventBusMock, vertxCache);
+
 	}
 
 }
