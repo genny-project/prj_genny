@@ -6,7 +6,7 @@ import java.util.HashSet;
 import life.genny.rules.QRules;
 import life.genny.utils.ContextUtils;
 import life.genny.qwanda.ContextType;
-import life.genny.qwanda.Context.VisualControlType;
+import life.genny.qwanda.VisualControlType;
 
 rule "Generate Table Header"
 	when
@@ -56,8 +56,8 @@ rule "Generate Table Header"
         rules.createVirtualContext(ask, tableHeaderThemes, ContextType.THEME);
 
         /* set the contexts to the table-header ask */
-		rules.createVirtualContext(ask, tableHeaderLabelTheme, ContextType.THEME, VisualControlType.LABEL);
-		rules.createVirtualContext(ask, tableInputDefaultTheme, ContextType.THEME, VisualControlType.INPUT);
+		rules.createVirtualContext(ask, tableHeaderLabelTheme, ContextType.THEME, VisualControlType.VCL_LABEL);
+		rules.createVirtualContext(ask, tableInputDefaultTheme, ContextType.THEME, VisualControlType.VCL_INPUT);
 
         Ask[] childAsksArr = ask.getChildAsks();
         List<Ask> childAsksList = new ArrayList<Ask>(Arrays.asList(childAsksArr));

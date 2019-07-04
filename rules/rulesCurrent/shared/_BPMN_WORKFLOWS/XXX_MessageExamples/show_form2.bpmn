@@ -24,10 +24,12 @@
   <bpmn2:itemDefinition id="ItemDefinition_36" isCollection="false" structureRef="life.genny.utils.Layout.LayoutUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_38_1" isCollection="false" structureRef="life.genny.utils.Layout.LayoutPosition"/>
   <bpmn2:itemDefinition id="ItemDefinition_38" isCollection="false" structureRef="life.genny.qwanda.ContextType"/>
-  <bpmn2:itemDefinition id="ItemDefinition_8" isCollection="false" structureRef="life.genny.qwanda.Ask"/>
-  <bpmn2:itemDefinition id="ItemDefinition_12" isCollection="false" structureRef="life.genny.utils.QuestionUtils"/>
-  <bpmn2:itemDefinition id="ItemDefinition_17" isCollection="false" structureRef="life.genny.qwanda.message.QDataAskMessage"/>
-  <bpmn2:process id="send_forms" drools:packageName="life.genny.jbpm" name="Send Forms" isExecutable="true">
+  <bpmn2:itemDefinition id="ItemDefinition_8" isCollection="false" structureRef="life.genny.qwanda.message.QEventBtnClickMessage"/>
+  <bpmn2:itemDefinition id="ItemDefinition_10" isCollection="false" structureRef="org.apache.commons.lang3.StringUtils"/>
+  <bpmn2:itemDefinition id="ItemDefinition_12" isCollection="false" structureRef="life.genny.models.GennyToken"/>
+  <bpmn2:itemDefinition id="ItemDefinition_17" isCollection="false" structureRef="org.apache.logging.log4j.Logger"/>
+  <bpmn2:message id="Message_1" itemRef="ItemDefinition_3" name="myMessage"/>
+  <bpmn2:process id="showform2" drools:packageName="life.genny.jbpm" name="ShowForm" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.qwanda.message.QEventMessage"/>
       <drools:import name="life.genny.rules.QRules"/>
@@ -53,20 +55,32 @@
       <drools:import name="life.genny.utils.Layout.LayoutUtils"/>
       <drools:import name="life.genny.utils.Layout.LayoutPosition"/>
       <drools:import name="life.genny.qwanda.ContextType"/>
-      <drools:import name="life.genny.qwanda.Ask"/>
-      <drools:import name="life.genny.utils.QuestionUtils"/>
-      <drools:import name="life.genny.qwanda.message.QDataAskMessage"/>
+      <drools:import name="life.genny.qwanda.message.QEventBtnClickMessage"/>
+      <drools:import name="org.apache.commons.lang3.StringUtils"/>
+      <drools:import name="life.genny.models.GennyToken"/>
+      <drools:import name="org.apache.logging.log4j.Logger"/>
+      <drools:global identifier="log" type="org.apache.logging.log4j.Logger"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_1" name="message"/>
-    <bpmn2:property id="name" itemSubjectRef="ItemDefinition_3" name="name"/>
     <bpmn2:property id="rules" itemSubjectRef="ItemDefinition_2" name="rules"/>
-    <bpmn2:startEvent id="StartEvent_1" name="SendForms">
+    <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_12" name="userToken"/>
+    <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_12" name="serviceToken"/>
+    <bpmn2:startEvent id="StartEvent_1" name="ShowForm">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[SendForms]]></drools:metaValue>
+          <drools:metaValue><![CDATA[ShowForm]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
-      <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
+      <bpmn2:dataOutput id="DataOutput_2" itemSubjectRef="ItemDefinition_3" name="event"/>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_1">
+        <bpmn2:sourceRef>DataOutput_2</bpmn2:sourceRef>
+        <bpmn2:targetRef>rules</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:outputSet id="OutputSet_1" name="Output Set 1">
+        <bpmn2:dataOutputRefs>DataOutput_2</bpmn2:dataOutputRefs>
+      </bpmn2:outputSet>
+      <bpmn2:messageEventDefinition id="MessageEventDefinition_1" messageRef="Message_1"/>
     </bpmn2:startEvent>
     <bpmn2:endEvent id="EndEvent_1" name="End Event 1">
       <bpmn2:extensionElements>
@@ -74,64 +88,75 @@
           <drools:metaValue><![CDATA[End Event 1]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_15</bpmn2:incoming>
     </bpmn2:endEvent>
-    <bpmn2:task id="Task_1" drools:taskName="ShowAllForms" drools:displayName="Show All Forms" drools:icon="icons/icon-info.gif" name="ShowAllForms">
+    <bpmn2:scriptTask id="ScriptTask_2" name="Show Form" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[ShowAllForms]]></drools:metaValue>
+          <drools:metaValue><![CDATA[Show Form]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
-      <bpmn2:ioSpecification id="InputOutputSpecification_1">
-        <bpmn2:dataInput id="DataInput_1" itemSubjectRef="ItemDefinition_2" name="rules"/>
-        <bpmn2:inputSet id="_InputSet_3">
-          <bpmn2:dataInputRefs>DataInput_1</bpmn2:dataInputRefs>
-        </bpmn2:inputSet>
-        <bpmn2:outputSet id="OutputSet_1" name="Output Set 1"/>
-      </bpmn2:ioSpecification>
-      <bpmn2:dataInputAssociation id="_DataInputAssociation_6">
-        <bpmn2:sourceRef>rules</bpmn2:sourceRef>
-        <bpmn2:targetRef>DataInput_1</bpmn2:targetRef>
-      </bpmn2:dataInputAssociation>
-    </bpmn2:task>
-    <bpmn2:sequenceFlow id="SequenceFlow_5" drools:priority="1" sourceRef="Task_1" targetRef="EndEvent_1"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_1" drools:priority="1" sourceRef="StartEvent_1" targetRef="Task_1"/>
+      <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_15</bpmn2:outgoing>
+      <bpmn2:script>log.info(&quot;Show Form!!&quot;);
+QEventBtnClickMessage m = (QEventBtnClickMessage) kcontext.getVariable(&quot;message&quot;);
+log.info(&quot;TEST BUTTON CLICK message = &quot;+m+&quot; : &quot;+m.getData().getCode());
+String questionCode = m.getData().getCode().substring(&quot;QUE_&quot;.length());
+
+log.info(&quot;Fixed QuestionCode = [&quot;+questionCode+&quot;]&quot;);
+      String code = m.getData().getCode();
+      String parentCode = m.getData().getParentCode();
+      String rootCode = m.getData().getRootCode();
+      String targetCode = m.getData().getTargetCode();
+
+      rules.println(&quot;code         ::   &quot; + code);
+      rules.println(&quot;parentCode   ::   &quot; + parentCode);
+      rules.println(&quot;rootCode     ::   &quot; + rootCode);
+      rules.println(&quot;targetCode     ::   &quot; + targetCode);
+
+      rules.println(&quot;========= STATES ===========&quot;);
+
+      rules.println(&quot;rootCode     ::   &quot; + &quot;ROOT_&quot; + rootCode);
+      rules.println(&quot;parentCode   ::   &quot; + &quot;PARENT_&quot; + parentCode);
+      rules.println(&quot;targetCode   ::   &quot; + &quot;TARGET_&quot; + targetCode);
+      rules.println(&quot;code         ::   &quot; + code);
+rules.sendForm(questionCode, rules.getUser().getCode(), rules.getUser().getCode()); 
+</bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_15" drools:priority="1" sourceRef="ScriptTask_2" targetRef="EndEvent_1"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_3" drools:priority="1" sourceRef="StartEvent_1" targetRef="ScriptTask_2"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Process Diagram">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="send_forms">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="showform2">
       <bpmndi:BPMNShape id="BPMNShape_1" bpmnElement="StartEvent_1">
-        <dc:Bounds height="36.0" width="36.0" x="71.0" y="104.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="80.0" y="104.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="47.0" x="66.0" y="140.0"/>
+          <dc:Bounds height="11.0" width="44.0" x="76.0" y="140.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_2" bpmnElement="EndEvent_1">
-        <dc:Bounds height="36.0" width="36.0" x="610.0" y="104.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="470.0" y="104.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_3" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="50.0" x="603.0" y="140.0"/>
+          <dc:Bounds height="11.0" width="50.0" x="463.0" y="140.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_Task_1" bpmnElement="Task_1" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="285.0" y="105.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_2">
-          <dc:Bounds height="11.0" width="59.0" x="310.0" y="124.0"/>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_2" bpmnElement="ScriptTask_2" isExpanded="true">
+        <dc:Bounds height="50.0" width="86.0" x="260.0" y="97.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_2" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="11.0" width="47.0" x="279.0" y="116.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_5" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_2">
-        <di:waypoint xsi:type="dc:Point" x="395.0" y="130.0"/>
-        <di:waypoint xsi:type="dc:Point" x="502.0" y="130.0"/>
-        <di:waypoint xsi:type="dc:Point" x="502.0" y="122.0"/>
-        <di:waypoint xsi:type="dc:Point" x="610.0" y="122.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_7"/>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_15" bpmnElement="SequenceFlow_15" sourceElement="BPMNShape_ScriptTask_2" targetElement="BPMNShape_2">
+        <di:waypoint xsi:type="dc:Point" x="346.0" y="122.0"/>
+        <di:waypoint xsi:type="dc:Point" x="408.0" y="122.0"/>
+        <di:waypoint xsi:type="dc:Point" x="470.0" y="122.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_6"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="BPMNShape_1" targetElement="BPMNShape_Task_1">
-        <di:waypoint xsi:type="dc:Point" x="107.0" y="122.0"/>
-        <di:waypoint xsi:type="dc:Point" x="196.0" y="122.0"/>
-        <di:waypoint xsi:type="dc:Point" x="196.0" y="130.0"/>
-        <di:waypoint xsi:type="dc:Point" x="285.0" y="130.0"/>
-        <bpmndi:BPMNLabel/>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_1" targetElement="BPMNShape_ScriptTask_2">
+        <di:waypoint xsi:type="dc:Point" x="116.0" y="122.0"/>
+        <di:waypoint xsi:type="dc:Point" x="188.0" y="122.0"/>
+        <di:waypoint xsi:type="dc:Point" x="260.0" y="122.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_4"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">

@@ -20,7 +20,7 @@ import org.kie.api.runtime.process.WorkflowProcessInstance;
 import life.genny.qwanda.llama.Frame;
 
 rule "DASHBOARD_1"
-    ruleflow-group 'GenerateLlamas'
+    ruleflow-group 'GenerateFrames'
     no-loop true
     when
       $process : WorkflowProcessInstance( ) 
@@ -30,7 +30,7 @@ rule "DASHBOARD_1"
 	GennyToken serviceToken = (GennyToken)$process.getVariable("serviceToken"); 
 	log.info("Genny Token Service Code2 = "+serviceToken.getCode());
 	
-/*	Llama desktop = Llama.Builder.newInstance("DASHBOARD") 
+/*	Llama desktop = Llama.Builder.newInstance("FRM_DASHBOARD") 
                               .addTheme("THM_BACKGROUND_GRAY","backgroundColor","gray") 
                               .addTheme("THM_BACKGROUND_INTERNMATCH","backgroundColor","#233a4e") 
                               .addTheme("THM_COLOR_WHITE","backgroundColor","white") 

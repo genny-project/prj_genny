@@ -1,0 +1,40 @@
+package life.genny.rules;
+
+
+global org.apache.logging.log4j.Logger log;
+
+import life.genny.qwanda.message.QCmdMessage;
+import life.genny.qwanda.message.QBulkMessage;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.qwanda.message.QEventMessage;
+import life.genny.rules.QRules;
+import io.vertx.core.json.JsonObject;
+import life.genny.qwandautils.JsonUtils;
+import java.util.List;
+import java.util.ArrayList;
+import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.entity.SearchEntity;
+import life.genny.utils.VertxUtils;
+import life.genny.utils.BaseEntityUtils;
+import life.genny.models.GennyToken;
+import org.kie.api.runtime.process.WorkflowProcessInstance;
+import life.genny.test.Frame3;
+
+rule "FRM_DUMMY"
+    ruleflow-group 'GenerateFrames'
+    no-loop true
+    when
+      $process : WorkflowProcessInstance( ) 
+     then
+     System.out.println("Generate FRM_DUMMY Rule");
+ 
+	GennyToken serviceToken = (GennyToken)$process.getVariable("serviceToken"); 
+	System.out.println("Genny Token Service Code = "+serviceToken.getCode());
+
+	Frame3 frameDummy = Frame3.builder("FRM_DUMMY")
+			.addTheme("THM_DUMMY")
+				.end()
+			.build();
+
+
+end

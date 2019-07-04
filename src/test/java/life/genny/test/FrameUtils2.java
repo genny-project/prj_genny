@@ -2,6 +2,7 @@ package life.genny.test;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,10 +21,12 @@ import io.vavr.Tuple4;
 import life.genny.models.GennyToken;
 import life.genny.qwanda.Ask;
 import life.genny.qwanda.Context;
-import life.genny.qwanda.Context.VisualControlType;
+
 import life.genny.qwanda.ContextList;
 import life.genny.qwanda.ContextType;
 import life.genny.qwanda.Link;
+import life.genny.qwanda.Question;
+import life.genny.qwanda.VisualControlType;
 import life.genny.qwanda.attribute.Attribute;
 import life.genny.qwanda.attribute.AttributeLink;
 import life.genny.qwanda.attribute.EntityAttribute;
@@ -36,6 +40,7 @@ import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.utils.QuestionUtils;
+import life.genny.utils.RulesUtils;
 import life.genny.utils.VertxUtils;
 
 public class FrameUtils2 {
@@ -64,24 +69,59 @@ public class FrameUtils2 {
 		for (Ask ask : askList) {
 			QDataAskMessage askMsg = QuestionUtils.getAsks(serviceToken.getUserCode(),"PRJ_INTERNMATCH",
 					ask.getQuestionCode(), serviceToken.getToken());
-			askMsg = processQDataAskMessage(askMsg, ask);
+			askMsg = processQDataAskMessage(askMsg, ask, serviceToken);
 
 			asks.add(askMsg);
 		}
 		return msg;
 	}
 
-	private static QDataAskMessage processQDataAskMessage(QDataAskMessage askMsg, Ask contextAsk) {
+	private static QDataAskMessage processQDataAskMessage(QDataAskMessage askMsg, Ask contextAsk,
+			GennyToken serviceToken) {
+		List<Ask> asks = new ArrayList<Ask>();
 		for (Ask ask : askMsg.getItems()) {
-			ask.setQuestionCode(ask.getQuestionCode());
+			ask.setQuestionCode(contextAsk.getQuestionCode()); // ?
+
 			ask.setContextList(contextAsk.getContextList());
+
+			// if ask question is not a group then make it a fake group
+			// if (!StringUtils.endsWith(ask.getQuestion().getCode(), "_GRP")) {
+			// String attributeCode = "QQQ_QUESTION_GROUP_INPUT";
+			//
+			// /* Get the on-the-fly question attribute */
+			// Attribute attribute = RulesUtils.getAttribute(attributeCode,
+			// serviceToken.getToken());
+			//
+			// Question fakeQuestionGrp = new Question(ask.getQuestionCode() + "_GRP",
+			// ask.getName(), attribute,
+			// false);
+			// fakeQuestionGrp.setMandatory(ask.getMandatory());
+			// fakeQuestionGrp.setRealm(ask.getRealm());
+			// fakeQuestionGrp.setReadonly(ask.getReadonly());
+			// fakeQuestionGrp.setOneshot(ask.getOneshot());
+			//
+			// try {
+			// fakeQuestionGrp.addTarget(ask.getQuestion(), 1.0);
+			// } catch (BadDataException e) {
+			// // TODO Auto-generated catch block
+			// e.printStackTrace();
+			// }
+			// Ask newask = new Ask(fakeQuestionGrp, serviceToken.getUserCode(),
+			// serviceToken.getUserCode(), false,
+			// 1.0, false, false, true);
+			// Ask[] childAsks = new Ask[1];
+			// childAsks[0] = ask;
+			// newask.setChildAsks(childAsks);
+			// asks.add(newask);
+			//
+			// } else {
+			asks.add(ask);
+			// }
 		}
+		Ask[] itemsArray = new Ask[asks.size()];
+		itemsArray = asks.toArray(itemsArray);
+		askMsg.setItems(itemsArray);
 		return askMsg;
-	}
-
-	private static BaseEntity getBaseEntity(final Frame2 rootFrame, final GennyToken serviceToken) {
-		return getBaseEntity(rootFrame.getCode(), rootFrame.getName(), serviceToken);
-
 	}
 
 	private static BaseEntity getBaseEntity(final Frame3 rootFrame, final GennyToken serviceToken) {
@@ -90,14 +130,22 @@ public class FrameUtils2 {
 	}
 
 	private static BaseEntity getBaseEntity(final String beCode, final String beName, final GennyToken serviceToken) {
-		BaseEntity be = VertxUtils.getObject(serviceToken.getRealm(), "", beCode, BaseEntity.class,
-				serviceToken.getToken());
+		BaseEntity be = null; //VertxUtils.getObject(serviceToken.getRealm(), "", beCode, BaseEntity.class,
+		// serviceToken.getToken());
+		if ("THM_NOT_INHERITBALE".equals(beCode)) {
+			log.info("here");
+		}
 		if (be == null) {
 			try {
-				be = QwandaUtils.getBaseEntityByCodeWithAttributes(beCode, serviceToken.getToken());
+				be = QwandaUtils.getBaseEntityByCodeWithAttributes(beCode,
+				 serviceToken.getToken());
 				if (be == null) {
-					be = QwandaUtils.createBaseEntityByCode(beCode, beName, GennySettings.qwandaServiceUrl,
-							serviceToken.getToken());
+					try {
+						be = QwandaUtils.createBaseEntityByCode(beCode, beName, GennySettings.qwandaServiceUrl,
+								serviceToken.getToken());
+					} catch (java.lang.NumberFormatException e) {
+						be = new BaseEntity(beCode, beName);
+					}
 				}
 			} catch (Exception e) {
 				be = QwandaUtils.createBaseEntityByCode(beCode, beName, GennySettings.qwandaServiceUrl,
@@ -159,20 +207,28 @@ public class FrameUtils2 {
 						childFrame.getQuestionGroup().get().getCode());
 				askBe.setRealm(parent.getRealm());
 
-				Ask ask = QuestionUtils.createQuestionForBaseEntity2(askBe, true, serviceToken);
+				Ask ask = QuestionUtils.createQuestionForBaseEntity2(askBe,
+						StringUtils.endsWith(askBe.getCode(), "GRP"), serviceToken,childFrame.getQuestionGroup().get().getSourceAlias(),childFrame.getQuestionGroup().get().getTargetAlias());
 
 				Map<ContextType, Set<BaseEntity>> contextMap = new HashMap<ContextType, Set<BaseEntity>>();
-				Map<ContextType, VisualControlType> vclMap = new HashMap<ContextType, VisualControlType>();
+				Map<ContextType, life.genny.qwanda.VisualControlType> vclMap = new HashMap<ContextType, VisualControlType>();
 				/* package up Question Themes */
 				if (!childFrame.getQuestionGroup().get().getQuestionThemes().isEmpty()) {
 					for (QuestionTheme qTheme : childFrame.getQuestionGroup().get().getQuestionThemes()) {
 						System.out.println("Question Theme: " + qTheme.getCode() + ":" + qTheme.getJson());
 						processQuestionThemes(askBe, qTheme, serviceToken, ask, baseEntityList, contextMap, vclMap);
-					}
-					// Now add contexts
-					for (ContextType contextType : contextMap.keySet()) {
-						createVirtualContext(ask, contextMap.get(contextType), contextType, vclMap.get(contextType),
-								weight);
+						Set<BaseEntity> themeSet = new HashSet<BaseEntity>();
+						if (qTheme.getTheme().isPresent()) {
+							themeSet.add(qTheme.getTheme().get().getBaseEntity());
+							// Hack
+							VisualControlType vcl = null;
+							if (!((qTheme.getCode().equals("THM_FORM_DEFAULT"))
+									|| (qTheme.getCode().equals("THM_FORM_CONTAINER_DEFAULT")))) {
+								vcl = qTheme.getVcl();
+							}
+							createVirtualContext(ask, themeSet, ContextType.THEME, vcl, qTheme.getWeight());
+						}
+
 					}
 
 				}
@@ -186,6 +242,7 @@ public class FrameUtils2 {
 
 				childBe.setQuestions(entityQuestionList);
 				baseEntityList.add(askBe);
+				/* Set the ask to support any sourceAlias and targetAlias */
 
 				askList.add(ask); // add to the ask list
 
@@ -193,6 +250,8 @@ public class FrameUtils2 {
 
 		}
 	}
+
+
 
 	/**
 	 * @param frame
@@ -261,6 +320,7 @@ public class FrameUtils2 {
 	 */
 	private static void processThemes(final Frame3 frame, FramePosition position, GennyToken gennyToken,
 			Set<BaseEntity> baseEntityList, BaseEntity parent) {
+
 		// Go through the theme codes and fetch the
 		for (Tuple2<Theme, Double> themeTuple2 : frame.getThemes()) {
 			System.out.println("Processing Theme     " + themeTuple2._1.getCode());
@@ -270,11 +330,20 @@ public class FrameUtils2 {
 			BaseEntity themeBe = getBaseEntity(theme.getCode(), theme.getCode(), gennyToken);
 
 			for (ThemeAttribute themeAttribute : theme.getAttributes()) {
-				Attribute attribute = new Attribute(themeAttribute.getCode(), themeAttribute.getCode(),
+				Attribute attribute = null;
+
+
+				attribute = RulesUtils.getAttribute(themeAttribute.getCode(),gennyToken.getToken());
+
+				if (attribute == null) { attribute = new Attribute(themeAttribute.getCode(), themeAttribute.getCode(),
 						new DataType("DTT_THEME"));
+				}
 
 				try {
 					if (themeBe.containsEntityAttribute(themeAttribute.getCode())) {
+						if ("PRI_IS_INHERITABLE".equals(themeAttribute.getCode())) {
+							log.info("here");
+						}
 						EntityAttribute themeEA = themeBe.findEntityAttribute(themeAttribute.getCode()).get();
 						String existingSetValue = themeEA.getAsString();
 						JSONObject json = new JSONObject(existingSetValue);
@@ -287,7 +356,16 @@ public class FrameUtils2 {
 						themeEA.setValue(merged.toString());
 						themeEA.setWeight(weight);
 					} else {
-						themeBe.addAttribute(new EntityAttribute(themeBe, attribute, weight, themeAttribute.getJson()));
+						if (attribute.dataType.getClassName().equals(Boolean.class.getCanonicalName())) {
+							themeBe.addAttribute(new EntityAttribute(themeBe, attribute, weight, themeAttribute.getValueBoolean().get()));
+						} else 	if (attribute.dataType.getClassName().equals(Double.class.getCanonicalName())) {
+							themeBe.addAttribute(new EntityAttribute(themeBe, attribute, weight, themeAttribute.getValueDouble()));
+						} else 	if (attribute.dataType.getClassName().equals(String.class.getCanonicalName())) {
+							themeBe.addAttribute(new EntityAttribute(themeBe, attribute, weight, themeAttribute.getValueString()));
+						} else{
+							themeBe.addAttribute(new EntityAttribute(themeBe,  new Attribute(themeAttribute.getCode(), themeAttribute.getCode(),
+									new DataType("DTT_THEME")), weight, themeAttribute.getJson()));
+						}
 					}
 				} catch (BadDataException e) {
 					// TODO Auto-generated catch block
@@ -296,9 +374,19 @@ public class FrameUtils2 {
 				// link to the parent
 				EntityEntity link = null;
 				Attribute linkFrame = new AttributeLink("LNK_THEME", "theme");
-				link = new EntityEntity(frame.getParent(), themeBe, linkFrame, position.name(), weight);
-				if (!frame.getParent().getLinks().contains(link)) {
-					frame.getParent().getLinks().add(link);
+
+				if (theme.getDirectLink()) {
+					link = new EntityEntity(parent, themeBe, linkFrame, "FRAME", weight);
+					if (!parent.getLinks().contains(link)) {
+						parent.getLinks().add(link);
+					}
+
+				} else {
+
+					link = new EntityEntity(frame.getParent(), themeBe, linkFrame, position.name(), weight);
+					if (!frame.getParent().getLinks().contains(link)) {
+						frame.getParent().getLinks().add(link);
+					}
 				}
 				baseEntityList.add(themeBe);
 
@@ -316,40 +404,55 @@ public class FrameUtils2 {
 	private static void processQuestionThemes(final BaseEntity fquestion, QuestionTheme qTheme, GennyToken gennyToken,
 			Ask ask, Set<BaseEntity> baseEntityList, Map<ContextType, Set<BaseEntity>> contextMap,
 			Map<ContextType, VisualControlType> vclMap) {
+		if ("THM_FORM_CONTAINER_DEFAULT".equals(qTheme.getCode())) {
+			log.info("info");
+		}
 
 		if (qTheme.getTheme().isPresent()) {
 			Theme theme = qTheme.getTheme().get();
+			theme.setRealm(fquestion.getRealm());
 
 			System.out.println("Processing Theme     " + theme.getCode());
 			Double weight = qTheme.getWeight();
 
-			BaseEntity themeBe = getBaseEntity(theme.getCode(), theme.getCode(), gennyToken);
+			String existingSetValue = "";
+			EntityAttribute themeEA = null;
+			if (theme.containsEntityAttribute(ThemeAttributeType.PRI_CONTENT.name())) {
+				themeEA = theme.findEntityAttribute(ThemeAttributeType.PRI_CONTENT.name()).get();
+				existingSetValue = themeEA.getAsString();
 
-			for (ThemeAttribute themeAttribute : theme.getAttributes()) {
-				Attribute attribute = new Attribute(themeAttribute.getCode(), themeAttribute.getCode(),
-						new DataType("DTT_THEME"));
-
+			} else {
+				Attribute attribute = new Attribute(ThemeAttributeType.PRI_CONTENT.name(),
+						ThemeAttributeType.PRI_CONTENT.name(), new DataType("DTT_THEME"));
+				existingSetValue = (new JSONObject()).toString();
+				themeEA = new EntityAttribute(theme, attribute, weight, existingSetValue);
 				try {
-					if (themeBe.containsEntityAttribute(themeAttribute.getCode())) {
-						EntityAttribute themeEA = themeBe.findEntityAttribute(themeAttribute.getCode()).get();
-						String existingSetValue = themeEA.getAsString();
-						JSONObject json = new JSONObject(existingSetValue);
-						JSONObject merged = new JSONObject(json, JSONObject.getNames(json));
-						JSONObject jo = themeAttribute.getJsonObject();
+					theme.addAttribute(new EntityAttribute(theme, attribute, weight, existingSetValue));
+					themeEA = theme.findEntityAttribute(ThemeAttributeType.PRI_CONTENT.name()).get();
+				} catch (BadDataException e) {
+
+				}
+			}
+
+			if ((theme.getAttributes() != null) && (!theme.getAttributes().isEmpty()))
+				for (ThemeAttribute themeAttribute : theme.getAttributes()) {
+					existingSetValue = themeEA.getAsString();
+					JSONObject json = new JSONObject(existingSetValue);
+					JSONObject merged = json;
+					JSONObject jo = themeAttribute.getJsonObject();
+					if (!jo.toString().equals("{}")) {
 						for (Object key : jo.names()/* JSONObject.getNames(themeAttribute.getJsonObject()) */) {
 							merged.put((String) key, themeAttribute.getJsonObject().get((String) key));
 						}
-
-						themeEA.setValue(merged.toString());
-						themeEA.setWeight(weight);
-					} else {
-						themeBe.addAttribute(new EntityAttribute(themeBe, attribute, weight, themeAttribute.getJson()));
 					}
-				} catch (BadDataException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+
+					themeEA.setValue(merged.toString());
+					themeEA.setWeight(weight);
+
 				}
-			}
+
+			BaseEntity themeBe = theme.getBaseEntity();
+
 			// link to the parent
 			EntityEntity link = null;
 			Attribute linkFrame = new AttributeLink("LNK_THEME", "theme");
@@ -359,6 +462,11 @@ public class FrameUtils2 {
 			}
 
 			baseEntityList.add(themeBe);
+
+			if ("THM_FORM_INPUT_DEFAULT".equals(qTheme.getCode())) {
+				log.info("hre");
+				;
+			}
 
 			// Add Contexts
 			ContextType contextType = qTheme.getContextType();
@@ -388,7 +496,7 @@ public class FrameUtils2 {
 	 * @return
 	 */
 	public static Ask createVirtualContext(Ask ask, Set<BaseEntity> themes, ContextType linkCode,
-			VisualControlType visualControlType, Double weight) {
+			life.genny.qwanda.VisualControlType visualControlType, Double weight) {
 
 		List<Context> completeContext = new ArrayList<>();
 

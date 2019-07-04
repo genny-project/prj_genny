@@ -2,7 +2,7 @@ package life.genny.test.FrameBuilderTests;
 
 import org.junit.Test;
 
-import life.genny.qwanda.Context.VisualControlType;
+import life.genny.qwanda.VisualControlType;
 import life.genny.test.Frame3;
 import life.genny.test.Theme;
 import life.genny.test.ThemeAttributeType;
@@ -27,19 +27,19 @@ public class FrameBuilderTest {
 						.end()
 				.end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE,true).end()
-				.addAttribute(ThemeAttributeType.PRI_HPRI_HAS_QUESTION_GRP_DESCRIPTION,true)
-					.PRI_HAS_LABEL(true)
-					.PRI_HAS_REQUIRED(true)
-					.PRI_HAS_ICON(true)
-					.end()
+				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION,true).end()
+				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE,false).end()
+
 				.build();	
+		
+		System.out.print(THM_FORM_CONTAINER_DEFAULT);
 		
 		
 	
 
 	}
 	
-	@Test
+	//@Test
 	public void frameBuilderTest()
 	{
 
@@ -58,11 +58,9 @@ public class FrameBuilderTest {
 						.end()
 				.end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE,true).end()
-				.addAttribute(ThemeAttributeType.PRI_HPRI_HAS_QUESTION_GRP_DESCRIPTION,true)
-					.PRI_HAS_LABEL(true)
-					.PRI_HAS_REQUIRED(true)
-					.PRI_HAS_ICON(true)
-					.end()
+				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION,true).end()
+				.addAttribute(ThemeAttributeType.PRI_HAS_LABEL,true).end()
+				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE,false).end()
 				.build();	
 		
 		
@@ -72,7 +70,7 @@ public class FrameBuilderTest {
 				.addTheme(THM_FORM_CONTAINER_DEFAULT).end()
 				.question("QUE_USER_PROFILE_GRP")
 					.addTheme(THM_FORM_CONTAINER_DEFAULT)
-						.vcl(VisualControlType.INPUT)
+						.vcl(VisualControlType.VCL_INPUT)
 						.weight(2.0)
 						.end()
 					.end()											
