@@ -66,6 +66,27 @@ public class AdamTest {
 	}
 
 	@Test
+	public void simpleTest() {
+		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+		QRules qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
+		qRules.set("realm", userToken.getRealm());
+		qRules.setServiceToken(serviceToken.getToken());
+
+		Theme THM_NOT_INHERITBALE = Theme.builder("THM_NOT_INHERITBALE")
+				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+		Frame3 logo = Frame3.builder("FRM_PROJECT_LOGO").addTheme(THM_NOT_INHERITBALE).end().build();
+
+		Frame3 frameRoot = Frame3.builder("FRM_ROOT").addFrame(logo, FramePosition.NORTH).end().build();
+
+		Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+		QDataBaseEntityMessage msg = FrameUtils2.toMessage(frameRoot, serviceToken, askMsgs);
+
+		String test = JsonUtils.toJson(msg);
+		System.out.println(test);
+	}
+
+	//@Test
 	public void quickTest() {
 
 		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
@@ -82,8 +103,8 @@ public class AdamTest {
 
 		GennyKieSession gks = null;
 		try {
-			gks = GennyKieSession.builder().addJbpm("adam_test_1.bpmn").addFact("qRules", qRules)
-					.addFact("msg", msg).addToken(serviceToken).addToken(userToken).build();
+			gks = GennyKieSession.builder().addJbpm("adam_test_1.bpmn").addFact("qRules", qRules).addFact("msg", msg)
+					.addToken(serviceToken).addToken(userToken).build();
 
 			gks.start();
 
