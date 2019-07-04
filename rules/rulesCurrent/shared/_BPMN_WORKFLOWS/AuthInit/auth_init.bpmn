@@ -154,7 +154,7 @@ rules.sendAllAttributes();
           <drools:metaValue><![CDATA[Send Llama]]></drools:metaValue>
         </drools:metaData>
         <drools:onEntry-script scriptFormat="http://www.java.com/java">
-          <drools:script>log.info(&quot;Start Send Llama&quot;);</drools:script>
+          <drools:script>System.out.println(&quot;Start Send Llama&quot;);</drools:script>
         </drools:onEntry-script>
         <drools:onExit-script scriptFormat="http://www.java.com/java">
           <drools:script>log.info(&quot;Completed Send Llama&quot;);</drools:script>

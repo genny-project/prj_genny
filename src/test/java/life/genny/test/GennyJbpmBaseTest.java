@@ -516,7 +516,7 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 				System.out.println("User "+username+" is logged in! "+userGennyToken.getAdecodedTokenMap().get("session_state"));;
 				projectParms.put("userToken", userToken);
 			} else {
-				log.error("User "+username+" is NOT LOGGED IN!");;
+				System.out.println("User "+username+" is NOT LOGGED IN!");;
 				projectParms.put("userToken", token);  // use non alyson token
 				return false;
 			}

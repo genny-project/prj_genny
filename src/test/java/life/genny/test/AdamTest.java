@@ -51,7 +51,7 @@ public class AdamTest {
 
 	}
 
-	@Test
+//	@Test
 	public void sendAuthInit()
 	{
 
@@ -140,7 +140,7 @@ public class AdamTest {
 
 
 	
-//	@Test
+	@Test
 	public void initRulesTest() {
 		System.out.println("Run the Project Initialisation");
 		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
@@ -169,7 +169,7 @@ public class AdamTest {
 
 			gks.start();
 
-			gks.advanceSeconds(10, false);
+			gks.advanceSeconds(20, false);
 		} catch (Exception e)
 		{
 			System.out.println(e.getLocalizedMessage());

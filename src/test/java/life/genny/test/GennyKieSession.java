@@ -243,7 +243,10 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			if (tokens.containsKey("userToken")) {
 				kieSession.addEventListener(new JbpmInitListener(tokens.get("userToken")));
 			}
-			//kieSession.setGlobal("log", log);
+			if (tokens.containsKey("serviceToken")) {
+				kieSession.addEventListener(new JbpmInitListener(tokens.get("serviceToken")));
+			}
+			kieSession.setGlobal("log", log);
 		} else {
 			log.error("KieSession not initialised");
 		}

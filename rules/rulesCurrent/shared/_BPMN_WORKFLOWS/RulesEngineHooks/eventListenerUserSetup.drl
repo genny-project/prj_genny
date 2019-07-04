@@ -1,6 +1,6 @@
 package life.genny.rules;
 
-global org.apache.logging.log4j.Logger log;
+
 
 import life.genny.rules.listeners.JbpmInitListener;
 import life.genny.models.GennyToken;
@@ -14,7 +14,7 @@ salience 10000
     	userToken: GennyToken(code == "userToken")
      	serviceToken: GennyToken(code == "serviceToken")
     then
-     log.info("Setup Listener for userToken!");
+     System.out.println("Setup Listener for userToken!");
     kcontext.getKnowledgeRuntime().addEventListener(new JbpmInitListener(userToken)); 
 
 end
