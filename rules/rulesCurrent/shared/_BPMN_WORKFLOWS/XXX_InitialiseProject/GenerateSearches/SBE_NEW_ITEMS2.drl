@@ -29,7 +29,6 @@ rule "SBE_NEW_ITEMS2"
  
 	GennyToken serviceToken = (GennyToken)$process.getVariable("serviceToken"); 
 	QRules rules = (QRules)$process.getVariable("rules"); 
-	System.out.println("Genny Token Service Code = "+serviceToken.getCode());
     
          SearchEntity searchBE = new SearchEntity("SBE_NEW_ITEMS2","All New Items")
   	     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)

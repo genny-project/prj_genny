@@ -30,7 +30,6 @@ import org.kie.api.runtime.process.WorkItemHandler;
 import org.kie.api.runtime.rule.FactHandle;
 import org.kie.internal.command.CommandFactory;
 
-
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import life.genny.jbpm.customworkitemhandlers.AwesomeHandler;
@@ -87,28 +86,32 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		super(persistence, persistence);
 	}
 
+	public ExecutionResults start() {
+		System.out.println("Starting !");
+		sessionClock = kieSession.getSessionClock();
+		long startTime = System.nanoTime();
+		ExecutionResults results = null;
+		if (tokens.isEmpty()) {
+			System.out.println("You must supply at least a service token!");
+		} else {
+			try {
+				results = kieSession.execute(CommandFactory.newBatchExecution(cmds));
+			} catch (Exception ee) {
+
+			} finally {
+				long endTime = System.nanoTime();
+				double difference = (endTime - startTime) / 1e6; // get ms
+				// System.out.println("BPMN completed in " + difference + " ms");
+			}
+		}
+		return results;
+	}
+
 	public ProcessInstance startProcess(String processId) {
 		processInstance = kieSession.startProcess(processId);
 		sessionClock = kieSession.getSessionClock();
 
 		return processInstance;
-	}
-
-	public void start() {
-		System.out.println("Started");
-		sessionClock = kieSession.getSessionClock();
-		long startTime = System.nanoTime();
-		ExecutionResults results = null;
-		try {
-			results = kieSession.execute(CommandFactory.newBatchExecution(cmds));
-		} catch (Exception ee) {
-
-		} finally {
-			long endTime = System.nanoTime();
-			double difference = (endTime - startTime) / 1e6; // get ms
-			// System.out.println("BPMN completed in " + difference + " ms");
-		}
-
 	}
 
 	public void broadcastSignal(final String type, final Object event) {
@@ -182,7 +185,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		// KieServices.Factory.get().newKieSessionConfiguration();
 
 		// config.setOption( ClockTypeOption.get("realtime") );
-		
+
 		/* Set up RulesEngine Hooks Setup */
 		this.drls.add(DRL_RULESENGINE_HOOKS_DIR);
 
@@ -191,11 +194,14 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 				if (StringUtils.endsWith(p, ".bpmn")) {
 					String fullJbpmPath = findFullPath(p);
 					resources.put(fullJbpmPath, ResourceType.BPMN2);
-					System.out.println("Loading "+fullJbpmPath);
+					System.out.println("Loading " + fullJbpmPath);
 				} else {
 					// Is a directory
 					List<String> fullJbpmPaths = findFullPaths(p, "bpmn");
-					fullJbpmPaths.forEach(f -> {resources.put(f, ResourceType.BPMN2); System.out.println("Loading "+f.toString());});
+					fullJbpmPaths.forEach(f -> {
+						resources.put(f, ResourceType.BPMN2);
+						System.out.println("Loading " + f.toString());
+					});
 
 				}
 			}
@@ -206,11 +212,14 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 				if (StringUtils.endsWith(p, ".drl")) {
 					String fullDrlPath = findFullPath(p);
 					resources.put(fullDrlPath, ResourceType.DRL);
-					System.out.println("Loading "+fullDrlPath);
+					System.out.println("Loading " + fullDrlPath);
 				} else {
 					// Is a directory
 					List<String> fullPaths = findFullPaths(p, "drl");
-					fullPaths.forEach(f -> {resources.put(f, ResourceType.DRL); System.out.println("Loading "+f.toString());});
+					fullPaths.forEach(f -> {
+						resources.put(f, ResourceType.DRL);
+						System.out.println("Loading " + f.toString());
+					});
 				}
 			}
 		}
@@ -220,11 +229,14 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 				if (StringUtils.endsWith(p, ".xls")) {
 					String fullDtablePath = findFullPath(p);
 					resources.put(fullDtablePath, ResourceType.DTABLE);
-					System.out.println("Loading "+fullDtablePath);
+					System.out.println("Loading " + fullDtablePath);
 				} else {
 					// Is a directory
 					List<String> fullPaths = findFullPaths(p, "xls");
-					fullPaths.forEach(f -> {resources.put(f, ResourceType.DTABLE); System.out.println("Loading "+f.toString());});
+					fullPaths.forEach(f -> {
+						resources.put(f, ResourceType.DTABLE);
+						System.out.println("Loading " + f.toString());
+					});
 				}
 
 			}
@@ -240,13 +252,21 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		if (kieSession != null) {
 			// Register handlers
 			addWorkItemHandlers();
-			if (tokens.containsKey("userToken")) {
-				kieSession.addEventListener(new JbpmInitListener(tokens.get("userToken")));
+			if (tokens.containsKey("PER_SERVICE")) {
+				kieSession.addEventListener(new JbpmInitListener(tokens.get("PER_SERVICE")));
 			}
-			if (tokens.containsKey("serviceToken")) {
-				kieSession.addEventListener(new JbpmInitListener(tokens.get("serviceToken")));
+			if (tokens.containsKey("PER_USER1")) {
+				kieSession.addEventListener(new JbpmInitListener(tokens.get("PER_USER1")));
 			}
+
 			kieSession.setGlobal("log", log);
+
+			// Add any tokens
+//			for (String tokenKey : this.tokens.keySet()) {
+//				GennyToken token = this.tokens.get(tokenKey);
+//				cmds.add(CommandFactory.newInsert(token, tokenKey));
+//			}
+
 		} else {
 			log.error("KieSession not initialised");
 		}
@@ -323,7 +343,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		File base = new File(testRulesDir);
 		File found = searchFile(new File(testRulesDir), dirname);
 		String finalFile = found.getAbsoluteFile().getPath().substring(base.getAbsoluteFile().getPath().length() + 1);
-	//	System.out.println("Found finalDir = " + finalFile);
+		// System.out.println("Found finalDir = " + finalFile);
 
 		Set<Path> resourcePaths = getAllFilesInDirectory(found.getAbsoluteFile().getPath(), extension);
 
@@ -459,6 +479,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 		public Builder addToken(GennyToken token) {
 			managedInstance.tokens.put(token.getCode(), token);
+			managedInstance.cmds.add(CommandFactory.newInsert(token, token.getCode()));
 			return this;
 		}
 

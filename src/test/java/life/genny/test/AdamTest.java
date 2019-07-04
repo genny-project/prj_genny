@@ -51,7 +51,7 @@ public class AdamTest {
 
 	}
 
-//	@Test
+   // @Test
 	public void sendAuthInit()
 	{
 
@@ -143,8 +143,8 @@ public class AdamTest {
 	@Test
 	public void initRulesTest() {
 		System.out.println("Run the Project Initialisation");
-		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
-		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "userToken");
+		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "serviceToken");
 		QRules qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
 		qRules.set("realm", userToken.getRealm());
 		qRules.setServiceToken(serviceToken.getToken());
@@ -162,10 +162,11 @@ public class AdamTest {
 					.addDrl("GenerateSearches")
 					.addDrl("GenerateThemes")
 					.addDrl("GenerateFrames")
+					.addToken(serviceToken)
 					.addFact("qRules", qRules)
 					.addFact("msg", msg)
-					.addToken(serviceToken)
-					.addToken(userToken).build();
+
+					.build();
 
 			gks.start();
 
