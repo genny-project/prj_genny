@@ -1,8 +1,13 @@
 package life.genny.test;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -65,7 +71,7 @@ public class AdamTest {
 
 	}
 
-	@Test
+	//@Test
 	public void simpleTest() {
 		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
@@ -117,6 +123,49 @@ public class AdamTest {
 		}
 
 	}
+	
+	
+
+
+	
+	@Test
+	public void initRulesTest() {
+		System.out.println("Run the Project Initialisation");
+		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+		QRules qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
+		qRules.set("realm", userToken.getRealm());
+		qRules.setServiceToken(serviceToken.getToken());
+
+		System.out.println("session     =" + userToken.getSessionCode());
+		System.out.println("userToken   =" + userToken.getToken());
+		System.out.println("serviceToken=" + serviceToken.getToken());
+
+		QEventMessage msg = new QEventMessage("EVT_MSG", "INIT_STARTUP");
+
+		GennyKieSession gks = null;
+		try {
+			gks = GennyKieSession.builder()
+					.addJbpm("init_project.bpmn")
+					.addDrl("GenerateSearches")
+					.addDrl("GenerateThemes")
+					.addDrl("GenerateFrames")
+					.addFact("qRules", qRules)
+					.addFact("msg", msg)
+					.addToken(serviceToken)
+					.addToken(userToken).build();
+
+			gks.start();
+
+			gks.advanceSeconds(10, false);
+		} catch (Exception e)
+		{
+			System.out.println(e.getLocalizedMessage());
+		} finally {
+			gks.close();
+		}
+
+	}
 
 	private QRules setupLocalService() {
 		GennyJbpmBaseTest localService = new GennyJbpmBaseTest(false);
@@ -136,6 +185,9 @@ public class AdamTest {
 		return rules;
 	}
 
+	
+	
+	
 //	@Test
 	public void testTheme() {
 		QRules rules = setupLocalService();

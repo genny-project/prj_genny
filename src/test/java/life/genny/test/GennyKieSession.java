@@ -1,26 +1,29 @@
 package life.genny.test;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang.StringUtils;
 import org.drools.core.ClockType;
 import org.drools.core.time.impl.PseudoClockScheduler;
 import org.jbpm.test.JbpmJUnitBaseTestCase;
-import org.jbpm.test.JbpmJUnitBaseTestCase.Strategy;
-import org.kie.api.KieServices;
 import org.kie.api.command.Command;
 import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.ExecutionResults;
 import org.kie.api.runtime.KieSession;
-import org.kie.api.runtime.KieSessionConfiguration;
-import org.kie.api.runtime.conf.ClockTypeOption;
 import org.kie.api.runtime.process.ProcessInstance;
 import org.kie.api.runtime.process.WorkItemHandler;
 import org.kie.api.runtime.rule.FactHandle;
@@ -35,7 +38,6 @@ import life.genny.jbpm.customworkitemhandlers.NotificationWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowAllFormsHandler;
 import life.genny.models.GennyToken;
 import life.genny.qwandautils.GennySettings;
-import life.genny.rules.QRules;
 import life.genny.rules.listeners.JbpmInitListener;
 
 public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoCloseable {
@@ -73,7 +75,6 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	public static Builder builder() {
 		return new GennyKieSession.Builder();
 	}
-	
 
 	/**
 	 * static factory method for builder
@@ -86,7 +87,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	 * forces use of the Builder
 	 */
 	private GennyKieSession(boolean persistence) {
-		super(persistence,persistence);
+		super(persistence, persistence);
 	}
 
 	public ProcessInstance startProcess(String processId) {
@@ -95,9 +96,8 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 		return processInstance;
 	}
-	
-	public void start()
-	{
+
+	public void start() {
 		System.out.println("Started");
 		sessionClock = kieSession.getSessionClock();
 		long startTime = System.nanoTime();
@@ -109,76 +109,72 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		} finally {
 			long endTime = System.nanoTime();
 			double difference = (endTime - startTime) / 1e6; // get ms
-		//	System.out.println("BPMN completed in " + difference + " ms");
+			// System.out.println("BPMN completed in " + difference + " ms");
 		}
 
-			
 	}
-	
-	public void broadcastSignal(final String type,final Object event)
-	{
+
+	public void broadcastSignal(final String type, final Object event) {
 		kieSession.signalEvent(type, event);
 	}
-	
-	public void broadcastSignal(final String type,final Object event, long processInstanceId)
-	{
+
+	public void broadcastSignal(final String type, final Object event, long processInstanceId) {
 		kieSession.signalEvent(type, event, processInstanceId);
 	}
-	
-	public void updateFact(FactHandle handle, Object object)
-	{
+
+	public void updateFact(FactHandle handle, Object object) {
 		kieSession.update(handle, object);
 	}
 
 	public long advanceSeconds(long amount) {
-		return advanceSeconds(amount,false);
+		return advanceSeconds(amount, false);
 	}
 
-	public long advanceSeconds(long amount,boolean humanTime) {
-		long absoluteTime=0;
-		for (int sec=0;sec<(amount*2);sec++) {
+	public long advanceSeconds(long amount, boolean humanTime) {
+		long absoluteTime = 0;
+		for (int sec = 0; sec < (amount * 2); sec++) {
 			absoluteTime = sessionClock.advanceTime(500, TimeUnit.MILLISECONDS); // half a sec should be ok
 			if (humanTime) {
 				sleepMS(500);
 			}
-			
+
 		}
 		return absoluteTime;
 	}
-	
+
 	public long advanceMinutes(long amount) {
-		return advanceMinutes(amount,false);
+		return advanceMinutes(amount, false);
 	}
 
-	public long advanceMinutes(long amount,boolean humanTime) {
-		return advanceSeconds(amount*60,humanTime);
+	public long advanceMinutes(long amount, boolean humanTime) {
+		return advanceSeconds(amount * 60, humanTime);
 	}
-	
+
 	public long advanceHours(long amount) {
-		return advanceHours(amount,false);
+		return advanceHours(amount, false);
 	}
 
-	public long advanceHours(long amount,boolean humanTime) {
-		return advanceMinutes(amount*60,humanTime);
+	public long advanceHours(long amount, boolean humanTime) {
+		return advanceMinutes(amount * 60, humanTime);
 	}
-	
+
 	public long advanceDays(long amount) {
-		return advanceDays(amount,false);
+		return advanceDays(amount, false);
 	}
 
-	public long advanceDays(long amount,boolean humanTime) {
-		return advanceHours(amount*24,humanTime);
+	public long advanceDays(long amount, boolean humanTime) {
+		return advanceHours(amount * 24, humanTime);
 	}
 
 	protected void sleepMS(long ms) {
-	    try {
-				Thread.sleep(ms);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		try {
+			Thread.sleep(ms);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-	
+	}
+
 	private void setup() {
 		if (clockType.equals(ClockType.PSEUDO_CLOCK)) {
 			System.setProperty("drools.clockType", "pseudo"/* clockType.name() */);
@@ -192,22 +188,42 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 		if (jbpms != null) {
 			for (String p : jbpms) {
-				String fullJbpmPath = findFullPath(p);
-				resources.put(fullJbpmPath, ResourceType.BPMN2);
+				if (StringUtils.endsWith(p, ".bpmn")) {
+					String fullJbpmPath = findFullPath(p);
+					resources.put(fullJbpmPath, ResourceType.BPMN2);
+				} else {
+					// Is a directory
+					List<String> fullJbpmPaths = findFullPaths(p, "bpmn");
+					fullJbpmPaths.forEach(f -> resources.put(f, ResourceType.BPMN2));
+
+				}
 			}
 		}
 
 		if (drls != null) {
 			for (String p : drls) {
-				String fullDrlPath = findFullPath(p);
-				resources.put(fullDrlPath, ResourceType.DRL);
+				if (StringUtils.endsWith(p, ".drl")) {
+					String fullDrlPath = findFullPath(p);
+					resources.put(fullDrlPath, ResourceType.DRL);
+				} else {
+					// Is a directory
+					List<String> fullPaths = findFullPaths(p, "drl");
+					fullPaths.forEach(f -> resources.put(f, ResourceType.DRL));
+				}
 			}
 		}
 
 		if (dtables != null) {
 			for (String p : dtables) {
-				String fullDtablePath = findFullPath(p);
-				resources.put(fullDtablePath, ResourceType.DTABLE);
+				if (StringUtils.endsWith(p, ".xls")) {
+					String fullDtablePath = findFullPath(p);
+					resources.put(fullDtablePath, ResourceType.DTABLE);
+				} else {
+					// Is a directory
+					List<String> fullPaths = findFullPaths(p, "xls");
+					fullPaths.forEach(f -> resources.put(f, ResourceType.DTABLE));
+				}
+
 			}
 		}
 
@@ -219,7 +235,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		}
 
 		String uniqueRuntimeStr = UUID.randomUUID().toString();
-		
+
 		createRuntimeManager(Strategy.SINGLETON, resources, uniqueRuntimeStr);
 		kieSession = getRuntimeEngine().getKieSession();
 
@@ -297,8 +313,30 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 	}
 
+	private List<String> findFullPaths(String dirname, String extension) {
+		String baseRulesDir = "./rules"; // default for project
+		if (!"/rules".equals(GennySettings.rulesDir)) {
+			baseRulesDir = GennySettings.rulesDir;
+		}
+		String testRulesDir = baseRulesDir;
+		File base = new File(testRulesDir);
+		File found = searchFile(new File(testRulesDir), dirname);
+		String finalFile = found.getAbsoluteFile().getPath().substring(base.getAbsoluteFile().getPath().length() + 1);
+	//	System.out.println("Found finalDir = " + finalFile);
+
+		Set<Path> resourcePaths = getAllFilesInDirectory(found.getAbsoluteFile().getPath(), extension);
+
+		List<String> files = new ArrayList<String>();
+		resourcePaths.forEach(f -> files.add(findFullPath(f.toString())));
+		return files;
+	}
+
 	private File searchFile(File file, String search) {
 		if (file.isDirectory()) {
+			if (file.getName().equals(search)) {
+				return file;
+			}
+
 			File[] arr = file.listFiles();
 			for (File f : arr) {
 				File found = searchFile(f, search);
@@ -311,6 +349,20 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			}
 		}
 		return null;
+	}
+
+	private Set<Path> getAllFilesInDirectory(String directoryPathStr, String extension) {
+		Set<Path> paths = new HashSet<>();
+
+		Path directoryPath = Paths.get(directoryPathStr);
+
+		try {
+			paths = Files.walk(directoryPath).filter(s -> s.toString().endsWith("." + extension)).map(Path::getFileName)
+					.sorted().collect(Collectors.toSet());
+		} catch (IOException e) {
+			log.warn("No files");
+		}
+		return paths;
 	}
 
 	public void close() {
@@ -326,13 +378,12 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		private GennyKieSession managedInstance = null;
 
 		public Builder() {
-			 managedInstance = new GennyKieSession(false);
+			managedInstance = new GennyKieSession(false);
 		}
 
 		public Builder(boolean persistence) {
-			 managedInstance = new GennyKieSession(persistence);
+			managedInstance = new GennyKieSession(persistence);
 		}
-
 
 		/**
 		 * fluent setter for jbpms in the list
@@ -349,8 +400,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			}
 			return this;
 		}
-		
-		
+
 		/**
 		 * fluent setter for drls in the list
 		 * 
