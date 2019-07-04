@@ -128,10 +128,11 @@ kcontext.getKnowledgeRuntime().insert(kcontext.getProcessInstance());
         <drools:onEntry-script scriptFormat="http://www.java.com/java">
           <drools:script>System.out.println(&quot;Generate Tree - Start &quot;);
 kcontext.getKnowledgeRuntime().insert(rules);
+kcontext.getKnowledgeRuntime().insert(serviceToken);
 kcontext.getKnowledgeRuntime().insert(kcontext.getProcessInstance());</drools:script>
         </drools:onEntry-script>
         <drools:onExit-script scriptFormat="http://www.java.com/java">
-          <drools:script>log.info(&quot;Generate Tree - Stop &quot;); </drools:script>
+          <drools:script>System.out.println(&quot;Generate Tree - Stop &quot;); </drools:script>
         </drools:onExit-script>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
@@ -170,7 +171,7 @@ kcontext.getKnowledgeRuntime().insert(kcontext.getProcessInstance());
 </drools:script>
         </drools:onEntry-script>
         <drools:onExit-script scriptFormat="http://www.java.com/java">
-          <drools:script>log.info(&quot;Generate Themes - Completed&quot;);</drools:script>
+          <drools:script>System.out.println(&quot;Generate Themes - Completed&quot;);</drools:script>
         </drools:onExit-script>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
@@ -207,7 +208,7 @@ kcontext.getKnowledgeRuntime().insert(kcontext.getProcessInstance());
 </drools:script>
         </drools:onEntry-script>
         <drools:onExit-script scriptFormat="http://www.java.com/java">
-          <drools:script>log.info(&quot;Generate Frames - Completed&quot;);</drools:script>
+          <drools:script>System.out.println(&quot;Generate Frames - Completed&quot;);</drools:script>
         </drools:onExit-script>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
