@@ -32,12 +32,14 @@ public class FrameBuilderTest {
 
 				.build();	
 		
+		System.out.print(THM_FORM_CONTAINER_DEFAULT);
+		
 		
 	
 
 	}
 	
-	@Test
+	//@Test
 	public void frameBuilderTest()
 	{
 

@@ -20,10 +20,15 @@ import io.vavr.Tuple3;
 import io.vavr.Tuple4;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.test.Frame2.Builder;
+import life.genny.utils.VertxUtils;
 
 @Immutable
 public class Frame3 extends BaseEntity {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String questionCode;
 	private Optional<QuestionGroup> questionGroup = Optional.empty();
 	private FramePosition position;
@@ -243,6 +248,26 @@ public class Frame3 extends BaseEntity {
 
 			return new Theme.Builder(this, f, theme);		
 		}
+		
+		
+		/**
+		 * fluent setter for themes in the list
+		 * 
+		 * @param none
+		 * @return
+		 */
+		public Theme.Builder addTheme(String themeCode) {
+			if (managedInstance.theme3s == null) {
+				managedInstance.theme3s = new ArrayList<Theme>();
+			}
+			Consumer<Theme> f = obj -> { managedInstance.theme3s.add(obj);};
+			Theme theme = VertxUtils.getObject(managedInstance.getRealm(), "", themeCode, Theme.class);
+			theme.setDirectLink(true);
+			managedInstance.themes.add(Tuple.of(theme,themeWeight));
+			themeWeight = themeWeight - 1.0;
+
+			return new Theme.Builder(this, f, theme);		
+		}		
 		
 		/**
 		 * fluent setter for themes in the list

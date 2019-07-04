@@ -85,35 +85,38 @@ public class FrameUtils2 {
 			ask.setContextList(contextAsk.getContextList());
 
 			// if ask question is not a group then make it a fake group
-//			if (!StringUtils.endsWith(ask.getQuestion().getCode(), "_GRP")) {
-//				String attributeCode = "QQQ_QUESTION_GROUP_INPUT";
-//
-//				/* Get the on-the-fly question attribute */
-//				Attribute attribute = RulesUtils.getAttribute(attributeCode, serviceToken.getToken());
-//
-//				Question fakeQuestionGrp = new Question(ask.getQuestionCode() + "_GRP", ask.getName(), attribute,
-//						false);
-//				fakeQuestionGrp.setMandatory(ask.getMandatory());
-//				fakeQuestionGrp.setRealm(ask.getRealm());
-//				fakeQuestionGrp.setReadonly(ask.getReadonly());
-//				fakeQuestionGrp.setOneshot(ask.getOneshot());
-//
-//				try {
-//					fakeQuestionGrp.addTarget(ask.getQuestion(), 1.0);
-//				} catch (BadDataException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//				Ask newask = new Ask(fakeQuestionGrp, serviceToken.getUserCode(), serviceToken.getUserCode(), false,
-//						1.0, false, false, true);
-//				Ask[] childAsks = new Ask[1];
-//				childAsks[0] = ask;
-//				newask.setChildAsks(childAsks);
-//				asks.add(newask);
-//
-//			} else {
-				asks.add(ask);
-//			}
+			// if (!StringUtils.endsWith(ask.getQuestion().getCode(), "_GRP")) {
+			// String attributeCode = "QQQ_QUESTION_GROUP_INPUT";
+			//
+			// /* Get the on-the-fly question attribute */
+			// Attribute attribute = RulesUtils.getAttribute(attributeCode,
+			// serviceToken.getToken());
+			//
+			// Question fakeQuestionGrp = new Question(ask.getQuestionCode() + "_GRP",
+			// ask.getName(), attribute,
+			// false);
+			// fakeQuestionGrp.setMandatory(ask.getMandatory());
+			// fakeQuestionGrp.setRealm(ask.getRealm());
+			// fakeQuestionGrp.setReadonly(ask.getReadonly());
+			// fakeQuestionGrp.setOneshot(ask.getOneshot());
+			//
+			// try {
+			// fakeQuestionGrp.addTarget(ask.getQuestion(), 1.0);
+			// } catch (BadDataException e) {
+			// // TODO Auto-generated catch block
+			// e.printStackTrace();
+			// }
+			// Ask newask = new Ask(fakeQuestionGrp, serviceToken.getUserCode(),
+			// serviceToken.getUserCode(), false,
+			// 1.0, false, false, true);
+			// Ask[] childAsks = new Ask[1];
+			// childAsks[0] = ask;
+			// newask.setChildAsks(childAsks);
+			// asks.add(newask);
+			//
+			// } else {
+			asks.add(ask);
+			// }
 		}
 		Ask[] itemsArray = new Ask[asks.size()];
 		itemsArray = asks.toArray(itemsArray);
@@ -127,14 +130,22 @@ public class FrameUtils2 {
 	}
 
 	private static BaseEntity getBaseEntity(final String beCode, final String beName, final GennyToken serviceToken) {
-		BaseEntity be = null;//VertxUtils.getObject(serviceToken.getRealm(), "", beCode, BaseEntity.class,
-			//	serviceToken.getToken());
+		BaseEntity be = null; //VertxUtils.getObject(serviceToken.getRealm(), "", beCode, BaseEntity.class,
+		// serviceToken.getToken());
+		if ("THM_NOT_INHERITBALE".equals(beCode)) {
+			log.info("here");
+		}
 		if (be == null) {
 			try {
-			//	be = QwandaUtils.getBaseEntityByCodeWithAttributes(beCode, serviceToken.getToken());
+				be = QwandaUtils.getBaseEntityByCodeWithAttributes(beCode,
+				 serviceToken.getToken());
 				if (be == null) {
-					be = QwandaUtils.createBaseEntityByCode(beCode, beName, GennySettings.qwandaServiceUrl,
-							serviceToken.getToken());
+					try {
+						be = QwandaUtils.createBaseEntityByCode(beCode, beName, GennySettings.qwandaServiceUrl,
+								serviceToken.getToken());
+					} catch (java.lang.NumberFormatException e) {
+						be = new BaseEntity(beCode, beName);
+					}
 				}
 			} catch (Exception e) {
 				be = QwandaUtils.createBaseEntityByCode(beCode, beName, GennySettings.qwandaServiceUrl,
@@ -197,7 +208,7 @@ public class FrameUtils2 {
 				askBe.setRealm(parent.getRealm());
 
 				Ask ask = QuestionUtils.createQuestionForBaseEntity2(askBe,
-						StringUtils.endsWith(askBe.getCode(), "GRP"), serviceToken);
+						StringUtils.endsWith(askBe.getCode(), "GRP"), serviceToken,childFrame.getQuestionGroup().get().getSourceAlias(),childFrame.getQuestionGroup().get().getTargetAlias());
 
 				Map<ContextType, Set<BaseEntity>> contextMap = new HashMap<ContextType, Set<BaseEntity>>();
 				Map<ContextType, life.genny.qwanda.VisualControlType> vclMap = new HashMap<ContextType, VisualControlType>();
@@ -231,6 +242,7 @@ public class FrameUtils2 {
 
 				childBe.setQuestions(entityQuestionList);
 				baseEntityList.add(askBe);
+				/* Set the ask to support any sourceAlias and targetAlias */
 
 				askList.add(ask); // add to the ask list
 
@@ -238,6 +250,8 @@ public class FrameUtils2 {
 
 		}
 	}
+
+
 
 	/**
 	 * @param frame
@@ -316,8 +330,14 @@ public class FrameUtils2 {
 			BaseEntity themeBe = getBaseEntity(theme.getCode(), theme.getCode(), gennyToken);
 
 			for (ThemeAttribute themeAttribute : theme.getAttributes()) {
-				Attribute attribute = new Attribute(themeAttribute.getCode(), themeAttribute.getCode(),
+				Attribute attribute = null;
+
+
+				attribute = RulesUtils.getAttribute(themeAttribute.getCode(),gennyToken.getToken());
+
+				if (attribute == null) { attribute = new Attribute(themeAttribute.getCode(), themeAttribute.getCode(),
 						new DataType("DTT_THEME"));
+				}
 
 				try {
 					if (themeBe.containsEntityAttribute(themeAttribute.getCode())) {
@@ -336,7 +356,16 @@ public class FrameUtils2 {
 						themeEA.setValue(merged.toString());
 						themeEA.setWeight(weight);
 					} else {
-						themeBe.addAttribute(new EntityAttribute(themeBe, attribute, weight, themeAttribute.getJson()));
+						if (attribute.dataType.getClassName().equals(Boolean.class.getCanonicalName())) {
+							themeBe.addAttribute(new EntityAttribute(themeBe, attribute, weight, themeAttribute.getValueBoolean().get()));
+						} else 	if (attribute.dataType.getClassName().equals(Double.class.getCanonicalName())) {
+							themeBe.addAttribute(new EntityAttribute(themeBe, attribute, weight, themeAttribute.getValueDouble()));
+						} else 	if (attribute.dataType.getClassName().equals(String.class.getCanonicalName())) {
+							themeBe.addAttribute(new EntityAttribute(themeBe, attribute, weight, themeAttribute.getValueString()));
+						} else{
+							themeBe.addAttribute(new EntityAttribute(themeBe,  new Attribute(themeAttribute.getCode(), themeAttribute.getCode(),
+									new DataType("DTT_THEME")), weight, themeAttribute.getJson()));
+						}
 					}
 				} catch (BadDataException e) {
 					// TODO Auto-generated catch block

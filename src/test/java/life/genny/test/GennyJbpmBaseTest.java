@@ -21,9 +21,11 @@ import javax.persistence.EntityManagerFactory;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.ClientProtocolException;
 import org.jbpm.test.JbpmJUnitBaseTestCase;
+import org.jbpm.test.JbpmJUnitBaseTestCase.Strategy;
 import org.junit.BeforeClass;
 import org.kie.api.KieBase;
 import org.kie.api.KieServices;
+import org.kie.api.command.Command;
 import org.kie.api.command.KieCommands;
 import org.kie.api.event.process.DefaultProcessEventListener;
 import org.kie.api.event.process.ProcessCompletedEvent;
@@ -33,11 +35,13 @@ import org.kie.api.event.process.ProcessStartedEvent;
 import org.kie.api.event.process.ProcessVariableChangedEvent;
 import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.Environment;
+import org.kie.api.runtime.ExecutionResults;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.KieSessionConfiguration;
 import org.kie.api.runtime.conf.TimedRuleExecutionOption;
 import org.kie.api.runtime.process.NodeInstance;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
+import org.kie.internal.command.CommandFactory;
 import org.kie.internal.runtime.StatefulKnowledgeSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,6 +90,13 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 	
 	protected  GennyToken userToken;
 	protected  GennyToken serviceToken;
+	
+	private static final String DRL_PROJECT = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/project.drl";
+	private static final String DRL_USER_COMPANY = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/user_company.drl";
+	private static final String DRL_USER = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/user.drl";
+	private static final String DRL_EVENT_LISTENER_SERVICE_SETUP = "rulesCurrent/shared/_BPMN_WORKFLOWS/Initialise_Project/eventListenerServiceSetup.drl";
+	private static final String DRL_EVENT_LISTENER_USER_SETUP = "rulesCurrent/shared/_BPMN_WORKFLOWS/Initialise_Project/eventListenerUserSetup.drl";
+
 
 
 	@BeforeClass
@@ -318,6 +329,15 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 		return getServices().getCommands();
 	}
 
+	protected static QRules createQRules(final GennyToken userToken,final GennyToken serviceToken, EventBusInterface eventBusMock) {
+
+		QRules qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
+		qRules.set("realm", userToken.getRealm());
+		qRules.setServiceToken(serviceToken.getToken());
+		return qRules;
+
+	}
+	
 	protected QRules getQRules(final GennyToken token) {
 
 		List<Tuple2<String, Object>> globals = new ArrayList<Tuple2<String, Object>>();
@@ -525,12 +545,13 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 		return true;
 	}
 	
-	protected void sleepMS(long ms) {
-    try {
-			Thread.sleep(ms);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+
+	
+	public static GennyToken createGennyToken(final String realm, String username, String name, String role)
+	{
+		String normalisedUsername = "PER_"+username.toUpperCase();
+
+		GennyToken gennyToken = new GennyToken(normalisedUsername,realm,username,name,role);
+		return gennyToken;
+	}			
 }

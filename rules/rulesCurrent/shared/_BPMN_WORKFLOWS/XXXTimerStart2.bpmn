@@ -3,7 +3,7 @@
 <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:g="http://www.jboss.org/drools/flow/gpd" xmlns:java="http://www.java.com/javaTypes" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.0.Final-v20180515-1642-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
   <bpmn2:itemDefinition id="_timeBefore" isCollection="false" structureRef="java.lang.Long"/>
   <bpmn2:itemDefinition id="_timeExecution" isCollection="false" structureRef="java.lang.Long"/>
-  <bpmn2:process id="DelayTimerEventProcess" tns:packageName="org.jbpm.persistence.timer" name="Delay Timer Event" isExecutable="true" processType="Private">
+  <bpmn2:process id="TimerTest" tns:packageName="org.jbpm.persistence.timer" name="Delay Timer Event" isExecutable="true" processType="Private">
     <bpmn2:property id="timeBeforeTimer" itemSubjectRef="_timeBefore" name="timeBeforeTimer"/>
     <bpmn2:property id="timeAfterTimer" itemSubjectRef="_timeExecution" name="timeAfterTimer"/>
     <bpmn2:startEvent id="_1" name="Start">
@@ -68,7 +68,7 @@ System.setProperty(&quot;timerFired&quot;, String.valueOf(valInt));</bpmn2:scrip
     <bpmn2:sequenceFlow id="_1-_5" sourceRef="_1" targetRef="_5"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="DelayTimerEventProcess">
+    <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="TimerTest">
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_1" bpmnElement="_1">
         <dc:Bounds height="36.0" width="36.0" x="50.0" y="57.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1">

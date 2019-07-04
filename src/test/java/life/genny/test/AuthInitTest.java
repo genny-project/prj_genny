@@ -49,6 +49,408 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		super(false);
 	}
 
+	@Test
+	public void simple()
+	{
+		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
+		QRules rules = getQRules(userToken); // defaults to user anyway
+		GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
+
+	//	GennyToken serviceToken = new GennyToken("PER_USER1","internmatch","user1","User1","test");
+		
+		Theme THM_NOT_INHERITBALE = Theme.builder("THM_NOT_INHERITBALE")
+				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE,true).end()				
+				.build();
+		Frame3 logo = Frame3.builder("FRM_PROJECT_LOGO")
+				.addTheme(THM_NOT_INHERITBALE).end()
+				.build();
+
+		Frame3 frameRoot = Frame3.builder("FRM_ROOT")
+				.addFrame(logo, FramePosition.NORTH).end()
+				.build();
+
+		Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+		QDataBaseEntityMessage msg = FrameUtils2.toMessage(frameRoot, serviceToken, askMsgs);
+		
+		String test = JsonUtils.toJson(msg);
+		System.out.println(test);
+		
+	}
+	
+	
+	//@Test
+	public void testTree() {
+
+		/* token stuff */
+		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
+		QRules rules = getQRules(userToken); // defaults to user anyway
+		GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
+
+		Theme THM_DUMMY = Theme.builder("THM_DUMMY").addAttribute().height(100).width(90).end()
+				.build();
+
+		Theme THM_LOGO = Theme.builder("THM_LOGO")
+		.addAttribute()
+			.fit("contain")
+			.height(100)
+			.width(100)
+			.end()
+		.build();
+
+		Theme THM_SIDEBAR = Theme.builder("THM_SIDEBAR")
+		.addAttribute()
+			.backgroundColor("#065B9A")
+			.minWidth(300)
+			.width("100%")
+			.end()
+		.build();
+
+		Theme THM_HEADER = Theme.builder("THM_HEADER")
+		.addAttribute()
+			.backgroundColor("#18639F")
+			.height(80)
+			.end()
+		.build();
+
+		Theme THM_CENTRE = Theme.builder("THM_CENTRE")
+		.addAttribute()
+			.backgroundColor("#F8F9FA")
+			.end()
+		.build();
+
+		Theme THM_FOOTER = Theme.builder("THM_FOOTER")
+		.addAttribute()
+			.backgroundColor("#16649E")
+			.bold(true)
+			.size("md")
+			.height(50)
+			.end()
+		.build();
+
+		Theme THM_FORM_LABEL_DEFAULT = Theme.builder("THM_FORM_LABEL_DEFAULT")
+		.build();
+
+		Theme THM_FORM_DEFAULT_REPLICA = Theme.builder("THM_FORM_DEFAULT_REPLICA")
+		.addAttribute()
+			.backgroundColor("none").end()
+		.addAttribute(ThemeAttributeType.PRI_HAS_LABEL,true)
+			.end()
+		.build();
+
+		Frame3 frameDummy = Frame3.builder("FRM_DUMMY").addTheme(THM_DUMMY).end().build();
+
+		Frame3 logo = Frame3.builder("FRM_PROJECT_LOGO")
+					.addTheme(THM_SIDEBAR).end()
+					.question("QUE_LOGO").end()
+					.addFrame(frameDummy).end()
+					.build();
+
+		Frame3 project = Frame3.builder("FRM_PROJECT")
+					.addThemeParent("THM_PROJECT", "size", "md").end()
+					.addThemeParent("THM_PROJECT_WEIGHT", "bold", true).end()
+					.addThemeParent("THM_PROJECT_COLOR", "color", "white").end()
+					.question("QUE_NAME_TWO")
+						.addTheme(THM_FORM_LABEL_DEFAULT)
+						.vcl(VisualControlType.VCL_LABEL)
+						.end()
+					.end()
+					.addFrame(frameDummy).end()
+					.build();
+
+		Frame3 sideBar = Frame3.builder("FRM_SIDEAR")
+						.addTheme(THM_SIDEBAR).end()
+						.addFrame(frameDummy).end()
+						.addFrame(logo, FramePosition.NORTH).end()
+						.build();
+		Frame3 header = Frame3.builder("FRM_HEADER")
+						.addTheme(THM_HEADER).end()
+						.addFrame(frameDummy).end()
+						.addFrame(project).end()
+						.build();
+		Frame3 centre = Frame3.builder("FRM_CENTRE")
+						.addTheme(THM_CENTRE).end()
+						.addFrame(frameDummy).end()
+						.build();
+
+		Frame3 poweredBy = Frame3.builder("FRM_POWERED_BBY")
+						.addThemeParent("THM_WIDTH", "width", 200).end()
+						.addThemeParent("THM_COLOR", "color", "white").end()
+						.question("QUE_POWERED_BY_GRP")
+							.addTheme(THM_FORM_LABEL_DEFAULT)
+							.vcl(VisualControlType.VCL_LABEL)
+							.end()
+						.addTheme(THM_FORM_DEFAULT_REPLICA)
+							.weight(3.0)
+							.end()
+						.end()
+						.build();
+
+		Frame3 footer = Frame3.builder("FRM_FOOTER")
+						.addTheme(THM_FOOTER).end()
+						.addFrame(frameDummy).end()
+						.addFrame(poweredBy, FramePosition.EAST).end()
+						.build();
+
+	//	Frame3 bucket = generateBucket();
+
+			Theme THM_BUCKET_LABEL = Theme.builder("THM_BUCKET_LABEL")
+				.addAttribute()
+					.textAlign("center")
+					.margin(0)
+					.end()
+				.build();
+
+				Theme THM_BUCKET = Theme.builder("THM_BUCKET")
+				.addAttribute()
+					.backgroundColor("#F8F9FA")
+					.overflowX("auto")
+					.overflowY("auto")
+					.width("100%")
+					.end()
+				.build();
+
+				Theme THM_NOT_INHERITBALE = Theme.builder("THM_NOT_INHERITBALE")
+						.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
+						.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION, true).end()
+						.addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end()
+						.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE,true).end()				
+						.build();
+
+				Theme THM_BUCKET_COLUMN_HEADER = Theme.builder("THM_BUCKET_COLUMN_HEADER")
+				.addAttribute()
+					.backgroundColor("#d1d1d1")
+					.height(20)
+					.end()
+				.build();
+
+				Theme THM_BUCKET_COLUMN = Theme.builder("THM_BUCKET_COLUMN")
+				.addAttribute()
+					.backgroundColor("#EAEAEA")
+					.minWidth(300)
+					.width("100%")
+					.margin(20)
+					.textAlign("center")
+					.end()
+				.build();
+
+
+				Frame3 columnHeader = Frame3.builder("FRM_BUCKET_COLUMN_HEADER")
+									.addTheme(THM_BUCKET_COLUMN_HEADER).end()
+									.question("QUE_NAME_TWO")
+										.addTheme(THM_BUCKET_LABEL)
+										.vcl(VisualControlType.VCL_LABEL)
+										.end()
+									.end()
+									.build();
+
+				Frame3 bucketColumn1 = Frame3.builder("FRM_BUCKET_COLUMN_ONE")
+								
+									.addTheme(THM_BUCKET_COLUMN).end()
+									// .question("QUE_NAME_TWO")
+									// 	.addTheme(THM_BUCKET_LABEL)
+									// 	.vcl(VisualControlType.VCL_LABEL)
+									// 	.end()
+									// .end()
+									.addTheme(THM_NOT_INHERITBALE).end()
+									.addFrame(columnHeader, FramePosition.NORTH).end()
+									.build();
+				Frame3 bucketColumn2 = Frame3.builder("FRM_BUCKET_COLUMN_TWO")
+									.addTheme(THM_BUCKET_COLUMN).end()
+									// .question("QUE_NAME_TWO")
+									// 	.addTheme(THM_BUCKET_LABEL)
+									// 	.vcl(VisualControlType.VCL_LABEL)
+									// 	.end()
+									// .end()
+									.build();
+				Frame3 bucketColumn3 = Frame3.builder("FRM_BUCKET_COLUMN_THREE")
+									.addTheme(THM_BUCKET_COLUMN).end()
+									// .question("QUE_NAME_TWO")
+									// 	.addTheme(THM_BUCKET_LABEL)
+									// 	.vcl(VisualControlType.VCL_LABEL)
+									// 	.end()
+									// .end()
+									.build();
+				Frame3 bucketColumn4 = Frame3.builder("FRM_BUCKET_COLUMN_FOUR")
+									.addTheme(THM_BUCKET_COLUMN).end()
+									// .question("QUE_NAME_TWO")
+									// 	.addTheme(THM_BUCKET_LABEL)
+									// 	.vcl(VisualControlType.VCL_LABEL)
+									// 	.end()
+									// .end()
+									.build();
+				Frame3 bucketColumn5 = Frame3.builder("FRM_BUCKET_COLUMN_FIVE")
+									.addTheme(THM_BUCKET_COLUMN).end()
+									// .question("QUE_NAME_TWO")
+									// 	.addTheme(THM_BUCKET_LABEL)
+									// 	.vcl(VisualControlType.VCL_LABEL)
+									// 	.end()
+									// .end()
+									.build();
+				Frame3 bucketColumn6 = Frame3.builder("FRM_BUCKET_COLUMN_SIX")
+									.addTheme(THM_BUCKET_COLUMN).end()
+									// .question("QUE_NAME_TWO")
+									// 	.addTheme(THM_BUCKET_LABEL)
+									// 	.vcl(VisualControlType.VCL_LABEL)
+									// 	.end()
+									// .end()
+									.build();
+				Frame3 bucketColumn7 = Frame3.builder("FRM_BUCKET_COLUMN_SEVEN")
+									.addTheme(THM_BUCKET_COLUMN).end()
+									// .question("QUE_NAME_TWO")
+									// 	.addTheme(THM_BUCKET_LABEL)
+									// 	.vcl(VisualControlType.VCL_LABEL)
+									// 	.end()
+									// .end()
+									.build();
+
+				Frame3 bucket = Frame3.builder("FRM_BUCKET")
+								.addTheme(THM_BUCKET).end()
+								.addFrame(bucketColumn1, FramePosition.WEST).end()
+								.addFrame(bucketColumn2, FramePosition.WEST).end()
+								.addFrame(bucketColumn3, FramePosition.WEST).end()
+								.addFrame(bucketColumn4, FramePosition.WEST).end()
+								.addFrame(bucketColumn5, FramePosition.WEST).end()
+								.addFrame(bucketColumn6, FramePosition.WEST).end()
+								.addFrame(bucketColumn7, FramePosition.WEST).end()
+								.build();
+
+		
+		Frame3 frameRoot = Frame3.builder("FRM_ROOT")
+						.addFrame(header, FramePosition.NORTH).end()
+						.addFrame(sideBar, FramePosition.WEST).end()
+						.addFrame(bucket, FramePosition.CENTRE).end()
+						.addFrame(footer, FramePosition.SOUTH).end()
+						.build();
+
+		Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+		QDataBaseEntityMessage msg = FrameUtils2.toMessage(frameRoot, serviceToken, askMsgs);
+		
+		String test = JsonUtils.toJson(msg);
+		
+		rules.publishCmd(msg);
+		for (QDataAskMessage askMsg : askMsgs) {
+			rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode()); // Send associated
+		}
+		System.out.println("Sent");
+	}
+
+	public Frame3 generateBucket(){
+
+		Theme THM_BUCKET_LABEL = Theme.builder("THM_BUCKET_LABEL")
+		.addAttribute().textAlign("center").end()
+		.addAttribute().margin(0).end()
+		.build();
+
+		Theme THM_BUCKET = Theme.builder("THM_BUCKET")
+		.addAttribute().backgroundColor("#F8F9FA").end()
+		.addAttribute().overflowX("auto").end()
+		.addAttribute().overflowY("auto").end()
+		.addAttribute().width("100%").end()
+		.build();
+
+		Theme THM_NOT_INHERITBALE = Theme.builder("THM_NOT_INHERITBALE")
+				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
+				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION, true).end()
+				.addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end()
+				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE,true).end()				
+				.build();
+
+		Theme THM_BUCKET_COLUMN_HEADER = Theme.builder("THM_BUCKET_COLUMN_HEADER")
+		.addAttribute().backgroundColor("#d1d1d1").end()
+		.addAttribute().height(20).end()
+		.build();
+
+		Theme THM_BUCKET_COLUMN = Theme.builder("THM_BUCKET_COLUMN")
+		.addAttribute().backgroundColor("#EAEAEA").end()
+		.addAttribute().minWidth(300).end()
+		.addAttribute().width("100%").end()
+		.addAttribute().margin(20).end()
+		.addAttribute().textAlign("center").end()
+		.build();
+
+
+		Frame3 columnHeader = Frame3.builder("FRM_BUCKET_COLUMN_HEADER")
+							.addTheme(THM_BUCKET_COLUMN_HEADER).end()
+							.question("QUE_NAME_TWO")
+								.addTheme(THM_BUCKET_LABEL)
+								.vcl(VisualControlType.VCL_LABEL)
+								.end()
+							.end()
+							.build();
+
+		Frame3 bucketColumn1 = Frame3.builder("FRM_BUCKET_COLUMN_ONE")
+						
+							.addTheme(THM_BUCKET_COLUMN).end()
+							// .question("QUE_NAME_TWO")
+							// 	.addTheme(THM_BUCKET_LABEL)
+							// 	.vcl(VisualControlType.VCL_LABEL)
+							// 	.end()
+							// .end()
+							.addTheme(THM_NOT_INHERITBALE).end()
+							.addFrame(columnHeader, FramePosition.NORTH).end()
+							.build();
+		Frame3 bucketColumn2 = Frame3.builder("FRM_BUCKET_COLUMN_TWO")
+							.addTheme(THM_BUCKET_COLUMN).end()
+							// .question("QUE_NAME_TWO")
+							// 	.addTheme(THM_BUCKET_LABEL)
+							// 	.vcl(VisualControlType.VCL_LABEL)
+							// 	.end()
+							// .end()
+							.build();
+		Frame3 bucketColumn3 = Frame3.builder("FRM_BUCKET_COLUMN_THREE")
+							.addTheme(THM_BUCKET_COLUMN).end()
+							// .question("QUE_NAME_TWO")
+							// 	.addTheme(THM_BUCKET_LABEL)
+							// 	.vcl(VisualControlType.VCL_LABEL)
+							// 	.end()
+							// .end()
+							.build();
+		Frame3 bucketColumn4 = Frame3.builder("FRM_BUCKET_COLUMN_FOUR")
+							.addTheme(THM_BUCKET_COLUMN).end()
+							// .question("QUE_NAME_TWO")
+							// 	.addTheme(THM_BUCKET_LABEL)
+							// 	.vcl(VisualControlType.VCL_LABEL)
+							// 	.end()
+							// .end()
+							.build();
+		Frame3 bucketColumn5 = Frame3.builder("FRM_BUCKET_COLUMN_FIVE")
+							.addTheme(THM_BUCKET_COLUMN).end()
+							// .question("QUE_NAME_TWO")
+							// 	.addTheme(THM_BUCKET_LABEL)
+							// 	.vcl(VisualControlType.VCL_LABEL)
+							// 	.end()
+							// .end()
+							.build();
+		Frame3 bucketColumn6 = Frame3.builder("FRM_BUCKET_COLUMN_SIX")
+							.addTheme(THM_BUCKET_COLUMN).end()
+							// .question("QUE_NAME_TWO")
+							// 	.addTheme(THM_BUCKET_LABEL)
+							// 	.vcl(VisualControlType.VCL_LABEL)
+							// 	.end()
+							// .end()
+							.build();
+		Frame3 bucketColumn7 = Frame3.builder("FRM_BUCKET_COLUMN_SEVEN")
+							.addTheme(THM_BUCKET_COLUMN).end()
+							// .question("QUE_NAME_TWO")
+							// 	.addTheme(THM_BUCKET_LABEL)
+							// 	.vcl(VisualControlType.VCL_LABEL)
+							// 	.end()
+							// .end()
+							.build();
+
+		Frame3 bucket = Frame3.builder("FRM_BUCKET")
+						.addTheme(THM_BUCKET).end()
+						.addFrame(bucketColumn1, FramePosition.WEST).end()
+						.addFrame(bucketColumn2, FramePosition.WEST).end()
+						.addFrame(bucketColumn3, FramePosition.WEST).end()
+						.addFrame(bucketColumn4, FramePosition.WEST).end()
+						.addFrame(bucketColumn5, FramePosition.WEST).end()
+						.addFrame(bucketColumn6, FramePosition.WEST).end()
+						.addFrame(bucketColumn7, FramePosition.WEST).end()
+						.build();
+
+		return bucket;
+	}
 	// @Test
 	public void displayGermanFlag() {
 
@@ -99,7 +501,7 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 
 	}
 
-//@Test
+
 	public void testTheme() {
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 		QRules rules = getQRules(userToken); // defaults to user anyway
@@ -122,6 +524,8 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 
 		Theme THM_BACKGROUND_GREEN = Theme.builder("THM_BACKGROUND_GREEN").addAttribute().backgroundColor("green").end()
 				.build();
+		Theme THM_BACKGROUND_YELLOW = Theme.builder("THM_BACKGROUND_YELLOW").addAttribute().backgroundColor("yellow")
+				.end().build();
 
 		Theme THM_BACKGROUND_RED = Theme.builder("THM_BACKGROUND_RED").addAttribute().backgroundColor("red").end()
 				.build();
@@ -129,6 +533,10 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		Theme THM_BACKGROUND_GRAY = Theme.builder("THM_BACKGROUND_GRAY").addAttribute().backgroundColor("gray").end()
 				.build();
 
+		Theme THM_BACKGROUND_ORANGE = Theme.builder("THM_BACKGROUND_ORANGE").addAttribute().backgroundColor("orange").end()
+				.build();
+
+		
 		Theme THM_BACKGROUND_BLACK = Theme.builder("THM_BACKGROUND_BLACK").addAttribute().backgroundColor("black").end()
 				.build();
 
@@ -183,21 +591,40 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 
 		Frame3 header = Frame3.builder("FRM_HEADER").addFrame(profile, FramePosition.EAST).end().build();
 
-		Frame3 notes = Frame3.builder("FRM_NOTES").addTheme(THM_WIDTH_300).end()/*.addTheme(THM_DISPLAY_VERTICAL).end()*/
+		Frame3 notes = Frame3.builder("FRM_NOTES").addTheme(THM_WIDTH_300).end()/*
+																				 * .addTheme(THM_DISPLAY_VERTICAL).end()
+																				 */
 				.addTheme(THM_BACKGROUND_RED).end().question("QUE_USER_COMPANY_GRP").end().build();
-		Frame3 sidebar2 = Frame3.builder("FRM_SIDEBAR2")/*.addTheme(THM_WIDTH_300).end()*//*.addTheme(THM_DISPLAY_VERTICAL)
-				.end()*/.addTheme(THM_BACKGROUND_GRAY).end().question("QUE_USER_PROFILE_GRP")
-				.addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
-				.addTheme(THM_FORM_LABEL_DEFAULT).vcl(VisualControlType.VCL_LABEL).end()
+		Frame3 sidebar2 = Frame3.builder("FRM_SIDEBAR2")
+				/* .addTheme(THM_WIDTH_300).end() *//*
+													 * .addTheme(THM_DISPLAY_VERTICAL) .end()
+													 */.addTheme(THM_BACKGROUND_GRAY).end()
+				.question("QUE_USER_PROFILE_GRP").addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT)
+				.weight(2.0).end().addTheme(THM_FORM_LABEL_DEFAULT).vcl(VisualControlType.VCL_LABEL).end()
+				.addTheme(THM_FORM_WRAPPER_DEFAULT).vcl(VisualControlType.VCL_WRAPPER).end()
+				.addTheme(THM_FORM_ERROR_DEFAULT).vcl(VisualControlType.VCL_ERROR).end().addTheme(THM_FORM_DEFAULT)
+				.weight(3.0).end().addTheme(THM_FORM_CONTAINER_DEFAULT).weight(2.0).end().end().build();
+
+		Frame3 sidebar3 = Frame3.builder("FRM_SIDEBAR3")
+				/* .addTheme(THM_WIDTH_300).end() *//*
+													 * .addTheme(THM_DISPLAY_VERTICAL) .end()
+													 */.addTheme(THM_BACKGROUND_YELLOW).end()
+				.question("QUE_USER_PROFILE_GRP").addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT)
+				.weight(2.0).end().addTheme(THM_FORM_LABEL_DEFAULT).vcl(VisualControlType.VCL_LABEL).end()
 				.addTheme(THM_FORM_WRAPPER_DEFAULT).vcl(VisualControlType.VCL_WRAPPER).end()
 				.addTheme(THM_FORM_ERROR_DEFAULT).vcl(VisualControlType.VCL_ERROR).end().addTheme(THM_FORM_DEFAULT)
 				.weight(3.0).end().addTheme(THM_FORM_CONTAINER_DEFAULT).weight(2.0).end().end().build();
 
 		Frame3 sidebar = Frame3.builder("FRM_SIDEBAR")
 				// .addTheme(THM_WIDTH_300).end()
-				/*.addTheme().addAttribute().width(400).end().end().addTheme(THM_DISPLAY_VERTICAL).end()*/
+
+				/*
+				 * .addTheme().addAttribute().width(400).end().end().addTheme(
+				 * THM_DISPLAY_VERTICAL).end()
+				 */
 				.addTheme(THM_BACKGROUND_GREEN).end().question("QUE_FIRSTNAME")
-//				.question("QUE_USER_PROFILE_GRP")
+				// .question("QUE_USER_PROFILE_GRP")
+
 				.addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
 				.addTheme(THM_FORM_LABEL_DEFAULT).vcl(VisualControlType.VCL_LABEL).end()
 				.addTheme(THM_FORM_WRAPPER_DEFAULT).vcl(VisualControlType.VCL_WRAPPER).end()
@@ -207,10 +634,10 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 		Frame3 footer = Frame3.builder("FRM_FOOTER").addFrame(frameDummy, FramePosition.CENTRE).end()
 				.addTheme(THM_BACKGROUND_BLUE).end().build();
 
-		Frame3 mainFrame = Frame3.builder("FRM_MAIN")
-				.addTheme(THM_BACKGROUND_WHITE).end()
+		Frame3 mainFrame = Frame3.builder("FRM_MAIN").addTheme(THM_BACKGROUND_WHITE).end()
 				.addFrame(sidebar, FramePosition.WEST).end().addFrame(sidebar2, FramePosition.WEST).end()
-//		    	.addFrame(notes,FramePosition.EAST).end()
+				.addFrame(sidebar3, FramePosition.WEST).end()
+				// .addFrame(notes,FramePosition.EAST).end()
 				.addFrame(footer, FramePosition.SOUTH).end().addFrame(centre, FramePosition.CENTRE).end()
 				.addFrame(header, FramePosition.NORTH).end().build();
 
@@ -235,6 +662,7 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 	}
 
 @Test
+
 public void displayFooter() {
 	//getting the tokens
 			GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
@@ -335,9 +763,11 @@ public void displayFooter() {
 			.addTheme(THM_BUTTONS)
 			.vcl(VisualControlType.VCL_INPUT)
 			.weight(2.0)
+
 			.end()
 		.end()
 		.build();
+
 
 	Frame3 frameCancel = Frame3.builder("FRM_CANCEL")
 		.addTheme(THM_CANCEL).end()
@@ -405,6 +835,7 @@ public void displayFooter() {
 	
 			System.out.println("Sent");
 		}
+
 	// @Test
 	public void testDesktopPageDisplay() {
 
@@ -416,16 +847,16 @@ public void displayFooter() {
 
 		Frame3 centre = Frame3.builder("FRM_CENTRE").build();
 
-		Frame3 profile = Frame3.builder("FRM_PROFILE").addThemeParent("THM_DISPLAY_HORIZONTAL", "flexDirection", "row").end()
-				.addThemeParent("THM_BACKGROUND_RED", "backgroundColor", "red").end().build();
+		Frame3 profile = Frame3.builder("FRM_PROFILE").addThemeParent("THM_DISPLAY_HORIZONTAL", "flexDirection", "row")
+				.end().addThemeParent("THM_BACKGROUND_RED", "backgroundColor", "red").end().build();
 
 		Frame3 header = Frame3.builder("FRM_HEADER").addFrame(profile, FramePosition.EAST).build();
 
 		Frame3 sidebar = Frame3.builder("FRM_SIDEBAR").addThemeParent("THM_WIDTH_300", "width", 300).end()
 				.addThemeParent("THM_DISPLAY_VERTICAL", "flexDirection", "column").end()
 				.addThemeParent("THM_DISPLAY_VERTICAL", "justifyContent", "flex-start").end()
-				.addThemeParent("THM_BACKGROUND_RED", "backgroundColor", "red").end().question("QUE_USER_PROFILE_GRP").end()
-				.build();
+				.addThemeParent("THM_BACKGROUND_RED", "backgroundColor", "red").end().question("QUE_USER_PROFILE_GRP")
+				.end().build();
 
 		Frame3 notes = Frame3.builder("FRM_NOTES").addThemeParent("THM_WIDTH_300", "width", 300).end()
 				.addThemeParent("THM_DISPLAY_VERTICAL", "flexDirection", "column").end()
@@ -433,12 +864,12 @@ public void displayFooter() {
 
 		Frame3 footer = Frame3.builder("FRM_FOOTER").build();
 
-		Frame3 mainFrame = Frame3.builder("FRM_MAIN")
-				.addFrame(header, FramePosition.NORTH).end().addFrame(sidebar, FramePosition.EAST).end()
-				.addFrame(footer, FramePosition.SOUTH).end().addFrame(centre, FramePosition.CENTRE).end().build();
+		Frame3 mainFrame = Frame3.builder("FRM_MAIN").addFrame(header, FramePosition.NORTH).end()
+				.addFrame(sidebar, FramePosition.EAST).end().addFrame(footer, FramePosition.SOUTH).end()
+				.addFrame(centre, FramePosition.CENTRE).end().build();
 
-		Frame3 desktop = Frame3.builder("FRM_ROOT").addThemeParent("THM_BACKGROUND_GRAY", "backgroundColor", "gray").end()
-				.addThemeParent("THM_BACKGROUND_INTERNMATCH", "backgroundColor", "#233a4e").end()
+		Frame3 desktop = Frame3.builder("FRM_ROOT").addThemeParent("THM_BACKGROUND_GRAY", "backgroundColor", "gray")
+				.end().addThemeParent("THM_BACKGROUND_INTERNMATCH", "backgroundColor", "#233a4e").end()
 				.addThemeParent("THM_COLOR_WHITE", "backgroundColor", "white").end()
 				.addThemeParent("THM_COLOR_BLACK", ThemeAttributeType.PRI_CONTENT, "backgroundColor", "black").end()
 
@@ -524,7 +955,7 @@ public void displayFooter() {
 
 	// @Test
 	public void formsTest() {
-		String apiUrl = GennySettings.qwandaServiceUrl + ":8280/service/forms";
+		String apiUrl = GennySettings.qwandaServiceUrl + "/service/forms";
 		System.out.println("Fetching setup info from " + apiUrl);
 		String userToken = projectParms.getString("userToken");
 		System.out.println("userToken (ensure user has test role) = " + userToken);
