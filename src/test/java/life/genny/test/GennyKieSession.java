@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Logger;
 import org.drools.core.ClockType;
 import org.drools.core.time.impl.PseudoClockScheduler;
 import org.jbpm.test.JbpmJUnitBaseTestCase;
@@ -28,8 +29,7 @@ import org.kie.api.runtime.process.ProcessInstance;
 import org.kie.api.runtime.process.WorkItemHandler;
 import org.kie.api.runtime.rule.FactHandle;
 import org.kie.internal.command.CommandFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
@@ -42,13 +42,10 @@ import life.genny.rules.listeners.JbpmInitListener;
 
 public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoCloseable {
 
-	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getCanonicalName());
+	protected static final Logger log = org.apache.logging.log4j.LogManager
+			.getLogger(MethodHandles.lookup().lookupClass().getCanonicalName());
 
-	private static final String DRL_PROJECT = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/project.drl";
-	private static final String DRL_USER_COMPANY = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/user_company.drl";
-	private static final String DRL_USER = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/user.drl";
-	private static final String DRL_EVENT_LISTENER_SERVICE_SETUP = "rulesCurrent/shared/_BPMN_WORKFLOWS/Initialise_Project/eventListenerServiceSetup.drl";
-	private static final String DRL_EVENT_LISTENER_USER_SETUP = "rulesCurrent/shared/_BPMN_WORKFLOWS/Initialise_Project/eventListenerUserSetup.drl";
+	private static final String DRL_RULESENGINE_HOOKS_DIR = "RulesEngineHooks";
 
 	Map<String, ResourceType> resources = new HashMap<String, ResourceType>();
 
@@ -185,16 +182,20 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		// KieServices.Factory.get().newKieSessionConfiguration();
 
 		// config.setOption( ClockTypeOption.get("realtime") );
+		
+		/* Set up RulesEngine Hooks Setup */
+		this.drls.add(DRL_RULESENGINE_HOOKS_DIR);
 
 		if (jbpms != null) {
 			for (String p : jbpms) {
 				if (StringUtils.endsWith(p, ".bpmn")) {
 					String fullJbpmPath = findFullPath(p);
 					resources.put(fullJbpmPath, ResourceType.BPMN2);
+					System.out.println("Loading "+fullJbpmPath);
 				} else {
 					// Is a directory
 					List<String> fullJbpmPaths = findFullPaths(p, "bpmn");
-					fullJbpmPaths.forEach(f -> resources.put(f, ResourceType.BPMN2));
+					fullJbpmPaths.forEach(f -> {resources.put(f, ResourceType.BPMN2); System.out.println("Loading "+f.toString());});
 
 				}
 			}
@@ -205,10 +206,11 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 				if (StringUtils.endsWith(p, ".drl")) {
 					String fullDrlPath = findFullPath(p);
 					resources.put(fullDrlPath, ResourceType.DRL);
+					System.out.println("Loading "+fullDrlPath);
 				} else {
 					// Is a directory
 					List<String> fullPaths = findFullPaths(p, "drl");
-					fullPaths.forEach(f -> resources.put(f, ResourceType.DRL));
+					fullPaths.forEach(f -> {resources.put(f, ResourceType.DRL); System.out.println("Loading "+f.toString());});
 				}
 			}
 		}
@@ -218,21 +220,17 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 				if (StringUtils.endsWith(p, ".xls")) {
 					String fullDtablePath = findFullPath(p);
 					resources.put(fullDtablePath, ResourceType.DTABLE);
+					System.out.println("Loading "+fullDtablePath);
 				} else {
 					// Is a directory
 					List<String> fullPaths = findFullPaths(p, "xls");
-					fullPaths.forEach(f -> resources.put(f, ResourceType.DTABLE));
+					fullPaths.forEach(f -> {resources.put(f, ResourceType.DTABLE); System.out.println("Loading "+f.toString());});
 				}
 
 			}
 		}
 
-		String[] coredrls = { DRL_PROJECT, DRL_USER_COMPANY, DRL_USER, DRL_EVENT_LISTENER_SERVICE_SETUP,
-				DRL_EVENT_LISTENER_USER_SETUP };
-
-		for (String p : coredrls) {
-			resources.put(p, ResourceType.DRL);
-		}
+		System.out.println("Loaded in All Resources");
 
 		String uniqueRuntimeStr = UUID.randomUUID().toString();
 
@@ -245,11 +243,11 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			if (tokens.containsKey("userToken")) {
 				kieSession.addEventListener(new JbpmInitListener(tokens.get("userToken")));
 			}
-			// kieSession.setGlobal("log", log);
+			//kieSession.setGlobal("log", log);
 		} else {
 			log.error("KieSession not initialised");
 		}
-
+		System.out.println("Completed Setup");
 	}
 
 	private void addWorkItemHandlers() {

@@ -1,11 +1,15 @@
 package life.genny.rules;
 
+global  org.apache.logging.log4j.LogManager log;
+
 import life.genny.qwanda.message.QCmdMessage;
 import life.genny.qwanda.message.QBulkMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventMessage;
 import life.genny.rules.QRules;
 import life.genny.qwandautils.JsonUtils;
+import org.apache.logging.log4j.Logger;
+
 
 import java.util.List;
 import java.util.ArrayList;
@@ -22,10 +26,11 @@ rule "SBE_NEW_ITEMS2"
     when
        $process : WorkflowProcessInstance( ) 
      then
-     System.out.println("Generate SBE_NEW_ITEMS2 Rule");
+     log.info("Generate SBE_NEW_ITEMS2 Rule");
  
 	GennyToken serviceToken = (GennyToken)$process.getVariable("serviceToken"); 
 	QRules rules = (QRules)$process.getVariable("rules"); 
+	Logger log2 = (Logger)$process.getVariable("log"); 
 	System.out.println("Genny Token Service Code = "+serviceToken.getCode());
     
          SearchEntity searchBE = new SearchEntity("SBE_NEW_ITEMS2","All New Items")

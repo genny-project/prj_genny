@@ -1,40 +1,19 @@
 package life.genny.test;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-
+import org.apache.logging.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.kie.api.command.Command;
-import org.kie.api.io.ResourceType;
-import org.kie.api.runtime.Environment;
-import org.kie.api.runtime.ExecutionResults;
-import org.kie.api.runtime.KieSession;
-import org.kie.internal.command.CommandFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.gson.reflect.TypeToken;
 
-import io.vertx.core.json.JsonObject;
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
@@ -48,19 +27,20 @@ import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.rules.QRules;
-import life.genny.rules.RulesLoader;
-import life.genny.rules.listeners.JbpmInitListener;
 import life.genny.utils.VertxUtils;
 
 public class AdamTest {
 
-	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getCanonicalName());
+	protected static final Logger log = org.apache.logging.log4j.LogManager
+			.getLogger(MethodHandles.lookup().lookupClass().getCanonicalName());
 
 	protected static String realm = GennySettings.mainrealm;
 	protected static Set<String> realms;
 
 	protected static EventBusInterface eventBusMock;
 	protected static GennyCacheInterface vertxCache;
+	
+	private static final String DRL_SEND_USER_DATA_DIR = "SendUserData";
 
 	private static final String WFE_SEND_FORMS = "send_forms.bpmn";
 	private static final String WFE_SHOW_FORM = "show_form.bpmn";
@@ -71,6 +51,38 @@ public class AdamTest {
 
 	}
 
+	@Test
+	public void sendAuthInit()
+	{
+
+
+		QRules rules = setupLocalService();
+		GennyToken userToken = new GennyToken("userToken", rules.getToken());
+		GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
+
+		QEventMessage msg = new QEventMessage("EVT_MSG", "AUTH_INIT");
+
+		GennyKieSession gks = null;
+		try {
+			gks = GennyKieSession.builder()
+					.addDrl(DRL_SEND_USER_DATA_DIR)   // send the initial User data using the rules
+					.addJbpm("auth_init.bpmn")
+					.addJbpm("send_llama.bpmn")
+					.addFact("qRules", rules)
+					.addFact("msg", msg)
+					.addToken(serviceToken)
+					.addToken(userToken)
+					.build();
+
+			gks.start();
+
+			gks.advanceSeconds(10, false);
+		} finally {
+			gks.close();
+		}
+	}
+	
+	
 	//@Test
 	public void simpleTest() {
 		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
@@ -109,7 +121,7 @@ public class AdamTest {
 
 		GennyKieSession gks = null;
 		try {
-			gks = GennyKieSession.builder().addJbpm("adam_test_1.bpmn").addFact("qRules", qRules).addFact("msg", msg)
+			gks = GennyKieSession.builder(true).addJbpm("adam_test_1.bpmn").addFact("qRules", qRules).addFact("msg", msg)
 					.addToken(serviceToken).addToken(userToken).build();
 
 			gks.start();
@@ -128,7 +140,7 @@ public class AdamTest {
 
 
 	
-	@Test
+//	@Test
 	public void initRulesTest() {
 		System.out.println("Run the Project Initialisation");
 		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
@@ -145,7 +157,7 @@ public class AdamTest {
 
 		GennyKieSession gks = null;
 		try {
-			gks = GennyKieSession.builder()
+			gks = GennyKieSession.builder(false)
 					.addJbpm("init_project.bpmn")
 					.addDrl("GenerateSearches")
 					.addDrl("GenerateThemes")

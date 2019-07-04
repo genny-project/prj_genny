@@ -12,11 +12,6 @@ public final class ThemeAttribute {
 	private String code;
 
 	
-	private Optional<Boolean> valueBoolean=Optional.empty();
-	private Optional<Integer> valueInteger=Optional.empty();
-	private Optional<String> valueString=Optional.empty();
-	private Optional<Double> valueDouble=Optional.empty();
-	
 	private Optional<String> flexDirection = Optional.empty();
 	private Optional<String> justifyContent = Optional.empty();
 	private Optional<String> backgroundColor = Optional.empty();
@@ -51,6 +46,7 @@ public final class ThemeAttribute {
 	private Optional<Integer> valueInteger = Optional.empty();
 	private Optional<String> valueString = Optional.empty();
 	private Optional<Double> valueDouble = Optional.empty();
+	private Optional<String> alignItems = Optional.empty();
 
 
 	/**

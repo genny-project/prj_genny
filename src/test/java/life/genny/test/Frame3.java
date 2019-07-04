@@ -12,6 +12,7 @@ import java.util.function.Consumer;
 
 import javax.annotation.concurrent.Immutable;
 
+import org.codehaus.plexus.util.StringUtils;
 import org.json.JSONObject;
 
 import io.vavr.Tuple;
@@ -148,6 +149,7 @@ public class Frame3 extends BaseEntity {
 		
 		public Builder(final String code) {
 			managedInstance.setCode(code);
+			managedInstance.setName(StringUtils.capitaliseAllWords(code.substring(4)));
 		}
 
 		public Builder(Frame3.Builder b, Consumer<Frame3> c, String frameCode) {
