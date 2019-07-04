@@ -12,6 +12,10 @@ import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import io.vavr.Tuple3;
 import io.vavr.Tuple4;
+import life.genny.models.FramePosition;
+import life.genny.models.QuestionGroup;
+import life.genny.models.Theme;
+import life.genny.models.ThemeAttributeType;
 import life.genny.qwanda.entity.BaseEntity;
 
 /* Llama class implements the frame of base entities 

@@ -21,8 +21,8 @@ import life.genny.utils.VertxUtils;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.models.GennyToken;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
-import life.genny.test.Frame3;
-import life.genny.test.FrameUtils2;
+import life.genny.qwanda.llama.Frame3;
+import life.genny.utils.FrameUtils2;
 
 rule "FRM_DUMMY"
     ruleflow-group 'GenerateFrames'

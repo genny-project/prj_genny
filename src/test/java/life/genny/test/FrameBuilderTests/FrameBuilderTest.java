@@ -2,10 +2,10 @@ package life.genny.test.FrameBuilderTests;
 
 import org.junit.Test;
 
+import life.genny.models.Frame3;
+import life.genny.models.Theme;
+import life.genny.models.ThemeAttributeType;
 import life.genny.qwanda.VisualControlType;
-import life.genny.test.Frame3;
-import life.genny.test.Theme;
-import life.genny.test.ThemeAttributeType;
 
 public class FrameBuilderTest {
 	@Test
