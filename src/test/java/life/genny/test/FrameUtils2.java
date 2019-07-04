@@ -357,7 +357,7 @@ public class FrameUtils2 {
 						themeEA.setWeight(weight);
 					} else {
 						if (attribute.dataType.getClassName().equals(Boolean.class.getCanonicalName())) {
-							themeBe.addAttribute(new EntityAttribute(themeBe, attribute, weight, themeAttribute.getValueBoolean()));
+							themeBe.addAttribute(new EntityAttribute(themeBe, attribute, weight, themeAttribute.getValueBoolean().get()));
 						} else 	if (attribute.dataType.getClassName().equals(Double.class.getCanonicalName())) {
 							themeBe.addAttribute(new EntityAttribute(themeBe, attribute, weight, themeAttribute.getValueDouble()));
 						} else 	if (attribute.dataType.getClassName().equals(String.class.getCanonicalName())) {
