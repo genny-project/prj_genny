@@ -67,7 +67,7 @@ public class FrameUtils2 {
 		msg.setReplace(true);
 
 		for (Ask ask : askList) {
-			QDataAskMessage askMsg = QuestionUtils.getAsks(serviceToken.getUserCode(), "PRJ_INTERNMATCH",
+			QDataAskMessage askMsg = QuestionUtils.getAsks(serviceToken.getUserCode(), serviceToken.getUserCode(),
 					ask.getQuestionCode(), serviceToken.getToken());
 			askMsg = processQDataAskMessage(askMsg, ask, serviceToken);
 
@@ -252,7 +252,7 @@ public class FrameUtils2 {
 	}
 
 
-	
+
 	/**
 	 * @param frame
 	 * @param gennyToken
@@ -331,10 +331,10 @@ public class FrameUtils2 {
 
 			for (ThemeAttribute themeAttribute : theme.getAttributes()) {
 				Attribute attribute = null;
-				
-				
+
+
 				attribute = RulesUtils.getAttribute(themeAttribute.getCode(),gennyToken.getToken());
-				
+
 				if (attribute == null) { attribute = new Attribute(themeAttribute.getCode(), themeAttribute.getCode(),
 						new DataType("DTT_THEME"));
 				}
