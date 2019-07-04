@@ -10,6 +10,13 @@ import org.json.JSONObject;
 @Immutable
 public final class ThemeAttribute {
 	private String code;
+
+	
+	private Optional<Boolean> valueBoolean=Optional.empty();
+	private Optional<Integer> valueInteger=Optional.empty();
+	private Optional<String> valueString=Optional.empty();
+	private Optional<Double> valueDouble=Optional.empty();
+	
 	private Optional<String> flexDirection = Optional.empty();
 	private Optional<String> justifyContent = Optional.empty();
 	private Optional<String> backgroundColor = Optional.empty();
@@ -45,6 +52,7 @@ public final class ThemeAttribute {
 	private Optional<String> valueString = Optional.empty();
 	private Optional<Double> valueDouble = Optional.empty();
 
+
 	/**
 	 * static factory method for builder
 	 */
@@ -67,6 +75,10 @@ public final class ThemeAttribute {
 	 */
 	public String getFlexDirection() {
 		return flexDirection.orElse("");
+	}
+
+	public String getAlignItems() {
+		return alignItems.orElse("");
 	}
 
 	/**
@@ -363,6 +375,11 @@ public final class ThemeAttribute {
 
 		public Builder justifyContent(String value) {
 			managedInstance.justifyContent = Optional.of(value);
+			return this;
+		}
+
+		public Builder alignItems(String value) {
+			managedInstance.alignItems = Optional.of(value);
 			return this;
 		}
 

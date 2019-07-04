@@ -501,7 +501,6 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 
 	}
 
-// @Test
 	public void testTheme() {
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 		QRules rules = getQRules(userToken); // defaults to user anyway
@@ -552,7 +551,8 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 				.borderColor("#ddd").borderStyle("solid").placeholderColor("#888").end()
 				.addAttribute(ThemeAttributeType.PRI_CONTENT_HOVER).borderColor("#aaa").end()
 				.addAttribute(ThemeAttributeType.PRI_CONTENT_ACTIVE).borderColor("green").end()
-				.addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).borderColor("red").color("red").end().build();
+				.addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).borderColor("red").color("red").end()
+				.build();
 
 		Theme THM_FORM_LABEL_DEFAULT = Theme.builder("THM_FORM_LABEL_DEFAULT").addAttribute().bold(true).size("md")
 				.end().build();
@@ -578,7 +578,8 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 				.shadowRadius(0).shadowOffset().width(0).height(0).end().end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION, true).end()
-				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+				.build();
 
 		Frame3 frameDummy = Frame3.builder("FRM_DUMMY").addTheme(THM_DUMMY).end().build();
 
@@ -658,6 +659,7 @@ public class AuthInitTest extends GennyJbpmBaseTest {
 
 		System.out.println("Sent");
 	}
+
 
 //@Test
 public void addInternshipOne() {
@@ -909,6 +911,7 @@ public void addAgentDetails() {
 			.maxWidth(700)
 			.width("100%")
 			.shadowColor("#000")
+
 			.shadowOpacity(0.8).shadowRadius(5).end()
 			.build();
 
@@ -971,6 +974,7 @@ public void addAgentDetails() {
 
 
 // @Test
+
 	public void testDesktopPageDisplay() {
 
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");

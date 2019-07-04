@@ -1,0 +1,42 @@
+package life.genny.rules;
+
+
+global org.apache.logging.log4j.Logger log;
+
+import life.genny.qwanda.message.QCmdMessage;
+import life.genny.qwanda.message.QBulkMessage;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.qwanda.message.QEventMessage;
+import life.genny.rules.QRules;
+import io.vertx.core.json.JsonObject;
+import life.genny.qwandautils.JsonUtils;
+import java.util.List;
+import java.util.ArrayList;
+import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.entity.SearchEntity;
+import life.genny.utils.VertxUtils;
+import life.genny.utils.BaseEntityUtils;
+import life.genny.models.GennyToken;
+import org.kie.api.runtime.process.WorkflowProcessInstance;
+import life.genny.test.Theme;
+
+rule "THM_DUMMY"
+    ruleflow-group 'GenerateThemes'
+    no-loop true
+    when
+      $process : WorkflowProcessInstance( ) 
+     then
+     log.info("Generate THM_DUMMY Rule");
+ 
+	GennyToken serviceToken = (GennyToken)$process.getVariable("serviceToken"); 
+	System.out.println("Genny Token Service Code = "+serviceToken.getCode());
+
+		Theme THM_DUMMY = Theme.builder("THM_DUMMY")
+							.addAttribute()
+								.height(100)
+								.width(90)
+								.end()
+							.build();
+
+
+end
