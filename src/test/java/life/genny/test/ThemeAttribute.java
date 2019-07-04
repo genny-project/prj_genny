@@ -28,6 +28,7 @@ public final class ThemeAttribute {
 	private Optional<Integer> shadowRadius = Optional.empty();
 	private Optional<ShadowOffset> shadowOffset = Optional.empty();
 	private Optional<Integer> borderBottomWidth = Optional.empty();
+	private Optional<Integer> borderWidth = Optional.empty();
 	private Optional<String> placeholderColor = Optional.empty();
 	private Optional<String> borderStyle = Optional.empty();
 	private Optional<String> borderColor = Optional.empty();
@@ -39,7 +40,6 @@ public final class ThemeAttribute {
 	private Optional<String> overflowX = Optional.empty();
 	private Optional<String> overflowY = Optional.empty();
 	private Optional<String> textAlign = Optional.empty();
-
 	private Optional<Boolean> valueBoolean = Optional.empty();
 	private Optional<Integer> valueInteger = Optional.empty();
 	private Optional<String> valueString = Optional.empty();
@@ -102,6 +102,13 @@ public final class ThemeAttribute {
 	 */
 	public Integer getBorderBottomWidth() {
 		return borderBottomWidth.orElse(0);
+	}
+
+		/**
+	 * @return the borderWidth
+	 */
+	public Integer getBorderWidth() {
+		return borderWidth.orElse(0);
 	}
 
 	/**
@@ -434,6 +441,11 @@ public final class ThemeAttribute {
 			return this;
 		}
 
+		public Builder borderWidth(Integer value) {
+			managedInstance.borderWidth = Optional.of(value);
+			return this;
+		}
+
 		public Builder placeholderColor(String value) {
 			managedInstance.placeholderColor = Optional.of(value);
 			return this;
@@ -593,9 +605,10 @@ public final class ThemeAttribute {
 			json.put("shadowRadius", shadowRadius.get());
 		if (shadowOffset.isPresent())
 			json.put("shadowOffset", shadowOffset.get().getJsonObject());
-
 		if (borderBottomWidth.isPresent())
 			json.put("borderBottomWidth", borderBottomWidth.get());
+		if (borderWidth.isPresent())
+			json.put("borderWidth", borderWidth.get());
 		if (placeholderColor.isPresent())
 			json.put("placeholderColor", placeholderColor.get());
 		if (borderStyle.isPresent())
