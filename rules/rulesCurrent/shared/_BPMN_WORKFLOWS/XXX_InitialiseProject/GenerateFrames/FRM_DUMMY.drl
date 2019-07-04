@@ -7,11 +7,14 @@ import life.genny.qwanda.message.QCmdMessage;
 import life.genny.qwanda.message.QBulkMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventMessage;
+import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.rules.QRules;
 import io.vertx.core.json.JsonObject;
 import life.genny.qwandautils.JsonUtils;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.SearchEntity;
 import life.genny.utils.VertxUtils;
@@ -19,22 +22,28 @@ import life.genny.utils.BaseEntityUtils;
 import life.genny.models.GennyToken;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
 import life.genny.test.Frame3;
+import life.genny.test.FrameUtils2;
 
 rule "FRM_DUMMY"
     ruleflow-group 'GenerateFrames'
     no-loop true
     when
       $process : WorkflowProcessInstance( ) 
-     then
+    then
      System.out.println("Generate FRM_DUMMY Rule");
  
 	GennyToken serviceToken = (GennyToken)$process.getVariable("serviceToken"); 
-	System.out.println("Genny Token Service Code = "+serviceToken.getCode());
 
-	Frame3 frameDummy = Frame3.builder("FRM_DUMMY")
-			.addTheme("THM_DUMMY")
-				.end()
-			.build();
+	Frame3 frame = Frame3.builder("FRM_DUMMY")
+						.addTheme("THM_DUMMY")
+							.end()
+						.build();
+
+	Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+
+	QDataBaseEntityMessage msg = FrameUtils2.toMessage(frame, serviceToken, askMsgs);
+
+	VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode(), msg, serviceToken.getToken());
 
 
 end

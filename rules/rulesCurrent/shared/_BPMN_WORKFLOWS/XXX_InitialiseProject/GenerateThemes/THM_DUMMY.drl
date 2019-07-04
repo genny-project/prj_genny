@@ -24,17 +24,16 @@ rule "THM_DUMMY"
     no-loop true
     when
       $process : WorkflowProcessInstance( ) 
-     then
+    then
      System.out.println("Generate THM_DUMMY Rule");
- 
-	GennyToken serviceToken = (GennyToken)$process.getVariable("serviceToken"); 
+     GennyToken serviceToken = (GennyToken)$process.getVariable("serviceToken"); 
 
-		Theme THM_DUMMY = Theme.builder("THM_DUMMY")
+	 Theme theme = Theme.builder("THM_DUMMY")
 							.addAttribute()
 								.height(100)
 								.width(90)
 								.end()
 							.build();
 
-
+	 VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
 end

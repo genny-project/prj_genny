@@ -25,10 +25,9 @@ rule "SBE_NEW_ITEMS2"
     when
        $process : WorkflowProcessInstance( ) 
      then
-     System.out.println("Generate SBE_NEW_ITEMS2 Rule");
+     	System.out.println("Generate SBE_NEW_ITEMS2 Rule");
  
-	GennyToken serviceToken = (GennyToken)$process.getVariable("serviceToken"); 
-	QRules rules = (QRules)$process.getVariable("rules"); 
+		GennyToken serviceToken = (GennyToken)$process.getVariable("serviceToken"); 
     
          SearchEntity searchBE = new SearchEntity("SBE_NEW_ITEMS2","All New Items")
   	     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
@@ -39,7 +38,7 @@ rule "SBE_NEW_ITEMS2"
   	     
   	     searchBE.setRealm(serviceToken.getRealm());
 
-  		 rules.writeCachedJson("SBE_NEW_ITEMS2", JsonUtils.toJson(searchBE));
+  		 VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken.getToken());
   		 
 
 end
