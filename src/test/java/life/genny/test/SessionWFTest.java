@@ -46,7 +46,7 @@ public class SessionWFTest extends GennyJbpmBaseTest {
 
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 		QRules qRules = getQRules(userToken); // defaults to user anyway
-		String keycloackState = userToken.getCode()
+		String keycloackState = userToken.getCode();
 		
 		GennyKieSession gks = GennyKieSession.builder()
 				.addJbpm("session_Workflow.bpmn")
