@@ -52,7 +52,7 @@ public class SessionWFTest extends GennyJbpmBaseTest {
 		msg.data.setValue("safal");
 		
 		QEventMessage msg1 = new QEventMessage("EVT_MSG", "LOGIN");
-		msg.data.setValue("anish");
+		msg1.data.setValue("anish");
 
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 		QRules qRules = getQRules(userToken); // defaults to user anyway
@@ -73,10 +73,10 @@ public class SessionWFTest extends GennyJbpmBaseTest {
 		    	sleepMS(1000);
 		    	gks.advanceSeconds(1);
 		    	System.out.println("Clock :::: " + (i+1) + "sec");
-		    	if(i==2) {
-		    		   		gks.injectMessage(msg);
-		    	}else if(i==4) {
-		    		gks.injectMessage(msg1);
+		    	if(i==1) {
+		    		gks.injectSignal("login",msg);
+		    	}else if(i==3) {
+		    		gks.injectSignal("login",msg1);
 		    	}else if(i==6){
 		    		gks.injectSignal("safal", "null");
 		    	}else if(i==8){

@@ -11,6 +11,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_2256" isCollection="false" structureRef="org.slf4j.Logger"/>
   <bpmn2:signal id="Signal_1" name="#{user}"/>
   <bpmn2:signal id="Signal_2" name="Signal 2"/>
+  <bpmn2:signal id="Signal_3" name="login"/>
   <bpmn2:message id="Message_1" itemRef="ItemDefinition_10" name="message_1"/>
   <bpmn2:process id="com.sample.bpmn.exampleSignal" name="Hello World" isExecutable="false" processType="Private">
     <bpmn2:extensionElements>
@@ -22,7 +23,7 @@
       <tns:import name="org.slf4j.LoggerFactory"/>
       <tns:import name="org.slf4j.Logger"/>
     </bpmn2:extensionElements>
-    <bpmn2:property id="itemPassed" name="itemPassed"/>
+    <bpmn2:property id="message" itemSubjectRef="ItemDefinition_1329" name="message"/>
     <bpmn2:property id="user" itemSubjectRef="ItemDefinition_10" name="user"/>
     <bpmn2:scriptTask id="_2" name="Hello" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>
@@ -32,9 +33,8 @@
       </bpmn2:extensionElements>
       <bpmn2:incoming>_1-_2</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;Starting examples workflows&quot;);
-kcontext.setVariable(&quot;user&quot;,&quot;safal&quot;);
-
+      <bpmn2:script>kcontext.setVariable(&quot;user&quot;,message.data.getValue());
+System.out.println(&quot;Logining user &quot; + message.data.getValue());
 
 </bpmn2:script>
     </bpmn2:scriptTask>
@@ -45,9 +45,15 @@ kcontext.setVariable(&quot;user&quot;,&quot;safal&quot;);
         </tns:metaData>
       </bpmn2:extensionElements>
       <bpmn2:outgoing>_1-_2</bpmn2:outgoing>
-      <bpmn2:conditionalEventDefinition id="ConditionalEventDefinition_1">
-        <bpmn2:condition xsi:type="bpmn2:tFormalExpression" id="FormalExpression_1" language="http://www.java.com/java">QEventMessage(data.code ==&quot;LOGIN&quot;);</bpmn2:condition>
-      </bpmn2:conditionalEventDefinition>
+      <bpmn2:dataOutput id="DataOutput_5" name="event"/>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_3">
+        <bpmn2:sourceRef>DataOutput_5</bpmn2:sourceRef>
+        <bpmn2:targetRef>message</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:outputSet id="OutputSet_2" name="Output Set 2">
+        <bpmn2:dataOutputRefs>DataOutput_5</bpmn2:dataOutputRefs>
+      </bpmn2:outputSet>
+      <bpmn2:signalEventDefinition id="SignalEventDefinition_2" signalRef="Signal_3"/>
     </bpmn2:startEvent>
     <bpmn2:sequenceFlow id="_1-_2" sourceRef="_1" targetRef="_2"/>
     <bpmn2:endEvent id="EndEvent_1" name="End Event 1">
@@ -70,7 +76,7 @@ kcontext.setVariable(&quot;user&quot;,&quot;safal&quot;);
       <bpmn2:dataOutput id="DataOutput_3" name="event"/>
       <bpmn2:dataOutputAssociation id="DataOutputAssociation_2">
         <bpmn2:sourceRef>DataOutput_3</bpmn2:sourceRef>
-        <bpmn2:targetRef>itemPassed</bpmn2:targetRef>
+        <bpmn2:targetRef>message</bpmn2:targetRef>
       </bpmn2:dataOutputAssociation>
       <bpmn2:outputSet id="OutputSet_1" name="Output Set 1">
         <bpmn2:dataOutputRefs>DataOutput_3</bpmn2:dataOutputRefs>
