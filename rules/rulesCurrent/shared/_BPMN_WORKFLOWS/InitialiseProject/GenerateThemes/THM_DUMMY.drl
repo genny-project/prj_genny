@@ -9,6 +9,8 @@ import life.genny.qwanda.message.QEventMessage;
 import life.genny.rules.QRules;
 import io.vertx.core.json.JsonObject;
 import life.genny.qwandautils.JsonUtils;
+import java.util.Map;
+import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
 import life.genny.qwanda.entity.BaseEntity;
@@ -19,11 +21,14 @@ import life.genny.models.GennyToken;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
 import life.genny.models.Theme;
 
+
+
 rule "THM_DUMMY"
     ruleflow-group 'GenerateThemes'
     no-loop true
     when
       $process : WorkflowProcessInstance( ) 
+      $gennyMap: Map( keySet not contains "THM_DUMMY" )
     then
      System.out.println("Generate THM_DUMMY Rule");
      GennyToken serviceToken = (GennyToken)$process.getVariable("serviceToken"); 
@@ -34,6 +39,11 @@ rule "THM_DUMMY"
 								.width(90)
 								.end()
 							.build();
+
+		
+
+/*	$gennyMap.put( "THM_DUMMY" , theme);
+	retract($gennyMap); */
 
 	 VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
 end
