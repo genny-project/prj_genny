@@ -61,23 +61,21 @@ public class TimerTest extends GennyJbpmBaseTest {
 	
 	@Test(timeout = 300000)	
 	public void testTimerProcess() {
-		
-		QEventMessage msg = new QEventMessage("EVT_MSG", "AUTH_INIT1");
+	
 
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 		QRules qRules = getQRules(userToken); // defaults to user anyway
 		
 		GennyKieSession gks = GennyKieSession.builder()
-				.addJbpm("example_message2.bpmn")
+				.addJbpm("signal_workflow_1.bpmn")
 				.addFact("qRules",qRules)
-				.addFact("msg",msg)
 				.addFact("eb", eventBusMock)
 				.addToken(new GennyToken("serviceUser", qRules.getServiceToken()))
 				.addToken(userToken)
 				.build();
 		
-	     gks.startProcess("com.sample.bpmn.exampleMsgStart");
-	      //gks.start();
+	     //gks.startProcess("com.sample.bpmn.exampleMsgStart");
+	      gks.start();
 	    gks.advanceSeconds(1);
 	      
 	     for (int i = 0; i<10; i++) {
@@ -86,10 +84,9 @@ public class TimerTest extends GennyJbpmBaseTest {
 		    	gks.advanceSeconds(1);
 		    	System.out.println("Clock :::: " + (i+1) + "sec");
 		    	if(i==4) {
-		    		
-		    		QEventMessage event = new QEventMessage("EVT_MSG", "ANSWER_MSG");	
+		    			
 		    		//gks.injectFact(event);
-		    		gks.getKieSession().signalEvent("Message_1", "sdgdgd");
+		    		gks.getKieSession().signalEvent("incomingSignal", "testobject");
 		    	}
 		    	
 		    }
