@@ -79,10 +79,9 @@ public class SessionWFTest extends GennyJbpmBaseTest {
 		    		gks.injectSignal("login",msg1);
 		    	}else if(i==6){
 		    		gks.injectSignal("safal", "null");
-		    	}else if(i==8){
+		    	}else if(i==7){
 		    		gks.injectSignal("anish", "null");
 		    	}
-		    	
 		    }
 	     
 	    
