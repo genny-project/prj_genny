@@ -84,6 +84,12 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	 */
 	private GennyKieSession(boolean persistence) {
 		super(persistence, persistence);
+		try {
+			super.setUp();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public ExecutionResults start() {
@@ -187,6 +193,9 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		// config.setOption( ClockTypeOption.get("realtime") );
 
 		/* Set up RulesEngine Hooks Setup */
+		if (this.drls==null) {
+			this.drls = new ArrayList<String>();
+		}
 		this.drls.add(DRL_RULESENGINE_HOOKS_DIR);
 
 		if (jbpms != null) {
@@ -389,6 +398,12 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	public void close() {
 		System.out.println("Completed");
 		kieSession.dispose();
+		try {
+			super.tearDown();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
