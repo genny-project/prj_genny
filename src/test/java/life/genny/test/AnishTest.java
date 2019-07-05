@@ -150,11 +150,14 @@ public class AnishTest extends GennyJbpmBaseTest {
         public Frame3 generateBucket() {
 
                 Theme THM_FORM_INPUT_DEFAULT = Theme.builder("THM_FORM_INPUT_DEFAULT")
-                        .addAttribute().borderBottomWidth(1).color("white")
-                        .borderColor("#ddd").borderStyle("solid").placeholderColor("#888").end()
-                        .addAttribute(ThemeAttributeType.PRI_CONTENT_HOVER).borderColor("#aaa").end()
-                        .addAttribute(ThemeAttributeType.PRI_CONTENT_ACTIVE).borderColor("green").end()
-                        .addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).borderColor("red").color("red").end().build();
+                                                .addAttribute()
+                                                        .borderBottomWidth(5)
+                                                        .color("black")
+                                                        .borderColor("#ddd")
+                                                        .borderStyle("solid")
+                                                        .placeholderColor("#888")
+                                                .end()
+                                                .build();
 
                 Theme THM_BUCKET_LABEL = Theme.builder("THM_BUCKET_LABEL")
                                         .addAttribute().textAlign("center")
@@ -163,86 +166,123 @@ public class AnishTest extends GennyJbpmBaseTest {
 
                 Theme THM_BUCKET = Theme.builder("THM_BUCKET")
                                 .addAttribute()
-                                .backgroundColor("#F8F9FA")
-                                .overflowX("auto")
-                                .overflowY("auto")
-                                .width("100%")
-                                .end()
+                                        .backgroundColor("#F8F9FA")
+                                        .overflowX("auto")
+                                        .overflowY("auto")
+                                        .width("100%")
+                                        .end()
                                 .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
                                 .build();
 
                 Theme THM_BUCKET_COLUMN = Theme.builder("THM_BUCKET_COLUMN")
                                 .addAttribute()
-                                .backgroundColor("#EAEAEA")
-                                .minWidth(300)
-                                .width("100%")
-                                .margin(20)
-                                .textAlign("center")
-                                .flexDirection("column").end()
+                                        .backgroundColor("#EAEAEA")
+                                        .minWidth(300)
+                                        .width("100%")
+                                        .margin(20)
+                                        .textAlign("center")
+                                        .flexDirection("column").end()
                                 .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
                                 .build();
 
                 Theme THM_TEST1 = Theme.builder("THM_TEST1")
                                 .addAttribute()
-                                .backgroundColor("green")
-                                .textAlign("center")
-                                .width("100%")
-                                .height(30)
-                                .end().build();
-                Theme THM_TEST2 = Theme.builder("THM_TEST2")
-                                .addAttribute()
-                                .backgroundColor("pink")
-                                .width("100%")
-                                .height(20)
-                                .end().build();
-                Theme THM_TEST3 = Theme.builder("THM_TEST3")
-                                .addAttribute()
-                                .backgroundColor("yellow")
-                                .height(70)
+                                        .backgroundColor("none")
+                                        .width("100%")
+                                        .height(70)
                                 .end().build();
 
-                Frame3 test1 = Frame3.builder("FRM_TEST1")
+                Frame3 available = Frame3.builder("FRM_GRP_AVAILABLE")
                                 .addTheme(THM_TEST1).end()
-                                .question("QUE_USER_PROFILE_GRP")
+                                .question("QUE_GRP_NOT_APPLIED")
                                 	.addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT)
                                 	.weight(2.0)
                                 	.end()
                             	.end()
-                                //.addTheme(THM_BUCKET_LABEL).vcl(VisualControlType.VCL_LABEL).end().end()
+                                .addTheme(THM_BUCKET_LABEL).end()
                                 .build();
-                Frame3 test2 = Frame3.builder("FRM_TEST2")
-                                .addTheme(THM_TEST2).end()
-                                .question("QUE_LASTNAME")
-                                .addTheme(THM_BUCKET_LABEL).vcl(VisualControlType.VCL_LABEL).end().end()
+                Frame3 applied = Frame3.builder("FRM_GRP_APPLIED")
+                                .addTheme(THM_TEST1).end()
+                                .question("QUE_GRP_APPLIED")
+                                	.addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT)
+                                	.weight(2.0)
+                                	.end()
+                            	.end()
+                                .addTheme(THM_BUCKET_LABEL).end()
                                 .build();
-                Frame3 test3 = Frame3.builder("FRM_TEST3")
-                                .addTheme(THM_TEST3).end()
-                                .question("QUE_EMAIL")
-                                .addTheme(THM_BUCKET_LABEL).vcl(VisualControlType.VCL_LABEL).end().end()
+                Frame3  shortlisted = Frame3.builder("FRM_GRP_SHORTLISTED")
+                                .addTheme(THM_TEST1).end()
+                                .question("QUE_GRP_SHORTLISTED")
+                                	.addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT)
+                                	.weight(2.0)
+                                	.end()
+                            	.end()
+                                .addTheme(THM_BUCKET_LABEL).end()
                                 .build();
+                Frame3  interviews = Frame3.builder("FRM_GRP_INTERVIEWS")
+                                .addTheme(THM_TEST1).end()
+                                .question("QUE_GRP_INTERVIEWS")
+                                	.addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT)
+                                	.weight(2.0)
+                                	.end()
+                            	.end()
+                                .addTheme(THM_BUCKET_LABEL).end()
+                                .build();
+                Frame3  offered = Frame3.builder("FRM_GRP_OFFERED")
+                                .addTheme(THM_TEST1).end()
+                                .question("QUE_GRP_OFFERED")
+                                	.addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT)
+                                	.weight(2.0)
+                                	.end()
+                            	.end()
+                                .addTheme(THM_BUCKET_LABEL).end()
+                                .build();
+                Frame3  placed = Frame3.builder("FRM_GRP_PLACED")
+                                .addTheme(THM_TEST1).end()
+                                .question("QUE_GRP_PLACED")
+                                	.addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT)
+                                	.weight(2.0)
+                                	.end()
+                            	.end()
+                                .addTheme(THM_BUCKET_LABEL).end()
+                                .build();
+                Frame3  inProgress = Frame3.builder("FRM_GRP_IN_PROGRESS")
+                                .addTheme(THM_TEST1).end()
+                                .question("QUE_GRP_IN_PROGRESS")
+                                	.addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT)
+                                	.weight(2.0)
+                                	.end()
+                            	.end()
+                                .addTheme(THM_BUCKET_LABEL).end()
+                                .build();
+
                 Frame3 bucketColumn1 = Frame3.builder("FRM_BUCKET_COLUMN_ONE")
                                 .addTheme(THM_BUCKET_COLUMN).end()
-                                .addFrame(test1, FramePosition.NORTH).end()
-                                .addFrame(test2, FramePosition.NORTH).end()
-                                .addFrame(test3, FramePosition.NORTH).end()
+                                .addFrame(available, FramePosition.NORTH).end()
                                 .build();
                 Frame3 bucketColumn2 = Frame3.builder("FRM_BUCKET_COLUMN_TWO")
                                 .addTheme(THM_BUCKET_COLUMN).end()
+                                .addFrame(applied, FramePosition.NORTH).end()
                                 .build();
                 Frame3 bucketColumn3 = Frame3.builder("FRM_BUCKET_COLUMN_THREE")
                                 .addTheme(THM_BUCKET_COLUMN).end()
+                                .addFrame(shortlisted, FramePosition.NORTH).end()
                                 .build();
                 Frame3 bucketColumn4 = Frame3.builder("FRM_BUCKET_COLUMN_FOUR")
                                 .addTheme(THM_BUCKET_COLUMN).end()
+                                .addFrame(interviews, FramePosition.NORTH).end()
                                 .build();
                 Frame3 bucketColumn5 = Frame3.builder("FRM_BUCKET_COLUMN_FIVE")
                                 .addTheme(THM_BUCKET_COLUMN).end()
+                                .addFrame(offered, FramePosition.NORTH).end()
                                 .build();
                 Frame3 bucketColumn6 = Frame3.builder("FRM_BUCKET_COLUMN_SIX")
                                 .addTheme(THM_BUCKET_COLUMN).end()
+                                .addFrame(placed, FramePosition.NORTH).end()
                                 .build();
                 Frame3 bucketColumn7 = Frame3.builder("FRM_BUCKET_COLUMN_SEVEN")
                                 .addTheme(THM_BUCKET_COLUMN).end()
+                                .addFrame(inProgress, FramePosition.NORTH).end()
                                 .build();
 
                 Frame3 bucket = Frame3.builder("FRM_BUCKET")
@@ -260,38 +300,63 @@ public class AnishTest extends GennyJbpmBaseTest {
 
         public Frame3 generateTabs() {
 
-                Theme THM_TABS = Theme.builder("THM_TABS").addAttribute().backgroundColor("red").end().addAttribute()
-                                .flexDirection("column").end().build();
+                Theme THM_TABS = Theme.builder("THM_TABS")
+                                .addAttribute().backgroundColor("red").end()
+                                .addAttribute().flexDirection("column").end()
+                                .build();
 
-                Theme THM_BUCKET_LABEL = Theme.builder("THM_BUCKET_LABEL").addAttribute().textAlign("center").end().build();
+                Theme THM_BUCKET_LABEL = Theme.builder("THM_BUCKET_LABEL")
+                                .addAttribute().textAlign("center").end()
+                                .build();
 
                 Theme THM_TAB_HEADER = Theme.builder("THM_TAB_HEADER")
-                                // .addAttribute().backgroundColor("green").end()
-                                .addAttribute().backgroundColor("#065B9A").end().addAttribute().flexDirection("row")
-                                .end().addAttribute().marginRight(5).end().build();
+                                .addAttribute().backgroundColor("#065B9A").end()
+                                .addAttribute().flexDirection("row").end()
+                                .addAttribute().marginRight(5).end()
+                                .build();
 
                 Theme THM_TAB_CONTENT = Theme.builder("THM_TAB_CONTENT")
-                                // .addAttribute().backgroundColor("yellow").end()
-                                .addAttribute().backgroundColor("#F8F9FA").end().build();
-
-                Theme THM_TAB = Theme.builder("THM_TAB").addAttribute().backgroundColor("#3F505F").borderStyle("solid")
-                                .borderColor("white").color("white").height(40).end().build();
-
-                Frame3 tab1 = Frame3.builder("FRM_TAB_ONE").addTheme(THM_TAB).end().question("QUE_NAME_TWO").addTheme(THM_BUCKET_LABEL).end().end()
-                                .build();
-                Frame3 tab2 = Frame3.builder("FRM_TAB_TWO").addTheme(THM_TAB).end().question("QUE_NAME_TWO").end()
-                                .build();
-                Frame3 tab3 = Frame3.builder("FRM_TAB_THREE").addTheme(THM_TAB).end().question("QUE_NAME_TWO").end()
+                                .addAttribute().backgroundColor("#F8F9FA").end()
                                 .build();
 
-                Frame3 tabHeader = Frame3.builder("FRM_TAB_HEADER").addTheme(THM_TAB_HEADER).end()
-                                .addFrame(tab1, FramePosition.WEST).end().addFrame(tab2, FramePosition.WEST).end()
-                                .addFrame(tab3, FramePosition.WEST).end().question("QUE_NAME_TWO").end().build();
+                Theme THM_TAB = Theme.builder("THM_TAB")
+                                .addAttribute()
+                                .backgroundColor("#3F505F")
+                                .borderStyle("solid")
+                                .borderColor("white")
+                                .color("white")
+                                .height(40)
+                                .end().build();
+
+                Frame3 tab1 = Frame3.builder("FRM_TAB_ONE")
+                                .addTheme(THM_TAB).end()
+                                .question("QUE_NAME_TWO")
+                                    .addTheme(THM_BUCKET_LABEL)
+                                    .end()
+                                .end()
+                                .build();
+                Frame3 tab2 = Frame3.builder("FRM_TAB_TWO")
+                                .addTheme(THM_TAB).end()
+                                    .question("QUE_NAME_TWO").end()
+                                .build();
+                Frame3 tab3 = Frame3.builder("FRM_TAB_THREE")
+                                .addTheme(THM_TAB).end()
+                                    .question("QUE_NAME_TWO").end()
+                                .build();
+
+                Frame3 tabHeader = Frame3.builder("FRM_TAB_HEADER")
+                                .addTheme(THM_TAB_HEADER).end()
+                                .addFrame(tab1, FramePosition.WEST).end()
+                                .addFrame(tab2, FramePosition.WEST).end()
+                                .addFrame(tab3, FramePosition.WEST).end()
+                                .question("QUE_NAME_TWO").end()
+                                .build();
 
                 Frame3 bucket = generateBucket();
 
-                Frame3 tabContent = Frame3.builder("FRM_TAB_CONTENT").addTheme(THM_TAB_CONTENT).end().addFrame(bucket)
-                                .end()
+                Frame3 tabContent = Frame3.builder("FRM_TAB_CONTENT")
+                                .addTheme(THM_TAB_CONTENT).end()
+                                .addFrame(bucket).end()
                                 // .question("QUE_NAME_TWO").end()
                                 .build();
 
