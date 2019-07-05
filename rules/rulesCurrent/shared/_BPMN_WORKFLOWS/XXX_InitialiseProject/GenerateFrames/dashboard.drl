@@ -17,7 +17,7 @@ import life.genny.utils.VertxUtils;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.models.GennyToken;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
-import life.genny.qwanda.llama.Frame;
+import life.genny.models.Frame3;
 
 rule "DASHBOARD_1"
     ruleflow-group 'GenerateFrames'

@@ -21,7 +21,7 @@ import life.genny.utils.VertxUtils;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.models.GennyToken;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
-import life.genny.qwanda.llama.Frame3;
+import life.genny.models.Frame3;
 import life.genny.utils.FrameUtils2;
 
 rule "FRM_DUMMY"
