@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import org.drools.core.marshalling.impl.ProtobufMessages.KnowledgeBase;
 import org.drools.core.time.impl.PseudoClockScheduler;
 import org.jbpm.test.JbpmJUnitBaseTestCase.Strategy;
 import org.junit.Test;
@@ -16,7 +17,10 @@ import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.ExecutionResults;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.process.ProcessInstance;
+import org.kie.internal.builder.KnowledgeBuilder;
+import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.internal.command.CommandFactory;
+import org.kie.internal.io.ResourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,39 +46,45 @@ public class SessionWFTest extends GennyJbpmBaseTest {
 	@Test(timeout = 300000)	
 	public void sessionWorkFLow() {
 		
-		QEventMessage msg = new QEventMessage("EVT_MSG", "AUTH_INIT1");
+		//Creating two Qevent message for a simulation of two people login
+		
+		QEventMessage msg = new QEventMessage("EVT_MSG", "LOGIN");
+		msg.data.setValue("safal");
+		
+		QEventMessage msg1 = new QEventMessage("EVT_MSG", "LOGIN");
+		msg.data.setValue("anish");
 
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 		QRules qRules = getQRules(userToken); // defaults to user anyway
-		String keycloackState = userToken.getCode()
+		String keycloackState = userToken.getCode();
 		
 		GennyKieSession gks = GennyKieSession.builder()
-				.addJbpm("session_Workflow.bpmn")
+				.addJbpm("example_start.bpmn")
 				.addFact("qRules",qRules)
-				.addFact("msg",msg)
 				.addFact("eb", eventBusMock)
 				.addToken(new GennyToken("serviceUser", qRules.getServiceToken()))
 				.addToken(userToken)
 				.build();
+	    
+		gks.start();
 		
-		
-		
-	    gks.startProcess("com.sample.bpmn.session");
-	      //gks.start();
-	    gks.advanceSeconds(1);
-	      
 	     for (int i = 0; i<10; i++) {
 		    	
 		    	sleepMS(1000);
 		    	gks.advanceSeconds(1);
 		    	System.out.println("Clock :::: " + (i+1) + "sec");
-		    	if(i==4) {
-		    		
-		    		
+		    	if(i==2) {
+		    		   		gks.injectMessage(msg);
+		    	}else if(i==4) {
+		    		gks.injectMessage(msg1);
+		    	}else if(i==6){
+		    		gks.injectSignal("safal", "null");
+		    	}else if(i==8){
+		    		gks.injectSignal("anish", "null");
 		    	}
 		    	
 		    }
-
+	     
 	    
 	    gks.close();
 

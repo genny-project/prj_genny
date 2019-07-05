@@ -167,13 +167,13 @@ Timer Example 3</bpmn2:text>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_1" bpmnElement="_2">
-        <dc:Bounds height="48.0" width="80.0" x="182.0" y="202.0"/>
+        <dc:Bounds height="48.0" width="80.0" x="290.0" y="480.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="32.0" x="206.0" y="220.0"/>
+          <dc:Bounds height="11.0" width="32.0" x="314.0" y="498.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_1" bpmnElement="_1">
-        <dc:Bounds height="48.0" width="48.0" x="110.0" y="110.0"/>
+        <dc:Bounds height="48.0" width="48.0" x="150.0" y="480.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_2" labelStyle="BPMNLabelStyle_1"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
@@ -220,7 +220,7 @@ Timer Example 3</bpmn2:text>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_IntermediateCatchEvent_1" bpmnElement="IntermediateCatchEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="510.0" y="600.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_8">
           <dc:Bounds height="11.0" width="48.0" x="504.0" y="636.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -231,14 +231,14 @@ Timer Example 3</bpmn2:text>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="_1-_2" sourceElement="BPMNShape_StartEvent_1" targetElement="BPMNShape_ScriptTask_1">
-        <di:waypoint xsi:type="dc:Point" x="134.0" y="158.0"/>
-        <di:waypoint xsi:type="dc:Point" x="134.0" y="226.0"/>
-        <di:waypoint xsi:type="dc:Point" x="182.0" y="226.0"/>
+        <di:waypoint xsi:type="dc:Point" x="198.0" y="504.0"/>
+        <di:waypoint xsi:type="dc:Point" x="244.0" y="504.0"/>
+        <di:waypoint xsi:type="dc:Point" x="290.0" y="504.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_5"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_4" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_SubProcess_1">
-        <di:waypoint xsi:type="dc:Point" x="222.0" y="250.0"/>
-        <di:waypoint xsi:type="dc:Point" x="222.0" y="633.0"/>
+        <di:waypoint xsi:type="dc:Point" x="330.0" y="528.0"/>
+        <di:waypoint xsi:type="dc:Point" x="330.0" y="633.0"/>
         <di:waypoint xsi:type="dc:Point" x="400.0" y="633.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_10"/>
       </bpmndi:BPMNEdge>
@@ -277,7 +277,7 @@ Timer Example 3</bpmn2:text>
         <di:waypoint xsi:type="dc:Point" x="468.0" y="618.0"/>
         <di:waypoint xsi:type="dc:Point" x="489.0" y="618.0"/>
         <di:waypoint xsi:type="dc:Point" x="510.0" y="618.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_15"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
