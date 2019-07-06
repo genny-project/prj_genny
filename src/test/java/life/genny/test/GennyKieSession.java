@@ -91,6 +91,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 				throw new Exception();
 			}
 			tokens.put("PER_SERVICE", serviceToken);
+			cmds.add(CommandFactory.newInsert(serviceToken, serviceToken.getCode()));
 			super.setUp();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
