@@ -68,22 +68,35 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	/**
 	 * static factory method for builder
 	 */
-	public static Builder builder() {
-		return new GennyKieSession.Builder();
+	public static Builder builder(GennyToken serviceToken) {
+		
+		return new GennyKieSession.Builder(serviceToken,false);
 	}
 
 	/**
 	 * static factory method for builder
 	 */
-	public static Builder builder(boolean persistence) {
-		return new GennyKieSession.Builder(persistence);
+	public static Builder builder(GennyToken serviceToken,boolean persistence) {
+		return new GennyKieSession.Builder(serviceToken,persistence);
 	}
 
 	/**
 	 * forces use of the Builder
 	 */
-	private GennyKieSession(boolean persistence) {
+	private GennyKieSession(GennyToken serviceToken,boolean persistence) {
 		super(persistence, persistence);
+		try {
+			if (!"PER_SERVICE".equals(serviceToken.getUserCode())) {
+				System.out.println("ERROR: MUST PASS A SERVICE TOKEN");
+				throw new Exception();
+			}
+			tokens.put("PER_SERVICE", serviceToken);
+			cmds.add(CommandFactory.newInsert(serviceToken, serviceToken.getCode()));
+			super.setUp();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public ExecutionResults start() {
@@ -187,6 +200,9 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		// config.setOption( ClockTypeOption.get("realtime") );
 
 		/* Set up RulesEngine Hooks Setup */
+		if (this.drls==null) {
+			this.drls = new ArrayList<String>();
+		}
 		this.drls.add(DRL_RULESENGINE_HOOKS_DIR);
 
 		if (jbpms != null) {
@@ -259,7 +275,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 				kieSession.addEventListener(new JbpmInitListener(tokens.get("PER_USER1")));
 			}
 
-			kieSession.setGlobal("log", log);
+		//	kieSession.setGlobal("log", log);
 
 			// Add any tokens
 //			for (String tokenKey : this.tokens.keySet()) {
@@ -389,6 +405,12 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	public void close() {
 		System.out.println("Completed");
 		kieSession.dispose();
+		try {
+			super.tearDown();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -398,12 +420,12 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 		private GennyKieSession managedInstance = null;
 
-		public Builder() {
-			managedInstance = new GennyKieSession(false);
+		public Builder(GennyToken serviceToken) {
+			managedInstance = new GennyKieSession(serviceToken,false);
 		}
 
-		public Builder(boolean persistence) {
-			managedInstance = new GennyKieSession(persistence);
+		public Builder(GennyToken serviceToken,boolean persistence) {
+			managedInstance = new GennyKieSession(serviceToken,persistence);
 		}
 
 		/**

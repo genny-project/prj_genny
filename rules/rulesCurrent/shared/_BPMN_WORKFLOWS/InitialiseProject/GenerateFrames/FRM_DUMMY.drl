@@ -21,7 +21,8 @@ import life.genny.utils.VertxUtils;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.models.GennyToken;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
-import life.genny.qwanda.llama.Frame3;
+import life.genny.models.Frame3;
+import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
 
 rule "FRM_DUMMY"
@@ -29,21 +30,26 @@ rule "FRM_DUMMY"
     no-loop true
     when
       $process : WorkflowProcessInstance( ) 
+      not  Frame3(code == "FRM_DUMMY")
+      serviceToken : GennyToken( code == "PER_SERVICE")
+      THM_DUMMY : Theme (code == "THM_DUMMY")
+      
     then
-     System.out.println("Generate FRM_DUMMY Rule");
- 
-	GennyToken serviceToken = (GennyToken)$process.getVariable("serviceToken"); 
+     System.out.println("   Generate FRM_DUMMY Rule  "+serviceToken.getUserCode());
 
-	Frame3 frame = Frame3.builder("FRM_DUMMY")
-						.addTheme("THM_DUMMY")
+ 	Frame3 frame = Frame3.builder("FRM_DUMMY")
+						.addTheme(THM_DUMMY)
 							.end()
 						.build();
-
+						
+	frame.setRealm(serviceToken.getRealm());
+						
+	insert (frame);
+	
+	VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode(), frame, serviceToken.getToken());
 	Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
 
 	QDataBaseEntityMessage msg = FrameUtils2.toMessage(frame, serviceToken, askMsgs);
-
-	VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode(), msg, serviceToken.getToken());
-
+	VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode()+"-MSG", msg, serviceToken.getToken());
 
 end

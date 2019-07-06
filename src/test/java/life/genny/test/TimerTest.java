@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import life.genny.models.GennyToken;
 import life.genny.qwanda.message.QEventMessage;
 import life.genny.rules.QRules;
+import life.genny.utils.VertxUtils;
 
 public class TimerTest extends GennyJbpmBaseTest {
 
@@ -22,9 +23,13 @@ public class TimerTest extends GennyJbpmBaseTest {
 	
 	@Test
 	public void timerIntervalTest() {
+		VertxUtils.cachedEnabled = true; // don't try and use any local services
+		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "userToken");
+		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "serviceToken");
+		QRules qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
 		
 		
-		GennyKieSession gks = GennyKieSession.builder()
+		GennyKieSession gks = GennyKieSession.builder(serviceToken)
 				.addJbpm( WFE_TIMER_INTERVAL)
 				.build();
 		
@@ -45,10 +50,12 @@ public class TimerTest extends GennyJbpmBaseTest {
 		
 		QEventMessage msg = new QEventMessage("EVT_MSG", "AUTH_INIT1");
 
-		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
-		QRules qRules = getQRules(userToken); // defaults to user anyway
+		VertxUtils.cachedEnabled = true; // don't try and use any local services
+		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "userToken");
+		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "serviceToken");
+		QRules qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
 		
-		GennyKieSession gks = GennyKieSession.builder()
+		GennyKieSession gks = GennyKieSession.builder(serviceToken)
 				.addJbpm("example_timer_start.bpmn")
 				.addJbpm("timer_example_workflow_1.bpmn","timer_example_workflow_2.bpmn","timer_example_workflow_3.bpmn")
 				.addJbpm("timer_example_workflow_4.bpmn")

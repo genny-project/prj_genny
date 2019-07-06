@@ -24,11 +24,11 @@ rule "SBE_NEW_ITEMS2"
      no-loop true
     when
        $process : WorkflowProcessInstance( ) 
+       not  SearchEntity (code == "SBE_NEW_ITEMS2")
+        serviceToken : GennyToken( code == "PER_SERVICE")
      then
-     	System.out.println("Generate SBE_NEW_ITEMS2 Rule");
- 
-		GennyToken serviceToken = (GennyToken)$process.getVariable("serviceToken"); 
-    
+     	System.out.println("   Generate SBE_NEW_ITEMS2 ");
+ 		
          SearchEntity searchBE = new SearchEntity("SBE_NEW_ITEMS2","All New Items")
   	     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
   	     .setSourceCode("GRP_NEW_ITEMS")
@@ -36,9 +36,9 @@ rule "SBE_NEW_ITEMS2"
   	     .setPageStart(0)
   	     .setPageSize(10000);
   	     
+   	     
   	     searchBE.setRealm(serviceToken.getRealm());
-
+  	     
+ 		 insert(searchBE);
   		 VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken.getToken());
-  		 
-
 end

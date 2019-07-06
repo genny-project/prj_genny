@@ -69,7 +69,7 @@ public class AdamTest {
 
 		GennyKieSession gks = null;
 		try {
-			gks = GennyKieSession.builder()
+			gks = GennyKieSession.builder(serviceToken)
 					.addDrl(DRL_SEND_USER_DATA_DIR)   // send the initial User data using the rules
 					.addJbpm("auth_init.bpmn")
 					.addJbpm("send_llama.bpmn")
@@ -126,7 +126,7 @@ public class AdamTest {
 
 		GennyKieSession gks = null;
 		try {
-			gks = GennyKieSession.builder(true).addJbpm("adam_test_1.bpmn").addFact("qRules", qRules).addFact("msg", msg)
+			gks = GennyKieSession.builder(serviceToken,true).addJbpm("adam_test_1.bpmn").addFact("qRules", qRules).addFact("msg", msg)
 					.addToken(serviceToken).addToken(userToken).build();
 
 			gks.start();
@@ -148,6 +148,7 @@ public class AdamTest {
 	@Test
 	public void initRulesTest() {
 		System.out.println("Run the Project Initialisation");
+		VertxUtils.cachedEnabled = true; // don't try and use any local services
 		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "userToken");
 		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "serviceToken");
 		QRules qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
@@ -162,12 +163,11 @@ public class AdamTest {
 
 		GennyKieSession gks = null;
 		try {
-			gks = GennyKieSession.builder(false)
+			gks = GennyKieSession.builder(serviceToken,false)
 					.addJbpm("init_project.bpmn")
 					.addDrl("GenerateSearches")
 					.addDrl("GenerateThemes")
 					.addDrl("GenerateFrames")
-					.addToken(serviceToken)
 					.addFact("qRules", qRules)
 					.addFact("msg", msg)
 
