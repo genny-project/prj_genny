@@ -10,6 +10,7 @@ import life.genny.rules.QRules;
 import io.vertx.core.json.JsonObject;
 import life.genny.qwandautils.JsonUtils;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
@@ -28,11 +29,12 @@ rule "THM_DUMMY"
     no-loop true
     when
       $process : WorkflowProcessInstance( ) 
-      $gennyMap: Map( keySet not contains "THM_DUMMY" )
+     /*  rules : QRules(!isState("THM_DUMMY")) */
+      not  Theme (code == "THM_DUMMY")
+      serviceToken : GennyToken( code == "PER_SERVICE")
     then
-     System.out.println("Generate THM_DUMMY Rule");
-     GennyToken serviceToken = (GennyToken)$process.getVariable("serviceToken"); 
-
+     System.out.println("   Generate THM_DUMMY Rule "+serviceToken.getUserCode());
+ 
 	 Theme theme = Theme.builder("THM_DUMMY")
 							.addAttribute()
 								.height(100)
@@ -40,8 +42,10 @@ rule "THM_DUMMY"
 								.end()
 							.build();
 
+	theme.setRealm(serviceToken.getRealm());
 		
-
+/*	rules.setState("THM_DUMMY"); */
+	insert(theme);
 /*	$gennyMap.put( "THM_DUMMY" , theme);
 	retract($gennyMap); */
 

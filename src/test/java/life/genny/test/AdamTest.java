@@ -109,7 +109,7 @@ public class AdamTest {
 		System.out.println(test);
 	}
 
-	@Test
+	//@Test
 	public void quickTest() {
 
 		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
@@ -145,9 +145,10 @@ public class AdamTest {
 
 
 	
-//	@Test
+	@Test
 	public void initRulesTest() {
 		System.out.println("Run the Project Initialisation");
+		VertxUtils.cachedEnabled = true; // don't try and use any local services
 		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "userToken");
 		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "serviceToken");
 		QRules qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());

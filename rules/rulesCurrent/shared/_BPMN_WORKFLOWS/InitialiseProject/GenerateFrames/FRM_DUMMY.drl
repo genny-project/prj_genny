@@ -31,24 +31,25 @@ rule "FRM_DUMMY"
     when
       $process : WorkflowProcessInstance( ) 
       not  Frame3(code == "FRM_DUMMY")
-      THM_DUMMY : Theme(code == "THM_DUMMY")
+      serviceToken : GennyToken( code == "PER_SERVICE")
+      THM_DUMMY : Theme (code == "THM_DUMMY")
+      
     then
-     System.out.println("Generate FRM_DUMMY Rule");
- 
-	GennyToken serviceToken = (GennyToken)$process.getVariable("serviceToken"); 
+     System.out.println("   Generate FRM_DUMMY Rule  "+serviceToken.getUserCode());
 
+   System.out.println("Theme "+THM_DUMMY.getCode());
 	Frame3 frame = Frame3.builder("FRM_DUMMY")
 						.addTheme(THM_DUMMY)
 							.end()
 						.build();
 						
-	update (frame);
-
+	frame.setRealm(serviceToken.getRealm());
+						
+	insert (frame);
+	VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode(), frame, serviceToken.getToken());
 	Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
 
 	QDataBaseEntityMessage msg = FrameUtils2.toMessage(frame, serviceToken, askMsgs);
-
-	VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode(), msg, serviceToken.getToken());
-
+	VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode()+"-MSG", msg, serviceToken.getToken());
 
 end
