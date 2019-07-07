@@ -34,7 +34,7 @@ rule "FRM_BUCKET_COLUMN_6"
       not  Frame3(code == "FRM_BUCKET_COLUMN_6")
       serviceToken : GennyToken( code == "PER_SERVICE")
       FRM_GRP_PLACED : Frame3 (code == "FRM_GRP_PLACED" )
-      FRM_BUCKET_COLUMN5 : Frame3 (code == "FRM_BUCKET_COLUMN5" ) /* just to see a sequence */      
+      FRM_BUCKET_COLUMN_5 : Frame3 (code == "FRM_BUCKET_COLUMN_5" ) /* just to see a sequence */      
     then
      System.out.println("   Generate FRM_BUCKET_COLUMN_6 Rule  "+serviceToken.getUserCode());
 
