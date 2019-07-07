@@ -48,7 +48,7 @@ rule "FRM_GRP_AVAILABLE"
                                 .addTheme("THM_BUCKET_LABEL",serviceToken)
                                 	.end()
                                 .build();
-		    System.out.println("   Got to here");
+	
 						
 	frame.setRealm(serviceToken.getRealm());
 						
