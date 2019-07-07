@@ -56,7 +56,7 @@ public class CyrusTest extends GennyJbpmBaseTest {
 
 
 
-@Test
+//@Test
 public void addInternshipOne() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
@@ -180,7 +180,7 @@ public void addInternshipOne() {
 	System.out.println("Sent");
 }
 
-//@Test
+@Test
 public void addInternshipTwo() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
@@ -189,9 +189,6 @@ public void addInternshipTwo() {
 
 	// building the themes and the footers
 	Theme THM_COLOR_GREY = Theme.builder("THM_COLOR_RED").addAttribute().backgroundColor("red").end().build();
-
-	Theme THM_SUBMIT = Theme.builder("THM_SUBMIT").addAttribute().backgroundColor("#1183c8").end().addAttribute()
-			.justifyContent("center").end().build();
 
 	Theme THM_COLOR_BLACK = Theme.builder("THM_COLOR_BLACK").addAttribute().backgroundColor("#ffffff").end().build();
 
@@ -216,62 +213,50 @@ public void addInternshipTwo() {
 			.addAttribute(ThemeAttributeType.PRI_HAS_ICON, true).end().build();
 
 	Theme THM_FORM_CONTAINER_DEFAULT = Theme.builder("THM_FORM_CONTAINER_DEFAULT").addAttribute()
-			.backgroundColor("white").padding(10).margin(10).maxWidth(700).width("100%").borderColour("#000000").borderStyle("solid").borderWidth(2).shadowColor("#000").shadowOpacity(0.4)
+			.backgroundColor("white").padding(10).maxWidth(700).width("100%").shadowColor("#000").shadowOpacity(0.4)
 			.shadowRadius(5).shadowOffset().width(0).height(0).end().end()
 			.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
 			.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION, true).end()
 			.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
 
-	Theme THM_BUTTONS = Theme.builder("THM_BUTTONS").
-			addAttribute()
-			.backgroundColor("#ffffff")
-			.padding(10)
-			.justifyContent("center")
-			.borderColor("#000000")
-			.margin(4)
-			.maxWidth(700)
-			.width("100%")
-			.shadowColor("#000")
-			.shadowOpacity(0.8).shadowRadius(5).end()
-			.build();
-
-	Theme THM_OF = Theme.builder("THM_OF").
-	addAttribute()
-		.overflowY("auto")
-		.end()
-	.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
-		.end()
-	.build();
-
-	Frame3 frameSubmit = Frame3.builder("FRM_SUBMIT")
-			.addTheme(THM_SUBMIT).end()
-			.addTheme(THM_OF).end()
-			.question("QUE_SUBMIT_BUTTON")
-			.addTheme(THM_BUTTONS).weight(2.0).end()
+	Theme THM_BUTTONS = Theme.builder("THM_BUTTONS")
+			.addAttribute().backgroundColor("#ffffff").padding(10)
+			.justifyContent("center").borderColor("#000000").margin(4).maxWidth(700).width("100%").shadowColor("#000")
+			.shadowOpacity(0.8).shadowRadius(5)
 			.end()
 			.build();
 
+			Theme THM_OF = Theme.builder("THM_OF")
+				.addAttribute().overflowY("auto").end()
+				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
+		.end()
+	.build();
+
 	Frame3 frameForm = Frame3.builder("FRM_FORM")
-			.addTheme(THM_COLOR_BLACK).end()
-			.addTheme(THM_OF).end()
-			.question("QUE_ADD_INTERNSHIP_AGENT_STEP_TWO_GRP")
-				.addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT).end()
-				.addTheme(THM_FORM_LABEL_DEFAULT).vcl(VisualControlType.VCL_LABEL).end()
-				.addTheme(THM_FORM_WRAPPER_DEFAULT).vcl(VisualControlType.VCL_WRAPPER).end()
-				.addTheme(THM_FORM_ERROR_DEFAULT).vcl(VisualControlType.VCL_ERROR).end()
-				.addTheme(THM_FORM_DEFAULT).end()
-				.addTheme(THM_FORM_CONTAINER_DEFAULT).end()
+				.addTheme(THM_COLOR_BLACK).end()
+				.addTheme(THM_OF).end()
+				.question("QUE_ADD_INTERNSHIP_AGENT_STEP_TWO_GRP")
+					.addTheme(THM_FORM_INPUT_DEFAULT)
+					.vcl(VisualControlType.VCL_INPUT).weight(2.0).end().
+					addTheme(THM_FORM_LABEL_DEFAULT)
+					.vcl(VisualControlType.VCL_LABEL).end()
+					.addTheme(THM_FORM_WRAPPER_DEFAULT).vcl(VisualControlType.VCL_WRAPPER).end()
+					.addTheme(THM_FORM_ERROR_DEFAULT).vcl(VisualControlType.VCL_ERROR).end()
+					.addTheme(THM_FORM_DEFAULT).weight(3.0).end()
+					.addTheme(THM_FORM_CONTAINER_DEFAULT).weight(2.0).end()
 			.end()
 			.build();
 
 	Frame3 frameCentre = Frame3.builder("FRM_CENTRE")
-			.addFrame(frameForm, FramePosition.CENTRE).end()
-			.addFrame(frameSubmit, FramePosition.SOUTH).end()
-			.build();
+					.addFrame(frameForm, FramePosition.NORTH).end()
+
+				.build();
+
 
 	Frame3 frameMain = Frame3.builder("FRM_MAIN")
-			.addTheme(THM_COLOR_GREY).end()
-			.addFrame(frameCentre, FramePosition.CENTRE).end()
+				.addTheme(THM_COLOR_GREY).end()
+				.addFrame(frameCentre, FramePosition.CENTRE)
+			.end()
 			.build();
 
 	Frame3 frameRoot = Frame3.builder("FRM_ROOT").addFrame(frameMain).end().build();
