@@ -93,13 +93,15 @@
           <drools:metaValue><![CDATA[Generate Searches]]></drools:metaValue>
         </drools:metaData>
         <drools:onEntry-script scriptFormat="http://www.java.com/java">
-          <drools:script>System.out.println(&quot;Generate Searches - Start &quot;); 
-/* System.out.println(&quot;Genny Token Service Code = &quot;+serviceToken.getCode());
-System.out.println(&quot;QRules Realm=&quot;+rules.realm()); */
+          <drools:script>
+if (serviceToken == null) { System.out.println(&quot;ServiceTopken is null!&quot;); }
+System.out.println(&quot;Genny Token Service Code = &quot;+serviceToken.getCode());
+System.out.println(&quot;QRules Realm=&quot;+rules.realm()); 
+System.out.println(&quot;Generate Searches - Start &quot;); 
 
 kcontext.getKnowledgeRuntime().insert(rules);
-kcontext.getKnowledgeRuntime().insert(serviceToken);
-kcontext.getKnowledgeRuntime().insert(kcontext.getProcessInstance());
+/*kcontext.getKnowledgeRuntime().insert(serviceToken);*/
+ kcontext.getKnowledgeRuntime().insert(kcontext.getProcessInstance()); 
 </drools:script>
         </drools:onEntry-script>
         <drools:onExit-script scriptFormat="http://www.java.com/java">

@@ -29,16 +29,15 @@ rule "FRM_DUMMY"
     ruleflow-group 'GenerateFrames'
     no-loop true
     when
-      $process : WorkflowProcessInstance( ) 
       not  Frame3(code == "FRM_DUMMY")
       serviceToken : GennyToken( code == "PER_SERVICE")
-      THM_DUMMY : Theme (code == "THM_DUMMY")
+     /* THM_DUMMY : Theme (code == "THM_DUMMY") */
       
     then
      System.out.println("   Generate FRM_DUMMY Rule  "+serviceToken.getUserCode());
 
  	Frame3 frame = Frame3.builder("FRM_DUMMY")
-						.addTheme(THM_DUMMY)
+						.addTheme("THM_DUMMY",serviceToken)
 							.end()
 						.build();
 						
