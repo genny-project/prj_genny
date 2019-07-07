@@ -87,7 +87,7 @@ public class AdamTest {
 		
 		
 		// test cache has data
-		
+		Frame3 bucket = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_BUCKET", Frame3.class, serviceToken.getToken());
 		
 		
 	} catch (Exception e)
