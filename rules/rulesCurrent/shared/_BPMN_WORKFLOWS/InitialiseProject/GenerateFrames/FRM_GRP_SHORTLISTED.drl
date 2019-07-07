@@ -54,9 +54,9 @@ rule "FRM_GRP_SHORTLISTED"
 	insert (frame);
 	
 	VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode(), frame, serviceToken.getToken());
-	Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+/*	Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
 
 	QDataBaseEntityMessage msg = FrameUtils2.toMessage(frame, serviceToken, askMsgs);
-	VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode()+"-MSG", msg, serviceToken.getToken());
+	VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode()+"-MSG", msg, serviceToken.getToken()); */
 
 end
