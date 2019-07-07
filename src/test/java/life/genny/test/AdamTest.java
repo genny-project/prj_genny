@@ -144,9 +144,10 @@ public class AdamTest {
 	
 
 
+	// Only run if no background service running, used to test GenerateRules
 	
 	@Test
-	public void initRulesTest() {
+	public void initLocalRulesTest() {
 		System.out.println("Run the Project Initialisation");
 		VertxUtils.cachedEnabled = true; // don't try and use any local services
 		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "userToken");
