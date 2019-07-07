@@ -88,10 +88,21 @@ public class AdamTest {
 		
 		// test cache has data
 		Frame3 bucket = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_BUCKET", Frame3.class, serviceToken.getToken());
-		QDataBaseEntityMessage bucketMsg = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_BUCKET-MSG", QDataBaseEntityMessage.class, serviceToken.getToken());
+
+		Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+
+		QDataBaseEntityMessage frameMsg = FrameUtils2.toMessage(bucket, serviceToken, askMsgs);
+		rules.publishCmd(frameMsg); // Send frames
+
 		
-		/* send message */
-		rules.publishCmd(bucketMsg); // Send QDataBaseEntityMessage
+	//	QDataBaseEntityMessage bucketMsg = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_BUCKET-MSG", QDataBaseEntityMessage.class, serviceToken.getToken());
+		
+		
+        for (QDataAskMessage askMsg : askMsgs) {
+            rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode()); // Send
+                                                                                           // associated
+        }
+    System.out.println("Sent");
 
 	} catch (Exception e)
 	{
