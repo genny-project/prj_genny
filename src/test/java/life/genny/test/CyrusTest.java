@@ -61,7 +61,7 @@ public void addInternshipOne() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 	QRules rules = getQRules(userToken);
-	GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
+	GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
 	// building the themes and the footers
 	Theme THM_COLOR_GREY = Theme.builder("THM_COLOR_RED").addAttribute().backgroundColor("red").end().build();
@@ -185,7 +185,7 @@ public void addInternshipTwo() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 	QRules rules = getQRules(userToken);
-	GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
+	GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
 	// building the themes and the footers
 	Theme THM_COLOR_GREY = Theme.builder("THM_COLOR_RED").addAttribute().backgroundColor("red").end().build();
@@ -282,7 +282,7 @@ public void selectUserType() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 	QRules rules = getQRules(userToken);
-	GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
+	GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
 	// building the themes and the footers
 	Theme THM_COLOR_GREY = Theme.builder("THM_COLOR_RED").addAttribute().backgroundColor("red").end().build();
@@ -378,7 +378,7 @@ public void profileDetails() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 	QRules rules = getQRules(userToken);
-	GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
+	GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
 	// building the themes and the footers
 	Theme THM_COLOR_GREY = Theme.builder("THM_COLOR_RED").addAttribute().backgroundColor("red").end().build();
@@ -474,7 +474,7 @@ public void addInternshipTemplate() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 	QRules rules = getQRules(userToken);
-	GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
+	GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
 	// building the themes and the footers
 	Theme THM_COLOR_GREY = Theme.builder("THM_COLOR_RED").addAttribute().backgroundColor("red").end().build();
@@ -569,7 +569,7 @@ public void agentDetais() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 	QRules rules = getQRules(userToken);
-	GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
+	GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
 	// building the themes and the footers
 	Theme THM_COLOR_GREY = Theme.builder("THM_COLOR_RED").addAttribute().backgroundColor("red").end().build();
@@ -664,7 +664,7 @@ public void eduProviderStaffProfile() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 	QRules rules = getQRules(userToken);
-	GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
+	GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
 	// building the themes and the footers
 	Theme THM_COLOR_GREY = Theme.builder("THM_COLOR_RED").addAttribute().backgroundColor("red").end().build();
@@ -759,7 +759,7 @@ public void hostCompanyStaffDetails() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 	QRules rules = getQRules(userToken);
-	GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
+	GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
 	// building the themes and the footers
 	Theme THM_COLOR_GREY = Theme.builder("THM_COLOR_RED").addAttribute().backgroundColor("red").end().build();
@@ -854,7 +854,7 @@ public void internProfile() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 	QRules rules = getQRules(userToken);
-	GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
+	GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
 	// building the themes and the footers
 	Theme THM_COLOR_GREY = Theme.builder("THM_COLOR_RED").addAttribute().backgroundColor("red").end().build();
@@ -949,7 +949,7 @@ public void selectCompanyType() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 	QRules rules = getQRules(userToken);
-	GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
+	GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
 	// building the themes and the footers
 	Theme THM_COLOR_GREY = Theme.builder("THM_COLOR_RED").addAttribute().backgroundColor("red").end().build();
@@ -1044,7 +1044,7 @@ public void agencyDetails() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 	QRules rules = getQRules(userToken);
-	GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
+	GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
 	// building the themes and the footers
 	Theme THM_COLOR_GREY = Theme.builder("THM_COLOR_RED").addAttribute().backgroundColor("red").end().build();
@@ -1139,7 +1139,7 @@ public void educationProviderDetails() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 	QRules rules = getQRules(userToken);
-	GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
+	GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
 	// building the themes and the footers
 	Theme THM_COLOR_GREY = Theme.builder("THM_COLOR_RED").addAttribute().backgroundColor("red").end().build();
@@ -1234,7 +1234,7 @@ public void hostCompanyDetails() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 	QRules rules = getQRules(userToken);
-	GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
+	GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
 	// building the themes and the footers
 	Theme THM_COLOR_GREY = Theme.builder("THM_COLOR_RED").addAttribute().backgroundColor("red").end().build();

@@ -140,6 +140,7 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 		eventBusMock = new EventBusMock();
 		vertxCache = new VertxCache();  // MockCache
 		VertxUtils.init(eventBusMock, vertxCache);
+		VertxUtils.cachedEnabled = false; // use any local services
 
 	}
 

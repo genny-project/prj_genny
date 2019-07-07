@@ -56,6 +56,49 @@ public class AdamTest {
 
 	}
 
+	@Test
+	public void  initRemoteInitProjectTest() {
+	System.out.println("Run the Remote Project Initialisation");
+	QRules rules = setupLocalService();
+	GennyToken userToken = new GennyToken("userToken", rules.getToken());
+	GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+
+	System.out.println("session     =" + userToken.getSessionCode());
+	System.out.println("userToken   =" + userToken.getToken());
+	System.out.println("serviceToken=" + serviceToken.getToken());
+
+	QEventMessage msg = new QEventMessage("EVT_MSG", "INIT_STARTUP");
+
+	GennyKieSession gks = null;
+	try {
+		gks = GennyKieSession.builder(serviceToken,false)
+				.addJbpm("init_project.bpmn")
+				.addDrl("GenerateSearches")
+				.addDrl("GenerateThemes")
+				.addDrl("GenerateFrames")
+				.addFact("qRules", rules)
+				.addFact("msg", msg)
+
+				.build();
+
+		gks.start();
+
+		gks.advanceSeconds(20, false);
+		
+		
+		// test cache has data
+		
+		
+		
+	} catch (Exception e)
+	{
+		System.out.println(e.getLocalizedMessage());
+	} finally {
+		gks.close();
+	}
+}
+	
+	
    // @Test
 	public void sendAuthInit()
 	{
@@ -63,7 +106,7 @@ public class AdamTest {
 
 		QRules rules = setupLocalService();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
-		GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
+		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
 		QEventMessage msg = new QEventMessage("EVT_MSG", "AUTH_INIT");
 
@@ -146,7 +189,7 @@ public class AdamTest {
 
 	// Only run if no background service running, used to test GenerateRules
 	
-	@Test
+	//@Test
 	public void initLocalRulesTest() {
 		System.out.println("Run the Project Initialisation");
 		VertxUtils.cachedEnabled = true; // don't try and use any local services
@@ -211,7 +254,7 @@ public class AdamTest {
 	public void testTheme() {
 		QRules rules = setupLocalService();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
-		GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
+		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
 		Theme THM_DUMMY = Theme.builder("THM_DUMMY").addAttribute().height(100).end().addAttribute().width(90).end()
 				.build();
@@ -385,7 +428,7 @@ public class AdamTest {
 
 		QRules rules = setupLocalService();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
-		GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
+		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
 		System.out.println("Starting");
 
@@ -422,7 +465,7 @@ public class AdamTest {
 	public void formsTest() {
 		QRules rules = setupLocalService();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
-		GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
+		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
 		String apiUrl = GennySettings.qwandaServiceUrl + "/service/forms";
 		System.out.println("Fetching setup info from " + apiUrl);
