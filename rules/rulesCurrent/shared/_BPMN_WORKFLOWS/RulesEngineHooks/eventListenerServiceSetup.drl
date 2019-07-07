@@ -21,12 +21,6 @@ rule "eventListenerServiceSetup"
      System.out.println("ServiceToken detected ==== "+serviceToken.getCode());
 
      insert(serviceToken);
- /*    kcontext.getKnowledgeRuntime().addEventListener(new JbpmInitListener(serviceToken)); */
-  /*   kcontext.getKnowledgeRuntime().addEventListener(new GennyAgendaEventListener()); */
- /* 	kcontext.getKnowledgeRuntime().addEventListener(new GennyAgendaEventListener()); */
-  /*   kcontext.getKnowledgeRuntime().insert(serviceToken); */
      
 
 end
-
-

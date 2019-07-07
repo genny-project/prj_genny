@@ -33,11 +33,8 @@ import org.kie.internal.command.CommandFactory;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import life.genny.jbpm.customworkitemhandlers.AwesomeHandler;
-import life.genny.jbpm.customworkitemhandlers.GenerateFrames;
-import life.genny.jbpm.customworkitemhandlers.GenerateSearches;
-import life.genny.jbpm.customworkitemhandlers.GenerateThemes;
-import life.genny.jbpm.customworkitemhandlers.GenerateTree;
 import life.genny.jbpm.customworkitemhandlers.NotificationWorkItemHandler;
+import life.genny.jbpm.customworkitemhandlers.RuleFlowGroupWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowAllFormsHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 import life.genny.models.GennyToken;
@@ -299,10 +296,8 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		kieSession.getWorkItemManager().registerWorkItemHandler("Notification", new NotificationWorkItemHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("ShowAllForms", new ShowAllFormsHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("ShowFrame", new ShowFrame());
-		kieSession.getWorkItemManager().registerWorkItemHandler("GenerateSearches", new GenerateSearches());
-		kieSession.getWorkItemManager().registerWorkItemHandler("GenerateThemes", new GenerateThemes());
-		kieSession.getWorkItemManager().registerWorkItemHandler("GenerateFrames", new GenerateFrames());
-		kieSession.getWorkItemManager().registerWorkItemHandler("GenerateTree", new GenerateTree());
+		kieSession.getWorkItemManager().registerWorkItemHandler("RuleFlowGroup", new RuleFlowGroupWorkItemHandler(kieSession));
+
 
 		if (workItemHandlers != null) {
 			for (Tuple2<String, WorkItemHandler> wih : workItemHandlers) {
