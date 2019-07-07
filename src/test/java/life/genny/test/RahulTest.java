@@ -17,7 +17,9 @@ public class RahulTest extends GennyJbpmBaseTest {
 	private static final String WFP_USER_LIFECYCLE = "userLifecycle.bpmn";
 	private static final String WFP_TEST_WORKFLOW = "testWorkflow.bpmn";
 	private static final String WFP_APPLICATION_LIFECYCLE = "applicationLifecycle.bpmn";
-
+	private static final String WFP_APPLICATION_AVAILABLE = "available.bpmn";
+	private static final String WFP_APPLICATION_APPLIED = "applied.bpmn";
+	
 	public RahulTest() {
 		super(false);
 	}
@@ -28,7 +30,7 @@ public class RahulTest extends GennyJbpmBaseTest {
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 		QRules qRules = getQRules(userToken); // defaults to user anyway
 
-		GennyKieSession gks = GennyKieSession.builder()
+		GennyKieSession gks = GennyKieSession.builder(serviceToken)
 				.addJbpm(WFP_USER_LIFECYCLE)
 				.addFact("user",userToken)
 				.addToken(new GennyToken("serviceUser", qRules.getServiceToken()))
@@ -51,7 +53,7 @@ public class RahulTest extends GennyJbpmBaseTest {
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 		QRules qRules = getQRules(userToken); // defaults to user anyway
 
-		GennyKieSession gks = GennyKieSession.builder()
+		GennyKieSession gks = GennyKieSession.builder(serviceToken)
 				.addJbpm(WFP_USER_SESSION)
 				.addFact("user",userToken)
 				.addToken(new GennyToken("serviceUser", qRules.getServiceToken()))
@@ -76,7 +78,7 @@ public class RahulTest extends GennyJbpmBaseTest {
 //		gks.getKieSession().signalEvent("abortAllSessions", userToken);
 		
 		System.out.println("GOOD STUFF !!! User about to log out"); 
-
+		
 
 		gks.getKieSession().signalEvent("userLogout", userToken);
 		gks.getKieSession().signalEvent("abortAllSessions", userToken);
@@ -108,8 +110,10 @@ public class RahulTest extends GennyJbpmBaseTest {
 
 		GennyKieSession gks = null;
 		try {
-			gks = GennyKieSession.builder(false)
+			gks = GennyKieSession.builder(serviceToken)
 					.addJbpm(WFP_APPLICATION_LIFECYCLE)
+					.addJbpm(WFP_APPLICATION_AVAILABLE)
+					.addJbpm(WFP_APPLICATION_APPLIED)
 					.addToken(serviceToken)
 					.addFact("qRules", qRules)
 					.addFact("msg", msg) 
@@ -117,10 +121,21 @@ public class RahulTest extends GennyJbpmBaseTest {
     
 			gks.start();
 			
-			System.out.println("TESTING HERE !!!"); 
+			System.out.println("START: TESTING HERE !!!"); 
 
 			gks.getKieSession().signalEvent("application", userToken);
 
+			gks.advanceSeconds(5,true); 
+			
+			gks.getKieSession().signalEvent("active", userToken);
+
+			gks.advanceSeconds(5,true); 
+			
+			gks.getKieSession().signalEvent("applied", userToken);
+
+			gks.advanceSeconds(5,true); 
+			
+			System.out.println("STOP: TESTING HERE !!!"); 
 			gks.advanceSeconds(5,true); 
 		
 ////		gks.getKieSession().signalEvent("abortAllSessions", userToken);
