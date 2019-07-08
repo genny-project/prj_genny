@@ -40,7 +40,7 @@ rule "FRM_GRP_INTERVIEWS"
                                 .addTheme("THM_TEST1",serviceToken)
                                 	.end()
                                 .question("QUE_GRP_INTERVIEWS")
-                                	.addTheme("THM_FORM_INPUT_DEFAULT")
+                                	.addTheme("THM_FORM_INPUT_DEFAULT",serviceToken)
                                 		.vcl(VisualControlType.VCL_INPUT)
                                 		.weight(2.0)
                                 		.end()

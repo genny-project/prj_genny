@@ -25,6 +25,8 @@ import life.genny.models.Frame3;
 import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
 import life.genny.models.FramePosition;
+import life.genny.qwanda.VisualControlType;
+
 
 rule "FRM_SIDEBAR"
     ruleflow-group 'GenerateFrames'
@@ -35,7 +37,7 @@ rule "FRM_SIDEBAR"
     then
      System.out.println("   Generate FRM_SIDEBAR Rule  "+serviceToken.getUserCode());
 
- 	 Frame3 frame = Frame3.builder("FRM_SIDEBAR")
+ 	/* Frame3 frame = Frame3.builder("FRM_SIDEBAR")
 				.addTheme("THM_BACKGROUND_GREEN",serviceToken)
 					.end()
 				.question("QUE_FIRSTNAME")
@@ -59,7 +61,15 @@ rule "FRM_SIDEBAR"
 						.weight(2.0)
 						.end()
 					.end()
-				.build();
+				.build();*/
+				
+				 Frame3 frame = Frame3.builder("FRM_SIDEBAR")
+				.addTheme("THM_BACKGROUND_GREEN",serviceToken).end().question("QUE_FIRSTNAME")
+				.addTheme("THM_FORM_INPUT_DEFAULT",serviceToken).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
+				.addTheme("THM_FORM_LABEL_DEFAULT",serviceToken).vcl(VisualControlType.VCL_LABEL).end()
+				.addTheme("THM_FORM_WRAPPER_DEFAULT",serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
+				.addTheme("THM_FORM_ERROR_DEFAULT",serviceToken).vcl(VisualControlType.VCL_ERROR).end().addTheme("THM_FORM_DEFAULT",serviceToken)
+				.weight(3.0).end().addTheme("THM_FORM_CONTAINER_DEFAULT",serviceToken).weight(2.0).end().end().build();
 						
 	frame.setRealm(serviceToken.getRealm());
 						

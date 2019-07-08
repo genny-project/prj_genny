@@ -25,6 +25,7 @@ import life.genny.models.Frame3;
 import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
 import life.genny.models.FramePosition;
+import life.genny.qwanda.VisualControlType;
 
 rule "FRM_SIDEBAR2"
     ruleflow-group 'GenerateFrames'
@@ -38,23 +39,23 @@ rule "FRM_SIDEBAR2"
  	 Frame3 frame = Frame3.builder("FRM_SIDEBAR2")
 							.addTheme("THM_BACKGROUND_YELLOW",serviceToken).end()
 							.question("QUE_USER_PROFILE_GRP")
-								.addTheme("THM_FORM_INPUT_DEFAULT")
+								.addTheme("THM_FORM_INPUT_DEFAULT",serviceToken)
 									.vcl(VisualControlType.VCL_INPUT)
 									.weight(2.0)
 									.end()
-								.addTheme("THM_FORM_LABEL_DEFAULT")
+								.addTheme("THM_FORM_LABEL_DEFAULT",serviceToken)
 									.vcl(VisualControlType.VCL_LABEL)
 									.end()
-								.addTheme("THM_FORM_WRAPPER_DEFAULT")
+								.addTheme("THM_FORM_WRAPPER_DEFAULT",serviceToken)
 									.vcl(VisualControlType.VCL_WRAPPER)
 									.end()
-								.addTheme("THM_FORM_ERROR_DEFAULT")
+								.addTheme("THM_FORM_ERROR_DEFAULT",serviceToken)
 									.vcl(VisualControlType.VCL_ERROR)
 									.end()
-								.addTheme("THM_FORM_DEFAULT")
+								.addTheme("THM_FORM_DEFAULT",serviceToken)
 									.weight(3.0)
 									.end()
-								.addTheme("THM_FORM_CONTAINER_DEFAULT")
+								.addTheme("THM_FORM_CONTAINER_DEFAULT",serviceToken)
 									.weight(2.0)
 									.end()
 								.end()
