@@ -91,9 +91,10 @@ rule "addInternshipTwo"
 			.end()
 			.build();
 
-	Frame3 frameCentre = Frame3.builder("FRM_CENTRE")
-					.addFrame(frameForm, FramePosition.NORTH).end()
+   VertxUtils.putObject(serviceToken.getRealm(), "", THM_OF.getCode(), THM_OF, serviceToken.getToken()); 
 
+	/*Frame3 frameCentre = Frame3.builder("FRM_CENTRE")
+					.addFrame(frameForm, FramePosition.NORTH).end()
 				.build();
 
 
@@ -109,14 +110,13 @@ rule "addInternshipTwo"
 
 	QDataBaseEntityMessage msg = FrameUtils2.toMessage(frameRoot, serviceToken, askMsgs);
 
-	/* send message */
+  msg.setReplace(false);s
 	rules.publishCmd(msg);
 
 	System.out.println("Sending Asks");
 	for (QDataAskMessage askMsg : askMsgs) {
 		rules.publishCmd(askMsg, serviceToken.getUserCode(), serviceToken.getUserCode());
 	}
-
-	System.out.println("Sent");
+*/
   
 end
