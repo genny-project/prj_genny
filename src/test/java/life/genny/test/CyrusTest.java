@@ -180,7 +180,7 @@ public void addInternshipOne() {
 	System.out.println("Sent");
 }
 
-@Test
+//@Test
 public void addInternshipTwo() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
@@ -262,6 +262,7 @@ public void addInternshipTwo() {
 	Frame3 frameRoot = Frame3.builder("FRM_ROOT").addFrame(frameMain).end().build();
 
 	Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+	System.out.println(askMsgs.size());
 
 	QDataBaseEntityMessage msg = FrameUtils2.toMessage(frameRoot, serviceToken, askMsgs);
 
@@ -274,6 +275,7 @@ public void addInternshipTwo() {
 		// QDataAskMessage
 	}
 
+	System.out.println(askMsgs.size());
 	System.out.println("Sent");
 }
 
@@ -1229,7 +1231,7 @@ public void educationProviderDetails() {
 	System.out.println("Sent");
 }
 
-//@Test
+@Test
 public void hostCompanyDetails() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");

@@ -92,30 +92,6 @@ rule "hostCompanyDetails"
           .end()
           .build();
 
-      Frame3 frameCentre = Frame3.builder("FRM_CENTRE")
-              .addFrame(frameForm, FramePosition.NORTH).end()
-            .build();
-
-      Frame3 frameMain = Frame3.builder("FRM_MAIN")
-            .addTheme(THM_COLOR_GREY).end()
-            .addFrame(frameCentre, FramePosition.CENTRE)
-          .end()
-          .build();
-
-      Frame3 frameRoot = Frame3.builder("FRM_ROOT").addFrame(frameMain).end().build();
-
-      Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
-
-      QDataBaseEntityMessage msg = FrameUtils2.toMessage(frameRoot, serviceToken, askMsgs);
-
-
-      rules.publishCmd(msg); 
-
-      System.out.println("Sending Asks");
-      for (QDataAskMessage askMsg : askMsgs) {
-        rules.publishCmd(askMsg, serviceToken.getUserCode(), serviceToken.getUserCode()); 
-      }
-
-      System.out.println("Sent");
+   VertxUtils.putObject(serviceToken.getRealm(), "", THM_OF.getCode(), THM_OF, serviceToken.getToken()); 
   
 end
