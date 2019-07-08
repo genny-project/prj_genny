@@ -24,21 +24,24 @@ import org.kie.api.runtime.process.WorkflowProcessInstance;
 import life.genny.models.Frame3;
 import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
+import life.genny.qwanda.VisualControlType;
+import life.genny.models.FramePosition;
 
-rule "FRM_DUMMY"
+rule "FRM_BUCKET_COLUMN_7"
     ruleflow-group 'GenerateFrames'
-
+  
     when
-      not  Frame3(code == "FRM_DUMMY")
+      not  Frame3(code == "FRM_BUCKET_COLUMN_7")
       serviceToken : GennyToken( code == "PER_SERVICE")
-      
+      FRM_GRP_IN_PROGRESS : Frame3 (code == "FRM_GRP_IN_PROGRESS" )
+      FRM_BUCKET_COLUMN_6 : Frame3 (code == "FRM_BUCKET_COLUMN_6" ) /* just to see a sequence */      
     then
-     System.out.println("   Generate FRM_DUMMY Rule  "+serviceToken.getUserCode());
+     System.out.println("   Generate FRM_BUCKET_COLUMN_7 Rule  "+serviceToken.getUserCode());
 
- 	Frame3 frame = Frame3.builder("FRM_DUMMY")
-						.addTheme("THM_DUMMY",serviceToken)
-							.end()
-						.build();
+ 	 Frame3 frame = Frame3.builder("FRM_BUCKET_COLUMN_7")
+                                .addTheme("THM_BUCKET_COLUMN",serviceToken).end()
+                                .addFrame(FRM_GRP_IN_PROGRESS, FramePosition.NORTH).end()
+                                .build();
 						
 	frame.setRealm(serviceToken.getRealm());
 						

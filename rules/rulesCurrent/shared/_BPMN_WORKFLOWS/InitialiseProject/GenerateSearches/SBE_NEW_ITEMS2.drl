@@ -23,7 +23,7 @@ rule "SBE_NEW_ITEMS2"
     ruleflow-group 'GenerateSearches'
      no-loop true
     when
-       $process : WorkflowProcessInstance( ) 
+	/*$process : WorkflowProcessInstance( ) */
        not  SearchEntity (code == "SBE_NEW_ITEMS2")
         serviceToken : GennyToken( code == "PER_SERVICE")
      then

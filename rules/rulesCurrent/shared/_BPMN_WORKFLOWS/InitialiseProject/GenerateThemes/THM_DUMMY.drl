@@ -28,9 +28,7 @@ rule "THM_DUMMY"
     ruleflow-group 'GenerateThemes'
     no-loop true
     when
-      $process : WorkflowProcessInstance( ) 
-     /*  rules : QRules(!isState("THM_DUMMY")) */
-      not  Theme (code == "THM_DUMMY")
+     not  Theme (code == "THM_DUMMY")
       serviceToken : GennyToken( code == "PER_SERVICE")
     then
      System.out.println("   Generate THM_DUMMY Rule "+serviceToken.getUserCode());
@@ -44,10 +42,7 @@ rule "THM_DUMMY"
 
 	theme.setRealm(serviceToken.getRealm());
 		
-/*	rules.setState("THM_DUMMY"); */
 	insert(theme);
-/*	$gennyMap.put( "THM_DUMMY" , theme);
-	retract($gennyMap); */
 
 	 VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
 end

@@ -83,7 +83,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                 /* token stuff */
                 GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
                 QRules rules = getQRules(userToken); // defaults to user anyway
-                GennyToken serviceToken = new GennyToken("serviceToken", rules.getServiceToken());
+                GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
                 Theme THM_DUMMY = Theme.builder("THM_DUMMY").addAttribute().height(100).end().addAttribute().width(90)
                                 .end().build();

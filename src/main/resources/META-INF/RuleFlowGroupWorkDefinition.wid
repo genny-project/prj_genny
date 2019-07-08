@@ -1,0 +1,13 @@
+import org.drools.core.process.core.datatype.impl.type.StringDataType;
+[
+  // the GenerateSearches work item
+  [
+    "name" : "RuleFlowGroup",
+    "parameters" : [     
+       "serviceToken"  : new GennyToken(),
+       "ruleFlowGroup"  :  new new StringDataType()
+     ],
+    "displayName" : "RunRuleFlowGroup",
+    "icon" : "icons/icon-info.gif"
+  ]
+]

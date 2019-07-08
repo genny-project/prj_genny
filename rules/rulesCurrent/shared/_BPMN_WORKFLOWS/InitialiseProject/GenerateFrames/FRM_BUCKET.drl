@@ -1,0 +1,68 @@
+package life.genny.rules;
+
+
+global org.apache.logging.log4j.Logger log;
+
+import life.genny.qwanda.message.QCmdMessage;
+import life.genny.qwanda.message.QBulkMessage;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.qwanda.message.QEventMessage;
+import life.genny.qwanda.message.QDataAskMessage;
+import life.genny.rules.QRules;
+import io.vertx.core.json.JsonObject;
+import life.genny.qwandautils.JsonUtils;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
+import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.entity.SearchEntity;
+import life.genny.utils.VertxUtils;
+import life.genny.utils.BaseEntityUtils;
+import life.genny.models.GennyToken;
+import org.kie.api.runtime.process.WorkflowProcessInstance;
+import life.genny.models.Frame3;
+import life.genny.models.Theme;
+import life.genny.utils.FrameUtils2;
+import life.genny.qwanda.VisualControlType;
+import life.genny.models.FramePosition;
+
+rule "FRM_BUCKET"
+    ruleflow-group 'GenerateFrames'
+  
+    when
+      not  Frame3(code == "FRM_BUCKET")
+      serviceToken : GennyToken( code == "PER_SERVICE")
+      FRM_BUCKET_COLUMN_1 : Frame3 (code == "FRM_BUCKET_COLUMN_1" )
+      FRM_BUCKET_COLUMN_2 : Frame3 (code == "FRM_BUCKET_COLUMN_2" )
+      FRM_BUCKET_COLUMN_3 : Frame3 (code == "FRM_BUCKET_COLUMN_3" )
+      FRM_BUCKET_COLUMN_4 : Frame3 (code == "FRM_BUCKET_COLUMN_4" )
+      FRM_BUCKET_COLUMN_5 : Frame3 (code == "FRM_BUCKET_COLUMN_5" )
+      FRM_BUCKET_COLUMN_6 : Frame3 (code == "FRM_BUCKET_COLUMN_6" )
+      FRM_BUCKET_COLUMN_7 : Frame3 (code == "FRM_BUCKET_COLUMN_7" )
+      
+    then
+     System.out.println("   Generate FRM_BUCKET_COLUMN_7 Rule  "+serviceToken.getUserCode());
+
+ 	 Frame3 frame = Frame3.builder("FRM_BUCKET")
+                                .addTheme("THM_BUCKET",serviceToken).end()
+                                .addFrame(FRM_BUCKET_COLUMN_1, FramePosition.WEST).end()
+                                .addFrame(FRM_BUCKET_COLUMN_2, FramePosition.WEST).end()
+                                .addFrame(FRM_BUCKET_COLUMN_3, FramePosition.WEST).end()
+                                .addFrame(FRM_BUCKET_COLUMN_4, FramePosition.WEST).end()
+                                .addFrame(FRM_BUCKET_COLUMN_5, FramePosition.WEST).end()
+                                .addFrame(FRM_BUCKET_COLUMN_6, FramePosition.WEST).end()
+                                .addFrame(FRM_BUCKET_COLUMN_7, FramePosition.WEST).end()
+                                .build();
+						
+	frame.setRealm(serviceToken.getRealm());
+						
+	insert (frame);
+	
+	VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode(), frame, serviceToken.getToken());
+	Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+
+	QDataBaseEntityMessage msg = FrameUtils2.toMessage(frame, serviceToken, askMsgs);
+	VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode()+"-MSG", msg, serviceToken.getToken());
+
+end

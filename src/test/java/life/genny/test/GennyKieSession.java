@@ -25,6 +25,7 @@ import org.kie.api.command.Command;
 import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.ExecutionResults;
 import org.kie.api.runtime.KieSession;
+import org.kie.api.runtime.manager.RuntimeEngine;
 import org.kie.api.runtime.process.ProcessInstance;
 import org.kie.api.runtime.process.WorkItemHandler;
 import org.kie.api.runtime.rule.FactHandle;
@@ -34,7 +35,9 @@ import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import life.genny.jbpm.customworkitemhandlers.AwesomeHandler;
 import life.genny.jbpm.customworkitemhandlers.NotificationWorkItemHandler;
+import life.genny.jbpm.customworkitemhandlers.RuleFlowGroupWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowAllFormsHandler;
+import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 import life.genny.models.GennyToken;
 import life.genny.qwandautils.GennySettings;
 import life.genny.rules.listeners.JbpmInitListener;
@@ -267,7 +270,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 		if (kieSession != null) {
 			// Register handlers
-			addWorkItemHandlers();
+			addWorkItemHandlers(getRuntimeEngine());
 			if (tokens.containsKey("PER_SERVICE")) {
 				kieSession.addEventListener(new JbpmInitListener(tokens.get("PER_SERVICE")));
 			}
@@ -289,10 +292,13 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		System.out.println("Completed Setup");
 	}
 
-	private void addWorkItemHandlers() {
+	private void addWorkItemHandlers(RuntimeEngine rteng) {
 		kieSession.getWorkItemManager().registerWorkItemHandler("Awesome", new AwesomeHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("Notification", new NotificationWorkItemHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("ShowAllForms", new ShowAllFormsHandler());
+		kieSession.getWorkItemManager().registerWorkItemHandler("ShowFrame", new ShowFrame());
+		kieSession.getWorkItemManager().registerWorkItemHandler("RuleFlowGroup", new RuleFlowGroupWorkItemHandler(kieSession,rteng));
+
 
 		if (workItemHandlers != null) {
 			for (Tuple2<String, WorkItemHandler> wih : workItemHandlers) {
