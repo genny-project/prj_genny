@@ -56,7 +56,7 @@ public class AdamTest {
 
 	}
 
-	//@Test
+	@Test
 	public void  initRemoteInitProjectTest() {
 	System.out.println("Run the Remote Project Initialisation");
 	QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -71,38 +71,42 @@ public class AdamTest {
 
 	GennyKieSession gks = null;
 	try {
-		gks = GennyKieSession.builder(serviceToken,false)
-				.addJbpm("init_project.bpmn")
-				.addDrl("GenerateSearches")
-				.addDrl("GenerateThemes")
-				.addDrl("GenerateFrames")
-				.addFact("qRules", rules)
-				.addFact("msg", msg)
-
-				.build();
-
-		gks.start();
-
-		gks.advanceSeconds(20, false);
+//		gks = GennyKieSession.builder(serviceToken,false)
+//				.addJbpm("init_project.bpmn")
+//				.addDrl("GenerateSearches")
+//				.addDrl("GenerateThemes")
+//				.addDrl("GenerateFrames")
+//				.addFact("qRules", rules)
+//				.addFact("msg", msg)
+//
+//				.build();
+//
+//		gks.start();
+//
+//		gks.advanceSeconds(20, false);
 		
 		
 		// test cache has data
-		Frame3 bucket = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_BUCKET", Frame3.class, serviceToken.getToken());
-
-		Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
-
-		QDataBaseEntityMessage frameMsg = FrameUtils2.toMessage(bucket, serviceToken, askMsgs);
-		rules.publishCmd(frameMsg); // Send frames
-
+		QDataBaseEntityMessage bucketMsg= VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_ROOT-MSG", QDataBaseEntityMessage.class, serviceToken.getToken());
+		bucketMsg.setToken(userToken.getToken());
+		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(bucketMsg));
 		
-	//	QDataBaseEntityMessage bucketMsg = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_BUCKET-MSG", QDataBaseEntityMessage.class, serviceToken.getToken());
-		
-		
-        for (QDataAskMessage askMsg : askMsgs) {
-            rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode()); // Send
-                                                                                           // associated
-        }
-    System.out.println("Sent");
+		Type setType = new TypeToken<Set<QDataAskMessage>>() {
+		}.getType();
+
+		String askMsgs2Str = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_ROOT-ASKS", String.class,
+				serviceToken.getToken());
+
+		Set<QDataAskMessage> askMsgs2 = JsonUtils.fromJson(askMsgs2Str, setType);
+
+		System.out.println("Sending Asks");
+		for (QDataAskMessage askMsg : askMsgs2) {
+			askMsg.setToken(userToken.getToken());
+			String json = JsonUtils.toJson(askMsg);
+	    	String jsonStr = json.replaceAll("PER_SERVICE", userToken.getUserCode()); // set the user
+
+	    	VertxUtils.writeMsg("cmds", jsonStr);		}
+   System.out.println("Sent");
 
 	} catch (Exception e)
 	{
@@ -247,7 +251,7 @@ public class AdamTest {
 	
 	
 	
-	@Test
+	//@Test
 	public void testTheme() {
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());

@@ -47,10 +47,7 @@ rule "FRM_BUCKET_COLUMN_5"
 						
 	insert (frame);
 	
-	VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode(), frame, serviceToken.getToken());
-	Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
-
-	QDataBaseEntityMessage msg = FrameUtils2.toMessage(frame, serviceToken, askMsgs);
-	VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode()+"-MSG", msg, serviceToken.getToken());
+	/* Process and save to cache */
+	FrameUtils2.toMessage(frame, serviceToken);
 
 end
