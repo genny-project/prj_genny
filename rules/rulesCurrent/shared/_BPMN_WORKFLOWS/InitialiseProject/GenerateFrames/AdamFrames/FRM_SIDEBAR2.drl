@@ -36,7 +36,7 @@ rule "FRM_SIDEBAR2"
      System.out.println("   Generate FRM_SIDEBAR2 Rule  "+serviceToken.getUserCode());
 
  	 Frame3 frame = Frame3.builder("FRM_SIDEBAR2")
-							.addTheme("THM_BACKGROUND_YELLOW").end()
+							.addTheme("THM_BACKGROUND_YELLOW",serviceToken).end()
 							.question("QUE_USER_PROFILE_GRP")
 								.addTheme("THM_FORM_INPUT_DEFAULT")
 									.vcl(VisualControlType.VCL_INPUT)
