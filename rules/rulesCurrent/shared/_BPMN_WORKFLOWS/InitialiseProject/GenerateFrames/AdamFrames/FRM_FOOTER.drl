@@ -39,7 +39,7 @@ rule "FRM_FOOTER"
  	Frame3 frame = Frame3.builder("FRM_FOOTER")
  							.addFrame(FRM_DUMMY, FramePosition.CENTRE)
  								.end()
-							.addTheme("THM_BACKGROUND_BLUE")
+							.addTheme("THM_BACKGROUND_BLUE",serviceToken)
 								.end()
 							.build();
 						
