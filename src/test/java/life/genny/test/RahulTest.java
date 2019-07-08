@@ -6,13 +6,14 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import life.genny.models.Frame3;
 import life.genny.models.GennyToken;
 import life.genny.qwanda.message.QEventMessage;
 import life.genny.rules.QRules;
 
 public class RahulTest extends GennyJbpmBaseTest {
 
-	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getCanonicalName());
+	//private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getCanonicalName());
 	private static final String WFP_USER_SESSION = "userSession.bpmn";
 	private static final String WFP_USER_LIFECYCLE = "userLifecycle.bpmn";
 	private static final String WFP_TEST_WORKFLOW = "testWorkflow.bpmn";
@@ -95,13 +96,15 @@ public class RahulTest extends GennyJbpmBaseTest {
 	
 	@Test
 	public void quickTest() {
-
+		
 		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+		System.out.println(userToken.getToken());
 		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+		System.out.println(serviceToken.getToken());
 		QRules qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
 		qRules.set("realm", userToken.getRealm());
-			qRules.setServiceToken(serviceToken.getToken());
-
+		qRules.setServiceToken(serviceToken.getToken());
+		
 		System.out.println("session=" + userToken.getSessionCode());
 		System.out.println("userToken=" + userToken.getToken());
 		System.out.println("serviceToken=" + serviceToken.getToken());
