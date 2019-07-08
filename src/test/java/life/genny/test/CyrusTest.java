@@ -662,7 +662,7 @@ public void agentDetais() {
 }
 
 //@Test
-public void eduProviderStaffProfile() {
+public void addEduProviderStaffProfile() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 	QRules rules = getQRules(userToken);
@@ -1614,7 +1614,7 @@ public void eduProviderStaffAddStudent() {
 	System.out.println("Sent");
 }
 
-@Test
+//@Test
 public void internProfile() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
