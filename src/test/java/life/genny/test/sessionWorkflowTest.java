@@ -25,7 +25,7 @@ public class sessionWorkflowTest extends GennyJbpmBaseTest {
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 		QRules qRules = getQRules(userToken); // defaults to user anyway
 
-		GennyKieSession gks = GennyKieSession.builder()
+		GennyKieSession gks = GennyKieSession.builder(userToken)
 				.addJbpm("userSession.bpmn")
 				.addFact("user",userToken)
 				.addToken(new GennyToken("serviceUser", qRules.getServiceToken()))

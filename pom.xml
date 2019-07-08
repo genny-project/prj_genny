@@ -136,6 +136,11 @@
 			<version>${runtime.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.jbpm</groupId>
+			<artifactId>jbpm-persistence-jpa</artifactId>
+			<version>${runtime.version}</version>
+		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.assertj/assertj-core -->
 		<dependency>
@@ -414,6 +419,7 @@
 			<version>${keycloak-core.version}</version>
 			<scope>provided</scope>
 		</dependency>
+
 	</dependencies>
 	<build>
 

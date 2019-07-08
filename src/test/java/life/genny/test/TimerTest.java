@@ -1,37 +1,18 @@
 package life.genny.test;
-
-import java.io.File;
-import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
-import org.drools.core.time.impl.PseudoClockScheduler;
-import org.jbpm.test.JbpmJUnitBaseTestCase.Strategy;
 import org.junit.Test;
-import org.kie.api.command.Command;
-import org.kie.api.io.ResourceType;
-import org.kie.api.runtime.ExecutionResults;
-import org.kie.api.runtime.KieSession;
-import org.kie.api.runtime.process.ProcessInstance;
-import org.kie.internal.command.CommandFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import life.genny.models.GennyToken;
 import life.genny.qwanda.message.QEventMessage;
-import life.genny.qwandautils.GennySettings;
 import life.genny.rules.QRules;
-import life.genny.rules.listeners.JbpmInitListener;
+import life.genny.utils.VertxUtils;
 
 public class TimerTest extends GennyJbpmBaseTest {
-
-	 private static final Logger logger = LoggerFactory.getLogger(TimerTest.class);
 	
 	//private static final String WFE_TIMER_INTERVAL = "rulesCurrent/shared/_BPMN_WORKFLOWS/XXXtimer5.bpmn";
 	//private static final String WFE_TIMER_EXAMPLE_START = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/example_timer_start.bpmn";
+
 
 
 	public TimerTest() {
@@ -40,9 +21,13 @@ public class TimerTest extends GennyJbpmBaseTest {
 	
 	//@Test
 	public void timerIntervalTest() {
+		VertxUtils.cachedEnabled = true; // don't try and use any local services
+		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "userToken");
+		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "serviceToken");
+		QRules qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
 		
 		
-		GennyKieSession gks = GennyKieSession.builder()
+		GennyKieSession gks = GennyKieSession.builder(serviceToken)
 				.addJbpm( "example_timer_start.bpmn")
 				.build();
 		
@@ -63,11 +48,15 @@ public class TimerTest extends GennyJbpmBaseTest {
 	public void testTimerProcess() {
 	
 
-		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
-		QRules qRules = getQRules(userToken); // defaults to user anyway
+		VertxUtils.cachedEnabled = true; // don't try and use any local services
+		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "userToken");
+		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "serviceToken");
+		QRules qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
 		
-		GennyKieSession gks = GennyKieSession.builder()
-				.addJbpm("signal_workflow_1.bpmn")
+		GennyKieSession gks = GennyKieSession.builder(serviceToken)
+				.addJbpm("example_timer_start.bpmn")
+				.addJbpm("timer_example_workflow_1.bpmn","timer_example_workflow_2.bpmn","timer_example_workflow_3.bpmn")
+				.addJbpm("timer_example_workflow_4.bpmn")
 				.addFact("qRules",qRules)
 				.addFact("eb", eventBusMock)
 				.addToken(new GennyToken("serviceUser", qRules.getServiceToken()))
@@ -75,25 +64,13 @@ public class TimerTest extends GennyJbpmBaseTest {
 				.build();
 		
 	     //gks.startProcess("com.sample.bpmn.exampleMsgStart");
-	      gks.start();
-	    gks.advanceSeconds(1);
-	      
-	     for (int i = 0; i<10; i++) {
-		    	
-		    	sleepMS(1000);
-		    	gks.advanceSeconds(1);
-		    	System.out.println("Clock :::: " + (i+1) + "sec");
-		    	if(i==4) {
-		    			
-		    		//gks.injectFact(event);
-		    		gks.getKieSession().signalEvent("incomingSignal", "testobject");
-		    	}
-		    	
-		    }
-
-	    
+	      gks.start();  
+		        	
+		gks.advanceSeconds(4,true);
+		    	    			
+		//gks.injectFact(event);
+		gks.getKieSession().signalEvent("incomingSignal", "testobject");	
 	    gks.close();
-
 	}
 
 

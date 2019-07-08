@@ -2,10 +2,12 @@ package life.genny.test.FrameBuilderTests;
 
 import org.junit.Test;
 
+import life.genny.models.Frame3;
+import life.genny.models.GennyToken;
+import life.genny.models.Theme;
+import life.genny.models.ThemeAttributeType;
 import life.genny.qwanda.VisualControlType;
-import life.genny.test.Frame3;
-import life.genny.test.Theme;
-import life.genny.test.ThemeAttributeType;
+import life.genny.test.GennyJbpmBaseTest;
 
 public class FrameBuilderTest {
 	@Test
@@ -32,12 +34,14 @@ public class FrameBuilderTest {
 
 				.build();	
 		
+		System.out.print(THM_FORM_CONTAINER_DEFAULT);
+		
 		
 	
 
 	}
 	
-	@Test
+	//@Test
 	public void frameBuilderTest()
 	{
 
