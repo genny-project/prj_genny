@@ -32,7 +32,7 @@
   <bpmn2:signal id="Signal_2" name="endSignal"/>
   <bpmn2:signal id="Signal_3" name="userLogout"/>
   <bpmn2:signal id="Signal_4" name="abortAllSessions"/>
-  <bpmn2:process id="create_user" drools:packageName="life.genny.jbpm" name="CreateUser" isExecutable="true">
+  <bpmn2:process id="user_session" drools:packageName="life.genny.jbpm" name="UserSession" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.qwanda.message.QEventMessage"/>
       <drools:import name="life.genny.rules.QRules"/>
@@ -194,7 +194,7 @@ System.out.println(&quot;User Aborted&quot;); </bpmn2:script>
     <bpmn2:sequenceFlow id="SequenceFlow_47" drools:priority="1" sourceRef="StartEvent_8" targetRef="SubProcess_2"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Process Diagram">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="create_user">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="user_session">
       <bpmndi:BPMNShape id="BPMNShape_SubProcess_2" bpmnElement="SubProcess_2" isExpanded="true">
         <dc:Bounds height="303.0" width="580.0" x="173.0" y="180.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1">
