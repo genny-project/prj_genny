@@ -145,6 +145,19 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	public long advanceSeconds(long amount) {
 		return advanceSeconds(amount, false);
 	}
+	
+	public void injectMessage(Object object) {
+		kieSession.insert(object);
+	}
+	
+	public void injectSignalToProcessInstance(String type, Object object, long processInstanceId) {
+		kieSession.signalEvent(type, object, processInstanceId);
+	}
+	
+	public void injectSignal(String type, Object object) {
+		kieSession.signalEvent(type, object);
+	}
+	
 
 	public long advanceSeconds(long amount, boolean humanTime) {
 		long absoluteTime = 0;
@@ -267,6 +280,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 		createRuntimeManager(Strategy.SINGLETON, resources, uniqueRuntimeStr);
 		kieSession = getRuntimeEngine().getKieSession();
+		
 
 		if (kieSession != null) {
 			// Register handlers
