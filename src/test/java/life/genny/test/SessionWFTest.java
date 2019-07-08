@@ -35,10 +35,11 @@ public class SessionWFTest extends GennyJbpmBaseTest {
 		msg1.data.setValue("anish");
 
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
+		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
 		QRules qRules = getQRules(userToken); // defaults to user anyway
 		String keycloackState = userToken.getCode();
 		
-		GennyKieSession gks = GennyKieSession.builder(userToken)
+		GennyKieSession gks = GennyKieSession.builder(serviceToken)
 				.addJbpm("example_start.bpmn")
 				.addFact("qRules",qRules)
 				.addFact("eb", eventBusMock)
