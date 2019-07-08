@@ -852,7 +852,7 @@ public void hostCompanyStaffDetails() {
 }
 
 //@Test
-public void internProfile() {
+public void addinternProfile() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 	QRules rules = getQRules(userToken);
@@ -1518,7 +1518,7 @@ public void eduProviderStaffAddStaff() {
 	System.out.println("Sent");
 }
 
-@Test
+//@Test
 public void eduProviderStaffAddStudent() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
@@ -1613,5 +1613,6 @@ public void eduProviderStaffAddStudent() {
 
 	System.out.println("Sent");
 }
+
 
 }
