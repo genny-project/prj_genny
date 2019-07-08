@@ -547,6 +547,23 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 	}
 	
 
+	static 	public  QRules setupLocalService() {
+		GennyJbpmBaseTest localService = new GennyJbpmBaseTest(false);
+		try {
+			localService.init();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		GennyToken userToken = localService.getToken(realm, "user1", "Barry Allan", "hero");
+		QRules rules = localService.getQRules(userToken); // defaults to user anyway
+
+		return rules;
+	}
 	
 	public static GennyToken createGennyToken(final String realm, String username, String name, String role)
 	{

@@ -59,7 +59,7 @@ public class AdamTest {
 	//@Test
 	public void  initRemoteInitProjectTest() {
 	System.out.println("Run the Remote Project Initialisation");
-	QRules rules = setupLocalService();
+	QRules rules = GennyJbpmBaseTest.setupLocalService();
 	GennyToken userToken = new GennyToken("userToken", rules.getToken());
 	GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
@@ -118,7 +118,7 @@ public class AdamTest {
 	{
 
 
-		QRules rules = setupLocalService();
+		QRules rules = GennyJbpmBaseTest.setupLocalService();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
@@ -243,30 +243,13 @@ public class AdamTest {
 
 	}
 
-	private QRules setupLocalService() {
-		GennyJbpmBaseTest localService = new GennyJbpmBaseTest(false);
-		try {
-			localService.init();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		GennyToken userToken = localService.getToken(realm, "user1", "Barry Allan", "hero");
-		QRules rules = localService.getQRules(userToken); // defaults to user anyway
-
-		return rules;
-	}
 
 	
 	
 	
 	@Test
 	public void testTheme() {
-		QRules rules = setupLocalService();
+		QRules rules = GennyJbpmBaseTest.setupLocalService();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
@@ -440,7 +423,7 @@ public class AdamTest {
 	// @Test
 	public void testCacheTheme() {
 
-		QRules rules = setupLocalService();
+		QRules rules = GennyJbpmBaseTest.setupLocalService();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
@@ -477,7 +460,7 @@ public class AdamTest {
 
 	// @Test
 	public void formsTest() {
-		QRules rules = setupLocalService();
+		QRules rules = GennyJbpmBaseTest.setupLocalService();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 

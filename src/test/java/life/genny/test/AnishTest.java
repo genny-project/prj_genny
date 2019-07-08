@@ -42,15 +42,6 @@ public class AnishTest extends GennyJbpmBaseTest {
         private static final Logger log = LoggerFactory
                         .getLogger(MethodHandles.lookup().lookupClass().getCanonicalName());
 
-        private static final String WFE_SEND_FORMS = "rulesCurrent/shared/_BPMN_WORKFLOWS/send_forms.bpmn";
-        private static final String WFE_SHOW_FORM = "rulesCurrent/shared/_BPMN_WORKFLOWS/show_form.bpmn";
-        private static final String WFE_AUTH_INIT = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/auth_init.bpmn";
-        private static final String WFE_SEND_LLAMA = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/send_llama.bpmn";
-        private static final String DRL_PROJECT = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/project.drl";
-        private static final String DRL_USER_COMPANY = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/user_company.drl";
-        private static final String DRL_USER = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/user.drl";
-        private static final String DRL_EVENT_LISTENER_SERVICE_SETUP = "rulesCurrent/shared/_BPMN_WORKFLOWS/Initialise_Project/eventListenerServiceSetup.drl";
-        private static final String DRL_EVENT_LISTENER_USER_SETUP = "rulesCurrent/shared/_BPMN_WORKFLOWS/Initialise_Project/eventListenerUserSetup.drl";
 
         public AnishTest() {
                 super(false);
@@ -204,9 +195,9 @@ public class AnishTest extends GennyJbpmBaseTest {
         public void testTree() {
 
                 /* token stuff */
-                GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
-                QRules rules = getQRules(userToken); // defaults to user anyway
-                GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+        	QRules rules = GennyJbpmBaseTest.setupLocalService();
+        	GennyToken userToken = new GennyToken("userToken", rules.getToken());
+        	GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
                 // System.out.println("saving answer");
 
