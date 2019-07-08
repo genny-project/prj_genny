@@ -56,7 +56,7 @@ public class AdamTest {
 
 	}
 
-	@Test
+	//@Test
 	public void  initRemoteInitProjectTest() {
 	System.out.println("Run the Remote Project Initialisation");
 	QRules rules = setupLocalService();
@@ -264,7 +264,7 @@ public class AdamTest {
 	
 	
 	
-//	@Test
+	@Test
 	public void testTheme() {
 		QRules rules = setupLocalService();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
