@@ -44,6 +44,16 @@ rule "THM_FORM_INPUT_DEFAULT"
                                                         .borderStyle("solid")
                                                         .placeholderColor("#888")
                                                 .end()
+												.addAttribute(ThemeAttributeType.PRI_CONTENT_HOVER)
+													.borderColor("#aaa")
+													.end()
+												.addAttribute(ThemeAttributeType.PRI_CONTENT_ACTIVE)
+													.borderColor("green")
+													.end()
+												.addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR)
+													.borderColor("red")
+													.color("red")
+													.end()
                                                 .build();
                         
 		theme.setRealm(serviceToken.getRealm());

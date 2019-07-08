@@ -24,24 +24,35 @@ import life.genny.models.Theme;
 
 
 
-rule "THM_FORM_LABEL_DEFAULT"
+rule "THM_FORM_CONTAINER_DEFAULT"
    ruleflow-group 'GenerateThemes'
     no-loop true
     
     when
-      not  Theme (code == "THM_FORM_LABEL_DEFAULT")
+      not  Theme (code == "THM_FORM_CONTAINER_DEFAULT")
       serviceToken : GennyToken( code == "PER_SERVICE")
       
     then
     
-     	System.out.println("   Generate THM_FORM_LABEL_DEFAULT Rule ");
+     	System.out.println("   Generate THM_FORM_CONTAINER_DEFAULT Rule ");
  
-		Theme theme = Theme.builder("THM_FORM_LABEL_DEFAULT")
+		Theme theme = Theme.builder("THM_FORM_CONTAINER_DEFAULT")
 							.addAttribute()
-								.bold(true)
-								.size("md")
+								.backgroundColor("none")
+								.padding(10).maxWidth(700)
+								.width("100%")
+								.shadowColor("#000")
+								.shadowOpacity(0.4)
+								.shadowRadius(0)
+								.shadowOffset()
+									.width(0)
+									.height(0)
+									.end()
 								.end()
-						.build();
+							.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
+							.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION, true).end()
+							.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, true).end()
+							.build();
                         
 		theme.setRealm(serviceToken.getRealm());
 		
