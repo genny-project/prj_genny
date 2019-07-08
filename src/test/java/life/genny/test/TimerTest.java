@@ -1,5 +1,4 @@
 package life.genny.test;
-
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,18 +9,17 @@ import life.genny.rules.QRules;
 import life.genny.utils.VertxUtils;
 
 public class TimerTest extends GennyJbpmBaseTest {
-
-	 private static final Logger logger = LoggerFactory.getLogger(TimerTest.class);
 	
-	private static final String WFE_TIMER_INTERVAL = "timer5.bpmn";
+	//private static final String WFE_TIMER_INTERVAL = "rulesCurrent/shared/_BPMN_WORKFLOWS/XXXtimer5.bpmn";
+	//private static final String WFE_TIMER_EXAMPLE_START = "rulesCurrent/shared/_BPMN_WORKFLOWS/TimerExamples/example_timer_start.bpmn";
+
 
 
 	public TimerTest() {
 		super(false);
 	}
-
 	
-	@Test
+	//@Test
 	public void timerIntervalTest() {
 		VertxUtils.cachedEnabled = true; // don't try and use any local services
 		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "userToken");
@@ -30,25 +28,25 @@ public class TimerTest extends GennyJbpmBaseTest {
 		
 		
 		GennyKieSession gks = GennyKieSession.builder(serviceToken)
-				.addJbpm( WFE_TIMER_INTERVAL)
+				.addJbpm( "example_timer_start.bpmn")
 				.build();
 		
-	
+		//.addJbpm( WFE_TIMER_EXAMPLE_1)
 	     gks.startProcess("TimerTest");
-	    
-	    gks.advanceSeconds(20,false);
-
+	     
+	    /* for (int i = 0; i<20; i++) {
+		    	System.out.println("Clock :::: " + (i+1) + "sec");
+		    	sleepMS(1000);
+		    	
+		    	gks.advanceSeconds(1,false);
+		    }*/
 	    
 	    gks.close();
 	}
 	
-
-
-	
 	@Test(timeout = 300000)	
 	public void testTimerProcess() {
-		
-		QEventMessage msg = new QEventMessage("EVT_MSG", "AUTH_INIT1");
+	
 
 		VertxUtils.cachedEnabled = true; // don't try and use any local services
 		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "userToken");
@@ -60,27 +58,22 @@ public class TimerTest extends GennyJbpmBaseTest {
 				.addJbpm("timer_example_workflow_1.bpmn","timer_example_workflow_2.bpmn","timer_example_workflow_3.bpmn")
 				.addJbpm("timer_example_workflow_4.bpmn")
 				.addFact("qRules",qRules)
-				.addFact("msg",msg)
 				.addFact("eb", eventBusMock)
 				.addToken(new GennyToken("serviceUser", qRules.getServiceToken()))
 				.addToken(userToken)
 				.build();
 		
-	   //  gks.startProcess("TimerTest");
-	     gks.start();
-		    
-	    gks.advanceSeconds(20,false);
-
-	    
+	     //gks.startProcess("com.sample.bpmn.exampleMsgStart");
+	      gks.start();  
+		        	
+		gks.advanceSeconds(4,true);
+		    	    			
+		//gks.injectFact(event);
+		gks.getKieSession().signalEvent("incomingSignal", "testobject");	
 	    gks.close();
-	
-
 	}
 
 
-
-
-	
 
 //	@Test
 	public void testTimerActivated() {
