@@ -57,7 +57,7 @@ public class CyrusTest extends GennyJbpmBaseTest {
 
 
 //@Test
-public void addInternshipOne() {
+public void addInternshipOneAgent() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 	QRules rules = getQRules(userToken);
@@ -181,7 +181,7 @@ public void addInternshipOne() {
 }
 
 //@Test
-public void addInternshipTwo() {
+public void addInternshipTwoAgent() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 	QRules rules = getQRules(userToken);
@@ -757,7 +757,7 @@ public void addEduProviderStaffProfile() {
 }
 
 //@Test
-public void hostCompanyStaffDetails() {
+public void addHostCompanyStaffDetails() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 	QRules rules = getQRules(userToken);
@@ -1423,7 +1423,7 @@ public void eduProviderStaffProfileDetails() {
 }
 
 //@Test
-public void eduProviderStaffAddStaff() {
+public void addStaff() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 	QRules rules = getQRules(userToken);
