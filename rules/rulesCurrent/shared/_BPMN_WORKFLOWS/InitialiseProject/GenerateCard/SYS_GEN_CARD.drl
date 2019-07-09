@@ -12,16 +12,16 @@ import life.genny.models.GennyToken;
 import life.genny.models.Theme;
 import life.genny.models.ThemeAttributeType;
 import life.genny.qwanda.VisualControlType;
+import io.vertx.core.json.JsonObject;
 
-rule "System Generate Card"
+rule "SYS_GENERATE_CARD"
     ruleflow-group 'GenerateCard'
-      no-loop true
+    no-loop true
+    salience 10000
     when
-      $process : WorkflowProcessInstance() 
-      rules : QRules()
       serviceToken : GennyToken( code == "PER_SERVICE")
+    
     then
-
 		    /* create themes */
 		
 		    Theme THM_FORM_LABEL_DEFAULT = Theme.builder("THM_FORM_LABEL_DEFAULT")
@@ -123,9 +123,15 @@ rule "System Generate Card"
 		                    .addFrame(frameLeftCard, FramePosition.WEST).end()
 		                    .addFrame(frameCentreCard, FramePosition.WEST).end()
 		                    .build();
-		
+			
 			insert(frameCard);
-		
+			
+			/* Writing frameCard to the cache*/
+			
 			VertxUtils.putObject(serviceToken.getRealm(), "", frameCard.getCode(), frameCard, serviceToken.getToken());
+			
+			/*Printing the frameCard just saved to cache */
+			BaseEntity be = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_CARD", BaseEntity.class, serviceToken.getToken());
+			System.out.println("CREATED CARD BASEENTITY   :::  " + be.getCode());
   
 	end
