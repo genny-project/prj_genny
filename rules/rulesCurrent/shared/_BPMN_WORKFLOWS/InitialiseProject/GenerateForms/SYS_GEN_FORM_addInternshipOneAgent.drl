@@ -24,7 +24,7 @@ import life.genny.models.ThemeAttributeType;
 import life.genny.qwanda.VisualControlType;
 import life.genny.qwanda.message.QDataAskMessage;
 
-rule "addInternshipTwo"
+rule "addInternshipOneAgent"
     ruleflow-group 'GenerateForms'
       no-loop true
     when
@@ -33,6 +33,11 @@ rule "addInternshipTwo"
       serviceToken : GennyToken()
     then
 	Theme THM_COLOR_GREY = Theme.builder("THM_COLOR_RED").addAttribute().backgroundColor("red").end().build();
+
+	Theme THM_SUBMIT = Theme.builder("THM_SUBMIT").addAttribute().backgroundColor("#1183c8").end().addAttribute()
+			.justifyContent("center").end().build();
+
+	Theme THM_CANCEL = Theme.builder("THM_CANCEL").addAttribute().backgroundColor("#C0C0C0").end().build();
 
 	Theme THM_COLOR_BLACK = Theme.builder("THM_COLOR_BLACK").addAttribute().backgroundColor("#ffffff").end().build();
 
@@ -79,7 +84,7 @@ rule "addInternshipTwo"
 	Frame3 frameForm = Frame3.builder("FRM_FORM")
 				.addTheme(THM_COLOR_BLACK).end()
 				.addTheme(THM_OF).end()
-				.question("QUE_ADD_INTERNSHIP_AGENT_STEP_TWO_GRP")
+				.question("QUE_ADD_INTERNSHIP_AGENT_STEP_ONE_GRP")
 					.addTheme(THM_FORM_INPUT_DEFAULT)
 					.vcl(VisualControlType.VCL_INPUT).weight(2.0).end().
 					addTheme(THM_FORM_LABEL_DEFAULT)
@@ -93,5 +98,4 @@ rule "addInternshipTwo"
 
    VertxUtils.putObject(serviceToken.getRealm(), "", THM_OF.getCode(), THM_OF, serviceToken.getToken()); 
 
-  
 end

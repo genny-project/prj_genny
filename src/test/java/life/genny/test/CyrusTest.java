@@ -567,7 +567,7 @@ public void addInternshipTemplate() {
 }
 
 //@Test
-public void agentDetais() {
+public void agentDetails() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 	QRules rules = getQRules(userToken);
