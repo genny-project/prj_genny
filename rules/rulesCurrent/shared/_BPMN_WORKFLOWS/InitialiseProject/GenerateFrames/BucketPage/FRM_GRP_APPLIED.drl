@@ -26,21 +26,21 @@ import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
 import life.genny.qwanda.VisualControlType;
 
-rule "FRM_GRP_OFFERED"
+rule "FRM_GRP_APPLIED"
     ruleflow-group 'GenerateFrames'
   
     when
-      not  Frame3(code == "FRM_GRP_OFFERED")
+      not  Frame3(code == "FRM_GRP_APPLIED")
       serviceToken : GennyToken( code == "PER_SERVICE")
       
     then
-     System.out.println("   Generate FRM_GRP_OFFERED Rule  "+serviceToken.getUserCode());
+     System.out.println("   Generate FRM_GRP_APPLIED Rule  "+serviceToken.getUserCode());
 
- 	 Frame3 frame = Frame3.builder("FRM_GRP_OFFERED")
+ 	 Frame3 frame = Frame3.builder("FRM_GRP_APPLIED")
                                 .addTheme("THM_TEST1",serviceToken)
                                 	.end()
-                                .question("QUE_GRP_OFFERED")
-                                	.addTheme("THM_FORM_INPUT_DEFAULT")
+                                .question("QUE_GRP_APPLIED")
+                                	.addTheme("THM_FORM_INPUT_DEFAULT",serviceToken)
                                 		.vcl(VisualControlType.VCL_INPUT)
                                 		.weight(2.0)
                                 		.end()
@@ -53,10 +53,7 @@ rule "FRM_GRP_OFFERED"
 						
 	insert (frame);
 	
-	VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode(), frame, serviceToken.getToken());
-	Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
-
-	QDataBaseEntityMessage msg = FrameUtils2.toMessage(frame, serviceToken, askMsgs);
-	VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode()+"-MSG", msg, serviceToken.getToken());
+	/* Process and save to cache */
+	FrameUtils2.toMessage(frame, serviceToken);
 
 end
