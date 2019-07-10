@@ -1,0 +1,41 @@
+package life.genny.rules;
+global org.apache.logging.log4j.Logger log;
+import life.genny.qwanda.message.QCmdMessage;
+import life.genny.qwanda.message.QBulkMessage;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.qwanda.message.QEventMessage;
+import life.genny.rules.QRules;
+import io.vertx.core.json.JsonObject;
+import java.util.List;
+import java.util.ArrayList;
+import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.entity.SearchEntity;
+import life.genny.utils.VertxUtils;
+import life.genny.utils.BaseEntityUtils;
+import life.genny.models.GennyToken;
+import org.kie.api.runtime.process.WorkflowProcessInstance;
+import life.genny.models.FramePosition;
+import life.genny.utils.FrameUtils2;
+import life.genny.models.Frame3;
+import life.genny.models.FramePosition;
+import life.genny.models.GennyToken;
+import life.genny.models.Theme;
+import life.genny.models.ThemeAttributeType;
+import life.genny.qwanda.VisualControlType;
+
+rule "FRM_ADD_EDU_PROVIDER_STAFF_GRP"
+	ruleflow-group 'GenerateForms'
+		no-loop true
+	when
+		not  Frame3(code == "FRM_ADD_EDU_PROVIDER_STAFF_GRP")
+		serviceToken : GennyToken( code == "PER_SERVICE")
+			FRM_FORM  : Frame3 ( code == "FRM_FORM" )
+      
+	then 
+		Frame3 form = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_FORM", Frame3.class, serviceToken.getToken());
+		form.question("QUE_ADD_EDU_PROVIDER_STAFF_GRP")
+			.end()
+			.build();
+	end
+
+

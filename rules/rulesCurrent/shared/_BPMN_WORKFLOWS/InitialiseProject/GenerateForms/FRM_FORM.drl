@@ -1,0 +1,62 @@
+package life.genny.rules;
+global org.apache.logging.log4j.Logger log;
+import life.genny.qwanda.message.QCmdMessage;
+import life.genny.qwanda.message.QBulkMessage;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.qwanda.message.QEventMessage;
+import life.genny.rules.QRules;
+import io.vertx.core.json.JsonObject;
+import java.util.List;
+import java.util.ArrayList;
+import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.entity.SearchEntity;
+import life.genny.utils.VertxUtils;
+import life.genny.utils.BaseEntityUtils;
+import life.genny.models.GennyToken;
+import org.kie.api.runtime.process.WorkflowProcessInstance;
+import life.genny.models.FramePosition;
+import life.genny.utils.FrameUtils2;
+import life.genny.models.Frame3;
+import life.genny.models.FramePosition;
+import life.genny.models.GennyToken;
+import life.genny.models.Theme;
+import life.genny.models.ThemeAttributeType;
+import life.genny.qwanda.VisualControlType;
+import life.genny.qwanda.message.QDataAskMessage;
+
+rule "FRM_FORM"
+    ruleflow-group 'GenerateForms'
+
+    when
+      not  Frame3(code == "FRM_FORM")
+      serviceToken : GennyToken( code == "PER_SERVICE")
+      THM_OF : Theme( code == "THM_OF")
+      THM_BACKGROUND_BLACK : Theme( code == "THM_BACKGROUND_BLACK")
+      THM_FORM_INPUT_DEFAULT : Theme( code == "THM_FORM_INPUT_DEFAULT")
+      THM_FORM_WRAPPER_DEFAULT : Theme( code == "THM_FORM_WRAPPER_DEFAULT")
+      THM_FORM_ERROR_DEFAULT : Theme( code == "THM_FORM_ERROR_DEFAULT")
+      THM_FORM_DEFAULT : Theme( code == "THM_FORM_DEFAULT")
+      THM_FORM_CONTAINER_DEFAULT : Theme( code == "THM_FORM_CONTAINER_DEFAULT")
+
+
+
+    then
+
+    Frame3 frameForm = Frame3.builder("FRM_FORM")
+          .addTheme(THM_BACKGROUND_BLACK).end()
+          .addTheme(THM_OF).end()
+            .addTheme(THM_FORM_INPUT_DEFAULT)
+            .vcl(VisualControlType.VCL_INPUT).weight(2.0).end().
+            addTheme(THM_FORM_INPUT_DEFAULT)
+            .vcl(VisualControlType.VCL_LABEL).end()
+            .addTheme(THM_FORM_WRAPPER_DEFAULT).vcl(VisualControlType.VCL_WRAPPER).end()
+            .addTheme(THM_FORM_ERROR_DEFAULT).vcl(VisualControlType.VCL_ERROR).end()
+            .addTheme(THM_FORM_DEFAULT).weight(3.0).end()
+            .addTheme(THM_FORM_CONTAINER_DEFAULT).weight(2.0).end()
+        .end()
+        .build();
+
+    VertxUtils.putObject(serviceToken.getRealm(), "", frameForm.getCode(), frameForm, serviceToken.getToken()); 
+  
+end
+ 

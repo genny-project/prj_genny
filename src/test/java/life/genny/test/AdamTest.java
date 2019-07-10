@@ -57,7 +57,7 @@ public class AdamTest {
 
 	}
 
-	@Test
+	//@Test
 	public void initRemoteInitProjectTest() {
 		System.out.println("Run the Remote Project Initialisation");
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -476,12 +476,12 @@ public class AdamTest {
 
 	}
 
-	@Test
+	//@Test
 	public void testLogout() {
 
 	}
 
-	// @Test
+	//@Test
 	public void formsTest() {
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
@@ -501,6 +501,16 @@ public class AdamTest {
 				for (String formCode : formCodes) {
 					// rules.sendForm("QUE_ADD_HOST_COMPANY_GRP", rules.getUser().getCode(),
 					// rules.getUser().getCode());
+				System.out.println(formCode);
+				Frame3 FRM_FORM_TEMPLATE = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_FORM", Frame3.class,
+						serviceToken.getToken());
+				String frm_form_template = JsonUtils.toJson(FRM_FORM_TEMPLATE);
+				String frm_form_str = frm_form_template.replaceAll("QUE_TEMPLATE", formCode);
+				Frame3 FRM_FORM = JsonUtils.fromJson(frm_form_str, Frame3.class);
+				
+				Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+				QDataBaseEntityMessage frmMsg = FrameUtils2.toMessage(FRM_FORM, serviceToken, askMsgs);
+				VertxUtils.putObject(serviceToken.getRealm(), "", FRM_FORM.getCode(), FRM_FORM, serviceToken.getToken()); 
 				}
 
 			} else {
