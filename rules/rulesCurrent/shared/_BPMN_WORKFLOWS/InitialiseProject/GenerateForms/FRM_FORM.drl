@@ -30,33 +30,29 @@ rule "FRM_FORM"
     when
       not  Frame3(code == "FRM_FORM")
       serviceToken : GennyToken( code == "PER_SERVICE")
-      THM_OF : Theme( code == "THM_OF")
-      THM_BACKGROUND_BLACK : Theme( code == "THM_BACKGROUND_BLACK")
-      THM_FORM_INPUT_DEFAULT : Theme( code == "THM_FORM_INPUT_DEFAULT")
-      THM_FORM_WRAPPER_DEFAULT : Theme( code == "THM_FORM_WRAPPER_DEFAULT")
-      THM_FORM_ERROR_DEFAULT : Theme( code == "THM_FORM_ERROR_DEFAULT")
-      THM_FORM_DEFAULT : Theme( code == "THM_FORM_DEFAULT")
-      THM_FORM_CONTAINER_DEFAULT : Theme( code == "THM_FORM_CONTAINER_DEFAULT")
-
-
 
     then
+         System.out.println("   Generate FRM_FORM  RULE "+serviceToken.getUserCode());
 
-    Frame3 frameForm = Frame3.builder("FRM_FORM")
-          .addTheme(THM_BACKGROUND_BLACK).end()
-          .addTheme(THM_OF).end()
-            .addTheme(THM_FORM_INPUT_DEFAULT)
-            .vcl(VisualControlType.VCL_INPUT).weight(2.0).end().
-            addTheme(THM_FORM_INPUT_DEFAULT)
-            .vcl(VisualControlType.VCL_LABEL).end()
-            .addTheme(THM_FORM_WRAPPER_DEFAULT).vcl(VisualControlType.VCL_WRAPPER).end()
-            .addTheme(THM_FORM_ERROR_DEFAULT).vcl(VisualControlType.VCL_ERROR).end()
-            .addTheme(THM_FORM_DEFAULT).weight(3.0).end()
-            .addTheme(THM_FORM_CONTAINER_DEFAULT).weight(2.0).end()
-        .end()
-        .build();
+				Frame3 frame = Frame3.builder("FRM_FORM")
+				.addTheme("THM_COLOR_BLACK", serviceToken).end()
+				.addTheme("THM_OF", serviceToken).end()
+				.question("QUE_TEMPLATE")
+				.addTheme("THM_FORM_INPUT_DEFAULT", serviceToken)
+				.vcl(VisualControlType.VCL_INPUT).weight(2.0).end().
+				addTheme("THM_FORM_LABEL_DEFAULT", serviceToken)
+				.vcl(VisualControlType.VCL_LABEL).end()
+				.addTheme("THM_FORM_WRAPPER_DEFAULT", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
+				.addTheme("THM_FORM_ERROR_DEFAULT",serviceToken).vcl(VisualControlType.VCL_ERROR).end()
+				.addTheme("THM_FORM_DEFAULT", serviceToken).weight(3.0).end()
+				.addTheme("THM_FORM_CONTAINER_DEFAULT", serviceToken).weight(2.0).end()
+				.end()
+				.build();
 
-    VertxUtils.putObject(serviceToken.getRealm(), "", frameForm.getCode(), frameForm, serviceToken.getToken()); 
+        insert(frame);
+
+				VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode(), frame, serviceToken.getToken()); 
+
   
 end
  

@@ -57,7 +57,7 @@ public class AdamTest {
 
 	}
 
-	@Test
+	//@Test
 	public void displayBucketPage() {
 		System.out.println("Show Bucket Page");
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -515,7 +515,7 @@ public class AdamTest {
 
 	}
 
-	//@Test
+	@Test
 	public void formsTest() {
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
