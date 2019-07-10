@@ -24,7 +24,7 @@ import life.genny.models.ThemeAttributeType;
 import life.genny.qwanda.VisualControlType;
 import life.genny.qwanda.message.QDataAskMessage;
 
-rule "internProfile"
+rule "FRM_internProfile"
     ruleflow-group 'GenerateForms'
       no-loop true
     when

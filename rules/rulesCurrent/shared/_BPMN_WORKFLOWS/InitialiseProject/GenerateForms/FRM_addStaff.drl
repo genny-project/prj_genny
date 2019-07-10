@@ -24,7 +24,7 @@ import life.genny.models.ThemeAttributeType;
 import life.genny.qwanda.VisualControlType;
 import life.genny.qwanda.message.QDataAskMessage;
 
-rule "hostCompanyStaffProfileDetails"
+rule "FRM_addStaff"
     ruleflow-group 'GenerateForms'
       no-loop true
     when
@@ -79,7 +79,7 @@ rule "hostCompanyStaffProfileDetails"
 	Frame3 frameForm = Frame3.builder("FRM_FORM")
 				.addTheme(THM_COLOR_BLACK).end()
 				.addTheme(THM_OF).end()
-				.question("QUE_HOST_COMPANY_STAFF_PROFILE_GRP")
+				.question("QUE_ADD_STAFF_GRP")
 					.addTheme(THM_FORM_INPUT_DEFAULT)
 					.vcl(VisualControlType.VCL_INPUT).weight(2.0).end().
 					addTheme(THM_FORM_LABEL_DEFAULT)

@@ -24,7 +24,7 @@ import life.genny.models.ThemeAttributeType;
 import life.genny.qwanda.VisualControlType;
 import life.genny.qwanda.message.QDataAskMessage;
 
-rule "addStaff"
+rule "FRM_addInternProfile"
     ruleflow-group 'GenerateForms'
       no-loop true
     when
@@ -79,7 +79,7 @@ rule "addStaff"
 	Frame3 frameForm = Frame3.builder("FRM_FORM")
 				.addTheme(THM_COLOR_BLACK).end()
 				.addTheme(THM_OF).end()
-				.question("QUE_ADD_STAFF_GRP")
+				.question("QUE_ADD_INTERN_GRP")
 					.addTheme(THM_FORM_INPUT_DEFAULT)
 					.vcl(VisualControlType.VCL_INPUT).weight(2.0).end().
 					addTheme(THM_FORM_LABEL_DEFAULT)
@@ -92,6 +92,5 @@ rule "addStaff"
 			.build();
 
    VertxUtils.putObject(serviceToken.getRealm(), "", THM_OF.getCode(), THM_OF, serviceToken.getToken()); 
-
   
 end
