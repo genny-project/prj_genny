@@ -71,21 +71,26 @@ public class AdamTest {
 			gks = GennyKieSession.builder(serviceToken, false)
 					.addJbpm("userSession.bpmn")
 					.addJbpm("test_page_1.bpmn")
+					.addJbpm("test_page_2.bpmn")
 					.addFact("msg", msg)
 					.addToken(userToken)
 					.build();
 
 			gks.start();
-		//	gks.advanceSeconds(10, true);
-		//	gks.injectSignal("inputSignal", "Hello");
-		//	gks.advanceSeconds(10, true);
 			
-			for (int i=0;i<2;i++) {
-				gks.displayForm("FRM_DASHBOARD",userToken);
+			for (int i=0;i<2;i++) {	
 				gks.advanceSeconds(2, true);
-				gks.displayForm("FRM_DASHBOARD2",userToken);
+				gks.injectSignal("inputSignal", "Hello");
 				gks.advanceSeconds(2, true);
+				gks.injectSignal("inputSignal2", "Hello");
 			}
+			
+//			for (int i=0;i<2;i++) {
+//				gks.displayForm("FRM_DASHBOARD",userToken);
+//				gks.advanceSeconds(2, true);
+//				gks.displayForm("FRM_DASHBOARD2",userToken);
+//				gks.advanceSeconds(2, true);
+//			}
 			gks.sendLogout(userToken);
 			System.out.println("Sent");
 
