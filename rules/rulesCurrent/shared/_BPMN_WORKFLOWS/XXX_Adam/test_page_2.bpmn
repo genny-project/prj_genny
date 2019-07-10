@@ -6,25 +6,26 @@
   <bpmn2:itemDefinition id="ItemDefinition_385" isCollection="false" structureRef="java.lang.String"/>
   <bpmn2:itemDefinition id="ItemDefinition_327" isCollection="false" structureRef="life.genny.models.GennyToken"/>
   <bpmn2:signal id="Signal_1" name="inputSignal"/>
-  <bpmn2:process id="show_test_page_1" name="Show Test Page 1" isExecutable="true" processType="Private">
+  <bpmn2:signal id="Signal_2" name="inputSignal2"/>
+  <bpmn2:process id="show_test_page_2" name="Show Test Page 2" isExecutable="true" processType="Private">
     <bpmn2:extensionElements>
       <drools:import name="java.util.Date"/>
       <drools:import name="life.genny.qwanda.message.QEventMessage"/>
       <drools:import name="life.genny.qwanda.message.QDataAnswerMessage"/>
       <drools:import name="life.genny.models.GennyToken"/>
     </bpmn2:extensionElements>
-    <bpmn2:property id="incomingSignal" itemSubjectRef="ItemDefinition_385" name="incomingSignal"/>
+    <bpmn2:property id="incomingSignal" name="incomingSignal"/>
     <bpmn2:property id="eventMessage" itemSubjectRef="ItemDefinition_364" name="eventMessage"/>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_327" name="userToken"/>
-    <bpmn2:scriptTask id="scriptTaskId" name="Hello">
+    <bpmn2:scriptTask id="scriptTaskId" name="Hello2">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Hello]]></drools:metaValue>
+          <drools:metaValue><![CDATA[Hello2]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;Hello jBPM Adam Test &quot;+(new Date()));</bpmn2:script>
+      <bpmn2:script>System.out.println(&quot;Hello jBPM Adam Test 2 &quot;+(new Date()));</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:endEvent id="endEventId">
       <bpmn2:extensionElements>
@@ -50,7 +51,7 @@
       <bpmn2:outputSet id="OutputSet_1" name="Output Set 1">
         <bpmn2:dataOutputRefs>DataOutput_4</bpmn2:dataOutputRefs>
       </bpmn2:outputSet>
-      <bpmn2:signalEventDefinition id="SignalEventDefinition_2" signalRef="Signal_1"/>
+      <bpmn2:signalEventDefinition id="SignalEventDefinition_2" signalRef="Signal_2"/>
     </bpmn2:startEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_4" drools:priority="1" sourceRef="StartEvent_2" targetRef="scriptTaskId"/>
     <bpmn2:task id="Task_1" drools:taskName="ShowFrame" drools:displayName="ShowFrame" drools:icon="icons/icon-info.gif" name="ShowFrame">
@@ -73,7 +74,7 @@
       <bpmn2:dataInputAssociation id="_DataInputAssociation_10">
         <bpmn2:targetRef>DataInput_1</bpmn2:targetRef>
         <bpmn2:assignment id="Assignment_1">
-          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_3">&quot;FRM_DASHBOARD&quot;</bpmn2:from>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_3">&quot;FRM_DASHBOARD2&quot;</bpmn2:from>
           <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_1">DataInput_1</bpmn2:to>
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
@@ -86,11 +87,11 @@
     <bpmn2:sequenceFlow id="SequenceFlow_2" drools:priority="1" sourceRef="Task_1" targetRef="endEventId"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="show_test_page_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="show_test_page_2">
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_1" bpmnElement="scriptTaskId">
         <dc:Bounds height="48.0" width="80.0" x="260.0" y="88.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1">
-          <dc:Bounds height="11.0" width="21.0" x="289.0" y="106.0"/>
+          <dc:Bounds height="11.0" width="26.0" x="287.0" y="106.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_1" bpmnElement="endEventId">
