@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,6 +34,8 @@ import org.kie.api.runtime.process.WorkItemHandler;
 import org.kie.api.runtime.rule.FactHandle;
 import org.kie.internal.command.CommandFactory;
 
+import com.google.gson.reflect.TypeToken;
+
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import life.genny.jbpm.customworkitemhandlers.AwesomeHandler;
@@ -41,9 +44,13 @@ import life.genny.jbpm.customworkitemhandlers.RuleFlowGroupWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowAllFormsHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 import life.genny.models.GennyToken;
+import life.genny.qwanda.message.QDataAskMessage;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwandautils.GennySettings;
+import life.genny.qwandautils.JsonUtils;
 import life.genny.rules.QRules;
 import life.genny.rules.listeners.JbpmInitListener;
+import life.genny.utils.VertxUtils;
 
 public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoCloseable {
 
@@ -169,8 +176,11 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			if (humanTime) {
 				sleepMS(500);
 			}
-
+			if ((sec % 2)==0) {
+				System.out.print(((amount)-(sec/2))+"s..");
+			}
 		}
+		System.out.println();
 		return absoluteTime;
 	}
 
@@ -371,6 +381,33 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		File found = searchFile(new File(testRulesDir), filename);
 		return found.getAbsoluteFile().getPath().substring(base.getAbsoluteFile().getPath().length() + 1);
 
+	}
+	
+	public void displayForm(final String frameCode,GennyToken userToken)
+	{
+		QDataBaseEntityMessage FRM_MSG = VertxUtils.getObject(userToken.getRealm(), "", frameCode+"-MSG",
+				QDataBaseEntityMessage.class, userToken.getToken());	
+		FRM_MSG.setToken(userToken.getToken());
+		String frmStr = JsonUtils.toJson(FRM_MSG);
+		frmStr = frmStr.replaceAll(frameCode, "FRM_ROOT");
+		QDataBaseEntityMessage FRM_MSG_ROOT = JsonUtils.fromJson(frmStr, QDataBaseEntityMessage.class);
+		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(FRM_MSG_ROOT));
+   		Type setType = new TypeToken<Set<QDataAskMessage>>() {
+		}.getType();
+
+		String askMsgs2Str = VertxUtils.getObject(userToken.getRealm(), "", frameCode+"-ASKS", String.class,
+				userToken.getToken());
+
+		Set<QDataAskMessage> askMsgs2 = JsonUtils.fromJson(askMsgs2Str, setType);
+
+		System.out.println("Sending Asks");
+		for (QDataAskMessage askMsg : askMsgs2) {
+			askMsg.setToken(userToken.getToken());
+			String json = JsonUtils.toJson(askMsg);
+	    	String jsonStr = json.replaceAll("PER_SERVICE", userToken.getUserCode()); // set the user
+
+	    	VertxUtils.writeMsg("webcmds", jsonStr);    																							// QDataAskMessage
+		}
 	}
 
 	private List<String> findFullPaths(String dirname, String extension) {
