@@ -26,22 +26,24 @@ import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
 import life.genny.models.FramePosition;
 
-rule "FRM_FOOTER"
+rule "FRM_LOGO"
     ruleflow-group 'GenerateFrames'
 
     when
-      not  Frame3(code == "FRM_FOOTER")
+      not  Frame3(code == "FRM_LOGO")
       serviceToken : GennyToken( code == "PER_SERVICE")
       FRM_DUMMY : Frame3 ( code == "FRM_DUMMY" )
     then
-     System.out.println("   Generate FRM_FOOTER Rule  "+serviceToken.getUserCode());
+     System.out.println("   Generate FRM_PROFILE Rule  "+serviceToken.getUserCode());
 
- 	Frame3 frame = Frame3.builder("FRM_FOOTER")
- 							.addFrame(FRM_DUMMY, FramePosition.CENTRE)
- 								.end()
-							.addTheme("THM_BACKGROUND_BLUE",serviceToken)
-								.end()
-							.build();
+ 	 Frame3 frame = Frame3.builder("FRM_PROJECT")
+                				.addTheme("THM_PROJECT", serviceToken).end()
+                				.question("QUE_NAME_TWO")
+                					.addTheme("THM_FORM_LABEL_DEFAULT",serviceToken)
+                						.vcl(VisualControlType.VCL_LABEL).end()
+                					.end()
+                				.addFrame(FRM_DUMMY).end()
+                				.build();
 						
 	frame.setRealm(serviceToken.getRealm());
 						
@@ -49,5 +51,4 @@ rule "FRM_FOOTER"
 	
 	/* Process and save to cache */
 	FrameUtils2.toMessage(frame, serviceToken);
-
 end

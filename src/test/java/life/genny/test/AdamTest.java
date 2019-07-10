@@ -57,9 +57,9 @@ public class AdamTest {
 
 	}
 
-	//@Test
-	public void initRemoteInitProjectTest() {
-		System.out.println("Run the Remote Project Initialisation");
+	@Test
+	public void displayBucketPage() {
+		System.out.println("Show Bucket Page");
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
@@ -73,7 +73,41 @@ public class AdamTest {
 		GennyKieSession gks = null;
 		try {
 			gks = GennyKieSession.builder(serviceToken, false)
-					.addJbpm("adam_test_1.bpmn")
+					.addJbpm("show_bucket_page.bpmn")
+					.addFact("msg", msg)
+					.addToken(userToken)
+					.build();
+
+			gks.start();
+			gks.injectSignal("inputSignal", "Hello");
+			gks.advanceSeconds(20, false);
+
+			System.out.println("Sent");
+
+		} catch (Exception e) {
+			System.out.println(e.getLocalizedMessage());
+		} finally {
+			gks.close();
+		}
+	}
+
+	//@Test
+	public void displayTestPage1() {
+		System.out.println("Show test page 1");
+		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		GennyToken userToken = new GennyToken("userToken", rules.getToken());
+		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+
+		System.out.println("session     =" + userToken.getSessionCode());
+		System.out.println("userToken   =" + userToken.getToken());
+		System.out.println("serviceToken=" + serviceToken.getToken());
+
+		QEventMessage msg = new QEventMessage("EVT_MSG", "INIT_STARTUP");
+
+		GennyKieSession gks = null;
+		try {
+			gks = GennyKieSession.builder(serviceToken, false)
+					.addJbpm("test_page_1.bpmn")
 					.addFact("msg", msg)
 					.addToken(userToken)
 					.build();

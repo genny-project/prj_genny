@@ -36,6 +36,7 @@ import life.genny.qwandautils.QwandaUtils;
 import life.genny.rules.QRules;
 import life.genny.rules.listeners.JbpmInitListener;
 import life.genny.utils.FrameUtils2;
+import life.genny.utils.VertxUtils;
 
 public class AnishTest extends GennyJbpmBaseTest {
 
@@ -199,60 +200,84 @@ public class AnishTest extends GennyJbpmBaseTest {
         	GennyToken userToken = new GennyToken("userToken", rules.getToken());
         	GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
+        	try {
                 // System.out.println("saving answer");
 
 
                 // rules.baseEntity.saveAnswer(new Answer(serviceToken.getUserCode(), "PRJ_INTERNMATCH", "PRI_USER_PROFILE_PICTURE", "https://imgur.com/a/HLsLP7X"));
 
                 // System.out.println("saved answer");
+//
+//                Theme THM_DUMMY = Theme.builder("THM_DUMMY").addAttribute().height(100).end().addAttribute().width(90)
+//                                .end().build();
+//        		Frame3 FRM_HEADER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_HEADER", Frame3.class,
+//        				serviceToken.getToken());
+//
+//                
+//                Theme THM_LOGO = Theme.builder("THM_LOGO").addAttribute().fit("contain").end().addAttribute()
+//                                .height(100).end().addAttribute().width(100).end().build();
+//
+//                Theme THM_SIDEBAR = Theme.builder("THM_SIDEBAR").addAttribute().backgroundColor("#065B9A").end()
+//                                .addAttribute().minWidth(300).end().addAttribute().width(100).end().build();
+//
+//                Theme THM_HEADER = Theme.builder("THM_HEADER").addAttribute().backgroundColor("#18639F").end()
+//                                .addAttribute().height(80).end().build();
+//
+//                Theme THM_FOOTER = Theme.builder("THM_FOOTER").addAttribute().backgroundColor("#16649E").end()
+//                                .addAttribute().bold(true).size("md").end().addAttribute().height(50).end().build();
+//
+//                Theme THM_FORM_LABEL_DEFAULT = Theme.builder("THM_FORM_LABEL_DEFAULT").addAttribute().end().build();
+//
+//                Theme THM_FORM_DEFAULT_REPLICA = Theme.builder("THM_FORM_DEFAULT_REPLICA").addAttribute()
+//                                .backgroundColor("none").end().addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true)
+//                                .end().build();
 
-                Theme THM_DUMMY = Theme.builder("THM_DUMMY").addAttribute().height(100).end().addAttribute().width(90)
+//                Frame3 frameDummy = Frame3.builder("FRM_DUMMY").addTheme(THM_DUMMY).end().build();
+    		Frame3 FRM_DUMMY = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_DUMMY", Frame3.class,
+    				serviceToken.getToken());
+
+                Frame3 FRM_LOGO = Frame3.builder("FRM_LOGO").addTheme("THM_SIDEBAR",serviceToken).end().question("QUE_IMAGE")
+                                .addTheme("THM_LOGO",serviceToken).vcl(VisualControlType.VCL_WRAPPER).end().end().addFrame(FRM_DUMMY)
                                 .end().build();
 
-                Theme THM_LOGO = Theme.builder("THM_LOGO").addAttribute().fit("contain").end().addAttribute()
-                                .height(100).end().addAttribute().width(100).end().build();
+                Frame3 FRM_PROJECT = Frame3.builder("FRM_PROJECT")
+                							.addTheme("THM_PROJECT", serviceToken).end()
+                							.question("QUE_NAME_TWO")
+                								.addTheme("THM_FORM_LABEL_DEFAULT",serviceToken)
+                									.vcl(VisualControlType.VCL_LABEL).end()
+                								.end()
+                							.addFrame(FRM_DUMMY).end()
+                							.build();
 
-                Theme THM_SIDEBAR = Theme.builder("THM_SIDEBAR").addAttribute().backgroundColor("#065B9A").end()
-                                .addAttribute().minWidth(300).end().addAttribute().width(100).end().build();
+                Frame3 FRM_SIDEBAR = Frame3.builder("FRM_SIDEBAR")
+                						.addTheme("THM_SIDEBAR",serviceToken).end()
+                						.addFrame(FRM_DUMMY).end()
+                						.addFrame(FRM_LOGO, FramePosition.NORTH).end()
+                						.build();
+                
+                Frame3 FRM_HEADER = Frame3.builder("FRM_HEADER")
+                						.addTheme("THM_HEADER",serviceToken).end()
+                						.addFrame(FRM_DUMMY).end()
+                						.addFrame(FRM_PROJECT).end()
+                						.build();
 
-                Theme THM_HEADER = Theme.builder("THM_HEADER").addAttribute().backgroundColor("#18639F").end()
-                                .addAttribute().height(80).end().build();
+                Frame3 FRM_POWERED_BY = Frame3.builder("FRM_POWERED_BY")
+                							.addTheme("THM_WIDTH_200",serviceToken).end()
+                							.addTheme("THM_COLOR_WHITE",serviceToken).end()   
+                							.question("QUE_POWERED_BY_GRP")
+                							.addTheme("THM_FORM_LABEL_DEFAULT",serviceToken)
+                								.vcl(VisualControlType.VCL_LABEL)
+                								.end()
+                							.addTheme("THM_FORM_DEFAULT_REPLICA",serviceToken)
+                								.weight(3.0)
+                								.end()
+                							.end()
+                							.build();
 
-                Theme THM_FOOTER = Theme.builder("THM_FOOTER").addAttribute().backgroundColor("#16649E").end()
-                                .addAttribute().bold(true).size("md").end().addAttribute().height(50).end().build();
+                Frame3 FRM_FOOTER = Frame3.builder("FRM_FOOTER").addTheme("THM_FOOTER",serviceToken).end().addFrame(FRM_DUMMY).end()
+                                .addFrame(FRM_POWERED_BY, FramePosition.EAST).end().build();
 
-                Theme THM_FORM_LABEL_DEFAULT = Theme.builder("THM_FORM_LABEL_DEFAULT").addAttribute().end().build();
-
-                Theme THM_FORM_DEFAULT_REPLICA = Theme.builder("THM_FORM_DEFAULT_REPLICA").addAttribute()
-                                .backgroundColor("none").end().addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true)
-                                .end().build();
-
-                Frame3 frameDummy = Frame3.builder("FRM_DUMMY").addTheme(THM_DUMMY).end().build();
-
-                Frame3 logo = Frame3.builder("FRM_PROJECT_LOGO").addTheme(THM_SIDEBAR).end().question("QUE_IMAGE")
-                                .addTheme(THM_LOGO).vcl(VisualControlType.VCL_WRAPPER).end().end().addFrame(frameDummy)
-                                .end().build();
-
-                Frame3 project = Frame3.builder("FRM_PROJECT").addThemeParent("THM_PROJECT", "size", "md").end()
-                                .addThemeParent("THM_PROJECT_WEIGHT", "bold", true).end()
-                                .addThemeParent("THM_PROJECT_COLOR", "color", "white").end().question("QUE_NAME_TWO")
-                                .addTheme(THM_FORM_LABEL_DEFAULT).vcl(VisualControlType.VCL_LABEL).end().end()
-                                .addFrame(frameDummy).end().build();
-
-                Frame3 sideBar = Frame3.builder("FRM_SIDEBAR").addTheme(THM_SIDEBAR).end().addFrame(frameDummy).end()
-                                .addFrame(logo, FramePosition.NORTH).end().build();
-                Frame3 header = Frame3.builder("FRM_HEADER").addTheme(THM_HEADER).end().addFrame(frameDummy).end()
-                                .addFrame(project).end().build();
-
-                Frame3 poweredBy = Frame3.builder("FRM_POWERED_BBY").addThemeParent("THM_WIDTH", "width", 200).end()
-                                .addThemeParent("THM_COLOR", "color", "white").end().question("QUE_POWERED_BY_GRP")
-                                .addTheme(THM_FORM_LABEL_DEFAULT).vcl(VisualControlType.VCL_LABEL).end()
-                                .addTheme(THM_FORM_DEFAULT_REPLICA).weight(3.0).end().end().build();
-
-                Frame3 footer = Frame3.builder("FRM_FOOTER").addTheme(THM_FOOTER).end().addFrame(frameDummy).end()
-                                .addFrame(poweredBy, FramePosition.EAST).end().build();
-
-                Frame3 tabs = generateTabs();
+                Frame3 FRM_TABS = generateTabs();
 
                 Theme THM_MAIN = Theme.builder("THM_MAIN")
                         .addAttribute()
@@ -261,15 +286,15 @@ public class AnishTest extends GennyJbpmBaseTest {
                         .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
                         .build();
 
-                Frame3 frameRoot = Frame3.builder("FRM_ROOT")
-                                .addFrame(header, FramePosition.NORTH).end()
-                                .addFrame(sideBar, FramePosition.WEST).end()
-                                .addFrame(tabs, FramePosition.CENTRE).end()
-                                .addFrame(footer, FramePosition.SOUTH).end()
+                Frame3 FRM_TREE = Frame3.builder("FRM_ROOT")
+                                .addFrame(FRM_HEADER, FramePosition.NORTH).end()
+                                .addFrame(FRM_SIDEBAR, FramePosition.WEST).end()
+                                .addFrame(FRM_TABS, FramePosition.CENTRE).end()
+                                .addFrame(FRM_FOOTER, FramePosition.SOUTH).end()
                                 .build();
 
                 Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
-                QDataBaseEntityMessage msg = FrameUtils2.toMessage(frameRoot, serviceToken, askMsgs);
+                QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_TREE, serviceToken, askMsgs);
                 rules.publishCmd(msg);
                 for (QDataAskMessage askMsg : askMsgs) {
                         rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode()); // Send
@@ -277,6 +302,9 @@ public class AnishTest extends GennyJbpmBaseTest {
                 }
                 // rules.sendTreeData();
                 System.out.println("Sent");
+        	} catch (Exception e) {
+        		  System.out.println("Error "+e.getLocalizedMessage());
+        	}
         }
 
         public Frame3 generateBucket() {
