@@ -80,12 +80,13 @@ public class AdamTest {
 		//	gks.injectSignal("inputSignal", "Hello");
 		//	gks.advanceSeconds(10, true);
 			
-			for (int i=0;i<3;i++) {
+			for (int i=0;i<2;i++) {
 				gks.displayForm("FRM_DASHBOARD",userToken);
-				gks.advanceSeconds(5, true);
+				gks.advanceSeconds(2, true);
 				gks.displayForm("FRM_DASHBOARD2",userToken);
-				gks.advanceSeconds(5, true);
+				gks.advanceSeconds(2, true);
 			}
+			gks.sendLogout(userToken);
 			System.out.println("Sent");
 
 		} catch (Exception e) {
@@ -608,4 +609,6 @@ public class AdamTest {
 
 	}
 
+	
+	
 }

@@ -44,8 +44,10 @@ import life.genny.jbpm.customworkitemhandlers.RuleFlowGroupWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowAllFormsHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 import life.genny.models.GennyToken;
+import life.genny.qwanda.message.QCmdMessage;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.qwanda.message.QEventMessage;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.rules.QRules;
@@ -408,6 +410,15 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 	    	VertxUtils.writeMsg("webcmds", jsonStr);    																							// QDataAskMessage
 		}
+	}
+	
+	public void sendLogout(GennyToken userToken)
+	{
+		QCmdMessage msg = new QCmdMessage("LOGOUT","LOGOUT");
+		msg.setToken(userToken.getToken());
+		String jsonStr = JsonUtils.toJson(msg);
+		VertxUtils.writeMsg("webcmds", jsonStr);  
+		
 	}
 
 	private List<String> findFullPaths(String dirname, String extension) {
