@@ -43,6 +43,7 @@ import life.genny.jbpm.customworkitemhandlers.NotificationWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.RuleFlowGroupWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowAllFormsHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowFrame;
+import life.genny.jbpm.customworkitemhandlers.ShowFrameWIthContextList;
 import life.genny.models.GennyToken;
 import life.genny.qwanda.message.QCmdMessage;
 import life.genny.qwanda.message.QDataAskMessage;
@@ -326,6 +327,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		kieSession.getWorkItemManager().registerWorkItemHandler("Notification", new NotificationWorkItemHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("ShowAllForms", new ShowAllFormsHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("ShowFrame", new ShowFrame());
+		kieSession.getWorkItemManager().registerWorkItemHandler("ShowFrameWithContextList", new ShowFrameWIthContextList());
 		kieSession.getWorkItemManager().registerWorkItemHandler("RuleFlowGroup", new RuleFlowGroupWorkItemHandler(kieSession,rteng));
 
 

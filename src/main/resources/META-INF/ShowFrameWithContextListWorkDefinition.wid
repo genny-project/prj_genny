@@ -1,0 +1,13 @@
+import org.drools.core.process.core.datatype.impl.type.StringDataType;
+[
+  // the ShowFrame work item
+  [
+    "name" : "ShowFrame",
+    "parameters" : [     
+      "rootFrameCode" : new StringDataType(),
+      "userToken"  : new GennyToken()
+     ],
+    "displayName" : "ShowFrame",
+    "icon" : "icons/icon-info.gif"
+  ]
+]
