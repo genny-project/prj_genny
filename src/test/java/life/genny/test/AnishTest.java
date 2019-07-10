@@ -213,7 +213,7 @@ public class AnishTest extends GennyJbpmBaseTest {
 //        		Frame3 FRM_HEADER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_HEADER", Frame3.class,
 //        				serviceToken.getToken());
 //
-//                
+//
 //                Theme THM_LOGO = Theme.builder("THM_LOGO").addAttribute().fit("contain").end().addAttribute()
 //                                .height(100).end().addAttribute().width(100).end().build();
 //
@@ -254,7 +254,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                 						.addFrame(FRM_DUMMY).end()
                 						.addFrame(FRM_LOGO, FramePosition.NORTH).end()
                 						.build();
-                
+
                 Frame3 FRM_HEADER = Frame3.builder("FRM_HEADER")
                 						.addTheme("THM_HEADER",serviceToken).end()
                 						.addFrame(FRM_DUMMY).end()
@@ -263,7 +263,7 @@ public class AnishTest extends GennyJbpmBaseTest {
 
                 Frame3 FRM_POWERED_BY = Frame3.builder("FRM_POWERED_BY")
                 							.addTheme("THM_WIDTH_200",serviceToken).end()
-                							.addTheme("THM_COLOR_WHITE",serviceToken).end()   
+                							.addTheme("THM_COLOR_WHITE",serviceToken).end()
                 							.question("QUE_POWERED_BY_GRP")
                 							.addTheme("THM_FORM_LABEL_DEFAULT",serviceToken)
                 								.vcl(VisualControlType.VCL_LABEL)
@@ -303,7 +303,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                 // rules.sendTreeData();
                 System.out.println("Sent");
         	} catch (Exception e) {
-        		  System.out.println("Error "+e.getLocalizedMessage());
+        		  System.out.println("Errorsss "+e.getLocalizedMessage());
         	}
         }
 
@@ -498,10 +498,13 @@ public class AnishTest extends GennyJbpmBaseTest {
                                 .addFrame(tab3, FramePosition.WEST).end().question("QUE_NAME_TWO").end().build();
 
                 Frame3 bucket = generateBucket();
+                Frame3 detailView = generateDetailView();
 
-                Frame3 tabContent = Frame3.builder("FRM_TAB_CONTENT").addTheme(THM_TAB_CONTENT).end().addFrame(bucket)
+                Frame3 tabContent = Frame3.builder("FRM_TAB_CONTENT")
+                                .addTheme(THM_TAB_CONTENT).end()
+                                .addFrame(bucket)
+                                //.addFrame(detailView) /* comment out this to see the detail view */
                                 .end()
-                                // .question("QUE_NAME_TWO").end()
                                 .build();
 
                 Frame3 tabs = Frame3.builder("FRM_TABS").addTheme(THM_TABS).end()
@@ -509,5 +512,86 @@ public class AnishTest extends GennyJbpmBaseTest {
                                 .addFrame(tabContent, FramePosition.CENTRE).end().build();
                 return tabs;
         }
+
+        public Frame3 generateDetailView(){
+
+                Theme THM_DETAIL_VIEW = Theme.builder("THM_DETAIL_VIEW")
+                                        .addAttribute()
+                                                .backgroundColor("#E2E1E0")
+                                                .flexDirection("column")
+                                                .end()
+                                        .build();
+
+                Theme THM_CONTAINER = Theme.builder("THM_CONTAINER")
+                                        .addAttribute()
+                                                .backgroundColor("white")
+                                                .width("90%")
+                                              //  .margin(5)
+                                                .height(300)
+                                                .end()
+                                       //.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                        .build();
+
+                Theme THM_FORM_DEFAULT = Theme.builder("THM_FORM_DEFAULT")
+                        .addAttribute().backgroundColor("none").end()
+                        .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
+                        .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION, true).end()
+                        .addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end()
+                        .addAttribute(ThemeAttributeType.PRI_HAS_REQUIRED, true).end()
+                        .addAttribute(ThemeAttributeType.PRI_HAS_ICON, true).end().build();
+
+        	Theme THM_FORM_LABEL_DEFAULT = Theme.builder("THM_FORM_LABEL_DEFAULT")
+                                                .addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end()
+                                                .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
+                                                .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION, true).end()
+                                                .build();
+
+
+                Frame3 FRM_EMAIL = Frame3.builder("FRM_EMAIL")
+                                .question("QUE_EMAIL")
+                                        .addTheme(THM_FORM_LABEL_DEFAULT)
+                                        .vcl(VisualControlType.VCL_LABEL).end()
+                                .end()
+                                .build();
+                Frame3 FRM_NAME = Frame3.builder("FRM_NAME")
+                                .question("QUE_NAME_TWO")
+                                        .addTheme(THM_FORM_LABEL_DEFAULT)
+                                        .vcl(VisualControlType.VCL_LABEL).end()
+                                .end()
+                                .build();
+                Frame3 FRM_DOB = Frame3.builder("FRM_DOB")
+                                .question("QUE_DOB")
+                                .end()
+                                .build();
+                Frame3 FRM_MOBILE = Frame3.builder("FRM_MOBILE")
+                                .question("QUE_MOBILE")
+                                .end()
+                                .build();
+                Frame3 FRM_IMAGE = Frame3.builder("FRM_IMAGE")
+                                .question("QUE_IMAGE")
+                                .end()
+                                .build();
+
+
+                Frame3 container = Frame3.builder("FRM_CONTAINER")
+                                .addTheme(THM_CONTAINER).end()
+                                .addFrame(FRM_NAME, FramePosition.WEST).end()
+                                .addFrame(FRM_NAME, FramePosition.WEST).end()
+                                .addFrame(FRM_EMAIL, FramePosition.WEST).end()
+                                .addFrame(FRM_DOB, FramePosition.WEST).end()
+                                .addFrame(FRM_MOBILE, FramePosition.WEST).end()
+                                .build();
+
+                Frame3 detailView = Frame3.builder("FRM_DETAIL_VIEW")
+                                .addTheme(THM_DETAIL_VIEW).end()
+                                .question("QUE_NAME_TWO")
+                                .end()
+                                .addFrame(container, FramePosition.NORTH).end()
+                                .build();
+
+                return detailView;
+
+        }
+
 
 }
