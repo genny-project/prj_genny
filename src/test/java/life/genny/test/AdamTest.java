@@ -69,7 +69,6 @@ public class AdamTest {
 		GennyKieSession gks = null;
 		try {
 			gks = GennyKieSession.builder(serviceToken, false)
-					.addJbpm("userSession.bpmn")
 					.addJbpm("test_page_1.bpmn")
 					.addJbpm("test_page_2.bpmn")
 					.addFact("msg", msg)
