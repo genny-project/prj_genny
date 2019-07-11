@@ -1903,7 +1903,7 @@ public void addInternshipOneHostCompanyStaff() {
 	System.out.println("Sent");
 }
 
-@Test
+//@Test
 public void addInternshipTwoHostCompanyStaff() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
@@ -2112,7 +2112,7 @@ public void test() {
 	
 }
 
-//@Test
+@Test
 	public void displayTestPage1() {
 		System.out.println("Show test page 1");
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -2134,7 +2134,8 @@ public void test() {
 					.build();
 
 			gks.start();
-			gks.injectSignal("inputSignal", "Hello");
+			gks.injectSignal("inputSignal", userToken);
+		//	gks.getKieSession().signalEvent(type, event);
 			gks.advanceSeconds(20, false);
 
 			System.out.println("Sent");
