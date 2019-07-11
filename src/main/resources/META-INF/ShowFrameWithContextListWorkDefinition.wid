@@ -6,6 +6,7 @@ import org.drools.core.process.core.datatype.impl.type.StringDataType;
     "parameters" : [     
       "rootFrameCode" : new StringDataType(),
       "userToken"  : new GennyToken(),
+      "targetFrameCode" : new StringDataType(),
       "contextListMap" : new Map<String,ContextList>()
      ],
     "displayName" : "ShowFrameWithContextList",
