@@ -1204,6 +1204,8 @@ public void educationProviderDetails() {
 			.end()
 			.build();
 
+			/* Get Fram object form cache*/
+
 	Frame3 frameCentre = Frame3.builder("FRM_CENTRE")
 					.addFrame(frameForm, FramePosition.NORTH).end()
 				.build();
@@ -2112,7 +2114,7 @@ public void test() {
 	
 }
 
-@Test
+//@Test
 	public void displayTestPage1() {
 		System.out.println("Show test page 1");
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -2146,4 +2148,53 @@ public void test() {
 			gks.close();
 		}
 	}
+
+	@Test
+	public void userSessionTest() {
+		System.out.println("Show UserSession");
+		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		GennyToken userToken = new GennyToken("userToken", rules.getToken());
+		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+
+		System.out.println("session     =" + userToken.getSessionCode());
+		System.out.println("userToken   =" + userToken.getToken());
+		System.out.println("serviceToken=" + serviceToken.getToken());
+
+		QEventMessage msg = new QEventMessage("EVT_MSG", "AUTH_INIT");
+
+		GennyKieSession gks = null;
+		try {
+			gks = GennyKieSession.builder(serviceToken, false)
+					.addJbpm("test_session_1.bpmn")
+					.addJbpm("test_session_2.bpmn")
+					.addFact("msg", msg)
+					.addToken(userToken)
+					.build();
+
+			gks.start();
+			
+			for (int i=0;i<2;i++) {	
+				gks.advanceSeconds(2, true);
+				gks.injectSignal("inputSignal", "Hello");
+				gks.advanceSeconds(2, true);
+				gks.injectSignal("inputSignal2", "Hello");
+			}
+			
+//			for (int i=0;i<2;i++) {
+//				gks.displayForm("FRM_DASHBOARD",userToken);
+//				gks.advanceSeconds(2, true);
+//				gks.displayForm("FRM_DASHBOARD2",userToken);
+//				gks.advanceSeconds(2, true);
+//			}
+			gks.sendLogout(userToken);
+			System.out.println("Sent");
+
+		} catch (Exception e) {
+			System.out.println(e.getLocalizedMessage());
+		} finally {
+			gks.close();
+		}
+	}
+	
+
 }	
