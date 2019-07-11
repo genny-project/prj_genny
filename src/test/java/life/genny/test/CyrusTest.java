@@ -35,6 +35,7 @@ import life.genny.qwandautils.QwandaUtils;
 import life.genny.rules.QRules;
 import life.genny.rules.listeners.JbpmInitListener;
 import life.genny.utils.FrameUtils2;
+import life.genny.utils.VertxUtils;
 
 public class CyrusTest extends GennyJbpmBaseTest {
 
@@ -1902,7 +1903,7 @@ public void addInternshipOneHostCompanyStaff() {
 	System.out.println("Sent");
 }
 
-@Test
+//@Test
 public void addInternshipTwoHostCompanyStaff() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
@@ -1997,5 +1998,202 @@ public void addInternshipTwoHostCompanyStaff() {
 
 	System.out.println("Sent");
 }
+
+//@Test
+public void test() {
+	// getting the tokens
+	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
+	QRules rules = getQRules(userToken);
+	GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+	String apiUrl = GennySettings.qwandaServiceUrl + "/service/forms";
+
+	// building the themes and the footers
+	Theme THM_COLOR_GREY = Theme.builder("THM_COLOR_RED").addAttribute().backgroundColor("red").end().build();
+
+	Theme THM_COLOR_BLACK = Theme.builder("THM_COLOR_BLACK").addAttribute().backgroundColor("#ffffff").end().build();
+
+	Theme THM_FORM_INPUT_DEFAULT = Theme.builder("THM_FORM_INPUT_DEFAULT").addAttribute().borderBottomWidth(1)
+			.borderColor("#ddd").borderStyle("solid").placeholderColor("#888").end()
+			.addAttribute(ThemeAttributeType.PRI_CONTENT_HOVER).borderColor("#aaa").end()
+			.addAttribute(ThemeAttributeType.PRI_CONTENT_ACTIVE).borderColor("green").end()
+			.addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).borderColor("red").color("red").end().build();
+
+	Theme THM_FORM_LABEL_DEFAULT = Theme.builder("THM_FORM_LABEL_DEFAULT").addAttribute().end().build();
+
+	Theme THM_FORM_WRAPPER_DEFAULT = Theme.builder("THM_FORM_WRAPPER_DEFAULT").addAttribute().marginBottom(10)
+			.padding(10).end().addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).backgroundColor("#fc8e6").end().build();
+
+	Theme THM_FORM_ERROR_DEFAULT = Theme.builder("THM_FORM_ERROR_DEFAULT").addAttribute().color("red").end().build();
+
+	Theme THM_FORM_DEFAULT = Theme.builder("THM_FORM_DEFAULT").addAttribute().backgroundColor("none").end()
+			.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
+			.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION, true).end()
+			.addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end()
+			.addAttribute(ThemeAttributeType.PRI_HAS_REQUIRED, true).end()
+			.addAttribute(ThemeAttributeType.PRI_HAS_ICON, true).end().build();
+
+	Theme THM_FORM_CONTAINER_DEFAULT = Theme.builder("THM_FORM_CONTAINER_DEFAULT").addAttribute()
+			.backgroundColor("white").padding(10).maxWidth(700).width("100%").shadowColor("#000").shadowOpacity(0.4)
+			.shadowRadius(5).shadowOffset().width(0).height(0).end().end()
+			.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
+			.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION, true).end()
+			.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+	Theme THM_BUTTONS = Theme.builder("THM_BUTTONS")
+			.addAttribute().backgroundColor("#ffffff").padding(10)
+			.justifyContent("center").borderColor("#000000").margin(4).maxWidth(700).width("100%").shadowColor("#000")
+			.shadowOpacity(0.8).shadowRadius(5)
+			.end()
+			.build();
+
+			Theme THM_OF = Theme.builder("THM_OF")
+				.addAttribute().overflowY("auto").end()
+				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
+		.end()
+	.build();
+
+	System.out.println("Sent");
+	try {
+		String jsonFormCodes = QwandaUtils.apiGet(apiUrl, userToken.getToken());
+		if (!"You need to be a test.".equals(jsonFormCodes)) {
+			Type type = new TypeToken<List<String>>() {
+			}.getType();
+			List<String> formCodes = JsonUtils.fromJson(jsonFormCodes, type);
+			System.out.println("Form Codes=" + formCodes);
+
+
+			System.out.println("Before caching the formCodes");
+			
+			for (String formCode : formCodes) {
+			//	System.out.println(formCode);
+				
+				
+				//	String frameCode = "FRM_" +  formCode;
+				
+				Frame3 frameForm = Frame3.builder("FRM_" +  formCode)
+				.addTheme(THM_COLOR_BLACK).end()
+				.addTheme(THM_OF).end()
+				.question(formCode)
+				.addTheme(THM_FORM_INPUT_DEFAULT)
+				.vcl(VisualControlType.VCL_INPUT).weight(2.0).end().
+				addTheme(THM_FORM_LABEL_DEFAULT)
+				.vcl(VisualControlType.VCL_LABEL).end()
+				.addTheme(THM_FORM_WRAPPER_DEFAULT).vcl(VisualControlType.VCL_WRAPPER).end()
+				.addTheme(THM_FORM_ERROR_DEFAULT).vcl(VisualControlType.VCL_ERROR).end()
+				.addTheme(THM_FORM_DEFAULT).weight(3.0).end()
+				.addTheme(THM_FORM_CONTAINER_DEFAULT).weight(2.0).end()
+				.end()
+				.build();
+				
+				/* we are caching the frame forms */
+				VertxUtils.putObject(serviceToken.getRealm(), "", frameForm.getCode(), frameForm, serviceToken.getToken()); 
+				System.out.println(frameForm.getCode());
+				
+			}
+			System.out.println("After caching the formCodes   ::  ");
+			System.out.println("\n");
+			
+			for (String formCode : formCodes) {
+				/* we are getting the cached frame forms */
+				Frame3 cachedFrameForm = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_" + formCode, Frame3.class,
+				serviceToken.getToken());
+				
+				System.out.println(cachedFrameForm.getCode());
+				
+			}
+
+		} else {
+			System.out.println("Ensure that the user you are using has a 'test' role ...");
+		}
+
+	} catch (Exception e) {
+
+	}
+	
+}
+
+//@Test
+public void displayTestPage1() {
+	System.out.println("Show test page 1");
+	QRules rules = GennyJbpmBaseTest.setupLocalService();
+	GennyToken userToken = new GennyToken("userToken", rules.getToken());
+	GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+
+	System.out.println("session     =" + userToken.getSessionCode());
+	System.out.println("userToken   =" + userToken.getToken());
+	System.out.println("serviceToken=" + serviceToken.getToken());
+
+	QEventMessage msg = new QEventMessage("EVT_MSG", "INIT_STARTUP");
+
+	GennyKieSession gks = null;
+	try {
+		gks = GennyKieSession.builder(serviceToken, false)
+				.addJbpm("test_page_1.bpmn")
+				.addFact("msg", msg)
+				.addToken(userToken)
+				.build();
+
+		gks.start();
+		gks.injectSignal("inputSignal", userToken);
+	//	gks.getKieSession().signalEvent(type, event);
+		gks.advanceSeconds(20, false);
+
+		System.out.println("Sent");
+
+	} catch (Exception e) {
+		System.out.println(e.getLocalizedMessage());
+	} finally {
+		gks.close();
+	}
+}
+
+@Test
+public void userSessionTest() {
+	System.out.println("Show UserSession");
+	QRules rules = GennyJbpmBaseTest.setupLocalService();
+	GennyToken userToken = new GennyToken("userToken", rules.getToken());
+	GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+
+	System.out.println("session     =" + userToken.getSessionCode());
+	System.out.println("userToken   =" + userToken.getToken());
+	System.out.println("serviceToken=" + serviceToken.getToken());
+
+	QEventMessage msg = new QEventMessage("EVT_MSG", "AUTH_INIT");
+
+	GennyKieSession gks = null;
+	try {
+		gks = GennyKieSession.builder(serviceToken, false)
+				.addDrl("FRM_FORM2.drl")
+				.addDrl("FRM_FORM1.drl")
+				.addDrl("GenerateThemes")
+			//	.addJbpm("test_session_2.bpmn")
+				.addToken(userToken)
+				.build();
+
+		
+		// for (int i=0;i<2;i++) {	
+		// 	gks.advanceSeconds(2, true);
+		// 	gks.injectSignal("inputSignal", "Hello");
+		// 	gks.advanceSeconds(2, true);
+		// 	gks.injectSignal("inputSignal2", "Hello");
+		// }
+		
+		//	for (int i=0;i<2;i++) {
+				gks.displayForm("FRM_FORM",userToken);
+				gks.advanceSeconds(2, true);
+				// gks.displayForm("FRM_FORM",userToken);
+				// gks.advanceSeconds(2, true);
+			//}
+		//gks.sendLogout(userToken);
+		 	System.out.println("Sent");
+
+		 } 
+	catch (Exception e) {
+		System.out.println(e.getLocalizedMessage());
+	} finally {
+		gks.close();
+	}
+}
+
 
 }

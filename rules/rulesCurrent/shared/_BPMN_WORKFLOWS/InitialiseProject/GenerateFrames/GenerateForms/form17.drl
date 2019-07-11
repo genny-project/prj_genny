@@ -24,8 +24,8 @@ import life.genny.models.ThemeAttributeType;
 import life.genny.qwanda.VisualControlType;
 import life.genny.qwanda.message.QDataAskMessage;
 
-rule "eduProviderStaffProfileDetails"
-    ruleflow-group 'GenerateForms'
+rule "internProfile"
+    ruleflow-group 'GenerateFrames'
       no-loop true
     when
       $process : WorkflowProcessInstance() 
@@ -79,7 +79,7 @@ rule "eduProviderStaffProfileDetails"
 	Frame3 frameForm = Frame3.builder("FRM_FORM")
 				.addTheme(THM_COLOR_BLACK).end()
 				.addTheme(THM_OF).end()
-				.question("QUE_EDU_PROVIDER_STAFF_PROFILE_GRP")
+				.question("QUE_INTERN_PROFILE_GRP")
 					.addTheme(THM_FORM_INPUT_DEFAULT)
 					.vcl(VisualControlType.VCL_INPUT).weight(2.0).end().
 					addTheme(THM_FORM_LABEL_DEFAULT)
