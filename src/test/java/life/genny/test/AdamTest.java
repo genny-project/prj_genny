@@ -68,7 +68,7 @@ public class AdamTest {
 
 		GennyKieSession gks = null;
 		try {
-			gks = GennyKieSession.builder(serviceToken, false)
+		gks = GennyKieSession.builder(serviceToken, false)
 					.addJbpm("test_session_1.bpmn")
 					.addJbpm("test_session_2.bpmn")
 					.addFact("msg", msg)
@@ -83,11 +83,11 @@ public class AdamTest {
 				gks.advanceSeconds(2, true);
 				gks.injectSignal("inputSignal2", "Hello");
 			}
-			
+
 //			for (int i=0;i<2;i++) {
-//				gks.displayForm("FRM_DASHBOARD",userToken);
+//				gks.displayForm("FRM_FORM",userToken);
 //				gks.advanceSeconds(2, true);
-//				gks.displayForm("FRM_DASHBOARD2",userToken);
+//				gks.displayForm("FRM_FORM",userToken);
 //				gks.advanceSeconds(2, true);
 //			}
 			gks.sendLogout(userToken);
