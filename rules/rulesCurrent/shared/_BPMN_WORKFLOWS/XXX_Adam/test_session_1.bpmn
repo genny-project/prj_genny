@@ -6,7 +6,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_385" isCollection="false" structureRef="java.lang.String"/>
   <bpmn2:itemDefinition id="ItemDefinition_327" isCollection="false" structureRef="life.genny.models.GennyToken"/>
   <bpmn2:signal id="Signal_1" name="inputSignal"/>
-  <bpmn2:process id="show_test_page_1" name="Show Test Page 1" isExecutable="true" processType="Private">
+  <bpmn2:process id="show_test_session_1" name="Show Test Session 1" isExecutable="true" processType="Private">
     <bpmn2:extensionElements>
       <drools:import name="java.util.Date"/>
       <drools:import name="life.genny.qwanda.message.QEventMessage"/>
@@ -86,7 +86,7 @@
     <bpmn2:sequenceFlow id="SequenceFlow_2" drools:priority="1" sourceRef="Task_1" targetRef="endEventId"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="show_test_page_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="show_test_session_1">
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_1" bpmnElement="scriptTaskId">
         <dc:Bounds height="48.0" width="80.0" x="260.0" y="88.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1">

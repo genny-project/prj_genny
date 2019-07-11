@@ -2,12 +2,13 @@ import org.drools.core.process.core.datatype.impl.type.StringDataType;
 [
   // the ShowFrame work item
   [
-    "name" : "ShowFrame",
+    "name" : "ShowFrameWithContextList",
     "parameters" : [     
       "rootFrameCode" : new StringDataType(),
-      "userToken"  : new GennyToken()
+      "userToken"  : new GennyToken(),
+      "contextListMap" : new Map<String,ContextList>()
      ],
-    "displayName" : "ShowFrame",
+    "displayName" : "ShowFrameWithContextList",
     "icon" : "icons/icon-info.gif"
   ]
 ]
