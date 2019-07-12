@@ -38,6 +38,7 @@ import com.google.gson.reflect.TypeToken;
 
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
+import io.vertx.core.json.JsonObject;
 import life.genny.jbpm.customworkitemhandlers.AwesomeHandler;
 import life.genny.jbpm.customworkitemhandlers.NotificationWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.RuleFlowGroupWorkItemHandler;
@@ -48,7 +49,9 @@ import life.genny.models.GennyToken;
 import life.genny.qwanda.message.QCmdMessage;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.qwanda.message.QDataMessage;
 import life.genny.qwanda.message.QEventMessage;
+import life.genny.qwanda.message.QMessage;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.rules.QRules;
@@ -172,6 +175,64 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	}
 	
 
+	public void injectEvent(QMessage msg) {
+		QEventMessage eventMsg = null;
+		QDataMessage dataMsg = null;
+		
+		GennyToken userToken = null;
+		for (String tokenKey : this.tokens.keySet()) {
+			GennyToken gt = this.tokens.get(tokenKey);
+			if (!gt.getCode().equals("PER_SERVICE")) {
+				userToken = gt;
+				break;
+			}
+		}
+		
+			if (msg instanceof QEventMessage)  {
+				eventMsg = (QEventMessage)msg;
+				eventMsg.setToken(userToken.getToken());
+			}
+			if (msg instanceof QDataMessage)  {
+				dataMsg = (QDataMessage)msg;
+				dataMsg.setToken(userToken.getToken());
+			}
+
+
+
+
+		log.info("******** Launching rules from executeStateless");
+		if (userToken != null) {
+		// Simulate the incoming event handler that performs newSession
+			// This is a userToken so send the event through 
+			String session_state = userToken.getSessionCode();
+			String processIdStr = null;
+			
+			// Check if an existing userSession is there
+			JsonObject processIdJson = VertxUtils.readCachedJson(userToken.getRealm(), session_state, userToken.getToken());
+			if (processIdJson.getString("status").equals("ok")) {
+				processIdStr = processIdJson.getString("value");
+				Long processId = Long.decode(processIdStr);
+				// So send the event through to the userSession
+				if (eventMsg != null) {
+					broadcastSignal("events",eventMsg , processId);
+				} else 
+				if (dataMsg != null) {
+					broadcastSignal("data",dataMsg , processId);
+				}
+
+			} else {
+				// Must be the AUTH_INIT
+				if (eventMsg.getData().getCode().equals("AUTH_INIT")) {
+					
+					broadcastSignal("newSession",eventMsg);
+				} else {
+					log.error("NO EXISTING SESSION AND NOT AUTH_INIT");;
+				}
+			}
+
+		}
+	}
+	
 	public long advanceSeconds(long amount, boolean humanTime) {
 		long absoluteTime = 0;
 		for (int sec = 0; sec < (amount * 2); sec++) {
@@ -319,6 +380,8 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		} else {
 			log.error("KieSession not initialised");
 		}
+		
+	
 		System.out.println("Completed Setup");
 	}
 

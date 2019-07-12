@@ -66,7 +66,7 @@ public class AdamTest {
 		System.out.println("userToken   =" + userToken.getToken());
 		System.out.println("serviceToken=" + serviceToken.getToken());
 
-		QEventMessage msg = new QEventMessage("EVT_MSG", "AUTH_INIT");
+		QEventMessage authInitMsg = new QEventMessage("EVT_MSG", "AUTH_INIT");
 		QEventMessage msg1 = new QEventMessage("EVT_MSG", "INIT_1");
 		QEventMessage msgLogout = new QEventMessage("EVT_MSG", "LOGOUT");
 
@@ -76,19 +76,19 @@ public class AdamTest {
 			gks = GennyKieSession.builder(serviceToken, false)
 					.addJbpm("test_session_1.bpmn")
 					.addJbpm("test_session_2.bpmn")
-					.addFact("msg", msg)
-
+					.addJbpm("dashboard.bpmn")
 					.addToken(userToken)
 					.build();
 					gks.start();
 			
 			
+//				gks.advanceSeconds(2, true);
+//				gks.injectSignal("userMessage", msg1);
+//				gks.advanceSeconds(2, true);
+				
+				gks.injectEvent(authInitMsg);
 				gks.advanceSeconds(2, true);
-				gks.injectMessage(msg);
-				gks.advanceSeconds(2, true);
-				gks.injectSignal("userMessage", msg1);
-				gks.advanceSeconds(2, true);
-				gks.injectSignal("userMessage", msgLogout);
+//				gks.injectSignal("userMessage", msgLogout);
 				
 //			for (int i=0;i<2;i++) {
 //				gks.displayForm("FRM_DASHBOARD",userToken);
@@ -97,7 +97,7 @@ public class AdamTest {
 //				gks.advanceSeconds(2, true);
 //			}
 
-			gks.sendLogout(userToken);
+		//	gks.sendLogout(userToken);
 
 			System.out.println("Sent");
 

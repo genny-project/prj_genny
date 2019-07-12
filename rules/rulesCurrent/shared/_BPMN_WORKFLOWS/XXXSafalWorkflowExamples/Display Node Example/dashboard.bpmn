@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:g="http://www.jboss.org/drools/flow/gpd" xmlns:java="http://www.java.com/javaTypes" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.4.3.Final-v20180418-1358-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:g="http://www.jboss.org/drools/flow/gpd" xmlns:java="http://www.java.com/javaTypes" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.0.Final-v20180515-1642-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
   <bpmn2:itemDefinition id="ItemDefinition_10" isCollection="false" structureRef="java.lang.String"/>
   <bpmn2:itemDefinition id="ItemDefinition_628" isCollection="false" structureRef="org.kie.internal.runtime.StatefulKnowledgeSession"/>
   <bpmn2:itemDefinition id="ItemDefinition_633" isCollection="false" structureRef="org.kie.api.runtime.process.WorkflowProcessInstance"/>
@@ -17,9 +17,10 @@
   <bpmn2:signal id="Signal_2" name="Signal 2"/>
   <bpmn2:signal id="Signal_3" name="login"/>
   <bpmn2:signal id="Signal_4" name="userMessage"/>
+  <bpmn2:signal id="Signal_5" name="newSession"/>
   <bpmn2:escalation id="Escalation_1" escalationCode="123" name="Escalation 1"/>
   <bpmn2:message id="Message_1" itemRef="ItemDefinition_10" name="message_1"/>
-  <bpmn2:process id="dashboard" name="Hello World" isExecutable="false" processType="Private">
+  <bpmn2:process id="dashboard" name="Show Dashboard" isExecutable="false" processType="Private">
     <bpmn2:extensionElements>
       <tns:import name="org.kie.internal.runtime.StatefulKnowledgeSession"/>
       <tns:import name="org.kie.api.runtime.process.WorkflowProcessInstance"/>
@@ -33,13 +34,23 @@
     </bpmn2:extensionElements>
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_1329" name="message"/>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_174" name="userToken"/>
-    <bpmn2:startEvent id="_1">
+    <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_174" name="serviceToken"/>
+    <bpmn2:startEvent id="_1" name="ShowPage">
       <bpmn2:extensionElements>
         <tns:metaData name="elementname">
-          <tns:metaValue><![CDATA[]]></tns:metaValue>
+          <tns:metaValue><![CDATA[ShowPage]]></tns:metaValue>
         </tns:metaData>
       </bpmn2:extensionElements>
       <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
+      <bpmn2:dataOutput id="DataOutput_5" name="event"/>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_2">
+        <bpmn2:sourceRef>DataOutput_5</bpmn2:sourceRef>
+        <bpmn2:targetRef>message</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:outputSet id="OutputSet_2" name="Output Set 2">
+        <bpmn2:dataOutputRefs>DataOutput_5</bpmn2:dataOutputRefs>
+      </bpmn2:outputSet>
+      <bpmn2:signalEventDefinition id="SignalEventDefinition_2" signalRef="Signal_5"/>
     </bpmn2:startEvent>
     <bpmn2:endEvent id="EndEvent_8" name="Exit Dashboard">
       <bpmn2:extensionElements>
@@ -146,14 +157,26 @@
       <bpmn2:outgoing>SequenceFlow_10</bpmn2:outgoing>
       <bpmn2:ioSpecification id="InputOutputSpecification_4">
         <bpmn2:dataInput id="DataInput_5" itemSubjectRef="ItemDefinition_174" name="userToken"/>
+        <bpmn2:dataInput id="DataInput_2" itemSubjectRef="ItemDefinition_1329" name="message"/>
+        <bpmn2:dataInput id="DataInput_8" itemSubjectRef="ItemDefinition_174" name="serviceToken"/>
         <bpmn2:inputSet id="InputSet_4" name="Input Set 4">
           <bpmn2:dataInputRefs>DataInput_5</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_2</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_8</bpmn2:dataInputRefs>
         </bpmn2:inputSet>
         <bpmn2:outputSet id="OutputSet_6" name="Output Set 6"/>
       </bpmn2:ioSpecification>
       <bpmn2:dataInputAssociation id="DataInputAssociation_2">
         <bpmn2:sourceRef>userToken</bpmn2:sourceRef>
         <bpmn2:targetRef>DataInput_5</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_1">
+        <bpmn2:sourceRef>message</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_2</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_5">
+        <bpmn2:sourceRef>serviceToken</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_8</bpmn2:targetRef>
       </bpmn2:dataInputAssociation>
     </bpmn2:callActivity>
     <bpmn2:sequenceFlow id="SequenceFlow_4" tns:priority="1" name="Yes" sourceRef="ExclusiveGateway_1" targetRef="CallActivity_1">
@@ -172,7 +195,9 @@
     <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="dashboard">
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_1" bpmnElement="_1">
         <dc:Bounds height="48.0" width="48.0" x="0.0" y="531.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_2" labelStyle="BPMNLabelStyle_1"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_2" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="11.0" width="44.0" x="2.0" y="579.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_8" bpmnElement="EndEvent_8">
         <dc:Bounds height="36.0" width="36.0" x="1150.0" y="537.0"/>
@@ -206,25 +231,25 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_1" bpmnElement="Task_1" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="650.0" y="530.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_1">
           <dc:Bounds height="11.0" width="70.0" x="670.0" y="549.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_1" bpmnElement="ExclusiveGateway_1" isMarkerVisible="true">
         <dc:Bounds height="50.0" width="50.0" x="215.0" y="530.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_7">
           <dc:Bounds height="11.0" width="69.0" x="206.0" y="580.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_CallActivity_1" bpmnElement="CallActivity_1" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="338.0" y="340.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_8">
           <dc:Bounds height="11.0" width="34.0" x="376.0" y="359.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_2" bpmnElement="ExclusiveGateway_2" isMarkerVisible="true">
         <dc:Bounds height="50.0" width="50.0" x="560.0" y="530.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_10">
           <dc:Bounds height="22.0" width="44.0" x="563.0" y="580.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -263,19 +288,19 @@
         <di:waypoint xsi:type="dc:Point" x="760.0" y="555.0"/>
         <di:waypoint xsi:type="dc:Point" x="795.0" y="555.0"/>
         <di:waypoint xsi:type="dc:Point" x="830.0" y="555.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_12"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_ExclusiveGateway_7" targetElement="BPMNShape_ExclusiveGateway_1">
         <di:waypoint xsi:type="dc:Point" x="140.0" y="555.0"/>
         <di:waypoint xsi:type="dc:Point" x="177.0" y="555.0"/>
         <di:waypoint xsi:type="dc:Point" x="215.0" y="555.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_15"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="SequenceFlow_4" sourceElement="BPMNShape_ExclusiveGateway_1" targetElement="BPMNShape_CallActivity_1">
         <di:waypoint xsi:type="dc:Point" x="240.0" y="530.0"/>
         <di:waypoint xsi:type="dc:Point" x="240.0" y="365.0"/>
         <di:waypoint xsi:type="dc:Point" x="338.0" y="365.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_16">
           <dc:Bounds height="11.0" width="15.0" x="233.0" y="400.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
@@ -283,19 +308,19 @@
         <di:waypoint xsi:type="dc:Point" x="448.0" y="365.0"/>
         <di:waypoint xsi:type="dc:Point" x="585.0" y="365.0"/>
         <di:waypoint xsi:type="dc:Point" x="585.0" y="530.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_17"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_11" bpmnElement="SequenceFlow_11" sourceElement="BPMNShape_ExclusiveGateway_2" targetElement="BPMNShape_Task_1">
         <di:waypoint xsi:type="dc:Point" x="610.0" y="555.0"/>
         <di:waypoint xsi:type="dc:Point" x="630.0" y="555.0"/>
         <di:waypoint xsi:type="dc:Point" x="650.0" y="555.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_18"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_14" bpmnElement="SequenceFlow_14" sourceElement="BPMNShape_ExclusiveGateway_1" targetElement="BPMNShape_ExclusiveGateway_2">
         <di:waypoint xsi:type="dc:Point" x="265.0" y="555.0"/>
         <di:waypoint xsi:type="dc:Point" x="412.0" y="555.0"/>
         <di:waypoint xsi:type="dc:Point" x="560.0" y="555.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_19">
           <dc:Bounds height="11.0" width="50.0" x="389.0" y="556.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
