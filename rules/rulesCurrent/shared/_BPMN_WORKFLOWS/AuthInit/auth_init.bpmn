@@ -29,6 +29,8 @@
   <bpmn2:itemDefinition id="ItemDefinition_12" isCollection="false" structureRef="org.apache.logging.log4j.Logger"/>
   <bpmn2:itemDefinition id="ItemDefinition_17" isCollection="false" structureRef="life.genny.models.GennyToken"/>
   <bpmn2:itemDefinition id="ItemDefinition_15" isCollection="false" structureRef="life.genny.qwanda.message.QDataAttributeMessage"/>
+  <bpmn2:itemDefinition id="ItemDefinition_20" isCollection="false" structureRef="life.genny.utils.BaseEntityUtils"/>
+  <bpmn2:itemDefinition id="ItemDefinition_25" isCollection="false" structureRef="life.genny.utils.RulesUtils"/>
   <bpmn2:process id="auth_init" drools:packageName="life.genny.jbpm" name="Auth Init" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.qwanda.message.QEventMessage"/>
@@ -59,6 +61,8 @@
       <drools:import name="life.genny.models.GennyToken"/>
       <drools:global identifier="log" type="org.apache.logging.log4j.Logger"/>
       <drools:import name="life.genny.qwanda.message.QDataAttributeMessage"/>
+      <drools:import name="life.genny.utils.BaseEntityUtils"/>
+      <drools:import name="life.genny.utils.RulesUtils"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_1" name="message"/>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_17" name="userToken"/>
@@ -147,7 +151,7 @@ Send Attributes]]></drools:metaValue>
 String projectCode = &quot;PRJ_&quot;+serviceToken.getRealm().toUpperCase();
 BaseEntity project = beUtils.getBaseEntityByCode(projectCode);
 System.out.println(&quot;Sending project - &quot;+project.getCode());
-VertxUtils.writeMsg(project, &quot;PROJECT&quot;);
+VertxUtils.writeMsg(&quot;webcmds&quot;,project, &quot;PROJECT&quot;);
 
 
 
