@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import life.genny.models.Frame3;
+import life.genny.models.FramePosition;
 import life.genny.models.GennyToken;
 import life.genny.qwanda.message.QEventMessage;
 import life.genny.rules.QRules;
@@ -20,6 +21,8 @@ public class RahulTest extends GennyJbpmBaseTest {
 	private static final String WFP_APPLICATION_LIFECYCLE = "applicationLifecycle.bpmn";
 	private static final String WFP_APPLICATION_AVAILABLE = "available.bpmn";
 	private static final String WFP_APPLICATION_APPLIED = "applied.bpmn";
+	private static final String WFP_AUTH_INIT = "auth_init.bpmn";
+	private static final String WFP_USER_VALIDATION = "userValidation.bpmn";
 	
 	public RahulTest() {
 		super(false);
@@ -97,14 +100,11 @@ public class RahulTest extends GennyJbpmBaseTest {
 	@Test
 	public void quickTest() {
 		
-		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
-		System.out.println(userToken.getToken());
-		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-		System.out.println(serviceToken.getToken());
-		QRules qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
-		qRules.set("realm", userToken.getRealm());
-		qRules.setServiceToken(serviceToken.getToken());
-		
+		System.out.println("Show UserSession");
+		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		GennyToken userToken = new GennyToken("userToken", rules.getToken());
+		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+       
 		System.out.println("session=" + userToken.getSessionCode());
 		System.out.println("userToken=" + userToken.getToken());
 		System.out.println("serviceToken=" + serviceToken.getToken());
@@ -114,40 +114,19 @@ public class RahulTest extends GennyJbpmBaseTest {
 		GennyKieSession gks = null;
 		try {
 			gks = GennyKieSession.builder(serviceToken)
-					.addJbpm(WFP_APPLICATION_LIFECYCLE)
-					.addJbpm(WFP_APPLICATION_AVAILABLE)
-					.addJbpm(WFP_APPLICATION_APPLIED)
-					.addToken(serviceToken)
-					.addFact("qRules", qRules)
-					.addFact("msg", msg) 
+					.addJbpm(WFP_USER_SESSION)
+					.addJbpm(WFP_USER_VALIDATION)
+					.addJbpm(WFP_USER_LIFECYCLE)
+					.addToken(userToken)
 					.build();
-    
+			
 			gks.start();
+			
+			gks.injectMessage(msg);
 			
 			System.out.println("START: TESTING HERE !!!"); 
 
-			gks.getKieSession().signalEvent("application", userToken);
-
-			gks.advanceSeconds(5,true); 
-			
-			gks.getKieSession().signalEvent("active", userToken);
-
-			gks.advanceSeconds(5,true); 
-			
-			gks.getKieSession().signalEvent("applied", userToken);
-
-			gks.advanceSeconds(5,true); 
-			
-			System.out.println("STOP: TESTING HERE !!!"); 
-			gks.advanceSeconds(5,true); 
-		
-////		gks.getKieSession().signalEvent("abortAllSessions", userToken);
-//			
-//			gks.getKieSession().signalEvent("userLogout", userToken);
-//			
-//			gks.getKieSession().signalEvent("abortAllSessions", userToken);
-//			
-//			gks.advanceSeconds(2,true); 	
+			gks.getKieSession().signalEvent("creatingUserSignal", userToken);
 
 		} catch (Exception e)
 		{
@@ -155,5 +134,7 @@ public class RahulTest extends GennyJbpmBaseTest {
 		} finally {
 			gks.close();
 		}
+		
+		
 	}	
 }
