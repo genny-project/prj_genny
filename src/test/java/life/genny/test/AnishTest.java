@@ -123,7 +123,7 @@ public class AnishTest extends GennyJbpmBaseTest {
 
         }
 
-         @Test
+      //   @Test
         public void testDesktop() {
                 QRules rules = GennyJbpmBaseTest.setupLocalService();
                 GennyToken userToken = new GennyToken("userToken", rules.getToken());
@@ -166,43 +166,63 @@ public class AnishTest extends GennyJbpmBaseTest {
                 GennyToken userToken = new GennyToken("userToken", rules.getToken());
                 GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
-                try {
-                        /* frame-tabs */
-                        Frame3 FRM_TABS = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_TABS", Frame3.class,
-                                        serviceToken.getToken());
-                        System.out.print("desktop-tabs :: " + FRM_TABS.getCode());
+        		GennyKieSession gks = null;
+        		
+        		try {
+        			gks = GennyKieSession.builder(serviceToken, false)
+        					.addToken(userToken)
+        					.build();
+        					gks.start();
+        			
+        			
+        				gks.displayForm("FRM_DESKTOP2",userToken);
 
-                        /* frame-header */
-                        Frame3 FRM_HEADER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_HEADER",
-                                        Frame3.class, serviceToken.getToken());
-                        System.out.print("desktop-header :: " + FRM_HEADER.getCode());
+        			System.out.println("Sent");
 
-                        /* frame-footer */
-                        Frame3 FRM_FOOTER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_FOOTER",
-                                        Frame3.class, serviceToken.getToken());
-                        System.out.print("desktop-footer :: " + FRM_FOOTER.getCode());
-
-                        /* frame-sidebar */
-                        Frame3 FRM_SIDEBAR = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_SIDEBAR",
-                                        Frame3.class, serviceToken.getToken());
-
-                        System.out.print("desktop-sidebar :: " + FRM_SIDEBAR.getCode());
-                        /* frame-root */
-                        Frame3 FRM_DESKTOP = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_DESKTOP",
-                                        Frame3.class, serviceToken.getToken());
-
-                        System.out.print("desktop-frame :: " + FRM_DESKTOP.getCode());
-
-                        Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
-                        QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_DESKTOP, serviceToken, askMsgs);
-                        rules.publishCmd(msg);
-                        for (QDataAskMessage askMsg : askMsgs) {
-                                rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode());
-                        }
-                        System.out.println("Sent");
-                } catch (Exception e) {
-                        System.out.println("Error " + e.getLocalizedMessage());
-                }
+        		} catch (Exception e) {
+        			System.out.println(e.getLocalizedMessage());
+        		} finally {
+        			gks.close();
+        		}
+                
+                
+//                try {
+//                        /* frame-tabs */
+//                        Frame3 FRM_TABS = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_TABS", Frame3.class,
+//                                        serviceToken.getToken());
+//                        System.out.print("desktop-tabs :: " + FRM_TABS.getCode());
+//
+//                        /* frame-header */
+//                        Frame3 FRM_HEADER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_HEADER",
+//                                        Frame3.class, serviceToken.getToken());
+//                        System.out.print("desktop-header :: " + FRM_HEADER.getCode());
+//
+//                        /* frame-footer */
+//                        Frame3 FRM_FOOTER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_FOOTER",
+//                                        Frame3.class, serviceToken.getToken());
+//                        System.out.print("desktop-footer :: " + FRM_FOOTER.getCode());
+//
+//                        /* frame-sidebar */
+//                        Frame3 FRM_SIDEBAR = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_SIDEBAR",
+//                                        Frame3.class, serviceToken.getToken());
+//
+//                        System.out.print("desktop-sidebar :: " + FRM_SIDEBAR.getCode());
+//                        /* frame-root */
+//                        Frame3 FRM_DESKTOP = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_DESKTOP",
+//                                        Frame3.class, serviceToken.getToken());
+//
+//                        System.out.print("desktop-frame :: " + FRM_DESKTOP.getCode());
+//
+//                        Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+//                        QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_DESKTOP, serviceToken, askMsgs);
+//                        rules.publishCmd(msg);
+//                        for (QDataAskMessage askMsg : askMsgs) {
+//                                rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode());
+//                        }
+//                        System.out.println("Sent");
+//                } catch (Exception e) {
+//                        System.out.println("Error " + e.getLocalizedMessage());
+//                }
         }
 
         public Frame3 generateHeader() {
@@ -518,7 +538,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                 System.out.println("Generated TableView Frame");
                 return FRM_TABLE_VIEW;
         }
-         @Test
+      //   @Test
 
         public void desktopWfTest() {
                 GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
