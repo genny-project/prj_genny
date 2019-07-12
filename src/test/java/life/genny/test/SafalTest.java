@@ -88,6 +88,95 @@ public class SafalTest extends GennyJbpmBaseTest {
 
 	}
 	
+	//@Test
+	public void AdHocTest() {
+		
+		VertxUtils.cachedEnabled = true; // don't try and use any local services
+		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "userToken");
+		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "serviceToken");
+		QRules qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
+		
+		
+		GennyKieSession gks = GennyKieSession.builder(serviceToken)
+				.addJbpm( "adhoc.bpmn")
+				.build();
+	
+	     gks.startProcess("adhoc");
+	     
+	     for (int i = 0; i<20; i++) {
+		    	System.out.println("Clock :::: " + (i+1) + "sec");
+		    
+		    	gks.advanceSeconds(1,true);
+		    	if(i == 3) {
+		    		gks.getProcessInstance().signalEvent("NAME", null);
+		    	}else if(i==5) {
+		    		gks.getProcessInstance().signalEvent("AGE", null);
+		    	}else if(i ==7 ) {
+		    		gks.getProcessInstance().signalEvent("LOGOUT", null);
+		    	}else if(i==9) {
+		    		gks.getProcessInstance().signalEvent("NAME", null);
+		    	}
+		    }
+	    
+	    gks.close();
+	}
+	
+	@Test
+	public void userSessionTest2() {
+		System.out.println("Show UserSession");
+		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		GennyToken userToken = new GennyToken("userToken", rules.getToken());
+		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+
+		System.out.println("session     =" + userToken.getSessionCode());
+		System.out.println("userToken   =" + userToken.getToken());
+		System.out.println("serviceToken=" + serviceToken.getToken());
+
+		QEventMessage msg = new QEventMessage("EVT_MSG", "AUTH_INIT");
+		QEventMessage msg1 = new QEventMessage("EVT_MSG", "SOMEEVENT");
+		QEventMessage msgLogout = new QEventMessage("EVT_MSG", "LOGOUT");
+
+		GennyKieSession gks = null;
+		
+		try {
+			gks = GennyKieSession.builder(serviceToken, false)
+					.addJbpm("Session.bpmn")
+					.addJbpm("somepage.bpmn")
+					.addJbpm("dashboard.bpmn")
+					.addJbpm("auth_init.bpmn")
+					
+//					.addFact("rules", rules)
+					.addToken(userToken)
+					.build();
+					gks.start();
+			
+			
+				gks.advanceSeconds(3, true);
+				//gks.getKieSession().getProcessInstance(processInstanceId)
+				
+				
+				gks.injectSignal("newSession",msg);
+				gks.advanceSeconds(5, true);
+				
+				gks.injectSignal("userMessage", msg1);
+				gks.advanceSeconds(5, true);
+				gks.injectSignal("userMessage", msg);
+				
+//			for (int i=0;i<2;i++) {
+//				gks.displayForm("FRM_DASHBOARD",userToken);
+//				gks.advanceSeconds(2, true);
+//				gks.displayForm("FRM_DASHBOARD2",userToken);
+//				gks.advanceSeconds(2, true);
+//			}
+			//gks.sendLogout(userToken);
+			System.out.println("Sent");
+
+		} catch (Exception e) {
+			System.out.println(e.getLocalizedMessage());
+		} finally {
+			gks.close();
+		}
+	}
 	
 	//@Test
 		public void timerIntervalTest() {
@@ -114,7 +203,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 		    gks.close();
 		}
 		
-		@Test(timeout = 300000)	
+		//@Test(timeout = 300000)	
 		public void testTimerProcess() {
 		
 

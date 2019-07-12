@@ -1,5 +1,7 @@
 package life.genny.test;
 
+
+import org.kie.api.runtime.process.ProcessContext;
 import java.io.FileNotFoundException;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
@@ -65,32 +67,38 @@ public class AdamTest {
 		System.out.println("serviceToken=" + serviceToken.getToken());
 
 		QEventMessage msg = new QEventMessage("EVT_MSG", "AUTH_INIT");
+		QEventMessage msg1 = new QEventMessage("EVT_MSG", "INIT_1");
+		QEventMessage msgLogout = new QEventMessage("EVT_MSG", "LOGOUT");
 
 		GennyKieSession gks = null;
+		
 		try {
 			gks = GennyKieSession.builder(serviceToken, false)
 					.addJbpm("test_session_1.bpmn")
 					.addJbpm("test_session_2.bpmn")
 					.addFact("msg", msg)
+
 					.addToken(userToken)
 					.build();
-
-			gks.start();
+					gks.start();
 			
-			for (int i=0;i<2;i++) {	
-				gks.advanceSeconds(2, true);
-				gks.injectSignal("inputSignal", "Hello");
-				gks.advanceSeconds(2, true);
-				gks.injectSignal("inputSignal2", "Hello");
-			}
 			
+				gks.advanceSeconds(2, true);
+				gks.injectMessage(msg);
+				gks.advanceSeconds(2, true);
+				gks.injectSignal("userMessage", msg1);
+				gks.advanceSeconds(2, true);
+				gks.injectSignal("userMessage", msgLogout);
+				
 //			for (int i=0;i<2;i++) {
 //				gks.displayForm("FRM_DASHBOARD",userToken);
 //				gks.advanceSeconds(2, true);
 //				gks.displayForm("FRM_DASHBOARD2",userToken);
 //				gks.advanceSeconds(2, true);
 //			}
-	//		gks.sendLogout(userToken);
+
+			gks.sendLogout(userToken);
+
 			System.out.println("Sent");
 
 		} catch (Exception e) {
@@ -171,7 +179,7 @@ public class AdamTest {
 		}
 	}
 
-	// @Test
+//@Test
 	public void sendAuthInit() {
 
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -184,12 +192,14 @@ public class AdamTest {
 		try {
 			gks = GennyKieSession.builder(serviceToken).addDrl(DRL_SEND_USER_DATA_DIR) // send the initial User data
 																						// using the rules
-					.addJbpm("auth_init.bpmn").addJbpm("send_llama.bpmn").addFact("qRules", rules).addFact("msg", msg)
+					.addJbpm("adhoc.bpmn").addFact("qRules", rules).addFact("msg", msg)
 					.addToken(serviceToken).addToken(userToken).build();
 
 			gks.start();
 
-			gks.advanceSeconds(10, false);
+			gks.advanceSeconds(5, true);
+			gks.injectMessage(msg);
+			gks.advanceSeconds(3, true);
 		} finally {
 			gks.close();
 		}
@@ -556,7 +566,7 @@ public class AdamTest {
 
 	}
 
-	@Test
+	//@Test
 	public void testLogout() {
 
 	}
