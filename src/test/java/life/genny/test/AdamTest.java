@@ -90,7 +90,7 @@ public class AdamTest {
 //				gks.displayForm("FRM_DASHBOARD2",userToken);
 //				gks.advanceSeconds(2, true);
 //			}
-			gks.sendLogout(userToken);
+	//		gks.sendLogout(userToken);
 			System.out.println("Sent");
 
 		} catch (Exception e) {
