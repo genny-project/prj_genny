@@ -28,29 +28,25 @@ import life.genny.models.ThemeAttributeType;
 rule "THM_TAB_HEADER"
    ruleflow-group 'GenerateThemes'
     no-loop true
-    
+
     when
       not  Theme (code == "THM_TAB_HEADER")
       serviceToken : GennyToken( code == "PER_SERVICE")
-      
+
     then
-    
+
      	System.out.println("   Generate THM_TAB_HEADER Rule ");
- 
+
 		Theme theme = Theme.builder("THM_TAB_HEADER")
                                 .addAttribute()
-                                	.backgroundColor("#065B9A")
-                                	.end()
-                                .addAttribute()
-                                	.flexDirection("row")
-                                	.end()
-                                .addAttribute()
-                                	.marginRight(5)
-                                	.end()
+                                .backgroundColor("#065B9A")
+                                .flexDirection("row")
+                                .marginRight(5)
+                                .end()
                                 .build();
-                        
+
 		theme.setRealm(serviceToken.getRealm());
-		
+
 		insert(theme);
 
 		VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
