@@ -26,6 +26,7 @@ import life.genny.models.Theme;
 import life.genny.models.ThemeAttributeType;
 import life.genny.models.ThemeDouble;
 import life.genny.qwanda.VisualControlType;
+import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventMessage;
@@ -79,6 +80,7 @@ public class AdamTest {
 			gks = GennyKieSession.builder(serviceToken, false)
 					.addJbpm("userLifecycle.bpmn")
 					.addJbpm("userSession.bpmn")
+					.addJbpm("userValidation.bpmn")
 					.addToken(userToken)
 					.build();
 					gks.start();
@@ -87,7 +89,8 @@ public class AdamTest {
 				gks.advanceSeconds(2, true);
 //				gks.injectSignal("userMessage", msgLogout);
 				
-
+			BaseEntity user = VertxUtils.getObject(serviceToken.getRealm(), "", userToken.getUserCode(),BaseEntity.class, serviceToken.getToken());
+			System.out.println("user created "+user);
 			System.out.println("Sent");
 
 		} catch (Exception e) {
