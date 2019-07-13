@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:g="http://www.jboss.org/drools/flow/gpd" xmlns:java="http://www.java.com/javaTypes" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.0.Final-v20180515-1642-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:g="http://www.jboss.org/drools/flow/gpd" xmlns:java="http://www.java.com/javaTypes" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.4.3.Final-v20180418-1358-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
   <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false" structureRef="life.genny.rules.QRules"/>
   <bpmn2:itemDefinition id="ItemDefinition_10" isCollection="false" structureRef="java.lang.String"/>
   <bpmn2:itemDefinition id="ItemDefinition_1014" isCollection="false" structureRef="life.genny.qwanda.entity.BaseEntity"/>
@@ -17,9 +17,11 @@
   <bpmn2:itemDefinition id="ItemDefinition_19" isCollection="false" structureRef="life.genny.qwanda.Answer"/>
   <bpmn2:itemDefinition id="ItemDefinition_201" isCollection="false" structureRef="life.genny.models.GennyToken"/>
   <bpmn2:itemDefinition id="ItemDefinition_88" isCollection="false" structureRef="life.genny.utils.BaseEntityUtils"/>
-  <bpmn2:signal id="Signal_1" name="newUserSignal"/>
+  <bpmn2:itemDefinition id="ItemDefinition_59" isCollection="false" structureRef="life.genny.qwandautils.JsonUtils"/>
+  <bpmn2:signal id="Signal_1" name="userToken.getUserCode()"/>
   <bpmn2:signal id="Signal_2" name="deleteuser"/>
   <bpmn2:signal id="Signal_3" name="createdUserSignal"/>
+  <bpmn2:signal id="Signal_4" name="userToken"/>
   <bpmn2:resource id="Resource_1" name="Resource 1"/>
   <bpmn2:process id="user_lifecycle" tns:adHoc="false" name="userLifecycle" isExecutable="true" processType="Private">
     <bpmn2:extensionElements>
@@ -36,27 +38,35 @@
       <tns:import name="life.genny.qwanda.Answer"/>
       <tns:import name="life.genny.models.GennyToken"/>
       <tns:import name="life.genny.utils.BaseEntityUtils"/>
+      <tns:import name="life.genny.qwandautils.JsonUtils"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="rules" itemSubjectRef="ItemDefinition_2" name="rules"/>
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_602" name="message"/>
     <bpmn2:property id="ruleGroup" itemSubjectRef="ItemDefinition_10" name="ruleGroup"/>
     <bpmn2:property id="drools" itemSubjectRef="ItemDefinition_144" name="drools"/>
-    <bpmn2:property id="user" name="user"/>
-    <bpmn2:property id="userToken" name="userToken"/>
-    <bpmn2:property id="currentUser" name="currentUser"/>
+    <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_201" name="userToken"/>
+    <bpmn2:property id="currentUser" itemSubjectRef="ItemDefinition_1014" name="currentUser"/>
+    <bpmn2:property id="newUser" name="newUser"/>
     <bpmn2:scriptTask id="ScriptTask_2" name="Creates a user" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>
         <tns:metaData name="elementname">
           <tns:metaValue><![CDATA[Creates a user]]></tns:metaValue>
         </tns:metaData>
       </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_12</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
       <bpmn2:script>BaseEntityUtils beUtils = new BaseEntityUtils((GennyToken)userToken);
 
-currentUser = beUtils.create(((GennyToken)userToken).getUserCode(), &quot;&quot;);
+/*currentUser = beUtils.create(((GennyToken)userToken).getUserCode(), &quot;&quot;);*/
+
+currentUser = new BaseEntity (userToken.getUserCode(), userToken.getUserCode());
 
 System.out.println(&quot;New User Created: &quot; + currentUser);
+
+VertxUtils.putObject(userToken.getRealm(), &quot;&quot;, userToken.getUserCode(), JsonUtils.toJson(currentUser), userToken.getToken());
+
+
+
 </bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:startEvent id="StartEvent_1" name="Start Event 1">
@@ -65,7 +75,7 @@ System.out.println(&quot;New User Created: &quot; + currentUser);
           <tns:metaValue><![CDATA[Start Event 1]]></tns:metaValue>
         </tns:metaData>
       </bpmn2:extensionElements>
-      <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
       <bpmn2:dataOutput id="DataOutput_2" name="event"/>
       <bpmn2:dataOutputAssociation id="DataOutputAssociation_1">
         <bpmn2:sourceRef>DataOutput_2</bpmn2:sourceRef>
@@ -74,9 +84,8 @@ System.out.println(&quot;New User Created: &quot; + currentUser);
       <bpmn2:outputSet id="OutputSet_1" name="Output Set 1">
         <bpmn2:dataOutputRefs>DataOutput_2</bpmn2:dataOutputRefs>
       </bpmn2:outputSet>
-      <bpmn2:signalEventDefinition id="SignalEventDefinition_1" signalRef="Signal_1"/>
+      <bpmn2:signalEventDefinition id="SignalEventDefinition_1" signalRef="Signal_4"/>
     </bpmn2:startEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_12" tns:priority="1" sourceRef="StartEvent_1" targetRef="ScriptTask_2"/>
     <bpmn2:intermediateThrowEvent id="IntermediateThrowEvent_2" name="Intermediate Throw Event 2">
       <bpmn2:extensionElements>
         <tns:metaData name="elementname">
@@ -124,13 +133,14 @@ System.out.println(&quot;New User Created: &quot; + currentUser);
     </bpmn2:endEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_2" tns:priority="1" sourceRef="IntermediateThrowEvent_2" targetRef="IntermediateCatchEvent_2"/>
     <bpmn2:sequenceFlow id="SequenceFlow_3" tns:priority="1" sourceRef="IntermediateCatchEvent_2" targetRef="EndEvent_2"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_6" tns:priority="1" sourceRef="StartEvent_1" targetRef="ScriptTask_2"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="user_lifecycle">
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_3" bpmnElement="ScriptTask_2" isExpanded="true">
-        <dc:Bounds height="65.0" width="130.0" x="200.0" y="125.0"/>
+        <dc:Bounds height="65.0" width="130.0" x="260.0" y="125.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_3" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="60.0" x="235.0" y="152.0"/>
+          <dc:Bounds height="11.0" width="60.0" x="295.0" y="152.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
@@ -157,15 +167,9 @@ System.out.println(&quot;New User Created: &quot; + currentUser);
           <dc:Bounds height="11.0" width="78.0" x="779.0" y="176.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_12" bpmnElement="SequenceFlow_12" sourceElement="BPMNShape_StartEvent_2" targetElement="BPMNShape_ScriptTask_3">
-        <di:waypoint xsi:type="dc:Point" x="106.0" y="158.0"/>
-        <di:waypoint xsi:type="dc:Point" x="153.0" y="158.0"/>
-        <di:waypoint xsi:type="dc:Point" x="200.0" y="157.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_5"/>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="BPMNShape_ScriptTask_3" targetElement="BPMNShape_IntermediateThrowEvent_2">
-        <di:waypoint xsi:type="dc:Point" x="330.0" y="157.0"/>
-        <di:waypoint xsi:type="dc:Point" x="398.0" y="157.0"/>
+        <di:waypoint xsi:type="dc:Point" x="390.0" y="157.0"/>
+        <di:waypoint xsi:type="dc:Point" x="428.0" y="157.0"/>
         <di:waypoint xsi:type="dc:Point" x="467.0" y="158.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_6"/>
       </bpmndi:BPMNEdge>
@@ -180,6 +184,12 @@ System.out.println(&quot;New User Created: &quot; + currentUser);
         <di:waypoint xsi:type="dc:Point" x="718.0" y="158.0"/>
         <di:waypoint xsi:type="dc:Point" x="800.0" y="158.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_8"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="BPMNShape_StartEvent_2" targetElement="BPMNShape_ScriptTask_3">
+        <di:waypoint xsi:type="dc:Point" x="106.0" y="158.0"/>
+        <di:waypoint xsi:type="dc:Point" x="183.0" y="158.0"/>
+        <di:waypoint xsi:type="dc:Point" x="260.0" y="157.0"/>
+        <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
