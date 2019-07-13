@@ -113,9 +113,19 @@
         <bpmn2:incoming>SequenceFlow_29</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_28</bpmn2:outgoing>
         <bpmn2:ioSpecification id="InputOutputSpecification_2">
-          <bpmn2:inputSet id="InputSet_2" name="Input Set 2"/>
+          <bpmn2:dataInput id="DataInput_1" name="input1"/>
+          <bpmn2:inputSet id="InputSet_2" name="Input Set 2">
+            <bpmn2:dataInputRefs>DataInput_1</bpmn2:dataInputRefs>
+          </bpmn2:inputSet>
           <bpmn2:outputSet id="OutputSet_2" name="Output Set 3"/>
         </bpmn2:ioSpecification>
+        <bpmn2:dataInputAssociation id="DataInputAssociation_1">
+          <bpmn2:targetRef>DataInput_1</bpmn2:targetRef>
+          <bpmn2:assignment id="Assignment_1">
+            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_3">((GennyToken)userToken).getUserCode()</bpmn2:from>
+            <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_1">DataInput_1</bpmn2:to>
+          </bpmn2:assignment>
+        </bpmn2:dataInputAssociation>
       </bpmn2:callActivity>
       <bpmn2:endEvent id="EndEvent_2" name="End Event 2">
         <bpmn2:extensionElements>

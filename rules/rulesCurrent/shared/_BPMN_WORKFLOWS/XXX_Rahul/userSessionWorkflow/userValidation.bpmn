@@ -13,9 +13,9 @@
       <drools:import name="life.genny.utils.BaseEntityUtils"/>
       <drools:import name="life.genny.qwanda.entity.BaseEntity"/>
     </bpmn2:extensionElements>
-    <bpmn2:property id="userToken" name="userToken"/>
+    <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_2" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_2" name="serviceToken"/>
-    <bpmn2:property id="currentUser" name="currentUser"/>
+    <bpmn2:property id="currentUser" itemSubjectRef="ItemDefinition_325" name="currentUser"/>
     <bpmn2:property id="userCode" itemSubjectRef="ItemDefinition_10" name="userCode"/>
     <bpmn2:startEvent id="StartEvent_1" name="Start Event 1">
       <bpmn2:extensionElements>
@@ -50,7 +50,7 @@
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_17</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;Check if the user is present&quot;);</bpmn2:script>
+      <bpmn2:script>System.out.println(&quot;Check if the user is present&quot; + userCode);</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:scriptTask id="ScriptTask_3" name="Get User" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>
