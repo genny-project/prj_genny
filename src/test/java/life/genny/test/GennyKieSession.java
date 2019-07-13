@@ -176,6 +176,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	
 
 	public void injectEvent(QMessage msg) {
+		System.out.println("Injecting event "+msg.getMsg_type());
 		QEventMessage eventMsg = null;
 		QDataMessage dataMsg = null;
 		
@@ -197,10 +198,6 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 				dataMsg.setToken(userToken.getToken());
 			}
 
-
-
-
-		log.info("******** Launching rules from executeStateless");
 		if (userToken != null) {
 		// Simulate the incoming event handler that performs newSession
 			// This is a userToken so send the event through 
@@ -209,7 +206,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			
 			// Check if an existing userSession is there
 			JsonObject processIdJson = VertxUtils.readCachedJson(userToken.getRealm(), session_state, userToken.getToken());
-			if (processIdJson.getString("status").equals("ok")) {
+			if (processIdJson.getString("status").equals("ok") && processIdJson.getString("value") != null) {
 				processIdStr = processIdJson.getString("value");
 				Long processId = Long.decode(processIdStr);
 				// So send the event through to the userSession
@@ -222,8 +219,8 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 			} else {
 				// Must be the AUTH_INIT
-				if (eventMsg.getData().getCode().equals("AUTH_INIT")) {
-					
+				if (eventMsg.getData().getCode().equals("AUTH_INIT")) {		
+					System.out.println("Identified new Session - broadcasting newSession");
 					broadcastSignal("newSession",eventMsg);
 				} else {
 					log.error("NO EXISTING SESSION AND NOT AUTH_INIT");;
