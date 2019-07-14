@@ -63,7 +63,7 @@ newUser = beUtils.create(((GennyToken)userToken).getUserCode(), ((GennyToken)use
 userCode = ((GennyToken)userToken).getUserCode();
 
 /* currentUser = new BaseEntity (userToken.getUserCode(), userToken.getUserCode()); */
-VertxUtils.putObject(userToken.getRealm(), &quot;&quot;, userToken.getUserCode(), JsonUtils.toJson(currentUser), userToken.getToken());
+VertxUtils.putObject(userToken.getRealm(), &quot;&quot;, userToken.getUserCode(), JsonUtils.toJson(newUser), userToken.getToken());
 System.out.println(&quot;userlifeCycle: New User Created: &quot; + newUser+&quot; now sendng to channel callback :[&quot;+userToken.getUserCode()+&quot;]&quot;);
 
 
