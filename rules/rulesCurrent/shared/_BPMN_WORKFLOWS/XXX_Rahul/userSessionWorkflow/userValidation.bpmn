@@ -8,6 +8,7 @@
   <bpmn2:signal id="Signal_1" name="#{userToken.getUserCode()}"/>
   <bpmn2:signal id="Signal_2" name="userToken"/>
   <bpmn2:signal id="Signal_3" name="PER_USER1"/>
+  <bpmn2:interface id="Interface_1" name="Interface 1"/>
   <bpmn2:process id="user_validation" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="userValidation" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.models.GennyToken"/>
@@ -18,6 +19,7 @@
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_2" name="serviceToken"/>
     <bpmn2:property id="currentUser" itemSubjectRef="ItemDefinition_325" name="currentUser"/>
     <bpmn2:property id="userCode" itemSubjectRef="ItemDefinition_10" name="userCode"/>
+    <bpmn2:property id="beUtils" itemSubjectRef="ItemDefinition_323" name="beUtils"/>
     <bpmn2:startEvent id="StartEvent_1" name="Start Event 1">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -42,7 +44,7 @@
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_17</bpmn2:outgoing>
-      <bpmn2:script>BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+      <bpmn2:script>beUtils = new BaseEntityUtils(userToken);
 
 BaseEntity be = beUtils.getBaseEntityByCode(userToken.getUserCode());
 
@@ -86,7 +88,11 @@ System.out.println(&quot;userValidation: Current User is &quot; + currentUser + 
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_51</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;userValidation: newUser returned -> &quot;+currentUser);</bpmn2:script>
+      <bpmn2:script>System.out.println(&quot;userValidation: newUser returned -> &quot;+currentUser);
+if (userToken == null) { System.out.println(&quot;userToken is NULL&quot;);}
+if (currentUser == null) { System.out.println(&quot;currentUseruserToken is NULL&quot;);}
+if (beUtils == null) { System.out.println(&quot;beUtils is NULL&quot;);}
+currentUser = beUtils.getBaseEntityByCode(userToken.getUserCode());</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_2" drools:priority="1" sourceRef="ScriptTask_1" targetRef="ExclusiveGateway_1"/>
     <bpmn2:scriptTask id="ScriptTask_6" name="Choosing create new User path" scriptFormat="http://www.java.com/java">
@@ -144,13 +150,13 @@ System.out.println(&quot;userValidation: Current User is &quot; + currentUser + 
       <bpmn2:outgoing>SequenceFlow_48</bpmn2:outgoing>
     </bpmn2:parallelGateway>
     <bpmn2:sequenceFlow id="SequenceFlow_45" drools:priority="1" sourceRef="ScriptTask_6" targetRef="ParallelGateway_3"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_46" drools:priority="100" sourceRef="ParallelGateway_3" targetRef="IntermediateThrowEvent_1"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_46" drools:priority="100" name="TX" sourceRef="ParallelGateway_3" targetRef="IntermediateThrowEvent_1"/>
     <bpmn2:exclusiveGateway id="ExclusiveGateway_4" name="Exclusive Gateway 4" gatewayDirection="Converging">
       <bpmn2:incoming>SequenceFlow_48</bpmn2:incoming>
       <bpmn2:incoming>SequenceFlow_49</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_52</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="SequenceFlow_48" drools:priority="1" sourceRef="ParallelGateway_3" targetRef="ExclusiveGateway_4"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_48" drools:priority="1000" name="RX" sourceRef="ParallelGateway_3" targetRef="ExclusiveGateway_4"/>
     <bpmn2:sequenceFlow id="SequenceFlow_49" drools:priority="1" sourceRef="IntermediateThrowEvent_1" targetRef="ExclusiveGateway_4"/>
     <bpmn2:sequenceFlow id="SequenceFlow_51" drools:priority="1" sourceRef="IntermediateCatchEvent_1" targetRef="ScriptTask_1"/>
     <bpmn2:scriptTask id="ScriptTask_7" name="Wait for new User" scriptFormat="http://www.java.com/java">
@@ -218,31 +224,31 @@ System.out.println(&quot;userValidation: Current User is &quot; + currentUser + 
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_1" bpmnElement="ScriptTask_1" isExpanded="true">
         <dc:Bounds height="50.0" width="76.0" x="1002.0" y="305.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_9">
           <dc:Bounds height="11.0" width="65.0" x="1007.0" y="324.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_6" bpmnElement="ScriptTask_6" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="455.0" y="305.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_10">
           <dc:Bounds height="22.0" width="94.0" x="463.0" y="319.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ParallelGateway_3" bpmnElement="ParallelGateway_3" isMarkerVisible="true">
         <dc:Bounds height="50.0" width="50.0" x="625.0" y="305.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_11">
           <dc:Bounds height="11.0" width="76.0" x="612.0" y="355.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_4" bpmnElement="ExclusiveGateway_4" isMarkerVisible="true">
         <dc:Bounds height="50.0" width="50.0" x="835.0" y="382.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_12">
           <dc:Bounds height="22.0" width="44.0" x="838.0" y="432.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_7" bpmnElement="ScriptTask_7" isExpanded="true">
         <dc:Bounds height="50.0" width="55.0" x="920.0" y="382.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_13">
           <dc:Bounds height="11.0" width="72.0" x="912.0" y="401.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -282,13 +288,13 @@ System.out.println(&quot;userValidation: Current User is &quot; + currentUser + 
         <di:waypoint xsi:type="dc:Point" x="1040.0" y="305.0"/>
         <di:waypoint xsi:type="dc:Point" x="1040.0" y="267.0"/>
         <di:waypoint xsi:type="dc:Point" x="1040.0" y="228.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_14"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_29" bpmnElement="SequenceFlow_29" sourceElement="BPMNShape_ExclusiveGateway_3" targetElement="BPMNShape_ScriptTask_6">
         <di:waypoint xsi:type="dc:Point" x="431.0" y="205.0"/>
         <di:waypoint xsi:type="dc:Point" x="431.0" y="330.0"/>
         <di:waypoint xsi:type="dc:Point" x="455.0" y="330.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_15">
           <dc:Bounds height="11.0" width="14.0" x="425.0" y="281.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
@@ -296,43 +302,47 @@ System.out.println(&quot;userValidation: Current User is &quot; + currentUser + 
         <di:waypoint xsi:type="dc:Point" x="565.0" y="330.0"/>
         <di:waypoint xsi:type="dc:Point" x="595.0" y="330.0"/>
         <di:waypoint xsi:type="dc:Point" x="625.0" y="330.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_16"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_46" bpmnElement="SequenceFlow_46" sourceElement="BPMNShape_ParallelGateway_3" targetElement="BPMNShape_IntermediateThrowEvent_1">
         <di:waypoint xsi:type="dc:Point" x="675.0" y="330.0"/>
         <di:waypoint xsi:type="dc:Point" x="711.0" y="330.0"/>
         <di:waypoint xsi:type="dc:Point" x="748.0" y="330.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_17">
+          <dc:Bounds height="11.0" width="12.0" x="707.0" y="331.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_48" bpmnElement="SequenceFlow_48" sourceElement="BPMNShape_ParallelGateway_3" targetElement="BPMNShape_ExclusiveGateway_4">
         <di:waypoint xsi:type="dc:Point" x="650.0" y="355.0"/>
         <di:waypoint xsi:type="dc:Point" x="650.0" y="407.0"/>
         <di:waypoint xsi:type="dc:Point" x="835.0" y="407.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_18">
+          <dc:Bounds height="11.0" width="13.0" x="711.0" y="408.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_49" bpmnElement="SequenceFlow_49" sourceElement="BPMNShape_IntermediateThrowEvent_1" targetElement="BPMNShape_ExclusiveGateway_4">
         <di:waypoint xsi:type="dc:Point" x="784.0" y="330.0"/>
         <di:waypoint xsi:type="dc:Point" x="860.0" y="330.0"/>
         <di:waypoint xsi:type="dc:Point" x="860.0" y="382.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_19"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_51" bpmnElement="SequenceFlow_51" sourceElement="BPMNShape_IntermediateCatchEvent_1" targetElement="BPMNShape_ScriptTask_1">
         <di:waypoint xsi:type="dc:Point" x="1040.0" y="389.0"/>
         <di:waypoint xsi:type="dc:Point" x="1040.0" y="372.0"/>
         <di:waypoint xsi:type="dc:Point" x="1040.0" y="355.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_20"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_52" bpmnElement="SequenceFlow_52" sourceElement="BPMNShape_ExclusiveGateway_4" targetElement="BPMNShape_ScriptTask_7">
         <di:waypoint xsi:type="dc:Point" x="885.0" y="407.0"/>
         <di:waypoint xsi:type="dc:Point" x="902.0" y="407.0"/>
         <di:waypoint xsi:type="dc:Point" x="920.0" y="407.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_21"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_53" bpmnElement="SequenceFlow_53" sourceElement="BPMNShape_ScriptTask_7" targetElement="BPMNShape_IntermediateCatchEvent_1">
         <di:waypoint xsi:type="dc:Point" x="975.0" y="407.0"/>
         <di:waypoint xsi:type="dc:Point" x="998.0" y="407.0"/>
         <di:waypoint xsi:type="dc:Point" x="1022.0" y="407.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_22"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">

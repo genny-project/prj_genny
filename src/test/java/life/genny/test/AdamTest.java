@@ -77,7 +77,7 @@ public class AdamTest {
 		GennyKieSession gks = null;
 		
 		try {
-			gks = GennyKieSession.builder(serviceToken, false)
+			gks = GennyKieSession.builder(serviceToken, true)
 					.addJbpm("userLifecycle.bpmn")
 					.addJbpm("userSession.bpmn")
 					.addJbpm("userValidation.bpmn")
