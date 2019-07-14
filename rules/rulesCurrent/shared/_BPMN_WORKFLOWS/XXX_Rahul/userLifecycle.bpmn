@@ -24,7 +24,7 @@
   <bpmn2:signal id="Signal_4" name="userToken"/>
   <bpmn2:signal id="Signal_5" name="#{userCode}"/>
   <bpmn2:resource id="Resource_1" name="Resource 1"/>
-  <bpmn2:process id="user_lifecycle" tns:adHoc="true" name="userLifecycle" isExecutable="true" processType="Private">
+  <bpmn2:process id="user_lifecycle" tns:adHoc="false" name="userLifecycle" isExecutable="true" processType="Private">
     <bpmn2:extensionElements>
       <tns:import name="life.genny.rules.QRules"/>
       <tns:import name="life.genny.qwanda.entity.BaseEntity"/>
