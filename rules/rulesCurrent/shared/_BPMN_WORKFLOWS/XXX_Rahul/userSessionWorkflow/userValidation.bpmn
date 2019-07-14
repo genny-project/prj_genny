@@ -48,7 +48,7 @@ BaseEntity be = beUtils.getBaseEntityByCode(userToken.getUserCode());
 
 currentUser = be;
 
-System.out.println(&quot;Current User is &quot; + currentUser + &quot; sending signal to userLifeCycle to create  :&quot;+userToken.getUserCode());</bpmn2:script>
+System.out.println(&quot;userValidation: Current User is &quot; + currentUser + &quot; sending signal to userLifeCycle to create  :&quot;+userToken.getUserCode());</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:scriptTask id="ScriptTask_3" name="Get User" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>
