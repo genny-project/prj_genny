@@ -1,5 +1,7 @@
 package life.genny.test;
 
+
+import org.kie.api.runtime.process.ProcessContext;
 import java.io.FileNotFoundException;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
@@ -24,6 +26,7 @@ import life.genny.models.Theme;
 import life.genny.models.ThemeAttributeType;
 import life.genny.models.ThemeDouble;
 import life.genny.qwanda.VisualControlType;
+import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventMessage;
@@ -56,6 +59,54 @@ public class AdamTest {
 	@Test
 	public void userSessionTest() {
 		System.out.println("Show UserSession");
+		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+		QRules qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
+		qRules.set("realm", userToken.getRealm());
+		qRules.setServiceToken(serviceToken.getToken());
+		VertxUtils.cachedEnabled = true;  // don't send to local Service Cache
+
+		System.out.println("session     =" + userToken.getSessionCode());
+		System.out.println("userToken   =" + userToken.getToken());
+		System.out.println("serviceToken=" + serviceToken.getToken());
+
+		QEventMessage authInitMsg = new QEventMessage("EVT_MSG", "AUTH_INIT");
+		QEventMessage msg1 = new QEventMessage("EVT_MSG", "INIT_1");
+		QEventMessage msgLogout = new QEventMessage("EVT_MSG", "LOGOUT");
+
+		GennyKieSession gks = null;
+		
+		try {
+			gks = GennyKieSession.builder(serviceToken, false)
+					.addJbpm("userLifecycle.bpmn")
+					.addJbpm("userSession.bpmn")
+					.addJbpm("userValidation.bpmn")
+					.addToken(userToken)
+					.build();
+					gks.start();
+			
+				gks.injectEvent(authInitMsg);
+				gks.advanceSeconds(2, true);
+				gks.injectEvent(authInitMsg);
+				gks.advanceSeconds(2, true);
+//				gks.injectSignal("userMessage", msgLogout);
+				
+			BaseEntity user = VertxUtils.getObject(serviceToken.getRealm(), "", userToken.getUserCode(),BaseEntity.class, serviceToken.getToken());
+			System.out.println("final user created "+user);
+			System.out.println("Sent");
+
+		} catch (Exception e) {
+			System.out.println(e.getLocalizedMessage());
+		} finally {
+			gks.close();
+		}
+	}
+		
+	
+	
+	//@Test
+	public void userSessionTest2() {
+		System.out.println("Show UserSession");
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
@@ -64,33 +115,39 @@ public class AdamTest {
 		System.out.println("userToken   =" + userToken.getToken());
 		System.out.println("serviceToken=" + serviceToken.getToken());
 
-		QEventMessage msg = new QEventMessage("EVT_MSG", "AUTH_INIT");
+		QEventMessage authInitMsg = new QEventMessage("EVT_MSG", "AUTH_INIT");
+		QEventMessage msg1 = new QEventMessage("EVT_MSG", "INIT_1");
+		QEventMessage msgLogout = new QEventMessage("EVT_MSG", "LOGOUT");
 
 		GennyKieSession gks = null;
+		
 		try {
 			gks = GennyKieSession.builder(serviceToken, false)
 					.addJbpm("test_session_1.bpmn")
 					.addJbpm("test_session_2.bpmn")
-					.addFact("msg", msg)
+					.addJbpm("dashboard.bpmn")
 					.addToken(userToken)
 					.build();
+					gks.start();
+			
+			
+//				gks.advanceSeconds(2, true);
+//				gks.injectSignal("userMessage", msg1);
+//				gks.advanceSeconds(2, true);
+				
+				gks.injectEvent(authInitMsg);
+				gks.advanceSeconds(2, true);
+//				gks.injectSignal("userMessage", msgLogout);
+				
+//			for (int i=0;i<2;i++) {
+//				gks.displayForm("FRM_DASHBOARD",userToken);
+//				gks.advanceSeconds(2, true);
+//				gks.displayForm("FRM_DASHBOARD2",userToken);
+//				gks.advanceSeconds(2, true);
+//			}
 
-			gks.start();
-			
-			// for (int i=0;i<2;i++) {	
-			// 	gks.advanceSeconds(2, true);
-			// 	gks.injectSignal("inputSignal", "Hello");
-			// 	gks.advanceSeconds(2, true);
-			// 	gks.injectSignal("inputSignal2", "Hello");
-			// }
-			
-			for (int i=0;i<2;i++) {
-				gks.displayForm("FRM_FORM",userToken);
-				gks.advanceSeconds(2, true);
-				gks.displayForm("FRM_FORM2",userToken);
-				gks.advanceSeconds(2, true);
-			}
-			gks.sendLogout(userToken);
+		//	gks.sendLogout(userToken);
+
 			System.out.println("Sent");
 
 		} catch (Exception e) {
@@ -171,7 +228,7 @@ public class AdamTest {
 		}
 	}
 
-	// @Test
+//@Test
 	public void sendAuthInit() {
 
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -184,12 +241,14 @@ public class AdamTest {
 		try {
 			gks = GennyKieSession.builder(serviceToken).addDrl(DRL_SEND_USER_DATA_DIR) // send the initial User data
 																						// using the rules
-					.addJbpm("auth_init.bpmn").addJbpm("send_llama.bpmn").addFact("qRules", rules).addFact("msg", msg)
+					.addJbpm("adhoc.bpmn").addFact("qRules", rules).addFact("msg", msg)
 					.addToken(serviceToken).addToken(userToken).build();
 
 			gks.start();
 
-			gks.advanceSeconds(10, false);
+			gks.advanceSeconds(5, true);
+			gks.injectMessage(msg);
+			gks.advanceSeconds(3, true);
 		} finally {
 			gks.close();
 		}
@@ -556,7 +615,7 @@ public class AdamTest {
 
 	}
 
-	@Test
+	//@Test
 	public void testLogout() {
 
 	}
