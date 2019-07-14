@@ -8,7 +8,6 @@
   <bpmn2:signal id="Signal_1" name="#{userToken.getUserCode()}"/>
   <bpmn2:signal id="Signal_2" name="userToken"/>
   <bpmn2:signal id="Signal_3" name="PER_USER1"/>
-  <bpmn2:interface id="Interface_1" name="Interface 1"/>
   <bpmn2:process id="user_validation" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="userValidation" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.models.GennyToken"/>
