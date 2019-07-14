@@ -77,19 +77,19 @@ public class AdamTest {
 
 			gks.start();
 			
-			for (int i=0;i<2;i++) {	
-				gks.advanceSeconds(2, true);
-				gks.injectSignal("inputSignal", "Hello");
-				gks.advanceSeconds(2, true);
-				gks.injectSignal("inputSignal2", "Hello");
-			}
+			// for (int i=0;i<2;i++) {	
+			// 	gks.advanceSeconds(2, true);
+			// 	gks.injectSignal("inputSignal", "Hello");
+			// 	gks.advanceSeconds(2, true);
+			// 	gks.injectSignal("inputSignal2", "Hello");
+			// }
 			
-//			for (int i=0;i<2;i++) {
-//				gks.displayForm("FRM_DASHBOARD",userToken);
-//				gks.advanceSeconds(2, true);
-//				gks.displayForm("FRM_DASHBOARD2",userToken);
-//				gks.advanceSeconds(2, true);
-//			}
+			for (int i=0;i<2;i++) {
+				gks.displayForm("FRM_FORM",userToken);
+				gks.advanceSeconds(2, true);
+				gks.displayForm("FRM_FORM2",userToken);
+				gks.advanceSeconds(2, true);
+			}
 			gks.sendLogout(userToken);
 			System.out.println("Sent");
 

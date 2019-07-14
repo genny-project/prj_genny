@@ -1999,7 +1999,7 @@ public void addInternshipTwoHostCompanyStaff() {
 	System.out.println("Sent");
 }
 
-//@Test
+@Test
 public void test() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
@@ -2147,7 +2147,7 @@ public void displayTestPage1() {
 	}
 }
 
-@Test
+//@Test
 public void userSessionTest() {
 	System.out.println("Show UserSession");
 	QRules rules = GennyJbpmBaseTest.setupLocalService();
