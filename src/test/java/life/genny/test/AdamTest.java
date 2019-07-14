@@ -87,10 +87,12 @@ public class AdamTest {
 			
 				gks.injectEvent(authInitMsg);
 				gks.advanceSeconds(2, true);
+				gks.injectEvent(authInitMsg);
+				gks.advanceSeconds(2, true);
 //				gks.injectSignal("userMessage", msgLogout);
 				
 			BaseEntity user = VertxUtils.getObject(serviceToken.getRealm(), "", userToken.getUserCode(),BaseEntity.class, serviceToken.getToken());
-			System.out.println("user created "+user);
+			System.out.println("final user created "+user);
 			System.out.println("Sent");
 
 		} catch (Exception e) {

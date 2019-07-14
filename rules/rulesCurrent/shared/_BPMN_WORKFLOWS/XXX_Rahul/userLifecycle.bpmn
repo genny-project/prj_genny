@@ -60,6 +60,7 @@
       <bpmn2:script>BaseEntityUtils beUtils = new BaseEntityUtils((GennyToken)userToken);
 
 newUser = beUtils.create(((GennyToken)userToken).getUserCode(), ((GennyToken)userToken).getUserCode());
+kcontext.setVariable(&quot;newUser&quot;,newUser);
 userCode = ((GennyToken)userToken).getUserCode();
 
 /* currentUser = new BaseEntity (userToken.getUserCode(), userToken.getUserCode()); */

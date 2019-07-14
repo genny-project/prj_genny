@@ -9,7 +9,8 @@
   <bpmn2:itemDefinition id="ItemDefinition_231" isCollection="false" structureRef="life.genny.utils.VertxUtils"/>
   <bpmn2:signal id="Signal_1" name="#{userToken.getUserCode()}"/>
   <bpmn2:signal id="Signal_2" name="userToken"/>
-  <bpmn2:signal id="Signal_3" name="#{userCode}"/>
+  <bpmn2:signal id="Signal_3" name="PER_USER1"/>
+  <bpmn2:interface id="Interface_1" name="Interface 1"/>
   <bpmn2:process id="user_validation" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="userValidation" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.models.GennyToken"/>
@@ -48,11 +49,10 @@
       <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_17</bpmn2:outgoing>
       <bpmn2:script>beUtils = new BaseEntityUtils(userToken);
-kcontext.setVariable(&quot;beUtils&quot;,beUtils);
 
-currentUser = beUtils.getBaseEntityByCode(userToken.getUserCode());
-kcontext.setVariable(&quot;currentUser&quot;,currentUser);
-kcontext.setVariable(&quot;userCode&quot;,userToken.getUserCode());
+BaseEntity be = beUtils.getBaseEntityByCode(userToken.getUserCode());
+
+currentUser = be;
 
 System.out.println(&quot;userValidation: Current User is &quot; + currentUser + &quot; sending signal to userLifeCycle to create  :&quot;+userToken.getUserCode());</bpmn2:script>
     </bpmn2:scriptTask>
@@ -98,11 +98,14 @@ System.out.println(&quot;userToken is NOT NULL &quot;);
 System.out.println(&quot;REALM = &quot;+userToken.getRealm());
 System.out.println(&quot;USERCODE = &quot;+userToken.getUserCode());
 System.out.println(&quot;Token = &quot;+userToken.getToken());
-/* currentUser = VertxUtils.getObject(userToken.getRealm(),&quot;&quot;,userToken.getUserCode(),BaseEntity.class,userToken.getToken());  */
-kcontext.setVariable(&quot;currentUser&quot;,currentUser);
+currentUser = VertxUtils.getObject(userToken.getRealm(),&quot;&quot;,userToken.getUserCode(),BaseEntity.class,userToken.getToken()); 
+
 }
 if (currentUser == null) { System.out.println(&quot;currentUser is NULL&quot;);} else { System.out.println(&quot;currentUser is NOT NULL ->&quot;+currentUser);}
-</bpmn2:script>
+if (beUtils == null) { System.out.println(&quot;beUtils is NULL&quot;);} 
+else {
+currentUser = beUtils.getBaseEntityByCode(userToken.getUserCode());
+}</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_2" drools:priority="1" sourceRef="ScriptTask_1" targetRef="ExclusiveGateway_1"/>
     <bpmn2:scriptTask id="ScriptTask_6" name="Choosing create new User path" scriptFormat="http://www.java.com/java">
@@ -147,7 +150,7 @@ if (currentUser == null) { System.out.println(&quot;currentUser is NULL&quot;);}
       <bpmn2:dataOutput id="DataOutput_3" name="event"/>
       <bpmn2:dataOutputAssociation id="DataOutputAssociation_2">
         <bpmn2:sourceRef>DataOutput_3</bpmn2:sourceRef>
-        <bpmn2:targetRef>currentUser</bpmn2:targetRef>
+        <bpmn2:targetRef>userCode</bpmn2:targetRef>
       </bpmn2:dataOutputAssociation>
       <bpmn2:outputSet id="OutputSet_3" name="Output Set 3">
         <bpmn2:dataOutputRefs>DataOutput_3</bpmn2:dataOutputRefs>
@@ -277,7 +280,7 @@ System.out.println(&quot;userValidation: Yay! currentUser is &quot;+currentUser)
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_4" bpmnElement="ScriptTask_4" isExpanded="true">
         <dc:Bounds height="50.0" width="75.0" x="1091.0" y="179.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_14">
+        <bpmndi:BPMNLabel>
           <dc:Bounds height="22.0" width="63.0" x="1097.0" y="193.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -371,13 +374,13 @@ System.out.println(&quot;userValidation: Yay! currentUser is &quot;+currentUser)
         <di:waypoint xsi:type="dc:Point" x="1065.0" y="203.0"/>
         <di:waypoint xsi:type="dc:Point" x="1078.0" y="204.0"/>
         <di:waypoint xsi:type="dc:Point" x="1091.0" y="204.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_23"/>
+        <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_ScriptTask_4" targetElement="BPMNShape_2">
         <di:waypoint xsi:type="dc:Point" x="1166.0" y="204.0"/>
         <di:waypoint xsi:type="dc:Point" x="1176.0" y="204.0"/>
         <di:waypoint xsi:type="dc:Point" x="1185.0" y="204.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_24"/>
+        <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
