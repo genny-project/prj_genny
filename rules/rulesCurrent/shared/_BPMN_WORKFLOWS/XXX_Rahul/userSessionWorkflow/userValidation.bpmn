@@ -7,8 +7,9 @@
   <bpmn2:itemDefinition id="ItemDefinition_10" isCollection="false" structureRef="java.lang.String"/>
   <bpmn2:signal id="Signal_1" name="#{userToken.getUserCode()}"/>
   <bpmn2:signal id="Signal_2" name="userToken"/>
+  <bpmn2:signal id="Signal_3" name="PER_USER1"/>
   <bpmn2:interface id="Interface_1" name="Interface 1"/>
-  <bpmn2:process id="user_validation" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="true" name="userValidation" isExecutable="true">
+  <bpmn2:process id="user_validation" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="userValidation" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.models.GennyToken"/>
       <drools:import name="life.genny.utils.BaseEntityUtils"/>
@@ -84,7 +85,7 @@ System.out.println(&quot;userValidation: Current User is &quot; + currentUser + 
           <drools:metaValue><![CDATA[Show New User]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_42</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_51</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
       <bpmn2:script>System.out.println(&quot;userValidation: newUser returned -> &quot;+currentUser);</bpmn2:script>
     </bpmn2:scriptTask>
@@ -96,7 +97,7 @@ System.out.println(&quot;userValidation: Current User is &quot; + currentUser + 
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_29</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_37</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_45</bpmn2:outgoing>
       <bpmn2:script>System.out.println(&quot;userValidation: on new User path to ad hoc box&quot;);</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_29" drools:priority="1" name="NO" sourceRef="ExclusiveGateway_2" targetRef="ScriptTask_6">
@@ -108,8 +109,8 @@ System.out.println(&quot;userValidation: Current User is &quot; + currentUser + 
           <drools:metaValue><![CDATA[IntermediateThrowEvent-UserLifecycle]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_39</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_34</bpmn2:outgoing>
+      <bpmn2:incoming>SequenceFlow_46</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_49</bpmn2:outgoing>
       <bpmn2:dataInput id="DataInput_2" itemSubjectRef="ItemDefinition_2" name="userToken"/>
       <bpmn2:dataInputAssociation id="DataInputAssociation_2">
         <bpmn2:sourceRef>userToken</bpmn2:sourceRef>
@@ -120,51 +121,51 @@ System.out.println(&quot;userValidation: Current User is &quot; + currentUser + 
       </bpmn2:inputSet>
       <bpmn2:signalEventDefinition id="SignalEventDefinition_3" signalRef="Signal_2"/>
     </bpmn2:intermediateThrowEvent>
-    <bpmn2:inclusiveGateway id="InclusiveGateway_3" name="Inclusive Gateway 3" gatewayDirection="Converging">
-      <bpmn2:incoming>SequenceFlow_34</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_40</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_41</bpmn2:outgoing>
-    </bpmn2:inclusiveGateway>
     <bpmn2:intermediateCatchEvent id="IntermediateCatchEvent_1" name="Catch new User Signal">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
           <drools:metaValue><![CDATA[Catch new User Signal]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_41</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_42</bpmn2:outgoing>
-      <bpmn2:dataOutput id="DataOutput_1" name="newUser"/>
-      <bpmn2:dataOutputAssociation id="DataOutputAssociation_1">
-        <bpmn2:sourceRef>DataOutput_1</bpmn2:sourceRef>
-        <bpmn2:targetRef>currentUser</bpmn2:targetRef>
+      <bpmn2:incoming>SequenceFlow_53</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_51</bpmn2:outgoing>
+      <bpmn2:dataOutput id="DataOutput_3" name="event"/>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_2">
+        <bpmn2:sourceRef>DataOutput_3</bpmn2:sourceRef>
+        <bpmn2:targetRef>userCode</bpmn2:targetRef>
       </bpmn2:dataOutputAssociation>
       <bpmn2:outputSet id="OutputSet_3" name="Output Set 3">
-        <bpmn2:dataOutputRefs>DataOutput_1</bpmn2:dataOutputRefs>
+        <bpmn2:dataOutputRefs>DataOutput_3</bpmn2:dataOutputRefs>
       </bpmn2:outputSet>
-      <bpmn2:signalEventDefinition id="SignalEventDefinition_1" signalRef="Signal_1"/>
+      <bpmn2:signalEventDefinition id="SignalEventDefinition_2" signalRef="Signal_3"/>
     </bpmn2:intermediateCatchEvent>
-    <bpmn2:scriptTask id="ScriptTask_4" name="Wait for User to be created" scriptFormat="http://www.java.com/java">
+    <bpmn2:parallelGateway id="ParallelGateway_3" name="Parallel Gateway 3" gatewayDirection="Diverging">
+      <bpmn2:incoming>SequenceFlow_45</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_46</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_48</bpmn2:outgoing>
+    </bpmn2:parallelGateway>
+    <bpmn2:sequenceFlow id="SequenceFlow_45" drools:priority="1" sourceRef="ScriptTask_6" targetRef="ParallelGateway_3"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_46" drools:priority="100" sourceRef="ParallelGateway_3" targetRef="IntermediateThrowEvent_1"/>
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_4" name="Exclusive Gateway 4" gatewayDirection="Converging">
+      <bpmn2:incoming>SequenceFlow_48</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_49</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_52</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="SequenceFlow_48" drools:priority="1" sourceRef="ParallelGateway_3" targetRef="ExclusiveGateway_4"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_49" drools:priority="1" sourceRef="IntermediateThrowEvent_1" targetRef="ExclusiveGateway_4"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_51" drools:priority="1" sourceRef="IntermediateCatchEvent_1" targetRef="ScriptTask_1"/>
+    <bpmn2:scriptTask id="ScriptTask_7" name="Wait for new User" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Wait for User to be created]]></drools:metaValue>
+          <drools:metaValue><![CDATA[Wait for new User]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_38</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_40</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;userValidation: waiting for callback signal &quot;+userToken.getUserCode());</bpmn2:script>
+      <bpmn2:incoming>SequenceFlow_52</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_53</bpmn2:outgoing>
+      <bpmn2:script>System.out.println(&quot;userValidation: Wait for PER_USER1&quot;);</bpmn2:script>
     </bpmn2:scriptTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_34" drools:priority="1" sourceRef="IntermediateThrowEvent_1" targetRef="InclusiveGateway_3"/>
-    <bpmn2:parallelGateway id="ParallelGateway_2" name="Parallel Gateway 2" gatewayDirection="Diverging">
-      <bpmn2:incoming>SequenceFlow_37</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_38</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_39</bpmn2:outgoing>
-    </bpmn2:parallelGateway>
-    <bpmn2:sequenceFlow id="SequenceFlow_37" drools:priority="1" sourceRef="ScriptTask_6" targetRef="ParallelGateway_2"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_38" drools:priority="1" name="Wait" sourceRef="ParallelGateway_2" targetRef="ScriptTask_4"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_39" drools:priority="100" sourceRef="ParallelGateway_2" targetRef="IntermediateThrowEvent_1"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_40" drools:priority="1" sourceRef="ScriptTask_4" targetRef="InclusiveGateway_3"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_41" drools:priority="1" sourceRef="InclusiveGateway_3" targetRef="IntermediateCatchEvent_1"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_42" drools:priority="1" sourceRef="IntermediateCatchEvent_1" targetRef="ScriptTask_1"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_52" drools:priority="1" sourceRef="ExclusiveGateway_4" targetRef="ScriptTask_7"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_53" drools:priority="1" sourceRef="ScriptTask_7" targetRef="IntermediateCatchEvent_1"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Process Diagram">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="user_validation">
@@ -205,33 +206,21 @@ System.out.println(&quot;userValidation: Current User is &quot; + currentUser + 
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_IntermediateCatchEvent_1" bpmnElement="IntermediateCatchEvent_1">
-        <dc:Bounds height="36.0" width="36.0" x="940.0" y="269.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="1022.0" y="389.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_7">
-          <dc:Bounds height="22.0" width="74.0" x="921.0" y="305.0"/>
+          <dc:Bounds height="22.0" width="74.0" x="1003.0" y="425.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_IntermediateThrowEvent_1" bpmnElement="IntermediateThrowEvent_1">
-        <dc:Bounds height="36.0" width="36.0" x="740.0" y="231.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="748.0" y="312.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_8">
-          <dc:Bounds height="33.0" width="80.0" x="718.0" y="267.0"/>
+          <dc:Bounds height="33.0" width="80.0" x="726.0" y="348.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_1" bpmnElement="ScriptTask_1" isExpanded="true">
-        <dc:Bounds height="50.0" width="76.0" x="1002.0" y="280.0"/>
+        <dc:Bounds height="50.0" width="76.0" x="1002.0" y="305.0"/>
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="11.0" width="65.0" x="1007.0" y="299.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_4" bpmnElement="ScriptTask_4" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="650.0" y="376.0"/>
-        <bpmndi:BPMNLabel>
-          <dc:Bounds height="11.0" width="108.0" x="651.0" y="395.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_InclusiveGateway_3" bpmnElement="InclusiveGateway_3" isMarkerVisible="true">
-        <dc:Bounds height="50.0" width="50.0" x="860.0" y="259.0"/>
-        <bpmndi:BPMNLabel>
-          <dc:Bounds height="22.0" width="79.0" x="846.0" y="309.0"/>
+          <dc:Bounds height="11.0" width="65.0" x="1007.0" y="324.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_6" bpmnElement="ScriptTask_6" isExpanded="true">
@@ -240,10 +229,22 @@ System.out.println(&quot;userValidation: Current User is &quot; + currentUser + 
           <dc:Bounds height="22.0" width="94.0" x="463.0" y="319.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ParallelGateway_2" bpmnElement="ParallelGateway_2" isMarkerVisible="true">
-        <dc:Bounds height="50.0" width="50.0" x="595.0" y="305.0"/>
+      <bpmndi:BPMNShape id="BPMNShape_ParallelGateway_3" bpmnElement="ParallelGateway_3" isMarkerVisible="true">
+        <dc:Bounds height="50.0" width="50.0" x="625.0" y="305.0"/>
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="11.0" width="76.0" x="582.0" y="355.0"/>
+          <dc:Bounds height="11.0" width="76.0" x="612.0" y="355.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_4" bpmnElement="ExclusiveGateway_4" isMarkerVisible="true">
+        <dc:Bounds height="50.0" width="50.0" x="835.0" y="382.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="22.0" width="44.0" x="838.0" y="432.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_7" bpmnElement="ScriptTask_7" isExpanded="true">
+        <dc:Bounds height="50.0" width="55.0" x="920.0" y="382.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="11.0" width="72.0" x="912.0" y="401.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="BPMNShape_ScriptTask_3" targetElement="BPMNShape_ExclusiveGateway_1">
@@ -279,8 +280,8 @@ System.out.println(&quot;userValidation: Current User is &quot; + currentUser + 
         <bpmndi:BPMNLabel id="BPMNLabel_13"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_ExclusiveGateway_1">
-        <di:waypoint xsi:type="dc:Point" x="1040.0" y="280.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1040.0" y="254.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1040.0" y="305.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1040.0" y="267.0"/>
         <di:waypoint xsi:type="dc:Point" x="1040.0" y="228.0"/>
         <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
@@ -292,50 +293,46 @@ System.out.println(&quot;userValidation: Current User is &quot; + currentUser + 
           <dc:Bounds height="11.0" width="14.0" x="425.0" y="281.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_34" bpmnElement="SequenceFlow_34" sourceElement="BPMNShape_IntermediateThrowEvent_1" targetElement="BPMNShape_InclusiveGateway_3">
-        <di:waypoint xsi:type="dc:Point" x="776.0" y="249.0"/>
-        <di:waypoint xsi:type="dc:Point" x="885.0" y="249.0"/>
-        <di:waypoint xsi:type="dc:Point" x="885.0" y="259.0"/>
-        <bpmndi:BPMNLabel/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_37" bpmnElement="SequenceFlow_37" sourceElement="BPMNShape_ScriptTask_6" targetElement="BPMNShape_ParallelGateway_2">
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_45" bpmnElement="SequenceFlow_45" sourceElement="BPMNShape_ScriptTask_6" targetElement="BPMNShape_ParallelGateway_3">
         <di:waypoint xsi:type="dc:Point" x="565.0" y="330.0"/>
-        <di:waypoint xsi:type="dc:Point" x="580.0" y="330.0"/>
         <di:waypoint xsi:type="dc:Point" x="595.0" y="330.0"/>
+        <di:waypoint xsi:type="dc:Point" x="625.0" y="330.0"/>
         <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_38" bpmnElement="SequenceFlow_38" sourceElement="BPMNShape_ParallelGateway_2" targetElement="BPMNShape_ScriptTask_4">
-        <di:waypoint xsi:type="dc:Point" x="620.0" y="355.0"/>
-        <di:waypoint xsi:type="dc:Point" x="620.0" y="401.0"/>
-        <di:waypoint xsi:type="dc:Point" x="650.0" y="401.0"/>
-        <bpmndi:BPMNLabel>
-          <dc:Bounds height="11.0" width="18.0" x="612.0" y="394.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_39" bpmnElement="SequenceFlow_39" sourceElement="BPMNShape_ParallelGateway_2" targetElement="BPMNShape_IntermediateThrowEvent_1">
-        <di:waypoint xsi:type="dc:Point" x="620.0" y="305.0"/>
-        <di:waypoint xsi:type="dc:Point" x="620.0" y="249.0"/>
-        <di:waypoint xsi:type="dc:Point" x="740.0" y="249.0"/>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_46" bpmnElement="SequenceFlow_46" sourceElement="BPMNShape_ParallelGateway_3" targetElement="BPMNShape_IntermediateThrowEvent_1">
+        <di:waypoint xsi:type="dc:Point" x="675.0" y="330.0"/>
+        <di:waypoint xsi:type="dc:Point" x="711.0" y="330.0"/>
+        <di:waypoint xsi:type="dc:Point" x="748.0" y="330.0"/>
         <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_40" bpmnElement="SequenceFlow_40" sourceElement="BPMNShape_ScriptTask_4" targetElement="BPMNShape_InclusiveGateway_3">
-        <di:waypoint xsi:type="dc:Point" x="760.0" y="401.0"/>
-        <di:waypoint xsi:type="dc:Point" x="885.0" y="401.0"/>
-        <di:waypoint xsi:type="dc:Point" x="885.0" y="309.0"/>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_48" bpmnElement="SequenceFlow_48" sourceElement="BPMNShape_ParallelGateway_3" targetElement="BPMNShape_ExclusiveGateway_4">
+        <di:waypoint xsi:type="dc:Point" x="650.0" y="355.0"/>
+        <di:waypoint xsi:type="dc:Point" x="650.0" y="407.0"/>
+        <di:waypoint xsi:type="dc:Point" x="835.0" y="407.0"/>
         <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_41" bpmnElement="SequenceFlow_41" sourceElement="BPMNShape_InclusiveGateway_3" targetElement="BPMNShape_IntermediateCatchEvent_1">
-        <di:waypoint xsi:type="dc:Point" x="910.0" y="284.0"/>
-        <di:waypoint xsi:type="dc:Point" x="925.0" y="284.0"/>
-        <di:waypoint xsi:type="dc:Point" x="925.0" y="287.0"/>
-        <di:waypoint xsi:type="dc:Point" x="940.0" y="287.0"/>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_49" bpmnElement="SequenceFlow_49" sourceElement="BPMNShape_IntermediateThrowEvent_1" targetElement="BPMNShape_ExclusiveGateway_4">
+        <di:waypoint xsi:type="dc:Point" x="784.0" y="330.0"/>
+        <di:waypoint xsi:type="dc:Point" x="860.0" y="330.0"/>
+        <di:waypoint xsi:type="dc:Point" x="860.0" y="382.0"/>
         <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_42" bpmnElement="SequenceFlow_42" sourceElement="BPMNShape_IntermediateCatchEvent_1" targetElement="BPMNShape_ScriptTask_1">
-        <di:waypoint xsi:type="dc:Point" x="976.0" y="287.0"/>
-        <di:waypoint xsi:type="dc:Point" x="989.0" y="287.0"/>
-        <di:waypoint xsi:type="dc:Point" x="989.0" y="305.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1002.0" y="305.0"/>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_51" bpmnElement="SequenceFlow_51" sourceElement="BPMNShape_IntermediateCatchEvent_1" targetElement="BPMNShape_ScriptTask_1">
+        <di:waypoint xsi:type="dc:Point" x="1040.0" y="389.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1040.0" y="372.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1040.0" y="355.0"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_52" bpmnElement="SequenceFlow_52" sourceElement="BPMNShape_ExclusiveGateway_4" targetElement="BPMNShape_ScriptTask_7">
+        <di:waypoint xsi:type="dc:Point" x="885.0" y="407.0"/>
+        <di:waypoint xsi:type="dc:Point" x="902.0" y="407.0"/>
+        <di:waypoint xsi:type="dc:Point" x="920.0" y="407.0"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_53" bpmnElement="SequenceFlow_53" sourceElement="BPMNShape_ScriptTask_7" targetElement="BPMNShape_IntermediateCatchEvent_1">
+        <di:waypoint xsi:type="dc:Point" x="975.0" y="407.0"/>
+        <di:waypoint xsi:type="dc:Point" x="998.0" y="407.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1022.0" y="407.0"/>
         <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
