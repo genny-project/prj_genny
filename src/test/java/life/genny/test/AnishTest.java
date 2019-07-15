@@ -70,6 +70,9 @@ public class AnishTest extends GennyJbpmBaseTest {
                                 .end().addAttribute()
                                 // .width(300)
                                 .height(200)
+                                .flexGrow(0)
+                                .flexShrink(0)
+                                .flexBasis("initial")
                                 // .backgroundColor("white")
                                 // .backgroundColor("pink")
                                 .backgroundColor("#F8F9FA").width("100%").shadowColor("#000").shadowOpacity(0.4)
@@ -108,10 +111,12 @@ public class AnishTest extends GennyJbpmBaseTest {
                                 .question("QUE_NAME_TWO").end().build();
 
                 Theme THM_TEST1 = Theme.builder("THM_TEST1").addAttribute().backgroundColor("none").width("100%")
-                                .height(70).end().build();
+                                .height(70).flexGrow(0)
+                                .flexBasis("initial").end().build();
 
                 /* create frames */
-                Frame3 frameCard = Frame3.builder("FRM_CARD" + "_" + count).addTheme(THM_CARD).end()
+                Frame3 frameCard = Frame3.builder("FRM_CARD" + "_" + count)
+                                .addTheme(THM_CARD).end()
                                 .question("QUE_NAME_TWO").addTheme(THM_FORM_LABEL_DEFAULT)
                                 .vcl(VisualControlType.VCL_WRAPPER).end().end()
                                 .addFrame(frameLeftCard, FramePosition.WEST).end()
@@ -123,13 +128,15 @@ public class AnishTest extends GennyJbpmBaseTest {
 
         }
 
-      //   @Test
+       @Test
         public void testDesktop() {
                 QRules rules = GennyJbpmBaseTest.setupLocalService();
                 GennyToken userToken = new GennyToken("userToken", rules.getToken());
                 GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
                 try {
+                        rules.sendAllAttributes();
+
                         /* frame-tabs */
                         Frame3 FRM_TABS = generateTabs();
 
@@ -160,69 +167,73 @@ public class AnishTest extends GennyJbpmBaseTest {
                 }
         }
 
-        @Test
+         //@Test
         public void testCachedDesktop() {
                 QRules rules = GennyJbpmBaseTest.setupLocalService();
                 GennyToken userToken = new GennyToken("userToken", rules.getToken());
                 GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
-        		GennyKieSession gks = null;
-        		
-        		try {
-        			gks = GennyKieSession.builder(serviceToken, false)
-        					.addToken(userToken)
-        					.build();
-        					gks.start();
-        			
-        			
-        				gks.displayForm("FRM_DESKTOP2",userToken);
+                GennyKieSession gks = null;
 
-        			System.out.println("Sent");
+                try {
+                		rules.sendAllAttributes();
+                        gks = GennyKieSession.builder(serviceToken, false).addToken(userToken).build();
+                        gks.start();
 
-        		} catch (Exception e) {
-        			System.out.println(e.getLocalizedMessage());
-        		} finally {
-        			gks.close();
-        		}
-                
-                
-//                try {
-//                        /* frame-tabs */
-//                        Frame3 FRM_TABS = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_TABS", Frame3.class,
-//                                        serviceToken.getToken());
-//                        System.out.print("desktop-tabs :: " + FRM_TABS.getCode());
-//
-//                        /* frame-header */
-//                        Frame3 FRM_HEADER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_HEADER",
-//                                        Frame3.class, serviceToken.getToken());
-//                        System.out.print("desktop-header :: " + FRM_HEADER.getCode());
-//
-//                        /* frame-footer */
-//                        Frame3 FRM_FOOTER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_FOOTER",
-//                                        Frame3.class, serviceToken.getToken());
-//                        System.out.print("desktop-footer :: " + FRM_FOOTER.getCode());
-//
-//                        /* frame-sidebar */
-//                        Frame3 FRM_SIDEBAR = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_SIDEBAR",
-//                                        Frame3.class, serviceToken.getToken());
-//
-//                        System.out.print("desktop-sidebar :: " + FRM_SIDEBAR.getCode());
-//                        /* frame-root */
-//                        Frame3 FRM_DESKTOP = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_DESKTOP",
-//                                        Frame3.class, serviceToken.getToken());
-//
-//                        System.out.print("desktop-frame :: " + FRM_DESKTOP.getCode());
-//
-//                        Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
-//                        QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_DESKTOP, serviceToken, askMsgs);
-//                        rules.publishCmd(msg);
-//                        for (QDataAskMessage askMsg : askMsgs) {
-//                                rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode());
-//                        }
-//                        System.out.println("Sent");
-//                } catch (Exception e) {
-//                        System.out.println("Error " + e.getLocalizedMessage());
-//                }
+                        gks.displayForm("FRM_DESKTOP2", userToken);
+
+                        System.out.println("Sent");
+
+                } catch (Exception e) {
+                        System.out.println(e.getLocalizedMessage());
+                } finally {
+                        gks.close();
+                }
+
+                // try {
+                // /* frame-tabs */
+                // Frame3 FRM_TABS = VertxUtils.getObject(serviceToken.getRealm(), "",
+                // "FRM_TABS", Frame3.class,
+                // serviceToken.getToken());
+                // System.out.print("desktop-tabs :: " + FRM_TABS.getCode());
+                //
+                // /* frame-header */
+                // Frame3 FRM_HEADER = VertxUtils.getObject(serviceToken.getRealm(), "",
+                // "FRM_HEADER",
+                // Frame3.class, serviceToken.getToken());
+                // System.out.print("desktop-header :: " + FRM_HEADER.getCode());
+                //
+                // /* frame-footer */
+                // Frame3 FRM_FOOTER = VertxUtils.getObject(serviceToken.getRealm(), "",
+                // "FRM_FOOTER",
+                // Frame3.class, serviceToken.getToken());
+                // System.out.print("desktop-footer :: " + FRM_FOOTER.getCode());
+                //
+                // /* frame-sidebar */
+                // Frame3 FRM_SIDEBAR = VertxUtils.getObject(serviceToken.getRealm(), "",
+                // "FRM_SIDEBAR",
+                // Frame3.class, serviceToken.getToken());
+                //
+                // System.out.print("desktop-sidebar :: " + FRM_SIDEBAR.getCode());
+                // /* frame-root */
+                // Frame3 FRM_DESKTOP = VertxUtils.getObject(serviceToken.getRealm(), "",
+                // "FRM_DESKTOP",
+                // Frame3.class, serviceToken.getToken());
+                //
+                // System.out.print("desktop-frame :: " + FRM_DESKTOP.getCode());
+                //
+                // Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+                // QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_DESKTOP, serviceToken,
+                // askMsgs);
+                // rules.publishCmd(msg);
+                // for (QDataAskMessage askMsg : askMsgs) {
+                // rules.publishCmd(askMsg, serviceToken.getUserCode(),
+                // userToken.getUserCode());
+                // }
+                // System.out.println("Sent");
+                // } catch (Exception e) {
+                // System.out.println("Error " + e.getLocalizedMessage());
+                // }
         }
 
         public Frame3 generateHeader() {
@@ -270,12 +281,24 @@ public class AnishTest extends GennyJbpmBaseTest {
                         Frame3 FRM_DUMMY = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_DUMMY", Frame3.class,
                                         serviceToken.getToken());
 
-                        Frame3 FRM_LOGO = Frame3.builder("FRM_LOGO").addTheme("THM_SIDEBAR", serviceToken).end()
+                        Theme THM_SIDEBAR = Theme.builder("THM_SIDEBAR")
+                                        .addAttribute()
+                                        .backgroundColor("#065B9A")
+                                        .end()
+                                        .addAttribute()
+                                                .minWidth(300)
+                                                .end()
+                                        .addAttribute()
+                                                .width(100)
+                                                .end()
+                                        .build();
+
+                        Frame3 FRM_LOGO = Frame3.builder("FRM_LOGO").addTheme(THM_SIDEBAR).end()
                                         .question("QUE_PROJECT_SIDEBAR_GRP").addTheme("THM_LOGO", serviceToken)
                                         .vcl(VisualControlType.VCL_WRAPPER).end().end().addFrame(FRM_DUMMY).end()
                                         .build();
 
-                        Frame3 FRM_SIDEBAR = Frame3.builder("FRM_SIDEBAR").addTheme("THM_SIDEBAR", serviceToken).end()
+                        Frame3 FRM_SIDEBAR = Frame3.builder("FRM_SIDEBAR").addTheme(THM_SIDEBAR).end()
                                         .addFrame(FRM_LOGO, FramePosition.NORTH).end().addFrame(FRM_DUMMY).end()
                                         .build();
 
@@ -327,12 +350,26 @@ public class AnishTest extends GennyJbpmBaseTest {
                                 .overflowX("auto").overflowY("auto").width("100%").end()
                                 .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
 
-                Theme THM_BUCKET_COLUMN = Theme.builder("THM_BUCKET_COLUMN").addAttribute().backgroundColor("#EAEAEA")
-                                .minWidth(300).width("100%").margin(20).textAlign("center").flexDirection("column")
-                                .end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+                Theme THM_BUCKET_COLUMN = Theme.builder("THM_BUCKET_COLUMN")
+                                .addAttribute()
+                                        .backgroundColor("#EAEAEA")
+                                        .minWidth(300)
+                                        .width("100%")
+                                        .margin(20)
+                                        .paddingX(20)
+                                        .textAlign("center")
+                                        .flexDirection("column")
+                                .end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
 
-                Theme THM_TEST1 = Theme.builder("THM_TEST1").addAttribute().backgroundColor("none").width("100%")
-                                .height(70).end().build();
+                Theme THM_TEST1 = Theme.builder("THM_TEST1")
+                                .addAttribute()
+                                .backgroundColor("none")
+                                .width("100%")
+                                .height(70)
+                                .flexGrow(0)
+                                .flexBasis("initial")
+                                .end().build();
 
                 Frame3 available = Frame3.builder("FRM_GRP_AVAILABLE").addTheme(THM_TEST1).end()
                                 .question("QUE_GRP_NOT_APPLIED").addTheme(THM_FORM_INPUT_DEFAULT)
@@ -403,7 +440,8 @@ public class AnishTest extends GennyJbpmBaseTest {
                                 // .addFrame(frameCard2, FramePosition.NORTH).end()
                                 .build();
                 Frame3 bucketColumn2 = Frame3.builder("FRM_BUCKET_COLUMN_TWO").addTheme(THM_BUCKET_COLUMN).end()
-                                .addFrame(applied, FramePosition.NORTH).end().build();
+                                .addFrame(applied, FramePosition.NORTH).end().addFrame(frameCard1, FramePosition.NORTH)
+                                .end().addFrame(frameCard2, FramePosition.NORTH).end().build();
                 Frame3 bucketColumn3 = Frame3.builder("FRM_BUCKET_COLUMN_THREE").addTheme(THM_BUCKET_COLUMN).end()
                                 .addFrame(shortlisted, FramePosition.NORTH).end().build();
                 Frame3 bucketColumn4 = Frame3.builder("FRM_BUCKET_COLUMN_FOUR").addTheme(THM_BUCKET_COLUMN).end()
@@ -435,7 +473,8 @@ public class AnishTest extends GennyJbpmBaseTest {
                 Frame3 bucketColumn7 = Frame3.builder("FRM_BUCKET_COLUMN_SEVEN").addTheme(THM_BUCKET_COLUMN).end()
                                 .addFrame(inProgress, FramePosition.NORTH).end().build();
 
-                Frame3 bucket = Frame3.builder("FRM_BUCKET").addTheme(THM_BUCKET).end()
+                Frame3 bucket = Frame3.builder("FRM_BUCKET")
+                                .addTheme(THM_BUCKET).end()
                                 .addFrame(bucketColumn1, FramePosition.WEST).end()
                                 .addFrame(bucketColumn2, FramePosition.WEST).end()
                                 .addFrame(bucketColumn3, FramePosition.WEST).end()
@@ -538,7 +577,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                 System.out.println("Generated TableView Frame");
                 return FRM_TABLE_VIEW;
         }
-      //   @Test
+        // @Test
 
         public void desktopWfTest() {
                 GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
@@ -554,24 +593,21 @@ public class AnishTest extends GennyJbpmBaseTest {
 
                 GennyKieSession gks = null;
                 try {
-                	 Frame3 FRM_DESKTOP = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_DESKTOP",
-                             Frame3.class, serviceToken.getToken());
+                        Frame3 FRM_DESKTOP = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_DESKTOP",
+                                        Frame3.class, serviceToken.getToken());
 
-                	 System.out.print("desktop-frame :: " + FRM_DESKTOP.getCode());
+                        System.out.print("desktop-frame :: " + FRM_DESKTOP.getCode());
 
-                	 // Insert emoji for success here :)
-                	 
-             
-                    gks = GennyKieSession.builder(serviceToken, false).addJbpm("desktop_test.bpmn")
-                                    // .addFact("qRules", qRules)
-                                    // .addFact("msg", msg)
-                                    .addToken(serviceToken)
-                                    .addToken(userToken)
-                                    .build();
+                        // Insert emoji for success here :)
 
-                    gks.start();
-                    gks.advanceSeconds(5, true);
-                    gks.injectSignal("runDesktop", FRM_DESKTOP);
+                        gks = GennyKieSession.builder(serviceToken, false).addJbpm("desktop_test.bpmn")
+                                        // .addFact("qRules", qRules)
+                                        // .addFact("msg", msg)
+                                        .addToken(serviceToken).addToken(userToken).build();
+
+                        gks.start();
+                        gks.advanceSeconds(5, true);
+                        gks.injectSignal("runDesktop", FRM_DESKTOP);
 
                 } finally {
                         gks.close();
