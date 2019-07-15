@@ -339,6 +339,7 @@ System.out.println(&quot;userValidation: Yay! currentUser is &quot;+currentUser)
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_48" bpmnElement="SequenceFlow_48" sourceElement="BPMNShape_ParallelGateway_3" targetElement="BPMNShape_ExclusiveGateway_4">
         <di:waypoint xsi:type="dc:Point" x="650.0" y="355.0"/>
         <di:waypoint xsi:type="dc:Point" x="650.0" y="395.0"/>
+        <di:waypoint xsi:type="dc:Point" x="724.0" y="395.0"/>
         <di:waypoint xsi:type="dc:Point" x="811.0" y="395.0"/>
         <di:waypoint xsi:type="dc:Point" x="811.0" y="407.0"/>
         <di:waypoint xsi:type="dc:Point" x="835.0" y="407.0"/>
