@@ -84,13 +84,14 @@
       </bpmn2:outputSet>
       <bpmn2:signalEventDefinition id="SignalEventDefinition_16" signalRef="Signal_6"/>
     </bpmn2:startEvent>
-    <bpmn2:endEvent id="EndEvent_3" name="End Event 3">
+    <bpmn2:endEvent id="EndEvent_3" name="End Session">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[End Event 3]]></drools:metaValue>
+          <drools:metaValue><![CDATA[End Session]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
+      <bpmn2:terminateEventDefinition id="TerminateEventDefinition_1"/>
     </bpmn2:endEvent>
     <bpmn2:scriptTask id="ScriptTask_1" name="Entry userSession" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>
@@ -110,10 +111,11 @@
           <drools:metaValue><![CDATA[Exiting userSession]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
-      <bpmn2:script>/*System.out.println(&quot;userSession: Exiting userSession &quot;+((QEventMessage)message).getData().getCode()+&quot; with userToken = &quot;+userToken.getUserCode()+&quot; : User be is &quot;+currentUser);*/
-System.out.println(&quot;userSession: Exiting userSession&quot;);
+      <bpmn2:script>System.out.println(&quot;userSession: Deleting userSession &quot;+userToken.getSessionCode()+&quot; from processId map&quot;);
+VertxUtils.writeCachedJson(userToken.getRealm(),userToken.getSessionCode(),null,userToken.getToken());
+System.out.println(&quot;userSession: Exiting userSession for &quot;+currentUser.getCode());
 </bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_4" drools:priority="1" sourceRef="ScriptTask_2" targetRef="EndEvent_3"/>
@@ -130,7 +132,7 @@ System.out.println(&quot;userSession: Exiting userSession&quot;);
         </drools:onExit-script>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_12</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_13</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
       <bpmn2:ioSpecification id="InputOutputSpecification_4">
         <bpmn2:dataInput id="DataInput_2" itemSubjectRef="ItemDefinition_17" name="userToken"/>
         <bpmn2:dataOutput id="DataOutput_2" itemSubjectRef="ItemDefinition_16" name="currentUser"/>
@@ -151,7 +153,31 @@ System.out.println(&quot;userSession: Exiting userSession&quot;);
       </bpmn2:dataOutputAssociation>
     </bpmn2:callActivity>
     <bpmn2:sequenceFlow id="SequenceFlow_12" drools:priority="1" sourceRef="ScriptTask_1" targetRef="CallActivity_1"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_13" drools:priority="1" sourceRef="CallActivity_1" targetRef="ScriptTask_2"/>
+    <bpmn2:intermediateCatchEvent id="IntermediateCatchEvent_1" name="Wait for Logout">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Wait for Logout]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
+      <bpmn2:conditionalEventDefinition id="ConditionalEventDefinition_1">
+        <bpmn2:condition xsi:type="bpmn2:tFormalExpression" id="FormalExpression_1" language="http://www.java.com/java">QEventMessage(data.code == 'LOGOUT')</bpmn2:condition>
+      </bpmn2:conditionalEventDefinition>
+    </bpmn2:intermediateCatchEvent>
+    <bpmn2:sequenceFlow id="SequenceFlow_3" drools:priority="1" sourceRef="IntermediateCatchEvent_1" targetRef="ScriptTask_2"/>
+    <bpmn2:scriptTask id="ScriptTask_3" name="Waiting for Logout" scriptFormat="http://www.java.com/java">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Waiting for Logout]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
+      <bpmn2:script>System.out.println(&quot;Waiting for &quot;+currentUser.getCode()+&quot; to logout&quot;);</bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_5" drools:priority="1" sourceRef="CallActivity_1" targetRef="ScriptTask_3"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_6" drools:priority="1" sourceRef="ScriptTask_3" targetRef="IntermediateCatchEvent_1"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Process Diagram">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="user_session_workflow">
@@ -164,7 +190,7 @@ System.out.println(&quot;userSession: Exiting userSession&quot;);
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_3" bpmnElement="EndEvent_3">
         <dc:Bounds height="36.0" width="36.0" x="920.0" y="200.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_11" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="50.0" x="913.0" y="236.0"/>
+          <dc:Bounds height="11.0" width="51.0" x="913.0" y="236.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_1" bpmnElement="ScriptTask_1" isExpanded="true">
@@ -174,15 +200,27 @@ System.out.println(&quot;userSession: Exiting userSession&quot;);
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_2" bpmnElement="ScriptTask_2" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="690.0" y="335.0"/>
+        <dc:Bounds height="50.0" width="110.0" x="784.0" y="335.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="80.0" x="705.0" y="354.0"/>
+          <dc:Bounds height="11.0" width="80.0" x="799.0" y="354.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_CallActivity_1" bpmnElement="CallActivity_1" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="426.0" y="335.0"/>
+        <dc:Bounds height="50.0" width="110.0" x="360.0" y="335.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_2">
-          <dc:Bounds height="11.0" width="57.0" x="452.0" y="354.0"/>
+          <dc:Bounds height="11.0" width="57.0" x="386.0" y="354.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_IntermediateCatchEvent_1" bpmnElement="IntermediateCatchEvent_1">
+        <dc:Bounds height="36.0" width="36.0" x="700.0" y="342.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="11.0" width="61.0" x="688.0" y="378.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_3" bpmnElement="ScriptTask_3" isExpanded="true">
+        <dc:Bounds height="50.0" width="81.0" x="574.0" y="335.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="11.0" width="73.0" x="578.0" y="354.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_StartEvent_8" targetElement="BPMNShape_ScriptTask_1">
@@ -192,22 +230,34 @@ System.out.println(&quot;userSession: Exiting userSession&quot;);
         <bpmndi:BPMNLabel id="BPMNLabel_8"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="SequenceFlow_4" sourceElement="BPMNShape_ScriptTask_2" targetElement="BPMNShape_EndEvent_3">
-        <di:waypoint xsi:type="dc:Point" x="800.0" y="360.0"/>
+        <di:waypoint xsi:type="dc:Point" x="894.0" y="360.0"/>
         <di:waypoint xsi:type="dc:Point" x="938.0" y="360.0"/>
         <di:waypoint xsi:type="dc:Point" x="938.0" y="236.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_3"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_12" bpmnElement="SequenceFlow_12" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_CallActivity_1">
         <di:waypoint xsi:type="dc:Point" x="320.0" y="360.0"/>
-        <di:waypoint xsi:type="dc:Point" x="373.0" y="360.0"/>
-        <di:waypoint xsi:type="dc:Point" x="426.0" y="360.0"/>
+        <di:waypoint xsi:type="dc:Point" x="340.0" y="360.0"/>
+        <di:waypoint xsi:type="dc:Point" x="360.0" y="360.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_5"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_13" bpmnElement="SequenceFlow_13" sourceElement="BPMNShape_CallActivity_1" targetElement="BPMNShape_ScriptTask_2">
-        <di:waypoint xsi:type="dc:Point" x="536.0" y="360.0"/>
-        <di:waypoint xsi:type="dc:Point" x="613.0" y="360.0"/>
-        <di:waypoint xsi:type="dc:Point" x="690.0" y="360.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_6"/>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_IntermediateCatchEvent_1" targetElement="BPMNShape_ScriptTask_2">
+        <di:waypoint xsi:type="dc:Point" x="736.0" y="360.0"/>
+        <di:waypoint xsi:type="dc:Point" x="760.0" y="360.0"/>
+        <di:waypoint xsi:type="dc:Point" x="784.0" y="360.0"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_5" sourceElement="BPMNShape_CallActivity_1" targetElement="BPMNShape_ScriptTask_3">
+        <di:waypoint xsi:type="dc:Point" x="470.0" y="360.0"/>
+        <di:waypoint xsi:type="dc:Point" x="522.0" y="360.0"/>
+        <di:waypoint xsi:type="dc:Point" x="574.0" y="360.0"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="BPMNShape_ScriptTask_3" targetElement="BPMNShape_IntermediateCatchEvent_1">
+        <di:waypoint xsi:type="dc:Point" x="655.0" y="360.0"/>
+        <di:waypoint xsi:type="dc:Point" x="677.0" y="360.0"/>
+        <di:waypoint xsi:type="dc:Point" x="700.0" y="360.0"/>
+        <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">

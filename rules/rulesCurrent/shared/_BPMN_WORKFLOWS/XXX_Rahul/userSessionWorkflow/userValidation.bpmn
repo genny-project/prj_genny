@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.4.3.Final-v20180418-1358-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.0.Final-v20180515-1642-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
   <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false" structureRef="life.genny.models.GennyToken"/>
   <bpmn2:itemDefinition id="ItemDefinition_323" isCollection="false" structureRef="life.genny.utils.BaseEntityUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_325" isCollection="false" structureRef="life.genny.qwanda.entity.BaseEntity"/>
@@ -65,7 +65,7 @@ System.out.println(&quot;userValidation: Current User is &quot; + currentUser + 
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_15</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;Current user &quot; + currentUser);
+      <bpmn2:script>System.out.println(&quot;userValidation: Existing Current user &quot; + currentUser);
 </bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:exclusiveGateway id="ExclusiveGateway_1" name="activeUser" gatewayDirection="Converging" default="SequenceFlow_1">
@@ -81,7 +81,7 @@ System.out.println(&quot;userValidation: Current User is &quot; + currentUser + 
       <bpmn2:outgoing>SequenceFlow_29</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
     <bpmn2:sequenceFlow id="SequenceFlow_15" drools:priority="1" name="YES" sourceRef="ExclusiveGateway_2" targetRef="ScriptTask_3">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_4" language="http://www.java.com/java">return ((currentUser) != null);</bpmn2:conditionExpression>
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_4" language="http://www.java.com/java">return (currentUser != null);</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:sequenceFlow id="SequenceFlow_17" drools:priority="1" sourceRef="ScriptTask_2" targetRef="ExclusiveGateway_2"/>
     <bpmn2:scriptTask id="ScriptTask_1" name="Show New User" scriptFormat="http://www.java.com/java">
@@ -93,16 +93,13 @@ System.out.println(&quot;userValidation: Current User is &quot; + currentUser + 
       <bpmn2:incoming>SequenceFlow_51</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
       <bpmn2:script>System.out.println(&quot;userValidation: newUser returned -> &quot;+currentUser);
-if (userToken == null) { System.out.println(&quot;userToken is NULL&quot;);} 
+if (userToken == null) { 
+	System.out.println(&quot;userValidation: userToken is NULL&quot;);
+} 
 else { 
-System.out.println(&quot;userToken is NOT NULL &quot;);
-System.out.println(&quot;REALM = &quot;+userToken.getRealm());
-System.out.println(&quot;USERCODE = &quot;+userToken.getUserCode());
-System.out.println(&quot;Token = &quot;+userToken.getToken());
-/* currentUser = VertxUtils.getObject(userToken.getRealm(),&quot;&quot;,userToken.getUserCode(),BaseEntity.class,userToken.getToken());  */
-kcontext.setVariable(&quot;currentUser&quot;,currentUser);
+	kcontext.setVariable(&quot;currentUser&quot;,currentUser);
 }
-if (currentUser == null) { System.out.println(&quot;currentUser is NULL&quot;);} else { System.out.println(&quot;currentUser is NOT NULL ->&quot;+currentUser);}
+if (currentUser == null) { System.out.println(&quot;userValidation: currentUser is NULL&quot;);} else { System.out.println(&quot;userValidation: currentUser returned from userLifeCycle is NOT NULL ->&quot;+currentUser);}
 </bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_2" drools:priority="1" sourceRef="ScriptTask_1" targetRef="ExclusiveGateway_1"/>
@@ -295,7 +292,7 @@ System.out.println(&quot;userValidation: Yay! currentUser is &quot;+currentUser)
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_5" bpmnElement="ScriptTask_5" isExpanded="true">
         <dc:Bounds height="50.0" width="64.0" x="711.0" y="305.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_15">
           <dc:Bounds height="11.0" width="26.0" x="730.0" y="324.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -396,7 +393,7 @@ System.out.println(&quot;userValidation: Yay! currentUser is &quot;+currentUser)
         <di:waypoint xsi:type="dc:Point" x="675.0" y="330.0"/>
         <di:waypoint xsi:type="dc:Point" x="693.0" y="330.0"/>
         <di:waypoint xsi:type="dc:Point" x="711.0" y="330.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_17">
           <dc:Bounds height="11.0" width="12.0" x="688.0" y="331.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
@@ -404,7 +401,7 @@ System.out.println(&quot;userValidation: Yay! currentUser is &quot;+currentUser)
         <di:waypoint xsi:type="dc:Point" x="775.0" y="330.0"/>
         <di:waypoint xsi:type="dc:Point" x="787.0" y="330.0"/>
         <di:waypoint xsi:type="dc:Point" x="800.0" y="330.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_25"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
