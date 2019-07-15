@@ -26,29 +26,28 @@ import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
 import life.genny.models.FramePosition;
 
-rule "FRM_LOGO"
+rule "FRM_SIDEBAR"
     ruleflow-group 'GenerateFrames'
 
     when
-      not  Frame3(code == "FRM_LOGO")
+      not  Frame3(code == "FRM_SIDEBAR")
       serviceToken : GennyToken( code == "PER_SERVICE")
+      FRM_LOGO : Frame3 ( code == "FRM_LOGO" )
       FRM_DUMMY : Frame3 ( code == "FRM_DUMMY" )
     then
-    	System.out.println("   Generate FRM_PROFILE Rule  "+serviceToken.getUserCode());
+      System.out.println("   Generate FRM_SIDEBAR Rule  "+serviceToken.getUserCode());
 
-			Frame3 frame = Frame3.builder("FRM_LOGO")
-										.addTheme("THM_SIDEBAR", serviceToken).end()
-										.question("QUE_PROJECT_SIDEBAR_GRP")
-											.addTheme("THM_LOGO", serviceToken)
-											.vcl(VisualControlType.VCL_WRAPPER).end()
-										.end()
-										.addFrame(FRM_DUMMY).end()
-										.build();
+      Frame3 frame = Frame3.builder("FRM_SIDEBAR")
+                      .addTheme("THM_SIDEBAR", serviceToken).end()
+                      .addFrame(FRM_LOGO, FramePosition.NORTH).end()
+                      .addFrame(FRM_DUMMY).end()
+                      .build();
 
-			frame.setRealm(serviceToken.getRealm());
+      frame.setRealm(serviceToken.getRealm());
 
-			insert (frame);
+      insert (frame);
 
-			/* Process and save to cache */
-			FrameUtils2.toMessage(frame, serviceToken);
+      /* Process and save to cache */
+      FrameUtils2.toMessage(frame, serviceToken);
+
 end

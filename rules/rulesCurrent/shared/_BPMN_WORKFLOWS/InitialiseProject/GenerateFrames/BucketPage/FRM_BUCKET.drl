@@ -29,7 +29,7 @@ import life.genny.models.FramePosition;
 
 rule "FRM_BUCKET"
     ruleflow-group 'GenerateFrames'
-  
+
     when
       not  Frame3(code == "FRM_BUCKET")
       serviceToken : GennyToken( code == "PER_SERVICE")
@@ -40,7 +40,7 @@ rule "FRM_BUCKET"
       FRM_BUCKET_COLUMN_5 : Frame3 (code == "FRM_BUCKET_COLUMN_5" )
       FRM_BUCKET_COLUMN_6 : Frame3 (code == "FRM_BUCKET_COLUMN_6" )
       FRM_BUCKET_COLUMN_7 : Frame3 (code == "FRM_BUCKET_COLUMN_7" )
-      
+
     then
      System.out.println("   Generate FRM_BUCKET Rule  "+serviceToken.getUserCode());
 
@@ -54,11 +54,11 @@ rule "FRM_BUCKET"
                                 .addFrame(FRM_BUCKET_COLUMN_6, FramePosition.WEST).end()
                                 .addFrame(FRM_BUCKET_COLUMN_7, FramePosition.WEST).end()
                                 .build();
-						
+
 	frame.setRealm(serviceToken.getRealm());
-						
+
 	insert (frame);
-	
+
 	/* Process and save to cache */
 	FrameUtils2.toMessage(frame, serviceToken);
 
