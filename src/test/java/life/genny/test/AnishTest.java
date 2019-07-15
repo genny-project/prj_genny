@@ -123,13 +123,14 @@ public class AnishTest extends GennyJbpmBaseTest {
 
         }
 
-      //   @Test
+       @Test
         public void testDesktop() {
                 QRules rules = GennyJbpmBaseTest.setupLocalService();
                 GennyToken userToken = new GennyToken("userToken", rules.getToken());
                 GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
                 try {
+                		rules.sendAllAttributes();
                         /* frame-tabs */
                         Frame3 FRM_TABS = generateTabs();
 
@@ -142,10 +143,16 @@ public class AnishTest extends GennyJbpmBaseTest {
                         /* frame-sidebar */
                         Frame3 FRM_SIDEBAR = generateSidebar();
 
+                        Frame3 FRM_FORM = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_FORM", Frame3.class,
+                        serviceToken.getToken());
+
+                        System.out.println(FRM_FORM.getCode());
+
+
                         /* frame-root */
                         Frame3 FRM_ROOT = Frame3.builder("FRM_ROOT").addFrame(FRM_HEADER, FramePosition.NORTH).end()
                                         .addFrame(FRM_SIDEBAR, FramePosition.WEST).end()
-                                        .addFrame(FRM_TABS, FramePosition.CENTRE).end()
+                                        .addFrame(FRM_FORM, FramePosition.CENTRE).end()
                                         .addFrame(FRM_FOOTER, FramePosition.SOUTH).end().build();
 
                         Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
@@ -160,7 +167,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                 }
         }
 
-        @Test
+       // @Test
         public void testCachedDesktop() {
                 QRules rules = GennyJbpmBaseTest.setupLocalService();
                 GennyToken userToken = new GennyToken("userToken", rules.getToken());
