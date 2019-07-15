@@ -122,6 +122,36 @@ public class SafalTest extends GennyJbpmBaseTest {
 	}
 	
 	@Test
+	public void userPool() {
+		System.out.println("Show UserSession");
+		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		GennyToken userToken = new GennyToken("userToken", rules.getToken());
+		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+
+		GennyKieSession gks = null;
+		
+		try {
+			gks = GennyKieSession.builder(serviceToken, false)
+					.addJbpm("sas.bpmn")
+//					.addFact("rules", rules)
+					.addToken(userToken)
+					.build();
+				
+				gks.startProcess("laneandpool");
+			
+			
+				gks.advanceSeconds(3, true);
+	
+			System.out.println("Sent");
+
+		} catch (Exception e) {
+			System.out.println(e.getLocalizedMessage());
+		} finally {
+			gks.close();
+		}
+	}
+	
+	//@Test
 	public void userSessionTest2() {
 		System.out.println("Show UserSession");
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
