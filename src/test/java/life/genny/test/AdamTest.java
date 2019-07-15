@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.logging.log4j.Logger;
+import org.codehaus.plexus.util.StringUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -77,7 +78,10 @@ public class AdamTest {
 		QEventMessage msg1 = new QEventMessage("EVT_MSG", "INIT_1");
 		QEventMessage msgLogout = new QEventMessage("EVT_MSG", "LOGOUT");
 
-	
+	// NOW SET UP Some baseentitys
+		BaseEntity project = new BaseEntity("PRJ_"+serviceToken.getRealm().toUpperCase(),StringUtils.capitaliseAllWords(serviceToken.getRealm()));
+		project.setRealm(serviceToken.getRealm());
+		VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_"+serviceToken.getRealm().toUpperCase(),JsonUtils.toJson(project), serviceToken.getToken());
 		
 		GennyKieSession gks = null;
 		
@@ -85,15 +89,16 @@ public class AdamTest {
 			gks = GennyKieSession.builder(serviceToken, false)
 					.addJbpm("userLifecycle.bpmn")
 					.addJbpm("userSession.bpmn")
+					.addJbpm("auth_init.bpmn")
 					.addJbpm("userValidation.bpmn")
 					.addToken(userToken)
 					.build();
 					gks.start();
 			
 				gks.injectEvent(authInitMsg);
-				gks.advanceSeconds(2, true);
+				gks.advanceSeconds(2, false);
 				gks.injectEvent(authInitMsg);
-				gks.advanceSeconds(2, true);
+				gks.advanceSeconds(2, false);
 				gks.injectEvent(msgLogout);
 				
 			BaseEntity user = VertxUtils.getObject(serviceToken.getRealm(), "", userToken.getUserCode(),BaseEntity.class, serviceToken.getToken());
