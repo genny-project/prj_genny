@@ -56,6 +56,9 @@ public class AdamTest {
 
 	}
 
+
+	
+	
 	@Test
 	public void userSessionTest() {
 		System.out.println("Show UserSession");
@@ -74,6 +77,8 @@ public class AdamTest {
 		QEventMessage msg1 = new QEventMessage("EVT_MSG", "INIT_1");
 		QEventMessage msgLogout = new QEventMessage("EVT_MSG", "LOGOUT");
 
+	
+		
 		GennyKieSession gks = null;
 		
 		try {
