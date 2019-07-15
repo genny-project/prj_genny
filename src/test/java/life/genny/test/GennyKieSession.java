@@ -176,7 +176,14 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	
 
 	public void injectEvent(QMessage msg) {
-		System.out.println("Injecting event "+msg.getMsg_type());
+		if (msg instanceof QEventMessage) {
+			QEventMessage msgEvent = (QEventMessage)msg;
+		System.out.println("Injecting event "+msg.getMsg_type()+"  "+msgEvent.getData().getCode());
+		} else {
+			QDataMessage msgData = (QDataMessage)msg;
+		System.out.println("Injecting data "+msg.getMsg_type()+"  "+msgData.getData_type());
+
+		}
 		QEventMessage eventMsg = null;
 		QDataMessage dataMsg = null;
 		
@@ -211,10 +218,10 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 				Long processId = Long.decode(processIdStr);
 				// So send the event through to the userSession
 				if (eventMsg != null) {
-					broadcastSignal("events",eventMsg , processId);
+					broadcastSignal("sessionEvent",eventMsg , processId);
 				} else 
 				if (dataMsg != null) {
-					broadcastSignal("data",dataMsg , processId);
+					broadcastSignal("sessionData",dataMsg , processId);
 				}
 
 			} else {
