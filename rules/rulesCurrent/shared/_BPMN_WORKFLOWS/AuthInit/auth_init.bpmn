@@ -31,6 +31,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_15" isCollection="false" structureRef="life.genny.qwanda.message.QDataAttributeMessage"/>
   <bpmn2:itemDefinition id="ItemDefinition_20" isCollection="false" structureRef="life.genny.utils.BaseEntityUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_25" isCollection="false" structureRef="life.genny.utils.RulesUtils"/>
+  <bpmn2:itemDefinition id="ItemDefinition_19" isCollection="false" structureRef="life.genny.qwandautils.JsonUtils"/>
   <bpmn2:process id="auth_init" drools:packageName="life.genny.jbpm" name="Auth Init" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.qwanda.message.QEventMessage"/>
@@ -63,6 +64,7 @@
       <drools:import name="life.genny.qwanda.message.QDataAttributeMessage"/>
       <drools:import name="life.genny.utils.BaseEntityUtils"/>
       <drools:import name="life.genny.utils.RulesUtils"/>
+      <drools:import name="life.genny.qwandautils.JsonUtils"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_1" name="message"/>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_17" name="userToken"/>
@@ -129,8 +131,9 @@ Send Attributes]]></drools:metaValue>
       <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
       <bpmn2:script>System.out.println(&quot;auth_init: Send Attributes!!&quot;);
 		try {
-			QDataAttributeMessage msg = RulesUtils.loadAllAttributesIntoCache(serviceToken.getToken());
-			VertxUtils.writeMsg(&quot;webcmds&quot;,msg);
+			QDataAttributeMessage msg = RulesUtils.loadAllAttributesIntoCache(userToken.getToken());
+			msg.setToken(userToken.getToken());
+			VertxUtils.writeMsg(&quot;webcmds&quot;,JsonUtils.toJson(msg));
 			System.out.println(&quot;auth_init: All the attributes sent &quot; + msg.getItems().length + &quot; of them&quot;);
 
 		} catch (Exception e) {
@@ -151,14 +154,16 @@ Send Attributes]]></drools:metaValue>
       <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
       <bpmn2:script>System.out.println(&quot;auth_init: SendProject&quot;);
-BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 System.out.println(&quot;auth_init: beUtils created&quot;);
-String projectCode = &quot;PRJ_&quot;+serviceToken.getRealm().toUpperCase();
+String projectCode = &quot;PRJ_&quot;+userToken.getRealm().toUpperCase();
 System.out.println(&quot;auth_init: &quot;+projectCode);
 BaseEntity project = beUtils.getBaseEntityByCode(projectCode);
 System.out.println(&quot;auth_init: project=&quot;+project);
 System.out.println(&quot;Sending project - &quot;+project.getCode());
-VertxUtils.writeMsg(&quot;webcmds&quot;,project, &quot;PROJECT&quot;);
+
+
+VertxUtils.publish(currentUser,&quot;webcmds&quot;,project, &quot;PROJECT&quot;, userToken.getToken());
 
 
 
@@ -182,9 +187,10 @@ VertxUtils.writeMsg(&quot;webcmds&quot;,project, &quot;PROJECT&quot;);
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
-      <bpmn2:script>BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
-System.out.println(&quot;Sending user - &quot;+currentUser.getCode());
-VertxUtils.writeMsg(&quot;webcmds&quot;,currentUser, &quot;USER&quot;);
+      <bpmn2:script>BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+System.out.println(&quot;Sending user - &quot;+currentUser);
+
+VertxUtils.publish(currentUser,&quot;webcmds&quot;,currentUser, &quot;USER&quot;, userToken.getToken());
 
 
 
