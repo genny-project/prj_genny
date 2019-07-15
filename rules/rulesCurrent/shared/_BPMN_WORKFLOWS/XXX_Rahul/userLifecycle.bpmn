@@ -22,7 +22,8 @@
   <bpmn2:signal id="Signal_2" name="deleteuser"/>
   <bpmn2:signal id="Signal_3" name="#{userToken.getUserCode()}"/>
   <bpmn2:signal id="Signal_4" name="userToken"/>
-  <bpmn2:signal id="Signal_5" name="PER_USER1"/>
+  <bpmn2:signal id="Signal_5" name="#{userCode}"/>
+  <bpmn2:signal id="Signal_6" name="PER_USER1"/>
   <bpmn2:resource id="Resource_1" name="Resource 1"/>
   <bpmn2:process id="user_lifecycle" tns:adHoc="true" name="userLifecycle" isExecutable="true" processType="Private">
     <bpmn2:extensionElements>
@@ -47,7 +48,7 @@
     <bpmn2:property id="drools" itemSubjectRef="ItemDefinition_144" name="drools"/>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_201" name="userToken"/>
     <bpmn2:property id="currentUser" itemSubjectRef="ItemDefinition_1014" name="currentUser"/>
-    <bpmn2:property id="newUser" itemSubjectRef="ItemDefinition_1014" name="newUser"/>
+    <bpmn2:property id="newUser" name="newUser"/>
     <bpmn2:property id="userCode" itemSubjectRef="ItemDefinition_10" name="userCode"/>
     <bpmn2:scriptTask id="ScriptTask_2" name="Creates a user" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>
@@ -61,11 +62,14 @@
 
 newUser = beUtils.create(((GennyToken)userToken).getUserCode(), ((GennyToken)userToken).getUserCode());
 kcontext.setVariable(&quot;newUser&quot;,newUser);
-userCode = ((GennyToken)userToken).getUserCode();
+
+kcontext.setVariable(&quot;userCode&quot;, ((GennyToken)userToken).getUserCode());
+
+
 
 /* currentUser = new BaseEntity (userToken.getUserCode(), userToken.getUserCode()); */
 VertxUtils.putObject(userToken.getRealm(), &quot;&quot;, userToken.getUserCode(), JsonUtils.toJson(newUser), userToken.getToken());
-System.out.println(&quot;userlifeCycle: New User Created: &quot; + newUser+&quot; now sendng to channel callback :[&quot;+userToken.getUserCode()+&quot;]&quot;);
+System.out.println(&quot;userlifeCycle: New User Created: &quot; + newUser+&quot; now sendng to channel callback :[&quot;+userToken.getUserCode()+&quot;]&quot; );
 
 
 
@@ -98,7 +102,7 @@ System.out.println(&quot;userlifeCycle: New User Created: &quot; + newUser+&quot
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
-      <bpmn2:dataInput id="DataInput_4" itemSubjectRef="ItemDefinition_1014" name="newUser"/>
+      <bpmn2:dataInput id="DataInput_4" name="newUser"/>
       <bpmn2:dataInputAssociation id="DataInputAssociation_4">
         <bpmn2:sourceRef>newUser</bpmn2:sourceRef>
         <bpmn2:targetRef>DataInput_4</bpmn2:targetRef>
@@ -156,7 +160,7 @@ System.out.println(&quot;userlifeCycle: New User Created: &quot; + newUser+&quot
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;userLIfeCycle: waiting for other userLifeCycle signals&quot;);</bpmn2:script>
+      <bpmn2:script>System.out.println(&quot;userLifeCycle: waiting for other userLifeCycle signals&quot;);</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_6" tns:priority="1" sourceRef="IntermediateThrowEvent_2" targetRef="ScriptTask_3"/>
     <bpmn2:sequenceFlow id="SequenceFlow_7" tns:priority="1" sourceRef="ScriptTask_3" targetRef="IntermediateCatchEvent_2"/>

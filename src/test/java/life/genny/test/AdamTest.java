@@ -1,6 +1,5 @@
 package life.genny.test;
 
-
 import org.kie.api.runtime.process.ProcessContext;
 import java.io.FileNotFoundException;
 import java.lang.invoke.MethodHandles;
@@ -11,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.logging.log4j.Logger;
+import org.codehaus.plexus.util.StringUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -51,7 +51,6 @@ public class AdamTest {
 
 	private static final String DRL_SEND_USER_DATA_DIR = "SendUserData";
 
-
 	public AdamTest() {
 
 	}
@@ -59,12 +58,22 @@ public class AdamTest {
 	@Test
 	public void userSessionTest() {
 		System.out.println("Show UserSession");
-		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
-		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-		QRules qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
-		qRules.set("realm", userToken.getRealm());
-		qRules.setServiceToken(serviceToken.getToken());
-		VertxUtils.cachedEnabled = true;  // don't send to local Service Cache
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+		} else {
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+		}
 
 		System.out.println("session     =" + userToken.getSessionCode());
 		System.out.println("userToken   =" + userToken.getToken());
@@ -74,25 +83,32 @@ public class AdamTest {
 		QEventMessage msg1 = new QEventMessage("EVT_MSG", "INIT_1");
 		QEventMessage msgLogout = new QEventMessage("EVT_MSG", "LOGOUT");
 
-		GennyKieSession gks = null;
+		// NOW SET UP Some baseentitys
+		BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
+				StringUtils.capitaliseAllWords(serviceToken.getRealm()));
+		project.setRealm(serviceToken.getRealm());
+		VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
+				JsonUtils.toJson(project), serviceToken.getToken());
 		
+		// Log out to begin
+		VertxUtils.writeCachedJson(userToken.getRealm(),userToken.getSessionCode(),null,userToken.getToken());
+
+		GennyKieSession gks = null;
+
 		try {
-			gks = GennyKieSession.builder(serviceToken, false)
-					.addJbpm("userLifecycle.bpmn")
-					.addJbpm("userSession.bpmn")
-					.addJbpm("userValidation.bpmn")
-					.addToken(userToken)
-					.build();
-					gks.start();
-			
-				gks.injectEvent(authInitMsg);
-				gks.advanceSeconds(2, true);
-				gks.injectEvent(authInitMsg);
-				gks.advanceSeconds(2, true);
-//				gks.injectSignal("userMessage", msgLogout);
-				
-			BaseEntity user = VertxUtils.getObject(serviceToken.getRealm(), "", userToken.getUserCode(),BaseEntity.class, serviceToken.getToken());
-			System.out.println("final user created "+user);
+			gks = GennyKieSession.builder(serviceToken, false).addJbpm("userLifecycle.bpmn").addJbpm("userSession.bpmn")
+					.addJbpm("auth_init.bpmn").addJbpm("userValidation.bpmn").addToken(userToken).build();
+			gks.start();
+
+			gks.injectEvent(authInitMsg);
+			gks.advanceSeconds(5, true);
+			gks.injectEvent(authInitMsg);
+			gks.advanceSeconds(5, true);
+			gks.injectEvent(msgLogout);
+
+			BaseEntity user = VertxUtils.getObject(serviceToken.getRealm(), "", userToken.getUserCode(),
+					BaseEntity.class, serviceToken.getToken());
+			System.out.println("final user created " + user);
 			System.out.println("Sent");
 
 		} catch (Exception e) {
@@ -101,10 +117,8 @@ public class AdamTest {
 			gks.close();
 		}
 	}
-		
-	
-	
-	//@Test
+
+	// @Test
 	public void userSessionTest2() {
 		System.out.println("Show UserSession");
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -120,25 +134,20 @@ public class AdamTest {
 		QEventMessage msgLogout = new QEventMessage("EVT_MSG", "LOGOUT");
 
 		GennyKieSession gks = null;
-		
+
 		try {
-			gks = GennyKieSession.builder(serviceToken, false)
-					.addJbpm("test_session_1.bpmn")
-					.addJbpm("test_session_2.bpmn")
-					.addJbpm("dashboard.bpmn")
-					.addToken(userToken)
-					.build();
-					gks.start();
-			
-			
+			gks = GennyKieSession.builder(serviceToken, false).addJbpm("test_session_1.bpmn")
+					.addJbpm("test_session_2.bpmn").addJbpm("dashboard.bpmn").addToken(userToken).build();
+			gks.start();
+
 //				gks.advanceSeconds(2, true);
 //				gks.injectSignal("userMessage", msg1);
 //				gks.advanceSeconds(2, true);
-				
-				gks.injectEvent(authInitMsg);
-				gks.advanceSeconds(2, true);
+
+			gks.injectEvent(authInitMsg);
+			gks.advanceSeconds(2, true);
 //				gks.injectSignal("userMessage", msgLogout);
-				
+
 //			for (int i=0;i<2;i++) {
 //				gks.displayForm("FRM_DASHBOARD",userToken);
 //				gks.advanceSeconds(2, true);
@@ -146,7 +155,7 @@ public class AdamTest {
 //				gks.advanceSeconds(2, true);
 //			}
 
-		//	gks.sendLogout(userToken);
+			// gks.sendLogout(userToken);
 
 			System.out.println("Sent");
 
@@ -156,11 +165,8 @@ public class AdamTest {
 			gks.close();
 		}
 	}
-	
 
-	
-	
-	//@Test
+	// @Test
 	public void displayBucketPage() {
 		System.out.println("Show Bucket Page");
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -175,11 +181,8 @@ public class AdamTest {
 
 		GennyKieSession gks = null;
 		try {
-			gks = GennyKieSession.builder(serviceToken, false)
-					.addJbpm("show_bucket_page.bpmn")
-					.addFact("msg", msg)
-					.addToken(userToken)
-					.build();
+			gks = GennyKieSession.builder(serviceToken, false).addJbpm("show_bucket_page.bpmn").addFact("msg", msg)
+					.addToken(userToken).build();
 
 			gks.start();
 			gks.injectSignal("inputSignal", "Hello");
@@ -194,7 +197,7 @@ public class AdamTest {
 		}
 	}
 
-	//@Test
+	// @Test
 	public void displayTestPage1() {
 		System.out.println("Show test page 1");
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -209,11 +212,8 @@ public class AdamTest {
 
 		GennyKieSession gks = null;
 		try {
-			gks = GennyKieSession.builder(serviceToken, false)
-					.addJbpm("test_page_1.bpmn")
-					.addFact("msg", msg)
-					.addToken(userToken)
-					.build();
+			gks = GennyKieSession.builder(serviceToken, false).addJbpm("test_page_1.bpmn").addFact("msg", msg)
+					.addToken(userToken).build();
 
 			gks.start();
 			gks.injectSignal("inputSignal", "Hello");
@@ -241,8 +241,8 @@ public class AdamTest {
 		try {
 			gks = GennyKieSession.builder(serviceToken).addDrl(DRL_SEND_USER_DATA_DIR) // send the initial User data
 																						// using the rules
-					.addJbpm("adhoc.bpmn").addFact("qRules", rules).addFact("msg", msg)
-					.addToken(serviceToken).addToken(userToken).build();
+					.addJbpm("adhoc.bpmn").addFact("qRules", rules).addFact("msg", msg).addToken(serviceToken)
+					.addToken(userToken).build();
 
 			gks.start();
 
@@ -343,7 +343,7 @@ public class AdamTest {
 
 	}
 
-	//@Test
+	// @Test
 	public void testTheme() {
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
@@ -560,7 +560,7 @@ public class AdamTest {
 
 		msg2.setToken(userToken.getToken());
 		/* send message */
-	//	rules.publishCmd(msg2); // Send QDataBaseEntityMessage
+		// rules.publishCmd(msg2); // Send QDataBaseEntityMessage
 		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg2));
 //		String askMsgsStr = JsonUtils.toJson(askMsgs);
 //		VertxUtils.putObject(serviceToken.getRealm(), "", "DESKTOP-ASKS", askMsgsStr, serviceToken.getToken());
@@ -615,7 +615,7 @@ public class AdamTest {
 
 	}
 
-	//@Test
+	// @Test
 	public void testLogout() {
 
 	}
@@ -672,6 +672,4 @@ public class AdamTest {
 
 	}
 
-	
-	
 }
