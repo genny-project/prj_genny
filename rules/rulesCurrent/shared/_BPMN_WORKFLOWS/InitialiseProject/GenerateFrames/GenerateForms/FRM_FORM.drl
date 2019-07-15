@@ -29,10 +29,20 @@ rule "FRM_FORM"
 
     when
       not  Frame3(code == "FRM_FORM")
+
       serviceToken : GennyToken( code == "PER_SERVICE")
 
+			THM_OF : Theme (code == "THM_OF")
+			THM_DUMMY : Theme (code == "THM_DUMMY")
+			THM_FORM_INPUT_DEFAULT : Theme (code == "THM_FORM_INPUT_DEFAULT")
+			THM_FORM_LABEL_DEFAULT : Theme (code == "THM_FORM_LABEL_DEFAULT")
+			THM_FORM_WRAPPER_DEFAULT : Theme (code == "THM_FORM_WRAPPER_DEFAULT")
+			THM_FORM_ERROR_DEFAULT : Theme (code == "THM_FORM_ERROR_DEFAULT")
+			THM_FORM_DEFAULT : Theme (code == "THM_FORM_DEFAULT")
+			THM_FORM_CONTAINER_DEFAULT : Theme (code == "THM_FORM_CONTAINER_DEFAULT")
+
     then
-         System.out.println("   Generate FRM_FORM  RULE " + serviceToken.getUserCode());
+         System.out.println("   Generate FRM_FORM  RULE TEST" + serviceToken.getUserCode());
 
 
  	Frame3 frame = Frame3.builder("FRM_FORM")
@@ -40,7 +50,7 @@ rule "FRM_FORM"
 							.end()
 						.addTheme("THM_DUMMY",serviceToken)
 							.end()
-							.question("QUE_TEMPLATE")
+							.question("QUE_ADD_INTERNSHIP_STEP_ONE_GRP")
 							.addTheme("THM_FORM_INPUT_DEFAULT", serviceToken)
 																.vcl(VisualControlType.VCL_INPUT).weight(2.0)
 																.end()
