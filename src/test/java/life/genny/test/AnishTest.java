@@ -166,6 +166,8 @@ public class AnishTest extends GennyJbpmBaseTest {
                 GennyToken userToken = new GennyToken("userToken", rules.getToken());
                 GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
+                rules.sendAllAttributes();
+                
         		GennyKieSession gks = null;
         		
         		try {
