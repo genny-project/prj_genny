@@ -38,7 +38,7 @@ rule "THM_OF"
  
 		Theme theme = Theme.builder("THM_OF")
 								.addAttribute()
-									.color("white")
+									.color("black")
 									.end()
 								.build();
 
