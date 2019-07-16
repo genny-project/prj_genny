@@ -122,6 +122,74 @@ public class SafalTest extends GennyJbpmBaseTest {
 	}
 	
 	@Test
+	public void v7Test() {
+	
+		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
+		QRules rules = getQRules(userToken);
+		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+		rules.sendAllAttributes();	
+		
+		/* Themes and frames*/
+		
+		Theme THM_BLACK_PARTITON = Theme.builder("THM_BLACK_PARTITON")
+									.addAttribute().backgroundColor("black").end().build();
+		
+		Theme THM_RED_PARTITON = Theme.builder("THM_RED_PARTITON")
+								.addAttribute().backgroundColor("red").end().build();
+		
+		Theme THM_YELLOW_PARTITON = Theme.builder("THM_YELLOW_PARTITON")
+									.addAttribute().backgroundColor("yellow").end().build();
+		
+		Frame3 FRM_BLACK = Frame3.builder("FRM_BLACK")
+							.addTheme(THM_BLACK_PARTITON)
+							.end()
+							.question("QUE_NAME_TWO").end()
+							.build();
+		
+		Frame3 FRM_RED = Frame3.builder("FRM_RED")
+				.addTheme(THM_RED_PARTITON)
+				.end()
+				.question("QUE_NAME_TWO").end()
+				.build();
+		
+		Frame3 FRM_YELLOW = Frame3.builder("FRM_YELLOW")
+				.addTheme(THM_YELLOW_PARTITON)
+				.end()
+				.question("QUE_NAME_TWO").end()
+				.build();
+		
+		Frame3 FRM_CENTER = Frame3.builder("FRM_CENTER")
+				.addFrame(FRM_BLACK, FramePosition.NORTH).end()
+				.addFrame(FRM_RED,FramePosition.NORTH).end()
+				.addFrame(FRM_YELLOW,FramePosition.NORTH).end().build();
+
+		
+		Frame3 frameMain = Frame3.builder("FRM_MAIN")
+				.addFrame(FRM_CENTER, FramePosition.CENTRE)
+			.end()
+			.build();
+
+		Frame3 frameRoot = Frame3.builder("FRM_ROOT").addFrame(frameMain).end().build();
+
+		/* end */
+		Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+	
+		QDataBaseEntityMessage msg = FrameUtils2.toMessage(frameRoot, serviceToken, askMsgs);
+	
+		/* send message */
+		rules.publishCmd(msg); // Send QDataBaseEntityMessage
+	
+		System.out.println("Sending Asks");
+		for (QDataAskMessage askMsg : askMsgs) {
+			rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode()); // Send associated
+			// QDataAskMessage
+		}
+	
+		System.out.println("Sent");
+		
+	}
+	
+//	@Test
 	public void userPool() {
 		System.out.println("Show UserSession");
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
