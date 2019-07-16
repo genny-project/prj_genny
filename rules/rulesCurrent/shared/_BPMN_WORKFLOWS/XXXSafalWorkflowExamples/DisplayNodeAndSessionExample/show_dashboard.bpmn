@@ -22,7 +22,7 @@
   <bpmn2:signal id="Signal_5" name="newSession"/>
   <bpmn2:escalation id="Escalation_1" escalationCode="123" name="Escalation 1"/>
   <bpmn2:message id="Message_1" itemRef="ItemDefinition_10" name="message_1"/>
-  <bpmn2:process id="dashboard" name="Show Dashboard" isExecutable="false" processType="Private">
+  <bpmn2:process id="show_dashboard" name="Show Dashboard" isExecutable="false" processType="Private">
     <bpmn2:extensionElements>
       <tns:import name="org.kie.internal.runtime.StatefulKnowledgeSession"/>
       <tns:import name="org.kie.api.runtime.process.WorkflowProcessInstance"/>
@@ -185,7 +185,7 @@
     <bpmn2:sequenceFlow id="SequenceFlow_14" tns:priority="1" name="Not Auth Init" sourceRef="ExclusiveGateway_1" targetRef="ExclusiveGateway_2"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="dashboard">
+    <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="show_dashboard">
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_1" bpmnElement="_1">
         <dc:Bounds height="48.0" width="48.0" x="71.0" y="521.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_2" labelStyle="BPMNLabelStyle_1"/>
