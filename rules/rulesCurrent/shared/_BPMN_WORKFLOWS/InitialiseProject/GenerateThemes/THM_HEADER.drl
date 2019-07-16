@@ -40,7 +40,7 @@ rule "THM_HEADER"
 						.addAttribute()
 							.backgroundColor("#18639F")
 							.color("white")
-							.height(120)
+							.height(80)
 							.end()
 						.build();
 

@@ -25,6 +25,7 @@ import life.genny.models.FramePosition;
 import life.genny.models.GennyToken;
 import life.genny.models.Theme;
 import life.genny.models.ThemeAttributeType;
+import life.genny.models.ThemePosition;
 import life.genny.qwanda.Answer;
 import life.genny.qwanda.VisualControlType;
 import life.genny.qwanda.entity.BaseEntity;
@@ -67,16 +68,10 @@ public class AnishTest extends GennyJbpmBaseTest {
                                 .build();
 
                 Theme THM_CARD = Theme.builder("THM_CARD").addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
-                                .end().addAttribute()
-                                // .width(300)
-                                .height(200)
-                                .flexGrow(0)
-                                .flexShrink(0)
-                                .flexBasis("initial")
-                                // .backgroundColor("white")
-                                // .backgroundColor("pink")
-                                .backgroundColor("#F8F9FA").width("100%").shadowColor("#000").shadowOpacity(0.4)
-                                .shadowRadius(5).shadowOffset().width(0).height(0).end().end().build();
+                                .end().addAttribute().marginBottom(20).height(150).flexGrow(0).flexShrink(0)
+                                .flexBasis("initial").backgroundColor("#F8F9FA").width("100%").shadowColor("#000")
+                                .shadowOpacity(0.4).shadowRadius(5).end().addAttribute().shadowOffset().width(0)
+                                .height(0).end().end().build();
 
                 Theme THM_CARD_LEFT = Theme.builder("THM_CARD_LEFT").addAttribute().backgroundColor("#EBECF0").end()
                                 .build();
@@ -111,13 +106,11 @@ public class AnishTest extends GennyJbpmBaseTest {
                                 .question("QUE_NAME_TWO").end().build();
 
                 Theme THM_TEST1 = Theme.builder("THM_TEST1").addAttribute().backgroundColor("none").width("100%")
-                                .height(70).flexGrow(0)
-                                .flexBasis("initial").end().build();
+                                .height(70).flexGrow(0).flexBasis("initial").end().build();
 
                 /* create frames */
-                Frame3 frameCard = Frame3.builder("FRM_CARD" + "_" + count)
-                                .addTheme(THM_CARD).end()
-                                .question("QUE_NAME_TWO").addTheme(THM_FORM_LABEL_DEFAULT)
+                Frame3 frameCard = Frame3.builder("FRM_CARD" + "_" + count).addTheme(THM_CARD, ThemePosition.WRAPPER)
+                                .end().question("QUE_NAME_TWO").addTheme(THM_FORM_LABEL_DEFAULT)
                                 .vcl(VisualControlType.VCL_WRAPPER).end().end()
                                 .addFrame(frameLeftCard, FramePosition.WEST).end()
                                 .addFrame(frameCentreCard, FramePosition.WEST).end()
@@ -128,7 +121,7 @@ public class AnishTest extends GennyJbpmBaseTest {
 
         }
 
-       @Test
+        @Test
         public void testDesktop() {
                 QRules rules = GennyJbpmBaseTest.setupLocalService();
                 GennyToken userToken = new GennyToken("userToken", rules.getToken());
@@ -167,7 +160,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                 }
         }
 
-         //@Test
+        // @Test
         public void testCachedDesktop() {
                 QRules rules = GennyJbpmBaseTest.setupLocalService();
                 GennyToken userToken = new GennyToken("userToken", rules.getToken());
@@ -175,63 +168,66 @@ public class AnishTest extends GennyJbpmBaseTest {
 
                 rules.sendAllAttributes();
 
-        		GennyKieSession gks = null;
+                GennyKieSession gks = null;
 
-        		try {
-        			gks = GennyKieSession.builder(serviceToken, false)
-        					.addToken(userToken)
-        					.build();
-        					gks.start();
+                try {
+                        gks = GennyKieSession.builder(serviceToken, false).addToken(userToken).build();
+                        gks.start();
 
+                        gks.displayForm("FRM_DESKTOP2", userToken);
 
-        				gks.displayForm("FRM_DESKTOP2",userToken);
+                        System.out.println("Sent");
 
-        			System.out.println("Sent");
+                } catch (Exception e) {
+                        System.out.println(e.getLocalizedMessage());
+                } finally {
+                        gks.close();
+                }
 
-        		} catch (Exception e) {
-        			System.out.println(e.getLocalizedMessage());
-        		} finally {
-        			gks.close();
-        		}
-
-
-//                try {
-//                        /* frame-tabs */
-//                        Frame3 FRM_TABS = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_TABS", Frame3.class,
-//                                        serviceToken.getToken());
-//                        System.out.print("desktop-tabs :: " + FRM_TABS.getCode());
-//
-//                        /* frame-header */
-//                        Frame3 FRM_HEADER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_HEADER",
-//                                        Frame3.class, serviceToken.getToken());
-//                        System.out.print("desktop-header :: " + FRM_HEADER.getCode());
-//
-//                        /* frame-footer */
-//                        Frame3 FRM_FOOTER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_FOOTER",
-//                                        Frame3.class, serviceToken.getToken());
-//                        System.out.print("desktop-footer :: " + FRM_FOOTER.getCode());
-//
-//                        /* frame-sidebar */
-//                        Frame3 FRM_SIDEBAR = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_SIDEBAR",
-//                                        Frame3.class, serviceToken.getToken());
-//
-//                        System.out.print("desktop-sidebar :: " + FRM_SIDEBAR.getCode());
-//                        /* frame-root */
-//                        Frame3 FRM_DESKTOP = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_DESKTOP",
-//                                        Frame3.class, serviceToken.getToken());
-//
-//                        System.out.print("desktop-frame :: " + FRM_DESKTOP.getCode());
-//
-//                        Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
-//                        QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_DESKTOP, serviceToken, askMsgs);
-//                        rules.publishCmd(msg);
-//                        for (QDataAskMessage askMsg : askMsgs) {
-//                                rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode());
-//                        }
-//                        System.out.println("Sent");
-//                } catch (Exception e) {
-//                        System.out.println("Error " + e.getLocalizedMessage());
-//                }
+                // try {
+                // /* frame-tabs */
+                // Frame3 FRM_TABS = VertxUtils.getObject(serviceToken.getRealm(), "",
+                // "FRM_TABS", Frame3.class,
+                // serviceToken.getToken());
+                // System.out.print("desktop-tabs :: " + FRM_TABS.getCode());
+                //
+                // /* frame-header */
+                // Frame3 FRM_HEADER = VertxUtils.getObject(serviceToken.getRealm(), "",
+                // "FRM_HEADER",
+                // Frame3.class, serviceToken.getToken());
+                // System.out.print("desktop-header :: " + FRM_HEADER.getCode());
+                //
+                // /* frame-footer */
+                // Frame3 FRM_FOOTER = VertxUtils.getObject(serviceToken.getRealm(), "",
+                // "FRM_FOOTER",
+                // Frame3.class, serviceToken.getToken());
+                // System.out.print("desktop-footer :: " + FRM_FOOTER.getCode());
+                //
+                // /* frame-sidebar */
+                // Frame3 FRM_SIDEBAR = VertxUtils.getObject(serviceToken.getRealm(), "",
+                // "FRM_SIDEBAR",
+                // Frame3.class, serviceToken.getToken());
+                //
+                // System.out.print("desktop-sidebar :: " + FRM_SIDEBAR.getCode());
+                // /* frame-root */
+                // Frame3 FRM_DESKTOP = VertxUtils.getObject(serviceToken.getRealm(), "",
+                // "FRM_DESKTOP",
+                // Frame3.class, serviceToken.getToken());
+                //
+                // System.out.print("desktop-frame :: " + FRM_DESKTOP.getCode());
+                //
+                // Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+                // QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_DESKTOP, serviceToken,
+                // askMsgs);
+                // rules.publishCmd(msg);
+                // for (QDataAskMessage askMsg : askMsgs) {
+                // rules.publishCmd(askMsg, serviceToken.getUserCode(),
+                // userToken.getUserCode());
+                // }
+                // System.out.println("Sent");
+                // } catch (Exception e) {
+                // System.out.println("Error " + e.getLocalizedMessage());
+                // }
         }
 
         public Frame3 generateHeader() {
@@ -247,7 +243,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                                         .addAttribute(ThemeAttributeType.PRI_HAS_LABEL, false).end()
                                         .addAttribute(ThemeAttributeType.PRI_HAS_ICON, true).end()
                                         .addAttribute(ThemeAttributeType.PRI_HAS_INPUT, false).end()
-                                        .addAttribute(ThemeAttributeType.PRI_IS_EXPANDABLE, true).end()
+                                        .addAttribute(ThemeAttributeType.PRI_IS_DROPDOWN, true).end()
                                         .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
                                         .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
 
@@ -279,17 +275,8 @@ public class AnishTest extends GennyJbpmBaseTest {
                         Frame3 FRM_DUMMY = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_DUMMY", Frame3.class,
                                         serviceToken.getToken());
 
-                        Theme THM_SIDEBAR = Theme.builder("THM_SIDEBAR")
-                                        .addAttribute()
-                                        .backgroundColor("#065B9A")
-                                        .end()
-                                        .addAttribute()
-                                                .minWidth(300)
-                                                .end()
-                                        .addAttribute()
-                                                .width(100)
-                                                .end()
-                                        .build();
+                        Theme THM_SIDEBAR = Theme.builder("THM_SIDEBAR").addAttribute().backgroundColor("#065B9A").end()
+                                        .addAttribute().minWidth(300).end().addAttribute().width(100).end().build();
 
                         Frame3 FRM_LOGO = Frame3.builder("FRM_LOGO").addTheme(THM_SIDEBAR).end()
                                         .question("QUE_PROJECT_SIDEBAR_GRP").addTheme("THM_LOGO", serviceToken)
@@ -348,26 +335,15 @@ public class AnishTest extends GennyJbpmBaseTest {
                                 .overflowX("auto").overflowY("auto").width("100%").end()
                                 .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
 
-                Theme THM_BUCKET_COLUMN = Theme.builder("THM_BUCKET_COLUMN")
-                                .addAttribute()
-                                        .backgroundColor("#EAEAEA")
-                                        .minWidth(300)
-                                        .width("100%")
-                                        .margin(20)
-                                        .paddingX(20)
-                                        .textAlign("center")
-                                        .flexDirection("column")
-                                .end()
+                Theme THM_BUCKET_COLUMN = Theme.builder("THM_BUCKET_COLUMN").addAttribute().backgroundColor("#EAEAEA")
+                                .minWidth(300).width("100%").margin(20).textAlign("center").flexDirection("column")
+                                .end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+                Theme THM_BUCKET_COLUMN_PADDING = Theme.builder("THM_BUCKET_COLUMN_PADDING").addAttribute().padding(20)
+                                .justifyContent("flex-start").end()
                                 .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
 
-                Theme THM_TEST1 = Theme.builder("THM_TEST1")
-                                .addAttribute()
-                                .backgroundColor("none")
-                                .width("100%")
-                                .height(70)
-                                .flexGrow(0)
-                                .flexBasis("initial")
-                                .end().build();
+                Theme THM_TEST1 = Theme.builder("THM_TEST1").addAttribute().backgroundColor("none").width("100%")
+                                .height(70).flexGrow(0).flexBasis("initial").end().build();
 
                 Frame3 available = Frame3.builder("FRM_GRP_AVAILABLE").addTheme(THM_TEST1).end()
                                 .question("QUE_GRP_NOT_APPLIED").addTheme(THM_FORM_INPUT_DEFAULT)
@@ -422,57 +398,66 @@ public class AnishTest extends GennyJbpmBaseTest {
                                 .vcl(VisualControlType.VCL_INPUT).weight(2.0).end().end().addTheme(THM_BUCKET_LABEL)
                                 .end().build();
 
-                Frame3 bucketColumn1 = Frame3.builder("FRM_BUCKET_COLUMN_ONE").addTheme(THM_BUCKET_COLUMN).end()
+                Frame3 bucketColumn1 = Frame3.builder("FRM_BUCKET_COLUMN_ONE")
+                                .addTheme(THM_BUCKET_COLUMN, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_BUCKET_COLUMN_PADDING, ThemePosition.CENTRE).end()
                                 .addFrame(available, FramePosition.NORTH).end()
-                                // .addFrame(card, FramePosition.NORTH).end()
-                                .addFrame(frameCard1, FramePosition.NORTH).end()
-                                .addFrame(frameCard2, FramePosition.NORTH).end()
-                                .addFrame(frameCard3, FramePosition.NORTH).end()
-                                .addFrame(frameCard4, FramePosition.NORTH).end()
-                                .addFrame(frameCard5, FramePosition.NORTH).end()
-                                .addFrame(frameCard6, FramePosition.NORTH).end()
-                                .addFrame(frameCard7, FramePosition.NORTH).end()
-                                .addFrame(frameCard8, FramePosition.NORTH).end()
-                                .addFrame(frameCard9, FramePosition.NORTH).end()
-
-                                // .addFrame(frameCard2, FramePosition.NORTH).end()
-                                .build();
-                Frame3 bucketColumn2 = Frame3.builder("FRM_BUCKET_COLUMN_TWO").addTheme(THM_BUCKET_COLUMN).end()
+                                .addFrame(frameCard1, FramePosition.CENTRE).end()
+                                .addFrame(frameCard2, FramePosition.CENTRE).end()
+                                .addFrame(frameCard3, FramePosition.CENTRE).end()
+                                .addFrame(frameCard4, FramePosition.CENTRE).end()
+                                .addFrame(frameCard5, FramePosition.CENTRE).end()
+                                .addFrame(frameCard6, FramePosition.CENTRE).end()
+                                .addFrame(frameCard7, FramePosition.CENTRE).end()
+                                .addFrame(frameCard8, FramePosition.CENTRE).end()
+                                .addFrame(frameCard9, FramePosition.CENTRE).end().build();
+                Frame3 bucketColumn2 = Frame3.builder("FRM_BUCKET_COLUMN_TWO")
+                                .addTheme(THM_BUCKET_COLUMN, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_BUCKET_COLUMN_PADDING, ThemePosition.CENTRE).end()
                                 .addFrame(applied, FramePosition.NORTH).end().addFrame(frameCard1, FramePosition.NORTH)
-                                .end().addFrame(frameCard2, FramePosition.NORTH).end().build();
-                Frame3 bucketColumn3 = Frame3.builder("FRM_BUCKET_COLUMN_THREE").addTheme(THM_BUCKET_COLUMN).end()
+                                .end().addFrame(frameCard2, FramePosition.CENTRE).end().build();
+                Frame3 bucketColumn3 = Frame3.builder("FRM_BUCKET_COLUMN_THREE")
+                                .addTheme(THM_BUCKET_COLUMN, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_BUCKET_COLUMN_PADDING, ThemePosition.CENTRE).end()
                                 .addFrame(shortlisted, FramePosition.NORTH).end().build();
-                Frame3 bucketColumn4 = Frame3.builder("FRM_BUCKET_COLUMN_FOUR").addTheme(THM_BUCKET_COLUMN).end()
+                Frame3 bucketColumn4 = Frame3.builder("FRM_BUCKET_COLUMN_FOUR")
+                                .addTheme(THM_BUCKET_COLUMN, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_BUCKET_COLUMN_PADDING, ThemePosition.CENTRE).end()
                                 .addFrame(interviews, FramePosition.NORTH).end()
-                                .addFrame(frameCard1, FramePosition.NORTH).end()
-                                .addFrame(frameCard2, FramePosition.NORTH).end()
-                                .addFrame(frameCard3, FramePosition.NORTH).end()
-                                .addFrame(frameCard4, FramePosition.NORTH).end()
-                                .addFrame(frameCard5, FramePosition.NORTH).end()
-                                .addFrame(frameCard6, FramePosition.NORTH).end()
-                                .addFrame(frameCard7, FramePosition.NORTH).end()
-                                .addFrame(frameCard8, FramePosition.NORTH).end()
-                                .addFrame(frameCard9, FramePosition.NORTH).end()
-                                .addFrame(frameCard10, FramePosition.NORTH).end()
-                                .addFrame(frameCard11, FramePosition.NORTH).end()
-                                .addFrame(frameCard12, FramePosition.NORTH).end()
-                                .addFrame(frameCard13, FramePosition.NORTH).end()
-                                .addFrame(frameCard14, FramePosition.NORTH).end()
-                                .addFrame(frameCard15, FramePosition.NORTH).end()
-                                .addFrame(frameCard16, FramePosition.NORTH).end()
-                                .addFrame(frameCard17, FramePosition.NORTH).end()
-                                .addFrame(frameCard18, FramePosition.NORTH).end()
-                                .addFrame(frameCard19, FramePosition.NORTH).end().build();
+                                .addFrame(frameCard1, FramePosition.CENTRE).end()
+                                .addFrame(frameCard2, FramePosition.CENTRE).end()
+                                .addFrame(frameCard3, FramePosition.CENTRE).end()
+                                .addFrame(frameCard4, FramePosition.CENTRE).end()
+                                .addFrame(frameCard5, FramePosition.CENTRE).end()
+                                .addFrame(frameCard6, FramePosition.CENTRE).end()
+                                .addFrame(frameCard7, FramePosition.CENTRE).end()
+                                .addFrame(frameCard8, FramePosition.CENTRE).end()
+                                .addFrame(frameCard9, FramePosition.CENTRE).end()
+                                .addFrame(frameCard10, FramePosition.CENTRE).end()
+                                .addFrame(frameCard11, FramePosition.CENTRE).end()
+                                .addFrame(frameCard12, FramePosition.CENTRE).end()
+                                .addFrame(frameCard13, FramePosition.CENTRE).end()
+                                .addFrame(frameCard14, FramePosition.CENTRE).end()
+                                .addFrame(frameCard15, FramePosition.CENTRE).end()
+                                .addFrame(frameCard16, FramePosition.CENTRE).end()
+                                .addFrame(frameCard17, FramePosition.CENTRE).end()
+                                .addFrame(frameCard18, FramePosition.CENTRE).end()
+                                .addFrame(frameCard19, FramePosition.CENTRE).end().build();
 
-                Frame3 bucketColumn5 = Frame3.builder("FRM_BUCKET_COLUMN_FIVE").addTheme(THM_BUCKET_COLUMN).end()
+                Frame3 bucketColumn5 = Frame3.builder("FRM_BUCKET_COLUMN_FIVE")
+                                .addTheme(THM_BUCKET_COLUMN, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_BUCKET_COLUMN_PADDING, ThemePosition.CENTRE).end()
                                 .addFrame(offered, FramePosition.NORTH).end().build();
-                Frame3 bucketColumn6 = Frame3.builder("FRM_BUCKET_COLUMN_SIX").addTheme(THM_BUCKET_COLUMN).end()
+                Frame3 bucketColumn6 = Frame3.builder("FRM_BUCKET_COLUMN_SIX")
+                                .addTheme(THM_BUCKET_COLUMN, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_BUCKET_COLUMN_PADDING, ThemePosition.CENTRE).end()
                                 .addFrame(placed, FramePosition.NORTH).end().build();
-                Frame3 bucketColumn7 = Frame3.builder("FRM_BUCKET_COLUMN_SEVEN").addTheme(THM_BUCKET_COLUMN).end()
+                Frame3 bucketColumn7 = Frame3.builder("FRM_BUCKET_COLUMN_SEVEN")
+                                .addTheme(THM_BUCKET_COLUMN, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_BUCKET_COLUMN_PADDING, ThemePosition.CENTRE).end()
                                 .addFrame(inProgress, FramePosition.NORTH).end().build();
 
-                Frame3 bucket = Frame3.builder("FRM_BUCKET")
-                                .addTheme(THM_BUCKET).end()
+                Frame3 bucket = Frame3.builder("FRM_BUCKET").addTheme(THM_BUCKET).end()
                                 .addFrame(bucketColumn1, FramePosition.WEST).end()
                                 .addFrame(bucketColumn2, FramePosition.WEST).end()
                                 .addFrame(bucketColumn3, FramePosition.WEST).end()
@@ -498,8 +483,14 @@ public class AnishTest extends GennyJbpmBaseTest {
                 Theme THM_TAB_CONTENT = Theme.builder("THM_TAB_CONTENT").addAttribute().backgroundColor("#F8F9FA").end()
                                 .build();
 
-                Theme THM_TAB = Theme.builder("THM_TAB").addAttribute().backgroundColor("#3F505F").borderStyle("solid")
-                                .borderColor("white").color("white").height(40).end().build();
+                Theme THM_TAB = Theme.builder("THM_TAB")
+                                .addAttribute()
+                                        .backgroundColor("#3F505F")
+                                        // .borderStyle("solid")
+                                        // .borderColor("white")
+                                        .color("white")
+                                        .height(40)
+                                .end().build();
 
                 Frame3 tab1 = Frame3.builder("FRM_TAB_ONE").addTheme(THM_TAB).end().question("QUE_TAB_BUCKET_VIEW")
                                 .addTheme(THM_BUCKET_LABEL).end().end().build();
@@ -508,8 +499,8 @@ public class AnishTest extends GennyJbpmBaseTest {
                 Frame3 tab3 = Frame3.builder("FRM_TAB_THREE").addTheme(THM_TAB).end().question("QUE_TAB_DETAIL_VIEW")
                                 .end().build();
 
-                Frame3 tabHeader = Frame3.builder("FRM_TAB_HEADER").addTheme(THM_TAB_HEADER).end()
-                                .addFrame(tab1, FramePosition.WEST).end().addFrame(tab2, FramePosition.WEST).end()
+                Frame3 tabHeader = Frame3.builder("FRM_TAB_HEADER").addTheme(THM_TAB_HEADER, ThemePosition.WRAPPER)
+                                .end().addFrame(tab1, FramePosition.WEST).end().addFrame(tab2, FramePosition.WEST).end()
                                 .addFrame(tab3, FramePosition.WEST).end().question("QUE_NAME_TWO").end().build();
 
                 Frame3 bucket = generateBucket();
