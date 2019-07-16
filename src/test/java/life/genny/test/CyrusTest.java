@@ -472,7 +472,7 @@ public void agentProfileDetails() {
 	System.out.println("Sent");
 }
 
-//@Test
+@Test
 public void addInternshipTemplate() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
@@ -518,11 +518,14 @@ public void addInternshipTemplate() {
 			.end()
 			.build();
 
-			Theme THM_OF = Theme.builder("THM_OF")
+	Theme THM_OF = Theme.builder("THM_OF")
 				.addAttribute().overflowY("auto").end()
+				.addAttribute().justifyContent("flex-start").end()
+				.addAttribute().padding(10).end()
 				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
 		.end()
 	.build();
+
 
 	Frame3 frameForm = Frame3.builder("FRM_FORM")
 				.addTheme(THM_COLOR_BLACK).end()
@@ -555,6 +558,7 @@ public void addInternshipTemplate() {
 
 	QDataBaseEntityMessage msg = FrameUtils2.toMessage(frameRoot, serviceToken, askMsgs);
 
+	rules.sendAllAttributes();
 	/* send message */
 	rules.publishCmd(msg); // Send QDataBaseEntityMessage
 
@@ -2315,7 +2319,7 @@ public void testDesktop() {
 	}
 }
 
-@Test
+//@Test
 public void testForQuestionsList() {
 	// getting the tokens
 	GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
