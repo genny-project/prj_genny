@@ -19,6 +19,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_4" isCollection="false"/>
   <bpmn2:itemDefinition id="ItemDefinition_5" isCollection="false"/>
   <bpmn2:itemDefinition id="ItemDefinition_6" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_7" isCollection="false" structureRef="Object"/>
   <bpmn2:signal id="Signal_1" name="#{user}"/>
   <bpmn2:signal id="Signal_2" name="Signal 2"/>
   <bpmn2:signal id="Signal_3" name="login"/>
