@@ -33,6 +33,7 @@
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_1329" name="message"/>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_174" name="userToken"/>
     <bpmn2:property id="rules" itemSubjectRef="ItemDefinition_239" name="rules"/>
+    <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_174" name="serviceToken"/>
     <bpmn2:startEvent id="_1">
       <bpmn2:extensionElements>
         <tns:metaData name="elementname">
@@ -138,6 +139,29 @@
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
+      <bpmn2:ioSpecification id="InputOutputSpecification_3">
+        <bpmn2:dataInput id="DataInput_1" itemSubjectRef="ItemDefinition_174" name="userToken"/>
+        <bpmn2:dataInput id="DataInput_2" itemSubjectRef="ItemDefinition_1329" name="message"/>
+        <bpmn2:dataInput id="DataInput_3" itemSubjectRef="ItemDefinition_174" name="serviceToken"/>
+        <bpmn2:inputSet id="InputSet_2" name="Input Set 2">
+          <bpmn2:dataInputRefs>DataInput_1</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_2</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_3</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet id="OutputSet_4" name="Output Set 4"/>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_1">
+        <bpmn2:sourceRef>userToken</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_1</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_2">
+        <bpmn2:sourceRef>message</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_2</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_3">
+        <bpmn2:sourceRef>serviceToken</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_3</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
     </bpmn2:callActivity>
     <bpmn2:sequenceFlow id="SequenceFlow_2" tns:priority="1" sourceRef="CallActivity_1" targetRef="ExclusiveGateway_7"/>
   </bpmn2:process>
