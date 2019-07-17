@@ -39,7 +39,15 @@ rule "THM_OF"
 		Theme theme = Theme.builder("THM_OF")
 								.addAttribute()
 									.color("black")
-									.end()
+								.end()
+								.addAttribute()
+									.overflowY("auto")
+								.end()
+								.addAttribute()
+									.padding(10)
+								.end()
+								.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
+								.end().
 								.build();
 
 		theme.setRealm(serviceToken.getRealm());
