@@ -24,8 +24,8 @@ import life.genny.models.ThemeAttributeType;
 import life.genny.qwanda.VisualControlType;
 import life.genny.qwanda.message.QDataAskMessage;
 
-rule "agentDetais"
-    ruleflow-group 'GenerateForms'
+rule "addInternshipTemplate"
+    ruleflow-group 'GenerateFrames'
       no-loop true
     when
       $process : WorkflowProcessInstance() 
@@ -79,7 +79,7 @@ rule "agentDetais"
 	Frame3 frameForm = Frame3.builder("FRM_FORM")
 				.addTheme(THM_COLOR_BLACK).end()
 				.addTheme(THM_OF).end()
-				.question("QUE_ADD_AGENT_GRP")
+				.question("QUE_ADD_INTERNSHIP_TEMPLATE_AGENT_GRP")
 					.addTheme(THM_FORM_INPUT_DEFAULT)
 					.vcl(VisualControlType.VCL_INPUT).weight(2.0).end().
 					addTheme(THM_FORM_LABEL_DEFAULT)

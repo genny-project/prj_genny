@@ -69,10 +69,16 @@ public class AnishTest extends GennyJbpmBaseTest {
                         /* frame-sidebar */
                         Frame3 FRM_SIDEBAR = generateSidebar();
 
+                        Frame3 FRM_FORM = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_FORM", Frame3.class,
+                        serviceToken.getToken());
+
+                        System.out.println(FRM_FORM.getCode());
+
+
                         /* frame-root */
                         Frame3 FRM_ROOT = Frame3.builder("FRM_ROOT").addFrame(FRM_HEADER, FramePosition.NORTH).end()
                                         .addFrame(FRM_SIDEBAR, FramePosition.WEST).end()
-                                        .addFrame(FRM_TABS, FramePosition.CENTRE).end()
+                                        .addFrame(FRM_FORM, FramePosition.CENTRE).end()
                                         .addFrame(FRM_FOOTER, FramePosition.SOUTH).end().build();
 
                         Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
