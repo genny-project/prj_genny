@@ -85,10 +85,10 @@
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_1" language="http://www.java.com/java">return (message.getData().getCode() == &quot;AUTH_INIT&quot;);</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:sequenceFlow id="SequenceFlow_3" tns:priority="1" name="No" sourceRef="ExclusiveGateway_3" targetRef="EndEvent_8"/>
-    <bpmn2:task id="Task_1" tns:taskName="ShowFrame" tns:displayName="ShowFrame" tns:icon="icons/icon-info.gif" name="Show Menu Profile">
+    <bpmn2:task id="Task_1" tns:taskName="ShowFrame" tns:displayName="ShowFrame" tns:icon="icons/icon-info.gif" name="Show Table Page">
       <bpmn2:extensionElements>
         <tns:metaData name="elementname">
-          <tns:metaValue><![CDATA[Show Menu Profile]]></tns:metaValue>
+          <tns:metaValue><![CDATA[Show Table Page]]></tns:metaValue>
         </tns:metaData>
         <tns:onEntry-script scriptFormat="http://www.java.com/java">
           <tns:script>System.out.prinln(&quot;Calling 'MenuProfile' Workflow&quot;);</tns:script>
@@ -131,10 +131,10 @@
     </bpmn2:task>
     <bpmn2:sequenceFlow id="SequenceFlow_5" tns:priority="1" sourceRef="ExclusiveGateway_7" targetRef="Task_1"/>
     <bpmn2:sequenceFlow id="SequenceFlow_9" tns:priority="1" sourceRef="Task_1" targetRef="IntermediateCatchEvent_2"/>
-    <bpmn2:callActivity id="CallActivity_1" tns:waitForCompletion="true" tns:independent="false" name="Auth init" calledElement="auth_init">
+    <bpmn2:callActivity id="CallActivity_1" tns:waitForCompletion="true" tns:independent="false" name="Call Auth Init" calledElement="auth_init">
       <bpmn2:extensionElements>
         <tns:metaData name="elementname">
-          <tns:metaValue><![CDATA[Auth init]]></tns:metaValue>
+          <tns:metaValue><![CDATA[Call Auth Init]]></tns:metaValue>
         </tns:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
@@ -198,13 +198,13 @@
       <bpmndi:BPMNShape id="BPMNShape_Task_1" bpmnElement="Task_1" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="352.0" y="530.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1">
-          <dc:Bounds height="11.0" width="76.0" x="369.0" y="549.0"/>
+          <dc:Bounds height="11.0" width="70.0" x="372.0" y="549.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_CallActivity_1" bpmnElement="CallActivity_1" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="380.0" y="340.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_6">
-          <dc:Bounds height="11.0" width="33.0" x="418.0" y="359.0"/>
+          <dc:Bounds height="11.0" width="51.0" x="409.0" y="359.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="BPMNShape_IntermediateCatchEvent_2" targetElement="BPMNShape_ExclusiveGateway_3">
