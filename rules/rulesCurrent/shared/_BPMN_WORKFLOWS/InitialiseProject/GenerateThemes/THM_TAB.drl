@@ -39,13 +39,10 @@ rule "THM_TAB"
  
 		Theme theme = Theme.builder("THM_TAB")
                                 .addAttribute()
-                                	.backgroundColor("#3F505F")
-                                	.borderStyle("solid")
-                                	.borderColor("white")
-                                	.color("white")
-                                	.height(40)
-                                .end()
-                                .build();
+                                        .backgroundColor("#3F505F")
+                                        .color("white")
+                                        .height(40)
+                                .end().build();
                         
 		theme.setRealm(serviceToken.getRealm());
 		

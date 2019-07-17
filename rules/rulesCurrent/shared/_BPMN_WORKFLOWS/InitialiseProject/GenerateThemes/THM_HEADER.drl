@@ -38,9 +38,10 @@ rule "THM_HEADER"
 
 		Theme theme = Theme.builder("THM_HEADER")
 						.addAttribute()
-							.backgroundColor("#18639F")
+							/* .backgroundColor("#18639F") */
+							.backgroundColor("pink")
 							.color("white")
-							.height(120)
+							.height(80)
 							.end()
 						.build();
 
