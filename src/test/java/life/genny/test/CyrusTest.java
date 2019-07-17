@@ -1947,8 +1947,9 @@ public class CyrusTest extends GennyJbpmBaseTest {
 				.justifyContent("center").borderColor("#000000").margin(4).maxWidth(700).width("100%").shadowColor("#000")
 				.shadowOpacity(0.8).shadowRadius(5).end().build();
 
-		Theme THM_OF = Theme.builder("THM_OF").addAttribute().overflowY("auto").end().addAttribute()
-				.justifyContent("flex-start").end().addAttribute().padding(10).end()
+		Theme THM_OF = Theme.builder("THM_OF").addAttribute().overflowY("auto").end()
+				.addAttribute().justifyContent("flex-start").end()
+				.addAttribute().padding(10).end()
 				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
 
 		rules.sendAllAttributes();
@@ -2398,11 +2399,31 @@ public class CyrusTest extends GennyJbpmBaseTest {
 
 	@Test
 	public void testForQuestionsList2() {
-		// getting the tokens
-		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
-		QRules rules = getQRules(userToken);
-		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+		} else {
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+		}
+
+		System.out.println("session     =" + userToken.getSessionCode());
+		System.out.println("userToken   =" + userToken.getToken());
+		System.out.println("serviceToken=" + serviceToken.getToken());
+
 		String apiUrl = GennySettings.qwandaServiceUrl + "/service/forms";
+
+		qRules.sendAllAttributes();
 
 		// building the themes and the footers
 
@@ -2437,22 +2458,28 @@ public class CyrusTest extends GennyJbpmBaseTest {
 				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION, true).end()
 				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
 
-		Theme THM_OF = Theme.builder("THM_OF").addAttribute().overflowY("auto").end().addAttribute()
-				.justifyContent("flex-start").end().addAttribute().padding(10).end()
+				Theme THM_OF = Theme.builder("THM_OF").addAttribute().overflowY("auto").end()
+				.addAttribute().justifyContent("flex-start").end()
+				.addAttribute().padding(10).end()
 				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
 
-		rules.sendAllAttributes();
+				Theme THM_OF_ONE = Theme.builder("THM_OF_ONE").addAttribute().overflowY("auto").end()
+				.addAttribute().padding(10).end()
+				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
 
 		System.out.println("Sent");
 		try {
+
 			String jsonFormCodes = QwandaUtils.apiGet(apiUrl, userToken.getToken());
 			if (!"You need to be a test.".equals(jsonFormCodes)) {
 				Type type = new TypeToken<List<String>>() {
 				}.getType();
 				List<String> formCodes = JsonUtils.fromJson(jsonFormCodes, type);
-				System.out.println("Form Codes=" + formCodes);
 
 				System.out.println("Before caching the formCodes");
+
+				System.out.println("Form Codes=" + formCodes);
 
 				Frame3 FRM_WEST = Frame3.builder("FRM_WEST").addTheme(THM_BLACK).end().question("QUE_NAME_TWO").end().build();
 
@@ -2463,8 +2490,10 @@ public class CyrusTest extends GennyJbpmBaseTest {
 				.addFrame(FRM_WEST, FramePosition.WEST).end();
 			
 			//	FrameUtils2.toMessage(frameForm, serviceToken);
+			//int index =0;
 				for (String formCode : formCodes) {
-					Frame3 frameForm = Frame3.builder("FRM_" + formCode).addTheme(THM_COLOR_BLACK).end().addTheme(THM_OF).end()
+					//index++;
+					Frame3 frameForm = Frame3.builder("FRM_" + formCode).addTheme(THM_COLOR_BLACK).end().addTheme(THM_OF_ONE).end()
 							.question(formCode).addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
 							.addTheme(THM_FORM_LABEL_DEFAULT).vcl(VisualControlType.VCL_LABEL).end()
 							.addTheme(THM_FORM_WRAPPER_DEFAULT).vcl(VisualControlType.VCL_WRAPPER).end()
@@ -2476,16 +2505,30 @@ public class CyrusTest extends GennyJbpmBaseTest {
 						System.out.println(frameForm.getCode());
 
 						frameFormTestBuilder.addFrame(frameForm, FramePosition.NORTH).end();
-						
+
+						// if(index >5){
+						// 	break;
+						// }
 				}
 
-				Frame3 formsFrame = frameFormTestBuilder.build();
-				FrameUtils2.toMessage(formsFrame, serviceToken);
+				
+			Frame3 formsFrame = frameFormTestBuilder.build();
+			Frame3 frameMain = Frame3.builder("FRM_MAIN").addTheme(THM_OF).end()
+													.addFrame(formsFrame, FramePosition.CENTRE).end().build();
+	
+			Frame3 frameRoot = Frame3.builder("FRM_ROOT").addFrame(frameMain).end().build();
 
+			Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+			QDataBaseEntityMessage msg = FrameUtils2.toMessage(frameRoot, serviceToken, askMsgs);
+			qRules.publishCmd(msg);
+			for (QDataAskMessage askMsg : askMsgs) {
+				qRules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode());
+			}
 
-				System.out.println("After caching the formCodes   ::  ");
-				System.out.println("\n");
-
+			System.out.println("Sent");
+			System.out.println("\n");
+			System.out.println("After caching the formCodes   ::  ");
+			System.out.println("Form Codes=" + formCodes);
 			}
 
 		} catch (Exception e) {
