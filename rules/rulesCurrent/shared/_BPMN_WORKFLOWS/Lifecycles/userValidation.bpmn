@@ -56,7 +56,7 @@ kcontext.setVariable(&quot;beUtils&quot;,beUtils);
 
 currentUser = beUtils.getBaseEntityByCode(userToken.getUserCode());
 kcontext.setVariable(&quot;currentUser&quot;,currentUser);
-System.out.println(&quot;sass:::&quot;+ userToken.getUserCode());
+System.out.println(&quot;userValidation: &quot;+ userToken.getUserCode());
 
 kcontext.setVariable(&quot;userCode&quot;, userToken.getUserCode());
 
