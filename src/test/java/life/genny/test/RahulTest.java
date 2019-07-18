@@ -28,11 +28,13 @@ public class RahulTest extends GennyJbpmBaseTest {
 		super(false);
 	}
 	
-	//@Test(timeout = 30000)
+	@Test(timeout = 30000)
 	public void userLifecycleWorkflow() {
 		
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 		QRules qRules = getQRules(userToken); // defaults to user anyway
+		GennyToken serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+
 
 		GennyKieSession gks = GennyKieSession.builder(serviceToken)
 				.addJbpm(WFP_USER_LIFECYCLE)
@@ -42,11 +44,17 @@ public class RahulTest extends GennyJbpmBaseTest {
 				.build();
 
 	    gks.start();
-	    
-		System.out.println("GOOD STUFF !!! user lifecycle about to start"); 
-
-		gks.getKieSession().signalEvent("newUserSignal", userToken);
+	   
+		gks.getKieSession().signalEvent("userInSession", userToken); 
 		
+	    gks.advanceSeconds(5,true);
+	    
+		gks.getKieSession().signalEvent("userIsActive", userToken);
+
+	    gks.advanceSeconds(5,true);
+	    
+		gks.getKieSession().signalEvent("deleteuser", userToken); 
+
 		gks.close();
 
 	}
@@ -97,7 +105,7 @@ public class RahulTest extends GennyJbpmBaseTest {
 
 		}
 	
-	@Test
+	//@Test
 	public void quickTest() {
 		
 		System.out.println("Show UserSession");
