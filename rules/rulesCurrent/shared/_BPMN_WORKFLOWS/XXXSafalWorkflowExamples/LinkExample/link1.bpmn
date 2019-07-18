@@ -28,7 +28,8 @@
   <bpmn2:itemDefinition id="ItemDefinition_8" isCollection="false" structureRef="java.lang.Boolean"/>
   <bpmn2:itemDefinition id="ItemDefinition_12" isCollection="false" structureRef="org.apache.logging.log4j.Logger"/>
   <bpmn2:itemDefinition id="ItemDefinition_17" isCollection="false" structureRef="life.genny.models.GennyToken"/>
-  <bpmn2:process id="create_user" drools:packageName="life.genny.jbpm" name="Create User" isExecutable="true">
+  <bpmn2:message id="Message_1" itemRef="ItemDefinition_3" name="Message_1"/>
+  <bpmn2:process id="link" drools:packageName="life.genny.jbpm" name="Create User" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.qwanda.message.QEventMessage"/>
       <drools:import name="life.genny.rules.QRules"/>
@@ -62,6 +63,7 @@
     <bpmn2:property id="rules" itemSubjectRef="ItemDefinition_2" name="rules"/>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_17" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_17" name="serviceToken"/>
+    <bpmn2:property id="message1" itemSubjectRef="ItemDefinition_3" name="message1"/>
     <bpmn2:startEvent id="StartEvent_1" name="AuthInit">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -106,55 +108,33 @@ if (rs != null ){
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_15</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;This is a test&quot;);</bpmn2:script>
+      <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
+      <bpmn2:script>System.out.println(&quot;first workflow&quot;);
+message1 = &quot;sss&quot;;
+kcontext.setVariable(&quot;message1&quot;,&quot;sss&quot;);</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_15" drools:priority="1" sourceRef="StartEvent_1" targetRef="ScriptTask_13"/>
-    <bpmn2:intermediateCatchEvent id="IntermediateCatchEvent_1" name="link2">
+    <bpmn2:endEvent id="EndEvent_2" name="End Event 2">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[link2]]></drools:metaValue>
+          <drools:metaValue><![CDATA[End Event 2]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
-      <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
-      <bpmn2:linkEventDefinition id="LinkEventDefinition_1" name="sas">
-        <bpmn2:source>LinkEventDefinition_2</bpmn2:source>
-      </bpmn2:linkEventDefinition>
-    </bpmn2:intermediateCatchEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_1" drools:priority="1" sourceRef="ScriptTask_13" targetRef="IntermediateThrowEvent_1"/>
-    <bpmn2:intermediateThrowEvent id="IntermediateThrowEvent_1" name="link1">
-      <bpmn2:extensionElements>
-        <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[link1]]></drools:metaValue>
-        </drools:metaData>
-      </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
-      <bpmn2:linkEventDefinition id="LinkEventDefinition_2" name="linkget">
-        <bpmn2:target>LinkEventDefinition_1</bpmn2:target>
-      </bpmn2:linkEventDefinition>
-    </bpmn2:intermediateThrowEvent>
-    <bpmn2:scriptTask id="ScriptTask_1" name="Script Task 1">
-      <bpmn2:extensionElements>
-        <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Script Task 1]]></drools:metaValue>
-        </drools:metaData>
-      </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
-    </bpmn2:scriptTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_2" drools:priority="1" sourceRef="IntermediateCatchEvent_1" targetRef="ScriptTask_1"/>
-    <bpmn2:endEvent id="EndEvent_1" name="End Event 1">
-      <bpmn2:extensionElements>
-        <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[End Event 1]]></drools:metaValue>
-        </drools:metaData>
-      </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
+      <bpmn2:dataInput id="DataInput_1" itemSubjectRef="ItemDefinition_3" name="Message_1_Input"/>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_1">
+        <bpmn2:sourceRef>message1</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_1</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:inputSet id="InputSet_1" name="Input Set 1">
+        <bpmn2:dataInputRefs>DataInput_1</bpmn2:dataInputRefs>
+      </bpmn2:inputSet>
+      <bpmn2:messageEventDefinition id="MessageEventDefinition_1" messageRef="Message_1"/>
     </bpmn2:endEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_3" drools:priority="1" sourceRef="ScriptTask_1" targetRef="EndEvent_1"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_4" drools:priority="1" sourceRef="ScriptTask_13" targetRef="EndEvent_2"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Process Diagram">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="create_user">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="link">
       <bpmndi:BPMNShape id="BPMNShape_1" bpmnElement="StartEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="120.0" y="104.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1" labelStyle="BPMNLabelStyle_1">
@@ -167,28 +147,10 @@ if (rs != null ){
           <dc:Bounds height="11.0" width="22.0" x="260.0" y="116.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_IntermediateCatchEvent_1" bpmnElement="IntermediateCatchEvent_1">
-        <dc:Bounds height="36.0" width="36.0" x="520.0" y="210.0"/>
+      <bpmndi:BPMNShape id="BPMNShape_EndEvent_1" bpmnElement="EndEvent_2">
+        <dc:Bounds height="36.0" width="36.0" x="371.0" y="103.0"/>
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="11.0" width="19.0" x="528.0" y="246.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_IntermediateThrowEvent_1" bpmnElement="IntermediateThrowEvent_1">
-        <dc:Bounds height="36.0" width="36.0" x="347.0" y="210.0"/>
-        <bpmndi:BPMNLabel>
-          <dc:Bounds height="11.0" width="19.0" x="355.0" y="246.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_1" bpmnElement="ScriptTask_1" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="631.0" y="203.0"/>
-        <bpmndi:BPMNLabel>
-          <dc:Bounds height="11.0" width="52.0" x="660.0" y="222.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_EndEvent_2" bpmnElement="EndEvent_1">
-        <dc:Bounds height="36.0" width="36.0" x="809.0" y="210.0"/>
-        <bpmndi:BPMNLabel>
-          <dc:Bounds height="11.0" width="50.0" x="802.0" y="246.0"/>
+          <dc:Bounds height="11.0" width="50.0" x="364.0" y="139.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_15" bpmnElement="SequenceFlow_15" sourceElement="BPMNShape_1" targetElement="BPMNShape_ScriptTask_13">
@@ -197,22 +159,10 @@ if (rs != null ){
         <di:waypoint xsi:type="dc:Point" x="240.0" y="121.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_17"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="BPMNShape_ScriptTask_13" targetElement="BPMNShape_IntermediateThrowEvent_1">
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="SequenceFlow_4" sourceElement="BPMNShape_ScriptTask_13" targetElement="BPMNShape_EndEvent_1">
         <di:waypoint xsi:type="dc:Point" x="303.0" y="121.0"/>
-        <di:waypoint xsi:type="dc:Point" x="365.0" y="121.0"/>
-        <di:waypoint xsi:type="dc:Point" x="365.0" y="210.0"/>
-        <bpmndi:BPMNLabel/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_IntermediateCatchEvent_1" targetElement="BPMNShape_ScriptTask_1">
-        <di:waypoint xsi:type="dc:Point" x="556.0" y="228.0"/>
-        <di:waypoint xsi:type="dc:Point" x="593.0" y="228.0"/>
-        <di:waypoint xsi:type="dc:Point" x="631.0" y="228.0"/>
-        <bpmndi:BPMNLabel/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_EndEvent_2">
-        <di:waypoint xsi:type="dc:Point" x="741.0" y="228.0"/>
-        <di:waypoint xsi:type="dc:Point" x="775.0" y="228.0"/>
-        <di:waypoint xsi:type="dc:Point" x="809.0" y="228.0"/>
+        <di:waypoint xsi:type="dc:Point" x="337.0" y="121.0"/>
+        <di:waypoint xsi:type="dc:Point" x="371.0" y="121.0"/>
         <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

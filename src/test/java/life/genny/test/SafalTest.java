@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.logging.log4j.Logger;
+import org.codehaus.plexus.util.StringUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -23,6 +24,7 @@ import life.genny.models.GennyToken;
 import life.genny.models.Theme;
 import life.genny.models.ThemeAttributeType;
 import life.genny.qwanda.VisualControlType;
+import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventMessage;
@@ -55,7 +57,76 @@ public class SafalTest extends GennyJbpmBaseTest {
 	public SafalTest() {
 		super(false);
 	}
+	
+	
+	@Test
+	public void userSessionTest() {
+		
+		//VertxUtils.cachedEnabled = true; // don't try and use any local services
+		
+		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
+		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+		QEventMessage newLoginMessage = new QEventMessage("EVT_MSG","AUTH_INIT");
+		newLoginMessage.getData().setValue("NEW_SESSION");
+		
+		QEventMessage logOutMessage = new QEventMessage("EVT_MSG","LOGOUT");
+		QEventMessage displayTableMessage = new QEventMessage("EVT_MSG","DISPLAY_TABLE");
+		QEventMessage authinit = new QEventMessage("EVT_MSG","AUTH_INIT");
+		
+		/* NOW SET UP Some baseentitys*/
+		BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
+				StringUtils.capitaliseAllWords(serviceToken.getRealm()));
+		project.setRealm(serviceToken.getRealm());
+		VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
+				JsonUtils.toJson(project), serviceToken.getToken());
+		
+		VertxUtils.writeCachedJson(userToken.getRealm(),userToken.getSessionCode(),null,userToken.getToken());
+		GennyKieSession gks = GennyKieSession.builder(serviceToken)
+				.addJbpm( "user_lifecycle2.bpmn")
+				.addJbpm( "user_session2.bpmn")
+				.addJbpm( "show_dashboard.bpmn" )
+				.addJbpm( "user_validation.bpmn" )
+				.addJbpm( "auth_init.bpmn" )
+				.addJbpm( "bucket_page.bpmn" )
+				.addToken(userToken)
+				.addFact("rules", rules)
+				.build();
+		
+		
+		gks.start();
+		gks.advanceSeconds(3, true);
+		gks.injectSignal("newSession",newLoginMessage);
+		gks.advanceSeconds(10, true);
+		gks.injectSignal("userMessage",displayTableMessage);
+		gks.advanceSeconds(3, true);
+		/*gks.injectSignal("userMessage",authinit);
+		gks.advanceSeconds(5, true);
+		gks.injectSignal("userMessage",logOutMessage);
+		gks.advanceSeconds(5, true);
+		gks.injectSignal("userMessage",displayTableMessage);
+		gks.advanceSeconds(5, true);*/
+	}
 
+	//@Test
+	public void linkTest() {
+
+		VertxUtils.cachedEnabled = true; // don't try and use any local services
+		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "userToken");
+		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "serviceToken");
+		QRules qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
+		
+		GennyKieSession gks = GennyKieSession.builder(serviceToken)
+				.addJbpm( "link1.bpmn")
+				.addJbpm( "link2.bpmn")
+				.build();
+	
+	     gks.startProcess("link");
+	     
+	     
+		
+	}
+	
 	//@Test
 	public void quickTest() {
 
@@ -121,7 +192,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 	    gks.close();
 	}
 	
-	@Test
+	//@Test
 	public void v7Test() {
 	
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
@@ -385,7 +456,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 		System.out.println("BridgeUrl=" + GennySettings.bridgeServiceUrl);
 		System.out.println("QwandaUrl=" + GennySettings.qwandaServiceUrl);
 
-		// Set up realm
+		// Set up realm\
 		realms = new HashSet<String>();
 		realms.add(realm);
 		realms.stream().forEach(System.out::println);

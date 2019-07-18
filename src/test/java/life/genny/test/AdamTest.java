@@ -55,7 +55,7 @@ public class AdamTest {
 
 	}
 
-	@Test
+	//@Test
 	public void userSessionTest() {
 		System.out.println("Show UserSession");
 		GennyToken userToken = null;
@@ -166,7 +166,7 @@ public class AdamTest {
 		}
 	}
 
-	// @Test
+//@Test
 	public void displayBucketPage() {
 		System.out.println("Show Bucket Page");
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
