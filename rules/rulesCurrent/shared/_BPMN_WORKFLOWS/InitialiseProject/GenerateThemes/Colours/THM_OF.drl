@@ -47,7 +47,7 @@ rule "THM_OF"
 									.padding(10)
 								.end()
 								.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
-								.end().
+								.end()
 								.build();
 
 		theme.setRealm(serviceToken.getRealm());
