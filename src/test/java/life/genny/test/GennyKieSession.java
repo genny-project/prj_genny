@@ -41,6 +41,7 @@ import io.vavr.Tuple2;
 import io.vertx.core.json.JsonObject;
 import life.genny.jbpm.customworkitemhandlers.AwesomeHandler;
 import life.genny.jbpm.customworkitemhandlers.NotificationWorkItemHandler;
+import life.genny.jbpm.customworkitemhandlers.PrintWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.RuleFlowGroupWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowAllFormsHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowFrame;
@@ -176,7 +177,14 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	
 
 	public void injectEvent(QMessage msg) {
-		System.out.println("Injecting event "+msg.getMsg_type());
+		if (msg instanceof QEventMessage) {
+			QEventMessage msgEvent = (QEventMessage)msg;
+		System.out.println("Injecting event "+msg.getMsg_type()+"  "+msgEvent.getData().getCode());
+		} else {
+			QDataMessage msgData = (QDataMessage)msg;
+		System.out.println("Injecting data "+msg.getMsg_type()+"  "+msgData.getData_type());
+
+		}
 		QEventMessage eventMsg = null;
 		QDataMessage dataMsg = null;
 		
@@ -211,10 +219,10 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 				Long processId = Long.decode(processIdStr);
 				// So send the event through to the userSession
 				if (eventMsg != null) {
-					broadcastSignal("events",eventMsg , processId);
+					broadcastSignal("sessionEvent",eventMsg , processId);
 				} else 
 				if (dataMsg != null) {
-					broadcastSignal("data",dataMsg , processId);
+					broadcastSignal("sessionData",dataMsg , processId);
 				}
 
 			} else {
@@ -387,6 +395,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		kieSession.getWorkItemManager().registerWorkItemHandler("Notification", new NotificationWorkItemHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("ShowAllForms", new ShowAllFormsHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("ShowFrame", new ShowFrame());
+		kieSession.getWorkItemManager().registerWorkItemHandler("Print", new PrintWorkItemHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("ShowFrameWithContextList", new ShowFrameWIthContextList());
 		kieSession.getWorkItemManager().registerWorkItemHandler("RuleFlowGroup", new RuleFlowGroupWorkItemHandler(kieSession,rteng));
 

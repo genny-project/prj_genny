@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.logging.log4j.Logger;
+import org.codehaus.plexus.util.StringUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -23,6 +24,7 @@ import life.genny.models.GennyToken;
 import life.genny.models.Theme;
 import life.genny.models.ThemeAttributeType;
 import life.genny.qwanda.VisualControlType;
+import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventMessage;
@@ -55,7 +57,85 @@ public class SafalTest extends GennyJbpmBaseTest {
 	public SafalTest() {
 		super(false);
 	}
+	
+	
+	@Test
+	public void userSessionTest() {
+		
+		//VertxUtils.cachedEnabled = true; // don't try and use any local services
+		
+		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
+		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+		QEventMessage newLoginMessage = new QEventMessage("EVT_MSG","AUTH_INIT");
+		newLoginMessage.getData().setValue("NEW_SESSION");
+		
+		QEventMessage logOutMessage = new QEventMessage("EVT_MSG","LOGOUT");
+		QEventMessage displayTableMessage = new QEventMessage("EVT_MSG","DISPLAY_TABLE");
+		QEventMessage authinit = new QEventMessage("EVT_MSG","AUTH_INIT");
+		
+		/* NOW SET UP Some baseentitys*/
+		BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
+				StringUtils.capitaliseAllWords(serviceToken.getRealm()));
+		project.setRealm(serviceToken.getRealm());
+		VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
+				JsonUtils.toJson(project), serviceToken.getToken());
+		
+		VertxUtils.writeCachedJson(userToken.getRealm(),userToken.getSessionCode(),null,userToken.getToken());
+		rules.sendAllAttributes();
+		
+		GennyKieSession gks = GennyKieSession.builder(serviceToken)
+				.addJbpm( "user_lifecycle2.bpmn")
+				.addJbpm( "user_session21.bpmn")
+				.addJbpm( "show_dashboard.bpmn" )
+				.addJbpm( "user_validation.bpmn" )
+				.addJbpm( "auth_init.bpmn" )
+				.addJbpm( "bucket_page.bpmn" )
+				.addToken(userToken)
+				.addFact("rules", rules)
+				.build();
+		
+		
+		gks.start();
+		gks.advanceSeconds(3, true);
+		gks.injectSignal("newSession",newLoginMessage);
+		gks.advanceSeconds(10, true);
+		gks.injectSignal("userMessage",displayTableMessage);
+		gks.advanceSeconds(3, true);
+		/*gks.injectSignal("userMessage",authinit);
+		gks.advanceSeconds(5, true);
+		gks.injectSignal("userMessage",logOutMessage);
+		gks.advanceSeconds(5, true);
+		gks.injectSignal("userMessage",displayTableMessage);
+		gks.advanceSeconds(5, true);*/
+	}
+	
+	//@Test
+	public void simpleTest() {
+		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		rules.sendAllAttributes();
+		
+	}
 
+	//@Test
+	public void linkTest() {
+
+		VertxUtils.cachedEnabled = true; // don't try and use any local services
+		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "userToken");
+		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "serviceToken");
+		QRules qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
+		
+		GennyKieSession gks = GennyKieSession.builder(serviceToken)
+				.addJbpm( "link1.bpmn")
+				.addJbpm( "link2.bpmn")
+				.build();
+	
+	     gks.startProcess("link");
+	     
+	     
+		
+	}
+	
 	//@Test
 	public void quickTest() {
 
@@ -121,7 +201,75 @@ public class SafalTest extends GennyJbpmBaseTest {
 	    gks.close();
 	}
 	
-	@Test
+	//@Test
+	public void v7Test() {
+	
+		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
+		QRules rules = getQRules(userToken);
+		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+		rules.sendAllAttributes();	
+		
+		/* Themes and frames*/
+		
+		Theme THM_BLACK_PARTITON = Theme.builder("THM_BLACK_PARTITON")
+									.addAttribute().backgroundColor("black").end().build();
+		
+		Theme THM_RED_PARTITON = Theme.builder("THM_RED_PARTITON")
+								.addAttribute().backgroundColor("red").end().build();
+		
+		Theme THM_YELLOW_PARTITON = Theme.builder("THM_YELLOW_PARTITON")
+									.addAttribute().backgroundColor("yellow").end().build();
+		
+		Frame3 FRM_BLACK = Frame3.builder("FRM_BLACK")
+							.addTheme(THM_BLACK_PARTITON)
+							.end()
+							.question("QUE_NAME_TWO").end()
+							.build();
+		
+		Frame3 FRM_RED = Frame3.builder("FRM_RED")
+				.addTheme(THM_RED_PARTITON)
+				.end()
+				.question("QUE_NAME_TWO").end()
+				.build();
+		
+		Frame3 FRM_YELLOW = Frame3.builder("FRM_YELLOW")
+				.addTheme(THM_YELLOW_PARTITON)
+				.end()
+				.question("QUE_NAME_TWO").end()
+				.build();
+		
+		Frame3 FRM_CENTER = Frame3.builder("FRM_CENTER")
+				.addFrame(FRM_BLACK, FramePosition.NORTH).end()
+				.addFrame(FRM_RED,FramePosition.NORTH).end()
+				.addFrame(FRM_YELLOW,FramePosition.NORTH).end().build();
+
+		
+		Frame3 frameMain = Frame3.builder("FRM_MAIN")
+				.addFrame(FRM_CENTER, FramePosition.CENTRE)
+			.end()
+			.build();
+
+		Frame3 frameRoot = Frame3.builder("FRM_ROOT").addFrame(frameMain).end().build();
+
+		/* end */
+		Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+	
+		QDataBaseEntityMessage msg = FrameUtils2.toMessage(frameRoot, serviceToken, askMsgs);
+	
+		/* send message */
+		rules.publishCmd(msg); // Send QDataBaseEntityMessage
+	
+		System.out.println("Sending Asks");
+		for (QDataAskMessage askMsg : askMsgs) {
+			rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode()); // Send associated
+			// QDataAskMessage
+		}
+	
+		System.out.println("Sent");
+		
+	}
+	
+//	@Test
 	public void userPool() {
 		System.out.println("Show UserSession");
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -317,7 +465,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 		System.out.println("BridgeUrl=" + GennySettings.bridgeServiceUrl);
 		System.out.println("QwandaUrl=" + GennySettings.qwandaServiceUrl);
 
-		// Set up realm
+		// Set up realm\
 		realms = new HashSet<String>();
 		realms.add(realm);
 		realms.stream().forEach(System.out::println);
