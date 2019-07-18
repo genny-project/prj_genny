@@ -185,7 +185,7 @@ System.out.println(&quot;userValidation: Yay! currentUser is &quot;+currentUser)
         <bpmn2:incoming>SequenceFlow_25</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_23</bpmn2:outgoing>
         <bpmn2:timerEventDefinition id="TimerEventDefinition_1">
-          <bpmn2:timeDuration xsi:type="bpmn2:tFormalExpression" id="FormalExpression_1">PT2M</bpmn2:timeDuration>
+          <bpmn2:timeDuration xsi:type="bpmn2:tFormalExpression" id="FormalExpression_1">PT2H</bpmn2:timeDuration>
         </bpmn2:timerEventDefinition>
       </bpmn2:intermediateCatchEvent>
       <bpmn2:sequenceFlow id="SequenceFlow_25" drools:priority="1" sourceRef="ScriptTask_7" targetRef="IntermediateCatchEvent_2"/>
