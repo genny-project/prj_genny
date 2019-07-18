@@ -1,5 +1,38 @@
-package life.genny.rules;
-global org.apache.logging.log4j.Logger log;
+package life.genny.test;
+/*import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import org.kie.api.command.Command;
+import org.kie.api.io.ResourceType;
+import org.kie.api.runtime.ExecutionResults;
+import org.kie.api.runtime.KieSession;
+import org.kie.internal.command.CommandFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import com.google.gson.reflect.TypeToken;
+import life.genny.models.Frame3;
+import life.genny.models.FramePosition;
+import life.genny.models.GennyToken;
+import life.genny.models.Theme;
+import life.genny.models.ThemeAttributeType;
+import life.genny.qwanda.Answer;
+import life.genny.qwanda.VisualControlType;
+import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.message.QDataAskMessage;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.qwanda.message.QEventMessage;
+import life.genny.qwandautils.GennySettings;
+import life.genny.qwandautils.JsonUtils;
+import life.genny.qwandautils.QwandaUtils;
+import life.genny.rules.QRules;
+import life.genny.rules.listeners.JbpmInitListener;
+import life.genny.utils.FrameUtils2;
+import life.genny.utils.VertxUtils;*/
 import life.genny.qwanda.message.QCmdMessage;
 import life.genny.qwanda.message.QBulkMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
@@ -23,45 +56,53 @@ import life.genny.models.Theme;
 import life.genny.models.ThemeAttributeType;
 import life.genny.qwanda.VisualControlType;
 import life.genny.qwanda.message.QDataAskMessage;
+import life.genny.qwandautils.QwandaUtils;
+import java.lang.reflect.Type;
+import com.google.gson.reflect.TypeToken;
+import life.genny.qwandautils.JsonUtils;
+import life.genny.qwandautils.GennySettings;
+
 
 rule "FRM_FORM"
     ruleflow-group 'GenerateFrames'
 
     when
       not  Frame3(code == "FRM_FORM")
+
       serviceToken : GennyToken( code == "PER_SERVICE")
-			
-
+	
     then
-         System.out.println("   Generate FRM_FORM  RULE " + serviceToken.getUserCode());
+        System.out.println("   Generate FRM_FORM  RULE TEST " + serviceToken.getUserCode());
 
+				String apiUrl = GennySettings.qwandaServiceUrl + "/service/forms";
 
- 	Frame3 frame = Frame3.builder("FRM_FORM")
-	 					.addTheme("THM_OF", serviceToken)
-							.end()
-							.question("QUE_ADD_INTERNSHIP_AGENT_STEP_ONE_GRP")
-							.addTheme("THM_FORM_INPUT_DEFAULT", serviceToken)
-																.vcl(VisualControlType.VCL_INPUT).weight(2.0)
-																.end()
-							.addTheme("THM_FORM_LABEL_DEFAULT", serviceToken)
-																.vcl(VisualControlType.VCL_LABEL)
-																.end()
-							.addTheme("THM_FORM_WRAPPER_DEFAULT", serviceToken)
-																.vcl(VisualControlType.VCL_WRAPPER)
-																.end()
-							.addTheme("THM_FORM_ERROR_DEFAULT",serviceToken)
-																.vcl(VisualControlType.VCL_ERROR)
-																.end()
-							.addTheme("THM_FORM_DEFAULT", serviceToken)
-																.weight(3.0)
-																.end()
-							.addTheme("THM_FORM_CONTAINER_DEFAULT", serviceToken)
-																.weight(2.0)
-																.end()
-							.end()
+				String jsonFormCodes = QwandaUtils.apiGet(apiUrl, serviceToken.getToken());
+				
+				Type type = new TypeToken<List<String>>() {
+				}.getType();
+				List<String> formCodes = JsonUtils.fromJson(jsonFormCodes, type);
+
+				System.out.println("Before caching the formCodes");
+
+				System.out.println("Form Codes=" + formCodes);
+
+					Frame3 frameForm = Frame3.builder("FRM_" + formCodes)
+					.addTheme("THM_COLOR_WHITE", serviceToken).end()
+					.addTheme("THM_OF", serviceToken).end()
+							.question("formCodes")
+							.addTheme("THM_FORM_INPUT_DEFAULT", serviceToken).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
+							.addTheme("THM_FORM_LABEL_DEFAULT", serviceToken).vcl(VisualControlType.VCL_LABEL).end()
+							.addTheme("THM_FORM_WRAPPER_DEFAULT", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
+							.addTheme("THM_FORM_ERROR_DEFAULT", serviceToken).vcl(VisualControlType.VCL_ERROR).end()
+							.addTheme("THM_FORM_DEFAULT", serviceToken).weight(3.0).end()
+							.addTheme("THM_FORM_CONTAINER_DEFAULT", serviceToken).weight(2.0).end()
+						.end()
 						.build();
-       insert(frame); 
 
-				FrameUtils2.toMessage(frame, serviceToken);
+			frameForm.setRealm(serviceToken.getRealm());
 
+       insert(frameForm); 
+	
+			FrameUtils2.toMessage(frameForm, serviceToken);
 end
+ 
