@@ -51,8 +51,13 @@
     <bpmn2:property id="ruleGroup" itemSubjectRef="ItemDefinition_10" name="ruleGroup"/>
     <bpmn2:property id="drools" itemSubjectRef="ItemDefinition_144" name="drools"/>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_201" name="userToken"/>
+<<<<<<< HEAD:rules/rulesCurrent/shared/_BPMN_WORKFLOWS/XXX_Rahul/userLifecycle.bpmn
     <bpmn2:property id="currentUser" name="currentUser"/>
     <bpmn2:property id="newUser" name="newUser"/>
+=======
+    <bpmn2:property id="currentUser" itemSubjectRef="ItemDefinition_1014" name="currentUser"/>
+    <bpmn2:property id="newUser" itemSubjectRef="ItemDefinition_1014" name="newUser"/>
+>>>>>>> v2.4.0:rules/rulesCurrent/shared/_BPMN_WORKFLOWS/Lifecycles/userLifecycle.bpmn
     <bpmn2:property id="userCode" itemSubjectRef="ItemDefinition_10" name="userCode"/>
     <bpmn2:scriptTask id="ScriptTask_2" name="Creates a user" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>

@@ -25,7 +25,7 @@ import life.genny.qwanda.VisualControlType;
 import life.genny.qwanda.message.QDataAskMessage;
 
 rule "educationProviderDetails"
-    ruleflow-group 'GenerateForms'
+    ruleflow-group 'GenerateFrames'
       no-loop true
     when
       $process : WorkflowProcessInstance() 
