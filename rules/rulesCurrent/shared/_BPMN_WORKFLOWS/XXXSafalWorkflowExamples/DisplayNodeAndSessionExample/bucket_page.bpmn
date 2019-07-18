@@ -1,26 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
 <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.4.3.Final-v20180418-1358-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
-  <bpmn2:itemDefinition id="ItemDefinition_364" isCollection="false" structureRef="life.genny.qwanda.message.QEventMessage"/>
-  <bpmn2:itemDefinition id="ItemDefinition_366" isCollection="false" structureRef="life.genny.qwanda.message.QDataAnswerMessage"/>
-  <bpmn2:itemDefinition id="ItemDefinition_385" isCollection="false" structureRef="java.lang.String"/>
   <bpmn2:itemDefinition id="ItemDefinition_327" isCollection="false" structureRef="life.genny.models.GennyToken"/>
-  <bpmn2:itemDefinition id="ItemDefinition_1" isCollection="false" structureRef="Object"/>
-  <bpmn2:itemDefinition id="ItemDefinition_546" isCollection="false" structureRef="Object"/>
-  <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false"/>
-  <bpmn2:itemDefinition id="ItemDefinition_3" isCollection="false"/>
-  <bpmn2:itemDefinition id="ItemDefinition_4" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_8" isCollection="false" structureRef="life.genny.qwanda.message.QEventMessage"/>
+  <bpmn2:itemDefinition id="ItemDefinition_202" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_203" isCollection="false" structureRef="Object"/>
   <bpmn2:signal id="Signal_1" name="inputSignal"/>
-  <bpmn2:process id="show_bucket_page" name="Show Bucket Page 1" isExecutable="true" processType="Private">
+  <bpmn2:process id="show_bucket_page" name="Show Bucket Page " isExecutable="true" processType="Private">
     <bpmn2:extensionElements>
-      <drools:import name="java.util.Date"/>
-      <drools:import name="life.genny.qwanda.message.QEventMessage"/>
       <drools:import name="life.genny.qwanda.message.QDataAnswerMessage"/>
       <drools:import name="life.genny.models.GennyToken"/>
+      <drools:import name="life.genny.qwanda.message.QEventMessage"/>
     </bpmn2:extensionElements>
-    <bpmn2:property id="message" itemSubjectRef="ItemDefinition_364" name="message"/>
+    <bpmn2:property id="message" itemSubjectRef="ItemDefinition_8" name="message"/>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_327" name="userToken"/>
-    <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_327" name="serviceToken"/>
     <bpmn2:endEvent id="endEventId">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -89,7 +82,7 @@
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
-      <bpmn2:dataOutput id="DataOutput_1" name="Signal_4_Output"/>
+      <bpmn2:dataOutput id="DataOutput_1" name="Signal_1_Output"/>
       <bpmn2:dataOutputAssociation id="DataOutputAssociation_1">
         <bpmn2:sourceRef>DataOutput_1</bpmn2:sourceRef>
         <bpmn2:targetRef>message</bpmn2:targetRef>

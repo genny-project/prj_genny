@@ -86,7 +86,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 		
 		GennyKieSession gks = GennyKieSession.builder(serviceToken)
 				.addJbpm( "user_lifecycle2.bpmn")
-				.addJbpm( "user_session2.bpmn")
+				.addJbpm( "user_session21.bpmn")
 				.addJbpm( "show_dashboard.bpmn" )
 				.addJbpm( "user_validation.bpmn" )
 				.addJbpm( "auth_init.bpmn" )
