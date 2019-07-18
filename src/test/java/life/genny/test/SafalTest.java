@@ -82,6 +82,8 @@ public class SafalTest extends GennyJbpmBaseTest {
 				JsonUtils.toJson(project), serviceToken.getToken());
 		
 		VertxUtils.writeCachedJson(userToken.getRealm(),userToken.getSessionCode(),null,userToken.getToken());
+		rules.sendAllAttributes();
+		
 		GennyKieSession gks = GennyKieSession.builder(serviceToken)
 				.addJbpm( "user_lifecycle2.bpmn")
 				.addJbpm( "user_session2.bpmn")
@@ -106,6 +108,13 @@ public class SafalTest extends GennyJbpmBaseTest {
 		gks.advanceSeconds(5, true);
 		gks.injectSignal("userMessage",displayTableMessage);
 		gks.advanceSeconds(5, true);*/
+	}
+	
+	//@Test
+	public void simpleTest() {
+		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		rules.sendAllAttributes();
+		
 	}
 
 	//@Test
