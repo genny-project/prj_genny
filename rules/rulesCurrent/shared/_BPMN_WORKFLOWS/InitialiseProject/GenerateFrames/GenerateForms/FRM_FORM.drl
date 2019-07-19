@@ -53,9 +53,7 @@ rule "FRM_FORM"
 
 				System.out.println("Array of all the Form Codes");
 				System.out.println("Form Codes=" + formCodes);
-				int count = 0;
 			for (String formcode : formCodes){
-					count++;
 					Frame3 frame = Frame3.builder("FRM_FORM")
 					.addTheme("THM_COLOR_WHITE", serviceToken).end()
 					.addTheme("THM_OF", serviceToken).end()
@@ -68,10 +66,6 @@ rule "FRM_FORM"
 							.addTheme("THM_FORM_CONTAINER_DEFAULT", serviceToken).weight(2.0).end()
 					.end()
 					.build();
-
-						if (count>3){
-							break;
-						}
 
 			frame.setRealm(serviceToken.getRealm());
 
