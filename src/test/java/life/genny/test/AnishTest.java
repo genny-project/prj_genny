@@ -48,6 +48,58 @@ public class AnishTest extends GennyJbpmBaseTest {
         public AnishTest() {
                 super(false);
         }
+        
+        
+        @Test
+    	public void userSessionANishTest() {
+    		
+    		//VertxUtils.cachedEnabled = true; // don't try and use any local services
+    		
+    		QRules rules = GennyJbpmBaseTest.setupLocalService();
+    		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
+    		
+    		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+    		QEventMessage newLoginMessage = new QEventMessage("EVT_MSG","AUTH_INIT");
+    		newLoginMessage.getData().setValue("NEW_SESSION");
+    		
+    		QEventMessage logOutMessage = new QEventMessage("EVT_MSG","LOGOUT");
+    		logOutMessage.getData().setValue("LOGOUT");
+    		QEventMessage displayTableMessage = new QEventMessage("EVT_MSG","DISPLAY_DETAILS");
+    		QEventMessage AuthINit = new QEventMessage("EVT_MSG","AUTH_INIT");
+    		
+    		
+    		GennyKieSession gks = GennyKieSession.builder(serviceToken)
+    				.addJbpm( "user_lifecycle2.bpmn")
+    				.addJbpm( "userSession2.bpmn")
+    				.addJbpm( "show_dashboard2.bpmn" )
+    				.addJbpm( "user_validation.bpmn" )
+    				.addJbpm( "auth_init.bpmn" )
+    				.addJbpm( "bucket_page2.bpmn" )
+    				.addJbpm( "detailpage.bpmn" )
+    				.addToken(userToken)
+    				.addFact("rules", rules)
+    				.build();
+    		
+    		
+    		gks.start();
+    		gks.advanceSeconds(3, true);
+    		gks.injectSignal("newSession",newLoginMessage);
+    		gks.advanceSeconds(5, true);
+    		
+    		/*gks.injectSignal("event",AuthINit);
+    		gks.advanceSeconds(5, true);
+    		
+    		gks.injectSignal("event",displayTableMessage);
+    		gks.advanceSeconds(5, true);
+    		
+    		
+    		gks.injectSignal("event",AuthINit);
+    		gks.advanceSeconds(5, true);
+    		*/
+
+
+    	}
+    	
        // @Test
         public void testDesktop() {
                 QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -93,7 +145,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                 }
         }
 
-        @Test
+        //@Test
         public void testCachedDesktop() {
                 QRules rules = GennyJbpmBaseTest.setupLocalService();
                 GennyToken userToken = new GennyToken("userToken", rules.getToken());
