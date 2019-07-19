@@ -35,10 +35,14 @@
   <bpmn2:itemDefinition id="ItemDefinition_49" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_50" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_11" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_12" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_30" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_31" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_32" isCollection="false" structureRef="Object"/>
   <bpmn2:signal id="Signal_1" name="#{user}"/>
   <bpmn2:signal id="Signal_2" name="Signal 2"/>
   <bpmn2:signal id="Signal_3" name="login"/>
-  <bpmn2:signal id="Signal_4" name="userMessage"/>
+  <bpmn2:signal id="Signal_4" name="event"/>
   <bpmn2:signal id="Signal_5" name="newSession"/>
   <bpmn2:escalation id="Escalation_1" escalationCode="123" name="Escalation 1"/>
   <bpmn2:message id="Message_1" itemRef="ItemDefinition_10" name="message_1"/>
@@ -72,7 +76,6 @@
         </tns:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
-      <bpmn2:terminateEventDefinition id="TerminateEventDefinition_1"/>
     </bpmn2:endEvent>
     <bpmn2:intermediateCatchEvent id="IntermediateCatchEvent_2" name="Wait for Dashboard Events">
       <bpmn2:extensionElements>
@@ -103,10 +106,10 @@
       <bpmn2:script>System.out.println(&quot;Exiting Dashboard workflow&quot;);		</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_13" tns:priority="1" sourceRef="ScriptTask_2" targetRef="EndEvent_8"/>
-    <bpmn2:task id="Task_1" tns:taskName="ShowFrame" tns:displayName="ShowFrame" tns:icon="icons/icon-info.gif" name="ShowFrame">
+    <bpmn2:task id="Task_1" tns:taskName="ShowFrame" tns:displayName="ShowFrame" tns:icon="icons/icon-info.gif" name="ShowFrameDashboard">
       <bpmn2:extensionElements>
         <tns:metaData name="elementname">
-          <tns:metaValue><![CDATA[ShowFrame]]></tns:metaValue>
+          <tns:metaValue><![CDATA[ShowFrameDashboard]]></tns:metaValue>
         </tns:metaData>
         <tns:onEntry-script scriptFormat="http://www.java.com/java">
           <tns:script>System.out.println(&quot;Sending Dashboard&quot;);</tns:script>
@@ -129,7 +132,7 @@
       <bpmn2:dataInputAssociation id="_DataInputAssociation_88">
         <bpmn2:targetRef>DataInput_3</bpmn2:targetRef>
         <bpmn2:assignment id="Assignment_1">
-          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_5">&quot;FRM_DASHBOARD&quot;</bpmn2:from>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_5">&quot;FRM_DESKTOP&quot;</bpmn2:from>
           <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_2">DataInput_3</bpmn2:to>
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
@@ -169,7 +172,7 @@
       <bpmndi:BPMNShape id="BPMNShape_Task_1" bpmnElement="Task_1" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="260.0" y="153.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1">
-          <dc:Bounds height="11.0" width="49.0" x="290.0" y="172.0"/>
+          <dc:Bounds height="11.0" width="93.0" x="268.0" y="172.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_13" bpmnElement="SequenceFlow_13" sourceElement="BPMNShape_ScriptTask_2" targetElement="BPMNShape_EndEvent_8">

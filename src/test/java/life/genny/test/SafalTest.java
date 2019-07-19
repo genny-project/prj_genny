@@ -66,31 +66,25 @@ public class SafalTest extends GennyJbpmBaseTest {
 		
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
+		
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 		QEventMessage newLoginMessage = new QEventMessage("EVT_MSG","AUTH_INIT");
 		newLoginMessage.getData().setValue("NEW_SESSION");
 		
 		QEventMessage logOutMessage = new QEventMessage("EVT_MSG","LOGOUT");
+		logOutMessage.getData().setValue("LOGOUT");
 		QEventMessage displayTableMessage = new QEventMessage("EVT_MSG","DISPLAY_TABLE");
-		QEventMessage authinit = new QEventMessage("EVT_MSG","AUTH_INIT");
+		QEventMessage AuthINit = new QEventMessage("EVT_MSG","AUTH_INIT");
 		
-		/* NOW SET UP Some baseentitys*/
-		BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
-				StringUtils.capitaliseAllWords(serviceToken.getRealm()));
-		project.setRealm(serviceToken.getRealm());
-		VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
-				JsonUtils.toJson(project), serviceToken.getToken());
-		
-		VertxUtils.writeCachedJson(userToken.getRealm(),userToken.getSessionCode(),null,userToken.getToken());
-		rules.sendAllAttributes();
 		
 		GennyKieSession gks = GennyKieSession.builder(serviceToken)
 				.addJbpm( "user_lifecycle2.bpmn")
-				.addJbpm( "user_session21.bpmn")
-				.addJbpm( "show_dashboard.bpmn" )
+				.addJbpm( "userSession2.bpmn")
+				.addJbpm( "showDashboard.bpmn" )
 				.addJbpm( "user_validation.bpmn" )
 				.addJbpm( "auth_init.bpmn" )
-				.addJbpm( "bucket_page.bpmn" )
+				.addJbpm( "bucketPage.bpmn" )
+				.addJbpm( "detailPage.bpmn" )
 				.addToken(userToken)
 				.addFact("rules", rules)
 				.build();
@@ -99,15 +93,22 @@ public class SafalTest extends GennyJbpmBaseTest {
 		gks.start();
 		gks.advanceSeconds(3, true);
 		gks.injectSignal("newSession",newLoginMessage);
-		gks.advanceSeconds(10, true);
-		gks.injectSignal("userMessage",displayTableMessage);
-		gks.advanceSeconds(3, true);
-		/*gks.injectSignal("userMessage",authinit);
 		gks.advanceSeconds(5, true);
-		gks.injectSignal("userMessage",logOutMessage);
+		
+		gks.injectSignal("event",AuthINit);
 		gks.advanceSeconds(5, true);
-		gks.injectSignal("userMessage",displayTableMessage);
-		gks.advanceSeconds(5, true);*/
+	
+
+		
+		gks.injectSignal("event",displayTableMessage);
+		gks.advanceSeconds(5, true);
+		
+		
+		gks.injectSignal("event",AuthINit);
+		gks.advanceSeconds(5, true);
+		
+
+
 	}
 	
 	//@Test
