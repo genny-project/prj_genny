@@ -68,7 +68,7 @@ rule "FRM_FORM"
 					.build();
 
 			frame.setRealm(serviceToken.getRealm());
-			System.out.println(frame.getCode() + "CYRUS");
+			System.out.println(frame.getCode());
       insert(frame); 
 	
 			FrameUtils2.toMessage(frame, serviceToken);
