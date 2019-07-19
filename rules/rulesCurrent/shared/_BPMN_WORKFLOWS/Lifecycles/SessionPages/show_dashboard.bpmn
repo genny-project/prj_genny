@@ -39,6 +39,7 @@
   <bpmn2:signal id="Signal_3" name="login"/>
   <bpmn2:signal id="Signal_4" name="userMessage"/>
   <bpmn2:signal id="Signal_5" name="newSession"/>
+  <bpmn2:signal id="Signal_7" name="event"/>
   <bpmn2:escalation id="Escalation_1" escalationCode="123" name="Escalation 1"/>
   <bpmn2:message id="Message_1" itemRef="ItemDefinition_10" name="message_1"/>
   <bpmn2:process id="show_dashboard" name="Show Dashboard" isExecutable="false" processType="Private">
@@ -53,7 +54,7 @@
       <tns:import name="life.genny.models.GennyToken"/>
       <tns:import name="life.genny.qwanda.entity.BaseEntity"/>
     </bpmn2:extensionElements>
-    <bpmn2:property id="message" itemSubjectRef="ItemDefinition_1329" name="message"/>
+    <bpmn2:property id="message" name="message"/>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_174" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_174" name="serviceToken"/>
     <bpmn2:startEvent id="_1">
@@ -81,7 +82,7 @@
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
-      <bpmn2:dataOutput id="DataOutput_2" name="Signal_4_Output"/>
+      <bpmn2:dataOutput id="DataOutput_2" itemSubjectRef="ItemDefinition_1329" name="message"/>
       <bpmn2:dataOutputAssociation id="DataOutputAssociation_4">
         <bpmn2:sourceRef>DataOutput_2</bpmn2:sourceRef>
         <bpmn2:targetRef>message</bpmn2:targetRef>
@@ -89,7 +90,7 @@
       <bpmn2:outputSet id="OutputSet_1" name="Output Set 1">
         <bpmn2:dataOutputRefs>DataOutput_2</bpmn2:dataOutputRefs>
       </bpmn2:outputSet>
-      <bpmn2:signalEventDefinition id="SignalEventDefinition_4" signalRef="Signal_4"/>
+      <bpmn2:signalEventDefinition id="SignalEventDefinition_4" signalRef="Signal_7"/>
     </bpmn2:intermediateCatchEvent>
     <bpmn2:scriptTask id="ScriptTask_2" name="Display Exit Mesage" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>
@@ -99,7 +100,8 @@
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_13</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;Exiting Dashboard workflow&quot;);		</bpmn2:script>
+      <bpmn2:script>System.out.println(&quot;userSession: Show Dashboard : Exiting Dashboard workflow &quot;+((QEventMessage)message).getData().getCode()+&quot; received&quot; );
+kcontext.setVariable(&quot;message&quot;,((QEventMessage)message));		</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_13" tns:priority="1" sourceRef="ScriptTask_2" targetRef="EndEvent_8"/>
     <bpmn2:task id="Task_1" tns:taskName="ShowFrame" tns:displayName="ShowFrame" tns:icon="icons/icon-info.gif" name="ShowFrame">
@@ -197,7 +199,7 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_2" bpmnElement="Task_2" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="240.0" y="390.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_4">
           <dc:Bounds height="11.0" width="19.0" x="285.0" y="409.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -223,13 +225,13 @@
         <di:waypoint xsi:type="dc:Point" x="208.0" y="415.0"/>
         <di:waypoint xsi:type="dc:Point" x="224.0" y="415.0"/>
         <di:waypoint xsi:type="dc:Point" x="240.0" y="415.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_7"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_Task_2" targetElement="BPMNShape_Task_1">
         <di:waypoint xsi:type="dc:Point" x="350.0" y="415.0"/>
         <di:waypoint xsi:type="dc:Point" x="375.0" y="415.0"/>
         <di:waypoint xsi:type="dc:Point" x="400.0" y="415.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_8"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">

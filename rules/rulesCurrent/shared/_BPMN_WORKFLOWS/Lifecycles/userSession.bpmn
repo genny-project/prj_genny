@@ -249,7 +249,7 @@ kcontext.setVariable(&quot;recentMessage&quot;,message);</bpmn2:script>
           <tns:script>System.out.println(&quot;userSession: Calling DashBoard Workflow&quot;);</tns:script>
         </tns:onEntry-script>
         <tns:onExit-script scriptFormat="http://www.java.com/java">
-          <tns:script>System.out.println(&quot;Closing DashBoard Workflow&quot;);</tns:script>
+          <tns:script>System.out.println(&quot;userSession: Closing DashBoard Workflow&quot;);</tns:script>
         </tns:onExit-script>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_66</bpmn2:incoming>
@@ -334,7 +334,7 @@ kcontext.setVariable(&quot;recentMessage&quot;,message);</bpmn2:script>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_49</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_58</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;Logging Out&quot;);</bpmn2:script>
+      <bpmn2:script>System.out.println(&quot;userSession: Logging Out&quot;);</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_47" tns:priority="1" sourceRef="ExclusiveGateway_21" targetRef="CallActivity_15">
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_16" language="http://www.java.com/java">return (((QEventMessage)recentMessage).getData().getCode() == &quot;DISPLAY_TABLE&quot;);</bpmn2:conditionExpression>
@@ -342,8 +342,8 @@ kcontext.setVariable(&quot;recentMessage&quot;,message);</bpmn2:script>
     <bpmn2:sequenceFlow id="SequenceFlow_48" tns:priority="1" sourceRef="ExclusiveGateway_21" targetRef="CallActivity_17">
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_17">return (((QEventMessage)recentMessage).getData().getCode() == &quot;DISPLAY_DETAILS&quot;);</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="SequenceFlow_49" tns:priority="1" sourceRef="ExclusiveGateway_21" targetRef="ScriptTask_15">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_18">return (((QEventMessage)recentMessage).getData().getCode() == &quot;LOGOUT&quot;);</bpmn2:conditionExpression>
+    <bpmn2:sequenceFlow id="SequenceFlow_49" tns:priority="1" name="LOGOUT" sourceRef="ExclusiveGateway_21" targetRef="ScriptTask_15">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_18">return (((QEventMessage)recentMessage).getData().getCode() == &quot;QUE_LOGOUT&quot;);</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:exclusiveGateway id="ExclusiveGateway_22" name="event loop" gatewayDirection="Converging">
       <bpmn2:incoming>SequenceFlow_55</bpmn2:incoming>
@@ -580,7 +580,9 @@ kcontext.setVariable(&quot;message&quot;,message);</bpmn2:script>
         <di:waypoint xsi:type="dc:Point" x="705.0" y="422.0"/>
         <di:waypoint xsi:type="dc:Point" x="705.0" y="549.0"/>
         <di:waypoint xsi:type="dc:Point" x="780.0" y="549.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_30"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_30">
+          <dc:Bounds height="11.0" width="39.0" x="686.0" y="524.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_63" bpmnElement="SequenceFlow_53" sourceElement="BPMNShape_ExclusiveGateway_10" targetElement="BPMNShape_ExclusiveGateway_21">
         <di:waypoint xsi:type="dc:Point" x="598.0" y="397.0"/>
