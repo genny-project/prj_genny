@@ -1,45 +1,49 @@
-package life.genny.rules;
-
-
+       package life.genny.rules;
 global org.apache.logging.log4j.Logger log;
-
 import life.genny.qwanda.message.QCmdMessage;
 import life.genny.qwanda.message.QBulkMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventMessage;
-import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.rules.QRules;
 import io.vertx.core.json.JsonObject;
-import life.genny.qwandautils.JsonUtils;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.SearchEntity;
 import life.genny.utils.VertxUtils;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.models.GennyToken;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
-import life.genny.models.Frame3;
-import life.genny.models.Theme;
+import life.genny.models.FramePosition;
 import life.genny.utils.FrameUtils2;
+import life.genny.models.Frame3;
+import life.genny.models.FramePosition;
+import life.genny.models.GennyToken;
+import life.genny.models.Theme;
+import life.genny.models.ThemeAttributeType;
+import life.genny.qwanda.VisualControlType;
+import life.genny.qwanda.message.QDataAskMessage;
+import life.genny.qwandautils.QwandaUtils;
+import java.lang.reflect.Type;
+import com.google.gson.reflect.TypeToken;
+import life.genny.qwandautils.JsonUtils;
+import life.genny.qwandautils.GennySettings;
+import life.genny.models.Frame3;
 import life.genny.models.FramePosition;
 
-rule "FRM_FORM2"
+rule "FRM_FINAL"
     ruleflow-group 'GenerateFrames'
 
     when
-      not  Frame3(code == "FRM_FORM2")
+      not  Frame3(code == "FRM_FINAL")
       serviceToken : GennyToken( code == "PER_SERVICE")
+      FRM_PRE  : Frame3 ( code == "FRM_PRE" )
       FRM_FORM  : Frame3 ( code == "FRM_FORM" )
        
     then
-     System.out.println("   Generate FRM_FORM2 Rule  "+serviceToken.getUserCode());
+     System.out.println("   Generate FRM_FINAL Rule  "+serviceToken.getUserCode());
 
- 	Frame3 frame = Frame3.builder("FRM_FORM2")
-						.addFrame(FRM_FORM).end()
-						.build();
+    Frame3 frame = FRM_PRE.build();
 						
 	frame.setRealm(serviceToken.getRealm());
 						
@@ -47,6 +51,5 @@ rule "FRM_FORM2"
 	
 	/* Process and save to cache */
 	FrameUtils2.toMessage(frame, serviceToken);
-	
 
 end
