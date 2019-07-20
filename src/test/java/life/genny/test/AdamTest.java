@@ -65,7 +65,7 @@ public class AdamTest {
 		if (false) {
 			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-			qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
+			qRules = new QRules(eventBusMock, userToken.getToken());
 			qRules.set("realm", userToken.getRealm());
 			qRules.setServiceToken(serviceToken.getToken());
 			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -258,7 +258,7 @@ public class AdamTest {
 	public void simpleTest() {
 		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-		QRules qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
+		QRules qRules = new QRules(eventBusMock, userToken.getToken());
 		qRules.set("realm", userToken.getRealm());
 		qRules.setServiceToken(serviceToken.getToken());
 
@@ -280,7 +280,7 @@ public class AdamTest {
 
 		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-		QRules qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
+		QRules qRules = new QRules(eventBusMock, userToken.getToken());
 		qRules.set("realm", userToken.getRealm());
 		qRules.setServiceToken(serviceToken.getToken());
 
@@ -315,7 +315,7 @@ public class AdamTest {
 		VertxUtils.cachedEnabled = true; // don't try and use any local services
 		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "userToken");
 		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "serviceToken");
-		QRules qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
+		QRules qRules = new QRules(eventBusMock, userToken.getToken());
 		qRules.set("realm", userToken.getRealm());
 		qRules.setServiceToken(serviceToken.getToken());
 

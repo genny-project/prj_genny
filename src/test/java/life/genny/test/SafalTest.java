@@ -124,7 +124,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 		VertxUtils.cachedEnabled = true; // don't try and use any local services
 		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "userToken");
 		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "serviceToken");
-		QRules qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
+		QRules qRules = new QRules(eventBusMock, userToken.getToken());
 		
 		GennyKieSession gks = GennyKieSession.builder(serviceToken)
 				.addJbpm( "link1.bpmn")
@@ -142,7 +142,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 
 		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-		QRules qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
+		QRules qRules = new QRules(eventBusMock, userToken.getToken());
 		qRules.set("realm", userToken.getRealm());
 		qRules.setServiceToken(serviceToken.getToken());
 
@@ -175,7 +175,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 		VertxUtils.cachedEnabled = true; // don't try and use any local services
 		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "userToken");
 		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "serviceToken");
-		QRules qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
+		QRules qRules = new QRules(eventBusMock, userToken.getToken());
 		
 		
 		GennyKieSession gks = GennyKieSession.builder(serviceToken)
@@ -362,7 +362,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 			VertxUtils.cachedEnabled = true; // don't try and use any local services
 			GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "userToken");
 			GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "serviceToken");
-			QRules qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
+			QRules qRules = new QRules(eventBusMock, userToken.getToken());
 			
 			
 			GennyKieSession gks = GennyKieSession.builder(serviceToken)
@@ -389,7 +389,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 			VertxUtils.cachedEnabled = true; // don't try and use any local services
 			GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "userToken");
 			GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "serviceToken");
-			QRules qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
+			QRules qRules = new QRules(eventBusMock, userToken.getToken());
 			
 			GennyKieSession gks = GennyKieSession.builder(serviceToken)
 					.addJbpm("example_timer_start.bpmn")

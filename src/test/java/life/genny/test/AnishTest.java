@@ -466,7 +466,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                 GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
                 GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User",
                                 "service");
-                QRules rules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
+                QRules rules = new QRules(eventBusMock, userToken.getToken());
                 rules.set("realm", userToken.getRealm());
                 rules.setServiceToken(serviceToken.getToken());
 
@@ -636,7 +636,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                 GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
                 GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User",
                                 "service");
-                QRules qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
+                QRules qRules = new QRules(eventBusMock, userToken.getToken());
                 qRules.set("realm", userToken.getRealm());
                 qRules.setServiceToken(serviceToken.getToken());
 

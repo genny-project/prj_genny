@@ -10,7 +10,7 @@ salience 10000
     	not WorkflowProcessInstance( )
      	serviceToken: GennyToken(code == "PER_SERVICE")
     then
-     System.out.println("Setup Listener for serviceToken! Workflow startup");
+    /* System.out.println("Setup Listener for serviceToken! Workflow startup"); */
     kcontext.getKnowledgeRuntime().addEventListener(new JbpmInitListener(serviceToken)); 
 
 end

@@ -332,7 +332,7 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 
 	protected static QRules createQRules(final GennyToken userToken,final GennyToken serviceToken, EventBusInterface eventBusMock) {
 
-		QRules qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
+		QRules qRules = new QRules(eventBusMock, userToken.getToken());
 		qRules.set("realm", userToken.getRealm());
 		qRules.setServiceToken(serviceToken.getToken());
 		return qRules;
@@ -348,7 +348,7 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 
 
 
-		QRules qRules = new QRules(eventBusMock, token.getToken(), token.getAdecodedTokenMap());
+		QRules qRules = new QRules(eventBusMock, token.getToken());
 		qRules.set("realm", realm);
 		qRules.setServiceToken(projectParms.getString("serviceToken"));
 		return qRules;
@@ -406,11 +406,7 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 		try {
 			String kToken = getKeycloakToken(realm);
 			if (kToken != null) {
-				Map<String,Object> adecodedTokenMap = RulesLoader.getDecodedTokenMap(kToken);
-
 				gennyToken =  new GennyToken(kToken);
-				new GennyToken(normalisedUsername,realm,(String)adecodedTokenMap.get("preferred_username"),name,role);
-				gennyToken.setAdecodedTokenMap(adecodedTokenMap);
 				this.userToken = gennyToken;
 				
 			} else {
@@ -420,10 +416,7 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 			cache = new JsonObject(cacheToken);
 			if ("ok".equals(cache.getString("status"))) {
 				String token = cache.getString("value");
-				Map<String,Object> adecodedTokenMap = RulesLoader.getDecodedTokenMap(token);
-				gennyToken =  new GennyToken(kToken);
-				new GennyToken(normalisedUsername,realm,(String)adecodedTokenMap.get("preferred_username"),name,role);
-				gennyToken.setAdecodedTokenMap(adecodedTokenMap);
+				gennyToken =  new GennyToken(token);
 				this.serviceToken = gennyToken;
 			} else {
 				gennyToken =  new GennyToken(normalisedUsername,realm,username,name,role);
