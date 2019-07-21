@@ -14,7 +14,7 @@ salience 10000
     	userToken: GennyToken(code == "userToken")
      	serviceToken: GennyToken(code == "PER_SERVICE")
     then
-     System.out.println("Setup Listener for userToken!");
+    /* System.out.println("Setup Listener for userToken!"); */
     kcontext.getKnowledgeRuntime().addEventListener(new JbpmInitListener(userToken)); 
 
 end

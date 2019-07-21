@@ -298,7 +298,7 @@ public class CyrusTest extends GennyJbpmBaseTest {
 		if (false) {
 			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-			qRules = new QRules(eventBusMock, userToken.getToken(), userToken.getAdecodedTokenMap());
+			qRules = new QRules(eventBusMock, userToken.getToken());
 			qRules.set("realm", userToken.getRealm());
 			qRules.setServiceToken(serviceToken.getToken());
 			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -363,7 +363,6 @@ public class CyrusTest extends GennyJbpmBaseTest {
 		try {
 
 			String jsonFormCodes = QwandaUtils.apiGet(apiUrl, userToken.getToken());
-			if (!"You need to be a test.".equals(jsonFormCodes)) {
 				Type type = new TypeToken<List<String>>() {
 				}.getType();
 				List<String> formCodes = JsonUtils.fromJson(jsonFormCodes, type);
@@ -416,11 +415,10 @@ public class CyrusTest extends GennyJbpmBaseTest {
 				qRules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode());
 			}
 
-			System.out.println("Sent");
-			System.out.println("\n");
-			System.out.println("After caching the formCodes   ::  ");
-			System.out.println("Form Codes=" + formCodes);
-			}
+			// System.out.println("Sent");
+			// System.out.println("\n");
+			// System.out.println("After caching the formCodes   ::  ");
+			// System.out.println("Form Codes=" + formCodes);
 
 		} catch (Exception e) {
 

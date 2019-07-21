@@ -394,9 +394,9 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		kieSession.getWorkItemManager().registerWorkItemHandler("Awesome", new AwesomeHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("Notification", new NotificationWorkItemHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("ShowAllForms", new ShowAllFormsHandler());
-		kieSession.getWorkItemManager().registerWorkItemHandler("ShowFrame", new ShowFrame());
-		kieSession.getWorkItemManager().registerWorkItemHandler("Print", new PrintWorkItemHandler());
-		kieSession.getWorkItemManager().registerWorkItemHandler("ShowFrameWithContextList", new ShowFrameWIthContextList());
+		kieSession.getWorkItemManager().registerWorkItemHandler("ShowFrame", new ShowFrame(kieSession));
+		kieSession.getWorkItemManager().registerWorkItemHandler("Print", new PrintWorkItemHandler(kieSession));
+		kieSession.getWorkItemManager().registerWorkItemHandler("ShowFrameWithContextList", new ShowFrameWIthContextList(kieSession));
 		kieSession.getWorkItemManager().registerWorkItemHandler("RuleFlowGroup", new RuleFlowGroupWorkItemHandler(kieSession,rteng));
 
 

@@ -6,7 +6,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_385" isCollection="false" structureRef="java.lang.String"/>
   <bpmn2:itemDefinition id="ItemDefinition_327" isCollection="false" structureRef="life.genny.models.GennyToken"/>
   <bpmn2:signal id="Signal_3" name="event"/>
-  <bpmn2:process id="show_detail_page" name="Show Detail Page" isExecutable="true" processType="Private">
+  <bpmn2:process id="show_bucket_page" name="Show Detail Page" isExecutable="true" processType="Private">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.qwanda.message.QEventMessage"/>
       <drools:import name="life.genny.qwanda.message.QDataAnswerMessage"/>
@@ -68,7 +68,7 @@
     <bpmn2:sequenceFlow id="SequenceFlow_2" drools:priority="1" sourceRef="Task_1" targetRef="endEventId"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="show_detail_page">
+    <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="show_bucket_page">
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_1" bpmnElement="endEventId">
         <dc:Bounds height="36.0" width="36.0" x="710.0" y="94.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_3"/>

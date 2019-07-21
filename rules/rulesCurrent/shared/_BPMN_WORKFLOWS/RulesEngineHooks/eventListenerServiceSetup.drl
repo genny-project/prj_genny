@@ -16,9 +16,9 @@ rule "eventListenerServiceSetup"
 		$process : WorkflowProcessInstance( ) 
 		 not  GennyToken (code == "PER_SERVICE")
     then
-     System.out.println("Setup Startup Listener2 for serviceToken!  in eventListenerServiceSetup");
+    /* System.out.println("Setup Startup Listener2 for serviceToken!  in eventListenerServiceSetup"); */
      GennyToken serviceToken =  (GennyToken)$process.getVariable("serviceToken");
-     System.out.println("ServiceToken detected ==== "+serviceToken.getCode());
+    /* System.out.println("ServiceToken detected ==== "+serviceToken.getCode()); */
 
      insert(serviceToken);
      
