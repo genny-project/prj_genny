@@ -44,6 +44,7 @@
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_174" name="userToken"/>
     <bpmn2:property id="recentMessage" itemSubjectRef="ItemDefinition_1329" name="recentMessage"/>
     <bpmn2:property id="currentUser" itemSubjectRef="ItemDefinition_801" name="currentUser"/>
+    <bpmn2:property id="session_state" itemSubjectRef="ItemDefinition_10" name="session_state"/>
     <bpmn2:startEvent id="_1" name="Start">
       <bpmn2:extensionElements>
         <tns:metaData name="elementname">
@@ -82,6 +83,7 @@
       <bpmn2:script>System.out.println(&quot;userSession: Entering userSession &quot;+((QEventMessage)message).getData().getCode()+&quot; with userToken = &quot;+((GennyToken)userToken).getUserCode());
 ((QEventMessage)message).getData().setValue(&quot;NEW_SESSION&quot;);   /* Flag the incoming message as NEW! */
 kcontext.setVariable(&quot;message&quot;,(QEventMessage)message); 
+kcontext.setVariable(&quot;session_state&quot;,((GennyToken)userToken).getToken()); 
 </bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_6" tns:priority="1" sourceRef="_1" targetRef="ScriptTask_3"/>
