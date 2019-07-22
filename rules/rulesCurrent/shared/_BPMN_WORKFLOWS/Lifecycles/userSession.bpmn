@@ -83,7 +83,7 @@
       <bpmn2:script>System.out.println(&quot;userSession: Entering userSession &quot;+((QEventMessage)message).getData().getCode()+&quot; with userToken = &quot;+((GennyToken)userToken).getUserCode());
 ((QEventMessage)message).getData().setValue(&quot;NEW_SESSION&quot;);   /* Flag the incoming message as NEW! */
 kcontext.setVariable(&quot;message&quot;,(QEventMessage)message); 
-kcontext.setVariable(&quot;session_state&quot;,((GennyToken)userToken).getToken()); 
+kcontext.setVariable(&quot;session_state&quot;,((GennyToken)userToken).getSessionCode()); 
 </bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_6" tns:priority="1" sourceRef="_1" targetRef="ScriptTask_3"/>
