@@ -37,9 +37,13 @@ rule "THM_TAB_HEADER"
 
      	System.out.println("   Generate THM_TAB_HEADER Rule ");
 
+      BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+			BaseEntity project = beUtils.getBaseEntityByCode( "PRJ_" + realm.toUpperCase());
+
 		Theme theme = Theme.builder("THM_TAB_HEADER")
                                 .addAttribute()
-                                .backgroundColor("#065B9A")
+                                /* .backgroundColor("#065B9A") */
+                    						.backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E"))
                                 .flexDirection("row")
                                 .marginRight(5)
                                 .end()
