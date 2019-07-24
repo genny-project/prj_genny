@@ -38,7 +38,7 @@ rule "THM_TAB_HEADER"
      	System.out.println("   Generate THM_TAB_HEADER Rule ");
 
       BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
-			BaseEntity project = beUtils.getBaseEntityByCode( "PRJ_" + realm.toUpperCase());
+			BaseEntity project = beUtils.getBaseEntityByCode( "PRJ_" + serviceToken.getRealm().toUpperCase());
 
 		Theme theme = Theme.builder("THM_TAB_HEADER")
                                 .addAttribute()
