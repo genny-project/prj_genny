@@ -27,6 +27,8 @@ import life.genny.models.Theme;
 import life.genny.models.ThemeAttributeType;
 import life.genny.models.ThemePosition;
 import life.genny.qwanda.Answer;
+import life.genny.qwanda.Context;
+import life.genny.qwanda.ContextType;
 import life.genny.qwanda.VisualControlType;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.message.QDataAskMessage;
@@ -37,6 +39,7 @@ import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.rules.QRules;
 import life.genny.rules.listeners.JbpmInitListener;
+import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.FrameUtils2;
 import life.genny.utils.VertxUtils;
 
@@ -50,7 +53,7 @@ public class AnishTest extends GennyJbpmBaseTest {
         }
         
         
-        @Test
+       // @Test
     	public void userSessionANishTest() {
     		
     		//VertxUtils.cachedEnabled = true; // don't try and use any local services
@@ -153,7 +156,7 @@ public class AnishTest extends GennyJbpmBaseTest {
 
                 rules.sendAllAttributes();
 
-               GennyKieSession gks = null;
+                GennyKieSession gks = null;
 
                 try {
                         gks = GennyKieSession.builder(serviceToken, false).addToken(userToken).build();
@@ -214,6 +217,51 @@ public class AnishTest extends GennyJbpmBaseTest {
                 // System.out.println("Error " + e.getLocalizedMessage());
                 // }
         }
+        
+        @Test
+        public void virtualAskAndContextTest(){
+                QRules rules = GennyJbpmBaseTest.setupLocalService();
+                GennyToken userToken = new GennyToken("userToken", rules.getToken());
+                GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+                
+                rules.sendAllAttributes();
+
+
+                Frame3 FRM_HEADER = this.generateHeader();
+
+
+                Theme THM_MAIN = Theme.builder("THM_MAIN")
+                                .addAttribute()
+                                        .backgroundColor("grey")
+                                        .color("#18639F")
+                                        //.height(80)
+                                        .end()
+                                .build();                                        
+
+                Frame3 FRM_MAIN = Frame3.builder("FRM_MAIN")
+                                .addTheme(THM_MAIN).end()
+                                .question("QUE_NAME_TWO").end()
+                                .build();
+
+                try {
+                        /* frame-root */
+                        Frame3 FRM_ROOT = Frame3.builder("FRM_ROOT")
+				                        .addFrame(FRM_HEADER, FramePosition.NORTH).end()
+				                        .addFrame(FRM_MAIN, FramePosition.CENTRE).end()
+				                        .build();
+
+                        Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+                        QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_ROOT, serviceToken, askMsgs);
+                        rules.publishCmd(msg);
+                        for (QDataAskMessage askMsg : askMsgs) {
+                                rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode());
+                        }
+                        System.out.println("Sent");
+                } catch (Exception e) {
+                        System.out.println("Failed " + e.getLocalizedMessage());
+                }
+                
+        }
 
         public Frame3 generateHeader() {
                 QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -245,11 +293,36 @@ public class AnishTest extends GennyJbpmBaseTest {
                                                 .color("white")
                                                 .height(80)
                                                 .end()
-                                        .build();                                        
+                                        .build();    
+                        
+                		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+            			BaseEntity sortIconBe = beUtils.getBaseEntityByCode("ICN_SORT");
+                        
+            			Context context = new Context(ContextType.ICON, sortIconBe, VisualControlType.VCL_ICON, 1.0);
+                        
+            			/* Test Context */
+                        Frame3 FRM_HAMBURGER_MENU = Frame3.builder("FRM_HAMBURGER_MENU")
+                        							.question("QUE_SUBMIT")
+                        							.addContext(context).end()
+                        							.end()
+                        							.build();
+                        
+                        /* Test Virtual Ask */
+                        /*
+                        Frame3 FRM_HAMBURGER_MENU = Frame3.builder("FRM_HAMBURGER_MENU")
+                        							.question("PRI-EVENT", "Nothing")
+                        							.addContext(context).end()
+                        							.end()
+                        							.build();
+                        							
+                         */
 
                         Frame3 FRM_HEADER = Frame3.builder("FRM_HEADER").addTheme(THM_HEADER).end()
-                                        .addFrame(FRM_DUMMY).end().addFrame(FRM_PROJECT).end()
-                                        .addFrame(FRM_HEADER_OPTIONS, FramePosition.EAST).end().build();
+                                        .addFrame(FRM_DUMMY).end()
+                                        .addFrame(FRM_PROJECT).end()
+                                        .addFrame(FRM_HAMBURGER_MENU, FramePosition.WEST).end()
+                                        .addFrame(FRM_HEADER_OPTIONS, FramePosition.EAST).end()
+                                        .build();
 
                         System.out.println("Generated Header Frame");
                         return FRM_HEADER;
