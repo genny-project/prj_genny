@@ -55,6 +55,59 @@ public class AdamTest {
 
 	}
 
+	@Test
+	public void virtualQuestionTest() {
+		System.out.println("Send Virtual Question");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+		} else {
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+		}
+
+		System.out.println("session     =" + userToken.getSessionCode());
+		System.out.println("userToken   =" + userToken.getToken());
+		System.out.println("serviceToken=" + serviceToken.getToken());
+
+
+		// NOW SET UP Some baseentitys
+		BaseEntity user = VertxUtils.readFromDDT(serviceToken.getRealm(),userToken.getUserCode(), true,
+				serviceToken.getToken());
+		
+
+		// Create a frame with an attribute question
+		Theme THM_DUMMY = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DUMMY", Theme.class,
+				serviceToken.getToken());
+
+		Frame3 FRM_DUMMY3 = Frame3.builder("FRM_DUMMY3")
+				.addTheme(THM_DUMMY)
+				.end()
+				.question("PRI_FIRSTNAME", "Firstname").end()
+				.build();
+		
+		Frame3 FRM_ROOT3 = Frame3.builder("FRM_ROOT")
+				.addFrame(FRM_DUMMY3).end().build();
+
+		
+		Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+
+		QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_ROOT3, serviceToken, askMsgs);
+
+		
+		System.out.println(user);
+	}
+
+	
 	//@Test
 	public void userSessionTest() {
 		System.out.println("Show UserSession");
