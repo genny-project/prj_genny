@@ -55,7 +55,6 @@ rule "FRM_FORM"
 				System.out.println("Form Codes=" + questionCodes);
 			for (String questionCode : questionCodes){
 					Frame3 frame = Frame3.builder("FRM_" +  questionCode)
-					.addTheme("THM_COLOR_WHITE", serviceToken).end()
 					.addTheme("THM_OF", serviceToken).end()
 							.question(questionCode)
 							.addTheme("THM_FORM_INPUT_DEFAULT", serviceToken).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
