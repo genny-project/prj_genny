@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -64,12 +65,14 @@ public class SafalTest extends GennyJbpmBaseTest {
 
 	public SafalTest() {
 		super(false);
+		
+		
 	}
 	
 	//@Test
 	public void timeCHeck() {
 		
-	
+		
 		
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 		System.out.println(userToken.getExpiryDateTime());
@@ -89,7 +92,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 	}
 	
 	
-	@Test
+	//@Test
 	public void userSessionTestToRunnningService() {
 		
 		//VertxUtils.cachedEnabled = true; // don't try and use any local services
@@ -104,6 +107,46 @@ public class SafalTest extends GennyJbpmBaseTest {
 		ansMsg.setToken(userToken.getToken());
 		
 		VertxUtils.writeMsg("data", JsonUtils.toJson(ansMsg));
+		
+	}
+	
+	@Test
+	public void SendData() {
+		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
+		QRules rules = getQRules(userToken);
+		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+		
+
+		Answer ans = new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_NAME", "Safal Shrestha");
+		QDataAnswerMessage ansMsg = new QDataAnswerMessage(ans);
+		ansMsg.setToken(userToken.getToken());
+
+		QEventMessage msg = new QEventMessage("EVT_MSG", "AUTH_INIT");
+
+		GennyKieSession gks = GennyKieSession.builder(serviceToken)
+				.addJbpm("userSession.bpmn")
+				.addJbpm("userValidation.bpmn")
+				.addJbpm("userLifecycle.bpmn")
+				.addJbpm("bucketPage.bpmn")
+				.addJbpm("showDashboard.bpmn")
+				.addJbpm("auth_init.bpmn")
+				.addJbpm("detailpage.bpmn")
+				.addDrl("Answer.drl")
+				
+				.addFact("rules", rules)
+				.addToken(userToken) 
+				.addToken(serviceToken)
+				.build();
+				
+		
+		gks.start();
+		gks.injectSignal("newSession",msg);
+		gks.advanceSeconds(5, true);
+		
+		gks.injectSignal("data", ansMsg);
+		gks.advanceSeconds(5, true);
+	     
+		
 		
 	}
 	
