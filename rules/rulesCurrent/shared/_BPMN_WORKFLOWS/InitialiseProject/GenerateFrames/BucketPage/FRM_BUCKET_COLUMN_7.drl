@@ -44,6 +44,8 @@ rule "FRM_BUCKET_COLUMN_7"
                                 .addTheme("THM_BUCKET_COLUMN", ThemePosition.WRAPPER, serviceToken).end()
                                 .addTheme("THM_BUCKET_COLUMN_PADDING", ThemePosition.CENTRE, serviceToken).end()
                                 .addFrame(FRM_GRP_IN_PROGRESS, FramePosition.NORTH).end()
+                                .addFrame(FRM_CARD_COMPANY, FramePosition.CENTRE).end()
+                                .addFrame(FRM_CARD_PRODUCT, FramePosition.CENTRE).end()
                                 .build();
 						
 	frame.setRealm(serviceToken.getRealm());
