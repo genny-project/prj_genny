@@ -85,13 +85,13 @@
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
-      <bpmn2:dataOutput id="DataOutput_1" itemSubjectRef="ItemDefinition_364" name="message"/>
-      <bpmn2:dataOutputAssociation id="DataOutputAssociation_1">
-        <bpmn2:sourceRef>DataOutput_1</bpmn2:sourceRef>
+      <bpmn2:dataOutput id="DataOutput_2" name="Signal_1_Output"/>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_2">
+        <bpmn2:sourceRef>DataOutput_2</bpmn2:sourceRef>
         <bpmn2:targetRef>message</bpmn2:targetRef>
       </bpmn2:dataOutputAssociation>
       <bpmn2:outputSet id="OutputSet_3" name="Output Set 1">
-        <bpmn2:dataOutputRefs>DataOutput_1</bpmn2:dataOutputRefs>
+        <bpmn2:dataOutputRefs>DataOutput_2</bpmn2:dataOutputRefs>
       </bpmn2:outputSet>
       <bpmn2:signalEventDefinition id="SignalEventDefinition_1" signalRef="Signal_3"/>
     </bpmn2:intermediateCatchEvent>
