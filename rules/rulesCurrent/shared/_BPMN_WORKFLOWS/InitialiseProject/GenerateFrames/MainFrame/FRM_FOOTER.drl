@@ -40,11 +40,11 @@ rule "FRM_FOOTER"
  	Frame3 frame = Frame3.builder("FRM_FOOTER")
  							.addTheme("THM_FOOTER",serviceToken)
  								.end()
- 							.addFrame(FRM_DUMMY)
- 								.end()
-                            .addFrame(FRM_POWERED_BY, FramePosition.EAST)
-                            	.end()
-                            .build();
+                .addFrame(FRM_DUMMY, FramePosition.NORTH)
+                  .end()
+                .addFrame(FRM_POWERED_BY, FramePosition.NORTH)
+                .end()
+              .build();
 						
 	frame.setRealm(serviceToken.getRealm());
 						
