@@ -24,28 +24,27 @@ import org.kie.api.runtime.process.WorkflowProcessInstance;
 import life.genny.models.Frame3;
 import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
-import life.genny.qwanda.VisualControlType;
 import life.genny.models.FramePosition;
-import life.genny.models.ThemePosition;
+import life.genny.qwanda.VisualControlType;
 
 
-rule "FRM_BUCKET_COLUMN_6"
+rule "FRM_COMPANY_WEBSITE"
     ruleflow-group 'GenerateFrames'
-  
-    when
-      not  Frame3(code == "FRM_BUCKET_COLUMN_6")
-      serviceToken : GennyToken( code == "PER_SERVICE")
-      FRM_GRP_PLACED : Frame3 (code == "FRM_GRP_PLACED" )
-      FRM_BUCKET_COLUMN_5 : Frame3 (code == "FRM_BUCKET_COLUMN_5" ) /* just to see a sequence */      
-    then
-     System.out.println("   Generate FRM_BUCKET_COLUMN_6 Rule  "+serviceToken.getUserCode());
 
- 	 Frame3 frame = Frame3.builder("FRM_BUCKET_COLUMN_6")
-                                .addTheme("THM_BUCKET_COLUMN", ThemePosition.WRAPPER, serviceToken).end()
-                                .addTheme("THM_BUCKET_COLUMN_PADDING", ThemePosition.CENTRE, serviceToken).end()
-                                .addFrame(FRM_GRP_PLACED, FramePosition.NORTH).end()
+    when
+      not  Frame3(code == "FRM_COMPANY_WEBSITE")
+      serviceToken : GennyToken( code == "PER_SERVICE")
+      FRM_DUMMY : Frame3 ( code == "FRM_DUMMY" )
+    then
+     System.out.println("   Generate FRM_COMPANY_WEBSITE Rule  "+serviceToken.getUserCode());
+
+ 	 Frame3 frame = Frame3.builder("FRM_COMPANY_WEBSITE")
+                                .question("QUE_COMPANY_WEBSITE")
+                                        .addTheme("THM_CARD_DEFAULT",serviceToken)
+                                        .vcl(VisualControlType.VCL_LABEL)
+                                        .end()
+                                .end()
                                 .build();
-						
 	frame.setRealm(serviceToken.getRealm());
 						
 	insert (frame);
