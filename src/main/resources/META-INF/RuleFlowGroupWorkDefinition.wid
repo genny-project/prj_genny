@@ -5,7 +5,7 @@ import org.drools.core.process.core.datatype.impl.type.StringDataType;
     "name" : "RuleFlowGroup",
     "parameters" : [     
        "serviceToken"  : new GennyToken(),
-       "ruleFlowGroup"  :  new new StringDataType()
+       "ruleFlowGroup"  :  new StringDataType()
      ],
     "displayName" : "RunRuleFlowGroup",
     "icon" : "icons/icon-info.gif"
