@@ -36,18 +36,21 @@ rule "THM_HEADER"
 
      	System.out.println("   Generate THM_HEADER Rule ");
 
-		Theme theme = Theme.builder("THM_HEADER")
-						.addAttribute()
-							/* .backgroundColor("#18639F") */
-							.backgroundColor("pink")
-							.color("white")
-							.height(80)
-							.end()
-						.build();
+			BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+			BaseEntity project = beUtils.getBaseEntityByCode( "PRJ_" + serviceToken.getRealm().toUpperCase());
 
-		theme.setRealm(serviceToken.getRealm());
+			Theme theme = Theme.builder("THM_HEADER")
+							.addAttribute()
+								/* .backgroundColor("#18639F") */
+								.backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E"))
+								.color("white")
+								.height(80)
+								.end()
+							.build();
 
-		insert(theme);
+			theme.setRealm(serviceToken.getRealm());
 
-		VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
+			insert(theme);
+
+			VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
 end

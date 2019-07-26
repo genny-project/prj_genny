@@ -36,9 +36,14 @@ rule "THM_FOOTER"
 
      	System.out.println("   Generate THM_FOOTER Rule ");
 
+			BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+			BaseEntity project = beUtils.getBaseEntityByCode( "PRJ_" + serviceToken.getRealm().toUpperCase());
+
 			Theme theme = Theme.builder("THM_FOOTER")
 					.addAttribute()
-						.backgroundColor("#16649E")
+/* 						.backgroundColor("#16649E") */
+						.backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E"))
+
 						.end()
                     .addAttribute()
                     	.bold(true)
