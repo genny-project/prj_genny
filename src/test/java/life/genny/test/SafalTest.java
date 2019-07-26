@@ -66,7 +66,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 		super(false);
 	}
 	
-	@Test
+	//@Test
 	public void timeCHeck() {
 		
 	
@@ -89,7 +89,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 	}
 	
 	
-	//@Test
+	@Test
 	public void userSessionTestToRunnningService() {
 		
 		//VertxUtils.cachedEnabled = true; // don't try and use any local services
@@ -99,9 +99,12 @@ public class SafalTest extends GennyJbpmBaseTest {
 		
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 		
-		QDataAnswerMessage sas = new QDataAnswerMessage(new Answer("asd","asd","asdasd","adasdasd"));
-		sas.setToken(userToken.getToken());
-		VertxUtils.writeMsg("data", JsonUtils.toJson(sas));
+		Answer ans = new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_NAME", "Safal Shrestha");
+		QDataAnswerMessage ansMsg = new QDataAnswerMessage(ans);
+		ansMsg.setToken(userToken.getToken());
+		
+		VertxUtils.writeMsg("data", JsonUtils.toJson(ansMsg));
+		
 	}
 	
 	//@Test
