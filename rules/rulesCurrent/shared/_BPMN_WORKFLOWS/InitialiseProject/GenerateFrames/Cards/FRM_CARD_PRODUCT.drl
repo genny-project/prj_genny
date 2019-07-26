@@ -28,29 +28,34 @@ import life.genny.models.FramePosition;
 import life.genny.qwanda.VisualControlType;
 
 
-rule "FRM_CARD"
+rule "FRM_CARD_PRODUCT"
     ruleflow-group 'GenerateFrames'
 
     when
-      not  Frame3(code == "FRM_CARD")
+      not  Frame3(code == "FRM_CARD_PRODUCT")
       serviceToken : GennyToken( code == "PER_SERVICE")
       FRM_DUMMY : Frame3 ( code == "FRM_DUMMY" )
-      FRM_CARD_LEFT : Frame3 ( code == "FRM_CARD_LEFT" )
-      FRM_CARD_CENTRE : Frame3 ( code == "FRM_CARD_CENTRE" )
+      FRM_INTERNSHIP_TITLE : Frame3 ( code == "FRM_INTERNSHIP_TITLE" )
+      FRM_INTERNSHIP_DESCRIPTION : Frame3 ( code == "FRM_INTERNSHIP_DESCRIPTION" )
+      FRM_INTERNSHIP_START_DATE : Frame3 ( code == "FRM_INTERNSHIP_START_DATE" )
+      FRM_INTERNSHIP_START_DURATION : Frame3 ( code == "FRM_INTERNSHIP_START_DURATION" )
+      FRM_INTERNSHIP_INDUSTRY_AND_OCCUPATION : Frame3 ( code == "FRM_INTERNSHIP_INDUSTRY_AND_OCCUPATION" )
 
     then
-     System.out.println("   Generate FRM_CARD Rule  "+serviceToken.getUserCode());
+     System.out.println("   Generate FRM_CARD_PRODUCT Rule  "+serviceToken.getUserCode());
 
- 	 Frame3 frame = Frame3.builder("FRM_CARD")
+ 	 Frame3 frame = Frame3.builder("FRM_CARD_PRODUCT")
                                 .addTheme("THM_CARD", ThemePosition.WRAPPER, serviceToken).end()
-                                .question("QUE_NAME_TWO")
+                              /*   .question("QUE_NAME_TWO")
                                         .addTheme("THM_FORM_LABEL_DEFAULT",serviceToken)
                                         .vcl(VisualControlType.VCL_WRAPPER)
                                         .end()
-                                .end()
-                                .addFrame(FRM_CARD_LEFT, FramePosition.WEST).end()
-                                .addFrame(FRM_CARD_CENTRE, FramePosition.WEST).end()
-                               /* .addFrame(frameRightCard, FramePosition.WEST).end() */
+                                .end() */
+                                .addFrame(FRM_INTERNSHIP_TITLE, FramePosition.NORTH).end()
+                                .addFrame(FRM_INTERNSHIP_DESCRIPTION, FramePosition.NORTH).end()
+                                .addFrame(FRM_INTERNSHIP_START_DATE, FramePosition.NORTH).end()
+                                .addFrame(FRM_INTERNSHIP_START_DURATION, FramePosition.NORTH).end()
+                                .addFrame(FRM_INTERNSHIP_INDUSTRY_AND_OCCUPATION, FramePosition.NORTH).end()
                                 .build();
                 
 	frame.setRealm(serviceToken.getRealm());

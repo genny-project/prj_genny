@@ -28,29 +28,31 @@ import life.genny.models.FramePosition;
 import life.genny.qwanda.VisualControlType;
 
 
-rule "FRM_CARD"
+rule "FRM_CARD_COMPANY"
     ruleflow-group 'GenerateFrames'
 
     when
-      not  Frame3(code == "FRM_CARD")
+      not  Frame3(code == "FRM_CARD_COMPANY")
       serviceToken : GennyToken( code == "PER_SERVICE")
       FRM_DUMMY : Frame3 ( code == "FRM_DUMMY" )
-      FRM_CARD_LEFT : Frame3 ( code == "FRM_CARD_LEFT" )
-      FRM_CARD_CENTRE : Frame3 ( code == "FRM_CARD_CENTRE" )
+      FRM_COMPANY_ABN : Frame3 ( code == "FRM_COMPANY_ABN" )
+      FRM_COMPANY_ACN : Frame3 ( code == "FRM_COMPANY_ACN" )
+      FRM_COMPANY_LOGO : Frame3 ( code == "FRM_COMPANY_LOGO" )
+      FRM_COMPANY_WEBSITE : Frame3 ( code == "FRM_COMPANY_WEBSITE" )
+      FRM_LEGAL_NAME : Frame3 ( code == "FRM_LEGAL_NAME" )
+      FRM_TRADING_NAME : Frame3 ( code == "FRM_TRADING_NAME" )
 
     then
-     System.out.println("   Generate FRM_CARD Rule  "+serviceToken.getUserCode());
+     System.out.println("   Generate FRM_CARD_COMPANY Rule  "+serviceToken.getUserCode());
 
- 	 Frame3 frame = Frame3.builder("FRM_CARD")
+ 	 Frame3 frame = Frame3.builder("FRM_CARD_COMPANY")
                                 .addTheme("THM_CARD", ThemePosition.WRAPPER, serviceToken).end()
-                                .question("QUE_NAME_TWO")
-                                        .addTheme("THM_FORM_LABEL_DEFAULT",serviceToken)
-                                        .vcl(VisualControlType.VCL_WRAPPER)
-                                        .end()
-                                .end()
-                                .addFrame(FRM_CARD_LEFT, FramePosition.WEST).end()
-                                .addFrame(FRM_CARD_CENTRE, FramePosition.WEST).end()
-                               /* .addFrame(frameRightCard, FramePosition.WEST).end() */
+                                .addFrame(FRM_COMPANY_LOGO, FramePosition.NORTH).end()
+                                .addFrame(FRM_LEGAL_NAME, FramePosition.NORTH).end()
+                                .addFrame(FRM_TRADING_NAME, FramePosition.NORTH).end()
+                                .addFrame(FRM_COMPANY_ABN, FramePosition.NORTH).end()
+                                .addFrame(FRM_COMPANY_ACN, FramePosition.NORTH).end()
+                                .addFrame(FRM_COMPANY_WEBSITE, FramePosition.NORTH).end()
                                 .build();
                 
 	frame.setRealm(serviceToken.getRealm());

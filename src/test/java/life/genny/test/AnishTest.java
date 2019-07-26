@@ -103,7 +103,7 @@ public class AnishTest extends GennyJbpmBaseTest {
 
     	}
     	
-       // @Test
+        @Test
         public void testDesktop() {
                 QRules rules = GennyJbpmBaseTest.setupLocalService();
                 GennyToken userToken = new GennyToken("userToken", rules.getToken());
@@ -131,9 +131,11 @@ public class AnishTest extends GennyJbpmBaseTest {
 
 
                         /* frame-root */
-                        Frame3 FRM_ROOT = Frame3.builder("FRM_ROOT").addFrame(FRM_HEADER, FramePosition.NORTH).end()
+                        Frame3 FRM_ROOT = Frame3.builder("FRM_ROOT")
+                                        .addFrame(FRM_HEADER, FramePosition.NORTH).end()
                                         .addFrame(FRM_SIDEBAR, FramePosition.WEST).end()
-                                        .addFrame(FRM_MAIN, FramePosition.CENTRE).end()
+                                        /* .addFrame(FRM_MAIN, FramePosition.CENTRE).end() */
+                                        .addFrame(FRM_TABS, FramePosition.CENTRE).end()
                                         .addFrame(FRM_FOOTER, FramePosition.SOUTH).end().build();
 
                         Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
@@ -218,7 +220,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                 // }
         }
         
-        @Test
+        //@Test
         public void virtualAskAndContextTest(){
                 QRules rules = GennyJbpmBaseTest.setupLocalService();
                 GennyToken userToken = new GennyToken("userToken", rules.getToken());
@@ -267,6 +269,9 @@ public class AnishTest extends GennyJbpmBaseTest {
                 QRules rules = GennyJbpmBaseTest.setupLocalService();
                 GennyToken userToken = new GennyToken("userToken", rules.getToken());
                 GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+                BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+                BaseEntity project = beUtils.getBaseEntityByCode( "PRJ_" + serviceToken.getRealm().toUpperCase());
+
                 try {
 
                         Frame3 FRM_DUMMY = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_DUMMY", Frame3.class,
@@ -289,13 +294,13 @@ public class AnishTest extends GennyJbpmBaseTest {
 
                         Theme THM_HEADER = Theme.builder("THM_HEADER")
                                         .addAttribute()
-                                                .backgroundColor("#18639F")
+                                                //.backgroundColor("#18639F")
+                								.backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E"))
                                                 .color("white")
                                                 .height(80)
                                                 .end()
                                         .build();    
                         
-                		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
             			BaseEntity sortIconBe = beUtils.getBaseEntityByCode("ICN_SORT");
                         
             			Context context = new Context(ContextType.ICON, sortIconBe, VisualControlType.VCL_ICON, 1.0);
@@ -303,7 +308,7 @@ public class AnishTest extends GennyJbpmBaseTest {
             			/* Test Context */
                         Frame3 FRM_HAMBURGER_MENU = Frame3.builder("FRM_HAMBURGER_MENU")
                         							.question("QUE_SUBMIT")
-                        							.addContext(context).end()
+                        							//.addContext(context).end()
                         							.end()
                         							.build();
                         
@@ -336,13 +341,21 @@ public class AnishTest extends GennyJbpmBaseTest {
         public Frame3 generateSidebar() {
                 QRules rules = GennyJbpmBaseTest.setupLocalService();
                 GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+                BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+                BaseEntity project = beUtils.getBaseEntityByCode( "PRJ_" + serviceToken.getRealm().toUpperCase());
 
                 try {
                         Frame3 FRM_DUMMY = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_DUMMY", Frame3.class,
                                         serviceToken.getToken());
 
-                        Theme THM_SIDEBAR = Theme.builder("THM_SIDEBAR").addAttribute().backgroundColor("#065B9A").end()
-                                        .addAttribute().minWidth(300).end().addAttribute().width(100).end().build();
+                        Theme THM_SIDEBAR = Theme.builder("THM_SIDEBAR")
+                                        .addAttribute()
+                                                //.backgroundColor("#065B9A")
+                                                .backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E"))
+                                                .minWidth(300)
+                                                .width(100)
+                                        .end()
+                                        .build();
 
                         Frame3 FRM_LOGO = Frame3.builder("FRM_LOGO").addTheme(THM_SIDEBAR).end()
                                         .question("QUE_PROJECT_SIDEBAR_GRP").addTheme("THM_LOGO", serviceToken)
@@ -363,6 +376,8 @@ public class AnishTest extends GennyJbpmBaseTest {
         public Frame3 generateFooter() {
                 QRules rules = GennyJbpmBaseTest.setupLocalService();
                 GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+                BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+                BaseEntity project = beUtils.getBaseEntityByCode( "PRJ_" + serviceToken.getRealm().toUpperCase());
 
                 try {
 
