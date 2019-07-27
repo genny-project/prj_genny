@@ -47,10 +47,14 @@ rule "FRM_DESKTOP"
                       .addFrame(FRM_TABS, FramePosition.CENTRE).end()
                       .addFrame(FRM_FOOTER, FramePosition.SOUTH).end()
                       .build();
+			System.out.println("   Generated FRM_DESKTOP Rule  "+serviceToken.getUserCode());
 
 			frame.setRealm(serviceToken.getRealm());
 			insert (frame);
+			System.out.println("   Generate FRM_DESKTOP Rule INSERTED  "+serviceToken.getUserCode());
 
 			/* Process and save to cache */
 			FrameUtils2.toMessage(frame, serviceToken);
+			System.out.println("   Generated FRM_DESKTOP Rule MSG "+serviceToken.getUserCode());
+			
 end
