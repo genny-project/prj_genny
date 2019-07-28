@@ -55,7 +55,7 @@ public class AdamTest {
 
 	}
 
-	@Test
+	//@Test
 	public void virtualQuestionTest() {
 		System.out.println("Send Virtual Question");
 		GennyToken userToken = null;
@@ -108,14 +108,14 @@ public class AdamTest {
 	}
 
 	
-	//@Test
+	@Test
 	public void userSessionTest() {
 		System.out.println("Show UserSession");
 		GennyToken userToken = null;
 		GennyToken serviceToken = null;
 		QRules qRules = null;
 
-		if (false) {
+		if (true) {
 			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
 			qRules = new QRules(eventBusMock, userToken.getToken());
@@ -149,13 +149,20 @@ public class AdamTest {
 		GennyKieSession gks = null;
 
 		try {
-			gks = GennyKieSession.builder(serviceToken, false).addJbpm("userLifecycle.bpmn").addJbpm("userSession.bpmn")
-					.addJbpm("auth_init.bpmn").addJbpm("userValidation.bpmn").addToken(userToken).build();
+			gks = GennyKieSession.builder(serviceToken, true)
+					.addJbpm("userLifecycle.bpmn")
+					.addJbpm("userSession.bpmn")
+					.addJbpm("auth_init.bpmn")
+					.addJbpm("showDashboard.bpmn")
+					.addJbpm("userValidation.bpmn")
+					.addDrl("SendUserData")
+					.addToken(userToken)
+					.build();
 			gks.start();
 
-			gks.injectEvent(authInitMsg);
+			gks.injectEvent(authInitMsg); // This should create a new process
 			gks.advanceSeconds(5, true);
-			gks.injectEvent(authInitMsg);
+			gks.injectEvent(authInitMsg); // check that auth init with same session is ok and that process Id is looked up!
 			gks.advanceSeconds(5, true);
 			gks.injectEvent(msgLogout);
 

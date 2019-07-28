@@ -10,10 +10,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -23,6 +26,15 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.drools.core.ClockType;
 import org.drools.core.time.impl.PseudoClockScheduler;
+import org.jbpm.kie.services.impl.query.SqlQueryDefinition;
+import org.jbpm.kie.services.impl.query.mapper.ProcessInstanceQueryMapper;
+import org.jbpm.kie.services.impl.query.persistence.QueryDefinitionEntity;
+import org.jbpm.process.audit.JPAWorkingMemoryDbLogger;
+import org.jbpm.services.api.model.ProcessInstanceDesc;
+import org.jbpm.services.api.query.QueryAlreadyRegisteredException;
+import org.jbpm.services.api.query.QueryService;
+import org.jbpm.services.api.query.model.QueryParam;
+import org.jbpm.services.api.utils.KieServiceConfigurator;
 import org.jbpm.test.JbpmJUnitBaseTestCase;
 import org.kie.api.command.Command;
 import org.kie.api.io.ResourceType;
@@ -33,6 +45,9 @@ import org.kie.api.runtime.process.ProcessInstance;
 import org.kie.api.runtime.process.WorkItemHandler;
 import org.kie.api.runtime.rule.FactHandle;
 import org.kie.internal.command.CommandFactory;
+import org.kie.internal.identity.IdentityProvider;
+import org.kie.internal.query.QueryContext;
+import org.kie.internal.task.api.UserGroupCallback;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -56,6 +71,7 @@ import life.genny.qwanda.message.QMessage;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.rules.QRules;
+import life.genny.rules.listeners.GennyAgendaEventListener;
 import life.genny.rules.listeners.JbpmInitListener;
 import life.genny.utils.VertxUtils;
 
@@ -82,6 +98,10 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	private Map<String, GennyToken> tokens = new HashMap<String, GennyToken>();
 
 	PseudoClockScheduler sessionClock;
+	
+	JPAWorkingMemoryDbLogger logger = null;
+	
+	GennyToken serviceToken = null;
 
 	List<Command<?>> cmds = new ArrayList<Command<?>>();
 
@@ -187,6 +207,11 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		}
 		QEventMessage eventMsg = null;
 		QDataMessage dataMsg = null;
+		String msg_code = "";
+		String msg_type = "";
+		GennyToken gToken = this.serviceToken;
+		String bridgeSourceAddress = "";
+
 		
 		GennyToken userToken = null;
 		for (String tokenKey : this.tokens.keySet()) {
@@ -206,36 +231,54 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 				dataMsg.setToken(userToken.getToken());
 			}
 
-		if (userToken != null) {
-		// Simulate the incoming event handler that performs newSession
-			// This is a userToken so send the event through 
-			String session_state = userToken.getSessionCode();
-			String processIdStr = null;
-			
-			// Check if an existing userSession is there
-			JsonObject processIdJson = VertxUtils.readCachedJson(userToken.getRealm(), session_state, userToken.getToken());
-			if (processIdJson.getString("status").equals("ok") && processIdJson.getString("value") != null) {
-				processIdStr = processIdJson.getString("value");
-				Long processId = Long.decode(processIdStr);
-				// So send the event through to the userSession
-				if (eventMsg != null) {
-					broadcastSignal("sessionEvent",eventMsg , processId);
-				} else 
-				if (dataMsg != null) {
-					broadcastSignal("sessionData",dataMsg , processId);
-				}
+			if (userToken != null) {
+				// This is a userToken so send the event through
+				String session_state = userToken.getSessionCode();
+				String processIdStr = null;
+				gToken = userToken;
+				bridgeSourceAddress = "bridge";
+				Long processId  = null;
+				// Check if an existing userSession is there
 
-			} else {
-				// Must be the AUTH_INIT
-				if (eventMsg.getData().getCode().equals("AUTH_INIT")) {		
-					System.out.println("Identified new Session - broadcasting newSession");
-					broadcastSignal("newSession",eventMsg);
+				Optional<Long> processIdBysessionId = getProcessIdBysessionId(session_state);
+				boolean hasProcessIdBySessionId = processIdBysessionId.isPresent();
+				if (hasProcessIdBySessionId) {
+					processId = processIdBysessionId.get();
+				
+//				JsonObject processIdJson = VertxUtils.readCachedJson(serviceToken.getRealm(), session_state, serviceToken.getToken());
+//				if (processIdJson.getString("status").equals("ok")) {
+//					processIdStr = processIdJson.getString("value");
+//					 processId = Long.decode(processIdStr);
+					System.out.println("incoming " + msg_type + " message from " + bridgeSourceAddress + ": "
+							+ userToken.getRealm() + ":" + userToken.getSessionCode() + ":" + userToken.getUserCode()
+							+ "   " + msg_code + " to pid " + processId);
+
+					// So send the event through to the userSession
+					if (eventMsg != null) {
+						kieSession.signalEvent("event", eventMsg, processId);
+					} else if (dataMsg != null) {
+						kieSession.signalEvent("data", dataMsg, processId);
+					}
+
 				} else {
-					log.error("NO EXISTING SESSION AND NOT AUTH_INIT");;
+					// Must be the AUTH_INIT
+					if (eventMsg.getData().getCode().equals("AUTH_INIT")) {
+						eventMsg.getData().setValue("NEW_SESSION");
+						System.out.println("incoming  message from " + bridgeSourceAddress + ": " + userToken.getRealm() + ":"
+								+ userToken.getSessionCode() + ":" + userToken.getUserCode() + "   " + msg_code
+								+ " to NEW SESSION");
+						kieSession.signalEvent("newSession", eventMsg);
+					} else {
+						log.error("NO EXISTING SESSION AND NOT AUTH_INIT");
+						;
+					}
+				}
+			} else {
+				// Service Task
+				if (eventMsg.getData().getCode().equals("INIT_STARTUP")) {
+					kieSession.startProcess("init_project");
 				}
 			}
-
-		}
 	}
 	
 	public long advanceSeconds(long amount, boolean humanTime) {
@@ -365,10 +408,16 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		
 
 		if (kieSession != null) {
+			logger = new JPAWorkingMemoryDbLogger(kieSession);
+
 			// Register handlers
 			addWorkItemHandlers(getRuntimeEngine());
+			
+			kieSession.addEventListener(new GennyAgendaEventListener());
+
 			if (tokens.containsKey("PER_SERVICE")) {
 				kieSession.addEventListener(new JbpmInitListener(tokens.get("PER_SERVICE")));
+				this.serviceToken = tokens.get("PER_SERVICE");
 			}
 			if (tokens.containsKey("PER_USER1")) {
 				kieSession.addEventListener(new JbpmInitListener(tokens.get("PER_USER1")));
@@ -386,7 +435,15 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			log.error("KieSession not initialised");
 		}
 		
-	
+		QueryDefinitionEntity qde = new QueryDefinitionEntity();
+		configureServices();
+		SqlQueryDefinition query = new SqlQueryDefinition("getAllProcessInstances", "jdbc/jbpm-ds");
+		query.setExpression("select * from VariableInstanceLog");
+		try {
+			queryService.registerQuery(query);
+		} catch (QueryAlreadyRegisteredException e) {
+			log.warn(query.getName()+" is already registered");
+		}
 		System.out.println("Completed Setup");
 	}
 
@@ -659,5 +716,67 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 	}
 
+	private static QueryService queryService;
+	private static KieServiceConfigurator serviceConfigurator;
+
+	protected static void configureServices() {
+		serviceConfigurator = ServiceLoader.load(KieServiceConfigurator.class).iterator().next();
+
+		IdentityProvider identityProvider = new IdentityProvider() {
+
+			@Override
+			public String getName() {
+				// TODO Auto-generated method stub
+				return "";
+			}
+
+			@Override
+			public List<String> getRoles() {
+				// TODO Auto-generated method stub
+				return new ArrayList<String>();
+			}
+
+			@Override
+			public boolean hasRole(String role) {
+				// TODO Auto-generated method stub
+				return true;
+			}
+		};
+
+		UserGroupCallback userGroupCallback = new UserGroupCallback() {
+
+			@Override
+			public boolean existsUser(String userId) {
+				// TODO Auto-generated method stub
+				return true;
+			}
+
+			@Override
+			public boolean existsGroup(String groupId) {
+				// TODO Auto-generated method stub
+				return true;
+			}
+
+			@Override
+			public List<String> getGroupsForUser(String userId) {
+				// TODO Auto-generated method stub
+				return new ArrayList<String>();
+			}
+		};
+
+		serviceConfigurator.configureServices("org.jbpm.persistence.jpa", identityProvider, userGroupCallback);
+		queryService = serviceConfigurator.getQueryService();
+
+	}
+	
+	public static Optional<Long> getProcessIdBysessionId(String sessionId) {
+		// Do pagination here
+		QueryContext ctx = new QueryContext(0, 100);
+		Collection<ProcessInstanceDesc> instances = queryService.query("getAllProcessInstances",
+				ProcessInstanceQueryMapper.get(), ctx, QueryParam.equalsTo("value", sessionId));
+
+		return instances.stream().map(d -> d.getId()).findFirst();
+
+	}
 
 }
