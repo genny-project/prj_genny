@@ -25,6 +25,8 @@ import life.genny.models.GennyToken;
 import life.genny.models.Theme;
 import life.genny.models.ThemeAttributeType;
 import life.genny.models.ThemeDouble;
+import life.genny.qwanda.Context;
+import life.genny.qwanda.ContextType;
 import life.genny.qwanda.VisualControlType;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.message.QDataAskMessage;
@@ -35,6 +37,7 @@ import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.rules.QRules;
+import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.FrameUtils2;
 import life.genny.utils.VertxUtils;
 
@@ -55,7 +58,7 @@ public class AdamTest {
 
 	}
 
-	//@Test
+	@Test
 	public void virtualQuestionTest() {
 		System.out.println("Send Virtual Question");
 		GennyToken userToken = null;
@@ -89,10 +92,17 @@ public class AdamTest {
 		Theme THM_DUMMY = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DUMMY", Theme.class,
 				serviceToken.getToken());
 
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+		BaseEntity sortIconBe = beUtils.getBaseEntityByCode("ICN_SORT");
+        
+		Context context = new Context(ContextType.ICON, sortIconBe, VisualControlType.VCL_ICON, 1.0);
+
 		Frame3 FRM_DUMMY3 = Frame3.builder("FRM_DUMMY3")
 				.addTheme(THM_DUMMY)
 				.end()
-				.question("PRI_FIRSTNAME", "Firstname").end()
+				.question("PRI_FIRSTNAME", "Firstname")
+					.addContext(context)
+				.end()
 				.build();
 		
 		Frame3 FRM_ROOT3 = Frame3.builder("FRM_ROOT")
@@ -108,7 +118,7 @@ public class AdamTest {
 	}
 
 	
-	@Test
+	//@Test
 	public void userSessionTest() {
 		System.out.println("Show UserSession");
 		GennyToken userToken = null;
