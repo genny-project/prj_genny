@@ -36,9 +36,9 @@ rule "FRM_HEADER_ADD_ITEMS"
 
       Frame3 frame = Frame3.builder("FRM_HEADER_ADD_ITEMS")
                     .question("QUE_ADD_ITEMS_GRP")
-                      .addTheme(THM_DROPDOWN).vcl(VisualControlType.GROUP_HEADER_WRAPPER).end()
-                      .addTheme(THM_DROPDOWN_HEADER_WRAPPER).vcl(VisualControlType.GROUP_HEADER_WRAPPER).end()
-                      .addTheme(THM_DROPDOWN_CONTENT_WRAPPER).vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end()
+                      .addTheme("THM_DROPDOWN", serviceToken).vcl(VisualControlType.GROUP_HEADER_WRAPPER).end()
+                      .addTheme("THM_DROPDOWN_HEADER_WRAPPER", serviceToken).vcl(VisualControlType.GROUP_HEADER_WRAPPER).end()
+                      .addTheme("THM_DROPDOWN_CONTENT_WRAPPER", serviceToken).vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end()
                     .end()
                     .build();
 						
