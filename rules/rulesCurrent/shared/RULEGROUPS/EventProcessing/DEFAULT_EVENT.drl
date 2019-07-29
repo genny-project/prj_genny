@@ -1,0 +1,14 @@
+package life.genny.rules;
+import life.genny.qwanda.message.QEventMessage;
+
+rule "DEFAULT_EVENT"
+    ruleflow-group 'EventProcessing'
+    lock-on-active true
+    when
+      $message : QEventMessage( )  
+
+     then
+     log.info("Processing Event");
+
+		 
+end
