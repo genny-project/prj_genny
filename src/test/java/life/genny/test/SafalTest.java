@@ -69,6 +69,36 @@ public class SafalTest extends GennyJbpmBaseTest {
 		
 	}
 	
+	@Test
+	public void eventProcessTest() {
+		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
+		
+		QRules rules = getQRules(userToken);
+		
+		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+		
+		QEventMessage msg = new QEventMessage("EVT_MSG", "AUTH_INIT");
+		msg.getData().setValue("NEW_SESSION");
+		System.out.println("Hello");
+		GennyKieSession gks = GennyKieSession.builder(serviceToken,true)
+				.addJbpm("userSession.bpmn")
+				.addJbpm("userValidation.bpmn")
+				.addJbpm("userLifecycle.bpmn")
+				.addJbpm("auth_init.bpmn")
+				.addDrl("DEFAULT_EVENT.drl")
+				.addToken(serviceToken)
+				.addToken(userToken)
+				.build();
+		System.out.println("Hello");	
+		
+		gks.start();
+		gks.injectSignal("newSession",msg);
+		gks.advanceSeconds(5, true);
+		
+		gks.advanceSeconds(5, true);
+	     
+	}
+	
 	//@Test
 	public void timeCHeck() {
 		
@@ -110,7 +140,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 		
 	}
 	
-	@Test
+	//@Test
 	public void SendData() {
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 		QRules rules = getQRules(userToken);
@@ -524,4 +554,4 @@ public class SafalTest extends GennyJbpmBaseTest {
 
 	}
 
-}
+};

@@ -1,0 +1,19 @@
+package life.genny.rules;
+import life.genny.qwanda.message.QDataAnswerMessage;
+
+rule "DEFAULT_ANSWER"
+    ruleflow-group 'AnswerProcessing'
+    lock-on-active true
+    when
+      $process : WorkflowProcessInstance()  
+
+     then
+     log.info("Processing Answer/Data : " + $process);
+ 
+		
+/*	 QRules rules = (QRules)$process.getVariable("rules");*/  
+	
+	
+	       
+
+end
