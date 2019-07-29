@@ -58,7 +58,7 @@ public class AdamTest {
 
 	}
 
-	@Test
+	//@Test
 	public void virtualQuestionTest() {
 		System.out.println("Send Virtual Question");
 		GennyToken userToken = null;
@@ -118,7 +118,7 @@ public class AdamTest {
 	}
 
 	
-	//@Test
+	@Test
 	public void userSessionTest() {
 		System.out.println("Show UserSession");
 		GennyToken userToken = null;
