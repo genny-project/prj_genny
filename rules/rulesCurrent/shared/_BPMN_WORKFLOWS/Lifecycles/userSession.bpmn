@@ -292,8 +292,8 @@ System.out.println(&quot;userSession: Exiting userSession for &quot;+currentUser
     </bpmn2:sequenceFlow>
     <bpmn2:exclusiveGateway id="ExclusiveGateway_22" name="event loop" gatewayDirection="Converging">
       <bpmn2:incoming>SequenceFlow_56</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_28</bpmn2:incoming>
       <bpmn2:incoming>SequenceFlow_40</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_15</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_14</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
     <bpmn2:sequenceFlow id="SequenceFlow_53" tns:priority="1" sourceRef="ExclusiveGateway_10" targetRef="ExclusiveGateway_21"/>
@@ -387,52 +387,43 @@ System.out.println(&quot;************************************** Session Expired 
         <tns:metaData name="elementname">
           <tns:metaValue><![CDATA[Process Event]]></tns:metaValue>
         </tns:metaData>
+        <tns:onEntry-script scriptFormat="http://www.java.com/java">
+          <tns:script>System.out.println(&quot;userSession :::  Processing Event Message &quot; + message);</tns:script>
+        </tns:onEntry-script>
+        <tns:onExit-script scriptFormat="http://www.java.com/java">
+          <tns:script>System.out.println(&quot;userSession :::  Event Message Processed &quot; + message);</tns:script>
+        </tns:onExit-script>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_27</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_15</bpmn2:outgoing>
       <bpmn2:ioSpecification id="InputOutputSpecification_2">
-        <bpmn2:dataInput id="DataInput_5" name="serviceToken"/>
+        <bpmn2:dataInput id="DataInput_5" itemSubjectRef="ItemDefinition_801" name="serviceToken"/>
         <bpmn2:dataInput id="DataInput_6" name="ruleFlowGroup"/>
+        <bpmn2:dataInput id="DataInput_3" itemSubjectRef="ItemDefinition_1329" name="message"/>
         <bpmn2:inputSet id="_InputSet_6">
           <bpmn2:dataInputRefs>DataInput_5</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>DataInput_6</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_3</bpmn2:dataInputRefs>
         </bpmn2:inputSet>
         <bpmn2:outputSet id="OutputSet_6" name="Output Set 6"/>
       </bpmn2:ioSpecification>
       <bpmn2:dataInputAssociation id="_DataInputAssociation_10">
+        <bpmn2:sourceRef>currentUser</bpmn2:sourceRef>
         <bpmn2:targetRef>DataInput_5</bpmn2:targetRef>
       </bpmn2:dataInputAssociation>
       <bpmn2:dataInputAssociation id="_DataInputAssociation_11">
         <bpmn2:targetRef>DataInput_6</bpmn2:targetRef>
+        <bpmn2:assignment id="Assignment_1">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_6">&quot;EventProcessing&quot;</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_3">DataInput_6</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_3">
+        <bpmn2:sourceRef>message</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_3</bpmn2:targetRef>
       </bpmn2:dataInputAssociation>
     </bpmn2:task>
     <bpmn2:sequenceFlow id="SequenceFlow_9" tns:priority="1" sourceRef="ExclusiveGateway_21" targetRef="Task_1"/>
-    <bpmn2:task id="Task_2" tns:taskName="RuleFlowGroup" tns:displayName="RunRuleFlowGroup" tns:icon="icons/icon-info.gif" name="Process Route">
-      <bpmn2:extensionElements>
-        <tns:metaData name="elementname">
-          <tns:metaValue><![CDATA[Process Route]]></tns:metaValue>
-        </tns:metaData>
-      </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_27</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_28</bpmn2:outgoing>
-      <bpmn2:ioSpecification id="InputOutputSpecification_3">
-        <bpmn2:dataInput id="DataInput_7" name="serviceToken"/>
-        <bpmn2:dataInput id="DataInput_8" name="ruleFlowGroup"/>
-        <bpmn2:inputSet id="_InputSet_7">
-          <bpmn2:dataInputRefs>DataInput_7</bpmn2:dataInputRefs>
-          <bpmn2:dataInputRefs>DataInput_8</bpmn2:dataInputRefs>
-        </bpmn2:inputSet>
-        <bpmn2:outputSet id="OutputSet_7" name="Output Set 7"/>
-      </bpmn2:ioSpecification>
-      <bpmn2:dataInputAssociation id="_DataInputAssociation_12">
-        <bpmn2:targetRef>DataInput_7</bpmn2:targetRef>
-      </bpmn2:dataInputAssociation>
-      <bpmn2:dataInputAssociation id="_DataInputAssociation_13">
-        <bpmn2:targetRef>DataInput_8</bpmn2:targetRef>
-      </bpmn2:dataInputAssociation>
-    </bpmn2:task>
-    <bpmn2:sequenceFlow id="SequenceFlow_27" tns:priority="1" sourceRef="Task_1" targetRef="Task_2"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_28" tns:priority="1" sourceRef="Task_2" targetRef="ExclusiveGateway_22"/>
     <bpmn2:subProcess id="SubProcess_1" name="Sub Process 1">
       <bpmn2:extensionElements>
         <tns:metaData name="elementname">
@@ -492,18 +483,21 @@ System.out.println(&quot;Timer :::::::::::::::: safal &quot;);
           <tns:metaValue><![CDATA[Process Data ]]></tns:metaValue>
         </tns:metaData>
         <tns:onEntry-script scriptFormat="http://www.java.com/java">
-          <tns:script>System.out.println(&quot;userSession :::  Processing Answer Message &quot; + message);</tns:script>
+          <tns:script>System.out.println(&quot;userSession :::  Processing Answer Message &quot; + dataMessage);</tns:script>
         </tns:onEntry-script>
         <tns:onExit-script scriptFormat="http://www.java.com/java">
-          <tns:script>System.out.println(&quot;userSession :::  Answer Message Processed &quot; + message);</tns:script>
+          <tns:script>System.out.println(&quot;userSession :::  Answer Message Processed &quot; + dataMessage);</tns:script>
         </tns:onExit-script>
+        <tns:metaData name="customAsync">
+          <tns:metaValue><![CDATA[true]]></tns:metaValue>
+        </tns:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_40</bpmn2:outgoing>
       <bpmn2:ioSpecification id="InputOutputSpecification_7">
         <bpmn2:dataInput id="DataInput_12" itemSubjectRef="ItemDefinition_174" name="serviceToken"/>
         <bpmn2:dataInput id="DataInput_13" name="ruleFlowGroup"/>
-        <bpmn2:dataInput id="DataInput_14" name="dataMessage"/>
+        <bpmn2:dataInput id="DataInput_14" itemSubjectRef="ItemDefinition_140" name="dataMessage"/>
         <bpmn2:inputSet id="InputSet_2">
           <bpmn2:dataInputRefs>DataInput_12</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>DataInput_13</bpmn2:dataInputRefs>
@@ -518,7 +512,7 @@ System.out.println(&quot;Timer :::::::::::::::: safal &quot;);
       <bpmn2:dataInputAssociation id="DataInputAssociation_7">
         <bpmn2:targetRef>DataInput_13</bpmn2:targetRef>
         <bpmn2:assignment id="Assignment_2">
-          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_7">&quot;ProcessAnswer&quot;</bpmn2:from>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_7">&quot;AnswerProcessing&quot;</bpmn2:from>
           <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_8">DataInput_10</bpmn2:to>
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
@@ -566,6 +560,7 @@ System.out.println(&quot;Timer :::::::::::::::: safal &quot;);
       <bpmn2:signalEventDefinition id="SignalEventDefinition_8" signalRef="Signal_3"/>
     </bpmn2:boundaryEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_13" tns:priority="1" sourceRef="BoundaryEvent_4" targetRef="Task_4"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_15" tns:priority="1" sourceRef="Task_1" targetRef="ExclusiveGateway_22"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="user_session">
@@ -582,9 +577,9 @@ System.out.println(&quot;Timer :::::::::::::::: safal &quot;);
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_8" bpmnElement="EndEvent_8">
-        <dc:Bounds height="36.0" width="36.0" x="1151.0" y="630.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="1163.0" y="634.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_7" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="22.0" width="59.0" x="1140.0" y="666.0"/>
+          <dc:Bounds height="22.0" width="59.0" x="1152.0" y="670.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_3" bpmnElement="ScriptTask_3" isExpanded="true">
@@ -606,9 +601,9 @@ System.out.println(&quot;Timer :::::::::::::::: safal &quot;);
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_2" bpmnElement="ScriptTask_2" isExpanded="true">
-        <dc:Bounds height="50.0" width="73.0" x="1035.0" y="630.0"/>
+        <dc:Bounds height="50.0" width="73.0" x="1042.0" y="627.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_20" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="50.0" x="1046.0" y="649.0"/>
+          <dc:Bounds height="11.0" width="50.0" x="1053.0" y="646.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_6" bpmnElement="ExclusiveGateway_6" isMarkerVisible="true">
@@ -642,9 +637,9 @@ System.out.println(&quot;Timer :::::::::::::::: safal &quot;);
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_CallActivity_16" bpmnElement="CallActivity_16" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="859.0" y="509.0"/>
+        <dc:Bounds height="50.0" width="110.0" x="859.0" y="502.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_10">
-          <dc:Bounds height="11.0" width="94.0" x="867.0" y="528.0"/>
+          <dc:Bounds height="11.0" width="94.0" x="867.0" y="521.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_21" bpmnElement="ExclusiveGateway_21" isMarkerVisible="true">
@@ -708,15 +703,9 @@ System.out.println(&quot;Timer :::::::::::::::: safal &quot;);
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_1" bpmnElement="Task_1" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="767.0" y="427.0"/>
+        <dc:Bounds height="50.0" width="110.0" x="859.0" y="427.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_9">
-          <dc:Bounds height="11.0" width="59.0" x="792.0" y="446.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_Task_2" bpmnElement="Task_2" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="979.0" y="427.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_12">
-          <dc:Bounds height="11.0" width="60.0" x="1004.0" y="446.0"/>
+          <dc:Bounds height="11.0" width="59.0" x="884.0" y="446.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
@@ -774,17 +763,15 @@ System.out.println(&quot;Timer :::::::::::::::: safal &quot;);
         <bpmndi:BPMNLabel id="BPMNLabel_27"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_19" bpmnElement="SequenceFlow_19" sourceElement="BPMNShape_ScriptTask_2" targetElement="BPMNShape_EndEvent_8">
-        <di:waypoint xsi:type="dc:Point" x="1108.0" y="655.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1129.0" y="655.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1129.0" y="648.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1151.0" y="648.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1115.0" y="652.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1139.0" y="652.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1163.0" y="652.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_37"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_20" bpmnElement="SequenceFlow_20" sourceElement="BPMNShape_IntermediateThrowEvent_1" targetElement="BPMNShape_ScriptTask_2">
         <di:waypoint xsi:type="dc:Point" x="980.0" y="652.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1007.0" y="652.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1007.0" y="655.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1035.0" y="655.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1011.0" y="652.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1042.0" y="652.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_36"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_25" bpmnElement="SequenceFlow_23" sourceElement="BPMNShape_ExclusiveGateway_9" targetElement="BPMNShape_ScriptTask_7">
@@ -814,8 +801,8 @@ System.out.println(&quot;Timer :::::::::::::::: safal &quot;);
         <bpmndi:BPMNLabel id="BPMNLabel_32"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_67" bpmnElement="SequenceFlow_56" sourceElement="BPMNShape_CallActivity_16" targetElement="BPMNShape_ExclusiveGateway_22">
-        <di:waypoint xsi:type="dc:Point" x="969.0" y="534.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1240.0" y="534.0"/>
+        <di:waypoint xsi:type="dc:Point" x="969.0" y="527.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1240.0" y="527.0"/>
         <di:waypoint xsi:type="dc:Point" x="1240.0" y="260.0"/>
         <di:waypoint xsi:type="dc:Point" x="1230.0" y="260.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_35"/>
@@ -837,8 +824,7 @@ System.out.println(&quot;Timer :::::::::::::::: safal &quot;);
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_76" bpmnElement="SequenceFlow_66" sourceElement="BPMNShape_ExclusiveGateway_21" targetElement="BPMNShape_CallActivity_16">
         <di:waypoint xsi:type="dc:Point" x="730.0" y="527.0"/>
         <di:waypoint xsi:type="dc:Point" x="794.0" y="527.0"/>
-        <di:waypoint xsi:type="dc:Point" x="794.0" y="534.0"/>
-        <di:waypoint xsi:type="dc:Point" x="859.0" y="534.0"/>
+        <di:waypoint xsi:type="dc:Point" x="859.0" y="527.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_44"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_ExclusiveGateway_9" targetElement="BPMNShape_ExclusiveGateway_10">
@@ -902,20 +888,8 @@ System.out.println(&quot;Timer :::::::::::::::: safal &quot;);
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_10" bpmnElement="SequenceFlow_9" sourceElement="BPMNShape_ExclusiveGateway_21" targetElement="BPMNShape_Task_1">
         <di:waypoint xsi:type="dc:Point" x="705.0" y="502.0"/>
         <di:waypoint xsi:type="dc:Point" x="705.0" y="452.0"/>
-        <di:waypoint xsi:type="dc:Point" x="767.0" y="452.0"/>
+        <di:waypoint xsi:type="dc:Point" x="859.0" y="452.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_12"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_27" bpmnElement="SequenceFlow_27" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_Task_2">
-        <di:waypoint xsi:type="dc:Point" x="877.0" y="452.0"/>
-        <di:waypoint xsi:type="dc:Point" x="928.0" y="452.0"/>
-        <di:waypoint xsi:type="dc:Point" x="979.0" y="452.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_33"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_28" bpmnElement="SequenceFlow_28" sourceElement="BPMNShape_Task_2" targetElement="BPMNShape_ExclusiveGateway_22">
-        <di:waypoint xsi:type="dc:Point" x="1089.0" y="452.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1205.0" y="452.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1205.0" y="285.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_34"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_34" bpmnElement="SequenceFlow_34" sourceElement="BPMNShape_StartEvent_2" targetElement="BPMNShape_ScriptTask_9">
         <di:waypoint xsi:type="dc:Point" x="798.0" y="268.0"/>
@@ -969,6 +943,12 @@ System.out.println(&quot;Timer :::::::::::::::: safal &quot;);
         <di:waypoint xsi:type="dc:Point" x="1078.0" y="168.0"/>
         <di:waypoint xsi:type="dc:Point" x="1078.0" y="138.0"/>
         <di:waypoint xsi:type="dc:Point" x="1078.0" y="108.0"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_15" bpmnElement="SequenceFlow_15" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_ExclusiveGateway_22">
+        <di:waypoint xsi:type="dc:Point" x="969.0" y="452.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1205.0" y="452.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1205.0" y="285.0"/>
         <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

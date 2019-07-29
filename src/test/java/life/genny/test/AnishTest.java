@@ -124,10 +124,10 @@ public class AnishTest extends GennyJbpmBaseTest {
                         /* frame-sidebar */
                         Frame3 FRM_SIDEBAR = generateSidebar();
 
-                        Frame3 FRM_MAIN = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_MAIN", Frame3.class,
-                        serviceToken.getToken());
+                      /*   Frame3 FRM_MAIN = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_MAIN", Frame3.class,
+                        serviceToken.getToken()); */
 
-                        System.out.println(FRM_MAIN.getCode());
+                      //  System.out.println(FRM_MAIN.getCode());
 
 
                         /* frame-root */
@@ -135,8 +135,9 @@ public class AnishTest extends GennyJbpmBaseTest {
                                         .addFrame(FRM_HEADER, FramePosition.NORTH).end()
                                         .addFrame(FRM_SIDEBAR, FramePosition.WEST).end()
                                         /* .addFrame(FRM_MAIN, FramePosition.CENTRE).end() */
-                                        .addFrame(FRM_TABS, FramePosition.CENTRE).end()
-                                        .addFrame(FRM_FOOTER, FramePosition.SOUTH).end().build();
+                                    /*     .addFrame(FRM_TABS, FramePosition.CENTRE).end()
+                                        .addFrame(FRM_FOOTER, FramePosition.SOUTH).end() */
+                                        .build();
 
                         Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
                         QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_ROOT, serviceToken, askMsgs);
@@ -274,31 +275,67 @@ public class AnishTest extends GennyJbpmBaseTest {
 
                 try {
 
-                        Frame3 FRM_DUMMY = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_DUMMY", Frame3.class,
-                                        serviceToken.getToken());
-
-                        Theme THM_TABLE_ACTIONS_VISUAL_CONTROL = Theme.builder("THM_TABLE_ACTIONS_VISUAL_CONTROL")
-                                        .addAttribute(ThemeAttributeType.PRI_HAS_LABEL, false).end()
-                                        .addAttribute(ThemeAttributeType.PRI_HAS_ICON, true).end()
-                                        .addAttribute(ThemeAttributeType.PRI_HAS_INPUT, false).end()
-                                        .addAttribute(ThemeAttributeType.PRI_IS_DROPDOWN, true).end()
-                                        .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
-                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+                        // Frame3 FRM_DUMMY = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_DUMMY", Frame3.class,
+                        //                 serviceToken.getToken());
 
                         Frame3 FRM_PROJECT = Frame3.builder("FRM_PROJECT").addTheme("THM_PROJECT", serviceToken).end()
                                         .question("QUE_NAME_TWO").addTheme("THM_FORM_LABEL_DEFAULT", serviceToken)
-                                        .vcl(VisualControlType.VCL_LABEL).end().end().addFrame(FRM_DUMMY).end().build();
+                                        .vcl(VisualControlType.VCL_LABEL).end().end()
+                                        //.addFrame(FRM_DUMMY).end()
+                                        .build();
 
-                        Frame3 FRM_HEADER_OPTIONS = Frame3.builder("FRM_HEADER_OPTIONS").question("QUE_OPTIONS_GRP")
-                                        .addTheme(THM_TABLE_ACTIONS_VISUAL_CONTROL).end().end().build();
+                        Theme THM_DROPDOWN = Theme.builder("THM_DROPDOWN")
+                                        .addAttribute()
+                                                .color("white")
+                                                .backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E"))
+                                        .end()
+                                        .addAttribute(ThemeAttributeType.PRI_IS_DROPDOWN, true).end()
+                                        .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_LABEL, true).end()
+                                        .addAttribute(ThemeAttributeType.PRI_IS_QUESTION_GRP_LABEL_CLICKABLE, true).end()
+                                        .build();                       
+                        
+                        Theme THM_DROPDOWN_HEADER_WRAPPER = Theme.builder("THM_DROPDOWN_HEADER_WRAPPER")
+                                        .addAttribute()
+                                                .borderColor("white")
+                                                .borderStyle("solid")
+                                                .borderWidth(2)
+                                        .end()
+                                        .build();                       
+                        
+                        Theme THM_DROPDOWN_CONTENT_WRAPPER = Theme.builder("THM_DROPDOWN_CONTENT_WRAPPER")
+                                        .addAttribute()
+                                                .borderColor("white")
+                                                .borderStyle("solid")
+                                                .borderWidth(2)
+                                                .width(200)
+                                        .end()
+                                        .build();                       
+                        
+                        Frame3 FRM_HEADER_OPTIONS = Frame3.builder("FRM_HEADER_OPTIONS")
+                                        .question("QUE_OPTIONS_GRP")
+                                                .addTheme(THM_DROPDOWN).vcl(VisualControlType.GROUP_HEADER_WRAPPER).end()
+                                                .addTheme(THM_DROPDOWN_HEADER_WRAPPER).vcl(VisualControlType.GROUP_HEADER_WRAPPER).end()
+                                                .addTheme(THM_DROPDOWN_CONTENT_WRAPPER).vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end()
+                                        .end()
+                                        .build();
+                        
+                        Frame3 FRM_HEADER_ADD_ITEMS = Frame3.builder("FRM_HEADER_ADD_ITEMS")
+                                        .question("QUE_ADD_ITEMS_GRP")
+                                                .addTheme(THM_DROPDOWN).vcl(VisualControlType.GROUP_HEADER_WRAPPER).end()
+                                                .addTheme(THM_DROPDOWN_HEADER_WRAPPER).vcl(VisualControlType.GROUP_HEADER_WRAPPER).end()
+                                                .addTheme(THM_DROPDOWN_CONTENT_WRAPPER).vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end()
+                                        .end()
+                                        .build();
+
+
 
                         Theme THM_HEADER = Theme.builder("THM_HEADER")
                                         .addAttribute()
-                                                //.backgroundColor("#18639F")
-                								.backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E"))
+                                                .backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E"))
                                                 .color("white")
                                                 .height(80)
                                                 .end()
+                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
                                         .build();    
                         
             			BaseEntity sortIconBe = beUtils.getBaseEntityByCode("ICN_SORT");
@@ -323,10 +360,10 @@ public class AnishTest extends GennyJbpmBaseTest {
                          */
 
                         Frame3 FRM_HEADER = Frame3.builder("FRM_HEADER").addTheme(THM_HEADER).end()
-                                        .addFrame(FRM_DUMMY).end()
                                         .addFrame(FRM_PROJECT).end()
                                         .addFrame(FRM_HAMBURGER_MENU, FramePosition.WEST).end()
                                         .addFrame(FRM_HEADER_OPTIONS, FramePosition.EAST).end()
+                                        .addFrame(FRM_HEADER_ADD_ITEMS, FramePosition.EAST).end()
                                         .build();
 
                         System.out.println("Generated Header Frame");
@@ -345,12 +382,11 @@ public class AnishTest extends GennyJbpmBaseTest {
                 BaseEntity project = beUtils.getBaseEntityByCode( "PRJ_" + serviceToken.getRealm().toUpperCase());
 
                 try {
-                        Frame3 FRM_DUMMY = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_DUMMY", Frame3.class,
-                                        serviceToken.getToken());
+                        // Frame3 FRM_DUMMY = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_DUMMY", Frame3.class,
+                        //                 serviceToken.getToken());
 
                         Theme THM_SIDEBAR = Theme.builder("THM_SIDEBAR")
                                         .addAttribute()
-                                                //.backgroundColor("#065B9A")
                                                 .backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E"))
                                                 .minWidth(300)
                                                 .width(100)
@@ -359,11 +395,11 @@ public class AnishTest extends GennyJbpmBaseTest {
 
                         Frame3 FRM_LOGO = Frame3.builder("FRM_LOGO").addTheme(THM_SIDEBAR).end()
                                         .question("QUE_PROJECT_SIDEBAR_GRP").addTheme("THM_LOGO", serviceToken)
-                                        .vcl(VisualControlType.VCL_WRAPPER).end().end().addFrame(FRM_DUMMY).end()
+                                        .vcl(VisualControlType.VCL_WRAPPER).end().end()//.addFrame(FRM_DUMMY).end()
                                         .build();
 
                         Frame3 FRM_SIDEBAR = Frame3.builder("FRM_SIDEBAR").addTheme(THM_SIDEBAR).end()
-                                        .addFrame(FRM_LOGO, FramePosition.NORTH).end().addFrame(FRM_DUMMY).end()
+                                        .addFrame(FRM_LOGO, FramePosition.NORTH).end()//.addFrame(FRM_DUMMY).end()
                                         .build();
 
                         System.out.println("Generated Sidebar Frame");
@@ -381,17 +417,24 @@ public class AnishTest extends GennyJbpmBaseTest {
 
                 try {
 
-                        Frame3 FRM_DUMMY = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_DUMMY", Frame3.class,
-                                        serviceToken.getToken());
+                        // Frame3 FRM_DUMMY = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_DUMMY", Frame3.class,
+                        //                 serviceToken.getToken());
                         Frame3 FRM_POWERED_BY = Frame3.builder("FRM_POWERED_BY").addTheme("THM_WIDTH_200", serviceToken)
                                         .end().addTheme("THM_COLOR_WHITE", serviceToken).end()
-                                        .question("QUE_POWERED_BY_GRP").addTheme("THM_FORM_LABEL_DEFAULT", serviceToken)
-                                        .vcl(VisualControlType.VCL_LABEL).end()
-                                        .addTheme("THM_FORM_DEFAULT_REPLICA", serviceToken).weight(3.0).end().end()
+                                        .question("QUE_POWERED_BY_GRP")
+                                                .addTheme("THM_FORM_LABEL_DEFAULT", serviceToken)
+                                                .vcl(VisualControlType.VCL_LABEL)
+                                                .end()
+                                                
+                                                .addTheme("THM_FORM_DEFAULT_REPLICA", serviceToken)
+                                                .weight(3.0)
+                                                .end()
+                                        .end()
                                         .build();
 
-                        Frame3 FRM_FOOTER = Frame3.builder("FRM_FOOTER").addTheme("THM_FOOTER", serviceToken).end()
-                                        .addFrame(FRM_DUMMY).end().addFrame(FRM_POWERED_BY, FramePosition.EAST).end()
+                        Frame3 FRM_FOOTER = Frame3.builder("FRM_FOOTER")
+                                        .addTheme("THM_FOOTER", serviceToken).end()
+                                        .addFrame(FRM_POWERED_BY, FramePosition.EAST).end()
                                         .build();
 
                         System.out.println("Generated Footer Frame");
