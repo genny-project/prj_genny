@@ -36,6 +36,10 @@ rule "THM_DROPDOWN"
     then
     
      	System.out.println("   Generate THM_DROPDOWN Rule ");
+
+      BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+			BaseEntity project = beUtils.getBaseEntityByCode( "PRJ_" + serviceToken.getRealm().toUpperCase());
+
  
 		Theme theme = Theme.builder("THM_DROPDOWN")
                   .addAttribute()
