@@ -5,10 +5,10 @@ rule "DEFAULT_EVENT"
     ruleflow-group 'EventProcessing'
     lock-on-active true
     when
-      $message : QEventMessage( )  
+      $message : QEventMessage()  
 
      then
-     log.info("Processing Event");
+      
 
 		 
 end

@@ -10,14 +10,10 @@ rule "DEFAULT_ANSWER"
      then
      log.info("Processing Answer/Data : " + $dataMessage);
  
-		/*
-		QRules rules = (QRules)$process.getVariable("rules");  
-		BaseEntity project = rules.getProject();
+		
+/*	 QRules rules = (QRules)$process.getVariable("rules");*/  
 	
-	        if(project != null) {
-	            log.info("Sending project - "+project.getCode());
-	            rules.publishCmd(project, "PROJECT");
-	        }
-	        */
+	
+	       
 
 end
