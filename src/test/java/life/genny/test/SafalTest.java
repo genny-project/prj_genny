@@ -106,7 +106,6 @@ public class SafalTest extends GennyJbpmBaseTest {
 				.addJbpm("auth_init.bpmn")
 				.addJbpm("showDashboard.bpmn")
 				.addDrl("DEFAULT_EVENT.drl")
-				.addToken(serviceToken)
 				.addToken(userToken)
 				.build();
 		System.out.println("Hello");	

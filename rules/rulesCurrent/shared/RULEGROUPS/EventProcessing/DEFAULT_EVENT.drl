@@ -8,14 +8,13 @@ rule "DEFAULT_EVENT"
     no-loop
     when
 		$message : QEventMessage( )
-		gtoken : GennyToken ()
+		userToken : GennyToken (code != "PER_SERVICE" )
     then
 	
 		System.out.println("Processing Answer/Data : " + $message );
-		
 		String gotoPage = "FRM_DESKTOP";
-		String key = gtoken.getSessionCode()+":page";
-		VertxUtils.writeCachedJson(gtoken.getRealm(), key, gotoPage,gtoken.getToken());
+		String key = userToken.getSessionCode()+":page";
+		VertxUtils.writeCachedJson(userToken.getRealm(), key, gotoPage,userToken.getToken());
 		
 		System.out.println("sssss :"+ key);
 		
