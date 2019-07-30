@@ -577,6 +577,8 @@ if (jsonResult.getString(&quot;status&quot;).equals(&quot;ok&quot;)) {
 } else {
    System.out.println(&quot;Rules generated Page code has an error - not in cache  &quot;+(String)jsonResult.toString());
 }
+/* clear */
+VertxUtils.writeCachedJson(uToken.getRealm(), uToken.getSessionCode()+&quot;:page&quot;, null,uToken.getToken());
 </bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_17" tns:priority="1" sourceRef="Task_1" targetRef="ScriptTask_5"/>
