@@ -72,12 +72,27 @@ public class SafalTest extends GennyJbpmBaseTest {
 	@Test
 	public void eventProcessTest() {
 		
-		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
-		
-		QRules rules = getQRules(userToken);
-		
-		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
-		
+		System.out.println("Send Virtual Question");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+		} else {
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+		}
+
+		System.out.println("session     =" + userToken.getSessionCode());
+		System.out.println("userToken   =" + userToken.getToken());
+		System.out.println("serviceToken=" + serviceToken.getToken());		
 		
 		QEventMessage msg = new QEventMessage("EVT_MSG", "AUTH_INIT");
 		QEventMessage msg1 = new QEventMessage("EVT_MSG", "AUTH_INIT1");
