@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -16,6 +17,8 @@ import org.junit.Test;
 
 import com.google.gson.reflect.TypeToken;
 
+import io.vavr.Tuple;
+import io.vavr.Tuple2;
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
@@ -86,10 +89,8 @@ public class AdamTest {
 		// NOW SET UP Some baseentitys
 		BaseEntity user = VertxUtils.readFromDDT(serviceToken.getRealm(),userToken.getUserCode(), true,
 				serviceToken.getToken());
-		
 
-		// Create a frame with an attribute question
-		Theme THM_DUMMY = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DUMMY", Theme.class,
+		BaseEntity project = VertxUtils.readFromDDT(serviceToken.getRealm(),"PRJ_"+realm.toUpperCase(), true,
 				serviceToken.getToken());
 
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
@@ -97,22 +98,46 @@ public class AdamTest {
         
 		Context context = new Context(ContextType.ICON, sortIconBe, VisualControlType.VCL_ICON, 1.0);
 
-		Frame3 FRM_DUMMY3 = Frame3.builder("FRM_DUMMY3")
-				.addTheme(THM_DUMMY)
-				.end()
-				.question("PRI_FIRSTNAME", "Firstname")
-					.addContext(context)
-				.end()
-				.build();
 		
-		Frame3 FRM_ROOT3 = Frame3.builder("FRM_ROOT")
-				.addFrame(FRM_DUMMY3).end().build();
+		Frame3 FRM_POWERED_BY = null;
+		
+		try {
+			FRM_POWERED_BY = Frame3.builder("FRM_POWERED_BY")
+					.addTheme("THM_WIDTH_200",serviceToken).end()
+					.addTheme("THM_COLOR_WHITE",serviceToken).end()   
+					.question("QUE_POWERED_BY_GRP")
+						.sourceAlias("PRJ_"+realm.toUpperCase())
+						.targetAlias("PRJ_"+realm.toUpperCase())
+						.addTheme("THM_FORM_LABEL_DEFAULT",serviceToken)
+						.vcl(VisualControlType.VCL_LABEL)
+						.end()
+					.addTheme("THM_FORM_DEFAULT_REPLICA",serviceToken)
+						.weight(3.0)
+						.end()
+					.end()
+					.build();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
+//		BaseEntity[] bea = new BaseEntity[1];
+//		bea[0] = project;
+//		QDataBaseEntityMessage prjtest = new QDataBaseEntityMessage();
+		qRules.publishCmd(project, "PROJECT");
 		
 		Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
 
-		QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_ROOT3, serviceToken, askMsgs);
+		QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_POWERED_BY, serviceToken, askMsgs);
+   //     qRules.publishCmd(msg);
 
+        List<Tuple2<String,String>> sourceTargetCodes = new ArrayList<Tuple2<String,String>>();
+        sourceTargetCodes.add(Tuple.of(serviceToken.getUserCode(),userToken.getUserCode()));
+        
+        for (QDataAskMessage askMsg : askMsgs) {
+                qRules.publishCmd(askMsg, sourceTargetCodes);
+        }
+        System.out.println("Sent");
 		
 		System.out.println(user);
 	}

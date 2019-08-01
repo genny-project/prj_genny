@@ -69,6 +69,57 @@ public class SafalTest extends GennyJbpmBaseTest {
 		
 	}
 	
+	@Test
+	public void eventProcessTest() {
+		
+		System.out.println("Send Virtual Question");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+		} else {
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+		}
+
+		System.out.println("session     =" + userToken.getSessionCode());
+		System.out.println("userToken   =" + userToken.getToken());
+		System.out.println("serviceToken=" + serviceToken.getToken());		
+		
+		QEventMessage msg = new QEventMessage("EVT_MSG", "AUTH_INIT");
+		QEventMessage msg1 = new QEventMessage("EVT_MSG", "AUTH_INIT1");
+		msg.getData().setValue("NEW_SESSION");
+		
+		System.out.println("Hello");
+		GennyKieSession gks = GennyKieSession.builder(serviceToken,true)
+				.addJbpm("userSession.bpmn")
+				.addJbpm("userValidation.bpmn")
+				.addJbpm("userLifecycle.bpmn")
+				.addJbpm("auth_init.bpmn")
+				.addJbpm("showDashboard.bpmn")
+				.addDrl("DEFAULT_EVENT.drl")
+				.addToken(userToken)
+				.build();
+		System.out.println("Hello");	
+		
+		gks.start();
+		gks.injectSignal("newSession",msg);
+		gks.advanceSeconds(5, true);
+		//gks.injectSignal("event",msg1);
+		
+		
+		gks.advanceSeconds(5, true);
+	     
+	}
+	
 	//@Test
 	public void timeCHeck() {
 		
@@ -110,11 +161,12 @@ public class SafalTest extends GennyJbpmBaseTest {
 		
 	}
 	
-	@Test
+	//@Test
 	public void SendData() {
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 		QRules rules = getQRules(userToken);
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+		
 		
 
 		Answer ans = new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_NAME", "Safal Shrestha");
@@ -122,6 +174,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 		ansMsg.setToken(userToken.getToken());
 
 		QEventMessage msg = new QEventMessage("EVT_MSG", "AUTH_INIT");
+
 
 		GennyKieSession gks = GennyKieSession.builder(serviceToken)
 				.addJbpm("userSession.bpmn")
@@ -524,4 +577,4 @@ public class SafalTest extends GennyJbpmBaseTest {
 
 	}
 
-}
+};
