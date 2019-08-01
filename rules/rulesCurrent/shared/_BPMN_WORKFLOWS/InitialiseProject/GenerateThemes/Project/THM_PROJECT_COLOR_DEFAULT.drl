@@ -21,33 +21,34 @@ import life.genny.utils.BaseEntityUtils;
 import life.genny.models.GennyToken;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
 import life.genny.models.Theme;
-import life.genny.models.ThemeAttributeType;
 
 
 
-rule "THM_DROPDOWN_HEADER_WRAPPER"
-   ruleflow-group 'GenerateThemes'
+rule "THM_PROJECT_COLOR_DEFAULT"
+    ruleflow-group 'GenerateThemes'
     no-loop true
-    
-    when
-      not  Theme (code == "THM_DROPDOWN_HEADER_WRAPPER")
-      serviceToken : GennyToken( code == "PER_SERVICE")
-      
-    then
-    
-     	System.out.println("   Generate THM_DROPDOWN_HEADER_WRAPPER Rule ");
- 
-		Theme theme = Theme.builder("THM_DROPDOWN_HEADER_WRAPPER")
-                  .addAttribute()
-                          .borderColor("white")
-                          .borderStyle("solid")
-                          .borderWidth(2)
-                  .end()
-                  .build();                
-                        
-		theme.setRealm(serviceToken.getRealm());
-		
-		insert(theme);
 
-		VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
+    when
+      not  Theme (code == "THM_PROJECT_COLOR_DEFAULT")
+      serviceToken : GennyToken( code == "PER_SERVICE")
+
+    then
+
+     	System.out.println("   Generate THM_PROJECT_COLOR_DEFAULT Rule ");
+
+			BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+			BaseEntity project = beUtils.getBaseEntityByCode( "PRJ_" + serviceToken.getRealm().toUpperCase());
+
+			Theme theme = Theme.builder("THM_PROJECT_COLOR_DEFAULT")
+										.addAttribute()
+											.backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E"))
+											.color("white")
+										.end()
+										.build();  
+
+			theme.setRealm(serviceToken.getRealm());
+
+			insert(theme);
+
+			VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
 end
