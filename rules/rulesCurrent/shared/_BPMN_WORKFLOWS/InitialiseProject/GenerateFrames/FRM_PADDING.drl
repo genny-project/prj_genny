@@ -24,27 +24,19 @@ import org.kie.api.runtime.process.WorkflowProcessInstance;
 import life.genny.models.Frame3;
 import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
-import life.genny.models.FramePosition;
 
-rule "FRM_POWERED_BY"
+rule "FRM_PADDING"
     ruleflow-group 'GenerateFrames'
 
     when
-      not  Frame3(code == "FRM_POWERED_BY")
+      not  Frame3(code == "FRM_PADDING")
       serviceToken : GennyToken( code == "PER_SERVICE")
-      FRM_DUMMY : Frame3 ( code == "FRM_DUMMY" )
+      
     then
-     System.out.println("   Generate FRM_POWERED_BY Rule  "+serviceToken.getUserCode());
+     System.out.println("   Generate FRM_PADDING Rule  "+serviceToken.getUserCode());
 
- 	Frame3 frame = Frame3.builder("FRM_POWERED_BY")
-								.question("QUE_POWERED_BY_GRP")
-									.addTheme("THM_LABEL_BOLD", serviceToken)
-										.vcl(VisualControlType.VCL_LABEL)
-									.end()
-									.addTheme("THM_DISPLAY_HORIZONTAL", serviceToken)
-										.vcl(VisualControlType.VCL_WRAPPER)
-									.end()
-								.end()
+ 	Frame3 frame = Frame3.builder("FRM_PADDING")
+								.addTheme("THM_PADDING", serviceToken).end()
 								.build();
 						
 	frame.setRealm(serviceToken.getRealm());

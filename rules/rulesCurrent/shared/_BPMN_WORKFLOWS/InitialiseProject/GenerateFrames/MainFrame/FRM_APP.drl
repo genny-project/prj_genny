@@ -25,11 +25,11 @@ import life.genny.models.Frame3;
 import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
 
-rule "FRM_DESKTOP"
+rule "FRM_APP"
     ruleflow-group 'GenerateFrames'
 
     when
-      not  Frame3(code == "FRM_DESKTOP")
+      not  Frame3(code == "FRM_APP")
       serviceToken : GennyToken( code == "PER_SERVICE")
       FRM_HEADER : Frame3 ( code == "FRM_HEADER" )
       FRM_SIDEBAR : Frame3 ( code == "FRM_SIDEBAR" )
@@ -38,24 +38,24 @@ rule "FRM_DESKTOP"
 
 
     then
-			System.out.println("   Generate FRM_DESKTOP Rule  "+serviceToken.getUserCode());
+			System.out.println("   Generate FRM_APP Rule  "+serviceToken.getUserCode());
 
 		  /* frame-root */
-      Frame3 frame = Frame3.builder("FRM_DESKTOP")
+      Frame3 frame = Frame3.builder("FRM_APP")
                       .addTheme("THM_PROJECT", ThemePosition.FRAME, serviceToken).end()
                       .addFrame(FRM_HEADER, FramePosition.NORTH).end()
                       .addFrame(FRM_SIDEBAR, FramePosition.WEST).end()
                       .addFrame(FRM_TABS, FramePosition.CENTRE).end()
                       .addFrame(FRM_FOOTER, FramePosition.SOUTH).end()
                       .build();
-			System.out.println("   Generated FRM_DESKTOP Rule  "+serviceToken.getUserCode());
+			System.out.println("   Generated FRM_APP Rule  "+serviceToken.getUserCode());
 
 			frame.setRealm(serviceToken.getRealm());
 			insert (frame);
-			System.out.println("   Generate FRM_DESKTOP Rule INSERTED  "+serviceToken.getUserCode());
+			System.out.println("   Generate FRM_APP Rule INSERTED  "+serviceToken.getUserCode());
 
 			/* Process and save to cache */
 			FrameUtils2.toMessage(frame, serviceToken);
-			System.out.println("   Generated FRM_DESKTOP Rule MSG "+serviceToken.getUserCode());
+			System.out.println("   Generated FRM_APP Rule MSG "+serviceToken.getUserCode());
 			
 end
