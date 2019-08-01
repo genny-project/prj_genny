@@ -36,16 +36,18 @@ rule "THM_TAB_CONTENT"
     then
     
      	System.out.println("   Generate THM_TAB_CONTENT Rule ");
+      BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+			BaseEntity project = beUtils.getBaseEntityByCode( "PRJ_" + serviceToken.getRealm().toUpperCase());
  
-		Theme theme = Theme.builder("THM_TAB_CONTENT")
-                                .addAttribute()
-                                	.backgroundColor("#F8F9FA")
-                                	.end()
-                                .build();
-                        
-		theme.setRealm(serviceToken.getRealm());
-		
-		insert(theme);
+      Theme theme = Theme.builder("THM_TAB_CONTENT")
+                                  .addAttribute()
+                                    .backgroundColor(project.getValue("PRI_COLOR_BACKGROUND", "#F6F6F6"))
+                                    .end()
+                                  .build();
+                          
+      theme.setRealm(serviceToken.getRealm());
 
-		VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
+      insert(theme);
+
+      VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
 end

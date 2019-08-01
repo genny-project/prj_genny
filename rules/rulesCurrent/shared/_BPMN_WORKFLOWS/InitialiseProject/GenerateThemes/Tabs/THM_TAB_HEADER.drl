@@ -40,18 +40,16 @@ rule "THM_TAB_HEADER"
       BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
 			BaseEntity project = beUtils.getBaseEntityByCode( "PRJ_" + serviceToken.getRealm().toUpperCase());
 
-		Theme theme = Theme.builder("THM_TAB_HEADER")
-                                .addAttribute()
-                                /* .backgroundColor("#065B9A") */
-                    						.backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E"))
-                                .flexDirection("row")
-                                .marginRight(5)
-                                .end()
-                                .build();
+		  Theme theme = Theme.builder("THM_TAB_HEADER")
+                  .addAttribute()
+                    .backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E"))
+                    .flexDirection("row")
+                  .end()
+                  .build();
 
-		theme.setRealm(serviceToken.getRealm());
+      theme.setRealm(serviceToken.getRealm());
 
-		insert(theme);
+      insert(theme);
 
-		VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
+      VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
 end
