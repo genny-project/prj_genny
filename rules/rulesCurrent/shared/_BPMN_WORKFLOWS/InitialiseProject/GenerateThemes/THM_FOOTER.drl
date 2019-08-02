@@ -40,19 +40,13 @@ rule "THM_FOOTER"
 			BaseEntity project = beUtils.getBaseEntityByCode( "PRJ_" + serviceToken.getRealm().toUpperCase());
 
 			Theme theme = Theme.builder("THM_FOOTER")
-					.addAttribute()
-/* 						.backgroundColor("#16649E") */
-						.backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E"))
-
-						.end()
-                    .addAttribute()
-                    	.bold(true)
-                    	.size("md")
-                    	.end()
-                    .addAttribute()
-                    	.height(50)
-                    	.end()
-                    .build();
+										.addAttribute()
+														.backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E"))
+														.height(50)
+														.paddingX(20)
+										.end()
+										.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+										.build();
 
 		theme.setRealm(serviceToken.getRealm());
 

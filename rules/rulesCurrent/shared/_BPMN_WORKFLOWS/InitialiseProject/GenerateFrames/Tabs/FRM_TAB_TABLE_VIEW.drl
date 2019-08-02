@@ -37,8 +37,8 @@ rule "FRM_TAB_TABLE_VIEW"
 
 			Frame3 frame = Frame3.builder("FRM_TAB_TABLE_VIEW")
 										.addTheme("THM_TAB", serviceToken).end()
+										.addTheme("THM_TAB_WIDTH", ThemePosition.WRAPPER, serviceToken).end()
 										.question("QUE_TAB_TABLE_VIEW")
-											.addTheme("THM_BUCKET_LABEL", serviceToken).end()
 										.end()
 										.build();
 

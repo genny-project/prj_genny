@@ -25,26 +25,37 @@ import life.genny.models.Frame3;
 import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
 
-rule "FRM_TAB_DETAIL_VIEW"
+rule "FRM_APP"
     ruleflow-group 'GenerateFrames'
 
     when
-      not  Frame3(code == "FRM_TAB_DETAIL_VIEW")
+      not  Frame3(code == "FRM_APP")
       serviceToken : GennyToken( code == "PER_SERVICE")
+      FRM_HEADER : Frame3 ( code == "FRM_HEADER" )
+      FRM_SIDEBAR : Frame3 ( code == "FRM_SIDEBAR" )
+      FRM_TABS : Frame3 ( code == "FRM_TABS" )
+      FRM_FOOTER : Frame3 ( code == "FRM_FOOTER" )
+
 
     then
-			System.out.println("   Generate FRM_TAB_DETAIL_VIEW Rule  "+serviceToken.getUserCode());
+			System.out.println("   Generate FRM_APP Rule  "+serviceToken.getUserCode());
 
-			Frame3 frame = Frame3.builder("FRM_TAB_DETAIL_VIEW")
-										.addTheme("THM_TAB", serviceToken).end()
-										.addTheme("THM_TAB_WIDTH", ThemePosition.WRAPPER, serviceToken).end()
-										.question("QUE_TAB_DETAIL_VIEW")
-										.end()
-										.build();
+		  /* frame-root */
+      Frame3 frame = Frame3.builder("FRM_APP")
+                      .addTheme("THM_PROJECT", ThemePosition.FRAME, serviceToken).end()
+                      .addFrame(FRM_HEADER, FramePosition.NORTH).end()
+                      .addFrame(FRM_SIDEBAR, FramePosition.WEST).end()
+                      .addFrame(FRM_TABS, FramePosition.CENTRE).end()
+                      .addFrame(FRM_FOOTER, FramePosition.SOUTH).end()
+                      .build();
+			System.out.println("   Generated FRM_APP Rule  "+serviceToken.getUserCode());
 
 			frame.setRealm(serviceToken.getRealm());
 			insert (frame);
+			System.out.println("   Generate FRM_APP Rule INSERTED  "+serviceToken.getUserCode());
 
 			/* Process and save to cache */
 			FrameUtils2.toMessage(frame, serviceToken);
+			System.out.println("   Generated FRM_APP Rule MSG "+serviceToken.getUserCode());
+			
 end

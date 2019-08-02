@@ -21,35 +21,29 @@ import life.genny.utils.BaseEntityUtils;
 import life.genny.models.GennyToken;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
 import life.genny.models.Theme;
-import life.genny.models.ThemeAttributeType;
 
 
 
-rule "THM_DROPDOWN"
-   ruleflow-group 'GenerateThemes'
+rule "THM_LABEL_BOLD"
+    ruleflow-group 'GenerateThemes'
     no-loop true
     
     when
-      not  Theme (code == "THM_DROPDOWN")
+      not  Theme (code == "THM_LABEL_BOLD")
       serviceToken : GennyToken( code == "PER_SERVICE")
       
     then
     
-     	System.out.println("   Generate THM_DROPDOWN Rule ");
-
-      BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
-			BaseEntity project = beUtils.getBaseEntityByCode( "PRJ_" + serviceToken.getRealm().toUpperCase());
-
+     	System.out.println("   Generate THM_LABEL_BOLD Rule ");
  
-		Theme theme = Theme.builder("THM_DROPDOWN")
-                  .addAttribute()
-                          .color("white")
-                          .backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E"))
-                  .end()
-                  .addAttribute(ThemeAttributeType.PRI_IS_DROPDOWN, true).end()
-                  .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_LABEL, true).end()
-                  .addAttribute(ThemeAttributeType.PRI_IS_QUESTION_GRP_LABEL_CLICKABLE, true).end()
-                  .build();      
+		Theme theme = Theme.builder("THM_LABEL_BOLD")
+									.addAttribute()
+													.bold(true)
+													.size("md")
+													.paddingX(10)
+									.end()
+									.addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end()
+									.build();
                         
 		theme.setRealm(serviceToken.getRealm());
 		
