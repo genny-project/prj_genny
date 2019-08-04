@@ -1,5 +1,4 @@
 package life.genny.test;
-
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -134,8 +133,8 @@ public class AnishTest extends GennyJbpmBaseTest {
                                         .addFrame(FRM_HEADER, FramePosition.NORTH).end()
                                         .addFrame(FRM_SIDEBAR, FramePosition.WEST).end()
                                         /* .addFrame(FRM_MAIN, FramePosition.CENTRE).end() */
-                                    /*     .addFrame(FRM_TABS, FramePosition.CENTRE).end()
-                                        .addFrame(FRM_FOOTER, FramePosition.SOUTH).end() */
+                                       .addFrame(FRM_TABS, FramePosition.CENTRE).end()
+                                        .addFrame(FRM_FOOTER, FramePosition.SOUTH).end() 
                                         .build();
 
                         Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
@@ -761,6 +760,9 @@ public class AnishTest extends GennyJbpmBaseTest {
                 System.out.println("Generated TableView Frame");
                 return FRM_TABLE_VIEW;
         }
+        
+        
+        
         // @Test
         public void desktopWfTest() {
                 GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");

@@ -13,7 +13,7 @@ rule "USER_PROFILE_EVENT"
     then
 	
 		System.out.println("Processing Answer/Data : " + $message );
-		String gotoPage = "FRM_QUE_INTERN_PROFILE_GRP";
+		String gotoPage = "FRM_QUE_USER_PROFILE_GRP";
 		String key = userToken.getSessionCode()+":page";
 		VertxUtils.writeCachedJson(userToken.getRealm(), key, gotoPage,userToken.getToken());
 		
