@@ -33,7 +33,7 @@ rule "FRM_HEADER"
       not  Frame3(code == "FRM_HEADER")
       serviceToken : GennyToken( code == "PER_SERVICE")
       FRM_HEADER_OPTIONS : Frame3 ( code == "FRM_HEADER_OPTIONS" )
-      FRM_HEADER_ADD_ITEMS : Frame3 ( code == "FRM_HEADER_ADD_ITEMS" )
+      FRM_HEADER_ADD_ITEMS : Frame3 ( code == "FRM_HEADER_ADD_ITEMS" ) 
       FRM_DUMMY : Frame3 ( code == "FRM_DUMMY" )
     then
       System.out.println("   Generate FRM_HEADER Rule  "+serviceToken.getUserCode());
@@ -42,7 +42,7 @@ rule "FRM_HEADER"
                       .addTheme("THM_HEADER", serviceToken).end()
                       .addFrame(FRM_DUMMY).end()
                       .addFrame(FRM_HEADER_OPTIONS, FramePosition.EAST).end()
-                      .addFrame(FRM_HEADER_ADD_ITEMS, FramePosition.EAST).end()
+                      .addFrame(FRM_HEADER_ADD_ITEMS, FramePosition.EAST).end() 
                       .build();             
 						
       frame.setRealm(serviceToken.getRealm());
