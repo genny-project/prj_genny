@@ -540,7 +540,7 @@ System.out.println(&quot;Timer :::::::::::::::: safal &quot;);
           <tns:metaValue><![CDATA[ShowFrame]]></tns:metaValue>
         </tns:metaData>
         <tns:onEntry-script scriptFormat="http://www.java.com/java">
-          <tns:script>System.out.println(&quot;Rules fnished  and userToken is  &quot;+uToken.getSessionCode()+&quot; key -> &quot;+uToken.getSessionCode()+&quot;:page&quot;);
+          <tns:script>System.out.println(&quot;Rules fnished  and userToken is  &quot;+userToken.getSessionCode()+&quot; key -> &quot;+userToken.getSessionCode()+&quot;:page&quot;);
    System.out.println(&quot;Rules generated Page code is &quot;+ pages);</tns:script>
         </tns:onEntry-script>
       </bpmn2:extensionElements>
