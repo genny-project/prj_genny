@@ -3,19 +3,18 @@ import life.genny.qwanda.message.QEventMessage;
 import life.genny.models.GennyToken;
 import life.genny.utils.VertxUtils;
 import io.vertx.core.json.JsonObject;
+import life.genny.utils.OutputParam;
+
 rule "DEFAULT_EVENT"
     ruleflow-group 'EventProcessing'
     no-loop
     when
 		$message : QEventMessage( )
 		userToken : GennyToken (code != "PER_SERVICE" )
+		output : OutputParam( )
     then
 	
 		System.out.println("Processing Answer/Data : " + $message );
-		String gotoPage = "FRM_DESKTOP";
-		String key = userToken.getSessionCode()+":page";
-		VertxUtils.writeCachedJson(userToken.getRealm(), key, gotoPage,userToken.getToken());
-		
-		System.out.println("sssss :"+ key);
-		
+		output.setResult("FRM_DESKTOP");
+		retract($message);
 end

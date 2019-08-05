@@ -115,7 +115,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                         rules.sendAllAttributes();
 
                         /* frame-tabs */
-                        Frame3 FRM_TABS = generateTabs();
+                       // Frame3 FRM_TABS = generateTabs();
 
                         /* frame-header */
                         Frame3 FRM_HEADER = generateHeader();
@@ -139,7 +139,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                                         .addFrame(FRM_HEADER, FramePosition.NORTH).end()
                                         .addFrame(FRM_SIDEBAR, FramePosition.WEST).end()
                                         //.addFrame("FRM_TABS", FramePosition.CENTRE, serviceToken).end() 
-                                        .addFrame(FRM_TABS, FramePosition.CENTRE).end() 
+                                        //.addFrame(FRM_TABS, FramePosition.CENTRE).end() 
                                         .addFrame(FRM_FOOTER, FramePosition.SOUTH).end() 
                                         .build();
                         /* frame-root */
@@ -312,6 +312,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                         Theme THM_DROPDOWN_CONTENT_WRAPPER_GENNY = Theme.builder("THM_DROPDOWN_CONTENT_WRAPPER_GENNY")
                                         .addAttribute()
                                                 .backgroundColor(project.getValue("PRI_COLOR_SURFACE", "#FFFFFF"))
+                                                .color("green")
                                                 .width(200)
                                         .end()
                                         .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
@@ -332,7 +333,8 @@ public class AnishTest extends GennyJbpmBaseTest {
                        
                         Theme THM_DROPDOWN_VCL_GENNY = Theme.builder("THM_DROPDOWN_VCL_GENNY")
                                         .addAttribute()
-                                                .color(project.getValue("PRI_COLOR_SURFACE_ON", "#000000"))
+                                                //.color(project.getValue("PRI_COLOR_SURFACE_ON", "#000000"))
+                                                .color(project.getValue("PRI_COLOR_SURFACE_ON", "green"))
                                         .end()
                                         .build();  
                                         

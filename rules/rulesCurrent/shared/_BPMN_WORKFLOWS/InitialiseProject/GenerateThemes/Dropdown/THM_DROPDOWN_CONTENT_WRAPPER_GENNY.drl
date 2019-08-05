@@ -37,6 +37,7 @@ rule "THM_DROPDOWN_CONTENT_WRAPPER_GENNY"
 		Theme theme = Theme.builder("THM_DROPDOWN_CONTENT_WRAPPER_GENNY")
                   .addAttribute()
                     .backgroundColor(project.getValue("PRI_COLOR_SURFACE", "#FFFFFF"))
+                    .color("black")
                     .width(200)
                   .end()
                   .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
