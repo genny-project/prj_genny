@@ -10,13 +10,11 @@ rule "ADD_NEW_COMPANY_EVENT"
     when
 		$message : QEventMessage(data.code == "QUE_ADD_NEW_COMPANY")
 		userToken : GennyToken (code != "PER_SERVICE" )
+		output : OutputParam( )
     then
 	
 		System.out.println("Processing Answer/Data : cyrus" + $message );
-		String gotoPage = "FRM_QUE_ADD_NEW_COMPANY";
-		String key = userToken.getSessionCode()+":page";
-		VertxUtils.writeCachedJson(userToken.getRealm(), key, gotoPage,userToken.getToken());
+		output.setResult("FRM_QUE_ADD_NEW_COMPANY");
+		retract($message);
 		
-		System.out.println("sssss :"+ key);
-		retract( $message);
 end
