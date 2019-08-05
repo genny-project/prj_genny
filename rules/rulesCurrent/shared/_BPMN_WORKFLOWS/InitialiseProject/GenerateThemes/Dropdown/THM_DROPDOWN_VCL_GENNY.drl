@@ -36,11 +36,9 @@ rule "THM_DROPDOWN_VCL_GENNY"
 
 		Theme theme = Theme.builder("THM_DROPDOWN_VCL_GENNY")
                   .addAttribute()
-                    .backgroundColor(project.getValue("PRI_COLOR_SURFACE", "#FFFFFF"))
-                    .width(200)
+                    .color(project.getValue("PRI_COLOR_SURFACE_ON", "#000000"))
                   .end()
-                  .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
-                  .build();
+                  .build();  
 
 		theme.setRealm(serviceToken.getRealm());
 
