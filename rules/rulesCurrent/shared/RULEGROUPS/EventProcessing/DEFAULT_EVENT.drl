@@ -15,6 +15,6 @@ rule "DEFAULT_EVENT"
     then
 	
 		System.out.println("Processing Answer/Data : " + $message );
-		output.setResult("FRM_DESKTOP");
+		output.setResult("FRM_TABS");
 		retract($message);
 end
