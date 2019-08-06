@@ -3,18 +3,17 @@ import life.genny.qwanda.message.QEventMessage;
 import life.genny.models.GennyToken;
 import life.genny.utils.VertxUtils;
 import io.vertx.core.json.JsonObject;
-import life.genny.utils.OutputParam;
-
-rule "DEFAULT_EVENT"
+rule "USER_PROFILE_EVENT"
     ruleflow-group 'EventProcessing'
+		salience 2
     no-loop
     when
-		$message : QEventMessage( )
+		$message : QEventMessage(data.code == "QUE_USER_PROFILE")
 		userToken : GennyToken (code != "PER_SERVICE" )
 		output : OutputParam( )
     then
 	
 		System.out.println("Processing Answer/Data : " + $message );
-		output.setResult("FRM_TABS");
-		retract($message);
+		output.setResult("FRM_QUE_USER_PROFILE_GRP");
+		retract( $message);
 end

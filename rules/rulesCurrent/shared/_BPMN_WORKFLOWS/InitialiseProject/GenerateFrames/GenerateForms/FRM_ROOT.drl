@@ -41,8 +41,6 @@ rule "FRM_ROOT"
      System.out.println("   Generate FRM_ROOT Rule  "+serviceToken.getUserCode());
 
  	Frame3 frame = Frame3.builder("FRM_ROOT")
-                    .addTheme("THM_PROJECT", serviceToken).end()
-                    .addFrame(FRM_MAIN).end()
                     .build();
 
 	frame.setRealm(serviceToken.getRealm());
