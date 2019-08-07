@@ -37,9 +37,13 @@ rule "FRM_TREE_DETAIL_VIEW"
 
 		  /* frame-root */
       Frame3 frame = Frame3.builder("FRM_TREE_DETAIL_VIEW")
-                    .addTheme("THM_TREE_ITEM", serviceToken).end()
-                    .question("QUE_TREE_DETAIL_VIEW").end()
-                    .build();
+                      .addTheme("THM_TREE_ITEM", ThemePosition.WRAPPER, serviceToken).end()
+                      .question("QUE_TREE_DETAIL_VIEW")
+                        .addTheme("THM_TREE_GROUP_WRAPPER", serviceToken)
+                          .vcl(VisualControlType.VCL_WRAPPER)
+                        .end()
+                      .end()
+                      .build();
 
 			frame.setRealm(serviceToken.getRealm());
 			insert (frame);
