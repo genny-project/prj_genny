@@ -33,7 +33,7 @@ rule "FRM_APP"
       serviceToken : GennyToken( code == "PER_SERVICE")
       FRM_HEADER : Frame3 ( code == "FRM_HEADER" )
       FRM_SIDEBAR : Frame3 ( code == "FRM_SIDEBAR" )
-      FRM_TABS : Frame3 ( code == "FRM_TABS" )
+      FRM_CONTENT : Frame3 ( code == "FRM_CONTENT" )
       FRM_FOOTER : Frame3 ( code == "FRM_FOOTER" )
 
 
@@ -45,7 +45,7 @@ rule "FRM_APP"
                       .addTheme("THM_PROJECT", ThemePosition.FRAME, serviceToken).end()
                       .addFrame(FRM_HEADER, FramePosition.NORTH).end()
                       .addFrame(FRM_SIDEBAR, FramePosition.WEST).end()
-                      .addFrame(FRM_TABS, FramePosition.CENTRE).end()
+                      .addFrame(FRM_CONTENT, FramePosition.CENTRE).end()
                       .addFrame(FRM_FOOTER, FramePosition.SOUTH).end()
                       .build();
 			System.out.println("   Generated FRM_APP Rule  "+serviceToken.getUserCode());
