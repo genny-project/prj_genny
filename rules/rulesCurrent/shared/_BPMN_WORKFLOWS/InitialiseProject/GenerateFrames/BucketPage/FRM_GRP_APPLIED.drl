@@ -37,16 +37,10 @@ rule "FRM_GRP_APPLIED"
      System.out.println("   Generate FRM_GRP_APPLIED Rule  "+serviceToken.getUserCode());
 
  	 Frame3 frame = Frame3.builder("FRM_GRP_APPLIED")
-                                .addTheme("THM_TEST1",serviceToken)
-                                	.end()
+                                .addTheme("THM_TEST1",serviceToken).end()
                                 .question("QUE_GRP_APPLIED")
-                                	.addTheme("THM_FORM_INPUT_DEFAULT",serviceToken)
-                                		.vcl(VisualControlType.VCL_INPUT)
-                                		.weight(2.0)
-                                		.end()
+																	.addTheme("THM_BUCKET_LABEL", serviceToken).end()
                             		.end()
-                                .addTheme("THM_BUCKET_LABEL",serviceToken)
-                                	.end()
                                 .build();
 						
 	frame.setRealm(serviceToken.getRealm());
