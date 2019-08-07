@@ -113,7 +113,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                         rules.sendAllAttributes();
 
                         /* frame-tabs */
-                        Frame3 FRM_TABS = generateTabs();
+                       // Frame3 FRM_TABS = generateTabs();
 
                         /* frame-header */
                         Frame3 FRM_HEADER = generateHeader();
@@ -134,9 +134,19 @@ public class AnishTest extends GennyJbpmBaseTest {
                         Frame3 FRM_ROOT = Frame3.builder("FRM_ROOT")
                                         .addFrame(FRM_HEADER, FramePosition.NORTH).end()
                                         .addFrame(FRM_SIDEBAR, FramePosition.WEST).end()
+<<<<<<< HEAD
                                         /* .addFrame(FRM_MAIN, FramePosition.CENTRE).end() */
                                     /*     .addFrame(FRM_TABS, FramePosition.CENTRE).end()
                                         .addFrame(FRM_FOOTER, FramePosition.SOUTH).end() */
+=======
+                                        //.addFrame("FRM_TABS", FramePosition.CENTRE, serviceToken).end() 
+                                        //.addFrame(FRM_TABS, FramePosition.CENTRE).end() 
+                                        .addFrame(FRM_FOOTER, FramePosition.SOUTH).end() 
+                                        .build();
+                        /* frame-root */
+                        Frame3 FRM_ROOT = Frame3.builder("FRM_ROOT")
+                                        .addFrame(FRM_APP, FramePosition.CENTRE).end()
+>>>>>>> v3.0.0
                                         .build();
 
                         Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
@@ -304,12 +314,44 @@ public class AnishTest extends GennyJbpmBaseTest {
                         
                         Theme THM_DROPDOWN_CONTENT_WRAPPER = Theme.builder("THM_DROPDOWN_CONTENT_WRAPPER")
                                         .addAttribute()
+<<<<<<< HEAD
                                                 .borderColor("white")
                                                 .borderStyle("solid")
                                                 .borderWidth(2)
                                                 .width(200)
                                         .end()
                                         .build();                       
+=======
+                                                .backgroundColor(project.getValue("PRI_COLOR_SURFACE", "#FFFFFF"))
+                                                .color("green")
+                                                .width(200)
+                                        .end()
+                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                        .build();     
+
+                        Theme THM_BOX_SHADOW_SM = Theme.builder("THM_BOX_SHADOW_SM")
+                                        .addAttribute()
+                                                .shadowColor("#000")
+                                                .shadowOpacity(0.4)
+                                                .shadowRadius(10)
+                                                .shadowOffset()
+                                                        .width(0)
+                                                        .height(0)
+                                                .end()
+                                        .end()
+                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                        .build();     
+                       
+                        Theme THM_DROPDOWN_VCL_GENNY = Theme.builder("THM_DROPDOWN_VCL_GENNY")
+                                        .addAttribute()
+                                                //.color(project.getValue("PRI_COLOR_SURFACE_ON", "#000000"))
+                                                .color(project.getValue("PRI_COLOR_SURFACE_ON", "green"))
+                                        .end()
+                                        .build();  
+                                        
+                                        
+                        
+>>>>>>> v3.0.0
                         
                         Frame3 FRM_HEADER_OPTIONS = Frame3.builder("FRM_HEADER_OPTIONS")
                                         .question("QUE_OPTIONS_GRP")

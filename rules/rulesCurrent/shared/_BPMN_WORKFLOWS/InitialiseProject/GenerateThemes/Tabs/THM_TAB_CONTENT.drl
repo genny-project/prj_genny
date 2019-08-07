@@ -42,6 +42,7 @@ rule "THM_TAB_CONTENT"
       Theme theme = Theme.builder("THM_TAB_CONTENT")
                                   .addAttribute()
                                     .backgroundColor(project.getValue("PRI_COLOR_BACKGROUND", "#F6F6F6"))
+                                    .color(project.getValue("PRI_COLOR_BACKGROUND_ON", "#000000"))
                                     .end()
                                   .build();
                           
