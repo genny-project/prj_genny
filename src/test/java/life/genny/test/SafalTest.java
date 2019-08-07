@@ -70,6 +70,16 @@ public class SafalTest extends GennyJbpmBaseTest {
 	}
 	
 	@Test
+	public void beFetchTest() {
+		
+		String a = "abcdef";
+		String b = "a";
+		String c = a.replaceAll(b, "c");
+		System.out.println(c);
+	
+	}
+	
+	@Test
 	public void eventProcessTest() {
 		
 		System.out.println("Send Virtual Question");
