@@ -37,18 +37,12 @@ rule "FRM_GRP_AVAILABLE"
      System.out.println("   Generate FRM_GRP_AVAILABLE Rule  "+serviceToken.getUserCode());
 
  	 Frame3 frame = Frame3.builder("FRM_GRP_AVAILABLE")
-                                .addTheme("THM_TEST1",serviceToken)
-                                	.end()
-                                .question("QUE_GRP_NOT_APPLIED")
-                                	.addTheme("THM_FORM_INPUT_DEFAULT",serviceToken)
-                                		.vcl(VisualControlType.VCL_INPUT)
-                                		.weight(2.0)
-                                		.end()
-                            		.end()
-                                .addTheme("THM_BUCKET_LABEL",serviceToken)
-                                	.end()
-                                .build();
-	
+									.addTheme("THM_TEST1", serviceToken).end()
+									.question("QUE_GRP_NOT_APPLIED")
+										.addTheme("THM_BUCKET_LABEL", serviceToken).end()
+									.end()
+									.build();
+
 						
 	frame.setRealm(serviceToken.getRealm());
 						

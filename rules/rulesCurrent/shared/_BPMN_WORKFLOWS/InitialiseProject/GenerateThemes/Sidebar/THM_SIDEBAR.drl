@@ -42,15 +42,8 @@ rule "THM_SIDEBAR"
 		Theme theme = Theme.builder("THM_SIDEBAR")
 							.addAttribute()
 								.backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E"))
-								/* .backgroundColor("#065B9A") */
-								.end()
-                            .addAttribute()
-                            	.minWidth(300)
-                            	.end()
-                            .addAttribute()
-                            	.width(100)
-                            	.end()
-                            .build();
+							.end()
+							.build();
 
 		theme.setRealm(serviceToken.getRealm());
 

@@ -21,30 +21,34 @@ import life.genny.utils.BaseEntityUtils;
 import life.genny.models.GennyToken;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
 import life.genny.models.Theme;
-import life.genny.models.ThemeAttributeType;
 
 
 
-rule "THM_TREE_ITEM"
+rule "THM_SIDEBAR_WIDTH"
    ruleflow-group 'GenerateThemes'
     no-loop true
-    
+
     when
-      not  Theme (code == "THM_TREE_ITEM")
+      not  Theme (code == "THM_SIDEBAR_WIDTH")
       serviceToken : GennyToken( code == "PER_SERVICE")
-      
+
     then
-    
-     	System.out.println("   Generate THM_TREE_ITEM Rule ");
- 
-		Theme theme = Theme.builder("THM_TREE_ITEM")
-                                .addAttribute()
-                                  .color("white")
-                                  .end()
-                                .build();
-                        
+
+     	System.out.println("   Generate THM_SIDEBAR_WIDTH Rule ");
+
+			BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+			BaseEntity project = beUtils.getBaseEntityByCode( "PRJ_" + serviceToken.getRealm().toUpperCase());
+
+		Theme theme = Theme.builder("THM_SIDEBAR_WIDTH")
+										.addAttribute()
+											.minWidth(300)
+											.width(100)
+										.end()
+										.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE,false).end()
+										.build();
+
 		theme.setRealm(serviceToken.getRealm());
-		
+
 		insert(theme);
 
 		VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());

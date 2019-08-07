@@ -101,7 +101,178 @@ public class AnishTest extends GennyJbpmBaseTest {
     		*/
 
 
-    	}
+            }
+            
+        public Frame3 getDashboard(){
+                QRules rules = GennyJbpmBaseTest.setupLocalService();
+                GennyToken userToken = new GennyToken("userToken", rules.getToken());
+                GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+                BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+                BaseEntity project = beUtils.getBaseEntityByCode( "PRJ_" + serviceToken.getRealm().toUpperCase());
+
+                try {   
+
+                        Theme THM_CONTENT = Theme.builder("THM_CONTENT")
+                                        .addAttribute()
+                                                .backgroundColor(project.getValue("PRI_COLOR_BACKGROUND", "#F6F6F6"))
+                                                .end()
+                                        .build();     
+                        
+                        Theme THM_DASHBOARD = Theme.builder("THM_DASHBOARD")
+                                        .addAttribute()
+                                                .backgroundColor("green")
+                                                .maxWidth(900)
+                                                .width("100%")
+                                                .end()
+                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                        .build();   
+
+                        Theme THM_DASHBOARD_ITEM = Theme.builder("THM_DASHBOARD_ITEM")
+                                        .addAttribute()
+                                                .backgroundColor("white")
+                                                .color("black")
+                                                .borderStyle("solid")
+                                                .borderColor("black")
+                                                .borderBottomWidth(2)
+                                        .end()
+                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                        .build();   
+                                        
+                                        
+                        Theme THM_DASHBOARD_ITEM_WRAPPER = Theme.builder("THM_DASHBOARD_ITEM_WRAPPER")
+                                        .addAttribute()
+                                                .flexDirection("row")
+                                                .justifyContent("space-between")
+                                                .end()
+                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                        .build(); 
+                        
+                        Theme THM_DASHBOARD_ITEM_BEHAVIOUR = Theme.builder("THM_DASHBOARD_ITEM_BEHAVIOUR")
+                                        .addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end()
+                                        .build(); 
+
+                        /* interns-content-items */
+                        Frame3 FRM_COUNT_ALL_INTERNS  = Frame3.builder("FRM_COUNT_ALL_INTERNS")
+                                        .addTheme(THM_DASHBOARD_ITEM).end()
+                                        .question("QUE_COUNT_ALL_INTERNS")
+                                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end()
+                                        .end()
+                                        .build();
+                        
+                        Frame3 FRM_COUNT_AVAILABLE_INTERNS  = Frame3.builder("FRM_COUNT_AVAILABLE_INTERNS")
+                                        .addTheme(THM_DASHBOARD_ITEM).end()
+                                        .question("QUE_COUNT_AVAILABLE_INTERNS").end()
+                                        .build();
+
+                        Frame3 FRM_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNS  = Frame3.builder("FRM_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNS")
+                                        .addTheme(THM_DASHBOARD_ITEM).end()
+                                        .question("QUE_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNS").end()
+                                        .build();
+                        
+                        Frame3 FRM_COUNT_OFFERED_INTERNS  = Frame3.builder("FRM_COUNT_OFFERED_INTERNS")
+                                        .addTheme(THM_DASHBOARD_ITEM).end()
+                                        .question("QUE_COUNT_OFFERED_INTERNS").end()
+                                        .build();
+
+                        Frame3 FRM_COUNT_PLACED_INTERNS  = Frame3.builder("FRM_COUNT_PLACED_INTERNS")
+                                        .addTheme(THM_DASHBOARD_ITEM).end()
+                                        .question("QUE_COUNT_PLACED_INTERNS").end()
+                                        .build();
+                        
+                        Frame3 FRM_COUNT_IN_PROGRESS_INTERNS  = Frame3.builder("FRM_COUNT_IN_PROGRESS_INTERNS")
+                                        .addTheme(THM_DASHBOARD_ITEM).end()
+                                        .question("QUE_COUNT_IN_PROGRESS_INTERNS").end()
+                                        .build();
+                        Frame3 FRM_COUNT_COMPLETED_INTERNS  = Frame3.builder("FRM_COUNT_COMPLETED_INTERNS")
+                                        .addTheme(THM_DASHBOARD_ITEM).end()
+                                        .question("QUE_COUNT_COMPLETED_INTERNS").end()
+                                        .build();
+                        
+                        
+                        /* interns-header */
+                        Theme THM_TITLE_LABEL = Theme.builder("THM_TITLE_LABEL")
+                                        .addAttribute()
+                                                .textAlign("center")
+                                                .bold(true)
+                                                .size("lg")
+                                                .end()
+                                        .build();  
+                        
+                        Theme THM_TITLE_WRAPPER = Theme.builder("THM_TITLE_WRAPPER")
+                                        .addAttribute()
+                                                .padding(20)
+                                                .end()
+                                        .build();  
+                        
+
+                        Theme THM_TITLE_BEHAVIOUR = Theme.builder("THM_TITLE_BEHAVIOUR")
+                                        .addAttribute()
+                                                .backgroundColor(project.getValue("PRI_COLOR_SURFACE", "#FFFFFF"))
+                                                .color(project.getValue("PRI_COLOR_SURFACE_ON", "#000000"))
+                                                .end()
+                                        .addAttribute(ThemeAttributeType.PRI_HAS_INPUT, false).end()
+                                        .addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end()
+                                        .build();         
+
+
+                        Frame3 FRM_DASHBOARD_INTERNS_HEADER  = Frame3.builder("FRM_DASHBOARD_INTERNS_HEADER")
+                                                .question("QUE_COUNT_ALL_INTERNSHIPS")
+                                                        .addTheme(THM_TITLE_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                                        .addTheme(THM_TITLE_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                                        .addTheme(THM_TITLE_BEHAVIOUR).end()
+                                                .end()
+                                                .build();
+                                                
+                        /* interns-content */
+ 
+                        Frame3 FRM_DASHBOARD_INTERNS_CONTENT  = Frame3.builder("FRM_DASHBOARD_INTERNS_CONTENT")
+                                                .addFrame(FRM_COUNT_ALL_INTERNS, FramePosition.NORTH).end()
+                                                .addFrame(FRM_COUNT_AVAILABLE_INTERNS, FramePosition.NORTH).end()
+                                                .addFrame(FRM_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNS, FramePosition.NORTH).end()
+                                                .addFrame(FRM_COUNT_OFFERED_INTERNS, FramePosition.NORTH).end()
+                                                .addFrame(FRM_COUNT_PLACED_INTERNS, FramePosition.NORTH).end()
+                                                .addFrame(FRM_COUNT_IN_PROGRESS_INTERNS, FramePosition.NORTH).end()
+                                                .addFrame(FRM_COUNT_COMPLETED_INTERNS, FramePosition.NORTH).end()
+                                                .build();
+
+                        Frame3 FRM_DASHBOARD_INTERNS  = Frame3.builder("FRM_DASHBOARD_INTERNS")
+                                                .addTheme(THM_DASHBOARD).end()
+                                                .addFrame(FRM_DASHBOARD_INTERNS_HEADER, FramePosition.NORTH).end()
+                                                .addFrame(FRM_DASHBOARD_INTERNS_CONTENT, FramePosition.CENTRE).end()
+                                                .build();
+                        
+                        Frame3 FRM_CONTENT  = Frame3.builder("FRM_CONTENT")
+                                                .addTheme(THM_CONTENT).end()
+                                                .addFrame(FRM_DASHBOARD_INTERNS, FramePosition.CENTRE).end()
+                                                .build();
+                        
+                        // Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+                        // QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_CONTENT, serviceToken, askMsgs);
+                        // //rules.publishCmd(msg);
+                        // for (QDataAskMessage askMsg : askMsgs) {
+                        //         rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode());
+                        // }
+                        
+                        // System.out.println("Sent");
+                        
+                        Theme THM_TREE_GROUP_BEHAVIOUR = Theme.builder("THM_TREE_GROUP_BEHAVIOUR")
+                                .addAttribute(ThemeAttributeType.PRI_IS_EXPANDABLE, true).end()
+                                .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_LABEL, true).end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_QUESTION_GRP_LABEL_CLICKABLE, true).end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                .addAttribute(ThemeAttributeType.PRI_HAS_CHILD_ASKS, false).end()
+                                .build();
+                        
+                        return FRM_CONTENT;
+
+
+
+                } catch (Exception e) {
+                        //TODO: handle exception
+                }
+                return null;
+        }
     	
         @Test
         public void testDesktop() {
@@ -113,7 +284,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                         rules.sendAllAttributes();
 
                         /* frame-tabs */
-                       // Frame3 FRM_TABS = generateTabs();
+                        Frame3 FRM_TABS = generateTabs();
 
                         /* frame-header */
                         Frame3 FRM_HEADER = generateHeader();
@@ -123,17 +294,30 @@ public class AnishTest extends GennyJbpmBaseTest {
 
                         /* frame-sidebar */
                         Frame3 FRM_SIDEBAR = generateSidebar();
+                      
+                        /* frame-dashboard */
+                      //  Frame3 FRM_CONTENT = getDashboard();
 
                       /*   Frame3 FRM_MAIN = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_MAIN", Frame3.class,
                         serviceToken.getToken()); */
+<<<<<<< HEAD
 
                       //  System.out.println(FRM_MAIN.getCode());
 
+=======
+                        
+                     //    Frame3 FRM_TABS = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_TABS", Frame3.class,
+                      //  serviceToken.getToken()); 
+                         
+                
+                        
+>>>>>>> v3.0.0
 
                         /* frame-root */
                         Frame3 FRM_ROOT = Frame3.builder("FRM_ROOT")
                                         .addFrame(FRM_HEADER, FramePosition.NORTH).end()
                                         .addFrame(FRM_SIDEBAR, FramePosition.WEST).end()
+<<<<<<< HEAD
 <<<<<<< HEAD
                                         /* .addFrame(FRM_MAIN, FramePosition.CENTRE).end() */
                                     /*     .addFrame(FRM_TABS, FramePosition.CENTRE).end()
@@ -141,6 +325,10 @@ public class AnishTest extends GennyJbpmBaseTest {
 =======
                                         //.addFrame("FRM_TABS", FramePosition.CENTRE, serviceToken).end() 
                                         //.addFrame(FRM_TABS, FramePosition.CENTRE).end() 
+=======
+                                        .addFrame(FRM_TABS, FramePosition.CENTRE).end() 
+                                        //.addFrame(FRM_CONTENT, FramePosition.CENTRE).end() 
+>>>>>>> v3.0.0
                                         .addFrame(FRM_FOOTER, FramePosition.SOUTH).end() 
                                         .build();
                         /* frame-root */
@@ -430,11 +618,18 @@ public class AnishTest extends GennyJbpmBaseTest {
                         Theme THM_SIDEBAR = Theme.builder("THM_SIDEBAR")
                                         .addAttribute()
                                                 .backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E"))
-                                                .minWidth(300)
-                                                .width(100)
                                         .end()
                                         .build();
 
+                        Theme THM_SIDEBAR_WIDTH = Theme.builder("THM_SIDEBAR_WIDTH")
+                                        .addAttribute()
+                                                .minWidth(300)
+                                                .width(100)
+                                        .end()
+                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE,false).end()
+                                        .build();
+
+<<<<<<< HEAD
                         Frame3 FRM_LOGO = Frame3.builder("FRM_LOGO").addTheme(THM_SIDEBAR).end()
                                         .question("QUE_PROJECT_SIDEBAR_GRP").addTheme("THM_LOGO", serviceToken)
                                         .vcl(VisualControlType.VCL_WRAPPER).end().end()//.addFrame(FRM_DUMMY).end()
@@ -442,7 +637,114 @@ public class AnishTest extends GennyJbpmBaseTest {
 
                         Frame3 FRM_SIDEBAR = Frame3.builder("FRM_SIDEBAR").addTheme(THM_SIDEBAR).end()
                                         .addFrame(FRM_LOGO, FramePosition.NORTH).end()//.addFrame(FRM_DUMMY).end()
+=======
+
+                        Theme THM_TREE_ITEM = Theme.builder("THM_TREE_ITEM")
+                                        .addAttribute()
+                                                .color("white")
+                                                .height("auto")
+                                                .flexGrow(0)
+                                                .flexBasis("auto")
+                                        .end()
                                         .build();
+
+                        Frame3 FRM_LOGO = Frame3.builder("FRM_LOGO")
+                                        .addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER).end()
+                                        .question("QUE_PROJECT_SIDEBAR_GRP")
+                                                .addTheme("THM_LOGO", serviceToken)
+                                                .vcl(VisualControlType.VCL_WRAPPER).end()
+                                        .end()
+>>>>>>> v3.0.0
+                                        .build();
+                        
+
+                        Theme THM_TREE_GROUP_BEHAVIOUR = Theme.builder("THM_TREE_GROUP_BEHAVIOUR")
+                                                        .addAttribute(ThemeAttributeType.PRI_IS_EXPANDABLE, true).end()
+                                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                                        .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_LABEL, true).end()
+                                                        .addAttribute(ThemeAttributeType.PRI_IS_QUESTION_GRP_LABEL_CLICKABLE, true).end()
+                                                        .build();
+                        
+                        Theme THM_TREE_GROUP_LABEL = Theme.builder("THM_TREE_GROUP_LABEL")
+                                                        .addAttribute()
+                                                                .bold(false)
+                                                                .size("md")
+                                                                .end()
+                                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
+                                                        .end()
+                                                        .build();
+                                                        
+                        Theme THM_TREE_GROUP_WRAPPER = Theme.builder("THM_TREE_GROUP_WRAPPER")
+                                                        .addAttribute()
+                                                                .width("100%")
+                                                                .paddingX(20)
+                                                                .end()
+                                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                                        .build();
+                        
+                        Theme THM_TREE_GROUP_CLICKABLE_WRAPPER = Theme.builder("THM_TREE_GROUP_CLICKABLE_WRAPPER")
+                                                        .addAttribute()
+                                                                .width("100%")
+                                                                .justifyContent("space-between")
+                                                        .end()
+                                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                                        .build();
+
+                        Theme THM_TREE_GROUP_CONTENT_WRAPPER = Theme.builder("THM_TREE_GROUP_CONTENT_WRAPPER")
+                                                        .addAttribute()
+                                                                .paddingLeft(10)
+                                                                .end()
+                                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                                        .build();
+
+
+                        Frame3 FRM_TREE_FORM_VIEW = Frame3.builder("FRM_TREE_FORM_VIEW")
+				                                .addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER).end()
+				                                .question("QUE_TREE_FORM_VIEW_GRP")
+                                                                  .addTheme(THM_TREE_GROUP_BEHAVIOUR).end()
+                                                                  .addTheme(THM_TREE_GROUP_CLICKABLE_WRAPPER)
+                                                                        .vcl(VisualControlType.GROUP_CLICKABLE_WRAPPER)
+                                                                  .end()
+                                                                  .addTheme(THM_TREE_GROUP_CONTENT_WRAPPER)
+                                                                        .vcl(VisualControlType.GROUP_CONTENT_WRAPPER)
+                                                                  .end()
+                                                                  .addTheme(THM_TREE_GROUP_WRAPPER)
+                                                                        .vcl(VisualControlType.GROUP_WRAPPER)
+                                                                  .end()
+                                                                  .addTheme(THM_TREE_GROUP_LABEL)
+                                                                        .vcl(VisualControlType.GROUP_LABEL)
+                                                                  .end()
+				                                .end()
+				                                .build();
+                        
+                        Frame3 FRM_TREE_BUCKET_VIEW = Frame3.builder("FRM_TREE_BUCKET_VIEW")
+                                                        .addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER).end()
+                                                        .question("QUE_TREE_BUCKET_VIEW").end()
+                                                        .build();
+                        
+                        Frame3 FRM_TREE_DETAIL_VIEW = Frame3.builder("FRM_TREE_DETAIL_VIEW")
+                                                        .addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER).end()
+                                                        .question("QUE_TREE_DETAIL_VIEW")
+                                                                .addTheme(THM_TREE_GROUP_WRAPPER)
+                                                                        .vcl(VisualControlType.VCL_WRAPPER)
+                                                                .end()
+                                                        .end()
+                                                        .build();
+                        
+                        Frame3 FRM_TREE_TABLE_VIEW = Frame3.builder("FRM_TREE_TABLE_VIEW")
+                                                        .addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER).end()
+                                                        .question("QUE_TREE_TABLE_VIEW").end()
+                                                        .build();
+
+                        Frame3 FRM_SIDEBAR = Frame3.builder("FRM_SIDEBAR")
+                                                .addTheme(THM_SIDEBAR).end()
+                                                .addTheme(THM_SIDEBAR_WIDTH).end()
+                                                .addFrame(FRM_LOGO, FramePosition.NORTH).end()
+                                                .addFrame(FRM_TREE_TABLE_VIEW, FramePosition.NORTH).end()
+                                                .addFrame(FRM_TREE_BUCKET_VIEW, FramePosition.NORTH).end()
+                                                .addFrame(FRM_TREE_DETAIL_VIEW, FramePosition.NORTH).end()
+                                                .addFrame(FRM_TREE_FORM_VIEW, FramePosition.NORTH).end()
+                                                .build();
 
                         System.out.println("Generated Sidebar Frame");
                         return FRM_SIDEBAR;
