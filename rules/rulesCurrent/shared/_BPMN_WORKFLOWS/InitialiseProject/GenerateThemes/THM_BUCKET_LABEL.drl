@@ -39,6 +39,9 @@ rule "THM_BUCKET_LABEL"
 		Theme theme = Theme.builder("THM_BUCKET_LABEL")
                   .addAttribute()
                     .textAlign("center")
+                    .bold(true)
+                    .color("black")
+                    .size("md")
                   .end()
                   .build();
 
