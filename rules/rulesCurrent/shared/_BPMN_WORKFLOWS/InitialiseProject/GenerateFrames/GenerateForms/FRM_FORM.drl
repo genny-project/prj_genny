@@ -53,9 +53,9 @@ rule "FRM_FORM"
 
 				System.out.println("Array of all the Form Codes");
 				System.out.println("Form Codes=" + questionCodes);
-			for (String questionCode : questionCodes){
-					Frame3 frame = Frame3.builder("FRM_" +  questionCode)
-					.addTheme("THM_OF", serviceToken).end()
+				for (String questionCode : questionCodes){
+				
+					Frame3 frame2 = Frame3.builder("FRM_CONTENT_" +  questionCode)
 							.question(questionCode)
 							.addTheme("THM_FORM_INPUT_DEFAULT", serviceToken).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
 							.addTheme("THM_FORM_LABEL_DEFAULT", serviceToken).vcl(VisualControlType.VCL_LABEL).end()
@@ -63,15 +63,24 @@ rule "FRM_FORM"
 							.addTheme("THM_FORM_ERROR_DEFAULT", serviceToken).vcl(VisualControlType.VCL_ERROR).end()
 							.addTheme("THM_FORM_DEFAULT", serviceToken).weight(3.0).end()
 							.addTheme("THM_FORM_CONTAINER_DEFAULT", serviceToken).weight(2.0).end()
-					.end()
-					.build();
+							.end()
+							.build();
+							
+					System.out.println(frame2.getCode());
+					
+					frame2.setRealm(serviceToken.getRealm());
+					
+					FrameUtils2.toMessage(frame2, serviceToken);
+					
+					Frame3 frame = Frame3.builder("FRM_" +  questionCode)
+							.addFrame(frame2,FramePosition.CENTRE)
+							.end()
+							.build();
 
-			frame.setRealm(serviceToken.getRealm());
-			System.out.println(frame.getCode());
-      insert(frame); 
-	
-			FrameUtils2.toMessage(frame, serviceToken);
-			}
+					frame.setRealm(serviceToken.getRealm());
+					System.out.println(frame.getCode());
+					FrameUtils2.toMessage(frame, serviceToken);
+				}
 
 end
  
