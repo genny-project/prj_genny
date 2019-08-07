@@ -24,27 +24,29 @@ import life.genny.models.Theme;
 
 
 
-rule "THM_BUCKET_LABEL"
-   ruleflow-group 'GenerateThemes'
+rule "THM_TREE_GROUP_BEHAVIOUR"
+    ruleflow-group 'GenerateThemes'
     no-loop true
 
     when
-      not  Theme (code == "THM_BUCKET_LABEL")
+      not  Theme (code == "THM_TREE_GROUP_BEHAVIOUR")
       serviceToken : GennyToken( code == "PER_SERVICE")
 
     then
 
-     	System.out.println("   Generate THM_BUCKET_LABEL Rule ");
+     	System.out.println("   Generate THM_TREE_GROUP_BEHAVIOUR Rule ");
 
-		Theme theme = Theme.builder("THM_BUCKET_LABEL")
-                  .addAttribute()
-                    .textAlign("center")
-                  .end()
-                  .build();
+			Theme theme = Theme.builder("THM_TREE_GROUP_BEHAVIOUR")
+										.addAttribute(ThemeAttributeType.PRI_IS_EXPANDABLE, true).end()
+										.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+										.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_LABEL, true).end()
+										.addAttribute(ThemeAttributeType.PRI_IS_QUESTION_GRP_LABEL_CLICKABLE, true).end()
+										.addAttribute(ThemeAttributeType.PRI_HAS_CHILD_ASKS, false).end()
+										.build();
 
-		theme.setRealm(serviceToken.getRealm());
+			theme.setRealm(serviceToken.getRealm());
 
-		insert(theme);
+			insert(theme);
 
-		VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
+			VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
 end
