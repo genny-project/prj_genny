@@ -42,6 +42,7 @@ rule "THM_TEST1"
                                         .backgroundColor("none")
                                         .width("100%")
                                         .height(70)
+                                        .paddingLeft(20)
                                 		.end()
                                 .build();
                         
