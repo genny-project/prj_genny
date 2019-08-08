@@ -216,8 +216,7 @@ kcontext.setVariable(&quot;serviceToken&quot;,((GennyToken)serviceToken));
       <bpmn2:extensionElements>
         <tns:metaData name="elementname">
           <tns:metaValue><![CDATA[
-Set Dashboard Current Display
-]]></tns:metaValue>
+Set Dashboard Current Display]]></tns:metaValue>
         </tns:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_23</bpmn2:incoming>

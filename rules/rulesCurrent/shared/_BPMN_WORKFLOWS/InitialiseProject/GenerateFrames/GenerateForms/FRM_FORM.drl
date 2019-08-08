@@ -66,12 +66,8 @@ rule "FRM_FORM"
 							.addTheme("THM_FORM_CONTAINER_DEFAULT", serviceToken).weight(2.0).end()
 							.end()
 							.build();
-							
-					System.out.println(frame2.getCode());
 					
 					frame2.setRealm(serviceToken.getRealm());
-					
-					FrameUtils2.toMessage(frame2, serviceToken);
 					
 					Frame3 frame = Frame3.builder("FRM_" +  questionCode)
 							.addFrame(frame2,FramePosition.CENTRE)

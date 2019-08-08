@@ -41,7 +41,7 @@ rule "FRM_APP"
 			System.out.println("   Generate FRM_APP Rule  "+serviceToken.getUserCode());
 
 		  /* frame-root */
-      Frame3 frame = Frame3.builder("FRM_APP")
+      		Frame3 frame = Frame3.builder("FRM_APP_CONTENT")
                       .addTheme("THM_PROJECT", ThemePosition.FRAME, serviceToken).end()
                       .addFrame(FRM_HEADER, FramePosition.NORTH).end()
                       .addFrame(FRM_SIDEBAR, FramePosition.WEST).end()
@@ -51,11 +51,18 @@ rule "FRM_APP"
 			System.out.println("   Generated FRM_APP Rule  "+serviceToken.getUserCode());
 
 			frame.setRealm(serviceToken.getRealm());
-			insert (frame);
+			
+			
+			Frame3 frame2 = Frame3.builder("FRM_APP")
+							.addFrame(frame,FramePosition.CENTRE)
+							.end()
+							.build();
+							
+			insert (frame2);
 			System.out.println("   Generate FRM_APP Rule INSERTED  "+serviceToken.getUserCode());
 
 			/* Process and save to cache */
-			FrameUtils2.toMessage(frame, serviceToken);
+			FrameUtils2.toMessage(frame2, serviceToken);
 			System.out.println("   Generated FRM_APP Rule MSG "+serviceToken.getUserCode());
 			
 end
