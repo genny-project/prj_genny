@@ -38,20 +38,17 @@ rule "THM_FORM_CONTAINER_DEFAULT"
  
 		Theme theme = Theme.builder("THM_FORM_CONTAINER_DEFAULT")
 							.addAttribute()
-								.backgroundColor("none")
+								.backgroundColor("white")
 								.padding(10).maxWidth(700)
 								.width("100%")
-								.shadowColor("#000")
-								.shadowOpacity(0.4)
-								.shadowRadius(0)
-								.shadowOffset()
-									.width(0)
-									.height(0)
-									.end()
+								.margin(5)
+								.borderWidth(2)
+								.borderColor("black")
+								.borderStyle("solid")
 								.end()
 							.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
 							.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION, true).end()
-							.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, true).end()
+							.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
 							.build();
                         
 		theme.setRealm(serviceToken.getRealm());

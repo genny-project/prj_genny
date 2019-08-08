@@ -38,6 +38,7 @@ rule "THM_FORM_LABEL_DEFAULT"
  
 		Theme theme = Theme.builder("THM_FORM_LABEL_DEFAULT")
 							.addAttribute()
+								.color("black")
 								.bold(true)
 								.size("md")
 								.end()
