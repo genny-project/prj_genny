@@ -38,9 +38,6 @@ rule "THM_OF"
  
 		Theme theme = Theme.builder("THM_OF")
 								.addAttribute()
-									.color("black")
-								.end()
-								.addAttribute()
 									.overflowY("auto")
 								.end()
 								.addAttribute()

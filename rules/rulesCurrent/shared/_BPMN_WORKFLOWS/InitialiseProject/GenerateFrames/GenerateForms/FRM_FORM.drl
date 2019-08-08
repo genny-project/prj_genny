@@ -56,14 +56,15 @@ rule "FRM_FORM"
 				for (String questionCode : questionCodes){
 				
 					Frame3 frame2 = Frame3.builder("FRM_CONTENT_" +  questionCode)
-							.question(questionCode)
-							.addTheme("THM_FORM_INPUT_DEFAULT", serviceToken).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
-							.addTheme("THM_FORM_LABEL_DEFAULT", serviceToken).vcl(VisualControlType.VCL_LABEL).end()
-							.addTheme("THM_FORM_WRAPPER_DEFAULT", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
-							.addTheme("THM_FORM_ERROR_DEFAULT", serviceToken).vcl(VisualControlType.VCL_ERROR).end()
-							.addTheme("THM_FORM_DEFAULT", serviceToken).weight(3.0).end()
-							.addTheme("THM_FORM_CONTAINER_DEFAULT", serviceToken).weight(2.0).end()
-							.end()
+							.addTheme("THM_OF", serviceToken).end()
+								.question(questionCode)
+								.addTheme("THM_FORM_INPUT_DEFAULT", serviceToken).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
+								.addTheme("THM_FORM_LABEL_DEFAULT", serviceToken).vcl(VisualControlType.VCL_LABEL).end()
+								.addTheme("THM_FORM_WRAPPER_DEFAULT", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
+								.addTheme("THM_FORM_ERROR_DEFAULT", serviceToken).vcl(VisualControlType.VCL_ERROR).end()
+								.addTheme("THM_FORM_DEFAULT", serviceToken).weight(3.0).end()
+								.addTheme("THM_FORM_CONTAINER_DEFAULT", serviceToken).weight(2.0).end()
+								.end()
 							.build();
 							
 					System.out.println(frame2.getCode());
