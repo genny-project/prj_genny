@@ -12,6 +12,7 @@
     <factorypathentry kind="VARJAR" id="M2_REPO/org/kie/soup/kie-soup-project-datamodel-commons/7.23.0.Final/kie-soup-project-datamodel-commons-7.23.0.Final.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/kie/soup/kie-soup-project-datamodel-api/7.23.0.Final/kie-soup-project-datamodel-api-7.23.0.Final.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/jbpm/jbpm-bpmn2/7.23.0.Final/jbpm-bpmn2-7.23.0.Final.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/org/jbpm/jbpm-flow-builder/7.23.0.Final/jbpm-flow-builder-7.23.0.Final.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/jbpm/jbpm-flow/7.23.0.Final/jbpm-flow-7.23.0.Final.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/kie/kie-dmn-api/7.23.0.Final/kie-dmn-api-7.23.0.Final.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/kie/kie-dmn-feel/7.23.0.Final/kie-dmn-feel-7.23.0.Final.jar" enabled="true" runInBatchMode="false"/>
@@ -352,6 +353,7 @@
     <factorypathentry kind="VARJAR" id="M2_REPO/org/jboss/resteasy/resteasy-jaxb-provider/3.0.4.Final/resteasy-jaxb-provider-3.0.4.Final.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/sun/xml/bind/jaxb-impl/2.2.7/jaxb-impl-2.2.7.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/sun/xml/bind/jaxb-core/2.2.7/jaxb-core-2.2.7.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/javax/xml/bind/jaxb-api/2.2.7/jaxb-api-2.2.7.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/sun/istack/istack-commons-runtime/2.16/istack-commons-runtime-2.16.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/sun/xml/fastinfoset/FastInfoset/1.2.12/FastInfoset-1.2.12.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/javax/xml/bind/jsr173_api/1.0/jsr173_api-1.0.jar" enabled="true" runInBatchMode="false"/>
