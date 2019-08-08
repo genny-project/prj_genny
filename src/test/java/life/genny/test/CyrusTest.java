@@ -57,7 +57,7 @@ public class CyrusTest extends GennyJbpmBaseTest {
 		super(false);
 	}
 
-	// @Test
+ @Test
 	public void addInternshipTwoAgent() {
 		// getting the tokens
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
@@ -75,7 +75,7 @@ public class CyrusTest extends GennyJbpmBaseTest {
 				.addAttribute(ThemeAttributeType.PRI_CONTENT_ACTIVE).borderColor("green").end()
 				.addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).borderColor("red").color("red").end().build();
 
-		Theme THM_FORM_LABEL_DEFAULT = Theme.builder("THM_FORM_LABEL_DEFAULT").addAttribute().end().build();
+		Theme THM_FORM_LABEL_DEFAULT = Theme.builder("THM_FORM_LABEL_DEFAULT").addAttribute().color("black").end().build();
 
 		Theme THM_FORM_WRAPPER_DEFAULT = Theme.builder("THM_FORM_WRAPPER_DEFAULT").addAttribute().marginBottom(10)
 				.padding(10).end().addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).backgroundColor("#fc8e6").end().build();
@@ -90,8 +90,11 @@ public class CyrusTest extends GennyJbpmBaseTest {
 				.addAttribute(ThemeAttributeType.PRI_HAS_ICON, true).end().build();
 
 		Theme THM_FORM_CONTAINER_DEFAULT = Theme.builder("THM_FORM_CONTAINER_DEFAULT").addAttribute()
-				.backgroundColor("white").padding(10).maxWidth(700).width("100%").shadowColor("#000").shadowOpacity(0.4)
-				.shadowRadius(5).shadowOffset().width(0).height(0).end().end()
+				.backgroundColor("white").padding(10).maxWidth(700).width("100%")
+				.borderWidth(2)
+				.borderColor("black")
+				.borderStyle("solid")
+				.end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION, true).end()
 				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
@@ -100,15 +103,39 @@ public class CyrusTest extends GennyJbpmBaseTest {
 				.justifyContent("center").borderColor("#000000").margin(4).maxWidth(700).width("100%").shadowColor("#000")
 				.shadowOpacity(0.8).shadowRadius(5).end().build();
 
-		Theme THM_OF = Theme.builder("THM_OF").addAttribute().overflowY("auto").end()
-				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+		Theme THM_OF = Theme.builder("THM_OF").addAttribute()
+		.color("black")
+	.end()
+	.addAttribute()
+		.overflowY("auto")
+	.end()
+	.addAttribute()
+		.borderStyle("solid")
+	.end()
+	.addAttribute()
+		.borderColor("black")
+	.end()
+	.addAttribute()
+		.borderWidth(1)
+	.end()
+	.addAttribute()
+		.justifyContent("start")
+	.end()
+	.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
+	.end()
+	.build();
 
-		Frame3 frameForm = Frame3.builder("FRM_FORM").addTheme(THM_COLOR_BLACK).end().addTheme(THM_OF).end()
-				.question("QUE_ADD_INTERNSHIP_AGENT_STEP_TWO_GRP").addTheme(THM_FORM_INPUT_DEFAULT)
-				.vcl(VisualControlType.VCL_INPUT).weight(2.0).end().addTheme(THM_FORM_LABEL_DEFAULT)
-				.vcl(VisualControlType.VCL_LABEL).end().addTheme(THM_FORM_WRAPPER_DEFAULT).vcl(VisualControlType.VCL_WRAPPER)
-				.end().addTheme(THM_FORM_ERROR_DEFAULT).vcl(VisualControlType.VCL_ERROR).end().addTheme(THM_FORM_DEFAULT)
-				.weight(3.0).end().addTheme(THM_FORM_CONTAINER_DEFAULT).weight(2.0).end().end().build();
+		Frame3 frameForm = Frame3.builder("FRM_FORM")
+				.addTheme(THM_OF).end()
+					.question("QUE_INTERN_PROFILE_GRP")
+					.addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
+					.addTheme(THM_FORM_LABEL_DEFAULT).vcl(VisualControlType.VCL_LABEL).end()
+					.addTheme(THM_FORM_WRAPPER_DEFAULT).vcl(VisualControlType.VCL_WRAPPER).end()
+					.addTheme(THM_FORM_ERROR_DEFAULT).vcl(VisualControlType.VCL_ERROR).end()
+					.addTheme(THM_FORM_DEFAULT).weight(3.0).end()
+					.addTheme(THM_FORM_CONTAINER_DEFAULT).vcl(VisualControlType.GROUP_WRAPPER).weight(2.0).end()
+					.end()
+				.build();
 
 		Frame3 frameCentre = Frame3.builder("FRM_CENTRE").addFrame(frameForm, FramePosition.NORTH).end()
 
@@ -288,7 +315,7 @@ public class CyrusTest extends GennyJbpmBaseTest {
 		System.out.println("Sent");
 	}
 
-	@Test
+	//@Test
 	public void testForQuestionsList2() {
 
 		GennyToken userToken = null;
