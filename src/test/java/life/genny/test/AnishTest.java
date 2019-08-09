@@ -110,125 +110,194 @@ public class AnishTest extends GennyJbpmBaseTest {
                 BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
                 BaseEntity project = beUtils.getBaseEntityByCode( "PRJ_" + serviceToken.getRealm().toUpperCase());
 
-                try {   
-
-                        Theme THM_CONTENT = Theme.builder("THM_CONTENT")
-                                        .addAttribute()
-                                                .backgroundColor(project.getValue("PRI_COLOR_BACKGROUND", "#F6F6F6"))
-                                                .color("black")
-                                                .end()
-                                        .build();     
+                try {      
                         
+                        /* -------------------- THEMES ------------------------------ */
+
+                        Theme THM_PROJECT_COLOR_BACKGROUND = Theme.builder("THM_PROJECT_COLOR_BACKGROUND")
+                                                        .addAttribute()
+                                                                .backgroundColor(project.getValue("PRI_COLOR_BACKGROUND", "#F6F6F6"))
+                                                                .color(project.getValue("PRI_COLOR_BACKGROUND_ON", "#000000"))
+                                                        .end()
+                                                        .build();  
+
                         Theme THM_DASHBOARD = Theme.builder("THM_DASHBOARD")
-                                        .addAttribute()
-                                                .backgroundColor("green")
-                                                .maxWidth(900)
-                                                .width("100%")
-                                                .end()
-                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
-                                        .build();   
+                                                .addAttribute()
+                                                        //.backgroundColor("green")
+                                                        .maxWidth(900)
+                                                        .width("100%")
+                                                        .end()
+                                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                                .build();   
 
                         Theme THM_DASHBOARD_ITEM = Theme.builder("THM_DASHBOARD_ITEM")
-                                        .addAttribute()
-                                                .backgroundColor("white")
-                                                .color("black")
-                                                .borderStyle("solid")
-                                                .borderColor("black")
-                                                .borderBottomWidth(2)
-                                        .end()
-                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
-                                        .build();   
+                                                .addAttribute()
+                                                        .borderStyle("solid")
+                                                        .borderColor("grey")
+                                                        .borderBottomWidth(1)
+                                                        .maxHeight("fit-content")
+                                                        .padding(20)
+                                                .end()
+                                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                                .build();   
+                        
+                        Theme THM_DASHBOARD_ITEM_COLOR = Theme.builder("THM_DASHBOARD_ITEM_COLOR")
+                                                        .addAttribute()
+                                                                .backgroundColor(project.getValue("PRI_COLOR_SURFACE", "#FFFFFF"))
+                                                                .color(project.getValue("PRI_COLOR_SURFACE_ON", "#000000"))
+                                                        .end()
+                                                        .build();   
+                        
+                        Theme THM_DASHBOARD_ITEM_INPUT = Theme.builder("THM_DASHBOARD_ITEM_INPUT")
+                                                        .addAttribute()
+                                                                .dynamicWidth(true)
+                                                        .end()
+                                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                                        .build();   
+                        
+                        Theme THM_DASHBOARD_ITEM_LABEL = Theme.builder("THM_DASHBOARD_ITEM_LABEL")
+                                                        .addAttribute()
+                                                                .bold(true)
+                                                        .end()
+                                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                                        .build();   
                                         
                                         
                         Theme THM_DASHBOARD_ITEM_WRAPPER = Theme.builder("THM_DASHBOARD_ITEM_WRAPPER")
-                                        .addAttribute()
-                                                .flexDirection("row")
-                                                .justifyContent("space-between")
-                                                .width("100%")
-                                                .end()
-                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
-                                        .build(); 
+                                                        .addAttribute()
+                                                                .flexDirection("row")
+                                                                .justifyContent("space-between")
+                                                                .width("100%")
+                                                                .end()
+                                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                                        .build(); 
                         
                         Theme THM_DASHBOARD_ITEM_BEHAVIOUR = Theme.builder("THM_DASHBOARD_ITEM_BEHAVIOUR")
-                                        .addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end()
-                                        .build(); 
+                                                        .addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end()
+                                                        .build(); 
 
-                        /* interns-content-items */
-                        Frame3 FRM_COUNT_ALL_INTERNS  = Frame3.builder("FRM_COUNT_ALL_INTERNS")
-                                        .addTheme(THM_DASHBOARD_ITEM).end()
-                                        .question("QUE_COUNT_ALL_INTERNS")
-                                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
-                                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end()
-                                        .end()
-                                        .build();
-                        
-                        Frame3 FRM_COUNT_AVAILABLE_INTERNS  = Frame3.builder("FRM_COUNT_AVAILABLE_INTERNS")
-                                        .addTheme(THM_DASHBOARD_ITEM).end()
-                                        .question("QUE_COUNT_AVAILABLE_INTERNS").end()
-                                        .build();
-
-                        Frame3 FRM_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNS  = Frame3.builder("FRM_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNS")
-                                        .addTheme(THM_DASHBOARD_ITEM).end()
-                                        .question("QUE_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNS").end()
-                                        .build();
-                        
-                        Frame3 FRM_COUNT_OFFERED_INTERNS  = Frame3.builder("FRM_COUNT_OFFERED_INTERNS")
-                                        .addTheme(THM_DASHBOARD_ITEM).end()
-                                        .question("QUE_COUNT_OFFERED_INTERNS").end()
-                                        .build();
-
-                        Frame3 FRM_COUNT_PLACED_INTERNS  = Frame3.builder("FRM_COUNT_PLACED_INTERNS")
-                                        .addTheme(THM_DASHBOARD_ITEM).end()
-                                        .question("QUE_COUNT_PLACED_INTERNS").end()
-                                        .build();
-                        
-                        Frame3 FRM_COUNT_IN_PROGRESS_INTERNS  = Frame3.builder("FRM_COUNT_IN_PROGRESS_INTERNS")
-                                        .addTheme(THM_DASHBOARD_ITEM).end()
-                                        .question("QUE_COUNT_IN_PROGRESS_INTERNS").end()
-                                        .build();
-                        Frame3 FRM_COUNT_COMPLETED_INTERNS  = Frame3.builder("FRM_COUNT_COMPLETED_INTERNS")
-                                        .addTheme(THM_DASHBOARD_ITEM).end()
-                                        .question("QUE_COUNT_COMPLETED_INTERNS").end()
-                                        .build();
-                        
-                        
-                        /* interns-header */
                         Theme THM_TITLE_LABEL = Theme.builder("THM_TITLE_LABEL")
-                                        .addAttribute()
-                                                .textAlign("center")
-                                                .bold(true)
-                                                .size("lg")
-                                                .end()
-                                        .build();  
+                                                        .addAttribute()
+                                                                .textAlign("center")
+                                                                .bold(true)
+                                                                .size("lg")
+                                                                .end()
+                                                        .build();  
                         
                         Theme THM_TITLE_WRAPPER = Theme.builder("THM_TITLE_WRAPPER")
                                         .addAttribute()
                                                 .padding(20)
                                                 .end()
                                         .build();  
-                        
 
                         Theme THM_TITLE_BEHAVIOUR = Theme.builder("THM_TITLE_BEHAVIOUR")
-                                        .addAttribute()
-                                                .backgroundColor(project.getValue("PRI_COLOR_SURFACE", "#FFFFFF"))
-                                                .color(project.getValue("PRI_COLOR_SURFACE_ON", "#000000"))
-                                                .end()
                                         .addAttribute(ThemeAttributeType.PRI_HAS_INPUT, false).end()
                                         .addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end()
                                         .build();         
+                                        
+                        Theme THM_DASHBOARD_CONTENT_WRAPPER = Theme.builder("THM_DASHBOARD_CONTENT_WRAPPER")
+                                                        .addAttribute()
+                                                                .flexGrow(0)
+                                                                .flexBasis("initial")
+                                                                .height("initial")
+                                                        .end()
+                                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                                        .build();   
 
-
-                        Frame3 FRM_DASHBOARD_INTERNS_HEADER  = Frame3.builder("FRM_DASHBOARD_INTERNS_HEADER")
-                                                .question("QUE_COUNT_ALL_INTERNSHIPS")
-                                                        .addTheme(THM_TITLE_LABEL).vcl(VisualControlType.VCL_LABEL).end()
-                                                        .addTheme(THM_TITLE_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
-                                                        .addTheme(THM_TITLE_BEHAVIOUR).end()
+                        
+                        Theme THM_DASHBOARD_CONTENT_NORTH = Theme.builder("THM_DASHBOARD_CONTENT_NORTH")
+                                                .addAttribute()
+                                                        .flexBasis("initial")
                                                 .end()
-                                                .build();
-                                                
-                        /* interns-content */
- 
+                                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                                .build();  
+
+
+                        /* -------------------- INTERNS - FRAMES ------------------------------ */
+
+                        Frame3 FRM_COUNT_ALL_INTERNS  = Frame3.builder("FRM_COUNT_ALL_INTERNS")
+                                                        .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                                        .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                                        .question("QUE_COUNT_ALL_INTERNS")
+                                                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end()
+                                                        .end()
+                                                        .build();
+                        
+                        Frame3 FRM_COUNT_AVAILABLE_INTERNS  = Frame3.builder("FRM_COUNT_AVAILABLE_INTERNS")
+                                                        .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                                        .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                                        .question("QUE_COUNT_AVAILABLE_INTERNS")
+                                                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end()
+                                                        .end()
+                                                        .build();
+
+                        Frame3 FRM_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNS  = Frame3.builder("FRM_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNS")
+                                                                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                                                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                                                                .question("QUE_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNS")
+                                                                                        .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                                                                        .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                                                                        .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                                                                        .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end()
+                                                                                .end()
+                                                                                .build();
+                        
+                        Frame3 FRM_COUNT_OFFERED_INTERNS  = Frame3.builder("FRM_COUNT_OFFERED_INTERNS")
+                                                        .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                                        .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                                        .question("QUE_COUNT_OFFERED_INTERNS")
+                                                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end()
+                                                        .end()
+                                                        .build();
+
+                        Frame3 FRM_COUNT_PLACED_INTERNS  = Frame3.builder("FRM_COUNT_PLACED_INTERNS")
+                                                        .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                                        .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                                        .question("QUE_COUNT_PLACED_INTERNS")
+                                                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end()
+                                                        .end()
+                                                        .build();
+                        
+                        Frame3 FRM_COUNT_IN_PROGRESS_INTERNS  = Frame3.builder("FRM_COUNT_IN_PROGRESS_INTERNS")
+                                                        .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                                        .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                                        .question("QUE_COUNT_IN_PROGRESS_INTERNS")
+                                                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end()
+                                                        .end()
+                                                        .build();
+                        
+                        Frame3 FRM_COUNT_COMPLETED_INTERNS  = Frame3.builder("FRM_COUNT_COMPLETED_INTERNS")
+                                                        .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                                        .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                                        .question("QUE_COUNT_COMPLETED_INTERNS")
+                                                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end()
+                                                        .end()
+                                                        .build();
+                        
+                        
+                        /* DASHBOARD - INTERN - CONTENT */
+                       
                         Frame3 FRM_DASHBOARD_INTERNS_CONTENT  = Frame3.builder("FRM_DASHBOARD_INTERNS_CONTENT")
+                                                .addTheme(THM_DASHBOARD_CONTENT_WRAPPER, ThemePosition.WRAPPER).end()
+                                                .addTheme(THM_DASHBOARD_CONTENT_NORTH, ThemePosition.NORTH).end()
                                                 .addFrame(FRM_COUNT_ALL_INTERNS, FramePosition.NORTH).end()
                                                 .addFrame(FRM_COUNT_AVAILABLE_INTERNS, FramePosition.NORTH).end()
                                                 .addFrame(FRM_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNS, FramePosition.NORTH).end()
@@ -238,26 +307,156 @@ public class AnishTest extends GennyJbpmBaseTest {
                                                 .addFrame(FRM_COUNT_COMPLETED_INTERNS, FramePosition.NORTH).end()
                                                 .build();
 
+                        
+                        /* DASHBOARD - INTERN - HEADER */
+
+                        Frame3 FRM_DASHBOARD_INTERNS_HEADER  = Frame3.builder("FRM_DASHBOARD_INTERNS_HEADER")
+                                                .addTheme(THM_DASHBOARD_CONTENT_WRAPPER, ThemePosition.WRAPPER).end()
+                                                .question("QUE_COUNT_ALL_INTERNSHIPS")
+                                                        .addTheme(THM_TITLE_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                                        .addTheme(THM_TITLE_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                                        .addTheme(THM_TITLE_BEHAVIOUR).end()
+                                                .end()
+                                                .build();
+                        
+                        /* DASHBOARD - INTERN  */
+                        
                         Frame3 FRM_DASHBOARD_INTERNS  = Frame3.builder("FRM_DASHBOARD_INTERNS")
                                                 .addTheme(THM_DASHBOARD).end()
                                                 .addFrame(FRM_DASHBOARD_INTERNS_HEADER, FramePosition.NORTH).end()
-                                                .addFrame(FRM_DASHBOARD_INTERNS_CONTENT, FramePosition.CENTRE).end()
+                                                .addFrame(FRM_DASHBOARD_INTERNS_CONTENT, FramePosition.NORTH).end()
                                                 .build();
+
+
+                        /* 
+                        ========================================================================================================================
+                        ========================================================================================================================
+                        */
+
+
+                        /* -------------------- INTERNSHIPS - FRAMES ------------------------------ */
+
+                        Frame3 FRM_COUNT_ALL_INTERNSHIPS  = Frame3.builder("FRM_COUNT_ALL_INTERNSHIPS")
+                                                        .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                                        .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                                        .question("QUE_COUNT_ALL_INTERNSHIPS")
+                                                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end()
+                                                        .end()
+                                                        .build();
+                        
+                        Frame3 FRM_COUNT_AVAILABLE_INTERNSHIPS  = Frame3.builder("FRM_COUNT_AVAILABLE_INTERNSHIPS")
+                                                        .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                                        .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                                        .question("QUE_COUNT_AVAILABLE_INTERNSHIPS")
+                                                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end()
+                                                        .end()
+                                                        .build();
+
+                        Frame3 FRM_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNSHIPS  = Frame3.builder("FRM_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNSHIPS")
+                                                                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                                                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                                                                .question("QUE_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNSHIPS")
+                                                                                        .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                                                                        .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                                                                        .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                                                                        .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end()
+                                                                                .end()
+                                                                                .build();
+                        
+                        Frame3 FRM_COUNT_OFFERED_INTERNSHIPS  = Frame3.builder("FRM_COUNT_OFFERED_INTERNSHIPS")
+                                                        .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                                        .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                                        .question("QUE_COUNT_OFFERED_INTERNSHIPS")
+                                                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end()
+                                                        .end()
+                                                        .build();
+
+                        Frame3 FRM_COUNT_PLACED_INTERNSHIPS  = Frame3.builder("FRM_COUNT_PLACED_INTERNSHIPS")
+                                                        .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                                        .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                                        .question("QUE_COUNT_PLACED_INTERNSHIPS")
+                                                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end()
+                                                        .end()
+                                                        .build();
+                        
+                        Frame3 FRM_COUNT_IN_PROGRESS_INTERNSHIPS  = Frame3.builder("FRM_COUNT_IN_PROGRESS_INTERNSHIPS")
+                                                        .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                                        .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                                        .question("QUE_COUNT_IN_PROGRESS_INTERNSHIPS")
+                                                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end()
+                                                        .end()
+                                                        .build();
+                        
+                        Frame3 FRM_COUNT_COMPLETED_INTERNSHIPS  = Frame3.builder("FRM_COUNT_COMPLETED_INTERNSHIPS")
+                                                        .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                                        .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                                        .question("QUE_COUNT_COMPLETED_INTERNSHIPS")
+                                                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end()
+                                                        .end()
+                                                        .build();
+                        
+                        
+                        /* DASHBOARD - INTERNSHIPS - CONTENT */
+                       
+                        Frame3 FRM_DASHBOARD_INTERNSHIPS_CONTENT  = Frame3.builder("FRM_DASHBOARD_INTERNSHIPS_CONTENT")
+                                                //.addTheme("THM_BOX_SHADOW_SM", ThemePosition.WRAPPER, serviceToken).end()
+                                                .addTheme(THM_DASHBOARD_CONTENT_WRAPPER, ThemePosition.WRAPPER).end()
+                                                .addTheme(THM_DASHBOARD_CONTENT_NORTH, ThemePosition.NORTH).end()
+                                                .addFrame(FRM_COUNT_ALL_INTERNSHIPS, FramePosition.NORTH).end()
+                                                .addFrame(FRM_COUNT_AVAILABLE_INTERNSHIPS, FramePosition.NORTH).end()
+                                                .addFrame(FRM_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNSHIPS, FramePosition.NORTH).end()
+                                                .addFrame(FRM_COUNT_OFFERED_INTERNSHIPS, FramePosition.NORTH).end()
+                                                .addFrame(FRM_COUNT_PLACED_INTERNSHIPS, FramePosition.NORTH).end()
+                                                .addFrame(FRM_COUNT_IN_PROGRESS_INTERNSHIPS, FramePosition.NORTH).end()
+                                                .addFrame(FRM_COUNT_COMPLETED_INTERNSHIPS, FramePosition.NORTH).end()
+                                                .build();
+
+                        
+                        /* DASHBOARD - INTERNSHIPS - HEADER */
+
+                        Frame3 FRM_DASHBOARD_INTERNSHIPS_HEADER  = Frame3.builder("FRM_DASHBOARD_INTERNSHIPS_HEADER")
+                                                .addTheme(THM_DASHBOARD_CONTENT_WRAPPER, ThemePosition.WRAPPER).end()
+                                                .question("QUE_COUNT_ALL_INTERNSHIPS")
+                                                        .addTheme(THM_TITLE_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                                        .addTheme(THM_TITLE_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                                        .addTheme(THM_TITLE_BEHAVIOUR).end()
+                                                .end()
+                                                .build();
+                        
+                        /* DASHBOARD - INTERNSHIPS  */
+                        
+                        Frame3 FRM_DASHBOARD_INTERNSHIPS  = Frame3.builder("FRM_DASHBOARD_INTERNSHIPS")
+                                                .addTheme(THM_DASHBOARD).end()
+                                                .addFrame(FRM_DASHBOARD_INTERNSHIPS_HEADER, FramePosition.NORTH).end()
+                                                .addFrame(FRM_DASHBOARD_INTERNSHIPS_CONTENT, FramePosition.NORTH).end()
+                                                .build();
+
                         
                         Frame3 FRM_CONTENT  = Frame3.builder("FRM_CONTENT")
-                                                .addTheme(THM_CONTENT).end()
-                                                .addFrame(FRM_DASHBOARD_INTERNS, FramePosition.CENTRE).end()
+                                                .addTheme(THM_PROJECT_COLOR_BACKGROUND).end()
+                                                .addFrame(FRM_DASHBOARD_INTERNS, FramePosition.NORTH).end()
+                                                .addFrame(FRM_DASHBOARD_INTERNSHIPS, FramePosition.NORTH).end()
                                                 .build();
                         
-                        // Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
-                        // QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_CONTENT, serviceToken, askMsgs);
-                        // //rules.publishCmd(msg);
-                        // for (QDataAskMessage askMsg : askMsgs) {
-                        //         rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode());
-                        // }
-                        
-                        // System.out.println("Sent");
-                        
+
                         Theme THM_TREE_GROUP_BEHAVIOUR = Theme.builder("THM_TREE_GROUP_BEHAVIOUR")
                                 .addAttribute(ThemeAttributeType.PRI_IS_EXPANDABLE, true).end()
                                 .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_LABEL, true).end()
