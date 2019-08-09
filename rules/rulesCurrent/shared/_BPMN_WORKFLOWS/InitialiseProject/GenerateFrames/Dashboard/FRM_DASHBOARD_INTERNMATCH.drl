@@ -25,20 +25,23 @@ import life.genny.models.Frame3;
 import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
 
-rule "FRM_CONTENT"
+rule "FRM_DASHBOARD_INTERNMATCH"
     ruleflow-group 'GenerateFrames'
 
     when
-      not  Frame3(code == "FRM_CONTENT")
+      not  Frame3(code == "FRM_DASHBOARD_INTERNMATCH")
       serviceToken : GennyToken( code == "PER_SERVICE")
+      FRM_DASHBOARD_INTERNS : Frame3 ( code == "FRM_DASHBOARD_INTERNS" )
+      FRM_DASHBOARD_INTERNSHIPS  : Frame3 ( code == "FRM_DASHBOARD_INTERNSHIPS" )
+
 
     then
-        System.out.println("   Generate FRM_CONTENT Rule  "+serviceToken.getUserCode());
+        System.out.println("   Generate FRM_DASHBOARD_INTERNMATCH Rule  "+serviceToken.getUserCode());
 
-        Frame3 frame = Frame3.builder("FRM_CONTENT")
+        Frame3 frame = Frame3.builder("FRM_DASHBOARD_INTERNMATCH")
                       .addTheme("THM_PROJECT_COLOR_BACKGROUND", serviceToken).end()
-                        .question("QUE_NAME_TWO")
-                        .end()
+                      .addFrame(FRM_DASHBOARD_INTERNS, FramePosition.NORTH).end()
+                      .addFrame(FRM_DASHBOARD_INTERNSHIPS, FramePosition.NORTH).end()
                       .build();
     
         frame.setRealm(serviceToken.getRealm());
