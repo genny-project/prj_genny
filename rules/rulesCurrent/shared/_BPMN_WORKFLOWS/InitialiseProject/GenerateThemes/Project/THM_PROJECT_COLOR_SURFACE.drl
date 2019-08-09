@@ -21,34 +21,34 @@ import life.genny.utils.BaseEntityUtils;
 import life.genny.models.GennyToken;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
 import life.genny.models.Theme;
-import life.genny.models.ThemeAttributeType;
 
 
 
-rule "THM_TEST1"
-   ruleflow-group 'GenerateThemes'
+rule "THM_PROJECT_COLOR_SURFACE"
+    ruleflow-group 'GenerateThemes'
     no-loop true
-    
-    when
-      not  Theme (code == "THM_TEST1")
-      serviceToken : GennyToken( code == "PER_SERVICE")
-      
-    then
-    
-     	System.out.println("   Generate THM_TEST1 Rule ");
- 
-		Theme theme = Theme.builder("THM_TEST1")
-                                .addAttribute()
-                                        .backgroundColor("none")
-                                        .width("100%")
-                                        .height(70)
-                                        .paddingLeft(20)
-                                		.end()
-                                .build();
-                        
-		theme.setRealm(serviceToken.getRealm());
-		
-		insert(theme);
 
-		VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
+    when
+      not  Theme (code == "THM_PROJECT_COLOR_SURFACE")
+      serviceToken : GennyToken( code == "PER_SERVICE")
+
+    then
+
+     	System.out.println("   Generate THM_PROJECT_COLOR_SURFACE Rule ");
+
+			BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+			BaseEntity project = beUtils.getBaseEntityByCode( "PRJ_" + serviceToken.getRealm().toUpperCase());
+
+			Theme theme = Theme.builder("THM_PROJECT_COLOR_SURFACE")
+									.addAttribute()
+										.backgroundColor(project.getValue("PRI_COLOR_SURFACE", "#FFFFFF"))
+										.color(project.getValue("PRI_COLOR_SURFACE_ON", "#000000"))
+									.end()
+									.build();  
+
+			theme.setRealm(serviceToken.getRealm());
+
+			insert(theme);
+
+			VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
 end
