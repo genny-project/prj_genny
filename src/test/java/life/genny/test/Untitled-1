@@ -1,0 +1,27 @@
+Theme THM_PROJECT_COLOR_SURFACE = Theme.builder("THM_PROJECT_COLOR_SURFACE")
+                              .addAttribute()
+                                      .backgroundColor(project.getValue("PRI_COLOR_SURFACE", "#FFFFFF"))
+                                      .color(project.getValue("PRI_COLOR_SURFACE_ON", "#000000"))
+                              .end()
+                              .build();   
+
+Theme THM_PROJECT_COLOR_BACKGROUND = Theme.builder("THM_PROJECT_COLOR_BACKGROUND")
+                              .addAttribute()
+                                      .backgroundColor(project.getValue("PRI_COLOR_BACKGROUND", "#FFFFFF"))
+                                      .color(project.getValue("PRI_COLOR_BACKGROUND_ON", "#000000"))
+                              .end()
+                              .build();   
+
+Theme THM_PROJECT_COLOR_PRIMARY = Theme.builder("THM_PROJECT_COLOR_PRIMARY")
+                              .addAttribute()
+                                      .backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E"))
+                                      .color(project.getValue("PRI_COLOR_PRIMARY_ON", "#FFFFFF"))
+                              .end()
+                              .build();   
+
+Theme THM_PROJECT_COLOR_PRIMARY_INVERTED = Theme.builder("THM_PROJECT_COLOR_PRIMARY_INVERTED")
+                              .addAttribute()
+                                      .backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E"))
+                                      .color(project.getValue("PRI_COLOR_PRIMARY_ON", "#FFFFFF"))
+                              .end()
+                              .build();   
