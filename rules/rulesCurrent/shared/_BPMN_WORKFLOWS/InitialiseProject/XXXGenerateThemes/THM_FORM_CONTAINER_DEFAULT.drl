@@ -1,4 +1,4 @@
-package life.genny.rules;
+/* package life.genny.rules;
 
 
 
@@ -57,3 +57,4 @@ rule "THM_FORM_CONTAINER_DEFAULT"
 
 		VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
 end
+ */

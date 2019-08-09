@@ -67,73 +67,101 @@ public class CyrusTest extends GennyJbpmBaseTest {
 		// building the themes and the footers
 		Theme THM_COLOR_GREY = Theme.builder("THM_COLOR_RED").addAttribute().backgroundColor("red").end().build();
 
-		Theme THM_COLOR_BLACK = Theme.builder("THM_COLOR_BLACK").addAttribute().backgroundColor("#ffffff").end().build();
 
-		Theme THM_FORM_INPUT_DEFAULT = Theme.builder("THM_FORM_INPUT_DEFAULT").addAttribute().borderBottomWidth(1)
+		Theme THM_FORM_INPUT_DEFAULT_FORM = Theme.builder("THM_FORM_INPUT_DEFAULT_FORM").addAttribute().borderBottomWidth(1)
 				.borderColor("#ddd").borderStyle("solid").placeholderColor("#888").end()
 				.addAttribute(ThemeAttributeType.PRI_CONTENT_HOVER).borderColor("#aaa").end()
 				.addAttribute(ThemeAttributeType.PRI_CONTENT_ACTIVE).borderColor("green").end()
 				.addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).borderColor("red").color("red").end().build();
 
-		Theme THM_FORM_LABEL_DEFAULT = Theme.builder("THM_FORM_LABEL_DEFAULT").addAttribute().color("black").end().build();
+		Theme THM_FORM_LABEL_DEFAULT_FORM = Theme.builder("THM_FORM_LABEL_DEFAULT_FORM").addAttribute().color("black").end().build();
 
-		Theme THM_FORM_WRAPPER_DEFAULT = Theme.builder("THM_FORM_WRAPPER_DEFAULT").addAttribute().marginBottom(10)
+		Theme THM_FORM_WRAPPER_DEFAULT_FORM = Theme.builder("THM_FORM_WRAPPER_DEFAULT_FORM").addAttribute().marginBottom(10)
 				.padding(10).end().addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).backgroundColor("#fc8e6").end().build();
 
-		Theme THM_FORM_ERROR_DEFAULT = Theme.builder("THM_FORM_ERROR_DEFAULT").addAttribute().color("red").end().build();
+		Theme THM_FORM_ERROR_DEFAULT_FORM = Theme.builder("THM_FORM_ERROR_DEFAULT_FORM").addAttribute().color("red").end().build();
 
-		Theme THM_FORM_DEFAULT = Theme.builder("THM_FORM_DEFAULT").addAttribute().backgroundColor("none").end()
+		Theme THM_FORM_DEFAULT_FORM = Theme.builder("THM_FORM_DEFAULT_FORM").addAttribute().backgroundColor("none").end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION, true).end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_REQUIRED, true).end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_ICON, true).end().build();
 
-		Theme THM_FORM_CONTAINER_DEFAULT = Theme.builder("THM_FORM_CONTAINER_DEFAULT").addAttribute()
+		Theme THM_FORM_CONTAINER_DEFAULT_FORM = Theme.builder("THM_FORM_CONTAINER_DEFAULT_FORM").addAttribute()
 				.backgroundColor("white").padding(10).maxWidth(700).width("100%")
 				.borderWidth(2)
 				.borderColor("black")
 				.borderStyle("solid")
+				.margin(5)
 				.end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION, true).end()
 				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
 
-		Theme THM_BUTTONS = Theme.builder("THM_BUTTONS").addAttribute().backgroundColor("#ffffff").padding(10)
+		/*Theme THM_BUTTONS = Theme.builder("THM_BUTTONS").addAttribute().backgroundColor("#ffffff").padding(10)
 				.justifyContent("center").borderColor("#000000").margin(4).maxWidth(700).width("100%").shadowColor("#000")
-				.shadowOpacity(0.8).shadowRadius(5).end().build();
+				.shadowOpacity(0.8).shadowRadius(5).end().build();*/
 
-		Theme THM_OF = Theme.builder("THM_OF").addAttribute()
-		.color("black")
-	.end()
-	.addAttribute()
-		.overflowY("auto")
-	.end()
-	.addAttribute()
-		.borderStyle("solid")
-	.end()
-	.addAttribute()
-		.borderColor("black")
-	.end()
-	.addAttribute()
-		.borderWidth(1)
-	.end()
-	.addAttribute()
-		.justifyContent("start")
-	.end()
-	.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
+		Theme THM_BUTTON_DEFAULT = Theme.builder("THM_BUTTON_DEFAULT")
+			.addAttribute()
+				.justifyContent("centre")
+				.width("100%")
+				.maxWidth(300)
+				.padding(0)
+				.backgroundColor("green")
+				.borderStyle("solid")
+				.borderWidth(2)
+				.borderBottomWidth(2)
+				.borderColor("#ffffff")
+			.end()
+			.build();
+
+		Theme THM_BUTTON_DEFAULT_INPUT = Theme.builder("THM_BUTTON_DEFAULT_INPUT")
+		.addAttribute()
+			.size("xl")
+			.colour("#ffffff")
+		.end()
+		.build();
+
+		Theme THM_BUTTON_DEFAULT_WRAPPER = Theme.builder("THM_BUTTON_DEFAULT_WRAPPER")
+		.addAttribute()
+			.alignItems("center")
+		.end()
+		.build();
+
+	Theme THM_OF = Theme.builder("THM_OF")
+		.addAttribute()
+			.color("black")
+		.end()
+		.addAttribute()
+			.overflowY("auto")
+		.end()
+		.addAttribute()
+			.borderStyle("solid")
+		.end()
+		.addAttribute()
+			.borderColor("black")
+		.end()
+		.addAttribute()
+			.borderWidth(1)
+		.end()
+		.addAttribute()
+			.justifyContent("start")
+		.end()
+		.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
 	.end()
 	.build();
 
 		Frame3 frameForm = Frame3.builder("FRM_FORM")
 				.addTheme(THM_OF).end()
 					.question("QUE_INTERN_PROFILE_GRP")
-					.addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
-					.addTheme(THM_FORM_LABEL_DEFAULT).vcl(VisualControlType.VCL_LABEL).end()
-					.addTheme(THM_FORM_WRAPPER_DEFAULT).vcl(VisualControlType.VCL_WRAPPER).end()
-					.addTheme(THM_FORM_ERROR_DEFAULT).vcl(VisualControlType.VCL_ERROR).end()
-					.addTheme(THM_FORM_DEFAULT).weight(3.0).end()
-					.addTheme(THM_FORM_CONTAINER_DEFAULT).vcl(VisualControlType.GROUP_WRAPPER).weight(2.0).end()
+						.addTheme(THM_FORM_INPUT_DEFAULT_FORM).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
+						.addTheme(THM_FORM_LABEL_DEFAULT_FORM).vcl(VisualControlType.VCL_LABEL).end()
+						.addTheme(THM_FORM_WRAPPER_DEFAULT_FORM).vcl(VisualControlType.VCL_WRAPPER).end()
+						.addTheme(THM_FORM_ERROR_DEFAULT_FORM).vcl(VisualControlType.VCL_ERROR).end()
+						.addTheme(THM_FORM_DEFAULT_FORM).weight(3.0).end()
+						.addTheme(THM_FORM_CONTAINER_DEFAULT_FORM).vcl(VisualControlType.GROUP_WRAPPER).weight(2.0).end()
 					.end()
 				.build();
 
