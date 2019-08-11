@@ -9,10 +9,10 @@ rule "DEFAULT_ANSWER"
     when
 	  userToken : GennyToken ( code != "PER_SERVICE" ) 
 	  serviceToken : GennyToken( code == "PER_SERVICE") 
-	  rules : QRules()
+	/*  rules : QRules() */
      then
  		System.out.println("Rule -> DEFAULT_ANSWER Processing Answer/Data :  user=" + userToken.getUserCode()); 
-		System.out.println("Rule -> DEFAULT_ANSWER Processing Answer/Data :  qrules realm=" + rules.realm()); 
+	/*	System.out.println("Rule -> DEFAULT_ANSWER Processing Answer/Data :  qrules realm=" + rules.realm()); */
 /*	 QRules rules = (QRules)$process.getVariable("rules");*/  
 
 end
