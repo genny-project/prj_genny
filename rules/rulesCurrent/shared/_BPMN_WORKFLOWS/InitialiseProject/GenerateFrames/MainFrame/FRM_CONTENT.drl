@@ -35,11 +35,21 @@ rule "FRM_CONTENT"
     then
         System.out.println("   Generate FRM_CONTENT Rule  "+serviceToken.getUserCode());
 
-        Frame3 frame = Frame3.builder("FRM_CONTENT")
-                      .addTheme("THM_PROJECT_COLOR_BACKGROUND", serviceToken).end()
-                        .question("QUE_NAME_TWO")
+
+        Frame3 frameContent = Frame3.builder("FRM_CONTENT")
+        					.question("QUE_NAME_TWO")
+                        	.end().build();
+                        
+        frameContent.setRealm(serviceToken.getRealm());
+        insert (frameContent);
+        FrameUtils2.toMessage(frameContent, serviceToken);
+                        
+        Frame3 frame = Frame3.builder("FRM_CONTENT_WRAPPER")
+        				.addTheme("THM_PROJECT_COLOR_BACKGROUND", serviceToken).end()
+                     	.addFrame(frameContent)
                         .end()
-                      .build();
+                      .build();        				
+        				
     
         frame.setRealm(serviceToken.getRealm());
         insert (frame);
