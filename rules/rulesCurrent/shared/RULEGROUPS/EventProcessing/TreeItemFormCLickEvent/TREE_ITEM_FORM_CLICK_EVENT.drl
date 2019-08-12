@@ -3,22 +3,18 @@ import life.genny.qwanda.message.QEventMessage;
 import life.genny.models.GennyToken;
 import life.genny.utils.VertxUtils;
 import io.vertx.core.json.JsonObject;
-rule "FORM_CLICK_EVENT"
+rule "TREE_ITEM_FORM_CLICK_EVENT"
     ruleflow-group 'EventProcessing'
 		salience 2
     no-loop
     when
-		$message : QEventMessage(data.code matches "QUE_.*" && data.parentCode == "QUE_OPTIONS_GRP" )
+		$message : QEventMessage(data.code matches "QUE_.*" && data.parentCode == "QUE_TREE_FORM_VIEW_GRP" )
 		userToken : GennyToken (code != "PER_SERVICE" )
 		output : OutputParam( )
     then
 	
 		System.out.println("Processing Answer/Data : " + $message );
-		System.out.println("EVENT : FORM_CLICK_EVENT  " + $message.getData().getParentCode());
-		if( $message.getData().getCode().equals("QUE_USER_PROFILE")){
-			output.setResult("FRM_QUE_USER_PROFILE_GRP");
-		}else{
-			output.setResult("FRM_"+ $message.getData().getCode());
-		}
+		System.out.println("Parent code :  " + $message.getData().getParentCode());
+		output.setResult("FRM_"+ $message.getData().getCode());
 		retract( $message);
 end

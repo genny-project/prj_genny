@@ -26,7 +26,7 @@ rule "ADD_ITEM_CLICK_EVENT"
 			
 			case "QUE_ADD_NEW_INTERNSHIP_TEMPLATE": output.setResult("FRM_QUE_ADD_INTERNSHIP_TEMPLATE_AGENT_GRP"); break;
 			
-			default : output.setResult("FRM_TABS"); break;
+			default : output.setResult("FRM_" +$message.getData().getCode() + "_GRP");; break;
 		}
 			
 		retract( $message);

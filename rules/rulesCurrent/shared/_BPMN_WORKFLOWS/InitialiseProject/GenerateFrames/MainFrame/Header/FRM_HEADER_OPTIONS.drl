@@ -25,6 +25,7 @@ import life.genny.models.Frame3;
 import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
 import life.genny.models.FramePosition;
+import life.genny.qwanda.VisualControlType.*;
 
 rule "FRM_HEADER_OPTIONS"
     ruleflow-group 'GenerateFrames'
