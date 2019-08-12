@@ -56,15 +56,17 @@ rule "FRM_FORM"
 				for (String questionCode : questionCodes){
 				
 					Frame3 frame2 = Frame3.builder("FRM_CONTENT_" +  questionCode)
-							.addTheme("THM_OF", serviceToken).end()
-							.question(questionCode)
-							.addTheme("THM_FORM_INPUT_DEFAULT", serviceToken).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
-							.addTheme("THM_FORM_LABEL_DEFAULT", serviceToken).vcl(VisualControlType.VCL_LABEL).end()
-							.addTheme("THM_FORM_WRAPPER_DEFAULT", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
-							.addTheme("THM_FORM_ERROR_DEFAULT", serviceToken).vcl(VisualControlType.VCL_ERROR).end()
-							.addTheme("THM_FORM_DEFAULT", serviceToken).weight(3.0).end()
-							.addTheme("THM_FORM_CONTAINER_DEFAULT", serviceToken).weight(2.0).end()
-							.end()
+								.addTheme("THM_FORM_ATTRIBUTES_GENNY", serviceToken).end()
+								.question(questionCode) 
+									.addTheme("THM_FORM_VCL_INPUT_GENNY", serviceToken).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
+									.addTheme("THM_FORM_VCL_LABEL_GENNY", serviceToken).vcl(VisualControlType.VCL_LABEL).end()
+									.addTheme("THM_FORM_VCL_WRAPPER_GENNY", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
+									.addTheme("THM_FORM_VCL_ERROR_GENNY", serviceToken).vcl(VisualControlType.VCL_ERROR).end()
+									.addTheme("THM_FORM_BEHAVIOUR_GENNY", serviceToken).weight(3.0).end()
+									.addTheme("THM_FORM_GROUP_LABEL_GENNY", serviceToken).vcl(VisualControlType.GROUP_LABEL).weight(3.0).end()
+									.addTheme("THM_BACKGROUND_NONE", serviceToken).weight(3.0).end()
+									.addTheme("THM_FORM_GROUP_WRAPPER_GENNY", serviceToken).vcl(VisualControlType.GROUP_WRAPPER).weight(2.0).end()
+								.end()
 							.build();
 					
 					frame2.setRealm(serviceToken.getRealm());
@@ -80,4 +82,3 @@ rule "FRM_FORM"
 				}
 
 end
- 
