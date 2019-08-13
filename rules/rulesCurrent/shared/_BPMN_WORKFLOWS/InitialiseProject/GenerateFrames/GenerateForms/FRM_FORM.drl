@@ -65,7 +65,7 @@ rule "FRM_FORM"
 									.addTheme("THM_FORM_BEHAVIOUR_GENNY", serviceToken).weight(3.0).end()
 									.addTheme("THM_FORM_GROUP_LABEL_GENNY", serviceToken).vcl(VisualControlType.GROUP_LABEL).weight(3.0).end()
 									.addTheme("THM_BACKGROUND_NONE", serviceToken).weight(3.0).end()
-									.addTheme("THM_FORM_GROUP_WRAPPER_GENNY", serviceToken).vcl(VisualControlType.GROUP_WRAPPER).weight(2.0).end()
+									.addTheme("THM_FORM_GROUP_WRAPPER_GENNY", serviceToken).vcl(VisualControlType.GROUP_WRAPPER).weight(3.0).end()
 								.end()
 							.build();
 					
