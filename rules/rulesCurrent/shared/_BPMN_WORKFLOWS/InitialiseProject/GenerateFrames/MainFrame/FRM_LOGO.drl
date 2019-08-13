@@ -38,6 +38,7 @@ rule "FRM_LOGO"
 			Frame3 frame = Frame3.builder("FRM_LOGO")
 										.addTheme("THM_TREE_ITEM", serviceToken).end()
 										.question("QUE_PROJECT_SIDEBAR_GRP")
+											.targetAlias("PRJ_"+serviceToken.getRealm().toUpperCase())
 											.addTheme("THM_LOGO", serviceToken)
 											.vcl(VisualControlType.VCL_WRAPPER).end()
 										.end()
