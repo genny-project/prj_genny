@@ -31,9 +31,9 @@ rule "FRM_TAB_HEADER"
     when
       not  Frame3(code == "FRM_TAB_HEADER")
       serviceToken : GennyToken( code == "PER_SERVICE")
-      FRM_TAB_TABLE_VIEW : Frame3 ( code == "FRM_TAB_TABLE_VIEW" )
-      FRM_TAB_BUCKET_VIEW : Frame3 ( code == "FRM_TAB_BUCKET_VIEW" )
-      FRM_TAB_DETAIL_VIEW : Frame3 ( code == "FRM_TAB_DETAIL_VIEW" )
+      FRM_TAB_ITEM_TABLE_VIEW : Frame3 ( code == "FRM_TAB_ITEM_TABLE_VIEW" )
+      FRM_TAB_ITEM_BUCKET_VIEW : Frame3 ( code == "FRM_TAB_ITEM_BUCKET_VIEW" )
+      FRM_TAB_ITEM_DETAIL_VIEW : Frame3 ( code == "FRM_TAB_ITEM_DETAIL_VIEW" )
 
 
     then
@@ -43,9 +43,9 @@ rule "FRM_TAB_HEADER"
 										.addTheme("THM_TAB_HEADER", serviceToken).end()
                       					.addTheme("THM_BACKGROUND_NONE", serviceToken).end()
 		                                .addTheme("THM_FRAME_ALIGN_WEST", ThemePosition.WEST, serviceToken).end()
-										.addFrame(FRM_TAB_TABLE_VIEW, FramePosition.WEST).end()
-										.addFrame(FRM_TAB_BUCKET_VIEW, FramePosition.WEST).end()
-										.addFrame(FRM_TAB_DETAIL_VIEW, FramePosition.WEST).end()
+										.addFrame(FRM_TAB_ITEM_TABLE_VIEW, FramePosition.WEST).end()
+										.addFrame(FRM_TAB_ITEM_BUCKET_VIEW, FramePosition.WEST).end()
+										.addFrame(FRM_TAB_ITEM_DETAIL_VIEW, FramePosition.WEST).end()
 										.build();
 
 			frame.setRealm(serviceToken.getRealm());
