@@ -39,6 +39,7 @@ rule "FRM_DASHBOARD_INTERNSHIPS"
 
       Frame3 frame = Frame3.builder("FRM_DASHBOARD_INTERNSHIPS")
                       .addTheme("THM_DASHBOARD", serviceToken).end()
+                      .addTheme("THM_DASHBOARD_WRAPPER", ThemePosition.WRAPPER, serviceToken).end()
                       .addFrame(FRM_DASHBOARD_INTERNSHIPS_HEADER, FramePosition.NORTH).end()
                       .addFrame(FRM_DASHBOARD_INTERNSHIPS_CONTENT, FramePosition.NORTH).end()
                       .build();
