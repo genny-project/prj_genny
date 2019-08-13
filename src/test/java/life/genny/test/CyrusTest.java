@@ -116,11 +116,11 @@ public class CyrusTest extends GennyJbpmBaseTest {
 				
 			Theme THM_FORM_GROUP_WRAPPER_GENNY = Theme.builder("THM_FORM_GROUP_WRAPPER_GENNY")
 				.addAttribute()
-						.backgroundColor("white").padding(10).maxWidth(600)
-						.borderWidth(2)
+						.backgroundColor("white").padding(10).maxWidth(600).width("100%")
+						.borderWidth(1)
 						.borderColor("black")
 						.borderStyle("solid")
-						.margin(5)
+						.margin(10)
 					.end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION, true).end()
@@ -157,15 +157,11 @@ public class CyrusTest extends GennyJbpmBaseTest {
 		// .end()
 		// .build();
 
-    Theme THM_FORM_ATTRIBUTES_GENNY = Theme.builder("THM_FORM_ATTRIBUTES_GENNY")
+	Theme THM_FORM_ATTRIBUTES_GENNY = Theme.builder("THM_FORM_ATTRIBUTES_GENNY")
 		.addAttribute().color("black").end()
 		.addAttribute().overflowY("auto").end()
-    .addAttribute().borderStyle("solid").end()
-    .addAttribute().backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E")).end()
-    .addAttribute().color(project.getValue("PRI_COLOR_SURFACE_ON", "white")).end()
-    .addAttribute().borderColor("black").end()
-		.addAttribute().borderWidth(1).end()
-		.addAttribute().justifyContent("start").end()
+    .addAttribute().justifyContent("start").end()
+    .addAttribute().alignItems("centre").end()
 		.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
 	.end()
 	.build();
@@ -180,7 +176,7 @@ public class CyrusTest extends GennyJbpmBaseTest {
 						.addTheme(THM_FORM_BEHAVIOUR_GENNY).weight(3.0).end()
 						.addTheme(THM_FORM_GROUP_LABEL_GENNY).vcl(VisualControlType.GROUP_LABEL).weight(3.0).end()
 						.addTheme(THM_BACKGROUND_NONE).weight(3.0).end()
-						.addTheme(THM_FORM_GROUP_WRAPPER_GENNY).vcl(VisualControlType.GROUP_WRAPPER).weight(2.0).end()
+						.addTheme(THM_FORM_GROUP_WRAPPER_GENNY).vcl(VisualControlType.GROUP_WRAPPER).weight(3.0).end()
 					.end()
 				.build();
 
