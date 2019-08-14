@@ -13,7 +13,6 @@ rule "PROCESS_ANSWERS"
     when
 	  userToken : GennyToken ( code != "PER_SERVICE" ) 
 	  dataMsg : QDataAnswerMessage( (items != null) && (items.length > 0) )
-	  not Answer()
     then
  		System.out.println("Rule -> PROCESS_ANSWERS Processing Answer/Data!! :  user=" + userToken.getUserCode()); 
 
@@ -23,5 +22,7 @@ rule "PROCESS_ANSWERS"
  		for (Answer answer : dataMsg.getItems()) {
  			insert(answer);
  		}
+ 		
+ 		retract(dataMsg); /* stop this rule from firing again */
 
 end

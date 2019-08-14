@@ -93,8 +93,11 @@ public class AdamTest {
 		QEventMessage msg1 = new QEventMessage("EVT_MSG", "INIT_1");
 		QEventMessage msgLogout = new QEventMessage("EVT_MSG", "LOGOUT");
 
-		Answer answer = new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_FIRSTNAME", "Bruce");
-		QDataAnswerMessage answerMsg = new QDataAnswerMessage(answer);
+		List<Answer> answers = new ArrayList<Answer>();
+		
+		answers.add(new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_FIRSTNAME", "Bruce"));
+		answers.add(new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_LASTNAME", "Wayne"));
+		QDataAnswerMessage answerMsg = new QDataAnswerMessage(answers.toArray(new Answer[0]));
 		
 		// NOW SET UP Some baseentitys
 		BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
@@ -110,7 +113,7 @@ public class AdamTest {
 
 		try {
 			gks = GennyKieSession.builder(serviceToken,true)
-					.addDrl("AnswerProcessing")
+					.addDrl("DataProcessing")
 					.addDrl("EventProcessing")
 					.addDrl("InitialiseProject")
 					.addJbpm("InitialiseProject")

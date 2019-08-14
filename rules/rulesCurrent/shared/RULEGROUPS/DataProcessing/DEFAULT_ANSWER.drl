@@ -10,18 +10,17 @@ import java.util.ArrayList;
 
 rule "DEFAULT_ANSWER"
     ruleflow-group 'AnswerProcessing'
-  /*  lock-on-active true
-    salience -10000 */
+    salience -10000 
     when
       beUtils : BaseEntityUtils()
 	  serviceToken : GennyToken( code == "PER_SERVICE") 
 	  answer : Answer() /* (targetCode == beUtils.getGennyToken().getUserCode()) ) */
 	  
      then
- 		System.out.println("Rule -> DEFAULT_ANSWER :  user=" + beUtils.getGennyToken().getUserCode()); 
+ 		System.out.println("Rule -> DEFAULT_ANSWER :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
 	
 		answer.setChangeEvent(true);
 		beUtils.saveAnswer(answer); 
-
+		retract(answer);
 
 end
