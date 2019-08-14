@@ -32,6 +32,7 @@ rule "PRI_ADDRESS_JSON"
 			answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_COUNTRY", addressDataJson.getString("country")));
 			answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_POSTCODE", addressDataJson.getString("postal_code")));
 			answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_SUBURB", addressDataJson.getString("suburb")));
+			answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_CITY", addressDataJson.getString("suburb")));
 			answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", addressDataJson.getString("state")));
 			answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_ADDRESS1", addressDataJson.getString("street_address")));
 			answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", addressDataJson.getString("full_address")));
