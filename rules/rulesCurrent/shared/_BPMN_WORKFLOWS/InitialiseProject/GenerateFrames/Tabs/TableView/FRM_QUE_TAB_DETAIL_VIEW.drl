@@ -32,8 +32,7 @@ rule "FRM_QUE_TAB_DETAIL_VIEW"
       not  Frame3(code == "FRM_QUE_TAB_DETAIL_VIEW")
       serviceToken : GennyToken( code == "PER_SERVICE")
       FRM_DETAIL_VIEW : Frame3 ( code == "FRM_DETAIL_VIEW" )
-	  FRM_TAB_HEADER : Frame3 ( code == "FRM_TAB_HEADER" )
-    /*  FRM_TABLE_VIEW : Frame3 ( code == "FRM_TABLE_VIEW" )*/
+	  FRM_TAB_HEADER : Frame3 ( code == "FRM_TAB_HEADER" ) 
 
     then
 			System.out.println("   Generate FRM_QUE_TAB_DETAIL_VIEW Rule  "+serviceToken.getUserCode());
