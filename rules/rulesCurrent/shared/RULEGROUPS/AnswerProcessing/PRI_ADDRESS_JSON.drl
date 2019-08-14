@@ -8,17 +8,15 @@ import life.genny.qwanda.Answer;
 import java.util.List;
 import java.util.ArrayList;
 
-rule "DEFAULT_ANSWER"
+rule "PRI_ADDRESS_JSON"
     ruleflow-group 'AnswerProcessing'
-  /*  lock-on-active true
-    salience -10000 */
+    lock-on-active true
     when
       beUtils : BaseEntityUtils()
 	  serviceToken : GennyToken( code == "PER_SERVICE") 
-	  answer : Answer() /* (targetCode == beUtils.getGennyToken().getUserCode()) ) */
-	  
+	  answer : Answer( attributeCode == "PRI_ADDRESS_JSON" )
      then
- 		System.out.println("Rule -> DEFAULT_ANSWER :  user=" + beUtils.getGennyToken().getUserCode()); 
+ 		System.out.println("Rule -> PRI_ADDRESS_JSON :  user=" + beUtils.getGennyToken().getUserCode()); 
 	
 		answer.setChangeEvent(true);
 		beUtils.saveAnswer(answer); 

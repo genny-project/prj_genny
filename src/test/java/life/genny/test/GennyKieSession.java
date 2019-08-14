@@ -197,6 +197,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	
 
 	public void injectEvent(QMessage msg) {
+
 		if (msg instanceof QEventMessage) {
 			QEventMessage msgEvent = (QEventMessage)msg;
 		System.out.println("Injecting event "+msg.getMsg_type()+"  "+msgEvent.getData().getCode());
@@ -245,10 +246,6 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 				if (hasProcessIdBySessionId) {
 					processId = processIdBysessionId.get();
 				
-//				JsonObject processIdJson = VertxUtils.readCachedJson(serviceToken.getRealm(), session_state, serviceToken.getToken());
-//				if (processIdJson.getString("status").equals("ok")) {
-//					processIdStr = processIdJson.getString("value");
-//					 processId = Long.decode(processIdStr);
 					System.out.println("incoming " + msg_type + " message from " + bridgeSourceAddress + ": "
 							+ userToken.getRealm() + ":" + userToken.getSessionCode() + ":" + userToken.getUserCode()
 							+ "   " + msg_code + " to pid " + processId);
@@ -262,12 +259,16 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 				} else {
 					// Must be the AUTH_INIT
-					if (eventMsg.getData().getCode().equals("AUTH_INIT")) {
+					if ((eventMsg != null) && (eventMsg.getMsg_type().equals("EVT_MSG")) && (eventMsg.getData().getCode().equals("AUTH_INIT"))) {
 						eventMsg.getData().setValue("NEW_SESSION");
-						System.out.println("incoming  message from " + bridgeSourceAddress + ": " + userToken.getRealm() + ":"
+						System.out.println("incominog  message from " + bridgeSourceAddress + ": " + userToken.getRealm() + ":"
 								+ userToken.getSessionCode() + ":" + userToken.getUserCode() + "   " + msg_code
 								+ " to NEW SESSION");
-						kieSession.signalEvent("newSession", eventMsg);
+						try {
+							kieSession.signalEvent("newSession", eventMsg);
+						} catch (Exception e) {
+							System.out.println("Runtime error: "+e.getLocalizedMessage());
+						}
 					} else {
 						log.error("NO EXISTING SESSION AND NOT AUTH_INIT");
 						;
@@ -354,7 +355,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 					System.out.println("Loading " + fullJbpmPath);
 				} else {
 					// Is a directory
-					List<String> fullJbpmPaths = findFullPaths(p, "bpmn");
+					List<String> fullJbpmPaths = findFullPaths(p, "bpmn",false);
 					fullJbpmPaths.forEach(f -> {
 						resources.put(f, ResourceType.BPMN2);
 						System.out.println("Loading " + f.toString());
@@ -372,7 +373,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 					System.out.println("Loading " + fullDrlPath);
 				} else {
 					// Is a directory
-					List<String> fullPaths = findFullPaths(p, "drl");
+					List<String> fullPaths = findFullPaths(p, "drl",false);
 					fullPaths.forEach(f -> {
 						resources.put(f, ResourceType.DRL);
 						System.out.println("Loading " + f.toString());
@@ -389,7 +390,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 					System.out.println("Loading " + fullDtablePath);
 				} else {
 					// Is a directory
-					List<String> fullPaths = findFullPaths(p, "xls");
+					List<String> fullPaths = findFullPaths(p, "xls",false);
 					fullPaths.forEach(f -> {
 						resources.put(f, ResourceType.DTABLE);
 						System.out.println("Loading " + f.toString());
@@ -549,7 +550,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		
 	}
 
-	private List<String> findFullPaths(String dirname, String extension) {
+	private List<String> findFullPaths(String dirname, String extension, boolean allowXXX) {
 		String baseRulesDir = "./rules"; // default for project
 		if (!"/rules".equals(GennySettings.rulesDir)) {
 			baseRulesDir = GennySettings.rulesDir;
@@ -563,7 +564,14 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		Set<Path> resourcePaths = getAllFilesInDirectory(found.getAbsoluteFile().getPath(), extension);
 
 		List<String> files = new ArrayList<String>();
-		resourcePaths.forEach(f -> files.add(findFullPath(f.toString())));
+		resourcePaths.forEach(f -> { 
+			String filename = f.getFileName().toString();
+			
+			String fullPath = findFullPath(f.toString());
+			if ((!fullPath.contains("XXX")) ||allowXXX) {
+				files.add(findFullPath(f.toString()));
+			}
+		});
 		return files;
 	}
 

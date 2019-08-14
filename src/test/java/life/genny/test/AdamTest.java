@@ -28,10 +28,12 @@ import life.genny.models.GennyToken;
 import life.genny.models.Theme;
 import life.genny.models.ThemeAttributeType;
 import life.genny.models.ThemeDouble;
+import life.genny.qwanda.Answer;
 import life.genny.qwanda.Context;
 import life.genny.qwanda.ContextType;
 import life.genny.qwanda.VisualControlType;
 import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventMessage;
@@ -61,7 +63,84 @@ public class AdamTest {
 
 	}
 
+	
 	@Test
+	public void answerRulesTest()
+	{
+		System.out.println("Test Answer Rules");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (true) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+		} else {
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+		}
+
+		System.out.println("session     =" + userToken.getSessionCode());
+		System.out.println("userToken   =" + userToken.getToken());
+		System.out.println("serviceToken=" + serviceToken.getToken());
+
+		QEventMessage authInitMsg = new QEventMessage("EVT_MSG", "AUTH_INIT");
+		QEventMessage msg1 = new QEventMessage("EVT_MSG", "INIT_1");
+		QEventMessage msgLogout = new QEventMessage("EVT_MSG", "LOGOUT");
+
+		Answer answer = new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_FIRSTNAME", "Bruce");
+		QDataAnswerMessage answerMsg = new QDataAnswerMessage(answer);
+		
+		// NOW SET UP Some baseentitys
+		BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
+				StringUtils.capitaliseAllWords(serviceToken.getRealm()));
+		project.setRealm(serviceToken.getRealm());
+		VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
+				JsonUtils.toJson(project), serviceToken.getToken());
+		
+		// Log out to begin
+		VertxUtils.writeCachedJson(userToken.getRealm(),userToken.getSessionCode(),null,userToken.getToken());
+
+		GennyKieSession gks = null;
+
+		try {
+			gks = GennyKieSession.builder(serviceToken,true)
+					.addDrl("AnswerProcessing")
+					.addDrl("EventProcessing")
+					.addDrl("InitialiseProject")
+					.addJbpm("InitialiseProject")
+					.addJbpm("Lifecycles")
+					.addDrl("AuthInit")
+					.addJbpm("AuthInit")
+
+					.addToken(userToken)
+					.build();
+			gks.start();
+
+			gks.injectEvent(authInitMsg); // This should create a new process
+			gks.advanceSeconds(5, false);
+
+			gks.injectEvent(answerMsg); // This should create a new process
+			gks.advanceSeconds(5, false);
+			gks.injectEvent(msgLogout);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
+		finally {
+			if (gks!=null) {
+				gks.close();
+			}
+		}
+	}
+	
+	//@Test
 	public void virtualQuestionTest() {
 		System.out.println("Send Virtual Question");
 		GennyToken userToken = null;
