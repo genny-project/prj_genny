@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -22,6 +23,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.drools.core.ClockType;
@@ -62,8 +64,10 @@ import life.genny.jbpm.customworkitemhandlers.ShowAllFormsHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 import life.genny.jbpm.customworkitemhandlers.ShowFrameWIthContextList;
 import life.genny.models.GennyToken;
+import life.genny.qwanda.attribute.Attribute;
 import life.genny.qwanda.message.QCmdMessage;
 import life.genny.qwanda.message.QDataAskMessage;
+import life.genny.qwanda.message.QDataAttributeMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QDataMessage;
 import life.genny.qwanda.message.QEventMessage;
@@ -73,6 +77,7 @@ import life.genny.qwandautils.JsonUtils;
 import life.genny.rules.QRules;
 import life.genny.rules.listeners.GennyAgendaEventListener;
 import life.genny.rules.listeners.JbpmInitListener;
+import life.genny.utils.RulesUtils;
 import life.genny.utils.VertxUtils;
 
 public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoCloseable {
@@ -232,7 +237,9 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 				dataMsg.setToken(userToken.getToken());
 			}
 
-			if (userToken != null) {
+			if (eventMsg.getData().getCode().equals("INIT_STARTUP")) {
+				kieSession.startProcess("init_project");
+			} else if (userToken != null) {
 				// This is a userToken so send the event through
 				String session_state = userToken.getSessionCode();
 				String processIdStr = null;
@@ -274,12 +281,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 						;
 					}
 				}
-			} else {
-				// Service Task
-				if (eventMsg.getData().getCode().equals("INIT_STARTUP")) {
-					kieSession.startProcess("init_project");
-				}
-			}
+			} 
 	}
 	
 	public long advanceSeconds(long amount, boolean humanTime) {
@@ -331,6 +333,8 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	}
 
 	private void setup() {
+		
+		
 		if (clockType.equals(ClockType.PSEUDO_CLOCK)) {
 			System.setProperty("drools.clockType", "pseudo"/* clockType.name() */);
 		} else if (clockType.equals(ClockType.REALTIME_CLOCK)) {
@@ -419,10 +423,17 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			if (tokens.containsKey("PER_SERVICE")) {
 				kieSession.addEventListener(new JbpmInitListener(tokens.get("PER_SERVICE")));
 				this.serviceToken = tokens.get("PER_SERVICE");
+				
 			}
 			if (tokens.containsKey("PER_USER1")) {
 				kieSession.addEventListener(new JbpmInitListener(tokens.get("PER_USER1")));
 			}
+			
+			// Handle attributes ourselves if no background service
+			if (VertxUtils.cachedEnabled) {
+				loadAttributesJsonFromResources(this.serviceToken);
+			}
+
 
 		//	kieSession.setGlobal("log", log);
 
@@ -667,7 +678,6 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 			return this;
 		}
-
 		/**
 		 * fluent setter for dtables in the list
 		 * 
@@ -785,6 +795,32 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 		return instances.stream().map(d -> d.getId()).findFirst();
 
+	}
+	
+	public static void loadAttributesJsonFromResources(GennyToken gToken)
+	{
+		// This file can be created by using the script locally and placing in the src/test/resources
+		//TOKEN=$(./gettoken-prod.sh )
+		// curl -X GET --header 'Accept: application/json'  --header "Authorization: Bearer $TOKEN" 'http://alyson7.genny.life/qwanda/attributes'
+		
+		
+		File file = new File("src/test/resources/attributes.json");
+	    String jsonString;
+		try {
+			jsonString = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+			VertxUtils.writeCachedJson(gToken.getRealm(), "attributes", jsonString, gToken.getToken());
+			
+			QDataAttributeMessage attributesMsg = JsonUtils.fromJson(jsonString, QDataAttributeMessage.class);
+			Attribute[] attributeArray = attributesMsg.getItems();
+
+			for (Attribute attribute : attributeArray) {
+				RulesUtils.attributeMap.put(attribute.getCode(), attribute);
+			}
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

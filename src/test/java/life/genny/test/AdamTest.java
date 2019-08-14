@@ -6,8 +6,10 @@ import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.logging.log4j.Logger;
@@ -19,6 +21,7 @@ import com.google.gson.reflect.TypeToken;
 
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
+import io.vertx.core.json.JsonObject;
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
@@ -89,14 +92,19 @@ public class AdamTest {
 		System.out.println("userToken   =" + userToken.getToken());
 		System.out.println("serviceToken=" + serviceToken.getToken());
 
+		QEventMessage initMsg = new QEventMessage("EVT_MSG", "INIT_STARTUP");
+
 		QEventMessage authInitMsg = new QEventMessage("EVT_MSG", "AUTH_INIT");
 		QEventMessage msg1 = new QEventMessage("EVT_MSG", "INIT_1");
 		QEventMessage msgLogout = new QEventMessage("EVT_MSG", "LOGOUT");
 
 		List<Answer> answers = new ArrayList<Answer>();
-		
 		answers.add(new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_FIRSTNAME", "Bruce"));
 		answers.add(new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_LASTNAME", "Wayne"));
+		answers.add(new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_ADDRESS_JSON", 
+				"{\"street_number\":\"64\",\"street_name\":\"Fakenham Road\",\"suburb\":\"Ashburton\",\"state\":\"Victoria\",\"country\":\"AU\",\"postal_code\":\"3147\",\"full_address\":\"64 Fakenham Rd, Ashburton VIC 3147, Australia\",\"street_address\":\"64 Fakenham Road\"}"));
+		
+		
 		QDataAnswerMessage answerMsg = new QDataAnswerMessage(answers.toArray(new Answer[0]));
 		
 		// NOW SET UP Some baseentitys
@@ -125,6 +133,7 @@ public class AdamTest {
 					.addToken(userToken)
 					.build();
 			gks.start();
+			gks.injectEvent(initMsg); // This should create a new process
 
 			gks.injectEvent(authInitMsg); // This should create a new process
 			gks.advanceSeconds(5, false);
@@ -142,6 +151,28 @@ public class AdamTest {
 				gks.close();
 			}
 		}
+	}
+	//@Test
+	public void processAddress()
+	{
+		
+		Answer address = new Answer("PER_USER1", "PER_USER1", "PRI_ADDRESS_JSON", 
+				"{\"street_number\":\"64\",\"street_name\":\"Fakenham Road\",\"suburb\":\"Ashburton\",\"state\":\"Victoria\",\"country\":\"AU\",\"postal_code\":\"3147\",\"full_address\":\"64 Fakenham Rd, Ashburton VIC 3147, Australia\",\"street_address\":\"64 Fakenham Road\"}");
+		
+		JsonObject addressDataJson = new JsonObject(address.getValue());
+
+			System.out.println("The Address Json is  :: " + addressDataJson);
+
+			List<Answer> answers = new ArrayList<Answer>();
+			answers.add(new Answer("PER_USER1", "PER_USER1", "PRI_ADDRESS_COUNTRY", addressDataJson.getString("country")));
+			answers.add(new Answer("PER_USER1", "PER_USER1", "PRI_ADDRESS_POSTCODE", addressDataJson.getString("postal_code")));
+			answers.add(new Answer("PER_USER1", "PER_USER1", "PRI_ADDRESS_SUBURB", addressDataJson.getString("suburb")));
+			answers.add(new Answer("PER_USER1", "PER_USER1", "PRI_ADDRESS_STATE", addressDataJson.getString("state")));
+			answers.add(new Answer("PER_USER1", "PER_USER1", "PRI_ADDRESS_ADDRESS1", addressDataJson.getString("street_address")));
+			answers.add(new Answer("PER_USER1", "PER_USER1", "PRI_ADDRESS_FULL", addressDataJson.getString("full_address")));
+	
+			
+				
 	}
 	
 	//@Test

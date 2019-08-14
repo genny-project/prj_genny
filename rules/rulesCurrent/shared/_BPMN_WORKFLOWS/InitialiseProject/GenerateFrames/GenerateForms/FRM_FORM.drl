@@ -45,11 +45,21 @@ rule "FRM_FORM"
 
 				String apiUrl = GennySettings.qwandaServiceUrl + "/service/forms";
 
-				String jsonFormCodes = QwandaUtils.apiGet(apiUrl, serviceToken.getToken());
+				String jsonFormCodes = null;
+				List<String> questionCodes = new ArrayList<String>();
+				
+				jsonFormCodes = QwandaUtils.apiGet(apiUrl, serviceToken.getToken());
+				System.out.println("jsonFormCodes=["+jsonFormCodes);
+				if (!VertxUtils.cachedEnabled) {  // Not running junit mode
 
-				Type type = new TypeToken<List<String>>() {
-				}.getType();
-				List<String> questionCodes = JsonUtils.fromJson(jsonFormCodes, type);
+					Type type = new TypeToken<List<String>>() {
+					}.getType();
+					questionCodes  = JsonUtils.fromJson(jsonFormCodes, type);
+				} else {
+					/* used for testing */
+					questionCodes.add("QUE_USER_ADDRESS_GRP");
+					questionCodes.add("QUE_DEFAULT_PROFILE_GRP");
+				}
 
 				System.out.println("Array of all the Form Codes");
 				System.out.println("Form Codes=" + questionCodes);
