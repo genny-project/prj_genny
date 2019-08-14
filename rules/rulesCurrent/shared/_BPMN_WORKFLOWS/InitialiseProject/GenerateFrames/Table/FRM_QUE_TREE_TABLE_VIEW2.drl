@@ -25,16 +25,16 @@ import life.genny.models.Frame3;
 import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
 
-rule "FRM_QUE_TREE_TABLE_VIEW"
+rule "FRM_QUE_TREE_TABLE_VIEW2"
     ruleflow-group 'GenerateFrames'
     when
-      not  Frame3(code == "FRM_QUE_TREE_TABLE_VIEW")
+      not  Frame3(code == "FRM_QUE_TREE_TABLE_VIEW2")
       serviceToken : GennyToken( code == "PER_SERVICE")
 
     then
-        System.out.println("   Generate FRM_QUE_TREE_TABLE_VIEW Rule  "+serviceToken.getUserCode());
+        System.out.println("   Generate FRM_QUE_TREE_TABLE_VIEW2 Rule  "+serviceToken.getUserCode());
 
-        Frame3 frame = Frame3.builder("FRM_QUE_TREE_TABLE_VIEW")
+        Frame3 frame = Frame3.builder("FRM_QUE_TREE_TABLE_VIEW2")
                       .addTheme("THM_PROJECT_COLOR_BACKGROUND", serviceToken).end()
                       .question("QUE_TREE_TABLE_VIEW")
                       .end()
