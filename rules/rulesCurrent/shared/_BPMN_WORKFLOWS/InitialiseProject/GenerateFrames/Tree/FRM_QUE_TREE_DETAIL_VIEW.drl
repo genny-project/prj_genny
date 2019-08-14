@@ -1,6 +1,7 @@
 package life.genny.rules;
 
 
+
 global org.apache.logging.log4j.Logger log;
 
 import life.genny.qwanda.message.QCmdMessage;
@@ -24,29 +25,31 @@ import org.kie.api.runtime.process.WorkflowProcessInstance;
 import life.genny.models.Frame3;
 import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
-import life.genny.models.FramePosition;
+import life.genny.qwanda.VisualControlType;
 
-rule "FRM_DASHBOARD_INTERNMATCH"
+rule "FRM_QUE_TREE_DETAIL_VIEW"
     ruleflow-group 'GenerateFrames'
 
     when
-      not  Frame3(code == "FRM_DASHBOARD_INTERNMATCH")
+      not  Frame3(code == "FRM_QUE_TREE_ITEM_DETAIL_VIEW")
       serviceToken : GennyToken( code == "PER_SERVICE")
-      FRM_DASHBOARD_INTERNS : Frame3 ( code == "FRM_DASHBOARD_INTERNS" )
-      FRM_DASHBOARD_INTERNSHIPS  : Frame3 ( code == "FRM_DASHBOARD_INTERNSHIPS" )
-
 
     then
-        System.out.println("   Generate FRM_DASHBOARD_INTERNMATCH Rule  "+serviceToken.getUserCode());
+			System.out.println("   Generate FRM_QUE_TREE_DETAIL_VIEW Rule  "+serviceToken.getUserCode());
 
-        Frame3 frame = Frame3.builder("FRM_DASHBOARD_INTERNMATCH")
-                      .addTheme("THM_PROJECT_COLOR_BACKGROUND", serviceToken).end()
-                      .addFrame(FRM_DASHBOARD_INTERNS, FramePosition.NORTH).end()
-                      .addFrame(FRM_DASHBOARD_INTERNSHIPS, FramePosition.NORTH).end()
+		  /* frame-root */
+      Frame3 frame = Frame3.builder("FRM_QUE_TREE_ITEM_DETAIL_VIEW")
+                      .addTheme("THM_TREE_ITEM", ThemePosition.WRAPPER, serviceToken).end()
+                      .question("QUE_TREE_DETAIL_VIEW")
+                        .addTheme("THM_TREE_GROUP_WRAPPER", serviceToken)
+                          .vcl(VisualControlType.VCL_WRAPPER)
+                        .end()
+                      .end()
                       .build();
-    
-        frame.setRealm(serviceToken.getRealm());
-        insert (frame);
-        FrameUtils2.toMessage(frame, serviceToken);
-			
+
+			frame.setRealm(serviceToken.getRealm());
+			insert (frame);
+
+			/* Process and save to cache */
+			FrameUtils2.toMessage(frame, serviceToken);
 end
