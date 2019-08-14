@@ -8,7 +8,7 @@ rule "TREE_ITEM_CLICK_EVENT"
 		salience 2
     no-loop
     when
-		$message : QEventMessage(data.code matches "QUE_.*" && data.parentCode == "QUE_TREE_BUCKET_VIEW" )
+		$message : QEventMessage(data.code matches "QUE_.*" && (data.parentCode == "QUE_DASBOARD_VIEW" || data.parentCode == "QUE_TAB_VIEW"))
 		userToken : GennyToken (code != "PER_SERVICE" )
 		output : OutputParam( )
     then

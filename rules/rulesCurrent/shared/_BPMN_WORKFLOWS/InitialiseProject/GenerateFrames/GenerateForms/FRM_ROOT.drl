@@ -35,7 +35,6 @@ rule "FRM_ROOT"
     when
       not  Frame3(code == "FRM_ROOT")
       serviceToken : GennyToken( code == "PER_SERVICE")
-      FRM_MAIN  : Frame3 ( code == "FRM_MAIN" )
        
     then
      System.out.println("   Generate FRM_ROOT Rule  "+serviceToken.getUserCode());

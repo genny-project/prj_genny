@@ -25,28 +25,21 @@ import life.genny.models.Frame3;
 import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
 
-rule "FRM_TAB_HEADER"
-
+rule "FRM_TAB_ITEM_DETAIL_VIEW"
     ruleflow-group 'GenerateFrames'
 
     when
-      not  Frame3(code == "FRM_TAB_HEADER")
+      not  Frame3(code == "FRM_TAB_ITEM_DETAIL_VIEW")
       serviceToken : GennyToken( code == "PER_SERVICE")
-      FRM_TAB_ITEM_TABLE_VIEW : Frame3 ( code == "FRM_TAB_ITEM_TABLE_VIEW" )
-      FRM_TAB_ITEM_BUCKET_VIEW : Frame3 ( code == "FRM_TAB_ITEM_BUCKET_VIEW" )
-      FRM_TAB_ITEM_DETAIL_VIEW : Frame3 ( code == "FRM_TAB_ITEM_DETAIL_VIEW" )
-
 
     then
-			System.out.println("   Generate FRM_TAB_HEADER Rule  "+serviceToken.getUserCode());
+			System.out.println("   Generate FRM_TAB_ITEM_DETAIL_VIEW Rule  "+serviceToken.getUserCode());
 
-			Frame3 frame = Frame3.builder("FRM_TAB_HEADER")
-										.addTheme("THM_TAB_HEADER", serviceToken).end()
-                      					.addTheme("THM_BACKGROUND_NONE", serviceToken).end()
-		                                .addTheme("THM_FRAME_ALIGN_WEST", ThemePosition.WEST, serviceToken).end()
-										.addFrame(FRM_TAB_ITEM_TABLE_VIEW, FramePosition.WEST).end()
-										.addFrame(FRM_TAB_ITEM_BUCKET_VIEW, FramePosition.WEST).end()
-										.addFrame(FRM_TAB_ITEM_DETAIL_VIEW, FramePosition.WEST).end()
+			Frame3 frame = Frame3.builder("FRM_TAB_ITEM_DETAIL_VIEW")
+										.addTheme("THM_TAB", serviceToken).end()
+										.addTheme("THM_TAB_WIDTH", ThemePosition.WRAPPER, serviceToken).end()
+										.question("QUE_TAB_DETAIL_VIEW")
+										.end()
 										.build();
 
 			frame.setRealm(serviceToken.getRealm());
