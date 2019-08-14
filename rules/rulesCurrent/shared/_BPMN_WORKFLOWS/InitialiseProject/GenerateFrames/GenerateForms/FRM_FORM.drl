@@ -50,7 +50,7 @@ rule "FRM_FORM"
 				
 				jsonFormCodes = QwandaUtils.apiGet(apiUrl, serviceToken.getToken());
 				System.out.println("jsonFormCodes=["+jsonFormCodes);
-				if (!VertxUtils.cachedEnabled) {  // Not running junit mode
+				if (!VertxUtils.cachedEnabled) {  /* Not running junit mode */
 
 					Type type = new TypeToken<List<String>>() {
 					}.getType();
