@@ -237,7 +237,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 				dataMsg.setToken(userToken.getToken());
 			}
 
-			if (eventMsg.getData().getCode().equals("INIT_STARTUP")) {
+			if ((eventMsg != null) && (eventMsg.getData().getCode().equals("INIT_STARTUP"))) {
 				kieSession.startProcess("init_project");
 			} else if (userToken != null) {
 				// This is a userToken so send the event through
