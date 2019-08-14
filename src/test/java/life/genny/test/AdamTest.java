@@ -114,6 +114,7 @@ public class AdamTest {
 					.addDrl("EventProcessing")
 					.addDrl("InitialiseProject")
 					.addJbpm("InitialiseProject")
+					.addJbpm("userValidation")
 					.addJbpm("Lifecycles")
 					.addDrl("AuthInit")
 					.addJbpm("AuthInit")
