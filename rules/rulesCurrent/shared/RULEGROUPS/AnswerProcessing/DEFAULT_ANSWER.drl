@@ -28,7 +28,7 @@ rule "DEFAULT_ANSWER"
 	BaseEntity be = beUtils.getBaseEntityByCode(answer.getTargetCode());
 	Object existingValue = be.getValue(answer.getAttributeCode());
 	if (!answer.getValue().equals(existingValue.toString())) {
-		answer.setChangeEvent(false);
+		answer.setChangeEvent(true);
 		beUtils.saveAnswer(answer); 
 		System.out.println("Change to value required");
 	} else {
