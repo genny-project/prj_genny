@@ -26,6 +26,7 @@ import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
 
 rule "FRM_TAB_HEADER"
+
     ruleflow-group 'GenerateFrames'
 
     when
