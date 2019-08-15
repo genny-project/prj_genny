@@ -18,6 +18,9 @@
   <bpmn2:itemDefinition id="ItemDefinition_201" isCollection="false" structureRef="life.genny.models.GennyToken"/>
   <bpmn2:itemDefinition id="ItemDefinition_88" isCollection="false" structureRef="life.genny.utils.BaseEntityUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_59" isCollection="false" structureRef="life.genny.qwandautils.JsonUtils"/>
+  <bpmn2:itemDefinition id="ItemDefinition_451" isCollection="false" structureRef="java.lang.Long"/>
+  <bpmn2:itemDefinition id="ItemDefinition_638" isCollection="false" structureRef="life.genny.utils.CallingProcessToken"/>
+  <bpmn2:itemDefinition id="ItemDefinition_772" isCollection="false" structureRef="org.kie.internal.runtime.StatefulKnowledgeSession"/>
   <bpmn2:signal id="Signal_1" name="userToken.getUserCode()"/>
   <bpmn2:signal id="Signal_2" name="deleteuser"/>
   <bpmn2:signal id="Signal_3" name="userIsInActive"/>
@@ -46,15 +49,19 @@
       <tns:import name="life.genny.models.GennyToken"/>
       <tns:import name="life.genny.utils.BaseEntityUtils"/>
       <tns:import name="life.genny.qwandautils.JsonUtils"/>
+      <tns:import name="life.genny.utils.CallingProcessToken"/>
+      <tns:import name="org.kie.internal.runtime.StatefulKnowledgeSession"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="rules" itemSubjectRef="ItemDefinition_2" name="rules"/>
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_602" name="message"/>
     <bpmn2:property id="ruleGroup" itemSubjectRef="ItemDefinition_10" name="ruleGroup"/>
     <bpmn2:property id="drools" itemSubjectRef="ItemDefinition_144" name="drools"/>
-    <bpmn2:property id="userToken" name="userToken"/>
+    <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_201" name="userToken"/>
     <bpmn2:property id="currentUser" itemSubjectRef="ItemDefinition_1014" name="currentUser"/>
-    <bpmn2:property id="newUser" name="newUser"/>
+    <bpmn2:property id="newUser" itemSubjectRef="ItemDefinition_1014" name="newUser"/>
     <bpmn2:property id="userCode" itemSubjectRef="ItemDefinition_10" name="userCode"/>
+    <bpmn2:property id="callingProcessId" itemSubjectRef="ItemDefinition_451" name="callingProcessId"/>
+    <bpmn2:property id="callingProcessToken" itemSubjectRef="ItemDefinition_638" name="callingProcessToken"/>
     <bpmn2:scriptTask id="ScriptTask_2" name="Creates a user" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>
         <tns:metaData name="elementname">
@@ -69,24 +76,26 @@ newUser = beUtils.create(((GennyToken)userToken).getUserCode(), ((GennyToken)use
 kcontext.setVariable(&quot;newUser&quot;,newUser);
 
 kcontext.setVariable(&quot;userCode&quot;, ((GennyToken)userToken).getUserCode());
+userCode = (String)kcontext.getVariable(&quot;userCode&quot;);
 VertxUtils.putObject(((GennyToken)userToken).getRealm(), &quot;&quot;, ((GennyToken)userToken).getUserCode(), JsonUtils.toJson(newUser), ((GennyToken)userToken).getToken());
-System.out.println(&quot;userlifeCycle: New User Created: &quot; + newUser+&quot; now sendng to channel callback :[&quot;+((GennyToken)userToken).getUserCode()+&quot;]&quot; );
+System.out.println(&quot;userlifeCycle: New User Created: &quot; + newUser+&quot; now sendng to channel callback :[&quot;+userCode+&quot;]&quot; );
 
-
+StatefulKnowledgeSession kieSession = ((StatefulKnowledgeSession)kcontext.getKnowledgeRuntime());
+/* kieSession.signalEvent(&quot;event&quot;, eventMsg, processId); */
 
 </bpmn2:script>
     </bpmn2:scriptTask>
-    <bpmn2:startEvent id="StartEvent_1" name="Start Event 1">
+    <bpmn2:startEvent id="StartEvent_1" name="userLifeCycle">
       <bpmn2:extensionElements>
         <tns:metaData name="elementname">
-          <tns:metaValue><![CDATA[Start Event 1]]></tns:metaValue>
+          <tns:metaValue><![CDATA[userLifeCycle]]></tns:metaValue>
         </tns:metaData>
       </bpmn2:extensionElements>
       <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
       <bpmn2:dataOutput id="DataOutput_2" name="event"/>
       <bpmn2:dataOutputAssociation id="DataOutputAssociation_1">
         <bpmn2:sourceRef>DataOutput_2</bpmn2:sourceRef>
-        <bpmn2:targetRef>userToken</bpmn2:targetRef>
+        <bpmn2:targetRef>callingProcessToken</bpmn2:targetRef>
       </bpmn2:dataOutputAssociation>
       <bpmn2:outputSet id="OutputSet_1" name="Output Set 1">
         <bpmn2:dataOutputRefs>DataOutput_2</bpmn2:dataOutputRefs>
@@ -129,7 +138,16 @@ System.out.println(&quot;userlifeCycle: New User Created: &quot; + newUser+&quot
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;userLifeCycle: entered: &quot;+((GennyToken)userToken).getUserCode());</bpmn2:script>
+      <bpmn2:script>if (callingProcessToken ==null) {
+   System.out.println(&quot;callingProcessToken = null&quot;);
+} else {
+  System.out.println(&quot;callingProcessToken = &quot;+callingProcessToken);
+	GennyToken userToken2 = callingProcessToken.getGennyToken();
+kcontext.setVariable(&quot;userToken&quot;,userToken2);
+System.out.println(&quot;userLifeCycle: entered: &quot;+((GennyToken)userToken2).getUserCode() + &quot; from callingProcessId &quot;);
+}
+
+</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_4" tns:priority="1" sourceRef="StartEvent_1" targetRef="ScriptTask_1"/>
     <bpmn2:sequenceFlow id="SequenceFlow_5" tns:priority="1" sourceRef="ScriptTask_1" targetRef="ScriptTask_2"/>
@@ -333,7 +351,7 @@ System.out.println(&quot;userlifeCycle: New User Created: &quot; + newUser+&quot
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="37.0" y="140.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="53.0" x="29.0" y="176.0"/>
+          <dc:Bounds height="11.0" width="55.0" x="28.0" y="176.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_IntermediateThrowEvent_2" bpmnElement="IntermediateThrowEvent_2">
