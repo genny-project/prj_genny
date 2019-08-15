@@ -22,7 +22,9 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 		System.out.println("Processing Answer/Data : " + $message );
 		System.out.println("Parent code :  " + $message.getData().getParentCode());
 		
-		output.setResult("FRM_"+ $message.getData().getCode());
+		output.setResultCode("FRM_"+ $message.getData().getCode());
+		output.setTargetCode("FRM_CONTENT");
+		output.setTypeOfResult("FORMCODE");
 		
 		retract( $message);
 end
