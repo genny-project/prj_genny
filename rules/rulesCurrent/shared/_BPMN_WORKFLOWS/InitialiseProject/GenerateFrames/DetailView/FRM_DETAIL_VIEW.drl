@@ -25,19 +25,29 @@ import life.genny.models.Frame3;
 import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
 
-rule "FRM_QUE_TREE_DETAIL_VIEW"
+rule "FRM_DETAIL_VIEW"
     ruleflow-group 'GenerateFrames'
 
     when
-      not  Frame3(code == "FRM_QUE_TREE_DETAIL_VIEW")
+      not  Frame3(code == "FRM_DETAIL_VIEW")
       serviceToken : GennyToken( code == "PER_SERVICE")
+  /*    FRM_IMAGE : Frame3 ( code == "FRM_IMAGE" ) */
+      FRM_NAME : Frame3 ( code == "FRM_NAME" )
+      FRM_EMAIL : Frame3 ( code == "FRM_EMAIL" )
+      FRM_DOB : Frame3 ( code == "FRM_DOB" )
+      FRM_MOBILE : Frame3 ( code == "FRM_MOBILE" )
+
 
     then
-    	System.out.println("   Generate FRM_QUE_TREE_DETAIL_VIEW Rule  "+serviceToken.getUserCode());
+    	System.out.println("   Generate FRM_DETAIL_VIEW Rule  "+serviceToken.getUserCode());
 
- 	  	Frame3 frame = Frame3.builder("FRM_QUE_TREE_DETAIL_VIEW")
-			 							.addTheme("THM_PROJECT_COLOR_BACKGROUND", serviceToken).end()
-										.question("QUE_TREE_DETAIL_VIEW").end()
+ 	  	Frame3 frame = Frame3.builder("FRM_DETAIL_VIEW")
+			 							.addTheme("THM_CONTAINER", serviceToken).end()
+										/*.addFrame(FRM_IMAGE, FramePosition.WEST).end() */
+										.addFrame(FRM_NAME, FramePosition.WEST).end()
+										.addFrame(FRM_EMAIL, FramePosition.WEST).end()
+                    .addFrame(FRM_DOB, FramePosition.WEST).end()
+										.addFrame(FRM_MOBILE, FramePosition.WEST).end()
 										.build();
 
 			frame.setRealm(serviceToken.getRealm());
