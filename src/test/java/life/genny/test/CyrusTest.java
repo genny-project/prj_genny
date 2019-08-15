@@ -162,7 +162,7 @@ public class CyrusTest extends GennyJbpmBaseTest {
 	Theme THM_FORM_ATTRIBUTES_GENNY = Theme.builder("THM_FORM_ATTRIBUTES_GENNY")
 		.addAttribute().color("black").end()
 		.addAttribute().overflowY("auto").end()
-		.addAttribute().display("flex").end()
+	//	.addAttribute().display("flex").end()
 		.addAttribute().borderStyle("solid").end()
 		.addAttribute().backgroundColor(project.getValue("PRI_COLOR_BACKGROUND", "#f6f6f6")).end()
 		.addAttribute().color(project.getValue("PRI_COLOR_SURFACE_ON", "#ffffff")).end()
