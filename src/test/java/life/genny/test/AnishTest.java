@@ -693,9 +693,34 @@ public class AnishTest extends GennyJbpmBaseTest {
                         Theme THM_TREE_ITEM = Theme.builder("THM_TREE_ITEM").addAttribute().color("white")
                                         .height("auto").flexGrow(0).flexBasis("auto").end().build();
 
-                        Frame3 FRM_LOGO = Frame3.builder("FRM_LOGO").addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER)
-                                        .end().question("QUE_PROJECT_SIDEBAR_GRP").addTheme("THM_LOGO", serviceToken)
-                                        .vcl(VisualControlType.VCL_WRAPPER).end().end().build();
+                        Theme THM_LOGO = Theme.builder("THM_LOGO")
+                                        .addAttribute()
+                                                .fit("contain")
+                                                .height(100)
+                                                .width(100)
+                                        .end()
+                                        .build();
+                        
+                        Theme THM_LOGO_CENTRE = Theme.builder("THM_LOGO_CENTRE")
+                                        .addAttribute()
+                                                .justifyContent("center")
+                                                .width("100%")
+                                        .end()
+                                        .build();
+                        
+                        Theme THM_MARGIN_BOTTOM_20 = Theme.builder("THM_MARGIN_BOTTOM_20")
+                                        .addAttribute()
+                                                .marginBottom(20)
+                                        .end()
+                                        .build();
+
+                        Frame3 FRM_LOGO = Frame3.builder("FRM_LOGO")
+                                        .addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER).end()
+                                        .addTheme(THM_MARGIN_BOTTOM_20, ThemePosition.WRAPPER).end()
+                                        .addTheme(THM_LOGO_CENTRE, ThemePosition.CENTRE).end()
+                                        .question("QUE_PROJECT_SIDEBAR_GRP")
+                                                .addTheme(THM_LOGO)
+                                                .vcl(VisualControlType.VCL_WRAPPER).end().end().build();
 
                         Theme THM_TREE_GROUP_BEHAVIOUR = Theme.builder("THM_TREE_GROUP_BEHAVIOUR")
                                         .addAttribute(ThemeAttributeType.PRI_IS_EXPANDABLE, true).end()
@@ -705,7 +730,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                                         .end().build();
 
                         Theme THM_TREE_GROUP_LABEL = Theme.builder("THM_TREE_GROUP_LABEL").addAttribute().bold(false)
-                                        .size("md").end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
+                                        .size("sm").end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
                                         .end().build();
 
                         Theme THM_TREE_GROUP_WRAPPER = Theme.builder("THM_TREE_GROUP_WRAPPER").addAttribute()

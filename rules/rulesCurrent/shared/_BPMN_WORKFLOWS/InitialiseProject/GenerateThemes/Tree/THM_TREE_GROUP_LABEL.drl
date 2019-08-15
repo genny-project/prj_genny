@@ -40,10 +40,9 @@ rule "THM_TREE_GROUP_LABEL"
 			Theme theme = Theme.builder("THM_TREE_GROUP_LABEL")
 										.addAttribute()
 											.bold(false)
-											.size("md")
-											.end()
-										.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
+											.size("sm")
 										.end()
+										.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
 										.build();
 
 										
