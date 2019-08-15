@@ -21,16 +21,19 @@ rule "ADD_ITEM_CLICK_EVENT"
 		
 		switch($message.getData().getCode()){
 			
-			case "QUE_ADD_NEW_INTERNSHIP":output.setResult("FRM_QUE_ADD_INTERNSHIP_STEP_ONE_GRP");  break;
+			case "QUE_ADD_NEW_INTERNSHIP":output.setResultCode("FRM_QUE_ADD_INTERNSHIP_STEP_ONE_GRP");  break;
 			
-			case "QUE_ADD_NEW_COMPANY": output.setResult("FRM_QUE_SELECT_COMPANY_TYPE_GRP");break;
+			case "QUE_ADD_NEW_COMPANY": output.setResultCode("FRM_QUE_SELECT_COMPANY_TYPE_GRP");break;
 			
-			case "QUE_ADD_NEW_PERSON":output.setResult("FRM_QUE_SELECT_USER_TYPE_GRP"); break;
+			case "QUE_ADD_NEW_PERSON":output.setResultCode("FRM_QUE_SELECT_USER_TYPE_GRP"); break;
 			
-			case "QUE_ADD_NEW_INTERNSHIP_TEMPLATE": output.setResult("FRM_QUE_ADD_INTERNSHIP_TEMPLATE_AGENT_GRP"); break;
+			case "QUE_ADD_NEW_INTERNSHIP_TEMPLATE": output.setResultCode("FRM_QUE_ADD_INTERNSHIP_TEMPLATE_AGENT_GRP"); break;
 			
-			default : output.setResult("FRM_" +$message.getData().getCode() + "_GRP");; break;
+			default : output.setResultCode("FRM_" +$message.getData().getCode() + "_GRP");; break;
 		}
-			
+		
+		output.setTargetCode("FRM_CONTENT");
+		output.setTypeOfResult("FORMCODE");
+		
 		retract( $message);
 end

@@ -19,9 +19,12 @@ rule "FORM_CLICK_EVENT"
 		System.out.println("Processing Answer/Data : " + $message );
 		System.out.println("EVENT : FORM_CLICK_EVENT  " + $message.getData().getParentCode());
 		if( $message.getData().getCode().equals("QUE_USER_PROFILE")){
-			output.setResult("FRM_QUE_USER_PROFILE_GRP");
+			output.setResultCode("FRM_QUE_USER_PROFILE_GRP");
 		}else{
-			output.setResult("FRM_"+ $message.getData().getCode());
+			output.setResultCode("FRM_"+ $message.getData().getCode());
 		}
+		
+		output.setTargetCode("FRM_CONTENT");
+		output.setTypeOfResult("FORMCODE");
 		retract( $message);
 end
