@@ -24,6 +24,7 @@ import org.kie.api.runtime.process.WorkflowProcessInstance;
 import life.genny.models.Frame3;
 import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
+import life.genny.models.FramePosition;
 
 rule "FRM_APP"
     ruleflow-group 'GenerateFrames'

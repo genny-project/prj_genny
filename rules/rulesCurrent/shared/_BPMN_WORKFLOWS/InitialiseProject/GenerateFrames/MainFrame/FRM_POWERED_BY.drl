@@ -25,6 +25,7 @@ import life.genny.models.Frame3;
 import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
 import life.genny.models.FramePosition;
+import life.genny.qwanda.VisualControlType;
 
 rule "FRM_POWERED_BY"
     ruleflow-group 'GenerateFrames'
@@ -38,6 +39,7 @@ rule "FRM_POWERED_BY"
 
  	Frame3 frame = Frame3.builder("FRM_POWERED_BY")
 								.question("QUE_POWERED_BY_GRP")
+									.targetAlias("PRJ_"+serviceToken.getRealm().toUpperCase())
 									.addTheme("THM_LABEL_BOLD", serviceToken)
 										.vcl(VisualControlType.VCL_LABEL)
 									.end()

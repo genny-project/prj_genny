@@ -37,6 +37,7 @@ rule "FRM_PROJECT_NAME"
 
         Frame3 frame = Frame3.builder("FRM_PROJECT_NAME")
                         .question("QUE_NAME_TWO")
+                        	.targetAlias("PRJ_"+serviceToken.getRealm().toUpperCase())
                         .end()
                     .build();
     
