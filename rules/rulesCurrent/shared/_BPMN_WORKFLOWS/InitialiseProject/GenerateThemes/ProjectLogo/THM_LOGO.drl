@@ -36,21 +36,17 @@ rule "THM_LOGO"
     
      	System.out.println("   Generate THM_LOGO Rule ");
  
-		Theme theme = Theme.builder("THM_LOGO")
-							.addAttribute()
-								.fit("contain")
+			Theme theme = Theme.builder("THM_LOGO")
+								.addAttribute()
+									.fit("contain")
+									.height(100)
+									.width(100)
 								.end()
-							.addAttribute()
-                                .height(100)
-                                .end()
-                            .addAttribute()
-                            	.width(100)
-                            	.end()
-                            .build();
-                        
-		theme.setRealm(serviceToken.getRealm());
-		
-		insert(theme);
+								.build();
+													
+			theme.setRealm(serviceToken.getRealm());
+			
+			insert(theme);
 
-		VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
+			VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
 end

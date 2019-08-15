@@ -48,7 +48,7 @@ rule "FRM_CONTENT"
                       .addTheme("THM_PROJECT_COLOR_BACKGROUND", serviceToken).end()
                       .addTheme("THM_SCROLL_VERTICAL", ThemePosition.NORTH, serviceToken).end()
                       .addTheme("THM_PADDING_40", ThemePosition.NORTH, serviceToken).end()
-                      .addFrame(frameContent).end()
+                      .addFrame(frameContent, FramePosition.NORTH).end()
                       .build();        				
         				
     
