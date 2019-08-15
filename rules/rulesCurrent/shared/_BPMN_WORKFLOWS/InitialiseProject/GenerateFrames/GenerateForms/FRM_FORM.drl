@@ -61,8 +61,6 @@ rule "FRM_FORM"
 					questionCodes.add("QUE_DEFAULT_PROFILE_GRP");
 				}
 
-				System.out.println("Array of all the Form Codes");
-				System.out.println("Form Codes=" + questionCodes);
 				for (String questionCode : questionCodes){
 				
 					Frame3 frame2 = Frame3.builder("FRM_CONTENT_" +  questionCode)
