@@ -10,7 +10,7 @@ rule "TREE_ITEM_FORM_CLICK_EVENT"
 		salience 2
     no-loop
     when
-		$message : QEventMessage(data.code matches "QUE_.*" && data.parentCode == "QUE_TREE_FORM_VIEW_GRP" )
+		$message : QEventMessage(data.code matches "QUE_.*" && data.parentCode == "QUE_FORM_VIEW_GRP" )
 		userToken : GennyToken (code != "PER_SERVICE" )
 		output : OutputParam( )
     then
