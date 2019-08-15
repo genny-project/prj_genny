@@ -41,7 +41,7 @@ rule "FRM_LOGO"
 										.question("QUE_PROJECT_SIDEBAR_GRP")
 											.targetAlias("PRJ_"+serviceToken.getRealm().toUpperCase())
 											.addTheme("THM_LOGO", serviceToken)
-											.vcl(VisualControlType.INPUT_FIELD).end()
+											.vcl(VisualControlType.VCL_INPUT).end()
 										.end()
 										.build();
 

@@ -113,8 +113,6 @@ public class AdamTest {
 		VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
 				JsonUtils.toJson(project), serviceToken.getToken());
 		
-		// Log out to begin
-		VertxUtils.writeCachedJson(userToken.getRealm(),userToken.getSessionCode(),null,userToken.getToken());
 
 		GennyKieSession gks = null;
 
