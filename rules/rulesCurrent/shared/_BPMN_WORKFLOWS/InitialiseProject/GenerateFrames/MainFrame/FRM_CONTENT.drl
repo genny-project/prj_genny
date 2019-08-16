@@ -45,9 +45,10 @@ rule "FRM_CONTENT"
         FrameUtils2.toMessage(frameContent, serviceToken);
                         
         Frame3 frame = Frame3.builder("FRM_CONTENT_WRAPPER")
-        				.addTheme("THM_PROJECT_COLOR_BACKGROUND", serviceToken).end()
-                     	.addFrame(frameContent)
-                        .end()
+                      .addTheme("THM_PROJECT_COLOR_BACKGROUND", serviceToken).end()
+                      .addTheme("THM_SCROLL_VERTICAL", ThemePosition.NORTH, serviceToken).end()
+                      .addTheme("THM_PADDING_40", ThemePosition.NORTH, serviceToken).end()
+                      .addFrame(frameContent).end()
                       .build();        				
         				
     

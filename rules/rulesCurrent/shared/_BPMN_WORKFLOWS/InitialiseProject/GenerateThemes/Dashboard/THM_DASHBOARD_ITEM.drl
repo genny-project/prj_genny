@@ -21,6 +21,7 @@ import life.genny.utils.BaseEntityUtils;
 import life.genny.models.GennyToken;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
 import life.genny.models.Theme;
+import life.genny.models.ThemeAttributeType;
 
 
 
@@ -45,7 +46,7 @@ rule "THM_DASHBOARD_ITEM"
 											.borderColor("grey")
 											.borderBottomWidth(1)
 											.maxHeight("fit-content")
-											.padding(20)
+											.padding(10)
 										.end()
 										.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
 										.build();   

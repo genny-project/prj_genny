@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -557,12 +559,18 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 
 		return rules;
 	}
-	
+
 	public static GennyToken createGennyToken(final String realm, String username, String name, String role)
 	{
-		String normalisedUsername = "PER_"+username.toUpperCase();
+		return createGennyToken(realm, username, name, role,24*60*60);
+	}
 
-		GennyToken gennyToken = new GennyToken(normalisedUsername,realm,username,name,role);
+	public static GennyToken createGennyToken(final String realm, String username, String name, String role, long expirysecs)
+	{
+		String normalisedUsername = "PER_"+username.toUpperCase();
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime expiryTime = now.plusSeconds(expirysecs);
+		GennyToken gennyToken = new GennyToken(normalisedUsername,realm,username,name,role,expiryTime);
 		return gennyToken;
 	}			
 }

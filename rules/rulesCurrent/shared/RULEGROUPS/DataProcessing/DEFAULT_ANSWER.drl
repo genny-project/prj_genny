@@ -1,0 +1,26 @@
+package life.genny.rules;
+import life.genny.qwanda.message.QDataAnswerMessage;
+import life.genny.models.GennyToken;
+import life.genny.rules.QRules;
+import life.genny.utils.BaseEntityUtils;
+import life.genny.qwanda.Answer;
+
+import java.util.List;
+import java.util.ArrayList;
+
+rule "DEFAULT_ANSWER"
+    ruleflow-group 'AnswerProcessing'
+    salience -10000 
+    when
+      beUtils : BaseEntityUtils()
+	  serviceToken : GennyToken( code == "PER_SERVICE") 
+	  answer : Answer() /* (targetCode == beUtils.getGennyToken().getUserCode()) ) */
+	  
+     then
+ 		System.out.println("Rule -> DEFAULT_ANSWER :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
+	
+		answer.setChangeEvent(true);
+		beUtils.saveAnswer(answer); 
+		retract(answer);
+
+end

@@ -21,6 +21,7 @@ import life.genny.utils.BaseEntityUtils;
 import life.genny.models.GennyToken;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
 import life.genny.models.Theme;
+import life.genny.models.ThemeAttributeType;
 
 
 
@@ -46,7 +47,7 @@ rule "THM_DASHBOARD_CONTENT_WRAPPER"
 											.height("initial")
 										.end()
 										.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
-										.build();   
+										.build();
 
 
 			theme.setRealm(serviceToken.getRealm());
