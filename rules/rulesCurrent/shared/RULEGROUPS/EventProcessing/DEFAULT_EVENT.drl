@@ -16,8 +16,7 @@ rule "DEFAULT_EVENT"
     then
 	
 		System.out.println("Processing Answer/Data : " + $message );
-		output.setResultCode("FRM_QUE_DASHBOARD_VIEW");
-		output.setTypeOfResult("FORMCODE");
+		output.setFormCode("FRM_QUE_DASHBOARD_VIEW","FRM_CONTENT");
 		retract($message);
 
 end
