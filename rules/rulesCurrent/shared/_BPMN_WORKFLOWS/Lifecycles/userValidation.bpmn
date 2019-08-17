@@ -26,7 +26,7 @@
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_2" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_2" name="serviceToken"/>
-    <bpmn2:property id="currentUser" itemSubjectRef="ItemDefinition_325" name="currentUser"/>
+    <bpmn2:property id="currentUser" name="currentUser"/>
     <bpmn2:property id="userCode" itemSubjectRef="ItemDefinition_10" name="userCode"/>
     <bpmn2:property id="beUtils" itemSubjectRef="ItemDefinition_323" name="beUtils"/>
     <bpmn2:property id="processId" itemSubjectRef="ItemDefinition_531" name="processId"/>
@@ -231,7 +231,7 @@ System.out.println(&quot;userValidation: Yay! currentUser is &quot;+currentUser)
       <bpmn2:outputSet id="OutputSet_4" name="Output Set 4">
         <bpmn2:dataOutputRefs>DataOutput_4</bpmn2:dataOutputRefs>
       </bpmn2:outputSet>
-      <bpmn2:signalEventDefinition id="SignalEventDefinition_8" signalRef="Signal_4"/>
+      <bpmn2:signalEventDefinition id="SignalEventDefinition_8" signalRef="Signal_3"/>
     </bpmn2:boundaryEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_27" drools:priority="1" sourceRef="BoundaryEvent_3" targetRef="ScriptTask_1"/>
     <bpmn2:sequenceFlow id="SequenceFlow_28" drools:priority="1" sourceRef="ExclusiveGateway_2" targetRef="SubProcess_1"/>

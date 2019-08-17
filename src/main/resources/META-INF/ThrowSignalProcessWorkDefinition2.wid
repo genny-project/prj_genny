@@ -1,0 +1,16 @@
+import org.drools.core.process.core.datatype.impl.type.StringDataType;
+import org.drools.core.process.core.datatype.impl.type.LongDataType;
+[
+  // the ThrowSignalProcess work item
+  [
+    "name" : "ThrowSignalProcess",
+    "parameters" : [     
+       "serviceToken"  : new GennyToken(),
+       "Object"  : new Object(),
+       "signalCode"  :  new StringDataType(),
+       "processId"   " new LongDataType()
+     ],
+    "displayName" : "ThrowSignalProcess",
+    "icon" : "icons/icon-info.gif"
+  ]
+]
