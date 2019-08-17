@@ -10,7 +10,7 @@ rule "DEFAULT_EVENT"
     no-loop
     salience -10000
     when
-		$message : QEventMessage( data.code != "QUE_LOGOUT" )
+		$message : QEventMessage( (data.code != "QUE_LOGOUT") && (data.code != "LOGOUT"))
 		userToken : GennyToken (code != "PER_SERVICE" )
 		output : OutputParam( )
     then
