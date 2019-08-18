@@ -353,7 +353,7 @@ kcontext.setVariable(&quot;userToken&quot;,userToken);</bpmn2:script>
       <bpmn2:ioSpecification id="InputOutputSpecification_1">
         <bpmn2:dataInput id="DataInput_1" itemSubjectRef="ItemDefinition_201" name="gennyToken"/>
         <bpmn2:dataInput id="DataInput_2" itemSubjectRef="ItemDefinition_1014" name="payloadObject"/>
-        <bpmn2:dataInput id="DataInput_4" name="signalCode"/>
+        <bpmn2:dataInput id="DataInput_4" itemSubjectRef="ItemDefinition_10" name="signalCode"/>
         <bpmn2:dataInput id="DataInput_5" itemSubjectRef="ItemDefinition_425" name="processId"/>
         <bpmn2:inputSet id="_InputSet_2">
           <bpmn2:dataInputRefs>DataInput_1</bpmn2:dataInputRefs>
