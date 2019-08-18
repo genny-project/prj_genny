@@ -203,13 +203,17 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	
 
 	public void injectEvent(QMessage msg) {
-
+		String userCode= "";
+		if (msg.getToken()!=null) {
+			GennyToken uToken = new GennyToken(msg.getToken());
+			userCode = uToken.getUserCode();
+		}
 		if (msg instanceof QEventMessage) {
 			QEventMessage msgEvent = (QEventMessage)msg;
-		System.out.println("Injecting event "+msg.getMsg_type()+"  "+msgEvent.getData().getCode());
+		System.out.println("Injecting event "+msg.getMsg_type()+"  "+msgEvent.getData().getCode()+ " user->"+userCode);
 		} else {
 			QDataMessage msgData = (QDataMessage)msg;
-		System.out.println("Injecting data "+msg.getMsg_type()+"  "+msgData.getData_type());
+		System.out.println("Injecting data "+msg.getMsg_type()+"  "+msgData.getData_type()+ " user->"+userCode);
 
 		}
 		QEventMessage eventMsg = null;
@@ -221,12 +225,19 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 		
 		GennyToken userToken = null;
+		if (msg.getToken() == null ) {
 		for (String tokenKey : this.tokens.keySet()) {
 			GennyToken gt = this.tokens.get(tokenKey);
 			if (!gt.getCode().equals("PER_SERVICE")) {
 				userToken = gt;
 				break;
 			}
+		}
+		} else {
+			GennyToken uToken = new GennyToken(msg.getToken());
+			userToken = uToken;
+			
+			kieSession.insert(userToken); 
 		}
 		
 			if (msg instanceof QEventMessage)  {

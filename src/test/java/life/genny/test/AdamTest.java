@@ -71,11 +71,13 @@ public class AdamTest {
 	{
 		System.out.println("New User test");
 		GennyToken userToken = null;
+		GennyToken userToken2 = null;
 		GennyToken serviceToken = null;
 		QRules qRules = null;
 
 		if (true) {
-			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user2", "Barry Allan", "user");
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			userToken2 = GennyJbpmBaseTest.createGennyToken(realm, "user2", "Barry2 Allan2", "user");
 			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
 			qRules = new QRules(eventBusMock, userToken.getToken());
 			qRules.set("realm", userToken.getRealm());
@@ -89,13 +91,16 @@ public class AdamTest {
 
 		System.out.println("session     =" + userToken.getSessionCode());
 		System.out.println("userToken   =" + userToken.getToken());
+		System.out.println("userToken2   =" + userToken2.getToken());
 		System.out.println("serviceToken=" + serviceToken.getToken());
 
 		QEventMessage initMsg = new QEventMessage("EVT_MSG", "INIT_STARTUP");
 
-		QEventMessage authInitMsg = new QEventMessage("EVT_MSG", "AUTH_INIT");
+		QEventMessage authInitMsg1 = new QEventMessage("EVT_MSG", "AUTH_INIT"); authInitMsg1.setToken(userToken.getToken());
+		QEventMessage authInitMsg2 = new QEventMessage("EVT_MSG", "AUTH_INIT");authInitMsg2.setToken(userToken2.getToken());
 		QEventMessage msg1 = new QEventMessage("EVT_MSG", "INIT_1");
-		QEventMessage msgLogout = new QEventMessage("EVT_MSG", "LOGOUT");
+		QEventMessage msgLogout1 = new QEventMessage("EVT_MSG", "LOGOUT");msgLogout1.setToken(userToken.getToken());
+		QEventMessage msgLogout2 = new QEventMessage("EVT_MSG", "LOGOUT");msgLogout2.setToken(userToken2.getToken());
 
 		List<Answer> answers = new ArrayList<Answer>();
 		answers.add(new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_FIRSTNAME", "Bruce"));
@@ -105,6 +110,7 @@ public class AdamTest {
 		
 		
 		QDataAnswerMessage answerMsg = new QDataAnswerMessage(answers.toArray(new Answer[0]));
+		answerMsg.setToken(userToken.getToken());
 		
 		// NOW SET UP Some baseentitys
 		BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
@@ -132,13 +138,17 @@ public class AdamTest {
 			gks.start();
 			gks.injectEvent(initMsg); // This should create a new process
 
-			gks.injectEvent(authInitMsg); // This should create a new process
+			gks.injectEvent(authInitMsg1); // This should create a new process
+			gks.advanceSeconds(5, false);
+			gks.injectEvent(authInitMsg2); // This should create a new process
+			gks.advanceSeconds(5, false);
+			gks.injectEvent(authInitMsg1); // This should create a new process
 			gks.advanceSeconds(5, false);
 
 			gks.injectEvent(answerMsg); // This should create a new process
 			gks.advanceSeconds(5, false);
-			gks.injectEvent(msgLogout);
-
+			gks.injectEvent(msgLogout1);
+			gks.injectEvent(msgLogout2);
 		} catch (Exception e) {
 			e.printStackTrace();
 			
