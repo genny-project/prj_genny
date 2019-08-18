@@ -15,6 +15,7 @@
   <bpmn2:signal id="Signal_3" name="#{userCode}"/>
   <bpmn2:signal id="Signal_4" name="PER_USER1"/>
   <bpmn2:signal id="Signal_5" name="newUser"/>
+  <bpmn2:signal id="Signal_6" name="signalUser"/>
   <bpmn2:process id="user_validation" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="userValidation" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.models.GennyToken"/>
@@ -231,7 +232,7 @@ System.out.println(&quot;userValidation: Yay! currentUser is &quot;+currentUser)
       <bpmn2:outputSet id="OutputSet_4" name="Output Set 4">
         <bpmn2:dataOutputRefs>DataOutput_4</bpmn2:dataOutputRefs>
       </bpmn2:outputSet>
-      <bpmn2:signalEventDefinition id="SignalEventDefinition_8" signalRef="Signal_3"/>
+      <bpmn2:signalEventDefinition id="SignalEventDefinition_8" signalRef="Signal_6"/>
     </bpmn2:boundaryEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_27" drools:priority="1" sourceRef="BoundaryEvent_3" targetRef="ScriptTask_1"/>
     <bpmn2:sequenceFlow id="SequenceFlow_28" drools:priority="1" sourceRef="ExclusiveGateway_2" targetRef="SubProcess_1"/>

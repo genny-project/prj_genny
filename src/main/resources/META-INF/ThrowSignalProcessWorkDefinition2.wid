@@ -5,10 +5,10 @@ import org.drools.core.process.core.datatype.impl.type.LongDataType;
   [
     "name" : "ThrowSignalProcess",
     "parameters" : [     
-       "serviceToken"  : new GennyToken(),
-       "Object"  : new Object(),
+       "gennyToken"  : new GennyToken(),
+       "payloadObject"  : new ObjectDataType(),
        "signalCode"  :  new StringDataType(),
-       "processId"   " new LongDataType()
+       "processId"   : new ObjectDataType()
      ],
     "displayName" : "ThrowSignalProcess",
     "icon" : "icons/icon-info.gif"
