@@ -125,7 +125,7 @@ kcontext.setVariable(&quot;serviceToken&quot;,((GennyToken)serviceToken));
           <tns:script>System.out.println(&quot;user_session: Completed user validation workflow&quot;);</tns:script>
         </tns:onExit-script>
         <tns:metaData name="customAsync">
-          <tns:metaValue><![CDATA[true]]></tns:metaValue>
+          <tns:metaValue><![CDATA[false]]></tns:metaValue>
         </tns:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
