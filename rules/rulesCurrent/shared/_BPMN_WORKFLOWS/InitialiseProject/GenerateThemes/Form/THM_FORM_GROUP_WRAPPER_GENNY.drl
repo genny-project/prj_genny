@@ -45,8 +45,6 @@ rule "THM_FORM_GROUP_WRAPPER_GENNY"
 					.width("100%")
 					.borderWidth(1)
 					.borderColor("silver")
-					.marginTop(10)
-					.marginBottom(10)
 					.borderStyle("solid")
 					.margin("auto")
 					.shadowColor("silver")
