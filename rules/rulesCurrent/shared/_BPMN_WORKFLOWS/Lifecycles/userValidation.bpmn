@@ -16,7 +16,7 @@
   <bpmn2:signal id="Signal_4" name="PER_USER1"/>
   <bpmn2:signal id="Signal_5" name="newUser"/>
   <bpmn2:signal id="Signal_6" name="signalUser"/>
-  <bpmn2:process id="user_validation" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="userValidation" isExecutable="true">
+  <bpmn2:process id="user_validation" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="true" name="userValidation" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.models.GennyToken"/>
       <drools:import name="life.genny.utils.BaseEntityUtils"/>
@@ -27,7 +27,7 @@
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_2" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_2" name="serviceToken"/>
-    <bpmn2:property id="currentUser" name="currentUser"/>
+    <bpmn2:property id="currentUser" itemSubjectRef="ItemDefinition_325" name="currentUser"/>
     <bpmn2:property id="userCode" itemSubjectRef="ItemDefinition_10" name="userCode"/>
     <bpmn2:property id="beUtils" itemSubjectRef="ItemDefinition_323" name="beUtils"/>
     <bpmn2:property id="processId" itemSubjectRef="ItemDefinition_531" name="processId"/>
@@ -142,6 +142,9 @@ System.out.println(&quot;userValidation: Yay! currentUser is &quot;+currentUser)
         <drools:onExit-script scriptFormat="http://www.java.com/java">
           <drools:script>System.out.println(&quot;userValidation: Exiting on new User Path with userCode=&quot;+userCode);</drools:script>
         </drools:onExit-script>
+        <drools:metaData name="customAsync">
+          <drools:metaValue><![CDATA[true]]></drools:metaValue>
+        </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_28</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_26</bpmn2:outgoing>

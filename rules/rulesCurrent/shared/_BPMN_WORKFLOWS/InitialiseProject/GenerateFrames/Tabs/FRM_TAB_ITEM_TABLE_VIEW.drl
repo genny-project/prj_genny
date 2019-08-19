@@ -4,6 +4,7 @@ package life.genny.rules;
 
 
 
+
 global org.apache.logging.log4j.Logger log;
 
 import life.genny.qwanda.message.QCmdMessage;
@@ -27,6 +28,7 @@ import org.kie.api.runtime.process.WorkflowProcessInstance;
 import life.genny.models.Frame3;
 import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
+import life.genny.models.ThemePosition;
 
 rule "FRM_TAB_ITEM_TABLE_VIEW"
     ruleflow-group 'GenerateFrames'

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:g="http://www.jboss.org/drools/flow/gpd" xmlns:java="http://www.java.com/javaTypes" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.4.3.Final-v20180418-1358-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:g="http://www.jboss.org/drools/flow/gpd" xmlns:java="http://www.java.com/javaTypes" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.0.Final-v20180515-1642-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
   <bpmn2:itemDefinition id="ItemDefinition_10" isCollection="false" structureRef="java.lang.String"/>
   <bpmn2:itemDefinition id="ItemDefinition_628" isCollection="false" structureRef="org.kie.internal.runtime.StatefulKnowledgeSession"/>
   <bpmn2:itemDefinition id="ItemDefinition_633" isCollection="false" structureRef="org.kie.api.runtime.process.WorkflowProcessInstance"/>
@@ -36,7 +36,7 @@
   <bpmn2:signal id="Signal_8" name="internalSignal"/>
   <bpmn2:signal id="Signal_7" name="#{output.getResultCode()}"/>
   <bpmn2:message id="Message_1" itemRef="ItemDefinition_10" name="message_1"/>
-  <bpmn2:process id="user_session" name="userSession" isExecutable="false" processType="Private">
+  <bpmn2:process id="user_session" tns:adHoc="true" name="userSession" isExecutable="false" processType="Private">
     <bpmn2:extensionElements>
       <tns:import name="org.kie.internal.runtime.StatefulKnowledgeSession"/>
       <tns:import name="org.kie.api.runtime.process.WorkflowProcessInstance"/>
@@ -70,6 +70,7 @@
     <bpmn2:property id="pages" itemSubjectRef="ItemDefinition_10" name="pages"/>
     <bpmn2:property id="output" itemSubjectRef="ItemDefinition_1081" name="output"/>
     <bpmn2:property id="targetPage" itemSubjectRef="ItemDefinition_10" name="targetPage"/>
+    <bpmn2:property id="signalMessage" itemSubjectRef="ItemDefinition_1329" name="signalMessage"/>
     <bpmn2:startEvent id="_1" name="Start">
       <bpmn2:extensionElements>
         <tns:metaData name="elementname">
@@ -123,6 +124,9 @@ kcontext.setVariable(&quot;serviceToken&quot;,((GennyToken)serviceToken));
         <tns:onExit-script scriptFormat="http://www.java.com/java">
           <tns:script>System.out.println(&quot;user_session: Completed user validation workflow&quot;);</tns:script>
         </tns:onExit-script>
+        <tns:metaData name="customAsync">
+          <tns:metaValue><![CDATA[true]]></tns:metaValue>
+        </tns:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_42</bpmn2:outgoing>
@@ -190,7 +194,12 @@ kcontext.setVariable(&quot;serviceToken&quot;,((GennyToken)serviceToken));
           <tns:script>System.out.println(&quot;userSession ::: Starting Authinit&quot;);</tns:script>
         </tns:onEntry-script>
         <tns:onExit-script scriptFormat="http://www.java.com/java">
-          <tns:script>System.out.println(&quot;userSession ::: Ending Authinit with OutputParm=&quot;+output);</tns:script>
+          <tns:script>System.out.println(&quot;userSession ::: Ending Authinit with OutputParm=&quot;+output);
+if (output.getTypeOfResult().equals(&quot;ERROR&quot;)) {
+	System.out.println(&quot;Forcing session to logout&quot;);
+		output.setResultCode(&quot;USER_LOGOUT&quot;);
+		output.setTypeOfResult(&quot;LOGOUT&quot;);
+}</tns:script>
         </tns:onExit-script>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_62</bpmn2:incoming>
@@ -559,7 +568,7 @@ System.out.println(&quot;Rules generated Page code is &quot;+ output.getResultCo
       <bpmn2:dataOutput id="DataOutput_7" name="Signal_4_Output"/>
       <bpmn2:dataOutputAssociation id="DataOutputAssociation_7">
         <bpmn2:sourceRef>DataOutput_7</bpmn2:sourceRef>
-        <bpmn2:targetRef>pages</bpmn2:targetRef>
+        <bpmn2:targetRef>signalMessage</bpmn2:targetRef>
       </bpmn2:dataOutputAssociation>
       <bpmn2:outputSet id="OutputSet_10" name="Output Set 10">
         <bpmn2:dataOutputRefs>DataOutput_7</bpmn2:dataOutputRefs>
@@ -597,6 +606,9 @@ System.out.println(&quot;Rules generated Page code is &quot;+ output.getResultCo
         <tns:metaData name="elementname">
           <tns:metaValue><![CDATA[Process Internal Signal]]></tns:metaValue>
         </tns:metaData>
+        <tns:onEntry-script scriptFormat="http://www.java.com/java">
+          <tns:script>System.out.println(&quot;Internal Signal Rx &quot;);</tns:script>
+        </tns:onEntry-script>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_30</bpmn2:outgoing>
@@ -604,17 +616,14 @@ System.out.println(&quot;Rules generated Page code is &quot;+ output.getResultCo
         <bpmn2:dataInput id="DataInput_19" itemSubjectRef="ItemDefinition_174" name="serviceToken"/>
         <bpmn2:dataInput id="DataInput_20" itemSubjectRef="ItemDefinition_174" name="userToken"/>
         <bpmn2:dataInput id="DataInput_21" name="ruleFlowGroup"/>
-        <bpmn2:dataInput id="DataInput_23" itemSubjectRef="ItemDefinition_10" name="input1"/>
-        <bpmn2:dataOutput id="DataOutput_5" itemSubjectRef="ItemDefinition_10" name="output"/>
+        <bpmn2:dataInput id="DataInput_23" itemSubjectRef="ItemDefinition_1329" name="signalMessage"/>
         <bpmn2:inputSet id="_InputSet_19">
           <bpmn2:dataInputRefs>DataInput_19</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>DataInput_20</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>DataInput_21</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>DataInput_23</bpmn2:dataInputRefs>
         </bpmn2:inputSet>
-        <bpmn2:outputSet id="OutputSet_7" name="Output Set 7">
-          <bpmn2:dataOutputRefs>DataOutput_5</bpmn2:dataOutputRefs>
-        </bpmn2:outputSet>
+        <bpmn2:outputSet id="OutputSet_7" name="Output Set 7"/>
       </bpmn2:ioSpecification>
       <bpmn2:dataInputAssociation id="_DataInputAssociation_96">
         <bpmn2:sourceRef>serviceToken</bpmn2:sourceRef>
@@ -632,13 +641,9 @@ System.out.println(&quot;Rules generated Page code is &quot;+ output.getResultCo
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
       <bpmn2:dataInputAssociation id="DataInputAssociation_12">
-        <bpmn2:sourceRef>pages</bpmn2:sourceRef>
+        <bpmn2:sourceRef>signalMessage</bpmn2:sourceRef>
         <bpmn2:targetRef>DataInput_23</bpmn2:targetRef>
       </bpmn2:dataInputAssociation>
-      <bpmn2:dataOutputAssociation id="DataOutputAssociation_6">
-        <bpmn2:sourceRef>DataOutput_5</bpmn2:sourceRef>
-        <bpmn2:targetRef>pages</bpmn2:targetRef>
-      </bpmn2:dataOutputAssociation>
     </bpmn2:task>
     <bpmn2:sequenceFlow id="SequenceFlow_2" tns:priority="1" sourceRef="BoundaryEvent_2" targetRef="Task_5"/>
     <bpmn2:sequenceFlow id="SequenceFlow_11" tns:priority="1" sourceRef="CallActivity_6" targetRef="ExclusiveGateway_10"/>
@@ -675,7 +680,8 @@ System.out.println(&quot;Rules generated Page code is &quot;+ output.getResultCo
       <bpmn2:script>OutputParam output1 = new OutputParam();
 output1.setFormCode(&quot;FRM_APP&quot;,&quot;FRM_ROOT&quot;);
 kcontext.setVariable(&quot;output&quot;,output1);
-kcontext.setVariable(&quot;targetPage&quot;,&quot;FRM_ROOT&quot;);</bpmn2:script>
+kcontext.setVariable(&quot;targetPage&quot;,&quot;FRM_ROOT&quot;);
+System.out.println(&quot;Set initial Page to &quot;+output1);</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_3" tns:priority="1" sourceRef="ScriptTask_3" targetRef="ScriptTask_1"/>
     <bpmn2:sequenceFlow id="SequenceFlow_4" tns:priority="1" sourceRef="IntermediateThrowEvent_4" targetRef="ExclusiveGateway_22"/>
