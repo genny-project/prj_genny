@@ -16,7 +16,7 @@
   <bpmn2:signal id="Signal_4" name="PER_USER1"/>
   <bpmn2:signal id="Signal_5" name="newUser"/>
   <bpmn2:signal id="Signal_6" name="signalUser"/>
-  <bpmn2:process id="user_validation" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="true" name="userValidation" isExecutable="true">
+  <bpmn2:process id="user_validation" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="userValidation" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.models.GennyToken"/>
       <drools:import name="life.genny.utils.BaseEntityUtils"/>

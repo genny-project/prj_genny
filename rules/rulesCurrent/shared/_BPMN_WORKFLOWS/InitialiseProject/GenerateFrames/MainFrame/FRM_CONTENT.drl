@@ -43,6 +43,8 @@ rule "FRM_CONTENT"
         frameContent.setRealm(serviceToken.getRealm());
         insert (frameContent);
         FrameUtils2.toMessage(frameContent, serviceToken);
+ 
+         System.out.println("   Generate FRM_CONTENT_WRAPPER Rule  "+serviceToken.getUserCode());
                         
         Frame3 frame = Frame3.builder("FRM_CONTENT_WRAPPER")
                       .addTheme("THM_PROJECT_COLOR_BACKGROUND", serviceToken).end()
