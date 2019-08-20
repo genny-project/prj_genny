@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:g="http://www.jboss.org/drools/flow/gpd" xmlns:java="http://www.java.com/javaTypes" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.0.Final-v20180515-1642-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:g="http://www.jboss.org/drools/flow/gpd" xmlns:java="http://www.java.com/javaTypes" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.4.3.Final-v20180418-1358-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
   <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false" structureRef="life.genny.rules.QRules"/>
   <bpmn2:itemDefinition id="ItemDefinition_10" isCollection="false" structureRef="java.lang.String"/>
   <bpmn2:itemDefinition id="ItemDefinition_1014" isCollection="false" structureRef="life.genny.qwanda.entity.BaseEntity"/>
@@ -30,8 +30,9 @@
   <bpmn2:signal id="Signal_8" name="userInSession"/>
   <bpmn2:signal id="Signal_9" name="UserIsInActive"/>
   <bpmn2:signal id="Signal_11" name="newUser"/>
-  <bpmn2:signal id="Signal_12" name="questionCode"/>
+  <bpmn2:signal id="Signal_12" name="internalSignal"/>
   <bpmn2:signal id="Signal_13" name="controlSignal"/>
+  <bpmn2:signal id="Signal_10" name="QUEInternalSignal"/>
   <bpmn2:resource id="Resource_1" name="Resource 1"/>
   <bpmn2:process id="user_lifecycle" tns:adHoc="true" name="userLifecycle" isExecutable="true" processType="Private">
     <bpmn2:extensionElements>
@@ -169,8 +170,8 @@ kcontext.setVariable(&quot;userToken&quot;,userToken);</bpmn2:script>
           <tns:metaValue><![CDATA[Intermediate Throw Event FRAME]]></tns:metaValue>
         </tns:metaData>
       </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_15</bpmn2:outgoing>
+      <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_17</bpmn2:outgoing>
       <bpmn2:dataInput id="DataInput_3" name="event"/>
       <bpmn2:dataInputAssociation id="DataInputAssociation_2">
         <bpmn2:sourceRef>QUEcode</bpmn2:sourceRef>
@@ -187,7 +188,7 @@ kcontext.setVariable(&quot;userToken&quot;,userToken);</bpmn2:script>
           <tns:metaValue><![CDATA[Sub Process 2]]></tns:metaValue>
         </tns:metaData>
       </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_15</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_17</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_32</bpmn2:outgoing>
       <bpmn2:startEvent id="StartEvent_2" name="Start Event 2">
         <bpmn2:extensionElements>
@@ -328,7 +329,6 @@ kcontext.setVariable(&quot;userToken&quot;,userToken);</bpmn2:script>
       <bpmn2:sequenceFlow id="SequenceFlow_35" tns:priority="1" sourceRef="StartEvent_2" targetRef="ExclusiveGateway_7"/>
       <bpmn2:sequenceFlow id="SequenceFlow_36" tns:priority="1" sourceRef="IntermediateCatchEvent_2" targetRef="ExclusiveGateway_2"/>
     </bpmn2:subProcess>
-    <bpmn2:sequenceFlow id="SequenceFlow_15" tns:priority="1" sourceRef="IntermediateThrowEvent_1" targetRef="SubProcess_2"/>
     <bpmn2:sequenceFlow id="SequenceFlow_32" tns:priority="1" sourceRef="SubProcess_2" targetRef="ScriptTask_12"/>
     <bpmn2:boundaryEvent id="BoundaryEvent_5" name="userSessionTimeout" attachedToRef="SubProcess_2">
       <bpmn2:extensionElements>
@@ -349,7 +349,7 @@ kcontext.setVariable(&quot;userToken&quot;,userToken);</bpmn2:script>
         </tns:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
       <bpmn2:ioSpecification id="InputOutputSpecification_1">
         <bpmn2:dataInput id="DataInput_1" itemSubjectRef="ItemDefinition_201" name="gennyToken"/>
         <bpmn2:dataInput id="DataInput_2" itemSubjectRef="ItemDefinition_1014" name="payloadObject"/>
@@ -384,7 +384,21 @@ kcontext.setVariable(&quot;userToken&quot;,userToken);</bpmn2:script>
       </bpmn2:dataInputAssociation>
     </bpmn2:task>
     <bpmn2:sequenceFlow id="SequenceFlow_1" tns:priority="1" sourceRef="ScriptTask_2" targetRef="Task_1"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_2" tns:priority="1" sourceRef="Task_1" targetRef="IntermediateThrowEvent_1"/>
+    <bpmn2:scriptTask id="ScriptTask_5" name="ThrowQuestionCode" scriptFormat="http://www.java.com/java">
+      <bpmn2:extensionElements>
+        <tns:metaData name="elementname">
+          <tns:metaValue><![CDATA[ThrowQuestionCode]]></tns:metaValue>
+        </tns:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
+      <bpmn2:script>QUEcode = &quot;QUE_USER_PROFILE_GRP&quot;;
+System.out.println(&quot;ThrowQuestionCode:: &quot; + QUEcode);
+kcontext.setVariable(&quot;QUEcode&quot;, QUEcode);</bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_3" tns:priority="1" sourceRef="Task_1" targetRef="ScriptTask_5"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_6" tns:priority="1" sourceRef="ScriptTask_5" targetRef="IntermediateThrowEvent_1"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_17" tns:priority="1" sourceRef="IntermediateThrowEvent_1" targetRef="SubProcess_2"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="user_lifecycle">
@@ -479,9 +493,9 @@ kcontext.setVariable(&quot;userToken&quot;,userToken);</bpmn2:script>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_IntermediateThrowEvent_1" bpmnElement="IntermediateThrowEvent_1">
-        <dc:Bounds height="36.0" width="36.0" x="651.0" y="20.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="820.0" y="20.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_12">
-          <dc:Bounds height="33.0" width="56.0" x="641.0" y="56.0"/>
+          <dc:Bounds height="33.0" width="56.0" x="810.0" y="56.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_1" bpmnElement="StartEvent_2">
@@ -527,9 +541,15 @@ kcontext.setVariable(&quot;userToken&quot;,userToken);</bpmn2:script>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_1" bpmnElement="Task_1" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="455.0" y="15.0"/>
+        <dc:Bounds height="50.0" width="110.0" x="480.0" y="13.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_2">
-          <dc:Bounds height="11.0" width="83.0" x="468.0" y="34.0"/>
+          <dc:Bounds height="11.0" width="83.0" x="493.0" y="32.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_5" bpmnElement="ScriptTask_5" isExpanded="true">
+        <dc:Bounds height="50.0" width="110.0" x="649.0" y="13.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="11.0" width="83.0" x="662.0" y="32.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="SequenceFlow_4" sourceElement="BPMNShape_StartEvent_2" targetElement="BPMNShape_ScriptTask_1">
@@ -611,13 +631,6 @@ kcontext.setVariable(&quot;userToken&quot;,userToken);</bpmn2:script>
         <di:waypoint xsi:type="dc:Point" x="975.0" y="407.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_32"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_15" bpmnElement="SequenceFlow_15" sourceElement="BPMNShape_IntermediateThrowEvent_1" targetElement="BPMNShape_SubProcess_2">
-        <di:waypoint xsi:type="dc:Point" x="669.0" y="56.0"/>
-        <di:waypoint xsi:type="dc:Point" x="669.0" y="111.0"/>
-        <di:waypoint xsi:type="dc:Point" x="595.0" y="111.0"/>
-        <di:waypoint xsi:type="dc:Point" x="595.0" y="220.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_33"/>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_20" bpmnElement="SequenceFlow_20" sourceElement="BPMNShape_ExclusiveGateway_9" targetElement="BPMNShape_ExclusiveGateway_3">
         <di:waypoint xsi:type="dc:Point" x="1000.0" y="432.0"/>
         <di:waypoint xsi:type="dc:Point" x="1023.0" y="432.0"/>
@@ -690,17 +703,28 @@ kcontext.setVariable(&quot;userToken&quot;,userToken);</bpmn2:script>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="BPMNShape_ScriptTask_3" targetElement="BPMNShape_Task_1">
         <di:waypoint xsi:type="dc:Point" x="425.0" y="37.0"/>
-        <di:waypoint xsi:type="dc:Point" x="440.0" y="37.0"/>
-        <di:waypoint xsi:type="dc:Point" x="440.0" y="40.0"/>
-        <di:waypoint xsi:type="dc:Point" x="455.0" y="40.0"/>
+        <di:waypoint xsi:type="dc:Point" x="452.0" y="37.0"/>
+        <di:waypoint xsi:type="dc:Point" x="480.0" y="38.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_24"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_IntermediateThrowEvent_1">
-        <di:waypoint xsi:type="dc:Point" x="565.0" y="40.0"/>
-        <di:waypoint xsi:type="dc:Point" x="608.0" y="40.0"/>
-        <di:waypoint xsi:type="dc:Point" x="608.0" y="38.0"/>
-        <di:waypoint xsi:type="dc:Point" x="651.0" y="38.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_44"/>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_ScriptTask_5">
+        <di:waypoint xsi:type="dc:Point" x="590.0" y="38.0"/>
+        <di:waypoint xsi:type="dc:Point" x="619.0" y="38.0"/>
+        <di:waypoint xsi:type="dc:Point" x="649.0" y="38.0"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="BPMNShape_ScriptTask_5" targetElement="BPMNShape_IntermediateThrowEvent_1">
+        <di:waypoint xsi:type="dc:Point" x="759.0" y="38.0"/>
+        <di:waypoint xsi:type="dc:Point" x="789.0" y="38.0"/>
+        <di:waypoint xsi:type="dc:Point" x="820.0" y="38.0"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_17" bpmnElement="SequenceFlow_17" sourceElement="BPMNShape_IntermediateThrowEvent_1" targetElement="BPMNShape_SubProcess_2">
+        <di:waypoint xsi:type="dc:Point" x="838.0" y="56.0"/>
+        <di:waypoint xsi:type="dc:Point" x="838.0" y="138.0"/>
+        <di:waypoint xsi:type="dc:Point" x="595.0" y="138.0"/>
+        <di:waypoint xsi:type="dc:Point" x="595.0" y="220.0"/>
+        <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">

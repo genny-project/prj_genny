@@ -70,6 +70,7 @@
     <bpmn2:property id="pages" itemSubjectRef="ItemDefinition_10" name="pages"/>
     <bpmn2:property id="output" itemSubjectRef="ItemDefinition_1081" name="output"/>
     <bpmn2:property id="targetPage" itemSubjectRef="ItemDefinition_10" name="targetPage"/>
+    <bpmn2:property id="QUEcode" itemSubjectRef="ItemDefinition_10" name="QUEcode"/>
     <bpmn2:startEvent id="_1" name="Start">
       <bpmn2:extensionElements>
         <tns:metaData name="elementname">
@@ -555,11 +556,11 @@ System.out.println(&quot;Rules generated Page code is &quot;+ output.getResultCo
           <tns:metaValue><![CDATA[internal Signal]]></tns:metaValue>
         </tns:metaData>
       </bpmn2:extensionElements>
-      <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_23</bpmn2:outgoing>
       <bpmn2:dataOutput id="DataOutput_7" name="Signal_4_Output"/>
       <bpmn2:dataOutputAssociation id="DataOutputAssociation_7">
         <bpmn2:sourceRef>DataOutput_7</bpmn2:sourceRef>
-        <bpmn2:targetRef>pages</bpmn2:targetRef>
+        <bpmn2:targetRef>QUEcode</bpmn2:targetRef>
       </bpmn2:dataOutputAssociation>
       <bpmn2:outputSet id="OutputSet_10" name="Output Set 10">
         <bpmn2:dataOutputRefs>DataOutput_7</bpmn2:dataOutputRefs>
@@ -597,8 +598,11 @@ System.out.println(&quot;Rules generated Page code is &quot;+ output.getResultCo
         <tns:metaData name="elementname">
           <tns:metaValue><![CDATA[Process Internal Signal]]></tns:metaValue>
         </tns:metaData>
+        <tns:onEntry-script scriptFormat="http://www.java.com/java">
+          <tns:script>System.out.println(&quot;QUEcode:: &quot; + QUEcode);</tns:script>
+        </tns:onEntry-script>
       </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_23</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_30</bpmn2:outgoing>
       <bpmn2:ioSpecification id="InputOutputSpecification_6">
         <bpmn2:dataInput id="DataInput_19" itemSubjectRef="ItemDefinition_174" name="serviceToken"/>
@@ -640,7 +644,6 @@ System.out.println(&quot;Rules generated Page code is &quot;+ output.getResultCo
         <bpmn2:targetRef>pages</bpmn2:targetRef>
       </bpmn2:dataOutputAssociation>
     </bpmn2:task>
-    <bpmn2:sequenceFlow id="SequenceFlow_2" tns:priority="1" sourceRef="BoundaryEvent_2" targetRef="Task_5"/>
     <bpmn2:sequenceFlow id="SequenceFlow_11" tns:priority="1" sourceRef="CallActivity_6" targetRef="ExclusiveGateway_10"/>
     <bpmn2:intermediateThrowEvent id="IntermediateThrowEvent_4" name="Internal Signal">
       <bpmn2:extensionElements>
@@ -691,6 +694,7 @@ kcontext.setVariable(&quot;targetPage&quot;,&quot;FRM_ROOT&quot;);</bpmn2:script
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_5" tns:priority="1" sourceRef="ExclusiveGateway_10" targetRef="ScriptTask_5"/>
     <bpmn2:sequenceFlow id="SequenceFlow_17" tns:priority="1" sourceRef="ScriptTask_5" targetRef="ExclusiveGateway_21"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_23" tns:priority="1" sourceRef="BoundaryEvent_2" targetRef="Task_5"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="user_session">
@@ -1058,12 +1062,6 @@ kcontext.setVariable(&quot;targetPage&quot;,&quot;FRM_ROOT&quot;);</bpmn2:script
         <di:waypoint xsi:type="dc:Point" x="530.0" y="502.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_35"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_BoundaryEvent_2" targetElement="BPMNShape_Task_5">
-        <di:waypoint xsi:type="dc:Point" x="793.0" y="168.0"/>
-        <di:waypoint xsi:type="dc:Point" x="793.0" y="149.0"/>
-        <di:waypoint xsi:type="dc:Point" x="793.0" y="130.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_8"/>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_11" bpmnElement="SequenceFlow_11" sourceElement="BPMNShape_CallActivity_6" targetElement="BPMNShape_ExclusiveGateway_10">
         <di:waypoint xsi:type="dc:Point" x="303.0" y="415.0"/>
         <di:waypoint xsi:type="dc:Point" x="303.0" y="527.0"/>
@@ -1109,6 +1107,12 @@ kcontext.setVariable(&quot;targetPage&quot;,&quot;FRM_ROOT&quot;);</bpmn2:script
         <di:waypoint xsi:type="dc:Point" x="664.0" y="527.0"/>
         <di:waypoint xsi:type="dc:Point" x="680.0" y="527.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_48"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_23" bpmnElement="SequenceFlow_23" sourceElement="BPMNShape_BoundaryEvent_2" targetElement="BPMNShape_Task_5">
+        <di:waypoint xsi:type="dc:Point" x="793.0" y="168.0"/>
+        <di:waypoint xsi:type="dc:Point" x="793.0" y="149.0"/>
+        <di:waypoint xsi:type="dc:Point" x="793.0" y="130.0"/>
+        <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
