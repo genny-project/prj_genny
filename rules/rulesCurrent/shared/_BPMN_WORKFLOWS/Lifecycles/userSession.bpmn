@@ -124,9 +124,6 @@ kcontext.setVariable(&quot;serviceToken&quot;,((GennyToken)serviceToken));
         <tns:onExit-script scriptFormat="http://www.java.com/java">
           <tns:script>System.out.println(&quot;user_session: Completed user validation workflow&quot;);</tns:script>
         </tns:onExit-script>
-        <tns:metaData name="customAsync">
-          <tns:metaValue><![CDATA[false]]></tns:metaValue>
-        </tns:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_42</bpmn2:outgoing>
@@ -679,6 +676,7 @@ System.out.println(&quot;Rules generated Page code is &quot;+ output.getResultCo
       <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
       <bpmn2:script>OutputParam output1 = new OutputParam();
 output1.setFormCode(&quot;FRM_APP&quot;,&quot;FRM_ROOT&quot;);
+/* output1.setFormCode(&quot;FRM_QUE_DASHBOARD_VIEW&quot;,&quot;FRM_CONTENT&quot;); */
 kcontext.setVariable(&quot;output&quot;,output1);
 kcontext.setVariable(&quot;targetPage&quot;,&quot;FRM_ROOT&quot;);
 System.out.println(&quot;Set initial Page to &quot;+output1);</bpmn2:script>
