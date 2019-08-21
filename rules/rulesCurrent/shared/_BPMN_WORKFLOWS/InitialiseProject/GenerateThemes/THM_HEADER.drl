@@ -40,7 +40,7 @@ rule "THM_HEADER"
 			Theme theme = Theme.builder("THM_HEADER")
 										.addAttribute()
 											.height(80)
-											.paddingX(20)
+											.paddingRight(20)
 										.end()
 										.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
 										.build();  
