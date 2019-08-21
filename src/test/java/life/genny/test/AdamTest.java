@@ -140,15 +140,15 @@ public class AdamTest {
 
 			gks.injectEvent(authInitMsg1); // This should create a new process
 			gks.advanceSeconds(5, false);
-			gks.injectEvent(authInitMsg2); // This should create a new process
+//			gks.injectEvent(authInitMsg2); // This should create a new process
 			gks.advanceSeconds(5, false);
-			gks.injectEvent(authInitMsg1); // This should create a new process
+			gks.injectEvent(authInitMsg1); // This should attach to existing process
 			gks.advanceSeconds(5, false);
 
-			gks.injectEvent(answerMsg); // This should create a new process
+			gks.injectEvent(answerMsg); // This sends an answer to the first userSessio
 			gks.advanceSeconds(5, false);
 			gks.injectEvent(msgLogout1);
-			gks.injectEvent(msgLogout2);
+//			gks.injectEvent(msgLogout2);
 		} catch (Exception e) {
 			e.printStackTrace();
 			

@@ -56,6 +56,7 @@ import com.google.gson.reflect.TypeToken;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import io.vertx.core.json.JsonObject;
+import life.genny.jbpm.customworkitemhandlers.AskQuestionWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.AwesomeHandler;
 import life.genny.jbpm.customworkitemhandlers.NotificationWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.PrintWorkItemHandler;
@@ -80,6 +81,7 @@ import life.genny.rules.listeners.GennyAgendaEventListener;
 import life.genny.rules.listeners.JbpmInitListener;
 import life.genny.utils.RulesUtils;
 import life.genny.utils.VertxUtils;
+import life.genny.utils.WorkflowQueryInterface;
 
 public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoCloseable {
 
@@ -481,6 +483,8 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		kieSession.getWorkItemManager().registerWorkItemHandler("RuleFlowGroup", new RuleFlowGroupWorkItemHandler(kieSession,rteng));
 		kieSession.getWorkItemManager().registerWorkItemHandler("ThrowSignalProcess",
 				new ThrowSignalProcessWorkItemHandler(kieSession,rteng));
+		kieSession.getWorkItemManager().registerWorkItemHandler("AskQuestion",
+				new AskQuestionWorkItemHandler(GennyKieSession.class,kieSession,rteng));
 
 
 		if (workItemHandlers != null) {
@@ -835,6 +839,12 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	
+	public static Optional<Long> getProcessIdBySessionId(String sessionId) {
+		// TODO Auto-generated method stub
+		return GennyKieSession.getProcessIdBysessionId(sessionId);
 	}
 
 }

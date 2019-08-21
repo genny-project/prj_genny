@@ -329,6 +329,9 @@ kcontext.setVariable(&quot;userToken&quot;,userToken);</bpmn2:script>
         <tns:metaData name="elementname">
           <tns:metaValue><![CDATA[ThrowSignalProcess]]></tns:metaValue>
         </tns:metaData>
+        <tns:metaData name="customAsync">
+          <tns:metaValue><![CDATA[true]]></tns:metaValue>
+        </tns:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
