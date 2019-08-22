@@ -44,7 +44,7 @@ rule "THM_FORM_VCL_INPUT_GENNY"
 										.end()
 										.addAttribute(ThemeAttributeType.PRI_CONTENT_HOVER).borderColor("#aaa").end()
 										.addAttribute(ThemeAttributeType.PRI_CONTENT_ACTIVE).borderColor("green").end()
-										.addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).borderColor("red").color("red").end()
+										.addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).borderColor("red").end()
 									.build();
                         
 		theme.setRealm(serviceToken.getRealm());

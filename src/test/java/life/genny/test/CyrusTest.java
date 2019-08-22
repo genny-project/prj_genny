@@ -94,7 +94,6 @@ public class CyrusTest extends GennyJbpmBaseTest {
 
 			Theme THM_FORM_BEHAVIOUR_GENNY= Theme.builder("THM_FORM_BEHAVIOUR_GENNY")
 				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_LABEL, true).end()
-				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION, true).end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_REQUIRED, true).end()
 				.addAttribute(ThemeAttributeType.PRI_HAS_ICON, true).end()
@@ -126,8 +125,8 @@ public class CyrusTest extends GennyJbpmBaseTest {
 					.shadowOpacity(1.0)
 					.shadowRadius(5)
 				.end()
-				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
-				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION, true).end()
+				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, false).end()
+				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION, false).end()
 				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
 
 		/*Theme THM_BUTTONS = Theme.builder("THM_BUTTONS").addAttribute().backgroundColor("#ffffff").padding(10)
@@ -182,7 +181,7 @@ public class CyrusTest extends GennyJbpmBaseTest {
 					.addTheme(THM_FORM_VCL_LABEL_GENNY).vcl(VisualControlType.VCL_LABEL).end()
 					.addTheme(THM_FORM_VCL_WRAPPER_GENNY).vcl(VisualControlType.VCL_WRAPPER).end()
 					.addTheme(THM_FORM_VCL_ERROR_GENNY).vcl(VisualControlType.VCL_ERROR).end()
-					.addTheme(THM_FORM_BEHAVIOUR_GENNY).weight(3.0).end()
+					.addTheme(THM_FORM_BEHAVIOUR_GENNY).vcl(VisualControlType.GROUP_WRAPPER).weight(3.0).end()
 					.addTheme(THM_FORM_GROUP_LABEL_GENNY).vcl(VisualControlType.GROUP_LABEL).weight(3.0).end()
 					.addTheme(THM_BACKGROUND_NONE).weight(3.0).end()
 					.addTheme(THM_FORM_GROUP_WRAPPER_GENNY).vcl(VisualControlType.GROUP_WRAPPER).weight(3.0).end()
