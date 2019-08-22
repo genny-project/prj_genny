@@ -112,7 +112,7 @@ public class AdamTest {
 		QDataAnswerMessage answerMsg = new QDataAnswerMessage(answers.toArray(new Answer[0]));
 		answerMsg.setToken(userToken.getToken());
 	
-		Answer searchBarAnswer = new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_SEARCH_TEXT", "Phantom");
+		Answer searchBarAnswer = new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_SEARCH_TEXT2", "Phantom");
 		QDataAnswerMessage searchMsg = new QDataAnswerMessage(searchBarAnswer);
 		searchMsg.setToken(userToken.getToken());
 
@@ -135,6 +135,7 @@ public class AdamTest {
 					.addDrl("DataProcessing")
 					.addDrl("EventProcessing")
 					.addDrl("InitialiseProject")
+					.addDrl("XXXPRI_SEARCH_TEXT2.drl")
 					.addJbpm("InitialiseProject")
 					.addJbpm("Lifecycles")
 					.addDrl("AuthInit")
