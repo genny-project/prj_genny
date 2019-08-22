@@ -142,9 +142,6 @@ System.out.println(&quot;userValidation: Yay! currentUser is &quot;+currentUser)
         <drools:onExit-script scriptFormat="http://www.java.com/java">
           <drools:script>System.out.println(&quot;userValidation: Exiting on new User Path with userCode=&quot;+userCode);</drools:script>
         </drools:onExit-script>
-        <drools:metaData name="customAsync">
-          <drools:metaValue><![CDATA[true]]></drools:metaValue>
-        </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_28</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_26</bpmn2:outgoing>
