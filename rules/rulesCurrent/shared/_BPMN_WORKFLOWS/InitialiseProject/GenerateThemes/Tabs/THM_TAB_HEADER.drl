@@ -42,7 +42,7 @@ rule "THM_TAB_HEADER"
 
 		  Theme theme = Theme.builder("THM_TAB_HEADER")
                   .addAttribute()
-                    /* .backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E")) */
+                    .backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E"))
                     .flexDirection("row")
                   .end()
                   .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
