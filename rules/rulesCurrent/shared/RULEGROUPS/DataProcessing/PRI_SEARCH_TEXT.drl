@@ -1,0 +1,58 @@
+package life.genny.rules;
+import life.genny.qwanda.message.QDataAnswerMessage;
+import life.genny.models.GennyToken;
+import life.genny.rules.QRules;
+import life.genny.utils.BaseEntityUtils;
+import life.genny.qwanda.Answer;
+import io.vertx.core.json.JsonObject;
+import java.util.Map;
+import java.util.HashMap;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import com.google.gson.reflect.TypeToken;
+import life.genny.qwandautils.JsonUtils;
+import life.genny.utils.VertxUtils;
+
+
+import java.util.List;
+import java.util.ArrayList;
+
+rule "PRI_SEARCH_TEXT"
+    ruleflow-group 'AnswerProcessing'
+        salience 500 
+    when
+      beUtils : BaseEntityUtils()
+	  serviceToken : GennyToken( code == "PER_SERVICE") 
+	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" )
+     then
+ 		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
+		String sourceCode = beUtils.getGennyToken().getUserCode();
+		String targetCode = answer.getTargetCode();
+		
+		/* Perform a search bar search */
+		String searchBarString = answer.getValue();
+		searchBarString = searchBarString.trim();
+		System.out.println("Search text = ["+searchBarString+"]");
+		
+		/* fetch Session SearchBar List from User */
+		BaseEntity user = VertxUtils.getObject(serviceToken.getRealm(), "", beUtils.getGennyToken().getUserCode(),
+				BaseEntity.class, serviceToken.getToken());
+		Type type = new TypeToken<List<String>>() {
+				}.getType();
+		List<String> defaultList = new ArrayList<String>();
+		String defaultListString = JsonUtils.toJson(defaultList);
+		String historyStr = user.getValue("PRI_SEARCH_HISTORY",defaultListString);
+		List<String> searchHistory = JsonUtils.fromJson(historyStr, type);
+		
+		/* Add new SearchBarString to Session SearchBar List */
+		searchHistory.add(0, searchBarString);
+		String newHistoryString = JsonUtils.toJson(searchHistory);
+		Answer history = new Answer(beUtils.getGennyToken().getUserCode(),beUtils.getGennyToken().getUserCode(),"PRI_SEARCH_HISTORY",newHistoryString);
+		beUtils.saveAnswer(history);
+		
+		/* Look up Search */
+		
+		retract(answer);
+	
+end

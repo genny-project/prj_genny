@@ -174,7 +174,10 @@ kcontext.setVariable(&quot;serviceToken&quot;,((GennyToken)serviceToken));
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_20</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_19</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;userSession: **************************End Session ****************************&quot;);</bpmn2:script>
+      <bpmn2:script>
+System.out.println(&quot;userSession: Aggregate SearchBar terms into userAccount&quot;);
+System.out.println(&quot;userSession: Aggregate Session Times terms into userAccount History&quot;);
+System.out.println(&quot;userSession: **************************End Session ****************************&quot;);</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_20" tns:priority="1" sourceRef="IntermediateThrowEvent_1" targetRef="ScriptTask_2"/>
     <bpmn2:exclusiveGateway id="ExclusiveGateway_6" name="go to event type check?" gatewayDirection="Converging">

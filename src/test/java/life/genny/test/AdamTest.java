@@ -111,14 +111,21 @@ public class AdamTest {
 		
 		QDataAnswerMessage answerMsg = new QDataAnswerMessage(answers.toArray(new Answer[0]));
 		answerMsg.setToken(userToken.getToken());
-		
+	
+		Answer searchBarAnswer = new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_SEARCH_TEXT", "Phantom");
+		QDataAnswerMessage searchMsg = new QDataAnswerMessage(searchBarAnswer);
+		searchMsg.setToken(userToken.getToken());
+
 		// NOW SET UP Some baseentitys
 		BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
 				StringUtils.capitaliseAllWords(serviceToken.getRealm()));
 		project.setRealm(serviceToken.getRealm());
 		VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
 				JsonUtils.toJson(project), serviceToken.getToken());
-		
+		VertxUtils.writeCachedJson(realm,  ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(),JsonUtils.toJson(project), serviceToken.getToken());
+		 BaseEntity project2 = VertxUtils.getObject(serviceToken.getRealm(), "", "PRJ_" + serviceToken.getRealm().toUpperCase(),
+				BaseEntity.class, serviceToken.getToken());
+
 
 		GennyKieSession gks = null;
 
@@ -147,6 +154,14 @@ public class AdamTest {
 
 			gks.injectEvent(answerMsg); // This sends an answer to the first userSessio
 			gks.advanceSeconds(5, false);
+			
+			BaseEntity user = VertxUtils.getObject(serviceToken.getRealm(), "", userToken.getUserCode(),
+					BaseEntity.class, serviceToken.getToken());
+
+			gks.injectEvent(searchMsg); // This sends a search bar request
+			
+			
+			
 			gks.injectEvent(msgLogout1);
 //			gks.injectEvent(msgLogout2);
 		} catch (Exception e) {

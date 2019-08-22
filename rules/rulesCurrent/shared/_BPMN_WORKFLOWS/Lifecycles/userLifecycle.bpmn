@@ -78,7 +78,7 @@ newUser = beUtils.create(((GennyToken)userToken).getUserCode(), ((GennyToken)use
 kcontext.setVariable(&quot;newUser&quot;,newUser);
 
 kcontext.setVariable(&quot;userCode&quot;, ((GennyToken)userToken).getUserCode());
-VertxUtils.putObject(((GennyToken)userToken).getRealm(), &quot;&quot;, ((GennyToken)userToken).getUserCode(), JsonUtils.toJson(newUser), ((GennyToken)userToken).getToken());
+
 System.out.println(&quot;userlifeCycle: New User Created: &quot; + newUser+&quot; now sendng to channel callback :[&quot;+((GennyToken)userToken).getUserCode()+&quot;]&quot; );
 System.out.println(&quot;userLifeCycle:callingProcessId=: &quot;+callingProcessId);</bpmn2:script>
     </bpmn2:scriptTask>
@@ -671,7 +671,7 @@ kcontext.setVariable(&quot;userToken&quot;,userToken);</bpmn2:script>
         <di:waypoint xsi:type="dc:Point" x="565.0" y="40.0"/>
         <di:waypoint xsi:type="dc:Point" x="595.0" y="40.0"/>
         <di:waypoint xsi:type="dc:Point" x="595.0" y="220.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_12"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
