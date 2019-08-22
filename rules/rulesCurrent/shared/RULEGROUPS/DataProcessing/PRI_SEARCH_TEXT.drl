@@ -13,6 +13,7 @@ import java.util.List;
 import com.google.gson.reflect.TypeToken;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.utils.VertxUtils;
+import life.genny.utils.TableUtilsTest;
 
 
 import java.util.List;
@@ -25,6 +26,8 @@ rule "PRI_SEARCH_TEXT"
       beUtils : BaseEntityUtils()
 	  serviceToken : GennyToken( code == "PER_SERVICE") 
 	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" )
+	  output : OutputParam( )
+	  
      then
  		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
 		String sourceCode = beUtils.getGennyToken().getUserCode();
@@ -36,8 +39,8 @@ rule "PRI_SEARCH_TEXT"
 		System.out.println("Search text = ["+searchBarString+"]");
 		
 		/* fetch Session SearchBar List from User */
-		BaseEntity user = VertxUtils.getObject(serviceToken.getRealm(), "", beUtils.getGennyToken().getUserCode(),
-				BaseEntity.class, serviceToken.getToken());
+		BaseEntity user = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", beUtils.getGennyToken().getUserCode(),
+				BaseEntity.class, beUtils.getGennyToken().getToken());
 		Type type = new TypeToken<List<String>>() {
 				}.getType();
 		List<String> defaultList = new ArrayList<String>();
@@ -52,7 +55,20 @@ rule "PRI_SEARCH_TEXT"
 		beUtils.saveAnswer(history);
 		
 		/* Look up Search */
-		
+		  SearchEntity searchBE = new SearchEntity("SBE_SEARCH","Search")
+  	     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
+  	     .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%"+searchBarString+"%")
+  	     .setPageStart(0)
+  	     .setPageSize(10);
+  	     
+  	     
+  	     QDataBaseEntityMessage  msg = TableUtilsTest.fetchSearchResults(searchBE,beUtils.getGennyToken());
+  	     
+  	     TableUtilsTest.sendQuestions(searchBE,beUtils.getGennyToken(),  msg);
+  	     
+  	     output.setFormCode("FRM_TABLE_VIEW","FRM_CONTENT");
+  	     
+  	     
 		retract(answer);
 	
 end
