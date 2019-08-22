@@ -38,12 +38,13 @@ rule "FRM_HEADER_PROFILE_PICTURE"
     Frame3 frame = Frame3.builder("FRM_HEADER_PROFILE_PICTURE")
                   .addTheme("THM_PANEL_CONTENT_FIT", ThemePosition.WRAPPER, serviceToken).end()
                   .addTheme("THM_PADDING_RIGHT_10", ThemePosition.WRAPPER, serviceToken).end()
+                  /* .addTheme("THM_BORDER_RADIUS_50",ThemePosition.VCL_WRAPPER serviceToken).end() */
                   .question("QUE_IMAGE_URL")
                     .addTheme("THM_HEADER_PROFILE_PICTURE", serviceToken)
                     .vcl(VisualControlType.VCL_INPUT)
                     .end()
                     .addTheme("THM_BORDER_RADIUS_50", serviceToken)
-                    .vcl(VisualControlType.VCL)
+                    .vcl(VisualControlType.INPUT_FIELD)
                     .end()
                   .end()
                   .build();

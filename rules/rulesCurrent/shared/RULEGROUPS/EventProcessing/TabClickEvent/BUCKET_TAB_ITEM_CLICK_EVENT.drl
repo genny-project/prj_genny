@@ -14,7 +14,10 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
     no-loop
     when
     	
-		$message : QEventMessage(data.code matches "QUE_.*" && (data.parentCode == "QUE_TAB_BUCKET_VIEW" || data.parentCode == "QUE_TAB_DETAIL_VIEW" || data.parentCode == "QUE_TAB_TABLE_VIEW"))	
+		$message : QEventMessage(data.code matches "QUE_.*" && 
+							(	data.parentCode == "QUE_TAB_BUCKET_VIEW" || 
+								data.parentCode == "QUE_TAB_DETAIL_VIEW" || 
+								data.parentCode == "QUE_TAB_TABLE_VIEW") )	
 		userToken : GennyToken (code != "PER_SERVICE" )
 		output : OutputParam( )
     then
@@ -22,7 +25,17 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 		System.out.println("Processing Answer/Data : " + $message );
 		System.out.println("Parent code :  " + $message.getData().getParentCode());
 		
-		output.setFormCode("FRM_"+ $message.getData().getCode(),"FRM_CONTENT");	
+		switch($message.getData().getCode()){
+
+			case "QUE_TAB_BUCKET_VIEW" : output.setFormCode("FRM_BUCKET","FRM_TAB_CONTENT"); break;
+
+			case "QUE_TAB_DETAIL_VIEW" : output.setFormCode("FRM_DETAIL_VIEW","FRM_TAB_CONTENT"); break;
+
+			case "QUE_TAB_TABLE_VIEW" : output.setFormCode("FRM_TABLE_VIEW","FRM_TAB_CONTENT"); break;
+
+			default : output.setFormCode("FRM_QUE_DASHBOARD_VIEW","FRM_CONTENT");	break;
+		}
+		
 		
 		retract( $message);
 end

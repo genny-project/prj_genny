@@ -44,6 +44,7 @@ rule "FRM_HEADER_OPTIONS"
                       .addTheme("THM_DROPDOWN_HEADER_WRAPPER_GENNY", serviceToken).vcl(VisualControlType.GROUP_HEADER_WRAPPER).weight(2.0).end()
                       .addTheme("THM_DROPDOWN_GROUP_LABEL_GENNY", serviceToken).vcl(VisualControlType.GROUP_LABEL).end()
                       .addTheme("THM_DROPDOWN_CONTENT_WRAPPER_GENNY", serviceToken).vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end()
+                      .addTheme("THM_PROJECT_COLOR_SURFACE", serviceToken).vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end()                      
                       .addTheme("THM_BOX_SHADOW_SM", serviceToken).vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end()
                       .addTheme("THM_DROPDOWN_VCL_GENNY", serviceToken).vcl(VisualControlType.VCL).end()
                     .end()

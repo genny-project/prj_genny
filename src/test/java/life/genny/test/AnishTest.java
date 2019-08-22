@@ -409,7 +409,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                         rules.sendAllAttributes();
 
                         /* frame-tabs */
-                        // Frame3 FRM_TABS = generateTabs();
+                         Frame3 FRM_TABS = generateTabs();
 
                         /* frame-header */
                         Frame3 FRM_HEADER = generateHeader();
@@ -437,7 +437,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                                         .addTheme("THM_PROJECT", ThemePosition.FRAME, serviceToken).end()
                                         .addFrame(FRM_HEADER, FramePosition.NORTH).end()
                                         .addFrame(FRM_SIDEBAR, FramePosition.WEST).end()
-                                        // .addFrame(FRM_TABS, FramePosition.CENTRE).end()
+                                         .addFrame(FRM_TABS, FramePosition.CENTRE).end()
                                         .addFrame(FRM_CONTENT, FramePosition.CENTRE).end()
                                         .addFrame(FRM_FOOTER, FramePosition.SOUTH).end().build();
                         /* frame-root */
@@ -666,7 +666,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                                                 .addTheme(THM_PADDING_RIGHT_10, ThemePosition.WRAPPER).end()
                                                 .question("QUE_IMAGE_URL")
                                                         .addTheme(THM_HEADER_PROFILE_PICTURE).vcl(VisualControlType.VCL_INPUT).end()
-                                                        .addTheme(THM_BORDER_RADIUS_50).vcl(VisualControlType.VCL).end()
+                                                        .addTheme(THM_BORDER_RADIUS_50).vcl(VisualControlType.INPUT_FIELD).end()
                                                 .end()
                                                 .build();
 
