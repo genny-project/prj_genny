@@ -74,6 +74,7 @@ rule "FRM_FORM"
 									.addTheme("THM_FORM_GROUP_LABEL_GENNY", serviceToken).vcl(VisualControlType.GROUP_LABEL).weight(3.0).end()
 									.addTheme("THM_BACKGROUND_NONE", serviceToken).weight(3.0).end()
 									.addTheme("THM_FORM_GROUP_WRAPPER_GENNY", serviceToken).vcl(VisualControlType.GROUP_WRAPPER).weight(3.0).end()
+									.addTheme("THM_PROJECT_COLOR_SURFACE", serviceToken).vcl(VisualControlType.INPUT_ITEM_WRAPPER).end()
 								.end()
 							.build();
 					
