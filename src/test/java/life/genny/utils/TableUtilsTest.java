@@ -320,7 +320,7 @@ public class TableUtilsTest {
 		BaseEntity visualBaseEntity = beUtils.getBaseEntityByCode("THM_TABLE_HEADER_VISUAL_CONTROL");
 
 		/* get the BaseEntity for wrapper context */
-		BaseEntity horizontalWrapperBe = beUtils.getBaseEntityByCode("THM_HORIZONTAL_WRAPPER_INLINE");
+		BaseEntity horizontalWrapperBe = beUtils.getBaseEntityByCode("THM_DISPLAY_HORIZONTAL");
 
 		/* get the theme for Label and Sort */
 		BaseEntity headerLabelSortThemeBe = beUtils.getBaseEntityByCode("THM_TABLE_HEADER_SORT_THEME");
