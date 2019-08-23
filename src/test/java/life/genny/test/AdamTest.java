@@ -128,17 +128,6 @@ public class AdamTest {
 		 BaseEntity project2 = VertxUtils.getObject(serviceToken.getRealm(), "", "PRJ_" + serviceToken.getRealm().toUpperCase(),
 				BaseEntity.class, serviceToken.getToken());
 
-			BaseEntity icn_sort = new BaseEntity("ICN_SORT","Icon Sort");
-			try {
-				
-				icn_sort.addAttribute(RulesUtils.getAttribute("PRI_ICN_CODE", serviceToken.getToken()), 1.0, "sort");
-				icn_sort.setRealm(realm);
-				VertxUtils.writeCachedJson(realm,  ":" + "ICN_SORT",JsonUtils.toJson(icn_sort), serviceToken.getToken());
-
-			} catch (BadDataException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 
 
 		GennyKieSession gks = null;
@@ -158,6 +147,21 @@ public class AdamTest {
 					.addToken(userToken)
 					.build();
 			gks.start();
+			
+			
+			BaseEntity icn_sort = new BaseEntity("ICN_SORT","Icon Sort");
+			try {
+				
+				icn_sort.addAttribute(RulesUtils.getAttribute("PRI_ICON_CODE", serviceToken.getToken()), 1.0, "sort");
+				icn_sort.setRealm(realm);
+				VertxUtils.writeCachedJson(realm,  ":" + "ICN_SORT",JsonUtils.toJson(icn_sort), serviceToken.getToken());
+
+			} catch (BadDataException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+			
 			gks.injectEvent(initMsg); // This should create a new process
 
 			gks.injectEvent(authInitMsg1); // This should create a new process
