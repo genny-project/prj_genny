@@ -36,6 +36,7 @@ import life.genny.qwanda.Context;
 import life.genny.qwanda.ContextType;
 import life.genny.qwanda.VisualControlType;
 import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.exception.BadDataException;
 import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
@@ -47,6 +48,7 @@ import life.genny.qwandautils.QwandaUtils;
 import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.FrameUtils2;
+import life.genny.utils.RulesUtils;
 import life.genny.utils.VertxUtils;
 
 public class AdamTest {
@@ -125,6 +127,18 @@ public class AdamTest {
 		VertxUtils.writeCachedJson(realm,  ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(),JsonUtils.toJson(project), serviceToken.getToken());
 		 BaseEntity project2 = VertxUtils.getObject(serviceToken.getRealm(), "", "PRJ_" + serviceToken.getRealm().toUpperCase(),
 				BaseEntity.class, serviceToken.getToken());
+
+			BaseEntity icn_sort = new BaseEntity("ICN_SORT","Icon Sort");
+			try {
+				
+				icn_sort.addAttribute(RulesUtils.getAttribute("PRI_ICN_CODE", serviceToken.getToken()), 1.0, "sort");
+				icn_sort.setRealm(realm);
+				VertxUtils.writeCachedJson(realm,  ":" + "ICN_SORT",JsonUtils.toJson(icn_sort), serviceToken.getToken());
+
+			} catch (BadDataException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 
 
 		GennyKieSession gks = null;

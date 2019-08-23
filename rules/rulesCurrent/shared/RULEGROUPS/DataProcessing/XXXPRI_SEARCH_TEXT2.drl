@@ -58,13 +58,17 @@ rule "XXXPRI_SEARCH_TEXT2"
 		  SearchEntity searchBE = new SearchEntity("SBE_SEARCH","Search")
   	     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
   	     .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%"+searchBarString+"%")
+  	     .addColumn("PRI_FIRSTNAME","Firstname")
+  	     .addColumn("PRI_LASTNAME","Surname")
   	     .setPageStart(0)
   	     .setPageSize(10);
   	     
+  	     TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
   	     
-  	     QDataBaseEntityMessage  msg = TableUtilsTest.fetchSearchResults(searchBE,beUtils.getGennyToken());
+  	     QDataBaseEntityMessage  msg = tableUtils.fetchSearchResults(searchBE,beUtils.getGennyToken());
   	     
-  	     TableUtilsTest.sendQuestions(searchBE,beUtils.getGennyToken(),  msg);
+  	     
+  	     tableUtils.sendQuestions(searchBE,beUtils.getGennyToken(),  msg);
   	     
   	     output.setFormCode("FRM_TABLE_VIEW","FRM_CONTENT");
   	     
