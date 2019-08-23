@@ -14,6 +14,7 @@ import com.google.gson.reflect.TypeToken;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.utils.VertxUtils;
 import life.genny.utils.TableUtilsTest;
+import  life.genny.models.TableData;
 
 
 import java.util.List;
@@ -68,7 +69,11 @@ rule "XXXPRI_SEARCH_TEXT2"
   	     QDataBaseEntityMessage  msg = tableUtils.fetchSearchResults(searchBE,beUtils.getGennyToken());
   	     
   	     
-  	     tableUtils.sendQuestions(searchBE,beUtils.getGennyToken(),  msg);
+  	     TableData tableData = tableUtils.generateTableAsks(searchBE,beUtils.getGennyToken(),  msg);
+  	     
+  	     /* Send to front end */
+  	     
+  	     
   	     
   	     output.setFormCode("FRM_TABLE_VIEW","FRM_CONTENT");
   	     

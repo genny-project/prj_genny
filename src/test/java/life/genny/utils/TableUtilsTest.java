@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.codehaus.plexus.util.StringUtils;
 
 import life.genny.models.GennyToken;
+import life.genny.models.TableData;
 import life.genny.qwanda.Ask;
 import life.genny.qwanda.Context;
 import life.genny.qwanda.ContextList;
@@ -41,8 +42,9 @@ public class TableUtilsTest {
 		this.beUtils = beUtils;
 	}
 
-	public void sendQuestions(SearchEntity searchBe, GennyToken gennyToken,  QDataBaseEntityMessage msg)
+	public TableData generateTableAsks(SearchEntity searchBe, GennyToken gennyToken,  QDataBaseEntityMessage msg)
 	{
+		
 		log.info("Search Results for "+searchBe.getCode()+" and user "+gennyToken.getUserCode()+" = "+msg); //use  QUE_TABLE_VIEW_TEST
 		log.info("Search result items = "+msg.getReturnCount());
 		if (msg.getReturnCount()>0) {
@@ -60,11 +62,13 @@ public class TableUtilsTest {
 		
 		List<QDataBaseEntityMessage> themeMsgList = new ArrayList<QDataBaseEntityMessage>();
 
-		generateTableHeaderAsks(searchBe,themeMsgList);
+		Ask tableHeaderAsk = generateTableHeaderAsk(searchBe,themeMsgList);
 		
 		log.info("*** ThemeMsgList *****");
 		log.info(themeMsgList);
 		
+		TableData tableData = new TableData(themeMsgList, tableHeaderAsk);
+		return tableData;
 	}
 	
 	
@@ -159,7 +163,7 @@ public class TableUtilsTest {
 		return result1;
 	}
 	
-	public Ask generateTableHeaderAsks(SearchEntity searchBe,List<QDataBaseEntityMessage> themeMsgList) {
+	public Ask generateTableHeaderAsk(SearchEntity searchBe,List<QDataBaseEntityMessage> themeMsgList) {
 
 		List<Ask> asks = new ArrayList<>();
 
