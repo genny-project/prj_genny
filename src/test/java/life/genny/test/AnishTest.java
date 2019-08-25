@@ -409,19 +409,29 @@ public class AnishTest extends GennyJbpmBaseTest {
                         rules.sendAllAttributes();
 
                         /* frame-tabs */
-                         Frame3 FRM_TABS = generateTabs();
+//                         Frame3 FRM_TABS = generateTabs();
+//
+//                        /* frame-header */
+                        Frame3 FRM_HEADER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_HEADER",
+            					Frame3.class, serviceToken.getToken());//generateHeader();
+                        Frame3 FRM_SIDEBAR = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_SIDEBAR",
+            					Frame3.class, serviceToken.getToken());//generateHeader();
+                        Frame3 FRM_TABS = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_TABS",
+            					Frame3.class, serviceToken.getToken());//generateHeader();
+                        Frame3 FRM_CONTENT = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_CONTENT",
+            					Frame3.class, serviceToken.getToken());//generateHeader();
+                        Frame3 FRM_FOOTER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_FOOTER",
+            					Frame3.class, serviceToken.getToken());//generateHeader();
 
-                        /* frame-header */
-                        Frame3 FRM_HEADER = generateHeader();
-
-                        /* frame-footer */
-                        Frame3 FRM_FOOTER = generateFooter();
-
-                        /* frame-sidebar */
-                        Frame3 FRM_SIDEBAR = generateSidebar();
-
-                        /* frame-dashboard */
-                        Frame3 FRM_CONTENT = getDashboard();
+//
+//                        /* frame-footer */
+//                        Frame3 FRM_FOOTER = generateFooter();
+//
+//                        /* frame-sidebar */
+//                        Frame3 FRM_SIDEBAR = generateSidebar();
+//
+//                        /* frame-dashboard */
+//                        Frame3 FRM_CONTENT = getDashboard();
 
                         /*
                          * Frame3 FRM_MAIN = VertxUtils.getObject(serviceToken.getRealm(), "",

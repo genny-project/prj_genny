@@ -111,27 +111,42 @@ public class AdamTest {
 	     .setPageSize(10);
 	     
 		  BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
-	     
+		  
+		  // Test sending a page
+			QDataBaseEntityMessage msg2 = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_QUE_DASHBOARD_VIEW-MSG",
+					QDataBaseEntityMessage.class, serviceToken.getToken());
+
+			msg2.setToken(userToken.getToken());
+			/* send message */
+			// rules.publishCmd(msg2); // Send QDataBaseEntityMessage
+			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg2));
+	
 	 	     TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
 	  	     
 	  	     QDataBaseEntityMessage  msg = tableUtils.fetchSearchResults(searchBE,beUtils.getGennyToken());
-	  	     
-	  	     VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg)); // Send the results to the frontend to be put into the redux store
-	  	     
-	  	     
 	  	     TableData tableData = tableUtils.generateTableAsks(searchBE,beUtils.getGennyToken(),  msg);
 	  	     log.info(tableData);
-	  	     
+
+			//"FRM_QUE_DASHBOARD_VIEW","FRM_CONTENT"
 	  	     Set<Ask> asksSet = new HashSet<Ask>();
 	  	    asksSet.add(tableData.getAsk());
 	  	    Ask[] askArray = asksSet.stream().toArray(Ask[]::new);
 	  	    QDataAskMessage askMsg = new QDataAskMessage(askArray);
 	  	    Set<QDataAskMessage> askSet = new HashSet<QDataAskMessage>();
 	  	    askSet.add(askMsg);
+	  	  List<QDataBaseEntityMessage> msgs = new ArrayList<QDataBaseEntityMessage>();
+	  	  msgs.add(msg2);
 	  	    
-	  	    List<QDataBaseEntityMessage> msgs = tableData.getThemeMsgList();
+			GennyKieSession.sendData(serviceToken, userToken,"FRM_QUE_DASHBOARD_VIEW", "FRM_CONTENT", msgs, askSet);
+	  	     
+	  	     VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg)); // Send the results to the frontend to be put into the redux store
+	  	     
+	  	     
+	  	     
+	  	    
+	  	    List<QDataBaseEntityMessage> msgs3 = tableData.getThemeMsgList();
 	  	     // 
-	  		GennyKieSession.sendData(serviceToken, userToken,"FRM_TABLE_VIEW", "FRM_CONTENT", msgs, askSet);
+	  		GennyKieSession.sendData(serviceToken, userToken,"FRM_TABLE_VIEW", "FRM_CONTENT", msgs3, askSet);
 
 	}
 	
