@@ -28,14 +28,17 @@ import life.genny.eventbus.VertxCache;
 import life.genny.models.Frame3;
 import life.genny.models.FramePosition;
 import life.genny.models.GennyToken;
+import life.genny.models.TableData;
 import life.genny.models.Theme;
 import life.genny.models.ThemeAttributeType;
 import life.genny.models.ThemeDouble;
 import life.genny.qwanda.Answer;
+import life.genny.qwanda.Ask;
 import life.genny.qwanda.Context;
 import life.genny.qwanda.ContextType;
 import life.genny.qwanda.VisualControlType;
 import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwanda.exception.BadDataException;
 import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.qwanda.message.QDataAskMessage;
@@ -49,6 +52,7 @@ import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.FrameUtils2;
 import life.genny.utils.RulesUtils;
+import life.genny.utils.TableUtilsTest;
 import life.genny.utils.VertxUtils;
 
 public class AdamTest {
@@ -68,7 +72,72 @@ public class AdamTest {
 
 	}
 
+	
 	@Test
+	public void tableTest()
+	{
+		System.out.println("Table test");
+		GennyToken userToken = null;
+		GennyToken userToken2 = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			userToken2 = GennyJbpmBaseTest.createGennyToken(realm, "user2", "Barry2 Allan2", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+		} else {
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+		}
+
+		System.out.println("session     =" + userToken.getSessionCode());
+		System.out.println("userToken   =" + userToken.getToken());
+		System.out.println("serviceToken=" + serviceToken.getToken());
+
+		/* Look up Search */
+		  SearchEntity searchBE = new SearchEntity("SBE_SEARCH","Search")
+	     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
+	     .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%univ%")
+	     .addColumn("PRI_NAME", "Name")
+	     .addColumn("PRI_LANDLINE", "Phone")
+	     .setPageStart(0)
+	     .setPageSize(10);
+	     
+		  BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+	     
+	 	     TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
+	  	     
+	  	     QDataBaseEntityMessage  msg = tableUtils.fetchSearchResults(searchBE,beUtils.getGennyToken());
+	  	     
+	  	     VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg)); // Send the results to the frontend to be put into the redux store
+	  	     
+	  	     
+	  	     TableData tableData = tableUtils.generateTableAsks(searchBE,beUtils.getGennyToken(),  msg);
+	  	     log.info(tableData);
+	  	     
+	  	     Set<Ask> asksSet = new HashSet<Ask>();
+	  	    asksSet.add(tableData.getAsk());
+	  	    Ask[] askArray = asksSet.stream().toArray(Ask[]::new);
+	  	    QDataAskMessage askMsg = new QDataAskMessage(askArray);
+	  	    Set<QDataAskMessage> askSet = new HashSet<QDataAskMessage>();
+	  	    askSet.add(askMsg);
+	  	    
+	  	    List<QDataBaseEntityMessage> msgs = tableData.getThemeMsgList();
+	  	     // 
+	  		GennyKieSession.sendData(serviceToken, userToken,"FRM_TABLE_VIEW", "FRM_CONTENT", msgs, askSet);
+
+	}
+	
+	
+	
+	//@Test
 	public void newUserTest()
 	{
 		System.out.println("New User test");

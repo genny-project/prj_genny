@@ -3,12 +3,19 @@ package life.genny.utils;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.Logger;
 import org.codehaus.plexus.util.StringUtils;
+
+import com.google.common.collect.FluentIterable;
 
 import life.genny.models.GennyToken;
 import life.genny.models.TableData;
@@ -68,15 +75,19 @@ public class TableUtilsTest {
 		log.info(themeMsgList);
 		
 		TableData tableData = new TableData(themeMsgList, tableHeaderAsk);
-		return tableData;
+		return tableData; 
 	}
 	
 	
 	public Map<String, String> getTableColumns(SearchEntity searchBe) {
 
-		Map<String, String> columns = new HashMap<>();
+		Map<String, String> columns = new LinkedHashMap<String,String>();
+		List<EntityAttribute> cols = searchBe.getBaseEntityAttributes().stream()
+				.filter(x -> { return (x.getAttributeCode().startsWith("COL_") || x.getAttributeCode().startsWith("CAL_"));})
+		  .sorted(Comparator.comparing(EntityAttribute::getWeight)) //comparator - how you want to sort it
+		  .collect(Collectors.toList()); //collector - what you want to collect it to
 
-		for (EntityAttribute ea : searchBe.getBaseEntityAttributes()) {
+		for (EntityAttribute ea : cols) {
 			String attributeCode = ea.getAttributeCode();
 			String attributeName = ea.getAttributeName();
 			if (attributeCode.startsWith("COL_")) {
@@ -149,7 +160,7 @@ public class TableUtilsTest {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-
+		msg.setToken(gennyToken.getToken());
 		return msg;	
 	
 	}

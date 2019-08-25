@@ -66,7 +66,11 @@ import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 import life.genny.jbpm.customworkitemhandlers.ShowFrameWIthContextList;
 import life.genny.jbpm.customworkitemhandlers.ThrowSignalProcessWorkItemHandler;
 import life.genny.models.GennyToken;
+import life.genny.qwanda.Ask;
 import life.genny.qwanda.attribute.Attribute;
+import life.genny.qwanda.datatype.DataType;
+import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.entity.EntityEntity;
 import life.genny.qwanda.message.QCmdMessage;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataAttributeMessage;
@@ -74,6 +78,7 @@ import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QDataMessage;
 import life.genny.qwanda.message.QEventMessage;
 import life.genny.qwanda.message.QMessage;
+import life.genny.qwanda.validation.Validation;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.rules.QRules;
@@ -847,4 +852,91 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		return GennyKieSession.getProcessIdBysessionId(sessionId);
 	}
 
+	
+	public static void sendData(GennyToken serviceToken, GennyToken userToken,String rootFrameCode, String targetFrameCode,   List<QDataBaseEntityMessage> msgs , Set<QDataAskMessage> askMsgs2)
+	{
+
+		if (userToken == null) {
+			log.error("Must supply userToken!");
+
+		} else {
+
+			if (rootFrameCode == null) {
+				log.error("Must supply a root Frame Code!");
+			} else {
+				log.info("Sending root Frame Code sent to display  = " + rootFrameCode);
+
+				QDataBaseEntityMessage FRM_MSG = VertxUtils.getObject(userToken.getRealm(), "", rootFrameCode + "-MSG",
+						QDataBaseEntityMessage.class, userToken.getToken());
+
+				if (FRM_MSG != null) {
+
+					if (targetFrameCode == null) {
+						targetFrameCode = "FRM_ROOT";
+					}
+
+					for (QDataBaseEntityMessage msg : msgs) {
+					for (BaseEntity targetFrame : msg.getItems()) {
+						if (targetFrame.getCode().equals(targetFrameCode)) {
+
+							log.info("ShowFrame : Found Targeted Frame BaseEntity : " + targetFrame);
+
+							/* Adding the links in the targeted BaseEntity */
+							Attribute attribute = new Attribute("LNK_FRAME", "LNK_FRAME", new DataType(String.class));
+
+							for (BaseEntity sourceFrame : FRM_MSG.getItems()) {
+								if (sourceFrame.getCode().equals(rootFrameCode)) {
+
+									System.out.println("ShowFrame : Found Source Frame BaseEntity : " + sourceFrame);
+									EntityEntity entityEntity = new EntityEntity(targetFrame, sourceFrame, attribute,
+											1.0, "CENTRE");
+									Set<EntityEntity> entEntList = targetFrame.getLinks();
+									entEntList.add(entityEntity);
+									targetFrame.setLinks(entEntList);
+
+									/* Adding Frame to Targeted Frame BaseEntity Message */
+									FRM_MSG.add(targetFrame);
+									FRM_MSG.setReplace(true);
+									break;
+								}
+							}
+							break;
+						}
+					}
+					}
+
+					FRM_MSG.setToken(userToken.getToken());
+
+					FRM_MSG.setReplace(true);
+
+					VertxUtils.writeMsg("webcmds", JsonUtils.toJson(FRM_MSG));
+
+
+					// System.out.println("Sending Asks");
+					if ((askMsgs2 != null) && (!askMsgs2.isEmpty())) {
+						for (QDataAskMessage askMsg : askMsgs2) { // TODO, not needed
+							for (Ask aask : askMsg.getItems()) {
+								for (Validation val : aask.getQuestion().getAttribute().getDataType()
+										.getValidationList()) {
+									if (val.getRegex() == null) {
+										log.error("Regex for " + aask.getQuestion().getCode() + " == null");
+									}
+
+								}
+							}
+							askMsg.setToken(userToken.getToken());
+							String json = JsonUtils.toJson(askMsg);
+							String jsonStr = json.replaceAll("PER_SERVICE", userToken.getUserCode()); // set the user
+							VertxUtils.writeMsg("webcmds", jsonStr); // QDataAskMessage
+						}
+					}
+				} else {
+					log.error(rootFrameCode + "-MSG" + " DOES NOT EXIST IN CACHE - cannot display frame");
+				}
+
+			}
+
+		}
+	}
+	
 }
