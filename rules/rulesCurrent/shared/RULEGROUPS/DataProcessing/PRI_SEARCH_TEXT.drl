@@ -29,7 +29,7 @@ rule "PRI_SEARCH_TEXT"
 	  output : OutputParam( )
 	  
      then
- 		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
+  		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		String targetCode = answer.getTargetCode();
 		
@@ -38,22 +38,7 @@ rule "PRI_SEARCH_TEXT"
 		searchBarString = searchBarString.trim();
 		System.out.println("Search text = ["+searchBarString+"]");
 		
-		
-		/* Look up Search */
-		  SearchEntity searchBE = new SearchEntity("SBE_SEARCH","Search")
-  	     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
-  	     .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%"+searchBarString+"%")
-  	     .setPageStart(0)
-  	     .setPageSize(10);
-  	     
-  	     
-  	     QDataBaseEntityMessage  msg = TableUtils.fetchSearchResults(searchBE,beUtils.getGennyToken());
-  	     
-  	     TableUtils.sendQuestions(searchBE,beUtils.getGennyToken(),  msg);
-  	     
-  	     output.setFormCode("FRM_TABLE_VIEW","FRM_CONTENT");
-  	     
-  	     		/* fetch Session SearchBar List from User */
+		/* fetch Session SearchBar List from User */
 		BaseEntity user = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", beUtils.getGennyToken().getUserCode(),
 				BaseEntity.class, beUtils.getGennyToken().getToken());
 		Type type = new TypeToken<List<String>>() {
@@ -68,7 +53,26 @@ rule "PRI_SEARCH_TEXT"
 		String newHistoryString = JsonUtils.toJson(searchHistory);
 		Answer history = new Answer(beUtils.getGennyToken().getUserCode(),beUtils.getGennyToken().getUserCode(),"PRI_SEARCH_HISTORY",newHistoryString);
 		beUtils.saveAnswer(history);
+		
+		/* Look up Search */
+		  SearchEntity searchBE = new SearchEntity("SBE_SEARCH","Search")
+  	     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
+  	     .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%"+searchBarString+"%")
+  	     .addColumn("PRI_FIRSTNAME","Firstname")
+  	     .addColumn("PRI_LASTNAME","Surname")
+  	     .setPageStart(0)
+  	     .setPageSize(10);
   	     
+  	     TableUtils tableUtils = new TableUtils(beUtils);
+  	     
+  	     QDataBaseEntityMessage  msg = tableUtils.fetchSearchResults(searchBE,beUtils.getGennyToken());
+  	     
+  	     
+  	     TableData tableData = tableUtils.generateTableAsks(searchBE,beUtils.getGennyToken(),  msg);
+  	     
+  	     /* Send to front end */
+   	     
+  	     output.setFormCode("FRM_TABLE_VIEW","FRM_CONTENT");
 		retract(answer);
 	
 end
