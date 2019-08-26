@@ -447,7 +447,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                                         .addTheme("THM_PROJECT", ThemePosition.FRAME, serviceToken).end()
                                         .addFrame(FRM_HEADER, FramePosition.NORTH).end()
                                         .addFrame(FRM_SIDEBAR, FramePosition.WEST).end()
-                                         .addFrame(FRM_TABS, FramePosition.CENTRE).end()
+                           /*              .addFrame(FRM_TABS, FramePosition.CENTRE).end() */
                                         .addFrame(FRM_CONTENT, FramePosition.CENTRE).end()
                                         .addFrame(FRM_FOOTER, FramePosition.SOUTH).end().build();
                         /* frame-root */

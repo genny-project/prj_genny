@@ -32,6 +32,7 @@ import life.genny.models.TableData;
 import life.genny.models.Theme;
 import life.genny.models.ThemeAttributeType;
 import life.genny.models.ThemeDouble;
+import life.genny.models.ThemePosition;
 import life.genny.qwanda.Answer;
 import life.genny.qwanda.Ask;
 import life.genny.qwanda.Context;
@@ -112,6 +113,41 @@ public class AdamTest {
 	     
 		  BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		  
+          /* frame-root */
+		Frame3 FRM_ROOT = null;
+		try {
+			Frame3 FRM_HEADER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_HEADER",
+						Frame3.class, serviceToken.getToken());//generateHeader();
+			  Frame3 FRM_SIDEBAR = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_SIDEBAR",
+						Frame3.class, serviceToken.getToken());//generateHeader();
+			   Frame3 FRM_CONTENT = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_CONTENT",
+						Frame3.class, serviceToken.getToken());//generateHeader();
+			  Frame3 FRM_FOOTER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_FOOTER",
+						Frame3.class, serviceToken.getToken());//generateHeader();
+			  Frame3 FRM_APP = Frame3.builder("FRM_APP")
+			          .addTheme("THM_PROJECT", ThemePosition.FRAME, serviceToken).end()
+			          .addFrame(FRM_HEADER, FramePosition.NORTH).end()
+			          .addFrame(FRM_SIDEBAR, FramePosition.WEST).end()
+    /*              .addFrame(FRM_TABS, FramePosition.CENTRE).end() */
+			          .addFrame(FRM_CONTENT, FramePosition.CENTRE).end()
+			          .addFrame(FRM_FOOTER, FramePosition.SOUTH).end().build();
+			  FRM_ROOT = Frame3.builder("FRM_ROOT").addFrame(FRM_APP, FramePosition.CENTRE)
+					  .end()
+			          .build();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+  Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+  QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_ROOT, serviceToken, askMsgs);
+  msg.setToken(userToken.getToken());
+  //qRules.publishCmd(msg);
+  VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+//  for (QDataAskMessage askMsg : askMsgs) {
+//          rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode());
+//  }
+
 		  // Test sending a page
 			QDataBaseEntityMessage msg2 = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_QUE_DASHBOARD_VIEW-MSG",
 					QDataBaseEntityMessage.class, serviceToken.getToken());
@@ -123,8 +159,8 @@ public class AdamTest {
 	
 	 	     TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
 	  	     
-	  	     QDataBaseEntityMessage  msg = tableUtils.fetchSearchResults(searchBE,beUtils.getGennyToken());
-	  	     TableData tableData = tableUtils.generateTableAsks(searchBE,beUtils.getGennyToken(),  msg);
+	  	     QDataBaseEntityMessage  msg4 = tableUtils.fetchSearchResults(searchBE,beUtils.getGennyToken());
+	  	     TableData tableData = tableUtils.generateTableAsks(searchBE,beUtils.getGennyToken(),  msg4);
 	  	     log.info(tableData);
 
 			//"FRM_QUE_DASHBOARD_VIEW","FRM_CONTENT"
