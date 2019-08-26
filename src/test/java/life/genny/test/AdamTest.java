@@ -282,13 +282,25 @@ public void testDesktop() {
                 rules.sendAllAttributes();
 
                 /* frame-header */
-                Frame3 FRM_HEADER = generateHeader();
-                Frame3 FRM_SIDEBAR = generateSidebar();
-                Frame3 FRM_CONTENT = getDashboard();
-                Frame3 FRM_TABLE = generateTable();
-                Frame3 FRM_FOOTER = generateFooter();
-                /*Frame3 FRM_TABS = generateTabs(); */
+//                Frame3 FRM_HEADER = generateHeader();
+//                Frame3 FRM_SIDEBAR = generateSidebar();
+//                Frame3 FRM_CONTENT = getDashboard();
+//          //      Frame3 FRM_TABLE = generateTable();
+//                Frame3 FRM_FOOTER = generateFooter();
+//                /*Frame3 FRM_TABS = generateTabs(); */
 
+        		Frame3 FRM_TABLE = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_TABLE", Frame3.class,
+        				serviceToken.getToken());
+           		Frame3 FRM_HEADER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_HEADER", Frame3.class,
+        				serviceToken.getToken());
+           		Frame3 FRM_SIDEBAR = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_SIDEBAR", Frame3.class,
+        				serviceToken.getToken());
+           		Frame3 FRM_CONTENT = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_CONTENT", Frame3.class,
+        				serviceToken.getToken());
+           		Frame3 FRM_FOOTER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_FOOTER", Frame3.class,
+        				serviceToken.getToken());
+
+                
                 /* frame-root */
                 Frame3 FRM_APP = Frame3.builder("FRM_APP")
                                 .addTheme("THM_PROJECT", ThemePosition.FRAME, serviceToken).end()
