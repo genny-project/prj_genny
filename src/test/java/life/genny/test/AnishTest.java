@@ -485,8 +485,9 @@ public class AnishTest extends GennyJbpmBaseTest {
                         Frame3 FRM_TABLE_CONTENT = Frame3.builder("FRM_TABLE_CONTENT")
                                         .addTheme(THM_TABLE_CONTENT).end()
                                         .addTheme(THM_TABLE_BORDER).end()
-                                        .question("QUE_NAME_TWO")
+                                        .question("QUE_TABLE_VIEW_TEST")
                                                 .addTheme(THM_TABLE_HEADER_CELL_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                                .addTheme(THM_TABLE_CONTENT).end()
                                         .end()
                                         .build();
                         
