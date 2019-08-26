@@ -52,6 +52,54 @@ public class AnishTest extends GennyJbpmBaseTest {
                 super(false);
         }
 
+        @Test
+        public void testDesktop() {
+                QRules rules = GennyJbpmBaseTest.setupLocalService();
+                GennyToken userToken = new GennyToken("userToken", rules.getToken());
+                GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+                BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+                BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
+
+                try {
+                        rules.sendAllAttributes();
+
+                        /* frame-header */
+                        Frame3 FRM_HEADER = generateHeader();
+                        Frame3 FRM_SIDEBAR = generateSidebar();
+                        Frame3 FRM_CONTENT = getDashboard();
+                        Frame3 FRM_TABLE = generateTable();
+                        Frame3 FRM_FOOTER = generateFooter();
+                        /*Frame3 FRM_TABS = generateTabs(); */
+
+                        /* frame-root */
+                        Frame3 FRM_APP = Frame3.builder("FRM_APP")
+                                        .addTheme("THM_PROJECT", ThemePosition.FRAME, serviceToken).end()
+                                        .addFrame(FRM_HEADER, FramePosition.NORTH).end()
+                                        .addFrame(FRM_SIDEBAR, FramePosition.WEST).end()
+
+                                        /* .addFrame(FRM_CONTENT, FramePosition.CENTRE).end() */
+                                        .addFrame(FRM_TABLE, FramePosition.CENTRE).end()
+                                        .addFrame(FRM_FOOTER, FramePosition.SOUTH).end() 
+                                        /*.addFrame(FRM_TABS, FramePosition.CENTRE).end() */
+                                        .build();
+                        
+
+                        /* frame-root */
+                        Frame3 FRM_ROOT = Frame3.builder("FRM_ROOT")
+                                        .addFrame(FRM_APP, FramePosition.CENTRE).end()
+                                        .build();
+
+                        Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+                        QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_ROOT, serviceToken, askMsgs);
+                        rules.publishCmd(msg);
+                        for (QDataAskMessage askMsg : askMsgs) {
+                                rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode());
+                        }
+                        System.out.println("Sent");
+                } catch (Exception e) {
+                        System.out.println("Error " + e.getLocalizedMessage());
+                }
+        }
         // @Test
         public void userSessionANishTest() {
 
@@ -540,54 +588,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                 return null;
         }
 
-        @Test
-        public void testDesktop() {
-                QRules rules = GennyJbpmBaseTest.setupLocalService();
-                GennyToken userToken = new GennyToken("userToken", rules.getToken());
-                GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
-                BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
-                BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
-
-                try {
-                        rules.sendAllAttributes();
-
-                        /* frame-header */
-                        Frame3 FRM_HEADER = generateHeader();
-                        Frame3 FRM_SIDEBAR = generateSidebar();
-                        Frame3 FRM_CONTENT = getDashboard();
-                        Frame3 FRM_TABLE = generateTable();
-                        Frame3 FRM_FOOTER = generateFooter();
-                        /*Frame3 FRM_TABS = generateTabs(); */
-
-                        /* frame-root */
-                        Frame3 FRM_APP = Frame3.builder("FRM_APP")
-                                        .addTheme("THM_PROJECT", ThemePosition.FRAME, serviceToken).end()
-                                        .addFrame(FRM_HEADER, FramePosition.NORTH).end()
-                                        .addFrame(FRM_SIDEBAR, FramePosition.WEST).end()
-
-                                        /* .addFrame(FRM_CONTENT, FramePosition.CENTRE).end() */
-                                        .addFrame(FRM_TABLE, FramePosition.CENTRE).end()
-                                        .addFrame(FRM_FOOTER, FramePosition.SOUTH).end() 
-                                        /*.addFrame(FRM_TABS, FramePosition.CENTRE).end() */
-                                        .build();
-                        
-
-                        /* frame-root */
-                        Frame3 FRM_ROOT = Frame3.builder("FRM_ROOT")
-                                        .addFrame(FRM_APP, FramePosition.CENTRE).end()
-                                        .build();
-
-                        Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
-                        QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_ROOT, serviceToken, askMsgs);
-                        rules.publishCmd(msg);
-                        for (QDataAskMessage askMsg : askMsgs) {
-                                rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode());
-                        }
-                        System.out.println("Sent");
-                } catch (Exception e) {
-                        System.out.println("Error " + e.getLocalizedMessage());
-                }
-        }
+ 
 
         // @Test
         public void testCachedDesktop() {

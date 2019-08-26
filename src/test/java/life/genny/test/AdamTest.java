@@ -73,8 +73,236 @@ public class AdamTest {
 
 	}
 
+    public Frame3 generateTable() {
+
+        QRules rules = GennyJbpmBaseTest.setupLocalService();
+        GennyToken userToken = new GennyToken("userToken", rules.getToken());
+        GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+        BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+        BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
+
+        try {   
+
+//                Theme THM_TABLE_HEADER = Theme.builder("THM_TABLE_HEADER")
+//                                        .addAttribute()
+//                                                .backgroundColor("#f4f5f7")
+//                                                .width("100%")
+//                                                .color("black")
+//                                        .end()
+//                                        .build();
+                
+        		Theme THM_TABLE_HEADER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TABLE_HEADER",
+        				Theme.class, serviceToken.getToken());
+
+//                Theme THM_TABLE_BORDER = Theme.builder("THM_TABLE_BORDER")
+//                                        .addAttribute()
+//                                                .borderBottomWidth(1)
+//                                                .borderColor("grey")
+//                                        .end()
+//                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+//                                        .build();
+        		Theme THM_TABLE_BORDER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TABLE_BORDER",
+        				Theme.class, serviceToken.getToken());
+
+                
+//                Theme THM_TABLE_HEADER_CELL_WRAPPER = Theme.builder("THM_TABLE_HEADER_CELL_WRAPPER")
+//                                        .addAttribute()
+//                                                .width("initial")
+//                                                .flexGrow(1)
+//                                                .flexShrink(1)
+//                                                .flexBasis("auto")
+//                                                .padding(10)
+//                                        .end()
+//                                        .build();
+                
+        		Theme THM_TABLE_HEADER_CELL_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TABLE_HEADER_CELL_WRAPPER",
+        				Theme.class, serviceToken.getToken());
+
+               
+//                Theme THM_TABLE_HEADER_CELL_INPUT = Theme.builder("THM_TABLE_HEADER_CELL_INPUT")
+//                                        .addAttribute()
+//                                                .textAlign("center")
+//                                        .end()
+//                                        .build();
+                
+        		Theme THM_TABLE_HEADER_CELL_INPUT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TABLE_HEADER_CELL_INPUT",
+        				Theme.class, serviceToken.getToken());
+                
+                
+//                Theme THM_TABLE_CONTENT = Theme.builder("THM_TABLE_CONTENT")
+//                                        .addAttribute()
+//                                                .backgroundColor("#FAFAFA")
+//                                                .color("black")
+//                                                .width("100%")
+//                                        .end()
+//                                        .build();
+                
+        		Theme THM_TABLE_CONTENT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TABLE_CONTENT",
+        				Theme.class, serviceToken.getToken());
+
+//                Theme THM_TABLE_BODY = Theme.builder("THM_TABLE_BODY")
+//                                        .addAttribute()
+//                                                //.backgroundColor("yellow")
+//                                                .width("100%")
+//                                        .end()
+//                                        .build();
+                
+        		Theme THM_TABLE_BODY = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TABLE_BODY",
+        				Theme.class, serviceToken.getToken()); // GOOD
+
+                
+//                Theme THM_TABLE_FOOTER = Theme.builder("THM_TABLE_FOOTER")
+//                                                .addAttribute()
+//                                                .backgroundColor("#f4f5f7")
+//                                                .width("100%")
+//                                                .color("black")
+//                                        .end()
+//                                        .build();
+  
+        		Theme THM_TABLE_FOOTER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TABLE_FOOTER",
+        				Theme.class, serviceToken.getToken()); // GOOD
+
+                
+//                Theme THM_BUTTON = Theme.builder("THM_BUTTON")
+//                                        .addAttribute()
+//                                                .backgroundColor("blue")
+//                                                .color("white")
+//                                        .end()
+//                                        .build();
+// 
+        		Theme THM_BUTTON = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BUTTON",
+        				Theme.class, serviceToken.getToken());
+                
+                
+                Theme THM_TABLE = Theme.builder("THM_TABLE")
+                                        .addAttribute()
+                                                /* .backgroundColor("grey") */
+                                                .width("100%")
+                                        .end()
+                                        .build();
+  
+//        		Theme THM_TABLE = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TABLE",
+//        				Theme.class, serviceToken.getToken());
+
+                
+                Frame3 FRM_TABLE_HEADER = Frame3.builder("FRM_TABLE_HEADER")
+                                .addTheme(THM_TABLE_HEADER).end()
+                                .addTheme(THM_TABLE_BORDER).end()
+                                .question("QUE_NAME_GRP")
+                                        .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
+                                        .addTheme(THM_TABLE_HEADER_CELL_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                        .addTheme(THM_TABLE_HEADER_CELL_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                .end()
+                                .build();
+                
+                Frame3 FRM_TABLE_CONTENT = Frame3.builder("FRM_TABLE_CONTENT")
+                                .addTheme(THM_TABLE_CONTENT).end()
+                                .addTheme(THM_TABLE_BORDER).end()
+                                .question("QUE_TABLE_VIEW_TEST")
+                                        .addTheme(THM_TABLE_HEADER_CELL_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                        .addTheme(THM_TABLE_CONTENT).end()
+                                .end()
+                                .build();
+                
+                Frame3 FRM_TABLE_BODY = Frame3.builder("FRM_TABLE_BODY")
+                                .addTheme(THM_TABLE_BODY).end()
+                                .addFrame(FRM_TABLE_HEADER, FramePosition.NORTH).end()
+                                .addFrame(FRM_TABLE_CONTENT, FramePosition.CENTRE).end()
+                                .build();
+                
+               /*  Frame3 FRM_TABLE_PREVIOUS = Frame3.builder("FRM_TABLE_PREVIOUS")
+                                .addTheme(THM_BUTTON).end()
+                                .question("QUE_TABLE_PREVIOUS").end()
+                                .build();
+               
+                Frame3 FRM_TABLE_PAGE_SIZE = Frame3.builder("FRM_TABLE_PAGE_SIZE")
+                                .addTheme(THM_BUTTON).end()
+                                .question("QUE_TABLE_PAGE_SIZE").end()
+                                .build();
+                
+                Frame3 FRM_TABLE_NEXT = Frame3.builder("FRM_TABLE_NEXT")
+                                .addTheme(THM_BUTTON).end()
+                                .question("QUE_TABLE_NEXT").end()
+                                .build(); */
+
+                Frame3 FRM_TABLE_FOOTER = Frame3.builder("FRM_TABLE_FOOTER")
+                                .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
+                                .addTheme(THM_TABLE_FOOTER).end()
+                                .addTheme(THM_TABLE_BORDER).end()
+                                .question("QUE_TABLE_FOOTER_GRP")
+                                        .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
+                                        .addTheme(THM_TABLE_HEADER_CELL_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                        .addTheme(THM_TABLE_HEADER_CELL_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                .end()
+                                .build();
+                
+                
+                Frame3 FRM_TABLE = Frame3.builder("FRM_TABLE")
+                                .addTheme(THM_TABLE).end()
+                                .addFrame(FRM_TABLE_BODY, FramePosition.CENTRE).end()
+                                .addFrame(FRM_TABLE_FOOTER, FramePosition.SOUTH).end()
+                                .build();
+
+                return FRM_TABLE;
+                
+        } catch (Exception e) {
+                System.out.println("Error " + e.getLocalizedMessage());
+        }
+
+        System.out.println("Generated TableView Frame");
+        return null;
+}
+
+@Test
+public void testDesktop() {
+        QRules rules = GennyJbpmBaseTest.setupLocalService();
+        GennyToken userToken = new GennyToken("userToken", rules.getToken());
+        GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+        BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+        BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
+
+        try {
+                rules.sendAllAttributes();
+
+                /* frame-header */
+                Frame3 FRM_HEADER = generateHeader();
+                Frame3 FRM_SIDEBAR = generateSidebar();
+                Frame3 FRM_CONTENT = getDashboard();
+                Frame3 FRM_TABLE = generateTable();
+                Frame3 FRM_FOOTER = generateFooter();
+                /*Frame3 FRM_TABS = generateTabs(); */
+
+                /* frame-root */
+                Frame3 FRM_APP = Frame3.builder("FRM_APP")
+                                .addTheme("THM_PROJECT", ThemePosition.FRAME, serviceToken).end()
+                                .addFrame(FRM_HEADER, FramePosition.NORTH).end()
+                                .addFrame(FRM_SIDEBAR, FramePosition.WEST).end()
+
+                                /* .addFrame(FRM_CONTENT, FramePosition.CENTRE).end() */
+                                .addFrame(FRM_TABLE, FramePosition.CENTRE).end()
+                                .addFrame(FRM_FOOTER, FramePosition.SOUTH).end() 
+                                /*.addFrame(FRM_TABS, FramePosition.CENTRE).end() */
+                                .build();
+                
+
+                /* frame-root */
+                Frame3 FRM_ROOT = Frame3.builder("FRM_ROOT")
+                                .addFrame(FRM_APP, FramePosition.CENTRE).end()
+                                .build();
+
+                Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+                QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_ROOT, serviceToken, askMsgs);
+                rules.publishCmd(msg);
+                for (QDataAskMessage askMsg : askMsgs) {
+                        rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode());
+                }
+                System.out.println("Sent");
+        } catch (Exception e) {
+                System.out.println("Error " + e.getLocalizedMessage());
+        }
+}
 	
-	@Test
+	//@Test
 	public void tableTest()
 	{
 		System.out.println("Table test");
@@ -1106,6 +1334,756 @@ public class AdamTest {
 
 		}
 	}
+	
+    // @Test
+    public void virtualAskAndContextTest() {
+            QRules rules = GennyJbpmBaseTest.setupLocalService();
+            GennyToken userToken = new GennyToken("userToken", rules.getToken());
+            GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+
+            rules.sendAllAttributes();
+
+            Frame3 FRM_HEADER = this.generateHeader();
+
+            Theme THM_MAIN = Theme.builder("THM_MAIN").addAttribute().backgroundColor("grey").color("#18639F")
+                            // .height(80)
+                            .end().build();
+
+            Frame3 FRM_MAIN = Frame3.builder("FRM_MAIN").addTheme(THM_MAIN).end().question("QUE_NAME_TWO").end()
+                            .build();
+
+            try {
+                    /* frame-root */
+                    Frame3 FRM_ROOT = Frame3.builder("FRM_ROOT").addFrame(FRM_HEADER, FramePosition.NORTH).end()
+                                    .addFrame(FRM_MAIN, FramePosition.CENTRE).end().build();
+
+                    Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+                    QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_ROOT, serviceToken, askMsgs);
+                    rules.publishCmd(msg);
+                    for (QDataAskMessage askMsg : askMsgs) {
+                            rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode());
+                    }
+                    System.out.println("Sent");
+            } catch (Exception e) {
+                    System.out.println("Failed " + e.getLocalizedMessage());
+            }
+
+    }
+
+    public Frame3 generateHeader() {
+            QRules rules = GennyJbpmBaseTest.setupLocalService();
+            GennyToken userToken = new GennyToken("userToken", rules.getToken());
+            GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+            BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+            BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
+
+            try {
+
+                    Theme THM_DROPDOWN_BEHAVIOUR_GENNY = Theme.builder("THM_DROPDOWN_BEHAVIOUR_GENNY")
+                                    .addAttribute(ThemeAttributeType.PRI_IS_DROPDOWN, true).end()
+                                    .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_LABEL, true).end()
+                                    .addAttribute(ThemeAttributeType.PRI_IS_QUESTION_GRP_LABEL_CLICKABLE, true)
+                                    .end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                    Theme THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY = Theme.builder("THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY")
+                                    .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_LABEL, false).end()
+                                    .build();
+
+                    Theme THM_BACKGROUND_NONE = Theme.builder("THM_BACKGROUND_NONE").addAttribute()
+                                    .backgroundColor("none").end().build();
+
+                    Theme THM_DROPDOWN_HEADER_WRAPPER_GENNY = Theme.builder("THM_DROPDOWN_HEADER_WRAPPER_GENNY")
+                                    .addAttribute()
+                                            .padding(5)
+                                            .backgroundColor(project.getValue("PRI_COLOR_PRIMARY_VARIANT_LIGHT", "#395268"))
+                                    .end()
+                                    .build();
+
+                    Theme THM_DROPDOWN_GROUP_LABEL_GENNY = Theme.builder("THM_DROPDOWN_GROUP_LABEL_GENNY")
+                                    .addAttribute().marginBottom(0).size("sm").bold(false).end().build();
+
+                    Theme THM_DROPDOWN_CONTENT_WRAPPER_GENNY = Theme.builder("THM_DROPDOWN_CONTENT_WRAPPER_GENNY")
+                                    .addAttribute()
+                                    .backgroundColor(project.getValue("PRI_COLOR_SURFACE", "#FFFFFF"))
+                                    .color("green").width(200).end()
+                                    .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                    Theme THM_BOX_SHADOW_SM = Theme.builder("THM_BOX_SHADOW_SM").addAttribute().shadowColor("#000")
+                                    .shadowOpacity(0.4).shadowRadius(10).shadowOffset().width(0).height(0).end()
+                                    .end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                    Theme THM_DROPDOWN_VCL_GENNY = Theme.builder("THM_DROPDOWN_VCL_GENNY").addAttribute()
+                                    .color(project.getValue("PRI_COLOR_SURFACE_ON", "#000000"))
+                                    .end().build();
+
+                    Theme THM_DASHBOARD_ITEM_INPUT = Theme.builder("THM_DASHBOARD_ITEM_INPUT")
+                                                    .addAttribute().dynamicWidth(true).end()
+                                                    .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                                    .build();
+
+                    Theme THM_HEADER_PROFILE_PICTURE = Theme.builder("THM_HEADER_PROFILE_PICTURE")
+                                            .addAttribute()
+                                                    .height(32)
+                                                    .width(32)
+                                                    .fit("cover")
+                                                    .borderRadius(50)
+                                            .end()
+                                            .build();
+                    
+                    Theme THM_PANEL_CONTENT_FIT = Theme.builder("THM_PANEL_CONTENT_FIT")
+                                            .addAttribute()
+                                                    .flexShrink(0)
+                                                    .flexBasis("auto")
+                                                    .flexGrow(0)
+                                                    .width("auto")
+                                            .end()
+                                            .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                            .build();
+
+                    Theme THM_PADDING_RIGHT_10 = Theme.builder("THM_PADDING_RIGHT_10")
+                                            .addAttribute()
+                                                    .paddingRight(10)
+                                            .end()
+                                            .build();
+                    
+                    Theme THM_BORDER_RADIUS_50 = Theme.builder("THM_BORDER_RADIUS_50")
+                                            .addAttribute()
+                                                    .borderRadius(50)
+                                            .end()
+                                            .build();
+
+                    Frame3 FRM_HEADER_FIRSTNAME = Frame3.builder("FRM_HEADER_FIRSTNAME")                               
+                                            .question("QUE_FIRSTNAME")
+                                            .end()
+                                            .build();
+                    Frame3 FRM_HEADER_LASTNAME = Frame3.builder("FRM_HEADER_LASTNAME")                                        
+                                            .question("QUE_LASTNAME")
+                                            .end()
+                                            .build();
+
+                    Frame3 FRM_HEADER_USERNAME = Frame3.builder("FRM_HEADER_USERNAME")                                                         
+                                            .addTheme(THM_PANEL_CONTENT_FIT, ThemePosition.WRAPPER).end()
+                                            .question("QUE_NAME")
+                                                    .targetAlias("PER_USER1")
+                                                    .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                            .end()
+                                            .build();
+
+                    
+                    Frame3 FRM_HEADER_PROFILE_PICTURE = Frame3.builder("FRM_HEADER_PROFILE_PICTURE")                                                                                        
+                                            .addTheme(THM_PANEL_CONTENT_FIT, ThemePosition.WRAPPER).end()
+                                            .addTheme(THM_PADDING_RIGHT_10, ThemePosition.WRAPPER).end()
+                                            .question("QUE_IMAGE_URL")
+                                                    .addTheme(THM_HEADER_PROFILE_PICTURE).vcl(VisualControlType.VCL_INPUT).end()
+                                                    .addTheme(THM_BORDER_RADIUS_50).vcl(VisualControlType.INPUT_FIELD).end()
+                                            .end()
+                                            .build();
+
+                    Frame3 FRM_HEADER_OPTIONS = Frame3.builder("FRM_HEADER_OPTIONS")
+                                            .addTheme(THM_PANEL_CONTENT_FIT, ThemePosition.WRAPPER).end()
+                                            .question("QUE_OPTIONS_GRP")
+                                                    .addTheme(THM_BACKGROUND_NONE).vcl(VisualControlType.GROUP).weight(1.0).end()
+                                                    .addTheme(THM_DROPDOWN_BEHAVIOUR_GENNY).vcl(VisualControlType.GROUP).weight(2.0).end()
+                                                    .addTheme(THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY).vcl(VisualControlType.GROUP).weight(1.0).end()
+                                                    .addTheme(THM_DROPDOWN_HEADER_WRAPPER_GENNY).vcl(VisualControlType.GROUP_HEADER_WRAPPER).weight(2.0).end()
+                                                    .addTheme(THM_DROPDOWN_GROUP_LABEL_GENNY)
+                                                            .vcl(VisualControlType.GROUP_LABEL).end()
+                                                    .addTheme(THM_DROPDOWN_CONTENT_WRAPPER_GENNY)
+                                                            .vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end()
+                                                    .addTheme(THM_BOX_SHADOW_SM)
+                                                            .vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end()
+                                                    .addTheme(THM_DROPDOWN_VCL_GENNY)
+                                                            .vcl(VisualControlType.VCL).end()
+                                            .end()
+                                            .build();
+
+                    Frame3 FRM_HEADER_ADD_ITEMS = Frame3.builder("FRM_HEADER_ADD_ITEMS")
+                                    .addTheme(THM_PANEL_CONTENT_FIT, ThemePosition.WRAPPER).end()
+                                    .question("QUE_ADD_ITEMS_GRP").addTheme(THM_BACKGROUND_NONE)
+                                    .vcl(VisualControlType.GROUP).weight(2.0).end()
+                                    .addTheme(THM_DROPDOWN_BEHAVIOUR_GENNY).vcl(VisualControlType.GROUP).end()
+                                    .addTheme(THM_DROPDOWN_HEADER_WRAPPER_GENNY)
+                                    .vcl(VisualControlType.GROUP_HEADER_WRAPPER).end()
+                                    .addTheme(THM_DROPDOWN_GROUP_LABEL_GENNY).vcl(VisualControlType.GROUP_LABEL)
+                                    .end().addTheme(THM_DROPDOWN_CONTENT_WRAPPER_GENNY)
+                                    .vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end().addTheme(THM_BOX_SHADOW_SM)
+                                    .vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end()
+                                    .addTheme(THM_DROPDOWN_VCL_GENNY).vcl(VisualControlType.VCL).end().end()
+                                    .build();
+
+                    Theme THM_PADDING = Theme.builder("THM_PADDING").addAttribute().padding(10).flexGrow(0)
+                                    .flexShrink(0).width(0).flexBasis("initial").end().build();
+
+                    Frame3 FRM_PADDING = Frame3.builder("FRM_PADDING").addTheme(THM_PADDING).end().build();
+
+                    Theme THM_HEADER = Theme.builder("THM_HEADER")
+                                    .addAttribute()
+                                            .height(80)
+                                            //.paddingRight(20)
+                                    .end()
+                                    .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                    .build();
+
+                    BaseEntity sortIconBe = beUtils.getBaseEntityByCode("ICN_SORT");
+
+                    Context context = new Context(ContextType.ICON, sortIconBe, VisualControlType.VCL_ICON, 1.0);
+
+                    /* Test Context */
+                    Frame3 FRM_HAMBURGER_MENU = Frame3.builder("FRM_HAMBURGER_MENU").question("QUE_NAME_TWO")
+                                    // .addContext(context).end()
+                                    .end().build();
+
+                    /* Test Virtual Ask */
+                    /*
+                     * Frame3 FRM_HAMBURGER_MENU = Frame3.builder("FRM_HAMBURGER_MENU")
+                     * .question("PRI-EVENT", "Nothing") .addContext(context).end() .end() .build();
+                     *
+                     */
+
+                    Theme THM_FRAME_ALIGN_EAST = Theme.builder("THM_FRAME_ALIGN_EAST").addAttribute()
+                                    .marginLeft("auto").flexGrow(0).flexBasis("initial").end()
+                                    .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+                    Theme THM_FRAME_ALIGN_WEST = Theme.builder("THM_FRAME_ALIGN_WEST").addAttribute()
+                                    .marginRight("auto").flexGrow(0).flexBasis("initial").end()
+                                    .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+                 
+
+                    Theme THM_SEARCH_BAR = Theme.builder("THM_SEARCH_BAR")
+                                    .addAttribute()
+                                            .backgroundColor("white")
+                                            .color("black")
+                                            .end()
+                                            .build();
+                                            
+                    Theme THM_SEARCH_BAR_WRAPPER = Theme.builder("THM_SEARCH_BAR_WRAPPER")
+                                            .addAttribute()
+                                                    .maxWidth(700)
+                                                    .padding(10)
+                                                    .borderRadius(5)
+                                                    .width("100%")
+                                            .end()
+                                            .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                            .build();
+                    
+                    Theme THM_SEARCH_BAR_CENTRE = Theme.builder("THM_SEARCH_BAR_CENTRE")
+                                            .addAttribute()
+                                                    .justifyContent("flex-start")
+                                                    .flexDirection("row")
+                                            .end()
+                                            .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                            .build();
+                    
+                    
+                    Frame3 FRM_SEARCH_BAR = Frame3.builder("FRM_SEARCH_BAR")
+                                    .addTheme(THM_SEARCH_BAR_CENTRE, ThemePosition.CENTRE).end()
+                                    .question("QUE_SEARCH")
+                                            .addTheme(THM_SEARCH_BAR)
+                                            .vcl(VisualControlType.VCL)
+                                            .end()
+                                            .addTheme(THM_SEARCH_BAR_WRAPPER)
+                                            .vcl(VisualControlType.VCL_WRAPPER)
+                                            .end()
+                                    .end()
+                                    .build();
+                    
+                    Theme THM_PROJECT_NAME = Theme.builder("THM_PROJECT_NAME")
+                                    .addAttribute()
+                                            .flexGrow(0)
+                                    .end()
+                                    .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE,false).end()
+                                    .build();
+
+
+                    Frame3  FRM_PROJECT_NAME = Frame3.builder("FRM_PROJECT_NAME")
+                                    .addTheme("THM_SIDEBAR_WIDTH", ThemePosition.WRAPPER, serviceToken).end()                        
+                                    .addTheme(THM_PROJECT_NAME, ThemePosition.WRAPPER).end()                        
+                                    .question("QUE_NAME_TWO")
+                                            .targetAlias("PRJ_"+serviceToken.getRealm().toUpperCase())
+                                            .addTheme("THM_TITLE_LABEL", serviceToken).vcl(VisualControlType.VCL_LABEL).end()
+                                    .end()
+                                    .build();
+
+
+                    Frame3 FRM_HEADER = Frame3.builder("FRM_HEADER").addTheme(THM_HEADER).end()
+                                    .addTheme(THM_HEADER).end()
+                                    //.addTheme(THM_FRAME_ALIGN_WEST, ThemePosition.WEST).end()
+                                    //.addTheme(THM_FRAME_ALIGN_EAST, ThemePosition.EAST).end()
+                                    .addFrame(FRM_PROJECT_NAME, FramePosition.WEST).end()
+                                    .addFrame(FRM_SEARCH_BAR, FramePosition.CENTRE).end()
+                                    .addFrame(FRM_HEADER_OPTIONS, FramePosition.EAST).end()
+                                    .addFrame(FRM_HEADER_USERNAME, FramePosition.EAST).end()
+                                    .addFrame(FRM_HEADER_PROFILE_PICTURE, FramePosition.EAST).end()
+                                    .addFrame(FRM_PADDING, FramePosition.EAST).end()
+                                    .addFrame(FRM_HEADER_ADD_ITEMS, FramePosition.EAST).end().build();
+
+                    System.out.println("Generated Header Frame");
+                    return FRM_HEADER;
+
+            } catch (Exception e) {
+                    System.out.println("Error " + e.getLocalizedMessage());
+            }
+            return null;
+    }
+
+    public Frame3 generateSidebar() {
+            QRules rules = GennyJbpmBaseTest.setupLocalService();
+            GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+            BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+            BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
+
+            try {
+
+                    Theme THM_SIDEBAR = Theme.builder("THM_SIDEBAR").addAttribute()
+                                    .backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E")).end()
+                                    .build();
+
+                    Theme THM_SIDEBAR_WIDTH = Theme.builder("THM_SIDEBAR_WIDTH").addAttribute().minWidth(300)
+                                    .width(100).end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
+                                    .end().build();
+
+                    Theme THM_TREE_ITEM = Theme.builder("THM_TREE_ITEM").addAttribute().color("white")
+                                    .height("auto").flexGrow(0).flexBasis("auto").end().build();
+
+                    Theme THM_LOGO = Theme.builder("THM_LOGO")
+                                    .addAttribute()
+                                            .fit("contain")
+                                            .height(100)
+                                            .width(100)
+                                    .end()
+                                    .build();
+                    
+                    Theme THM_LOGO_CENTRE = Theme.builder("THM_LOGO_CENTRE")
+                                    .addAttribute()
+                                            .justifyContent("center")
+                                            .width("100%")
+                                    .end()
+                                    .build();
+                    
+                    Theme THM_MARGIN_BOTTOM_20 = Theme.builder("THM_MARGIN_BOTTOM_20")
+                                    .addAttribute()
+                                            .marginBottom(20)
+                                    .end()
+                                    .build();
+
+                    Frame3 FRM_LOGO = Frame3.builder("FRM_LOGO")
+                                    .addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER).end()
+                                    .addTheme(THM_MARGIN_BOTTOM_20, ThemePosition.WRAPPER).end()
+                                    .addTheme(THM_LOGO_CENTRE, ThemePosition.CENTRE).end()
+                                    .question("QUE_PROJECT_SIDEBAR_GRP")
+                                            .addTheme(THM_LOGO)
+                                            .vcl(VisualControlType.VCL_WRAPPER).end().end().build();
+
+                    Theme THM_TREE_GROUP_BEHAVIOUR = Theme.builder("THM_TREE_GROUP_BEHAVIOUR")
+                                    .addAttribute(ThemeAttributeType.PRI_IS_EXPANDABLE, true).end()
+                                    .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                    .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_LABEL, true).end()
+                                    .addAttribute(ThemeAttributeType.PRI_IS_QUESTION_GRP_LABEL_CLICKABLE, true)
+                                    .end().build();
+
+                    Theme THM_TREE_GROUP_LABEL = Theme.builder("THM_TREE_GROUP_LABEL").addAttribute().bold(false)
+                                    .size("sm").end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
+                                    .end().build();
+
+                    Theme THM_TREE_GROUP_WRAPPER = Theme.builder("THM_TREE_GROUP_WRAPPER").addAttribute()
+                                    .width("100%").paddingX(20).end()
+                                    .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                    Theme THM_TREE_GROUP_CLICKABLE_WRAPPER = Theme.builder("THM_TREE_GROUP_CLICKABLE_WRAPPER")
+                                    .addAttribute().width("100%").justifyContent("space-between").end()
+                                    .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                    Theme THM_TREE_GROUP_CONTENT_WRAPPER = Theme.builder("THM_TREE_GROUP_CONTENT_WRAPPER")
+                                    .addAttribute().paddingLeft(10).end()
+                                    .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                    Frame3 FRM_TREE_FORM_VIEW = Frame3.builder("FRM_TREE_FORM_VIEW")
+                                    .addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER).end()
+                                    .question("QUE_TREE_FORM_VIEW_GRP").addTheme(THM_TREE_GROUP_BEHAVIOUR).end()
+                                    .addTheme(THM_TREE_GROUP_CLICKABLE_WRAPPER)
+                                    .vcl(VisualControlType.GROUP_CLICKABLE_WRAPPER).end()
+                                    .addTheme(THM_TREE_GROUP_CONTENT_WRAPPER)
+                                    .vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end()
+                                    .addTheme(THM_TREE_GROUP_WRAPPER).vcl(VisualControlType.GROUP_WRAPPER).end()
+                                    .addTheme(THM_TREE_GROUP_LABEL).vcl(VisualControlType.GROUP_LABEL).end().end()
+                                    .build();
+
+                    Frame3 FRM_TREE_BUCKET_VIEW = Frame3.builder("FRM_TREE_BUCKET_VIEW")
+                                    .addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER).end()
+                                    .question("QUE_TREE_BUCKET_VIEW").end().build();
+
+                    Frame3 FRM_TREE_DETAIL_VIEW = Frame3.builder("FRM_TREE_DETAIL_VIEW")
+                                    .addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER).end()
+                                    .question("QUE_TREE_DETAIL_VIEW").addTheme(THM_TREE_GROUP_WRAPPER)
+                                    .vcl(VisualControlType.VCL_WRAPPER).end().end().build();
+
+                    Frame3 FRM_TREE_TABLE_VIEW = Frame3.builder("FRM_TREE_TABLE_VIEW")
+                                    .addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER).end()
+                                    .question("QUE_TREE_TABLE_VIEW").end().build();
+
+                    Frame3 FRM_SIDEBAR = Frame3.builder("FRM_SIDEBAR").addTheme(THM_SIDEBAR).end()
+                                    .addTheme(THM_SIDEBAR_WIDTH).end().addFrame(FRM_LOGO, FramePosition.NORTH).end()
+                                    .addFrame(FRM_TREE_TABLE_VIEW, FramePosition.NORTH).end()
+                                    .addFrame(FRM_TREE_BUCKET_VIEW, FramePosition.NORTH).end()
+                                    .addFrame(FRM_TREE_DETAIL_VIEW, FramePosition.NORTH).end()
+                                    .addFrame(FRM_TREE_FORM_VIEW, FramePosition.NORTH).end().build();
+
+                    System.out.println("Generated Sidebar Frame");
+                    return FRM_SIDEBAR;
+            } catch (Exception e) {
+                    System.out.println("Error " + e.getLocalizedMessage());
+            }
+            return null;
+    }
+
+    public Frame3 generateFooter() {
+            QRules rules = GennyJbpmBaseTest.setupLocalService();
+            GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+            BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+            BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
+
+            try {
+                    Theme THM_LABEL_BOLD = Theme.builder("THM_LABEL_BOLD").addAttribute().bold(true).size("md")
+                                    .paddingX(10).end().addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end()
+                                    .build();
+
+                    Theme THM_FOOTER = Theme.builder("THM_FOOTER").addAttribute()
+                                    .backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E")).height(50)
+                                    .paddingX(20).end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
+                                    .end().build();
+
+                    Frame3 FRM_POWERED_BY = Frame3.builder("FRM_POWERED_BY").question("QUE_POWERED_BY_GRP")
+                                    .addTheme(THM_LABEL_BOLD).vcl(VisualControlType.VCL_LABEL).end()
+
+                                    .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken)
+                                    .vcl(VisualControlType.VCL_WRAPPER).end()
+
+                                    .end().build();
+
+                    Theme THM_FRAME_ALIGN_EAST = Theme.builder("THM_FRAME_ALIGN_EAST").addAttribute()
+                                    .marginLeft("auto").flexGrow(0).flexBasis("initial").end()
+                                    .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+                    Theme THM_FRAME_ALIGN_WEST = Theme.builder("THM_FRAME_ALIGN_WEST").addAttribute()
+                                    .marginRight("auto").flexGrow(0).flexBasis("initial").end()
+                                    .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                    Frame3 FRM_FOOTER = Frame3.builder("FRM_FOOTER").addTheme(THM_FOOTER).end()
+                                    .addTheme(THM_FRAME_ALIGN_EAST, ThemePosition.EAST).end()
+                                    .addFrame(FRM_POWERED_BY, FramePosition.EAST).end().build();
+
+                    System.out.println("Generated Footer Frame");
+                    return FRM_FOOTER;
+            } catch (Exception e) {
+                    System.out.println("Error :: " + e.getLocalizedMessage());
+            }
+            return null;
+    }
+
+    public Frame3 getDashboard() {
+        QRules rules = GennyJbpmBaseTest.setupLocalService();
+        GennyToken userToken = new GennyToken("userToken", rules.getToken());
+        GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+        BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+        BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
+
+        try {
+
+                /* -------------------- THEMES ------------------------------ */
+
+                Theme THM_PROJECT_COLOR_BACKGROUND = Theme.builder("THM_PROJECT_COLOR_BACKGROUND")
+                                .addAttribute()
+                                .backgroundColor(project.getValue("PRI_COLOR_BACKGROUND", "#F6F6F6"))
+                                .color(project.getValue("PRI_COLOR_BACKGROUND_ON", "#000000")).end().build();
+
+                Theme THM_DASHBOARD = Theme.builder("THM_DASHBOARD").addAttribute()
+                                // .backgroundColor("green")
+                                .maxWidth(900)
+                                .width("100%")
+                                .end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                Theme THM_VERTICAL_SCROLL = Theme.builder("THM_VERTICAL_SCROLL")
+                                .addAttribute()
+                                        .overflowY("auto")
+                                        .padding(40)
+                                .end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                .build();
+                
+                Theme THM_PADDING_40 = Theme.builder("THM_PADDING_40")
+                                .addAttribute()
+                                        .padding(40)
+                                .end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                .build();
+
+                Theme THM_DASHBOARD_WRAPPER = Theme.builder("THM_DASHBOARD_WRAPPER").addAttribute()
+                                .flexShrink(0)
+                                .height("initial")
+                                .flexBasis("auto")
+                                .end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                Theme THM_DASHBOARD_ITEM = Theme.builder("THM_DASHBOARD_ITEM").addAttribute()
+                                .borderStyle("solid").borderColor("grey").borderBottomWidth(1)
+                                .maxHeight("fit-content").padding(10).end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                Theme THM_DASHBOARD_ITEM_COLOR = Theme.builder("THM_DASHBOARD_ITEM_COLOR").addAttribute()
+                                .backgroundColor(project.getValue("PRI_COLOR_SURFACE", "#FFFFFF"))
+                                .color(project.getValue("PRI_COLOR_SURFACE_ON", "#000000")).end().build();
+
+                Theme THM_DASHBOARD_ITEM_INPUT = Theme.builder("THM_DASHBOARD_ITEM_INPUT").addAttribute()
+                                .dynamicWidth(true).end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                Theme THM_DASHBOARD_ITEM_LABEL = Theme.builder("THM_DASHBOARD_ITEM_LABEL").addAttribute()
+                                .bold(true).end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
+                                .end().build();
+
+                Theme THM_DASHBOARD_ITEM_WRAPPER = Theme.builder("THM_DASHBOARD_ITEM_WRAPPER").addAttribute()
+                                .flexDirection("row").justifyContent("space-between").width("100%").end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                Theme THM_DASHBOARD_ITEM_BEHAVIOUR = Theme.builder("THM_DASHBOARD_ITEM_BEHAVIOUR")
+                                .addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end().build();
+
+                Theme THM_TITLE_LABEL = Theme.builder("THM_TITLE_LABEL").addAttribute().textAlign("center")
+                                .bold(true).size("lg").end().build();
+
+                Theme THM_TITLE_WRAPPER = Theme.builder("THM_TITLE_WRAPPER").addAttribute().padding(20).end()
+                                .build();
+
+                Theme THM_TITLE_BEHAVIOUR = Theme.builder("THM_TITLE_BEHAVIOUR")
+                                .addAttribute(ThemeAttributeType.PRI_HAS_INPUT, false).end()
+                                .addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end().build();
+
+                Theme THM_DASHBOARD_CONTENT_WRAPPER = Theme.builder("THM_DASHBOARD_CONTENT_WRAPPER")
+                                .addAttribute().flexGrow(0).flexBasis("initial").height("initial")
+                                .end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                Theme THM_DASHBOARD_CONTENT_NORTH = Theme.builder("THM_DASHBOARD_CONTENT_NORTH").addAttribute()
+                                .flexBasis("initial").end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                /* -------------------- INTERNS - FRAMES ------------------------------ */
+
+                Frame3 FRM_COUNT_ALL_INTERNS = Frame3.builder("FRM_COUNT_ALL_INTERNS")
+                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end().question("QUE_COUNT_ALL_INTERNS")
+                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end().end().build();
+
+                Frame3 FRM_COUNT_AVAILABLE_INTERNS = Frame3.builder("FRM_COUNT_AVAILABLE_INTERNS")
+                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                .question("QUE_COUNT_AVAILABLE_INTERNS").addTheme(THM_DASHBOARD_ITEM_WRAPPER)
+                                .vcl(VisualControlType.VCL_WRAPPER).end().addTheme(THM_DASHBOARD_ITEM_INPUT)
+                                .vcl(VisualControlType.VCL_INPUT).end().addTheme(THM_DASHBOARD_ITEM_LABEL)
+                                .vcl(VisualControlType.VCL_LABEL).end().addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR)
+                                .end().end().build();
+
+                Frame3 FRM_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNS = Frame3
+                                .builder("FRM_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNS")
+                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                .question("QUE_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNS")
+                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end().end().build();
+
+                Frame3 FRM_COUNT_OFFERED_INTERNS = Frame3.builder("FRM_COUNT_OFFERED_INTERNS")
+                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end().question("QUE_COUNT_OFFERED_INTERNS")
+                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end().end().build();
+
+                Frame3 FRM_COUNT_PLACED_INTERNS = Frame3.builder("FRM_COUNT_PLACED_INTERNS")
+                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end().question("QUE_COUNT_PLACED_INTERNS")
+                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end().end().build();
+
+                Frame3 FRM_COUNT_IN_PROGRESS_INTERNS = Frame3.builder("FRM_COUNT_IN_PROGRESS_INTERNS")
+                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                .question("QUE_COUNT_IN_PROGRESS_INTERNS").addTheme(THM_DASHBOARD_ITEM_WRAPPER)
+                                .vcl(VisualControlType.VCL_WRAPPER).end().addTheme(THM_DASHBOARD_ITEM_INPUT)
+                                .vcl(VisualControlType.VCL_INPUT).end().addTheme(THM_DASHBOARD_ITEM_LABEL)
+                                .vcl(VisualControlType.VCL_LABEL).end().addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR)
+                                .end().end().build();
+
+                Frame3 FRM_COUNT_COMPLETED_INTERNS = Frame3.builder("FRM_COUNT_COMPLETED_INTERNS")
+                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                .question("QUE_COUNT_COMPLETED_INTERNS").addTheme(THM_DASHBOARD_ITEM_WRAPPER)
+                                .vcl(VisualControlType.VCL_WRAPPER).end().addTheme(THM_DASHBOARD_ITEM_INPUT)
+                                .vcl(VisualControlType.VCL_INPUT).end().addTheme(THM_DASHBOARD_ITEM_LABEL)
+                                .vcl(VisualControlType.VCL_LABEL).end().addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR)
+                                .end().end().build();
+
+                /* DASHBOARD - INTERN - CONTENT */
+
+                Frame3 FRM_DASHBOARD_INTERNS_CONTENT = Frame3.builder("FRM_DASHBOARD_INTERNS_CONTENT")
+                                .addTheme(THM_DASHBOARD_CONTENT_WRAPPER, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_CONTENT_NORTH, ThemePosition.NORTH).end()
+                                .addFrame(FRM_COUNT_ALL_INTERNS, FramePosition.NORTH).end()
+                                .addFrame(FRM_COUNT_AVAILABLE_INTERNS, FramePosition.NORTH).end()
+                                .addFrame(FRM_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNS,
+                                                FramePosition.NORTH)
+                                .end().addFrame(FRM_COUNT_OFFERED_INTERNS, FramePosition.NORTH).end()
+                                .addFrame(FRM_COUNT_PLACED_INTERNS, FramePosition.NORTH).end()
+                                .addFrame(FRM_COUNT_IN_PROGRESS_INTERNS, FramePosition.NORTH).end()
+                                .addFrame(FRM_COUNT_COMPLETED_INTERNS, FramePosition.NORTH).end().build();
+
+                /* DASHBOARD - INTERN - HEADER */
+
+                Frame3 FRM_DASHBOARD_INTERNS_HEADER = Frame3.builder("FRM_DASHBOARD_INTERNS_HEADER")
+                                .addTheme(THM_DASHBOARD_CONTENT_WRAPPER, ThemePosition.WRAPPER).end()
+                                .question("QUE_DASHBOARD_ALL_INTERNS").addTheme(THM_TITLE_LABEL)
+                                .vcl(VisualControlType.VCL_LABEL).end().addTheme(THM_TITLE_WRAPPER)
+                                .vcl(VisualControlType.VCL_WRAPPER).end().addTheme(THM_TITLE_BEHAVIOUR).end()
+                                .end().build();
+
+                /* DASHBOARD - INTERN */
+
+                Frame3 FRM_DASHBOARD_INTERNS = Frame3.builder("FRM_DASHBOARD_INTERNS")
+                                .addTheme(THM_DASHBOARD).end()
+                                .addTheme(THM_DASHBOARD_WRAPPER, ThemePosition.WRAPPER).end()
+                                .addFrame(FRM_DASHBOARD_INTERNS_HEADER, FramePosition.NORTH).end()
+                                .addFrame(FRM_DASHBOARD_INTERNS_CONTENT, FramePosition.NORTH).end().build();
+
+                /*
+                 * =============================================================================
+                 * ===========================================
+                 * =============================================================================
+                 * ===========================================
+                 */
+
+                /* -------------------- INTERNSHIPS - FRAMES ------------------------------ */
+
+                Frame3 FRM_COUNT_ALL_INTERNSHIPS = Frame3.builder("FRM_COUNT_ALL_INTERNSHIPS")
+                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end().question("QUE_COUNT_ALL_INTERNSHIPS")
+                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end().end().build();
+
+                Frame3 FRM_COUNT_AVAILABLE_INTERNSHIPS = Frame3.builder("FRM_COUNT_AVAILABLE_INTERNSHIPS")
+                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                .question("QUE_COUNT_AVAILABLE_INTERNSHIPS")
+                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end().end().build();
+
+                Frame3 FRM_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNSHIPS = Frame3
+                                .builder("FRM_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNSHIPS")
+                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                .question("QUE_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNSHIPS")
+                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end().end().build();
+
+                Frame3 FRM_COUNT_OFFERED_INTERNSHIPS = Frame3.builder("FRM_COUNT_OFFERED_INTERNSHIPS")
+                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                .question("QUE_COUNT_OFFERED_INTERNSHIPS").addTheme(THM_DASHBOARD_ITEM_WRAPPER)
+                                .vcl(VisualControlType.VCL_WRAPPER).end().addTheme(THM_DASHBOARD_ITEM_INPUT)
+                                .vcl(VisualControlType.VCL_INPUT).end().addTheme(THM_DASHBOARD_ITEM_LABEL)
+                                .vcl(VisualControlType.VCL_LABEL).end().addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR)
+                                .end().end().build();
+
+                Frame3 FRM_COUNT_PLACED_INTERNSHIPS = Frame3.builder("FRM_COUNT_PLACED_INTERNSHIPS")
+                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                .question("QUE_COUNT_PLACED_INTERNSHIPS").addTheme(THM_DASHBOARD_ITEM_WRAPPER)
+                                .vcl(VisualControlType.VCL_WRAPPER).end().addTheme(THM_DASHBOARD_ITEM_INPUT)
+                                .vcl(VisualControlType.VCL_INPUT).end().addTheme(THM_DASHBOARD_ITEM_LABEL)
+                                .vcl(VisualControlType.VCL_LABEL).end().addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR)
+                                .end().end().build();
+
+                Frame3 FRM_COUNT_IN_PROGRESS_INTERNSHIPS = Frame3.builder("FRM_COUNT_IN_PROGRESS_INTERNSHIPS")
+                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                .question("QUE_COUNT_IN_PROGRESS_INTERNSHIPS")
+                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end().end().build();
+
+                Frame3 FRM_COUNT_COMPLETED_INTERNSHIPS = Frame3.builder("FRM_COUNT_COMPLETED_INTERNSHIPS")
+                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                .question("QUE_COUNT_COMPLETED_INTERNSHIPS")
+                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end().end().build();
+
+                /* DASHBOARD - INTERNSHIPS - CONTENT */
+
+                Frame3 FRM_DASHBOARD_INTERNSHIPS_CONTENT = Frame3.builder("FRM_DASHBOARD_INTERNSHIPS_CONTENT")
+                                // .addTheme("THM_BOX_SHADOW_SM", ThemePosition.WRAPPER, serviceToken).end()
+                                .addTheme(THM_DASHBOARD_CONTENT_WRAPPER, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_CONTENT_NORTH, ThemePosition.NORTH).end()
+                                .addFrame(FRM_COUNT_ALL_INTERNSHIPS, FramePosition.NORTH).end()
+                                .addFrame(FRM_COUNT_AVAILABLE_INTERNSHIPS, FramePosition.NORTH).end()
+                                .addFrame(FRM_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNSHIPS,
+                                                FramePosition.NORTH)
+                                .end().addFrame(FRM_COUNT_OFFERED_INTERNSHIPS, FramePosition.NORTH).end()
+                                .addFrame(FRM_COUNT_PLACED_INTERNSHIPS, FramePosition.NORTH).end()
+                                .addFrame(FRM_COUNT_IN_PROGRESS_INTERNSHIPS, FramePosition.NORTH).end()
+                                .addFrame(FRM_COUNT_COMPLETED_INTERNSHIPS, FramePosition.NORTH).end().build();
+
+                /* DASHBOARD - INTERNSHIPS - HEADER */
+
+                Frame3 FRM_DASHBOARD_INTERNSHIPS_HEADER = Frame3.builder("FRM_DASHBOARD_INTERNSHIPS_HEADER")
+                               .addTheme(THM_DASHBOARD_CONTENT_WRAPPER, ThemePosition.WRAPPER).end()
+                                .question("QUE_DASHBOARD_ALL_INTERNSHIPS").addTheme(THM_TITLE_LABEL)
+                                .vcl(VisualControlType.VCL_LABEL).end().addTheme(THM_TITLE_WRAPPER)
+                                .vcl(VisualControlType.VCL_WRAPPER).end().addTheme(THM_TITLE_BEHAVIOUR).end()
+                                .end().build();
+
+                /* DASHBOARD - INTERNSHIPS */
+
+                Frame3 FRM_DASHBOARD_INTERNSHIPS = Frame3.builder("FRM_DASHBOARD_INTERNSHIPS")
+                                .addTheme(THM_DASHBOARD).end()
+                                .addTheme(THM_DASHBOARD_WRAPPER, ThemePosition.WRAPPER).end()
+                                .addFrame(FRM_DASHBOARD_INTERNSHIPS_HEADER, FramePosition.NORTH).end()
+                                .addFrame(FRM_DASHBOARD_INTERNSHIPS_CONTENT, FramePosition.NORTH).end().build();
+
+                Frame3 FRM_CONTENT = Frame3.builder("FRM_CONTENT")
+                                .addTheme(THM_PROJECT_COLOR_BACKGROUND).end()
+                                .addTheme(THM_VERTICAL_SCROLL, ThemePosition.NORTH).end()
+                                .addTheme(THM_PADDING_40, ThemePosition.NORTH).end()
+                                .addFrame(FRM_DASHBOARD_INTERNS, FramePosition.NORTH).end()
+                                .addFrame(FRM_DASHBOARD_INTERNSHIPS, FramePosition.NORTH).end().build();
+
+                Theme THM_TREE_GROUP_BEHAVIOUR = Theme.builder("THM_TREE_GROUP_BEHAVIOUR")
+                                .addAttribute(ThemeAttributeType.PRI_IS_EXPANDABLE, true).end()
+                                .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_LABEL, true).end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_QUESTION_GRP_LABEL_CLICKABLE, true)
+                                .end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                .addAttribute(ThemeAttributeType.PRI_HAS_CHILD_ASKS, false).end().build();
+
+                return FRM_CONTENT;
+
+        } catch (Exception e) {
+                // TODO: handle exception
+        }
+        return null;
+}
 
 	@BeforeClass
 	public static void init() throws FileNotFoundException, SQLException {
