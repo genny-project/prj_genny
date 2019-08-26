@@ -174,41 +174,52 @@ public class AdamTest {
         				Theme.class, serviceToken.getToken());
                 
                 
-                Theme THM_TABLE = Theme.builder("THM_TABLE")
-                                        .addAttribute()
-                                                /* .backgroundColor("grey") */
-                                                .width("100%")
-                                        .end()
-                                        .build();
+//                Theme THM_TABLE = Theme.builder("THM_TABLE")
+//                                        .addAttribute()
+//                                                /* .backgroundColor("grey") */
+//                                                .width("100%")
+//                                        .end()
+//                                        .build();
   
-//        		Theme THM_TABLE = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TABLE",
-//        				Theme.class, serviceToken.getToken());
+        		Theme THM_TABLE = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TABLE",
+        				Theme.class, serviceToken.getToken());
 
                 
-                Frame3 FRM_TABLE_HEADER = Frame3.builder("FRM_TABLE_HEADER")
-                                .addTheme(THM_TABLE_HEADER).end()
-                                .addTheme(THM_TABLE_BORDER).end()
-                                .question("QUE_NAME_GRP")
-                                        .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
-                                        .addTheme(THM_TABLE_HEADER_CELL_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
-                                        .addTheme(THM_TABLE_HEADER_CELL_INPUT).vcl(VisualControlType.VCL_INPUT).end()
-                                .end()
-                                .build();
-                
-                Frame3 FRM_TABLE_CONTENT = Frame3.builder("FRM_TABLE_CONTENT")
-                                .addTheme(THM_TABLE_CONTENT).end()
-                                .addTheme(THM_TABLE_BORDER).end()
-                                .question("QUE_TABLE_VIEW_TEST")
-                                        .addTheme(THM_TABLE_HEADER_CELL_INPUT).vcl(VisualControlType.VCL_INPUT).end()
-                                        .addTheme(THM_TABLE_CONTENT).end()
-                                .end()
-                                .build();
-                
-                Frame3 FRM_TABLE_BODY = Frame3.builder("FRM_TABLE_BODY")
-                                .addTheme(THM_TABLE_BODY).end()
-                                .addFrame(FRM_TABLE_HEADER, FramePosition.NORTH).end()
-                                .addFrame(FRM_TABLE_CONTENT, FramePosition.CENTRE).end()
-                                .build();
+//                Frame3 FRM_TABLE_HEADER = Frame3.builder("FRM_TABLE_HEADER")
+//                                .addTheme(THM_TABLE_HEADER).end()
+//                                .addTheme(THM_TABLE_BORDER).end()
+//                                .question("QUE_NAME_GRP")
+//                                        .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
+//                                        .addTheme(THM_TABLE_HEADER_CELL_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+//                                        .addTheme(THM_TABLE_HEADER_CELL_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+//                                .end()
+//                                .build();
+   
+        		Frame3 FRM_TABLE_HEADER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_TABLE_HEADER",
+        				Frame3.class, serviceToken.getToken());
+
+//                Frame3 FRM_TABLE_CONTENT = Frame3.builder("FRM_TABLE_CONTENT")
+//                                .addTheme(THM_TABLE_CONTENT).end()
+//                                .addTheme(THM_TABLE_BORDER).end()
+//                                .question("QUE_TABLE_VIEW_TEST")
+//                                        .addTheme(THM_TABLE_HEADER_CELL_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+//                                        .addTheme(THM_TABLE_CONTENT).end()
+//                                .end()
+//                                .build();
+  
+                Frame3 FRM_TABLE_CONTENT = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_TABLE_CONTENT",
+        				Frame3.class, serviceToken.getToken());
+ 
+
+//                Frame3 FRM_TABLE_BODY = Frame3.builder("FRM_TABLE_BODY")
+//                                .addTheme(THM_TABLE_BODY).end()
+//                                .addFrame(FRM_TABLE_HEADER, FramePosition.NORTH).end()
+//                                .addFrame(FRM_TABLE_CONTENT, FramePosition.CENTRE).end()
+//                                .build();
+ 
+                Frame3 FRM_TABLE_BODY = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_TABLE_BODY",
+        				Frame3.class, serviceToken.getToken());
+
                 
                /*  Frame3 FRM_TABLE_PREVIOUS = Frame3.builder("FRM_TABLE_PREVIOUS")
                                 .addTheme(THM_BUTTON).end()
@@ -225,23 +236,29 @@ public class AdamTest {
                                 .question("QUE_TABLE_NEXT").end()
                                 .build(); */
 
-                Frame3 FRM_TABLE_FOOTER = Frame3.builder("FRM_TABLE_FOOTER")
-                                .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
-                                .addTheme(THM_TABLE_FOOTER).end()
-                                .addTheme(THM_TABLE_BORDER).end()
-                                .question("QUE_TABLE_FOOTER_GRP")
-                                        .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
-                                        .addTheme(THM_TABLE_HEADER_CELL_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
-                                        .addTheme(THM_TABLE_HEADER_CELL_INPUT).vcl(VisualControlType.VCL_INPUT).end()
-                                .end()
-                                .build();
+//                Frame3 FRM_TABLE_FOOTER = Frame3.builder("FRM_TABLE_FOOTER")
+//                                .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
+//                                .addTheme(THM_TABLE_FOOTER).end()
+//                                .addTheme(THM_TABLE_BORDER).end()
+//                                .question("QUE_TABLE_FOOTER_GRP")
+//                                        .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
+//                                        .addTheme(THM_TABLE_HEADER_CELL_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+//                                        .addTheme(THM_TABLE_HEADER_CELL_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+//                                .end()
+//                                .build();
                 
+                Frame3 FRM_TABLE_FOOTER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_TABLE_FOOTER",
+        				Frame3.class, serviceToken.getToken());
+             
                 
-                Frame3 FRM_TABLE = Frame3.builder("FRM_TABLE")
-                                .addTheme(THM_TABLE).end()
-                                .addFrame(FRM_TABLE_BODY, FramePosition.CENTRE).end()
-                                .addFrame(FRM_TABLE_FOOTER, FramePosition.SOUTH).end()
-                                .build();
+//                Frame3 FRM_TABLE = Frame3.builder("FRM_TABLE")
+//                                .addTheme(THM_TABLE).end()
+//                                .addFrame(FRM_TABLE_BODY, FramePosition.CENTRE).end()
+//                                .addFrame(FRM_TABLE_FOOTER, FramePosition.SOUTH).end()
+//                                .build();
+
+                Frame3 FRM_TABLE = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_TABLE",
+        				Frame3.class, serviceToken.getToken());
 
                 return FRM_TABLE;
                 
