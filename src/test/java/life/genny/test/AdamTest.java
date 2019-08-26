@@ -289,34 +289,37 @@ public void testDesktop() {
 //                Frame3 FRM_FOOTER = generateFooter();
 //                /*Frame3 FRM_TABS = generateTabs(); */
 
-        		Frame3 FRM_TABLE = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_TABLE", Frame3.class,
-        				serviceToken.getToken());
-           		Frame3 FRM_HEADER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_HEADER", Frame3.class,
-        				serviceToken.getToken());
-           		Frame3 FRM_SIDEBAR = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_SIDEBAR", Frame3.class,
-        				serviceToken.getToken());
-           		Frame3 FRM_CONTENT = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_CONTENT", Frame3.class,
-        				serviceToken.getToken());
-           		Frame3 FRM_FOOTER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_FOOTER", Frame3.class,
-        				serviceToken.getToken());
+//        		Frame3 FRM_TABLE = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_TABLE", Frame3.class,
+//        				serviceToken.getToken());
+//           		Frame3 FRM_HEADER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_HEADER", Frame3.class,
+//        				serviceToken.getToken());
+//           		Frame3 FRM_SIDEBAR = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_SIDEBAR", Frame3.class,
+//        				serviceToken.getToken());
+//           		Frame3 FRM_CONTENT = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_CONTENT", Frame3.class,
+//        				serviceToken.getToken());
+//           		Frame3 FRM_FOOTER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_FOOTER", Frame3.class,
+//        				serviceToken.getToken());
 
                 
                 /* frame-root */
-                Frame3 FRM_APP = Frame3.builder("FRM_APP")
-                                .addTheme("THM_PROJECT", ThemePosition.FRAME, serviceToken).end()
-                                .addFrame(FRM_HEADER, FramePosition.NORTH).end()
-                                .addFrame(FRM_SIDEBAR, FramePosition.WEST).end()
+//                Frame3 FRM_TABLE_APP = Frame3.builder("FRM_APP")
+//                                .addTheme("THM_PROJECT", ThemePosition.FRAME, serviceToken).end()
+//                                .addFrame(FRM_HEADER, FramePosition.NORTH).end()
+//                                .addFrame(FRM_SIDEBAR, FramePosition.WEST).end()
+//
+//                                /* .addFrame(FRM_CONTENT, FramePosition.CENTRE).end() */
+//                                .addFrame(FRM_TABLE, FramePosition.CENTRE).end()
+//                                .addFrame(FRM_FOOTER, FramePosition.SOUTH).end() 
+//                                /*.addFrame(FRM_TABS, FramePosition.CENTRE).end() */
+//                                .build();
+    
+          		Frame3 FRM_TABLE_APP = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_TABLE_APP", Frame3.class,
+        				serviceToken.getToken());
 
-                                /* .addFrame(FRM_CONTENT, FramePosition.CENTRE).end() */
-                                .addFrame(FRM_TABLE, FramePosition.CENTRE).end()
-                                .addFrame(FRM_FOOTER, FramePosition.SOUTH).end() 
-                                /*.addFrame(FRM_TABS, FramePosition.CENTRE).end() */
-                                .build();
-                
 
                 /* frame-root */
                 Frame3 FRM_ROOT = Frame3.builder("FRM_ROOT")
-                                .addFrame(FRM_APP, FramePosition.CENTRE).end()
+                                .addFrame(FRM_TABLE_APP, FramePosition.CENTRE).end()
                                 .build();
 
                 Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
