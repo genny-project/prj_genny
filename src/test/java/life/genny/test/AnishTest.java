@@ -397,6 +397,149 @@ public class AnishTest extends GennyJbpmBaseTest {
                 return null;
         }
 
+        public Frame3 generateTable() {
+
+                QRules rules = GennyJbpmBaseTest.setupLocalService();
+                GennyToken userToken = new GennyToken("userToken", rules.getToken());
+                GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+                BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+                BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
+
+                try {   
+
+                        Theme THM_TABLE_HEADER = Theme.builder("THM_TABLE_HEADER")
+                                                .addAttribute()
+                                                        .backgroundColor("#f4f5f7")
+                                                        .width("100%")
+                                                        .color("black")
+                                                .end()
+                                                .build();
+                        Theme THM_TABLE_BORDER = Theme.builder("THM_TABLE_BORDER")
+                                                .addAttribute()
+                                                        .borderBottomWidth(1)
+                                                        .borderColor("grey")
+                                                .end()
+                                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                                .build();
+
+                        Theme THM_TABLE_HEADER_CELL_WRAPPER = Theme.builder("THM_TABLE_HEADER_CELL_WRAPPER")
+                                                .addAttribute()
+                                                        .width("initial")
+                                                        .flexGrow(1)
+                                                        .flexShrink(1)
+                                                        .flexBasis("auto")
+                                                        .padding(10)
+                                                .end()
+                                                .build();
+                       
+                        Theme THM_TABLE_HEADER_CELL_INPUT = Theme.builder("THM_TABLE_HEADER_CELL_INPUT")
+                                                .addAttribute()
+                                                        .textAlign("center")
+                                                .end()
+                                                .build();
+                        Theme THM_TABLE_CONTENT = Theme.builder("THM_TABLE_CONTENT")
+                                                .addAttribute()
+                                                        .backgroundColor("#FAFAFA")
+                                                        .color("black")
+                                                        .width("100%")
+                                                .end()
+                                                .build();
+                        Theme THM_TABLE_BODY = Theme.builder("THM_TABLE_BODY")
+                                                .addAttribute()
+                                                        //.backgroundColor("yellow")
+                                                        .width("100%")
+                                                .end()
+                                                .build();
+                        Theme THM_TABLE_FOOTER = Theme.builder("THM_TABLE_FOOTER")
+                                                        .addAttribute()
+                                                        .backgroundColor("#f4f5f7")
+                                                        .width("100%")
+                                                        .color("black")
+                                                .end()
+                                                .build();
+                        
+                        Theme THM_BUTTON = Theme.builder("THM_BUTTON")
+                                                .addAttribute()
+                                                        .backgroundColor("blue")
+                                                        .color("white")
+                                                .end()
+                                                .build();
+                      
+                        Theme THM_TABLE = Theme.builder("THM_TABLE")
+                                                .addAttribute()
+                                                        /* .backgroundColor("grey") */
+                                                        .width("100%")
+                                                .end()
+                                                .build();
+                        
+                        Frame3 FRM_TABLE_HEADER = Frame3.builder("FRM_TABLE_HEADER")
+                                        .addTheme(THM_TABLE_HEADER).end()
+                                        .addTheme(THM_TABLE_BORDER).end()
+                                        .question("QUE_NAME_GRP")
+                                                .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
+                                                .addTheme(THM_TABLE_HEADER_CELL_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                                .addTheme(THM_TABLE_HEADER_CELL_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                        .end()
+                                        .build();
+                        
+                        Frame3 FRM_TABLE_CONTENT = Frame3.builder("FRM_TABLE_CONTENT")
+                                        .addTheme(THM_TABLE_CONTENT).end()
+                                        .addTheme(THM_TABLE_BORDER).end()
+                                        .question("QUE_TABLE_VIEW_TEST")
+                                                .addTheme(THM_TABLE_HEADER_CELL_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                                .addTheme(THM_TABLE_CONTENT).end()
+                                        .end()
+                                        .build();
+                        
+                        Frame3 FRM_TABLE_BODY = Frame3.builder("FRM_TABLE_BODY")
+                                        .addTheme(THM_TABLE_BODY).end()
+                                        .addFrame(FRM_TABLE_HEADER, FramePosition.NORTH).end()
+                                        .addFrame(FRM_TABLE_CONTENT, FramePosition.CENTRE).end()
+                                        .build();
+                        
+                       /*  Frame3 FRM_TABLE_PREVIOUS = Frame3.builder("FRM_TABLE_PREVIOUS")
+                                        .addTheme(THM_BUTTON).end()
+                                        .question("QUE_TABLE_PREVIOUS").end()
+                                        .build();
+                       
+                        Frame3 FRM_TABLE_PAGE_SIZE = Frame3.builder("FRM_TABLE_PAGE_SIZE")
+                                        .addTheme(THM_BUTTON).end()
+                                        .question("QUE_TABLE_PAGE_SIZE").end()
+                                        .build();
+                        
+                        Frame3 FRM_TABLE_NEXT = Frame3.builder("FRM_TABLE_NEXT")
+                                        .addTheme(THM_BUTTON).end()
+                                        .question("QUE_TABLE_NEXT").end()
+                                        .build(); */
+
+                        Frame3 FRM_TABLE_FOOTER = Frame3.builder("FRM_TABLE_FOOTER")
+                                        .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
+                                        .addTheme(THM_TABLE_FOOTER).end()
+                                        .addTheme(THM_TABLE_BORDER).end()
+                                        .question("QUE_TABLE_FOOTER_GRP")
+                                                .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
+                                                .addTheme(THM_TABLE_HEADER_CELL_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                                .addTheme(THM_TABLE_HEADER_CELL_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                        .end()
+                                        .build();
+                        
+                        
+                        Frame3 FRM_TABLE = Frame3.builder("FRM_TABLE")
+                                        .addTheme(THM_TABLE).end()
+                                        .addFrame(FRM_TABLE_BODY, FramePosition.CENTRE).end()
+                                        .addFrame(FRM_TABLE_FOOTER, FramePosition.SOUTH).end()
+                                        .build();
+
+                        return FRM_TABLE;
+                        
+                } catch (Exception e) {
+                        System.out.println("Error " + e.getLocalizedMessage());
+                }
+
+                System.out.println("Generated TableView Frame");
+                return null;
+        }
+
         @Test
         public void testDesktop() {
                 QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -408,50 +551,30 @@ public class AnishTest extends GennyJbpmBaseTest {
                 try {
                         rules.sendAllAttributes();
 
-                        /* frame-tabs */
-//                         Frame3 FRM_TABS = generateTabs();
-//
-//                        /* frame-header */
-                        Frame3 FRM_HEADER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_HEADER",
-            					Frame3.class, serviceToken.getToken());//generateHeader();
-                        Frame3 FRM_SIDEBAR = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_SIDEBAR",
-            					Frame3.class, serviceToken.getToken());//generateHeader();
-                        Frame3 FRM_TABS = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_TABS",
-            					Frame3.class, serviceToken.getToken());//generateHeader();
-                        Frame3 FRM_CONTENT = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_CONTENT",
-            					Frame3.class, serviceToken.getToken());//generateHeader();
-                        Frame3 FRM_FOOTER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_FOOTER",
-            					Frame3.class, serviceToken.getToken());//generateHeader();
-
-//
-//                        /* frame-footer */
-//                        Frame3 FRM_FOOTER = generateFooter();
-//
-//                        /* frame-sidebar */
-//                        Frame3 FRM_SIDEBAR = generateSidebar();
-//
-//                        /* frame-dashboard */
-//                        Frame3 FRM_CONTENT = getDashboard();
-
-                        /*
-                         * Frame3 FRM_MAIN = VertxUtils.getObject(serviceToken.getRealm(), "",
-                         * "FRM_MAIN", Frame3.class, serviceToken.getToken());
-                         */
-
-                        // Frame3 FRM_TABS = VertxUtils.getObject(serviceToken.getRealm(), "",
-                        // "FRM_TABS", Frame3.class,
-                        // serviceToken.getToken());
+                        /* frame-header */
+                        Frame3 FRM_HEADER = generateHeader();
+                        Frame3 FRM_SIDEBAR = generateSidebar();
+                        Frame3 FRM_CONTENT = getDashboard();
+                        Frame3 FRM_TABLE = generateTable();
+                        Frame3 FRM_FOOTER = generateFooter();
+                        /*Frame3 FRM_TABS = generateTabs(); */
 
                         /* frame-root */
                         Frame3 FRM_APP = Frame3.builder("FRM_APP")
                                         .addTheme("THM_PROJECT", ThemePosition.FRAME, serviceToken).end()
                                         .addFrame(FRM_HEADER, FramePosition.NORTH).end()
                                         .addFrame(FRM_SIDEBAR, FramePosition.WEST).end()
-                           /*              .addFrame(FRM_TABS, FramePosition.CENTRE).end() */
-                                        .addFrame(FRM_CONTENT, FramePosition.CENTRE).end()
-                                        .addFrame(FRM_FOOTER, FramePosition.SOUTH).end().build();
+
+                                        /* .addFrame(FRM_CONTENT, FramePosition.CENTRE).end() */
+                                        .addFrame(FRM_TABLE, FramePosition.CENTRE).end()
+                                        .addFrame(FRM_FOOTER, FramePosition.SOUTH).end() 
+                                        /*.addFrame(FRM_TABS, FramePosition.CENTRE).end() */
+                                        .build();
+                        
+
                         /* frame-root */
-                        Frame3 FRM_ROOT = Frame3.builder("FRM_ROOT").addFrame(FRM_APP, FramePosition.CENTRE).end()
+                        Frame3 FRM_ROOT = Frame3.builder("FRM_ROOT")
+                                        .addFrame(FRM_APP, FramePosition.CENTRE).end()
                                         .build();
 
                         Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
@@ -462,7 +585,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                         }
                         System.out.println("Sent");
                 } catch (Exception e) {
-                        System.out.println("Errorsss " + e.getLocalizedMessage());
+                        System.out.println("Error " + e.getLocalizedMessage());
                 }
         }
 
@@ -1295,18 +1418,6 @@ public class AnishTest extends GennyJbpmBaseTest {
                 System.out.println("Generated DetailView Frame");
                 return FRM_DETAIL_VIEW;
 
-        }
-
-        public Frame3 generateTableView() {
-
-                Theme THM_TABLE_VIEW = Theme.builder("THM_TABLE_VIEW").addAttribute().backgroundColor("#E2E1E0")
-                                .flexDirection("column").end().build();
-
-                Frame3 FRM_TABLE_VIEW = Frame3.builder("FRM_TABLE_VIEW").addTheme(THM_TABLE_VIEW).end()
-                                .question("QUE_TAB_TABLE_VIEW").end().build();
-
-                System.out.println("Generated TableView Frame");
-                return FRM_TABLE_VIEW;
         }
 
         // @Test
