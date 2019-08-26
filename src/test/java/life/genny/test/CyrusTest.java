@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.reflect.TypeToken;
 
+import life.genny.qwanda.datatype.DataType;
 import life.genny.models.Frame3;
 import life.genny.models.FramePosition;
 import life.genny.models.GennyToken;
@@ -31,6 +32,8 @@ import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventMessage;
+import life.genny.qwanda.validation.Validation;
+import life.genny.qwanda.validation.ValidationList;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.QwandaUtils;
@@ -39,6 +42,7 @@ import life.genny.rules.listeners.JbpmInitListener;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.FrameUtils2;
 import life.genny.utils.VertxUtils;
+import life.genny.qwanda.datatype.DataType;
 
 public class CyrusTest extends GennyJbpmBaseTest {
 
@@ -174,6 +178,22 @@ public class CyrusTest extends GennyJbpmBaseTest {
 	.end()
 	.build();
 
+	
+	Theme THM_FORM_BUTTON_COLOUR= Theme.builder("THM_FORM_BUTTON_COLOUR")
+			.addAttribute()
+				.backgroundColor("#fff000")
+			.end()
+		.build(); 
+	
+	Validation validation = new Validation("VLD_ANYTHING", "EmptyandBlankValues", ".*");
+	List<Validation> validations = new ArrayList<>();
+	validations.add(validation);
+	
+	ValidationList buttonValidationList = new ValidationList();
+	buttonValidationList.setValidationList(validations);
+	
+	DataType buttonDataType = new DataType("DTT_BUTTON_EVENT", buttonValidationList, "String", "");
+	
 	Frame3 frameForm = Frame3.builder("FRM_FORM")
 			.addTheme(THM_FORM_ATTRIBUTES_GENNY).end()
 				.question("QUE_INTERN_PROFILE_GRP")
@@ -185,8 +205,11 @@ public class CyrusTest extends GennyJbpmBaseTest {
 					.addTheme(THM_FORM_GROUP_LABEL_GENNY).vcl(VisualControlType.GROUP_LABEL).weight(3.0).end()
 					.addTheme(THM_BACKGROUND_NONE).weight(3.0).end()
 					.addTheme(THM_FORM_GROUP_WRAPPER_GENNY).vcl(VisualControlType.GROUP_WRAPPER).weight(3.0).end()
+					.addTheme(THM_FORM_BUTTON_COLOUR).dataType(buttonDataType).end()
 				.end()
 			.build();
+	
+	
 
 		Frame3 frameCentre = Frame3.builder("FRM_CENTRE").addFrame(frameForm, FramePosition.NORTH).end()
 				.build();
