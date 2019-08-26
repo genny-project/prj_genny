@@ -409,13 +409,38 @@ public class AnishTest extends GennyJbpmBaseTest {
 
                         Theme THM_TABLE_HEADER = Theme.builder("THM_TABLE_HEADER")
                                                 .addAttribute()
-                                                        .backgroundColor("red")
+                                                        .backgroundColor("#f4f5f7")
                                                         .width("100%")
+                                                        .color("black")
+                                                .end()
+                                                .build();
+                        Theme THM_TABLE_BORDER = Theme.builder("THM_TABLE_BORDER")
+                                                .addAttribute()
+                                                        .borderBottomWidth(1)
+                                                        .borderColor("grey")
+                                                .end()
+                                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                                .build();
+
+                        Theme THM_TABLE_HEADER_CELL_WRAPPER = Theme.builder("THM_TABLE_HEADER_CELL_WRAPPER")
+                                                .addAttribute()
+                                                        .width("initial")
+                                                        .flexGrow(1)
+                                                        .flexShrink(1)
+                                                        .flexBasis("auto")
+                                                        .padding(10)
+                                                .end()
+                                                .build();
+                       
+                        Theme THM_TABLE_HEADER_CELL_INPUT = Theme.builder("THM_TABLE_HEADER_CELL_INPUT")
+                                                .addAttribute()
+                                                        .textAlign("center")
                                                 .end()
                                                 .build();
                         Theme THM_TABLE_CONTENT = Theme.builder("THM_TABLE_CONTENT")
                                                 .addAttribute()
-                                                        .backgroundColor("green")
+                                                        .backgroundColor("#FAFAFA")
+                                                        .color("black")
                                                         .width("100%")
                                                 .end()
                                                 .build();
@@ -426,9 +451,10 @@ public class AnishTest extends GennyJbpmBaseTest {
                                                 .end()
                                                 .build();
                         Theme THM_TABLE_FOOTER = Theme.builder("THM_TABLE_FOOTER")
-                                                .addAttribute()
-                                                        .backgroundColor("yellow")
+                                                        .addAttribute()
+                                                        .backgroundColor("#f4f5f7")
                                                         .width("100%")
+                                                        .color("black")
                                                 .end()
                                                 .build();
                         
@@ -441,19 +467,27 @@ public class AnishTest extends GennyJbpmBaseTest {
                       
                         Theme THM_TABLE = Theme.builder("THM_TABLE")
                                                 .addAttribute()
-                                                        .backgroundColor("grey")
+                                                        /* .backgroundColor("grey") */
                                                         .width("100%")
                                                 .end()
                                                 .build();
                         
                         Frame3 FRM_TABLE_HEADER = Frame3.builder("FRM_TABLE_HEADER")
                                         .addTheme(THM_TABLE_HEADER).end()
-                                        .question("QUE_NAME_TWO").end()
+                                        .addTheme(THM_TABLE_BORDER).end()
+                                        .question("QUE_NAME_GRP")
+                                                .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
+                                                .addTheme(THM_TABLE_HEADER_CELL_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                                .addTheme(THM_TABLE_HEADER_CELL_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                        .end()
                                         .build();
                         
                         Frame3 FRM_TABLE_CONTENT = Frame3.builder("FRM_TABLE_CONTENT")
                                         .addTheme(THM_TABLE_CONTENT).end()
-                                        .question("QUE_NAME_TWO").end()
+                                        .addTheme(THM_TABLE_BORDER).end()
+                                        .question("QUE_NAME_TWO")
+                                                .addTheme(THM_TABLE_HEADER_CELL_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                        .end()
                                         .build();
                         
                         Frame3 FRM_TABLE_BODY = Frame3.builder("FRM_TABLE_BODY")
@@ -462,7 +496,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                                         .addFrame(FRM_TABLE_CONTENT, FramePosition.CENTRE).end()
                                         .build();
                         
-                        Frame3 FRM_TABLE_PREVIOUS = Frame3.builder("FRM_TABLE_PREVIOUS")
+                       /*  Frame3 FRM_TABLE_PREVIOUS = Frame3.builder("FRM_TABLE_PREVIOUS")
                                         .addTheme(THM_BUTTON).end()
                                         .question("QUE_TABLE_PREVIOUS").end()
                                         .build();
@@ -475,16 +509,18 @@ public class AnishTest extends GennyJbpmBaseTest {
                         Frame3 FRM_TABLE_NEXT = Frame3.builder("FRM_TABLE_NEXT")
                                         .addTheme(THM_BUTTON).end()
                                         .question("QUE_TABLE_NEXT").end()
-                                        .build();
-                        
+                                        .build(); */
+
                         Frame3 FRM_TABLE_FOOTER = Frame3.builder("FRM_TABLE_FOOTER")
                                         .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
                                         .addTheme(THM_TABLE_FOOTER).end()
-                                        .addFrame(FRM_TABLE_PREVIOUS, FramePosition.WEST).end()
-                                        .addFrame(FRM_TABLE_PAGE_SIZE, FramePosition.CENTRE).end()
-                                        .addFrame(FRM_TABLE_NEXT, FramePosition.EAST).end()
+                                        .addTheme(THM_TABLE_BORDER).end()
+                                        .question("QUE_TABLE_FOOTER_GRP")
+                                                .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
+                                                .addTheme(THM_TABLE_HEADER_CELL_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                                .addTheme(THM_TABLE_HEADER_CELL_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                        .end()
                                         .build();
-
                         
                         
                         Frame3 FRM_TABLE = Frame3.builder("FRM_TABLE")
