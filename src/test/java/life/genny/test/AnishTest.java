@@ -463,16 +463,17 @@ public class AnishTest extends GennyJbpmBaseTest {
                         
                         Theme THM_BUTTONS = Theme.builder("THM_BUTTONS")
                                                 .addAttribute()
-                                                        .backgroundColor("blue")
+                                                        .backgroundColor(project.getValue("PRI_COLOR_PRIMARY_VARIANT_LIGHT", "#395268"))
                                                         .color("white")
                                                 .end()
                                                 .build();
                       
                         Theme THM_TABLE = Theme.builder("THM_TABLE")
                                                 .addAttribute()
-                                                        /* .backgroundColor("grey") */
+                                                        .backgroundColor(project.getValue("PRI_COLOR_BACKGROUND", "#F6F6F6"))
                                                         .width("100%")
                                                 .end()
+                                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
                                                 .build();
                         
                         Frame3 FRM_TABLE_HEADER = Frame3.builder("FRM_TABLE_HEADER")
@@ -487,7 +488,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                         
                         Frame3 FRM_TABLE_CONTENT = Frame3.builder("FRM_TABLE_CONTENT")
                                         .addTheme(THM_TABLE_CONTENT).end()
-                                        .addTheme(THM_TABLE_BORDER).end()
+                                        /* .addTheme(THM_TABLE_BORDER).end() */
                                         .question("QUE_TABLE_VIEW_TEST")
                                                 .addTheme(THM_TABLE_HEADER_CELL_INPUT).vcl(VisualControlType.VCL_INPUT).end()
                                                 .addTheme(THM_TABLE_CONTENT).end()
@@ -522,7 +523,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                         ValidationList buttonValidationList = new ValidationList();
                         buttonValidationList.setValidationList(validations);
 
-                        DataType buttonDataType = new DataType("DTT_EVENT", buttonValidationList, "String", "");
+                        DataType buttonDataType = new DataType("DTT_EVENT", buttonValidationList, "Event", "");
 
                         Frame3 FRM_TABLE_FOOTER = Frame3.builder("FRM_TABLE_FOOTER")
                                         .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
@@ -537,10 +538,21 @@ public class AnishTest extends GennyJbpmBaseTest {
                                         .build();
                         
                         
-                        Frame3 FRM_TABLE = Frame3.builder("FRM_TABLE")
-                                        .addTheme(THM_TABLE).end()
+                        Frame3 FRM_TABLE_WRAPPER = Frame3.builder("FRM_TABLE_WRAPPER")
+                                        .addTheme(THM_TABLE, ThemePosition.WRAPPER).end()
+                                        .addTheme("THM_BOX_SHADOW_SM", ThemePosition.WRAPPER, serviceToken).end()
                                         .addFrame(FRM_TABLE_BODY, FramePosition.CENTRE).end()
                                         .addFrame(FRM_TABLE_FOOTER, FramePosition.SOUTH).end()
+                                        .build();
+
+                        Theme THM_PADDING_20 = Theme.builder("THM_PADDING_20")
+                                        .addAttribute().padding(20).end()
+                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                        .build();   
+                       
+                        Frame3 FRM_TABLE = Frame3.builder("FRM_TABLE")
+                                        .addTheme(THM_PADDING_20, ThemePosition.WRAPPER).end()
+                                        .addFrame(FRM_TABLE_WRAPPER, FramePosition.CENTRE).end()
                                         .build();
 
                         return FRM_TABLE;
