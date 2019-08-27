@@ -96,12 +96,22 @@ public void testTableHeader() {
       			     .setPageStart(0)
       			     .setPageSize(10);
       			     
-//      		  		TableUtilsTest tableUtils = new TableUtilsTest(new BaseEntityUtils(serviceToken));
+      		  		TableUtilsTest tableUtils = new TableUtilsTest(new BaseEntityUtils(serviceToken));
 //      		  		
-//      		  		QDataBaseEntityMessage resultsMsg = tableUtils.fetchSearchResults(searchBE, userToken);
-//      		  		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(resultsMsg));
+      		  		QDataBaseEntityMessage resultsMsg = tableUtils.fetchSearchResults(searchBE, userToken);
+      		  		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(resultsMsg));
       		  		
-      			        QDataBaseEntityMessage msg = changeQuestion("FRM_TABLE_HEADER","QUE_NAME_GRP",userToken);
+      		  		
+      		  		TableData tableData = tableUtils.generateTableAsks(searchBE, userToken, resultsMsg);
+      		  		Ask headerAsk = tableData.getAsk();
+      		  		Ask[] askArray = new Ask[1];
+      		  		askArray[0] = headerAsk;
+      		  	QDataAskMessage headerAskMsg = new QDataAskMessage(askArray);
+      	    	headerAskMsg.setToken(userToken.getToken());
+      	    	VertxUtils.writeMsg("webcmds", JsonUtils.toJson(headerAskMsg));
+      	    	String headerAskCode = headerAsk.getQuestionCode();
+      	    	
+      			        QDataBaseEntityMessage msg = changeQuestion("FRM_TABLE_HEADER",headerAskCode,userToken);
                 
       	                
       	                VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
