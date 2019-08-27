@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:g="http://www.jboss.org/drools/flow/gpd" xmlns:java="http://www.java.com/javaTypes" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.4.3.Final-v20180418-1358-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:g="http://www.jboss.org/drools/flow/gpd" xmlns:java="http://www.java.com/javaTypes" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.1.Final-v20190425-2005-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
   <bpmn2:itemDefinition id="ItemDefinition_10" isCollection="false" structureRef="java.lang.String"/>
   <bpmn2:itemDefinition id="ItemDefinition_628" isCollection="false" structureRef="org.kie.internal.runtime.StatefulKnowledgeSession"/>
   <bpmn2:itemDefinition id="ItemDefinition_633" isCollection="false" structureRef="org.kie.api.runtime.process.WorkflowProcessInstance"/>
@@ -106,7 +106,9 @@
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;userSession: Entering userSession &quot;+((QEventMessage)message).getData().getCode()+&quot; with userToken = &quot;+((GennyToken)userToken).getUserCode());
+      <bpmn2:script>System.out.println(&quot;\n>>>ENTRY>>>\n&quot;);
+
+System.out.println(&quot;userSession: Entering userSession &quot;+((QEventMessage)message).getData().getCode()+&quot; with userToken = &quot;+((GennyToken)userToken).getUserCode());
 ((QEventMessage)message).getData().setValue(&quot;NEW_SESSION&quot;);   /* Flag the incoming message as NEW! */
 kcontext.setVariable(&quot;message&quot;,(QEventMessage)message); 
 kcontext.setVariable(&quot;session_state&quot;,((GennyToken)userToken).getSessionCode()); 
@@ -175,7 +177,8 @@ kcontext.setVariable(&quot;serviceToken&quot;,((GennyToken)serviceToken));
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_20</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_19</bpmn2:outgoing>
-      <bpmn2:script>
+      <bpmn2:script>System.out.println(&quot;\n>>>EXIT SESSION>>>\n&quot;);
+
 System.out.println(&quot;userSession: Aggregate SearchBar terms into userAccount&quot;);
 System.out.println(&quot;userSession: Aggregate Session Times terms into userAccount History&quot;);
 System.out.println(&quot;userSession: **************************End Session ****************************&quot;);</bpmn2:script>
@@ -238,7 +241,9 @@ if (output.getTypeOfResult().equals(&quot;ERROR&quot;)) {
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_21</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_58</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;userSession: LOGOUT Detected&quot;);
+      <bpmn2:script>System.out.println(&quot;\n>>>LOG OUT>>>\n&quot;);
+
+System.out.println(&quot;userSession: LOGOUT Detected&quot;);
 QCmdMessage msgLogout = new QCmdMessage(&quot;LOGOUT&quot;, &quot;LOGOUT&quot;);
 msgLogout.setToken(userToken.getToken());
 VertxUtils.writeMsg(&quot;webcmds&quot;,JsonUtils.toJson(msgLogout));
@@ -276,7 +281,9 @@ System.out.println(&quot;userSession: Exiting userSession for &quot;+currentUser
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_28</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_50</bpmn2:outgoing>
-      <bpmn2:script>kcontext.setVariable(&quot;message&quot;, (QEventMessage)message);
+      <bpmn2:script>System.out.println(&quot;\n>>>PROCESS INCOMING EVENT>>>\n&quot;);
+
+kcontext.setVariable(&quot;message&quot;, (QEventMessage)message);
 
 /*System.out.println(&quot;Incoming message within existing workflow code is &quot;+((QMessage)message).getData().getCode());*/</bpmn2:script>
     </bpmn2:scriptTask>
@@ -317,7 +324,9 @@ System.out.println(&quot;userSession: Exiting userSession for &quot;+currentUser
           <tns:metaValue><![CDATA[Process Event]]></tns:metaValue>
         </tns:metaData>
         <tns:onEntry-script scriptFormat="http://www.java.com/java">
-          <tns:script>System.out.println(&quot;userSession: Not Authinit&quot;);
+          <tns:script>System.out.println(&quot;\n>>>PROCESS EVENT>>>\n&quot;);
+
+System.out.println(&quot;userSession: Not Authinit&quot;);
 System.out.println(&quot;userSession :::  Processing Event Message &quot; + message);</tns:script>
         </tns:onEntry-script>
         <tns:onExit-script scriptFormat="http://www.java.com/java">
@@ -379,6 +388,12 @@ System.out.println(&quot;userSession :::  output= &quot; + output);</tns:script>
         <tns:metaData name="elementname">
           <tns:metaValue><![CDATA[Event Loop]]></tns:metaValue>
         </tns:metaData>
+        <tns:onEntry-script scriptFormat="http://www.java.com/java">
+          <tns:script>System.out.println(&quot;\n>>>EVENT LOOP (Entry)>>>\n&quot;);</tns:script>
+        </tns:onEntry-script>
+        <tns:onExit-script scriptFormat="http://www.java.com/java">
+          <tns:script>System.out.println(&quot;\n>>>EVENT LOOP (Exit)>>>\n&quot;);</tns:script>
+        </tns:onExit-script>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_14</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_37</bpmn2:outgoing>
@@ -398,7 +413,9 @@ System.out.println(&quot;userSession :::  output= &quot; + output);</tns:script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_34</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
-        <bpmn2:script>System.out.println(&quot;userSession: - waiting for session Events on pid &quot;+kcontext.getProcessInstance().getId());
+        <bpmn2:script>System.out.println(&quot;\n>>>WAIT FOR EVENT>>>\n&quot;);
+
+System.out.println(&quot;userSession: - waiting for session Events on pid &quot;+kcontext.getProcessInstance().getId());
 System.out.println(&quot;Timer :::::::::::::::: safal &quot;);
 </bpmn2:script>
       </bpmn2:scriptTask>
@@ -433,7 +450,9 @@ System.out.println(&quot;Timer :::::::::::::::: safal &quot;);
           <tns:metaValue><![CDATA[Process Data ]]></tns:metaValue>
         </tns:metaData>
         <tns:onEntry-script scriptFormat="http://www.java.com/java">
-          <tns:script>System.out.println(&quot;userSession :::  Processing Answer Message &quot; + dataMessage);</tns:script>
+          <tns:script>System.out.println(&quot;\n>>>PROCESS DATA>>>\n&quot;);
+
+System.out.println(&quot;userSession :::  Processing Answer Message &quot; + dataMessage);</tns:script>
         </tns:onEntry-script>
         <tns:onExit-script scriptFormat="http://www.java.com/java">
           <tns:script>System.out.println(&quot;userSession :::  Answer Message Processed &quot; + dataMessage);</tns:script>
@@ -521,7 +540,9 @@ System.out.println(&quot;Timer :::::::::::::::: safal &quot;);
           <tns:metaValue><![CDATA[ShowFrame]]></tns:metaValue>
         </tns:metaData>
         <tns:onEntry-script scriptFormat="http://www.java.com/java">
-          <tns:script>System.out.println(&quot;Rules fnished  and userToken is  &quot;+userToken.getSessionCode()+&quot; key -> &quot;+userToken.getSessionCode()+&quot;:page&quot;);
+          <tns:script>System.out.println(&quot;\n>>>SHOW FRAME>>>\n&quot;);
+
+System.out.println(&quot;Rules fnished  and userToken is  &quot;+userToken.getSessionCode()+&quot; key -> &quot;+userToken.getSessionCode()+&quot;:page&quot;);
 System.out.println(&quot;Rules generated Page code is &quot;+ output.getResultCode());
 
 </tns:script>
@@ -608,7 +629,9 @@ System.out.println(&quot;Rules generated Page code is &quot;+ output.getResultCo
           <tns:metaValue><![CDATA[Process Internal Signal]]></tns:metaValue>
         </tns:metaData>
         <tns:onEntry-script scriptFormat="http://www.java.com/java">
-          <tns:script>System.out.println(&quot;Internal Signal Rx &quot;);</tns:script>
+          <tns:script>System.out.println(&quot;\n>>>PROCESS INTERNAL SIGNAL>>>\n&quot;);
+
+System.out.println(&quot;Internal Signal Rx &quot;);</tns:script>
         </tns:onEntry-script>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
@@ -678,7 +701,9 @@ System.out.println(&quot;Rules generated Page code is &quot;+ output.getResultCo
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
-      <bpmn2:script>OutputParam output1 = new OutputParam();
+      <bpmn2:script>System.out.println(&quot;\n>>>SET INITIAL PAGE>>>\n&quot;);
+
+OutputParam output1 = new OutputParam();
 /*output1.setFormCode(&quot;FRM_APP&quot;,&quot;FRM_ROOT&quot;);*/
 output1.setFormCode(&quot;FRM_QUE_DASHBOARD_VIEW&quot;,&quot;FRM_CONTENT&quot;); 
 kcontext.setVariable(&quot;output&quot;,output1);
@@ -695,7 +720,9 @@ System.out.println(&quot;Set initial Page to &quot;+output1);</bpmn2:script>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_17</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;userSession: output=&quot;+output);</bpmn2:script>
+      <bpmn2:script>System.out.println(&quot;\n>>>DISPLAY RESULT>>>\n&quot;);
+
+System.out.println(&quot;userSession: output=&quot;+output);</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_5" tns:priority="1" sourceRef="ExclusiveGateway_10" targetRef="ScriptTask_5"/>
     <bpmn2:sequenceFlow id="SequenceFlow_17" tns:priority="1" sourceRef="ScriptTask_5" targetRef="ExclusiveGateway_21"/>
@@ -704,6 +731,9 @@ System.out.println(&quot;Set initial Page to &quot;+output1);</bpmn2:script>
         <tns:metaData name="elementname">
           <tns:metaValue><![CDATA[Send Header & Tree]]></tns:metaValue>
         </tns:metaData>
+        <tns:onEntry-script scriptFormat="http://www.java.com/java">
+          <tns:script>System.out.println(&quot;\n>>>SEND HEADER &amp; TREE>>>\n&quot;);</tns:script>
+        </tns:onEntry-script>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_18</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_11</bpmn2:outgoing>
@@ -947,7 +977,7 @@ System.out.println(&quot;Set initial Page to &quot;+output1);</bpmn2:script>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_2" bpmnElement="Task_2" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="248.0" y="502.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_25">
           <dc:Bounds height="11.0" width="83.0" x="261.0" y="521.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -1168,7 +1198,7 @@ System.out.println(&quot;Set initial Page to &quot;+output1);</bpmn2:script>
         <di:waypoint xsi:type="dc:Point" x="303.0" y="415.0"/>
         <di:waypoint xsi:type="dc:Point" x="303.0" y="458.0"/>
         <di:waypoint xsi:type="dc:Point" x="303.0" y="502.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_55"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">

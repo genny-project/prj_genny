@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.0.Final-v20180515-1642-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.1.Final-v20190425-2005-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
   <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false" structureRef="life.genny.models.GennyToken"/>
   <bpmn2:itemDefinition id="ItemDefinition_323" isCollection="false" structureRef="life.genny.utils.BaseEntityUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_325" isCollection="false" structureRef="life.genny.qwanda.entity.BaseEntity"/>
@@ -57,19 +57,26 @@
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_17</bpmn2:outgoing>
-      <bpmn2:script>beUtils = new BaseEntityUtils(userToken);
+      <bpmn2:script>System.out.println(&quot;\n>>>CHECKING IF THE USER IS PRESENT>>>\n&quot;);
+
+// Create a Base Entitiy with the userToken
+beUtils = new BaseEntityUtils(userToken);
 kcontext.setVariable(&quot;beUtils&quot;,beUtils);
 System.out.println(&quot;userValidation: processInstanceId = &quot;+kcontext.getProcessInstance().getId());
 currentUser = beUtils.getBaseEntityByCode(userToken.getUserCode());
+
 kcontext.setVariable(&quot;currentUser&quot;,currentUser);
 System.out.println(&quot;userValidation: &quot;+ userToken.getUserCode());
+
 kcontext.setVariable(&quot;processId&quot;,kcontext.getProcessInstance().getId());
 processId = kcontext.getProcessInstance().getId();
 System.out.println(&quot;userValidation: processId = &quot;+ processId);
+
 kcontext.setVariable(&quot;userCode&quot;, userToken.getUserCode());
 callingProcessToken = new CallingProcessToken(userToken,processId,userToken.getUserCode());
 kcontext.setVariable(&quot;callingProcessToken&quot;, callingProcessToken);
 
+// Does the currentUser exist? If not send to userLifecycle to create user
 System.out.println(&quot;userValidation: Current User is &quot; + (currentUser==null?&quot;not existing&quot;:currentUser) + &quot; sending signal to userLifeCycle to create  :&quot;+userToken.getUserCode());</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:scriptTask id="ScriptTask_3" name="Get User" scriptFormat="http://www.java.com/java">
@@ -80,7 +87,9 @@ System.out.println(&quot;userValidation: Current User is &quot; + (currentUser==
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_15</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;userValidation: Existing Current user &quot; + currentUser);
+      <bpmn2:script>System.out.println(&quot;\n>>>GET USER>>>\n&quot;);
+
+System.out.println(&quot;userValidation: Existing Current user &quot; + currentUser);
 </bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:exclusiveGateway id="ExclusiveGateway_1" name="activeUser" gatewayDirection="Converging" default="SequenceFlow_1">
@@ -107,7 +116,9 @@ System.out.println(&quot;userValidation: Current User is &quot; + (currentUser==
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_27</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;userValidation: newUser returned -> &quot;+currentUser);
+      <bpmn2:script>System.out.println(&quot;\n>>>SHOW NEW USER>>>\n&quot;);
+
+System.out.println(&quot;userValidation: newUser returned -> &quot;+currentUser);
 if (userToken == null) { 
 	System.out.println(&quot;userValidation: userToken is NULL&quot;);
 } 
@@ -126,7 +137,9 @@ if (currentUser == null) { System.out.println(&quot;userValidation: currentUser 
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
-      <bpmn2:script>/* currentUser = VertxUtils.getObject(userToken.getRealm(),&quot;&quot;,userToken.getUserCode(),BaseEntity.class,userToken.getToken()); */
+      <bpmn2:script>System.out.println(&quot;\n>>>EXIT FROM USER VALIDATION>>>\n&quot;);
+
+/* currentUser = VertxUtils.getObject(userToken.getRealm(),&quot;&quot;,userToken.getUserCode(),BaseEntity.class,userToken.getToken()); */
 System.out.println(&quot;userValidation: Yay! currentUser is &quot;+currentUser);</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_1" drools:priority="1" sourceRef="ExclusiveGateway_1" targetRef="ScriptTask_4"/>
@@ -137,10 +150,15 @@ System.out.println(&quot;userValidation: Yay! currentUser is &quot;+currentUser)
           <drools:metaValue><![CDATA[Create New User]]></drools:metaValue>
         </drools:metaData>
         <drools:onEntry-script scriptFormat="http://www.java.com/java">
-          <drools:script>System.out.println(&quot;userValidation: on new User Path with userCode=&quot;+userCode);</drools:script>
+          <drools:script>System.out.println(&quot;\n>>>CREATE NEW USER (Entry)>>>\n&quot;);
+
+System.out.println(&quot;userValidation: on new User Path with userCode=&quot;+userCode);</drools:script>
         </drools:onEntry-script>
         <drools:onExit-script scriptFormat="http://www.java.com/java">
-          <drools:script>System.out.println(&quot;userValidation: Exiting on new User Path with userCode=&quot;+userCode);</drools:script>
+          <drools:script>System.out.println(&quot;\n>>>CREATE NEW USER (Exit)>>>\n&quot;);
+
+
+System.out.println(&quot;userValidation: Exiting on new User Path with userCode=&quot;+userCode);</drools:script>
         </drools:onExit-script>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_28</bpmn2:incoming>
@@ -154,7 +172,9 @@ System.out.println(&quot;userValidation: Yay! currentUser is &quot;+currentUser)
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_22</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_25</bpmn2:outgoing>
-        <bpmn2:script>System.out.println(&quot;userValidation: Wait for Creating New  User on signal channel [&quot;+userCode+&quot;]&quot;);</bpmn2:script>
+        <bpmn2:script>System.out.println(&quot;\n>>>WAIT FOR NEW USER>>>\n&quot;);
+
+System.out.println(&quot;userValidation: Wait for Creating New  User on signal channel [&quot;+userCode+&quot;]&quot;);</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:intermediateThrowEvent id="IntermediateThrowEvent_1" name="ThrowEvent-UserLifecycle">
         <bpmn2:extensionElements>
