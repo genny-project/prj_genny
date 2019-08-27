@@ -34,6 +34,8 @@ import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventMessage;
+import life.genny.qwanda.validation.Validation;
+import life.genny.qwanda.validation.ValidationList;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.QwandaUtils;
@@ -42,6 +44,7 @@ import life.genny.rules.listeners.JbpmInitListener;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.FrameUtils2;
 import life.genny.utils.VertxUtils;
+import life.genny.qwanda.datatype.DataType;
 
 public class AnishTest extends GennyJbpmBaseTest {
 
@@ -458,7 +461,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                                                 .end()
                                                 .build();
                         
-                        Theme THM_BUTTON = Theme.builder("THM_BUTTON")
+                        Theme THM_BUTTONS = Theme.builder("THM_BUTTONS")
                                                 .addAttribute()
                                                         .backgroundColor("blue")
                                                         .color("white")
@@ -498,19 +501,28 @@ public class AnishTest extends GennyJbpmBaseTest {
                                         .build();
                         
                        /*  Frame3 FRM_TABLE_PREVIOUS = Frame3.builder("FRM_TABLE_PREVIOUS")
-                                        .addTheme(THM_BUTTON).end()
+                                        .addTheme(THM_BUTTONS).end()
                                         .question("QUE_TABLE_PREVIOUS").end()
                                         .build();
                        
                         Frame3 FRM_TABLE_PAGE_SIZE = Frame3.builder("FRM_TABLE_PAGE_SIZE")
-                                        .addTheme(THM_BUTTON).end()
+                                        .addTheme(THM_BUTTONS).end()
                                         .question("QUE_TABLE_PAGE_SIZE").end()
                                         .build();
                         
                         Frame3 FRM_TABLE_NEXT = Frame3.builder("FRM_TABLE_NEXT")
-                                        .addTheme(THM_BUTTON).end()
+                                        .addTheme(THM_BUTTONS).end()
                                         .question("QUE_TABLE_NEXT").end()
                                         .build(); */
+
+                        Validation validation = new Validation("VLD_ANYTHING", "Anything", ".*");
+                        List<Validation> validations = new ArrayList<>();
+                        validations.add(validation);
+                        
+                        ValidationList buttonValidationList = new ValidationList();
+                        buttonValidationList.setValidationList(validations);
+
+                        DataType buttonDataType = new DataType("DTT_EVENT", buttonValidationList, "String", "");
 
                         Frame3 FRM_TABLE_FOOTER = Frame3.builder("FRM_TABLE_FOOTER")
                                         .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
@@ -518,6 +530,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                                         .addTheme(THM_TABLE_BORDER).end()
                                         .question("QUE_TABLE_FOOTER_GRP")
                                                 .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
+                                                .addTheme(THM_BUTTONS).dataType(buttonDataType).end()
                                                 .addTheme(THM_TABLE_HEADER_CELL_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
                                                 .addTheme(THM_TABLE_HEADER_CELL_INPUT).vcl(VisualControlType.VCL_INPUT).end()
                                         .end()
