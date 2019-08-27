@@ -73,7 +73,7 @@ rule "PRI_SEARCH_TEXT"
   	     
   	     /* Send to front end */
    	     
-  	     output.setFormCode("FRM_TABLE_APP","FRM_ROOT");
+  	     output.setFormCode("FRM_TABLE","FRM_CONTENT");
 		retract(answer);
 	
 end
