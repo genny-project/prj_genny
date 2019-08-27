@@ -38,7 +38,10 @@ import life.genny.qwanda.Ask;
 import life.genny.qwanda.Context;
 import life.genny.qwanda.ContextType;
 import life.genny.qwanda.VisualControlType;
+import life.genny.qwanda.attribute.Attribute;
+import life.genny.qwanda.datatype.DataType;
 import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.entity.EntityEntity;
 import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwanda.exception.BadDataException;
 import life.genny.qwanda.message.QDataAnswerMessage;
@@ -76,7 +79,7 @@ public class AdamTest {
 
 
 @Test
-public void testDesktop() {
+public void testTableHeader() {
         QRules rules = GennyJbpmBaseTest.setupLocalService();
         GennyToken userToken = new GennyToken("userToken", rules.getToken());
         GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
@@ -98,34 +101,82 @@ public void testDesktop() {
 //      		  		QDataBaseEntityMessage resultsMsg = tableUtils.fetchSearchResults(searchBE, userToken);
 //      		  		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(resultsMsg));
       		  		
-      			        Frame3 FRM_TABLE_HEADER = null;
-      					try {
-      						FRM_TABLE_HEADER = Frame3.builder("FRM_TABLE_HEADER")
-      						        .addTheme("THM_TABLE_HEADER",serviceToken).end()
-      						        .addTheme("THM_TABLE_BORDER",serviceToken).end()
-      						         .question("QUE_POWERED_BY_GRP") // QUE_NAME_GRP //QUE_POWERED_BY_GRP
-      						              .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
-      						              .addTheme("THM_TABLE_HEADER_CELL_WRAPPER",serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
-      						              .addTheme("THM_TABLE_HEADER_CELL_INPUT",serviceToken).vcl(VisualControlType.VCL_INPUT).end()
-      						         .end()
-      						         .build();
-      						
-      						
-      					} catch (Exception e1) {
-      						// TODO Auto-generated catch block
-      						e1.printStackTrace();
-      					}
-      			     
-      	                Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
-      	                QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_TABLE_HEADER, serviceToken, askMsgs);
- //     	                msg.setReplace(true);
+      			        QDataBaseEntityMessage msg = changeQuestion("FRM_TABLE_HEADER","QUE_NAME_GRP",userToken);
+                
+      	                
       	                VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
    
-    					GennyKieSession.displayForm("FRM_TABLE", "FRM_CONTENT", userToken);
+    		//			GennyKieSession.displayForm("FRM_TABLE_HEADER", "FRM_HEADER", userToken);
                 System.out.println("Sent");
         } catch (Exception e) {
                 System.out.println("Error " + e.getLocalizedMessage());
         }
+}
+
+
+
+/**
+ * @param serviceToken
+ * @return
+ */
+private QDataBaseEntityMessage changeQuestion(final String frameCode, final String questionCode,GennyToken serviceToken) {
+	Frame3 FRM_TABLE_HEADER = null;
+	try {
+		FRM_TABLE_HEADER = Frame3.builder("FRM_TABLE_HEADER")
+		        .addTheme("THM_TABLE_HEADER",serviceToken).end()
+		        .addTheme("THM_TABLE_BORDER",serviceToken).end()
+		         .question(questionCode) // QUE_NAME_GRP //QUE_POWERED_BY_GRP
+		              .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
+		              .addTheme("THM_TABLE_HEADER_CELL_WRAPPER",serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
+		              .addTheme("THM_TABLE_HEADER_CELL_INPUT",serviceToken).vcl(VisualControlType.VCL_INPUT).end()
+		         .end()
+		         .build();
+		
+		
+	} catch (Exception e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
+ 			     
+	Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();      	                
+	QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_TABLE_HEADER, serviceToken, askMsgs);
+	msg.setReplace(true);
+	
+    for (QDataAskMessage askMsg : askMsgs) {
+    	askMsg.setToken(serviceToken.getToken());
+    	VertxUtils.writeMsg("webcmds", JsonUtils.toJson(askMsg));
+    }
+
+	
+	String rootFrameCode = frameCode;
+	
+	for (BaseEntity targetFrame : msg.getItems()) {
+		if (targetFrame.getCode().equals(questionCode)) {
+
+			log.info("ShowFrame : Found Targeted Frame BaseEntity : " + targetFrame);
+
+			/* Adding the links in the targeted BaseEntity */
+			Attribute attribute = new Attribute("LNK_ASK", "LNK_ASK", new DataType(String.class));
+
+			for (BaseEntity sourceFrame : msg.getItems()) {
+				if (sourceFrame.getCode().equals(rootFrameCode)) {
+
+					System.out.println("ShowFrame : Found Source Frame BaseEntity : " + sourceFrame);
+					EntityEntity entityEntity = new EntityEntity(sourceFrame, targetFrame, attribute,
+							1.0, "CENTRE");
+					//Set<EntityEntity> entEntList = sourceFrame.getLinks();
+					//entEntList.add(entityEntity);
+					sourceFrame.getLinks().add(entityEntity);
+
+					/* Adding Frame to Targeted Frame BaseEntity Message */
+				//	msg.add(targetFrame);
+					break;
+				}
+			}
+			break;
+		}
+	}
+	return msg;
 }
 	
 	//@Test
