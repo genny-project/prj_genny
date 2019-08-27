@@ -93,17 +93,17 @@ public void testDesktop() {
       			     .setPageStart(0)
       			     .setPageSize(10);
       			     
-      		  		TableUtilsTest tableUtils = new TableUtilsTest(new BaseEntityUtils(serviceToken));
-      		  		
-      		  		QDataBaseEntityMessage resultsMsg = tableUtils.fetchSearchResults(searchBE, userToken);
-      		  		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(resultsMsg));
+//      		  		TableUtilsTest tableUtils = new TableUtilsTest(new BaseEntityUtils(serviceToken));
+//      		  		
+//      		  		QDataBaseEntityMessage resultsMsg = tableUtils.fetchSearchResults(searchBE, userToken);
+//      		  		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(resultsMsg));
       		  		
       			        Frame3 FRM_TABLE_HEADER = null;
       					try {
       						FRM_TABLE_HEADER = Frame3.builder("FRM_TABLE_HEADER")
       						        .addTheme("THM_TABLE_HEADER",serviceToken).end()
       						        .addTheme("THM_TABLE_BORDER",serviceToken).end()
-      						         .question("QUE_NAME_GRP") // QUE_NAME_GRP //QUE_POWERED_BY_GRP
+      						         .question("QUE_POWERED_BY_GRP") // QUE_NAME_GRP //QUE_POWERED_BY_GRP
       						              .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
       						              .addTheme("THM_TABLE_HEADER_CELL_WRAPPER",serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
       						              .addTheme("THM_TABLE_HEADER_CELL_INPUT",serviceToken).vcl(VisualControlType.VCL_INPUT).end()
@@ -118,15 +118,8 @@ public void testDesktop() {
       			     
       	                Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
       	                QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_TABLE_HEADER, serviceToken, askMsgs);
-      	                msg.setReplace(true);
+ //     	                msg.setReplace(true);
       	                VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
-      	 
-      					QDataBaseEntityMessage FRM_MSG = VertxUtils.getObject(userToken.getRealm(), "", "FRM_TABLE_BODY-MSG",
-      							QDataBaseEntityMessage.class, userToken.getToken());
-      					FRM_MSG.setToken(userToken.getToken());
-    					FRM_MSG.setReplace(true);
-
-    					VertxUtils.writeMsg("webcmds", JsonUtils.toJson(FRM_MSG));
    
     					GennyKieSession.displayForm("FRM_TABLE", "FRM_CONTENT", userToken);
                 System.out.println("Sent");
