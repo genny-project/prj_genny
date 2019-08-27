@@ -548,32 +548,98 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 	}
 	
-	public void displayForm(final String frameCode,GennyToken userToken)
+	public static void  displayForm(final String rootFrameCode, String targetFrameCode, GennyToken userToken)
 	{
-		QDataBaseEntityMessage FRM_MSG = VertxUtils.getObject(userToken.getRealm(), "", frameCode+"-MSG",
-				QDataBaseEntityMessage.class, userToken.getToken());	
-		FRM_MSG.setToken(userToken.getToken());
-		String frmStr = JsonUtils.toJson(FRM_MSG);
-		frmStr = frmStr.replaceAll(frameCode, "FRM_ROOT");
-		QDataBaseEntityMessage FRM_MSG_ROOT = JsonUtils.fromJson(frmStr, QDataBaseEntityMessage.class);
-		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(FRM_MSG_ROOT));
-   		Type setType = new TypeToken<Set<QDataAskMessage>>() {
-		}.getType();
 
-		String askMsgs2Str = VertxUtils.getObject(userToken.getRealm(), "", frameCode+"-ASKS", String.class,
-				userToken.getToken());
+		if (userToken == null) {
+			log.error("Must supply userToken!");
 
-		Set<QDataAskMessage> askMsgs2 = JsonUtils.fromJson(askMsgs2Str, setType);
+		} else {
+			// log.info("userToken = " + userToken.getCode());
 
-		System.out.println("Sending Asks");
-		for (QDataAskMessage askMsg : askMsgs2) {
-			askMsg.setToken(userToken.getToken());
-			String json = JsonUtils.toJson(askMsg);
-	    	String jsonStr = json.replaceAll("PER_SERVICE", userToken.getUserCode()); // set the user
+			if (rootFrameCode == null) {
+				log.error("Must supply a root Frame Code!");
+			} else {
 
-	    	VertxUtils.writeMsg("webcmds", jsonStr);    																							// QDataAskMessage
-		}
-	}
+				QDataBaseEntityMessage FRM_MSG = VertxUtils.getObject(userToken.getRealm(), "", rootFrameCode + "-MSG",
+						QDataBaseEntityMessage.class, userToken.getToken());
+
+				if (FRM_MSG != null) {
+
+					if (targetFrameCode == null) {
+						targetFrameCode = "FRM_ROOT";
+					}
+
+					QDataBaseEntityMessage TARGET_FRM_MSG = VertxUtils.getObject(userToken.getRealm(), "",
+							targetFrameCode + "-MSG", QDataBaseEntityMessage.class, userToken.getToken());
+
+					for (BaseEntity targetFrame : TARGET_FRM_MSG.getItems()) {
+						if (targetFrame.getCode().equals(targetFrameCode)) {
+
+							System.out.println("ShowFrame : Found Targeted Frame BaseEntity : " + targetFrame);
+
+							/* Adding the links in the targeted BaseEntity */
+							Attribute attribute = new Attribute("LNK_FRAME", "LNK_FRAME", new DataType(String.class));
+
+							for (BaseEntity sourceFrame : FRM_MSG.getItems()) {
+								if (sourceFrame.getCode().equals(rootFrameCode)) {
+
+									System.out.println("ShowFrame : Found Source Frame BaseEntity : " + sourceFrame);
+									EntityEntity entityEntity = new EntityEntity(targetFrame, sourceFrame, attribute,
+											1.0, "CENTRE");
+									Set<EntityEntity> entEntList = targetFrame.getLinks();
+									entEntList.add(entityEntity);
+									targetFrame.setLinks(entEntList);
+
+									/* Adding Frame to Targeted Frame BaseEntity Message */
+									FRM_MSG.add(targetFrame);
+									FRM_MSG.setReplace(true);
+									break;
+								}
+							}
+							break;
+						}
+					}
+
+					FRM_MSG.setToken(userToken.getToken());
+
+					FRM_MSG.setReplace(true);
+
+					VertxUtils.writeMsg("webcmds", JsonUtils.toJson(FRM_MSG));
+
+					Type setType = new TypeToken<Set<QDataAskMessage>>() {
+					}.getType();
+
+					String askMsgs2Str = VertxUtils.getObject(userToken.getRealm(), "", rootFrameCode + "-ASKS",
+							String.class, userToken.getToken());
+
+					Set<QDataAskMessage> askMsgs2 = JsonUtils.fromJson(askMsgs2Str, setType);
+
+					// System.out.println("Sending Asks");
+					if ((askMsgs2 != null) && (!askMsgs2.isEmpty())) {
+						for (QDataAskMessage askMsg : askMsgs2) { // TODO, not needed
+							for (Ask aask : askMsg.getItems()) {
+								for (Validation val : aask.getQuestion().getAttribute().getDataType()
+										.getValidationList()) {
+									if (val.getRegex() == null) {
+										log.error("Regex for " + aask.getQuestion().getCode() + " == null");
+									}
+
+								}
+							}
+							askMsg.setToken(userToken.getToken());
+							String json = JsonUtils.toJson(askMsg);
+							String jsonStr = json.replaceAll("PER_SERVICE", userToken.getUserCode()); // set the user
+							VertxUtils.writeMsg("webcmds", jsonStr); // QDataAskMessage
+						}
+					}
+				} else {
+					log.error(rootFrameCode + "-MSG" + " DOES NOT EXIST IN CACHE - cannot display frame");
+				}
+
+			}
+
+		}	}
 	
 	public void sendLogout(GennyToken userToken)
 	{

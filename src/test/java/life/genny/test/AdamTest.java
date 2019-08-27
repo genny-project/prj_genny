@@ -128,55 +128,7 @@ public void testDesktop() {
 
     					VertxUtils.writeMsg("webcmds", JsonUtils.toJson(FRM_MSG));
    
-//      				   Frame3 FRM_TABLE_CONTENT = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_TABLE_CONTENT",
-//      							Frame3.class, serviceToken.getToken());//generateHeader();
-//
-//      			        Frame3 FRM_TABLE_BODY = Frame3.builder("FRM_TABLE_BODY")
-//                                .addTheme("THM_TABLE_BODY",serviceToken).end()
-//                                .addFrame(FRM_TABLE_HEADER, FramePosition.NORTH).end()
-//                                .addFrame(FRM_TABLE_CONTENT, FramePosition.CENTRE).end()
-//                                .build();
-//    
-// 
-//    				   Frame3 FRM_TABLE_FOOTER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_TABLE_FOOTER",
-//     							Frame3.class, serviceToken.getToken());//generateHeader();
-//     	 
-//      	 
-//      			       Frame3 FRM_TABLE = Frame3.builder("FRM_TABLE")
-//                               .addTheme("THM_TABLE",serviceToken).end()
-//                              .addFrame(FRM_TABLE_BODY, FramePosition.CENTRE).end()
-//                              .addFrame(FRM_TABLE_FOOTER, FramePosition.SOUTH).end()
-//                              .build();
-//  
-// 
-//  				   Frame3 FRM_HEADER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_HEADER",
-//							Frame3.class, serviceToken.getToken());//generateHeader();
-//				   Frame3 FRM_SIDEBAR = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_SIDEBAR",
-//							Frame3.class, serviceToken.getToken());//generateHeader();
-//				   Frame3 FRM_FOOTER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_FOOTER",
-//							Frame3.class, serviceToken.getToken());//generateHeader();
-//
-//      		       Frame3 FRM_TABLE_APP = Frame3.builder("FRM_TABLE_APP")
-//                           .addTheme("THM_PROJECT", ThemePosition.FRAME, serviceToken).end()
-//                           .addFrame(FRM_HEADER, FramePosition.NORTH).end()
-//                           .addFrame(FRM_SIDEBAR, FramePosition.WEST).end()
-//                           .addFrame(FRM_TABLE, FramePosition.CENTRE).end()
-//                           .addFrame(FRM_FOOTER, FramePosition.SOUTH).end() 
-//                           .build();
-//
-//  
-//  
-//                /* frame-root */
-//                Frame3 FRM_ROOT = Frame3.builder("FRM_ROOT")
-//                                .addFrame(FRM_TABLE_APP, FramePosition.CENTRE).end()
-//                                .build();
-
-//                Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
-//                QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_ROOT, serviceToken, askMsgs);
-//                rules.publishCmd(msg);
-                for (QDataAskMessage askMsg : askMsgs) {
-                        rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode());
-                }
+    					GennyKieSession.displayForm("FRM_TABLE", "FRM_CONTENT", userToken);
                 System.out.println("Sent");
         } catch (Exception e) {
                 System.out.println("Error " + e.getLocalizedMessage());

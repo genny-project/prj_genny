@@ -604,7 +604,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                         gks = GennyKieSession.builder(serviceToken, false).addToken(userToken).build();
                         gks.start();
 
-                        gks.displayForm("FRM_DESKTOP2", userToken);
+                        GennyKieSession.displayForm("FRM_DESKTOP2", "FRM_ROOT", userToken);
 
                         System.out.println("Sent");
 
