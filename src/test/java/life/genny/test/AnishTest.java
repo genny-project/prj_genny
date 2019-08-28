@@ -69,7 +69,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                         /* frame-header */
                         Frame3 FRM_HEADER = generateHeader();
                         Frame3 FRM_SIDEBAR = generateSidebar();
-                        Frame3 FRM_CONTENT = getDashboard();
+                        /* Frame3 FRM_CONTENT = getDashboard(); */
                         Frame3 FRM_TABLE = generateTable();
                         Frame3 FRM_FOOTER = generateFooter();
                         /*Frame3 FRM_TABS = generateTabs(); */
@@ -508,17 +508,9 @@ public class AnishTest extends GennyJbpmBaseTest {
                                                         .color("black")
                                                 .end()
                                                 .build();
-                        
-                        Theme THM_BUTTONS = Theme.builder("THM_BUTTONS")
-                                                .addAttribute()
-                                                        .backgroundColor(project.getValue("PRI_COLOR_PRIMARY_VARIANT_LIGHT", "#395268"))
-                                                        .color("white")
-                                                .end()
-                                                .build();
                       
                         Theme THM_TABLE = Theme.builder("THM_TABLE")
                                                 .addAttribute()
-                                                        .backgroundColor(project.getValue("PRI_COLOR_BACKGROUND", "#F6F6F6"))
                                                         .width("100%")
                                                 .end()
                                                 .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
@@ -526,7 +518,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                         
                         Frame3 FRM_TABLE_HEADER = Frame3.builder("FRM_TABLE_HEADER")
                                         .addTheme(THM_TABLE_HEADER).end()
-                                        .addTheme(THM_TABLE_BORDER).end()
+                                        /* .addTheme(THM_TABLE_BORDER).end() */
                                         .question("QUE_NAME_GRP")
                                                 .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
                                                 .addTheme(THM_TABLE_HEADER_CELL_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
@@ -576,10 +568,10 @@ public class AnishTest extends GennyJbpmBaseTest {
                         Frame3 FRM_TABLE_FOOTER = Frame3.builder("FRM_TABLE_FOOTER")
                                         .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
                                         .addTheme(THM_TABLE_FOOTER).end()
-                                        .addTheme(THM_TABLE_BORDER).end()
+                                        /* .addTheme(THM_TABLE_BORDER).end() */
                                         .question("QUE_TABLE_FOOTER_GRP")
                                                 .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
-                                                .addTheme(THM_BUTTONS).dataType(buttonDataType).end()
+                                                .addTheme("THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHT", serviceToken).dataType(buttonDataType).end()
                                                 .addTheme(THM_TABLE_HEADER_CELL_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
                                                 .addTheme(THM_TABLE_HEADER_CELL_INPUT).vcl(VisualControlType.VCL_INPUT).end()
                                         .end()
@@ -587,19 +579,47 @@ public class AnishTest extends GennyJbpmBaseTest {
                         
                         
                         Frame3 FRM_TABLE_WRAPPER = Frame3.builder("FRM_TABLE_WRAPPER")
-                                        .addTheme(THM_TABLE, ThemePosition.WRAPPER).end()
                                         .addTheme("THM_BOX_SHADOW_SM", ThemePosition.WRAPPER, serviceToken).end()
                                         .addFrame(FRM_TABLE_BODY, FramePosition.CENTRE).end()
                                         .addFrame(FRM_TABLE_FOOTER, FramePosition.SOUTH).end()
                                         .build();
-
+                        
                         Theme THM_PADDING_20 = Theme.builder("THM_PADDING_20")
                                         .addAttribute().padding(20).end()
                                         .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
                                         .build();   
-                       
+                        
+                        Theme THM_TITLE = Theme.builder("THM_TITLE")
+                                        .addAttribute()
+                                                .bold(true)
+                                                .size("lg")        
+                                                .textAlign("left")
+                                        .end()
+                                        .build();   
+                        
+                        Theme THM_WIDTH_FULL = Theme.builder("THM_WIDTH_FULL")
+                                        .addAttribute()
+                                                .width("100%")
+                                        .end()
+                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                        .build();   
+
+
+                        Frame3 FRM_TABLE_TITLE = Frame3.builder("FRM_TABLE_TITLE")
+                                        .question("QUE_CONTENT")
+                                                .addTheme(THM_TITLE).vcl(VisualControlType.VCL_LABEL).end()
+                                                /* .addTheme("THM_TITLE_LABEL", serviceToken).vcl(VisualControlType.VCL_LABEL).end() */
+                                                .addTheme("THM_TITLE_WRAPPER", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
+                                                .addTheme("THM_WIDTH_FULL", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
+                                                .addTheme("THM_TITLE_BEHAVIOUR", serviceToken).end()
+                                        .end()
+                                        .build();
+                        
                         Frame3 FRM_TABLE = Frame3.builder("FRM_TABLE")
+                                        .addTheme(THM_TABLE, ThemePosition.WRAPPER).end()
+                                        .addTheme("THM_PROJECT_COLOR_BACKGROUND", serviceToken).end()
                                         .addTheme(THM_PADDING_20, ThemePosition.WRAPPER).end()
+                                        .addFrame(FRM_TABLE_TITLE, FramePosition.NORTH).end()
                                         .addFrame(FRM_TABLE_WRAPPER, FramePosition.CENTRE).end()
                                         .build();
 
