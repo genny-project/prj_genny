@@ -488,41 +488,55 @@ public class AnishTest extends GennyJbpmBaseTest {
                                                         .textAlign("center")
                                                 .end()
                                                 .build();
-                        Theme THM_TABLE_CONTENT = Theme.builder("THM_TABLE_CONTENT")
-                                                .addAttribute()
-                                                        .backgroundColor("#FAFAFA")
-                                                        .color("black")
-                                                        .width("100%")
-                                                .end()
-                                                .build();
-                        Theme THM_TABLE_BODY = Theme.builder("THM_TABLE_BODY")
-                                                .addAttribute()
-                                                        //.backgroundColor("yellow")
-                                                        .width("100%")
-                                                .end()
-                                                .build();
-                        Theme THM_TABLE_FOOTER = Theme.builder("THM_TABLE_FOOTER")
-                                                        .addAttribute()
-                                                        .backgroundColor("#f4f5f7")
-                                                        .width("100%")
-                                                        .color("black")
-                                                .end()
-                                                .build();
-                        
-                        Theme THM_BUTTONS = Theme.builder("THM_BUTTONS")
-                                                .addAttribute()
-                                                        .backgroundColor(project.getValue("PRI_COLOR_PRIMARY_VARIANT_LIGHT", "#395268"))
-                                                        .color("white")
-                                                .end()
-                                                .build();
+//                        Theme THM_TABLE_CONTENT = Theme.builder("THM_TABLE_CONTENT")
+//                                                .addAttribute()
+//                                                        .backgroundColor("#FAFAFA")
+//                                                        .color("black")
+//                                                        .width("100%")
+//                                                .end()
+ //                       .build();
+                         Theme THM_TABLE_CONTENT  = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TABLE_CONTENT",
+                                						Theme.class, serviceToken.getToken());
+                                               
+                                                
+//                        Theme THM_TABLE_BODY = Theme.builder("THM_TABLE_BODY")
+//                                                .addAttribute()
+//                                                        //.backgroundColor("yellow")
+//                                                        .width("100%")
+//                                                .end()
+//                                                .build();
+                        Theme THM_TABLE_BODY  = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TABLE_BODY",
+        						Theme.class, serviceToken.getToken());
+
+//                        Theme THM_TABLE_FOOTER = Theme.builder("THM_TABLE_FOOTER")
+//                                                        .addAttribute()
+//                                                        .backgroundColor("#f4f5f7")
+//                                                        .width("100%")
+//                                                        .color("black")
+//                                                .end()
+//                                                .build();
+                        Theme THM_TABLE_FOOTER  = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TABLE_FOOTER",
+        						Theme.class, serviceToken.getToken());
+                       
+//                        Theme THM_BUTTONS = Theme.builder("THM_BUTTONS")
+//                                                .addAttribute()
+//                                                        .backgroundColor(project.getValue("PRI_COLOR_PRIMARY_VARIANT_LIGHT", "#395268"))
+//                                                        .color("white")
+//                                                .end()
+//                                                .build();
+                        Theme THM_BUTTONS  = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BUTTONS",
+        						Theme.class, serviceToken.getToken());
                       
-                        Theme THM_TABLE = Theme.builder("THM_TABLE")
-                                                .addAttribute()
-                                                        .backgroundColor(project.getValue("PRI_COLOR_BACKGROUND", "#F6F6F6"))
-                                                        .width("100%")
-                                                .end()
-                                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
-                                                .build();
+//                        Theme THM_TABLE = Theme.builder("THM_TABLE")
+//                                                .addAttribute()
+//                                                        .backgroundColor(project.getValue("PRI_COLOR_BACKGROUND", "#F6F6F6"))
+//                                                        .width("100%")
+//                                                .end()
+//                                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+//                                                .build();
+                        Theme THM_TABLE  = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TABLE",
+        						Theme.class, serviceToken.getToken());
+
                         
                         Frame3 FRM_TABLE_HEADER = Frame3.builder("FRM_TABLE_HEADER")
                                         .addTheme(THM_TABLE_HEADER).end()

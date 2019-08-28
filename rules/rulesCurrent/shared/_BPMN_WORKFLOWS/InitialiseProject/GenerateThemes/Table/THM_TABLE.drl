@@ -24,6 +24,7 @@ import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
 import life.genny.models.FramePosition;
 import life.genny.qwanda.VisualControlType;
+import life.genny.models.ThemeAttributeType;
 
 rule "THM_TABLE"
   ruleflow-group 'GenerateThemes'
@@ -36,13 +37,20 @@ rule "THM_TABLE"
 
   then
     System.out.println(" Generate THM_TABLE Rule  ");
+    
+    String projectCode = "PRJ_"+serviceToken.getRealm().toUpperCase();
+     	
+ 	BaseEntity project = VertxUtils.getObject(serviceToken.getRealm(), "", projectCode,
+				BaseEntity.class, serviceToken.getToken());
+    
 
     Theme theme = Theme.builder("THM_TABLE")
-                                        .addAttribute()
-                                                /* .backgroundColor("grey") */
-                                                .width("100%")
-                                        .end()
-                                        .build();
+             .addAttribute()
+               .backgroundColor(project.getValue("PRI_COLOR_BACKGROUND", "#F6F6F6"))
+               .width("100%")
+             .end()
+             .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+             .build();
   
     
     theme.setRealm(serviceToken.getRealm());

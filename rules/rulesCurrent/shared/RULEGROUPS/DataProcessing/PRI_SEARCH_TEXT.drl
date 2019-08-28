@@ -15,6 +15,10 @@ import life.genny.qwandautils.JsonUtils;
 import life.genny.utils.VertxUtils;
 import life.genny.utils.TableUtils;
 import life.genny.models.TableData;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.Ask;
+import life.genny.qwanda.message.QDataAskMessage;
 
 
 import java.util.List;
@@ -42,8 +46,7 @@ rule "PRI_SEARCH_TEXT"
 		/* fetch Session SearchBar List from User */
 		BaseEntity user = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", beUtils.getGennyToken().getUserCode(),
 				BaseEntity.class, beUtils.getGennyToken().getToken());
-		Type type = new TypeToken<List<String>>() {
-				}.getType();
+		Type type = new TypeToken<List<String>>() {}.getType();
 		List<String> defaultList = new ArrayList<String>();
 		String defaultListString = JsonUtils.toJson(defaultList);
 		String historyStr = user.getValue("PRI_SEARCH_HISTORY",defaultListString);
@@ -59,8 +62,9 @@ rule "PRI_SEARCH_TEXT"
 		  SearchEntity searchBE = new SearchEntity("SBE_SEARCH","Search")
   	     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
   	     .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%"+searchBarString+"%")
-  	     .addColumn("PRI_FIRSTNAME","Firstname")
-  	     .addColumn("PRI_LASTNAME","Surname")
+  	     .addColumn("PRI_NAME", "Name")
+      	 .addColumn("PRI_LANDLINE", "Phone")
+  	     .addColumn("PRI_EMAIL", "Email")
   	     .setPageStart(0)
   	     .setPageSize(10);
   	     
@@ -70,6 +74,21 @@ rule "PRI_SEARCH_TEXT"
   	     
   	     
   	     TableData tableData = tableUtils.generateTableAsks(searchBE,beUtils.getGennyToken(),  msg);
+  	     VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+  	     
+      		  		
+         Ask headerAsk = tableData.getAsk();
+      	 Ask[] askArray = new Ask[1];
+      	 askArray[0] = headerAsk;
+      	 QDataAskMessage headerAskMsg = new QDataAskMessage(askArray);
+      	 headerAskMsg.setToken(beUtils.getGennyToken().getToken());
+      	 VertxUtils.writeMsg("webcmds", JsonUtils.toJson(headerAskMsg));
+      	 String headerAskCode = headerAsk.getQuestionCode();
+  	     
+  	     msg = tableUtils.changeQuestion("FRM_TABLE_HEADER",headerAskCode,beUtils.getGennyToken());
+                
+      	                
+      	 VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
   	     
   	     /* Send to front end */
    	     

@@ -4,19 +4,16 @@ import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.Logger;
-import org.codehaus.plexus.util.StringUtils;
 
-import com.google.common.collect.FluentIterable;
-
+import life.genny.models.Frame3;
 import life.genny.models.GennyToken;
 import life.genny.models.TableData;
 import life.genny.qwanda.Ask;
@@ -29,14 +26,15 @@ import life.genny.qwanda.attribute.Attribute;
 import life.genny.qwanda.attribute.EntityAttribute;
 import life.genny.qwanda.datatype.DataType;
 import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.entity.EntityEntity;
 import life.genny.qwanda.entity.SearchEntity;
+import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.validation.Validation;
 import life.genny.qwanda.validation.ValidationList;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.QwandaUtils;
-import life.genny.test.GennyJbpmBaseTest;
 
 public class TableUtilsTest {
 
@@ -347,5 +345,69 @@ public class TableUtilsTest {
 		createVirtualContext(columnSortAsk, headerLabelSortThemeBe, ContextType.THEME, VisualControlType.VCL_LABEL,themeMsgList);
 
 		return columnSortAsk;
+	}
+	
+	/**
+	 * @param serviceToken
+	 * @return
+	 */
+	public static QDataBaseEntityMessage changeQuestion(final String frameCode, final String questionCode,GennyToken serviceToken) {
+		Frame3 FRM_TABLE_HEADER = null;
+		try {
+			FRM_TABLE_HEADER = Frame3.builder("FRM_TABLE_HEADER")
+			        .addTheme("THM_TABLE_HEADER",serviceToken).end()
+			        .addTheme("THM_TABLE_BORDER",serviceToken).end()
+			         .question(questionCode) // QUE_NAME_GRP //QUE_POWERED_BY_GRP
+			              .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
+			              .addTheme("THM_TABLE_HEADER_CELL_WRAPPER",serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
+			              .addTheme("THM_TABLE_HEADER_CELL_INPUT",serviceToken).vcl(VisualControlType.VCL_INPUT).end()
+			         .end()
+			         .build();
+			
+			
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	 			     
+		Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();      	                
+		QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_TABLE_HEADER, serviceToken, askMsgs);
+		msg.setReplace(true);
+		
+	    for (QDataAskMessage askMsg : askMsgs) {
+	    	askMsg.setToken(serviceToken.getToken());
+	    	VertxUtils.writeMsg("webcmds", JsonUtils.toJson(askMsg));
+	    }
+
+		
+		String rootFrameCode = frameCode;
+		
+		for (BaseEntity targetFrame : msg.getItems()) {
+			if (targetFrame.getCode().equals(questionCode)) {
+
+				log.info("ShowFrame : Found Targeted Frame BaseEntity : " + targetFrame);
+
+				/* Adding the links in the targeted BaseEntity */
+				Attribute attribute = new Attribute("LNK_ASK", "LNK_ASK", new DataType(String.class));
+
+				for (BaseEntity sourceFrame : msg.getItems()) {
+					if (sourceFrame.getCode().equals(rootFrameCode)) {
+
+						System.out.println("ShowFrame : Found Source Frame BaseEntity : " + sourceFrame);
+						EntityEntity entityEntity = new EntityEntity(sourceFrame, targetFrame, attribute,
+								1.0, "CENTRE");
+						//Set<EntityEntity> entEntList = sourceFrame.getLinks();
+						//entEntList.add(entityEntity);
+						sourceFrame.getLinks().add(entityEntity);
+
+						/* Adding Frame to Targeted Frame BaseEntity Message */
+					//	msg.add(targetFrame);
+						break;
+					}
+				}
+				break;
+			}
+		}
+		return msg;
 	}
 }

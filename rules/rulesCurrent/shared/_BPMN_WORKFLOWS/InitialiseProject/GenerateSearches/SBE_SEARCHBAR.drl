@@ -18,6 +18,7 @@ import life.genny.utils.VertxUtils;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.models.GennyToken;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
+import life.genny.utils.BaseEntityUtils;
 
 rule "SBE_SEARCHBAR"
     ruleflow-group 'GenerateSearches'
@@ -27,14 +28,19 @@ rule "SBE_SEARCHBAR"
         serviceToken : GennyToken( code == "PER_SERVICE")
      then
      	System.out.println("   Generate "+drools.getRule().getName() );
+     	BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+     	
      	String projectCode = "PRJ_"+serviceToken.getRealm().toUpperCase();
      	
- 		 BaseEntity project = VertxUtils.getObject(serviceToken.getRealm(), "", projectCode,
-				BaseEntity.class, serviceToken.getToken());
-				if (project!=null) {
+ 		 BaseEntity project = beUtils.getBaseEntityByCode(projectCode);
+ 		 
+		if (project != null) {
          SearchEntity searchBE = new SearchEntity(drools.getRule().getName(),project.getValue("PRI_NAME",projectCode)+" Search")
   	     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
   	     .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%")
+  	     .addColumn("PRI_NAME", "Name")
+      	 .addColumn("PRI_LANDLINE", "Phone")
+  	     .addColumn("PRI_EMAIL", "Email")
   	     .setPageStart(0)
   	     .setPageSize(10);
   	     
@@ -42,6 +48,11 @@ rule "SBE_SEARCHBAR"
   	     searchBE.setRealm(serviceToken.getRealm());
   	     
  		 insert(searchBE);
+ 		 
   		 VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken.getToken());
-  		 }
+  		 
+   		 } else {
+   		 	System.out.println("PROJECT is not in cache "+projectCode);
+   		 }
+
 end
