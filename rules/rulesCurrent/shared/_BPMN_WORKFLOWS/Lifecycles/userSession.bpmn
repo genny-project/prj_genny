@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:g="http://www.jboss.org/drools/flow/gpd" xmlns:java="http://www.java.com/javaTypes" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.0.Final-v20180515-1642-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:g="http://www.jboss.org/drools/flow/gpd" xmlns:java="http://www.java.com/javaTypes" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.4.3.Final-v20180418-1358-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
   <bpmn2:itemDefinition id="ItemDefinition_10" isCollection="false" structureRef="java.lang.String"/>
   <bpmn2:itemDefinition id="ItemDefinition_628" isCollection="false" structureRef="org.kie.internal.runtime.StatefulKnowledgeSession"/>
   <bpmn2:itemDefinition id="ItemDefinition_633" isCollection="false" structureRef="org.kie.api.runtime.process.WorkflowProcessInstance"/>
@@ -27,6 +27,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_1" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_3" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_1081" isCollection="false" structureRef="life.genny.utils.OutputParam"/>
+  <bpmn2:itemDefinition id="ItemDefinition_16" isCollection="false" structureRef="life.genny.utils.SessionFacts"/>
   <bpmn2:signal id="Signal_1" name="#{user}"/>
   <bpmn2:signal id="Signal_2" name="event"/>
   <bpmn2:signal id="Signal_3" name="data"/>
@@ -59,6 +60,7 @@
       <tns:import name="life.genny.qwanda.Answer"/>
       <tns:import name="io.vertx.core.json.JsonObject"/>
       <tns:import name="life.genny.utils.OutputParam"/>
+      <tns:import name="life.genny.utils.SessionFacts"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_1329" name="message"/>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_174" name="userToken"/>
@@ -72,6 +74,7 @@
     <bpmn2:property id="targetPage" itemSubjectRef="ItemDefinition_10" name="targetPage"/>
     <bpmn2:property id="signalMessage" itemSubjectRef="ItemDefinition_1329" name="signalMessage"/>
     <bpmn2:property id="outerFrame" itemSubjectRef="ItemDefinition_10" name="outerFrame"/>
+    <bpmn2:property id="sessionFacts" itemSubjectRef="ItemDefinition_16" name="sessionFacts"/>
     <bpmn2:startEvent id="_1" name="Start">
       <bpmn2:extensionElements>
         <tns:metaData name="elementname">
@@ -82,7 +85,7 @@
       <bpmn2:dataOutput id="DataOutput_6" name="event"/>
       <bpmn2:dataOutputAssociation id="DataOutputAssociation_3">
         <bpmn2:sourceRef>DataOutput_6</bpmn2:sourceRef>
-        <bpmn2:targetRef>message</bpmn2:targetRef>
+        <bpmn2:targetRef>sessionFacts</bpmn2:targetRef>
       </bpmn2:dataOutputAssociation>
       <bpmn2:outputSet id="OutputSet_2" name="Output Set 2">
         <bpmn2:dataOutputRefs>DataOutput_6</bpmn2:dataOutputRefs>
@@ -106,11 +109,14 @@
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;userSession: Entering userSession &quot;+((QEventMessage)message).getData().getCode()+&quot; with userToken = &quot;+((GennyToken)userToken).getUserCode());
-((QEventMessage)message).getData().setValue(&quot;NEW_SESSION&quot;);   /* Flag the incoming message as NEW! */
-kcontext.setVariable(&quot;message&quot;,(QEventMessage)message); 
-kcontext.setVariable(&quot;session_state&quot;,((GennyToken)userToken).getSessionCode()); 
-kcontext.setVariable(&quot;serviceToken&quot;,((GennyToken)serviceToken)); 
+      <bpmn2:script>System.out.println(&quot;Runnig user Session&quot;);
+kcontext.setVariable(&quot;message&quot;,(QEventMessage)sessionFacts.getMessage()); 
+kcontext.setVariable(&quot;session_state&quot;,   sessionFacts.getUserToken().getSessionCode()); 
+kcontext.setVariable(&quot;serviceToken&quot;, sessionFacts.getServiceToken());
+kcontext.setVariable(&quot;userToken&quot;, sessionFacts.getUserToken());
+
+System.out.println(&quot;userSession: Entering userSession &quot; + kcontext.getVariable(&quot;message&quot;)+&quot; with userToken = &quot;+((GennyToken)kcontext.getVariable(&quot;userToken&quot;)).getUserCode());
+
 </bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_6" tns:priority="1" sourceRef="_1" targetRef="ScriptTask_3"/>
@@ -207,14 +213,20 @@ if (output.getTypeOfResult().equals(&quot;ERROR&quot;)) {
       <bpmn2:outgoing>SequenceFlow_18</bpmn2:outgoing>
       <bpmn2:ioSpecification id="InputOutputSpecification_1">
         <bpmn2:dataInput id="DataInput_2" itemSubjectRef="ItemDefinition_801" name="currentUser"/>
+        <bpmn2:dataInput id="DataInput_22" itemSubjectRef="ItemDefinition_174" name="userToken"/>
         <bpmn2:inputSet id="InputSet_1" name="Input Set 3">
           <bpmn2:dataInputRefs>DataInput_2</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_22</bpmn2:dataInputRefs>
         </bpmn2:inputSet>
         <bpmn2:outputSet id="OutputSet_1" name="Output Set 4"/>
       </bpmn2:ioSpecification>
       <bpmn2:dataInputAssociation id="DataInputAssociation_2">
         <bpmn2:sourceRef>currentUser</bpmn2:sourceRef>
         <bpmn2:targetRef>DataInput_2</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_11">
+        <bpmn2:sourceRef>userToken</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_22</bpmn2:targetRef>
       </bpmn2:dataInputAssociation>
     </bpmn2:callActivity>
     <bpmn2:exclusiveGateway id="ExclusiveGateway_10" name="Merge" gatewayDirection="Converging">
@@ -276,7 +288,7 @@ System.out.println(&quot;userSession: Exiting userSession for &quot;+currentUser
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_28</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_50</bpmn2:outgoing>
-      <bpmn2:script>kcontext.setVariable(&quot;message&quot;, (QEventMessage)message);
+      <bpmn2:script>kcontext.setVariable(&quot;message&quot;,(QEventMessage)sessionFacts.getMessage()); 
 
 /*System.out.println(&quot;Incoming message within existing workflow code is &quot;+((QMessage)message).getData().getCode());*/</bpmn2:script>
     </bpmn2:scriptTask>
@@ -432,7 +444,8 @@ System.out.println(&quot;Timer :::::::::::::::: safal &quot;);
           <tns:metaValue><![CDATA[Process Data ]]></tns:metaValue>
         </tns:metaData>
         <tns:onEntry-script scriptFormat="http://www.java.com/java">
-          <tns:script>System.out.println(&quot;userSession :::  Processing Answer Message &quot; + dataMessage);</tns:script>
+          <tns:script>kcontext.setVariable(&quot;dataMessage&quot;,(QEventMessage)sessionFacts.getMessage()); 
+System.out.println(&quot;userSession :::  Processing Answer Message &quot; + dataMessage);</tns:script>
         </tns:onEntry-script>
         <tns:onExit-script scriptFormat="http://www.java.com/java">
           <tns:script>System.out.println(&quot;userSession :::  Answer Message Processed &quot; + dataMessage);</tns:script>
@@ -495,7 +508,7 @@ System.out.println(&quot;Timer :::::::::::::::: safal &quot;);
       <bpmn2:dataOutput id="DataOutput_4" name="Signal_6_Output"/>
       <bpmn2:dataOutputAssociation id="DataOutputAssociation_5">
         <bpmn2:sourceRef>DataOutput_4</bpmn2:sourceRef>
-        <bpmn2:targetRef>message</bpmn2:targetRef>
+        <bpmn2:targetRef>sessionFacts</bpmn2:targetRef>
       </bpmn2:dataOutputAssociation>
       <bpmn2:outputSet id="OutputSet_8" name="Output Set 8">
         <bpmn2:dataOutputRefs>DataOutput_4</bpmn2:dataOutputRefs>
@@ -512,7 +525,7 @@ System.out.println(&quot;Timer :::::::::::::::: safal &quot;);
       <bpmn2:dataOutput id="DataOutput_3" name="Signal_8_Output"/>
       <bpmn2:dataOutputAssociation id="DataOutputAssociation_4">
         <bpmn2:sourceRef>DataOutput_3</bpmn2:sourceRef>
-        <bpmn2:targetRef>dataMessage</bpmn2:targetRef>
+        <bpmn2:targetRef>sessionFacts</bpmn2:targetRef>
       </bpmn2:dataOutputAssociation>
       <bpmn2:outputSet id="OutputSet_4" name="Output Set 4">
         <bpmn2:dataOutputRefs>DataOutput_3</bpmn2:dataOutputRefs>
@@ -1170,13 +1183,13 @@ System.out.println(&quot;Set initial Page to &quot;+output1);</bpmn2:script>
         <di:waypoint xsi:type="dc:Point" x="1165.0" y="260.0"/>
         <di:waypoint xsi:type="dc:Point" x="1148.0" y="259.0"/>
         <di:waypoint xsi:type="dc:Point" x="1130.0" y="259.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_40"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_23" bpmnElement="SequenceFlow_23" sourceElement="BPMNShape_ExclusiveGateway_22" targetElement="BPMNShape_Task_3">
         <di:waypoint xsi:type="dc:Point" x="1280.0" y="260.0"/>
         <di:waypoint xsi:type="dc:Point" x="1262.0" y="260.0"/>
         <di:waypoint xsi:type="dc:Point" x="1244.0" y="260.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_52"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
