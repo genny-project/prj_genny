@@ -38,9 +38,7 @@ rule "THM_PADDING_40"
      	System.out.println("   Generate THM_PADDING_40 Rule ");
 
 			Theme theme = Theme.builder("THM_PADDING_40")
-										.addAttribute()
-											.padding(40)
-										.end()
+										.addAttribute().padding(40).end()
 										.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
 										.build();   
 			theme.setRealm(serviceToken.getRealm());

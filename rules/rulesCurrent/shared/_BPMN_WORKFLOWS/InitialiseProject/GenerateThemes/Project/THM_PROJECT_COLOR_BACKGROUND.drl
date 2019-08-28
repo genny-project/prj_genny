@@ -41,7 +41,7 @@ rule "THM_PROJECT_COLOR_BACKGROUND"
 
 			Theme theme = Theme.builder("THM_PROJECT_COLOR_BACKGROUND")
 										.addAttribute()
-										 	.backgroundColor(project.getValue("PRI_COLOR_BACKGROUND", "#FFFFFF"))
+										 	.backgroundColor(project.getValue("PRI_COLOR_BACKGROUND", "#F6F6F6"))
 											.color(project.getValue("PRI_COLOR_BACKGROUND_ON", "#000000"))
 										.end()
 										.build();  
