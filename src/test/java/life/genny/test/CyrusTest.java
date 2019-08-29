@@ -178,25 +178,41 @@ public class CyrusTest extends GennyJbpmBaseTest {
 	.end()
 	.build();
 
+
+	Theme THM_FORM_BUTTONS = Theme.builder("THM_FORM_BUTTONS")
+		.addAttribute()
+			//.backgroundColor("#263238")
+			//.color("#ffffff")
+			.display("flex")
+			.alignItems("center")
+			.borderWidth(1)
+			.borderColor("black")
+			.height(40)
+			.padding(0)
+		.end()
+		.addAttribute().backgroundColor(project.getValue("PRI_COLOR_BACKGROUND", "#263238")).end()
+		.addAttribute().color(project.getValue("PRI_COLOR_SURFACE_ON", "#ffffff")).end()
+		.build();
+
+		Theme THM_FORM_BUTTONS_BEHAVIOUR= Theme.builder("THM_FORM_BUTTONS_BEHAVIOUR")
+		.addAttribute(ThemeAttributeType.PRI_HAS_LABEL, false).end()
+		.build();
 	
-	Theme THM_FORM_BUTTON_COLOUR= Theme.builder("THM_FORM_BUTTON_COLOUR")
-			.addAttribute()
-				.backgroundColor("#fff000")
-			.end()
-		.build(); 
 	
-	Validation validation = new Validation("VLD_ANYTHING", "EmptyandBlankValues", ".*");
+	Validation validation = new Validation("VLD_ANYTHING", "Anything", ".*");
 	List<Validation> validations = new ArrayList<>();
 	validations.add(validation);
 	
 	ValidationList buttonValidationList = new ValidationList();
 	buttonValidationList.setValidationList(validations);
-	
-	DataType buttonDataType = new DataType("DTT_BUTTON_EVENT", buttonValidationList, "String", "");
+
+	DataType buttonDataType = new DataType("DTT_BUTTON_EVENT", buttonValidationList, "buttonEvent", "");
 	
 	Frame3 frameForm = Frame3.builder("FRM_FORM")
 			.addTheme(THM_FORM_ATTRIBUTES_GENNY).end()
-				.question("QUE_INTERN_PROFILE_GRP")
+				.question("QUE_ADD_INTERNSHIP_AGENT_STEP_ONE_GRP")
+					.addTheme(THM_FORM_BUTTONS).dataType(buttonDataType).vcl(VisualControlType.VCL_WRAPPER).end()
+					.addTheme(THM_FORM_BUTTONS_BEHAVIOUR).dataType(buttonDataType).end()
 					.addTheme(THM_FORM_VCL_INPUT_GENNY).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
 					.addTheme(THM_FORM_VCL_LABEL_GENNY).vcl(VisualControlType.VCL_LABEL).end()
 					.addTheme(THM_FORM_VCL_WRAPPER_GENNY).vcl(VisualControlType.VCL_WRAPPER).end()
@@ -205,7 +221,6 @@ public class CyrusTest extends GennyJbpmBaseTest {
 					.addTheme(THM_FORM_GROUP_LABEL_GENNY).vcl(VisualControlType.GROUP_LABEL).weight(3.0).end()
 					.addTheme(THM_BACKGROUND_NONE).weight(3.0).end()
 					.addTheme(THM_FORM_GROUP_WRAPPER_GENNY).vcl(VisualControlType.GROUP_WRAPPER).weight(3.0).end()
-					.addTheme(THM_FORM_BUTTON_COLOUR).dataType(buttonDataType).end()
 				.end()
 			.build();
 	
