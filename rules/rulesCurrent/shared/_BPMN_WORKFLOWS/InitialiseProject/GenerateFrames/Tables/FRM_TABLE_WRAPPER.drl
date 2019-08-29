@@ -25,29 +25,29 @@ import life.genny.utils.FrameUtils2;
 import life.genny.models.FramePosition;
 import life.genny.qwanda.VisualControlType;
 
-rule "THM_TABLE_CONTENT"
-  ruleflow-group 'GenerateThemes'
-
-  no-loop true
+rule "FRM_TABLE_WRAPPER"
+  ruleflow-group 'GenerateFrames'
 
   when
-    not  Theme(code == "THM_TABLE_CONTENT")
+    not  Frame3(code == "FRM_TAB_HEADER")
     serviceToken : GennyToken( code == "PER_SERVICE")
+    FRM_TABLE_BODY : Frame3 ( code == "FRM_TABLE_BODY" )
+    FRM_TABLE_FOOTER : Frame3 ( code == "FRM_TABLE_FOOTER" )
 
+    FRM_FRAME_TO_BE_ADDED : Frame3 ( code == "FRM_FRAME_TO_BE_ADDED" )
   then
-    System.out.println(" Generate THM_TABLE_CONTENT Rule  ");
+    System.out.println(" Generate FRM_TABLE_WRAPPER Rule  "+serviceToken.getUserCode());
 
-    Theme theme = Theme.builder("THM_TABLE_CONTENT")
-                .addAttribute()
-                  .backgroundColor("#FAFAFA")
-                  .color("black")
-                  .width("100%")
-                .end()
-                .build();  
+    Frame3 frame = Frame3.builder("FRM_TABLE_WRAPPER")
+                  .addTheme("THM_BOX_SHADOW_XS", ThemePosition.WRAPPER, serviceToken).end()
+                  .addTheme("THM_PROJECT_COLOR_SURFACE", serviceToken).end()
+                  .addFrame(FRM_TABLE_BODY, FramePosition.CENTRE).end()
+                  .addFrame(FRM_TABLE_FOOTER, FramePosition.SOUTH).end()
+                  .build();
     
-    theme.setRealm(serviceToken.getRealm());
-    insert (theme);
+    frame.setRealm(serviceToken.getRealm());
+    insert (frame);
 
-    VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, 
-    serviceToken.getToken());
+    /* Process and save to cache */
+    FrameUtils2.toMessage(frame, serviceToken);
 end
