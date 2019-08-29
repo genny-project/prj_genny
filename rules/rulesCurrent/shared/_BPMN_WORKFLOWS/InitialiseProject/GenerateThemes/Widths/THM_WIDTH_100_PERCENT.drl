@@ -24,31 +24,28 @@ import life.genny.models.Theme;
 
 
 
-rule "THM_PROJECT_COLOR_BACKGROUND"
+rule "THM_WIDTH_100_PERCENT"
     ruleflow-group 'GenerateThemes'
     no-loop true
-
+    
     when
-      not  Theme (code == "THM_PROJECT_COLOR_BACKGROUND")
+      not  Theme (code == "THM_WIDTH_100_PERCENT")
       serviceToken : GennyToken( code == "PER_SERVICE")
-
+      
     then
+    
+     	System.out.println("   Generate THM_WIDTH_100_PERCENT Rule ");
+ 
+		Theme theme = Theme.builder("THM_WIDTH_100_PERCENT")
+							.addAttribute()
+								.width("100%")
+							.end()
+							.build();
 
-     	System.out.println("   Generate THM_PROJECT_COLOR_BACKGROUND Rule ");
+		theme.setRealm(serviceToken.getRealm());
+		
+		insert(theme);
 
-			BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
-			BaseEntity project = beUtils.getBaseEntityByCode( "PRJ_" + serviceToken.getRealm().toUpperCase());
-
-			Theme theme = Theme.builder("THM_PROJECT_COLOR_BACKGROUND")
-										.addAttribute()
-										 	.backgroundColor(project.getValue("PRI_COLOR_BACKGROUND", "#F6F6F6"))
-											.color(project.getValue("PRI_COLOR_BACKGROUND_ON", "#000000"))
-										.end()
-										.build();  
-
-			theme.setRealm(serviceToken.getRealm());
-
-			insert(theme);
-
-			VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
+		VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
+	 
 end
