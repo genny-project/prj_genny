@@ -1376,7 +1376,7 @@ public void testTableHeader() {
 
                     /* Test Context */
                     Frame3 FRM_HAMBURGER_MENU = Frame3.builder("FRM_HAMBURGER_MENU").question("QUE_NAME_TWO")
-                                    // .addContext(context).end()
+                                    .addContext(context).end()
                                     .end().build();
 
                     /* Test Virtual Ask */
@@ -1454,6 +1454,7 @@ public void testTableHeader() {
                                     .addTheme(THM_HEADER).end()
                                     //.addTheme(THM_FRAME_ALIGN_WEST, ThemePosition.WEST).end()
                                     //.addTheme(THM_FRAME_ALIGN_EAST, ThemePosition.EAST).end()
+                                    .addFrame(FRM_HAMBURGER_MENU, FramePosition.WEST).end()
                                     .addFrame(FRM_PROJECT_NAME, FramePosition.WEST).end()
                                     .addFrame(FRM_SEARCH_BAR, FramePosition.CENTRE).end()
                                     .addFrame(FRM_HEADER_OPTIONS, FramePosition.EAST).end()
