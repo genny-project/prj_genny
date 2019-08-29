@@ -43,6 +43,15 @@ rule "FRM_FORM"
     
         System.out.println("   Generate FRM_FORM  RULE TEST " + serviceToken.getUserCode());
 
+				Validation validation = new Validation("VLD_ANYTHING", "Anything", ".*");
+				List<Validation> validations = new ArrayList<>();
+				validations.add(validation);
+				
+				ValidationList buttonValidationList = new ValidationList();
+				buttonValidationList.setValidationList(validations);
+
+				DataType buttonDataType = new DataType("DTT_BUTTON_EVENT", buttonValidationList, "buttonEvent", "");
+
 				String apiUrl = GennySettings.qwandaServiceUrl + "/service/forms";
 				System.out.println("QwandaServiceUrl is "+apiUrl);
 				String jsonFormCodes = null;
@@ -66,6 +75,8 @@ rule "FRM_FORM"
 					Frame3 frame2 = Frame3.builder("FRM_CONTENT_" +  questionCode)
 								.addTheme("THM_FORM_ATTRIBUTES_GENNY", serviceToken).end()
 								.question(questionCode) 
+									.addTheme("THM_FORM_BUTTONS", serviceToken).dataType(buttonDataType).vcl(VisualControlType.VCL_WRAPPER).end()
+									.addTheme("THM_FORM_BUTTONS_BEHAVIOUR", serviceToken).dataType(buttonDataType).end()
 									.addTheme("THM_FORM_VCL_INPUT_GENNY", serviceToken).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
 									.addTheme("THM_FORM_VCL_LABEL_GENNY", serviceToken).vcl(VisualControlType.VCL_LABEL).end()
 									.addTheme("THM_FORM_VCL_WRAPPER_GENNY", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
