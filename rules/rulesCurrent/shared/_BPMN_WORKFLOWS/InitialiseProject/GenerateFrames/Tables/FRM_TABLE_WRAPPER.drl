@@ -23,13 +23,13 @@ import life.genny.models.Frame3;
 import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
 import life.genny.models.FramePosition;
-import life.genny.qwanda.VisualControlType;
+import life.genny.qwanda.VisualControlType; 
 
 rule "FRM_TABLE_WRAPPER"
-  ruleflow-group 'GenerateFrames'
+  ruleflow-group 'GenerateFrames' 
 
   when
-    not  Frame3(code == "FRM_TAB_HEADER")
+    not  Frame3(code == "FRM_TABLE_HEADER")
     serviceToken : GennyToken( code == "PER_SERVICE")
     FRM_TABLE_BODY : Frame3 ( code == "FRM_TABLE_BODY" )
     FRM_TABLE_FOOTER : Frame3 ( code == "FRM_TABLE_FOOTER" )

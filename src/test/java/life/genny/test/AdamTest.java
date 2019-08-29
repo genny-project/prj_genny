@@ -78,7 +78,7 @@ public class AdamTest {
 
 
 
-@Test
+//@Test
 public void testTableHeader() {
         QRules rules = GennyJbpmBaseTest.setupLocalService();
         GennyToken userToken = new GennyToken("userToken", rules.getToken());
@@ -262,7 +262,7 @@ public void testTableHeader() {
 	
 	
 	
-	//@Test
+	@Test
 	public void newUserTest()
 	{
 		System.out.println("New User test");
