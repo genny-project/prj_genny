@@ -38,12 +38,13 @@ rule "THM_TABLE_BORDER"
     System.out.println(" Generate THM_TABLE_BORDER Rule  ");
 
     Theme theme = Theme.builder("THM_TABLE_BORDER")
-                                         .addAttribute()
-                                                .borderBottomWidth(1)
-                                                .borderColor("grey")
-                                        .end()
-                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
-                                        .build();
+                  .addAttribute()
+                    .borderBottomWidth(1)
+                    .borderColor("#f6f6f6")
+                    .borderStyle("solid")
+                  .end()
+                  .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                  .build();
   
     
     theme.setRealm(serviceToken.getRealm());
