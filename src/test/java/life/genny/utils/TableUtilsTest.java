@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 import life.genny.models.Frame3;
 import life.genny.models.GennyToken;
 import life.genny.models.TableData;
+import life.genny.models.Theme;
 import life.genny.qwanda.Ask;
 import life.genny.qwanda.Context;
 import life.genny.qwanda.ContextList;
@@ -184,7 +185,7 @@ public class TableUtilsTest {
 		searchValidationList.setValidationList(validations);
 
 		Attribute eventAttribute = RulesUtils.attributeMap.get("PRI_SORT");
-		Attribute questionAttribute = RulesUtils.attributeMap.get("QQQ_QUESTION_GROUP");
+		Attribute questionAttribute = RulesUtils.attributeMap.get("QQQ_QUESTION_GROUP_TABLE_CELL");
 
 		/* get table columns */
 		Map<String, String> columns = getTableColumns(searchBe);
@@ -354,13 +355,31 @@ public class TableUtilsTest {
 	public static QDataBaseEntityMessage changeQuestion(final String frameCode, final String questionCode,GennyToken serviceToken) {
 		Frame3 FRM_TABLE_HEADER = null;
 		try {
+
+			Validation validation = new Validation("VLD_ANYTHING", "Anything", ".*");
+			List<Validation> validations = new ArrayList<>();
+			validations.add(validation);
+			
+			ValidationList buttonValidationList = new ValidationList();
+			buttonValidationList.setValidationList(validations);
+
+			DataType buttonDataType = new DataType("DTT_TABLE_CELL_GRP", buttonValidationList, "Table Cell Group", "");
+
+			Theme THM_DISPLAY_VERTICAL = Theme.builder("THM_DISPLAY_VERTICAL")
+										.addAttribute()
+											.flexDirection("row").end()
+										.build();
+
 			FRM_TABLE_HEADER = Frame3.builder("FRM_TABLE_HEADER")
 			        .addTheme("THM_TABLE_HEADER",serviceToken).end()
 			        .addTheme("THM_TABLE_BORDER",serviceToken).end()
 			         .question(questionCode) // QUE_NAME_GRP //QUE_POWERED_BY_GRP
 			              .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
 			              .addTheme("THM_TABLE_HEADER_CELL_WRAPPER",serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
-			              .addTheme("THM_TABLE_HEADER_CELL_INPUT",serviceToken).vcl(VisualControlType.VCL_INPUT).end()
+										.addTheme("THM_TABLE_HEADER_CELL_INPUT",serviceToken).vcl(VisualControlType.VCL_INPUT).end()
+										.addTheme(THM_DISPLAY_VERTICAL)
+										.vcl(VisualControlType.GROUP)
+										.dataType(buttonDataType).end()										
 			         .end()
 			         .build();
 			

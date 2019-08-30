@@ -39,10 +39,10 @@ rule "THM_TABLE_HEADER_CELL_INPUT"
 
  
      Theme theme = Theme.builder("THM_TABLE_HEADER_CELL_INPUT")
- 				.addAttribute()
-                  .textAlign("center")
-                                        .end()
-                                        .build();  
+                  .addAttribute()
+                    .textAlign("center")
+                  .end()
+                  .build();  
     
     theme.setRealm(serviceToken.getRealm());
     insert (theme);
