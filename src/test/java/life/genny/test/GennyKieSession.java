@@ -85,6 +85,7 @@ import life.genny.rules.QRules;
 import life.genny.rules.listeners.GennyAgendaEventListener;
 import life.genny.rules.listeners.JbpmInitListener;
 import life.genny.utils.RulesUtils;
+import life.genny.utils.SessionFacts;
 import life.genny.utils.VertxUtils;
 import life.genny.utils.WorkflowQueryInterface;
 
@@ -244,7 +245,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			GennyToken uToken = new GennyToken(msg.getToken());
 			userToken = uToken;
 			
-			kieSession.insert(userToken); 
+			//kieSession.insert(userToken); 
 		}
 		
 			if (msg instanceof QEventMessage)  {
@@ -265,7 +266,11 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 				gToken = userToken;
 				bridgeSourceAddress = "bridge";
 				Long processId  = null;
+				
+				
 				// Check if an existing userSession is there
+				
+
 
 				Optional<Long> processIdBysessionId = getProcessIdBysessionId(session_state);
 				boolean hasProcessIdBySessionId = processIdBysessionId.isPresent();
@@ -278,9 +283,12 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 					// So send the event through to the userSession
 					if (eventMsg != null) {
-						kieSession.signalEvent("event", eventMsg, processId);
+						SessionFacts sessionFactsEvent = new SessionFacts(serviceToken, userToken , eventMsg);
+
+						kieSession.signalEvent("event", sessionFactsEvent, processId);
 					} else if (dataMsg != null) {
-						kieSession.signalEvent("data", dataMsg, processId);
+						SessionFacts sessionFactsData = new SessionFacts(serviceToken, userToken , dataMsg);
+						kieSession.signalEvent("data", sessionFactsData, processId);
 					}
 
 				} else {
@@ -291,7 +299,8 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 								+ userToken.getSessionCode() + ":" + userToken.getUserCode() + "   " + msg_code
 								+ " to NEW SESSION");
 						try {
-							kieSession.signalEvent("newSession", eventMsg);
+							SessionFacts sessionFactsEvent = new SessionFacts(serviceToken, userToken , eventMsg);
+							kieSession.signalEvent("newSession", sessionFactsEvent);
 						} catch (Exception e) {
 							System.out.println("Runtime error: "+e.getLocalizedMessage());
 						}
