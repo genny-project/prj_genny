@@ -178,56 +178,30 @@ public class CyrusTest extends GennyJbpmBaseTest {
 
 	Theme THM_FORM_BUTTONS_TEST = Theme.builder("THM_FORM_BUTTONS_TEST")
 		.addAttribute()
-			.backgroundColor("yellow")
-			.color("#000000")
-			.borderWidth(1)
 			.justifyContent("center")
-			// .borderBottomWidth(0)
+			.borderWidth(1)
 			.borderColor("black")
-			.padding(10)
 		.end()
 		.build();
 
 		Theme THM_FORM_BUTTONS_TEST1 = Theme.builder("THM_FORM_BUTTONS_TEST1")
 		.addAttribute()
-			.backgroundColor("orange")
-			.padding(5)
+			.borderWidth(0)
+			.padding(10)
 		.end()
 		.build();
 
-		Theme THM_FORM_BUTTONS_TEST2 = Theme.builder("THM_FORM_BUTTONS_TEST2")
-		.addAttribute()
-			.backgroundColor("blue")
-			.padding(5)
-		.end()
-		.build();
-
-		Theme THM_FORM_BUTTONS_TEST3 = Theme.builder("THM_FORM_BUTTONS_TEST3")
-		.addAttribute()
-			.backgroundColor("red")
-			.padding(5)
-		.end()
-		.build();
-
-		Theme THM_FORM_BUTTONS_TEST4 = Theme.builder("THM_FORM_BUTTONS_TEST4")
-		.addAttribute()
-			.backgroundColor("silver")
-			.padding(5)
-		.end()
-		.build();
-
-
-
-		// Theme THM_FORM_BUTTONS_TESTONE = Theme.builder("THM_FORM_BUTTONS_TESTONE")
-		// .addAttribute()
-		// 	.backgroundColor("red")
-		// 	.borderWidth(0)
-		// .end()
-		// .build();
 
 		Theme THM_FORM_BUTTONS_BEHAVIOUR_TEST= Theme.builder("THM_FORM_BUTTONS_BEHAVIOUR_TEST")
 		.addAttribute(ThemeAttributeType.PRI_HAS_LABEL, false).end()
 		.build();
+
+		Theme THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHT = Theme.builder("THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHT")
+		.addAttribute()
+			.backgroundColor(project.getValue("PRI_COLOR_PRIMARY_VARIANT_LIGHT", "#395268"))
+			 .color(project.getValue("PRI_COLOR_PRIMARY_ON", "#FFFFFF"))
+		.end()
+		.build();  
 	
 	
 	Validation validation = new Validation("VLD_ANYTHING", "Anything", ".*");
@@ -242,12 +216,9 @@ public class CyrusTest extends GennyJbpmBaseTest {
 	Frame3 FRM_FORM_TEST = Frame3.builder("FRM_FORM_TEST")
 			.addTheme(THM_FORM_ATTRIBUTES_GENNY).end()
 				.question("QUE_ADD_INTERNSHIP_AGENT_STEP_ONE_GRP")
-					// .addTheme(THM_FORM_BUTTONS_TEST).dataType(buttonDataType).end()
-					.addTheme(THM_FORM_BUTTONS_TEST1).dataType(buttonDataType).vcl(VisualControlType.VCL_WRAPPER).end()
-					.addTheme(THM_FORM_BUTTONS_TEST2).dataType(buttonDataType).vcl(VisualControlType.VCL_INPUT).end()
-					// .addTheme(THM_FORM_BUTTONS_TEST3).dataType(buttonDataType).vcl(VisualControlType.INPUT_WRAPPER).end() // working
-					.addTheme(THM_FORM_BUTTONS_TEST4).dataType(buttonDataType).vcl(VisualControlType.INPUT_FIELD).end()
-					//.addTheme(THM_FORM_BUTTONS_TESTONE).dataType(buttonDataType).vcl(VisualControlType.VCL_INPUT).end()
+					.addTheme(THM_FORM_BUTTONS_TEST).dataType(buttonDataType).vcl(VisualControlType.INPUT_WRAPPER).end()
+					.addTheme(THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHT).dataType(buttonDataType).end()
+					.addTheme(THM_FORM_BUTTONS_TEST1).dataType(buttonDataType).vcl(VisualControlType.INPUT_FIELD).end()
 					.addTheme(THM_FORM_BUTTONS_BEHAVIOUR_TEST).dataType(buttonDataType).end()
 					.addTheme(THM_FORM_VCL_INPUT_GENNY).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
 					.addTheme(THM_FORM_VCL_LABEL_GENNY).vcl(VisualControlType.VCL_LABEL).end()
