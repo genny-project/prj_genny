@@ -48,6 +48,8 @@ import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventMessage;
+import life.genny.qwanda.validation.Validation;
+import life.genny.qwanda.validation.ValidationList;
 import life.genny.qwandautils.GennyCacheInterface;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
@@ -167,13 +169,26 @@ public void testTableHeader() {
 		  
 	        Frame3 headerFrame = null;
 			try {
+
+				Validation tableCellValidation = new Validation("VLD_ANYTHING", "Anything", ".*");
+        
+				List<Validation> tableCellValidations = new ArrayList<>();
+				tableCellValidations.add(tableCellValidation);
+				
+				ValidationList tableCellValidationList = new ValidationList();
+				tableCellValidationList.setValidationList(tableCellValidations);
+
+				DataType tableCellDataType = new DataType("DTT_TABLE_CELL_GRP", tableCellValidationList, "Table Cell Group", "");
+
 				headerFrame = Frame3.builder("FRM_TABLE_HEADER")
 				        .addTheme("THM_TABLE_HEADER",serviceToken).end()
 				        .addTheme("THM_TABLE_BORDER",serviceToken).end()
 				         .question("QUE_NAME_GRP")
-				              .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
-				              .addTheme("THM_TABLE_HEADER_CELL_WRAPPER",serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
-				              .addTheme("THM_TABLE_HEADER_CELL_INPUT",serviceToken).vcl(VisualControlType.VCL_INPUT).end()
+							.addTheme("THM_QUESTION_GRP_LABEL", serviceToken).vcl(VisualControlType.GROUP).dataType(tableCellDataType).end()
+							.addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).weight(2.0).end()
+							.addTheme("THM_TABLE_HEADER_CELL_WRAPPER", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
+							.addTheme("THM_TABLE_HEADER_CELL_GROUP_LABEL", serviceToken).vcl(VisualControlType.GROUP_LABEL).end()
+							.addTheme("THM_DISPLAY_VERTICAL", serviceToken).dataType(tableCellDataType).weight(1.0).end()
 				         .end()
 				         .build();
 			} catch (Exception e1) {

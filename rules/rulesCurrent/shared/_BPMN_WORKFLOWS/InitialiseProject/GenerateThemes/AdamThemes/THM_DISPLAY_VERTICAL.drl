@@ -37,20 +37,8 @@ rule "THM_DISPLAY_VERTICAL"
      	System.out.println("   Generate THM_THM_DISPLAY_VERTICAL Rule ");
  
 		Theme theme = Theme.builder("THM_DISPLAY_VERTICAL")
-				.name("Display Visual Controls Vertically") /* Optional - defaults to the code */
-				.addAttribute(ThemeAttributeType.PRI_CONTENT)
-					.flexDirection("column")
-					.shadowOffset()
-						.height(5)
-						.width(5)
-						.end()
-					.maxWidth(600)
-					.padding(10)
-					.end()
-				.addAttribute() /* defaults to ThemeAttributeType.PRI_CONTENT */
-					.justifyContent("flex-start")
-					.end()
-				.build();
+			 						.addAttribute().flexDirection("column").end()
+									.build();
 
 		theme.setRealm(serviceToken.getRealm());
 		

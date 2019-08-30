@@ -487,6 +487,13 @@ public class AnishTest extends GennyJbpmBaseTest {
                                                         .textAlign("center")
                                                 .end()
                                                 .build();
+                        Theme THM_TABLE_HEADER_CELL_GROUP_LABEL = Theme.builder("THM_TABLE_HEADER_CELL_GROUP_LABEL")
+                                                .addAttribute()
+                                                        .paddingLeft(10)
+                                                        .alignSelf("flex-start")
+                                                .end()
+                                                .build();
+
                         Theme THM_TABLE_CONTENT = Theme.builder("THM_TABLE_CONTENT")
                                                 .addAttribute()
                                                         .width("100%")
@@ -511,14 +518,34 @@ public class AnishTest extends GennyJbpmBaseTest {
                                                 .end()
                                                 .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
                                                 .build();
+
+                        Theme THM_DISPLAY_VERTICAL = Theme.builder("THM_DISPLAY_VERTICAL")
+                                                .addAttribute()
+                                                        .flexDirection("column").end()
+                                                .build();
+
+                        Theme THM_QUESTION_GRP_LABEL = Theme.builder("THM_QUESTION_GRP_LABEL")
+                                                .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_LABEL, true).end()
+                                                .build();      
                         
+                        Validation tableCellValidation = new Validation("VLD_ANYTHING", "Anything", ".*");
+                                                List<Validation> tableCellValidations = new ArrayList<>();
+                                                tableCellValidations.add(tableCellValidation);
+                                                
+                                                ValidationList tableCellValidationList = new ValidationList();
+                                                tableCellValidationList.setValidationList(tableCellValidations);
+                        
+                        DataType tableCellDataType = new DataType("DTT_TABLE_CELL_GRP", tableCellValidationList, "Table Cell Group", "");
+        
                         Frame3 FRM_TABLE_HEADER = Frame3.builder("FRM_TABLE_HEADER")
-                                        .addTheme(THM_TABLE_HEADER).end()
+                                        /* .addTheme(THM_TABLE_HEADER).end() */
                                         .addTheme(THM_TABLE_BORDER).end()
-                                        .question("QUE_NAME_GRP")
-                                                .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
+                                        .question("QUE_TEST_TABLE_HEADER_GRP")
+                                                .addTheme(THM_QUESTION_GRP_LABEL).vcl(VisualControlType.GROUP).dataType(tableCellDataType).end()
+                                                .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).weight(2.0).end()
                                                 .addTheme(THM_TABLE_HEADER_CELL_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
-                                                .addTheme(THM_TEXT_ALIGN_CENTER).vcl(VisualControlType.VCL_INPUT).end()
+                                                .addTheme(THM_TABLE_HEADER_CELL_GROUP_LABEL).vcl(VisualControlType.GROUP_LABEL).end()
+                                                .addTheme(THM_DISPLAY_VERTICAL).dataType(tableCellDataType).weight(1.0).end()			
                                         .end()
                                         .build();
                         

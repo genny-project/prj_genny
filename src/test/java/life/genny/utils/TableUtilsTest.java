@@ -185,7 +185,8 @@ public class TableUtilsTest {
 		searchValidationList.setValidationList(validations);
 
 		Attribute eventAttribute = RulesUtils.attributeMap.get("PRI_SORT");
-		Attribute questionAttribute = RulesUtils.attributeMap.get("QQQ_QUESTION_GROUP_TABLE_CELL");
+		Attribute questionAttribute = RulesUtils.attributeMap.get("QQQ_QUESTION_GROUP");
+		Attribute tableCellAttribute = RulesUtils.attributeMap.get("QQQ_QUESTION_GROUP_TABLE_CELL");
 
 		/* get table columns */
 		Map<String, String> columns = getTableColumns(searchBe);
@@ -204,7 +205,7 @@ public class TableUtilsTest {
 
 			/* Initialize Column Header Ask group */
 			Question columnHeaderQuestion = new Question("QUE_" + attributeCode + "_GRP", attributeName,
-					questionAttribute, true);
+			tableCellAttribute, true);
 			Ask columnHeaderAsk = new Ask(columnHeaderQuestion, beUtils.getGennyToken().getUserCode(), searchBe.getCode());
 
 			/* creating ask for table header label-sort */
@@ -356,30 +357,25 @@ public class TableUtilsTest {
 		Frame3 FRM_TABLE_HEADER = null;
 		try {
 
-			Validation validation = new Validation("VLD_ANYTHING", "Anything", ".*");
-			List<Validation> validations = new ArrayList<>();
-			validations.add(validation);
+			Validation tableCellValidation = new Validation("VLD_ANYTHING", "Anything", ".*");
+        
+			List<Validation> tableCellValidations = new ArrayList<>();
+			tableCellValidations.add(tableCellValidation);
 			
-			ValidationList buttonValidationList = new ValidationList();
-			buttonValidationList.setValidationList(validations);
+			ValidationList tableCellValidationList = new ValidationList();
+			tableCellValidationList.setValidationList(tableCellValidations);
 
-			DataType buttonDataType = new DataType("DTT_TABLE_CELL_GRP", buttonValidationList, "Table Cell Group", "");
-
-			Theme THM_DISPLAY_VERTICAL = Theme.builder("THM_DISPLAY_VERTICAL")
-										.addAttribute()
-											.flexDirection("row").end()
-										.build();
-
+			DataType tableCellDataType = new DataType("DTT_TABLE_CELL_GRP", tableCellValidationList, "Table Cell Group", "");
+	
 			FRM_TABLE_HEADER = Frame3.builder("FRM_TABLE_HEADER")
 			        .addTheme("THM_TABLE_HEADER",serviceToken).end()
 			        .addTheme("THM_TABLE_BORDER",serviceToken).end()
 			         .question(questionCode) // QUE_NAME_GRP //QUE_POWERED_BY_GRP
-			              .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
-			              .addTheme("THM_TABLE_HEADER_CELL_WRAPPER",serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
-										.addTheme("THM_TABLE_HEADER_CELL_INPUT",serviceToken).vcl(VisualControlType.VCL_INPUT).end()
-										.addTheme(THM_DISPLAY_VERTICAL)
-										.vcl(VisualControlType.GROUP)
-										.dataType(buttonDataType).end()										
+									.addTheme("THM_QUESTION_GRP_LABEL", serviceToken).vcl(VisualControlType.GROUP).dataType(tableCellDataType).end()
+									.addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).weight(2.0).end()
+									.addTheme("THM_TABLE_HEADER_CELL_WRAPPER", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
+									.addTheme("THM_TABLE_HEADER_CELL_GROUP_LABEL", serviceToken).vcl(VisualControlType.GROUP_LABEL).end()
+									.addTheme("THM_DISPLAY_VERTICAL", serviceToken).dataType(tableCellDataType).weight(1.0).end()
 			         .end()
 			         .build();
 			
