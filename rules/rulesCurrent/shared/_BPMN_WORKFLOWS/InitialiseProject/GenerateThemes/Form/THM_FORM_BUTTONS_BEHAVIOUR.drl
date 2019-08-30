@@ -41,14 +41,7 @@ rule "THM_FORM_BUTTONS_BEHAVIOUR"
 			BaseEntity project = beUtils.getBaseEntityByCode( "PRJ_" + serviceToken.getRealm().toUpperCase());
  
 		Theme theme = Theme.builder("THM_FORM_BUTTONS_BEHAVIOUR")
-		.addAttribute()
-			.backgroundColor("#263238")
-			.color("#ffffff")
-			.borderWidth(1)
-			.borderColor("black")
-			.height(40)
-			.padding(0)
-		.end()
+		.addAttribute(ThemeAttributeType.PRI_HAS_LABEL, false).end()
 		.build();
 
 		theme.setRealm(serviceToken.getRealm());
