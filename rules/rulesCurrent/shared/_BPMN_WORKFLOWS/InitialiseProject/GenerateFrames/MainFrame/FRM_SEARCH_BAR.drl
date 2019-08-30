@@ -29,7 +29,7 @@ rule "FRM_SEARCH_BAR"
   ruleflow-group 'GenerateFrames'
 
   when
-    not  Frame3(code == "FRM_TAB_HEADER")
+    not  Frame3(code == "FRM_SEARCH_BAR")
     serviceToken : GennyToken( code == "PER_SERVICE")
 
   then
