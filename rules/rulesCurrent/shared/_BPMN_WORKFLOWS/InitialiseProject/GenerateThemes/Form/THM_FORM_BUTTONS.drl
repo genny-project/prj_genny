@@ -42,14 +42,9 @@ rule "THM_FORM_BUTTONS"
  
 		Theme theme = Theme.builder("THM_FORM_BUTTONS")
 		.addAttribute()
-			.backgroundColor("#263238")
-			.color("#ffffff")
-			.display("flex")
-			.alignItems("center")
+			.justifyContent("center")
 			.borderWidth(1)
 			.borderColor("black")
-			.height(40)
-			.padding(0)
 		.end()
 		.build();
 
