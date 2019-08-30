@@ -368,7 +368,6 @@ public class TableUtilsTest {
 			DataType tableCellDataType = new DataType("DTT_TABLE_CELL_GRP", tableCellValidationList, "Table Cell Group", "");
 	
 			FRM_TABLE_HEADER = Frame3.builder("FRM_TABLE_HEADER")
-			        .addTheme("THM_TABLE_HEADER",serviceToken).end()
 			        .addTheme("THM_TABLE_BORDER",serviceToken).end()
 			         .question(questionCode) // QUE_NAME_GRP //QUE_POWERED_BY_GRP
 									.addTheme("THM_QUESTION_GRP_LABEL", serviceToken).vcl(VisualControlType.GROUP).dataType(tableCellDataType).end()
