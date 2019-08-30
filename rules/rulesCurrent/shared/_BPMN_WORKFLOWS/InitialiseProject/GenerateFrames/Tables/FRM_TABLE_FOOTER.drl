@@ -47,36 +47,16 @@ rule "FRM_TABLE_FOOTER"
 
         DataType buttonDataType = new DataType("DTT_EVENT", buttonValidationList, "Event", "");
         
-       Theme THM_BUTTONS = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BUTTONS",
-        				Theme.class, serviceToken.getToken());
-
-        Theme THM_TABLE_HEADER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TABLE_HEADER",
-        				Theme.class, serviceToken.getToken());
-
-        Theme THM_TABLE_FOOTER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TABLE_FOOTER",
-        				Theme.class, serviceToken.getToken());
-
-        Theme THM_TABLE_BORDER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TABLE_BORDER",
-        				Theme.class, serviceToken.getToken());
-
-        Theme THM_TABLE_HEADER_CELL_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TABLE_HEADER_CELL_WRAPPER",
-        				Theme.class, serviceToken.getToken());
-
-        Theme THM_TABLE_HEADER_CELL_INPUT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TABLE_HEADER_CELL_INPUT",
-        				Theme.class, serviceToken.getToken());
-
-                                
         Frame3 frame = Frame3.builder("FRM_TABLE_FOOTER")
-                                 .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
-                                 .addTheme(THM_TABLE_FOOTER).end()
-                                 .addTheme(THM_TABLE_BORDER).end()
-                                 .question("QUE_TABLE_FOOTER_GRP")
-                                                .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
-                                                .addTheme(THM_BUTTONS).dataType(buttonDataType).end()
-                                                .addTheme(THM_TABLE_HEADER_CELL_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
-                                                .addTheme(THM_TABLE_HEADER_CELL_INPUT).vcl(VisualControlType.VCL_INPUT).end()
-                                        .end()
-                                        .build();
+                      .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
+                      .question("QUE_TABLE_FOOTER_GRP")
+                        .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
+                        .addTheme("THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHT", serviceToken).dataType(buttonDataType).end()
+
+                        .addTheme("THM_TABLE_HEADER_CELL_WRAPPER", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
+                        .addTheme("THM_TEXT_ALIGN_CENTER", serviceToken).vcl(VisualControlType.VCL_INPUT).end()
+                    .end()
+                    .build();
                                 
     
         frame.setRealm(serviceToken.getRealm());
