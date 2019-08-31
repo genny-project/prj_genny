@@ -85,40 +85,60 @@ public void testTableHeader() {
         QRules rules = GennyJbpmBaseTest.setupLocalService();
         GennyToken userToken = new GennyToken("userToken", rules.getToken());
         GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+		GennyKieSession.loadAttributesJsonFromResources(userToken);
+
         BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
         BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
 
-        try {
+		GennyKieSession gks = null;
+
+		try {
+			gks = GennyKieSession.builder(serviceToken,true)
+					.addDrl("InitialiseProject")
+					.addDrl("XXXPRI_SEARCH_TEXT2.drl")
+					.addJbpm("InitialiseProject")
+
+					.addToken(userToken)
+					.build();
+			gks.start();
+        String searchBarString = "univ";
+        
  
-      		  SearchEntity searchBE = new SearchEntity("SBE_SEARCH","Search")
-      			     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
-      			     .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%univ%")
-      			     .addColumn("PRI_NAME", "Name")
-      			     .addColumn("PRI_LANDLINE", "Phone")
-      			     .setPageStart(0)
-      			     .setPageSize(10);
-      			     
-      		  		TableUtilsTest tableUtils = new TableUtilsTest(new BaseEntityUtils(serviceToken));
-//      		  		
-      		  		QDataBaseEntityMessage resultsMsg = tableUtils.fetchSearchResults(searchBE, userToken);
-      		  		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(resultsMsg));
-      		  		
-      		  		
-      		  		TableData tableData = tableUtils.generateTableAsks(searchBE, userToken, resultsMsg);
-      		  		Ask headerAsk = tableData.getAsk();
-      		  		Ask[] askArray = new Ask[1];
-      		  		askArray[0] = headerAsk;
-      		  	QDataAskMessage headerAskMsg = new QDataAskMessage(askArray);
-      	    	headerAskMsg.setToken(userToken.getToken());
-      	    	VertxUtils.writeMsg("webcmds", JsonUtils.toJson(headerAskMsg));
-      	    	String headerAskCode = headerAsk.getQuestionCode();
-      	    	
-      			        QDataBaseEntityMessage msg = tableUtils.changeQuestion("FRM_TABLE_HEADER",headerAskCode,userToken);
-                
-      	                
-      	                VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
-   
-    					GennyKieSession.displayForm("FRM_TABLE", "FRM_CONTENT", userToken);
+  		  SearchEntity searchBE = new SearchEntity("SBE_SEARCH","Search")
+  		  	     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
+  		  	     .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%"+searchBarString+"%")
+  		  	     .addColumn("PRI_NAME", "Name")
+  		      	 .addColumn("PRI_LANDLINE", "Phone")
+  		  	     .addColumn("PRI_EMAIL", "Email")
+  		  	     .addColumn("PRI_ADDRESS_STATE","State")
+  		  	     .setPageStart(0)
+  		  	     .setPageSize(10);
+  		  	     
+  		  	     TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
+  		  	     
+  		  	     QDataBaseEntityMessage  msg = tableUtils.fetchSearchResults(searchBE,beUtils.getGennyToken());
+  		  	     
+  		  	     
+  		  	     TableData tableData = tableUtils.generateTableAsks(searchBE,beUtils.getGennyToken(),  msg);
+  		  	     VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+  		  	     
+  		      		  		
+  		         Ask headerAsk = tableData.getAsk();
+  		      	 Ask[] askArray = new Ask[1];
+  		      	 askArray[0] = headerAsk;
+  		      	 QDataAskMessage headerAskMsg = new QDataAskMessage(askArray);
+  		      	 headerAskMsg.setToken(beUtils.getGennyToken().getToken());
+  		      	 VertxUtils.writeMsg("webcmds", JsonUtils.toJson(headerAskMsg));
+  		      	 String headerAskCode = headerAsk.getQuestionCode();
+  		  	     
+  		  	     msg = tableUtils.changeQuestion("FRM_TABLE_HEADER",headerAskCode,beUtils.getGennyToken());
+  		                
+  		      	                
+  		      	 VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+  		  	     
+  		  	     /* Send to front end */
+   					
+  		  	     GennyKieSession.displayForm("FRM_TABLE", "FRM_CONTENT", userToken);
                 System.out.println("Sent");
         } catch (Exception e) {
                 System.out.println("Error " + e.getLocalizedMessage());

@@ -19,6 +19,7 @@ import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.Ask;
 import life.genny.qwanda.message.QDataAskMessage;
+import  life.genny.utils.OutputParam;
 
 
 import java.util.List;
