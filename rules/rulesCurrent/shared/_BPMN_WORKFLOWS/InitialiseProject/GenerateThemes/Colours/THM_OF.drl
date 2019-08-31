@@ -30,7 +30,7 @@ rule "THM_OF"
     no-loop true
     
     when
-      not  Theme (code == "THM_BCOLOR_WHITE")
+      not  Theme (code == "THM_OF")
       serviceToken : GennyToken( code == "PER_SERVICE")
       
     then

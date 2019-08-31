@@ -570,7 +570,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 				log.error("Must supply a root Frame Code!");
 			} else {
 
-				QDataBaseEntityMessage FRM_MSG = VertxUtils.getObject(userToken.getRealm(), "", rootFrameCode + "-MSG",
+				QDataBaseEntityMessage FRM_MSG = VertxUtils.getObject(userToken.getRealm(), "", rootFrameCode + "_MSG",
 						QDataBaseEntityMessage.class, userToken.getToken());
 
 				if (FRM_MSG != null) {
@@ -580,7 +580,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 					}
 
 					QDataBaseEntityMessage TARGET_FRM_MSG = VertxUtils.getObject(userToken.getRealm(), "",
-							targetFrameCode + "-MSG", QDataBaseEntityMessage.class, userToken.getToken());
+							targetFrameCode + "_MSG", QDataBaseEntityMessage.class, userToken.getToken());
 
 					for (BaseEntity targetFrame : TARGET_FRM_MSG.getItems()) {
 						if (targetFrame.getCode().equals(targetFrameCode)) {
@@ -619,7 +619,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 					Type setType = new TypeToken<Set<QDataAskMessage>>() {
 					}.getType();
 
-					String askMsgs2Str = VertxUtils.getObject(userToken.getRealm(), "", rootFrameCode + "-ASKS",
+					String askMsgs2Str = VertxUtils.getObject(userToken.getRealm(), "", rootFrameCode + "_ASKS",
 							String.class, userToken.getToken());
 
 					Set<QDataAskMessage> askMsgs2 = JsonUtils.fromJson(askMsgs2Str, setType);
@@ -643,7 +643,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 						}
 					}
 				} else {
-					log.error(rootFrameCode + "-MSG" + " DOES NOT EXIST IN CACHE - cannot display frame");
+					log.error(rootFrameCode + "_MSG" + " DOES NOT EXIST IN CACHE - cannot display frame");
 				}
 
 			}
@@ -941,7 +941,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			} else {
 				log.info("Sending root Frame Code sent to display  = " + rootFrameCode);
 
-				QDataBaseEntityMessage FRM_MSG = VertxUtils.getObject(userToken.getRealm(), "", rootFrameCode + "-MSG",
+				QDataBaseEntityMessage FRM_MSG = VertxUtils.getObject(userToken.getRealm(), "", rootFrameCode + "_MSG",
 						QDataBaseEntityMessage.class, userToken.getToken());
 
 				if (FRM_MSG != null) {
@@ -1006,7 +1006,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 						}
 					}
 				} else {
-					log.error(rootFrameCode + "-MSG" + " DOES NOT EXIST IN CACHE - cannot display frame");
+					log.error(rootFrameCode + "_MSG" + " DOES NOT EXIST IN CACHE - cannot display frame");
 				}
 
 			}

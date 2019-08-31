@@ -237,7 +237,7 @@ public void testTableHeader() {
 //  }
 
 		  // Test sending a page
-			QDataBaseEntityMessage msg2 = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_QUE_DASHBOARD_VIEW-MSG",
+			QDataBaseEntityMessage msg2 = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_QUE_DASHBOARD_VIEW_MSG",
 					QDataBaseEntityMessage.class, serviceToken.getToken());
 
 			msg2.setToken(userToken.getToken());
@@ -1097,9 +1097,9 @@ public void testTableHeader() {
 
 		QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_ROOT, serviceToken, askMsgs);
 
-//		VertxUtils.putObject(serviceToken.getRealm(), "", "FRM_ROOT-MSG", msg, serviceToken.getToken());
+//		VertxUtils.putObject(serviceToken.getRealm(), "", "FRM_ROOT_MSG", msg, serviceToken.getToken());
 
-		QDataBaseEntityMessage msg2 = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_ROOT-MSG",
+		QDataBaseEntityMessage msg2 = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_ROOT_MSG",
 				QDataBaseEntityMessage.class, serviceToken.getToken());
 
 		msg2.setToken(userToken.getToken());
@@ -1107,12 +1107,12 @@ public void testTableHeader() {
 		// rules.publishCmd(msg2); // Send QDataBaseEntityMessage
 		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg2));
 //		String askMsgsStr = JsonUtils.toJson(askMsgs);
-//		VertxUtils.putObject(serviceToken.getRealm(), "", "DESKTOP-ASKS", askMsgsStr, serviceToken.getToken());
+//		VertxUtils.putObject(serviceToken.getRealm(), "", "DESKTOP_ASKS", askMsgsStr, serviceToken.getToken());
 
 		Type setType = new TypeToken<Set<QDataAskMessage>>() {
 		}.getType();
 
-		String askMsgs2Str = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_ROOT-ASKS", String.class,
+		String askMsgs2Str = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_ROOT_ASKS", String.class,
 				serviceToken.getToken());
 
 		Set<QDataAskMessage> askMsgs2 = JsonUtils.fromJson(askMsgs2Str, setType);
@@ -1135,7 +1135,7 @@ public void testTableHeader() {
 
 		System.out.println("Starting");
 
-		QDataBaseEntityMessage msg2 = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_ROOT-MSG",
+		QDataBaseEntityMessage msg2 = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_ROOT_MSG",
 				QDataBaseEntityMessage.class, serviceToken.getToken());
 
 		/* send message */
@@ -1144,7 +1144,7 @@ public void testTableHeader() {
 		Type setType = new TypeToken<Set<QDataAskMessage>>() {
 		}.getType();
 
-		String askMsgs2Str = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_ROOT-ASKS", String.class,
+		String askMsgs2Str = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_ROOT_ASKS", String.class,
 				serviceToken.getToken());
 
 		Set<QDataAskMessage> askMsgs2 = JsonUtils.fromJson(askMsgs2Str, setType);

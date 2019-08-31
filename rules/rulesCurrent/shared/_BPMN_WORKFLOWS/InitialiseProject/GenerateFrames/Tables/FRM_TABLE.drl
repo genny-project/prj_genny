@@ -37,7 +37,7 @@ rule "FRM_TABLE"
       FRM_TABLE_WRAPPER : Frame3 ( code == "FRM_TABLE_WRAPPER" )
       
     then
-        System.out.println("   Generate FRM_TABLE Rule  "+serviceToken.getUserCode());
+        System.out.println("   Generate FRM_TABLE Rule   "+serviceToken.getUserCode());
 
         Theme THM_TABLE = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TABLE",
         				Theme.class, serviceToken.getToken());
