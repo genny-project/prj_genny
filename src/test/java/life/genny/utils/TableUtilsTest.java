@@ -353,8 +353,8 @@ public class TableUtilsTest {
 	 * @param serviceToken
 	 * @return
 	 */
-	public static QDataBaseEntityMessage changeQuestion(final String frameCode, final String questionCode,GennyToken serviceToken) {
-		Frame3 FRM_TABLE_HEADER = null;
+	public static QDataBaseEntityMessage changeQuestion(final String frameCode, final String questionCode,GennyToken serviceToken,GennyToken userToken,Set<QDataAskMessage> askMsgs ) {
+		Frame3 frame = null;
 		try {
 
 			Validation tableCellValidation = new Validation("VLD_ANYTHING", "Anything", ".*");
@@ -366,8 +366,13 @@ public class TableUtilsTest {
 			tableCellValidationList.setValidationList(tableCellValidations);
 
 			DataType tableCellDataType = new DataType("DTT_TABLE_CELL_GRP", tableCellValidationList, "Table Cell Group", "");
-	
-			FRM_TABLE_HEADER = Frame3.builder("FRM_TABLE_HEADER")
+
+//			frame = VertxUtils.getObject(serviceToken.getRealm(), "", frameCode,
+//					Frame3.class, userToken.getToken());//generateHeader();
+
+//			frame.setQuestionCode(questionCode);
+			
+			frame = Frame3.builder(frameCode)
 			        .addTheme("THM_TABLE_BORDER",serviceToken).end()
 			         .question(questionCode) // QUE_NAME_GRP //QUE_POWERED_BY_GRP
 									.addTheme("THM_QUESTION_GRP_LABEL", serviceToken).vcl(VisualControlType.GROUP).dataType(tableCellDataType).end()
@@ -378,20 +383,17 @@ public class TableUtilsTest {
 			         .end()
 			         .build();
 			
+ 
+			
 			
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	 			     
-		Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();      	                
-		QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_TABLE_HEADER, serviceToken, askMsgs);
+		QDataBaseEntityMessage msg = FrameUtils2.toMessage(frame, serviceToken, askMsgs);
 		msg.setReplace(true);
 		
-	    for (QDataAskMessage askMsg : askMsgs) {
-	    	askMsg.setToken(serviceToken.getToken());
-	    	VertxUtils.writeMsg("webcmds", JsonUtils.toJson(askMsg));
-	    }
 
 		
 		String rootFrameCode = frameCode;
@@ -404,10 +406,10 @@ public class TableUtilsTest {
 				/* Adding the links in the targeted BaseEntity */
 				Attribute attribute = new Attribute("LNK_ASK", "LNK_ASK", new DataType(String.class));
 
-				for (BaseEntity sourceFrame : msg.getItems()) {
+ 				for (BaseEntity sourceFrame : msg.getItems()) {
 					if (sourceFrame.getCode().equals(rootFrameCode)) {
 
-						System.out.println("ShowFrame : Found Source Frame BaseEntity : " + sourceFrame);
+						log.info("ShowFrame : Found Source Frame BaseEntity : " + sourceFrame);
 						EntityEntity entityEntity = new EntityEntity(sourceFrame, targetFrame, attribute,
 								1.0, "CENTRE");
 						//Set<EntityEntity> entEntList = sourceFrame.getLinks();
@@ -422,6 +424,7 @@ public class TableUtilsTest {
 				break;
 			}
 		}
+		msg.setToken(userToken.getToken());
 		return msg;
 	}
 }

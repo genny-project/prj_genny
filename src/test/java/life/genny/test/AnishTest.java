@@ -23,14 +23,17 @@ import com.google.gson.reflect.TypeToken;
 import life.genny.models.Frame3;
 import life.genny.models.FramePosition;
 import life.genny.models.GennyToken;
+import life.genny.models.TableData;
 import life.genny.models.Theme;
 import life.genny.models.ThemeAttributeType;
 import life.genny.models.ThemePosition;
 import life.genny.qwanda.Answer;
+import life.genny.qwanda.Ask;
 import life.genny.qwanda.Context;
 import life.genny.qwanda.ContextType;
 import life.genny.qwanda.VisualControlType;
 import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventMessage;
@@ -43,6 +46,7 @@ import life.genny.rules.QRules;
 import life.genny.rules.listeners.JbpmInitListener;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.FrameUtils2;
+import life.genny.utils.TableUtils;
 import life.genny.utils.VertxUtils;
 import life.genny.qwanda.datatype.DataType;
 
@@ -537,10 +541,46 @@ public class AnishTest extends GennyJbpmBaseTest {
                         
                         DataType tableCellDataType = new DataType("DTT_TABLE_CELL_GRP", tableCellValidationList, "Table Cell Group", "");
         
+                        String searchBarString = "univ";
+                        
+                        
+                		  SearchEntity searchBE = new SearchEntity("SBE_SEARCH","Search")
+                		  	     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
+                		  	     .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%"+searchBarString+"%")
+                		  	     .addColumn("PRI_NAME", "Name")
+                		      	 .addColumn("PRI_LANDLINE", "Phone")
+                		  	     .addColumn("PRI_EMAIL", "Email")
+                		  	     .addColumn("PRI_ADDRESS_STATE","State")
+                		  	     .setPageStart(0)
+                		  	     .setPageSize(10);
+                		  	     
+                		  	     TableUtils tableUtils = new TableUtils(beUtils);
+                		  	     
+                		  	     QDataBaseEntityMessage  msg = tableUtils.fetchSearchResults(searchBE,beUtils.getGennyToken());
+                		  	     
+                		  	     
+                		  	     TableData tableData = tableUtils.generateTableAsks(searchBE,beUtils.getGennyToken(),  msg);
+                		  	     VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+                		  	     
+                		      		  		
+                		         Ask headerAsk = tableData.getAsk();
+                		      	 Ask[] askArray = new Ask[1];
+                		      	 askArray[0] = headerAsk;
+                		      	 QDataAskMessage headerAskMsg = new QDataAskMessage(askArray);
+                		      	 headerAskMsg.setToken(beUtils.getGennyToken().getToken());
+                		      	 VertxUtils.writeMsg("webcmds", JsonUtils.toJson(headerAskMsg));
+                		      	 String headerAskCode = headerAsk.getQuestionCode();
+                		  	     
+                		  	     msg = tableUtils.changeQuestion("FRM_TABLE_HEADER",headerAskCode,beUtils.getGennyToken());
+                		                
+                		      	                
+                		      	 VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+
+                        
                         Frame3 FRM_TABLE_HEADER = Frame3.builder("FRM_TABLE_HEADER")
                                         /* .addTheme(THM_TABLE_HEADER).end() */
                                         .addTheme(THM_TABLE_BORDER).end()
-                                        .question("QUE_TEST_TABLE_HEADER_GRP")
+                                        .question("QUE_TABLE_HEADER_GRP") // QUE_TEST_TABLE_HEADER_GRP
                                                 .addTheme(THM_QUESTION_GRP_LABEL).vcl(VisualControlType.GROUP).dataType(tableCellDataType).end()
                                                 .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).weight(2.0).end()
                                                 .addTheme(THM_TABLE_HEADER_CELL_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()

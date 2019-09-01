@@ -66,6 +66,8 @@ rule "PRI_SEARCH_TEXT"
   	     .addColumn("PRI_NAME", "Name")
       	 .addColumn("PRI_LANDLINE", "Phone")
   	     .addColumn("PRI_EMAIL", "Email")
+  	     .addColumn("PRI_ADDRESS_CITY", "City")
+  	     .addColumn("PRI_ADDRESS_STATE", "State")
   	     .setPageStart(0)
   	     .setPageSize(10);
   	     
@@ -86,7 +88,13 @@ rule "PRI_SEARCH_TEXT"
       	 VertxUtils.writeMsg("webcmds", JsonUtils.toJson(headerAskMsg));
       	 String headerAskCode = headerAsk.getQuestionCode();
   	     
-  	     msg = tableUtils.changeQuestion("FRM_TABLE_HEADER",headerAskCode,beUtils.getGennyToken());
+    		Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+  		  	msg = TableUtils.changeQuestion("FRM_TABLE_HEADER",headerAskCode,serviceToken,beUtils.getGennyToken(),askMsgs);
+  			    for (QDataAskMessage askMsg : askMsgs) {
+  			    	askMsg.setToken(beUtils.getGennyToken().getToken());
+  			    	askMsg.getItems()[0] = headerAsk;
+  			    	VertxUtils.writeMsg("webcmds", JsonUtils.toJson(askMsg));
+  			    }
                 
       	                
       	 VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
