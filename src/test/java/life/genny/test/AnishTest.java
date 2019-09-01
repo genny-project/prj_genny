@@ -570,10 +570,11 @@ public class AnishTest extends GennyJbpmBaseTest {
                 		      	 headerAskMsg.setToken(beUtils.getGennyToken().getToken());
                 		      	 VertxUtils.writeMsg("webcmds", JsonUtils.toJson(headerAskMsg));
                 		      	 String headerAskCode = headerAsk.getQuestionCode();
-                		  	     
-                		  	     msg = tableUtils.changeQuestion("FRM_TABLE_HEADER",headerAskCode,beUtils.getGennyToken());
-                		                
-                		      	                
+ 
+                		    		Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+                		  		  	msg = TableUtils.changeQuestion("FRM_TABLE_HEADER",headerAskCode,serviceToken,beUtils.getGennyToken(),askMsgs);
+
+                 		      	                
                 		      	 VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 
                         
