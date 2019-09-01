@@ -59,45 +59,22 @@ rule "PRI_SEARCH_TEXT"
 		Answer history = new Answer(beUtils.getGennyToken().getUserCode(),beUtils.getGennyToken().getUserCode(),"PRI_SEARCH_HISTORY",newHistoryString);
 		beUtils.saveAnswer(history);
 		
-		/* Look up Search */
-		  SearchEntity searchBE = new SearchEntity("SBE_SEARCH","Search")
-  	     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
-  	     .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%"+searchBarString+"%")
-  	     .addColumn("PRI_NAME", "Name")
-      	 .addColumn("PRI_LANDLINE", "Phone")
-  	     .addColumn("PRI_EMAIL", "Email")
-  	     .addColumn("PRI_ADDRESS_CITY", "City")
-  	     .addColumn("PRI_ADDRESS_STATE", "State")
-  	     .setPageStart(0)
-  	     .setPageSize(10);
+		String searchBarCode = "SBE_SEARCHBAR";
+		
+		String sessionSearchCode = searchBarCode+"_"+beUtils.getGennyToken().getSessionCode();
+		SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", sessionSearchCode, SearchEntity.class,serviceToken.getToken());
+		
+		if (searchBE == null) {
+			searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", searchBarCode, SearchEntity.class,serviceToken.getToken());
+			/* Save Session Search in cache , ideally this should be in OutputParam and saved to workflow */
+			VertxUtils.putObject(serviceToken.getRealm(), "", sessionSearchCode, searchBE, serviceToken.getToken());
+		}
+		
+		
+		searchBE.addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%"+searchBarString+"%");
+		
   	     
-  	     TableUtils tableUtils = new TableUtils(beUtils);
-  	     
-  	     QDataBaseEntityMessage  msg = tableUtils.fetchSearchResults(searchBE,beUtils.getGennyToken());
-  	     
-  	     
-  	     TableData tableData = tableUtils.generateTableAsks(searchBE,beUtils.getGennyToken(),  msg);
-  	     VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
-  	     
-      		  		
-         Ask headerAsk = tableData.getAsk();
-      	 Ask[] askArray = new Ask[1];
-      	 askArray[0] = headerAsk;
-      	 QDataAskMessage headerAskMsg = new QDataAskMessage(askArray);
-      	 headerAskMsg.setToken(beUtils.getGennyToken().getToken());
-      	 VertxUtils.writeMsg("webcmds", JsonUtils.toJson(headerAskMsg));
-      	 String headerAskCode = headerAsk.getQuestionCode();
-  	     
-    		Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
-  		  	msg = TableUtils.changeQuestion("FRM_TABLE_HEADER",headerAskCode,serviceToken,beUtils.getGennyToken(),askMsgs);
-  			    for (QDataAskMessage askMsg : askMsgs) {
-  			    	askMsg.setToken(beUtils.getGennyToken().getToken());
-  			    	askMsg.getItems()[0] = headerAsk;
-  			    	VertxUtils.writeMsg("webcmds", JsonUtils.toJson(askMsg));
-  			    }
-                
-      	                
-      	 VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+ 		TableUtils.performSearch(serviceToken , beUtils, searchBE);
   	     
   	     /* Send to front end */
    	     
