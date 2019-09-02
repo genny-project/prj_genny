@@ -245,7 +245,8 @@ public class TableUtilsTest {
 
 		Ask tableHeaderAsk = new Ask(tableHeaderQuestion, beUtils.getGennyToken().getUserCode(), searchBe.getCode());
 		tableHeaderAsk.setChildAsks(asksArray);
-
+		tableHeaderAsk.setName(searchBe.getName());
+		
 		return tableHeaderAsk;
 	}
 	

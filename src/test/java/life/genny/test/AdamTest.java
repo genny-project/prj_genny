@@ -88,10 +88,31 @@ public class AdamTest {
 
 @Test
 public void testTableHeader() {
-        QRules rules = GennyJbpmBaseTest.setupLocalService();
-        GennyToken userToken = new GennyToken("userToken", rules.getToken());
-        GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+	System.out.println("Table test");
+	GennyToken userToken = null;
+	GennyToken userToken2 = null;
+	GennyToken serviceToken = null;
+	QRules qRules = null;
+
+	if (true.gada.io (Currently the cer)) {
+		userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+		userToken2 = GennyJbpmBaseTest.createGennyToken(realm, "user2", "Barry2 Allan2", "user");
+		serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+		qRules = new QRules(eventBusMock, userToken.getToken());
+		qRules.set("realm", userToken.getRealm());
+		qRules.setServiceToken(serviceToken.getToken());
+		VertxUtils.cachedEnabled = true; // don't send to local Service Cache
 		GennyKieSession.loadAttributesJsonFromResources(userToken);
+	} else {
+		qRules = GennyJbpmBaseTest.setupLocalService();
+		userToken = new GennyToken("userToken", qRules.getToken());
+		serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+		
+	}
+
+	System.out.println("session     =" + userToken.getSessionCode());
+	System.out.println("userToken   =" + userToken.getToken());
+	System.out.println("serviceToken=" + serviceToken.getToken());
 
         BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
         BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
@@ -122,7 +143,7 @@ public void testTableHeader() {
 	  		  	     .setPageSize(10);
 
  
-        TableUtilsTest.performSearch(serviceToken , beUtils, searchBE);
+		  			TableUtilsTest.performSearch(serviceToken , beUtils, searchBE);
         
    		  	     
   	
