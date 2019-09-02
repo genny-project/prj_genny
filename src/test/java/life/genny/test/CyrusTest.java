@@ -83,8 +83,8 @@ public class CyrusTest extends GennyJbpmBaseTest {
 
 		Theme THM_FORM_VCL_LABEL_GENNY = Theme.builder("THM_FORM_VCL_LABEL_GENNY").addAttribute().color("black").end().build();
 
-		Theme THM_FORM_VCL_WRAPPER_GENNY = Theme.builder("THM_FORM_VCL_WRAPPER_GENNY").addAttribute().marginBottom(10)
-		 		.padding(10).end().addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).backgroundColor("#ffffff").end().build();
+		Theme THM_FORM_VCL_WRAPPER_GENNY = Theme.builder("THM_FORM_VCL_WRAPPER_GENNY").addAttribute().margin(10)
+		 		.end().addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).end().build();
 
 		Theme THM_FORM_VCL_ERROR_GENNY= Theme.builder("THM_FORM_VCL_ERROR_GENNY").addAttribute().color("red").end().build();
 
@@ -118,7 +118,7 @@ public class CyrusTest extends GennyJbpmBaseTest {
 				
 			Theme THM_FORM_GROUP_WRAPPER_GENNY = Theme.builder("THM_FORM_GROUP_WRAPPER_GENNY")
 				.addAttribute()
-					.backgroundColor("white").padding(10).maxWidth(600).width("100%")
+					.backgroundColor("white").maxWidth(600).width("100%")
 					.borderWidth(1)
 					.borderColor("silver")
 					.borderStyle("solid")
