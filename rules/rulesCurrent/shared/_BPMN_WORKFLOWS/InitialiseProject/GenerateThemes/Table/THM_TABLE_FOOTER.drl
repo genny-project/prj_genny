@@ -38,12 +38,12 @@ rule "THM_TABLE_FOOTER"
     System.out.println(" Generate THM_TABLE_FOOTER Rule  ");
 
     Theme theme = Theme.builder("THM_TABLE_FOOTER")
-                                               .addAttribute()
-                                                .backgroundColor("#f4f5f7")
-                                                .width("100%")
-                                                .color("black")
-                                        .end()
-                                        .build();
+                  .addAttribute()
+                    .backgroundColor("#f4f5f7")
+                    .width("100%")
+                    .color("black")
+                  .end()
+                  .build();
     
     theme.setRealm(serviceToken.getRealm());
     insert (theme);

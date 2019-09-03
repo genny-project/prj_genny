@@ -39,9 +39,7 @@ rule "THM_TABLE_HEADER"
 
     Theme theme = Theme.builder("THM_TABLE_HEADER")
                         .addAttribute()
-                             .backgroundColor("#f4f5f7")
                              .width("100%")
-                             .color("black")
                          .end()
                          .build();       
     
