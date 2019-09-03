@@ -52,6 +52,7 @@ rule "FRM_TABLE_HEADER"
                .addTheme("THM_TABLE_BORDER", serviceToken).end()
                 .question("QUE_TEST_TABLE_HEADER_GRP")
                   .addTheme("THM_QUESTION_GRP_LABEL", serviceToken).vcl(VisualControlType.GROUP).dataType(tableCellDataType).end()
+                  .addTheme("THM_WIDTH_100_PERCENT_NO_INHERIT", serviceToken).vcl(VisualControlType.GROUP).end()
                   .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).weight(2.0).end()
                   .addTheme("THM_TABLE_HEADER_CELL_WRAPPER", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
                   .addTheme("THM_TABLE_HEADER_CELL_GROUP_LABEL", serviceToken).vcl(VisualControlType.GROUP_LABEL).end()
