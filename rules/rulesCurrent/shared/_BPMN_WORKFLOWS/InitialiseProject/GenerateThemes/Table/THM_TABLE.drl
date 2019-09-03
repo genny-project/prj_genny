@@ -46,7 +46,6 @@ rule "THM_TABLE"
 
     Theme theme = Theme.builder("THM_TABLE")
              .addAttribute()
-               .backgroundColor(project.getValue("PRI_COLOR_BACKGROUND", "#F6F6F6"))
                .width("100%")
              .end()
              .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()

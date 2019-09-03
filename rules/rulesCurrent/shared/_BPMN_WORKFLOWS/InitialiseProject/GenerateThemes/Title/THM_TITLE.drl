@@ -1,7 +1,5 @@
 package life.genny.rules;
 
-
-
 import life.genny.qwanda.message.QCmdMessage;
 import life.genny.qwanda.message.QBulkMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
@@ -20,34 +18,34 @@ import life.genny.utils.VertxUtils;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.models.GennyToken;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
+import life.genny.models.Frame3;
 import life.genny.models.Theme;
-
-
+import life.genny.utils.FrameUtils2;
+import life.genny.models.FramePosition;
+import life.genny.qwanda.VisualControlType;
 
 rule "THM_TITLE"
-    ruleflow-group 'GenerateThemes'
-    no-loop true
+  ruleflow-group 'GenerateThemes'
 
-    when
-      not  Theme (code == "THM_TITLE")
-      serviceToken : GennyToken( code == "PER_SERVICE")
+  no-loop true
 
-    then
+  when
+    not  Theme(code == "THM_TITLE")
+    serviceToken : GennyToken( code == "PER_SERVICE")
 
-     	System.out.println("   Generate THM_TITLE Rule ");
+  then
+    System.out.println(" Generate THM_TITLE Rule  ");
 
-			Theme theme = Theme.builder("THM_TITLE")
-                                        .addAttribute()
-                                                .bold(true)
-                                                .size("lg")        
-                                                .textAlign("left")
-                                        .end()
-                                        .build();   
+    Theme theme = Theme.builder("THM_TITLE")
+                  .addAttribute()
+                    .bold(true)
+                    .size("lg")        
+                    .textAlign("left")
+                  .end()
+                  .build();
+    theme.setRealm(serviceToken.getRealm());
+    insert (theme);
 
-
-			theme.setRealm(serviceToken.getRealm());
-
-			insert(theme);
-
-			VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
+    VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, 
+    serviceToken.getToken());
 end

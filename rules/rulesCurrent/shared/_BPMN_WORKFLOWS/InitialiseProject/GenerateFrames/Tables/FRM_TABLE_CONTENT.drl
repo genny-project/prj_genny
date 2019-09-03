@@ -25,6 +25,9 @@ import life.genny.models.Frame3;
 import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
 import life.genny.models.FramePosition;
+import life.genny.qwanda.validation.Validation;
+import life.genny.qwanda.validation.ValidationList;
+import life.genny.qwanda.datatype.DataType;
 
 rule "FRM_TABLE_CONTENT"
     ruleflow-group 'GenerateFrames'
@@ -35,12 +38,25 @@ rule "FRM_TABLE_CONTENT"
     then
         System.out.println("   Generate FRM_TABLE_CONTENT Rule  "+serviceToken.getUserCode());
 
-        Frame3 frame = Frame3.builder("FRM_TABLE_CONTENT")
-                        .addTheme("THM_TABLE_CONTENT", serviceToken).end()
+        Validation tableRowValidation = new Validation("VLD_ANYTHING", "Anything", ".*");
+
+        List<Validation> tableRowValidations = new ArrayList<>();
+        tableRowValidations.add(tableRowValidation);
+
+        ValidationList tableRowValidationList = new ValidationList();
+        tableRowValidationList.setValidationList(tableRowValidations);
+
+        DataType tableRowDataType = new DataType("DTT_TABLE_ROW_GRP", tableRowValidationList, "Table Row Group", "");
+
+        Frame3 frame =  Frame3.builder("FRM_TABLE_CONTENT")
                         .addTheme("THM_TABLE_BORDER", serviceToken).end()
-                        .question("QUE_TABLE_VIEW_TEST")
-                                .addTheme("THM_TEXT_ALIGN_CENTER", serviceToken).vcl(VisualControlType.VCL_INPUT).end()
-                                .addTheme("THM_TABLE_CONTENT", serviceToken).end()
+                        .addTheme("THM_TABLE_CONTENT_CENTRE", ThemePosition.CENTRE, serviceToken).end()
+                        .question("QUE_TEST_TABLE_RESULTS_GRP")
+                                .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).dataType(tableRowDataType).weight(1.0).end()
+                                .addTheme("THM_TABLE_ROW_CONTENT_WRAPPER", serviceToken).dataType(tableRowDataType).vcl(VisualControlType.GROUP).weight(1.0).end()
+                                .addTheme("THM_TABLE_ROW", serviceToken).dataType(tableRowDataType).weight(1.0).end()
+                                .addTheme("THM_TABLE_CONTENT", serviceToken).vcl(VisualControlType.GROUP).end()			
+                                .addTheme("THM_TABLE_ROW_CELL", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()			
                         .end()
                         .build();
     

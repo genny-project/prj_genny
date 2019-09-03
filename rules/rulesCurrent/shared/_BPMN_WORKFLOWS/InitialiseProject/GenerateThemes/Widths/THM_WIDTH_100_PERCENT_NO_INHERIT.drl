@@ -25,32 +25,25 @@ import life.genny.utils.FrameUtils2;
 import life.genny.models.FramePosition;
 import life.genny.qwanda.VisualControlType;
 
-rule "THM_TABLE_HEADER_CELL_WRAPPER"
+rule "THM_WIDTH_100_PERCENT_NO_INHERIT"
   ruleflow-group 'GenerateThemes'
 
   no-loop true
 
   when
-    not  Theme(code == "THM_TABLE_HEADER_CELL_WRAPPER")
+    not  Theme(code == "THM_WIDTH_100_PERCENT_NO_INHERIT")
     serviceToken : GennyToken( code == "PER_SERVICE")
 
   then
-    System.out.println(" Generate THM_TABLE_HEADER_CELL_WRAPPER Rule  ");
+    System.out.println(" Generate THM_WIDTH_100_PERCENT_NO_INHERIT Rule  ");
 
-  
-     Theme theme = Theme.builder("THM_TABLE_HEADER_CELL_WRAPPER")
+    Theme theme = Theme.builder("THM_WIDTH_100_PERCENT_NO_INHERIT")
                   .addAttribute()
-                    .width("initial")
-                    .flexGrow(1)
-                    .flexShrink(1)
-                    .flexBasis("auto")
-                    .padding(10)
-                    .justifyContent("flex-start")
+                    .width("100%")                
                   .end()
+                  .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
                   .build();
-  
-    
-    theme.setRealm(serviceToken.getRealm());
+     theme.setRealm(serviceToken.getRealm());
     insert (theme);
 
     VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, 

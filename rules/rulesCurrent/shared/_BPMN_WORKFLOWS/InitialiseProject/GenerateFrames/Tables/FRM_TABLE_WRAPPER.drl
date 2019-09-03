@@ -34,8 +34,6 @@ rule "FRM_TABLE_WRAPPER"
     serviceToken : GennyToken( code == "PER_SERVICE")
     FRM_TABLE_BODY : Frame3 ( code == "FRM_TABLE_BODY" )
     FRM_TABLE_FOOTER : Frame3 ( code == "FRM_TABLE_FOOTER" )
-
-  /*  FRM_FRAME_TO_BE_ADDED : Frame3 ( code == "FRM_FRAME_TO_BE_ADDED" ) */
   then
     System.out.println(" Generate FRM_TABLE_WRAPPER Rule  "+serviceToken.getUserCode());
 

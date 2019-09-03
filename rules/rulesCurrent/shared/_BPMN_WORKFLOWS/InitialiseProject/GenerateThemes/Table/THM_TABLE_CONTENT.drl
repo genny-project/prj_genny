@@ -39,10 +39,9 @@ rule "THM_TABLE_CONTENT"
 
     Theme theme = Theme.builder("THM_TABLE_CONTENT")
                 .addAttribute()
-                  .backgroundColor("#FAFAFA")
-                  .color("black")
                   .width("100%")
                 .end()
+                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
                 .build();  
     
     theme.setRealm(serviceToken.getRealm());
