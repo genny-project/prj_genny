@@ -38,11 +38,7 @@ rule "THM_FORM_VCL_WRAPPER_GENNY"
  
 		Theme theme = Theme.builder("THM_FORM_VCL_WRAPPER_GENNY")
 										.addAttribute()
-											.marginBottom(10)
-											.padding(10)
-										.end()
-										.addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR)
-											.backgroundColor("#fc8e6")
+											.margin(10)
 										.end()
 									.build();
                         

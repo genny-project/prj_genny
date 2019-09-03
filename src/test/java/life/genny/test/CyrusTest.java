@@ -83,8 +83,8 @@ public class CyrusTest extends GennyJbpmBaseTest {
 
 		Theme THM_FORM_VCL_LABEL_GENNY = Theme.builder("THM_FORM_VCL_LABEL_GENNY").addAttribute().color("black").end().build();
 
-		Theme THM_FORM_VCL_WRAPPER_GENNY = Theme.builder("THM_FORM_VCL_WRAPPER_GENNY").addAttribute().marginBottom(10)
-		 		.padding(10).end().addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).backgroundColor("#fc8e6").end().build();
+		Theme THM_FORM_VCL_WRAPPER_GENNY = Theme.builder("THM_FORM_VCL_WRAPPER_GENNY").addAttribute().margin(10)
+		 		.end().addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).end().build();
 
 		Theme THM_FORM_VCL_ERROR_GENNY= Theme.builder("THM_FORM_VCL_ERROR_GENNY").addAttribute().color("red").end().build();
 
@@ -118,7 +118,7 @@ public class CyrusTest extends GennyJbpmBaseTest {
 				
 			Theme THM_FORM_GROUP_WRAPPER_GENNY = Theme.builder("THM_FORM_GROUP_WRAPPER_GENNY")
 				.addAttribute()
-					.backgroundColor("white").padding(10).maxWidth(600).width("100%")
+					.backgroundColor("white").maxWidth(600).width("100%")
 					.borderWidth(1)
 					.borderColor("silver")
 					.borderStyle("solid")
@@ -217,7 +217,7 @@ public class CyrusTest extends GennyJbpmBaseTest {
 			.addTheme(THM_FORM_ATTRIBUTES_GENNY).end()
 				.question("QUE_ADD_INTERNSHIP_AGENT_STEP_ONE_GRP")
 					.addTheme(THM_FORM_BUTTONS_TEST).dataType(buttonDataType).vcl(VisualControlType.INPUT_WRAPPER).end()
-					.addTheme(THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHT).dataType(buttonDataType).end()
+					.addTheme(THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHT).dataType(buttonDataType).weight(2.0).end()
 					.addTheme(THM_FORM_BUTTONS_TEST1).dataType(buttonDataType).vcl(VisualControlType.INPUT_FIELD).end()
 					.addTheme(THM_FORM_BUTTONS_BEHAVIOUR_TEST).dataType(buttonDataType).end()
 					.addTheme(THM_FORM_VCL_INPUT_GENNY).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
