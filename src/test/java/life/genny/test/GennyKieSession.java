@@ -85,6 +85,7 @@ import life.genny.rules.QRules;
 import life.genny.rules.listeners.GennyAgendaEventListener;
 import life.genny.rules.listeners.JbpmInitListener;
 import life.genny.utils.RulesUtils;
+import life.genny.utils.SessionFacts;
 import life.genny.utils.VertxUtils;
 import life.genny.utils.WorkflowQueryInterface;
 
@@ -244,7 +245,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			GennyToken uToken = new GennyToken(msg.getToken());
 			userToken = uToken;
 			
-			kieSession.insert(userToken); 
+			//kieSession.insert(userToken); 
 		}
 		
 			if (msg instanceof QEventMessage)  {
@@ -265,7 +266,11 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 				gToken = userToken;
 				bridgeSourceAddress = "bridge";
 				Long processId  = null;
+				
+				
 				// Check if an existing userSession is there
+				
+
 
 				Optional<Long> processIdBysessionId = getProcessIdBysessionId(session_state);
 				boolean hasProcessIdBySessionId = processIdBysessionId.isPresent();
@@ -278,9 +283,12 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 					// So send the event through to the userSession
 					if (eventMsg != null) {
-						kieSession.signalEvent("event", eventMsg, processId);
+						SessionFacts sessionFactsEvent = new SessionFacts(serviceToken, userToken , eventMsg);
+
+						kieSession.signalEvent("event", sessionFactsEvent, processId);
 					} else if (dataMsg != null) {
-						kieSession.signalEvent("data", dataMsg, processId);
+						SessionFacts sessionFactsData = new SessionFacts(serviceToken, userToken , dataMsg);
+						kieSession.signalEvent("data", sessionFactsData, processId);
 					}
 
 				} else {
@@ -291,7 +299,8 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 								+ userToken.getSessionCode() + ":" + userToken.getUserCode() + "   " + msg_code
 								+ " to NEW SESSION");
 						try {
-							kieSession.signalEvent("newSession", eventMsg);
+							SessionFacts sessionFactsEvent = new SessionFacts(serviceToken, userToken , eventMsg);
+							kieSession.signalEvent("newSession", sessionFactsEvent);
 						} catch (Exception e) {
 							System.out.println("Runtime error: "+e.getLocalizedMessage());
 						}
@@ -561,7 +570,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 				log.error("Must supply a root Frame Code!");
 			} else {
 
-				QDataBaseEntityMessage FRM_MSG = VertxUtils.getObject(userToken.getRealm(), "", rootFrameCode + "-MSG",
+				QDataBaseEntityMessage FRM_MSG = VertxUtils.getObject(userToken.getRealm(), "", rootFrameCode + "_MSG",
 						QDataBaseEntityMessage.class, userToken.getToken());
 
 				if (FRM_MSG != null) {
@@ -571,7 +580,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 					}
 
 					QDataBaseEntityMessage TARGET_FRM_MSG = VertxUtils.getObject(userToken.getRealm(), "",
-							targetFrameCode + "-MSG", QDataBaseEntityMessage.class, userToken.getToken());
+							targetFrameCode + "_MSG", QDataBaseEntityMessage.class, userToken.getToken());
 
 					for (BaseEntity targetFrame : TARGET_FRM_MSG.getItems()) {
 						if (targetFrame.getCode().equals(targetFrameCode)) {
@@ -610,7 +619,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 					Type setType = new TypeToken<Set<QDataAskMessage>>() {
 					}.getType();
 
-					String askMsgs2Str = VertxUtils.getObject(userToken.getRealm(), "", rootFrameCode + "-ASKS",
+					String askMsgs2Str = VertxUtils.getObject(userToken.getRealm(), "", rootFrameCode + "_ASKS",
 							String.class, userToken.getToken());
 
 					Set<QDataAskMessage> askMsgs2 = JsonUtils.fromJson(askMsgs2Str, setType);
@@ -634,7 +643,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 						}
 					}
 				} else {
-					log.error(rootFrameCode + "-MSG" + " DOES NOT EXIST IN CACHE - cannot display frame");
+					log.error(rootFrameCode + "_MSG" + " DOES NOT EXIST IN CACHE - cannot display frame");
 				}
 
 			}
@@ -932,7 +941,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			} else {
 				log.info("Sending root Frame Code sent to display  = " + rootFrameCode);
 
-				QDataBaseEntityMessage FRM_MSG = VertxUtils.getObject(userToken.getRealm(), "", rootFrameCode + "-MSG",
+				QDataBaseEntityMessage FRM_MSG = VertxUtils.getObject(userToken.getRealm(), "", rootFrameCode + "_MSG",
 						QDataBaseEntityMessage.class, userToken.getToken());
 
 				if (FRM_MSG != null) {
@@ -997,7 +1006,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 						}
 					}
 				} else {
-					log.error(rootFrameCode + "-MSG" + " DOES NOT EXIST IN CACHE - cannot display frame");
+					log.error(rootFrameCode + "_MSG" + " DOES NOT EXIST IN CACHE - cannot display frame");
 				}
 
 			}

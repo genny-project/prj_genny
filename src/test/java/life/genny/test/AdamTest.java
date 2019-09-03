@@ -2,10 +2,12 @@ package life.genny.test;
 
 import org.kie.api.runtime.process.ProcessContext;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -37,6 +39,7 @@ import life.genny.qwanda.Answer;
 import life.genny.qwanda.Ask;
 import life.genny.qwanda.Context;
 import life.genny.qwanda.ContextType;
+import life.genny.qwanda.Question;
 import life.genny.qwanda.VisualControlType;
 import life.genny.qwanda.attribute.Attribute;
 import life.genny.qwanda.datatype.DataType;
@@ -44,6 +47,7 @@ import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.EntityEntity;
 import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwanda.exception.BadDataException;
+import life.genny.qwanda.message.QBulkMessage;
 import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
@@ -56,8 +60,10 @@ import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
+import life.genny.utils.ContextUtils;
 import life.genny.utils.FrameUtils2;
 import life.genny.utils.RulesUtils;
+import life.genny.utils.TableUtils;
 import life.genny.utils.TableUtilsTest;
 import life.genny.utils.VertxUtils;
 
@@ -82,49 +88,77 @@ public class AdamTest {
 
 @Test
 public void testTableHeader() {
-        QRules rules = GennyJbpmBaseTest.setupLocalService();
-        GennyToken userToken = new GennyToken("userToken", rules.getToken());
-        GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+	System.out.println("Table test");
+	GennyToken userToken = null;
+	GennyToken userToken2 = null;
+	GennyToken serviceToken = null;
+	QRules qRules = null;
+
+	if (false) {
+		userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+		userToken2 = GennyJbpmBaseTest.createGennyToken(realm, "user2", "Barry2 Allan2", "user");
+		serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+		qRules = new QRules(eventBusMock, userToken.getToken());
+		qRules.set("realm", userToken.getRealm());
+		qRules.setServiceToken(serviceToken.getToken());
+		VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+		GennyKieSession.loadAttributesJsonFromResources(userToken);
+	} else {
+		qRules = GennyJbpmBaseTest.setupLocalService();
+		userToken = new GennyToken("userToken", qRules.getToken());
+		serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+		
+	}
+
+	System.out.println("session     =" + userToken.getSessionCode());
+	System.out.println("userToken   =" + userToken.getToken());
+	System.out.println("serviceToken=" + serviceToken.getToken());
+
         BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
         BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
 
-        try {
+		GennyKieSession gks = null;
+
+		try {
+			gks = GennyKieSession.builder(serviceToken,true)
+					.addDrl("InitialiseProject")
+					.addDrl("XXXPRI_SEARCH_TEXT2.drl")
+					.addJbpm("InitialiseProject")
+
+					.addToken(userToken)
+					.build();
+			gks.start();
+          String searchBarString = "univ";
+        
+		  SearchEntity searchBE = new SearchEntity("SBE_SEARCH","Search")
+	  		  	     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
+	  		  	     .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%"+searchBarString+"%")
+	  		  	     .addColumn("PRI_NAME", "Name")
+	  		      	 .addColumn("PRI_LANDLINE", "Phone")
+	  		  	     .addColumn("PRI_EMAIL", "Email")
+	  		  	     .addColumn("PRI_ADDRESS_STATE","State")
+	  		  	     .addColumn("PRI_ADDRESS_CITY","City")
+	  		  	     .addColumn("PRI_ADDRESS_POSTCODE","Postcode")
+	  		  	     .setPageStart(0)
+	  		  	     .setPageSize(10);
+
  
-      		  SearchEntity searchBE = new SearchEntity("SBE_SEARCH","Search")
-      			     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
-      			     .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%univ%")
-      			     .addColumn("PRI_NAME", "Name")
-      			     .addColumn("PRI_LANDLINE", "Phone")
-      			     .setPageStart(0)
-      			     .setPageSize(10);
-      			     
-      		  		TableUtilsTest tableUtils = new TableUtilsTest(new BaseEntityUtils(serviceToken));
-//      		  		
-      		  		QDataBaseEntityMessage resultsMsg = tableUtils.fetchSearchResults(searchBE, userToken);
-      		  		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(resultsMsg));
-      		  		
-      		  		
-      		  		TableData tableData = tableUtils.generateTableAsks(searchBE, userToken, resultsMsg);
-      		  		Ask headerAsk = tableData.getAsk();
-      		  		Ask[] askArray = new Ask[1];
-      		  		askArray[0] = headerAsk;
-      		  	QDataAskMessage headerAskMsg = new QDataAskMessage(askArray);
-      	    	headerAskMsg.setToken(userToken.getToken());
-      	    	VertxUtils.writeMsg("webcmds", JsonUtils.toJson(headerAskMsg));
-      	    	String headerAskCode = headerAsk.getQuestionCode();
-      	    	
-      			        QDataBaseEntityMessage msg = tableUtils.changeQuestion("FRM_TABLE_HEADER",headerAskCode,userToken);
-                
-      	                
-      	                VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
-   
-    		//			GennyKieSession.displayForm("FRM_TABLE_HEADER", "FRM_HEADER", userToken);
+		  			TableUtilsTest.performSearch(serviceToken , beUtils, searchBE);
+        
+   		  	     
+  	
+  		      	 
+  		      	 
+  	
+  		  	     
+  		  	     /* Send to front end */
+   					
+  		  	     GennyKieSession.displayForm("FRM_TABLE", "FRM_CONTENT", userToken);
                 System.out.println("Sent");
         } catch (Exception e) {
                 System.out.println("Error " + e.getLocalizedMessage());
         }
 }
-
 
 
 
@@ -237,7 +271,7 @@ public void testTableHeader() {
 //  }
 
 		  // Test sending a page
-			QDataBaseEntityMessage msg2 = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_QUE_DASHBOARD_VIEW-MSG",
+			QDataBaseEntityMessage msg2 = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_QUE_DASHBOARD_VIEW_MSG",
 					QDataBaseEntityMessage.class, serviceToken.getToken());
 
 			msg2.setToken(userToken.getToken());
@@ -1097,9 +1131,9 @@ public void testTableHeader() {
 
 		QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_ROOT, serviceToken, askMsgs);
 
-//		VertxUtils.putObject(serviceToken.getRealm(), "", "FRM_ROOT-MSG", msg, serviceToken.getToken());
+//		VertxUtils.putObject(serviceToken.getRealm(), "", "FRM_ROOT_MSG", msg, serviceToken.getToken());
 
-		QDataBaseEntityMessage msg2 = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_ROOT-MSG",
+		QDataBaseEntityMessage msg2 = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_ROOT_MSG",
 				QDataBaseEntityMessage.class, serviceToken.getToken());
 
 		msg2.setToken(userToken.getToken());
@@ -1107,12 +1141,12 @@ public void testTableHeader() {
 		// rules.publishCmd(msg2); // Send QDataBaseEntityMessage
 		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg2));
 //		String askMsgsStr = JsonUtils.toJson(askMsgs);
-//		VertxUtils.putObject(serviceToken.getRealm(), "", "DESKTOP-ASKS", askMsgsStr, serviceToken.getToken());
+//		VertxUtils.putObject(serviceToken.getRealm(), "", "DESKTOP_ASKS", askMsgsStr, serviceToken.getToken());
 
 		Type setType = new TypeToken<Set<QDataAskMessage>>() {
 		}.getType();
 
-		String askMsgs2Str = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_ROOT-ASKS", String.class,
+		String askMsgs2Str = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_ROOT_ASKS", String.class,
 				serviceToken.getToken());
 
 		Set<QDataAskMessage> askMsgs2 = JsonUtils.fromJson(askMsgs2Str, setType);
@@ -1135,7 +1169,7 @@ public void testTableHeader() {
 
 		System.out.println("Starting");
 
-		QDataBaseEntityMessage msg2 = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_ROOT-MSG",
+		QDataBaseEntityMessage msg2 = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_ROOT_MSG",
 				QDataBaseEntityMessage.class, serviceToken.getToken());
 
 		/* send message */
@@ -1144,7 +1178,7 @@ public void testTableHeader() {
 		Type setType = new TypeToken<Set<QDataAskMessage>>() {
 		}.getType();
 
-		String askMsgs2Str = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_ROOT-ASKS", String.class,
+		String askMsgs2Str = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_ROOT_ASKS", String.class,
 				serviceToken.getToken());
 
 		Set<QDataAskMessage> askMsgs2 = JsonUtils.fromJson(askMsgs2Str, setType);
@@ -1390,7 +1424,7 @@ public void testTableHeader() {
 
                     /* Test Context */
                     Frame3 FRM_HAMBURGER_MENU = Frame3.builder("FRM_HAMBURGER_MENU").question("QUE_NAME_TWO")
-                                    // .addContext(context).end()
+                                    .addContext(context).end()
                                     .end().build();
 
                     /* Test Virtual Ask */
@@ -1468,6 +1502,7 @@ public void testTableHeader() {
                                     .addTheme(THM_HEADER).end()
                                     //.addTheme(THM_FRAME_ALIGN_WEST, ThemePosition.WEST).end()
                                     //.addTheme(THM_FRAME_ALIGN_EAST, ThemePosition.EAST).end()
+                                    .addFrame(FRM_HAMBURGER_MENU, FramePosition.WEST).end()
                                     .addFrame(FRM_PROJECT_NAME, FramePosition.WEST).end()
                                     .addFrame(FRM_SEARCH_BAR, FramePosition.CENTRE).end()
                                     .addFrame(FRM_HEADER_OPTIONS, FramePosition.EAST).end()

@@ -38,7 +38,7 @@ rule "THM_PROJECT_COLOR_BACKGROUND"
 
 			BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
 			BaseEntity project = beUtils.getBaseEntityByCode( "PRJ_" + serviceToken.getRealm().toUpperCase());
-
+			System.out.println("Project being used for theme is "+project+" and background colour is "+project.getValue("PRI_COLOR_BACKGROUND", "#F6F6F6"));
 			Theme theme = Theme.builder("THM_PROJECT_COLOR_BACKGROUND")
 										.addAttribute()
 										 	.backgroundColor(project.getValue("PRI_COLOR_BACKGROUND", "#F6F6F6"))

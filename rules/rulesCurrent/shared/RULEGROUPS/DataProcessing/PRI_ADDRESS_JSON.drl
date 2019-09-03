@@ -37,6 +37,11 @@ rule "PRI_ADDRESS_JSON"
 			answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_ADDRESS1", addressDataJson.getString("street_address")));
 			answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", addressDataJson.getString("full_address")));
 		
+			Double latitude = addressDataJson.getDouble("latitude");
+			Double longitude = addressDataJson.getDouble("longitude");
+			
+			answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_LATITUDE", latitude+""));
+			answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_LONGITUDE", longitude+""));
 	
 		beUtils.saveAnswers(answers,true); 
 
