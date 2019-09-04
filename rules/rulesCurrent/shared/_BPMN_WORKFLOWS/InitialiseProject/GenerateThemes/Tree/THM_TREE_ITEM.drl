@@ -43,6 +43,8 @@ rule "THM_TREE_ITEM"
                                   .height("auto")
                                   .flexGrow(0)
                                   .flexBasis("auto")
+                                  .paddingLeft(20)
+                                  .paddingY(5)
                                 .end()
                                 .build();
                         
