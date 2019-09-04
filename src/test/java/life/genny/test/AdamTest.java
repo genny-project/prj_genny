@@ -115,7 +115,7 @@ public void testTableHeader() {
 	System.out.println("userToken   =" + userToken.getToken());
 	System.out.println("serviceToken=" + serviceToken.getToken());
 
-        BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+        BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
         BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
 
 		GennyKieSession gks = null;
@@ -148,7 +148,7 @@ public void testTableHeader() {
    		  	     
   		  	     /* Send to front end */
    					
-  		  	     GennyKieSession.displayForm("FRM_TABLE", "FRM_CONTENT", userToken);
+  		  	     GennyKieSession.displayForm("FRM_TABLE_VIEW", "FRM_CONTENT", userToken);
                 System.out.println("Sent");
         } catch (Exception e) {
                 System.out.println("Error " + e.getLocalizedMessage());
