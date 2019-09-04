@@ -71,8 +71,9 @@ public class AnishTest extends GennyJbpmBaseTest {
                         rules.sendAllAttributes();
 
                         /* frame-header */
-                        Frame3 FRM_HEADER = generateHeader();
-                        Frame3 FRM_SIDEBAR = generateSidebar();
+                        //Frame3 FRM_HEADER = generateHeader();
+                        /* Frame3 FRM_SIDEBAR = generateSidebar(); */
+                        Frame3 FRM_SIDEBAR = generateInternmatchSidebar();
                         /* Frame3 FRM_CONTENT = getDashboard(); */
                         Frame3 FRM_TABLE = generateTable();
                         Frame3 FRM_FOOTER = generateFooter();
@@ -81,7 +82,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                         /* frame-root */
                         Frame3 FRM_APP = Frame3.builder("FRM_APP")
                                         .addTheme("THM_PROJECT", ThemePosition.FRAME, serviceToken).end()
-                                        .addFrame(FRM_HEADER, FramePosition.NORTH).end()
+                                        //.addFrame(FRM_HEADER, FramePosition.NORTH).end()
                                         .addFrame(FRM_SIDEBAR, FramePosition.WEST).end()
 
                                         /* .addFrame(FRM_CONTENT, FramePosition.CENTRE).end() */
@@ -617,7 +618,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                         Frame3 FRM_TABLE_HEADER = Frame3.builder("FRM_TABLE_HEADER")
                                         /* .addTheme(THM_TABLE_HEADER).end() */
                                         .addTheme(THM_TABLE_BORDER).end()
-                                        .question("QUE_TABLE_HEADER_GRP") // QUE_TEST_TABLE_HEADER_GRP
+                                        .question("QUE_TEST_TABLE_HEADER_GRP") // QUE_TEST_TABLE_HEADER_GRP
                                                 .addTheme(THM_QUESTION_GRP_LABEL).vcl(VisualControlType.GROUP).dataType(tableCellDataType).end()
                                                 .addTheme(THM_WIDTH_100_PERCENT_NO_INHERIT).vcl(VisualControlType.GROUP).end()
                                                 .addTheme(THM_TABLE_ROW_CELL).dataType(tableCellDataType).vcl(VisualControlType.GROUP_WRAPPER).end()			
@@ -1133,6 +1134,13 @@ public class AnishTest extends GennyJbpmBaseTest {
 
                         Theme THM_TREE_ITEM = Theme.builder("THM_TREE_ITEM").addAttribute().color("white")
                                         .height("auto").flexGrow(0).flexBasis("auto").end().build();
+                        
+                        Theme THM_TREE_ITEM_GROUP_WRAPPER = Theme.builder("THM_TREE_ITEM_GROUP_WRAPPER")
+                                        .addAttribute()
+                                                .justifyContent("flex-start")
+                                                .flexDirection("row")
+                                        .end()
+                                        .build();
 
                         Theme THM_LOGO = Theme.builder("THM_LOGO")
                                         .addAttribute()
@@ -1209,14 +1217,131 @@ public class AnishTest extends GennyJbpmBaseTest {
                         Frame3 FRM_TREE_TABLE_VIEW = Frame3.builder("FRM_TREE_TABLE_VIEW")
                                         .addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER).end()
                                         .question("QUE_TREE_TABLE_VIEW").end().build();
+
+                        /* Internmatch Trees */
+                        Frame3 FRM_TREE_DASHBOARD_VIEW = Frame3.builder("FRM_TREE_DASHBOARD_VIEW")
+                                                .addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER).end()
+                                                .addTheme(THM_TREE_ITEM_GROUP_WRAPPER, ThemePosition.CENTRE).end()
+                                                .question("QUE_TREE_DASHBOARD_VIEW").end()
+                                                .build();
+                        Frame3 FRM_TREE_INTERNSHIPS_VIEW = Frame3.builder("FRM_TREE_INTERNSHIPS_VIEW")
+                                                .addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER).end()
+                                                .addTheme(THM_TREE_ITEM_GROUP_WRAPPER, ThemePosition.CENTRE).end()
+                                                .question("QUE_TREE_INTERNSHIPS_VIEW").end()
+                                                .build();
+                        Frame3 FRM_TREE_CONTACTS_VIEW = Frame3.builder("FRM_TREE_CONTACTS_VIEW")
+                                                .addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER).end()
+                                                .addTheme(THM_TREE_ITEM_GROUP_WRAPPER, ThemePosition.CENTRE).end()
+                                                .question("QUE_TREE_CONTACTS_VIEW").end()
+                                                .build();
+                        Frame3 FRM_TREE_COMPANIES_VIEW = Frame3.builder("FRM_TREE_COMPANIES_VIEW")
+                                                .addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER).end()
+                                                .addTheme(THM_TREE_ITEM_GROUP_WRAPPER, ThemePosition.CENTRE).end()
+                                                .question("QUE_TREE_COMPANIES_VIEW").end()
+                                                .build();
+                        Frame3 FRM_TREE_INTERNSHIP_TEMPLATES_VIEW = Frame3.builder("FRM_TREE_INTERNSHIP_TEMPLATES_VIEW")
+                                                .addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER).end()
+                                                .addTheme(THM_TREE_ITEM_GROUP_WRAPPER, ThemePosition.CENTRE).end()
+                                                .question("QUE_TREE_INTERNSHIP_TEMPLATES_VIEW").end()
+                                                .build();
+                        /*  */
                         
                         
                         Frame3 FRM_SIDEBAR = Frame3.builder("FRM_SIDEBAR").addTheme(THM_SIDEBAR).end()
-                                        .addTheme(THM_SIDEBAR_WIDTH).end().addFrame(FRM_LOGO, FramePosition.NORTH).end()
-                                        .addFrame(FRM_TREE_TABLE_VIEW, FramePosition.NORTH).end()
+                                        .addTheme(THM_SIDEBAR_WIDTH).end()
+                                        .addFrame(FRM_LOGO, FramePosition.NORTH).end()
+                                 /*        .addFrame(FRM_TREE_TABLE_VIEW, FramePosition.NORTH).end()
                                         .addFrame(FRM_TREE_BUCKET_VIEW, FramePosition.NORTH).end()
                                         .addFrame(FRM_TREE_DETAIL_VIEW, FramePosition.NORTH).end()
-                                        .addFrame(FRM_TREE_FORM_VIEW, FramePosition.NORTH).end().build();
+                                        .addFrame(FRM_TREE_FORM_VIEW, FramePosition.NORTH).end() */
+                                        /* internmatch trees */
+                                        .addFrame(FRM_TREE_DASHBOARD_VIEW, FramePosition.NORTH).end()
+                                        .addFrame(FRM_TREE_INTERNSHIPS_VIEW, FramePosition.NORTH).end()
+                                        .addFrame(FRM_TREE_CONTACTS_VIEW, FramePosition.NORTH).end()
+                                        .addFrame(FRM_TREE_COMPANIES_VIEW, FramePosition.NORTH).end()
+                                        .addFrame(FRM_TREE_INTERNSHIP_TEMPLATES_VIEW, FramePosition.NORTH).end()
+                                        .build();
+
+                        System.out.println("Generated Sidebar Frame");
+                        return FRM_SIDEBAR;
+                } catch (Exception e) {
+                        System.out.println("Error " + e.getLocalizedMessage());
+                }
+                return null;
+        }
+        
+        public Frame3 generateInternmatchSidebar() {
+                QRules rules = GennyJbpmBaseTest.setupLocalService();
+                GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+                BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+                BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
+
+                try {
+
+                        Theme THM_SIDEBAR = Theme.builder("THM_SIDEBAR").addAttribute()
+                                        .backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E")).end()
+                                        .build();
+
+                        Theme THM_SIDEBAR_WIDTH = Theme.builder("THM_SIDEBAR_WIDTH").addAttribute().minWidth(300)
+                                        .width(100).end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
+                                        .end().build();
+
+                        Theme THM_TREE_ITEM = Theme.builder("THM_TREE_ITEM")
+                                        .addAttribute()
+                                                .color("white")
+                                                .height("auto")
+                                                .flexGrow(0)
+                                                .flexBasis("auto")
+                                                .paddingLeft(20)
+                                                .paddingY(5)
+                                        .end()
+                                        .build();
+                        
+                        Theme THM_TREE_ITEM_GROUP_WRAPPER = Theme.builder("THM_TREE_ITEM_GROUP_WRAPPER")
+                                        .addAttribute()
+                                                .justifyContent("flex-start")
+                                                .flexDirection("row")
+                                        .end()
+                                        .build();
+
+                        /* Internmatch Trees */
+                        Frame3 FRM_TREE_ITEM_DASHBOARD_VIEW = Frame3.builder("FRM_TREE_ITEM_DASHBOARD_VIEW")
+                                                .addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER).end()
+                                                .addTheme(THM_TREE_ITEM_GROUP_WRAPPER, ThemePosition.CENTRE).end()
+                                                .question("QUE_TREE_DASHBOARD_VIEW").end()
+                                                .build();
+                        Frame3 FRM_TREE_ITEM_INTERNSHIPS_VIEW = Frame3.builder("FRM_TREE_ITEM_INTERNSHIPS_VIEW")
+                                                .addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER).end()
+                                                .addTheme(THM_TREE_ITEM_GROUP_WRAPPER, ThemePosition.CENTRE).end()
+                                                .question("QUE_TREE_INTERNSHIPS_VIEW").end()
+                                                .build();
+                        Frame3 FRM_TREE_ITEM_CONTACTS_VIEW = Frame3.builder("FRM_TREE_ITEM_CONTACTS_VIEW")
+                                                .addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER).end()
+                                                .addTheme(THM_TREE_ITEM_GROUP_WRAPPER, ThemePosition.CENTRE).end()
+                                                .question("QUE_TREE_CONTACTS_VIEW").end()
+                                                .build();
+                        Frame3 FRM_TREE_ITEM_COMPANIES_VIEW = Frame3.builder("FRM_TREE_ITEM_COMPANIES_VIEW")
+                                                .addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER).end()
+                                                .addTheme(THM_TREE_ITEM_GROUP_WRAPPER, ThemePosition.CENTRE).end()
+                                                .question("QUE_TREE_COMPANIES_VIEW").end()
+                                                .build();
+                        Frame3 FRM_TREE_ITEM_INTERNSHIP_TEMPLATES_VIEW = Frame3.builder("FRM_TREE_ITEM_INTERNSHIP_TEMPLATES_VIEW")
+                                                .addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER).end()
+                                                .addTheme(THM_TREE_ITEM_GROUP_WRAPPER, ThemePosition.CENTRE).end()
+                                                .question("QUE_TREE_INTERNSHIP_TEMPLATES_VIEW")
+                                                .end()
+                                                .build();
+                        /*  */
+                        
+                        
+                        Frame3 FRM_SIDEBAR = Frame3.builder("FRM_SIDEBAR").addTheme(THM_SIDEBAR).end()
+                                        .addTheme(THM_SIDEBAR_WIDTH).end()
+                                        .addFrame(FRM_TREE_ITEM_DASHBOARD_VIEW, FramePosition.NORTH).end()
+                                        .addFrame(FRM_TREE_ITEM_INTERNSHIPS_VIEW, FramePosition.NORTH).end()
+                                        .addFrame(FRM_TREE_ITEM_CONTACTS_VIEW, FramePosition.NORTH).end()
+                                        .addFrame(FRM_TREE_ITEM_COMPANIES_VIEW, FramePosition.NORTH).end()
+                                        .addFrame(FRM_TREE_ITEM_INTERNSHIP_TEMPLATES_VIEW, FramePosition.NORTH).end()
+                                        .build();
 
                         System.out.println("Generated Sidebar Frame");
                         return FRM_SIDEBAR;

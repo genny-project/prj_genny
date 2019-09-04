@@ -459,12 +459,23 @@ public class TableUtilsTest {
       	  msg.setToken(beUtils.getGennyToken().getToken());   
       	 VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
       	 
-      	 /* Now to display the rows */
-	      	 List<BaseEntity> rowList = Arrays.asList(msg.getItems());
-	      	 List<Ask> rowAsks = generateQuestions(beUtils.getGennyToken(), beUtils, rowList,columns,beUtils.getGennyToken().getUserCode());
-	      	 /* Now send out the question rows and themes etc */
-	      	  /* Link row asks to a single ask? */
-	      	 /* link single ask to FRM_TABLE_BODY ? */
+					/* Now to display the rows */
+					List<BaseEntity> rowList = Arrays.asList(msg.getItems());
+					List<Ask> rowAsks = generateQuestions(beUtils.getGennyToken(), beUtils, rowList,columns,beUtils.getGennyToken().getUserCode());
+					 
+					/* converting rowAsks list to array */
+					Ask[] rowAsksArr = rowAsks.stream().toArray(Ask[]::new);
+					
+					/* Now send out the question rows and themes etc */
+					
+					 /* Link row asks to a single ask:  QUE_TEST_TABLE_RESULTS_GRP */
+					Attribute questionAttribute = new Attribute("QQQ_QUESTION_GROUP", "link",
+							new DataType(String.class));
+					Question tableResultQuestion = new Question("QUE_TEST_TABLE_RESULTS_GRP", "Table Results Question Group", questionAttribute, true);
+					Ask tableResultAsk = new Ask(tableResultQuestion, beUtils.getGennyToken().getUserCode(), beUtils.getGennyToken().getUserCode());
+					tableResultAsk.setChildAsks(rowAsksArr);
+					
+	      	/* link single ask QUE_TEST_TABLE_RESULTS_GRP to FRM_TABLE_CONTENT ? */
 	}
 	
 	/*
@@ -778,10 +789,13 @@ public class TableUtilsTest {
 					/* Get the on-the-fly question attribute */
 					Attribute questionAttribute = new Attribute("QQQ_QUESTION_GROUP", "link",
 							new DataType(String.class));
+					
+					Attribute questionTableRowAttribute = new Attribute("QQQ_QUESTION_GROUP_TABLE_ROW", "link",
+							new DataType(String.class));
 
 					/* Generate ask for the baseentity */
 					Question parentQuestion = new Question("QUE_" + be.getCode() + "_GRP", be.getName(),
-							questionAttribute, true);
+					questionTableRowAttribute, true);
 					Ask parentAsk = new Ask(parentQuestion, targetCode, be.getCode());
 
 					/* apply selectable theme to each parent ask group */
