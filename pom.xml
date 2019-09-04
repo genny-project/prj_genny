@@ -13,8 +13,8 @@
 	<description>jBPM Genny Maven project</description>
 
 	<properties>
-		<runtime.version>7.24.0.Final</runtime.version>
-		<kie.version>7.24.0.Final</kie.version>
+		<runtime.version>7.25.0.Final</runtime.version>
+		<kie.version>7.25.0.Final</kie.version>
 		<genny-verticle.version>3.0.0</genny-verticle.version>
 		<genny-rules.version>3.0.0</genny-rules.version>
 
@@ -60,7 +60,7 @@
 		<version.maven-source-plugin>3.0.1</version.maven-source-plugin>
 
 		<!-- dependency versions -->
-		<javaee-api-version>7.0</javaee-api-version>
+		<javaee-api-version>8.0</javaee-api-version>
 
 		<!-- EJB spec version -->
 		<ejb-spec-version>3.2</ejb-spec-version>
@@ -72,7 +72,7 @@
 		<version.mysql-connector>6.0.6</version.mysql-connector>
 		<jersey-version>2.13</jersey-version>
 		<version.apache-httpclient>4.5.3</version.apache-httpclient>
-		<keycloak-core.version>6.0.1</keycloak-core.version>
+		<keycloak-core.version>7.0.0</keycloak-core.version>
 		<version.hibernate>5.3.6.Final</version.hibernate>
 		<version.hibernate-validator>5.3.6.Final</version.hibernate-validator>
 		<version.hsqldb>2.4.1</version.hsqldb>

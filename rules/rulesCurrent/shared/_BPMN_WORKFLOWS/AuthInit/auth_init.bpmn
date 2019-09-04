@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmn20="http://www.omg.org/bpmn20" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="_rgjd0GkSEeGLXa7Rf4_OXA" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.4.3.Final-v20180418-1358-B1" name="auth_init" targetNamespace="http://www.omg.org/bpmn20">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmn20="http://www.omg.org/bpmn20" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="_rgjd0GkSEeGLXa7Rf4_OXA" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.1.Final-v20190425-2005-B1" name="auth_init" targetNamespace="http://www.omg.org/bpmn20">
   <bpmn2:itemDefinition id="ItemDefinition_1" isCollection="false" structureRef="life.genny.qwanda.message.QEventMessage"/>
   <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false" structureRef="life.genny.rules.QRules"/>
   <bpmn2:itemDefinition id="ItemDefinition_3" isCollection="false" structureRef="java.lang.String"/>
@@ -121,11 +121,10 @@ kcontext.setVariable(&quot;userToken&quot;, userToken);
 </bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_15" drools:priority="1" sourceRef="StartEvent_1" targetRef="ScriptTask_13"/>
-    <bpmn2:scriptTask id="ScriptTask_14" name="&#xA;Send Attributes" scriptFormat="http://www.java.com/java">
+    <bpmn2:scriptTask id="ScriptTask_14" name="Send Attributes" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[
-Send Attributes]]></drools:metaValue>
+          <drools:metaValue><![CDATA[Send Attributes]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_17</bpmn2:incoming>
@@ -134,6 +133,9 @@ Send Attributes]]></drools:metaValue>
 		try {
 			QDataAttributeMessage msg = RulesUtils.loadAllAttributesIntoCache(userToken.getToken());
 			msg.setToken(userToken.getToken());
+				if (userToken.getToken()==null) {
+						System.out.println(&quot;NULL TOKEN IN SENDING ATTRIBUTES&quot;);
+				}
 			VertxUtils.writeMsg(&quot;webcmds&quot;,JsonUtils.toJson(msg));
 			System.out.println(&quot;authInit: All the attributes sent &quot; + msg.getItems().length + &quot; of them&quot;);
 
@@ -219,7 +221,7 @@ VertxUtils.publish(currentUser,&quot;webcmds&quot;,currentUser, &quot;USER&quot;
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_14" bpmnElement="ScriptTask_14" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="220.0" y="97.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_4" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="22.0" width="62.0" x="244.0" y="111.0"/>
+          <dc:Bounds height="11.0" width="62.0" x="244.0" y="116.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_1" bpmnElement="ScriptTask_1" isExpanded="true">

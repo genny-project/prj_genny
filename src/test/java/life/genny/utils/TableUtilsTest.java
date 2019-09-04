@@ -1,5 +1,4 @@
 package life.genny.utils;
-
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
@@ -38,6 +37,7 @@ import life.genny.qwanda.validation.ValidationList;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.QwandaUtils;
+import life.genny.utils.ContextUtils;
 
 public class TableUtilsTest {
 
@@ -246,7 +246,7 @@ public class TableUtilsTest {
 		Ask tableHeaderAsk = new Ask(tableHeaderQuestion, beUtils.getGennyToken().getUserCode(), searchBe.getCode());
 		tableHeaderAsk.setChildAsks(asksArray);
 		tableHeaderAsk.setName(searchBe.getName());
-		
+
 		return tableHeaderAsk;
 	}
 	
@@ -439,8 +439,7 @@ public class TableUtilsTest {
   	     
   	     TableData tableData = tableUtils.generateTableAsks(searchBE,beUtils.getGennyToken(),  msg);
   	     VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
-  	     
-      		  		
+  	          		  		
          Ask headerAsk = tableData.getAsk();
       	 Ask[] askArray = new Ask[1];
       	 askArray[0] = headerAsk;
@@ -450,14 +449,14 @@ public class TableUtilsTest {
       	 String headerAskCode = headerAsk.getQuestionCode();
   	     
     		Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
-  		  	msg = TableUtils.changeQuestion("FRM_TABLE_HEADER",headerAskCode,serviceToken,beUtils.getGennyToken(),askMsgs);
+  		  	msg = TableUtilsTest.changeQuestion("FRM_TABLE_HEADER",headerAskCode,serviceToken,beUtils.getGennyToken(),askMsgs);
   			    for (QDataAskMessage askMsg : askMsgs) {
   			    	askMsg.setToken(beUtils.getGennyToken().getToken());
   			    	askMsg.getItems()[0] = headerAsk;
   			    	VertxUtils.writeMsg("webcmds", JsonUtils.toJson(askMsg));
   			    }
                 
-      	                
+      	  msg.setToken(beUtils.getGennyToken().getToken());   
       	 VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
       	 
       	 /* Now to display the rows */
@@ -484,7 +483,7 @@ public class TableUtilsTest {
 				/* we grab the theme for table actions */
 				BaseEntity visualBaseEntity = beUtils
 						.getBaseEntityByCode("THM_TABLE_ACTIONS_VISUAL_CONTROL");
-
+ 
 				/* we grab the icons for actions */
 				BaseEntity viewIconBe = beUtils.getBaseEntityByCode("ICN_VIEW");
 				BaseEntity editIconBe = beUtils.getBaseEntityByCode("ICN_EDIT");
@@ -499,14 +498,20 @@ public class TableUtilsTest {
 						.getBaseEntityByCode("THM_TABLE_CELL_UNINHERITABLE");
 				BaseEntity noFlexTheme = ContextUtils.getNoFlexTheme();
 
-				VertxUtils.writeMsg("webcmds", JsonUtils.toJson((visualBaseEntity)));
-				VertxUtils.writeMsg("webcmds", JsonUtils.toJson(viewIconBe));
-				VertxUtils.writeMsg("webcmds", JsonUtils.toJson((editIconBe)));
-				VertxUtils.writeMsg("webcmds", JsonUtils.toJson((deleteIconBe)));
-				VertxUtils.writeMsg("webcmds", JsonUtils.toJson((selectableTheme)));
-				VertxUtils.writeMsg("webcmds", JsonUtils.toJson((tableCellUnInheritableTheme)));
-				VertxUtils.writeMsg("webcmds", JsonUtils.toJson((noFlexTheme)));
-				VertxUtils.writeMsg("webcmds", JsonUtils.toJson((moreVerticalIconBe)));
+				List<BaseEntity> bes2 = new ArrayList<BaseEntity>();
+				bes2.add(visualBaseEntity);
+				bes2.add(viewIconBe);
+				bes2.add(editIconBe);
+				bes2.add(deleteIconBe);
+				bes2.add(selectableTheme);
+				bes2.add(tableCellUnInheritableTheme);
+				bes2.add(noFlexTheme);
+				bes2.add(moreVerticalIconBe);
+				
+				QDataBaseEntityMessage msg = new QDataBaseEntityMessage(bes2);
+				msg.setToken(beUtils.getGennyToken().getToken());
+				
+				VertxUtils.writeMsg("webcmds", JsonUtils.toJson((msg)));
 
 				log.info(visualBaseEntity.getCode());
 				log.info(viewIconBe.getCode());
