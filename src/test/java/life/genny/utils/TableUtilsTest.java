@@ -450,14 +450,10 @@ public class TableUtilsTest {
   	     
     		Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
   		  	msg = TableUtilsTest.changeQuestion("FRM_TABLE_HEADER",headerAskCode,serviceToken,beUtils.getGennyToken(),askMsgs);
-  			    for (QDataAskMessage askMsg : askMsgs) {
-  			    	askMsg.setToken(beUtils.getGennyToken().getToken());
-  			    	askMsg.getItems()[0] = headerAsk;
-  			    	VertxUtils.writeMsg("webcmds", JsonUtils.toJson(askMsg));
-  			    }
+	     	  msg.setToken(beUtils.getGennyToken().getToken());   
+		       	 VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+
                 
-      	  msg.setToken(beUtils.getGennyToken().getToken());   
-      	 VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
       	 
 					/* Now to display the rows */
 					List<BaseEntity> rowList = Arrays.asList(msg.getItems());
@@ -474,8 +470,16 @@ public class TableUtilsTest {
 					Question tableResultQuestion = new Question("QUE_TEST_TABLE_RESULTS_GRP", "Table Results Question Group", questionAttribute, true);
 					Ask tableResultAsk = new Ask(tableResultQuestion, beUtils.getGennyToken().getUserCode(), beUtils.getGennyToken().getUserCode());
 					tableResultAsk.setChildAsks(rowAsksArr);
+					askMsgs.add(new QDataAskMessage(tableResultAsk));
 					
+		 		  	for (QDataAskMessage askMsg : askMsgs) {
+	  			    	askMsg.setToken(beUtils.getGennyToken().getToken());
+	  			    	askMsg.getItems()[0] = headerAsk;
+	  			    	VertxUtils.writeMsg("webcmds", JsonUtils.toJson(askMsg));
+	  			    }
+	 	
 	      	/* link single ask QUE_TEST_TABLE_RESULTS_GRP to FRM_TABLE_CONTENT ? */
+			  
 	}
 	
 	/*

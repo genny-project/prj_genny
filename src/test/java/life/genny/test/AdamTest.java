@@ -107,6 +107,7 @@ public void testTableHeader() {
 		qRules = GennyJbpmBaseTest.setupLocalService();
 		userToken = new GennyToken("userToken", qRules.getToken());
 		serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+		GennyKieSession.loadAttributesJsonFromResources(userToken);
 		
 	}
 
@@ -120,14 +121,14 @@ public void testTableHeader() {
 		GennyKieSession gks = null;
 
 		try {
-			gks = GennyKieSession.builder(serviceToken,true)
-					.addDrl("InitialiseProject")
-					.addDrl("XXXPRI_SEARCH_TEXT2.drl")
-					.addJbpm("InitialiseProject")
-
-					.addToken(userToken)
-					.build();
-			gks.start();
+//			gks = GennyKieSession.builder(serviceToken,true)
+//					.addDrl("InitialiseProject")
+//					.addDrl("XXXPRI_SEARCH_TEXT2.drl")
+//					.addJbpm("InitialiseProject")
+//
+//					.addToken(userToken)
+//					.build();
+//			gks.start();
           String searchBarString = "univ";
         
 		  SearchEntity searchBE = new SearchEntity("SBE_SEARCH","Search")
@@ -144,13 +145,7 @@ public void testTableHeader() {
 
  
 		  			TableUtilsTest.performSearch(serviceToken , beUtils, searchBE);
-        
    		  	     
-  	
-  		      	 
-  		      	 
-  	
-  		  	     
   		  	     /* Send to front end */
    					
   		  	     GennyKieSession.displayForm("FRM_TABLE", "FRM_CONTENT", userToken);
