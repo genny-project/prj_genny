@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:g="http://www.jboss.org/drools/flow/gpd" xmlns:java="http://www.java.com/javaTypes" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.0.Final-v20180515-1642-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:g="http://www.jboss.org/drools/flow/gpd" xmlns:java="http://www.java.com/javaTypes" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.4.3.Final-v20180418-1358-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
   <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false" structureRef="life.genny.rules.QRules"/>
   <bpmn2:itemDefinition id="ItemDefinition_10" isCollection="false" structureRef="java.lang.String"/>
   <bpmn2:itemDefinition id="ItemDefinition_1014" isCollection="false" structureRef="life.genny.qwanda.entity.BaseEntity"/>
@@ -64,6 +64,7 @@
     <bpmn2:property id="controlSignalCode" itemSubjectRef="ItemDefinition_10" name="controlSignalCode"/>
     <bpmn2:property id="callingProcessToken" itemSubjectRef="ItemDefinition_97" name="callingProcessToken"/>
     <bpmn2:property id="callingProcessId" itemSubjectRef="ItemDefinition_425" name="callingProcessId"/>
+    <bpmn2:property id="workflowcode" itemSubjectRef="ItemDefinition_10" name="workflowcode"/>
     <bpmn2:scriptTask id="ScriptTask_2" name="Creates a user" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>
         <tns:metaData name="elementname">
@@ -121,7 +122,9 @@ System.out.println(&quot;userLifeCycle: entered: &quot;+((GennyToken)userToken).
 userToken = callingProcessToken.getGennyToken(); 
 callingProcessId = callingProcessToken.getProcessId();
 kcontext.setVariable(&quot;callingProcessId&quot;,callingProcessId);
-kcontext.setVariable(&quot;userToken&quot;,userToken);</bpmn2:script>
+kcontext.setVariable(&quot;userToken&quot;,userToken);
+kcontext.setVariable(&quot;workflowcode&quot;, &quot;userLifecycle&quot;);
+</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_4" tns:priority="1" sourceRef="StartEvent_1" targetRef="ScriptTask_1"/>
     <bpmn2:sequenceFlow id="SequenceFlow_5" tns:priority="1" sourceRef="ScriptTask_1" targetRef="ScriptTask_2"/>

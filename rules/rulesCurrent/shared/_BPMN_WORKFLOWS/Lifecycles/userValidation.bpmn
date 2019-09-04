@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.0.Final-v20180515-1642-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.4.3.Final-v20180418-1358-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
   <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false" structureRef="life.genny.models.GennyToken"/>
   <bpmn2:itemDefinition id="ItemDefinition_323" isCollection="false" structureRef="life.genny.utils.BaseEntityUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_325" isCollection="false" structureRef="life.genny.qwanda.entity.BaseEntity"/>
@@ -32,6 +32,7 @@
     <bpmn2:property id="beUtils" itemSubjectRef="ItemDefinition_323" name="beUtils"/>
     <bpmn2:property id="processId" itemSubjectRef="ItemDefinition_531" name="processId"/>
     <bpmn2:property id="callingProcessToken" itemSubjectRef="ItemDefinition_536" name="callingProcessToken"/>
+    <bpmn2:property id="workflowcode" itemSubjectRef="ItemDefinition_10" name="workflowcode"/>
     <bpmn2:startEvent id="StartEvent_1" name="Start Event 1">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -69,6 +70,7 @@ System.out.println(&quot;userValidation: processId = &quot;+ processId);
 kcontext.setVariable(&quot;userCode&quot;, userToken.getUserCode());
 callingProcessToken = new CallingProcessToken(userToken,processId,userToken.getUserCode());
 kcontext.setVariable(&quot;callingProcessToken&quot;, callingProcessToken);
+kcontext.setVariable(&quot;workflowcode&quot;, &quot;userValidation&quot;);
 
 System.out.println(&quot;userValidation: Current User is &quot; + (currentUser==null?&quot;not existing&quot;:currentUser) + &quot; sending signal to userLifeCycle to create  :&quot;+userToken.getUserCode());</bpmn2:script>
     </bpmn2:scriptTask>
