@@ -238,13 +238,13 @@ public class TableUtilsTest {
 		/*
 		 * we create a table-header ask grp and set all the column asks as it's childAsk
 		 */
-		Question tableHeaderQuestion = new Question("QUE_TABLE_HEADER_GRP", "Table Header Question Group",
+		Question tableHeaderQuestion = new Question("QUE_TABLE_HEADER_GRP", searchBe.getName(),
 				questionAttribute, true);
 
 		Ask tableHeaderAsk = new Ask(tableHeaderQuestion, beUtils.getGennyToken().getUserCode(), searchBe.getCode());
 		tableHeaderAsk.setChildAsks(asksArray);
 		tableHeaderAsk.setName(searchBe.getName());
-
+		
 		return tableHeaderAsk;
 	}
 
@@ -359,7 +359,7 @@ public class TableUtilsTest {
 	 * @param serviceToken
 	 * @return
 	 */
-	public static QDataBaseEntityMessage changeQuestion(final String frameCode, final String questionCode,
+	public static QDataBaseEntityMessage changeQuestion( SearchEntity searchBE, final String frameCode, final String questionCode,
 			GennyToken serviceToken, GennyToken userToken, Set<QDataAskMessage> askMsgs) {
 		Frame3 frame = null;
 		try {
@@ -380,15 +380,30 @@ public class TableUtilsTest {
 
 //			frame.setQuestionCode(questionCode);
 
-			frame = Frame3.builder(frameCode).addTheme("THM_TABLE_BORDER", serviceToken).end().question(questionCode) // QUE_NAME_GRP
-																														// //QUE_POWERED_BY_GRP
-					.addTheme("THM_QUESTION_GRP_LABEL", serviceToken).vcl(VisualControlType.GROUP)
-					.dataType(tableCellDataType).end().addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).weight(2.0)
-					.end().addTheme("THM_TABLE_HEADER_CELL_WRAPPER", serviceToken).vcl(VisualControlType.VCL_WRAPPER)
-					.end().addTheme("THM_TABLE_HEADER_CELL_GROUP_LABEL", serviceToken)
-					.vcl(VisualControlType.GROUP_LABEL).end().addTheme("THM_DISPLAY_VERTICAL", serviceToken)
-					.dataType(tableCellDataType).weight(1.0).end().end().build();
+//			frame = Frame3.builder(frameCode).addTheme("THM_TABLE_BORDER", serviceToken).end().question(questionCode) // QUE_NAME_GRP
+//																														// //QUE_POWERED_BY_GRP
+//					.addTheme("THM_QUESTION_GRP_LABEL", serviceToken).vcl(VisualControlType.GROUP)
+//					.dataType(tableCellDataType).end().addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).weight(2.0)
+//					.end().addTheme("THM_TABLE_HEADER_CELL_WRAPPER", serviceToken).vcl(VisualControlType.VCL_WRAPPER)
+//					.end().addTheme("THM_TABLE_HEADER_CELL_GROUP_LABEL", serviceToken)
+//					.vcl(VisualControlType.GROUP_LABEL).end().addTheme("THM_DISPLAY_VERTICAL", serviceToken)
+//					.dataType(tableCellDataType).weight(1.0).end().end().build();
 
+            frame = Frame3.builder(frameCode)
+                    /* .addTheme(THM_TABLE_HEADER).end() */
+                    .addTheme("THM_TABLE_BORDER", serviceToken).end()
+                    .question(questionCode) // QUE_TEST_TABLE_HEADER_GRP
+                            .addTheme("THM_QUESTION_GRP_LABEL",serviceToken).vcl(VisualControlType.GROUP).dataType(tableCellDataType).end()
+                            .addTheme("THM_WIDTH_100_PERCENT_NO_INHERIT",serviceToken).vcl(VisualControlType.GROUP).end()
+                            .addTheme("THM_TABLE_ROW_CELL",serviceToken).dataType(tableCellDataType).vcl(VisualControlType.GROUP_WRAPPER).end()			
+                            .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).weight(2.0).end()
+                            .addTheme("THM_TABLE_HEADER_CELL_WRAPPER",serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
+                            .addTheme("THM_TABLE_HEADER_CELL_GROUP_LABEL",serviceToken).vcl(VisualControlType.GROUP_LABEL).end()
+                            .addTheme("THM_DISPLAY_VERTICAL",serviceToken).dataType(tableCellDataType).weight(1.0).end()			
+                    .end()
+                    .build();			
+			
+			
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -416,9 +431,9 @@ public class TableUtilsTest {
 						// Set<EntityEntity> entEntList = sourceFrame.getLinks();
 						// entEntList.add(entityEntity);
 						sourceFrame.getLinks().add(entityEntity);
-
+						sourceFrame.setName(searchBE.getName());
 						/* Adding Frame to Targeted Frame BaseEntity Message */
-						// msg.add(targetFrame);
+					//	msg.add(targetFrame);
 						break;
 					}
 				}
@@ -452,7 +467,7 @@ public class TableUtilsTest {
 		// Now link the FRM_TABLE_HEADER to that new Question
 		String headerAskCode = headerAsk.getQuestionCode();
 		Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
-		msg = TableUtilsTest.changeQuestion("FRM_TABLE_HEADER", headerAskCode, serviceToken, beUtils.getGennyToken(),
+		msg = TableUtilsTest.changeQuestion(searchBE,"FRM_TABLE_HEADER", headerAskCode, serviceToken, beUtils.getGennyToken(),
 				askMsgs);
 		msg.setToken(beUtils.getGennyToken().getToken());
 		msg.setReplace(true);
@@ -480,6 +495,7 @@ public class TableUtilsTest {
 		for (QDataAskMessage askMsg : askMsgs) {
 			askMsg.setToken(beUtils.getGennyToken().getToken());
 			askMsg.getItems()[0] = headerAsk;
+			askMsg.setReplace(true);
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(askMsg));
 		}
 

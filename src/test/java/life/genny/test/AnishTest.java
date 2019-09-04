@@ -587,6 +587,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                 		  	     .addColumn("PRI_NAME", "Name")
                 		      	 .addColumn("PRI_LANDLINE", "Phone")
                 		  	     .addColumn("PRI_EMAIL", "Email")
+                		  	     .addColumn("PRI_ADDRESS_CITY","City")
                 		  	     .addColumn("PRI_ADDRESS_STATE","State")
                 		  	     .setPageStart(0)
                 		  	     .setPageSize(10);
