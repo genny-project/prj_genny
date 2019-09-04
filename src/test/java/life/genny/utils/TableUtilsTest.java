@@ -446,6 +446,7 @@ public class TableUtilsTest {
 		askArray[0] = headerAsk;
 		QDataAskMessage headerAskMsg = new QDataAskMessage(askArray);
 		headerAskMsg.setToken(beUtils.getGennyToken().getToken());
+		headerAskMsg.setReplace(true);
 		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(headerAskMsg));
 
 		// Now link the FRM_TABLE_HEADER to that new Question
@@ -454,6 +455,7 @@ public class TableUtilsTest {
 		msg = TableUtilsTest.changeQuestion("FRM_TABLE_HEADER", headerAskCode, serviceToken, beUtils.getGennyToken(),
 				askMsgs);
 		msg.setToken(beUtils.getGennyToken().getToken());
+		msg.setReplace(true);
 		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 
 		/* Now to display the rows */
