@@ -533,12 +533,12 @@ public class TableUtilsTest {
 				beUtils.getGennyToken().getUserCode());
 		tableResultAsk.setChildAsks(rowAsksArr);
 		tableResultAsk.setContextList(rowsContextList);
+		Set<QDataAskMessage> tableResultAskMsgs = new HashSet<QDataAskMessage>();
 		
-		askMsgs.add(new QDataAskMessage(tableResultAsk));
+		tableResultAskMsgs.add(new QDataAskMessage(tableResultAsk));
 		
 		/* link single ask QUE_TEST_TABLE_RESULTS_GRP to FRM_TABLE_CONTENT ? */
 		String tableResultAskCode = tableResultAsk.getQuestionCode();
-		Set<QDataAskMessage> tableResultAskMsgs = new HashSet<QDataAskMessage>();
 		
 		QDataBaseEntityMessage msg3 = null;
 		msg3 = TableUtilsTest.changeQuestion(searchBE,"FRM_TABLE_CONTENT", tableResultAskCode, serviceToken, beUtils.getGennyToken(),
