@@ -24,7 +24,6 @@ import life.genny.models.Theme;
 import life.genny.models.ThemeAttributeType;
 
 
-
 rule "THM_CARD"
     ruleflow-group 'GenerateThemes'
     no-loop true
