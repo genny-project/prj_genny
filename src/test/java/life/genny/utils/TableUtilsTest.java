@@ -18,6 +18,7 @@ import life.genny.models.Frame3;
 import life.genny.models.GennyToken;
 import life.genny.models.TableData;
 import life.genny.models.Theme;
+import life.genny.models.ThemePosition;
 import life.genny.qwanda.Ask;
 import life.genny.qwanda.Context;
 import life.genny.qwanda.ContextList;
@@ -364,51 +365,67 @@ public class TableUtilsTest {
 		Frame3 frame = null;
 		try {
 
-			Validation tableCellValidation = new Validation("VLD_ANYTHING", "Anything", ".*");
 
-			List<Validation> tableCellValidations = new ArrayList<>();
-			tableCellValidations.add(tableCellValidation);
+			if(frameCode.equals("FRM_TABLE_CONTENT")){
+				
+				Validation tableRowValidation = new Validation("VLD_ANYTHING", "Anything", ".*");
 
-			ValidationList tableCellValidationList = new ValidationList();
-			tableCellValidationList.setValidationList(tableCellValidations);
+        List<Validation> tableRowValidations = new ArrayList<>();
+        tableRowValidations.add(tableRowValidation);
 
-			DataType tableCellDataType = new DataType("DTT_TABLE_CELL_GRP", tableCellValidationList, "Table Cell Group",
-					"");
+        ValidationList tableRowValidationList = new ValidationList();
+        tableRowValidationList.setValidationList(tableRowValidations);
 
-//			frame = VertxUtils.getObject(serviceToken.getRealm(), "", frameCode,
-//					Frame3.class, userToken.getToken());//generateHeader();
+				DataType tableRowDataType = new DataType("DTT_TABLE_ROW_GRP", tableRowValidationList, "Table Row Group", "");
 
-//			frame.setQuestionCode(questionCode);
+				frame = Frame3.builder(frameCode)
+								.addTheme("THM_TABLE_BORDER", serviceToken).end()
+								.addTheme("THM_TABLE_CONTENT_CENTRE", ThemePosition.CENTRE, serviceToken).end()
+								.question(questionCode)
+									.addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).dataType(tableRowDataType).weight(1.0).end()
+									.addTheme("THM_TABLE_ROW_CONTENT_WRAPPER", serviceToken).dataType(tableRowDataType).vcl(VisualControlType.GROUP).weight(1.0).end()
+									.addTheme("THM_TABLE_ROW", serviceToken).dataType(tableRowDataType).weight(1.0).end()
+									.addTheme("THM_TABLE_CONTENT", serviceToken).vcl(VisualControlType.GROUP).end()			
+									.addTheme("THM_TABLE_ROW_CELL", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()			
+								.end()
+								.build();
+				
+			}else{
+				
+				System.out.println("it's a FRM_TABLE_HEADER");
 
-//			frame = Frame3.builder(frameCode).addTheme("THM_TABLE_BORDER", serviceToken).end().question(questionCode) // QUE_NAME_GRP
-//																														// //QUE_POWERED_BY_GRP
-//					.addTheme("THM_QUESTION_GRP_LABEL", serviceToken).vcl(VisualControlType.GROUP)
-//					.dataType(tableCellDataType).end().addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).weight(2.0)
-//					.end().addTheme("THM_TABLE_HEADER_CELL_WRAPPER", serviceToken).vcl(VisualControlType.VCL_WRAPPER)
-//					.end().addTheme("THM_TABLE_HEADER_CELL_GROUP_LABEL", serviceToken)
-//					.vcl(VisualControlType.GROUP_LABEL).end().addTheme("THM_DISPLAY_VERTICAL", serviceToken)
-//					.dataType(tableCellDataType).weight(1.0).end().end().build();
+				Validation tableCellValidation = new Validation("VLD_ANYTHING", "Anything", ".*");
 
-            frame = Frame3.builder(frameCode)
-                    /* .addTheme(THM_TABLE_HEADER).end() */
-                    .addTheme("THM_TABLE_BORDER", serviceToken).end()
-                    .question(questionCode) // QUE_TEST_TABLE_HEADER_GRP
-                            .addTheme("THM_QUESTION_GRP_LABEL",serviceToken).vcl(VisualControlType.GROUP).dataType(tableCellDataType).end()
-                            .addTheme("THM_WIDTH_100_PERCENT_NO_INHERIT",serviceToken).vcl(VisualControlType.GROUP).end()
-                            .addTheme("THM_TABLE_ROW_CELL",serviceToken).dataType(tableCellDataType).vcl(VisualControlType.GROUP_WRAPPER).end()			
-                            .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).weight(2.0).end()
-                            .addTheme("THM_TABLE_HEADER_CELL_WRAPPER",serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
-                            .addTheme("THM_TABLE_HEADER_CELL_GROUP_LABEL",serviceToken).vcl(VisualControlType.GROUP_LABEL).end()
-                            .addTheme("THM_DISPLAY_VERTICAL",serviceToken).dataType(tableCellDataType).weight(1.0).end()			
-                    .end()
-                    .build();			
-			
+				List<Validation> tableCellValidations = new ArrayList<>();
+				tableCellValidations.add(tableCellValidation);
+
+				ValidationList tableCellValidationList = new ValidationList();
+				tableCellValidationList.setValidationList(tableCellValidations);
+
+				DataType tableCellDataType = new DataType("DTT_TABLE_CELL_GRP", tableCellValidationList, "Table Cell Group",
+						"");
+
+				frame = Frame3.builder(frameCode)
+								.addTheme("THM_TABLE_BORDER", serviceToken).end()
+								.question(questionCode) // QUE_TEST_TABLE_HEADER_GRP
+									.addTheme("THM_QUESTION_GRP_LABEL",serviceToken).vcl(VisualControlType.GROUP).dataType(tableCellDataType).end()
+									.addTheme("THM_WIDTH_100_PERCENT_NO_INHERIT",serviceToken).vcl(VisualControlType.GROUP).end()
+									.addTheme("THM_TABLE_ROW_CELL",serviceToken).dataType(tableCellDataType).vcl(VisualControlType.GROUP_WRAPPER).end()			
+									.addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).weight(2.0).end()
+									.addTheme("THM_TABLE_HEADER_CELL_WRAPPER",serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
+									.addTheme("THM_TABLE_HEADER_CELL_GROUP_LABEL",serviceToken).vcl(VisualControlType.GROUP_LABEL).end()
+									.addTheme("THM_DISPLAY_VERTICAL",serviceToken).dataType(tableCellDataType).weight(1.0).end()			
+								.end()
+								.build();			
+
+			}
 			
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-
+		
+		
 		QDataBaseEntityMessage msg = FrameUtils2.toMessage(frame, serviceToken, askMsgs);
 		msg.setReplace(true);
 
@@ -462,16 +479,27 @@ public class TableUtilsTest {
 		QDataAskMessage headerAskMsg = new QDataAskMessage(askArray);
 		headerAskMsg.setToken(beUtils.getGennyToken().getToken());
 		headerAskMsg.setReplace(true);
-		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(headerAskMsg));
+		//VertxUtils.writeMsg("webcmds", JsonUtils.toJson(headerAskMsg));
+		
+		// create virtual context
 
 		// Now link the FRM_TABLE_HEADER to that new Question
 		String headerAskCode = headerAsk.getQuestionCode();
 		Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
-		msg = TableUtilsTest.changeQuestion(searchBE,"FRM_TABLE_HEADER", headerAskCode, serviceToken, beUtils.getGennyToken(),
+		QDataBaseEntityMessage msg2 = null;
+		msg2 = TableUtilsTest.changeQuestion(searchBE,"FRM_TABLE_HEADER", headerAskCode, serviceToken, beUtils.getGennyToken(),
 				askMsgs);
-		msg.setToken(beUtils.getGennyToken().getToken());
-		msg.setReplace(true);
-		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+		msg2.setToken(beUtils.getGennyToken().getToken());
+		msg2.setReplace(true);
+		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg2));
+		
+		QDataAskMessage[] askMsgArr = askMsgs.toArray(new QDataAskMessage[0]);
+		ContextList contextList = askMsgArr[0].getItems()[0].getContextList();
+		headerAskMsg.getItems()[0].setContextList(contextList);
+
+		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(headerAskMsg));
+		
+		askMsgs.clear();
 
 		/* Now to display the rows */
 		List<BaseEntity> rowList = Arrays.asList(msg.getItems());
@@ -494,12 +522,21 @@ public class TableUtilsTest {
 
 		for (QDataAskMessage askMsg : askMsgs) {
 			askMsg.setToken(beUtils.getGennyToken().getToken());
-			askMsg.getItems()[0] = headerAsk;
+			//askMsg.getItems()[0] = headerAsk;
 			askMsg.setReplace(true);
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(askMsg));
 		}
 
 		/* link single ask QUE_TEST_TABLE_RESULTS_GRP to FRM_TABLE_CONTENT ? */
+		String tableResultAskCode = tableResultAsk.getQuestionCode();
+		Set<QDataAskMessage> tableResultAskMsgs = new HashSet<QDataAskMessage>();
+		
+		QDataBaseEntityMessage msg3 = null;
+		msg3 = TableUtilsTest.changeQuestion(searchBE,"FRM_TABLE_CONTENT", tableResultAskCode, serviceToken, beUtils.getGennyToken(),
+				tableResultAskMsgs);
+		msg3.setToken(beUtils.getGennyToken().getToken());
+		msg3.setReplace(true);
+		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg3));
 
 	}
 
