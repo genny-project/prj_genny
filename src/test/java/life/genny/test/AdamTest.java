@@ -137,7 +137,7 @@ public void testTableHeader() {
 	  		  	     .addColumn("PRI_NAME", "Name")
 	  		      	 .addColumn("PRI_LANDLINE", "Phone")
 	  		  	     .addColumn("PRI_EMAIL", "Email")
-	  		  	     .addColumn("PRI_MOBILE", "Telephone") 
+	  		  	     .addColumn("PRI_MOBILE", "Mobile") 
 	  		  	     .addColumn("PRI_ADDRESS_CITY","City")
 	  		  	     .addColumn("PRI_ADDRESS_STATE","State")
 	  		  	     .setPageStart(0)
