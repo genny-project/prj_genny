@@ -518,6 +518,10 @@ public class TableUtilsTest {
 		Ask tableResultAsk = new Ask(tableResultQuestion, beUtils.getGennyToken().getUserCode(),
 				beUtils.getGennyToken().getUserCode());
 		tableResultAsk.setChildAsks(rowAsksArr);
+		QDataAskMessage[] askMsgArr2 = askMsgs.toArray(new QDataAskMessage[0]);
+		ContextList contextList2 = askMsgArr[0].getItems()[0].getContextList();
+		tableResultAsk.setContextList(contextList2);
+
 		askMsgs.add(new QDataAskMessage(tableResultAsk));
 
 		for (QDataAskMessage askMsg : askMsgs) {
