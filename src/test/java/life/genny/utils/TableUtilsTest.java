@@ -553,7 +553,6 @@ public class TableUtilsTest {
 			askMsg.setReplace(true);
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(askMsg));
 		}
-
 		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg3));
 
 
