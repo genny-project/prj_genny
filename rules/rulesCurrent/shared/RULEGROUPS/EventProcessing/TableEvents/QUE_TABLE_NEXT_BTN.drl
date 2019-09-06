@@ -7,6 +7,8 @@ import life.genny.models.GennyToken;
 import life.genny.utils.VertxUtils;
 import io.vertx.core.json.JsonObject;
 import life.genny.utils.OutputParam;
+import life.genny.qwanda.entity.SearchEntity;
+
 
 rule "QUE_TABLE_NEXT_BTN"
     ruleflow-group 'EventProcessing'
@@ -16,20 +18,57 @@ rule "QUE_TABLE_NEXT_BTN"
     	
 		$message : QEventMessage(data.code matches "QUE_TABLE_.*" )	
 		userToken : GennyToken (code != "PER_SERVICE" )
+		beUtils : BaseEntityUtils()
 		output : OutputParam( )
     then
 	
 		System.out.println("Processing Answer/Data : " + $message );
 		System.out.println("Parent code :  " + $message.getData().getParentCode());
 		
+		/* get current search */
+		String searchBarCode = "SBE_SEARCHBAR";
+		String sessionSearchCode = searchBarCode + "_" + beUtils.getGennyToken().getSessionCode();
+		SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", sessionSearchCode, SearchEntity.class,
+				serviceToken.getToken());
+
+		if (searchBE == null) {
+			searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", searchBarCode, SearchEntity.class,
+					serviceToken.getToken());
+			/*
+			 * Save Session Search in cache , ideally this should be in OutputParam and
+			 * saved to workflow
+			 */
+			VertxUtils.putObject(serviceToken.getRealm(), "", sessionSearchCode, searchBE, serviceToken.getToken());
+		}
+		
+		
 		switch($message.getData().getCode()){
 
-			case "QUE_TABLE_NEXT_BTN" : System.out.println("NEXT"); break;
+			case "QUE_TABLE_NEXT_BTN" : System.out.println("NEXT"); 
+			
+			Integer pageIndex = searchBE.getValue("SCH_PAGE_START",0);
+			Integer pageSize = searchBE.getValue("SCH_PAGE_SIZE",10);
+			pageIndex = pageIndex + pageSize;
+			Answer pageAnswer = new Answer(beUtils.getGennyToken().getUserCode(), beUtils.getGennyToken().getUserCode(),
+				"SCH_PAGE_START", pageIndex+"");
+			beUtils.saveAnswer(pageAnswer);
+			
+			
+			break;
 
 			case "QUE_TABLE_PREV_BTN" : System.out.println("PREV"); break;
+			Integer pageIndex = searchBE.getValue("SCH_PAGE_START",0);
+			Integer pageSize = searchBE.getValue("SCH_PAGE_SIZE",10);
+			pageIndex = pageIndex - pageSize;
+			if (pageIndex < 0) { pageIndex = 0; }
+			Answer pageAnswer = new Answer(beUtils.getGennyToken().getUserCode(), beUtils.getGennyToken().getUserCode(),
+				"SCH_PAGE_START", pageIndex+"");
+			beUtils.saveAnswer(pageAnswer);
 
 			default : System.out.println("ERROR!! "+$message.getData().getCode()+" DETECTED");	break;
 		}
+		
+		 TableUtils.performSearch(serviceToken , beUtils, "SBE_SEARCHBAR", null);
 		
 		
 		retract( $message);
