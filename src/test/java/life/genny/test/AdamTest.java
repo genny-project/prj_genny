@@ -129,10 +129,10 @@ public void testTableHeader() {
 //					.addToken(userToken)
 //					.build();
 //			gks.start();
-          String searchBarString = "univ";
+          String searchBarString = "Adam";
         
 		  SearchEntity searchBE = new SearchEntity("SBE_SEARCH","Search")
-	  		  	     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
+	  		  	     .addSort("PRI_NAME","Name",SearchEntity.Sort.ASC)
 	  		  	     .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%"+searchBarString+"%")
 	  		  	     .addColumn("PRI_NAME", "Name")
 	  		      	 .addColumn("PRI_LANDLINE", "Phone")
@@ -143,8 +143,13 @@ public void testTableHeader() {
 	  		  	     .setPageStart(0)
 	  		  	     .setPageSize(10);
 
- 
-		  			TableUtilsTest.performSearch(serviceToken , beUtils, searchBE);
+	 	     searchBE.setRealm(serviceToken.getRealm());
+	  	     
+	  		 VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken.getToken());
+	 
+		  Answer answer = new Answer(userToken.getUserCode(),userToken.getUserCode(),"PRI_SEARCH_TEXT",searchBarString);
+		  
+		  			TableUtilsTest.performSearch(serviceToken , beUtils, "SBE_SEARCHBAR", answer);
    		  	     
   		  	     /* Send to front end */
    					
