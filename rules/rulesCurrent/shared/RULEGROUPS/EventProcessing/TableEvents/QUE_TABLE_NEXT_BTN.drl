@@ -42,8 +42,6 @@ rule "QUE_TABLE_NEXT_BTN"
 		}
 		
 		
-		switch($message.getData().getCode()){
-
 			if ( "QUE_TABLE_NEXT_BTN".equals($message.getData().getCode()))  { 
 			System.out.println("NEXT"); 
 			
@@ -58,7 +56,7 @@ rule "QUE_TABLE_NEXT_BTN"
 			}
 
 			if ( "QUE_TABLE_PREV_BTN".equals($message.getData().getCode()))  { 
-			System.out.println("PREV"); break;
+			System.out.println("PREV"); 
 			Integer pageIndex = searchBE.getValue("SCH_PAGE_START",0);
 			Integer pageSize = searchBE.getValue("SCH_PAGE_SIZE",10);
 			pageIndex = pageIndex - pageSize;
