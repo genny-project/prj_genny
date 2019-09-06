@@ -17,7 +17,7 @@ rule "QUE_TABLE_NEXT_BTN"
     when
     	
 		$message : QEventMessage(data.code matches "QUE_TABLE_.*" )	
-		userToken : GennyToken (code != "PER_SERVICE" )
+	    serviceToken : GennyToken( code == "PER_SERVICE") 
 		beUtils : BaseEntityUtils()
 		output : OutputParam( )
     then
@@ -44,7 +44,8 @@ rule "QUE_TABLE_NEXT_BTN"
 		
 		switch($message.getData().getCode()){
 
-			case "QUE_TABLE_NEXT_BTN" : System.out.println("NEXT"); 
+			if ( "QUE_TABLE_NEXT_BTN".equals($message.getData().getCode()))  { 
+			System.out.println("NEXT"); 
 			
 			Integer pageIndex = searchBE.getValue("SCH_PAGE_START",0);
 			Integer pageSize = searchBE.getValue("SCH_PAGE_SIZE",10);
@@ -54,9 +55,10 @@ rule "QUE_TABLE_NEXT_BTN"
 			beUtils.saveAnswer(pageAnswer);
 			
 			
-			break;
+			}
 
-			case "QUE_TABLE_PREV_BTN" : System.out.println("PREV"); break;
+			if ( "QUE_TABLE_PREV_BTN".equals($message.getData().getCode()))  { 
+			System.out.println("PREV"); break;
 			Integer pageIndex = searchBE.getValue("SCH_PAGE_START",0);
 			Integer pageSize = searchBE.getValue("SCH_PAGE_SIZE",10);
 			pageIndex = pageIndex - pageSize;
@@ -65,7 +67,6 @@ rule "QUE_TABLE_NEXT_BTN"
 				"SCH_PAGE_START", pageIndex+"");
 			beUtils.saveAnswer(pageAnswer);
 
-			default : System.out.println("ERROR!! "+$message.getData().getCode()+" DETECTED");	break;
 		}
 		
 		 TableUtils.performSearch(serviceToken , beUtils, "SBE_SEARCHBAR", null);
