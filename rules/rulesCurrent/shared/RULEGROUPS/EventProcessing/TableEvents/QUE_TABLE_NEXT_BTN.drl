@@ -53,6 +53,6 @@ rule "QUE_TABLE_NEXT_BTN"
 		
 		
 		retract( $message);
-		/* output.setFormCode("FRM_TABLE_VIEW","FRM_CONTENT"); */
+		output.setFormCode("FRM_TABLE_VIEW","FRM_CONTENT"); 
 		
 end
