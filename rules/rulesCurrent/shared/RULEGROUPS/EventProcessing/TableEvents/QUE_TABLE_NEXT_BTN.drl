@@ -32,7 +32,7 @@ rule "QUE_TABLE_NEXT_BTN"
 		/* get current search */
 		String searchBarCode = "SBE_SEARCHBAR";
 		String sessionSearchCode = searchBarCode + "_" + beUtils.getGennyToken().getSessionCode();
-		SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", sessionSearchCode, SearchEntity.class,
+		SearchEntity searchBE = VertxUtils.getObject(userToken.getRealm(), "", sessionSearchCode, SearchEntity.class,
 				userToken.getToken());
 
 		if (searchBE == null) {

@@ -36,8 +36,8 @@ rule "QUE_TABLE_PREV_BTN"
 				userToken.getToken());
 
 		if (searchBE == null) {
-			searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", searchBarCode, SearchEntity.class,
-					serviceToken.getToken());
+			searchBE = VertxUtils.getObject(userToken.getRealm(), "", searchBarCode, SearchEntity.class,
+					userToken.getToken());
 		}
 		
 		
