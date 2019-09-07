@@ -74,7 +74,9 @@ public class TableUtilsTest {
 			// Clean up search Text
 			searchBarString = searchBarString.trim();
 			searchBarString = searchBarString.replaceAll("[^a-zA-Z0-9\\ ]", "");
-			searchBarString.substring(0,  MAX_SEARCH_BAR_TEXT_SIZE); 
+			Integer max = searchBarString.length();
+			Integer realMax = (max > MAX_SEARCH_BAR_TEXT_SIZE)?MAX_SEARCH_BAR_TEXT_SIZE:max;
+			searchBarString.substring(0,  realMax); 
 			log.info("Search text = [" + searchBarString + "]");
 		}
 		
