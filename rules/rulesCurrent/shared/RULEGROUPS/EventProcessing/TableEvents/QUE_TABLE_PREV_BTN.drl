@@ -9,6 +9,7 @@ import io.vertx.core.json.JsonObject;
 import life.genny.utils.OutputParam;
 import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwanda.Answer;
+import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.TableUtils;
 
 
@@ -19,13 +20,14 @@ rule "QUE_TABLE_PREV_BTN"
     when
     	
 		$message : QEventMessage(data.code matches "QUE_TABLE_PREV_BTN" )	
-	    serviceToken : GennyToken( code == "PER_SERVICE") 
-		beUtils : BaseEntityUtils()
+	    userToken : GennyToken ( code != "PER_SERVICE" ) 
 		output : OutputParam( )
     then
 	
 		System.out.println("Processing Answer/Data : " + $message );
 		System.out.println("Parent code :  " + $message.getData().getParentCode());
+		
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken); 
 		
 		/* get current search */
 		String searchBarCode = "SBE_SEARCHBAR";
