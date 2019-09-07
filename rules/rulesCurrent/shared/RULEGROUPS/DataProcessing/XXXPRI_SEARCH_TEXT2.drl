@@ -33,53 +33,12 @@ rule "XXXPRI_SEARCH_TEXT2"
 	  
      then
  		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
-		String sourceCode = beUtils.getGennyToken().getUserCode();
-		String targetCode = answer.getTargetCode();
-		
-		/* Perform a search bar search */
-		String searchBarString = answer.getValue();
-		searchBarString = searchBarString.trim();
-		System.out.println("Search text = ["+searchBarString+"]");
-		
-		/* fetch Session SearchBar List from User */
-		BaseEntity user = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", beUtils.getGennyToken().getUserCode(),
-				BaseEntity.class, beUtils.getGennyToken().getToken());
-		Type type = new TypeToken<List<String>>() {
-				}.getType();
-		List<String> defaultList = new ArrayList<String>();
-		String defaultListString = JsonUtils.toJson(defaultList);
-		String historyStr = user.getValue("PRI_SEARCH_HISTORY",defaultListString);
-		List<String> searchHistory = JsonUtils.fromJson(historyStr, type);
-		
-		/* Add new SearchBarString to Session SearchBar List */
-		searchHistory.add(0, searchBarString);
-		String newHistoryString = JsonUtils.toJson(searchHistory);
-		Answer history = new Answer(beUtils.getGennyToken().getUserCode(),beUtils.getGennyToken().getUserCode(),"PRI_SEARCH_HISTORY",newHistoryString);
-		beUtils.saveAnswer(history);
-		
-		/* Look up Search */
-		  SearchEntity searchBE = new SearchEntity("SBE_SEARCH","Search")
-  	     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
-  	     .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%"+searchBarString+"%")
-  	     .addColumn("PRI_FIRSTNAME","Firstname")
-  	     .addColumn("PRI_LASTNAME","Surname")
-  	     .setPageStart(0)
-  	     .setPageSize(10);
-  	     
-  	     TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
-  	     
-  	     QDataBaseEntityMessage  msg = tableUtils.fetchSearchResults(searchBE,beUtils.getGennyToken());
-  	     
-  	     
-  	     TableData tableData = tableUtils.generateTableAsks(searchBE,beUtils.getGennyToken(),  msg);
+ 		TableUtilsTest.performSearch(serviceToken , beUtils, "SBE_SEARCHBAR", answer);
   	     
   	     /* Send to front end */
-  	     
-  	     
-  	     
+   	     
   	     output.setFormCode("FRM_TABLE_VIEW","FRM_CONTENT");
-  	     
-  	     
-		retract(answer);
+		retract(answer);  	     
+
 	
 end

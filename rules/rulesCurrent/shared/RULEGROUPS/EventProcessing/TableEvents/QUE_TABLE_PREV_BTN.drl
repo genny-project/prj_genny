@@ -12,13 +12,13 @@ import life.genny.qwanda.Answer;
 import life.genny.utils.TableUtils;
 
 
-rule "QUE_TABLE_NEXT_BTN"
+rule "QUE_TABLE_PREV_BTN"
     ruleflow-group 'EventProcessing'
 	salience 2
     no-loop
     when
     	
-		$message : QEventMessage(data.code matches "QUE_TABLE_NEXT_BTN" )	
+		$message : QEventMessage(data.code matches "QUE_TABLE_PREV_BTN" )	
 	    serviceToken : GennyToken( code == "PER_SERVICE") 
 		beUtils : BaseEntityUtils()
 		output : OutputParam( )
@@ -43,7 +43,10 @@ rule "QUE_TABLE_NEXT_BTN"
 			
 			Integer pageIndex = searchBE.getValue("SCH_PAGE_START",0);
 			Integer pageSize = searchBE.getValue("SCH_PAGE_SIZE",10);
-			pageIndex = pageIndex + pageSize;
+			pageIndex = pageIndex - pageSize;
+			if (pageIndex < 0) {
+				pageIndex= 0;
+			}
 			Answer pageAnswer = new Answer(beUtils.getGennyToken().getUserCode(),sessionSearchCode,
 				"SCH_PAGE_START", pageIndex+"");
 			beUtils.addAnswer(pageAnswer);
@@ -51,8 +54,7 @@ rule "QUE_TABLE_NEXT_BTN"
 		
 		 TableUtils.performSearch(serviceToken , beUtils, "SBE_SEARCHBAR", null);
 		
-		
 		retract( $message);
-		/* output.setFormCode("FRM_TABLE_VIEW","FRM_CONTENT"); */
+	/*	output.setFormCode("FRM_TABLE_VIEW","FRM_CONTENT"); */
 		
 end

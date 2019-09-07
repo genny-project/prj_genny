@@ -84,9 +84,137 @@ public class AdamTest {
 
 	}
 
+	@Test
+	public void paginationTest()
+	{
+		System.out.println("Pagination Test");
+		GennyToken userToken = null;
+		GennyToken userToken2 = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (true) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			userToken2 = GennyJbpmBaseTest.createGennyToken(realm, "user2", "Barry2 Allan2", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+		} else {
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+		}
+
+		System.out.println("session     =" + userToken.getSessionCode());
+		System.out.println("userToken   =" + userToken.getToken());
+		System.out.println("userToken2   =" + userToken2.getToken());
+		System.out.println("serviceToken=" + serviceToken.getToken());
+
+		QEventMessage initMsg = new QEventMessage("EVT_MSG", "INIT_STARTUP");
+
+		QEventMessage authInitMsg1 = new QEventMessage("EVT_MSG", "AUTH_INIT"); authInitMsg1.setToken(userToken.getToken());
+		QEventMessage authInitMsg2 = new QEventMessage("EVT_MSG", "AUTH_INIT");authInitMsg2.setToken(userToken2.getToken());
+		QEventMessage msg1 = new QEventMessage("EVT_MSG", "INIT_1");
+		QEventMessage msgLogout1 = new QEventMessage("EVT_MSG", "LOGOUT");msgLogout1.setToken(userToken.getToken());
+		QEventMessage msgLogout2 = new QEventMessage("EVT_MSG", "LOGOUT");msgLogout2.setToken(userToken2.getToken());
+
+		
+		List<Answer> answers = new ArrayList<Answer>();
+		answers.add(new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_FIRSTNAME", "Bruce"));
+		answers.add(new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_LASTNAME", "Wayne"));
+		answers.add(new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_ADDRESS_JSON", 
+			//	"{\"street_number\":\"64\",\"street_name\":\"Fakenham Road\",\"suburb\":\"Ashburton\",\"state\":\"Victoria\",\"country\":\"AU\",\"postal_code\":\"3147\",\"full_address\":\"64 Fakenham Rd, Ashburton VIC 3147, Australia\",\"street_address\":\"64 Fakenham Road\"}"));
+		"{\"street_number\":\"64\",\"street_name\":\"Fakenham Road\",\"suburb\":\"Ashburton\",\"state\":\"Victoria\",\"country\":\"AU\",\"postal_code\":\"3147\",\"full_address\":\"64 Fakenham Rd, Ashburton VIC 3147, Australia\",\"latitude\":-37.863208,\"longitude\":145.092359,\"street_address\":\"64 Fakenham Road\"}"));
+		
+		QDataAnswerMessage answerMsg = new QDataAnswerMessage(answers.toArray(new Answer[0]));
+		answerMsg.setToken(userToken.getToken());
+	
+		Answer searchBarAnswer = new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_SEARCH_TEXT2", "univ");
+		QDataAnswerMessage searchMsg = new QDataAnswerMessage(searchBarAnswer);
+		searchMsg.setToken(userToken.getToken());
+
+		// NOW SET UP Some baseentitys
+		BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
+				StringUtils.capitaliseAllWords(serviceToken.getRealm()));
+		project.setRealm(serviceToken.getRealm());
+		VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
+				JsonUtils.toJson(project), serviceToken.getToken());
+		VertxUtils.writeCachedJson(realm,  ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(),JsonUtils.toJson(project), serviceToken.getToken());
+		 BaseEntity project2 = VertxUtils.getObject(serviceToken.getRealm(), "", "PRJ_" + serviceToken.getRealm().toUpperCase(),
+				BaseEntity.class, serviceToken.getToken());
 
 
-@Test
+
+		GennyKieSession gks = null;
+
+		try {
+			gks = GennyKieSession.builder(serviceToken,true)
+					.addDrl("SignalProcessing")
+					.addDrl("DataProcessing")
+					.addDrl("EventProcessing")
+					.addDrl("InitialiseProject")
+					.addDrl("XXXPRI_SEARCH_TEXT2.drl")
+					.addJbpm("InitialiseProject")
+					.addJbpm("Lifecycles")
+					.addDrl("AuthInit")
+					.addJbpm("AuthInit")
+
+					.addToken(userToken)
+					.build();
+			gks.start();
+			
+			
+			BaseEntity icn_sort = new BaseEntity("ICN_SORT","Icon Sort");
+			try {
+				
+				icn_sort.addAttribute(RulesUtils.getAttribute("PRI_ICON_CODE", serviceToken.getToken()), 1.0, "sort");
+				icn_sort.setRealm(realm);
+				VertxUtils.writeCachedJson(realm,   "ICN_SORT",JsonUtils.toJson(icn_sort), serviceToken.getToken());
+
+			} catch (BadDataException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+			
+			gks.injectEvent(initMsg); // This should create a new process
+
+			gks.injectEvent(authInitMsg1); // This should create a new process
+			gks.advanceSeconds(5, false);
+			gks.injectEvent(authInitMsg1); // This should attach to existing process
+			gks.advanceSeconds(5, false);
+
+			gks.injectEvent(answerMsg); // This sends an answer to the first userSessio
+			gks.advanceSeconds(5, false);
+			
+			BaseEntity user = VertxUtils.getObject(serviceToken.getRealm(), "", userToken.getUserCode(),
+					BaseEntity.class, serviceToken.getToken());
+
+			gks.injectEvent(searchMsg); // This sends a search bar request
+			
+			QEventMessage pageNextMsg = new QEventMessage("EVT_MSG", "QUE_TABLE_NEXT_BTN");pageNextMsg.setToken(userToken.getToken());
+			QEventMessage pagePrevMsg = new QEventMessage("EVT_MSG", "QUE_TABLE_PREV_BTN");pagePrevMsg.setToken(userToken.getToken());
+			gks.injectEvent(pageNextMsg); // This sends a page Next request
+			gks.injectEvent(pageNextMsg); // This sends a page Next request
+			gks.injectEvent(pagePrevMsg); // This sends a page Prev request
+
+			gks.injectEvent(msgLogout1);
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
+		finally {
+			if (gks!=null) {
+				gks.close();
+			}
+		}
+	}
+
+//@Test
 public void testTableHeader() {
 	System.out.println("Table test");
 	GennyToken userToken = null;
@@ -121,14 +249,21 @@ public void testTableHeader() {
 		GennyKieSession gks = null;
 
 		try {
-//			gks = GennyKieSession.builder(serviceToken,true)
-//					.addDrl("InitialiseProject")
-//					.addDrl("XXXPRI_SEARCH_TEXT2.drl")
-//					.addJbpm("InitialiseProject")
-//
-//					.addToken(userToken)
-//					.build();
-//			gks.start();
+			gks = GennyKieSession.builder(serviceToken,true)
+					.addDrl("SignalProcessing")
+					.addDrl("DataProcessing")
+					.addDrl("EventProcessing")
+					.addDrl("InitialiseProject")
+					.addDrl("XXXPRI_SEARCH_TEXT2.drl")
+					.addJbpm("InitialiseProject")
+					.addJbpm("Lifecycles")
+					.addDrl("AuthInit")
+					.addJbpm("AuthInit")
+
+					.addToken(userToken)
+					.build();
+			gks.start();
+			
           String searchBarString = "Adam";
         
 		  SearchEntity searchBE = new SearchEntity("SBE_SEARCH","Search")
