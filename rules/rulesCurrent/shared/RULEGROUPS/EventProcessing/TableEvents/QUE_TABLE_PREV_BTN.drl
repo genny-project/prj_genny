@@ -32,8 +32,8 @@ rule "QUE_TABLE_PREV_BTN"
 		/* get current search */
 		String searchBarCode = "SBE_SEARCHBAR";
 		String sessionSearchCode = searchBarCode + "_" + beUtils.getGennyToken().getSessionCode();
-		SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", sessionSearchCode, SearchEntity.class,
-				serviceToken.getToken());
+		SearchEntity searchBE = VertxUtils.getObject(userToken.getRealm(), "", sessionSearchCode, SearchEntity.class,
+				userToken.getToken());
 
 		if (searchBE == null) {
 			searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", searchBarCode, SearchEntity.class,
@@ -54,7 +54,7 @@ rule "QUE_TABLE_PREV_BTN"
 			beUtils.addAnswer(pageAnswer);
 			
 		
-		 TableUtils.performSearch(serviceToken , beUtils, "SBE_SEARCHBAR", null);
+		 TableUtils.performSearch(userToken , beUtils, "SBE_SEARCHBAR", null);
 		
 		retract( $message);
 		output.setFormCode("FRM_TABLE_VIEW","FRM_CONTENT"); 

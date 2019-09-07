@@ -33,11 +33,11 @@ rule "QUE_TABLE_NEXT_BTN"
 		String searchBarCode = "SBE_SEARCHBAR";
 		String sessionSearchCode = searchBarCode + "_" + beUtils.getGennyToken().getSessionCode();
 		SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", sessionSearchCode, SearchEntity.class,
-				serviceToken.getToken());
+				userToken.getToken());
 
 		if (searchBE == null) {
-			searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", searchBarCode, SearchEntity.class,
-					serviceToken.getToken());
+			searchBE = VertxUtils.getObject(userToken.getRealm(), "", searchBarCode, SearchEntity.class,
+					userToken.getToken());
 		}
 		
 		
@@ -51,7 +51,7 @@ rule "QUE_TABLE_NEXT_BTN"
 			beUtils.addAnswer(pageAnswer);
 			
 		
-		 TableUtils.performSearch(serviceToken , beUtils, "SBE_SEARCHBAR", null);
+		 TableUtils.performSearch(userToken , beUtils, "SBE_SEARCHBAR", null);
 		
 		
 		retract( $message);
