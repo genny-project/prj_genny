@@ -131,9 +131,8 @@ public class TableUtilsTest {
 		}
 
 
-		if (answer != null) {
 			searchBE.addFilter("PRI_NAME", SearchEntity.StringFilter.LIKE, "%" + searchBarString + "%");
-		}
+
 		// Send out Search Results
 
 		QDataBaseEntityMessage msg = tableUtils.fetchSearchResults(searchBE, beUtils.getGennyToken());
