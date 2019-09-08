@@ -13,13 +13,13 @@ import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.TableUtils;
 
 
-rule "QUE_TABLE_PREV_BTN"
+rule "QUE_TABLE_PREVIOUS_BTN"
     ruleflow-group 'EventProcessing'
 	salience 2
     no-loop
     when
     	
-		$message : QEventMessage(data.code matches "QUE_TABLE_PREV_BTN" )	
+		$message : QEventMessage(data.code matches "QUE_TABLE_PREVIOUS_BTN" )	
 	    userToken : GennyToken ( code != "PER_SERVICE" ) 
 		output : OutputParam( )
     then
