@@ -122,12 +122,14 @@ public class RahulTest extends GennyJbpmBaseTest {
 		}
 		
 		BaseEntity intern = new BaseEntity("PRI_INTERN");
-		BaseEntity internship = new BaseEntity("PRI_INTERNSHIP");
+		BaseEntity internship = new BaseEntity("BE_INTERNSHIP");		
+		BaseEntity hostCompany = new BaseEntity("CPY_HOSTCOMPANY");
 
 	    HashMap<String, BaseEntity> hashBeg = new HashMap<String, BaseEntity>();
 	    
 	    hashBeg.put("intern", intern);
 	    hashBeg.put("internship", internship);
+	    hashBeg.put("hostCompany", hostCompany);
 
 		System.out.println("session     =" + userToken.getSessionCode());
 		System.out.println("userToken   =" + userToken.getToken());
@@ -151,15 +153,32 @@ public class RahulTest extends GennyJbpmBaseTest {
 
 		try {
 			gks = GennyKieSession.builder(serviceToken, true)
+					.addJbpm("internshipLifecycle.bpmn")
 					.addJbpm("applicationLifecycle.bpmn")
 					.addToken(userToken)
 					.build();
 			gks.start();
 			
 			gks.advanceSeconds(5, true);
+		
+			System.out.println("TEST:: Activating Internship Lifecycle");
+
+			gks.injectSignal("newInternship", hashBeg);
+			
+			gks.advanceSeconds(5, true);
+
+			System.out.println("TEST:: Activating Application Lifecycle");
 
 			gks.injectSignal("newApplication", hashBeg);
 			
+			gks.advanceSeconds(5, true);
+			
+			gks.injectSignal("controlSignal", "FOWARD");
+
+			gks.advanceSeconds(5, true);
+			
+			gks.injectSignal("controlSignal", "FOWARD");
+
 			gks.advanceSeconds(5, true);
 			
 		} catch (Exception e) {
