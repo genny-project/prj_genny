@@ -47,6 +47,7 @@ import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.EntityEntity;
 import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwanda.exception.BadDataException;
+import life.genny.qwanda.message.MessageData;
 import life.genny.qwanda.message.QBulkMessage;
 import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.qwanda.message.QDataAskMessage;
@@ -93,7 +94,7 @@ public class AdamTest {
 		GennyToken serviceToken = null;
 		QRules qRules = null;
 
-		if (true) {
+		if (false) {
 			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 			userToken2 = GennyJbpmBaseTest.createGennyToken(realm, "user2", "Barry2 Allan2", "user");
 			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
@@ -111,16 +112,29 @@ public class AdamTest {
 
 		System.out.println("session     =" + userToken.getSessionCode());
 		System.out.println("userToken   =" + userToken.getToken());
-		System.out.println("userToken2   =" + userToken2.getToken());
+		//System.out.println("userToken2   =" + userToken2.getToken());
 		System.out.println("serviceToken=" + serviceToken.getToken());
 
 		QEventMessage initMsg = new QEventMessage("EVT_MSG", "INIT_STARTUP");
 
 		QEventMessage authInitMsg1 = new QEventMessage("EVT_MSG", "AUTH_INIT"); authInitMsg1.setToken(userToken.getToken());
-		QEventMessage authInitMsg2 = new QEventMessage("EVT_MSG", "AUTH_INIT");authInitMsg2.setToken(userToken2.getToken());
+		//QEventMessage authInitMsg2 = new QEventMessage("EVT_MSG", "AUTH_INIT");authInitMsg2.setToken(userToken2.getToken());
 		QEventMessage msg1 = new QEventMessage("EVT_MSG", "INIT_1");
+		
+
+		/*  table next btn event */
+		
+		MessageData data = new MessageData("QUE_TABLE_NEXT_BTN");
+		data.setParentCode("QUE_TABLE_FOOTER_GRP");
+		data.setCode("QUE_TABLE_FOOTER_GRP");
+
+		QEventMessage nextEvtMsg = new QEventMessage("EVT_MSG", "BTN_CLICK");
+		nextEvtMsg.setToken(userToken.getToken());
+		nextEvtMsg.setData(data);
+		
+		
 		QEventMessage msgLogout1 = new QEventMessage("EVT_MSG", "LOGOUT");msgLogout1.setToken(userToken.getToken());
-		QEventMessage msgLogout2 = new QEventMessage("EVT_MSG", "LOGOUT");msgLogout2.setToken(userToken2.getToken());
+	//	QEventMessage msgLogout2 = new QEventMessage("EVT_MSG", "LOGOUT");msgLogout2.setToken(userToken2.getToken());
 
 		
 		List<Answer> answers = new ArrayList<Answer>();
@@ -156,9 +170,11 @@ public class AdamTest {
 					.addDrl("SignalProcessing")
 					.addDrl("DataProcessing")
 					.addDrl("EventProcessing")
-					.addDrl("InitialiseProject")
-					.addDrl("XXXPRI_SEARCH_TEXT2.drl")
-					.addJbpm("InitialiseProject")
+					//.addDrl("InitialiseProject")
+					//.addDrl("XXXPRI_SEARCH_TEXT2.drl")
+					.addDrl("QUE_TABLE_NEXT_BTN.drl")
+					//.addDrl("XXXQUE_TABLE_NEXT_BTN.drl")
+					//.addJbpm("InitialiseProject")
 					.addJbpm("Lifecycles")
 					.addDrl("AuthInit")
 					.addJbpm("AuthInit")
@@ -199,8 +215,8 @@ public class AdamTest {
 			QEventMessage pageNextMsg = new QEventMessage("EVT_MSG", "QUE_TABLE_NEXT_BTN");pageNextMsg.setToken(userToken.getToken());
 			QEventMessage pagePrevMsg = new QEventMessage("EVT_MSG", "QUE_TABLE_PREV_BTN");pagePrevMsg.setToken(userToken.getToken());
 			gks.injectEvent(pageNextMsg); // This sends a page Next request
-			gks.injectEvent(pageNextMsg); // This sends a page Next request
-			gks.injectEvent(pagePrevMsg); // This sends a page Prev request
+			//gks.injectEvent(pageNextMsg); // This sends a page Next request
+		//	gks.injectEvent(pagePrevMsg); // This sends a page Prev request
 
 			gks.injectEvent(msgLogout1);
 		} catch (Exception e) {
@@ -477,6 +493,15 @@ public void testTableHeader() {
 
 		QEventMessage authInitMsg1 = new QEventMessage("EVT_MSG", "AUTH_INIT"); authInitMsg1.setToken(userToken.getToken());
 		QEventMessage authInitMsg2 = new QEventMessage("EVT_MSG", "AUTH_INIT");authInitMsg2.setToken(userToken2.getToken());
+		
+		MessageData data = new MessageData("QUE_TABLE_NEXT_BTN");
+		data.setParentCode("QUE_TABLE_FOOTER_GRP");
+		data.setRootCode("QUE_TABLE_FOOTER_GRP");
+
+		QEventMessage nextEvtMsg = new QEventMessage("EVT_MSG", "BTN_CLICK");
+		nextEvtMsg.setToken(userToken.getToken());
+		nextEvtMsg.setData(data);
+
 		QEventMessage msg1 = new QEventMessage("EVT_MSG", "INIT_1");
 		QEventMessage msgLogout1 = new QEventMessage("EVT_MSG", "LOGOUT");msgLogout1.setToken(userToken.getToken());
 		QEventMessage msgLogout2 = new QEventMessage("EVT_MSG", "LOGOUT");msgLogout2.setToken(userToken2.getToken());
