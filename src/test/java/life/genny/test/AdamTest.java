@@ -262,7 +262,7 @@ public void testTableHeader() {
 	
 	
 	
-	//@Test
+	@Test
 	public void newUserTest()
 	{
 		System.out.println("New User test");

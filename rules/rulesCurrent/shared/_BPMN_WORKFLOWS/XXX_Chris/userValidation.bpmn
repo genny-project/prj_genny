@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.0.Final-v20180515-1642-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.1.Final-v20190425-2005-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
   <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false" structureRef="life.genny.models.GennyToken"/>
   <bpmn2:itemDefinition id="ItemDefinition_323" isCollection="false" structureRef="life.genny.utils.BaseEntityUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_325" isCollection="false" structureRef="life.genny.qwanda.entity.BaseEntity"/>
@@ -9,7 +9,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_231" isCollection="false" structureRef="life.genny.utils.VertxUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_6" isCollection="false" structureRef="java.lang.Integer"/>
   <bpmn2:itemDefinition id="ItemDefinition_531" isCollection="false" structureRef="java.lang.Long"/>
-  <bpmn2:itemDefinition id="ItemDefinition_536" isCollection="false" structureRef="life.genny.utils.CallingProcessToken"/>
+  <bpmn2:itemDefinition id="ItemDefinition_538" isCollection="false" structureRef="life.genny.utils.CallingProcessToken"/>
   <bpmn2:signal id="Signal_1" name="#{userToken.getUserCode()}"/>
   <bpmn2:signal id="Signal_2" name="userToken"/>
   <bpmn2:signal id="Signal_3" name="#{userCode}"/>
@@ -31,11 +31,11 @@
     <bpmn2:property id="userCode" itemSubjectRef="ItemDefinition_10" name="userCode"/>
     <bpmn2:property id="beUtils" itemSubjectRef="ItemDefinition_323" name="beUtils"/>
     <bpmn2:property id="processId" itemSubjectRef="ItemDefinition_531" name="processId"/>
-    <bpmn2:property id="callingProcessToken" itemSubjectRef="ItemDefinition_536" name="callingProcessToken"/>
-    <bpmn2:startEvent id="StartEvent_1" name="Start Event 1">
+    <bpmn2:property id="callingProcTok" itemSubjectRef="ItemDefinition_538" name="callingProcTok"/>
+    <bpmn2:startEvent id="StartEvent_1" name="Start userValidation">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Start Event 1]]></drools:metaValue>
+          <drools:metaValue><![CDATA[Start userValidation]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:outgoing>SequenceFlow_13</bpmn2:outgoing>
@@ -46,51 +46,48 @@
           <drools:metaValue><![CDATA[End userValidation]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
       <bpmn2:terminateEventDefinition id="TerminateEventDefinition_1"/>
     </bpmn2:endEvent>
-    <bpmn2:scriptTask id="ScriptTask_2" name="CheckingIfTheUserIsPresent" scriptFormat="http://www.java.com/java">
+    <bpmn2:scriptTask id="ScriptTask_2" name="Check If User Is Present" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[CheckingIfTheUserIsPresent]]></drools:metaValue>
+          <drools:metaValue><![CDATA[Check If User Is Present]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_17</bpmn2:outgoing>
       <bpmn2:script>beUtils = new BaseEntityUtils(userToken);
 kcontext.setVariable(&quot;beUtils&quot;,beUtils);
-System.out.println(&quot;userValidation: processInstanceId = &quot;+kcontext.getProcessInstance().getId());
+
 currentUser = beUtils.getBaseEntityByCode(userToken.getUserCode());
 kcontext.setVariable(&quot;currentUser&quot;,currentUser);
-System.out.println(&quot;userValidation: &quot;+ userToken.getUserCode());
-kcontext.setVariable(&quot;processId&quot;,kcontext.getProcessInstance().getId());
-processId = kcontext.getProcessInstance().getId();
-System.out.println(&quot;userValidation: processId = &quot;+ processId);
 kcontext.setVariable(&quot;userCode&quot;, userToken.getUserCode());
-callingProcessToken = new CallingProcessToken(userToken,processId,userToken.getUserCode());
-kcontext.setVariable(&quot;callingProcessToken&quot;, callingProcessToken);
+kcontext.setVariable(&quot;processId&quot;,kcontext.getProcessInstance().getId());
 
-System.out.println(&quot;userValidation: Current User is &quot; + (currentUser==null?&quot;not existing&quot;:currentUser) + &quot; sending signal to userLifeCycle to create  :&quot;+userToken.getUserCode());</bpmn2:script>
+processId = kcontext.getProcessInstance().getId();
+/*callingProcTok = new CallingProcessToken(userToken, processId, userToken.getUserCode());*/
+/*kcontext.setVariable(&quot;callingProcTok&quot;, callingProcTok);*/</bpmn2:script>
     </bpmn2:scriptTask>
-    <bpmn2:scriptTask id="ScriptTask_3" name="Get User" scriptFormat="http://www.java.com/java">
+    <bpmn2:scriptTask id="ScriptTask_3" name="UserLifecycle" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Get User]]></drools:metaValue>
+          <drools:metaValue><![CDATA[UserLifecycle]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_15</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;userValidation: Existing Current user &quot; + currentUser);
+      <bpmn2:script>System.out.println(&quot;userValidation: Existing Current User = &quot; + currentUser);
 </bpmn2:script>
     </bpmn2:scriptTask>
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_1" name="activeUser" gatewayDirection="Converging" default="SequenceFlow_1">
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_1" name="Active User Dumb Merge" gatewayDirection="Converging" default="SequenceFlow_1">
       <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
       <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
     <bpmn2:sequenceFlow id="SequenceFlow_6" drools:priority="1" sourceRef="ScriptTask_3" targetRef="ExclusiveGateway_1"/>
     <bpmn2:sequenceFlow id="SequenceFlow_13" drools:priority="1" sourceRef="StartEvent_1" targetRef="ScriptTask_2"/>
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_2" name="checkIfUserIsPresent" gatewayDirection="Diverging" default="SequenceFlow_28">
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_2" name="GW: Check If User Is Present" gatewayDirection="Diverging" default="SequenceFlow_28">
       <bpmn2:incoming>SequenceFlow_17</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_15</bpmn2:outgoing>
       <bpmn2:outgoing>SequenceFlow_28</bpmn2:outgoing>
@@ -107,14 +104,15 @@ System.out.println(&quot;userValidation: Current User is &quot; + (currentUser==
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_27</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;userValidation: newUser returned -> &quot;+currentUser);
-if (userToken == null) { 
+      <bpmn2:script>if (userToken == null) { 
 	System.out.println(&quot;userValidation: userToken is NULL&quot;);
 } 
 else { 
 	kcontext.setVariable(&quot;currentUser&quot;,currentUser);
+	System.out.println(&quot;userValidation: NewUser returned = &quot;+currentUser);
 }
-if (currentUser == null) { System.out.println(&quot;userValidation: currentUser is NULL&quot;);} else { System.out.println(&quot;userValidation: currentUser returned from userLifeCycle is NOT NULL ->&quot;+currentUser);}
+
+// if (currentUser == null) { System.out.println(&quot;userValidation: currentUser is NULL&quot;);} else { System.out.println(&quot;userValidation: currentUser returned from userLifeCycle is NOT NULL ->&quot;+currentUser);}
 </bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_2" drools:priority="1" sourceRef="ScriptTask_1" targetRef="ExclusiveGateway_1"/>
@@ -125,19 +123,19 @@ if (currentUser == null) { System.out.println(&quot;userValidation: currentUser 
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
-      <bpmn2:script>/* currentUser = VertxUtils.getObject(userToken.getRealm(),&quot;&quot;,userToken.getUserCode(),BaseEntity.class,userToken.getToken()); */
-System.out.println(&quot;userValidation: Yay! currentUser is &quot;+currentUser);</bpmn2:script>
+      <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
+      <bpmn2:script>System.out.println(&quot;userValidation: CurrentUser is now = &quot;+currentUser);
+/* currentUser = VertxUtils.getObject(userToken.getRealm(),&quot;&quot;,userToken.getUserCode(),BaseEntity.class,userToken.getToken()); */
+</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_1" drools:priority="1" sourceRef="ExclusiveGateway_1" targetRef="ScriptTask_4"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_3" drools:priority="1" sourceRef="ScriptTask_4" targetRef="EndEvent_1"/>
     <bpmn2:subProcess id="SubProcess_1" name="Create New User">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
           <drools:metaValue><![CDATA[Create New User]]></drools:metaValue>
         </drools:metaData>
         <drools:onEntry-script scriptFormat="http://www.java.com/java">
-          <drools:script>System.out.println(&quot;userValidation: on new User Path with userCode=&quot;+userCode);</drools:script>
+          <drools:script>System.out.println(&quot;userValidation: on new User Path with userCode = &quot;+userCode);</drools:script>
         </drools:onEntry-script>
         <drools:onExit-script scriptFormat="http://www.java.com/java">
           <drools:script>System.out.println(&quot;userValidation: Exiting on new User Path with userCode=&quot;+userCode);</drools:script>
@@ -145,7 +143,6 @@ System.out.println(&quot;userValidation: Yay! currentUser is &quot;+currentUser)
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_28</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_26</bpmn2:outgoing>
-      <bpmn2:property id="userCode2" itemSubjectRef="ItemDefinition_10" name="userCode2"/>
       <bpmn2:scriptTask id="ScriptTask_7" name="Wait for new User" scriptFormat="http://www.java.com/java">
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
@@ -154,7 +151,7 @@ System.out.println(&quot;userValidation: Yay! currentUser is &quot;+currentUser)
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_22</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_25</bpmn2:outgoing>
-        <bpmn2:script>System.out.println(&quot;userValidation: Wait for Creating New  User on signal channel [&quot;+userCode+&quot;]&quot;);</bpmn2:script>
+        <bpmn2:script>System.out.println(&quot;userValidation: Waiting for New User to be created by userLifecycle on signal channel [&quot;+userCode+&quot;]&quot;);</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:intermediateThrowEvent id="IntermediateThrowEvent_1" name="ThrowEvent-UserLifecycle">
         <bpmn2:extensionElements>
@@ -164,9 +161,9 @@ System.out.println(&quot;userValidation: Yay! currentUser is &quot;+currentUser)
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_21</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_22</bpmn2:outgoing>
-        <bpmn2:dataInput id="DataInput_2" itemSubjectRef="ItemDefinition_536" name="callingProcessToken"/>
+        <bpmn2:dataInput id="DataInput_2" name="callingProcTok"/>
         <bpmn2:dataInputAssociation id="DataInputAssociation_3">
-          <bpmn2:sourceRef>callingProcessToken</bpmn2:sourceRef>
+          <bpmn2:sourceRef>callingProcTok</bpmn2:sourceRef>
           <bpmn2:targetRef>DataInput_2</bpmn2:targetRef>
         </bpmn2:dataInputAssociation>
         <bpmn2:inputSet id="InputSet_3" name="Input Set 3">
@@ -174,29 +171,29 @@ System.out.println(&quot;userValidation: Yay! currentUser is &quot;+currentUser)
         </bpmn2:inputSet>
         <bpmn2:signalEventDefinition id="SignalEventDefinition_1" signalRef="Signal_5"/>
       </bpmn2:intermediateThrowEvent>
-      <bpmn2:startEvent id="StartEvent_3" name="Start Event 3">
+      <bpmn2:startEvent id="StartEvent_3" name="Start Create New User">
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
-            <drools:metaValue><![CDATA[Start Event 3]]></drools:metaValue>
+            <drools:metaValue><![CDATA[Start Create New User]]></drools:metaValue>
           </drools:metaData>
         </bpmn2:extensionElements>
         <bpmn2:outgoing>SequenceFlow_21</bpmn2:outgoing>
       </bpmn2:startEvent>
       <bpmn2:sequenceFlow id="SequenceFlow_21" drools:priority="1" sourceRef="StartEvent_3" targetRef="IntermediateThrowEvent_1"/>
       <bpmn2:sequenceFlow id="SequenceFlow_22" drools:priority="1" sourceRef="IntermediateThrowEvent_1" targetRef="ScriptTask_7"/>
-      <bpmn2:endEvent id="EndEvent_2" name="End Event 2">
+      <bpmn2:endEvent id="EndEvent_2" name="End Create New User">
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
-            <drools:metaValue><![CDATA[End Event 2]]></drools:metaValue>
+            <drools:metaValue><![CDATA[End Create New User]]></drools:metaValue>
           </drools:metaData>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_23</bpmn2:incoming>
       </bpmn2:endEvent>
       <bpmn2:sequenceFlow id="SequenceFlow_23" drools:priority="1" sourceRef="IntermediateCatchEvent_2" targetRef="EndEvent_2"/>
-      <bpmn2:intermediateCatchEvent id="IntermediateCatchEvent_2" name="Catch Time Out">
+      <bpmn2:intermediateCatchEvent id="IntermediateCatchEvent_2" name="New User Time Out">
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
-            <drools:metaValue><![CDATA[Catch Time Out]]></drools:metaValue>
+            <drools:metaValue><![CDATA[New User Time Out]]></drools:metaValue>
           </drools:metaData>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_25</bpmn2:incoming>
@@ -207,20 +204,20 @@ System.out.println(&quot;userValidation: Yay! currentUser is &quot;+currentUser)
       </bpmn2:intermediateCatchEvent>
       <bpmn2:sequenceFlow id="SequenceFlow_25" drools:priority="1" sourceRef="ScriptTask_7" targetRef="IntermediateCatchEvent_2"/>
     </bpmn2:subProcess>
-    <bpmn2:endEvent id="EndEvent_3" name="End After TimeOut">
+    <bpmn2:endEvent id="EndEvent_3" name="End userValidation After TimeOut">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[End After TimeOut]]></drools:metaValue>
+          <drools:metaValue><![CDATA[End userValidation After TimeOut]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_26</bpmn2:incoming>
       <bpmn2:terminateEventDefinition id="TerminateEventDefinition_2"/>
     </bpmn2:endEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_26" drools:priority="1" sourceRef="SubProcess_1" targetRef="EndEvent_3"/>
-    <bpmn2:boundaryEvent id="BoundaryEvent_3" name="newUser" attachedToRef="SubProcess_1" cancelActivity="false">
+    <bpmn2:boundaryEvent id="BoundaryEvent_3" name="New User Siganl Receiver" attachedToRef="SubProcess_1">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[newUser]]></drools:metaValue>
+          <drools:metaValue><![CDATA[New User Siganl Receiver]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:outgoing>SequenceFlow_27</bpmn2:outgoing>
@@ -235,7 +232,8 @@ System.out.println(&quot;userValidation: Yay! currentUser is &quot;+currentUser)
       <bpmn2:signalEventDefinition id="SignalEventDefinition_8" signalRef="Signal_6"/>
     </bpmn2:boundaryEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_27" drools:priority="1" sourceRef="BoundaryEvent_3" targetRef="ScriptTask_1"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_28" drools:priority="1" sourceRef="ExclusiveGateway_2" targetRef="SubProcess_1"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_28" drools:priority="1" name="NO" sourceRef="ExclusiveGateway_2" targetRef="SubProcess_1"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_9" drools:priority="1" sourceRef="ScriptTask_4" targetRef="EndEvent_1"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Process Diagram">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="user_validation">
@@ -248,37 +246,37 @@ System.out.println(&quot;userValidation: Yay! currentUser is &quot;+currentUser)
       <bpmndi:BPMNShape id="BPMNShape_1" bpmnElement="StartEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="95.0" y="221.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="53.0" x="87.0" y="257.0"/>
+          <dc:Bounds height="11.0" width="78.0" x="74.0" y="257.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_2" bpmnElement="EndEvent_1">
-        <dc:Bounds height="36.0" width="36.0" x="1220.0" y="221.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="1241.0" y="325.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_2" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="75.0" x="1201.0" y="257.0"/>
+          <dc:Bounds height="11.0" width="75.0" x="1222.0" y="361.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_2" bpmnElement="ScriptTask_2" isExpanded="true">
         <dc:Bounds height="52.0" width="120.0" x="200.0" y="213.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_3" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="116.0" x="202.0" y="233.0"/>
+          <dc:Bounds height="11.0" width="98.0" x="211.0" y="233.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_3" bpmnElement="ScriptTask_3" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="625.0" y="67.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_4" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="37.0" x="661.0" y="86.0"/>
+          <dc:Bounds height="11.0" width="55.0" x="652.0" y="86.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_1" bpmnElement="ExclusiveGateway_1" isMarkerVisible="true">
         <dc:Bounds height="50.0" width="50.0" x="1002.0" y="214.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_5">
-          <dc:Bounds height="11.0" width="43.0" x="1005.0" y="264.0"/>
+          <dc:Bounds height="22.0" width="55.0" x="1000.0" y="264.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_3" bpmnElement="ExclusiveGateway_2" isMarkerVisible="true">
         <dc:Bounds height="50.0" width="50.0" x="384.0" y="214.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_6">
-          <dc:Bounds height="22.0" width="67.0" x="376.0" y="264.0"/>
+          <dc:Bounds height="22.0" width="68.0" x="375.0" y="264.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_IntermediateThrowEvent_1" bpmnElement="IntermediateThrowEvent_1">
@@ -308,31 +306,31 @@ System.out.println(&quot;userValidation: Yay! currentUser is &quot;+currentUser)
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_2" bpmnElement="StartEvent_3">
         <dc:Bounds height="36.0" width="36.0" x="519.0" y="409.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_7">
-          <dc:Bounds height="11.0" width="53.0" x="511.0" y="445.0"/>
+          <dc:Bounds height="22.0" width="80.0" x="497.0" y="445.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_1" bpmnElement="EndEvent_2">
         <dc:Bounds height="36.0" width="36.0" x="942.0" y="409.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_10">
-          <dc:Bounds height="11.0" width="50.0" x="935.0" y="445.0"/>
+          <dc:Bounds height="22.0" width="77.0" x="922.0" y="445.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_IntermediateCatchEvent_2" bpmnElement="IntermediateCatchEvent_2">
         <dc:Bounds height="36.0" width="36.0" x="842.0" y="409.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_11">
-          <dc:Bounds height="11.0" width="63.0" x="829.0" y="445.0"/>
+          <dc:Bounds height="11.0" width="79.0" x="821.0" y="445.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_2" bpmnElement="EndEvent_3">
         <dc:Bounds height="36.0" width="36.0" x="1070.0" y="414.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_12">
-          <dc:Bounds height="11.0" width="74.0" x="1051.0" y="450.0"/>
+          <dc:Bounds height="33.0" width="68.0" x="1054.0" y="450.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_BoundaryEvent_3" bpmnElement="BoundaryEvent_3">
         <dc:Bounds height="36.0" width="36.0" x="724.0" y="339.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_15">
-          <dc:Bounds height="11.0" width="36.0" x="724.0" y="375.0"/>
+          <dc:Bounds height="22.0" width="78.0" x="703.0" y="375.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="BPMNShape_ScriptTask_3" targetElement="BPMNShape_ExclusiveGateway_1">
@@ -372,12 +370,6 @@ System.out.println(&quot;userValidation: Yay! currentUser is &quot;+currentUser)
         <di:waypoint xsi:type="dc:Point" x="1074.0" y="239.0"/>
         <di:waypoint xsi:type="dc:Point" x="1097.0" y="239.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_23"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_ScriptTask_4" targetElement="BPMNShape_2">
-        <di:waypoint xsi:type="dc:Point" x="1172.0" y="239.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1196.0" y="239.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1220.0" y="239.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_24"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_21" bpmnElement="SequenceFlow_21" sourceElement="BPMNShape_StartEvent_2" targetElement="BPMNShape_IntermediateThrowEvent_1">
         <di:waypoint xsi:type="dc:Point" x="555.0" y="427.0"/>
@@ -419,7 +411,9 @@ System.out.println(&quot;userValidation: Yay! currentUser is &quot;+currentUser)
         <di:waypoint xsi:type="dc:Point" x="409.0" y="264.0"/>
         <di:waypoint xsi:type="dc:Point" x="409.0" y="432.0"/>
         <di:waypoint xsi:type="dc:Point" x="487.0" y="432.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_22"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_22">
+          <dc:Bounds height="11.0" width="14.0" x="403.0" y="388.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4">
         <di:waypoint xsi:type="dc:Point" x="675.0" y="330.0"/>
@@ -434,6 +428,12 @@ System.out.println(&quot;userValidation: Yay! currentUser is &quot;+currentUser)
         <di:waypoint xsi:type="dc:Point" x="787.0" y="330.0"/>
         <di:waypoint xsi:type="dc:Point" x="800.0" y="330.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_25"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_11" bpmnElement="SequenceFlow_9" sourceElement="BPMNShape_ScriptTask_4" targetElement="BPMNShape_2">
+        <di:waypoint xsi:type="dc:Point" x="1172.0" y="239.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1259.0" y="239.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1259.0" y="325.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_24"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
