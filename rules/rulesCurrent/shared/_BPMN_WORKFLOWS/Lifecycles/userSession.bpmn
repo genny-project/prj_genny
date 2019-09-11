@@ -109,8 +109,9 @@
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;Runnig user Session&quot;);
-kcontext.setVariable(&quot;message&quot;,(QEventMessage)sessionFacts.getMessage()); 
+      <bpmn2:script>System.out.println(&quot;Running user Session&quot;);
+kcontext.setVariable(&quot;sessionFacts&quot;,sessionFacts);
+kcontext.setVariable(&quot;message&quot;,(QEventMessage)(((SessionFacts)sessionFacts).getMessage())); 
 kcontext.setVariable(&quot;session_state&quot;,   sessionFacts.getUserToken().getSessionCode()); 
 kcontext.setVariable(&quot;serviceToken&quot;, sessionFacts.getServiceToken());
 kcontext.setVariable(&quot;userToken&quot;, sessionFacts.getUserToken());

@@ -43,7 +43,7 @@ public class ChrisTest {
 
 	}
 	
-	@Test
+	//@Test
     public void LifecycleTest() {
         GennyToken userToken = null;
         GennyToken serviceToken = null;
@@ -65,12 +65,14 @@ public class ChrisTest {
         BaseEntity intern = new BaseEntity("PRI_INTERN");
         BaseEntity internship = new BaseEntity("BE_INTERNSHIP");        
         BaseEntity hostCompany = new BaseEntity("CPY_HOSTCOMPANY");
+//        BaseEntity xyz = new BaseEntity("BE_XYZ");
 
         HashMap<String, BaseEntity> hashBeg = new HashMap<String, BaseEntity>();
         
         hashBeg.put("intern", intern);
         hashBeg.put("internship", internship);
         hashBeg.put("hostCompany", hostCompany);
+//        hashBeg.put("xyz", xyz);
 
         System.out.println("session     =" + userToken.getSessionCode());
         System.out.println("userToken   =" + userToken.getToken());
@@ -110,7 +112,9 @@ public class ChrisTest {
             
             gks.advanceSeconds(5, false);
             
-            gks.injectSignal("beginEvent", hashBeg);
+            gks.injectSignalToProcessInstance("xyz", hashBeg,1);
+            
+//            gks.injectSignal("beginEvent", hashBeg);
             gks.injectSignal("beginInternalSignal", hashBeg);
             gks.injectSignal("beginData", hashBeg);
 
@@ -136,7 +140,7 @@ public class ChrisTest {
         
     }
 
-	//@Test
+	@Test
 	public void newUserTest() {
 		System.out.println("New User test");
 		GennyToken userToken = null;
@@ -145,7 +149,7 @@ public class ChrisTest {
 		QRules qRules = null;
 
 		if (true) {
-			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user13", "Barry Allan", "user");
 			userToken2 = GennyJbpmBaseTest.createGennyToken(realm, "user2", "Barry2 Allan2", "user");
 			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
 			qRules = new QRules(eventBusMock, userToken.getToken());
@@ -167,13 +171,13 @@ public class ChrisTest {
 
 		QEventMessage authInitMsg1 = new QEventMessage("EVT_MSG", "AUTH_INIT");
 		authInitMsg1.setToken(userToken.getToken());
-		QEventMessage authInitMsg2 = new QEventMessage("EVT_MSG", "AUTH_INIT");
-		authInitMsg2.setToken(userToken2.getToken());
-		QEventMessage msg1 = new QEventMessage("EVT_MSG", "INIT_1");
+//		QEventMessage authInitMsg2 = new QEventMessage("EVT_MSG", "AUTH_INIT");
+//		authInitMsg2.setToken(userToken2.getToken());
+//		QEventMessage msg1 = new QEventMessage("EVT_MSG", "INIT_1");
 		QEventMessage msgLogout1 = new QEventMessage("EVT_MSG", "LOGOUT");
 		msgLogout1.setToken(userToken.getToken());
-		QEventMessage msgLogout2 = new QEventMessage("EVT_MSG", "LOGOUT");
-		msgLogout2.setToken(userToken2.getToken());
+//		QEventMessage msgLogout2 = new QEventMessage("EVT_MSG", "LOGOUT");
+//		msgLogout2.setToken(userToken2.getToken());
 
 		List<Answer> answers = new ArrayList<Answer>();
 		answers.add(new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_FIRSTNAME", "Bruce"));
@@ -194,19 +198,32 @@ public class ChrisTest {
 		GennyKieSession gks = null;
 
 		try {
-			gks = GennyKieSession.builder(serviceToken, true).addDrl("SignalProcessing").addDrl("DataProcessing")
-					.addDrl("EventProcessing").addDrl("InitialiseProject").addJbpm("InitialiseProject")
-					.addJbpm("Lifecycles").addDrl("AuthInit").addJbpm("AuthInit")
-
+			gks = GennyKieSession
+					.builder(serviceToken, true)
+			//		.addDrl("SignalProcessing")
+			//		.addDrl("DataProcessing")
+			//		.addDrl("EventProcessing")
+					//.addDrl("InitialiseProject")
+					//.addJbpm("InitialiseProject")
+			//		.addJbpm("Lifecycles")
+					.addDrl("AuthInit")
+					.addJbpm("AuthInit")
+					.addJbpm("userSession2.bpmn")
+					.addJbpm("userValidation2.bpmn")
+					.addJbpm("userLifecycle2.bpmn")
+//					.addJbpm("userApplication.bpmn")
+//					.addJbpm("auth_init.bpmn")
 					.addToken(userToken).build();
+			
+			
 			gks.start();
-			gks.injectEvent(initMsg); // This should create a new process
+//			gks.injectEvent(initMsg); // This should create a new process
 
 			gks.injectEvent(authInitMsg1); // This should create a new process
 			gks.advanceSeconds(5, false);
-			gks.advanceSeconds(5, false);
-			gks.injectEvent(authInitMsg1); // This should attach to existing process
-			gks.advanceSeconds(5, false);
+//			gks.advanceSeconds(5, false);
+//			gks.injectEvent(authInitMsg1); // This should attach to existing process
+//			gks.advanceSeconds(5, false);
 
 			gks.injectEvent(answerMsg); // This sends an answer to the first userSessio
 			gks.advanceSeconds(5, false);
