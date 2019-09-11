@@ -717,7 +717,7 @@ public class AnishTest extends GennyJbpmBaseTest {
 
                         DataType buttonDataType = new DataType("DTT_EVENT", buttonValidationList, "Event", "");
 
-                        Frame3 FRM_TABLE_FOOTER = Frame3.builder("FRM_TABLE_FOOTER")
+                        Frame3 FRM_TABLE_FOOTER_PAGINATION = Frame3.builder("FRM_TABLE_FOOTER_PAGINATION")
                                         .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
                                         .question("QUE_TABLE_FOOTER_GRP")
                                                 .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
@@ -725,6 +725,23 @@ public class AnishTest extends GennyJbpmBaseTest {
                                                 .addTheme(THM_TABLE_HEADER_CELL_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
                                                 .addTheme(THM_TEXT_ALIGN_CENTER).vcl(VisualControlType.VCL_INPUT).end()
                                         .end()
+                                        .build();
+                        
+                        Frame3 FRM_TABLE_RESULT_COUNT = Frame3.builder("FRM_TABLE_RESULT_COUNT")
+                                        .question("QUE_TABLE_TOTAL_RESULT_COUNT")
+                                        .end()
+                                        .build();
+                        
+                        Frame3 FRM_TABLE_PAGE_INDEX = Frame3.builder("FRM_TABLE_PAGE_INDEX")
+                                        .question("QUE_TABLE_PAGE_INDEX")
+                                        .end()
+                                        .build();
+
+                        Frame3 FRM_TABLE_FOOTER = Frame3.builder("FRM_TABLE_FOOTER")
+                                        .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()                        
+                                        .addFrame(FRM_TABLE_RESULT_COUNT).end()
+                                        .addFrame(FRM_TABLE_PAGE_INDEX).end()
+                                        .addFrame(FRM_TABLE_FOOTER_PAGINATION).end()
                                         .build();
                         
                         
