@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.lang.invoke.MethodHandles;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -41,8 +42,101 @@ public class ChrisTest {
 	public ChrisTest() {
 
 	}
-
+	
 	@Test
+    public void LifecycleTest() {
+        GennyToken userToken = null;
+        GennyToken serviceToken = null;
+        QRules qRules = null;
+
+        if (true) {
+            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+            qRules = new QRules(eventBusMock, userToken.getToken());
+            qRules.set("realm", userToken.getRealm());
+            qRules.setServiceToken(serviceToken.getToken());
+            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+        } else {
+            qRules = GennyJbpmBaseTest.setupLocalService();
+            userToken = new GennyToken("userToken", qRules.getToken());
+            serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+        }
+        
+        BaseEntity intern = new BaseEntity("PRI_INTERN");
+        BaseEntity internship = new BaseEntity("BE_INTERNSHIP");        
+        BaseEntity hostCompany = new BaseEntity("CPY_HOSTCOMPANY");
+
+        HashMap<String, BaseEntity> hashBeg = new HashMap<String, BaseEntity>();
+        
+        hashBeg.put("intern", intern);
+        hashBeg.put("internship", internship);
+        hashBeg.put("hostCompany", hostCompany);
+
+        System.out.println("session     =" + userToken.getSessionCode());
+        System.out.println("userToken   =" + userToken.getToken());
+        System.out.println("serviceToken=" + serviceToken.getToken());
+
+        QEventMessage authInitMsg = new QEventMessage("EVT_MSG", "AUTH_INIT");
+        QEventMessage msg1 = new QEventMessage("EVT_MSG", "INIT_1");
+        QEventMessage msgLogout = new QEventMessage("EVT_MSG", "LOGOUT");
+
+        // NOW SET UP Some baseentitys
+        BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
+                StringUtils.capitaliseAllWords(serviceToken.getRealm()));
+        project.setRealm(serviceToken.getRealm());
+        VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
+                JsonUtils.toJson(project), serviceToken.getToken());
+        
+        // Log out to begin
+        VertxUtils.writeCachedJson(userToken.getRealm(),userToken.getSessionCode(),null,userToken.getToken());
+
+        GennyKieSession gks = null;
+
+        try {
+            gks = GennyKieSession
+            		.builder(serviceToken, true)
+                    .addJbpm("internshipLifecycle.bpmn")
+//                    .addJbpm("applicationLifecycle.bpmn")
+                    .addToken(userToken)
+                    .build();
+            
+            gks.start();
+            
+            gks.advanceSeconds(5, false);
+        
+            System.out.println("TEST:: Activating Internship Lifecycle");
+
+            gks.injectSignal("newInternship", hashBeg);
+            
+            gks.advanceSeconds(5, false);
+            
+            gks.injectSignal("beginEvent", hashBeg);
+            gks.injectSignal("beginInternalSignal", hashBeg);
+            gks.injectSignal("beginData", hashBeg);
+
+            System.out.println("TEST:: Activating Application Lifecycle");
+
+            gks.injectSignal("newApplication", hashBeg);
+            
+            gks.advanceSeconds(5, false);
+            
+            gks.injectSignal("controlSignal", "FORWARD");
+
+            gks.advanceSeconds(5, false);
+            
+            gks.injectSignal("controlSignal", "FORWARD");
+
+            gks.advanceSeconds(5, false);
+            
+        } catch (Exception e) {
+            System.out.println(e.getLocalizedMessage());
+        } finally {
+            gks.close();
+        }
+        
+    }
+
+	//@Test
 	public void newUserTest() {
 		System.out.println("New User test");
 		GennyToken userToken = null;
