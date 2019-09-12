@@ -43,7 +43,7 @@ rule "FRM_TABLE_FOOTER"
         Frame3 frame = Frame3.builder("FRM_TABLE_FOOTER")
                       .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()                        
                       .addFrame(FRM_TABLE_RESULT_COUNT).end()
-                      .addFrame(FRM_TABLE_PAGE_INDEX).end()
+                      /* .addFrame(FRM_TABLE_PAGE_INDEX).end() */
                       .addFrame(FRM_TABLE_FOOTER_PAGINATION).end()
                       .build();
                         

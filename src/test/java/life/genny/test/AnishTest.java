@@ -131,6 +131,16 @@ public class AnishTest extends GennyJbpmBaseTest {
                         Frame3 FRM_FOOTER = generateFooter();
                         /*Frame3 FRM_TABS = generateTabs(); */
 
+
+                        /* need to call performSearch in TableUtils */
+
+                        //TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
+                        
+                        Answer answer = new Answer(userToken.getUserCode(),userToken.getUserCode(),"PRI_SEARCH_TEXT", "univ");
+                        TableUtilsTest.performSearch(serviceToken , beUtils, "SBE_SEARCHBAR", answer);
+
+
+
                         /* frame-root */
                         Frame3 FRM_APP = Frame3.builder("FRM_APP")
                                         .addTheme("THM_PROJECT", ThemePosition.FRAME, serviceToken).end()
@@ -719,6 +729,7 @@ public class AnishTest extends GennyJbpmBaseTest {
 
                         Frame3 FRM_TABLE_FOOTER_PAGINATION = Frame3.builder("FRM_TABLE_FOOTER_PAGINATION")
                                         .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
+                                        .addTheme("THM_FRAME_ALIGN_EAST", ThemePosition.WRAPPER, serviceToken).end()
                                         .question("QUE_TABLE_FOOTER_GRP")
                                                 .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
                                                 .addTheme("THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHT", serviceToken).dataType(buttonDataType).end()
@@ -727,9 +738,11 @@ public class AnishTest extends GennyJbpmBaseTest {
                                         .end()
                                         .build();
                         
+                        /*  */
                         Frame3 FRM_TABLE_RESULT_COUNT = Frame3.builder("FRM_TABLE_RESULT_COUNT")
                                         .question("QUE_TABLE_TOTAL_RESULT_COUNT")
-                                        .end()
+                                                .addTheme("THM_LABEL_BOLD", serviceToken).vcl(VisualControlType.VCL_LABEL).end()
+                                                .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end().end()
                                         .build();
                         
                         Frame3 FRM_TABLE_PAGE_INDEX = Frame3.builder("FRM_TABLE_PAGE_INDEX")
@@ -739,9 +752,9 @@ public class AnishTest extends GennyJbpmBaseTest {
 
                         Frame3 FRM_TABLE_FOOTER = Frame3.builder("FRM_TABLE_FOOTER")
                                         .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()                        
-                                        .addFrame(FRM_TABLE_RESULT_COUNT).end()
-                                        .addFrame(FRM_TABLE_PAGE_INDEX).end()
-                                        .addFrame(FRM_TABLE_FOOTER_PAGINATION).end()
+                                        .addFrame(FRM_TABLE_RESULT_COUNT, FramePosition.WEST).end()
+                                        /* .addFrame(FRM_TABLE_PAGE_INDEX).end() */
+                                        .addFrame(FRM_TABLE_FOOTER_PAGINATION, FramePosition.EAST).end()
                                         .build();
                         
                         
