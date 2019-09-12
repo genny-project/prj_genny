@@ -133,6 +133,14 @@ public class TableUtilsTest {
 		// Send out Search Results
 
 		QDataBaseEntityMessage msg = tableUtils.fetchSearchResults(searchBE, beUtils.getGennyToken());
+		
+		long totalResults = msg.getTotal();
+		Answer totalAnswer = new Answer(beUtils.getGennyToken().getUserCode(),searchBE.getCode(),
+				"PRI_TOTAL", totalResults+"");
+		beUtils.addAnswer(totalAnswer);
+		
+		
+		
 		Map<String, String> columns = tableUtils.getTableColumns(searchBE);
 
 		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
@@ -218,6 +226,40 @@ public class TableUtilsTest {
 					VertxUtils.writeMsg("webcmds", JsonUtils.toJson(askMsg));
 				}
 				VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg3));
+
+				/* need to send the footer question again here  */
+				Attribute totalAttribute = new Attribute("PRI_TOTAL", "link", new DataType(String.class));
+				Attribute indexAttribute = new Attribute("PRI_INDEX", "link", new DataType(String.class));
+
+				/* create total count ask */
+				Question totalQuestion = new Question("QUE_TABLE_TOTAL_RESULT_COUNT", "of",
+				totalAttribute, true);
+
+				Ask totalAsk = new Ask(totalQuestion, beUtils.getGennyToken().getUserCode(),
+				searchBE.getCode());
+			
+				/* create index ask */
+				Question indexQuestion = new Question("QUE_TABLE_INDEX_RESULT_COUNT", "of",
+				indexAttribute, true);
+
+				Ask indexAsk = new Ask(indexQuestion, beUtils.getGennyToken().getUserCode(),
+				searchBE.getCode());
+
+				/* collect the asks to bbe sent ouy */
+				Set<QDataAskMessage> footerAskMsgs = new HashSet<QDataAskMessage>();
+				footerAskMsgs.add(new QDataAskMessage(totalAsk));
+				footerAskMsgs.add(new QDataAskMessage(indexAsk));
+
+				/* publish the new asks with searchBe set as targetCode */
+				for (QDataAskMessage footerAskMsg : footerAskMsgs) {
+					footerAskMsg.setToken(beUtils.getGennyToken().getToken());
+					footerAskMsg.setReplace(true);
+					VertxUtils.writeMsg("webcmds", JsonUtils.toJson(footerAskMsg));
+				}
+
+				/* publishing the searchBE to frontEnd */
+				QDataBaseEntityMessage searchBeMsg = new QDataBaseEntityMessage(searchBE);
+				searchBeMsg.setToken(beUtils.getGennyToken().getToken());
 			}
 		}
 

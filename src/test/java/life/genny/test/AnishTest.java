@@ -60,6 +60,57 @@ public class AnishTest extends GennyJbpmBaseTest {
                 super(false);
         }
 
+        
+
+        @Test
+        public void testContext() {
+                QRules rules = GennyJbpmBaseTest.setupLocalService();
+                GennyToken userToken = new GennyToken("userToken", rules.getToken());
+                GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+                BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+                BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
+
+                try {
+                        rules.sendAllAttributes();
+
+                        /* get the icon baseentity*/
+                        BaseEntity sortIconBe = beUtils.getBaseEntityByCode("ICN_SORT");
+                        
+                        /* create a context object using the iconBE*/
+                        Context context = new Context(ContextType.ICON, sortIconBe, VisualControlType.VCL_ICON, 1.0);
+
+                        /* add the context to the question  */
+                        Frame3 FRM_HAMBURGER_MENU = Frame3.builder("FRM_HAMBURGER_MENU")
+                                        .question("QUE_WEBSITE")
+                                        .addContext(context).end()
+                                        .end().build();
+                        
+                        
+                        /*
+                         *  in the question, the context should appear 
+                         *  same as the themes that appear for the question.
+                         * */
+
+        
+                        /* frame-root */
+                        Frame3 FRM_ROOT = Frame3.builder("FRM_ROOT")
+                                        .addFrame(FRM_HAMBURGER_MENU, FramePosition.CENTRE).end()
+                                        .build();
+
+                        Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+                        QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_ROOT, serviceToken, askMsgs);
+                        rules.publishCmd(msg);
+                        for (QDataAskMessage askMsg : askMsgs) {
+                                rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode());
+                        }
+                        System.out.println("Sent");
+
+                }catch (Exception e) {
+                        System.out.println("Error " + e.getLocalizedMessage());
+                }
+        }
+
+
         @Test
         public void testDesktop() {
                 QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -666,7 +717,7 @@ public class AnishTest extends GennyJbpmBaseTest {
 
                         DataType buttonDataType = new DataType("DTT_EVENT", buttonValidationList, "Event", "");
 
-                        Frame3 FRM_TABLE_FOOTER = Frame3.builder("FRM_TABLE_FOOTER")
+                        Frame3 FRM_TABLE_FOOTER_PAGINATION = Frame3.builder("FRM_TABLE_FOOTER_PAGINATION")
                                         .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
                                         .question("QUE_TABLE_FOOTER_GRP")
                                                 .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
@@ -674,6 +725,23 @@ public class AnishTest extends GennyJbpmBaseTest {
                                                 .addTheme(THM_TABLE_HEADER_CELL_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
                                                 .addTheme(THM_TEXT_ALIGN_CENTER).vcl(VisualControlType.VCL_INPUT).end()
                                         .end()
+                                        .build();
+                        
+                        Frame3 FRM_TABLE_RESULT_COUNT = Frame3.builder("FRM_TABLE_RESULT_COUNT")
+                                        .question("QUE_TABLE_TOTAL_RESULT_COUNT")
+                                        .end()
+                                        .build();
+                        
+                        Frame3 FRM_TABLE_PAGE_INDEX = Frame3.builder("FRM_TABLE_PAGE_INDEX")
+                                        .question("QUE_TABLE_PAGE_INDEX")
+                                        .end()
+                                        .build();
+
+                        Frame3 FRM_TABLE_FOOTER = Frame3.builder("FRM_TABLE_FOOTER")
+                                        .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()                        
+                                        .addFrame(FRM_TABLE_RESULT_COUNT).end()
+                                        .addFrame(FRM_TABLE_PAGE_INDEX).end()
+                                        .addFrame(FRM_TABLE_FOOTER_PAGINATION).end()
                                         .build();
                         
                         
@@ -1013,7 +1081,8 @@ public class AnishTest extends GennyJbpmBaseTest {
                         Context context = new Context(ContextType.ICON, sortIconBe, VisualControlType.VCL_ICON, 1.0);
 
                         /* Test Context */
-                        Frame3 FRM_HAMBURGER_MENU = Frame3.builder("FRM_HAMBURGER_MENU").question("QUE_NAME_TWO")
+                        Frame3 FRM_HAMBURGER_MENU = Frame3.builder("FRM_HAMBURGER_MENU")
+                                        .question("QUE_WEBSITE")
                                         .addContext(context).end()
                                         .end().build();
 
