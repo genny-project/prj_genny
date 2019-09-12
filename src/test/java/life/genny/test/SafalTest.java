@@ -31,6 +31,7 @@ import life.genny.models.GennyToken;
 import life.genny.models.Theme;
 import life.genny.models.ThemeAttributeType;
 import life.genny.qwanda.Answer;
+import life.genny.qwanda.Question;
 import life.genny.qwanda.VisualControlType;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.message.QDataAskMessage;
@@ -561,7 +562,6 @@ public class SafalTest extends GennyJbpmBaseTest {
 				gks.injectSignal("anish", "null");
 
 			    gks.close();
-
 	}
 	
 	
