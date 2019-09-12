@@ -38,7 +38,7 @@ rule "FRM_HEADER_OPTIONS"
       Frame3 frame = Frame3.builder("FRM_HEADER_OPTIONS")
                     .addTheme("THM_PANEL_CONTENT_FIT", ThemePosition.WRAPPER, serviceToken).end()
                     .question("QUE_OPTIONS_GRP")
-                      .addTheme("THM_BACKGROUND_NONE", serviceToken).vcl(VisualControlType.GROUP).weight(1.0).end()
+                      .addTheme("THM_BACKGROUND_NONE", serviceToken).vcl(VisualControlType.GROUP).weight(2.0).end()
                       .addTheme("THM_DROPDOWN_BEHAVIOUR_GENNY", serviceToken).vcl(VisualControlType.GROUP).weight(2.0).end()
                       .addTheme("THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY", serviceToken).vcl(VisualControlType.GROUP).weight(1.0).end()
                       .addTheme("THM_DROPDOWN_HEADER_WRAPPER_GENNY", serviceToken).vcl(VisualControlType.GROUP_HEADER_WRAPPER).weight(2.0).end()
