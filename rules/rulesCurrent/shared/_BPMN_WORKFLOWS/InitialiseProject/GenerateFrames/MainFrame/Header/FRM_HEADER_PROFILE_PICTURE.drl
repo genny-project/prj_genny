@@ -41,7 +41,7 @@ rule "FRM_HEADER_PROFILE_PICTURE"
                   /* .addTheme("THM_BORDER_RADIUS_50",ThemePosition.VCL_WRAPPER serviceToken).end() */
                   .question("QUE_IMAGE_URL")
                     .addTheme("THM_HEADER_PROFILE_PICTURE", serviceToken)
-                    .vcl(VisualControlType.VCL_INPUT)
+                    .vcl(VisualControlType.INPUT_SELECTED)
                     .end()
                     .addTheme("THM_BORDER_RADIUS_50", serviceToken)
                     .vcl(VisualControlType.INPUT_FIELD)

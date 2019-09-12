@@ -39,12 +39,13 @@ rule "THM_HEADER_PROFILE_PICTURE"
 
     Theme theme = Theme.builder("THM_HEADER_PROFILE_PICTURE")
                   .addAttribute()
-                    .height(32)
-                    .width(32)
-                    .fit("cover")
-                    .borderRadius(50)
+                  	.fit("contain")
+                    .imageHeight(32)
+                    .imageWidth(32)
+                    .showName(false)
                   .end()
                   .build();
+                  
     theme.setRealm(serviceToken.getRealm());
     insert (theme);
 
