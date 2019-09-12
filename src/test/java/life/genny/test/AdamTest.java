@@ -85,7 +85,7 @@ public class AdamTest {
 
 	}
 
-	@Test
+	//@Test
 	public void paginationTest()
 	{
 		System.out.println("Pagination Test");
@@ -314,7 +314,7 @@ public void testTableHeader() {
 
 
 	
-	//@Test
+	@Test
 	public void tableTest()
 	{
 		System.out.println("Table test");

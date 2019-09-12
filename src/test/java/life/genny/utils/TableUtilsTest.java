@@ -83,15 +83,24 @@ public class TableUtilsTest {
 		SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", sessionSearchCode, SearchEntity.class,
 				serviceToken.getToken());
 
+		/* we need to set the searchBe's  code to session Search Code */
+		searchBE.setCode(sessionSearchCode);
+
 		if (searchBE == null) {
 			searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", searchBarCode, SearchEntity.class,
 					serviceToken.getToken());
+
+			/* we need to set the searchBe's  code to session Search Code */
+			searchBE.setCode(sessionSearchCode);
 			/*
 			 * Save Session Search in cache , ideally this should be in OutputParam and
 			 * saved to workflow
 			 */
 			VertxUtils.putObject(serviceToken.getRealm(), "", sessionSearchCode, searchBE, serviceToken.getToken());
 		}
+
+		log.info("search code coming from searchBE getCode  :: " + searchBE.getCode());
+
 
 		/* fetch Session SearchBar List from User */
 		BaseEntity user = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "",
@@ -100,33 +109,33 @@ public class TableUtilsTest {
 		}.getType();
 		List<String> defaultList = new ArrayList<String>();
 		String defaultListString = JsonUtils.toJson(defaultList);
-		String historyStr = user.getValue("PRI_SEARCH_HISTORY", defaultListString);
-		List<String> searchHistory = JsonUtils.fromJson(historyStr, type);
+		//String historyStr = user.getValue("PRI_SEARCH_HISTORY", defaultListString);
+		//List<String> searchHistory = JsonUtils.fromJson(historyStr, type);
 
 		/* Add new SearchBarString to Session SearchBar List */
 		/* look for existing search term and bring to front - slow */
-		if (answer != null) { // no need to set history if no data sent
-			int index = searchHistory.indexOf(searchBarString);
-			if (index >= 0) {
-				searchHistory.remove(index);
-			}
-			searchHistory.add(0, searchBarString);
-			if (searchHistory.size() > MAX_SEARCH_HISTORY_SIZE) {
-				searchHistory.remove(MAX_SEARCH_HISTORY_SIZE);
-			}
-			String newHistoryString = JsonUtils.toJson(searchHistory);
-			Answer history = new Answer(beUtils.getGennyToken().getUserCode(), beUtils.getGennyToken().getUserCode(),
-					"PRI_SEARCH_HISTORY", newHistoryString);
-			beUtils.saveAnswer(history);
-			log.info("Search History for " + beUtils.getGennyToken().getUserCode() + " = " + searchHistory.toString());
-		} else {
-			// so grab the latest search history
-			if (!searchHistory.isEmpty()) {
-				searchBarString = searchHistory.get(0);
-			} else {
-				searchBarString = ""; // fetch everything
-			}
-		}
+		// if (answer != null) { // no need to set history if no data sent
+		// 	int index = searchHistory.indexOf(searchBarString);
+		// 	if (index >= 0) {
+		// 		searchHistory.remove(index);
+		// 	}
+		// 	searchHistory.add(0, searchBarString);
+		// 	if (searchHistory.size() > MAX_SEARCH_HISTORY_SIZE) {
+		// 		searchHistory.remove(MAX_SEARCH_HISTORY_SIZE);
+		// 	}
+		// 	String newHistoryString = JsonUtils.toJson(searchHistory);
+		// 	Answer history = new Answer(beUtils.getGennyToken().getUserCode(), beUtils.getGennyToken().getUserCode(),
+		// 			"PRI_SEARCH_HISTORY", newHistoryString);
+		// 	beUtils.saveAnswer(history);
+		// 	log.info("Search History for " + beUtils.getGennyToken().getUserCode() + " = " + searchHistory.toString());
+		// } else {
+		// 	// so grab the latest search history
+		// 	if (!searchHistory.isEmpty()) {
+		// 		searchBarString = searchHistory.get(0);
+		// 	} else {
+		// 		searchBarString = ""; // fetch everything
+		// 	}
+		// }
 
 		searchBE.addFilter("PRI_NAME", SearchEntity.StringFilter.LIKE, "%" + searchBarString + "%");
 
@@ -136,9 +145,9 @@ public class TableUtilsTest {
 		
 		long totalResults = msg.getTotal();
 		Answer totalAnswer = new Answer(beUtils.getGennyToken().getUserCode(),searchBE.getCode(),
-				"PRI_TOTAL", totalResults+"");
+				"PRI_TOTAL_RESULTS", totalResults+"");
 		beUtils.addAnswer(totalAnswer);
-		
+		beUtils.updateBaseEntity(searchBE, totalAnswer);
 		
 		
 		Map<String, String> columns = tableUtils.getTableColumns(searchBE);
@@ -227,41 +236,43 @@ public class TableUtilsTest {
 				}
 				VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg3));
 
-				/* need to send the footer question again here  */
-				Attribute totalAttribute = new Attribute("PRI_TOTAL", "link", new DataType(String.class));
-				Attribute indexAttribute = new Attribute("PRI_INDEX", "link", new DataType(String.class));
-
-				/* create total count ask */
-				Question totalQuestion = new Question("QUE_TABLE_TOTAL_RESULT_COUNT", "of",
-				totalAttribute, true);
-
-				Ask totalAsk = new Ask(totalQuestion, beUtils.getGennyToken().getUserCode(),
-				searchBE.getCode());
-			
-				/* create index ask */
-				Question indexQuestion = new Question("QUE_TABLE_INDEX_RESULT_COUNT", "of",
-				indexAttribute, true);
-
-				Ask indexAsk = new Ask(indexQuestion, beUtils.getGennyToken().getUserCode(),
-				searchBE.getCode());
-
-				/* collect the asks to bbe sent ouy */
-				Set<QDataAskMessage> footerAskMsgs = new HashSet<QDataAskMessage>();
-				footerAskMsgs.add(new QDataAskMessage(totalAsk));
-				footerAskMsgs.add(new QDataAskMessage(indexAsk));
-
-				/* publish the new asks with searchBe set as targetCode */
-				for (QDataAskMessage footerAskMsg : footerAskMsgs) {
-					footerAskMsg.setToken(beUtils.getGennyToken().getToken());
-					footerAskMsg.setReplace(true);
-					VertxUtils.writeMsg("webcmds", JsonUtils.toJson(footerAskMsg));
-				}
-
-				/* publishing the searchBE to frontEnd */
-				QDataBaseEntityMessage searchBeMsg = new QDataBaseEntityMessage(searchBE);
-				searchBeMsg.setToken(beUtils.getGennyToken().getToken());
 			}
 		}
+
+		/* need to send the footer question again here  */
+		Attribute totalAttribute = new Attribute("PRI_TOTAL_RESULTS", "link", new DataType(String.class));
+		Attribute indexAttribute = new Attribute("PRI_INDEX", "link", new DataType(String.class));
+
+		/* create total count ask */
+		Question totalQuestion = new Question("QUE_TABLE_TOTAL_RESULT_COUNT", "Total Results",
+		totalAttribute, true);
+
+		Ask totalAsk = new Ask(totalQuestion, beUtils.getGennyToken().getUserCode(),
+		sessionSearchCode);
+	
+		/* create index ask */
+		Question indexQuestion = new Question("QUE_TABLE_PAGE_INDEX", "Page Number",
+		indexAttribute, true);
+
+		Ask indexAsk = new Ask(indexQuestion, beUtils.getGennyToken().getUserCode(),
+		searchBE.getCode());
+
+		/* collect the asks to bbe sent ouy */
+		Set<QDataAskMessage> footerAskMsgs = new HashSet<QDataAskMessage>();
+		footerAskMsgs.add(new QDataAskMessage(totalAsk));
+		footerAskMsgs.add(new QDataAskMessage(indexAsk));
+
+		/* publish the new asks with searchBe set as targetCode */
+		for (QDataAskMessage footerAskMsg : footerAskMsgs) {
+			footerAskMsg.setToken(beUtils.getGennyToken().getToken());
+			footerAskMsg.setReplace(true);
+			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(footerAskMsg));
+		}
+
+		/* publishing the searchBE to frontEnd */
+		QDataBaseEntityMessage searchBeMsg = new QDataBaseEntityMessage(searchBE);
+		searchBeMsg.setToken(beUtils.getGennyToken().getToken());
+		VertxUtils.writeMsg("webcmds", JsonUtils.toJson((searchBeMsg)));
 
 	}
 
@@ -499,8 +510,8 @@ public class TableUtilsTest {
 			Ask columnHeaderAsk = new Ask(columnHeaderQuestion, beUtils.getGennyToken().getUserCode(), searchBe.getCode());
 
 			/* creating ask for table header label-sort */
-			Ask columnSortAsk = getAskForTableHeaderSort(searchBe, attributeCode, attributeName, eventAttribute,
-					themeMsgList);
+			Question columnSortQues = new Question("QUE_SORT_" + attributeCode, attributeName, eventAttribute, false);
+			Ask columnSortAsk = new Ask(columnSortQues, beUtils.getGennyToken().getUserCode(), searchBe.getCode());
 
 			/* creating Ask for table header search input */
 			Question columnSearchQues = new Question("QUE_SEARCH_" + attributeCode, "Search " + attributeName + "..",
