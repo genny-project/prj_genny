@@ -39,7 +39,10 @@ rule "FRM_TABLE_RESULT_COUNT"
         System.out.println("   Generate FRM_TABLE_RESULT_COUNT Rule  "+serviceToken.getUserCode());
         
         Frame3 frame = Frame3.builder("FRM_TABLE_RESULT_COUNT")
-                      .question("QUE_TABLE_TOTAL_RESULT_COUNT").end()
+                      .question("QUE_TABLE_TOTAL_RESULT_COUNT")
+                        .addTheme("THM_LABEL_BOLD", serviceToken).vcl(VisualControlType.VCL_LABEL).end()
+                        .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
+                      .end()
                       .build();
     
         frame.setRealm(serviceToken.getRealm());

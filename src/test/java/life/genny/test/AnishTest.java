@@ -742,18 +742,21 @@ public class AnishTest extends GennyJbpmBaseTest {
                         Frame3 FRM_TABLE_RESULT_COUNT = Frame3.builder("FRM_TABLE_RESULT_COUNT")
                                         .question("QUE_TABLE_TOTAL_RESULT_COUNT")
                                                 .addTheme("THM_LABEL_BOLD", serviceToken).vcl(VisualControlType.VCL_LABEL).end()
-                                                .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end().end()
+                                                .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
+                                        .end()
                                         .build();
                         
                         Frame3 FRM_TABLE_PAGE_INDEX = Frame3.builder("FRM_TABLE_PAGE_INDEX")
                                         .question("QUE_TABLE_PAGE_INDEX")
+                                                .addTheme("THM_LABEL_BOLD", serviceToken).vcl(VisualControlType.VCL_LABEL).end()
+                                                .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
                                         .end()
                                         .build();
 
                         Frame3 FRM_TABLE_FOOTER = Frame3.builder("FRM_TABLE_FOOTER")
                                         .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()                        
                                         .addFrame(FRM_TABLE_RESULT_COUNT, FramePosition.WEST).end()
-                                        /* .addFrame(FRM_TABLE_PAGE_INDEX).end() */
+                                        .addFrame(FRM_TABLE_PAGE_INDEX, FramePosition.WEST).end()
                                         .addFrame(FRM_TABLE_FOOTER_PAGINATION, FramePosition.EAST).end()
                                         .build();
                         

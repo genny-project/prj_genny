@@ -82,10 +82,7 @@ public class TableUtilsTest {
 		String sessionSearchCode = searchBarCode + "_" + beUtils.getGennyToken().getSessionCode();
 		SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", sessionSearchCode, SearchEntity.class,
 				serviceToken.getToken());
-
-		/* we need to set the searchBe's  code to session Search Code */
-		searchBE.setCode(sessionSearchCode);
-
+		
 		if (searchBE == null) {
 			searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", searchBarCode, SearchEntity.class,
 					serviceToken.getToken());
@@ -99,7 +96,7 @@ public class TableUtilsTest {
 			VertxUtils.putObject(serviceToken.getRealm(), "", sessionSearchCode, searchBE, serviceToken.getToken());
 		}
 
-		log.info("search code coming from searchBE getCode  :: " + searchBE.getCode());
+		log.info("search code coming from searchBEgetCode" + searchBE.getCode());
 
 
 		/* fetch Session SearchBar List from User */
@@ -145,9 +142,9 @@ public class TableUtilsTest {
 		
 		long totalResults = msg.getTotal();
 		Answer totalAnswer = new Answer(beUtils.getGennyToken().getUserCode(),searchBE.getCode(),
-				"PRI_TOTAL_RESULTS", totalResults+"");
+				"PRI_TOTAL", totalResults+"");
 		beUtils.addAnswer(totalAnswer);
-		beUtils.updateBaseEntity(searchBE, totalAnswer);
+		
 		
 		
 		Map<String, String> columns = tableUtils.getTableColumns(searchBE);
