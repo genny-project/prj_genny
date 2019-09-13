@@ -91,6 +91,7 @@ rule "FRM_FORM"
 									.addTheme("THM_FORM_BUTTONS_BEHAVIOUR", serviceToken).dataType(buttonDataType).end()
 									.addTheme("THM_FORM_BUTTONS_BORDER", serviceToken).dataType(buttonDataType).vcl(VisualControlType.INPUT_FIELD).end()
 									.addTheme("THM_FORM_IMAGE_RESTRICTIONS", serviceToken).dataType(imageDataType).vcl(VisualControlType.VCL_INPUT).end()
+									.addTheme("THM_FORM_IMAGE_RESTRICTIONS_DIMENSION", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_SELECTED).end()
 									.addTheme("THM_FORM_VCL_INPUT_GENNY", serviceToken).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
 									.addTheme("THM_FORM_VCL_LABEL_GENNY", serviceToken).vcl(VisualControlType.VCL_LABEL).end()
 									.addTheme("THM_FORM_VCL_WRAPPER_GENNY", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
