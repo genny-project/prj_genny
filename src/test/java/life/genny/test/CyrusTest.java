@@ -215,7 +215,7 @@ public class CyrusTest extends GennyJbpmBaseTest {
 	
 	Frame3 FRM_FORM_TEST = Frame3.builder("FRM_FORM_TEST")
 			.addTheme(THM_FORM_ATTRIBUTES_GENNY).end()
-				.question("QUE_ADD_INTERNSHIP_AGENT_STEP_ONE_GRP")
+				.question("QUE_JOURNAL_W1D1_GRP")
 					.addTheme(THM_FORM_BUTTONS_TEST).dataType(buttonDataType).vcl(VisualControlType.INPUT_WRAPPER).end()
 					.addTheme(THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHT).dataType(buttonDataType).weight(2.0).end()
 					.addTheme(THM_FORM_BUTTONS_TEST1).dataType(buttonDataType).vcl(VisualControlType.INPUT_FIELD).end()

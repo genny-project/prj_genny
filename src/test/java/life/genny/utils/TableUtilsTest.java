@@ -1,5 +1,6 @@
 package life.genny.utils;
 
+
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
@@ -47,6 +48,8 @@ import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.utils.ContextUtils;
 
+
+
 public class TableUtilsTest {
 
 	protected static final Logger log = org.apache.logging.log4j.LogManager
@@ -73,30 +76,33 @@ public class TableUtilsTest {
 			searchBarString = searchBarString.trim();
 			searchBarString = searchBarString.replaceAll("[^a-zA-Z0-9\\ ]", "");
 			Integer max = searchBarString.length();
-			Integer realMax = (max > MAX_SEARCH_BAR_TEXT_SIZE) ? MAX_SEARCH_BAR_TEXT_SIZE : max;
-			searchBarString.substring(0, realMax);
+			Integer realMax = (max > MAX_SEARCH_BAR_TEXT_SIZE)?MAX_SEARCH_BAR_TEXT_SIZE:max;
+			searchBarString.substring(0,  realMax); 
 			log.info("Search text = [" + searchBarString + "]");
 		}
-
+		
 		/* Get the SearchBE */
 		String sessionSearchCode = searchBarCode + "_" + beUtils.getGennyToken().getSessionCode();
 		SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", sessionSearchCode, SearchEntity.class,
 				serviceToken.getToken());
-		
+
 		if (searchBE == null) {
 			searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", searchBarCode, SearchEntity.class,
-					serviceToken.getToken());
-
+			serviceToken.getToken());
+			
+			
 			/* we need to set the searchBe's  code to session Search Code */
 			searchBE.setCode(sessionSearchCode);
+			
 			/*
-			 * Save Session Search in cache , ideally this should be in OutputParam and
-			 * saved to workflow
-			 */
+			* Save Session Search in cache , ideally this should be in OutputParam and
+			* saved to workflow
+			*/
 			VertxUtils.putObject(serviceToken.getRealm(), "", sessionSearchCode, searchBE, serviceToken.getToken());
 		}
 
-		log.info("search code coming from searchBEgetCode" + searchBE.getCode());
+				
+		log.info("search code coming from searchBE getCode  :: " + searchBE.getCode());
 
 
 		/* fetch Session SearchBar List from User */
@@ -106,47 +112,53 @@ public class TableUtilsTest {
 		}.getType();
 		List<String> defaultList = new ArrayList<String>();
 		String defaultListString = JsonUtils.toJson(defaultList);
-		//String historyStr = user.getValue("PRI_SEARCH_HISTORY", defaultListString);
-		//List<String> searchHistory = JsonUtils.fromJson(historyStr, type);
+		String historyStr = user.getValue("PRI_SEARCH_HISTORY", defaultListString);
+		List<String> searchHistory = JsonUtils.fromJson(historyStr, type);
 
 		/* Add new SearchBarString to Session SearchBar List */
 		/* look for existing search term and bring to front - slow */
-		// if (answer != null) { // no need to set history if no data sent
-		// 	int index = searchHistory.indexOf(searchBarString);
-		// 	if (index >= 0) {
-		// 		searchHistory.remove(index);
-		// 	}
-		// 	searchHistory.add(0, searchBarString);
-		// 	if (searchHistory.size() > MAX_SEARCH_HISTORY_SIZE) {
-		// 		searchHistory.remove(MAX_SEARCH_HISTORY_SIZE);
-		// 	}
-		// 	String newHistoryString = JsonUtils.toJson(searchHistory);
-		// 	Answer history = new Answer(beUtils.getGennyToken().getUserCode(), beUtils.getGennyToken().getUserCode(),
-		// 			"PRI_SEARCH_HISTORY", newHistoryString);
-		// 	beUtils.saveAnswer(history);
-		// 	log.info("Search History for " + beUtils.getGennyToken().getUserCode() + " = " + searchHistory.toString());
-		// } else {
-		// 	// so grab the latest search history
-		// 	if (!searchHistory.isEmpty()) {
-		// 		searchBarString = searchHistory.get(0);
-		// 	} else {
-		// 		searchBarString = ""; // fetch everything
-		// 	}
-		// }
+		if (answer != null) { // no need to set history if no data sent
+		int index = searchHistory.indexOf(searchBarString);
+		if (index >= 0) {
+			searchHistory.remove(index);
+		}
+		searchHistory.add(0, searchBarString);
+		if (searchHistory.size() > MAX_SEARCH_HISTORY_SIZE) {
+			searchHistory.remove(MAX_SEARCH_HISTORY_SIZE);
+		}
+		String newHistoryString = JsonUtils.toJson(searchHistory);
+		Answer history = new Answer(beUtils.getGennyToken().getUserCode(), beUtils.getGennyToken().getUserCode(),
+				"PRI_SEARCH_HISTORY", newHistoryString);
+		beUtils.saveAnswer(history);
+		log.info("Search History for "+beUtils.getGennyToken().getUserCode()+" = "+searchHistory.toString());
+		} else {
+			// so grab the latest search history
+			if (!searchHistory.isEmpty()) {
+			searchBarString = searchHistory.get(0);
+			} else {
+				searchBarString = ""; // fetch everything
+			}
+		}
 
-		searchBE.addFilter("PRI_NAME", SearchEntity.StringFilter.LIKE, "%" + searchBarString + "%");
+
+			searchBE.addFilter("PRI_NAME", SearchEntity.StringFilter.LIKE, "%" + searchBarString + "%");
 
 		// Send out Search Results
 
 		QDataBaseEntityMessage msg = tableUtils.fetchSearchResults(searchBE, beUtils.getGennyToken());
-		
+
+		/* get the total count of the results */
 		long totalResults = msg.getTotal();
+
+		/* print the total  */
+		log.info("total count is  :: " + totalResults + "");
 		Answer totalAnswer = new Answer(beUtils.getGennyToken().getUserCode(),searchBE.getCode(),
 				"PRI_TOTAL", totalResults+"");
 		beUtils.addAnswer(totalAnswer);
-		
-		
-		
+
+		beUtils.updateBaseEntity(searchBE, totalAnswer);
+
+
 		Map<String, String> columns = tableUtils.getTableColumns(searchBE);
 
 		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
@@ -188,9 +200,16 @@ public class TableUtilsTest {
 				Type setType = new TypeToken<Set<QDataAskMessage>>() {
 				}.getType();
 
-				String askMsgs2Str = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", "FRM_TABLE_CONTENT_ASKS",
-						String.class, beUtils.getGennyToken().getToken());
+				String askMsgs2Str = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "",
+						"FRM_TABLE_CONTENT_ASKS", String.class, beUtils.getGennyToken().getToken());
 
+				if (askMsgs2Str == null) {
+					Frame3 frame = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_TABLE_CONTENT",
+							Frame3.class, serviceToken.getToken());
+					
+					FrameUtils2.toMessage2(frame, serviceToken);
+				}
+				
 				Set<QDataAskMessage> askMsgs2 = JsonUtils.fromJson(askMsgs2Str, setType);
 				QDataAskMessage[] askMsg2Array = askMsgs2.stream().toArray(QDataAskMessage[]::new);
 				ContextList rowsContextList = askMsg2Array[0].getItems()[0].getContextList();
@@ -207,24 +226,24 @@ public class TableUtilsTest {
 				/* Link row asks to a single ask: QUE_TEST_TABLE_RESULTS_GRP */
 				Attribute questionAttribute = new Attribute("QQQ_QUESTION_GROUP", "link", new DataType(String.class));
 				Question tableResultQuestion = new Question("QUE_TABLE_RESULTS_GRP", "Table Results Question Group",
-						questionAttribute, true);
+				questionAttribute, true);
 				Ask tableResultAsk = new Ask(tableResultQuestion, beUtils.getGennyToken().getUserCode(),
-						beUtils.getGennyToken().getUserCode());
+				beUtils.getGennyToken().getUserCode());
 				tableResultAsk.setChildAsks(rowAsksArr);
 				tableResultAsk.setContextList(rowsContextList);
 				Set<QDataAskMessage> tableResultAskMsgs = new HashSet<QDataAskMessage>();
-
+				
 				tableResultAskMsgs.add(new QDataAskMessage(tableResultAsk));
-
+				
 				/* link single ask QUE_TEST_TABLE_RESULTS_GRP to FRM_TABLE_CONTENT ? */
 				String tableResultAskCode = tableResultAsk.getQuestionCode();
-
+				
 				QDataBaseEntityMessage msg3 = null;
 				msg3 = TableUtilsTest.changeQuestion(searchBE, "FRM_TABLE_CONTENT", tableResultAskCode, serviceToken,
-						beUtils.getGennyToken(), tableResultAskMsgs);
+				beUtils.getGennyToken(), tableResultAskMsgs);
 				msg3.setToken(beUtils.getGennyToken().getToken());
 				msg3.setReplace(true);
-
+				
 				for (QDataAskMessage askMsg : tableResultAskMsgs) {
 					askMsg.setToken(beUtils.getGennyToken().getToken());
 					// askMsg.getItems()[0] = headerAsk;
@@ -245,7 +264,7 @@ public class TableUtilsTest {
 		totalAttribute, true);
 
 		Ask totalAsk = new Ask(totalQuestion, beUtils.getGennyToken().getUserCode(),
-		sessionSearchCode);
+		searchBE.getCode());
 	
 		/* create index ask */
 		Question indexQuestion = new Question("QUE_TABLE_PAGE_INDEX", "Page Number",
@@ -271,12 +290,13 @@ public class TableUtilsTest {
 		searchBeMsg.setToken(beUtils.getGennyToken().getToken());
 		VertxUtils.writeMsg("webcmds", JsonUtils.toJson((searchBeMsg)));
 
+
 	}
 
 	public TableData generateTableAsks(SearchEntity searchBe, GennyToken gennyToken, QDataBaseEntityMessage msg) {
 
 		log.info("Search Results for " + searchBe.getCode() + " and user " + gennyToken.getUserCode() + " = " + msg); // use
-		// QUE_TABLE_VIEW_TEST
+																														// QUE_TABLE_VIEW_TEST
 		log.info("Search result items = " + msg.getReturnCount());
 		if (msg.getReturnCount() > 0) {
 			BaseEntity result0 = msg.getItems()[0];
@@ -339,64 +359,44 @@ public class TableUtilsTest {
 
 		if (VertxUtils.cachedEnabled) {
 			List<BaseEntity> results = new ArrayList<BaseEntity>();
-			// tests.add(createTestPerson(gennyToken, "The Phantom",
-			// "kit.walker@phantom.bg"));
-			// tests.add(createTestPerson(gennyToken, "Phantom Menace",
-			// "menace43r@starwars.net"));
-			// tests.add(createTestPerson(gennyToken, "The Phantom Ranger",
-			// "phantom@rangers.com"));
+//			tests.add(createTestPerson(gennyToken, "The Phantom", "kit.walker@phantom.bg"));
+//			tests.add(createTestPerson(gennyToken, "Phantom Menace", "menace43r@starwars.net"));
+//			tests.add(createTestPerson(gennyToken, "The Phantom Ranger", "phantom@rangers.com"));
 			Integer pageStart = searchBE.getValue("SCH_PAGE_START", 0);
 			Integer pageSize = searchBE.getValue("SCH_PAGE_SIZE", 10);
-
+			
 			List<BaseEntity> tests = new ArrayList<>();
+			
+			
+			
+			tests.add(createTestCompany(gennyToken, "Melbourne University", "0398745321","support@melbuni.edu.au","MELBOURNE","Victoria","3001"));
+			tests.add(createTestCompany(gennyToken, "Monash University", "0398744421","support@melbuni.edu.au","CLAYTON","Victoria","3142"));
+			tests.add(createTestCompany(gennyToken, "Latrobe University", "0398733321","support@melbuni.edu.au","MELBOURNE","Victoria","3001"));
+			tests.add(createTestCompany(gennyToken, "University Of Warracknabeal", "0392225321","support@melbuni.edu.au","WARRACKNABEAL","Victoria","3993"));
+			tests.add(createTestCompany(gennyToken, "Ashburton University", "0398741111","support@melbuni.edu.au","ASHBURTON","Victoria","3147"));
+			tests.add(createTestCompany(gennyToken, "Outcome Academy", "0398745777","support@melbuni.edu.au","MELBOURNE","Victoria","3001"));
+			tests.add(createTestCompany(gennyToken, "Holland University", "0298555521","support@melbuni.edu.au","MELBOURNE","Victoria","3001"));
+			tests.add(createTestCompany(gennyToken, "University of Greenvale", "0899995321","support@melbuni.edu.au","MELBOURNE","Victoria","3001"));
+			tests.add(createTestCompany(gennyToken, "Crow University", "0398749999","support@melbuni.edu.au","MELBOURNE","Victoria","3001"));
+			tests.add(createTestCompany(gennyToken, "RMIT University", "0398748787","support@melbuni.edu.au","MELBOURNE","Victoria","3001"));
+			tests.add(createTestCompany(gennyToken, "Mt Buller University", "0398836421","support@melbuni.edu.au","MELBOURNE","Victoria","3001"));
+			tests.add(createTestCompany(gennyToken, "Australian National University", "0198876541","support@melbuni.edu.au","MELBOURNE","Victoria","3001"));
+			tests.add(createTestCompany(gennyToken, "Dodgy University", "0390000001","support@melbuni.edu.au","MELBOURNE","Victoria","3001"));
+			tests.add(createTestCompany(gennyToken, "Australian Catholic University", "0398711121","support@melbuni.edu.au","MELBOURNE","Victoria","3001"));
+			tests.add(createTestCompany(gennyToken, "Australian Jedi University", "0798788881","support@melbuni.edu.au","MELBOURNE","Victoria","3001"));
+			tests.add(createTestCompany(gennyToken, "Brisbane Lions University", "0401020319","support@melbuni.edu.au","BRISBANE","Queensland","4000"));
+			tests.add(createTestCompany(gennyToken, "AFL University", "0390000001","support@melbuni.edu.au","MELBOURNE","Victoria","3001"));
+			tests.add(createTestCompany(gennyToken, "Uluru University", "0398711441","support@melbuni.edu.au","MELBOURNE","Victoria","3001"));
+			tests.add(createTestCompany(gennyToken, "University Of Hard Knocks", "0798744881","support@melbuni.edu.au","MELBOURNE","Victoria","3001"));
+			tests.add(createTestCompany(gennyToken, "Scam University", "0705020319","support@melbuni.edu.au","MELBOURNE","Victoria","3001"));
 
-			tests.add(createTestCompany(gennyToken, "Melbourne University", "0398745321", "support@melbuni.edu.au",
-					"MELBOURNE", "Victoria", "3001"));
-			tests.add(createTestCompany(gennyToken, "Monash University", "0398744421", "support@melbuni.edu.au", "CLAYTON",
-					"Victoria", "3142"));
-			tests.add(createTestCompany(gennyToken, "Latrobe University", "0398733321", "support@melbuni.edu.au", "MELBOURNE",
-					"Victoria", "3001"));
-			tests.add(createTestCompany(gennyToken, "University Of Warracknabeal", "0392225321", "support@melbuni.edu.au",
-					"WARRACKNABEAL", "Victoria", "3993"));
-			tests.add(createTestCompany(gennyToken, "Ashburton University", "0398741111", "support@melbuni.edu.au",
-					"ASHBURTON", "Victoria", "3147"));
-			tests.add(createTestCompany(gennyToken, "Outcome Academy", "0398745777", "support@melbuni.edu.au", "MELBOURNE",
-					"Victoria", "3001"));
-			tests.add(createTestCompany(gennyToken, "Holland University", "0298555521", "support@melbuni.edu.au", "MELBOURNE",
-					"Victoria", "3001"));
-			tests.add(createTestCompany(gennyToken, "University of Greenvale", "0899995321", "support@melbuni.edu.au",
-					"MELBOURNE", "Victoria", "3001"));
-			tests.add(createTestCompany(gennyToken, "Crow University", "0398749999", "support@melbuni.edu.au", "MELBOURNE",
-					"Victoria", "3001"));
-			tests.add(createTestCompany(gennyToken, "RMIT University", "0398748787", "support@melbuni.edu.au", "MELBOURNE",
-					"Victoria", "3001"));
-			tests.add(createTestCompany(gennyToken, "Mt Buller University", "0398836421", "support@melbuni.edu.au",
-					"MELBOURNE", "Victoria", "3001"));
-			tests.add(createTestCompany(gennyToken, "Australian National University", "0198876541", "support@melbuni.edu.au",
-					"MELBOURNE", "Victoria", "3001"));
-			tests.add(createTestCompany(gennyToken, "Dodgy University", "0390000001", "support@melbuni.edu.au", "MELBOURNE",
-					"Victoria", "3001"));
-			tests.add(createTestCompany(gennyToken, "Australian Catholic University", "0398711121", "support@melbuni.edu.au",
-					"MELBOURNE", "Victoria", "3001"));
-			tests.add(createTestCompany(gennyToken, "Australian Jedi University", "0798788881", "support@melbuni.edu.au",
-					"MELBOURNE", "Victoria", "3001"));
-			tests.add(createTestCompany(gennyToken, "Brisbane Lions University", "0401020319", "support@melbuni.edu.au",
-					"BRISBANE", "Queensland", "4000"));
-			tests.add(createTestCompany(gennyToken, "AFL University", "0390000001", "support@melbuni.edu.au", "MELBOURNE",
-					"Victoria", "3001"));
-			tests.add(createTestCompany(gennyToken, "Uluru University", "0398711441", "support@melbuni.edu.au", "MELBOURNE",
-					"Victoria", "3001"));
-			tests.add(createTestCompany(gennyToken, "University Of Hard Knocks", "0798744881", "support@melbuni.edu.au",
-					"MELBOURNE", "Victoria", "3001"));
-			tests.add(createTestCompany(gennyToken, "Scam University", "0705020319", "support@melbuni.edu.au", "MELBOURNE",
-					"Victoria", "3001"));
-
-			for (Integer pageIndex = pageStart; pageIndex < (pageStart + pageSize); pageIndex++) {
+			for (Integer pageIndex = pageStart;pageIndex < (pageStart+pageSize);pageIndex++) {
 				if (pageIndex < tests.size()) {
 					results.add(tests.get(pageIndex));
 				}
 			}
-
+			
+			
 			msg = new QDataBaseEntityMessage(results);
 			return msg;
 		}
@@ -447,18 +447,17 @@ public class TableUtilsTest {
 		return result1;
 	}
 
-	static BaseEntity createTestCompany(GennyToken gennyToken, String name, String phone, String email, String city,
-			String state, String postcode) {
+	static BaseEntity createTestCompany(GennyToken gennyToken, String name, String phone,String email,String city, String state, String postcode) {
 		String usercode = "CPY_" + UUID.randomUUID().toString().substring(0, 15).toUpperCase().replaceAll("-", "");
-
+		
 		BaseEntity result1 = new BaseEntity(usercode, name);
 		result1.setRealm(gennyToken.getRealm());
 		try {
-			result1.addAnswer(new Answer(result1, result1, attribute("PRI_EMAIL", gennyToken), email));
-			result1.addAnswer(new Answer(result1, result1, attribute("PRI_ADDRESS_STATE", gennyToken), state));
-			result1.addAnswer(new Answer(result1, result1, attribute("PRI_ADDRESS_CITY", gennyToken), city));
-			result1.addAnswer(new Answer(result1, result1, attribute("PRI_ADDRESS_POSTCODE", gennyToken), postcode));
-			result1.addAnswer(new Answer(result1, result1, attribute("PRI_LANDLINE", gennyToken), phone));
+			result1.addAnswer(new Answer(result1,result1,attribute("PRI_EMAIL",gennyToken),email));
+			result1.addAnswer(new Answer(result1,result1,attribute("PRI_ADDRESS_STATE",gennyToken),state));
+			result1.addAnswer(new Answer(result1,result1,attribute("PRI_ADDRESS_CITY",gennyToken),city));
+			result1.addAnswer(new Answer(result1,result1,attribute("PRI_ADDRESS_POSTCODE",gennyToken),postcode));
+			result1.addAnswer(new Answer(result1,result1,attribute("PRI_LANDLINE",gennyToken),phone));
 		} catch (BadDataException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -466,12 +465,14 @@ public class TableUtilsTest {
 
 		return result1;
 	}
-
-	private static Attribute attribute(final String attributeCode, GennyToken gToken) {
+	
+	
+	private static Attribute attribute(final String attributeCode,GennyToken gToken)
+	{
 		Attribute attribute = RulesUtils.getAttribute(attributeCode, gToken.getToken());
 		return attribute;
 	}
-
+	
 	public Ask generateTableHeaderAsk(SearchEntity searchBe, List<QDataBaseEntityMessage> themeMsgList) {
 
 		List<Ask> asks = new ArrayList<>();
@@ -502,13 +503,14 @@ public class TableUtilsTest {
 					new DataType("Text", searchValidationList, "Text"));
 
 			/* Initialize Column Header Ask group */
-			Question columnHeaderQuestion = new Question("QUE_" + attributeCode + "_GRP", attributeName, tableCellAttribute,
-					true);
-			Ask columnHeaderAsk = new Ask(columnHeaderQuestion, beUtils.getGennyToken().getUserCode(), searchBe.getCode());
+			Question columnHeaderQuestion = new Question("QUE_" + attributeCode + "_GRP", attributeName,
+					tableCellAttribute, true);
+			Ask columnHeaderAsk = new Ask(columnHeaderQuestion, beUtils.getGennyToken().getUserCode(),
+					searchBe.getCode());
 
 			/* creating ask for table header label-sort */
-			Question columnSortQues = new Question("QUE_SORT_" + attributeCode, attributeName, eventAttribute, false);
-			Ask columnSortAsk = new Ask(columnSortQues, beUtils.getGennyToken().getUserCode(), searchBe.getCode());
+			Ask columnSortAsk = getAskForTableHeaderSort(searchBe, attributeCode, attributeName, eventAttribute,
+					themeMsgList);
 
 			/* creating Ask for table header search input */
 			Question columnSearchQues = new Question("QUE_SEARCH_" + attributeCode, "Search " + attributeName + "..",
@@ -527,7 +529,8 @@ public class TableUtilsTest {
 			columnHeaderAsk.setChildAsks(tableColumnChildAsksArray);
 
 			/* set Vertical Theme to columnHeaderAsk */
-			columnHeaderAsk = this.createVirtualContext(columnHeaderAsk, verticalTheme, ContextType.THEME, themeMsgList);
+			columnHeaderAsk = this.createVirtualContext(columnHeaderAsk, verticalTheme, ContextType.THEME,
+					themeMsgList);
 			asks.add(columnHeaderAsk);
 		}
 
@@ -537,7 +540,8 @@ public class TableUtilsTest {
 		/*
 		 * we create a table-header ask grp and set all the column asks as it's childAsk
 		 */
-		Question tableHeaderQuestion = new Question("QUE_TABLE_HEADER_GRP", searchBe.getName(), questionAttribute, true);
+		Question tableHeaderQuestion = new Question("QUE_TABLE_HEADER_GRP", searchBe.getName(), questionAttribute,
+				true);
 
 		Ask tableHeaderAsk = new Ask(tableHeaderQuestion, beUtils.getGennyToken().getUserCode(), searchBe.getCode());
 		tableHeaderAsk.setChildAsks(asksArray);
@@ -558,15 +562,15 @@ public class TableUtilsTest {
 		return createVirtualContext(ask, themeList, linkCode, VisualControlType.VCL_INPUT, themeMsgList);
 	}
 
-	public Ask createVirtualContext(Ask ask, BaseEntity theme, ContextType linkCode, VisualControlType visualControlType,
-			List<QDataBaseEntityMessage> themeMsgList) {
+	public Ask createVirtualContext(Ask ask, BaseEntity theme, ContextType linkCode,
+			VisualControlType visualControlType, List<QDataBaseEntityMessage> themeMsgList) {
 		List<BaseEntity> themeList = new ArrayList<>();
 		themeList.add(theme);
 		return createVirtualContext(ask, themeList, linkCode, visualControlType, themeMsgList);
 	}
 
-	public Ask createVirtualContext(Ask ask, BaseEntity theme, ContextType linkCode, VisualControlType visualControlType,
-			Double weight, List<QDataBaseEntityMessage> themeMsgList) {
+	public Ask createVirtualContext(Ask ask, BaseEntity theme, ContextType linkCode,
+			VisualControlType visualControlType, Double weight, List<QDataBaseEntityMessage> themeMsgList) {
 		List<BaseEntity> themeList = new ArrayList<>();
 		themeList.add(theme);
 		return createVirtualContext(ask, themeList, linkCode, visualControlType, weight, themeMsgList);
@@ -645,7 +649,8 @@ public class TableUtilsTest {
 		createVirtualContext(columnSortAsk, horizontalWrapperBe, ContextType.THEME, VisualControlType.VCL_WRAPPER,
 				themeMsgList);
 		createVirtualContext(columnSortAsk, sortIconBe, ContextType.ICON, VisualControlType.VCL_ICON, themeMsgList);
-		createVirtualContext(columnSortAsk, visualBaseEntity, ContextType.THEME, VisualControlType.VCL_INPUT, themeMsgList);
+		createVirtualContext(columnSortAsk, visualBaseEntity, ContextType.THEME, VisualControlType.VCL_INPUT,
+				themeMsgList);
 		createVirtualContext(columnSortAsk, headerLabelSortThemeBe, ContextType.THEME, VisualControlType.VCL_LABEL,
 				themeMsgList);
 
@@ -671,11 +676,13 @@ public class TableUtilsTest {
 				ValidationList tableRowValidationList = new ValidationList();
 				tableRowValidationList.setValidationList(tableRowValidations);
 
-				DataType tableRowDataType = new DataType("DTT_TABLE_ROW_GRP", tableRowValidationList, "Table Row Group", "");
+				DataType tableRowDataType = new DataType("DTT_TABLE_ROW_GRP", tableRowValidationList, "Table Row Group",
+						"");
 
 				frame = Frame3.builder(frameCode).addTheme("THM_TABLE_BORDER", serviceToken).end()
-						.addTheme("THM_TABLE_CONTENT_CENTRE", ThemePosition.CENTRE, serviceToken).end().question(questionCode)
-						.addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).dataType(tableRowDataType).weight(1.0).end()
+						.addTheme("THM_TABLE_CONTENT_CENTRE", ThemePosition.CENTRE, serviceToken).end()
+						.question(questionCode).addTheme("THM_DISPLAY_HORIZONTAL", serviceToken)
+						.dataType(tableRowDataType).weight(1.0).end()
 						.addTheme("THM_TABLE_ROW_CONTENT_WRAPPER", serviceToken).dataType(tableRowDataType)
 						.vcl(VisualControlType.GROUP).weight(1.0).end().addTheme("THM_TABLE_ROW", serviceToken)
 						.dataType(tableRowDataType).weight(1.0).end().addTheme("THM_TABLE_CONTENT", serviceToken)
@@ -694,17 +701,20 @@ public class TableUtilsTest {
 				ValidationList tableCellValidationList = new ValidationList();
 				tableCellValidationList.setValidationList(tableCellValidations);
 
-				DataType tableCellDataType = new DataType("DTT_TABLE_CELL_GRP", tableCellValidationList, "Table Cell Group",
-						"");
+				DataType tableCellDataType = new DataType("DTT_TABLE_CELL_GRP", tableCellValidationList,
+						"Table Cell Group", "");
 
-				frame = Frame3.builder(frameCode).addTheme("THM_TABLE_BORDER", serviceToken).end().question(questionCode) // QUE_TEST_TABLE_HEADER_GRP
-						.addTheme("THM_QUESTION_GRP_LABEL", serviceToken).vcl(VisualControlType.GROUP).dataType(tableCellDataType)
-						.end().addTheme("THM_WIDTH_100_PERCENT_NO_INHERIT", serviceToken).vcl(VisualControlType.GROUP).end()
-						.addTheme("THM_TABLE_ROW_CELL", serviceToken).dataType(tableCellDataType)
-						.vcl(VisualControlType.GROUP_WRAPPER).end().addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).weight(2.0)
-						.end().addTheme("THM_TABLE_HEADER_CELL_WRAPPER", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
-						.addTheme("THM_TABLE_HEADER_CELL_GROUP_LABEL", serviceToken).vcl(VisualControlType.GROUP_LABEL).end()
-						.addTheme("THM_DISPLAY_VERTICAL", serviceToken).dataType(tableCellDataType).weight(1.0).end().end().build();
+				frame = Frame3.builder(frameCode).addTheme("THM_TABLE_BORDER", serviceToken).end()
+						.question(questionCode) // QUE_TEST_TABLE_HEADER_GRP
+						.addTheme("THM_QUESTION_GRP_LABEL", serviceToken).vcl(VisualControlType.GROUP)
+						.dataType(tableCellDataType).end().addTheme("THM_WIDTH_100_PERCENT_NO_INHERIT", serviceToken)
+						.vcl(VisualControlType.GROUP).end().addTheme("THM_TABLE_ROW_CELL", serviceToken)
+						.dataType(tableCellDataType).vcl(VisualControlType.GROUP_WRAPPER).end()
+						.addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).weight(2.0).end()
+						.addTheme("THM_TABLE_HEADER_CELL_WRAPPER", serviceToken).vcl(VisualControlType.VCL_WRAPPER)
+						.end().addTheme("THM_TABLE_HEADER_CELL_GROUP_LABEL", serviceToken)
+						.vcl(VisualControlType.GROUP_LABEL).end().addTheme("THM_DISPLAY_VERTICAL", serviceToken)
+						.dataType(tableCellDataType).weight(1.0).end().end().build();
 
 			}
 
@@ -730,7 +740,8 @@ public class TableUtilsTest {
 					if (sourceFrame.getCode().equals(rootFrameCode)) {
 
 						log.info("ShowFrame : Found Source Frame BaseEntity : " + sourceFrame);
-						EntityEntity entityEntity = new EntityEntity(sourceFrame, targetFrame, attribute, 1.0, "CENTRE");
+						EntityEntity entityEntity = new EntityEntity(sourceFrame, targetFrame, attribute, 1.0,
+								"CENTRE");
 						// Set<EntityEntity> entEntList = sourceFrame.getLinks();
 						// entEntList.add(entityEntity);
 						sourceFrame.getLinks().add(entityEntity);
@@ -820,8 +831,8 @@ public class TableUtilsTest {
 						if (attributeCode.equals("QUE_TABLE_ACTIONS_GRP")) {
 
 							/* creating actions ask group */
-							Question actionGroupQuestion = new Question("QUE_" + be.getCode() + "_TABLE_ACTIONS_GRP", "Actions", attr,
-									true);
+							Question actionGroupQuestion = new Question("QUE_" + be.getCode() + "_TABLE_ACTIONS_GRP",
+									"Actions", attr, true);
 							Ask childAsk = new Ask(actionGroupQuestion, targetCode, be.getCode());
 
 							/* creating child ask for actions */
@@ -829,7 +840,8 @@ public class TableUtilsTest {
 
 							Question viewQues = new Question("QUE_VIEW_" + be.getCode(), "View", actionAttribute, true);
 							Question editQues = new Question("QUE_EDIT_" + be.getCode(), "Edit", actionAttribute, true);
-							Question deleteQues = new Question("QUE_DELETE_" + be.getCode(), "Delete", actionAttribute, true);
+							Question deleteQues = new Question("QUE_DELETE_" + be.getCode(), "Delete", actionAttribute,
+									true);
 
 							List<Ask> actionChildAsks = new ArrayList<>();
 
@@ -861,7 +873,8 @@ public class TableUtilsTest {
 							Ask[] actionChildAsksArr = actionChildAsks.stream().toArray(Ask[]::new);
 							childAsk.setChildAsks(actionChildAsksArr);
 
-							tableUtils.createVirtualContext(childAsk, tableCellUnInheritableTheme, ContextType.THEME, themeMsgList);
+							tableUtils.createVirtualContext(childAsk, tableCellUnInheritableTheme, ContextType.THEME,
+									themeMsgList);
 							tableUtils.createVirtualContext(childAsk, noFlexTheme, ContextType.THEME, themeMsgList);
 
 							/* add the entityAttribute ask to list */
@@ -878,8 +891,10 @@ public class TableUtilsTest {
 
 							QBulkMessage bulkMsg = new QBulkMessage();
 
-							QDataBaseEntityMessage elementHeightFitThemeBeMsg = new QDataBaseEntityMessage(elementHeightFitThemeBe);
-							QDataBaseEntityMessage cardContainerThemeBeMsg = new QDataBaseEntityMessage(cardContainerThemeBe);
+							QDataBaseEntityMessage elementHeightFitThemeBeMsg = new QDataBaseEntityMessage(
+									elementHeightFitThemeBe);
+							QDataBaseEntityMessage cardContainerThemeBeMsg = new QDataBaseEntityMessage(
+									cardContainerThemeBe);
 
 							bulkMsg.add(elementHeightFitThemeBeMsg);
 							bulkMsg.add(cardContainerThemeBeMsg);
@@ -906,50 +921,54 @@ public class TableUtilsTest {
 							Ask cardGrpAsk = new Ask(cardGrpQues, targetCode, be.getCode());
 							cardGrpAsk = tableUtils.createVirtualContext(cardGrpAsk, verticalThemeBe, ContextType.THEME,
 									themeMsgList);
-							cardGrpAsk = tableUtils.createVirtualContext(cardGrpAsk, cardContainerThemeBe, ContextType.THEME,
-									themeMsgList);
-							cardGrpAsk = tableUtils.createVirtualContext(cardGrpAsk, elementHeightFitThemeBe, ContextType.THEME,
-									VisualControlType.VCL_WRAPPER, themeMsgList);
+							cardGrpAsk = tableUtils.createVirtualContext(cardGrpAsk, cardContainerThemeBe,
+									ContextType.THEME, themeMsgList);
+							cardGrpAsk = tableUtils.createVirtualContext(cardGrpAsk, elementHeightFitThemeBe,
+									ContextType.THEME, VisualControlType.VCL_WRAPPER, themeMsgList);
 
 							/* creating card-main group */
-							Question cardMainGrpQues = new Question("QUE_CARD_MAIN_GRP", "Card Main Group", quesGrpAttr, true);
+							Question cardMainGrpQues = new Question("QUE_CARD_MAIN_GRP", "Card Main Group", quesGrpAttr,
+									true);
 							Ask cardMainGrpAsk = new Ask(cardMainGrpQues, targetCode, be.getCode());
-							cardMainGrpAsk = tableUtils.createVirtualContext(cardMainGrpAsk, horizontalThemeBe, ContextType.THEME,
-									themeMsgList);
-
-							/* creating card-secondary group */
-							Question cardSecondaryGrpQues = new Question("QUE_CARD_SECONDARY_GRP", "Card Secondary Group",
-									quesGrpAttr, true);
-							Ask cardSecondaryGrpAsk = new Ask(cardSecondaryGrpQues, targetCode, be.getCode());
-							cardSecondaryGrpAsk = tableUtils.createVirtualContext(cardSecondaryGrpAsk, horizontalThemeBe,
+							cardMainGrpAsk = tableUtils.createVirtualContext(cardMainGrpAsk, horizontalThemeBe,
 									ContextType.THEME, themeMsgList);
 
+							/* creating card-secondary group */
+							Question cardSecondaryGrpQues = new Question("QUE_CARD_SECONDARY_GRP",
+									"Card Secondary Group", quesGrpAttr, true);
+							Ask cardSecondaryGrpAsk = new Ask(cardSecondaryGrpQues, targetCode, be.getCode());
+							cardSecondaryGrpAsk = tableUtils.createVirtualContext(cardSecondaryGrpAsk,
+									horizontalThemeBe, ContextType.THEME, themeMsgList);
+
 							/* creating left-card group */
-							Question cardLeftGrpQues = new Question("QUE_CARD_LEFT_GRP", "Card Left Group", quesGrpAttr, true);
+							Question cardLeftGrpQues = new Question("QUE_CARD_LEFT_GRP", "Card Left Group", quesGrpAttr,
+									true);
 							Ask cardLeftGrpAsk = new Ask(cardLeftGrpQues, targetCode, be.getCode());
-							cardLeftGrpAsk = tableUtils.createVirtualContext(cardLeftGrpAsk, verticalThemeBe, ContextType.THEME,
-									themeMsgList);
+							cardLeftGrpAsk = tableUtils.createVirtualContext(cardLeftGrpAsk, verticalThemeBe,
+									ContextType.THEME, themeMsgList);
 
 							/* image */
 							Question imgQues = new Question("QUE_IMAGE", "Image Question", imgAttr, true);
 							Ask imgAsk = new Ask(imgQues, targetCode, be.getCode());
-							imgAsk = tableUtils.createVirtualContext(imgAsk, imageFitThemeBe, ContextType.THEME, themeMsgList);
+							imgAsk = tableUtils.createVirtualContext(imgAsk, imageFitThemeBe, ContextType.THEME,
+									themeMsgList);
 							Ask[] imgAskArr = { imgAsk };
 
 							/* link asks */
 							cardLeftGrpAsk.setChildAsks(imgAskArr);
 
 							/* creating centre-card group */
-							Question cardCentreGrpQues = new Question("QUE_CARD_CENTRE_GRP", "Card Centre Group", quesGrpAttr, true);
+							Question cardCentreGrpQues = new Question("QUE_CARD_CENTRE_GRP", "Card Centre Group",
+									quesGrpAttr, true);
 							Ask cardCentreGrpAsk = new Ask(cardCentreGrpQues, targetCode, be.getCode());
-							cardCentreGrpAsk = tableUtils.createVirtualContext(cardCentreGrpAsk, verticalThemeBe, ContextType.THEME,
-									themeMsgList);
+							cardCentreGrpAsk = tableUtils.createVirtualContext(cardCentreGrpAsk, verticalThemeBe,
+									ContextType.THEME, themeMsgList);
 
 							/* name-group */
 							Question nameGrpQues = new Question("QUE_NAME_GRP", "Name Group", quesGrpAttr, true);
 							Ask nameGrpAsk = new Ask(nameGrpQues, targetCode, be.getCode());
-							nameGrpAsk = tableUtils.createVirtualContext(nameGrpAsk, horizontalThemeBe, ContextType.THEME,
-									themeMsgList);
+							nameGrpAsk = tableUtils.createVirtualContext(nameGrpAsk, horizontalThemeBe,
+									ContextType.THEME, themeMsgList);
 
 							/* first-name */
 							Question fNameQues = new Question("QUE_FIRSTNAME", "First Name", fNameAttr, true);
@@ -989,18 +1008,20 @@ public class TableUtilsTest {
 							cardCentreGrpAsk.setChildAsks(cardCentreChildAsksArr);
 
 							/* creating right-card group */
-							Question cardRightGrpQues = new Question("QUE_CARD_RIGHT_GRP", "Card Right Group", quesGrpAttr, true);
+							Question cardRightGrpQues = new Question("QUE_CARD_RIGHT_GRP", "Card Right Group",
+									quesGrpAttr, true);
 							Ask cardRightGrpAsk = new Ask(cardRightGrpQues, targetCode, be.getCode());
-							cardRightGrpAsk = tableUtils.createVirtualContext(cardRightGrpAsk, verticalThemeBe, ContextType.THEME,
-									themeMsgList);
+							cardRightGrpAsk = tableUtils.createVirtualContext(cardRightGrpAsk, verticalThemeBe,
+									ContextType.THEME, themeMsgList);
 
 							/* options-menu */
-							Question optionsQues = new Question("QUE_CARD_OPTIONS" + be.getCode(), "options", actionAttribute, true);
+							Question optionsQues = new Question("QUE_CARD_OPTIONS" + be.getCode(), "options",
+									actionAttribute, true);
 							Ask optionsAsk = new Ask(optionsQues, userToken.getUserCode(), be.getCode());
-							optionsAsk = tableUtils.createVirtualContext(optionsAsk, moreVerticalIconBe, ContextType.ICON,
-									VisualControlType.VCL_ICON, themeMsgList);
-							optionsAsk = tableUtils.createVirtualContext(optionsAsk, visualBaseEntity, ContextType.THEME,
-									VisualControlType.VCL_INPUT, themeMsgList);
+							optionsAsk = tableUtils.createVirtualContext(optionsAsk, moreVerticalIconBe,
+									ContextType.ICON, VisualControlType.VCL_ICON, themeMsgList);
+							optionsAsk = tableUtils.createVirtualContext(optionsAsk, visualBaseEntity,
+									ContextType.THEME, VisualControlType.VCL_INPUT, themeMsgList);
 
 							Ask[] optionsAskArr = { optionsAsk };
 							cardRightGrpAsk.setChildAsks(optionsAskArr);
@@ -1019,7 +1040,8 @@ public class TableUtilsTest {
 							cardSecondaryGrpAskChildAsks.add(cardCentreGrpAsk);
 							cardSecondaryGrpAskChildAsks.add(cardRightGrpAsk);
 
-							Ask[] cardSecondaryGrpAskChildAsksArr = cardSecondaryGrpAskChildAsks.stream().toArray(Ask[]::new);
+							Ask[] cardSecondaryGrpAskChildAsksArr = cardSecondaryGrpAskChildAsks.stream()
+									.toArray(Ask[]::new);
 
 							cardGrpAsk.setChildAsks(cardMainGrpAskChildAsksArr);
 							cardGrpAsk.setChildAsks(cardSecondaryGrpAskChildAsksArr);
@@ -1028,8 +1050,8 @@ public class TableUtilsTest {
 
 						} else {
 
-							Question childQuestion = new Question("QUE_" + attributeCode + "_" + be.getCode(), attributeName, attr,
-									true);
+							Question childQuestion = new Question("QUE_" + attributeCode + "_" + be.getCode(),
+									attributeName, attr, true);
 							Ask childAsk = new Ask(childQuestion, targetCode, be.getCode());
 
 							/* add the entityAttribute ask to list */
@@ -1042,7 +1064,8 @@ public class TableUtilsTest {
 					Ask[] childAsArr = childAskList.stream().toArray(Ask[]::new);
 
 					/* Get the on-the-fly question attribute */
-					Attribute questionAttribute = new Attribute("QQQ_QUESTION_GROUP", "link", new DataType(String.class));
+					Attribute questionAttribute = new Attribute("QQQ_QUESTION_GROUP", "link",
+							new DataType(String.class));
 
 					Attribute questionTableRowAttribute = new Attribute("QQQ_QUESTION_GROUP_TABLE_ROW", "link",
 							new DataType(String.class));
@@ -1053,8 +1076,8 @@ public class TableUtilsTest {
 					Ask parentAsk = new Ask(parentQuestion, targetCode, be.getCode());
 
 					/* apply selectable theme to each parent ask group */
-					tableUtils.createVirtualContext(parentAsk, selectableTheme, ContextType.THEME, VisualControlType.VCL_INPUT,
-							themeMsgList);
+					tableUtils.createVirtualContext(parentAsk, selectableTheme, ContextType.THEME,
+							VisualControlType.VCL_INPUT, themeMsgList);
 
 					/* setting weight to parent ask */
 					parentAsk.setWeight(be.getIndex().doubleValue());
@@ -1068,71 +1091,6 @@ public class TableUtilsTest {
 
 			}
 
-		}
-
-		/* return list of asks */
-		return askList;
-	}
-
-	public static List<Ask> generateQuestions2(GennyToken userToken, BaseEntityUtils beUtils, List<BaseEntity> bes,
-			Map<String, String> columns, String targetCode) {
-
-		/* initialize an empty ask list */
-		List<Ask> askList = new ArrayList<>();
-		TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
-
-		if (columns != null) {
-			if (bes != null && bes.isEmpty() == false) {
-
-				/* loop through baseentities to generate row ask */
-				for (BaseEntity be : bes) {
-
-					/* we add attributes for each be */
-					// ? why
-					beUtils.addAttributes(be);
-
-					/* initialize child ask list */
-					List<Ask> childAskList = new ArrayList<>();
-
-					for (Map.Entry<String, String> column : columns.entrySet()) {
-
-						String attributeCode = column.getKey();
-						String attributeName = column.getValue();
-						Attribute attr = RulesUtils.attributeMap.get(attributeCode);
-
-						Question childQuestion = new Question("QUE_" + attributeCode + "_" + be.getCode(), attributeName, attr,
-								true);
-						Ask childAsk = new Ask(childQuestion, targetCode, be.getCode());
-
-						/* add the entityAttribute ask to list */
-						childAskList.add(childAsk);
-
-					}
-
-					/* converting childAsks list to array */
-					Ask[] childAsArr = childAskList.stream().toArray(Ask[]::new);
-
-					/* Get the on-the-fly question attribute */
-					Attribute questionAttribute = new Attribute("QQQ_QUESTION_GROUP", "link", new DataType(String.class));
-
-					Attribute questionTableRowAttribute = new Attribute("QQQ_QUESTION_GROUP_TABLE_ROW", "link",
-							new DataType(String.class));
-
-					/* Generate ask for the baseentity */
-					Question parentQuestion = new Question("QUE_" + be.getCode() + "_GRP", be.getName(),
-							questionTableRowAttribute, true);
-					Ask parentAsk = new Ask(parentQuestion, targetCode, be.getCode());
-
-					/* setting weight to parent ask */
-					parentAsk.setWeight(be.getIndex().doubleValue());
-
-					/* set all the childAsks to parentAsk */
-					parentAsk.setChildAsks(childAsArr);
-
-					/* add the baseentity asks to a list */
-					askList.add(parentAsk);
-				}
-			}
 		}
 
 		/* return list of asks */
@@ -1141,20 +1099,76 @@ public class TableUtilsTest {
 
 	public static void paginateTable( GennyToken serviceToken, BaseEntityUtils beUtils, final String searchBarCode, Answer answer) {
   
-		TableUtils tableUtils = new TableUtils(beUtils);
-	
-		/* Get the SearchBE object */
+		TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
+
+		/* Perform a search bar search */
+		String searchBarString = null;
+		if (answer != null) {
+			searchBarString = answer.getValue();
+			// Clean up search Text
+			searchBarString = searchBarString.trim();
+			searchBarString = searchBarString.replaceAll("[^a-zA-Z0-9\\ ]", "");
+			Integer max = searchBarString.length();
+			Integer realMax = (max > MAX_SEARCH_BAR_TEXT_SIZE)?MAX_SEARCH_BAR_TEXT_SIZE:max;
+			searchBarString.substring(0,  realMax); 
+			log.info("Search text = [" + searchBarString + "]");
+		}
+		
+		/* Get the SearchBE */
 		String sessionSearchCode = searchBarCode + "_" + beUtils.getGennyToken().getSessionCode();
 		SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", sessionSearchCode, SearchEntity.class,
 				serviceToken.getToken());
-	
+
 		if (searchBE == null) {
 			searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", searchBarCode, SearchEntity.class,
 					serviceToken.getToken());
+			/*
+			 * Save Session Search in cache , ideally this should be in OutputParam and
+			 * saved to workflow
+			 */
 			VertxUtils.putObject(serviceToken.getRealm(), "", sessionSearchCode, searchBE, serviceToken.getToken());
 		}
-	
-		/*  do the search */
+
+		/* fetch Session SearchBar List from User */
+		BaseEntity user = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "",
+				beUtils.getGennyToken().getUserCode(), BaseEntity.class, beUtils.getGennyToken().getToken());
+		Type type = new TypeToken<List<String>>() {
+		}.getType();
+		List<String> defaultList = new ArrayList<String>();
+		String defaultListString = JsonUtils.toJson(defaultList);
+		String historyStr = user.getValue("PRI_SEARCH_HISTORY", defaultListString);
+		List<String> searchHistory = JsonUtils.fromJson(historyStr, type);
+
+		/* Add new SearchBarString to Session SearchBar List */
+		/* look for existing search term and bring to front - slow */
+		if (answer != null) { // no need to set history if no data sent
+		int index = searchHistory.indexOf(searchBarString);
+		if (index >= 0) {
+			searchHistory.remove(index);
+		}
+		searchHistory.add(0, searchBarString);
+		if (searchHistory.size() > MAX_SEARCH_HISTORY_SIZE) {
+			searchHistory.remove(MAX_SEARCH_HISTORY_SIZE);
+		}
+		String newHistoryString = JsonUtils.toJson(searchHistory);
+		Answer history = new Answer(beUtils.getGennyToken().getUserCode(), beUtils.getGennyToken().getUserCode(),
+				"PRI_SEARCH_HISTORY", newHistoryString);
+		beUtils.saveAnswer(history);
+		log.info("Search History for "+beUtils.getGennyToken().getUserCode()+" = "+searchHistory.toString());
+		} else {
+			// so grab the latest search history
+			if (!searchHistory.isEmpty()) {
+			searchBarString = searchHistory.get(0);
+			} else {
+				searchBarString = ""; // fetch everything
+			}
+		}
+
+
+			searchBE.addFilter("PRI_NAME", SearchEntity.StringFilter.LIKE, "%" + searchBarString + "%");
+
+		// Send out Search Results
+
 		QDataBaseEntityMessage msg = tableUtils.fetchSearchResults(searchBE, beUtils.getGennyToken());
 	
 		/* send the baseentity from the search */
@@ -1171,6 +1185,17 @@ public class TableUtilsTest {
 	
 		/* converting rowAsks list to array */
 		Ask[] rowAsksArr = rowAsks.stream().toArray(Ask[]::new);
+
+		/* get the row themes for table */
+		Type setType = new TypeToken<Set<QDataAskMessage>>() {
+		}.getType();
+
+		String askMsgs2Str = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "",
+				"FRM_TABLE_CONTENT_ASKS", String.class, beUtils.getGennyToken().getToken());
+
+		Set<QDataAskMessage> askMsgs2 = JsonUtils.fromJson(askMsgs2Str, setType);
+		QDataAskMessage[] askMsg2Array = askMsgs2.stream().toArray(QDataAskMessage[]::new);
+		ContextList rowsContextList = askMsg2Array[0].getItems()[0].getContextList();
 	
 		/* Link row asks to a single ask: QUE_TABLE_RESULTS_GRP */
 		Attribute questionAttribute = new Attribute("QQQ_QUESTION_GROUP", "link", new DataType(String.class));
@@ -1178,12 +1203,12 @@ public class TableUtilsTest {
 		
 		Ask tableResultAsk = new Ask(tableResultQuestion, beUtils.getGennyToken().getUserCode(), beUtils.getGennyToken().getUserCode());
 		tableResultAsk.setChildAsks(rowAsksArr);
-		//tableResultAsk.setContextList(rowsContextList);
+		tableResultAsk.setContextList(rowsContextList);
 		
 		/* sending the row asks */
 		Set<QDataAskMessage> tableResultAskMsgs = new HashSet<QDataAskMessage>();
 		tableResultAskMsgs.add(new QDataAskMessage(tableResultAsk));
-		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(tableResultAskMsgs));
+		/* VertxUtils.writeMsg("webcmds", JsonUtils.toJson(tableResultAskMsgs)); */
 	
 		
 		
@@ -1199,7 +1224,7 @@ public class TableUtilsTest {
 		
 		/* change the question from frame */
 		QDataBaseEntityMessage msg3 = null;
-		msg3 = TableUtils.changeQuestion(searchBE, "FRM_TABLE_CONTENT", tableResultAsk.getQuestionCode(), serviceToken,
+		msg3 = TableUtilsTest.changeQuestion(searchBE, "FRM_TABLE_CONTENT", tableResultAsk.getQuestionCode(), serviceToken,
 				beUtils.getGennyToken(), tableResultAskMsgs);
 		msg3.setToken(beUtils.getGennyToken().getToken());
 		msg3.setReplace(true);
@@ -1207,5 +1232,70 @@ public class TableUtilsTest {
 		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg3));
 	
 	}
+
+	public static List<Ask> generateQuestions2(GennyToken userToken, BaseEntityUtils beUtils, List<BaseEntity> bes,
+	Map<String, String> columns, String targetCode) {
+
+/* initialize an empty ask list */
+List<Ask> askList = new ArrayList<>();
+TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
+
+if (columns != null) {
+	if (bes != null && bes.isEmpty() == false) {
+
+		/* loop through baseentities to generate row ask */
+		for (BaseEntity be : bes) {
+
+			/* we add attributes for each be */
+			// ? why
+			beUtils.addAttributes(be);
+
+			/* initialize child ask list */
+			List<Ask> childAskList = new ArrayList<>();
+
+			for (Map.Entry<String, String> column : columns.entrySet()) {
+
+				String attributeCode = column.getKey();
+				String attributeName = column.getValue();
+				Attribute attr = RulesUtils.attributeMap.get(attributeCode);
+
+				Question childQuestion = new Question("QUE_" + attributeCode + "_" + be.getCode(), attributeName, attr,
+						true);
+				Ask childAsk = new Ask(childQuestion, targetCode, be.getCode());
+
+				/* add the entityAttribute ask to list */
+				childAskList.add(childAsk);
+
+			}
+
+			/* converting childAsks list to array */
+			Ask[] childAsArr = childAskList.stream().toArray(Ask[]::new);
+
+			/* Get the on-the-fly question attribute */
+			Attribute questionAttribute = new Attribute("QQQ_QUESTION_GROUP", "link", new DataType(String.class));
+
+			Attribute questionTableRowAttribute = new Attribute("QQQ_QUESTION_GROUP_TABLE_ROW", "link",
+					new DataType(String.class));
+
+			/* Generate ask for the baseentity */
+			Question parentQuestion = new Question("QUE_" + be.getCode() + "_GRP", be.getName(),
+					questionTableRowAttribute, true);
+			Ask parentAsk = new Ask(parentQuestion, targetCode, be.getCode());
+
+			/* setting weight to parent ask */
+			parentAsk.setWeight(be.getIndex().doubleValue());
+
+			/* set all the childAsks to parentAsk */
+			parentAsk.setChildAsks(childAsArr);
+
+			/* add the baseentity asks to a list */
+			askList.add(parentAsk);
+		}
+	}
+}
+
+/* return list of asks */
+return askList;
+}
 
 }
