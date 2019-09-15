@@ -85,8 +85,7 @@ public class TableUtilsTest {
 		String sessionSearchCode = searchBarCode + "_" + beUtils.getGennyToken().getSessionCode();
 		SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", sessionSearchCode, SearchEntity.class,
 				serviceToken.getToken());
-				
-				
+
 		if (searchBE == null) {
 			searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", searchBarCode, SearchEntity.class,
 			serviceToken.getToken());
@@ -101,8 +100,10 @@ public class TableUtilsTest {
 			*/
 			VertxUtils.putObject(serviceToken.getRealm(), "", sessionSearchCode, searchBE, serviceToken.getToken());
 		}
+
 				
 		log.info("search code coming from searchBE getCode  :: " + searchBE.getCode());
+
 
 		/* fetch Session SearchBar List from User */
 		BaseEntity user = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "",
@@ -152,8 +153,9 @@ public class TableUtilsTest {
 		/* print the total  */
 		log.info("total count is  :: " + totalResults + "");
 		Answer totalAnswer = new Answer(beUtils.getGennyToken().getUserCode(),searchBE.getCode(),
-				"PRI_TOTAL_RESULTS", totalResults+"");
+				"PRI_TOTAL", totalResults+"");
 		beUtils.addAnswer(totalAnswer);
+
 		beUtils.updateBaseEntity(searchBE, totalAnswer);
 
 

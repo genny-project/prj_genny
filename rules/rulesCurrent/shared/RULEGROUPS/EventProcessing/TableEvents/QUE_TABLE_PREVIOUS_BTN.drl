@@ -39,17 +39,28 @@ rule "QUE_TABLE_PREVIOUS_BTN"
 		}
 		
 		
-		System.out.println("NEXT"); 
+		System.out.println("PREVIOUS"); 
 		
 		Integer pageIndex = searchBE.getValue("SCH_PAGE_START",0);
 		Integer pageSize = searchBE.getValue("SCH_PAGE_SIZE",10);
 		pageIndex = pageIndex - pageSize;
+		
+		Integer pageNumber = searchBE.getValue("PRI_INDEX", 1);
+		pageNumber = pageNumber - 1;
+
 		if (pageIndex < 0) {
 			pageIndex= 0;
+			pageNumber = 1;
 		}
-		Answer pageAnswer = new Answer(beUtils.getGennyToken().getUserCode(),sessionSearchCode,
-			"SCH_PAGE_START", pageIndex+"");
+		
+		Answer pageAnswer = new Answer(beUtils.getGennyToken().getUserCode(),sessionSearchCode, "SCH_PAGE_START", pageIndex+"");
+		Answer pageNumberAnswer = new Answer(beUtils.getGennyToken().getUserCode(),sessionSearchCode, "PRI_INDEX", pageNumber+"");
+
 		beUtils.addAnswer(pageAnswer);
+		beUtils.addAnswer(pageNumberAnswer);
+
+		beUtils.updateBaseEntity(searchBE, pageAnswer);
+		beUtils.updateBaseEntity(searchBE, pageNumberAnswer);
 			
   	TableUtils.paginateTable(userToken , beUtils, "SBE_SEARCHBAR", null);
 		

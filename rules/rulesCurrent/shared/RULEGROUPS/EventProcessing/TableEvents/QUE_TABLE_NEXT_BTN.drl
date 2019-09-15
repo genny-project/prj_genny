@@ -30,24 +30,34 @@ rule "QUE_TABLE_NEXT_BTN"
 			/* get current search */
 			String searchBarCode = "SBE_SEARCHBAR";
 			String sessionSearchCode = searchBarCode + "_" + beUtils.getGennyToken().getSessionCode();
-			SearchEntity searchBE = VertxUtils.getObject(userToken.getRealm(), "", sessionSearchCode, SearchEntity.class,
-					userToken.getToken());
+			SearchEntity searchBE = VertxUtils.getObject(userToken.getRealm(), "", sessionSearchCode, SearchEntity.class, userToken.getToken());
 
 			if (searchBE == null) {
-				searchBE = VertxUtils.getObject(userToken.getRealm(), "", searchBarCode, SearchEntity.class,
-						userToken.getToken());
+				searchBE = VertxUtils.getObject(userToken.getRealm(), "", searchBarCode, SearchEntity.class, userToken.getToken());
 			}
 			
 			
 			System.out.println("NEXT"); 
 			
 			Integer pageIndex = searchBE.getValue("SCH_PAGE_START",0);
-			Integer pageSize = searchBE.getValue("SCH_PAGE_SIZE",10);
+			Integer pageSize = searchBE.getValue("SCH_PAGE_SIZE",7);
 			pageIndex = pageIndex + pageSize;
-			Answer pageAnswer = new Answer(beUtils.getGennyToken().getUserCode(),sessionSearchCode,
-				"SCH_PAGE_START", pageIndex+"");
+			
+			Integer pageNumber = 1;
+
+			if(pageIndex != 0){
+				pageNumber = pageIndex / pageSize;
+			}
+
+			Answer pageAnswer = new Answer(beUtils.getGennyToken().getUserCode(),sessionSearchCode, "SCH_PAGE_START", pageIndex+"");
+			Answer pageNumberAnswer = new Answer(beUtils.getGennyToken().getUserCode(),sessionSearchCode, "PRI_INDEX", pageNumber+"");
+
 			beUtils.addAnswer(pageAnswer);
-		
+			beUtils.addAnswer(pageNumberAnswer);
+
+			beUtils.updateBaseEntity(searchBE, pageAnswer);
+			beUtils.updateBaseEntity(searchBE, pageNumberAnswer);
+
 			/* TableUtils.performSearch(userToken , beUtils, "SBE_SEARCHBAR", null); */
 			TableUtils.paginateTable(userToken , beUtils, "SBE_SEARCHBAR", null);
 			
