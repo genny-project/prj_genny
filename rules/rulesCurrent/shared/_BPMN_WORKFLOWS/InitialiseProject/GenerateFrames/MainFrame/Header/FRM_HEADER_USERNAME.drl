@@ -38,7 +38,7 @@ rule "FRM_HEADER_USERNAME"
     Frame3 frame = Frame3.builder("FRM_HEADER_USERNAME")
                  .addTheme("THM_PANEL_CONTENT_FIT", ThemePosition.WRAPPER, serviceToken).end()
                   .question("QUE_HEADER_USERNAME_GRP")
-                    .addTheme("THM_DASHBOARD_ITEM_INPUT", serviceToken).vcl(VisualControlType.VCL_INPUT).end()
+                    .addTheme("THM_DASHBOARD_ITEM_INPUT", serviceToken).vcl(VisualControlType.VCL_LABEL).end()
                   .end()
                   .build();
     frame.setRealm(serviceToken.getRealm());
