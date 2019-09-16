@@ -39,7 +39,7 @@ rule "FRM_HEADER_PROFILE_PICTURE"
                   .addTheme("THM_PANEL_CONTENT_FIT", ThemePosition.WRAPPER, serviceToken).end()
                   .addTheme("THM_PADDING_RIGHT_10", ThemePosition.WRAPPER, serviceToken).end()
                   /* .addTheme("THM_BORDER_RADIUS_50",ThemePosition.VCL_WRAPPER serviceToken).end() */
-                  .question("QUE_IMAGE_URL")
+                  .question("QUE_HEADER_USER_PICTURE_GRP")
                     .addTheme("THM_HEADER_PROFILE_PICTURE", serviceToken)
                     .vcl(VisualControlType.INPUT_SELECTED)
                     .end()
