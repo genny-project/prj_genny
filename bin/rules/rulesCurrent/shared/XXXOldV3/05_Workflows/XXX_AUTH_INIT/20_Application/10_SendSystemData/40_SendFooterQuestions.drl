@@ -1,0 +1,22 @@
+package life.genny.rules;
+import life.genny.rules.QRules;
+import life.genny.utils.Layout.LayoutPosition;
+
+rule "Send Footer Questions"
+    when
+        rules: QRules(  isState("SEND_FOOTER_QUESTIONS") && 
+                        !isState("LOOP_SEND_FOOTER_QUESTIONS")  ) 
+     then
+
+        rules.header();
+        rules.setState("LOOP_SEND_FOOTER_QUESTIONS");
+        
+        /* gets the project baseentity */
+        BaseEntity project = rules.getProject();
+  		
+  		/* sends questions for project-powered-by and positions it in the right side of the footer frame */
+       	rules.askQuestions(rules.getUser().getCode(), project.getCode(), "QUE_POWERED_BY_GRP", false, "FRM_FOOTER", LayoutPosition.EAST);
+       	
+		rules.setState("SEND_LOGO_QUESTIONS");
+	    rules.footer();     		      
+end

@@ -200,7 +200,7 @@ public class ChrisTest {
 		try {
 			gks = GennyKieSession
 					.builder(serviceToken, true)
-			//		.addDrl("SignalProcessing")
+					.addDrl("SignalProcessing")
 			//		.addDrl("DataProcessing")
 			//		.addDrl("EventProcessing")
 					//.addDrl("InitialiseProject")
@@ -208,11 +208,11 @@ public class ChrisTest {
 			//		.addJbpm("Lifecycles")
 					.addDrl("AuthInit")
 					.addJbpm("AuthInit")
-					.addJbpm("userSession2.bpmn")
-					.addJbpm("userValidation2.bpmn")
-					.addJbpm("userLifecycle2.bpmn")
+					.addJbpm("userSession5.bpmn")
+					.addJbpm("process_4.bpmn")
+					.addJbpm("process_3.bpmn")
 //					.addJbpm("userApplication.bpmn")
-//					.addJbpm("auth_init.bpmn")
+					.addJbpm("auth_init.bpmn")
 					.addToken(userToken).build();
 			
 			
@@ -221,12 +221,13 @@ public class ChrisTest {
 
 			gks.injectEvent(authInitMsg1); // This should create a new process
 			gks.advanceSeconds(5, false);
+			gks.advanceSeconds(5, false);
 //			gks.advanceSeconds(5, false);
 //			gks.injectEvent(authInitMsg1); // This should attach to existing process
 //			gks.advanceSeconds(5, false);
 
-			gks.injectEvent(answerMsg); // This sends an answer to the first userSessio
-			gks.advanceSeconds(5, false);
+//			gks.injectEvent(answerMsg); // This sends an answer to the first userSessio
+//			gks.advanceSeconds(5, false);
 			gks.injectEvent(msgLogout1);
 		} catch (Exception e) {
 			e.printStackTrace();

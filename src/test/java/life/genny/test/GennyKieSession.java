@@ -65,6 +65,7 @@ import life.genny.jbpm.customworkitemhandlers.ShowAllFormsHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 import life.genny.jbpm.customworkitemhandlers.ShowFrameWIthContextList;
 import life.genny.jbpm.customworkitemhandlers.ThrowSignalProcessWorkItemHandler;
+import life.genny.jbpm.customworkitemhandlers.ThrowSignalWorkItemHandler;
 import life.genny.models.GennyToken;
 import life.genny.qwanda.Ask;
 import life.genny.qwanda.attribute.Attribute;
@@ -82,6 +83,7 @@ import life.genny.qwanda.validation.Validation;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.rules.QRules;
+import life.genny.rules.RulesLoader;
 import life.genny.rules.listeners.GennyAgendaEventListener;
 import life.genny.rules.listeners.JbpmInitListener;
 import life.genny.utils.RulesUtils;
@@ -499,6 +501,8 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 				new ThrowSignalProcessWorkItemHandler(kieSession,rteng));
 		kieSession.getWorkItemManager().registerWorkItemHandler("AskQuestion",
 				new AskQuestionWorkItemHandler(GennyKieSession.class,kieSession,rteng));
+		kieSession.getWorkItemManager().registerWorkItemHandler("ThrowSignal",
+				new ThrowSignalWorkItemHandler(GennyKieSession.class, kieSession,rteng));
 
 
 		if (workItemHandlers != null) {

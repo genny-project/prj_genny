@@ -18,3 +18,5 @@ nginx/conf.d2/default.conf
 eclipse/
 /target/
 /ObjectStore/
+/.apt_generated/
+/.apt_generated_tests/

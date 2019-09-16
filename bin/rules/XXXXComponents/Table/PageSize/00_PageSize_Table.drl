@@ -1,0 +1,45 @@
+package life.genny.rules;
+import life.genny.rules.QRules;
+import life.genny.qwanda.Answer;
+import java.util.HashSet;
+
+rule "Change PageSize of Search "
+    when
+        answer : Answer( attributeCode == "SCH_PAGE_SIZE")
+        rules : QRules( isState("EVENT_ANSWER")  &&
+                        isState("SCH_PAGE_SIZE") &&
+                        !isState("LOOP_TRIGGER_SEARCH_STEP_ONE") )
+     then
+      	rules.header();
+		rules.setState("LOOP_TRIGGER_SEARCH_STEP_ONE");
+
+		String searchCode = rules.getAsString("targetCode");
+		String attributeCode = rules.getAsString("attributeCode");
+		String value = rules.getAsString("value");
+
+        rules.println("targetCode" + searchCode);
+        rules.println("attributeCode" + attributeCode);
+        rules.println("value" + value);
+
+		SearchEntity searchBe = rules.baseEntity.getSearchEntityByCode(searchCode);
+        rules.println("search" + searchBe.getCode());
+
+        searchBe.setPageSize(Integer.parseInt(value));
+        rules.set("searchBe", searchBe);
+
+        VertxUtils.writeCachedJson(rules.realm(), searchBe.getCode(), JsonUtils.toJson(searchBe), rules.getToken());
+
+
+        /* create a bulk msg */
+        QBulkMessage bulkMsg = new QBulkMessage();
+        rules.set("bulkMsg", bulkMsg);
+
+		rules.setState("GENERATE_TABLE_CONTENT");
+
+        rules.clearState("LOOP_GENERATE_TABLE_CONTENT");
+		rules.setState("LOOP_GENERATE_TABLE_FOOTER");
+
+		rules.setState("SEND_SEARCH_RESULTS");
+        rules.footer();
+end
+
