@@ -200,19 +200,19 @@ public class ChrisTest {
 		try {
 			gks = GennyKieSession
 					.builder(serviceToken, true)
-					.addDrl("SignalProcessing")
-			//		.addDrl("DataProcessing")
-			//		.addDrl("EventProcessing")
-					//.addDrl("InitialiseProject")
-					//.addJbpm("InitialiseProject")
-			//		.addJbpm("Lifecycles")
-					.addDrl("AuthInit")
-					.addJbpm("AuthInit")
-					.addJbpm("userSession5.bpmn")
-					.addJbpm("process_4.bpmn")
-					.addJbpm("process_3.bpmn")
+//					.addDrl("SignalProcessing")
+//					.addDrl("DataProcessing")
+//					.addDrl("EventProcessing")
+//					.addDrl("InitialiseProject")
+//					.addJbpm("InitialiseProject")
+					.addJbpm("Lifecycles")
+//					.addDrl("AuthInit")
+//					.addJbpm("AuthInit")
+//					.addJbpm("userSession.bpmn")
+//					.addJbpm("userValidation.bpmn")
+//					.addJbpm("userLifecycle.bpmn")
 //					.addJbpm("userApplication.bpmn")
-					.addJbpm("auth_init.bpmn")
+			//		.addJbpm("auth_init.bpmn")
 					.addToken(userToken).build();
 			
 			
