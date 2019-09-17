@@ -60,7 +60,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                 super(false);
         }
 
-        @Test
+     //   @Test
         public void testDesktop() {
                 QRules rules = GennyJbpmBaseTest.setupLocalService();
                 GennyToken userToken = new GennyToken("userToken", rules.getToken());
