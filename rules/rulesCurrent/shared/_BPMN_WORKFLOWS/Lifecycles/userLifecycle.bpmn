@@ -154,10 +154,10 @@ System.out.println(&quot;userLifecycle: inputSessionCode = &quot;+inputSessionCo
         <bpmn2:incoming>SequenceFlow_38</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
         <bpmn2:ioSpecification id="InputOutputSpecification_4">
-          <bpmn2:dataInput id="DataInput_13" itemSubjectRef="userLifecycle.bpmn#ItemDefinition_201" name="gennyToken"/>
-          <bpmn2:dataInput id="DataInput_14" itemSubjectRef="userLifecycle.bpmn#ItemDefinition_1014" name="payloadObject"/>
-          <bpmn2:dataInput id="DataInput_15" itemSubjectRef="userLifecycle.bpmn#ItemDefinition_10" name="signalCode"/>
-          <bpmn2:dataInput id="DataInput_16" itemSubjectRef="userLifecycle.bpmn#ItemDefinition_425" name="processId"/>
+          <bpmn2:dataInput id="DataInput_13" itemSubjectRef="ItemDefinition_201" name="gennyToken"/>
+          <bpmn2:dataInput id="DataInput_14" itemSubjectRef="ItemDefinition_1014" name="payloadObject"/>
+          <bpmn2:dataInput id="DataInput_15" itemSubjectRef="ItemDefinition_10" name="signalCode"/>
+          <bpmn2:dataInput id="DataInput_16" itemSubjectRef="ItemDefinition_425" name="processId"/>
           <bpmn2:inputSet id="InputSet_3">
             <bpmn2:dataInputRefs>DataInput_13</bpmn2:dataInputRefs>
             <bpmn2:dataInputRefs>DataInput_14</bpmn2:dataInputRefs>
@@ -267,10 +267,10 @@ System.out.println(&quot;userLifeCycle: callingProcessId=: &quot;+callingProcess
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_46" tns:priority="1" sourceRef="ScriptTask_10" targetRef="EndEvent_4"/>
       <bpmn2:sequenceFlow id="SequenceFlow_24" tns:priority="1" sourceRef="Task_5" targetRef="ScriptTask_10"/>
-      <bpmn2:task id="Task_1" tns:taskName="ThrowSignal" tns:displayName="Throw Signal" tns:icon="icons/icon-info.gif" name="Throw Signal">
+      <bpmn2:task id="Task_1" tns:taskName="ThrowSignal" tns:displayName="Throw Signal" tns:icon="icons/icon-info.gif" name="Set Default User Page">
         <bpmn2:extensionElements>
           <tns:metaData name="elementname">
-            <tns:metaValue><![CDATA[Throw Signal]]></tns:metaValue>
+            <tns:metaValue><![CDATA[Set Default User Page]]></tns:metaValue>
           </tns:metaData>
           <tns:metaData name="customAsync">
             <tns:metaValue><![CDATA[true]]></tns:metaValue>
@@ -387,8 +387,8 @@ System.out.println(&quot;userLifeCycle: callingProcessId=: &quot;+callingProcess
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_1" bpmnElement="Task_1" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="810.0" y="201.0"/>
-        <bpmndi:BPMNLabel>
-          <dc:Bounds height="11.0" width="53.0" x="838.0" y="220.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_10">
+          <dc:Bounds height="11.0" width="90.0" x="820.0" y="220.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_25" bpmnElement="SequenceFlow_25" sourceElement="BPMNShape_StartEvent_2" targetElement="BPMNShape_SubProcess_1">
@@ -438,14 +438,14 @@ System.out.println(&quot;userLifeCycle: callingProcessId=: &quot;+callingProcess
         <di:waypoint xsi:type="dc:Point" x="780.0" y="230.0"/>
         <di:waypoint xsi:type="dc:Point" x="780.0" y="226.0"/>
         <di:waypoint xsi:type="dc:Point" x="810.0" y="226.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_16"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_Task_5">
         <di:waypoint xsi:type="dc:Point" x="920.0" y="226.0"/>
         <di:waypoint xsi:type="dc:Point" x="955.0" y="226.0"/>
         <di:waypoint xsi:type="dc:Point" x="955.0" y="230.0"/>
         <di:waypoint xsi:type="dc:Point" x="990.0" y="230.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_18"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">

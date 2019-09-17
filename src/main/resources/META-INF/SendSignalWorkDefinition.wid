@@ -1,0 +1,15 @@
+import org.drools.core.process.core.datatype.impl.type.StringDataType;
+
+[
+  // the Send Signal work item
+  [
+    "name" : "SendSignal",
+    "parameters" : [     
+       "userToken"  : new GennyToken(),
+       "signalCode"  :  new StringDataType(),
+       "payloadObject"  :  new ObjectDataType()
+      ],
+    "displayName" : "Send Signal",
+    "icon" : "icons/icon-info.gif"
+  ]
+]
