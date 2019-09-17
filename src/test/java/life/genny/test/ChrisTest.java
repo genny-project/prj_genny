@@ -9,10 +9,23 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.Session;
+import javax.jms.TextMessage;
+
+import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.plexus.util.StringUtils;
+import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
@@ -38,10 +51,19 @@ public class ChrisTest {
 
 	protected static EventBusInterface eventBusMock;
 	protected static GennyCacheInterface vertxCache;
+	
+	/* Constant(s): */
+    public static final String AMQ_BROKER_URL = "tcp://localhost:61616";
+    public static final String QUEUE_NAME = "queue/KIE.SERVER.EXECUTOR";
+ 
+    /* Instance variable(s): */
+    protected ConnectionFactory mActiveMQConnectionFactory;
+    protected JmsTemplate mJmsTemplate;
 
 	public ChrisTest() {
 
 	}
+	
 	
 	//@Test
     public void LifecycleTest() {
@@ -239,6 +261,45 @@ public class ChrisTest {
 		}
 	}
 
+	
+	@Test
+    public void someIntegrationTest() throws Exception {
+        System.out.println("Test starting...");
+        sendMessages();
+        receiveMessages();
+        System.out.println("Test done!");
+    }
+ 
+    protected void sendMessages() {
+        for (int i = 1; i <= 10; i++) {
+            final int theMessageIndex = i;
+            final String theMessageString = "Message: " + theMessageIndex;
+            System.out.println("Sending message with text: " + theMessageString);
+ 
+            mJmsTemplate.send(new MessageCreator() {
+                public Message createMessage(Session inJmsSession) throws JMSException {
+                    TextMessage theTextMessage = inJmsSession.createTextMessage(theMessageString);
+                    theTextMessage.setIntProperty("messageNumber", theMessageIndex);
+ 
+                    return theTextMessage;
+                }
+            });
+        }
+    }
+ 
+    protected void receiveMessages() throws Exception {
+        Message theReceivedMessage = mJmsTemplate.receive();
+        while (theReceivedMessage != null) {
+            if (theReceivedMessage instanceof TextMessage) {
+                final TextMessage theTextMessage = (TextMessage)theReceivedMessage;
+                System.out.println("Received a message with text: " + theTextMessage.getText());
+            }
+ 
+            theReceivedMessage = mJmsTemplate.receive();
+        }
+        System.out.println("All messages received!");
+    }
+	
 	@BeforeClass
 	public static void init() throws FileNotFoundException, SQLException {
 
@@ -257,7 +318,18 @@ public class ChrisTest {
 		eventBusMock = new EventBusMock();
 		vertxCache = new VertxCache(); // MockCache
 		VertxUtils.init(eventBusMock, vertxCache);
+		
+	 
 
 	}
+	
+	@Before
+    public void setUp() {
+        mActiveMQConnectionFactory = new ActiveMQConnectionFactory(AMQ_BROKER_URL);
+        mJmsTemplate = new JmsTemplate(mActiveMQConnectionFactory);
+        final Destination theTestDestination = new ActiveMQQueue(QUEUE_NAME);
+        mJmsTemplate.setDefaultDestination(theTestDestination);
+        mJmsTemplate.setReceiveTimeout(500L);
+    }
 
 }
