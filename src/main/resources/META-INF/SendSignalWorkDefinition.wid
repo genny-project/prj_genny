@@ -1,4 +1,5 @@
 import org.drools.core.process.core.datatype.impl.type.StringDataType;
+import org.drools.core.process.core.datatype.impl.type.ObjectDataType;
 
 [
   // the Send Signal work item
@@ -9,7 +10,7 @@ import org.drools.core.process.core.datatype.impl.type.StringDataType;
        "signalCode"  :  new StringDataType(),
        "payloadObject"  :  new ObjectDataType()
       ],
-    "displayName" : "Send Signal",
+    "displayName" : "SendSignal",
     "icon" : "icons/icon-info.gif"
   ]
 ]
