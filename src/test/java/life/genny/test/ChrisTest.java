@@ -219,6 +219,7 @@ public class ChrisTest {
 
 		GennyKieSession gks = null;
 
+		System.setProperty("org.kie.executor.jms", "false");
 		try {
 			gks = GennyKieSession
 					.builder(serviceToken, true)
