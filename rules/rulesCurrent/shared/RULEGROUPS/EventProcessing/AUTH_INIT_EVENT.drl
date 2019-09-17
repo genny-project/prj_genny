@@ -23,11 +23,9 @@ rule "AUTH_INIT_EVENT"
     then
 	
 		System.out.println("Processing Answer/Data : " + $message );
-		if( $message.getData().getCode().equals("QUE_USER_PROFILE")){
-			output.setFormCode("FRM_QUE_USER_PROFILE_GRP","FRM_CONTENT");
-		}else{
-			output.setFormCode("FRM_"+ $message.getData().getCode(),"FRM_CONTENT");
-		}
+
+		output.setFormCode("FRM_APP","FRM_ROOT");
+
 
 		retract( $message);
 end
