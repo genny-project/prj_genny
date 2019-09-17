@@ -85,7 +85,8 @@ System.out.println(&quot;userValidation: Yay! currentUser is &quot;+currentUser)
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_24</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
-        <bpmn2:script>beUtils = new BaseEntityUtils(userToken);
+        <bpmn2:script>
+beUtils = new BaseEntityUtils(userToken);
 kcontext.setVariable(&quot;beUtils&quot;,beUtils);
 System.out.println(&quot;userValidation: processId = &quot;+kcontext.getProcessInstance().getId());
 currentUser = beUtils.getBaseEntityByCode(userToken.getUserCode());
@@ -363,23 +364,23 @@ System.out.println(&quot;userValidation: callingProcessToken = &quot;+ callingPr
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_3" bpmnElement="EndEvent_4">
         <dc:Bounds height="36.0" width="36.0" x="1590.0" y="524.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_2">
           <dc:Bounds height="11.0" width="50.0" x="1583.0" y="560.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_6" bpmnElement="ScriptTask_6" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="2138.0" y="410.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_12">
           <dc:Bounds height="11.0" width="52.0" x="2167.0" y="429.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_BoundaryEvent_4" bpmnElement="BoundaryEvent_4">
         <dc:Bounds height="36.0" width="36.0" x="1322.0" y="455.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_15"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_5" bpmnElement="EndEvent_6">
         <dc:Bounds height="36.0" width="36.0" x="2162.0" y="332.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_16">
           <dc:Bounds height="11.0" width="50.0" x="2155.0" y="368.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -477,26 +478,26 @@ System.out.println(&quot;userValidation: callingProcessToken = &quot;+ callingPr
         <di:waypoint xsi:type="dc:Point" x="1541.0" y="541.0"/>
         <di:waypoint xsi:type="dc:Point" x="1565.0" y="541.0"/>
         <di:waypoint xsi:type="dc:Point" x="1590.0" y="542.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_20"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_42" bpmnElement="SequenceFlow_40" sourceElement="BPMNShape_SubProcess_2" targetElement="BPMNShape_ScriptTask_6">
         <di:waypoint xsi:type="dc:Point" x="2107.0" y="435.0"/>
         <di:waypoint xsi:type="dc:Point" x="2122.0" y="435.0"/>
         <di:waypoint xsi:type="dc:Point" x="2138.0" y="435.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_24"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_44" bpmnElement="SequenceFlow_42" sourceElement="BPMNShape_BoundaryEvent_4" targetElement="BPMNShape_ScriptTask_1">
         <di:waypoint xsi:type="dc:Point" x="1340.0" y="455.0"/>
         <di:waypoint xsi:type="dc:Point" x="1340.0" y="428.0"/>
         <di:waypoint xsi:type="dc:Point" x="1340.0" y="401.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_26"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_45" bpmnElement="SequenceFlow_43" sourceElement="BPMNShape_ScriptTask_6" targetElement="BPMNShape_EndEvent_5">
         <di:waypoint xsi:type="dc:Point" x="2193.0" y="410.0"/>
         <di:waypoint xsi:type="dc:Point" x="2193.0" y="389.0"/>
         <di:waypoint xsi:type="dc:Point" x="2180.0" y="389.0"/>
         <di:waypoint xsi:type="dc:Point" x="2180.0" y="368.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_30"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
