@@ -153,31 +153,19 @@ public class RahulTest extends GennyJbpmBaseTest {
 
 		try {
 			gks = GennyKieSession.builder(serviceToken, true)
-					.addJbpm("internshipLifecycle.bpmn")
-					.addJbpm("applicationLifecycle.bpmn")
+//					.addDrl("ADD_COMPANY_ATTRIBUTES.drl")
+					.addDrl("ADD_PERSON_ATTRIBUTES.drl")
+//					.addJbpm("companyLifecycle.bpmn")
+//					.addJbpm("applicationLifecycle.bpmn")
+					.addJbpm("baseEntityValidation.bpmn")
+					.addJbpm("personLifecycle.bpmn")
 					.addToken(userToken)
 					.build();
 			gks.start();
 			
 			gks.advanceSeconds(5, true);
 		
-			System.out.println("TEST:: Activating Internship Lifecycle");
-
-			gks.injectSignal("newInternship", hashBeg);
-			
-			gks.advanceSeconds(5, true);
-
-			System.out.println("TEST:: Activating Application Lifecycle");
-
-			gks.injectSignal("newApplication", hashBeg);
-			
-			gks.advanceSeconds(5, true);
-			
-			gks.injectSignal("controlSignal", "FOWARD");
-
-			gks.advanceSeconds(5, true);
-			
-			gks.injectSignal("controlSignal", "FOWARD");
+			gks.injectSignal("newPerson", hashBeg);
 
 			gks.advanceSeconds(5, true);
 			
