@@ -85,7 +85,8 @@ rule "FRM_FORM"
 				
 					Frame3 frame2 = Frame3.builder("FRM_CONTENT_" +  questionCode)
 								.addTheme("THM_FORM_ATTRIBUTES_GENNY", serviceToken).end()
-								.question(questionCode) 
+								.question(questionCode)
+									.addTheme("THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHT", serviceToken).dataType(buttonDataType).end()
 									.addTheme("THM_FORM_BUTTONS", serviceToken).dataType(buttonDataType).vcl(VisualControlType.INPUT_WRAPPER).end()
 									.addTheme("THM_FORM_BUTTONS_BEHAVIOUR", serviceToken).dataType(buttonDataType).end()
 									.addTheme("THM_FORM_BUTTONS_BORDER", serviceToken).dataType(buttonDataType).vcl(VisualControlType.INPUT_FIELD).end()
