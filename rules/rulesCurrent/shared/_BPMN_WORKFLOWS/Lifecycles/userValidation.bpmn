@@ -258,10 +258,10 @@ System.out.println(&quot;userValidation: callingProcessToken = &quot;+ callingPr
       <bpmn2:outgoing>SequenceFlow_21</bpmn2:outgoing>
     </bpmn2:startEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_21" drools:priority="1" sourceRef="StartEvent_1" targetRef="SubProcess_2"/>
-    <bpmn2:scriptTask id="ScriptTask_6" name="Script Task 6" scriptFormat="http://www.java.com/java">
+    <bpmn2:scriptTask id="ScriptTask_6" name="Exit" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Script Task 6]]></drools:metaValue>
+          <drools:metaValue><![CDATA[Exit]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_40</bpmn2:incoming>
@@ -378,7 +378,7 @@ System.out.println(&quot;userValidation: callingProcessToken = &quot;+ callingPr
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_6" bpmnElement="ScriptTask_6" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="2138.0" y="410.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_12">
-          <dc:Bounds height="11.0" width="52.0" x="2167.0" y="429.0"/>
+          <dc:Bounds height="11.0" width="16.0" x="2185.0" y="429.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_5" bpmnElement="EndEvent_6">
@@ -389,7 +389,7 @@ System.out.println(&quot;userValidation: callingProcessToken = &quot;+ callingPr
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_IntermediateCatchEvent_1" bpmnElement="IntermediateCatchEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="1431.0" y="552.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_15">
           <dc:Bounds height="22.0" width="60.0" x="1419.0" y="588.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -512,14 +512,14 @@ System.out.println(&quot;userValidation: callingProcessToken = &quot;+ callingPr
         <di:waypoint xsi:type="dc:Point" x="1425.0" y="574.0"/>
         <di:waypoint xsi:type="dc:Point" x="1425.0" y="570.0"/>
         <di:waypoint xsi:type="dc:Point" x="1431.0" y="570.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_29"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_7" bpmnElement="SequenceFlow_4" sourceElement="BPMNShape_IntermediateCatchEvent_1" targetElement="BPMNShape_EndEvent_1">
         <di:waypoint xsi:type="dc:Point" x="1467.0" y="570.0"/>
         <di:waypoint xsi:type="dc:Point" x="1476.0" y="570.0"/>
         <di:waypoint xsi:type="dc:Point" x="1476.0" y="575.0"/>
         <di:waypoint xsi:type="dc:Point" x="1486.0" y="575.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_31"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
