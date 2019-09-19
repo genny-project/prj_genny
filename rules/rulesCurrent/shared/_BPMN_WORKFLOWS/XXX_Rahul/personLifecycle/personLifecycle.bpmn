@@ -80,7 +80,7 @@ System.out.println(&quot;personLifeCycle entered: &quot;);
             <drools:metaValue><![CDATA[Ask Question]]></drools:metaValue>
           </drools:metaData>
           <drools:onEntry-script scriptFormat="http://www.java.com/java">
-            <drools:script>System.out.println(&quot;Adding Company BE Attributes&quot;);</drools:script>
+            <drools:script>System.out.println(&quot;Adding Person BE Attributes&quot;);</drools:script>
           </drools:onEntry-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
