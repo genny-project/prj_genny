@@ -163,7 +163,12 @@
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_20</bpmn2:outgoing>
-        <bpmn2:script>message = (QEventMessage)((SessionFacts)sessionFacts).getMessage();
+        <bpmn2:script>if (((SessionFacts)sessionFacts).getMessage() instanceof QEventMessage) {
+message = (QEventMessage)((SessionFacts)sessionFacts).getMessage();}
+else {
+System.out.println(&quot;userSession: ERROR - NON QEventMessage sent! - &quot;);
+message = new QEventMessage(&quot;EVT_MSG&quot;, &quot;LOGOUT&quot;);
+}
 serviceToken = (GennyToken)((SessionFacts)sessionFacts).getServiceToken();
 userToken = (GennyToken)((SessionFacts)sessionFacts).getUserToken();
 message.getData().setValue(&quot;NEW_SESSION&quot;);   
