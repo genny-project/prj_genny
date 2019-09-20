@@ -163,32 +163,24 @@
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_20</bpmn2:outgoing>
-        <bpmn2:script>System.out.println(&quot;userSession: initial Task - UserSessionDetails processId = &quot;+kcontext.getProcessInstance().getId());
-message = (QEventMessage)((SessionFacts)sessionFacts).getMessage();
+        <bpmn2:script>message = (QEventMessage)((SessionFacts)sessionFacts).getMessage();
 serviceToken = (GennyToken)((SessionFacts)sessionFacts).getServiceToken();
 userToken = (GennyToken)((SessionFacts)sessionFacts).getUserToken();
-
-System.out.println(&quot;userSession: Entering userSession &quot;+((QEventMessage)message).getData().getCode()+&quot; with (userToken)userCode = &quot;+((GennyToken)userToken).getUserCode());
-
-((QEventMessage)message).getData().setValue(&quot;NEW_SESSION&quot;);   
-kcontext.setVariable(&quot;message&quot;,(QEventMessage)message); 
-kcontext.setVariable(&quot;session_state&quot;,((GennyToken)userToken).getSessionCode()); 
-kcontext.setVariable(&quot;serviceToken&quot;,((GennyToken)serviceToken)); 
-kcontext.setVariable(&quot;userToken&quot;,userToken); 
-
+message.getData().setValue(&quot;NEW_SESSION&quot;);   
 sessionCode = userToken.getSessionCode();
+kcontext.setVariable(&quot;message&quot;,message); 
+kcontext.setVariable(&quot;session_state&quot;,userToken.getSessionCode()); 
+kcontext.setVariable(&quot;serviceToken&quot;,serviceToken); 
+kcontext.setVariable(&quot;userToken&quot;,userToken); 
 kcontext.setVariable(&quot;sessionCode&quot;, sessionCode);
-System.out.println(&quot;userSession: Session Code = &quot;+ sessionCode);
-
-inputSessionCode = &quot;IS_&quot;+&quot;ABCD&quot;;
-kcontext.setVariable(&quot;inputSessionCode&quot;, inputSessionCode);
+kcontext.setVariable(&quot;inputSessionCode&quot;, &quot;IS_&quot;+sessionCode);
 kcontext.setVariable(&quot;dataSessionCode&quot;, &quot;DT_&quot;+sessionCode);
 kcontext.setVariable(&quot;eventSessionCode&quot;, &quot;EV_&quot;+sessionCode);
 
-System.out.println(&quot;userSession: inputSessionCode = &quot;+inputSessionCode);
+System.out.println(&quot;userSession:Entering userSession - Setup pid = &quot;+kcontext.getProcessInstance().getId()+&quot;:msg Code->&quot;+message.getData().getCode()+&quot; for &quot;+userToken.getUserCode());
+
 output = new OutputParam();
 output.setFormCode(&quot;FRM_APP&quot;,&quot;FRM_ROOT&quot;); 
-
 kcontext.setVariable(&quot;output&quot;,output);
 
 </bpmn2:script>
@@ -230,7 +222,11 @@ kcontext.setVariable(&quot;output&quot;,output);
           <bpmn2:incoming>SequenceFlow_65</bpmn2:incoming>
           <bpmn2:outgoing>SequenceFlow_138</bpmn2:outgoing>
           <bpmn2:script>System.out.println(&quot;userSession: Event Message received by Process Event Handler&quot;);
+if (((SessionFacts)sessionFacts).getMessage() instanceof QEventMessage) {
 message = (QEventMessage)((SessionFacts)sessionFacts).getMessage();
+} else {
+System.out.println(&quot;ERROR-> Someone is sending an outputParam to event!&quot;);
+}
 serviceToken = (GennyToken)((SessionFacts)sessionFacts).getServiceToken();
 kcontext.setVariable(&quot;message&quot;,(QEventMessage)message); 
 kcontext.setVariable(&quot;serviceToken&quot;,((GennyToken)serviceToken)); 
@@ -314,9 +310,6 @@ System.out.println(&quot;userSession: Process Event Handler: sending output to t
           <bpmn2:extensionElements>
             <tns:metaData name="elementname">
               <tns:metaValue><![CDATA[SendSignal]]></tns:metaValue>
-            </tns:metaData>
-            <tns:metaData name="customAsync">
-              <tns:metaValue><![CDATA[true]]></tns:metaValue>
             </tns:metaData>
           </bpmn2:extensionElements>
           <bpmn2:incoming>SequenceFlow_43</bpmn2:incoming>
@@ -523,9 +516,6 @@ System.out.println(&quot;userSession: Internal Signal Handler: sending output to
           <bpmn2:extensionElements>
             <tns:metaData name="elementname">
               <tns:metaValue><![CDATA[SendSignal]]></tns:metaValue>
-            </tns:metaData>
-            <tns:metaData name="customAsync">
-              <tns:metaValue><![CDATA[true]]></tns:metaValue>
             </tns:metaData>
           </bpmn2:extensionElements>
           <bpmn2:incoming>SequenceFlow_37</bpmn2:incoming>
@@ -769,8 +759,8 @@ kcontext.setVariable(&quot;dataMessage&quot;,(QDataMessage)dataMessage); </bpmn2
           </bpmn2:extensionElements>
           <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
           <bpmn2:outgoing>SequenceFlow_163</bpmn2:outgoing>
-          <bpmn2:script>System.out.println(&quot;userSession: Show Page Handler&quot;);
-System.out.println(&quot;userSession: output = &quot; +output.getTypeOfResult());
+          <bpmn2:script>
+System.out.println(&quot;userSession: Show Page Handler output = &quot; +output.getTypeOfResult());
 </bpmn2:script>
         </bpmn2:scriptTask>
         <bpmn2:endEvent id="EndEvent_13" name="End Process Event Handler">
@@ -787,9 +777,9 @@ System.out.println(&quot;userSession: output = &quot; +output.getTypeOfResult())
               <tns:metaValue><![CDATA[ShowFrame]]></tns:metaValue>
             </tns:metaData>
             <tns:onEntry-script scriptFormat="http://www.java.com/java">
-              <tns:script>System.out.println(&quot;userSession: ShowFrame -> Rules finished with userToken = &quot;+userToken.getSessionCode()+&quot; and key = &quot;+userToken.getSessionCode()+&quot;:page&quot;);
+              <tns:script>/*System.out.println(&quot;userSession: ShowFrame -> Rules finished with userToken = &quot;+userToken.getSessionCode()+&quot; and key = &quot;+userToken.getSessionCode()+&quot;:page&quot;);
 System.out.println(&quot;userSession: ShowFrame -> Root Frame Code is &quot;+ output.getResultCode());
-System.out.println(&quot;userSession: ShowFrame -> Target Frame Code is &quot; +output.getTargetCode());
+System.out.println(&quot;userSession: ShowFrame -> Target Frame Code is &quot; +output.getTargetCode());*/
 
 
 </tns:script>
@@ -1363,15 +1353,15 @@ System.out.println(&quot;userSession: **************************End Session ****
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_16" bpmnElement="ScriptTask_16" isExpanded="true">
-        <dc:Bounds height="50.0" width="64.0" x="1119.0" y="143.0"/>
+        <dc:Bounds height="50.0" width="64.0" x="1119.0" y="172.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_41">
-          <dc:Bounds height="11.0" width="33.0" x="1134.0" y="162.0"/>
+          <dc:Bounds height="11.0" width="33.0" x="1134.0" y="191.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_IntermediateThrowEvent_7" bpmnElement="IntermediateThrowEvent_7">
-        <dc:Bounds height="36.0" width="36.0" x="1275.0" y="150.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="1290.0" y="150.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_42">
-          <dc:Bounds height="22.0" width="64.0" x="1261.0" y="186.0"/>
+          <dc:Bounds height="22.0" width="64.0" x="1276.0" y="186.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_3" bpmnElement="ExclusiveGateway_3" isMarkerVisible="true">
@@ -1584,9 +1574,9 @@ System.out.println(&quot;userSession: **************************End Session ****
         <bpmndi:BPMNLabel id="BPMNLabel_69"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_62" bpmnElement="SequenceFlow_62" sourceElement="BPMNShape_ScriptTask_16" targetElement="BPMNShape_IntermediateThrowEvent_7">
-        <di:waypoint xsi:type="dc:Point" x="1183.0" y="168.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1229.0" y="168.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1275.0" y="168.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1183.0" y="197.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1308.0" y="197.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1308.0" y="186.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_71"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_70" bpmnElement="SequenceFlow_70" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_ExclusiveGateway_3">
@@ -1596,8 +1586,7 @@ System.out.println(&quot;userSession: **************************End Session ****
         <bpmndi:BPMNLabel id="BPMNLabel_74"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_71" bpmnElement="SequenceFlow_71" sourceElement="BPMNShape_IntermediateThrowEvent_7" targetElement="BPMNShape_ExclusiveGateway_3">
-        <di:waypoint xsi:type="dc:Point" x="1293.0" y="150.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1293.0" y="138.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1308.0" y="150.0"/>
         <di:waypoint xsi:type="dc:Point" x="1308.0" y="138.0"/>
         <di:waypoint xsi:type="dc:Point" x="1308.0" y="125.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_75"/>
@@ -1648,8 +1637,8 @@ System.out.println(&quot;userSession: **************************End Session ****
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_8" bpmnElement="SequenceFlow_8" sourceElement="BPMNShape_BoundaryEvent_3" targetElement="BPMNShape_ScriptTask_16">
         <di:waypoint xsi:type="dc:Point" x="979.0" y="166.0"/>
-        <di:waypoint xsi:type="dc:Point" x="979.0" y="168.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1119.0" y="168.0"/>
+        <di:waypoint xsi:type="dc:Point" x="979.0" y="197.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1119.0" y="197.0"/>
         <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_9" bpmnElement="SequenceFlow_9" sourceElement="BPMNShape_Task_2" targetElement="BPMNShape_EndEvent_9">
