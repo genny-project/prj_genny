@@ -8,7 +8,8 @@ import org.drools.core.process.core.datatype.impl.type.StringDataType;
        "userToken"  : new GennyToken(),
        "signalCode"  :  new StringDataType(),
        "eventCode"  :  new StringDataType(),
-       "eventValue"  :  new StringDataType()
+       "eventValue"  :  new StringDataType(),
+       "callingWorkflow"  :  new StringDataType()
       ],
     "displayName" : "Throw Signal",
     "icon" : "icons/icon-info.gif"

@@ -16,11 +16,9 @@ rule "DEFAULTPAGE"
 		msg : QEventMessage (data.code == "DEFAULTPAGE")
     then
 	
-		System.out.println("Processing Internal Signal - DEFAULTPAGE " + userToken.getUserCode());
+		System.out.println(drools.getRule().getName()+" Processing Internal Signal - DEFAULTPAGE " + userToken.getUserCode());
 		output.setTypeOfResult("FORMCODE");
 		output.setTargetCode("FRM_ROOT");
-		System.out.println(output.getTypeOfResult());
-		System.out.println(msg.getData().getCode());
 		output.setResultCode("FRM_APP");
 		
 		retract(serviceToken)

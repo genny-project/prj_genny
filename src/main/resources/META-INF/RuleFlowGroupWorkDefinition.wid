@@ -6,7 +6,8 @@ import org.drools.core.process.core.datatype.impl.type.StringDataType;
     "parameters" : [     
        "serviceToken"  : new GennyToken(),
        "userToken"  : new GennyToken(),
-       "ruleFlowGroup"  :  new StringDataType()
+       "ruleFlowGroup"  :  new StringDataType(),
+       "callingWorkflow"  :  new StringDataType()
      ],
     "displayName" : "RunRuleFlowGroup",
     "icon" : "icons/icon-info.gif"

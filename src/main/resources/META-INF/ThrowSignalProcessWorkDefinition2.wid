@@ -8,7 +8,8 @@ import org.drools.core.process.core.datatype.impl.type.LongDataType;
        "gennyToken"  : new GennyToken(),
        "payloadObject"  : new ObjectDataType(),
        "signalCode"  :  new StringDataType(),
-       "processId"   : new ObjectDataType()
+       "processId"   : new ObjectDataType(),
+       "callingWorkflow"  :  new StringDataType()
      ],
     "displayName" : "ThrowSignalProcess",
     "icon" : "icons/icon-info.gif"
