@@ -223,14 +223,14 @@ public class ChrisTest {
 		try {
 			gks = GennyKieSession
 					.builder(serviceToken, true)
-//					.addDrl("SignalProcessing")
-//					.addDrl("DataProcessing")
-//					.addDrl("EventProcessing")
-//					.addDrl("InitialiseProject")
-//					.addJbpm("InitialiseProject")
+					.addDrl("SignalProcessing")
+					.addDrl("DataProcessing")
+					.addDrl("EventProcessing")
+					.addDrl("InitialiseProject")
+					.addJbpm("InitialiseProject")
 					.addJbpm("Lifecycles")
-//					.addDrl("AuthInit")
-//					.addJbpm("AuthInit")
+					.addDrl("AuthInit")
+					.addJbpm("AuthInit")
 //					.addJbpm("userSession.bpmn")
 //					.addJbpm("userValidation.bpmn")
 //					.addJbpm("userLifecycle.bpmn")
@@ -244,8 +244,7 @@ public class ChrisTest {
 
 			gks.injectEvent(authInitMsg1); // This should create a new process
 			gks.advanceSeconds(5, false);
-			gks.advanceSeconds(5, false);
-//			gks.advanceSeconds(5, false);
+
 //			gks.injectEvent(authInitMsg1); // This should attach to existing process
 //			gks.advanceSeconds(5, false);
 
