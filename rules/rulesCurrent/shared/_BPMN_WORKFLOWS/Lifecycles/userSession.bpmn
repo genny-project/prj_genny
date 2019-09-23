@@ -121,9 +121,6 @@
         <tns:metaData name="elementname">
           <tns:metaValue><![CDATA[userSession Box]]></tns:metaValue>
         </tns:metaData>
-        <tns:metaData name="customAsync">
-          <tns:metaValue><![CDATA[true]]></tns:metaValue>
-        </tns:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_18</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_57</bpmn2:outgoing>
@@ -994,7 +991,7 @@ if (output.getTypeOfResult().equals(&quot;ERROR&quot;)) {
           <bpmn2:outgoing>SequenceFlow_35</bpmn2:outgoing>
           <bpmn2:script>output = (OutputParam)((SessionFacts)sessionFacts).getMessage();
 kcontext.setVariable(&quot;output&quot;,output);
-
+System.out.println(&quot;userSession - Show Page Handler - incoming output &quot;+output+&quot;:&quot;+(message.getData().getCode().equals(&quot;AUTH_INIT&quot;)?&quot;AUTH_INIT&quot;:&quot;&quot;));
 dom.add(output);
 kcontext.setVariable(&quot;dom&quot;,dom);
 
