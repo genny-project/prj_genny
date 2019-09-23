@@ -263,7 +263,11 @@ System.out.println(&quot;userSession: Processing Event Message = &quot; + messag
               <tns:script>System.out.println(&quot;userSession: Process Event Handler Event Message Processed = &quot; + message);
 System.out.println(&quot;userSession: Process Event Handler output = &quot; + output);
 kcontext.setVariable(&quot;output&quot;,output);
-System.out.println(&quot;userSession: Process Event Handler: sending output to to sessionCode &quot;+sessionCode);</tns:script>
+if (output.getTypeOfResult().equals(&quot;LOGOUT&quot;)) {
+	System.out.println(&quot;userSession: Process Event Handler - LOGOUT detected!&quot;);
+} else {
+	System.out.println(&quot;userSession: Process Event Handler: sending output to to sessionCode DISPLAY &quot;+sessionCode);
+}</tns:script>
             </tns:onExit-script>
           </bpmn2:extensionElements>
           <bpmn2:incoming>SequenceFlow_138</bpmn2:incoming>
@@ -390,9 +394,6 @@ System.out.println(&quot;userSession: Process Event Handler: sending output to t
           <bpmn2:extensionElements>
             <tns:metaData name="elementname">
               <tns:metaValue><![CDATA[Send Logout]]></tns:metaValue>
-            </tns:metaData>
-            <tns:metaData name="customAsync">
-              <tns:metaValue><![CDATA[true]]></tns:metaValue>
             </tns:metaData>
           </bpmn2:extensionElements>
           <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
@@ -1224,7 +1225,7 @@ System.out.println(&quot;userSession: Exiting userSession for &quot;+currentUser
         <bpmn2:dataOutput id="DataOutput_7" name="Signal_4_Output"/>
         <bpmn2:dataOutputAssociation id="DataOutputAssociation_7">
           <bpmn2:sourceRef>DataOutput_7</bpmn2:sourceRef>
-          <bpmn2:targetRef>output</bpmn2:targetRef>
+          <bpmn2:targetRef>sessionFacts</bpmn2:targetRef>
         </bpmn2:dataOutputAssociation>
         <bpmn2:outputSet id="OutputSet_6" name="Output Set 6">
           <bpmn2:dataOutputRefs>DataOutput_7</bpmn2:dataOutputRefs>
