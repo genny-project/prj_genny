@@ -72,6 +72,7 @@ import life.genny.jbpm.customworkitemhandlers.SendSignalWorkItemHandler2;
 import life.genny.jbpm.customworkitemhandlers.ShowAllFormsHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 import life.genny.jbpm.customworkitemhandlers.ShowFrameWIthContextList;
+import life.genny.jbpm.customworkitemhandlers.ShowFrames;
 import life.genny.jbpm.customworkitemhandlers.ThrowSignalProcessWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.ThrowSignalWorkItemHandler;
 import life.genny.models.GennyToken;
@@ -543,6 +544,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		kieSession.getWorkItemManager().registerWorkItemHandler("Notification", new NotificationWorkItemHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("ShowAllForms", new ShowAllFormsHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("ShowFrame", new ShowFrame());
+		kieSession.getWorkItemManager().registerWorkItemHandler("ShowFrames", new ShowFrame());
 		kieSession.getWorkItemManager().registerWorkItemHandler("Print", new PrintWorkItemHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("ShowFrameWithContextList", new ShowFrameWIthContextList());
 		kieSession.getWorkItemManager().registerWorkItemHandler("RuleFlowGroup", new RuleFlowGroupWorkItemHandler(rteng));
@@ -556,6 +558,12 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 				new SendSignalWorkItemHandler(GennyKieSession.class,rteng));
 		kieSession.getWorkItemManager().registerWorkItemHandler("SendSignal2",
 				new SendSignalWorkItemHandler2(GennyKieSession.class,rteng));
+
+		
+		kieSession.getWorkItemManager().registerWorkItemHandler("SendSignal",
+				new SendSignalWorkItemHandler(RulesLoader.class));
+		kieSession.getWorkItemManager().registerWorkItemHandler("SendSignal2",
+				new SendSignalWorkItemHandler2(RulesLoader.class));
 
 
 		if (workItemHandlers != null) {
