@@ -41,7 +41,8 @@ rule "FRM_TABLE_FOOTER"
     then
         System.out.println("   Generate FRM_TABLE_FOOTER Rule  "+serviceToken.getUserCode());
         Frame3 frame = Frame3.builder("FRM_TABLE_FOOTER")
-                      .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()                     .addFrame(FRM_TABLE_RESULT_COUNT, FramePosition.WEST).end()
+                      .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()                     
+                      .addFrame(FRM_TABLE_RESULT_COUNT, FramePosition.WEST).end()
                       .addFrame(FRM_TABLE_PAGE_INDEX, FramePosition.WEST).end()
                       .addFrame(FRM_TABLE_FOOTER_PAGINATION, FramePosition.EAST).end()
                       .build();

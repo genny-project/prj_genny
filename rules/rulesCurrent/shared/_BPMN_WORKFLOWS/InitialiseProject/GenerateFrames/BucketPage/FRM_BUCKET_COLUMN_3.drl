@@ -31,12 +31,12 @@ import life.genny.models.ThemePosition;
 
 rule "FRM_BUCKET_COLUMN_3"
     ruleflow-group 'GenerateFrames'
-  
+
     when
       not  Frame3(code == "FRM_BUCKET_COLUMN_3")
       serviceToken : GennyToken( code == "PER_SERVICE")
       FRM_GRP_SHORTLISTED : Frame3 (code == "FRM_GRP_SHORTLISTED" )
-      FRM_CARD_COMPANY : Frame3 (code == "FRM_CARD_COMPANY" )
+      FRM_CARDS : Frame3 (code == "FRM_CARDS" )
       FRM_BUCKET_COLUMN_2 : Frame3 (code == "FRM_BUCKET_COLUMN_2" ) /* just to see a sequence */
     then
      System.out.println("   Generate FRM_BUCKET_COLUMN_3 Rule  "+serviceToken.getUserCode());
@@ -45,13 +45,13 @@ rule "FRM_BUCKET_COLUMN_3"
                                 .addTheme("THM_BUCKET_COLUMN", ThemePosition.WRAPPER, serviceToken).end()
                                 .addTheme("THM_BUCKET_COLUMN_PADDING", ThemePosition.CENTRE, serviceToken).end()
                                 .addFrame(FRM_GRP_SHORTLISTED, FramePosition.NORTH).end()
-                                .addFrame(FRM_CARD_COMPANY, FramePosition.CENTRE).end()
+                                .addFrame(FRM_CARDS, FramePosition.CENTRE).end()
                                 .build();
-						
+
 	frame.setRealm(serviceToken.getRealm());
-						
+
 	insert (frame);
-	
+
 	/* Process and save to cache */
 	FrameUtils2.toMessage(frame, serviceToken);
 
