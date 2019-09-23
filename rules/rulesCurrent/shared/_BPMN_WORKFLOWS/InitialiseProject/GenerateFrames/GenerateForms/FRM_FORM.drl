@@ -84,23 +84,23 @@ rule "FRM_FORM"
 				for (String questionCode : questionCodes){
 				
 					Frame3 frame2 = Frame3.builder("FRM_CONTENT_" +  questionCode)
-								.addTheme("THM_FORM_ATTRIBUTES_GENNY", serviceToken).end()
-								.question(questionCode)
-									.addTheme("THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHT", serviceToken).dataType(buttonDataType).end()
-									.addTheme("THM_FORM_BUTTONS", serviceToken).dataType(buttonDataType).vcl(VisualControlType.INPUT_WRAPPER).end()
-									.addTheme("THM_FORM_BUTTONS_BEHAVIOUR", serviceToken).dataType(buttonDataType).end()
-									.addTheme("THM_FORM_BUTTONS_BORDER", serviceToken).dataType(buttonDataType).vcl(VisualControlType.INPUT_FIELD).end()
-									.addTheme("THM_FORM_IMAGE_RESTRICTIONS", serviceToken).dataType(imageDataType).vcl(VisualControlType.VCL_INPUT).end()
-									.addTheme("THM_FORM_IMAGE_RESTRICTIONS_DIMENSION", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_SELECTED).end()
-									.addTheme("THM_FORM_VCL_INPUT_GENNY", serviceToken).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
-									.addTheme("THM_FORM_VCL_LABEL_GENNY", serviceToken).vcl(VisualControlType.VCL_LABEL).end()
-									.addTheme("THM_FORM_VCL_WRAPPER_GENNY", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
-									.addTheme("THM_FORM_VCL_ERROR_GENNY", serviceToken).vcl(VisualControlType.VCL_ERROR).end()
-									.addTheme("THM_FORM_BEHAVIOUR_GENNY", serviceToken).weight(3.0).end()
-									.addTheme("THM_FORM_GROUP_LABEL_GENNY", serviceToken).vcl(VisualControlType.GROUP_LABEL).weight(3.0).end()
-									.addTheme("THM_BACKGROUND_NONE", serviceToken).weight(3.0).end()
-									.addTheme("THM_FORM_GROUP_WRAPPER_GENNY", serviceToken).vcl(VisualControlType.GROUP_WRAPPER).weight(3.0).end()
-									.addTheme("THM_PROJECT_COLOR_SURFACE", serviceToken).vcl(VisualControlType.INPUT_ITEM_WRAPPER).end()
+								.addTheme("THM_FORM_ATTRIBUTES_GENNY", serviceToken).end() /*Adds the theme that contains the styling for the whole container that has form*/
+								.question(questionCode) /*Attaching the Question Group to the Frame*/
+									.addTheme("THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHT", serviceToken).dataType(buttonDataType).end() /*Attaching the theme that contains project color for the buttons*/
+									.addTheme("THM_FORM_BUTTONS", serviceToken).dataType(buttonDataType).vcl(VisualControlType.INPUT_WRAPPER).end() /*contains the properties to style the within button*/
+									.addTheme("THM_FORM_BUTTONS_BEHAVIOUR", serviceToken).dataType(buttonDataType).end() /*Hides the Question Name*/
+									.addTheme("THM_FORM_BUTTONS_BORDER", serviceToken).dataType(buttonDataType).vcl(VisualControlType.INPUT_FIELD).end() /*contains the border and padding for the buttonn*/
+									.addTheme("THM_FORM_IMAGE_RESTRICTIONS", serviceToken).dataType(imageDataType).vcl(VisualControlType.VCL_INPUT).end() /*hides the name and defines the maximum number of files that can be uploaded*/
+									.addTheme("THM_FORM_IMAGE_RESTRICTIONS_DIMENSION", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_SELECTED).end()/*sets the dimension of image to be rendered in the form*/
+									.addTheme("THM_FORM_VCL_INPUT_GENNY", serviceToken).vcl(VisualControlType.VCL_INPUT).weight(2.0).end() /*shows different color when hovered, active or there is error*/
+									.addTheme("THM_FORM_VCL_LABEL_GENNY", serviceToken).vcl(VisualControlType.VCL_LABEL).end() /*sets the colour for the label of individual question*/
+									.addTheme("THM_FORM_VCL_WRAPPER_GENNY", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end() /*sets the margin around individual question*/
+									.addTheme("THM_FORM_VCL_ERROR_GENNY", serviceToken).vcl(VisualControlType.VCL_ERROR).end() /*sets the color of error*/
+									.addTheme("THM_FORM_BEHAVIOUR_GENNY", serviceToken).weight(3.0).end() /*showing the question label, question group label, icon and required property for a question */
+									.addTheme("THM_FORM_GROUP_LABEL_GENNY", serviceToken).vcl(VisualControlType.GROUP_LABEL).weight(3.0).end() /*sets the colour for the label of a question group*/
+									.addTheme("THM_BACKGROUND_NONE", serviceToken).weight(3.0).end() /*setting the background colour to none*/
+									.addTheme("THM_FORM_GROUP_WRAPPER_GENNY", serviceToken).vcl(VisualControlType.GROUP_WRAPPER).weight(3.0).end() /*applies the designing styles for the form wrapper*/
+									.addTheme("THM_PROJECT_COLOR_SURFACE", serviceToken).vcl(VisualControlType.INPUT_ITEM_WRAPPER).end() /*sets the  color properties for the input items and input wrapper*/
 								.end()
 							.build();
 					

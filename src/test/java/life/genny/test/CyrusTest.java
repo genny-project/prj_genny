@@ -81,7 +81,7 @@ public class CyrusTest extends GennyJbpmBaseTest {
 				//.addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).borderColor("red").color("red").end()
 				.build();
 
-		Theme THM_FORM_VCL_LABEL_GENNY = Theme.builder("THM_FORM_VCL_LABEL_GENNY").addAttribute().color("black").end().build();
+		Theme THM_FORM_VCL_LABEL_GENNY = Theme.builder("THM_FORM_VCL_LABEL_GENNY").addAttribute().color("yellow").end().build();
 
 		Theme THM_FORM_VCL_WRAPPER_GENNY = Theme.builder("THM_FORM_VCL_WRAPPER_GENNY").addAttribute().margin(10)
 		 		.end().addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).end().build();
@@ -111,15 +111,15 @@ public class CyrusTest extends GennyJbpmBaseTest {
 
 			Theme THM_FORM_GROUP_LABEL_GENNY= Theme.builder("THM_FORM_GROUP_LABEL_GENNY")
 				.addAttribute()
-					.color("black")
+					.color("blue")
 				.end()
 			.build(); 
 
 				
 			Theme THM_FORM_GROUP_WRAPPER_GENNY = Theme.builder("THM_FORM_GROUP_WRAPPER_GENNY")
 				.addAttribute()
-					.backgroundColor("white").maxWidth(600).width("100%")
-					.borderWidth(1)
+					.backgroundColor("blue").maxWidth(600).width("100%")
+					.borderWidth(5)
 					.borderColor("silver")
 					.borderStyle("solid")
 					.margin("auto")
@@ -215,7 +215,7 @@ public class CyrusTest extends GennyJbpmBaseTest {
 	
 	Frame3 FRM_FORM_TEST = Frame3.builder("FRM_FORM_TEST")
 			.addTheme(THM_FORM_ATTRIBUTES_GENNY).end()
-				.question("QUE_JOURNAL_W1D1_GRP")
+				.question("QUE_FORM_VIEW_GRP")
 					.addTheme(THM_FORM_BUTTONS_TEST).dataType(buttonDataType).vcl(VisualControlType.INPUT_WRAPPER).end()
 					.addTheme(THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHT).dataType(buttonDataType).weight(2.0).end()
 					.addTheme(THM_FORM_BUTTONS_TEST1).dataType(buttonDataType).vcl(VisualControlType.INPUT_FIELD).end()
@@ -232,6 +232,7 @@ public class CyrusTest extends GennyJbpmBaseTest {
 			.build();
 	
 	
+
 
 		Frame3 frameCentre = Frame3.builder("FRM_CENTRE").addFrame(FRM_FORM_TEST, FramePosition.NORTH).end()
 				.build();
