@@ -256,11 +256,13 @@ kcontext.setVariable(&quot;serviceToken&quot;,((GennyToken)serviceToken));
             <tns:onEntry-script scriptFormat="http://www.java.com/java">
               <tns:script>/*kcontext.setVariable(&quot;message&quot;,((QEventMessage)sessionFacts).getMessage());*/
 System.out.println(&quot;userSession: Custom Process Event - Should not be Auth_Init&quot;);
+
 System.out.println(&quot;userSession: Processing Event Message = &quot; + message);</tns:script>
             </tns:onEntry-script>
             <tns:onExit-script scriptFormat="http://www.java.com/java">
               <tns:script>System.out.println(&quot;userSession: Process Event Handler Event Message Processed = &quot; + message);
 System.out.println(&quot;userSession: Process Event Handler output = &quot; + output);
+kcontext.setVariable(&quot;output&quot;,output);
 System.out.println(&quot;userSession: Process Event Handler: sending output to to sessionCode &quot;+sessionCode);</tns:script>
             </tns:onExit-script>
           </bpmn2:extensionElements>
@@ -500,7 +502,7 @@ System.out.println(&quot;userSession: Internal Signal received , msg code = &quo
             </tns:onEntry-script>
             <tns:onExit-script scriptFormat="http://www.java.com/java">
               <tns:script>System.out.println(&quot;userSession: internal Signal Handler output = &quot; + output.getTypeOfResult()+&quot;sending output to to sessionCode &quot;+sessionCode);
-</tns:script>
+kcontext.setVariable(&quot;output&quot;,output);</tns:script>
             </tns:onExit-script>
           </bpmn2:extensionElements>
           <bpmn2:incoming>SequenceFlow_128</bpmn2:incoming>
