@@ -31,7 +31,6 @@ rule "FRM_CARD_LEFTS"
     when
       not  Frame3(code == "FRM_CARD_LEFTS")
       serviceToken : GennyToken( code == "PER_SERVICE")
-      FRM_DUMMY : Frame3 ( code == "FRM_DUMMY" )
     then
      System.out.println("   Generate FRM_CARD_LEFTS Rule  "+serviceToken.getUserCode());
 
