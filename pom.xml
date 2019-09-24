@@ -80,7 +80,9 @@
 		<version.resteasy>3.0.10.Final</version.resteasy>
 
 		<m2e.jpa.activation>false</m2e.jpa.activation>
-
+		<activemq-junit-version>5.13.0</activemq-junit-version>
+		<activemq-version>5.13.0</activemq-version>
+		<spring.version>4.2.4.RELEASE</spring.version>
 	</properties>
 
 	<repositories>
@@ -425,6 +427,38 @@
 			<artifactId>javax.el-api</artifactId>
 			<version>3.0.0</version>
 		</dependency>
+	<!-- <dependency>
+			<groupId>org.apache.activemq.tooling</groupId>
+			<artifactId>activemq-junit</artifactId>
+			<version>${activemq-junit-version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-broker</artifactId>
+			<version>${activemq-version}</version>
+			<scope>test</scope>
+		</dependency>
+		-->
+		<dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-all</artifactId>
+            <version>${activemq-version}</version>
+            <scope>test</scope>
+        </dependency>
+         <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jms</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
 	<build>
 
@@ -441,6 +475,45 @@
 			</testResource>
 		</testResources>
 		<plugins>
+		<!--
+                Starts an minimal embedded ActiveMQ broker for the test.
+            -->
+            <plugin>
+                <groupId>org.apache.activemq.tooling</groupId>
+                <artifactId>activemq-maven-plugin</artifactId>
+                <version>${activemq-version}</version>
+                <configuration>
+                    <configUri>xbean:file:./src/test/resources/activemq.xml</configUri>
+                    <fork>true</fork>
+                    <systemProperties>
+                        <property>
+                            <name>org.apache.activemq.default.directory.prefix</name>
+                            <value>./target/</value>
+                        </property>
+                    </systemProperties>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.activemq</groupId>
+                        <artifactId>activemq-spring</artifactId>
+                        <version>${activemq-version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.apache.activemq</groupId>
+                        <artifactId>activemq-leveldb-store</artifactId>
+                        <version>${activemq-version}</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>start-activemq</id>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <phase>process-test-resources</phase>
+                    </execution>
+                </executions>
+            </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>

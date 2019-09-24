@@ -7,7 +7,7 @@ rule "eventListenerServiceWorkflowSetup"
 salience 10000
     no-loop true
     when
-    	not WorkflowProcessInstance( )
+ /*   	not WorkflowProcessInstance( ) */
      	serviceToken: GennyToken(code == "PER_SERVICE")
     then
     /* System.out.println("Setup Listener for serviceToken! Workflow startup"); */

@@ -1,0 +1,28 @@
+package life.genny.rules;
+import life.genny.qwanda.message.QDataAnswerMessage;
+import life.genny.models.GennyToken;
+import life.genny.rules.QRules;
+import life.genny.utils.BaseEntityUtils;
+import life.genny.qwanda.Answer;
+import java.util.List;
+import java.util.ArrayList;
+
+rule "PROCESS_ANSWERS"
+    ruleflow-group 'AnswerProcessing'
+   
+    when
+	  userToken : GennyToken ( code != "PER_SERVICE" ) 
+	  dataMsg : QDataAnswerMessage( (items != null) && (items.length > 0) )
+    then
+ 		System.out.println("Rule -> PROCESS_ANSWERS Processing Answer/Data!! :  user=" + userToken.getUserCode()); 
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken); 
+		insert(beUtils);
+ 
+ 		for (Answer answer : dataMsg.getItems()) {
+ 			insert(answer);
+ 		}
+ 		
+ 		retract(dataMsg); /* stop this rule from firing again */
+
+end

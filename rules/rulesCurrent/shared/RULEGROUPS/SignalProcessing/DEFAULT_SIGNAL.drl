@@ -7,15 +7,19 @@ import life.genny.utils.OutputParam;
 
 rule "DEFAULT_SIGNAL"
     ruleflow-group 'SignalProcessing'
-    no-loop
+    lock-on-active
     salience -10000
     when
-		serviceToken : GennyToken (code != "PER_SERVICE" )
+		userToken : GennyToken (code != "PER_SERVICE" )
+		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam( )
     then
 	
-		System.out.println("Processing Internal Signal ");
+		System.out.println("Processing Internal Signal - DEFAULTSIGNAL" + userToken.getUserCode());
+		System.out.println(output.getTypeOfResult());
 		output.setTypeOfResult("NONE");
+		System.out.println(output.getTypeOfResult());
 		output.setResultCode("");
+		
 		
 end

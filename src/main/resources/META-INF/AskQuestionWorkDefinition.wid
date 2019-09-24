@@ -6,7 +6,8 @@ import org.drools.core.process.core.datatype.impl.type.StringDataType;
     "name" : "AskQuestion",
     "parameters" : [     
        "userToken"  : new GennyToken(),
-       "questionCode"  :  new StringDataType()
+       "questionCode"  :  new StringDataType(),
+       "callingWorkflow"  :  new StringDataType()
       ],
     "displayName" : "Ask Question",
     "icon" : "icons/icon-info.gif"
