@@ -17,8 +17,6 @@ rule "TREE_ITEM_FORM_CLICK_EVENT"
 	
 		System.out.println("Processing Answer/Data : " + $message );
 		System.out.println("Parent code :  " + $message.getData().getParentCode());
-		output.setResultCode("FRM_"+ $message.getData().getCode());
-		output.setTargetCode("FRM_CONTENT");
-		output.setTypeOfResult("FORMCODE");
+		output.setFormCode("FRM_"+ $message.getData().getCode(),"FRM_CONTENT");
 		retract( $message);
 end

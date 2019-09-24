@@ -127,34 +127,36 @@ public class AnishTest extends GennyJbpmBaseTest {
                         rules.sendAllAttributes();
 
                         /* frame-header */
-                        //Frame3 FRM_HEADER = generateHeader();
+                        Frame3 FRM_HEADER = generateHeader();
                         /* Frame3 FRM_SIDEBAR = generateSidebar(); */
                         Frame3 FRM_SIDEBAR = generateInternmatchSidebar();
                         /* Frame3 FRM_CONTENT = getDashboard(); */
-                        Frame3 FRM_TABLE = generateTable();
+                        /*Frame3 FRM_TABLE = generateTable();*/
                         Frame3 FRM_FOOTER = generateFooter();
-                        /*Frame3 FRM_TABS = generateTabs(); */
+                        //Frame3 FRM_TABS = generateTabs(); 
+                        //Frame3 FRM_TABS = generateTabs(); 
+                        Frame3 FRM_TABS = generateProcessView(); 
 
 
                         /* need to call performSearch in TableUtils */
 
                         //TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
                         
-                        Answer answer = new Answer(userToken.getUserCode(),userToken.getUserCode(),"PRI_SEARCH_TEXT", "univ");
-                        TableUtilsTest.performSearch(serviceToken , beUtils, "SBE_SEARCHBAR", answer);
+//                        Answer answer = new Answer(userToken.getUserCode(),userToken.getUserCode(),"PRI_SEARCH_TEXT", "univ");
+//                        TableUtilsTest.performSearch(serviceToken , beUtils, "SBE_SEARCHBAR", answer);
 
 
 
                         /* frame-root */
                         Frame3 FRM_APP = Frame3.builder("FRM_APP")
                                         .addTheme("THM_PROJECT", ThemePosition.FRAME, serviceToken).end()
-                                        //.addFrame(FRM_HEADER, FramePosition.NORTH).end()
+                                       // .addFrame(FRM_HEADER, FramePosition.NORTH).end()
                                         .addFrame(FRM_SIDEBAR, FramePosition.WEST).end()
 
                                         /* .addFrame(FRM_CONTENT, FramePosition.CENTRE).end() */
-                                        .addFrame(FRM_TABLE, FramePosition.CENTRE).end()
+                                        /*.addFrame(FRM_TABLE, FramePosition.CENTRE).end()*/
                                         .addFrame(FRM_FOOTER, FramePosition.SOUTH).end() 
-                                        /*.addFrame(FRM_TABS, FramePosition.CENTRE).end() */
+                                        .addFrame(FRM_TABS, FramePosition.CENTRE).end() 
                                         .build();
                         
 
@@ -993,14 +995,14 @@ public class AnishTest extends GennyJbpmBaseTest {
                                                         .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
                                                         .build();
 
-                        Theme THM_HEADER_PROFILE_PICTURE = Theme.builder("THM_HEADER_PROFILE_PICTURE")
-                                                .addAttribute()
-                                                        .height(32)
-                                                        .width(32)
-                                                        .fit("cover")
-                                                        .borderRadius(50)
-                                                .end()
-                                                .build();
+                        // Theme THM_HEADER_PROFILE_PICTURE = Theme.builder("THM_HEADER_PROFILE_PICTURE")
+                        //                         .addAttribute()
+                        //                                 .height(32)
+                        //                                 .width(32)
+                        //                                 .fit("cover")
+                        //                                 .borderRadius(50)
+                        //                         .end()
+                        //                         .build();
                         
                         Theme THM_PANEL_CONTENT_FIT = Theme.builder("THM_PANEL_CONTENT_FIT")
                                                 .addAttribute()
@@ -1046,7 +1048,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                                                 .addTheme(THM_PANEL_CONTENT_FIT, ThemePosition.WRAPPER).end()
                                                 .addTheme(THM_PADDING_RIGHT_10, ThemePosition.WRAPPER).end()
                                                 .question("QUE_IMAGE_URL")
-                                                        .addTheme(THM_HEADER_PROFILE_PICTURE).vcl(VisualControlType.VCL_INPUT).end()
+                                                        //.addTheme(THM_HEADER_PROFILE_PICTURE).vcl(VisualControlType.VCL_INPUT).end()
                                                         .addTheme(THM_BORDER_RADIUS_50).vcl(VisualControlType.INPUT_FIELD).end()
                                                 .end()
                                                 .build();
@@ -1510,10 +1512,23 @@ public class AnishTest extends GennyJbpmBaseTest {
 
                 Theme THM_BUCKET_HEADER = Theme.builder("THM_BUCKET_HEADER").addAttribute().backgroundColor("red").end()
                                 .build();
+                
+                Theme THM_COLOR_BACKGROUND = Theme.builder("THM_COLOR_BACKGROUND")
+                                        .addAttribute()
+                                                .backgroundColor("#F6F6F6")
+                                                .color("#000000")
+                                        .end()
+                                        .build();  
 
-                Frame3 available = Frame3.builder("FRM_GRP_AVAILABLE").addTheme(THM_TEST1).end()
+                Frame3 available = Frame3.builder("FRM_GRP_AVAILABLE")
+                					.addTheme(THM_TEST1).end()
                                 // .addTheme(THM_BUCKET_HEADER).weight(1.0).end()
-                                .question("QUE_GRP_NOT_APPLIED").addTheme(THM_BUCKET_LABEL).end().end().end().build();
+            						.question("QUE_GRP_NOT_APPLIED")
+            							.addTheme(THM_BUCKET_LABEL).end()
+            						.end()
+            						.build();
+                
+                
 
                 Frame3 applied = Frame3.builder("FRM_GRP_APPLIED").addTheme(THM_TEST1).end().question("QUE_GRP_APPLIED")
                                 .addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
@@ -1559,13 +1574,9 @@ public class AnishTest extends GennyJbpmBaseTest {
                 Frame3 frameCard18 = generateCards("8");
                 Frame3 frameCard19 = generateCards("9");
 
-                Frame3 card = Frame3.builder("FRM_CARD_TEST").addTheme(THM_TEST1).end().addTheme(THM_GREEN).end()
-                                .question("QUE_GRP_NOT_APPLIED").addTheme(THM_FORM_INPUT_DEFAULT)
-                                .vcl(VisualControlType.VCL_INPUT).weight(2.0).end().end().addTheme(THM_BUCKET_LABEL)
-                                .end().build();
 
                 Frame3 bucketColumn1 = Frame3.builder("FRM_BUCKET_COLUMN_ONE")
-                                .addTheme(THM_BUCKET_COLUMN, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_BUCKET_COLUMN, ThemePosition.FRAME).end()
                                 .addTheme(THM_BUCKET_COLUMN_PADDING, ThemePosition.CENTRE).end()
                                 .addFrame(available, FramePosition.NORTH).end()
                                 .addFrame(frameCard1, FramePosition.CENTRE).end()
@@ -1578,16 +1589,16 @@ public class AnishTest extends GennyJbpmBaseTest {
                                 .addFrame(frameCard8, FramePosition.CENTRE).end()
                                 .addFrame(frameCard9, FramePosition.CENTRE).end().build();
                 Frame3 bucketColumn2 = Frame3.builder("FRM_BUCKET_COLUMN_TWO")
-                                .addTheme(THM_BUCKET_COLUMN, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_BUCKET_COLUMN, ThemePosition.FRAME).end()
                                 .addTheme(THM_BUCKET_COLUMN_PADDING, ThemePosition.CENTRE).end()
                                 .addFrame(applied, FramePosition.NORTH).end().addFrame(frameCard1, FramePosition.CENTRE)
                                 .end().addFrame(frameCard2, FramePosition.CENTRE).end().build();
                 Frame3 bucketColumn3 = Frame3.builder("FRM_BUCKET_COLUMN_THREE")
-                                .addTheme(THM_BUCKET_COLUMN, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_BUCKET_COLUMN, ThemePosition.FRAME).end()
                                 .addTheme(THM_BUCKET_COLUMN_PADDING, ThemePosition.CENTRE).end()
                                 .addFrame(shortlisted, FramePosition.NORTH).end().build();
                 Frame3 bucketColumn4 = Frame3.builder("FRM_BUCKET_COLUMN_FOUR")
-                                .addTheme(THM_BUCKET_COLUMN, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_BUCKET_COLUMN, ThemePosition.FRAME).end()
                                 .addTheme(THM_BUCKET_COLUMN_PADDING, ThemePosition.CENTRE).end()
                                 .addFrame(interviews, FramePosition.NORTH).end()
                                 .addFrame(frameCard1, FramePosition.CENTRE).end()
@@ -1611,6 +1622,125 @@ public class AnishTest extends GennyJbpmBaseTest {
                                 .addFrame(frameCard19, FramePosition.CENTRE).end().build();
 
                 Frame3 bucketColumn5 = Frame3.builder("FRM_BUCKET_COLUMN_FIVE")
+                                .addTheme(THM_BUCKET_COLUMN, ThemePosition.FRAME).end()
+                                .addTheme(THM_BUCKET_COLUMN_PADDING, ThemePosition.CENTRE).end()
+                                .addFrame(offered, FramePosition.NORTH).end().build();
+                Frame3 bucketColumn6 = Frame3.builder("FRM_BUCKET_COLUMN_SIX")
+                                .addTheme(THM_BUCKET_COLUMN, ThemePosition.FRAME).end()
+                                .addTheme(THM_BUCKET_COLUMN_PADDING, ThemePosition.CENTRE).end()
+                                .addFrame(placed, FramePosition.NORTH).end().build();
+                Frame3 bucketColumn7 = Frame3.builder("FRM_BUCKET_COLUMN_SEVEN")
+                                .addTheme(THM_BUCKET_COLUMN, ThemePosition.FRAME).end()
+                                .addTheme(THM_BUCKET_COLUMN_PADDING, ThemePosition.CENTRE).end()
+                                .addFrame(inProgress, FramePosition.NORTH).end().build();
+
+                Frame3 bucket = Frame3.builder("FRM_BUCKETSSSS")
+                                .addTheme(THM_BUCKET).end()
+                                .addTheme(THM_COLOR_BACKGROUND).end()
+                                .addFrame(bucketColumn1, FramePosition.WEST).end()
+                                .addFrame(bucketColumn2, FramePosition.WEST).end()
+                                .addFrame(bucketColumn3, FramePosition.WEST).end()
+                                .addFrame(bucketColumn4, FramePosition.WEST).end()
+                                .addFrame(bucketColumn5, FramePosition.WEST).end()
+                                .addFrame(bucketColumn6, FramePosition.WEST).end()
+                                .addFrame(bucketColumn7, FramePosition.WEST).end().build();
+
+                return bucket;
+        }
+        public Frame3 generateProcessView() {
+        	
+        	try{
+        		
+
+                Theme THM_FORM_INPUT_DEFAULT = Theme.builder("THM_FORM_INPUT_DEFAULT").addAttribute()
+                                .borderBottomWidth(5).color("black").borderColor("#ddd").borderStyle("solid")
+                                .placeholderColor("#888").height(70).end().build();
+
+                Theme THM_BUCKET_LABEL = Theme.builder("THM_BUCKET_LABEL").addAttribute().textAlign("center").bold(true)
+                                .color("black").end().build();
+
+                Theme THM_BUCKET = Theme.builder("THM_BUCKET").addAttribute()
+                                .overflowX("auto").overflowY("auto").width("100%").end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                Theme THM_BUCKET_COLUMN = Theme.builder("THM_BUCKET_COLUMN").addAttribute().backgroundColor("#EAEAEA")
+                                .minWidth(300).width("100%").margin(20).textAlign("center")
+                                .end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+                Theme THM_BUCKET_COLUMN_PADDING = Theme.builder("THM_BUCKET_COLUMN_PADDING").addAttribute().padding(20)
+                                .justifyContent("flex-start").end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                Theme THM_TEST1 = Theme.builder("THM_TEST1").addAttribute().backgroundColor("none").width("100%")
+                                .height(70).flexGrow(0).flexBasis("initial").end().build();
+
+                Theme THM_BUCKET_HEADER = Theme.builder("THM_BUCKET_HEADER").addAttribute().backgroundColor("red").end()
+                                .build();
+
+                Frame3 available = Frame3.builder("FRM_GRP_AVAILABLE")
+                					.addTheme(THM_TEST1).end()
+                                // .addTheme(THM_BUCKET_HEADER).weight(1.0).end()
+            						.question("QUE_GRP_NOT_APPLIED")
+            							.addTheme(THM_BUCKET_LABEL).end()
+            						.end()
+            						.build();
+
+                Frame3 applied = Frame3.builder("FRM_GRP_APPLIED").addTheme(THM_TEST1).end().question("QUE_GRP_APPLIED")
+                                .addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
+                                .end().addTheme(THM_BUCKET_LABEL).end().build();
+                Frame3 shortlisted = Frame3.builder("FRM_GRP_SHORTLISTED").addTheme(THM_TEST1).end()
+                                .question("QUE_GRP_SHORTLISTED").addTheme(THM_FORM_INPUT_DEFAULT)
+                                .vcl(VisualControlType.VCL_INPUT).weight(2.0).end().end().addTheme(THM_BUCKET_LABEL)
+                                .end().build();
+                Frame3 interviews = Frame3.builder("FRM_GRP_INTERVIEWS").addTheme(THM_TEST1).end()
+                                .question("QUE_GRP_INTERVIEWS").addTheme(THM_FORM_INPUT_DEFAULT)
+                                .vcl(VisualControlType.VCL_INPUT).weight(2.0).end().end().addTheme(THM_BUCKET_LABEL)
+                                .end().build();
+                Frame3 offered = Frame3.builder("FRM_GRP_OFFERED").addTheme(THM_TEST1).end().question("QUE_GRP_OFFERED")
+                                .addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
+                                .end().addTheme(THM_BUCKET_LABEL).end().build();
+                Frame3 placed = Frame3.builder("FRM_GRP_PLACED").addTheme(THM_TEST1).end().question("QUE_GRP_PLACED")
+                                .addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
+                                .end().addTheme(THM_BUCKET_LABEL).end().build();
+                Frame3 inProgress = Frame3.builder("FRM_GRP_IN_PROGRESS").addTheme(THM_TEST1).end()
+                                .question("QUE_GRP_IN_PROGRESS").addTheme(THM_FORM_INPUT_DEFAULT)
+                                .vcl(VisualControlType.VCL_INPUT).weight(2.0).end().end().addTheme(THM_BUCKET_LABEL)
+                                .end().build();
+
+                Theme THM_GREEN = Theme.builder("THM_GREEN").addAttribute().backgroundColor("green").end().build();
+                
+                Theme THM_DISPLAY_HORIZONTAL = Theme.builder("THM_DISPLAY_HORIZONTAL").addAttribute().flexDirection("row").end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+                Theme THM_DISPLAY_VERTICAL = Theme.builder("THM_DISPLAY_VERTICAL").addAttribute().flexDirection("column").end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                Frame3 frameCard = generateNewCard();
+                Frame3 frameCard1 = generateCards("1");
+
+
+                Frame3 bucketColumn1 = Frame3.builder("FRM_BUCKET_COLUMN_ONE")
+                                .addTheme(THM_DISPLAY_VERTICAL, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_BUCKET_COLUMN, ThemePosition.FRAME).end()
+                                .addTheme(THM_BUCKET_COLUMN_PADDING, ThemePosition.CENTRE).end()
+                                .addFrame(available, FramePosition.NORTH).end()
+                                .addFrame(frameCard, FramePosition.CENTRE).end()
+                                .addFrame(frameCard1, FramePosition.CENTRE).end()
+                                .build();
+
+                Frame3 bucketColumn2 = Frame3.builder("FRM_BUCKET_COLUMN_TWO")
+                                .addTheme(THM_BUCKET_COLUMN, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_BUCKET_COLUMN_PADDING, ThemePosition.CENTRE).end()
+                                .addFrame(applied, FramePosition.NORTH).end()
+                                .addFrame(frameCard, FramePosition.CENTRE).end()
+                                .build();
+                Frame3 bucketColumn3 = Frame3.builder("FRM_BUCKET_COLUMN_THREE")
+                                .addTheme(THM_BUCKET_COLUMN, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_BUCKET_COLUMN_PADDING, ThemePosition.CENTRE).end()
+                                .addFrame(shortlisted, FramePosition.NORTH).end().build();
+                Frame3 bucketColumn4 = Frame3.builder("FRM_BUCKET_COLUMN_FOUR")
+                                .addTheme(THM_BUCKET_COLUMN, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_BUCKET_COLUMN_PADDING, ThemePosition.CENTRE).end()
+                                .addFrame(interviews, FramePosition.NORTH).end()
+                                .build();
+
+                Frame3 bucketColumn5 = Frame3.builder("FRM_BUCKET_COLUMN_FIVE")
                                 .addTheme(THM_BUCKET_COLUMN, ThemePosition.WRAPPER).end()
                                 .addTheme(THM_BUCKET_COLUMN_PADDING, ThemePosition.CENTRE).end()
                                 .addFrame(offered, FramePosition.NORTH).end().build();
@@ -1623,7 +1753,9 @@ public class AnishTest extends GennyJbpmBaseTest {
                                 .addTheme(THM_BUCKET_COLUMN_PADDING, ThemePosition.CENTRE).end()
                                 .addFrame(inProgress, FramePosition.NORTH).end().build();
 
-                Frame3 bucket = Frame3.builder("FRM_BUCKET").addTheme(THM_BUCKET).end()
+                Frame3 bucket = Frame3.builder("FRM_BUCKET")
+                                .addTheme(THM_BUCKET).end()
+                                .addTheme(THM_DISPLAY_HORIZONTAL).end()
                                 .addFrame(bucketColumn1, FramePosition.WEST).end()
                                 .addFrame(bucketColumn2, FramePosition.WEST).end()
                                 .addFrame(bucketColumn3, FramePosition.WEST).end()
@@ -1633,8 +1765,210 @@ public class AnishTest extends GennyJbpmBaseTest {
                                 .addFrame(bucketColumn7, FramePosition.WEST).end().build();
 
                 return bucket;
+                
+        	}catch (Exception e) {
+				// TODO: handle exception
+			}
+        	return null;
         }
 
+        public Frame3 generateNewCard() {
+                GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+                GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User",
+                                "service");
+                QRules rules = new QRules(eventBusMock, userToken.getToken());
+                rules.set("realm", userToken.getRealm());
+                rules.setServiceToken(serviceToken.getToken());
+                
+                try {
+
+                /* create themes */
+
+                Theme THM_CARD_DEFAULT = Theme.builder("THM_CARD_DEFAULT").addAttribute().backgroundColor("none").end()
+                                // .addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end()
+                                // .addAttribute(ThemeAttributeType.PRI_HAS_INPUT, false).end()
+                                .build();
+
+                Theme THM_CARD = Theme.builder("THM_CARD").addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
+                                .end().addAttribute().marginBottom(20).height(150).flexGrow(0).flexShrink(0)
+                                .flexBasis("initial").backgroundColor("#F8F9FA").width("100%").shadowColor("#000")
+                                .shadowOpacity(0.4).shadowRadius(5).end().addAttribute().shadowOffset().width(0)
+                                .height(0).end().end().build();
+
+
+                Theme THM_TEST1 = Theme.builder("THM_TEST1").addAttribute().backgroundColor("none").width("100%")
+                                .height(70).flexGrow(0).flexBasis("initial").end().build();
+
+
+                /* new card themes */
+                Theme THM_CARD_TEST = Theme.builder("THM_CARD_TEST")
+                                .addAttribute()
+                                        .backgroundColor("white")
+                                        .height("auto")
+                                        .width("100%")
+                                        .backgroundColor("#F8F9FA")
+                                        .flexBasis("initial")
+                                        .flexGrow(0)
+                                        .flexShrink(0)
+                                        .marginBottom(20)
+                                        .shadowColor("#000")
+                                        .shadowOffset()
+                                          .height(0)
+                                          .width(0)                                        
+                                        .end()
+                                        .shadowOpacity(0.4)
+                                        .shadowRadius(5)
+                                .end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                .build();
+                // *
+                Theme THM_FORM_LABEL_DEFAULT = Theme.builder("THM_FORM_LABEL_DEFAULT")
+                                .addAttribute()
+                                        .backgroundColor("white")
+                                .end()
+                                .build();
+                
+                Theme THM_CARD_STATUS = Theme.builder("THM_CARD_STATUS")
+                                .addAttribute()
+                                        .height("100%")
+                                .end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                .build();
+
+                Theme THM_PROFILE_IMAGE = Theme.builder("THM_PROFILE_IMAGE")
+                                .addAttribute()
+                                        .imageHeight(40)
+                                        .imageWidth(40)
+                                        .showName(false)
+                                .end()
+                                .build();
+                
+                Theme THM_PANEL_ALIGN_TOP_LEFT = Theme.builder("THM_PANEL_ALIGN_TOP_LEFT")
+                                .addAttribute()
+                                        .alignItems("flex-start")
+                                        .justifyContent("flex-start")
+                                .end()
+                                .build();
+                // *
+                Theme THM_CARD_TEST_CENTRE = Theme.builder("THM_CARD_TEST_CENTRE")
+                                .addAttribute().padding(5).end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                .build();
+             
+                Theme THM_WIDTH_DYNAMIC = Theme.builder("THM_WIDTH_DYNAMIC")
+                                .addAttribute().dynamicWidth(true).end()
+                                .build();
+                
+                Theme THM_WIDTH_100_PERCENT = Theme.builder("THM_WIDTH_100_PERCENT")
+                                .addAttribute().width("100%").end()
+                                .build();
+                
+                
+                Theme THM_EXPANDABLE = Theme.builder("THM_EXPANDABLE")
+                                .addAttribute(ThemeAttributeType.PRI_IS_EXPANDABLE, true).end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                .build();
+              
+                Theme THM_JUSTIFY_CONTENT_CENTRE = Theme.builder("THM_JUSTIFY_CONTENT_CENTRE")
+                                .addAttribute()
+                                        .justifyContent("center")
+                                .end()
+                                .build();
+                Theme THM_JUSTIFY_CONTENT_FLEX_START = Theme.builder("THM_JUSTIFY_CONTENT_FLEX_START")
+                                .addAttribute()
+                                        .justifyContent("flex-start")
+                                .end()
+                                .build();
+
+                Theme THM_IMAGE_PLACEHOLDER = Theme.builder("THM_IMAGE_PLACEHOLDER")
+				.addAttribute()
+                                        .name("image")
+                                        .type("icon")
+                                        .color("white")
+				.end()
+		                .build();
+
+
+
+
+                /* new card frames */
+
+                Frame3 FRM_CARD_STATUS = Frame3.builder("FRM_CARD_STATUS")
+                                        .question("QUE_CARD_STATUS")
+                                                .addTheme(THM_CARD_STATUS)
+                                                .vcl(VisualControlType.VCL_WRAPPER).end()
+                                        .end()
+                                        .build();
+
+               
+                Frame3 FRM_CARD_LEFTS = Frame3.builder("FRM_CARD_LEFTS")
+                                        .question("QUE_IMAGE_URL")
+                                                .addTheme(THM_PROFILE_IMAGE).vcl(VisualControlType.INPUT_SELECTED).end()
+                                                .addTheme(THM_IMAGE_PLACEHOLDER).vcl(VisualControlType.INPUT_PLACEHOLDER).end()
+                                        .end()
+                                        .build();
+
+                Frame3 FRM_CARD_CENTRES = Frame3.builder("FRM_CARD_CENTRES")
+                                        .question("QUE_TEST_CARD_CONTENT_GRP")
+                                                .addTheme(THM_PANEL_ALIGN_TOP_LEFT).end()
+                                                .addTheme(THM_CARD_TEST_CENTRE).end()
+                                        .end()
+                                        .build();
+                
+                Frame3 FRM_CARD_RIGHTS = Frame3.builder("FRM_CARD_RIGHTS")
+                                        .addTheme(THM_JUSTIFY_CONTENT_FLEX_START, ThemePosition.CENTRE).end()
+                                        .question("QUE_TEST_CARD_OPTIONS_GRP")
+                                                .addTheme("THM_BACKGROUND_NONE", serviceToken).vcl(VisualControlType.GROUP).weight(2.0).end()
+                                                .addTheme("THM_DROPDOWN_BEHAVIOUR_GENNY", serviceToken).vcl(VisualControlType.GROUP).weight(2.0).end()
+                                                .addTheme("THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY", serviceToken).vcl(VisualControlType.GROUP).weight(1.0).end()
+                                                .addTheme("THM_DROPDOWN_HEADER_WRAPPER_GENNY", serviceToken).vcl(VisualControlType.GROUP_HEADER_WRAPPER).weight(2.0).end()
+                                                .addTheme("THM_DROPDOWN_GROUP_LABEL_GENNY", serviceToken).vcl(VisualControlType.GROUP_LABEL).end()
+                                                .addTheme("THM_DROPDOWN_CONTENT_WRAPPER_GENNY", serviceToken).vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end()
+                                                .addTheme("THM_PROJECT_COLOR_SURFACE", serviceToken).vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end()                      
+                                                .addTheme("THM_BOX_SHADOW_SM", serviceToken).vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end()
+                                                .addTheme("THM_DROPDOWN_VCL_GENNY", serviceToken).vcl(VisualControlType.VCL).end()
+                                        .end()
+                                        .build();
+
+                Frame3 FRM_CARD_BOTTOM = Frame3.builder("FRM_CARD_BOTTOM")
+                                        .addTheme(THM_PANEL_ALIGN_TOP_LEFT, ThemePosition.CENTRE).end()
+                                        .question("QUE_TEST_CARD_BOTTOM_GRP")
+                                                .addTheme(THM_WIDTH_DYNAMIC).vcl(VisualControlType.VCL_INPUT).end()
+                                                .addTheme("THM_WIDTH_100_PERCENT", serviceToken).vcl(VisualControlType.GROUP).end()
+                                                .addTheme(THM_JUSTIFY_CONTENT_CENTRE).vcl(VisualControlType.GROUP_CLICKABLE_WRAPPER).end()
+                                                .addTheme(THM_EXPANDABLE).end()
+                                        .end()
+                                        .build();
+                
+                Frame3 FRM_CARD_MAIN = Frame3.builder("FRM_CARD_MAIN")
+                        .addFrame(FRM_CARD_LEFTS, FramePosition.WEST).end()
+                        .addFrame(FRM_CARD_CENTRES, FramePosition.CENTRE).end()
+                        .addFrame(FRM_CARD_RIGHTS, FramePosition.EAST).end()
+                        .addFrame(FRM_CARD_BOTTOM, FramePosition.SOUTH).end()
+                        .build();
+
+
+
+
+
+
+
+
+                /* create frames */
+                Frame3 FRM_CARDS = Frame3.builder("FRM_CARDS")
+                                .addTheme(THM_CARD_TEST, ThemePosition.WRAPPER).end()
+                                .addFrame(FRM_CARD_STATUS, FramePosition.WEST).end()
+                                .addFrame(FRM_CARD_MAIN, FramePosition.CENTRE).end()
+                                .build();
+
+                return FRM_CARDS;
+                
+                }catch (Exception e) {
+                    System.out.println("Error " + e.getLocalizedMessage());
+                }
+				return null;
+
+        }
         public Frame3 generateCards(String count) {
                 GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
                 GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User",
@@ -1714,12 +2048,14 @@ public class AnishTest extends GennyJbpmBaseTest {
                 GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
                 BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
                 BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
+                
+                try {
 
-                Theme THM_TABS = Theme.builder("THM_TABS").addAttribute().backgroundColor("none").end().addAttribute()
+                Theme THM_TABS = Theme.builder("THM_TABS").addAttribute().backgroundColor("green").end().addAttribute()
                                 .flexDirection("column").end().build();
 
                 Theme THM_TAB_HEADER = Theme.builder("THM_TAB_HEADER").addAttribute()
-                                .backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E")).flexDirection("row")
+                                .flexDirection("row")
                                 .end().build();
 
                 Theme THM_TAB_CONTENT = Theme.builder("THM_TAB_CONTENT").addAttribute()
@@ -1746,24 +2082,51 @@ public class AnishTest extends GennyJbpmBaseTest {
                                 .flexGrow(0).flexBasis("initial").end()
                                 .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
 
-                Frame3 tabHeader = Frame3.builder("FRM_TAB_HEADER").addTheme(THM_TAB_HEADER, ThemePosition.WRAPPER)
-                                .end().addTheme(THM_FRAME_ALIGN_WEST, ThemePosition.WEST).end()
+                Theme THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHTSSSS = Theme.builder("THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHTSSSS")
+                                .addAttribute()
+                                        .backgroundColor(project.getValue("PRI_COLOR_PRIMARY_VARIANT_LIGHT", "#395268"))
+                                        .color(project.getValue("PRI_COLOR_PRIMARY_ON", "#FFFFFF"))
+                                .end()
+                                .build();  
+
+                Theme THM_PROJECT_COLOR_DEFAULTSSS = Theme.builder("THM_PROJECT_COLOR_DEFAULTSSS")
+                                                                .addAttribute()
+                                                                        .backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E"))
+                                                                        .color("white")
+                                                                .end()
+                                                                .build();  
+
+                Frame3 tabHeader = Frame3.builder("FRM_TAB_HEADERSSSS")
+                                .addTheme(THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHTSSSS, ThemePosition.FRAME).end()
+                                .addTheme(THM_TAB_HEADER, ThemePosition.FRAME).end()
+                                .addTheme(THM_FRAME_ALIGN_WEST, ThemePosition.WEST).end()
                                 .addFrame(tab1, FramePosition.WEST).end().addFrame(tab2, FramePosition.WEST).end()
                                 .addFrame(tab3, FramePosition.WEST).end().build();
 
-                Frame3 bucket = generateBucket();
+                //Frame3 bucket = generateBucket();
+                Frame3 bucket = generateProcessView();
                 // Frame3 detailView = generateDetailView();
 
                 Frame3 tabContent = Frame3.builder("FRM_TAB_CONTENT").addTheme(THM_TAB_CONTENT).end().addFrame(bucket)
                                 // .addFrame(detailView) /* comment out this to see the detail view */
                                 .end().build();
 
-                Frame3 tabs = Frame3.builder("FRM_TABS").addTheme(THM_TABS).end()
+                
+
+                Frame3 tabs = Frame3.builder("FRM_TABS")
+                                .addTheme("THM_DISPLAY_VERTICAL", serviceToken).end()
+                                .addTheme(THM_PROJECT_COLOR_DEFAULTSSS).end()
                                 .addFrame(tabHeader, FramePosition.NORTH).end()
                                 .addFrame(tabContent, FramePosition.CENTRE).end().build();
 
                 System.out.println("Generated Tabs Frame");
                 return tabs;
+                
+                }catch (Exception e) {
+					// TODO: handle exception
+				}
+                
+                return null;
         }
 
         public Frame3 generateDetailView() {

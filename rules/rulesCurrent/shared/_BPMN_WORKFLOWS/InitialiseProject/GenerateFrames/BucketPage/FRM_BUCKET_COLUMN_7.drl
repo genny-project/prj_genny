@@ -31,14 +31,12 @@ import life.genny.models.ThemePosition;
 
 rule "FRM_BUCKET_COLUMN_7"
     ruleflow-group 'GenerateFrames'
-  
+
     when
       not  Frame3(code == "FRM_BUCKET_COLUMN_7")
       serviceToken : GennyToken( code == "PER_SERVICE")
       FRM_GRP_IN_PROGRESS : Frame3 (code == "FRM_GRP_IN_PROGRESS" )
-      FRM_CARD_PRODUCT : Frame3 (code == "FRM_CARD_PRODUCT" )
-      FRM_CARD_COMPANY : Frame3 (code == "FRM_CARD_COMPANY" )
-      FRM_BUCKET_COLUMN_6 : Frame3 (code == "FRM_BUCKET_COLUMN_6" ) /* just to see a sequence */      
+      FRM_BUCKET_COLUMN_6 : Frame3 (code == "FRM_BUCKET_COLUMN_6" ) /* just to see a sequence */
     then
      System.out.println("   Generate FRM_BUCKET_COLUMN_7 Rule  "+serviceToken.getUserCode());
 
@@ -46,14 +44,12 @@ rule "FRM_BUCKET_COLUMN_7"
                                 .addTheme("THM_BUCKET_COLUMN", ThemePosition.WRAPPER, serviceToken).end()
                                 .addTheme("THM_BUCKET_COLUMN_PADDING", ThemePosition.CENTRE, serviceToken).end()
                                 .addFrame(FRM_GRP_IN_PROGRESS, FramePosition.NORTH).end()
-                                .addFrame(FRM_CARD_COMPANY, FramePosition.CENTRE).end()
-                                .addFrame(FRM_CARD_PRODUCT, FramePosition.CENTRE).end()
                                 .build();
-						
+
 	frame.setRealm(serviceToken.getRealm());
-						
+
 	insert (frame);
-	
+
 	/* Process and save to cache */
 	FrameUtils2.toMessage(frame, serviceToken);
 
