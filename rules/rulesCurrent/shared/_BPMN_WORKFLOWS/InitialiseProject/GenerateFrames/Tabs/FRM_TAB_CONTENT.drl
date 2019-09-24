@@ -36,7 +36,7 @@ rule "FRM_TAB_CONTENT"
     when
       not  Frame3(code == "FRM_TAB_CONTENT")
       serviceToken : GennyToken( code == "PER_SERVICE")
-      FRM_BUCKET : Frame3 ( code == "FRM_BUCKET" )
+      /* FRM_BUCKET : Frame3 ( code == "FRM_BUCKET" ) */
   /*    FRM_DETAIL_VIEW : Frame3 ( code == "FRM_DETAIL_VIEW" )
       FRM_TABLE_VIEW : Frame3 ( code == "FRM_TABLE_VIEW" )*/
 
