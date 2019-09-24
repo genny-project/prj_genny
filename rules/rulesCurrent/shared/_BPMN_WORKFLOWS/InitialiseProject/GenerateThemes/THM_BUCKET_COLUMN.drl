@@ -39,7 +39,7 @@ rule "THM_BUCKET_COLUMN"
  
 		Theme theme = Theme.builder("THM_BUCKET_COLUMN")
                                 .addAttribute()
-                                        .backgroundColor("#EAEAEA")
+                                        /* .backgroundColor("#EAEAEA") */
                                         .minWidth(300)
                                         .width("100%")
                                         .margin(20)
