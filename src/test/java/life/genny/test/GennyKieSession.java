@@ -23,11 +23,14 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityManagerFactory;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.drools.core.ClockType;
 import org.drools.core.time.impl.PseudoClockScheduler;
+import org.jbpm.executor.ExecutorServiceFactory;
 import org.jbpm.kie.services.impl.query.SqlQueryDefinition;
 import org.jbpm.kie.services.impl.query.mapper.ProcessInstanceQueryMapper;
 import org.jbpm.kie.services.impl.query.persistence.QueryDefinitionEntity;
@@ -39,10 +42,13 @@ import org.jbpm.services.api.query.model.QueryParam;
 import org.jbpm.services.api.utils.KieServiceConfigurator;
 import org.jbpm.test.JbpmJUnitBaseTestCase;
 import org.kie.api.command.Command;
+import org.kie.api.executor.ExecutorService;
 import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.ExecutionResults;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.manager.RuntimeEngine;
+import org.kie.api.runtime.manager.RuntimeEnvironment;
+import org.kie.api.runtime.manager.RuntimeEnvironmentBuilder;
 import org.kie.api.runtime.process.ProcessInstance;
 import org.kie.api.runtime.process.WorkItemHandler;
 import org.kie.api.runtime.rule.FactHandle;
@@ -61,10 +67,14 @@ import life.genny.jbpm.customworkitemhandlers.AwesomeHandler;
 import life.genny.jbpm.customworkitemhandlers.NotificationWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.PrintWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.RuleFlowGroupWorkItemHandler;
+import life.genny.jbpm.customworkitemhandlers.SendSignalWorkItemHandler;
+import life.genny.jbpm.customworkitemhandlers.SendSignalWorkItemHandler2;
 import life.genny.jbpm.customworkitemhandlers.ShowAllFormsHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 import life.genny.jbpm.customworkitemhandlers.ShowFrameWIthContextList;
+import life.genny.jbpm.customworkitemhandlers.ShowFrames;
 import life.genny.jbpm.customworkitemhandlers.ThrowSignalProcessWorkItemHandler;
+import life.genny.jbpm.customworkitemhandlers.ThrowSignalWorkItemHandler;
 import life.genny.models.GennyToken;
 import life.genny.qwanda.Ask;
 import life.genny.qwanda.attribute.Attribute;
@@ -82,12 +92,17 @@ import life.genny.qwanda.validation.Validation;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.rules.QRules;
+import life.genny.rules.RulesLoader;
 import life.genny.rules.listeners.GennyAgendaEventListener;
 import life.genny.rules.listeners.JbpmInitListener;
 import life.genny.utils.RulesUtils;
 import life.genny.utils.SessionFacts;
 import life.genny.utils.VertxUtils;
 import life.genny.utils.WorkflowQueryInterface;
+import org.jbpm.executor.impl.ExecutorImpl;
+import org.jbpm.executor.impl.ExecutorServiceImpl;
+import org.jbpm.kie.services.impl.KModuleDeploymentService;
+import org.jbpm.kie.services.impl.KModuleDeploymentUnit;
 
 public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoCloseable {
 
@@ -100,6 +115,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 	private KieSession kieSession;
 	ProcessInstance processInstance;
+	private ExecutorService executorService;
 
 	private List<String> jbpms;
 	private List<String> drls;
@@ -147,6 +163,13 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			tokens.put("PER_SERVICE", serviceToken);
 			cmds.add(CommandFactory.newInsert(serviceToken, serviceToken.getCode()));
 			super.setUp();
+			
+			
+
+            // need to add 				
+            // runtimeEnvironment = runtimeEnvironmentBuilder.knowledgeBase(kbase).entityManagerFactory(emf).addEnvironmentEntry("ExecutorService", executorService).get();
+
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -435,8 +458,37 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		System.out.println("Loaded in All Resources");
 
 		String uniqueRuntimeStr = UUID.randomUUID().toString();
+		
 
-		createRuntimeManager(Strategy.SINGLETON, resources, uniqueRuntimeStr);
+		if (System.getenv("USE_JMS")==null) {
+			System.out.println("NOT USING JMS");
+			createRuntimeManager(Strategy.SINGLETON, resources,  uniqueRuntimeStr);
+		} else {
+			System.out.println("USINGJMS");
+			EntityManagerFactory emf = super.getEmf();
+			String executorQueueName = "queue/KIE.SERVER.EXECUTOR";
+			// build executor service
+	        executorService = ExecutorServiceFactory.newExecutorService(emf);
+	        executorService.setInterval(3);
+	        executorService.setRetries(3);
+	        executorService.setThreadPoolSize(1);
+	        executorService.setTimeunit(TimeUnit.valueOf( "SECONDS"));
+
+	        ((ExecutorImpl) ((ExecutorServiceImpl) executorService).getExecutor()).setQueueName(executorQueueName);
+
+	        executorService.init();
+			
+			RuntimeEnvironment env = RuntimeEnvironmentBuilder.Factory
+					.get()
+					.newEmptyBuilder()
+					// remember to register the executor service
+					.addEnvironmentEntry("ExecutorService", executorService) 
+					.entityManagerFactory(emf)
+					.get();
+
+			createRuntimeManager(Strategy.SINGLETON, resources, env, uniqueRuntimeStr);
+		}
+
 		kieSession = getRuntimeEngine().getKieSession();
 		
 
@@ -491,14 +543,27 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		kieSession.getWorkItemManager().registerWorkItemHandler("Awesome", new AwesomeHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("Notification", new NotificationWorkItemHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("ShowAllForms", new ShowAllFormsHandler());
-		kieSession.getWorkItemManager().registerWorkItemHandler("ShowFrame", new ShowFrame(kieSession));
-		kieSession.getWorkItemManager().registerWorkItemHandler("Print", new PrintWorkItemHandler(kieSession));
-		kieSession.getWorkItemManager().registerWorkItemHandler("ShowFrameWithContextList", new ShowFrameWIthContextList(kieSession));
-		kieSession.getWorkItemManager().registerWorkItemHandler("RuleFlowGroup", new RuleFlowGroupWorkItemHandler(kieSession,rteng));
+		kieSession.getWorkItemManager().registerWorkItemHandler("ShowFrame", new ShowFrame());
+		kieSession.getWorkItemManager().registerWorkItemHandler("ShowFrames", new ShowFrame());
+		kieSession.getWorkItemManager().registerWorkItemHandler("Print", new PrintWorkItemHandler());
+		kieSession.getWorkItemManager().registerWorkItemHandler("ShowFrameWithContextList", new ShowFrameWIthContextList());
+		kieSession.getWorkItemManager().registerWorkItemHandler("RuleFlowGroup", new RuleFlowGroupWorkItemHandler(rteng));
 		kieSession.getWorkItemManager().registerWorkItemHandler("ThrowSignalProcess",
-				new ThrowSignalProcessWorkItemHandler(kieSession,rteng));
+				new ThrowSignalProcessWorkItemHandler(rteng));
 		kieSession.getWorkItemManager().registerWorkItemHandler("AskQuestion",
-				new AskQuestionWorkItemHandler(GennyKieSession.class,kieSession,rteng));
+				new AskQuestionWorkItemHandler(GennyKieSession.class,rteng));
+		kieSession.getWorkItemManager().registerWorkItemHandler("ThrowSignal",
+				new ThrowSignalWorkItemHandler(GennyKieSession.class,rteng));
+		kieSession.getWorkItemManager().registerWorkItemHandler("SendSignal",
+				new SendSignalWorkItemHandler(GennyKieSession.class,rteng));
+		kieSession.getWorkItemManager().registerWorkItemHandler("SendSignal2",
+				new SendSignalWorkItemHandler2(GennyKieSession.class,rteng));
+
+		
+		kieSession.getWorkItemManager().registerWorkItemHandler("SendSignal",
+				new SendSignalWorkItemHandler(RulesLoader.class));
+		kieSession.getWorkItemManager().registerWorkItemHandler("SendSignal2",
+				new SendSignalWorkItemHandler2(RulesLoader.class));
 
 
 		if (workItemHandlers != null) {
@@ -720,6 +785,9 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 	public void close() {
 		System.out.println("Completed");
+	       if (executorService != null) {
+	            executorService.destroy();
+	        }
 		kieSession.dispose();
 		try {
 			super.tearDown();
@@ -882,6 +950,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 		serviceConfigurator.configureServices("org.jbpm.persistence.jpa", identityProvider, userGroupCallback);
 		queryService = serviceConfigurator.getQueryService();
+		
 
 	}
 	

@@ -1,0 +1,57 @@
+package life.genny.rules;
+import life.genny.rules.QRules;
+
+rule "Generate Table Frames"
+	when
+		rules: QRules(  isState("GENERATE_TABLE_FRAMES") &&
+						!isState("LOOP_GENERATE_TABLE_FRAMES"))
+	 then
+	 	rules.header();
+		rules.setState("LOOP_GENERATE_TABLE_FRAMES");
+
+		/* we create a bulk message */
+        QBulkMessage bulkMsg = new QBulkMessage();
+
+        /* we get the inital frames */
+        BaseEntity frameContentBe = new BaseEntity("FRM_CONTENT", "frame-content");
+
+        BaseEntity frameTableBe = rules.baseEntity.getBaseEntityByCode("FRM_TABLE");
+        BaseEntity frameTableBodyBe = rules.baseEntity.getBaseEntityByCode("FRM_TABLE_BODY");
+        BaseEntity frameTableHeaderBe = rules.baseEntity.getBaseEntityByCode("FRM_TABLE_HEADER");
+        BaseEntity frameTableContentBe = rules.baseEntity.getBaseEntityByCode("FRM_TABLE_CONTENT");
+        BaseEntity frameTableFooterBe = rules.baseEntity.getBaseEntityByCode("FRM_TABLE_FOOTER");
+
+		/* link table-body to table-header and table-content */
+		frameTableBodyBe = rules.createVirtualLink(frameTableBodyBe, frameTableHeaderBe, "LNK_FRAME", "NORTH", 1.0);
+		frameTableBodyBe = rules.createVirtualLink(frameTableBodyBe, frameTableContentBe, "LNK_FRAME", "CENTRE", 2.0);
+
+		/* link table-frame to table-body and table-footer */
+		frameTableBe = rules.createVirtualLink(frameTableBe, frameTableBodyBe, "LNK_FRAME", "CENTRE", 1.0);
+		frameTableBe = rules.createVirtualLink(frameTableBe, frameTableFooterBe, "LNK_FRAME", "SOUTH", 2.0);
+
+		/* link contentFrame to tableFrame */
+		frameContentBe = rules.createVirtualLink(frameContentBe, frameTableBe, "LNK_FRAME", "CENTRE", 1.0);
+
+		QDataBaseEntityMessage frameTableBodyBeMsg = new QDataBaseEntityMessage(frameTableBodyBe);
+		frameTableBodyBeMsg.setReplace(true);
+
+		QDataBaseEntityMessage frameTableBeMsg = new QDataBaseEntityMessage(frameTableBe);
+		frameTableBeMsg.setReplace(true);
+
+		QDataBaseEntityMessage frameContentMsg = new QDataBaseEntityMessage(frameContentBe);
+		frameContentMsg.setReplace(true);
+
+        /* we add it to the bulk */
+        bulkMsg.add(frameTableBodyBeMsg);
+        bulkMsg.add(frameTableBeMsg);
+        bulkMsg.add(frameContentMsg);
+
+		/* we store the bulk */
+		rules.set("bulkMsg", bulkMsg);
+
+        /* generate table header */
+		rules.setState("GENERATE_TABLE_HEADER");
+
+		rules.setState("GENERATED_TABLE_FRAMES");
+        rules.footer();
+    end

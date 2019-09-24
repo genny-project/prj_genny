@@ -1,0 +1,67 @@
+package life.genny.rules;
+
+
+global org.apache.logging.log4j.Logger log;
+
+import life.genny.qwanda.message.QCmdMessage;
+import life.genny.qwanda.message.QBulkMessage;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.qwanda.message.QEventMessage;
+import life.genny.qwanda.message.QDataAskMessage;
+import life.genny.rules.QRules;
+import io.vertx.core.json.JsonObject;
+import life.genny.qwandautils.JsonUtils;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
+import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.entity.SearchEntity;
+import life.genny.utils.VertxUtils;
+import life.genny.utils.BaseEntityUtils;
+import life.genny.models.GennyToken;
+import org.kie.api.runtime.process.WorkflowProcessInstance;
+import life.genny.models.Frame3;
+import life.genny.models.Theme;
+import life.genny.utils.FrameUtils2;
+import life.genny.models.FramePosition;
+import life.genny.qwanda.validation.Validation;
+import life.genny.qwanda.validation.ValidationList;
+import life.genny.qwanda.datatype.DataType;
+
+rule "FRM_TABLE_HEADER"
+    ruleflow-group 'GenerateFrames'
+
+    when
+      not  Frame3(code == "FRM_TABLE_HEADER")
+      serviceToken : GennyToken( code == "PER_SERVICE")
+    then
+        System.out.println("   Generate FRM_TABLE_HEADER Rule  "+serviceToken.getUserCode());
+
+        Validation tableCellValidation = new Validation("VLD_ANYTHING", "Anything", ".*");
+        
+        List<Validation> tableCellValidations = new ArrayList<>();
+        tableCellValidations.add(tableCellValidation);
+        
+        ValidationList tableCellValidationList = new ValidationList();
+        tableCellValidationList.setValidationList(tableCellValidations);
+
+        DataType tableCellDataType = new DataType("DTT_TABLE_CELL_GRP", tableCellValidationList, "Table Cell Group", "");
+
+        Frame3 frame = Frame3.builder("FRM_TABLE_HEADER")
+               .addTheme("THM_TABLE_BORDER", serviceToken).end()
+                .question("QUE_TABLE_HEADER_GRP")
+                  .addTheme("THM_QUESTION_GRP_LABEL", serviceToken).vcl(VisualControlType.GROUP).dataType(tableCellDataType).end()
+                  .addTheme("THM_WIDTH_100_PERCENT_NO_INHERIT", serviceToken).vcl(VisualControlType.GROUP).end()
+                  .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).weight(2.0).end()
+                  .addTheme("THM_TABLE_HEADER_CELL_WRAPPER", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
+                  .addTheme("THM_TABLE_HEADER_CELL_GROUP_LABEL", serviceToken).vcl(VisualControlType.GROUP_LABEL).end()
+                  .addTheme("THM_DISPLAY_VERTICAL", serviceToken).dataType(tableCellDataType).weight(1.0).end()
+                .end()
+                .build();
+    
+        frame.setRealm(serviceToken.getRealm());
+        insert (frame);
+        FrameUtils2.toMessage(frame, serviceToken);
+			
+end
