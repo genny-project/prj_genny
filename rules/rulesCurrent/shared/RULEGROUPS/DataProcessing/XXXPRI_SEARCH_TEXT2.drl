@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 rule "XXXPRI_SEARCH_TEXT2"
-    ruleflow-group 'AnswerProcessing'
+    ruleflow-group 'DataProcessing'
         salience 500 
     when
       beUtils : BaseEntityUtils()

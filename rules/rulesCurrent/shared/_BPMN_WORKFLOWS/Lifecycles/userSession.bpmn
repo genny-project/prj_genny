@@ -688,10 +688,10 @@ kcontext.setVariable(&quot;output&quot;,output);</tns:script>
             <tns:metaValue><![CDATA[true]]></tns:metaValue>
           </tns:metaData>
         </bpmn2:extensionElements>
-        <bpmn2:startEvent id="StartEvent_6" name="Start Process Event Handler" isInterrupting="false">
+        <bpmn2:startEvent id="StartEvent_6" name="Start Process Data Handler" isInterrupting="false">
           <bpmn2:extensionElements>
             <tns:metaData name="elementname">
-              <tns:metaValue><![CDATA[Start Process Event Handler]]></tns:metaValue>
+              <tns:metaValue><![CDATA[Start Process Data Handler]]></tns:metaValue>
             </tns:metaData>
           </bpmn2:extensionElements>
           <bpmn2:outgoing>SequenceFlow_84</bpmn2:outgoing>
@@ -733,6 +733,10 @@ kcontext.setVariable(&quot;dataMessage&quot;,(QDataMessage)dataMessage); </bpmn2
             <tns:metaData name="elementname">
               <tns:metaValue><![CDATA[Process Data ]]></tns:metaValue>
             </tns:metaData>
+            <tns:onExit-script scriptFormat="http://www.java.com/java">
+              <tns:script>System.out.println(&quot;userSession: Process Data Handler output = &quot; + output+&quot;sending output to to sessionCode &quot;+sessionCode);
+kcontext.setVariable(&quot;output&quot;,output);</tns:script>
+            </tns:onExit-script>
           </bpmn2:extensionElements>
           <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
           <bpmn2:outgoing>SequenceFlow_26</bpmn2:outgoing>
@@ -742,6 +746,7 @@ kcontext.setVariable(&quot;dataMessage&quot;,(QDataMessage)dataMessage); </bpmn2
             <bpmn2:dataInput id="DataInput_16" name="ruleFlowGroup"/>
             <bpmn2:dataInput id="DataInput_20" itemSubjectRef="ItemDefinition_1081" name="output"/>
             <bpmn2:dataInput id="DataInput_41" itemSubjectRef="ItemDefinition_62" name="callingWorkflow"/>
+            <bpmn2:dataOutput id="DataOutput_3" itemSubjectRef="ItemDefinition_1081" name="output"/>
             <bpmn2:inputSet id="_InputSet_3">
               <bpmn2:dataInputRefs>DataInput_13</bpmn2:dataInputRefs>
               <bpmn2:dataInputRefs>DataInput_14</bpmn2:dataInputRefs>
@@ -749,7 +754,9 @@ kcontext.setVariable(&quot;dataMessage&quot;,(QDataMessage)dataMessage); </bpmn2
               <bpmn2:dataInputRefs>DataInput_20</bpmn2:dataInputRefs>
               <bpmn2:dataInputRefs>DataInput_41</bpmn2:dataInputRefs>
             </bpmn2:inputSet>
-            <bpmn2:outputSet id="OutputSet_9" name="Output Set 9"/>
+            <bpmn2:outputSet id="OutputSet_9" name="Output Set 9">
+              <bpmn2:dataOutputRefs>DataOutput_3</bpmn2:dataOutputRefs>
+            </bpmn2:outputSet>
           </bpmn2:ioSpecification>
           <bpmn2:dataInputAssociation id="_DataInputAssociation_5">
             <bpmn2:sourceRef>serviceToken</bpmn2:sourceRef>
@@ -777,15 +784,16 @@ kcontext.setVariable(&quot;dataMessage&quot;,(QDataMessage)dataMessage); </bpmn2
               <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_40">DataInput_41</bpmn2:to>
             </bpmn2:assignment>
           </bpmn2:dataInputAssociation>
+          <bpmn2:dataOutputAssociation id="DataOutputAssociation_4">
+            <bpmn2:sourceRef>DataOutput_3</bpmn2:sourceRef>
+            <bpmn2:targetRef>output</bpmn2:targetRef>
+          </bpmn2:dataOutputAssociation>
         </bpmn2:task>
         <bpmn2:sequenceFlow id="SequenceFlow_1" tns:priority="1" sourceRef="ScriptTask_8" targetRef="Task_4"/>
         <bpmn2:task id="Task_9" tns:taskName="SendSignal" tns:displayName="SendSignal" tns:icon="icons/icon-info.gif" name="SendSignal">
           <bpmn2:extensionElements>
             <tns:metaData name="elementname">
               <tns:metaValue><![CDATA[SendSignal]]></tns:metaValue>
-            </tns:metaData>
-            <tns:metaData name="customAsync">
-              <tns:metaValue><![CDATA[true]]></tns:metaValue>
             </tns:metaData>
           </bpmn2:extensionElements>
           <bpmn2:incoming>SequenceFlow_26</bpmn2:incoming>
@@ -1604,7 +1612,7 @@ System.out.println(&quot;userSession: **************************End Session ****
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_3" bpmnElement="Task_3" isExpanded="true">
         <dc:Bounds height="50.0" width="79.0" x="1227.0" y="296.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_8">
           <dc:Bounds height="11.0" width="54.0" x="1239.0" y="315.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -1860,37 +1868,37 @@ System.out.println(&quot;userSession: **************************End Session ****
         <di:waypoint xsi:type="dc:Point" x="1202.0" y="321.0"/>
         <di:waypoint xsi:type="dc:Point" x="1214.0" y="321.0"/>
         <di:waypoint xsi:type="dc:Point" x="1227.0" y="321.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_56"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_Task_3" targetElement="BPMNShape_ExclusiveGateway_8">
         <di:waypoint xsi:type="dc:Point" x="1306.0" y="321.0"/>
         <di:waypoint xsi:type="dc:Point" x="1333.0" y="321.0"/>
         <di:waypoint xsi:type="dc:Point" x="1360.0" y="321.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_58"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_8" bpmnElement="SequenceFlow_8" sourceElement="BPMNShape_Task_6" targetElement="BPMNShape_SubProcess_1">
         <di:waypoint xsi:type="dc:Point" x="738.0" y="133.0"/>
         <di:waypoint xsi:type="dc:Point" x="829.0" y="133.0"/>
         <di:waypoint xsi:type="dc:Point" x="920.0" y="133.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_77"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_12" bpmnElement="SequenceFlow_12" sourceElement="BPMNShape_ExclusiveGateway_8" targetElement="BPMNShape_EndEvent_13">
         <di:waypoint xsi:type="dc:Point" x="1410.0" y="321.0"/>
         <di:waypoint xsi:type="dc:Point" x="1470.0" y="321.0"/>
         <di:waypoint xsi:type="dc:Point" x="1530.0" y="321.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_83"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_14" bpmnElement="SequenceFlow_14" sourceElement="BPMNShape_ScriptTask_10" targetElement="BPMNShape_Task_16">
         <di:waypoint xsi:type="dc:Point" x="1201.0" y="405.0"/>
         <di:waypoint xsi:type="dc:Point" x="1214.0" y="405.0"/>
         <di:waypoint xsi:type="dc:Point" x="1227.0" y="405.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_84"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_15" bpmnElement="SequenceFlow_15" sourceElement="BPMNShape_Task_16" targetElement="BPMNShape_ExclusiveGateway_8">
         <di:waypoint xsi:type="dc:Point" x="1306.0" y="405.0"/>
         <di:waypoint xsi:type="dc:Point" x="1385.0" y="405.0"/>
         <di:waypoint xsi:type="dc:Point" x="1385.0" y="346.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_87"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
