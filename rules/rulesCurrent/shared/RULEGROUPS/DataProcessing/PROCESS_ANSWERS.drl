@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.ArrayList;
 
 rule "PROCESS_ANSWERS"
-    ruleflow-group 'AnswerProcessing'
-   
+    ruleflow-group 'DataProcessing'
+     salience 10000
     when
 	  userToken : GennyToken ( code != "PER_SERVICE" ) 
 	  dataMsg : QDataAnswerMessage( (items != null) && (items.length > 0) )
     then
- 		System.out.println("Rule -> PROCESS_ANSWERS Processing Answer/Data!! :  user=" + userToken.getUserCode()); 
+ 		System.out.println("Rule -> PROCESS_DATA Processing Answer/Data!! :  user=" + userToken.getUserCode()); 
 
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken); 
 		insert(beUtils);
