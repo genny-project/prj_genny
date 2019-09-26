@@ -7,16 +7,15 @@
 
 	<groupId>life.genny.jbpm</groupId>
 	<artifactId>prj_genny</artifactId>
-	<version>3.0.0</version>
+	<version>3.1.0</version>
 
 	<name>jBPM Genny </name>
 	<description>jBPM Genny Maven project</description>
 
 	<properties>
-		<runtime.version>7.25.0.Final</runtime.version>
-		<kie.version>7.25.0.Final</kie.version>
-		<genny-verticle.version>3.0.0</genny-verticle.version>
-		<genny-rules.version>3.0.0</genny-rules.version>
+		<runtime.version>7.26.0.Final</runtime.version>
+		<kie.version>7.26.0.Final</kie.version>
+		<genny-rules.version>3.1.0</genny-rules.version>
 
 		<vertx.version>3.5.1</vertx.version>
 		<hazelcast.version>3.8.2</hazelcast.version>
@@ -42,8 +41,6 @@
 
 		<jar.finalName>${project.name}</jar.finalName>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-		<qwanda-utils.version>2.3.0</qwanda-utils.version>
 
 		<!--java version -->
 		<java-version>1.8</java-version>
@@ -191,26 +188,7 @@
 
 		</dependency>
 
-		<dependency>
-			<groupId>life.genny</groupId>
-			<artifactId>genny-verticle-rules</artifactId>
-			<version>${genny-verticle.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>com.hazelcast</groupId>
-					<artifactId>hazelcast</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>io.vertx</groupId>
-					<artifactId>vertx-hazelcast</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.hazelcast</groupId>
-					<artifactId>hazelcast-client</artifactId>
-				</exclusion>
-			</exclusions>
 
-		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
