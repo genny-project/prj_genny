@@ -85,6 +85,46 @@ public class AdamTest {
 
 	}
 
+	@Test
+	public void headerTest()
+	{
+		System.out.println("HEader test");
+		GennyToken userToken = null;
+		GennyToken userToken2 = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			userToken2 = GennyJbpmBaseTest.createGennyToken(realm, "user2", "Barry2 Allan2", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+		} else {
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+		}
+
+		System.out.println("session     =" + userToken.getSessionCode());
+		System.out.println("userToken   =" + userToken.getToken());
+		System.out.println("serviceToken=" + serviceToken.getToken());
+
+		  Answer answer = new Answer(userToken.getUserCode(),userToken.getUserCode(),"PRI_SEARCH_TEXT","univ");
+		  BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		  
+			TableUtils.performSearch2(serviceToken , beUtils, "SBE_SEARCHBAR", answer);
+	  	     
+  	     /* Send to front end */
+				
+  	     GennyKieSession.displayForm("FRM_TABLE_VIEW", "FRM_CONTENT", userToken);
+
+		
+	}
+		
 	//@Test
 	public void paginationTest()
 	{
@@ -314,7 +354,7 @@ public void testTableHeader() {
 
 
 	
-	@Test
+//	@Test
 	public void tableTest()
 	{
 		System.out.println("Table test");
