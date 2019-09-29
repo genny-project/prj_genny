@@ -116,7 +116,7 @@ public class AdamTest {
 		  Answer answer = new Answer(userToken.getUserCode(),userToken.getUserCode(),"PRI_SEARCH_TEXT","univ");
 		  BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		  
-			TableUtils.performSearch2(serviceToken , beUtils, "SBE_SEARCHBAR", answer);
+			TableUtils.performSearch(serviceToken , beUtils, "SBE_SEARCHBAR", answer);
 	  	     
   	     /* Send to front end */
 				
