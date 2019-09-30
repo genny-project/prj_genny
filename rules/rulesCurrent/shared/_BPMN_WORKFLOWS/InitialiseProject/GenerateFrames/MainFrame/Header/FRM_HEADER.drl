@@ -50,8 +50,8 @@ rule "FRM_HEADER"
                         .addFrame(FRM_HEADER_OPTIONS, FramePosition.EAST).end()
                         .addFrame(FRM_HEADER_USERNAME, FramePosition.EAST).end()
                         .addFrame(FRM_HEADER_PROFILE_PICTURE, FramePosition.EAST).end()
-                        .addFrame(FRM_PADDING, FramePosition.EAST).end()
                         .addFrame(FRM_HEADER_ADD_ITEMS, FramePosition.EAST).end()
+                        .addFrame(FRM_PADDING, FramePosition.EAST).end()
                         .build();
       
       frame.setRealm(serviceToken.getRealm());
