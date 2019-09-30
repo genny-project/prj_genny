@@ -35,6 +35,7 @@ import org.jbpm.kie.services.impl.query.SqlQueryDefinition;
 import org.jbpm.kie.services.impl.query.mapper.ProcessInstanceQueryMapper;
 import org.jbpm.kie.services.impl.query.persistence.QueryDefinitionEntity;
 import org.jbpm.process.audit.JPAWorkingMemoryDbLogger;
+
 import org.jbpm.services.api.model.ProcessInstanceDesc;
 import org.jbpm.services.api.query.QueryAlreadyRegisteredException;
 import org.jbpm.services.api.query.QueryService;
@@ -75,6 +76,7 @@ import life.genny.jbpm.customworkitemhandlers.ShowFrameWIthContextList;
 import life.genny.jbpm.customworkitemhandlers.ShowFrames;
 import life.genny.jbpm.customworkitemhandlers.ThrowSignalProcessWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.ThrowSignalWorkItemHandler;
+import life.genny.jbpm.customworkitemhandlers.JMSSendTaskWorkItemHandler;
 import life.genny.models.GennyToken;
 import life.genny.qwanda.Ask;
 import life.genny.qwanda.attribute.Attribute;
@@ -564,6 +566,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 				new SendSignalWorkItemHandler(RulesLoader.class));
 		kieSession.getWorkItemManager().registerWorkItemHandler("SendSignal2",
 				new SendSignalWorkItemHandler2(RulesLoader.class));
+		kieSession.getWorkItemManager().registerWorkItemHandler("JMSSendTask", new JMSSendTaskWorkItemHandler());
 
 
 		if (workItemHandlers != null) {
