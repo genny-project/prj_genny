@@ -88,7 +88,7 @@ public class AdamTest {
 	@Test
 	public void headerTest()
 	{
-		System.out.println("HEader test");
+		System.out.println("Header test");
 		GennyToken userToken = null;
 		GennyToken userToken2 = null;
 		GennyToken serviceToken = null;
@@ -113,14 +113,16 @@ public class AdamTest {
 		System.out.println("userToken   =" + userToken.getToken());
 		System.out.println("serviceToken=" + serviceToken.getToken());
 
-		  Answer answer = new Answer(userToken.getUserCode(),userToken.getUserCode(),"PRI_SEARCH_TEXT","univ");
+		  Answer answer = new Answer(userToken.getUserCode(),userToken.getUserCode(),"PRI_SEARCH_TEXT","user");
 		  BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		  
-			TableUtils.performSearch(serviceToken , beUtils, "SBE_SEARCHBAR", answer);
+		  GennyKieSession.displayForm("FRM_TABLE_VIEW", "FRM_CONTENT", userToken);
+		  
+		  TableUtils.performSearch(serviceToken , beUtils, "SBE_SEARCHBAR", answer);
 	  	     
   	     /* Send to front end */
 				
-  	     GennyKieSession.displayForm("FRM_TABLE_VIEW", "FRM_CONTENT", userToken);
+  	   //  
 
 		
 	}
