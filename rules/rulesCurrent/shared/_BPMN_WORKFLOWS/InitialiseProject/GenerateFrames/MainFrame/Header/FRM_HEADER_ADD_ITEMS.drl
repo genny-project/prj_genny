@@ -36,6 +36,8 @@ rule "FRM_HEADER_ADD_ITEMS"
       System.out.println("   Generate FRM_HEADER_ADD_ITEMS Rule  "+serviceToken.getUserCode());
 
       Frame3 frame = Frame3.builder("FRM_HEADER_ADD_ITEMS")
+      				.addTheme("THM_PANEL_CONTENT_FIT",ThemePosition.WRAPPER,serviceToken).end()
+      				.addTheme("THM_PADDING_RIGHT_10", ThemePosition.WRAPPER, serviceToken).end()
                     .question("QUE_ADD_ITEMS_GRP")
                       .addTheme("THM_DROPDOWN_ICON_HIDE", serviceToken).end()
                       .addTheme("THM_BACKGROUND_NONE", serviceToken).vcl(VisualControlType.GROUP).weight(2.0).end()

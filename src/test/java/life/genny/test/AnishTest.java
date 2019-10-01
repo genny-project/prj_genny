@@ -661,7 +661,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                 		  	     QDataBaseEntityMessage  msg = tableUtils.fetchSearchResults(searchBE,beUtils.getGennyToken());
 
 
-                		  	     TableData tableData = tableUtils.generateTableAsks(searchBE,beUtils.getGennyToken(),  msg);
+                		  	     TableData tableData = tableUtils.generateTableAsks(searchBE,beUtils.getGennyToken());
                 		  	     VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 
 
