@@ -1,17 +1,12 @@
 package life.genny.test;
 
-import org.kie.api.runtime.process.ProcessContext;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.logging.log4j.Logger;
@@ -27,28 +22,24 @@ import io.vertx.core.json.JsonObject;
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
+import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 import life.genny.models.Frame3;
 import life.genny.models.FramePosition;
 import life.genny.models.GennyToken;
 import life.genny.models.TableData;
 import life.genny.models.Theme;
 import life.genny.models.ThemeAttributeType;
-import life.genny.models.ThemeDouble;
 import life.genny.models.ThemePosition;
 import life.genny.qwanda.Answer;
 import life.genny.qwanda.Ask;
 import life.genny.qwanda.Context;
 import life.genny.qwanda.ContextType;
-import life.genny.qwanda.Question;
 import life.genny.qwanda.VisualControlType;
-import life.genny.qwanda.attribute.Attribute;
 import life.genny.qwanda.datatype.DataType;
 import life.genny.qwanda.entity.BaseEntity;
-import life.genny.qwanda.entity.EntityEntity;
 import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwanda.exception.BadDataException;
 import life.genny.qwanda.message.MessageData;
-import life.genny.qwanda.message.QBulkMessage;
 import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
@@ -61,8 +52,8 @@ import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
-import life.genny.utils.ContextUtils;
 import life.genny.utils.FrameUtils2;
+import life.genny.utils.OutputParam;
 import life.genny.utils.RulesUtils;
 import life.genny.utils.TableUtils;
 import life.genny.utils.TableUtilsTest;
@@ -102,11 +93,31 @@ public class AdamTest {
 			qRules.set("realm", userToken.getRealm());
 			qRules.setServiceToken(serviceToken.getToken());
 			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+
 		} else {
 			qRules = GennyJbpmBaseTest.setupLocalService();
 			userToken = new GennyToken("userToken", qRules.getToken());
 			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+		GennyToken userToken = null;
+		GennyToken userToken2 = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			userToken2 = GennyJbpmBaseTest.createGennyToken(realm, "user2", "Barry2 Allan2", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
 			GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+		} else {
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
 		}
 
 		System.out.println("session     =" + userToken.getSessionCode());
@@ -356,7 +367,11 @@ public void testTableHeader() {
 
 
 	
+<<<<<<< HEAD
+	//@Test
+=======
 //	@Test
+>>>>>>> e7cb9a2214fa3d69a514f72fea06a98b99c752b0
 	public void tableTest()
 	{
 		System.out.println("Table test");
