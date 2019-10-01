@@ -10,12 +10,16 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.Logger;
+import org.assertj.core.util.Arrays;
 import org.codehaus.plexus.util.StringUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -28,16 +32,19 @@ import life.genny.eventbus.VertxCache;
 import life.genny.models.Frame3;
 import life.genny.models.FramePosition;
 import life.genny.models.GennyToken;
+import life.genny.models.TableData;
 import life.genny.models.Theme;
 import life.genny.models.ThemeAttributeType;
 import life.genny.models.ThemePosition;
 import life.genny.qwanda.Answer;
 import life.genny.qwanda.Ask;
+import life.genny.qwanda.ContextList;
 import life.genny.qwanda.Question;
 import life.genny.qwanda.VisualControlType;
 import life.genny.qwanda.attribute.Attribute;
 import life.genny.qwanda.datatype.DataType;
 import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
@@ -52,6 +59,7 @@ import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.FrameUtils2;
 import life.genny.utils.RulesUtils;
+import life.genny.utils.TableUtils;
 import life.genny.utils.VertxUtils;
 
 public class SafalTest extends GennyJbpmBaseTest {
@@ -70,219 +78,423 @@ public class SafalTest extends GennyJbpmBaseTest {
 	private static final String WFE_SHOW_FORM = "show_form.bpmn";
 	private static final String WFE_AUTH_INIT = "auth_init.bpmn";
 	private static final String WFE_SEND_LLAMA = "send_llama.bpmn";
-
+	
+	private static Theme THM_SHADOW = null;
+	private static Theme THM_CONTENT_WRAPPER = null;
+	private static BaseEntity project =  null;
+	private static GennyToken userToken = null;
+	private static QRules rules = null;
+	private static GennyToken serviceToken = null;
+	
 	public SafalTest() {
+		
 		super(false);
+	}
+
+	public void initItem() {
+		
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			rules = new QRules(eventBusMock, userToken.getToken());
+	
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+		} else {
+			
+			rules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", rules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+		}
+		
+		//rules.sendAllAttributes();
+		
+		project =  new BaseEntityUtils(serviceToken).getBaseEntityByCode("PRJ_INTERNMATCH");
+		rules.sendAllAttributes();
+		
+		QDataBaseEntityMessage msgg = new QDataBaseEntityMessage(rules.getUser());
+		msgg.setToken(userToken.getToken());
+		
+		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msgg));
+
+		THM_SHADOW = Theme.builder("THM_SHADOW")
+				.addAttribute()
+					.shadowColor("#949798")
+					.shadowOpacity(0.88)
+					.shadowRadius(10)
+					.shadowOffset()
+					.width(4)
+					.height(4).end()
+				.end()
+				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+				.build();
+		
+		THM_CONTENT_WRAPPER = Theme.builder("THM_CONTENT_WRAPPER")
+				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+				.addAttribute().borderRadius(5).borderWidth(1).borderColor("black").end()
+				.build();
 		
 	}
 	
 	@Test
 	public void v7DetailsView() {
 
-		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
-		QRules rules = getQRules(userToken);
-		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
-		rules.sendAllAttributes();
-
+		initItem();
 		/* Themes and frames */
-
 		try {
 			
-			Theme THM_CONTENT_WRAPPER = Theme.builder("THM_CONTENT_WRAPPER")
-					.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
-					// .addAttribute().borderRadius(5).borderWidth(1).borderColor("black").end()
-					.build();
-	
-			Theme THM_DETAIL_VIEW = Theme.builder("THM_DETAIL_VIEW")
-					.addAttribute().margin(10).alignSelf("centre")
-					.justifyContent("centre").width("98%").end().build();
-	
-			Theme THM_SHADOW = Theme.builder("THM_SHADOW")
-					
-					.addAttribute()
-						.shadowColor("#949798")
-						.shadowOpacity(0.88)
-						.shadowRadius(10)
-						.shadowOffset()
-						.width(5)
-						.height(5).end()
-					.end()
-					.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
-					.build();
-	
-			Theme THM_DETAIL_VIEW_HEADER = Theme.builder("THM_DETAIL_VIEW_HEADER").addAttribute().backgroundColor("#faf9fa")
-					.flexDirection("row").flex(2).end().build();
-	
-			Theme THM_DETAIL_VIEW_CENTRE = Theme.builder("THM_DETAIL_VIEW_CENTRE").addAttribute().flex(4).end()
-					.addAttribute().backgroundColor("#faf9fa").flexDirection("row").end().build();
-	
-			/* Control button Themes
-			 * These Section contains all the theme for control button for Detail View
-			 *  frame name = THM_DETAIL_VIEW_CONTROL
-			 *  */
-			BaseEntity project =  new BaseEntityUtils(serviceToken).getBaseEntityByCode("PRJ_INTERNMATCH");
-			
-			Theme THM_DETAIL_VIEW_CONTROL_BUTTON = Theme.builder("THM_DETAIL_VIEW_CONTROL")
-					
-					.addAttribute()
-						.margin(10)
-						.height(70)
-						.width(160)
-						.end()
-                    .build();
-			
-			Theme THM_DETAIL_VIEW_CONTROL_BUTTON_LOOKS =  Theme.builder("THM_DETAIL_VIEW_CONTROL_BUTTON_LOOKS")
-						.addAttribute()
-						.backgroundColor(project.getValue("PRI_COLOR_PRIMARY_VARIANT_LIGHT", "#395268"))
-						.color(project.getValue("PRI_COLOR_PRIMARY_ON", "#FFFFFF"))
-						.justifyContent("center")
-					.end().build();
-			
-			Theme THM_DETAIL_VIEW_CONTROLS = Theme.builder("THM_DETAIL_VIEW_CONTROL").addAttribute()
-					.backgroundColor("white")
-					.flexDirection("row")
-					.justifyContent("flex-start")
-					.end().build();	
-			
-			
-			Theme THM_SHADY = Theme.builder("THM_SHADY")
-					
-					.addAttribute()
-						.borderWidth(1)
-						.borderStyle("solid")
-						.shadowColor("#949798")
-						.shadowOpacity(0.88)
-						.shadowRadius(10)
-					.end()
-				.build();
-			
-			
-			/* Ending theme
-			 * 
-			 *  
-			 *  Control button Themes end*/
-			
-			
-			/* Controls Frames */
-	
+			Ask[] askList = new Ask[3];
+			askList[0] = getControlAsk();
+			askList[1] = getDetailViewAsk();
+			askList[2] = getImageQuestion();
 			/* virtual Asks */
-	
-			/* get attributes for generating asks */
-			Attribute eventAttribute = RulesUtils.attributeMap.get("PRI_EVENT");
-			Attribute questionAttribute = RulesUtils.attributeMap.get("QQQ_QUESTION_GROUP");
-	
-			/* Construct a table footer Ask */
-			Question controlQues = new Question("QUE_DETAIL_VIEW_CONTROL_GRP", "Control Group", questionAttribute, true);
-	
-			Ask controlAsk = new Ask(controlQues, rules.getUser().getCode(), userToken.getUserCode(), false, 1.0, false,
-					false, true);
-	
-			/* question for previous, next, buttons and no. of items */
-			Question addQuestion = new Question("QUE_ADD_ITEM", "Add", eventAttribute, false);
-			Question editQuestion = new Question("QUE_EDIT_ITEM", "Edit", eventAttribute, false);
-			Question deleteQuestion = new Question("QUE_DELETE_ITEM", "Delete", eventAttribute, false);
-	
-			List<Question> questions = new ArrayList<>();
-			questions.add(addQuestion);
-			questions.add(editQuestion);
-			questions.add(deleteQuestion);
-	
-			List<Ask> controlChildAsks = new ArrayList<>();
-			
-			Double count = 1.0;
-			for (Question question : questions) {
-				Ask childAsk = new Ask(question, rules.getUser().getCode(), userToken.getToken());
-				controlAsk.setWeight(count);
-				count++;
-				controlChildAsks.add(childAsk);
-			}
-	
-			/* Convert ask list to Array */
-			Ask[] controlChildAsksArray = controlChildAsks.toArray(new Ask[0]);
-	
-			/* set the child asks to Table Footer */
-			controlAsk.setChildAsks(controlChildAsksArray);
-	
-			QDataAskMessage controlAskMsg = new QDataAskMessage(controlAsk);
-
-			Validation validation = new Validation("VLD_ANYTHING", "Anything", ".*");
-			List<Validation> validations = new ArrayList<>();
-			validations.add(validation);
-
-			ValidationList buttonValidationList = new ValidationList();
-			buttonValidationList.setValidationList(validations);
-
-			DataType buttonDataType = new DataType("DTT_EVENT", buttonValidationList, "Event", "");
-			
-			
-	
-			Frame3 FRM_DETAIL_VIEW_CONTROLS = Frame3.builder("FRM_DETAIL_VIEW_CONTROLS")
-					
-											.addTheme(THM_DETAIL_VIEW_CONTROLS).end()
-											.question("QUE_DETAIL_VIEW_CONTROL_GRP")
-												.addTheme(THM_DETAIL_VIEW_CONTROL_BUTTON_LOOKS).vcl(VisualControlType.INPUT_WRAPPER).end()
-												.addTheme(THM_DETAIL_VIEW_CONTROL_BUTTON).vcl(VisualControlType.INPUT_WRAPPER).end()
-												.addTheme(THM_SHADOW).vcl(VisualControlType.INPUT_WRAPPER).end()
-											.end()
-											.build();
-	
-			/* Header Frame */
-			Frame3 FRM_DETAIL_VIEW_HEADER_SUMMERY = Frame3.builder("FRM_DETAIL_VIEW_HEADER_SUMMERY")
-					.addTheme(THM_CONTENT_WRAPPER).end().question("QUE_NAME_TWO").end().build();
-	
-			Frame3 FRM_DETAIL_VIEW_HEADER_IMAGE = Frame3.builder("FRM_DETAIL_VIEW_HEADER_IMAGE")
-					.addTheme(THM_CONTENT_WRAPPER).end().question("QUE_NAME_TWO").end().build();
-	
-			Frame3 FRM_DETAIL_VIEW_HEADER = Frame3.builder("FRM_DETAIL_VIEW_HEADER")
-					.addTheme(THM_DETAIL_VIEW_HEADER).end()
-					.addTheme(THM_SHADOW,ThemePosition.WRAPPER).end()
-					.addFrame(FRM_DETAIL_VIEW_HEADER_IMAGE, FramePosition.CENTRE).end()
-					.addFrame(FRM_DETAIL_VIEW_HEADER_SUMMERY, FramePosition.CENTRE).end().build();
-	
-			
-			/* Frame Detail view Content */
-		     Frame3 FRM_DETAIL_VIEW_CENTER = Frame3.builder("FRM_DETAIL_VIEW_CENTER")
-		    		.addTheme(THM_DETAIL_VIEW_CENTRE).end()
-					.addTheme(THM_SHADOW).end().question("QUE_NAME_TWO")
-					.end()
-					.build();
- 
+			QDataAskMessage askMsgs = new QDataAskMessage(askList);
+		    
 			/* FRame for detail View */
+		     Theme THM_DETAIL_VIEW= Theme.builder("THM_DETAIL_VIEW")
+						.addAttribute()
+						.end().build();
+		    
 			Frame3 FRM_DETAIL_VIEW = Frame3.builder("FRM_DETAIL_VIEW")
-					.addTheme(THM_DETAIL_VIEW, ThemePosition.WRAPPER).end()
-					.addFrame(FRM_DETAIL_VIEW_CONTROLS, FramePosition.CENTRE).end()
-					.addFrame(FRM_DETAIL_VIEW_HEADER, FramePosition.CENTRE).end()
-					.addFrame(FRM_DETAIL_VIEW_CENTER, FramePosition.CENTRE).end().build();
+					.addTheme(THM_DETAIL_VIEW).end()
+					.addFrame(getFrameHeader(), FramePosition.CENTRE).end()
+					.addFrame(getDetailViewBody(), FramePosition.CENTRE).end()
+					.build();
 
-			Frame3 frameRoot = Frame3.builder("FRM_ROOT").addFrame(FRM_DETAIL_VIEW).end().build();
+			Frame3 FRM_ROOT = Frame3.builder("FRM_ROOT").addFrame(FRM_DETAIL_VIEW).end().build();
 
 			/* end */
-			Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+			Set<QDataAskMessage> askMsgSet = new HashSet<QDataAskMessage>();
 			
-
-			QDataBaseEntityMessage msg = FrameUtils2.toMessage(frameRoot, serviceToken, askMsgs);
-			askMsgs.add(controlAskMsg);
+			Map<String, ContextList> contextListMap = new HashMap<String, ContextList>();
 			
+			QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_ROOT, serviceToken, askMsgSet,contextListMap);
+			msg.setToken(userToken.getToken());
+			
+			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));	
+			
+			askMsgSet.add(askMsgs);		
 			
 			/* send message */
 
 			System.out.println("Sending Asks");
-			for (QDataAskMessage askMsg : askMsgs) {
+			for (QDataAskMessage item : askMsgSet) {
 
-				askMsg.setToken(userToken.getToken());
-				String json = JsonUtils.toJson(askMsg);
+				item.setToken(userToken.getToken());
+				String json = JsonUtils.toJson(item);
 				VertxUtils.writeMsg("webcmds", json);
-				// QDataAskMessage
+				
 			}
-			rules.publishCmd(msg);
-		
-			System.out.println("Sent");
+			
+			
+
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
+	}
+	
+	public Frame3 getContextSummary( String name) {
+		
+		Theme THM_CONTEXT_SUMMARY = Theme.builder("THM_CONTEXT_SUMMARY").addAttribute().backgroundColor("#faf9fa")
+				.end().build();
+		
+		
+		/* Theme for Question for profile picture*/
+//		Theme THM_LOGO_TEST = Theme.builder("THM_LOGO_TEST")
+//				.addAttribute()
+//					.fit("contain")
+//					.imageHeight(100)
+//					.imageWidth(100)
+//					.showName(false)
+//				.end()
+//				.build();
+		
+		Theme THM_TEST_FORM_IMAGE_RESTRICTIONS = Theme.builder("THM_TEST_FORM_IMAGE_RESTRICTIONS")
+				.addAttribute()
+					.fit("contain")
+					.imageHeight(100)
+					.imageWidth(100)
+					.showName(false)
+				
+				.end()
+			.build();
+		
+		/* Theme for Question for profile picture frame*/
+		Theme THM_CONTEXT_SUMMARY_IMAGE_FRAME = Theme.builder("THM_CONTEXT_SUMMARY_IMAGE_FRAME")
+			.addAttribute()
+				.alignItems("flex-start")
+				.justifyContent("flex-start")
+				.flex(1)
+			.end()
+			.addAttribute()
+				.borderWidth(1)
+				.borderColor("black")
+			.end()
+			.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+			.build();
+		
+		
+
+		Theme THM_CONTEXT_SUMMARY_IMAGE = Theme.builder("THM_CONTEXT_SUMMARY_IMAGE")
+		.addAttribute()
+			.justifyContent("flex-start")
+		.end()
+		.build();
+
+		Theme THM_CONTEXT_SUMMARY_CONTENT_FRAME = Theme.builder("THM_CONTEXT_SUMMARY_CONTENT_FRAME")
+		.addAttribute()
+			.flex(3)
+			.borderWidth(1)
+			.borderColor("black")
+			.width("100%")
+		.end()
+		.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+		.build();
+		
+		Theme THM_CONTEXT_SUMMARY_CONTENT = Theme.builder("THM_CONTEXT_SUMMARY_CONTENT")
+				.addAttribute()
+					.display("flex")
+					.alignItems("stretch")
+					.justifyContent("stretch")
+				.end()
+				.build();
+		
+		Theme THM_LABEL_BOLD = Theme.builder("THM_LABEL_BOLD")
+				.addAttribute()
+								.bold(true)
+								.size("sm")
+								.paddingX(10)
+				.end()
+				.addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end()
+				.build();
+    
+		Theme THM_DISPLAY_HORIZONTAL = Theme.builder("THM_DISPLAY_HORIZONTAL")
+				.addAttribute()
+					.flexDirection("row").margin("1%").end()
+				.build();
+		try {
+			
+			Frame3 FRM_CONTEXT_SUMMARY_CONTENT = Frame3.builder("FRM_CONTEXT_SUMMARY_CONTENT")
+					.addTheme(THM_CONTEXT_SUMMARY_CONTENT).end()
+						.question("QUE_TEST_PERSON_DETAIL_GRP")
+							.addTheme(THM_LABEL_BOLD).vcl(VisualControlType.VCL_LABEL).end()
+							.addTheme(THM_DISPLAY_HORIZONTAL).vcl(VisualControlType.VCL_WRAPPER).end()
+							.addTheme("THM_BACKGROUND_NONE",serviceToken).end()
+					.end()
+					.build();
+			
+			/* Update this
+			 * */
+			 
+			
+			Frame3 FRM_PROFILE_PICTURE_GRP = Frame3.builder("FRM_PROFILE_PICTURE_GRP")
+					.addTheme(THM_CONTEXT_SUMMARY_IMAGE).end()
+					.question("QUE_TEST_DETAIL_VIEW_IMAGE_GRP")
+						.addTheme(THM_TEST_FORM_IMAGE_RESTRICTIONS).vcl(VisualControlType.INPUT_SELECTED).end()
+					.end()
+					.build();
+			
+		
+			/* ******end******* */
+			
+			Frame3 FRM_DETAIL_VIEW_SUMMARY = Frame3.builder(name)
+					.addTheme(THM_CONTEXT_SUMMARY).end()
+					.addTheme(THM_CONTEXT_SUMMARY_IMAGE_FRAME,ThemePosition.WEST).end()
+					.addTheme(THM_CONTEXT_SUMMARY_CONTENT_FRAME,ThemePosition.CENTRE).end()
+					.addTheme(THM_SHADOW,ThemePosition.WRAPPER).end()
+					.addFrame(FRM_PROFILE_PICTURE_GRP, FramePosition.WEST).end()
+					.addFrame(FRM_CONTEXT_SUMMARY_CONTENT, FramePosition.CENTRE).end()		
+			
+			.build();
+			
+			return FRM_DETAIL_VIEW_SUMMARY;
+			
+		}catch(Exception e){
+				System.out.println(e);
+				return null;
+				
+		}
+	}
+	
+	public Frame3 getDetailViewBody() {
+		
+		 /*Frame Detail View BODY */
+	     Theme THM_DETAIL_VIEW_BODY = Theme.builder("THM_DETAIL_VIEW_BODY")
+					.addAttribute().flex(12).margin(10).width("98%").end()
+					.build();
+	     
+	     Theme THM_SCROLL_VERTICAL = Theme.builder("THM_SCROLL_VERTICAL")
+					.addAttribute()
+						.overflowY("auto")
+					.end()
+					.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+					.build();  
+	     
+	     Frame3 FRM_DETAIL_VIEW_BODY = Frame3.builder("FRM_DETAIL_VIEW_BODY")
+	    		 
+	    		 	.addTheme(THM_SCROLL_VERTICAL,ThemePosition.CENTRE).end()
+	    		 	.addTheme(THM_DETAIL_VIEW_BODY, ThemePosition.WRAPPER).end()
+	    			.addFrame(getContextSummary("FRM_PROJECT_DETAIL"), FramePosition.CENTRE).end()
+	    			.build();
+	     
+	     return FRM_DETAIL_VIEW_BODY;
+	}
+	
+	public Ask getImageQuestion() {
+		
+		GennyToken serviceToken = getToken(realm, "service", "Service User", "service");
+		QRules rules = getQRules(serviceToken);
+		
+		Attribute questionAttribute = RulesUtils.attributeMap.get("QQQ_QUESTION_GROUP");
+		
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+		TableUtils tableUtils = new TableUtils(beUtils);
+		
+		  SearchEntity searchBE = new SearchEntity("SBE_SEARCH","Search")
+	 		  	     .addFilter("PRI_CODE",SearchEntity.StringFilter.EQUAL,"PER_USER1")
+	 		  	     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
+	 		  	     .addColumn("PRI_IMAGE_URL","Image url")
+	 		  	     .setPageStart(0)
+	 		  	     .setPageSize(10);
+		  
+		 QDataBaseEntityMessage  msg = tableUtils.fetchSearchResults(searchBE,serviceToken);
+		 Map<String, String> columns = tableUtils.getTableColumns(searchBE);
+		 
+		 List<Object> belist = new ArrayList<>(Arrays.asList(msg.getItems()));
+		   
+		 List<BaseEntity> results = (List<BaseEntity>) (List)belist;
+		    
+		 List<Ask> asks = TableUtils.generateQuestions2(serviceToken, beUtils, results,
+					columns, "PRJ_INTERNMATCH");
+		 asks.get(0).setQuestionCode("QUE_TEST_DETAIL_VIEW_IMAGE_GRP");
+		 return asks.get(0);
+	}
+	
+	public Ask getDetailViewAsk() {
+		
+		GennyToken serviceToken = getToken(realm, "service", "Service User", "service");
+		QRules rules = getQRules(serviceToken);
+		
+		Attribute questionAttribute = RulesUtils.attributeMap.get("QQQ_QUESTION_GROUP");
+		/*
+		Question parentQues = new Question("QUE_TEST_PERSON_DETAIL_VIEW_GRP", "Control Group", questionAttribute, true);
+		
+		Ask parentAsk = new Ask(parentQues, rules.getUser().getCode(), userToken.getUserCode(), false, 1.0, false,
+				false, true);
+		*/
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+		TableUtils tableUtils = new TableUtils(beUtils);
+		
+		  SearchEntity searchBE = new SearchEntity("SBE_SEARCH","Search")
+	 		  	     .addFilter("PRI_CODE",SearchEntity.StringFilter.EQUAL,"PER_USER1")
+	 		  	     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
+	 		  	     .addColumn("PRI_FIRSTNAME", "FirstName")
+	 		  	     .addColumn("PRI_LASTNAME", "LastName")
+	 		      	 .addColumn("PRI_MOBILE", "Mobile")
+	 		  	     .addColumn("PRI_ADDRESS_FULL", "Address")
+	 		  	     .addColumn("PRI_EMAIL", "Email")
+	 		  	     .setPageStart(0)
+	 		  	     .setPageSize(10);
+		 
+	 	QDataBaseEntityMessage  msg = tableUtils.fetchSearchResults(searchBE,serviceToken);
+	 	Map<String, String> columns = tableUtils.getTableColumns(searchBE);
+	 	
+	    List<Object> belist = new ArrayList<>(Arrays.asList(msg.getItems()));
+	   
+	    List<BaseEntity> results = (List<BaseEntity>) (List)belist;
+	    
+		List<Ask> asks = TableUtils.generateQuestions2(serviceToken, beUtils, results,
+				columns, "PRJ_INTERNMATCH");
+		
+		Ask myAsk = asks.get(0);
+		myAsk.setQuestionCode("QUE_TEST_PERSON_DETAIL_GRP");
+		
+		return myAsk;
+		
+	}
+		
+	public Frame3 getFrameHeader() {
+
+		Theme THM_DETAIL_VIEW_HEADER = Theme.builder("THM_DETAIL_VIEW_HEADER")
+				.addAttribute()
+					.backgroundColor("#faf9fa")
+					.flex(1)
+					.display("flex")
+					.flexDirection("row")
+					.justifyContent("flex-start").end()
+				.build();
+		
+		
+		Theme THM_DETAIL_VIEW_CONTROL =  Theme.builder("THM_DETAIL_VIEW_CONTROL")
+											.addAttribute()
+												.margin(10).height("70%").width("60%")
+											.end()	
+											.addAttribute()
+													//.color(project.getValue("PRI_COLOR_PRIMARY_ON", "#FFFFFF"))
+													//.backgroundColor(project.getValue("PRI_COLOR_PRIMARY_VARIANT_LIGHT", "#395268"))
+													.backgroundColor("#395268")
+													.color("#FFFFFF")
+													.borderColor("red")
+													.justifyContent("center")
+											.end()	
+											.build();
+									
+		Frame3 frame = Frame3.builder("FRM_DETAIL_VIEW_HEADER")
+										.addTheme(THM_DETAIL_VIEW_HEADER).end()
+										.addTheme(THM_SHADOW,ThemePosition.WRAPPER).end()
+										.question("QUE_DETAIL_VIEW_CONTROL_GRP")
+											.addTheme(THM_DETAIL_VIEW_CONTROL).vcl(VisualControlType.INPUT_WRAPPER).end()
+										.end()
+										.build();
+		
+		return frame;
+	}
+	
+	public Ask getControlAsk() {
+		
+		/* get attributes for generating asks */
+		Attribute eventAttribute = RulesUtils.attributeMap.get("PRI_EVENT");
+		Attribute questionAttribute = RulesUtils.attributeMap.get("QQQ_QUESTION_GROUP");
+
+		/* Construct a table footer Ask */
+		Question controlQues = new Question("QUE_DETAIL_VIEW_CONTROL_GRP", "Control Group", questionAttribute, true);
+
+		Ask controlAsk = new Ask(controlQues, rules.getUser().getCode(), userToken.getUserCode(), false, 1.0, false,
+				false, true);
+
+		/* question for previous, next, buttons and no. of items */
+		Question addQuestion = new Question("QUE_ADD_ITEM", "Add", eventAttribute, false);
+		Question editQuestion = new Question("QUE_EDIT_ITEM", "Edit", eventAttribute, false);
+		Question deleteQuestion = new Question("QUE_DELETE_ITEM", "Delete", eventAttribute, false);
+
+		List<Question> questions = new ArrayList<>();
+		questions.add(addQuestion);
+		questions.add(editQuestion);
+		questions.add(deleteQuestion);
+
+		List<Ask> controlChildAsks = new ArrayList<>();
+		
+		Double count = 1.0;
+		for (Question question : questions) {
+			Ask childAsk = new Ask(question, rules.getUser().getCode(), userToken.getToken());
+			childAsk.setWeight(count);
+			count++;
+			controlChildAsks.add(childAsk);
+		}
+		
+		/* Convert ask list to Array */
+		Ask[] controlChildAsksArray = controlChildAsks.toArray(new Ask[0]);
+
+		/* set the child asks to Table Footer */
+		controlAsk.setChildAsks(controlChildAsksArray);
+		
+		
+		return controlAsk;
 	}
 	
 	//@Test

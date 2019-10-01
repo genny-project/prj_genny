@@ -77,9 +77,15 @@ public class AdamTest {
 	}
 
 	@Test
+<<<<<<< HEAD
 	public void searchTableTest()
 	{
 		System.out.println("SearchTable Test");
+=======
+	public void headerTest()
+	{
+		System.out.println("HEader test");
+>>>>>>> e7cb9a2214fa3d69a514f72fea06a98b99c752b0
 		GennyToken userToken = null;
 		GennyToken userToken2 = null;
 		GennyToken serviceToken = null;
@@ -93,12 +99,16 @@ public class AdamTest {
 			qRules.set("realm", userToken.getRealm());
 			qRules.setServiceToken(serviceToken.getToken());
 			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+<<<<<<< HEAD
 			GennyKieSession.loadAttributesJsonFromResources(userToken);
 
+=======
+>>>>>>> e7cb9a2214fa3d69a514f72fea06a98b99c752b0
 		} else {
 			qRules = GennyJbpmBaseTest.setupLocalService();
 			userToken = new GennyToken("userToken", qRules.getToken());
 			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+<<<<<<< HEAD
 		}
 
 		System.out.println("session     =" + userToken.getSessionCode());
@@ -158,10 +168,14 @@ public class AdamTest {
 			qRules = GennyJbpmBaseTest.setupLocalService();
 			userToken = new GennyToken("userToken", qRules.getToken());
 			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+=======
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+>>>>>>> e7cb9a2214fa3d69a514f72fea06a98b99c752b0
 		}
 
 		System.out.println("session     =" + userToken.getSessionCode());
 		System.out.println("userToken   =" + userToken.getToken());
+<<<<<<< HEAD
 		//System.out.println("userToken2   =" + userToken2.getToken());
 		System.out.println("serviceToken=" + serviceToken.getToken());
 		
@@ -211,6 +225,22 @@ public class AdamTest {
 	}
 	
 	
+=======
+		System.out.println("serviceToken=" + serviceToken.getToken());
+
+		  Answer answer = new Answer(userToken.getUserCode(),userToken.getUserCode(),"PRI_SEARCH_TEXT","univ");
+		  BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		  
+			TableUtils.performSearch(serviceToken , beUtils, "SBE_SEARCHBAR", answer);
+	  	     
+  	     /* Send to front end */
+				
+  	     GennyKieSession.displayForm("FRM_TABLE_VIEW", "FRM_CONTENT", userToken);
+
+		
+	}
+		
+>>>>>>> e7cb9a2214fa3d69a514f72fea06a98b99c752b0
 	//@Test
 	public void paginationTest()
 	{
@@ -440,7 +470,11 @@ public void testTableHeader() {
 
 
 	
+<<<<<<< HEAD
 	//@Test
+=======
+//	@Test
+>>>>>>> e7cb9a2214fa3d69a514f72fea06a98b99c752b0
 	public void tableTest()
 	{
 		System.out.println("Table test");
