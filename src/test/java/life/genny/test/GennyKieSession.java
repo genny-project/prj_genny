@@ -488,11 +488,9 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 					.entityManagerFactory(emf)
 					.get();
 
-<<<<<<< HEAD
-			createRuntimeManager(Strategy.SINGLETON, resources, env, uniqueRuntimeStr);
-=======
+
 			createRuntimeManager(Strategy.PROCESS_INSTANCE, resources, env, uniqueRuntimeStr);
->>>>>>> e7cb9a2214fa3d69a514f72fea06a98b99c752b0
+
 		}
 
 		kieSession = getRuntimeEngine().getKieSession();
