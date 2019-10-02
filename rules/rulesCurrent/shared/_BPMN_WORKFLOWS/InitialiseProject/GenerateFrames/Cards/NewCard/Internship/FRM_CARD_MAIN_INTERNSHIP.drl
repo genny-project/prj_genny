@@ -25,24 +25,25 @@ import life.genny.utils.FrameUtils2;
 import life.genny.models.FramePosition;
 import life.genny.qwanda.VisualControlType;
 
-rule "FRM_CARD_BOTTOM"
+rule "FRM_CARD_MAIN_INTERNSHIP"
   ruleflow-group 'GenerateFrames'
 
   when
-    not  Frame3(code == "FRM_CARD_BOTTOM")
+    not  Frame3(code == "FRM_TAB_HEADER")
     serviceToken : GennyToken( code == "PER_SERVICE")
 
+    FRM_CARD_IMAGE_INTERNSHIP : Frame3 ( code == "FRM_CARD_IMAGE_INTERNSHIP" )
+    FRM_CARD_PRIMARY_CONTENT_INTERNSHIP : Frame3 ( code == "FRM_CARD_PRIMARY_CONTENT_INTERNSHIP" )
+    FRM_CARD_RIGHTS : Frame3 ( code == "FRM_CARD_RIGHTS" )
+    FRM_CARD_SECONDARY_CONTENT_INTERNSHIP : Frame3 ( code == "FRM_CARD_SECONDARY_CONTENT_INTERNSHIP" )
   then
-    System.out.println(" Generate FRM_CARD_BOTTOM Rule  "+serviceToken.getUserCode());
+    System.out.println(" Generate FRM_CARD_MAIN_INTERNSHIP Rule  "+serviceToken.getUserCode());
 
-    Frame3 frame = Frame3.builder("FRM_CARD_BOTTOM")
-                  .addTheme("THM_PANEL_ALIGN_TOP_LEFT", ThemePosition.CENTRE, serviceToken).end()
-                  .question("QUE_TEST_CARD_BOTTOM_GRP")
-                    .addTheme("THM_WIDTH_DYNAMIC", serviceToken).vcl(VisualControlType.VCL_INPUT).end()
-                    .addTheme("THM_WIDTH_100_PERCENT", serviceToken).vcl(VisualControlType.GROUP).end()
-                    .addTheme("THM_JUSTIFY_CONTENT_CENTRE", serviceToken).vcl(VisualControlType.GROUP_CLICKABLE_WRAPPER).end()
-                    .addTheme("THM_EXPANDABLE", serviceToken).end()
-                  .end()
+    Frame3 frame = Frame3.builder("FRM_CARD_MAIN_INTERNSHIP")
+                  .addFrame(FRM_CARD_IMAGE_INTERNSHIP, FramePosition.WEST).end()
+                  .addFrame(FRM_CARD_PRIMARY_CONTENT_INTERNSHIP, FramePosition.CENTRE).end()
+                  .addFrame(FRM_CARD_RIGHTS, FramePosition.EAST).end()
+                  .addFrame(FRM_CARD_SECONDARY_CONTENT_INTERNSHIP, FramePosition.SOUTH).end()
                   .build();
     frame.setRealm(serviceToken.getRealm());
     insert (frame);
