@@ -41,7 +41,7 @@ rule "THM_IMAGE_PLACEHOLDER_PERSON_OUTLINE"
 				.addAttribute()
 					.type("icon")
 					.name("person_outline")
-					.color("#f3f3f3")
+					.color("#cbcaca")
 					.size("xl")
 				.end()
 		.build();
