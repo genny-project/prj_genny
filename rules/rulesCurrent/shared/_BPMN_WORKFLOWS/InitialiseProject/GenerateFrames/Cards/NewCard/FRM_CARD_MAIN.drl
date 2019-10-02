@@ -29,7 +29,7 @@ rule "FRM_CARD_MAIN"
   ruleflow-group 'GenerateFrames'
 
   when
-    not  Frame3(code == "FRM_TAB_HEADER")
+    not  Frame3(code == "FRM_CARD_MAIN")
     serviceToken : GennyToken( code == "PER_SERVICE")
 
     FRM_CARD_LEFTS : Frame3 ( code == "FRM_CARD_LEFTS" )

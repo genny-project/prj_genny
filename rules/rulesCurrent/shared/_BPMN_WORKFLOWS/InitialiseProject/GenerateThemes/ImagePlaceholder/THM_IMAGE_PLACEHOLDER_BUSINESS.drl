@@ -41,7 +41,7 @@ rule "THM_IMAGE_PLACEHOLDER_BUSINESS"
 				.addAttribute()
 					.type("icon")
 					.name("business")
-					.color("#f3f3f3")
+					.color("#cbcaca")
 					.size("xl")
 				.end()
 		.build();
