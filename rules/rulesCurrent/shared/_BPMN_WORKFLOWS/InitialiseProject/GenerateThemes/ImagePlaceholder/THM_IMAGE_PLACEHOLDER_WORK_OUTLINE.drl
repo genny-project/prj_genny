@@ -41,7 +41,7 @@ rule "THM_IMAGE_PLACEHOLDER_WORK_OUTLINE"
 				.addAttribute()
 					.type("icon")
 					.name("work_outline")
-					.color("#f3f3f3")
+					.color("#cbcaca")
 					.size("xl")
 				.end()
 		.build();

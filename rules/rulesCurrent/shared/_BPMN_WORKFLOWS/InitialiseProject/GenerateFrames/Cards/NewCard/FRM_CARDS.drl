@@ -46,11 +46,11 @@ rule "FRM_CARDS"
                   .addFrame(FRM_CARD_STATUS, FramePosition.WEST).end()
                   .addFrame(FRM_CARD_MAIN, FramePosition.CENTRE).end()
                   .build();
-                
+
 	frame.setRealm(serviceToken.getRealm());
-						
+
 	insert (frame);
-	
+
 	/* Process and save to cache */
 	FrameUtils2.toMessage(frame, serviceToken);
 
