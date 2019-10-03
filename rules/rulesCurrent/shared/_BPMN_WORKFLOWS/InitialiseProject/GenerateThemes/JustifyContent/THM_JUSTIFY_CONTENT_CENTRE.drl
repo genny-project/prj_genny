@@ -38,11 +38,11 @@ rule "THM_JUSTIFY_CONTENT_CENTRE"
     System.out.println(" Generate THM_JUSTIFY_CONTENT_CENTRE Rule  ");
 
     Theme theme = Theme.builder("THM_JUSTIFY_CONTENT_CENTRE")
-                  .addAttribute().justifyContent("flex-start").end()
+                  .addAttribute().justifyContent("center").end()
                   .build();
      theme.setRealm(serviceToken.getRealm());
     insert (theme);
 
-    VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, 
+    VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme,
     serviceToken.getToken());
 end
