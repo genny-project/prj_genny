@@ -13,10 +13,10 @@
 	<description>jBPM Genny Maven project</description>
 
 	<properties>
-		<runtime.version>7.26.0.Final</runtime.version>
 		<kie.version>7.26.0.Final</kie.version>
-		<genny-verticle.version>3.1.0</genny-verticle.version>
-		<genny-rules.version>3.1.0</genny-rules.version>
+		<version.keycloak>7.0.0</version.keycloak>		
+		<genny-verticle.version>${project.version}</genny-verticle.version>
+		<genny-rules.version>${project.version}</genny-rules.version>
 
 		<vertx.version>3.5.1</vertx.version>
 		<hazelcast.version>3.8.2</hazelcast.version>
@@ -33,8 +33,8 @@
 		<war-plugin-version>2.4</war-plugin-version>
 		<ear-plugin-version>2.9</ear-plugin-version>
 		<compiler-plugin-version>3.1</compiler-plugin-version>
-		<version.maven-jar-plugin>3.0.2</version.maven-jar-plugin>
-		<version.maven-source-plugin>3.0.1</version.maven-source-plugin>
+		<version.maven-jar-plugin>3.1.2</version.maven-jar-plugin>
+		<version.maven-source-plugin>3.1.0</version.maven-source-plugin>
 		<dropwizard.version>3.5.1</dropwizard.version>
 		<vertx-concurrent.version>1.0.0</vertx-concurrent.version>
 
@@ -43,44 +43,30 @@
 		<jar.finalName>${project.name}</jar.finalName>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<!--java version -->
-		<java-version>1.8</java-version>
-
 		<junit-version>4.12</junit-version>
 		<log4j-core-version>2.5</log4j-core-version>
 
-		<!-- plugin versions -->
-		<ejb-plugin-version>2.3</ejb-plugin-version>
-		<war-plugin-version>2.4</war-plugin-version>
-		<ear-plugin-version>2.9</ear-plugin-version>
-		<compiler-plugin-version>3.7.0</compiler-plugin-version>
-		<version.maven-jar-plugin>3.0.2</version.maven-jar-plugin>
-		<version.maven-source-plugin>3.0.1</version.maven-source-plugin>
 
 		<!-- dependency versions -->
 		<javaee-api-version>8.0</javaee-api-version>
 
 		<!-- EJB spec version -->
 		<ejb-spec-version>3.2</ejb-spec-version>
-
-
-
 		<!-- <jackson.version>2.8.7</jackson.version> -->
 		<jackson.version>2.9.5</jackson.version>
-		<version.mysql-connector>6.0.6</version.mysql-connector>
 		<jersey-version>2.13</jersey-version>
 		<version.apache-httpclient>4.5.3</version.apache-httpclient>
-		<keycloak-core.version>7.0.0</keycloak-core.version>
-		<version.hibernate>5.3.6.Final</version.hibernate>
-		<version.hibernate-validator>5.3.6.Final</version.hibernate-validator>
-		<version.hsqldb>2.4.1</version.hsqldb>
-		<version.h2db>1.4.198</version.h2db>
+		<version.hibernate>5.4.5.Final</version.hibernate>
+		<version.hibernate-validator>6.0.17.Final</version.hibernate-validator>
+		<version.hsqldb>2.5.0</version.hsqldb>
+		<version.h2db>1.4.199</version.h2db>
 		<version.resteasy>3.0.10.Final</version.resteasy>
 
 		<m2e.jpa.activation>false</m2e.jpa.activation>
 		<activemq-junit-version>5.13.0</activemq-junit-version>
 		<activemq-version>5.13.0</activemq-version>
 		<spring.version>4.2.4.RELEASE</spring.version>
+		<version.gson>2.8.5</version.gson>
 	</properties>
 
 	<repositories>
@@ -121,13 +107,13 @@
 		<dependency>
 			<groupId>org.kie</groupId>
 			<artifactId>kie-api</artifactId>
-			<version>${runtime.version}</version>
+			<version>${kie.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.jbpm</groupId>
 			<artifactId>jbpm-test</artifactId>
-			<version>${runtime.version}</version>
+			<version>${kie.version}</version>
 		</dependency>
 
 		<!-- https://github.com/DiUS/java-faker -->
@@ -141,13 +127,13 @@
 		<dependency>
 			<groupId>org.jbpm</groupId>
 			<artifactId>jbpm-test-util</artifactId>
-			<version>${runtime.version}</version>
+			<version>${kie.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jbpm</groupId>
 			<artifactId>jbpm-persistence-jpa</artifactId>
-			<version>${runtime.version}</version>
+			<version>${kie.version}</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.assertj/assertj-core -->
@@ -253,12 +239,12 @@
 			<version>4.8.0.201706111038-r</version>
 		</dependency>
 		<dependency>
-			<groupId>org.hibernate</groupId>
+			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator</artifactId>
 			<version>${version.hibernate-validator}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.hibernate</groupId>
+			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator-annotation-processor</artifactId>
 			<version>${version.hibernate-validator}</version>
 		</dependency>
@@ -307,7 +293,7 @@
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-			<version>2.1</version>
+			<version>${version.gson}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -385,13 +371,13 @@
 		<dependency>
 			<groupId>org.keycloak</groupId>
 			<artifactId>keycloak-adapter-core</artifactId>
-			<version>${keycloak-core.version}</version>
+			<version>${version.keycloak}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.keycloak</groupId>
 			<artifactId>keycloak-adapter-spi</artifactId>
-			<version>${keycloak-core.version}</version>
+			<version>${version.keycloak}</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -399,13 +385,13 @@
 		<dependency>
 			<groupId>org.keycloak</groupId>
 			<artifactId>keycloak-core</artifactId>
-			<version>${keycloak-core.version}</version>
+			<version>${version.keycloak}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.keycloak</groupId>
 			<artifactId>keycloak-admin-client</artifactId>
-			<version>${keycloak-core.version}</version>
+			<version>${version.keycloak}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

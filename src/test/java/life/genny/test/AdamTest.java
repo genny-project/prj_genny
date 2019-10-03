@@ -81,13 +81,11 @@ public class AdamTest {
 	{
 		System.out.println("Header test");
 		GennyToken userToken = null;
-		GennyToken userToken2 = null;
 		GennyToken serviceToken = null;
 		QRules qRules = null;
 
 		if (false) {
 			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
-			userToken2 = GennyJbpmBaseTest.createGennyToken(realm, "user2", "Barry2 Allan2", "user");
 			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
 			qRules = new QRules(eventBusMock, userToken.getToken());
 			qRules.set("realm", userToken.getRealm());
