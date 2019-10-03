@@ -114,22 +114,21 @@ public class SafalTest extends GennyJbpmBaseTest {
 		project =  new BaseEntityUtils(serviceToken).getBaseEntityByCode("PRJ_INTERNMATCH");
 		rules.sendAllAttributes();
 		
-		QDataBaseEntityMessage msgg = new QDataBaseEntityMessage(rules.getUser());
-		msgg.setToken(userToken.getToken());
-		
-		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msgg));
+
 
 		THM_SHADOW = Theme.builder("THM_SHADOW")
-				.addAttribute()
-					.shadowColor("#949798")
-					.shadowOpacity(0.88)
-					.shadowRadius(10)
-					.shadowOffset()
-					.width(4)
-					.height(4).end()
-				.end()
-				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
-				.build();
+					 .addAttribute()
+	                 .shadowColor("#000")
+	                 .shadowOpacity(0.4)
+	                 .shadowRadius(10)
+	                 .shadowOffset()
+	                   .width(0)
+	                   .height(0)
+	                 .end()
+	               .end()
+	               .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+	               .build();    
+			
 		
 		THM_CONTENT_WRAPPER = Theme.builder("THM_CONTENT_WRAPPER")
 				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
@@ -143,14 +142,18 @@ public class SafalTest extends GennyJbpmBaseTest {
 
 		initItem();
 		/* Themes and frames */
+		
 		try {
+			Ask[] askList = new Ask[1];
 			
-			Ask[] askList = new Ask[3];
-			askList[0] = getControlAsk();
-			askList[1] = getDetailViewAsk();
-			askList[2] = getImageQuestion();
+			Ask detailViewAsk = getDetailViewAsk();
+			askList[0] = detailViewAsk;
+			
 			/* virtual Asks */
 			QDataAskMessage askMsgs = new QDataAskMessage(askList);
+			askMsgs.setReplace(true);
+			askMsgs.setToken(userToken.getToken());
+			String jsonAsk = JsonUtils.toJson(askMsgs);
 		    
 			/* FRame for detail View */
 		     Theme THM_DETAIL_VIEW= Theme.builder("THM_DETAIL_VIEW")
@@ -163,24 +166,31 @@ public class SafalTest extends GennyJbpmBaseTest {
 					.addFrame(getDetailViewBody(), FramePosition.CENTRE).end()
 					.build();
 
-			Frame3 FRM_ROOT = Frame3.builder("FRM_ROOT").addFrame(FRM_DETAIL_VIEW).end().build();
+			Frame3 FRM_ROOT = Frame3.builder("FRM_CONTENT").addFrame(FRM_DETAIL_VIEW).end().build();
 
 			/* end */
-			Set<QDataAskMessage> askMsgSet = new HashSet<QDataAskMessage>();
-			
+			Set<QDataAskMessage> set = new HashSet<QDataAskMessage>();
+
 			Map<String, ContextList> contextListMap = new HashMap<String, ContextList>();
 			
-			QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_ROOT, serviceToken, askMsgSet,contextListMap);
+			Map<String, QDataAskMessage> virtualAskMap = new HashMap<String, QDataAskMessage>();
+			virtualAskMap.put(askList[0].getQuestionCode(),new QDataAskMessage(askList[0]));
+			
+			
+			QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_ROOT, serviceToken, set,contextListMap,virtualAskMap);
+			
+			
 			msg.setToken(userToken.getToken());
+			msg.setReplace(true);
 			
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));	
 			
-			askMsgSet.add(askMsgs);		
+			/* we publish the  virtual ask with child asks */
+			VertxUtils.writeMsg("webcmds", jsonAsk);
 			
 			/* send message */
-
 			System.out.println("Sending Asks");
-			for (QDataAskMessage item : askMsgSet) {
+			for (QDataAskMessage item : set) {
 
 				item.setToken(userToken.getToken());
 				String json = JsonUtils.toJson(item);
@@ -188,8 +198,10 @@ public class SafalTest extends GennyJbpmBaseTest {
 				
 			}
 			
+			QDataBaseEntityMessage msgg = new QDataBaseEntityMessage(rules.getUser());
+			msgg.setToken(userToken.getToken());
 			
-
+			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msgg));
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -201,28 +213,13 @@ public class SafalTest extends GennyJbpmBaseTest {
 	public Frame3 getContextSummary( String name) {
 		
 		Theme THM_CONTEXT_SUMMARY = Theme.builder("THM_CONTEXT_SUMMARY").addAttribute().backgroundColor("#faf9fa")
-				.end().build();
-		
-		
-		/* Theme for Question for profile picture*/
-//		Theme THM_LOGO_TEST = Theme.builder("THM_LOGO_TEST")
-//				.addAttribute()
-//					.fit("contain")
-//					.imageHeight(100)
-//					.imageWidth(100)
-//					.showName(false)
-//				.end()
-//				.build();
-		
-		Theme THM_TEST_FORM_IMAGE_RESTRICTIONS = Theme.builder("THM_TEST_FORM_IMAGE_RESTRICTIONS")
-				.addAttribute()
-					.fit("contain")
-					.imageHeight(100)
-					.imageWidth(100)
-					.showName(false)
-				
+				.justifyContent("flex-start")
+				.marginBottom(20)
+				.padding(10)
 				.end()
-			.build();
+				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+				.build();
+
 		
 		/* Theme for Question for profile picture frame*/
 		Theme THM_CONTEXT_SUMMARY_IMAGE_FRAME = Theme.builder("THM_CONTEXT_SUMMARY_IMAGE_FRAME")
@@ -230,28 +227,38 @@ public class SafalTest extends GennyJbpmBaseTest {
 				.alignItems("flex-start")
 				.justifyContent("flex-start")
 				.flex(1)
-			.end()
-			.addAttribute()
-				.borderWidth(1)
-				.borderColor("black")
+                .flexShrink(0)
+                .flexBasis("auto")
+                .flexGrow(0)
+                .width("initial")
 			.end()
 			.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
 			.build();
-		
-		
 
-		Theme THM_CONTEXT_SUMMARY_IMAGE = Theme.builder("THM_CONTEXT_SUMMARY_IMAGE")
-		.addAttribute()
-			.justifyContent("flex-start")
-		.end()
-		.build();
 
+		Theme THM_TEST_FORM_IMAGE_RESTRICTIONS = Theme.builder("THM_TEST_FORM_IMAGE_RESTRICTIONS")
+				.addAttribute()
+					.imageHeight(150)
+					.imageWidth(150)
+					.showName(false)
+					.fit("contain")
+					.maxNumberOfFiles(1)
+				.end()
+			.build();
+		
+		Theme THM_DETAIL_VIEW_IMAGE_FRAME = Theme.builder("THM_DETAIL_VIEW_IMAGE_FRAME")
+				.addAttribute()
+					.height(150)
+					.width(150)
+				.end()
+			.build();
+		
+		/********************/
 		Theme THM_CONTEXT_SUMMARY_CONTENT_FRAME = Theme.builder("THM_CONTEXT_SUMMARY_CONTENT_FRAME")
 		.addAttribute()
 			.flex(3)
-			.borderWidth(1)
-			.borderColor("black")
 			.width("100%")
+			.paddingLeft(20)
 		.end()
 		.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
 		.build();
@@ -277,11 +284,30 @@ public class SafalTest extends GennyJbpmBaseTest {
 				.addAttribute()
 					.flexDirection("row").margin("1%").end()
 				.build();
+		
+		Theme THM_FLEX_SIZE = Theme.builder("THM_FLEX_SIZE")
+                .addAttribute()
+                  .flexShrink(0)
+                  .flexBasis("auto")
+                  .flexGrow(0)
+                  .height("initial")
+                .end()
+                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                .build();
+		
 		try {
+			
+			Theme THM_DYNAMIC_WIDTH = Theme.builder("THM_DYNAMIC_WIDTH")
+					.addAttribute()
+						.dynamicWidth(true)
+					.end()
+					.build();  
+
 			
 			Frame3 FRM_CONTEXT_SUMMARY_CONTENT = Frame3.builder("FRM_CONTEXT_SUMMARY_CONTENT")
 					.addTheme(THM_CONTEXT_SUMMARY_CONTENT).end()
 						.question("QUE_TEST_PERSON_DETAIL_GRP")
+							.addTheme(THM_DYNAMIC_WIDTH).vcl(VisualControlType.VCL_INPUT).end()
 							.addTheme(THM_LABEL_BOLD).vcl(VisualControlType.VCL_LABEL).end()
 							.addTheme(THM_DISPLAY_HORIZONTAL).vcl(VisualControlType.VCL_WRAPPER).end()
 							.addTheme("THM_BACKGROUND_NONE",serviceToken).end()
@@ -290,34 +316,31 @@ public class SafalTest extends GennyJbpmBaseTest {
 			
 			/* Update this
 			 * */
-			 
 			
 			Frame3 FRM_PROFILE_PICTURE_GRP = Frame3.builder("FRM_PROFILE_PICTURE_GRP")
-					.addTheme(THM_CONTEXT_SUMMARY_IMAGE).end()
-					.question("QUE_TEST_DETAIL_VIEW_IMAGE_GRP")
+					.question("QUE_TEST_IMAGE_GRP")
+						.targetAlias(userToken.getUserCode())
 						.addTheme(THM_TEST_FORM_IMAGE_RESTRICTIONS).vcl(VisualControlType.INPUT_SELECTED).end()
+						.addTheme(THM_DETAIL_VIEW_IMAGE_FRAME).vcl(VisualControlType.INPUT_SELECTED_WRAPPER).end()
 					.end()
 					.build();
 			
-		
 			/* ******end******* */
-			
 			Frame3 FRM_DETAIL_VIEW_SUMMARY = Frame3.builder(name)
-					.addTheme(THM_CONTEXT_SUMMARY).end()
+					.addTheme(THM_CONTEXT_SUMMARY,ThemePosition.WRAPPER).end()
+					.addTheme(THM_FLEX_SIZE,ThemePosition.WRAPPER).end()
 					.addTheme(THM_CONTEXT_SUMMARY_IMAGE_FRAME,ThemePosition.WEST).end()
 					.addTheme(THM_CONTEXT_SUMMARY_CONTENT_FRAME,ThemePosition.CENTRE).end()
 					.addTheme(THM_SHADOW,ThemePosition.WRAPPER).end()
 					.addFrame(FRM_PROFILE_PICTURE_GRP, FramePosition.WEST).end()
-					.addFrame(FRM_CONTEXT_SUMMARY_CONTENT, FramePosition.CENTRE).end()		
-			
+					.addFrame(FRM_CONTEXT_SUMMARY_CONTENT, FramePosition.CENTRE).end()	
 			.build();
 			
 			return FRM_DETAIL_VIEW_SUMMARY;
 			
 		}catch(Exception e){
 				System.out.println(e);
-				return null;
-				
+				return null;		
 		}
 	}
 	
@@ -325,68 +348,35 @@ public class SafalTest extends GennyJbpmBaseTest {
 		
 		 /*Frame Detail View BODY */
 	     Theme THM_DETAIL_VIEW_BODY = Theme.builder("THM_DETAIL_VIEW_BODY")
-					.addAttribute().flex(12).margin(10).width("98%").end()
+					.addAttribute().flex(15).justifyContent("flex-start").end()
+					//.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
 					.build();
 	     
 	     Theme THM_SCROLL_VERTICAL = Theme.builder("THM_SCROLL_VERTICAL")
 					.addAttribute()
+						.justifyContent("flex-start")
 						.overflowY("auto")
+						.padding(10)
 					.end()
 					.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
 					.build();  
 	     
 	     Frame3 FRM_DETAIL_VIEW_BODY = Frame3.builder("FRM_DETAIL_VIEW_BODY")
-	    		 
 	    		 	.addTheme(THM_SCROLL_VERTICAL,ThemePosition.CENTRE).end()
 	    		 	.addTheme(THM_DETAIL_VIEW_BODY, ThemePosition.WRAPPER).end()
 	    			.addFrame(getContextSummary("FRM_PROJECT_DETAIL"), FramePosition.CENTRE).end()
+	    			.addFrame(getContextSummary("FRM_PROJECT_DETAIL1"), FramePosition.CENTRE).end()
+	    			.addFrame(getContextSummary("FRM_PROJECT_DETAIL2"), FramePosition.CENTRE).end()
+	    			.addFrame(getContextSummary("FRM_PROJECT_DETAIL3"), FramePosition.CENTRE).end()
 	    			.build();
 	     
 	     return FRM_DETAIL_VIEW_BODY;
 	}
 	
-	public Ask getImageQuestion() {
-		
-		GennyToken serviceToken = getToken(realm, "service", "Service User", "service");
-		QRules rules = getQRules(serviceToken);
-		
-		Attribute questionAttribute = RulesUtils.attributeMap.get("QQQ_QUESTION_GROUP");
-		
-		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
-		TableUtils tableUtils = new TableUtils(beUtils);
-		
-		  SearchEntity searchBE = new SearchEntity("SBE_SEARCH","Search")
-	 		  	     .addFilter("PRI_CODE",SearchEntity.StringFilter.EQUAL,"PER_USER1")
-	 		  	     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
-	 		  	     .addColumn("PRI_IMAGE_URL","Image url")
-	 		  	     .setPageStart(0)
-	 		  	     .setPageSize(10);
-		  
-		 QDataBaseEntityMessage  msg = tableUtils.fetchSearchResults(searchBE,serviceToken);
-		 Map<String, String> columns = tableUtils.getTableColumns(searchBE);
-		 
-		 List<Object> belist = new ArrayList<>(Arrays.asList(msg.getItems()));
-		   
-		 List<BaseEntity> results = (List<BaseEntity>) (List)belist;
-		    
-		 List<Ask> asks = TableUtils.generateQuestions2(serviceToken, beUtils, results,
-					columns, "PRJ_INTERNMATCH");
-		 asks.get(0).setQuestionCode("QUE_TEST_DETAIL_VIEW_IMAGE_GRP");
-		 return asks.get(0);
-	}
-	
 	public Ask getDetailViewAsk() {
 		
 		GennyToken serviceToken = getToken(realm, "service", "Service User", "service");
-		QRules rules = getQRules(serviceToken);
-		
-		Attribute questionAttribute = RulesUtils.attributeMap.get("QQQ_QUESTION_GROUP");
-		/*
-		Question parentQues = new Question("QUE_TEST_PERSON_DETAIL_VIEW_GRP", "Control Group", questionAttribute, true);
-		
-		Ask parentAsk = new Ask(parentQues, rules.getUser().getCode(), userToken.getUserCode(), false, 1.0, false,
-				false, true);
-		*/
+
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
 		TableUtils tableUtils = new TableUtils(beUtils);
 		
@@ -415,86 +405,67 @@ public class SafalTest extends GennyJbpmBaseTest {
 		myAsk.setQuestionCode("QUE_TEST_PERSON_DETAIL_GRP");
 		
 		return myAsk;
-		
 	}
 		
 	public Frame3 getFrameHeader() {
 
 		Theme THM_DETAIL_VIEW_HEADER = Theme.builder("THM_DETAIL_VIEW_HEADER")
 				.addAttribute()
-					.backgroundColor("#faf9fa")
 					.flex(1)
 					.display("flex")
 					.flexDirection("row")
 					.justifyContent("flex-start").end()
+					
 				.build();
-		
 		
 		Theme THM_DETAIL_VIEW_CONTROL =  Theme.builder("THM_DETAIL_VIEW_CONTROL")
 											.addAttribute()
-												.margin(10).height("70%").width("60%")
-											.end()	
-											.addAttribute()
-													//.color(project.getValue("PRI_COLOR_PRIMARY_ON", "#FFFFFF"))
-													//.backgroundColor(project.getValue("PRI_COLOR_PRIMARY_VARIANT_LIGHT", "#395268"))
-													.backgroundColor("#395268")
-													.color("#FFFFFF")
-													.borderColor("red")
-													.justifyContent("center")
+												.margin(5).height("70%")
+												.justifyContent("center")
+												.backgroundColor("#233a4e")	
+												.padding(5)
 											.end()	
 											.build();
-									
+		
+		Theme THM_CONTROLS_COLOR = Theme.builder("THM_CONTROLS_COLOR")
+									.addAttribute()
+										.color("#ffffff")
+									.end()
+									.build();
+		
+		Theme THM_MARGIN = Theme.builder("THM_MARGIN")
+				.addAttribute()
+					.marginBottom(5).end()
+				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
+				.end()
+				.build();
+		
+		Theme THM_CONTENT_WIDTH_CONTROLS = Theme.builder("THM_CONTENT_WIDTH_CONTROLS")
+							                .addAttribute()
+								                .flexShrink(0)
+								                .flexBasis("auto")
+								                .flexGrow(0)
+							                .end()
+							                .build();
+		
+		Theme THM_CONTROLS_ALIGNMENT = Theme.builder("THM_CONTROLS_ALIGNMENT")
+						                .addAttribute()
+							               .justifyContent("flex-end")
+							            .end()
+							            .build();
+		
 		Frame3 frame = Frame3.builder("FRM_DETAIL_VIEW_HEADER")
 										.addTheme(THM_DETAIL_VIEW_HEADER).end()
-										.addTheme(THM_SHADOW,ThemePosition.WRAPPER).end()
-										.question("QUE_DETAIL_VIEW_CONTROL_GRP")
+										.addTheme(THM_MARGIN,ThemePosition.WRAPPER).end()
+										.question("QUE_TEST_CONTROL_GRP")
+											.addTheme(THM_CONTROLS_ALIGNMENT).vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end()
+											.addTheme(THM_CONTENT_WIDTH_CONTROLS).vcl(VisualControlType.VCL_WRAPPER).end()
 											.addTheme(THM_DETAIL_VIEW_CONTROL).vcl(VisualControlType.INPUT_WRAPPER).end()
+											.addTheme(THM_CONTROLS_COLOR).vcl(VisualControlType.INPUT_FIELD).end()
 										.end()
 										.build();
 		
 		return frame;
-	}
-	
-	public Ask getControlAsk() {
-		
-		/* get attributes for generating asks */
-		Attribute eventAttribute = RulesUtils.attributeMap.get("PRI_EVENT");
-		Attribute questionAttribute = RulesUtils.attributeMap.get("QQQ_QUESTION_GROUP");
-
-		/* Construct a table footer Ask */
-		Question controlQues = new Question("QUE_DETAIL_VIEW_CONTROL_GRP", "Control Group", questionAttribute, true);
-
-		Ask controlAsk = new Ask(controlQues, rules.getUser().getCode(), userToken.getUserCode(), false, 1.0, false,
-				false, true);
-
-		/* question for previous, next, buttons and no. of items */
-		Question addQuestion = new Question("QUE_ADD_ITEM", "Add", eventAttribute, false);
-		Question editQuestion = new Question("QUE_EDIT_ITEM", "Edit", eventAttribute, false);
-		Question deleteQuestion = new Question("QUE_DELETE_ITEM", "Delete", eventAttribute, false);
-
-		List<Question> questions = new ArrayList<>();
-		questions.add(addQuestion);
-		questions.add(editQuestion);
-		questions.add(deleteQuestion);
-
-		List<Ask> controlChildAsks = new ArrayList<>();
-		
-		Double count = 1.0;
-		for (Question question : questions) {
-			Ask childAsk = new Ask(question, rules.getUser().getCode(), userToken.getToken());
-			childAsk.setWeight(count);
-			count++;
-			controlChildAsks.add(childAsk);
-		}
-		
-		/* Convert ask list to Array */
-		Ask[] controlChildAsksArray = controlChildAsks.toArray(new Ask[0]);
-
-		/* set the child asks to Table Footer */
-		controlAsk.setChildAsks(controlChildAsksArray);
-		
-		
-		return controlAsk;
 	}
 	
 	//@Test
