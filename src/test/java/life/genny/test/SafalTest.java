@@ -398,7 +398,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 	   
 	    List<BaseEntity> results = (List<BaseEntity>) (List)belist;
 	    
-		List<Ask> asks = TableUtils.generateQuestions2(serviceToken, beUtils, results,
+		List<Ask> asks = TableUtils.generateQuestions(serviceToken, beUtils, results,
 				columns, "PRJ_INTERNMATCH");
 		
 		Ask myAsk = asks.get(0);
