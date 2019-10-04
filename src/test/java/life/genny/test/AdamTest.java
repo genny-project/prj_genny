@@ -104,7 +104,7 @@ public class AdamTest {
 		System.out.println("userToken   =" + userToken.getToken());
 		System.out.println("serviceToken=" + serviceToken.getToken());
 
-		  Answer answer = new Answer(userToken.getUserCode(),userToken.getUserCode(),"PRI_SEARCH_TEXT","user");
+		  Answer answer = new Answer(userToken.getUserCode(),userToken.getUserCode(),"PRI_SEARCH_TEXT","univ");
 		  BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		  
 		 // GennyKieSession.displayForm("FRM_TABLE_VIEW", "FRM_CONTENT", userToken);
