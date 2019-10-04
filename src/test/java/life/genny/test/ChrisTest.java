@@ -65,7 +65,7 @@ public class ChrisTest {
 	}
 	
 	
-	//@Test
+	@Test
     public void LifecycleTest() {
         GennyToken userToken = null;
         GennyToken serviceToken = null;
@@ -101,8 +101,10 @@ public class ChrisTest {
         System.out.println("serviceToken=" + serviceToken.getToken());
 
         QEventMessage authInitMsg = new QEventMessage("EVT_MSG", "AUTH_INIT");
+        authInitMsg.setToken(userToken.getToken());
         QEventMessage msg1 = new QEventMessage("EVT_MSG", "INIT_1");
         QEventMessage msgLogout = new QEventMessage("EVT_MSG", "LOGOUT");
+        QEventMessage menu = new QEventMessage("EVT_MSG", "MENU");
 
         // NOW SET UP Some baseentitys
         BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
@@ -119,38 +121,69 @@ public class ChrisTest {
         try {
             gks = GennyKieSession
             		.builder(serviceToken, true)
-                    .addJbpm("internshipLifecycle.bpmn")
-//                    .addJbpm("applicationLifecycle.bpmn")
+                    .addJbpm("applicationLifecycleCP.bpmn")
+                    .addJbpm("baseEntityValidation.bpmn")
+                    .addJbpm("notificationHub.bpmn")
+                    .addJbpm("placementLifecycle.bpmn")
+//                    .addJbpm("userSession.bpmn")
+                    .addDrl("CHRIS_RULE.drl")
+                    .addDrl("ADD_APPLICATION_ATTRIBUTES.drl")
                     .addToken(userToken)
                     .build();
             
             gks.start();
             
-            gks.advanceSeconds(5, false);
-        
-            System.out.println("TEST:: Activating Internship Lifecycle");
+//            System.out.println("Here");
 
-            gks.injectSignal("newInternship", hashBeg);
+            gks.injectEvent(authInitMsg);
+//            gks.injectSignal("newApplication", hashBeg);
+            
+//            
+//            gks.injectSignalToProcessInstance("xyz", hashBeg,1);
+//            
+//			  gks.injectSignal("beginEvent", hashBeg);
+//            gks.injectSignal("beginInternalSignal", hashBeg);
+//            gks.injectSignal("beginData", hashBeg);
+//
+//            System.out.println("TEST:: Activating Application Lifecycle");
+//
+//            gks.injectSignal("newApplication", hashBeg);
+
+//            gks.injectEvent(menu);
+            gks.injectSignal("dropDown", "VIEW_PROFILE");
+//            gks.injectSignal("dropDown", "VIEW_APPLICATION");
+//            gks.injectSignal("dropDown", "ON_HOLD");
+//            gks.injectSignal("dropDown", "WITHDRAWN");
+//            gks.injectSignal("dropDown", "REACTIVATE");
+//            gks.injectSignal("dropDown", "REJECT");
+//            gks.injectSignal("dropDown", "VIEW_INTERNSHIP_OFFER");
+            
+//            gks.injectSignal("rule", "VIEW_INTERNSHIP_OFFER");
             
             gks.advanceSeconds(5, false);
             
-            gks.injectSignalToProcessInstance("xyz", hashBeg,1);
-            
-//            gks.injectSignal("beginEvent", hashBeg);
-            gks.injectSignal("beginInternalSignal", hashBeg);
-            gks.injectSignal("beginData", hashBeg);
-
-            System.out.println("TEST:: Activating Application Lifecycle");
-
-            gks.injectSignal("newApplication", hashBeg);
+            gks.injectSignal("controlSignal", "SHORTLIST");
             
             gks.advanceSeconds(5, false);
             
-            gks.injectSignal("controlSignal", "FORWARD");
-
+            gks.injectSignal("controlSignal", "INTERVIEW");
+            
+            gks.advanceSeconds(5, false);
+           
+            gks.injectSignal("controlSignal", "OFFER");
+            
+            gks.advanceSeconds(5, false);
+//            gks.injectSignal("dropDown", "VIEW_INTERNSHIP_OFFER");
+            
+            gks.injectSignal("controlSignal", "PLACED");
+            
             gks.advanceSeconds(5, false);
             
-            gks.injectSignal("controlSignal", "FORWARD");
+            gks.injectSignal("controlSignal", "IN_PROGRESS");
+
+            gks.advanceSeconds(15, false);
+            
+            gks.injectSignal("controlSignal", "FINISH_INTERNSHIP");
 
             gks.advanceSeconds(5, false);
             
@@ -162,7 +195,7 @@ public class ChrisTest {
         
     }
 
-	@Test
+	//@Test
 	public void newUserTest() {
 		System.out.println("New User test");
 		GennyToken userToken = null;
