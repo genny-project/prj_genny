@@ -13,14 +13,10 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.plexus.util.StringUtils;
-import org.jbpm.test.JbpmJUnitBaseTestCase;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.kie.api.runtime.KieSession;
-import org.kie.api.runtime.manager.RuntimeEngine;
-import org.kie.api.runtime.manager.RuntimeManager;
-import org.kie.api.runtime.process.ProcessInstance;
 import org.springframework.jms.core.JmsTemplate;
 
 import life.genny.eventbus.EventBusInterface;
@@ -28,6 +24,7 @@ import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
 import life.genny.models.GennyToken;
 import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.message.QCmdMessageToggleFrame;
 import life.genny.qwanda.message.QEventMessage;
 import life.genny.qwandautils.GennyCacheInterface;
 import life.genny.qwandautils.GennySettings;
@@ -43,7 +40,7 @@ import life.genny.utils.VertxUtils;
  *         This test class will test Template Lifecycle by using assertions.
  *
  */
-public class LinTestActionCache extends JbpmJUnitBaseTestCase {
+public class LinTestActionCache extends GennyJbpmBaseTest {
 
     protected static final Logger log = org.apache.logging.log4j.LogManager
 	    .getLogger(MethodHandles.lookup().lookupClass().getCanonicalName());
@@ -64,7 +61,7 @@ public class LinTestActionCache extends JbpmJUnitBaseTestCase {
 
     // Constructor
     public LinTestActionCache() {
-
+	super(false);
     }
 
     @BeforeClass
@@ -96,14 +93,19 @@ public class LinTestActionCache extends JbpmJUnitBaseTestCase {
 	mJmsTemplate.setReceiveTimeout(500L);
     }
 
+    /*
+     * Send the toggle frame Qmessage to the frontend by using Workflow and Drools.
+     */
     @Test
     public void testActionCacheMessageBySignal() {
 
+	String injectSignal = "SignalToggleFrame";
+	
 	System.out.println("Start Action Cache Test");
 	GennyToken userToken = null;
 	GennyToken serviceToken = null;
 	QRules qRules = null;
-	boolean isCreateToken = true;
+	boolean isCreateToken = false;
 
 	if (isCreateToken) {
 	    userToken = GennyJbpmBaseTest.createGennyToken(realm, "user13", "Barry Allan", "user");
@@ -122,7 +124,7 @@ public class LinTestActionCache extends JbpmJUnitBaseTestCase {
 	System.out.println("userToken   =" + userToken.getToken());
 	System.out.println("serviceToken=" + serviceToken.getToken());
 
-	// This will pass into the Drools rule
+	// This will message pass into the Drools rule
 	QEventMessage actionCacheLayoutMessage = new QEventMessage("EVT_LAYOUT", "actionCacheLayoutMessage");
 
 	QEventMessage authInitMsg1 = new QEventMessage("EVT_MSG", "AUTH_INIT");
@@ -159,7 +161,7 @@ public class LinTestActionCache extends JbpmJUnitBaseTestCase {
 	    // This will inject into all started workflows
 	    // with a signal call "SignalToggleFrame" and event object
 	    // The workflow will fire automatically after receive the signal
-	    gks.injectSignal("SignalToggleFrame", actionCacheLayoutMessage);
+	    gks.injectSignal(injectSignal, actionCacheLayoutMessage);
 	    gks.advanceSeconds(5, false);
 
 	    //Trigger the Logout Event
@@ -171,26 +173,54 @@ public class LinTestActionCache extends JbpmJUnitBaseTestCase {
 		gks.close();
 	    }
 	}
+	
+	//Following assertion must be fulfilled that to make the test success.
+	Assert.assertEquals(userToken.getUserCode(), "PER_USER1");
+	Assert.assertFalse(isCreateToken);
+	Assert.assertEquals(authInitMsg1.getData().getCode(), "AUTH_INIT");
+	Assert.assertEquals(actionCacheLayoutMessage.getData().getCode(), "actionCacheLayoutMessage");
+	Assert.assertEquals(injectSignal, "SignalToggleFrame");
 
     }
 
+    /*
+     * This test case will send a Frame Toogle QMessage to the frontend
+     */
 //    @Test
-    public void testWorkflowNodeTriggerred() {
-	RuntimeManager manager = createRuntimeManager(
-		"rulesCurrent/shared/_BPMN_WORKFLOWS/XXX_Lin/ActionCache.bpmn");
-	RuntimeEngine engine = getRuntimeEngine(null);
-	KieSession ksession = engine.getKieSession();
+    public void sendCmdMessage() {
+	System.out.println("Send Message to Frontend");
+	GennyToken userToken = null;
+	GennyToken serviceToken = null;
+	QRules qRules = null;
+	boolean isCreateToken = false;
 
-	// This will looking at the id of the workflow
-	ProcessInstance processInstance = ksession.startProcess("ActionCacheProcessID");
+	if (isCreateToken) {
+	    userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+	    serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+	    qRules = new QRules(eventBusMock, userToken.getToken());
+	    qRules.set("realm", userToken.getRealm());
+	    qRules.setServiceToken(serviceToken.getToken());
+	    VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+	} else {
+	    qRules = GennyJbpmBaseTest.setupLocalService();
+	    userToken = new GennyToken("userToken", qRules.getToken());
+	    serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+	}
+	System.out.println("session     =" + userToken.getSessionCode());
+	System.out.println("userToken   =" + userToken.getToken());
+	System.out.println("serviceToken=" + serviceToken.getToken());
 
-	// Examinate the Delete Company Flow by nodes
-	assertNodeTriggered(processInstance.getId(), "startActionCacheEvent");
-	assertNodeTriggered(processInstance.getId(), "RunRuleFlowGroup");
-	assertNodeTriggered(processInstance.getId(), "endActionCacheEvent");
-//	assertNodeTriggered(processInstance.getId(), "is delete Template?");
+	GennyToken msgUserToken = getToken(realm, "user1", "Barry Allan", "user");
 
-	manager.disposeRuntimeEngine(engine);
-	manager.close();
+	String toggleFrame = "QUE_SIDEBAR_MENU_GRP:QUE_SIDEBAR_MENU_GRP:QUE_SIDEBAR_TOGGLEXXXXX";
+	// The frontend need to send the current status of the menu
+	QCmdMessageToggleFrame cmdMessage = new QCmdMessageToggleFrame();
+//	QCmdMessage cmdMessage = new QCmdMessage("PANEL_TOGGLE","FRM_APP_CONTENT:WEST");
+	cmdMessage.setToken(msgUserToken.getToken());
+	cmdMessage.setCache(toggleFrame);
+
+	// Send message to frontend by using Vertix
+	System.out.println(cmdMessage);
+	VertxUtils.writeMsg("webcmds", JsonUtils.toJson(cmdMessage));
     }
 }
