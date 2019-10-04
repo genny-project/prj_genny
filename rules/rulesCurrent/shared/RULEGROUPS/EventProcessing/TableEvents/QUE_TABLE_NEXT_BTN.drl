@@ -59,7 +59,8 @@ rule "QUE_TABLE_NEXT_BTN"
 			beUtils.updateBaseEntity(searchBE, pageNumberAnswer);
 
 			/* TableUtils.performSearch(userToken , beUtils, "SBE_SEARCHBAR", null); */
-			TableUtils.paginateTable(userToken , beUtils, "SBE_SEARCHBAR", null);
+			/* TableUtils.paginateTable(userToken , beUtils, "SBE_SEARCHBAR", null); */
+ 			TableUtils.performSearch(userToken , beUtils, "SBE_SEARCHBAR", null);
 			
 			retract( $message);
 			output.setFormCode("FRM_TABLE_VIEW","FRM_CONTENT"); 
