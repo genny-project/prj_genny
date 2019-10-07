@@ -58,10 +58,12 @@ rule "QUE_TABLE_NEXT_BTN"
 			beUtils.updateBaseEntity(searchBE, pageAnswer);
 			beUtils.updateBaseEntity(searchBE, pageNumberAnswer);
 
-			/* TableUtils.performSearch(userToken , beUtils, "SBE_SEARCHBAR", null); */
-			/* TableUtils.paginateTable(userToken , beUtils, "SBE_SEARCHBAR", null); */
- 			TableUtils.performSearch(userToken , beUtils, "SBE_SEARCHBAR", null);
+	        ShowFrame.display(userToken, "FRM_TABLE_VIEW", "FRM_CONTENT", "Test");
+ 		    TableUtils.performSearch(userToken , beUtils, "SBE_SEARCHBAR", answer);
 			
-			retract( $message);
-			output.setFormCode("FRM_TABLE_VIEW","FRM_CONTENT"); 
+			
+  	       output.setTypeOfResult("NONE");
+  	       output.setResultCode("NONE");  /* dont display anything new */
+  	      update(output);
+  	      retract( $message);
 end

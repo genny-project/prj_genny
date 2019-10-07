@@ -994,7 +994,7 @@ if (output.getTypeOfResult().equals(&quot;ERROR&quot;)) {
           </bpmn2:extensionElements>
           <bpmn2:incoming>SequenceFlow_31</bpmn2:incoming>
           <bpmn2:outgoing>SequenceFlow_14</bpmn2:outgoing>
-          <bpmn2:script>System.out.println(&quot;userSession: Show Page Handler - Skip Auth init&quot;);</bpmn2:script>
+          <bpmn2:script>/* System.out.println(&quot;userSession: Show Page Handler - Skip Auth init&quot;); */</bpmn2:script>
         </bpmn2:scriptTask>
         <bpmn2:scriptTask id="ScriptTask_11" name="Update DOM" scriptFormat="http://www.java.com/java">
           <bpmn2:extensionElements>
@@ -1902,7 +1902,7 @@ System.out.println(&quot;userSession: **************************End Session ****
         <di:waypoint xsi:type="dc:Point" x="346.0" y="134.0"/>
         <di:waypoint xsi:type="dc:Point" x="378.0" y="133.0"/>
         <di:waypoint xsi:type="dc:Point" x="410.0" y="133.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_73"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
