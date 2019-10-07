@@ -63,7 +63,7 @@ rule "QUE_TABLE_PREVIOUS_BTN"
 		beUtils.updateBaseEntity(searchBE, pageNumberAnswer);
 			
 	        ShowFrame.display(userToken, "FRM_TABLE_VIEW", "FRM_CONTENT", "Test");
- 		    TableUtils.performSearch(userToken , beUtils, "SBE_SEARCHBAR", answer);
+ 		    TableUtils.performSearch(userToken , beUtils, "SBE_SEARCHBAR", null);
 			
 			
   	       output.setTypeOfResult("NONE");
