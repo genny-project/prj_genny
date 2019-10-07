@@ -45,12 +45,12 @@
       <bpmn2:dataOutput id="DataOutput_2" name="event"/>
       <bpmn2:dataOutputAssociation id="DataOutputAssociation_1">
         <bpmn2:sourceRef>DataOutput_2</bpmn2:sourceRef>
-        <bpmn2:targetRef>sessionFacts</bpmn2:targetRef>
+        <bpmn2:targetRef>hashBeg</bpmn2:targetRef>
       </bpmn2:dataOutputAssociation>
       <bpmn2:outputSet id="OutputSet_2" name="Output Set 2">
         <bpmn2:dataOutputRefs>DataOutput_2</bpmn2:dataOutputRefs>
       </bpmn2:outputSet>
-      <bpmn2:signalEventDefinition id="SignalEventDefinition_2" signalRef="Signal_8"/>
+      <bpmn2:signalEventDefinition id="SignalEventDefinition_2" signalRef="Signal_1"/>
     </bpmn2:startEvent>
     <bpmn2:endEvent id="EndEvent_1" name="End Event 1">
       <bpmn2:extensionElements>
@@ -1979,13 +1979,13 @@ System.out.println(&quot;message:&quot; + message);*/</bpmn2:script>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_IntermediateThrowEvent_14" bpmnElement="IntermediateThrowEvent_14">
         <dc:Bounds height="36.0" width="36.0" x="992.0" y="616.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_83">
           <dc:Bounds height="22.0" width="61.0" x="980.0" y="652.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_1" bpmnElement="ScriptTask_1" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="281.0" y="608.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_84">
           <dc:Bounds height="11.0" width="52.0" x="310.0" y="627.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -2465,32 +2465,32 @@ System.out.println(&quot;message:&quot; + message);*/</bpmn2:script>
         <di:waypoint xsi:type="dc:Point" x="950.0" y="634.0"/>
         <di:waypoint xsi:type="dc:Point" x="971.0" y="634.0"/>
         <di:waypoint xsi:type="dc:Point" x="992.0" y="634.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_85"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_11" bpmnElement="SequenceFlow_11" sourceElement="BPMNShape_IntermediateThrowEvent_14" targetElement="BPMNShape_EndEvent_1">
         <di:waypoint xsi:type="dc:Point" x="1028.0" y="634.0"/>
         <di:waypoint xsi:type="dc:Point" x="1047.0" y="634.0"/>
         <di:waypoint xsi:type="dc:Point" x="1067.0" y="634.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_86"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_12" bpmnElement="SequenceFlow_12" sourceElement="BPMNShape_StartEvent_1" targetElement="BPMNShape_ScriptTask_1">
         <di:waypoint xsi:type="dc:Point" x="344.0" y="536.0"/>
         <di:waypoint xsi:type="dc:Point" x="344.0" y="572.0"/>
         <di:waypoint xsi:type="dc:Point" x="336.0" y="572.0"/>
         <di:waypoint xsi:type="dc:Point" x="336.0" y="608.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_92"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_17" bpmnElement="SequenceFlow_17" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_CallActivity_2">
         <di:waypoint xsi:type="dc:Point" x="391.0" y="633.0"/>
         <di:waypoint xsi:type="dc:Point" x="425.0" y="634.0"/>
         <di:waypoint xsi:type="dc:Point" x="460.0" y="634.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_152"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_18" bpmnElement="SequenceFlow_18" sourceElement="BPMNShape_CallActivity_2" targetElement="BPMNShape_SubProcess_5">
         <di:waypoint xsi:type="dc:Point" x="570.0" y="634.0"/>
         <di:waypoint xsi:type="dc:Point" x="618.0" y="633.0"/>
         <di:waypoint xsi:type="dc:Point" x="666.0" y="633.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_153"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

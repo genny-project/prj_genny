@@ -40,7 +40,7 @@ rule "FRM_TABLE_TITLE"
                   .question("QUE_TABLE_TITLE_TEST")
                     .addTheme("THM_TITLE", serviceToken).vcl(VisualControlType.VCL_LABEL).end()
                     .addTheme("THM_TITLE_WRAPPER", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
-                    .addTheme("THM_TITLE_BEHAVIOUR", serviceToken).end()
+                 /*   .addTheme("THM_TITLE_BEHAVIOUR", serviceToken).end() */
                   .end()
                   .build();
     frame.setRealm(serviceToken.getRealm());
