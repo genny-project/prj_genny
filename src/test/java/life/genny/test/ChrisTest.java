@@ -125,18 +125,22 @@ public class ChrisTest {
                     .addJbpm("baseEntityValidation.bpmn")
                     .addJbpm("notificationHub.bpmn")
                     .addJbpm("placementLifecycle.bpmn")
-//                    .addJbpm("userSession.bpmn")
-                    .addDrl("CHRIS_RULE.drl")
+                    .addJbpm("userSession.bpmn")
+//                    .addJbpm("userValidation.bpmn")
+//                    .addJbpm("userLifecycle.bpmn")
+//                    .addDrl("CHRIS_RULE.drl")
                     .addDrl("ADD_APPLICATION_ATTRIBUTES.drl")
                     .addToken(userToken)
                     .build();
             
             gks.start();
             
-//            System.out.println("Here");
-
+            // Start userSession/userValidation/userLifecycle processes
             gks.injectEvent(authInitMsg);
-//            gks.injectSignal("newApplication", hashBeg);
+			gks.advanceSeconds(5, false);
+
+			// Start applicationLifecycle/baseEntityValidation/placementLifecycle processes
+            gks.injectSignal("newApplication", hashBeg);
             
 //            
 //            gks.injectSignalToProcessInstance("xyz", hashBeg,1);
