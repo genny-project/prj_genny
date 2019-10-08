@@ -115,7 +115,7 @@ if (rs != null ){
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_15</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_17</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;authInit: AuthInit Entry&quot;);
+      <bpmn2:script>/* System.out.println(&quot;authInit: AuthInit Entry&quot;); */
 kcontext.setVariable(&quot;currentUser&quot;,currentUser);
 kcontext.setVariable(&quot;userToken&quot;, userToken);
 </bpmn2:script>
