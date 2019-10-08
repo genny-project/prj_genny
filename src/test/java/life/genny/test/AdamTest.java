@@ -76,7 +76,7 @@ public class AdamTest {
 
 	}
 
-	@Test
+	//@Test
 	public void headerTest()
 	{
 		System.out.println("Header test");
@@ -113,27 +113,27 @@ public class AdamTest {
 		  TableUtils.performSearch(serviceToken , beUtils, "SBE_SEARCHBAR", answer);
 	  	     
   	     /* Send to front end */
-          String searchBarString = "univ";
-
-
-   		  SearchEntity searchBE = new SearchEntity("SBE_SEARCH","Search")
-   		  	     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
-   		  	     .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%"+searchBarString+"%")
-   		  	     .addColumn("PRI_NAME", "Name")
-   		      	 .addColumn("PRI_LANDLINE", "Phone")
-   		  	     .addColumn("PRI_EMAIL", "Email")
-   		  	     .addColumn("PRI_ADDRESS_CITY","City")
-   		  	     .addColumn("PRI_ADDRESS_STATE","State")
-   		  	     .setPageStart(0)
-   		  	     .setPageSize(10);
-
-   		  	     TableUtils tableUtils = new TableUtils(beUtils);
-
-   		  	     QDataBaseEntityMessage  msg = tableUtils.fetchSearchResults(searchBE,beUtils.getGennyToken());
-
-
-   		  	     TableData tableData = tableUtils.generateTableAsks(searchBE,beUtils.getGennyToken());
-   		  	     VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+//          String searchBarString = "univ";
+//
+//
+//   		  SearchEntity searchBE = new SearchEntity("SBE_SEARCH","Search")
+//   		  	     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
+//   		  	     .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%"+searchBarString+"%")
+//   		  	     .addColumn("PRI_NAME", "Name")
+//   		      	 .addColumn("PRI_LANDLINE", "Phone")
+//   		  	     .addColumn("PRI_EMAIL", "Email")
+//   		  	     .addColumn("PRI_ADDRESS_CITY","City")
+//   		  	     .addColumn("PRI_ADDRESS_STATE","State")
+//   		  	     .setPageStart(0)
+//   		  	     .setPageSize(10);
+//
+//   		  	     TableUtils tableUtils = new TableUtils(beUtils);
+//
+//   		  	     QDataBaseEntityMessage  msg = tableUtils.fetchSearchResults(searchBE,beUtils.getGennyToken());
+//
+//
+//   		  	     TableData tableData = tableUtils.generateTableAsks(searchBE,beUtils.getGennyToken());
+//   		  	     VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 
   	   //  
 
@@ -285,7 +285,7 @@ public class AdamTest {
 		}
 	}
 
-//@Test
+@Test
 public void testTableHeader() {
 	System.out.println("Table test");
 	GennyToken userToken = null;
@@ -2214,4 +2214,503 @@ public void testTableHeader() {
 
 	}
 
+   // @Test
+    public void testDesktop() {
+            QRules rules = GennyJbpmBaseTest.setupLocalService();
+            GennyToken userToken = new GennyToken("userToken", rules.getToken());
+            GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+            BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+            BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
+
+            try {
+                    rules.sendAllAttributes();
+
+                    /* frame-header */
+                    Frame3 FRM_HEADER = generateHeader();
+                    /* Frame3 FRM_SIDEBAR = generateSidebar(); */
+                    Frame3 FRM_SIDEBAR = generateSidebar();
+                    /* Frame3 FRM_CONTENT = getDashboard(); */
+                    Frame3 FRM_TABLE = generateTable();
+                    Frame3 FRM_FOOTER = generateFooter();
+                    //Frame3 FRM_TABS = generateTabs();
+                    //Frame3 FRM_TABS = generateTabs();
+                    Frame3 FRM_TABS = generateProcessView();
+
+
+                    /* need to call performSearch in TableUtils */
+
+                    //TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
+
+//                    Answer answer = new Answer(userToken.getUserCode(),userToken.getUserCode(),"PRI_SEARCH_TEXT", "univ");
+//                    TableUtilsTest.performSearch(serviceToken , beUtils, "SBE_SEARCHBAR", answer);
+
+
+
+                    /* frame-root */
+                    Frame3 FRM_APP = Frame3.builder("FRM_APP")
+                                    .addTheme("THM_PROJECT", ThemePosition.FRAME, serviceToken).end()
+                                   // .addFrame(FRM_HEADER, FramePosition.NORTH).end()
+                                    .addFrame(FRM_SIDEBAR, FramePosition.WEST).end()
+
+                                    /* .addFrame(FRM_CONTENT, FramePosition.CENTRE).end() */
+                                    .addFrame(FRM_TABLE, FramePosition.CENTRE).end()
+                                    .addFrame(FRM_FOOTER, FramePosition.SOUTH).end()
+                                    .addFrame(FRM_TABS, FramePosition.CENTRE).end()
+                                    .build();
+
+
+                    /* frame-root */
+                    Frame3 FRM_ROOT = Frame3.builder("FRM_ROOT")
+                                    .addFrame(FRM_APP, FramePosition.CENTRE).end()
+                                    .build();
+
+                    Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+                    QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_ROOT, serviceToken, askMsgs);
+                    rules.publishCmd(msg);
+                    for (QDataAskMessage askMsg : askMsgs) {
+                            rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode());
+                    }
+                    System.out.println("Sent");
+            } catch (Exception e) {
+                    System.out.println("Error " + e.getLocalizedMessage());
+            }
+    }
+	
+    public Frame3 generateTable() {
+
+        QRules rules = GennyJbpmBaseTest.setupLocalService();
+        GennyToken userToken = new GennyToken("userToken", rules.getToken());
+        GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+        BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+        BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
+
+        try {
+
+                Theme THM_TABLE_HEADER = Theme.builder("THM_TABLE_HEADER")
+                                        .addAttribute()
+                                                .width("100%")
+                                        .end()
+                                        .build();
+                Theme THM_TABLE_BORDER = Theme.builder("THM_TABLE_BORDER")
+                                        .addAttribute()
+                                                .borderBottomWidth(1)
+                                                .borderColor("#f6f6f6")
+                                                .borderStyle("solid")
+                                        .end()
+                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                        .build();
+
+                Theme THM_TABLE_CONTENT_CENTRE = Theme.builder("THM_TABLE_CONTENT_CENTRE")
+                                        .addAttribute()
+                                                .justifyContent("flex-start")
+                                                .paddingX(10)
+                                        .end()
+                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                        .build();
+
+                Theme THM_TABLE_HEADER_CELL_WRAPPER = Theme.builder("THM_TABLE_HEADER_CELL_WRAPPER")
+                                        .addAttribute()
+                                                .width("initial")
+                                                .flexGrow(1)
+                                                .flexShrink(1)
+                                                .flexBasis("auto")
+                                                .padding(10)
+                                                .justifyContent("flex-start")
+                                        .end()
+                                        .build();
+
+                Theme THM_TEXT_ALIGN_CENTER = Theme.builder("THM_TEXT_ALIGN_CENTER")
+                                        .addAttribute()
+                                                .textAlign("center")
+                                        .end()
+                                        .build();
+
+                Theme THM_TABLE_HEADER_CELL_GROUP_LABEL = Theme.builder("THM_TABLE_HEADER_CELL_GROUP_LABEL")
+                                        .addAttribute()
+                                                .paddingLeft(10)
+                                                .alignSelf("flex-start")
+                                        .end()
+                                        .build();
+
+                Theme THM_TABLE_CONTENT = Theme.builder("THM_TABLE_CONTENT")
+                                        .addAttribute()
+                                                .width("100%")
+                                        .end()
+                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                        .build();
+                Theme THM_TABLE_ROW = Theme.builder("THM_TABLE_ROW")
+                                        .addAttribute()
+                                                .width("100%")
+                                                .marginLeft(30)
+                                                .backgroundColor("yellow")
+                                        .end()
+                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                        .build();
+                Theme THM_TABLE_ROW_CONTENT_WRAPPER = Theme.builder("THM_TABLE_ROW_CONTENT_WRAPPER")
+                                        .addAttribute()
+                                                .width("100%")
+                                        .end()
+                                        .build();
+                Theme THM_TABLE_ROW_CELL = Theme.builder("THM_TABLE_ROW_CELL")
+                                        .addAttribute()
+                                                .flexGrow(1)
+                                                .flexBasis(0)
+                                        .end()
+                                        .build();
+                Theme THM_TABLE_BODY = Theme.builder("THM_TABLE_BODY")
+                                        .addAttribute()
+                                                .width("100%")
+                                        .end()
+                                        .build();
+                Theme THM_TABLE_FOOTER = Theme.builder("THM_TABLE_FOOTER")
+                                                .addAttribute()
+                                                .backgroundColor("#f4f5f7")
+                                                .width("100%")
+                                                .color("black")
+                                        .end()
+                                        .build();
+
+                Theme THM_TABLE = Theme.builder("THM_TABLE")
+                                        .addAttribute()
+                                                .width("100%")
+                                        .end()
+                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                        .build();
+                Theme THM_WIDTH_100_PERCENT_NO_INHERIT = Theme.builder("THM_WIDTH_100_PERCENT_NO_INHERIT")
+                                        .addAttribute()
+                                                .width("100%")
+                                        .end()
+                                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                        .build();
+
+                Theme THM_DISPLAY_VERTICAL = Theme.builder("THM_DISPLAY_VERTICAL")
+                                        .addAttribute()
+                                                .flexDirection("column").end()
+                                        .build();
+
+                Theme THM_QUESTION_GRP_LABEL = Theme.builder("THM_QUESTION_GRP_LABEL")
+                                        .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_LABEL, true).end()
+                                        .build();
+
+                Validation tableCellValidation = new Validation("VLD_ANYTHING", "Anything", ".*");
+                                        List<Validation> tableCellValidations = new ArrayList<>();
+                                        tableCellValidations.add(tableCellValidation);
+
+                                        ValidationList tableCellValidationList = new ValidationList();
+                                        tableCellValidationList.setValidationList(tableCellValidations);
+
+                DataType tableCellDataType = new DataType("DTT_TABLE_CELL_GRP", tableCellValidationList, "Table Cell Group", "");
+
+                String searchBarString = "univ";
+
+
+        		  SearchEntity searchBE = new SearchEntity("SBE_SEARCH","Search")
+        		  	     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
+        		  	     .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%"+searchBarString+"%")
+        		  	     .addColumn("PRI_NAME", "Name")
+        		      	 .addColumn("PRI_LANDLINE", "Phone")
+        		  	     .addColumn("PRI_EMAIL", "Email")
+        		  	     .addColumn("PRI_ADDRESS_CITY","City")
+        		  	     .addColumn("PRI_ADDRESS_STATE","State")
+        		  	     .setPageStart(0)
+        		  	     .setPageSize(10);
+
+        		  	     TableUtils tableUtils = new TableUtils(beUtils);
+
+        		  	     QDataBaseEntityMessage  msg = tableUtils.fetchSearchResults(searchBE,beUtils.getGennyToken());
+
+
+        		  	     TableData tableData = tableUtils.generateTableAsks(searchBE,beUtils.getGennyToken());
+        		  	     VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+
+
+        		         Ask headerAsk = tableData.getAsk();
+        		      	 Ask[] askArray = new Ask[1];
+        		      	 askArray[0] = headerAsk;
+        		      	 QDataAskMessage headerAskMsg = new QDataAskMessage(askArray);
+        		      	 headerAskMsg.setToken(beUtils.getGennyToken().getToken());
+        		      	 VertxUtils.writeMsg("webcmds", JsonUtils.toJson(headerAskMsg));
+        		      	 String headerAskCode = headerAsk.getQuestionCode();
+
+//        		    		Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+//        		  		  	msg = TableUtils.changeQuestion("FRM_TABLE_HEADER",headerAskCode,serviceToken,beUtils.getGennyToken(),askMsgs);
+//
+//
+//        		      	 VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+
+
+                Frame3 FRM_TABLE_HEADER = Frame3.builder("FRM_TABLE_HEADER")
+                                /* .addTheme(THM_TABLE_HEADER).end() */
+                                .addTheme(THM_TABLE_BORDER).end()
+                                .question("QUE_TEST_TABLE_HEADER_GRP") // QUE_TEST_TABLE_HEADER_GRP
+                                        .addTheme(THM_QUESTION_GRP_LABEL).vcl(VisualControlType.GROUP).dataType(tableCellDataType).end()
+                                        .addTheme(THM_WIDTH_100_PERCENT_NO_INHERIT).vcl(VisualControlType.GROUP).end()
+                                        .addTheme(THM_TABLE_ROW_CELL).dataType(tableCellDataType).vcl(VisualControlType.GROUP_WRAPPER).end()
+                                        .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).weight(2.0).end()
+                                        .addTheme(THM_TABLE_HEADER_CELL_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                        .addTheme(THM_TABLE_HEADER_CELL_GROUP_LABEL).vcl(VisualControlType.GROUP_LABEL).end()
+                                        .addTheme(THM_DISPLAY_VERTICAL).dataType(tableCellDataType).weight(1.0).end()
+                                .end()
+                                .build();
+
+                Validation tableRowValidation = new Validation("VLD_ANYTHING", "Anything", ".*");
+                                List<Validation> tableRowValidations = new ArrayList<>();
+                                tableRowValidations.add(tableRowValidation);
+
+                                ValidationList tableRowValidationList = new ValidationList();
+                                tableRowValidationList.setValidationList(tableRowValidations);
+
+                DataType tableRowDataType = new DataType("DTT_TABLE_ROW_GRP", tableRowValidationList, "Table Row Group", "");
+
+                Frame3 FRM_TABLE_CONTENT = Frame3.builder("FRM_TABLE_CONTENT")
+                                .addTheme(THM_TABLE_BORDER).end()
+                                .addTheme(THM_TABLE_CONTENT_CENTRE, ThemePosition.CENTRE).end()
+                                .question("QUE_TEST_TABLE_RESULTS_GRP")
+                                        .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).dataType(tableRowDataType).weight(1.0).end()
+                                        .addTheme(THM_TABLE_ROW_CONTENT_WRAPPER).dataType(tableRowDataType).vcl(VisualControlType.GROUP).weight(1.0).end()
+                                        .addTheme(THM_TABLE_ROW).dataType(tableRowDataType).weight(1.0).end()
+                                        .addTheme(THM_TABLE_CONTENT).vcl(VisualControlType.GROUP).end()
+                                        .addTheme(THM_TABLE_ROW_CELL).vcl(VisualControlType.VCL_WRAPPER).end()
+                                .end()
+                                .build();
+
+                Frame3 FRM_TABLE_BODY = Frame3.builder("FRM_TABLE_BODY")
+                                .addFrame(FRM_TABLE_HEADER, FramePosition.NORTH).end()
+                                .addFrame(FRM_TABLE_CONTENT, FramePosition.CENTRE).end()
+                                .build();
+
+                Validation validation = new Validation("VLD_ANYTHING", "Anything", ".*");
+                List<Validation> validations = new ArrayList<>();
+                validations.add(validation);
+
+                ValidationList buttonValidationList = new ValidationList();
+                buttonValidationList.setValidationList(validations);
+
+                DataType buttonDataType = new DataType("DTT_EVENT", buttonValidationList, "Event", "");
+
+                Frame3 FRM_TABLE_FOOTER_PAGINATION = Frame3.builder("FRM_TABLE_FOOTER_PAGINATION")
+                                .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
+                                .addTheme("THM_FRAME_ALIGN_EAST", ThemePosition.WRAPPER, serviceToken).end()
+                                .question("QUE_TABLE_FOOTER_GRP")
+                                        .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
+                                        .addTheme("THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHT", serviceToken).dataType(buttonDataType).end()
+                                        .addTheme(THM_TABLE_HEADER_CELL_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                        .addTheme(THM_TEXT_ALIGN_CENTER).vcl(VisualControlType.VCL_INPUT).end()
+                                .end()
+                                .build();
+
+                /*  */
+                Frame3 FRM_TABLE_RESULT_COUNT = Frame3.builder("FRM_TABLE_RESULT_COUNT")
+                                .question("QUE_TABLE_TOTAL_RESULT_COUNT")
+                                        .addTheme("THM_LABEL_BOLD", serviceToken).vcl(VisualControlType.VCL_LABEL).end()
+                                        .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
+                                .end()
+                                .build();
+
+                Frame3 FRM_TABLE_PAGE_INDEX = Frame3.builder("FRM_TABLE_PAGE_INDEX")
+                                .question("QUE_TABLE_PAGE_INDEX")
+                                        .addTheme("THM_LABEL_BOLD", serviceToken).vcl(VisualControlType.VCL_LABEL).end()
+                                        .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
+                                .end()
+                                .build();
+
+                Frame3 FRM_TABLE_FOOTER = Frame3.builder("FRM_TABLE_FOOTER")
+                                .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).end()
+                                .addFrame(FRM_TABLE_RESULT_COUNT, FramePosition.WEST).end()
+                                .addFrame(FRM_TABLE_PAGE_INDEX, FramePosition.WEST).end()
+                                .addFrame(FRM_TABLE_FOOTER_PAGINATION, FramePosition.EAST).end()
+                                .build();
+
+
+                Theme THM_BOX_SHADOW_XS = Theme.builder("THM_BOX_SHADOW_XS")
+                                .addAttribute()
+                                        .shadowColor("#dedede")
+                                        .shadowOpacity(0.5)
+                                        .shadowRadius(90)
+                                        .shadowOffset()
+                                        .width(0)
+                                        .height(0)
+                                        .end()
+                                .end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                .build();
+
+                Frame3 FRM_TABLE_WRAPPER = Frame3.builder("FRM_TABLE_WRAPPER")
+                                .addTheme(THM_BOX_SHADOW_XS, ThemePosition.WRAPPER).end()
+                                .addTheme("THM_PROJECT_COLOR_SURFACE", serviceToken).end()
+                                .addFrame(FRM_TABLE_BODY, FramePosition.CENTRE).end()
+                                .addFrame(FRM_TABLE_FOOTER, FramePosition.SOUTH).end()
+                                .build();
+
+                Theme THM_PADDING_20 = Theme.builder("THM_PADDING_20")
+                                .addAttribute().padding(20).end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                .build();
+
+                Theme THM_TITLE = Theme.builder("THM_TITLE")
+                                .addAttribute()
+                                        .bold(true)
+                                        .size("lg")
+                                        .textAlign("left")
+                                .end()
+                                .build();
+
+                Theme THM_WIDTH_100_PERCENT = Theme.builder("THM_WIDTH_100_PERCENT")
+                                .addAttribute()
+                                        .width("100%")
+                                .end()
+                                /* .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end() */
+                                .build();
+
+
+                Frame3 FRM_TABLE_TITLE = Frame3.builder("FRM_TABLE_TITLE")
+                                .question("QUE_TABLE_TITLE_TEST")
+                                        .addTheme(THM_TITLE).vcl(VisualControlType.VCL_LABEL).end()
+                                        /* .addTheme("THM_TITLE_LABEL", serviceToken).vcl(VisualControlType.VCL_LABEL).end() */
+                                        .addTheme("THM_TITLE_WRAPPER", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
+                                        /* .addTheme("THM_WIDTH_100_PERCENT", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end() */
+                                        .addTheme("THM_TITLE_BEHAVIOUR", serviceToken).end()
+                                .end()
+                                .build();
+
+                Frame3 FRM_TABLE = Frame3.builder("FRM_TABLE")
+                                /* .addTheme(THM_TABLE, ThemePosition.WRAPPER).end() */
+                                .addTheme(THM_WIDTH_100_PERCENT, ThemePosition.WRAPPER).end()
+                                .addTheme("THM_PROJECT_COLOR_BACKGROUND", serviceToken).end()
+                                .addTheme(THM_PADDING_20, ThemePosition.WRAPPER).end()
+                                .addFrame(FRM_TABLE_TITLE, FramePosition.NORTH).end()
+                                .addFrame(FRM_TABLE_WRAPPER, FramePosition.CENTRE).end()
+                                .build();
+
+                return FRM_TABLE;
+
+        } catch (Exception e) {
+                System.out.println("Error " + e.getLocalizedMessage());
+        }
+
+        System.out.println("Generated TableView Frame");
+        return null;
+}
+
+    public Frame3 generateProcessView() {
+
+    	try{
+
+
+            Theme THM_FORM_INPUT_DEFAULT = Theme.builder("THM_FORM_INPUT_DEFAULT").addAttribute()
+                            .borderBottomWidth(5).color("black").borderColor("#ddd").borderStyle("solid")
+                            .placeholderColor("#888").height(70).end().build();
+
+            Theme THM_BUCKET_LABEL = Theme.builder("THM_BUCKET_LABEL").addAttribute().textAlign("center").bold(true)
+                            .color("black").end().build();
+
+            Theme THM_BUCKET = Theme.builder("THM_BUCKET").addAttribute()
+                            .overflowX("auto").overflowY("auto").width("100%").end()
+                            .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+            Theme THM_BUCKET_COLUMN = Theme.builder("THM_BUCKET_COLUMN").addAttribute().backgroundColor("#EAEAEA")
+                            .minWidth(300).width("100%").margin(20).textAlign("center")
+                            .end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+            Theme THM_BUCKET_COLUMN_PADDING = Theme.builder("THM_BUCKET_COLUMN_PADDING").addAttribute().padding(20)
+                            .justifyContent("flex-start").end()
+                            .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+            Theme THM_TEST1 = Theme.builder("THM_TEST1").addAttribute().backgroundColor("none").width("100%")
+                            .height(70).flexGrow(0).flexBasis("initial").end().build();
+
+            Theme THM_BUCKET_HEADER = Theme.builder("THM_BUCKET_HEADER").addAttribute().backgroundColor("red").end()
+                            .build();
+
+            Frame3 available = Frame3.builder("FRM_GRP_AVAILABLE")
+            					.addTheme(THM_TEST1).end()
+                            // .addTheme(THM_BUCKET_HEADER).weight(1.0).end()
+        						.question("QUE_GRP_NOT_APPLIED")
+        							.addTheme(THM_BUCKET_LABEL).end()
+        						.end()
+        						.build();
+
+            Frame3 applied = Frame3.builder("FRM_GRP_APPLIED").addTheme(THM_TEST1).end().question("QUE_GRP_APPLIED")
+                            .addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
+                            .end().addTheme(THM_BUCKET_LABEL).end().build();
+            Frame3 shortlisted = Frame3.builder("FRM_GRP_SHORTLISTED").addTheme(THM_TEST1).end()
+                            .question("QUE_GRP_SHORTLISTED").addTheme(THM_FORM_INPUT_DEFAULT)
+                            .vcl(VisualControlType.VCL_INPUT).weight(2.0).end().end().addTheme(THM_BUCKET_LABEL)
+                            .end().build();
+            Frame3 interviews = Frame3.builder("FRM_GRP_INTERVIEWS").addTheme(THM_TEST1).end()
+                            .question("QUE_GRP_INTERVIEWS").addTheme(THM_FORM_INPUT_DEFAULT)
+                            .vcl(VisualControlType.VCL_INPUT).weight(2.0).end().end().addTheme(THM_BUCKET_LABEL)
+                            .end().build();
+            Frame3 offered = Frame3.builder("FRM_GRP_OFFERED").addTheme(THM_TEST1).end().question("QUE_GRP_OFFERED")
+                            .addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
+                            .end().addTheme(THM_BUCKET_LABEL).end().build();
+            Frame3 placed = Frame3.builder("FRM_GRP_PLACED").addTheme(THM_TEST1).end().question("QUE_GRP_PLACED")
+                            .addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
+                            .end().addTheme(THM_BUCKET_LABEL).end().build();
+            Frame3 inProgress = Frame3.builder("FRM_GRP_IN_PROGRESS").addTheme(THM_TEST1).end()
+                            .question("QUE_GRP_IN_PROGRESS").addTheme(THM_FORM_INPUT_DEFAULT)
+                            .vcl(VisualControlType.VCL_INPUT).weight(2.0).end().end().addTheme(THM_BUCKET_LABEL)
+                            .end().build();
+
+            Theme THM_GREEN = Theme.builder("THM_GREEN").addAttribute().backgroundColor("green").end().build();
+
+            Theme THM_DISPLAY_HORIZONTAL = Theme.builder("THM_DISPLAY_HORIZONTAL").addAttribute().flexDirection("row").end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+            Theme THM_DISPLAY_VERTICAL = Theme.builder("THM_DISPLAY_VERTICAL").addAttribute().flexDirection("column").end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+  
+
+            Frame3 bucketColumn1 = Frame3.builder("FRM_BUCKET_COLUMN_ONE")
+                            .addTheme(THM_DISPLAY_VERTICAL, ThemePosition.WRAPPER).end()
+                            .addTheme(THM_BUCKET_COLUMN, ThemePosition.FRAME).end()
+                            .addTheme(THM_BUCKET_COLUMN_PADDING, ThemePosition.CENTRE).end()
+                            .addFrame(available, FramePosition.NORTH).end()
+                            .build();
+
+            Frame3 bucketColumn2 = Frame3.builder("FRM_BUCKET_COLUMN_TWO")
+                            .addTheme(THM_BUCKET_COLUMN, ThemePosition.WRAPPER).end()
+                            .addTheme(THM_BUCKET_COLUMN_PADDING, ThemePosition.CENTRE).end()
+                            .addFrame(applied, FramePosition.NORTH).end()
+                             .build();
+            Frame3 bucketColumn3 = Frame3.builder("FRM_BUCKET_COLUMN_THREE")
+                            .addTheme(THM_BUCKET_COLUMN, ThemePosition.WRAPPER).end()
+                            .addTheme(THM_BUCKET_COLUMN_PADDING, ThemePosition.CENTRE).end()
+                            .addFrame(shortlisted, FramePosition.NORTH).end().build();
+            Frame3 bucketColumn4 = Frame3.builder("FRM_BUCKET_COLUMN_FOUR")
+                            .addTheme(THM_BUCKET_COLUMN, ThemePosition.WRAPPER).end()
+                            .addTheme(THM_BUCKET_COLUMN_PADDING, ThemePosition.CENTRE).end()
+                            .addFrame(interviews, FramePosition.NORTH).end()
+                            .build();
+
+            Frame3 bucketColumn5 = Frame3.builder("FRM_BUCKET_COLUMN_FIVE")
+                            .addTheme(THM_BUCKET_COLUMN, ThemePosition.WRAPPER).end()
+                            .addTheme(THM_BUCKET_COLUMN_PADDING, ThemePosition.CENTRE).end()
+                            .addFrame(offered, FramePosition.NORTH).end().build();
+            Frame3 bucketColumn6 = Frame3.builder("FRM_BUCKET_COLUMN_SIX")
+                            .addTheme(THM_BUCKET_COLUMN, ThemePosition.WRAPPER).end()
+                            .addTheme(THM_BUCKET_COLUMN_PADDING, ThemePosition.CENTRE).end()
+                            .addFrame(placed, FramePosition.NORTH).end().build();
+            Frame3 bucketColumn7 = Frame3.builder("FRM_BUCKET_COLUMN_SEVEN")
+                            .addTheme(THM_BUCKET_COLUMN, ThemePosition.WRAPPER).end()
+                            .addTheme(THM_BUCKET_COLUMN_PADDING, ThemePosition.CENTRE).end()
+                            .addFrame(inProgress, FramePosition.NORTH).end().build();
+
+            Frame3 bucket = Frame3.builder("FRM_BUCKET")
+                            .addTheme(THM_BUCKET).end()
+                            .addTheme(THM_DISPLAY_HORIZONTAL).end()
+                            .addFrame(bucketColumn1, FramePosition.WEST).end()
+                            .addFrame(bucketColumn2, FramePosition.WEST).end()
+                            .addFrame(bucketColumn3, FramePosition.WEST).end()
+                            .addFrame(bucketColumn4, FramePosition.WEST).end()
+                            .addFrame(bucketColumn5, FramePosition.WEST).end()
+                            .addFrame(bucketColumn6, FramePosition.WEST).end()
+                            .addFrame(bucketColumn7, FramePosition.WEST).end().build();
+
+            return bucket;
+
+    	}catch (Exception e) {
+			// TODO: handle exception
+		}
+    	return null;
+    }
+
+ 
 }
