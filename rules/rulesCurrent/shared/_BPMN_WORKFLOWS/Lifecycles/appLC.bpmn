@@ -35,7 +35,7 @@
     <bpmn2:property id="ruleCode" itemSubjectRef="ItemDefinition_1965" name="ruleCode"/>
     <bpmn2:property id="userSessionDDCode" itemSubjectRef="ItemDefinition_1965" name="userSessionDDCode"/>
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_1456" name="message"/>
-    <bpmn2:property id="sessionFacts" itemSubjectRef="ItemDefinition_1245" name="sessionFacts"/>
+    <bpmn2:property id="sessionFacts" name="sessionFacts"/>
     <bpmn2:property id="notificationCode" itemSubjectRef="ItemDefinition_1965" name="notificationCode"/>
     <bpmn2:startEvent id="StartEvent_1" name="Start applicationLC">
       <bpmn2:extensionElements>
@@ -52,7 +52,7 @@
       <bpmn2:outputSet id="OutputSet_2" name="Output Set 2">
         <bpmn2:dataOutputRefs>DataOutput_2</bpmn2:dataOutputRefs>
       </bpmn2:outputSet>
-      <bpmn2:signalEventDefinition id="SignalEventDefinition_2" signalRef="Signal_8"/>
+      <bpmn2:signalEventDefinition id="SignalEventDefinition_2" signalRef="Signal_1"/>
     </bpmn2:startEvent>
     <bpmn2:endEvent id="EndEvent_1" name="End Event 1">
       <bpmn2:extensionElements>
