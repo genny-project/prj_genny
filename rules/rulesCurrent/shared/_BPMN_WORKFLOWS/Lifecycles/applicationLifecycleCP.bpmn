@@ -16,7 +16,7 @@
   <bpmn2:signal id="Signal_6" name="rule"/>
   <bpmn2:signal id="Signal_7" name="cardStatus"/>
   <bpmn2:signal id="Signal_8" name="newSession"/>
-  <bpmn2:process id="applicationLifecycle" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="applicationLifecycle" isExecutable="true">
+  <bpmn2:process id="applicationLifecycleCP" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="applicationLifecycle" isExecutable="false">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.qwanda.entity.BaseEntity"/>
       <drools:import name="java.util.HashMap"/>
@@ -1427,7 +1427,7 @@ System.out.println(&quot;applicationLC: cardStatusCode = &quot; + cardStatusCode
     <bpmn2:sequenceFlow id="SequenceFlow_111" drools:priority="1" sourceRef="ScriptTask_14" targetRef="EndEvent_1"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Process Diagram">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="applicationLifecycle">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="applicationLifecycleCP">
       <bpmndi:BPMNShape id="BPMNShape_SubProcess_4" bpmnElement="SubProcess_4" isExpanded="true">
         <dc:Bounds height="878.0" width="5076.0" x="226.0" y="213.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1">
@@ -1977,7 +1977,7 @@ System.out.println(&quot;applicationLC: cardStatusCode = &quot; + cardStatusCode
       <bpmndi:BPMNShape id="BPMNShape_IntermediateThrowEvent_14" bpmnElement="IntermediateThrowEvent_14">
         <dc:Bounds height="36.0" width="36.0" x="992.0" y="616.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_83">
-          <dc:Bounds height="22.0" width="61.0" x="980.0" y="652.0"/>
+          <dc:Bounds height="11.0" width="43.0" x="989.0" y="652.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_1" bpmnElement="ScriptTask_1" isExpanded="true">
