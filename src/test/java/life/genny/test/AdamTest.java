@@ -76,7 +76,7 @@ public class AdamTest {
 
 	}
 
-	//@Test
+	@Test
 	public void headerTest()
 	{
 		System.out.println("Header test");
@@ -285,7 +285,7 @@ public class AdamTest {
 		}
 	}
 
-@Test
+//@Test
 public void testTableHeader() {
 	System.out.println("Table test");
 	GennyToken userToken = null;

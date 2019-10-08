@@ -137,7 +137,7 @@ kcontext.setVariable(&quot;userToken&quot;, userToken);
 						System.out.println(&quot;NULL TOKEN IN SENDING ATTRIBUTES&quot;);
 				}
 			VertxUtils.writeMsg(&quot;webcmds&quot;,JsonUtils.toJson(msg));
-			System.out.println(&quot;authInit: All the attributes sent &quot; + msg.getItems().length + &quot; of them&quot;);
+			/*System.out.println(&quot;authInit: All the attributes sent &quot; + msg.getItems().length + &quot; of them&quot;);*/
 
 		} catch (Exception e) {
 			System.out.println(&quot;authInit: No web browser to talk to!&quot;);
@@ -158,13 +158,13 @@ kcontext.setVariable(&quot;userToken&quot;, userToken);
       <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
       <bpmn2:script>System.out.println(&quot;authInit: SendProject&quot;);
 BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
-System.out.println(&quot;authInit: beUtils created&quot;);
+/* System.out.println(&quot;authInit: beUtils created&quot;);*/
 String projectCode = &quot;PRJ_&quot;+userToken.getRealm().toUpperCase();
-System.out.println(&quot;authInit:  PROJECT CODE = &quot;+projectCode);
+/* System.out.println(&quot;authInit:  PROJECT CODE = &quot;+projectCode);*/
 BaseEntity project = beUtils.getBaseEntityByCode(projectCode);
 
 System.out.println(&quot;authInit: Sending &quot;+project);
-System.out.println(&quot;authInit: &quot;+currentUser);
+/* System.out.println(&quot;authInit: &quot;+currentUser); */
 /* System.out.println(userToken.getToken()); */
 
 VertxUtils.publish(currentUser,&quot;webcmds&quot;,project, &quot;PROJECT&quot;, userToken.getToken());
