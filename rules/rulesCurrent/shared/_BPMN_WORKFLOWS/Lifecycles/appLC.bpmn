@@ -17,7 +17,7 @@
   <bpmn2:signal id="Signal_7" name="userSessionDD"/>
   <bpmn2:signal id="Signal_8" name="newSession"/>
   <bpmn2:signal id="Signal_9" name="notification"/>
-  <bpmn2:process id="applicationLifecycle" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="applicationLifecycle" isExecutable="true">
+  <bpmn2:process id="appLC" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="applicationLifecycle" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.qwanda.entity.BaseEntity"/>
       <drools:import name="java.util.HashMap"/>
@@ -1434,7 +1434,7 @@ System.out.println(&quot;message:&quot; + message);*/</bpmn2:script>
     <bpmn2:sequenceFlow id="SequenceFlow_111" drools:priority="1" sourceRef="ScriptTask_14" targetRef="EndEvent_1"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Process Diagram">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="applicationLifecycle">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="appLC">
       <bpmndi:BPMNShape id="BPMNShape_SubProcess_4" bpmnElement="SubProcess_4" isExpanded="true">
         <dc:Bounds height="878.0" width="5076.0" x="226.0" y="213.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1">
