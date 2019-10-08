@@ -125,9 +125,6 @@ public class ChrisTest {
                     .addJbpm("baseEntityValidation.bpmn")
                     .addJbpm("notificationHub.bpmn")
                     .addJbpm("placementLifecycle.bpmn")
-                    .addJbpm("userSession.bpmn")
-//                    .addJbpm("userValidation.bpmn")
-//                    .addJbpm("userLifecycle.bpmn")
 //                    .addDrl("CHRIS_RULE.drl")
                     .addDrl("ADD_APPLICATION_ATTRIBUTES.drl")
                     .addToken(userToken)
@@ -135,9 +132,10 @@ public class ChrisTest {
             
             gks.start();
             
+            
             // Start userSession/userValidation/userLifecycle processes
-            gks.injectEvent(authInitMsg);
-			gks.advanceSeconds(5, false);
+//            gks.injectEvent(authInitMsg);
+//			gks.advanceSeconds(5, false);
 
 			// Start applicationLifecycle/baseEntityValidation/placementLifecycle processes
             gks.injectSignal("newApplication", hashBeg);
@@ -154,6 +152,7 @@ public class ChrisTest {
 //            gks.injectSignal("newApplication", hashBeg);
 
 //            gks.injectEvent(menu);
+//            gks.injectSignal("notificationCode", "EMAIL_1A");
             gks.injectSignal("dropDown", "VIEW_PROFILE");
 //            gks.injectSignal("dropDown", "VIEW_APPLICATION");
 //            gks.injectSignal("dropDown", "ON_HOLD");
@@ -166,18 +165,45 @@ public class ChrisTest {
             
             gks.advanceSeconds(5, false);
             
-            gks.injectSignal("controlSignal", "SHORTLIST");
+            gks.injectSignal("controlSignal", "FORWARD");
             
             gks.advanceSeconds(5, false);
             
-            gks.injectSignal("controlSignal", "INTERVIEW");
+            gks.injectSignal("controlSignal", "FORWARD");
+            
+            gks.advanceSeconds(5, false);
+            
+            gks.injectSignal("controlSignal", "FORWARD");
+            
+            gks.advanceSeconds(5, false);
+            
+            gks.injectSignal("controlSignal", "FORWARD");
+            
+            gks.advanceSeconds(5, false);
+            
+            gks.injectSignal("dropDown", "VIEW_APPLICATION");
+            
+            gks.advanceSeconds(5, false);
+            
+            gks.injectSignal("controlSignal", "BACKWARD");
+            
+            gks.advanceSeconds(5, false);
+            
+            gks.injectSignal("controlSignal", "FORWARD");
             
             gks.advanceSeconds(5, false);
            
-            gks.injectSignal("controlSignal", "OFFER");
+            gks.injectSignal("controlSignal", "FORWARD");
             
             gks.advanceSeconds(5, false);
-//            gks.injectSignal("dropDown", "VIEW_INTERNSHIP_OFFER");
+            
+            gks.injectSignal("dropDown", "VIEW_INTERNSHIP_OFFER");
+            
+            gks.advanceSeconds(5, false);
+            
+            gks.injectSignal("controlSignal", "FORWARD");
+            
+            gks.advanceSeconds(5, false);
             
             gks.injectSignal("controlSignal", "PLACED");
             
