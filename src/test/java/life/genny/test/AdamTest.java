@@ -113,7 +113,28 @@ public class AdamTest {
 		  TableUtils.performSearch(serviceToken , beUtils, "SBE_SEARCHBAR", answer);
 	  	     
   	     /* Send to front end */
-				
+          String searchBarString = "univ";
+
+
+   		  SearchEntity searchBE = new SearchEntity("SBE_SEARCH","Search")
+   		  	     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
+   		  	     .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%"+searchBarString+"%")
+   		  	     .addColumn("PRI_NAME", "Name")
+   		      	 .addColumn("PRI_LANDLINE", "Phone")
+   		  	     .addColumn("PRI_EMAIL", "Email")
+   		  	     .addColumn("PRI_ADDRESS_CITY","City")
+   		  	     .addColumn("PRI_ADDRESS_STATE","State")
+   		  	     .setPageStart(0)
+   		  	     .setPageSize(10);
+
+   		  	     TableUtils tableUtils = new TableUtils(beUtils);
+
+   		  	     QDataBaseEntityMessage  msg = tableUtils.fetchSearchResults(searchBE,beUtils.getGennyToken());
+
+
+   		  	     TableData tableData = tableUtils.generateTableAsks(searchBE,beUtils.getGennyToken());
+   		  	     VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+
   	   //  
 
 		
