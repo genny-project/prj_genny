@@ -131,28 +131,9 @@ public class ChrisTest {
                     .build();
             
             gks.start();
-            
-            
-            // Start userSession/userValidation/userLifecycle processes
-//            gks.injectEvent(authInitMsg);
-//			gks.advanceSeconds(5, false);
 
-			// Start applicationLifecycle/baseEntityValidation/placementLifecycle processes
             gks.injectSignal("newApplication", hashBeg);
             
-//            
-//            gks.injectSignalToProcessInstance("xyz", hashBeg,1);
-//            
-//			  gks.injectSignal("beginEvent", hashBeg);
-//            gks.injectSignal("beginInternalSignal", hashBeg);
-//            gks.injectSignal("beginData", hashBeg);
-//
-//            System.out.println("TEST:: Activating Application Lifecycle");
-//
-//            gks.injectSignal("newApplication", hashBeg);
-
-//            gks.injectEvent(menu);
-//            gks.injectSignal("notificationCode", "EMAIL_1A");
             gks.injectSignal("dropDown", "VIEW_PROFILE");
 //            gks.injectSignal("dropDown", "VIEW_APPLICATION");
 //            gks.injectSignal("dropDown", "ON_HOLD");
@@ -181,35 +162,7 @@ public class ChrisTest {
             
             gks.advanceSeconds(5, false);
             
-            gks.injectSignal("dropDown", "VIEW_APPLICATION");
-            
-            gks.advanceSeconds(5, false);
-            
-            gks.injectSignal("controlSignal", "BACKWARD");
-            
-            gks.advanceSeconds(5, false);
-            
             gks.injectSignal("controlSignal", "FORWARD");
-            
-            gks.advanceSeconds(5, false);
-           
-            gks.injectSignal("controlSignal", "FORWARD");
-            
-            gks.advanceSeconds(5, false);
-            
-            gks.injectSignal("dropDown", "VIEW_INTERNSHIP_OFFER");
-            
-            gks.advanceSeconds(5, false);
-            
-            gks.injectSignal("controlSignal", "FORWARD");
-            
-            gks.advanceSeconds(5, false);
-            
-            gks.injectSignal("controlSignal", "PLACED");
-            
-            gks.advanceSeconds(5, false);
-            
-            gks.injectSignal("controlSignal", "IN_PROGRESS");
 
             gks.advanceSeconds(15, false);
             
