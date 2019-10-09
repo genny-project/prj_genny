@@ -114,7 +114,7 @@ public class AdamTest {
 
  
    		  SearchEntity searchBE = new SearchEntity(searchCode,"Test Search")
-   		  	     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
+   		  	     .addSort("PRI_NAME","Created",SearchEntity.Sort.ASC)
    		  	     .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%"+answer.getValue()+"%")
    		  	     .addColumn("PRI_NAME", "Name")
    		      	 .addColumn("PRI_LANDLINE", "Phone")
