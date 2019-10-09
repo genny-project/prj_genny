@@ -121,7 +121,7 @@ public class ChrisTest {
         try {
             gks = GennyKieSession
             		.builder(serviceToken, true)
-                    .addJbpm("applicationLifecycleCP.bpmn")
+                    .addJbpm("applicationLC.bpmn")
                     .addJbpm("baseEntityValidation.bpmn")
                     .addJbpm("notificationHub.bpmn")
                     .addJbpm("placementLifecycle.bpmn")
