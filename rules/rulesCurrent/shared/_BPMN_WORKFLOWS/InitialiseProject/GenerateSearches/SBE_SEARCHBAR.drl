@@ -45,7 +45,7 @@ rule "SBE_SEARCHBAR"
 	  		  	     .addColumn("PRI_ADDRESS_CITY","City")
 	  		  	     .addColumn("PRI_ADDRESS_STATE","State")
   	     .setPageStart(0)
-  	     .setPageSize(2);
+  	     .setPageSize(20);
   	     
    	     
   	     searchBE.setRealm(serviceToken.getRealm());
