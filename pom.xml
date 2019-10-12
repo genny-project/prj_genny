@@ -13,8 +13,8 @@
 	<description>jBPM Genny Maven project</description>
 
 	<properties>
-		<kie.version>7.26.0.Final</kie.version>
-		<version.keycloak>7.0.0</version.keycloak>		
+		<kie.version>7.27.0.Final</kie.version>
+		<version.keycloak>7.0.0</version.keycloak>
 		<genny-verticle.version>${project.version}</genny-verticle.version>
 		<genny-rules.version>${project.version}</genny-rules.version>
 
@@ -56,8 +56,9 @@
 		<jackson.version>2.9.5</jackson.version>
 		<jersey-version>2.13</jersey-version>
 		<version.apache-httpclient>4.5.3</version.apache-httpclient>
-		<version.hibernate>5.4.5.Final</version.hibernate>
+		<version.hibernate>5.3.13.Final</version.hibernate>	
 		<version.hibernate-validator>6.0.17.Final</version.hibernate-validator>
+		<version.hibernate.envers>5.4.6.Final</version.hibernate.envers>
 		<version.hsqldb>2.5.0</version.hsqldb>
 		<version.h2db>1.4.199</version.h2db>
 		<version.resteasy>3.0.10.Final</version.resteasy>
@@ -118,21 +119,103 @@
 
 		<!-- https://github.com/DiUS/java-faker -->
 		<dependency>
-		    <groupId>com.github.javafaker</groupId>
-		    <artifactId>javafaker</artifactId>
-		    <version>1.0.1</version>
+			<groupId>com.github.javafaker</groupId>
+			<artifactId>javafaker</artifactId>
+			<version>1.0.1</version>
 		</dependency>
-		
-		<!-- https://mvnrepository.com/artifact/org.jbpm/jbpm-test-util -->
+
+
+		<dependency>
+			<groupId>org.kie</groupId>
+			<artifactId>kie-internal</artifactId>
+			<version>${kie.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-decisiontables</artifactId>
+			<version>${kie.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-core</artifactId>
+			<version>${kie.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-compiler</artifactId>
+			<version>${kie.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.kie</groupId>
+			<artifactId>kie-ci</artifactId>
+			<version>${kie.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.jbpm</groupId>
-			<artifactId>jbpm-test-util</artifactId>
+			<artifactId>jbpm-flow</artifactId>
 			<version>${kie.version}</version>
-			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jbpm</groupId>
+			<artifactId>jbpm-flow-builder</artifactId>
+			<version>${kie.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jbpm</groupId>
+			<artifactId>jbpm-bpmn2</artifactId>
+			<version>${kie.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jbpm</groupId>
 			<artifactId>jbpm-persistence-jpa</artifactId>
+			<version>${kie.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>antlr</groupId>
+					<artifactId>antlr</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jbpm</groupId>
+			<artifactId>jbpm-kie-services</artifactId>
+			<version>${kie.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jbpm</groupId>
+			<artifactId>jbpm-case-mgmt</artifactId>
+			<version>${kie.version}</version>
+			<type>pom</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jbpm</groupId>
+			<artifactId>jbpm-executor</artifactId>
+			<version>${kie.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jbpm</groupId>
+			<artifactId>jbpm-human-task-jpa</artifactId>
+			<version>${kie.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jbpm</groupId>
+			<artifactId>jbpm-test-util</artifactId>
+			<version>${kie.version}</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.optaplanner</groupId>
+			<artifactId>optaplanner-persistence-jpa</artifactId>
 			<version>${kie.version}</version>
 		</dependency>
 
@@ -348,7 +431,7 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<version>1.4.196</version>
+			<version>${version.h2db}</version>
 			<scope>test</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.orbisgis/h2gis -->

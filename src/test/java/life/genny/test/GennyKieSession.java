@@ -50,12 +50,15 @@ import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.manager.RuntimeEngine;
 import org.kie.api.runtime.manager.RuntimeEnvironment;
 import org.kie.api.runtime.manager.RuntimeEnvironmentBuilder;
+import org.kie.api.runtime.manager.RuntimeManager;
 import org.kie.api.runtime.process.ProcessInstance;
 import org.kie.api.runtime.process.WorkItemHandler;
 import org.kie.api.runtime.rule.FactHandle;
+import org.kie.api.task.TaskService;
 import org.kie.internal.command.CommandFactory;
 import org.kie.internal.identity.IdentityProvider;
 import org.kie.internal.query.QueryContext;
+import org.kie.internal.runtime.manager.context.EmptyContext;
 import org.kie.internal.task.api.UserGroupCallback;
 
 import com.google.gson.reflect.TypeToken;
@@ -136,6 +139,9 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	GennyToken serviceToken = null;
 
 	List<Command<?>> cmds = new ArrayList<Command<?>>();
+	
+	RuntimeManager runtimeManager;
+	TaskService taskService;
 
 	/**
 	 * static factory method for builder
@@ -489,9 +495,11 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 					.get();
 
 
-			createRuntimeManager(Strategy.PROCESS_INSTANCE, resources, env, uniqueRuntimeStr);
+			runtimeManager = createRuntimeManager(Strategy.PROCESS_INSTANCE, resources, env, uniqueRuntimeStr);
 
 		}
+
+		taskService = getRuntimeEngine().getTaskService();
 
 		kieSession = getRuntimeEngine().getKieSession();
 		
@@ -555,19 +563,19 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		kieSession.getWorkItemManager().registerWorkItemHandler("ThrowSignalProcess",
 				new ThrowSignalProcessWorkItemHandler(rteng));
 		kieSession.getWorkItemManager().registerWorkItemHandler("AskQuestion",
-				new AskQuestionWorkItemHandler(GennyKieSession.class,rteng));
+				new AskQuestionWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng));
 		kieSession.getWorkItemManager().registerWorkItemHandler("ThrowSignal",
-				new ThrowSignalWorkItemHandler(GennyKieSession.class,rteng));
+				new ThrowSignalWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng));
 		kieSession.getWorkItemManager().registerWorkItemHandler("SendSignal",
-				new SendSignalWorkItemHandler(GennyKieSession.class,rteng));
+				new SendSignalWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng));
 		kieSession.getWorkItemManager().registerWorkItemHandler("SendSignal2",
-				new SendSignalWorkItemHandler2(GennyKieSession.class,rteng));
+				new SendSignalWorkItemHandler2(MethodHandles.lookup().lookupClass(),rteng));
 
 		
 		kieSession.getWorkItemManager().registerWorkItemHandler("SendSignal",
-				new SendSignalWorkItemHandler(RulesLoader.class));
+				new SendSignalWorkItemHandler(MethodHandles.lookup().lookupClass()));
 		kieSession.getWorkItemManager().registerWorkItemHandler("SendSignal2",
-				new SendSignalWorkItemHandler2(RulesLoader.class));
+				new SendSignalWorkItemHandler2(MethodHandles.lookup().lookupClass()));
 		kieSession.getWorkItemManager().registerWorkItemHandler("JMSSendTask", new JMSSendTaskWorkItemHandler());
 
 

@@ -19,6 +19,7 @@ import life.genny.utils.BaseEntityUtils;
 import life.genny.models.GennyToken;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
 import life.genny.utils.BaseEntityUtils;
+import life.genny.qwandautils.GennySettings;
 
 rule "SBE_SEARCHBAR"
     ruleflow-group 'GenerateSearches'
@@ -45,7 +46,7 @@ rule "SBE_SEARCHBAR"
 	  		  	     .addColumn("PRI_ADDRESS_CITY","City")
 	  		  	     .addColumn("PRI_ADDRESS_STATE","State")
   	     .setPageStart(0)
-  	     .setPageSize(20);
+  	     .setPageSize(GennySettings.defaultPageSize);
   	     
    	     
   	     searchBE.setRealm(serviceToken.getRealm());
