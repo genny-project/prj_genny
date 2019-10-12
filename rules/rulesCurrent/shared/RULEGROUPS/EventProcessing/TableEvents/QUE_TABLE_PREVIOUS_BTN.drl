@@ -13,6 +13,7 @@ import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.TableUtils;
 import life.genny.qwandautils.GennySettings;
 import life.genny.jbpm.customworkitemhandlers.ShowFrame;
+import life.genny.qwanda.rule.RuleDetails;
 
 rule "QUE_TABLE_PREVIOUS_BTN"
 	ruleflow-group 'EventProcessing'
@@ -22,16 +23,17 @@ rule "QUE_TABLE_PREVIOUS_BTN"
 		$message : QEventMessage(data.code matches "QUE_TABLE_PREVIOUS_BTN" )	
 		userToken : GennyToken ( code != "PER_SERVICE" ) 
 		output : OutputParam( )
+		ruleDetails : RuleDetails()
 	then
-		System.out.println("Processing Answer/Data : " + $message );
-		System.out.println("Parent code :  " + $message.getData().getParentCode());
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing Answer/Data : " + $message );
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Parent code :  " + $message.getData().getParentCode());
 		
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken); 
 		
 		/* get current search */
 		SearchEntity searchBE = TableUtils.getSessionSearch("SBE_SEARCHBAR",userToken);
 			
-		System.out.println("PREV for "+searchBE.getCode()); 
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" PREV for "+searchBE.getCode()); 
 		
 		Integer pageIndex = searchBE.getValue("SCH_PAGE_START",0);
 		Integer pageSize = searchBE.getValue("SCH_PAGE_SIZE",GennySettings.defaultPageSize); /* TODO, don't let this be 0 */

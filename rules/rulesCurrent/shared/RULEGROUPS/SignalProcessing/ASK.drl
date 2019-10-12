@@ -4,6 +4,7 @@ import life.genny.models.GennyToken;
 import life.genny.utils.VertxUtils;
 import io.vertx.core.json.JsonObject;
 import life.genny.utils.OutputParam;
+import life.genny.qwanda.rule.RuleDetails;
 
 rule "ASK"
     ruleflow-group 'SignalProcessing'
@@ -14,21 +15,15 @@ rule "ASK"
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam( )
 		msg : QEventMessage (data.code == "ASK")
+		ruleDetails : RuleDetails()
     then
+		String frameCode = "FRM_"+msg.getData().getValue();
 	
-		System.out.println("Processing Internal Signal - ASK " + userToken.getUserCode());
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" " + userToken.getUserCode()+"  Question Code = "+msg.getData().getValue()+" ,FORMCODE="+frameCode);
 		output.setTypeOfResult("FORMCODE");
-		
-		
-		String questionCode = msg.getData().getValue();
-		System.out.println("Question Code = "+questionCode);
-		
-		String frameCode = "FRM_"+questionCode;
-		
-
-		System.out.println(output.getTypeOfResult());
 		output.setResultCode(frameCode);
 		output.setTargetCode("FRM_CONTENT");
 		
-		retract(serviceToken)
+		retract(serviceToken);
+		update(output);
 end

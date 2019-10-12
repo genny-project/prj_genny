@@ -156,18 +156,12 @@ kcontext.setVariable(&quot;userToken&quot;, userToken);
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;authInit: SendProject&quot;);
+      <bpmn2:script>/* System.out.println(&quot;authInit: SendProject&quot;);
 BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
-/* System.out.println(&quot;authInit: beUtils created&quot;);*/
 String projectCode = &quot;PRJ_&quot;+userToken.getRealm().toUpperCase();
-/* System.out.println(&quot;authInit:  PROJECT CODE = &quot;+projectCode);*/
 BaseEntity project = beUtils.getBaseEntityByCode(projectCode);
-
 System.out.println(&quot;authInit: Sending &quot;+project);
-/* System.out.println(&quot;authInit: &quot;+currentUser); */
-/* System.out.println(userToken.getToken()); */
-
-VertxUtils.publish(currentUser,&quot;webcmds&quot;,project, &quot;PROJECT&quot;, userToken.getToken());
+VertxUtils.publish(currentUser,&quot;webcmds&quot;,project, &quot;PROJECT&quot;, userToken.getToken()); */
 
 
 
@@ -191,10 +185,10 @@ VertxUtils.publish(currentUser,&quot;webcmds&quot;,project, &quot;PROJECT&quot;,
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
-      <bpmn2:script>BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+      <bpmn2:script>/*BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 System.out.println(&quot;authInit: Sending user - &quot;+currentUser);
 
-VertxUtils.publish(currentUser,&quot;webcmds&quot;,currentUser, &quot;USER&quot;, userToken.getToken());
+VertxUtils.publish(currentUser,&quot;webcmds&quot;,currentUser, &quot;USER&quot;, userToken.getToken());*/
 
 
 

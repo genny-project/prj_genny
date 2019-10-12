@@ -4,18 +4,20 @@ import life.genny.models.GennyToken;
 import life.genny.utils.VertxUtils;
 import io.vertx.core.json.JsonObject;
 import life.genny.utils.OutputParam;
+import life.genny.qwanda.rule.RuleDetails;
 
 rule "LOGOUT_EVENT"
     ruleflow-group 'EventProcessing'
     no-loop
     salience 500
     when
-		$message : QEventMessage( (data.code == "QUE_LOGOUT") || (data.code == "LOGOUT") )
+		$message : QEventMessage( (data.code == "QUE_LOGOUT") || (data.code == "LOGOUT") || (data.code == "FRM_QUE_LOGOUT") )
 		userToken : GennyToken (code != "PER_SERVICE" )
 		output : OutputParam( )
+		ruleDetails : RuleDetails()
     then
 	
-		System.out.println("Processing Answer/Data LOGOUT: " + $message );
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+"Processing Answer/Data : " + $message );
 		output.setResultCode("USER_LOGOUT");
 		output.setTypeOfResult("LOGOUT");
 		
