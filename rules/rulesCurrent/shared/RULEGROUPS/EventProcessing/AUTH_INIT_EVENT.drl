@@ -10,6 +10,7 @@ import life.genny.utils.RulesUtils;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.rule.RuleDetails;
 
 
 rule "AUTH_INIT_EVENT"
@@ -20,9 +21,10 @@ rule "AUTH_INIT_EVENT"
 		$message : QEventMessage(data.code matches "AUTH_INIT")
 		userToken : GennyToken (code != "PER_SERVICE" )
 		output : OutputParam( )
+		ruleDetails : RuleDetails()
     then
 	
-		System.out.println("Processing Answer/Data : " + $message );
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
 
 		output.setFormCode("FRM_APP","FRM_ROOT");
 

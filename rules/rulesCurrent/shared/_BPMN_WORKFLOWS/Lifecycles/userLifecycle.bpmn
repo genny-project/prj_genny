@@ -43,7 +43,7 @@
   <bpmn2:signal id="Signal_14" name="internalSignal"/>
   <bpmn2:signal id="Signal_15" name="#{inputSessionCode}"/>
   <bpmn2:resource id="Resource_1" name="Resource 1"/>
-  <bpmn2:process id="user_lifecycle" tns:adHoc="true" name="userLifecycle" isExecutable="true" processType="Private">
+  <bpmn2:process id="userLC" tns:adHoc="true" name="userLC" isExecutable="true" processType="Private">
     <bpmn2:extensionElements>
       <tns:import name="life.genny.rules.QRules"/>
       <tns:import name="life.genny.qwanda.entity.BaseEntity"/>
@@ -132,10 +132,10 @@ inputSessionCode = userToken.getSessionCode();
 kcontext.setVariable(&quot;inputSessionCode&quot;, inputSessionCode);
 System.out.println(&quot;userLifeCycle: entered: pid &quot;+kcontext.getProcessInstance().getId()+&quot;:&quot;+((GennyToken)userToken).getUserCode()+&quot;:inputSessionCode = &quot;+inputSessionCode); </bpmn2:script>
       </bpmn2:scriptTask>
-      <bpmn2:task id="Task_4" tns:taskName="ThrowSignalProcess" tns:displayName="ThrowSignalProcess" tns:icon="icons/icon-info.gif" name="Send new Validated User">
+      <bpmn2:task id="Task_4" tns:taskName="ThrowSignalProcess" tns:displayName="ThrowSignalProcess" tns:icon="icons/icon-info.gif" name="Send new User">
         <bpmn2:extensionElements>
           <tns:metaData name="elementname">
-            <tns:metaValue><![CDATA[Send new Validated User]]></tns:metaValue>
+            <tns:metaValue><![CDATA[Send new User]]></tns:metaValue>
           </tns:metaData>
           <tns:onExit-script/>
           <tns:onEntry-script scriptFormat="http://www.java.com/java"/>
@@ -184,10 +184,10 @@ System.out.println(&quot;userLifeCycle: entered: pid &quot;+kcontext.getProcessI
           <bpmn2:targetRef>DataInput_7</bpmn2:targetRef>
         </bpmn2:dataInputAssociation>
       </bpmn2:task>
-      <bpmn2:task id="Task_5" tns:taskName="AskQuestion" tns:displayName="Ask Question" tns:icon="icons/icon-info.gif" name="Ask Question">
+      <bpmn2:task id="Task_5" tns:taskName="AskQuestion" tns:displayName="Ask Question" tns:icon="icons/icon-info.gif" name="Ask">
         <bpmn2:extensionElements>
           <tns:metaData name="elementname">
-            <tns:metaValue><![CDATA[Ask Question]]></tns:metaValue>
+            <tns:metaValue><![CDATA[Ask]]></tns:metaValue>
           </tns:metaData>
           <tns:onEntry-script scriptFormat="http://www.java.com/java">
             <tns:script>System.out.println(&quot;userLifecycle: Ask Question&quot;);</tns:script>
@@ -291,7 +291,7 @@ System.out.println(&quot;userlifeCycle: New User Created: pid: &quot;+callingPro
     <bpmn2:sequenceFlow id="SequenceFlow_27" tns:priority="1" sourceRef="SubProcess_1" targetRef="EndEvent_3"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="user_lifecycle">
+    <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="userLC">
       <bpmndi:BPMNShape id="BPMNShape_SubProcess_1" bpmnElement="SubProcess_1" isExpanded="true">
         <dc:Bounds height="200.0" width="1130.0" x="270.0" y="121.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1">
@@ -319,13 +319,13 @@ System.out.println(&quot;userlifeCycle: New User Created: pid: &quot;+callingPro
       <bpmndi:BPMNShape id="BPMNShape_Task_4" bpmnElement="Task_4" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="730.0" y="204.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_4">
-          <dc:Bounds height="11.0" width="101.0" x="734.0" y="223.0"/>
+          <dc:Bounds height="11.0" width="62.0" x="754.0" y="223.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_5" bpmnElement="Task_5" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="990.0" y="205.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_5">
-          <dc:Bounds height="11.0" width="54.0" x="1018.0" y="224.0"/>
+          <dc:Bounds height="11.0" width="16.0" x="1037.0" y="224.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_3" bpmnElement="StartEvent_3">

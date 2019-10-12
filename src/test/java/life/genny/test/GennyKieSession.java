@@ -289,7 +289,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			}
 
 			if ((eventMsg != null) && (eventMsg.getData().getCode().equals("INIT_STARTUP"))) {
-				kieSession.startProcess("init_project");
+				kieSession.startProcess("initProject");
 			} else if (userToken != null) {
 				// This is a userToken so send the event through
 				String session_state = userToken.getSessionCode();
@@ -470,7 +470,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 		if (System.getenv("USE_JMS")==null) {
 			System.out.println("NOT USING JMS");
-			createRuntimeManager(Strategy.SINGLETON, resources,  uniqueRuntimeStr);
+			createRuntimeManager(Strategy.REQUEST, resources,  uniqueRuntimeStr);
 		} else {
 			System.out.println("USINGJMS");
 			EntityManagerFactory emf = super.getEmf();
@@ -573,9 +573,9 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 		
 		kieSession.getWorkItemManager().registerWorkItemHandler("SendSignal",
-				new SendSignalWorkItemHandler(MethodHandles.lookup().lookupClass()));
+				new SendSignalWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng));
 		kieSession.getWorkItemManager().registerWorkItemHandler("SendSignal2",
-				new SendSignalWorkItemHandler2(MethodHandles.lookup().lookupClass()));
+				new SendSignalWorkItemHandler2(MethodHandles.lookup().lookupClass(),rteng));
 		kieSession.getWorkItemManager().registerWorkItemHandler("JMSSendTask", new JMSSendTaskWorkItemHandler());
 
 
