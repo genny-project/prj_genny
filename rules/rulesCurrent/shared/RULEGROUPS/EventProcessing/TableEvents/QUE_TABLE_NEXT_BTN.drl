@@ -11,6 +11,8 @@ import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwanda.Answer;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.TableUtils;
+import life.genny.qwandautils.GennySettings;
+import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 
 
 rule "QUE_TABLE_NEXT_BTN"
@@ -27,43 +29,34 @@ rule "QUE_TABLE_NEXT_BTN"
 			
 			BaseEntityUtils beUtils = new BaseEntityUtils(userToken); 
 			
-			/* get current search */
-			String searchBarCode = "SBE_SEARCHBAR";
-			String sessionSearchCode = searchBarCode + "_" + beUtils.getGennyToken().getSessionCode();
-			SearchEntity searchBE = VertxUtils.getObject(userToken.getRealm(), "", sessionSearchCode, SearchEntity.class, userToken.getToken());
+		/* get current search */
+		SearchEntity searchBE = TableUtils.getSessionSearch("SBE_SEARCHBAR",userToken);
+		
+		System.out.println("NEXT for "+searchBE.getCode()); 
+		
+		Integer pageIndex = searchBE.getValue("SCH_PAGE_START",0);
+		Integer pageSize = searchBE.getValue("SCH_PAGE_SIZE", GennySettings.defaultPageSize);
 
-			if (searchBE == null) {
-				searchBE = VertxUtils.getObject(userToken.getRealm(), "", searchBarCode, SearchEntity.class, userToken.getToken());
-			}
-			
-			
-			System.out.println("NEXT"); 
-			
-			Integer pageIndex = searchBE.getValue("SCH_PAGE_START",0);
-			Integer pageSize = searchBE.getValue("SCH_PAGE_SIZE",7);
-			pageIndex = pageIndex + pageSize;
-			
-			Integer pageNumber = 1;
+		pageIndex = pageIndex + pageSize;
+		Integer pageNumber = (pageIndex / pageSize) +1;
+		
 
-			if(pageIndex != 0){
-				pageNumber = pageIndex / pageSize;
-			}
+		Answer pageAnswer = new Answer(userToken.getUserCode(),searchBE.getCode(), "SCH_PAGE_START", pageIndex+"");
+		Answer pageNumberAnswer = new Answer(userToken.getUserCode(),searchBE.getCode(), "PRI_INDEX", pageNumber+"");
 
-			Answer pageAnswer = new Answer(beUtils.getGennyToken().getUserCode(),sessionSearchCode, "SCH_PAGE_START", pageIndex+"");
-			Answer pageNumberAnswer = new Answer(beUtils.getGennyToken().getUserCode(),sessionSearchCode, "PRI_INDEX", pageNumber+"");
+		searchBE = beUtils.updateBaseEntity(searchBE, pageAnswer,SearchEntity.class);
+		searchBE = beUtils.updateBaseEntity(searchBE, pageNumberAnswer,SearchEntity.class);
+		
+		VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
+			beUtils.getGennyToken().getToken());
+		
 
-			beUtils.addAnswer(pageAnswer);
-			beUtils.addAnswer(pageNumberAnswer);
-
-			beUtils.updateBaseEntity(searchBE, pageAnswer);
-			beUtils.updateBaseEntity(searchBE, pageNumberAnswer);
-
-	        ShowFrame.display(userToken, "FRM_TABLE_VIEW", "FRM_CONTENT", "Test");
- 		    TableUtils.performSearch(userToken , beUtils, "SBE_SEARCHBAR", null);
-			
+        ShowFrame.display(userToken, "FRM_TABLE_VIEW", "FRM_CONTENT", "Test");
+		TableUtils.performSearch(userToken , beUtils, "SBE_SEARCHBAR", null);
 			
   	       output.setTypeOfResult("NONE");
   	       output.setResultCode("NONE");  /* dont display anything new */
-  	      update(output);
-  	      retract( $message);
+  	     
+  	       retract( $message);
+  	       update(output);
 end

@@ -7,12 +7,27 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ServiceLoader;
 import java.util.Set;
+
+import javax.persistence.EntityManagerFactory;
 
 import org.apache.logging.log4j.Logger;
 import org.codehaus.plexus.util.StringUtils;
+import org.jbpm.services.api.DefinitionService;
+import org.jbpm.services.api.ProcessService;
+import org.jbpm.services.api.RuntimeDataService;
+import org.jbpm.services.api.UserTaskService;
+import org.jbpm.services.api.admin.ProcessInstanceAdminService;
+import org.jbpm.services.api.model.DeploymentUnit;
+import org.jbpm.services.api.query.QueryService;
+import org.jbpm.services.api.utils.KieServiceConfigurator;
+import org.jbpm.test.services.TestIdentityProvider;
+import org.jbpm.test.services.TestUserGroupCallbackImpl;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.kie.api.runtime.manager.RuntimeEngine;
+import org.kie.internal.runtime.manager.context.EmptyContext;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -55,6 +70,7 @@ import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.FrameUtils2;
 import life.genny.utils.OutputParam;
 import life.genny.utils.RulesUtils;
+import life.genny.utils.SessionFacts;
 import life.genny.utils.TableUtils;
 import life.genny.utils.TableUtilsTest;
 import life.genny.utils.VertxUtils;
@@ -71,12 +87,125 @@ public class AdamTest {
 	protected static GennyCacheInterface vertxCache;
 
 	private static final String DRL_SEND_USER_DATA_DIR = "SendUserData";
+	
+	   protected EntityManagerFactory emf;    
+	    protected DefinitionService bpmn2Service;
+	    protected RuntimeDataService runtimeDataService;
+	    protected ProcessService processService;
+	    protected UserTaskService userTaskService;
+	    protected QueryService queryService;
+	    protected ProcessInstanceAdminService processAdminService;
+
+	    protected TestIdentityProvider identityProvider;
+	    protected TestUserGroupCallbackImpl userGroupCallback;
+
+	    protected KieServiceConfigurator serviceConfigurator;
+	    
+	    protected DeploymentUnit deploymentUnit;  
 
 	public AdamTest() {
-
+		 loadServiceConfigurator();
 	}
+	
+	   protected void loadServiceConfigurator() {
+	        this.serviceConfigurator = ServiceLoader.load(KieServiceConfigurator.class).iterator().next();
+	    }
 
-	@Test
+		@Test
+		public void userTaskTest()
+		{
+			System.out.println("UserTask Test");
+			GennyToken userToken = null;
+			GennyToken serviceToken = null;
+			QRules qRules = null;
+
+			if (true) {
+				userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+				serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+				qRules = new QRules(eventBusMock, userToken.getToken());
+				qRules.set("realm", userToken.getRealm());
+				qRules.setServiceToken(serviceToken.getToken());
+				VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+				GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+			} else {
+				qRules = GennyJbpmBaseTest.setupLocalService();
+				userToken = new GennyToken("userToken", qRules.getToken());
+				serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+			}
+
+			System.out.println("session     =" + userToken.getSessionCode());
+			System.out.println("userToken   =" + userToken.getToken());
+			//System.out.println("userToken2   =" + userToken2.getToken());
+			System.out.println("serviceToken=" + serviceToken.getToken());
+
+			SessionFacts initFacts = new SessionFacts(serviceToken, null, new QEventMessage("EVT_MSG", "INIT_STARTUP"));
+			QEventMessage authInitMsg = new QEventMessage("EVT_MSG", "AUTH_INIT"); authInitMsg.setToken(userToken.getToken());
+			QEventMessage msgLogout = new QEventMessage("EVT_MSG", "LOGOUT");msgLogout.setToken(userToken.getToken());
+
+
+			// NOW SET UP Some baseentitys
+			BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
+					StringUtils.capitaliseAllWords(serviceToken.getRealm()));
+			project.setRealm(serviceToken.getRealm());
+			VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
+					JsonUtils.toJson(project), serviceToken.getToken());
+			VertxUtils.writeCachedJson(realm,  ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(),JsonUtils.toJson(project), serviceToken.getToken());
+
+
+			GennyKieSession gks = null;
+
+			try {
+				gks = GennyKieSession.builder(serviceToken,true)
+						.addDrl("SignalProcessing")
+						.addDrl("DataProcessing")
+						.addDrl("EventProcessing")
+						.addJbpm("Lifecycles")
+						.addDrl("AuthInit")
+						.addJbpm("AuthInit")
+						.addDrl("InitialiseProject")
+						.addJbpm("InitialiseProject")
+
+						.addToken(userToken)
+						.build();
+				gks.start();
+				
+
+				
+				BaseEntity icn_sort = new BaseEntity("ICN_SORT","Icon Sort");
+				try {
+					
+					icn_sort.addAttribute(RulesUtils.getAttribute("PRI_ICON_CODE", serviceToken.getToken()), 1.0, "sort");
+					icn_sort.setRealm(realm);
+					VertxUtils.writeCachedJson(realm,   "ICN_SORT",JsonUtils.toJson(icn_sort), serviceToken.getToken());
+
+				} catch (BadDataException e1) {
+					e1.printStackTrace();
+				}
+
+				gks.injectSignal("initProject", initFacts); // This should initialise everything
+				gks.advanceSeconds(5, false);
+
+				gks.injectEvent(authInitMsg); // This should create a new process
+				gks.advanceSeconds(5, false);
+
+				BaseEntity user = VertxUtils.getObject(serviceToken.getRealm(), "", userToken.getUserCode(),
+						BaseEntity.class, serviceToken.getToken());
+
+				gks.injectEvent(msgLogout);
+			} catch (Exception e) {
+				e.printStackTrace();
+				
+			}
+			finally {
+				if (gks!=null) {
+					gks.close();
+				}
+			}
+		}
+
+
+//	@Test
 	public void headerTest()
 	{
 		System.out.println("Header test");
@@ -107,29 +236,90 @@ public class AdamTest {
 		  BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		  beUtils.setServiceToken(serviceToken);
 		  
-		  ShowFrame.display(userToken, "FRM_TABLE_VIEW", "FRM_CONTENT", "Test");
-		  String searchCode = "SBE_SEARCH_TEST";
-		  
-		  Answer answer = new Answer(userToken.getUserCode(),userToken.getUserCode(),"PRI_SEARCH_TEXT","univ");
-
- 
-   		  SearchEntity searchBE = new SearchEntity(searchCode,"Test Search")
-   		  	     .addSort("PRI_NAME","Created",SearchEntity.Sort.ASC)
-   		  	     .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%"+answer.getValue()+"%")
-   		  	     .addColumn("PRI_NAME", "Name")
-   		      	 .addColumn("PRI_LANDLINE", "Phone")
-   		  	     .addColumn("PRI_EMAIL", "Email")
-   		  	     .addColumn("PRI_ADDRESS_CITY","City")
-   		  	     .addColumn("PRI_ADDRESS_STATE","State")
-   		  	     .setPageStart(0)
-   		  	     .setPageSize(20);
-
-   		VertxUtils.putObject(userToken.getRealm(), "", searchCode, searchBE,
-				userToken.getToken());  
-   		
-   		TableUtils.performSearch(serviceToken , beUtils, searchCode, answer);
-
+//		  ShowFrame.display(userToken, "FRM_TABLE_VIEW", "FRM_CONTENT", "Test");
+//		  String searchCode = "SBE_SEARCH_TEST";
+//		  
+//		  Answer answer = new Answer(userToken.getUserCode(),userToken.getUserCode(),"PRI_SEARCH_TEXT","univ");
+//
+// 
+//   		  SearchEntity searchBE = new SearchEntity(searchCode,"Test Search")
+//   		  	     .addSort("PRI_NAME","Created",SearchEntity.Sort.ASC)
+//   		  	     .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%"+answer.getValue()+"%")
+//   		  	     .addColumn("PRI_NAME", "Name")
+//   		      	 .addColumn("PRI_LANDLINE", "Phone")
+//   		  	     .addColumn("PRI_EMAIL", "Email")
+//   		  	     .addColumn("PRI_ADDRESS_CITY","City")
+//   		  	     .addColumn("PRI_ADDRESS_STATE","State")
+//   		  	     .setPageStart(0)
+//   		  	     .setPageSize(20);
+//
+//   		VertxUtils.putObject(userToken.getRealm(), "", searchCode, searchBE,
+//				userToken.getToken());  
+//   		
+//   		TableUtils.performSearch(serviceToken , beUtils, searchCode, answer);
+//
  		
+		BaseEntityUtils beUtils2 = new BaseEntityUtils(userToken); 
+		
+		/* get current search */
+//		SearchEntity searchBE2 = TableUtils.getSessionSearch("SBE_SEARCHBAR",userToken);
+//
+//		
+//		System.out.println("NEXT for "+searchBE2.getCode()); 
+//		
+//		Integer pageIndex = searchBE2.getValue("SCH_PAGE_START",0);
+//		Integer pageSize = searchBE2.getValue("SCH_PAGE_SIZE", GennySettings.defaultPageSize);
+//		pageIndex = pageIndex + pageSize;
+//		
+//		Integer pageNumber = 1;
+//
+//		if(pageIndex != 0){
+//			pageNumber = pageIndex / pageSize;
+//		}
+//
+//		Answer pageAnswer = new Answer(userToken.getUserCode(),searchBE2.getCode(), "SCH_PAGE_START", pageIndex+"");
+//		Answer pageNumberAnswer = new Answer(userToken.getUserCode(),searchBE2.getCode(), "PRI_INDEX", pageNumber+"");
+//
+//		searchBE2 = beUtils2.updateBaseEntity(searchBE2, pageAnswer,SearchEntity.class);
+//		searchBE2 = beUtils2.updateBaseEntity(searchBE2, pageNumberAnswer,SearchEntity.class);
+//		
+//		VertxUtils.putObject(beUtils2.getGennyToken().getRealm(), "", searchBE2.getCode(), searchBE2,
+//			beUtils2.getGennyToken().getToken());
+//		
+//
+//        ShowFrame.display(userToken, "FRM_TABLE_VIEW", "FRM_CONTENT", "Test");
+//		TableUtils.performSearch(userToken , beUtils2, "SBE_SEARCHBAR", null);
+		
+		/* get current search */
+		SearchEntity searchBE = TableUtils.getSessionSearch("SBE_SEARCHBAR",userToken);
+			
+		System.out.println("PREV for "+searchBE.getCode()); 
+		
+		Integer pageIndex = searchBE.getValue("SCH_PAGE_START",0);
+		Integer pageSize = searchBE.getValue("SCH_PAGE_SIZE",GennySettings.defaultPageSize); // TODO, don't let this be 0
+		pageIndex = pageIndex - pageSize;
+		
+		if (pageIndex <0) {
+			pageIndex = 0;
+		}
+		
+		Integer pageNumber = (pageIndex / pageSize) + 1;
+		
+
+		
+			Answer pageAnswer = new Answer(beUtils.getGennyToken().getUserCode(),searchBE.getCode(), "SCH_PAGE_START", pageIndex+"");
+			Answer pageNumberAnswer = new Answer(beUtils.getGennyToken().getUserCode(),searchBE.getCode(), "PRI_INDEX", pageNumber+"");
+
+		searchBE = beUtils.updateBaseEntity(searchBE, pageAnswer,SearchEntity.class);
+		searchBE = beUtils.updateBaseEntity(searchBE, pageNumberAnswer,SearchEntity.class);
+			
+			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
+				beUtils.getGennyToken().getToken());
+			
+	        ShowFrame.display(userToken, "FRM_TABLE_VIEW", "FRM_CONTENT", "Test");
+ 		    TableUtils.performSearch(userToken , beUtils, "SBE_SEARCHBAR", null);
+	
+   		
 	}
 		
 	//@Test
@@ -230,6 +420,7 @@ public class AdamTest {
 					.build();
 			gks.start();
 			
+
 			
 			BaseEntity icn_sort = new BaseEntity("ICN_SORT","Icon Sort");
 			try {

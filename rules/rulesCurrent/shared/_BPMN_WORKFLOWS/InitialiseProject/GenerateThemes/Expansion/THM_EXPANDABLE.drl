@@ -24,6 +24,7 @@ import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
 import life.genny.models.FramePosition;
 import life.genny.qwanda.VisualControlType;
+import life.genny.models.ThemeAttributeType;
 
 rule "THM_EXPANDABLE"
   ruleflow-group 'GenerateThemes'
