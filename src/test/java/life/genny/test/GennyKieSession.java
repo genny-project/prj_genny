@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.persistence.EntityManagerFactory;
 
@@ -35,7 +36,7 @@ import org.jbpm.kie.services.impl.query.SqlQueryDefinition;
 import org.jbpm.kie.services.impl.query.mapper.ProcessInstanceQueryMapper;
 import org.jbpm.kie.services.impl.query.persistence.QueryDefinitionEntity;
 import org.jbpm.process.audit.JPAWorkingMemoryDbLogger;
-
+import org.jbpm.services.api.RuntimeDataService;
 import org.jbpm.services.api.model.ProcessInstanceDesc;
 import org.jbpm.services.api.query.QueryAlreadyRegisteredException;
 import org.jbpm.services.api.query.QueryService;
@@ -502,6 +503,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		taskService = getRuntimeEngine().getTaskService();
 
 		kieSession = getRuntimeEngine().getKieSession();
+		
 		
 
 		if (kieSession != null) {
@@ -984,10 +986,8 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		// curl -X GET --header 'Accept: application/json'  --header "Authorization: Bearer $TOKEN" 'http://alyson7.genny.life/qwanda/attributes'
 		
 		
-		File file = new File("src/test/resources/attributes.json");
 	    String jsonString;
-		try {
-			jsonString = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+			jsonString = readLineByLineJava8( "src/test/resources/attributes.json" );
 			VertxUtils.writeCachedJson(gToken.getRealm(), "attributes", jsonString, gToken.getToken());
 			
 			QDataAttributeMessage attributesMsg = JsonUtils.fromJson(jsonString, QDataAttributeMessage.class);
@@ -996,16 +996,10 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			for (Attribute attribute : attributeArray) {
 				RulesUtils.attributeMap.put(attribute.getCode(), attribute);
 			}
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	
 	public static Optional<Long> getProcessIdBySessionId(String sessionId) {
-		// TODO Auto-generated method stub
 		return GennyKieSession.getProcessIdBysessionId(sessionId);
 	}
 
@@ -1096,4 +1090,38 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		}
 	}
 	
+	
+	
+	
+    //Read file content into string with - Files.lines(Path path, Charset cs)
+	 
+    /**
+	 * @return the runtimeManager
+	 */
+	public RuntimeManager getRuntimeManager() {
+		return runtimeManager;
+	}
+
+	/**
+	 * @return the taskService
+	 */
+	public TaskService getTaskService() {
+		return  getRuntimeEngine().getTaskService();
+	}
+
+	private static String readLineByLineJava8(String filePath)
+    {
+        StringBuilder contentBuilder = new StringBuilder();
+ 
+        try (Stream<String> stream = Files.lines( Paths.get(filePath), StandardCharsets.UTF_8))
+        {
+            stream.forEach(s -> contentBuilder.append(s).append("\n"));
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+ 
+        return contentBuilder.toString();
+    }
 }
