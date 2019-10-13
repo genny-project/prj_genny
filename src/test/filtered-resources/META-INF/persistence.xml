@@ -7,7 +7,7 @@
   xmlns:orm="http://java.sun.com/xml/ns/persistence/orm" 
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-    <persistence-unit name="org.jbpm.persistence.jpa" transaction-type="JTA">
+    <persistence-unit name="org.jbpm.persistence.jpa3" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <jta-data-source>jdbc/jbpm-ds</jta-data-source>              
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>

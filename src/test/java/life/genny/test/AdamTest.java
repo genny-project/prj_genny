@@ -1,12 +1,17 @@
 package life.genny.test;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.FileNotFoundException;
+import java.io.StringReader;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
 
@@ -14,6 +19,7 @@ import javax.persistence.EntityManagerFactory;
 
 import org.apache.logging.log4j.Logger;
 import org.codehaus.plexus.util.StringUtils;
+import org.jbpm.bpmn2.handler.ServiceTaskHandler;
 import org.jbpm.services.api.DefinitionService;
 import org.jbpm.services.api.ProcessService;
 import org.jbpm.services.api.RuntimeDataService;
@@ -22,11 +28,15 @@ import org.jbpm.services.api.admin.ProcessInstanceAdminService;
 import org.jbpm.services.api.model.DeploymentUnit;
 import org.jbpm.services.api.query.QueryService;
 import org.jbpm.services.api.utils.KieServiceConfigurator;
+import org.jbpm.services.task.impl.factories.TaskFactory;
+import org.jbpm.services.task.utils.TaskFluent;
 import org.jbpm.test.services.TestIdentityProvider;
 import org.jbpm.test.services.TestUserGroupCallbackImpl;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.kie.api.runtime.manager.RuntimeEngine;
+import org.kie.api.task.model.Task;
+import org.kie.api.task.model.TaskSummary;
 import org.kie.internal.runtime.manager.context.EmptyContext;
 
 import com.google.gson.reflect.TypeToken;
@@ -37,6 +47,7 @@ import io.vertx.core.json.JsonObject;
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
+import life.genny.jbpm.customworkitemhandlers.AdamTest1WorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 import life.genny.models.Frame3;
 import life.genny.models.FramePosition;
@@ -161,10 +172,11 @@ public class AdamTest {
 						.addDrl("DataProcessing")
 						.addDrl("EventProcessing")
 						.addJbpm("Lifecycles")
+						.addJbpm("adam_user1.bpmn")
 						.addDrl("AuthInit")
 						.addJbpm("AuthInit")
-						.addDrl("InitialiseProject")
-						.addJbpm("InitialiseProject")
+					//	.addDrl("InitialiseProject")
+					//	.addJbpm("InitialiseProject")
 
 						.addToken(userToken)
 						.build();
@@ -183,8 +195,54 @@ public class AdamTest {
 					e1.printStackTrace();
 				}
 
-				gks.injectSignal("initProject", initFacts); // This should initialise everything
+				//gks.injectSignal("initProject", initFacts); // This should initialise everything
 				gks.advanceSeconds(5, false);
+				
+			       // One potential owner, should go straight to state Reserved
+//		        String str = "(with (new Task()) { priority = 55, taskData = (with( new TaskData()) { } ), ";
+//		        str += "peopleAssignments = (with ( new PeopleAssignments() ) { potentialOwners = [new User('Bobba Fet'), new User('Darth Vader') ], excludedOwners = [new User('Darth Vader')],businessAdministrators = [ new User('Administrator') ], }),";
+//		        str += "name =  'This is my task name' })";
+//		        Task task = TaskFactory.evalTask(new StringReader(str));
+//		        gks.getTaskService().addTask(task, new HashMap<String, Object>());
+				//gks.getTaskService().
+		        List<TaskSummary> tasks = gks.getTaskService().getTasksAssignedAsPotentialOwner("Bobba Fet", "en-UK");
+		       
+				AdamTest1WorkItemHandler adamTaskHandler = new AdamTest1WorkItemHandler(gks.getKieSession(),Thread.currentThread().getContextClassLoader());
+				
+		    //    CommandBasedWSHumanTaskHandler taskHandler = new CommandBasedWSHumanTaskHandler(ksession);
+
+		        gks.getKieSession().getWorkItemManager().registerWorkItemHandler("AdamTask1", adamTaskHandler);
+		        // Start a process
+		        gks.startProcess("adam_user1");
+		        gks.advanceSeconds(5, false);
+		        Map<String,Object> params = new HashMap<String,Object>();
+		        Task task = new TaskFluent().setName("This is my task name")
+		                .addPotentialGroup("GADA")
+		                .setAdminUser("Administrator")
+		                .addPotentialUser("acrow")
+		                .getTask();
+
+		        long taskId = task.getId();
+		        Task task2 = new TaskFluent().setName("This is my task name2")
+		                .addPotentialGroup("GADA")
+		                .setAdminUser("Administrator")
+		                .addPotentialUser("acrow")
+		                .getTask();
+
+		        long taskId2 = task2.getId();
+
+		        gks.getTaskService().addTask(task, params);
+	              // Do Task Operations
+	              List<TaskSummary> tasksAssignedAsPotentialOwner = gks.getTaskService().getTasksAssignedAsPotentialOwner("acrow", null);
+	              
+	              // Claim Task
+	       //       gks.getTaskService().claim(taskId, "acrow");
+	              tasksAssignedAsPotentialOwner = gks.getTaskService().getTasksAssignedAsPotentialOwner("acrow", "en-UK");
+	             // Map<String, Object> getTaskContent( long taskId );
+	              // Start Task
+	              //gks.getTaskService().start(taskSummary.getId(), "mary");
+		        
+		        tasks = gks.getTaskService().getTasksAssignedAsPotentialOwner("Darth Vader", "en-UK");
 
 				gks.injectEvent(authInitMsg); // This should create a new process
 				gks.advanceSeconds(5, false);
