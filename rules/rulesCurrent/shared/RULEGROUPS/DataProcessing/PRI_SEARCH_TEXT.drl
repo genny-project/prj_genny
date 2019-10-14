@@ -17,6 +17,7 @@ import life.genny.utils.TableUtils;
 import life.genny.models.TableData;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwanda.Ask;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.utils.OutputParam;
@@ -37,6 +38,20 @@ rule "PRI_SEARCH_TEXT"
 	  
      then
   		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
+ 	     
+ 	    /* get current search */
+		SearchEntity searchBE = TableUtils.getSessionSearch("SBE_SEARCHBAR",beUtils.getGennyToken());
+		
+ 	    /* Reset page to start */ 
+ 	    Answer pageAnswer = new Answer(beUtils.getGennyToken().getUserCode(),searchBE.getCode(), "SCH_PAGE_START", "0");
+		Answer pageNumberAnswer = new Answer(beUtils.getGennyToken().getUserCode(),searchBE.getCode(), "PRI_INDEX", "0");
+
+		searchBE = beUtils.updateBaseEntity(searchBE, pageAnswer,SearchEntity.class);
+		searchBE = beUtils.updateBaseEntity(searchBE, pageNumberAnswer,SearchEntity.class);
+		
+		VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
+			beUtils.getGennyToken().getToken());
+ 	     
  	     
  	    ShowFrame.display(beUtils.getGennyToken(), "FRM_TABLE_VIEW", "FRM_CONTENT", "Test");
  		TableUtils.performSearch(serviceToken , beUtils, "SBE_SEARCHBAR", answer);
