@@ -42,7 +42,7 @@ rule "THM_TABLE_ROW"
                     .width("100%")
                     .padding(10)
                   .end()
-                  .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                  /* .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end() */
                   .build();
     theme.setRealm(serviceToken.getRealm());
     insert (theme);
