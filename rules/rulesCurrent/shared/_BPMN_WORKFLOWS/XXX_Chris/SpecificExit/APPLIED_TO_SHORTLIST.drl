@@ -1,0 +1,31 @@
+package life.genny.rules;
+import life.genny.qwanda.message.QDataAnswerMessage;
+import life.genny.models.GennyToken;
+import life.genny.rules.QRules;
+import life.genny.utils.BaseEntityUtils;
+import life.genny.qwanda.Answer;
+import life.genny.utils.OutputParam;
+
+import java.util.List;
+import java.util.ArrayList;
+
+rule "APPLIED_TO_SHORTLIST"
+    ruleflow-group 'SpecificExit'
+    no-loop true
+    salience 1 
+    when
+	 	userToken : GennyToken (code != "PER_SERVICE" )
+		serviceToken : GennyToken (code == "PER_SERVICE" )
+		output : OutputParam()
+		bucketCode : String( bucketCode == "APPLIED")
+	  
+     then
+     
+     	bucketCode = "SHORTLIST";
+     	System.out.println(bucketCode); 
+ 		System.out.println("SUCCESS -> Set notification code to SHORTLIST" ); 
+ 		output.setResultCode("SHORTLIST");
+ 		
+ 	
+ 		retract(output)
+end
