@@ -3,11 +3,16 @@ package life.genny.test;
 import static org.junit.Assert.assertEquals;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.StringReader;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -18,8 +23,10 @@ import java.util.Set;
 import javax.persistence.EntityManagerFactory;
 
 import org.apache.logging.log4j.Logger;
+import org.assertj.core.util.Arrays;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbpm.bpmn2.handler.ServiceTaskHandler;
+import org.jbpm.kie.services.impl.model.UserTaskInstanceDesc;
 import org.jbpm.services.api.DefinitionService;
 import org.jbpm.services.api.ProcessService;
 import org.jbpm.services.api.RuntimeDataService;
@@ -29,15 +36,25 @@ import org.jbpm.services.api.model.DeploymentUnit;
 import org.jbpm.services.api.query.QueryService;
 import org.jbpm.services.api.utils.KieServiceConfigurator;
 import org.jbpm.services.task.impl.factories.TaskFactory;
+import org.jbpm.services.task.internals.lifecycle.MVELLifeCycleManager;
+import org.jbpm.services.task.internals.lifecycle.OperationCommand;
 import org.jbpm.services.task.utils.TaskFluent;
+import org.jbpm.services.task.wih.NonManagedLocalHTWorkItemHandler;
 import org.jbpm.test.services.TestIdentityProvider;
 import org.jbpm.test.services.TestUserGroupCallbackImpl;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.kie.api.runtime.manager.RuntimeEngine;
+
+import org.kie.api.task.model.Comment;
+import org.kie.api.task.model.Status;
 import org.kie.api.task.model.Task;
 import org.kie.api.task.model.TaskSummary;
+import org.kie.api.task.model.User;
 import org.kie.internal.runtime.manager.context.EmptyContext;
+import org.kie.internal.task.api.TaskModelProvider;
+import org.kie.internal.task.api.model.InternalComment;
+import org.kie.internal.task.api.model.Operation;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -113,6 +130,8 @@ public class AdamTest {
 	    protected KieServiceConfigurator serviceConfigurator;
 	    
 	    protected DeploymentUnit deploymentUnit;  
+	    
+ 
 
 	public AdamTest() {
 		 loadServiceConfigurator();
@@ -168,13 +187,13 @@ public class AdamTest {
 
 			try {
 				gks = GennyKieSession.builder(serviceToken,true)
-						.addDrl("SignalProcessing")
-						.addDrl("DataProcessing")
-						.addDrl("EventProcessing")
-						.addJbpm("Lifecycles")
+					//	.addDrl("SignalProcessing")
+					//	.addDrl("DataProcessing")
+					//	.addDrl("EventProcessing")
+					//	.addJbpm("Lifecycles")
 						.addJbpm("adam_user1.bpmn")
-						.addDrl("AuthInit")
-						.addJbpm("AuthInit")
+					//	.addDrl("AuthInit")
+					//	.addJbpm("AuthInit")
 					//	.addDrl("InitialiseProject")
 					//	.addJbpm("InitialiseProject")
 
@@ -198,6 +217,8 @@ public class AdamTest {
 				//gks.injectSignal("initProject", initFacts); // This should initialise everything
 				gks.advanceSeconds(5, false);
 				
+				gks.getKieSession().getWorkItemManager().registerWorkItemHandler("Human Task", new NonManagedLocalHTWorkItemHandler(gks.getKieSession(),gks.getTaskService()));
+				
 			       // One potential owner, should go straight to state Reserved
 //		        String str = "(with (new Task()) { priority = 55, taskData = (with( new TaskData()) { } ), ";
 //		        str += "peopleAssignments = (with ( new PeopleAssignments() ) { potentialOwners = [new User('Bobba Fet'), new User('Darth Vader') ], excludedOwners = [new User('Darth Vader')],businessAdministrators = [ new User('Administrator') ], }),";
@@ -205,45 +226,88 @@ public class AdamTest {
 //		        Task task = TaskFactory.evalTask(new StringReader(str));
 //		        gks.getTaskService().addTask(task, new HashMap<String, Object>());
 				//gks.getTaskService().
-		        List<TaskSummary> tasks = gks.getTaskService().getTasksAssignedAsPotentialOwner("Bobba Fet", "en-UK");
-		       
-				AdamTest1WorkItemHandler adamTaskHandler = new AdamTest1WorkItemHandler(gks.getKieSession(),Thread.currentThread().getContextClassLoader());
-				
-		    //    CommandBasedWSHumanTaskHandler taskHandler = new CommandBasedWSHumanTaskHandler(ksession);
+		        List<TaskSummary> tasks = null;
 
-		        gks.getKieSession().getWorkItemManager().registerWorkItemHandler("AdamTask1", adamTaskHandler);
+		        User acrow = (User) TaskModelProvider.getFactory().newUser("acrow");
 		        // Start a process
 		        gks.startProcess("adam_user1");
 		        gks.advanceSeconds(5, false);
 		        Map<String,Object> params = new HashMap<String,Object>();
-		        Task task = new TaskFluent().setName("This is my task name")
+		        Task task = new TaskFluent().setName("Amazing GADA Stuff")
 		                .addPotentialGroup("GADA")
-		                .setAdminUser("Administrator")
-		                .addPotentialUser("acrow")
+		                .setAdminUser("acrow")
+		             //   .addPotentialUser("acrow")
+		                .setDeploymentID("genny")
 		                .getTask();
 
-		        long taskId = task.getId();
-		        Task task2 = new TaskFluent().setName("This is my task name2")
-		                .addPotentialGroup("GADA")
+		        Task task2 = new TaskFluent().setName("Awesome GADA stuff")
+		              //  .addPotentialGroup("GADA")
 		                .setAdminUser("Administrator")
-		                .addPotentialUser("acrow")
+		                .addPotentialUser("domenic")
+		                .setDeploymentID("genny")
 		                .getTask();
 
-		        long taskId2 = task2.getId();
+		        Task task3 = new TaskFluent().setName("Boring Outcome Stuff")
+		                .addPotentialGroup("OUTCOME")
+		                .setAdminUser("Administrator")
+		                .addPotentialUser("gerard")
+		                .setDeploymentID("genny")
+		                .getTask();
+
 
 		        gks.getTaskService().addTask(task, params);
-	              // Do Task Operations
-	              List<TaskSummary> tasksAssignedAsPotentialOwner = gks.getTaskService().getTasksAssignedAsPotentialOwner("acrow", null);
-	              
-	              // Claim Task
-	       //       gks.getTaskService().claim(taskId, "acrow");
-	              tasksAssignedAsPotentialOwner = gks.getTaskService().getTasksAssignedAsPotentialOwner("acrow", "en-UK");
-	             // Map<String, Object> getTaskContent( long taskId );
-	              // Start Task
-	              //gks.getTaskService().start(taskSummary.getId(), "mary");
-		        
-		        tasks = gks.getTaskService().getTasksAssignedAsPotentialOwner("Darth Vader", "en-UK");
+		        gks.getTaskService().addTask(task2, params);
+		        gks.getTaskService().addTask(task3, params);
+		        long taskId = task.getId();
+		        long taskId2 = task2.getId();
+		        long taskId3 = task3.getId();
 
+	              // Do Task Operations
+	            
+	              showStatuses(gks);
+
+	            
+	            // Add Comment
+	            InternalComment commentImpl = (InternalComment) TaskModelProvider.getFactory().newComment();
+	            
+	            commentImpl.setAddedAt(new Date());
+	            commentImpl.setAddedBy(acrow);
+	            gks.getTaskService().addComment(taskId2, commentImpl);
+	            
+	             Map<String, Object> content = gks.getTaskService().getTaskContent(taskId2 );
+	             System.out.println(content);
+	              // Start Task
+	              gks.getTaskService().start(taskId, "acrow");    
+	              showStatuses(gks);
+
+	              gks.getTaskService().suspend(taskId, "acrow");    
+	              showStatuses(gks);
+
+	              gks.getTaskService().resume(taskId, "acrow");    
+	              showStatuses(gks);
+
+	              // Claim Task
+//	              gks.getTaskService().claim(taskId, "acrow");
+//	              showStatuses(gks);
+//              
+	              Map<String, Object> results = new HashMap<String, Object>();
+	              results.put("Result", "Done");
+	              gks.getTaskService().complete(taskId, "acrow", results);
+	              showStatuses(gks);
+ 
+	              results.put("Result", "some document data");
+
+//	              long processInstanceId =
+//	            		  processService.startProcess(deployUnit.getIdentifier(), "org.jbpm.writedocument");
+//	            		  List<Long> taskIds =
+//	            		  runtimeDataService.getTasksByProcessInstanceId(processInstanceId);
+//	            		  Long taskId4 = taskIds.get(0);
+//	            		  userTaskService.start(taskId, "john");
+//	            		  UserTaskInstanceDesc task4 = runtimeDataService.getTaskById(taskId4);
+//	            		  Map<String, Object> results = new HashMap<String, Object>();
+//	            		  results.put("Result", "some document data");
+//	            		  userTaskService.complete(taskId4, "john", results);
+	              
 				gks.injectEvent(authInitMsg); // This should create a new process
 				gks.advanceSeconds(5, false);
 
@@ -263,6 +327,35 @@ public class AdamTest {
 		}
 
 
+		private void showStatuses(GennyKieSession gks)
+		{
+		       List<Status> statuses = new ArrayList<Status>();
+		        statuses.add(Status.Ready);
+		        statuses.add(Status.Completed);
+		        statuses.add(Status.Created);
+		        statuses.add(Status.Error);
+		        statuses.add(Status.Exited);
+		        statuses.add(Status.InProgress);
+		        statuses.add(Status.Obsolete);
+		        statuses.add(Status.Reserved);
+		        statuses.add(Status.Suspended);
+		        
+	            List<String> groups = new ArrayList<String>();
+	            groups.add("GADA");
+
+
+            System.out.println("POTENTIAL acrow      "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwnerByStatus("acrow", statuses, null)));
+            System.out.println("POTENTIAL dom        "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner("domenic", null)));
+            System.out.println("POTENTIAL gerard     "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner("gerard",  null)));
+            System.out.println("POTENTIAL chris      "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner("chris", null)));
+            System.out.println("POTENTIAL anish      "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner("anish",  null)));
+            System.out.println("POTENTIAL chris+gada "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner("chris", groups, "en-AU", 0,10)));
+            System.out.println("POTENTIAL gada       "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(null, groups, "en-AU", 0,10)));
+            
+            System.out.println("OWNED acrow          "+showTaskNames(gks.getTaskService().getTasksOwned("acrow", null)));
+            System.out.println();
+		}
+		
 //	@Test
 	public void headerTest()
 	{
@@ -1683,6 +1776,40 @@ public void testTableHeader() {
 		}
 	}
 	
+ String showTaskNames(List<TaskSummary> tasks)
+ {
+	 String ret = "";
+	 if (tasks.isEmpty()) {
+		return "(empty)"; 
+	 } 
+	 for (TaskSummary task : tasks) {
+		 ret += "["+task.getName()+"("+task.getProcessId()+"):"+task.getStatusId()+"],";
+	 }
+	 return ret;
+ }
  
- 
+// public static Map<Operation, List<OperationCommand>> initMVELOperations() {  
+//	  
+//     Map<String, Object> vars = new HashMap<String, Object>();  
+//
+//     // Search operations-dsl.mvel, if necessary using superclass if TaskService is subclassed  
+//     InputStream is = null;  
+//     // for (Class<?> c = getClass(); c != null; c = c.getSuperclass()) {  
+//     is = MVELLifeCycleManager.class.getResourceAsStream("/operations-dsl.mvel");  
+////         if (is != null) {  
+////             break;  
+////         }  
+//     //}  
+//     if (is == null) {  
+//         throw new RuntimeException("Unable To initialise TaskService, could not find Operations DSL");  
+//     }  
+//     Reader reader = new InputStreamReader(is);  
+//     try {  
+//         return (Map<Operation, List<OperationCommand>>) eval(toString(reader), vars);  
+//     } catch (IOException e) {  
+//         throw new RuntimeException("Unable To initialise TaskService, could not load Operations DSL");  
+//     }  
+//
+//
+// }  
 }

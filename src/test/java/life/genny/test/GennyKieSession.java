@@ -31,11 +31,13 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.drools.core.ClockType;
 import org.drools.core.time.impl.PseudoClockScheduler;
+import org.jbpm.bpmn2.handler.ServiceTaskHandler;
 import org.jbpm.executor.ExecutorServiceFactory;
 import org.jbpm.kie.services.impl.query.SqlQueryDefinition;
 import org.jbpm.kie.services.impl.query.mapper.ProcessInstanceQueryMapper;
 import org.jbpm.kie.services.impl.query.persistence.QueryDefinitionEntity;
 import org.jbpm.process.audit.JPAWorkingMemoryDbLogger;
+import org.jbpm.process.instance.impl.humantask.HumanTaskHandler;
 import org.jbpm.services.api.RuntimeDataService;
 import org.jbpm.services.api.model.ProcessInstanceDesc;
 import org.jbpm.services.api.query.QueryAlreadyRegisteredException;
@@ -46,6 +48,7 @@ import org.jbpm.test.JbpmJUnitBaseTestCase;
 import org.kie.api.command.Command;
 import org.kie.api.executor.ExecutorService;
 import org.kie.api.io.ResourceType;
+import org.kie.api.runtime.EnvironmentName;
 import org.kie.api.runtime.ExecutionResults;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.manager.RuntimeEngine;
@@ -58,6 +61,7 @@ import org.kie.api.runtime.rule.FactHandle;
 import org.kie.api.task.TaskService;
 import org.kie.internal.command.CommandFactory;
 import org.kie.internal.identity.IdentityProvider;
+import org.kie.internal.io.ResourceFactory;
 import org.kie.internal.query.QueryContext;
 import org.kie.internal.runtime.manager.context.EmptyContext;
 import org.kie.internal.task.api.UserGroupCallback;
@@ -464,27 +468,34 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 		System.out.println("Loaded in All Resources");
 
-		String uniqueRuntimeStr = UUID.randomUUID().toString();
+		String uniqueRuntimeStr = "genny";//UUID.randomUUID().toString();
 		
+		System.setProperty("org.kie.server.bypass.auth.user", "true");
 
 		if (System.getenv("USE_JMS")==null) {
 			System.out.println("NOT USING JMS");
 			EntityManagerFactory emf = super.getEmf();
 
-			RuntimeEnvironment env = RuntimeEnvironmentBuilder.Factory
+
+			RuntimeEnvironmentBuilder envBuilder = RuntimeEnvironmentBuilder.Factory
 					.get()
 					.newEmptyBuilder()
 					// remember to register the executor service
-					.addEnvironmentEntry("ExecutorService", executorService) 
+					.addEnvironmentEntry( EnvironmentName.ENTITY_MANAGER_FACTORY, emf )
 					.entityManagerFactory(emf)
 					.persistence(sessionPersistence)
 					.userGroupCallback(new UserGroupCallback() {
 		    			public List<String> getGroupsForUser(String userId) {
 		    				List<String> result = new ArrayList<String>();
-		    				if ("sales-rep".equals(userId)) {
-		    					result.add("sales");
-		    				} else if ("john".equals(userId)) {
-		    					result.add("PM");
+		    				if ("acrow".equals(userId)) {
+		    					result.add("GADA");
+		    				} else if ("domenic".equals(userId)) {
+		    					result.add("GADA");
+		    				} else if ("gerard".equals(userId)) {
+		    					result.add("OUTCOME");
+		    				} else if ("chris".equals(userId)) {
+		    					result.add("OUTCOME");
+		    					result.add("GADA");
 		    				}
 		    				return result;
 		    			}
@@ -494,9 +505,15 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		    			public boolean existsGroup(String arg0) {
 		    				return true;
 		    			}
-		    		})
-					.get();
-			createRuntimeManager(Strategy.REQUEST, resources, env, uniqueRuntimeStr);
+		    		});
+					
+					
+	        for (Map.Entry<String, ResourceType> entry : resources.entrySet()) {
+	            envBuilder.addAsset(ResourceFactory.newClassPathResource(entry.getKey()), entry.getValue());
+	        }
+	        RuntimeEnvironment env = envBuilder.get();
+
+			createRuntimeManager(Strategy.PROCESS_INSTANCE, resources, env, uniqueRuntimeStr);
 		} else {
 			System.out.println("USINGJMS");
 			EntityManagerFactory emf = super.getEmf();
@@ -512,11 +529,12 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 	        executorService.init();
 			
-			RuntimeEnvironment env = RuntimeEnvironmentBuilder.Factory
+			RuntimeEnvironmentBuilder envBuilder = RuntimeEnvironmentBuilder.Factory
 					.get()
 					.newEmptyBuilder()
 					// remember to register the executor service
 					.addEnvironmentEntry("ExecutorService", executorService) 
+					.addEnvironmentEntry( EnvironmentName.ENTITY_MANAGER_FACTORY, emf )
 					.entityManagerFactory(emf)
 					.userGroupCallback(new UserGroupCallback() {
 		    			public List<String> getGroupsForUser(String userId) {
@@ -534,9 +552,14 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		    			public boolean existsGroup(String arg0) {
 		    				return true;
 		    			}
-		    		})
-					.get();
-
+		    		});
+				
+					
+	        for (Map.Entry<String, ResourceType> entry : resources.entrySet()) {
+	            envBuilder.addAsset(ResourceFactory.newClassPathResource(entry.getKey()), entry.getValue());
+	        }
+	        RuntimeEnvironment env = envBuilder.get();
+	        
 
 			createRuntimeManager(Strategy.PROCESS_INSTANCE, resources, env, uniqueRuntimeStr);
 
@@ -594,6 +617,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	}
 
 	private void addWorkItemHandlers(RuntimeEngine rteng) {
+	
 		kieSession.getWorkItemManager().registerWorkItemHandler("Awesome", new AwesomeHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("Notification", new NotificationWorkItemHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("ShowAllForms", new ShowAllFormsHandler());
@@ -1135,12 +1159,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	
     //Read file content into string with - Files.lines(Path path, Charset cs)
 	 
-    /**
-	 * @return the runtimeManager
-	 */
-	public RuntimeManager getRuntimeManager() {
-		return runtimeManager;
-	}
+ 
 
 	/**
 	 * @return the taskService
