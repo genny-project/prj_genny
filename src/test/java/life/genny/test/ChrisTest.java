@@ -121,11 +121,11 @@ public class ChrisTest {
         try {
             gks = GennyKieSession
             		.builder(serviceToken, true)
-                    .addJbpm("applicationLifecycleCP.bpmn")
+                    .addJbpm("genericApplication.bpmn")
                     .addJbpm("baseEntityValidation.bpmn")
-                    .addJbpm("notificationHub.bpmn")
+//                    .addJbpm("notificationHub.bpmn")
                     .addJbpm("placementLifecycle.bpmn")
-//                    .addDrl("CHRIS_RULE.drl")
+                    .addDrl("GREEN.drl")
                     .addDrl("ADD_APPLICATION_ATTRIBUTES.drl")
                     .addToken(userToken)
                     .build();
@@ -134,39 +134,9 @@ public class ChrisTest {
 
             gks.injectSignal("newApplication", hashBeg);
             
-            gks.injectSignal("dropDown", "VIEW_PROFILE");
-//            gks.injectSignal("dropDown", "VIEW_APPLICATION");
-//            gks.injectSignal("dropDown", "ON_HOLD");
-//            gks.injectSignal("dropDown", "WITHDRAWN");
-//            gks.injectSignal("dropDown", "REACTIVATE");
-//            gks.injectSignal("dropDown", "REJECT");
-//            gks.injectSignal("dropDown", "VIEW_INTERNSHIP_OFFER");
-            
-//            gks.injectSignal("rule", "VIEW_INTERNSHIP_OFFER");
-            
             gks.advanceSeconds(5, false);
             
             gks.injectSignal("controlSignal", "FORWARD");
-            
-            gks.advanceSeconds(5, false);
-            
-            gks.injectSignal("controlSignal", "FORWARD");
-            
-            gks.advanceSeconds(5, false);
-            
-            gks.injectSignal("controlSignal", "FORWARD");
-            
-            gks.advanceSeconds(5, false);
-            
-            gks.injectSignal("controlSignal", "FORWARD");
-            
-            gks.advanceSeconds(5, false);
-            
-            gks.injectSignal("controlSignal", "FORWARD");
-
-            gks.advanceSeconds(15, false);
-            
-            gks.injectSignal("controlSignal", "FINISH_INTERNSHIP");
 
             gks.advanceSeconds(5, false);
             
