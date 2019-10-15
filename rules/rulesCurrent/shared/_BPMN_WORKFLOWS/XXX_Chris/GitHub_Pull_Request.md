@@ -44,19 +44,19 @@ Aborting
 ---
 
 **4. Since the .classpath and rules/rulescurrent... will be overwritten and we need to deal with this**
-- **OVERWRITE MY CHANGES TO RULES/RULESCHECKOUT...** 
-----------------------------------------------------------------------------------------------------
-chrispyke@Chriss-MacBook-Pro prj_genny (v3.1.0) $ git checkout rules/rulesCurrent/shared/_BPMN_WORKFLOWS/Lifecycles/userSession.bpmn
 
-----------------------------------------------------------------------------------------------------
-REMOVE THE CLASSPATH
-----------------------------------------------------------------------------------------------------
-chrispyke@Chriss-MacBook-Pro prj_genny (v3.1.0) $ rm -rf .classpath
+* > Overwrite my changes to rules/rulescurrent...
+prj_genny (v3.1.0) $ `git checkout rules/rulesCurrent/shared/_BPMN_WORKFLOWS/Lifecycles/userSession.bpmn`
 
-----------------------------------------------------------------------------------------------------
-GIT STATUS SHOWS HOW FAR MY SHADOW COPY IS BEHIND THE MASTER > 32 COMMITS
-----------------------------------------------------------------------------------------------------
-chrispyke@Chriss-MacBook-Pro prj_genny (v3.1.0) $ git status
+* > Remove the .classpath
+prj_genny (v3.1.0) $ `rm -rf .classpath`
+
+---
+
+**5. Git staus shows how far my shadow copy is behind the master**
+
+prj_genny (v3.1.0) $ `git status`
+
 On branch v3.1.0
 Your branch is behind 'origin/v3.1.0' by 32 commits, and can be fast-forwarded.
   (use "git pull" to update your local branch)
@@ -87,11 +87,12 @@ Untracked files:
 	rules/rulesCurrent/shared/_BPMN_WORKFLOWS/XXX_Chris/
 	src/test/java/life/genny/test/LinTest.java
 
+---
 
-----------------------------------------------------------------------------------------------------
-GIT PULL TO GET YOUR SHADOW COPY UP TO DATE WITH THE MASTER COPY
-----------------------------------------------------------------------------------------------------
-chrispyke@Chriss-MacBook-Pro prj_genny (v3.1.0) $ git pull
+**6. Git pull to get your shadow copy up to date with the master**
+
+prj_genny (v3.1.0) $ `git pull`
+
 Updating 7c0452e..47fe766
 Fast-forward
  .classpath                                                                                                                      |  10 +-
@@ -168,10 +169,12 @@ Fast-forward
  create mode 100644 src/test/java/life/genny/test/LinTestActionCache.java
  create mode 100644 src/test/java/life/genny/test/LinTestFaker.java
 
-----------------------------------------------------------------------------------------------------
-GIT STATUS WILL SHOW THE CHANGES TO THE FOLDER YOU ARE REQUESTING IN THE PULL REQUEST 
-----------------------------------------------------------------------------------------------------
-chrispyke@Chriss-MacBook-Pro prj_genny (v3.1.0) $ git status
+---
+
+**7. Git status will show the chnages to the folder to show the chnages you are requesting in the pull request**
+
+prj_genny (v3.1.0) $ `git status`
+
 On branch v3.1.0
 Your branch is up to date with 'origin/v3.1.0'.
 
@@ -200,10 +203,12 @@ Untracked files:
 	rules/rulesCurrent/shared/_BPMN_WORKFLOWS/XXX_Chris/
 	src/test/java/life/genny/test/LinTest.java
 
-----------------------------------------------------------------------------------------------------
-GIT CHECKOUT TO A NEW BRANCH TO MAKE PULL REQUEST TO > APPLICATIONLC
-----------------------------------------------------------------------------------------------------
-chrispyke@Chriss-MacBook-Pro prj_genny (v3.1.0) $ git checkout -b applicationlc
+---
+
+**8. Git checkout to a new branch to make the pull request from**
+
+prj_genny (v3.1.0) $ `git checkout -b applicationlc`
+
 M	rules/rulesCurrent/shared/_BPMN_WORKFLOWS/Lifecycles/project.bpmn
 D	rules/rulesCurrent/shared/_BPMN_WORKFLOWS/Lifecycles/testLifecycle.bpmn
 A	rules/rulesCurrent/shared/_BPMN_WORKFLOWS/XXX_Rahul/applicationWorkflow/v6/XXXapplicationLifecycle.bpmn
@@ -212,15 +217,18 @@ M	rules/rulesCurrent/shared/_BPMN_WORKFLOWS/XXX_Rahul/baseEntityValidation/baseE
 M	src/test/java/life/genny/test/ChrisTest.java
 Switched to a new branch 'applicationlc'
 
-----------------------------------------------------------------------------------------------------
-GIT ADD . WILL ADD YOUR FILES HERE IN NEW BRANCH
-----------------------------------------------------------------------------------------------------
-chrispyke@Chriss-MacBook-Pro prj_genny (applicationlc) $ git add .
+---
 
-----------------------------------------------------------------------------------------------------
-GIT STATUS WILL SHOW THE CHANGES TO THE FOLDER YOU ARE REQUESTING IN THE PULL REQUEST 
-----------------------------------------------------------------------------------------------------
-chrispyke@Chriss-MacBook-Pro prj_genny (applicationlc) $ git status
+**9. Git add . will add your files here in the new branch**
+
+prj_genny (applicationlc) $ `git add .`
+
+---
+
+**10. Git status will show the changes to the folder you are requesting in the pull request**
+
+prj_genny (applicationlc) $ `git status`
+
 On branch applicationlc
 Changes to be committed:
   (use "git reset HEAD <file>..." to unstage)
@@ -237,10 +245,12 @@ Changes to be committed:
 	modified:   src/test/java/life/genny/test/ChrisTest.java
 	new file:   src/test/java/life/genny/test/LinTest.java
 
-----------------------------------------------------------------------------------------------------
-GIT COMMIT -M "DESCRIPTION" WILL COMMIT OYUR CHNAGES TO THE NEW BRANCH
-----------------------------------------------------------------------------------------------------
-chrispyke@Chriss-MacBook-Pro prj_genny (applicationlc) $ git commit -m "built applicationlc and placementlc"
+---
+
+**11. Git commit -m "description" will commit your changes to the new branch**
+
+prj_genny (applicationlc) $ `git commit -m "built applicationlc and placementlc"`
+
 [applicationlc db58db2] built applicationlc and placementlc
  11 files changed, 4511 insertions(+), 537 deletions(-)
  create mode 100644 rules/rulesCurrent/shared/_BPMN_WORKFLOWS/Lifecycles/applicationLifecycleCP.bpmn
@@ -251,18 +261,24 @@ chrispyke@Chriss-MacBook-Pro prj_genny (applicationlc) $ git commit -m "built ap
  create mode 100644 rules/rulesCurrent/shared/_BPMN_WORKFLOWS/XXX_Chris/CHRIS_RULE.drl
  rename rules/rulesCurrent/shared/_BPMN_WORKFLOWS/XXX_Rahul/applicationWorkflow/v6/{applicationLifecycle.bpmn => XXXapplicationLifecycle.bpmn} (72%)
  create mode 100644 src/test/java/life/genny/test/LinTest.java
-chrispyke@Chriss-MacBook-Pro prj_genny (applicationlc) $
-chrispyke@Chriss-MacBook-Pro prj_genny (applicationlc) $
-chrispyke@Chriss-MacBook-Pro prj_genny (applicationlc) $ git push
+
+---
+
+**12. Actually git push the changes**
+
+prj_genny (applicationlc) $ `git push`
+
 fatal: The current branch applicationlc has no upstream branch.
 To push the current branch and set the remote as upstream, use
 
     git push --set-upstream origin applicationlc
 
-----------------------------------------------------------------------------------------------------
-COPY AND PASTE THE GIT PUSH COMMAND ABOVE TO CREATE PULL REQUEST 
-----------------------------------------------------------------------------------------------------
-chrispyke@Chriss-MacBook-Pro prj_genny (applicationlc) $ git push --set-upstream origin applicationlc
+---
+
+**13. Copy and paste the git push command above to create pull request**
+
+prj_genny (applicationlc) $ `git push --set-upstream origin applicationlc`
+
 Counting objects: 27, done.
 Delta compression using up to 8 threads.
 Compressing objects: 100% (26/26), done.
@@ -282,18 +298,23 @@ To https://github.com/genny-project/prj_genny
  * [new branch]      applicationlc -> applicationlc
 Branch 'applicationlc' set up to track remote branch 'applicationlc' from 'origin'.
 
-----------------------------------------------------------------------------------------------------
-GO TO GITHUB.COM AND GO TO THE FOLDER YOUR MADE PULL REQUEST TO
-----------------------------------------------------------------------------------------------------
+---
 
-----------------------------------------------------------------------------------------------------
-Click on tab labelled Pull Requests
-----------------------------------------------------------------------------------------------------
+**14. Git checkout back to the master branch**
+prj_genny (applicationlc) $ `git checkout -b v3.1.0`
 
-----------------------------------------------------------------------------------------------------
-CLICK ON Compare and PULL REQUEST (GREEN BUTON)
-----------------------------------------------------------------------------------------------------
+---
 
-----------------------------------------------------------------------------------------------------
-SLECET YOUR REVIEWERS (EG. ADAM) AND THEN click CREATE PULl REQUEST
-----------------------------------------------------------------------------------------------------
+**15. Go to gihub.com and go to the folder you made the pull rquest to**
+
+---
+
+**16. Click on tab labelled Pull Requests**
+
+---
+
+**17. Click on Compare and Pull Request (Green Button)**
+
+---
+
+**18. Slect your reviewers (eg. Adam) and then click the Create Pull Request**
