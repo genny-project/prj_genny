@@ -141,8 +141,6 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 	List<Command<?>> cmds = new ArrayList<Command<?>>();
 	
-	RuntimeManager runtimeManager;
-	TaskService taskService;
 
 	/**
 	 * static factory method for builder
@@ -471,7 +469,34 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 		if (System.getenv("USE_JMS")==null) {
 			System.out.println("NOT USING JMS");
-			createRuntimeManager(Strategy.REQUEST, resources,  uniqueRuntimeStr);
+			EntityManagerFactory emf = super.getEmf();
+
+			RuntimeEnvironment env = RuntimeEnvironmentBuilder.Factory
+					.get()
+					.newEmptyBuilder()
+					// remember to register the executor service
+					.addEnvironmentEntry("ExecutorService", executorService) 
+					.entityManagerFactory(emf)
+					.persistence(sessionPersistence)
+					.userGroupCallback(new UserGroupCallback() {
+		    			public List<String> getGroupsForUser(String userId) {
+		    				List<String> result = new ArrayList<String>();
+		    				if ("sales-rep".equals(userId)) {
+		    					result.add("sales");
+		    				} else if ("john".equals(userId)) {
+		    					result.add("PM");
+		    				}
+		    				return result;
+		    			}
+		    			public boolean existsUser(String arg0) {
+		    				return true;
+		    			}
+		    			public boolean existsGroup(String arg0) {
+		    				return true;
+		    			}
+		    		})
+					.get();
+			createRuntimeManager(Strategy.REQUEST, resources, env, uniqueRuntimeStr);
 		} else {
 			System.out.println("USINGJMS");
 			EntityManagerFactory emf = super.getEmf();
@@ -493,14 +518,29 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 					// remember to register the executor service
 					.addEnvironmentEntry("ExecutorService", executorService) 
 					.entityManagerFactory(emf)
+					.userGroupCallback(new UserGroupCallback() {
+		    			public List<String> getGroupsForUser(String userId) {
+		    				List<String> result = new ArrayList<String>();
+		    				if ("sales-rep".equals(userId)) {
+		    					result.add("sales");
+		    				} else if ("john".equals(userId)) {
+		    					result.add("PM");
+		    				}
+		    				return result;
+		    			}
+		    			public boolean existsUser(String arg0) {
+		    				return true;
+		    			}
+		    			public boolean existsGroup(String arg0) {
+		    				return true;
+		    			}
+		    		})
 					.get();
 
 
-			runtimeManager = createRuntimeManager(Strategy.PROCESS_INSTANCE, resources, env, uniqueRuntimeStr);
+			createRuntimeManager(Strategy.PROCESS_INSTANCE, resources, env, uniqueRuntimeStr);
 
 		}
-
-		taskService = getRuntimeEngine().getTaskService();
 
 		kieSession = getRuntimeEngine().getKieSession();
 		
