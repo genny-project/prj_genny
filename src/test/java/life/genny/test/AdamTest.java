@@ -237,6 +237,7 @@ public class AdamTest {
 		                .addPotentialGroup("GADA")
 		                .setAdminUser("acrow")
 		             //   .addPotentialUser("acrow")
+		                .setProcessId("direct")
 		                .setDeploymentID("genny")
 		                .getTask();
 
@@ -245,12 +246,14 @@ public class AdamTest {
 		                .setAdminUser("Administrator")
 		                .addPotentialUser("domenic")
 		                .setDeploymentID("genny")
+		                .setProcessId("direct")
 		                .getTask();
 
 		        Task task3 = new TaskFluent().setName("Boring Outcome Stuff")
 		                .addPotentialGroup("OUTCOME")
 		                .setAdminUser("Administrator")
 		                .addPotentialUser("gerard")
+		                .setProcessId("direct")
 		                .setDeploymentID("genny")
 		                .getTask();
 
@@ -285,6 +288,8 @@ public class AdamTest {
 
 	              gks.getTaskService().resume(taskId, "acrow");    
 	              showStatuses(gks);
+	              
+	              gks.getTaskService().forward(taskId2, "domenic", "anish");
 
 	              // Claim Task
 //	              gks.getTaskService().claim(taskId, "acrow");
