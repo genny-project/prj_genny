@@ -1,7 +1,6 @@
 package life.genny.test;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
@@ -9,7 +8,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -26,19 +24,17 @@ import java.util.stream.Stream;
 
 import javax.persistence.EntityManagerFactory;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.drools.core.ClockType;
 import org.drools.core.time.impl.PseudoClockScheduler;
-import org.jbpm.bpmn2.handler.ServiceTaskHandler;
 import org.jbpm.executor.ExecutorServiceFactory;
+import org.jbpm.executor.impl.ExecutorImpl;
+import org.jbpm.executor.impl.ExecutorServiceImpl;
 import org.jbpm.kie.services.impl.query.SqlQueryDefinition;
 import org.jbpm.kie.services.impl.query.mapper.ProcessInstanceQueryMapper;
 import org.jbpm.kie.services.impl.query.persistence.QueryDefinitionEntity;
 import org.jbpm.process.audit.JPAWorkingMemoryDbLogger;
-import org.jbpm.process.instance.impl.humantask.HumanTaskHandler;
-import org.jbpm.services.api.RuntimeDataService;
 import org.jbpm.services.api.model.ProcessInstanceDesc;
 import org.jbpm.services.api.query.QueryAlreadyRegisteredException;
 import org.jbpm.services.api.query.QueryService;
@@ -54,7 +50,6 @@ import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.manager.RuntimeEngine;
 import org.kie.api.runtime.manager.RuntimeEnvironment;
 import org.kie.api.runtime.manager.RuntimeEnvironmentBuilder;
-import org.kie.api.runtime.manager.RuntimeManager;
 import org.kie.api.runtime.process.ProcessInstance;
 import org.kie.api.runtime.process.WorkItemHandler;
 import org.kie.api.runtime.rule.FactHandle;
@@ -63,16 +58,15 @@ import org.kie.internal.command.CommandFactory;
 import org.kie.internal.identity.IdentityProvider;
 import org.kie.internal.io.ResourceFactory;
 import org.kie.internal.query.QueryContext;
-import org.kie.internal.runtime.manager.context.EmptyContext;
 import org.kie.internal.task.api.UserGroupCallback;
 
 import com.google.gson.reflect.TypeToken;
 
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
-import io.vertx.core.json.JsonObject;
 import life.genny.jbpm.customworkitemhandlers.AskQuestionWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.AwesomeHandler;
+import life.genny.jbpm.customworkitemhandlers.JMSSendTaskWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.NotificationWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.PrintWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.RuleFlowGroupWorkItemHandler;
@@ -81,10 +75,8 @@ import life.genny.jbpm.customworkitemhandlers.SendSignalWorkItemHandler2;
 import life.genny.jbpm.customworkitemhandlers.ShowAllFormsHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 import life.genny.jbpm.customworkitemhandlers.ShowFrameWIthContextList;
-import life.genny.jbpm.customworkitemhandlers.ShowFrames;
 import life.genny.jbpm.customworkitemhandlers.ThrowSignalProcessWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.ThrowSignalWorkItemHandler;
-import life.genny.jbpm.customworkitemhandlers.JMSSendTaskWorkItemHandler;
 import life.genny.models.GennyToken;
 import life.genny.qwanda.Ask;
 import life.genny.qwanda.attribute.Attribute;
@@ -101,18 +93,12 @@ import life.genny.qwanda.message.QMessage;
 import life.genny.qwanda.validation.Validation;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
-import life.genny.rules.QRules;
-import life.genny.rules.RulesLoader;
+import life.genny.rules.GennyUsersCallback;
 import life.genny.rules.listeners.GennyAgendaEventListener;
 import life.genny.rules.listeners.JbpmInitListener;
 import life.genny.utils.RulesUtils;
 import life.genny.utils.SessionFacts;
 import life.genny.utils.VertxUtils;
-import life.genny.utils.WorkflowQueryInterface;
-import org.jbpm.executor.impl.ExecutorImpl;
-import org.jbpm.executor.impl.ExecutorServiceImpl;
-import org.jbpm.kie.services.impl.KModuleDeploymentService;
-import org.jbpm.kie.services.impl.KModuleDeploymentUnit;
 
 public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoCloseable {
 
@@ -174,7 +160,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			tokens.put("PER_SERVICE", serviceToken);
 			cmds.add(CommandFactory.newInsert(serviceToken, serviceToken.getCode()));
 			super.setUp();
-			
+			this.serviceToken = serviceToken;
 			
 
             // need to add 				
@@ -468,7 +454,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 		System.out.println("Loaded in All Resources");
 
-		String uniqueRuntimeStr = "genny";//UUID.randomUUID().toString();
+		String uniqueRuntimeStr = this.serviceToken.getRealm();//UUID.randomUUID().toString();
 		
 		System.setProperty("org.kie.server.bypass.auth.user", "true");
 
@@ -484,28 +470,33 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 					.addEnvironmentEntry( EnvironmentName.ENTITY_MANAGER_FACTORY, emf )
 					.entityManagerFactory(emf)
 					.persistence(sessionPersistence)
-					.userGroupCallback(new UserGroupCallback() {
-		    			public List<String> getGroupsForUser(String userId) {
-		    				List<String> result = new ArrayList<String>();
-		    				if ("acrow".equals(userId)) {
-		    					result.add("GADA");
-		    				} else if ("domenic".equals(userId)) {
-		    					result.add("GADA");
-		    				} else if ("gerard".equals(userId)) {
-		    					result.add("OUTCOME");
-		    				} else if ("chris".equals(userId)) {
-		    					result.add("OUTCOME");
-		    					result.add("GADA");
-		    				}
-		    				return result;
-		    			}
-		    			public boolean existsUser(String arg0) {
-		    				return true;
-		    			}
-		    			public boolean existsGroup(String arg0) {
-		    				return true;
-		    			}
-		    		});
+					
+//					.userGroupCallback(new UserGroupCallback() {
+//		    			public List<String> getGroupsForUser(String userId) {  // could actually send token rather than user
+//		    				List<String> result = new ArrayList<String>();
+//		    				// fetch user baseentity
+//		    				String userCode = "PER_"+userId.toUpperCase();
+//		    				
+//		    				if ("acrow".equals(userId)) {
+//		    					result.add("GADA");
+//		    				} else if ("domenic".equals(userId)) {
+//		    					result.add("GADA");
+//		    				} else if ("gerard".equals(userId)) {
+//		    					result.add("OUTCOME");
+//		    				} else if ("chris".equals(userId)) {
+//		    					result.add("OUTCOME");
+//		    					result.add("GADA");
+//		    				}
+//		    				return result;
+//		    			}
+//		    			public boolean existsUser(String arg0) {
+//		    				return true;
+//		    			}
+//		    			public boolean existsGroup(String arg0) {
+//		    				return true;
+//		    			}
+//		    		});
+					.userGroupCallback(new GennyUsersCallback());
 					
 					
 	        for (Map.Entry<String, ResourceType> entry : resources.entrySet()) {
@@ -514,6 +505,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	        RuntimeEnvironment env = envBuilder.get();
 
 			createRuntimeManager(Strategy.PROCESS_INSTANCE, resources, env, uniqueRuntimeStr);
+			
 		} else {
 			System.out.println("USINGJMS");
 			EntityManagerFactory emf = super.getEmf();
