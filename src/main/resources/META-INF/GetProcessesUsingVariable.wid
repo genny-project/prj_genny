@@ -1,15 +1,15 @@
 import org.drools.core.process.core.datatype.impl.type.StringDataType;
 [
-  // the QueryProcessInstanceIDByVariable work item
+  // the GetProcessesUsingVariable work item
   [
-    "name" : "QueryProcessInstanceIDByVariable",
+    "name" : "GetProcessesUsingVariable",
     "parameters" : [     
        "userToken"  : new GennyToken(),
        "variableName"  :  new StringDataType(),
        "variableValue"  :  new StringDataType(),
        "callingWorkflow"  :  new StringDataType()
      ],
-    "displayName" : "QueryProcessInstanceIDByVariable",
+    "displayName" : "GetProcessesUsingVariable",
     "icon" : "icons/icon-info.gif"
   ]
 ]
