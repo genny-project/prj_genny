@@ -22,3 +22,7 @@ eclipse/
 /.apt_generated_tests/
 /bin/
 /ActiveMQData/
+
+#ignore eclipse settings
+.settings/
+.classpath
