@@ -64,6 +64,7 @@ import com.google.gson.reflect.TypeToken;
 
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
+import life.genny.jbpm.customworkitemhandlers.AskQuestionTaskWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.AskQuestionWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.AwesomeHandler;
 import life.genny.jbpm.customworkitemhandlers.GetProcessesUsingVariable;
@@ -584,7 +585,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 				loadAttributesJsonFromResources(this.serviceToken);
 			}
 
-
+			kieSession.getEnvironment().set("Autoclaim", "true");  // for JBPM
 		//	kieSession.setGlobal("log", log);
 
 			// Add any tokens
@@ -637,6 +638,9 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		kieSession.getWorkItemManager().registerWorkItemHandler("SendSignal2",
 				new SendSignalWorkItemHandler2(MethodHandles.lookup().lookupClass(),rteng));
 		kieSession.getWorkItemManager().registerWorkItemHandler("JMSSendTask", new JMSSendTaskWorkItemHandler());
+
+		kieSession.getWorkItemManager().registerWorkItemHandler("AskQuestionTask",
+				new AskQuestionTaskWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng,kieSession));
 
 
 		if (workItemHandlers != null) {
