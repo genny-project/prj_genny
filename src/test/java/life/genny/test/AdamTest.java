@@ -204,6 +204,7 @@ public class AdamTest {
 					//	.addDrl("EventProcessing")
 					//	.addJbpm("Lifecycles")
 						.addJbpm("adam_user1.bpmn")
+						.addJbpm("adam_user2.bpmn")
 					//	.addDrl("AuthInit")
 					//	.addJbpm("AuthInit")
 					//	.addDrl("InitialiseProject")
@@ -234,7 +235,15 @@ public class AdamTest {
 
 		        
 		        // Start a process
-		        gks.startProcess("adam_user1");
+		        gks.startProcess("adam_user2");
+		        
+		        Task tasky = gks.getTaskService().getTaskById(1L);
+		        System.out.println(tasky);
+		        System.out.println("Formname: "+tasky.getFormName());
+		        System.out.println("Description: "+tasky.getDescription());
+		        System.out.println("People Assignments: "+tasky.getPeopleAssignments().getPotentialOwners());
+		        showStatuses(gks);
+		        
 		        gks.advanceSeconds(5, false);
 		        Map<String,Object> params = new HashMap<String,Object>();
 		        Task task = new TaskFluent().setName("Amazing GADA Stuff")
@@ -328,6 +337,29 @@ public class AdamTest {
 				BaseEntity user = VertxUtils.getObject(serviceToken.getRealm(), "", userToken.getUserCode(),
 						BaseEntity.class, serviceToken.getToken());
 
+				
+				// Ok, let's close the PER_USER1 task and see if the workflow continues....
+				System.out.println("CLosing adam_user2 task");
+				// first claim
+				List<TaskSummary> per_user1_tasks = gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_USER1", null);
+				TaskSummary taskSummary = per_user1_tasks.get(0);
+	            gks.getTaskService().claim(taskSummary.getId(), realm+"+PER_USER1");
+		        System.out.println("PER_USER1 CLAIMED "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_USER1", null)));
+	            gks.getTaskService().start(taskSummary.getId(), realm+"+PER_USER1");
+		        System.out.println("PER_USER1 STARTED "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_USER1", null)));
+	            gks.getTaskService().suspend(taskSummary.getId(), realm+"+PER_USER1");
+		        System.out.println("PER_USER1 SUSPENDED "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_USER1", null)));
+	            gks.getTaskService().resume(taskSummary.getId(), realm+"+PER_USER1");
+		        System.out.println("PER_USER1 RESUMED "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_USER1", null)));
+	            
+		        
+		        Map<String, Object> results2 = new HashMap<String, Object>();
+		        results2.put("Status", "good");
+		        gks.getTaskService().complete(taskSummary.getId(), realm+"+PER_USER1",results2);
+		        System.out.println("PER_USER1 COMPLETED  "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_USER1", null))+":results sent="+results2);
+
+
+				
 				gks.injectEvent(msgLogout);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -385,6 +417,7 @@ public class AdamTest {
 			both.add("GRP_OUTCOME");
 		
 
+			BaseEntity PER_USER1 = createTestUser(realm, "PER_USER1", "Ginger", gada,serviceToken);
 			BaseEntity acrow = createTestUser(realm, "PER_ADAMCROW63_AT_GMAIL_COM", "Adam", crowtech,serviceToken);
 			BaseEntity domenic = createTestUser(realm, "PER_DOMENIC_AT_OUTCOME_LIFE", "Domenic", gada,serviceToken);
 			BaseEntity gerard = createTestUser(realm, "PER_GERARD_AT_OUTCOME_LIFE", "Gerard ", outcome,serviceToken);
@@ -474,6 +507,7 @@ public class AdamTest {
 	            groups.add(realm+"+GRP_GADA");
 
 
+	        System.out.println("POTENTIAL PER_USER1  "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwnerByStatus(realm+"+PER_USER1", statuses, null)));
             System.out.println("POTENTIAL acrow      "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwnerByStatus(realm+"+PER_ADAMCROW63_AT_GMAIL_COM", statuses, null)));
             System.out.println("POTENTIAL dom        "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_DOMENIC_AT_OUTCOME_LIFE", null)));
             System.out.println("POTENTIAL gerard     "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_GERARD_AT_OUTCOME_LIFE",  null)));
