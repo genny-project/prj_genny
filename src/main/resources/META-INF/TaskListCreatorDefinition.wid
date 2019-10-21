@@ -1,0 +1,19 @@
+import org.drools.core.process.core.datatype.impl.type.StringDataType;
+[
+  // this work item handler will allow workflows to register a task into the Task List 
+  // genny-rules/src/main/java/life/genny/jbpm/customworkitemhandlers/TaskListCreator.java
+  [
+    "name" : "TaskListCreator",
+    "parameters" : [
+      "taskName" : new StringDataType(),
+      "taskAdmin" : new StringDataType(),
+      "taskPotentialGroup" : new StringDataType(),
+      "taskPotentialUser" : new StringDataType(),
+      "taskProcessId" : new StringDataType(),
+      "taskDeploymentId" : new StringDataType(),
+      "userToken"  : new GennyToken()
+    ],
+    "displayName" : "TaskListCreator",
+    "icon" : "icons/icon-info.gif"
+  ]
+]
