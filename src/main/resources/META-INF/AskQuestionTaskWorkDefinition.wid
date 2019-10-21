@@ -1,0 +1,15 @@
+import org.drools.core.process.core.datatype.impl.type.StringDataType;
+
+[
+  // the AskQuestionTask work item
+  [
+    "name" : "AskQuestionTask",
+    "parameters" : [     
+       "userToken"  : new GennyToken(),
+       "questionCode"  :  new StringDataType(),
+       "callingWorkflow"  :  new StringDataType()
+      ],
+    "displayName" : "Ask Question Task",
+    "icon" : "icons/icon-info.gif"
+  ]
+]
