@@ -16,6 +16,7 @@ import java.util.Set;
 import org.apache.logging.log4j.Logger;
 import org.assertj.core.util.Arrays;
 import org.jbpm.ruleflow.core.RuleFlowProcess;
+import org.junit.Test;
 import org.kie.api.runtime.process.ProcessInstance;
 
 import life.genny.eventbus.EventBusInterface;
@@ -76,12 +77,24 @@ public class SafalTest extends GennyJbpmBaseTest {
 		super(false);
 	}
 
+	@Test
+	public void queryTest() {
+		initItem();
+		GennyKieSession gks = GennyKieSession.builder(serviceToken,true)
+				.addJbpm("query_test.bpmn")
+				.build();
+		
+		System.out.println("Hi");
+		gks.injectSignal("start",userToken);
+	
+	}
+	
 	
 	public void initItem() {		
+		boolean runNewLocal = false;
 		
 		
-		
-		if (false) {
+		if (runNewLocal) {
 			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 			
 			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
