@@ -2,12 +2,9 @@ package life.genny.test;
 
 import java.io.FileNotFoundException;
 import java.lang.invoke.MethodHandles;
-import java.lang.reflect.Type;
 import java.sql.SQLException;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,50 +12,38 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TimeZone;
-import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.Logger;
 import org.assertj.core.util.Arrays;
-import org.codehaus.plexus.util.StringUtils;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import com.google.gson.reflect.TypeToken;
+import org.jbpm.ruleflow.core.RuleFlowProcess;
+import org.kie.api.runtime.process.ProcessInstance;
 
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
+import life.genny.model.NodeStatus;
 import life.genny.models.Frame3;
 import life.genny.models.FramePosition;
 import life.genny.models.GennyToken;
-import life.genny.models.TableData;
 import life.genny.models.Theme;
 import life.genny.models.ThemeAttributeType;
 import life.genny.models.ThemePosition;
 import life.genny.qwanda.Answer;
 import life.genny.qwanda.Ask;
 import life.genny.qwanda.ContextList;
-import life.genny.qwanda.Question;
 import life.genny.qwanda.VisualControlType;
-import life.genny.qwanda.attribute.Attribute;
-import life.genny.qwanda.datatype.DataType;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.SearchEntity;
-import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataAnswerMessage;
+import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventMessage;
-import life.genny.qwanda.validation.Validation;
-import life.genny.qwanda.validation.ValidationList;
 import life.genny.qwandautils.GennyCacheInterface;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
-import life.genny.qwandautils.QwandaUtils;
 import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.FrameUtils2;
-import life.genny.utils.RulesUtils;
 import life.genny.utils.TableUtils;
 import life.genny.utils.VertxUtils;
 
@@ -91,7 +76,10 @@ public class SafalTest extends GennyJbpmBaseTest {
 		super(false);
 	}
 
-	public void initItem() {
+	
+	public void initItem() {		
+		
+		
 		
 		if (false) {
 			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
@@ -137,7 +125,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 		
 	}
 	
-	@Test
+	//@Test
 	public void v7DetailsView() {
 
 		initItem();
@@ -522,8 +510,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 		gks.start();
 		gks.injectSignal("newSession",msg);
 		gks.advanceSeconds(5, true);
-		//gks.injectSignal("event",msg1);
-		
+		//gks.injectSignal("event",msg1);		
 		
 		gks.advanceSeconds(5, true);
 	     
