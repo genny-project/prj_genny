@@ -29,11 +29,11 @@ rule "ORANGE_REMINDER_SHORTLIST"
 		jsonTemplates.put("4", "ORANGE_SHORTLIST_REMINDER_SMS_TEMPLATE_APPLIED_STUDENT");
 		System.out.println("Shortlist Orange Reminder Notitificaitons Template Json: " + jsonTemplates.toString());
 		
-		//output.setTypeOfResult("NotificationHubTemplateFound");
-		//output.setResultCode(jsonTemplates.toString());
-		//retract(output);
+	/* output.setTypeOfResult("NotificationHubTemplateFound"); */
+	/* output.setResultCode(jsonTemplates.toString()); */
+	/* retract(output); */
 		    
- 		//System.out.println("SUCCESS -> Set notification code to APPLIED" ); 
+ 	/* System.out.println("SUCCESS -> Set notification code to APPLIED" );  */
  		
  		retract(userToken)
  		retract(serviceToken)

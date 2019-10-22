@@ -26,18 +26,18 @@ rule "INTERVIEW_TO_OFFERED"
  		System.out.println("INTERVIEW_TO_OFFERED: Rule fired" ); 
  		System.out.println("INTERVIEW_TO_OFFERED: newApplication = " + newApplication.getCode());
  		
- 		// Construct answer with Source, Target, Attribute Code, Value
+ 	/*  Construct answer with Source, Target, Attribute Code, Value */
  		Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_BUCKET_CODE","Offered");
  		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
  		beUtils.saveAnswer(answer);
 
-		//insert(answer);
+	/* insert(answer); */
 		
 		System.out.println("INTERVIEW_TO_OFFERED: Answer = " + answer);
 		System.out.println("INTERVIEW_TO_OFFERED: newApplication = " + newApplication); 
 		
 		
-		// Set the attribute code and value to output
+	/*  Set the attribute code and value to output */
 		output.setResultCode(answer.getAttributeCode());
 		output.setTargetCode(answer.getValue());
 	

@@ -26,27 +26,27 @@ rule "RED"
  		System.out.println("Red: Rule fired" ); 
  		System.out.println("Red: newApplication = " + newApplication.getCode());
  		
- 		// green: '#5cb85c'
-		// orange: '#FFCC00'
-		// red: '#cc0000'
+ 	/*  green: '#5cb85c' */
+	/*  orange: '#FFCC00' */
+	/*  red: '#cc0000' */
  		
- 		// Construct answer with Source, Target, Attribute Code, Value
+ 	/*  Construct answer with Source, Target, Attribute Code, Value */
  		Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_STATUS_COLOR","#cc0000");
  		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
  		beUtils.saveAnswer(answer);
 
-		//insert(answer);
+	/* insert(answer); */
 		
 		System.out.println("Red: Answer = " + answer);
 		System.out.println("Red: newApplication = " + newApplication); 
 		
 		
-		//System.out.println("GREEN: Answer Source Code = " + answer.getSourceCode());
-		//System.out.println("GREEN: Answer Target Code = " + answer.getTargetCode());
-		//System.out.println("GREEN: Answer Attribute Code = " + answer.getAttributeCode());
-		//System.out.println("GREEN: Answer Value = " + answer.getValue()); 
+	/* System.out.println("GREEN: Answer Source Code = " + answer.getSourceCode()); */
+	/* System.out.println("GREEN: Answer Target Code = " + answer.getTargetCode()); */
+	/* System.out.println("GREEN: Answer Attribute Code = " + answer.getAttributeCode()); */
+	/* System.out.println("GREEN: Answer Value = " + answer.getValue());  */
 		
-		// Set the attribute code and value to output
+	/*  Set the attribute code and value to output */
 		output.setResultCode(answer.getAttributeCode());
 		output.setTargetCode(answer.getValue());
 	
