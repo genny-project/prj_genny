@@ -66,7 +66,7 @@
 		<m2e.jpa.activation>false</m2e.jpa.activation>
 		<activemq-junit-version>5.13.0</activemq-junit-version>
 		<activemq-version>5.13.0</activemq-version>
-		<spring.version>4.2.4.RELEASE</spring.version>
+		<spring.version>5.2.0.RELEASE</spring.version>
 		<version.gson>2.8.5</version.gson>
 	</properties>
 
