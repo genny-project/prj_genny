@@ -28,11 +28,11 @@ rule "SPECIFIC_APPLIED"
 		jsonTemplates.put("4", "SMS_TEMPLATE_APPLIED_STUDENT");
 		System.out.println("Applied Notitificaitons Template Json: " + jsonTemplates.toString());
 		
-		//output.setTypeOfResult("NotificationHubTemplateFound");
-		//output.setResultCode(jsonTemplates.toString());
-		//retract(output);
+	/* output.setTypeOfResult("NotificationHubTemplateFound"); */
+	/* output.setResultCode(jsonTemplates.toString()); */
+	/* retract(output); */
 		    
- 		//System.out.println("SUCCESS -> Set notification code to APPLIED" ); 
+ 	/* System.out.println("SUCCESS -> Set notification code to APPLIED" );  */
  		
  		retract(userToken)
  		retract(serviceToken)
