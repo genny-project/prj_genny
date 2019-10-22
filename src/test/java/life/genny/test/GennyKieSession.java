@@ -72,7 +72,6 @@ import life.genny.jbpm.customworkitemhandlers.NotificationWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.PrintWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.RuleFlowGroupWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.SendSignalWorkItemHandler;
-import life.genny.jbpm.customworkitemhandlers.SendSignalWorkItemHandler2;
 import life.genny.jbpm.customworkitemhandlers.ShowAllFormsHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 import life.genny.jbpm.customworkitemhandlers.ShowFrameWIthContextList;
@@ -529,23 +528,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 					.addEnvironmentEntry("ExecutorService", executorService) 
 					.addEnvironmentEntry( EnvironmentName.ENTITY_MANAGER_FACTORY, emf )
 					.entityManagerFactory(emf)
-					.userGroupCallback(new UserGroupCallback() {
-		    			public List<String> getGroupsForUser(String userId) {
-		    				List<String> result = new ArrayList<String>();
-		    				if ("sales-rep".equals(userId)) {
-		    					result.add("sales");
-		    				} else if ("john".equals(userId)) {
-		    					result.add("PM");
-		    				}
-		    				return result;
-		    			}
-		    			public boolean existsUser(String arg0) {
-		    				return true;
-		    			}
-		    			public boolean existsGroup(String arg0) {
-		    				return true;
-		    			}
-		    		});
+					.userGroupCallback(new GennyUsersCallback());
 				
 					
 	        for (Map.Entry<String, ResourceType> entry : resources.entrySet()) {
@@ -625,22 +608,18 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 				new AskQuestionWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng));
 		kieSession.getWorkItemManager().registerWorkItemHandler("ThrowSignal",
 				new ThrowSignalWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng));
-		kieSession.getWorkItemManager().registerWorkItemHandler("SendSignal",
-				new SendSignalWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng));
-		kieSession.getWorkItemManager().registerWorkItemHandler("SendSignal2",
-				new SendSignalWorkItemHandler2(MethodHandles.lookup().lookupClass(),rteng));
-
 		
 		kieSession.getWorkItemManager().registerWorkItemHandler("SendSignal",
 				new SendSignalWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng));
-		kieSession.getWorkItemManager().registerWorkItemHandler("SendSignal2",
-				new SendSignalWorkItemHandler2(MethodHandles.lookup().lookupClass(),rteng));
+
+		
 		kieSession.getWorkItemManager().registerWorkItemHandler("JMSSendTask", new JMSSendTaskWorkItemHandler());
 
 		kieSession.getWorkItemManager().registerWorkItemHandler("AskQuestionTask",
 				new AskQuestionTaskWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng,kieSession));
 
-
+	//	kieSession.getWorkItemManager().registerWorkItemHandler("NotificationHub", new NotificationHubWorkItemHandler());
+		
 		if (workItemHandlers != null) {
 			for (Tuple2<String, WorkItemHandler> wih : workItemHandlers) {
 				kieSession.getWorkItemManager().registerWorkItemHandler(wih._1, wih._2);

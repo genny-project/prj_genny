@@ -1083,6 +1083,9 @@ kcontext.setVariable(&quot;currentUser&quot;,currentUser);
           <tns:metaData name="elementname">
             <tns:metaValue><![CDATA[SendSignal]]></tns:metaValue>
           </tns:metaData>
+          <tns:onEntry-script scriptFormat="http://www.java.com/java">
+            <tns:script>System.out.println(&quot;Entering SendSignal&quot;);</tns:script>
+          </tns:onEntry-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_17</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
