@@ -19,29 +19,41 @@ rule "GREEN"
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		newApplication : BaseEntity()
 		output : OutputParam()
+		colourCode : String(colourCode.equals("Green"))
+
 	  
      then
- 		System.out.println("GREEN: Rule fired" ); 
- 		System.out.println("GREEN: newApplication = " + newApplication.getCode());
+ 		System.out.println("Green: Rule fired" ); 
+ 		System.out.println("Green: newApplication = " + newApplication.getCode());
  		
  		// green: '#5cb85c'
 		// orange: '#FFCC00'
 		// red: '#cc0000'
  		
  		// Construct answer with Source, Target, Attribute Code, Value
+ 		//Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_BUCKET_CODE","SHORTLIST");
  		Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_STATUS_COLOR","#5cb85c");
  		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
  		beUtils.saveAnswer(answer);
 
 		//insert(answer);
 		
-		System.out.println("GREEN: Answer = " + answer); 
-		System.out.println("GREEN: Answer Source Code = " + answer.getSourceCode());
-		System.out.println("GREEN: Answer Target Code = " + answer.getTargetCode());
-		System.out.println("GREEN: Answer Attribute Code = " + answer.getAttributeCode());
-		System.out.println("GREEN: Answer Value = " + answer.getValue()); 
-		System.out.println("GREEN: Answer Type = " + answer.getCreatedDate()); 
+		System.out.println("Green: Answer = " + answer);
+		System.out.println("Green: newApplication = " + newApplication); 
 		
-		output.setResultCode("Dude");
+		
+		//System.out.println("GREEN: Answer Source Code = " + answer.getSourceCode());
+		//System.out.println("GREEN: Answer Target Code = " + answer.getTargetCode());
+		//System.out.println("GREEN: Answer Attribute Code = " + answer.getAttributeCode());
+		//System.out.println("GREEN: Answer Value = " + answer.getValue()); 
+		
+		// Set the attribute code and value to output
+		output.setResultCode(answer.getAttributeCode());
+		output.setTargetCode(answer.getValue());
+	
+		retract(userToken)
+		retract(serviceToken)
+		retract(colourCode)
+		retract(newApplication)
 		
 end
