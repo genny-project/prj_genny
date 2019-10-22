@@ -147,7 +147,7 @@ public class AdamTest {
 	        this.serviceConfigurator = ServiceLoader.load(KieServiceConfigurator.class).iterator().next();
 	    }
 
-	//@Test
+	@Test
 		public void askQuestionTest()
 		{
 			System.out.println("AskQuestion Test");
@@ -205,15 +205,16 @@ public class AdamTest {
 						.addJbpm("Lifecycles")
 						.addJbpm("adam_user1.bpmn")
 						.addJbpm("adam_user2.bpmn")
+						.addJbpm("adam_user3.bpmn")
 						.addDrl("AuthInit")
 						.addJbpm("AuthInit")
-					//	.addDrl("InitialiseProject")
-					//	.addJbpm("InitialiseProject")
+						.addDrl("InitialiseProject")
+						.addJbpm("InitialiseProject")
 
 						.addToken(userToken)
 						.build();
 				gks.start();
-	
+			//	 gks.startProcess("adam_user3");
 				gks.injectEvent(authInitMsg); // This should create a new process
 				gks.advanceSeconds(5, false);
 
@@ -231,7 +232,7 @@ public class AdamTest {
 		}
 
 	   
-		@Test
+		//@Test
 		public void userTaskTest()
 		{
 			System.out.println("UserTask Test");

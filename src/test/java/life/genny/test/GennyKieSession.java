@@ -504,7 +504,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	        }
 	        RuntimeEnvironment env = envBuilder.get();
 
-			createRuntimeManager(Strategy.PROCESS_INSTANCE, resources, env, uniqueRuntimeStr);
+			createRuntimeManager(Strategy.SINGLETON, resources, env, uniqueRuntimeStr);
 			
 		} else {
 			System.out.println("USINGJMS");
@@ -593,7 +593,9 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	}
 
 	private void addWorkItemHandlers(RuntimeEngine rteng) {
-	
+		kieSession.getWorkItemManager().registerWorkItemHandler("SendSignal",
+				new SendSignalWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng));
+
 		kieSession.getWorkItemManager().registerWorkItemHandler("Awesome", new AwesomeHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("Notification", new NotificationWorkItemHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("ShowAllForms", new ShowAllFormsHandler());
