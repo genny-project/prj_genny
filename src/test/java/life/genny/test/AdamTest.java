@@ -147,6 +147,90 @@ public class AdamTest {
 	        this.serviceConfigurator = ServiceLoader.load(KieServiceConfigurator.class).iterator().next();
 	    }
 
+	//@Test
+		public void askQuestionTest()
+		{
+			System.out.println("AskQuestion Test");
+			GennyToken userToken = null;
+			GennyToken serviceToken = null;
+			QRules qRules = null;
+
+			if (true) {
+				userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+				serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+				qRules = new QRules(eventBusMock, userToken.getToken());
+				qRules.set("realm", userToken.getRealm());
+				qRules.setServiceToken(serviceToken.getToken());
+				VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+				GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+			} else {
+				qRules = GennyJbpmBaseTest.setupLocalService();
+				userToken = new GennyToken("userToken", qRules.getToken());
+				serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+			}
+
+			System.out.println("session     =" + userToken.getSessionCode());
+			System.out.println("userToken   =" + userToken.getToken());
+			//System.out.println("userToken2   =" + userToken2.getToken());
+			System.out.println("serviceToken=" + serviceToken.getToken());
+
+			SessionFacts initFacts = new SessionFacts(serviceToken, null, new QEventMessage("EVT_MSG", "INIT_STARTUP"));
+			QEventMessage authInitMsg = new QEventMessage("EVT_MSG", "AUTH_INIT"); authInitMsg.setToken(userToken.getToken());
+			QEventMessage msgLogout = new QEventMessage("EVT_MSG", "LOGOUT");msgLogout.setToken(userToken.getToken());
+
+
+			// NOW SET UP Some baseentitys
+			BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
+					StringUtils.capitaliseAllWords(serviceToken.getRealm()));
+			project.setRealm(serviceToken.getRealm());
+			VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
+					JsonUtils.toJson(project), serviceToken.getToken());
+			VertxUtils.writeCachedJson(realm,  ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(),JsonUtils.toJson(project), serviceToken.getToken());
+			VertxUtils.writeCachedJson(GennySettings.GENNY_REALM,
+					"TOKEN" + realm.toUpperCase(),serviceToken.getToken());
+			JsonObject tokenObj = VertxUtils.readCachedJson(GennySettings.GENNY_REALM,
+					"TOKEN" + realm.toUpperCase());
+			String token = tokenObj.getString("value");
+
+			createTestUsersGroups(serviceToken);
+
+			GennyKieSession gks = null;
+
+			try {
+				gks = GennyKieSession.builder(serviceToken,true)
+						.addDrl("SignalProcessing")
+						.addDrl("DataProcessing")
+						.addDrl("EventProcessing")
+						.addJbpm("Lifecycles")
+						.addJbpm("adam_user1.bpmn")
+						.addJbpm("adam_user2.bpmn")
+						.addDrl("AuthInit")
+						.addJbpm("AuthInit")
+					//	.addDrl("InitialiseProject")
+					//	.addJbpm("InitialiseProject")
+
+						.addToken(userToken)
+						.build();
+				gks.start();
+	
+				gks.injectEvent(authInitMsg); // This should create a new process
+				gks.advanceSeconds(5, false);
+
+				
+				gks.injectEvent(msgLogout);
+			} catch (Exception e) {
+				e.printStackTrace();
+				
+			}
+			finally {
+				if (gks!=null) {
+					gks.close();
+				}
+			}
+		}
+
+	   
 		@Test
 		public void userTaskTest()
 		{
