@@ -537,7 +537,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	        RuntimeEnvironment env = envBuilder.get();
 	        
 
-			createRuntimeManager(Strategy.PROCESS_INSTANCE, resources, env, uniqueRuntimeStr);
+			createRuntimeManager(Strategy.SINGLETON, resources, env, uniqueRuntimeStr);
 
 		}
 
