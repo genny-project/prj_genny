@@ -9,7 +9,24 @@ import org.drools.core.process.core.datatype.impl.type.StringDataType;
        "questionCode"  :  new StringDataType(),
        "callingWorkflow"  :  new StringDataType()
       ],
+      "results" : [
+        "Result" : new ObjectDataType(),
+    ],
     "displayName" : "Ask Question Task",
     "icon" : "icons/icon-info.gif"
+  ],
+
+  /* the Send Signal work item */
+  [
+    "name" : "SendSignal",
+    "parameters" : [     
+       "userToken"  : new GennyToken(),
+       "signalCode"  :  new StringDataType(),
+       "payloadObject"  :  new ObjectDataType(),
+       "callingWorkflow"  :  new StringDataType()
+      ],
+    "displayName" : "SendSignal",
+    "icon" : "icons/icon-info.gif"
   ]
+
 ]
