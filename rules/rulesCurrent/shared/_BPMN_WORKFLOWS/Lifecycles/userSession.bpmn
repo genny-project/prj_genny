@@ -39,6 +39,8 @@
   <bpmn2:itemDefinition id="ItemDefinition_24" isCollection="false" structureRef="life.genny.model.OutputParamTreeSet"/>
   <bpmn2:itemDefinition id="ItemDefinition_95" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_96" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_113" isCollection="false" structureRef="org.kie.api.runtime.KieSession.AtomicAction"/>
+  <bpmn2:itemDefinition id="ItemDefinition_114" isCollection="false" structureRef="org.kie.api.runtime.KieSession"/>
   <bpmn2:signal id="Signal_2" name="event"/>
   <bpmn2:signal id="Signal_3" name="data"/>
   <bpmn2:signal id="Signal_4" name="newSession"/>
@@ -80,6 +82,8 @@
       <tns:import name="org.kie.api.definition.process.WorkflowProcess"/>
       <tns:import name="life.genny.qwandautils.QwandaUtils"/>
       <tns:import name="life.genny.model.OutputParamTreeSet"/>
+      <tns:import name="org.kie.api.runtime.KieSession"/>
+      <tns:import name="org.kie.api.runtime.KieSession.AtomicAction"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_1329" name="message"/>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_174" name="userToken"/>
@@ -176,6 +180,8 @@
         <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_22</bpmn2:outgoing>
         <bpmn2:script>Long processId = kcontext.getProcessInstance().getId();
+KieSession kieSession = ((StatefulKnowledgeSession)kcontext.getKnowledgeRuntime());
+System.out.println(&quot;KieSession id = &quot;+kieSession.getId());
 if (((SessionFacts)sessionFacts).getMessage() instanceof QEventMessage) {
 message = (QEventMessage)((SessionFacts)sessionFacts).getMessage();}
 else {
@@ -1027,6 +1033,13 @@ if (currentUser == null) {
             <tns:metaData name="elementname">
               <tns:metaValue><![CDATA[ShowFrames]]></tns:metaValue>
             </tns:metaData>
+            <tns:onEntry-script scriptFormat="http://www.java.com/java">
+              <tns:script>System.out.println(&quot;userSession: Show Page Handler - Entering ShowFrames in userSession using dom &quot;+dom);
+KieSession kieSession = ((StatefulKnowledgeSession)kcontext.getKnowledgeRuntime());
+System.out.println(&quot;KieSession id = &quot;+kieSession.getId());
+
+</tns:script>
+            </tns:onEntry-script>
           </bpmn2:extensionElements>
           <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
           <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>

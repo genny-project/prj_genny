@@ -25,6 +25,7 @@ import javax.persistence.EntityManagerFactory;
 import org.apache.logging.log4j.Logger;
 import org.assertj.core.util.Arrays;
 import org.codehaus.plexus.util.StringUtils;
+import org.drools.core.process.instance.impl.WorkItemImpl;
 import org.jbpm.bpmn2.handler.ServiceTaskHandler;
 import org.jbpm.kie.services.impl.model.UserTaskInstanceDesc;
 import org.jbpm.services.api.DefinitionService;
@@ -46,7 +47,7 @@ import org.jbpm.test.services.TestUserGroupCallbackImpl;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.kie.api.runtime.manager.RuntimeEngine;
-
+import org.kie.api.runtime.process.WorkItemManager;
 import org.kie.api.task.model.Comment;
 import org.kie.api.task.model.Group;
 import org.kie.api.task.model.OrganizationalEntity;
@@ -68,6 +69,7 @@ import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
 import life.genny.jbpm.customworkitemhandlers.AdamTest1WorkItemHandler;
+import life.genny.jbpm.customworkitemhandlers.AskQuestionTaskWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 import life.genny.models.Frame3;
 import life.genny.models.FramePosition;
@@ -210,7 +212,6 @@ public class AdamTest {
 						.addJbpm("AuthInit")
 						.addDrl("InitialiseProject")
 						.addJbpm("InitialiseProject")
-
 						.addToken(userToken)
 						.build();
 				gks.start();
@@ -218,7 +219,24 @@ public class AdamTest {
 				gks.injectEvent(authInitMsg); // This should create a new process
 				gks.advanceSeconds(5, false);
 
+				System.out.println("Invoking AskQuestionTask workItem");
+				// Send an AskQuestion
+				AskQuestionTaskWorkItemHandler askQ = new AskQuestionTaskWorkItemHandler(GennyKieSession.class,gks.getGennyRuntimeEngine(),gks.getKieSession());
+				WorkItemManager workItemManager = gks.getKieSession().getWorkItemManager();
+				WorkItemImpl workItem = new WorkItemImpl();
+		        workItem.setParameter("userToken",
+		                              userToken);
+		        workItem.setParameter("questionCode",
+		                              "QUE_USER_PROFILE_GRP");
+		        workItem.setParameter("callingWorkflow", "AdamTest");
+		        workItem.setParameter("Priority", "10");  // if l;eft out defaults to 0
+		        workItem.setDeploymentId(userToken.getRealm());
+		        workItem.setName("AskQuestion");
+		        workItem.setProcessInstanceId(1234L); // made up processId
+		        askQ.executeWorkItem(workItem, workItemManager);
 				
+		        showStatuses(gks);
+		        
 				gks.injectEvent(msgLogout);
 			} catch (Exception e) {
 				e.printStackTrace();
