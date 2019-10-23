@@ -5,27 +5,33 @@ import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.qwanda.Answer;
 import life.genny.utils.OutputParam;
+import io.vertx.core.json.JsonObject;
 
 import java.util.List;
 import java.util.ArrayList;
 
-rule "SET_NOTIFICATION_CODE"
+rule "SPECIFIC_OFFERED"
     ruleflow-group 'SpecificEnter'
     no-loop true
     salience 1 
     when
 	 	userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
-		output : OutputParam( )
+		bucketCode : String(bucketCode.equals("Offered"))
 	  
      then
-     
-     	
- 		System.out.println("SUCCESS -> Set notification code to APPLIED" ); 
- 		output.setResultCode("APPLIED");
+    
+		JsonObject jsonTemplates = new JsonObject();
+		jsonTemplates.put("1", "EMAIL_TEMPLATE_OFFERED_STUDENT");
+		jsonTemplates.put("2", "EMAIL_TEMPLATE_OFFERED_SCHOOL");
+		jsonTemplates.put("3", "EMAIL_TEMPLATE_OFFERED_SALESTEAM");
+		jsonTemplates.put("4", "SMS_TEMPLATE_OFFERED_STUDENT");
+		System.out.println("Offered Notitificaitons Template Json: " + jsonTemplates.toString());
+	 
  		
  		retract(userToken)
  		retract(serviceToken)
+ 		retract(bucketCode)
  		
  
 end

@@ -24,6 +24,8 @@ import java.util.stream.Stream;
 
 import javax.persistence.EntityManagerFactory;
 
+import com.google.gson.reflect.TypeToken;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.drools.core.ClockType;
@@ -60,8 +62,6 @@ import org.kie.internal.io.ResourceFactory;
 import org.kie.internal.query.QueryContext;
 import org.kie.internal.task.api.UserGroupCallback;
 
-import com.google.gson.reflect.TypeToken;
-
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import life.genny.jbpm.customworkitemhandlers.AskQuestionTaskWorkItemHandler;
@@ -73,7 +73,6 @@ import life.genny.jbpm.customworkitemhandlers.NotificationWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.PrintWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.RuleFlowGroupWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.SendSignalWorkItemHandler;
-import life.genny.jbpm.customworkitemhandlers.SendSignalWorkItemHandler2;
 import life.genny.jbpm.customworkitemhandlers.ShowAllFormsHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 import life.genny.jbpm.customworkitemhandlers.ShowFrameWIthContextList;
@@ -506,7 +505,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	        }
 	        RuntimeEnvironment env = envBuilder.get();
 
-			createRuntimeManager(Strategy.PROCESS_INSTANCE, resources, env, uniqueRuntimeStr);
+			createRuntimeManager(Strategy.SINGLETON, resources, env, uniqueRuntimeStr);
 			
 		} else {
 			System.out.println("USINGJMS");
@@ -530,23 +529,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 					.addEnvironmentEntry("ExecutorService", executorService) 
 					.addEnvironmentEntry( EnvironmentName.ENTITY_MANAGER_FACTORY, emf )
 					.entityManagerFactory(emf)
-					.userGroupCallback(new UserGroupCallback() {
-		    			public List<String> getGroupsForUser(String userId) {
-		    				List<String> result = new ArrayList<String>();
-		    				if ("sales-rep".equals(userId)) {
-		    					result.add("sales");
-		    				} else if ("john".equals(userId)) {
-		    					result.add("PM");
-		    				}
-		    				return result;
-		    			}
-		    			public boolean existsUser(String arg0) {
-		    				return true;
-		    			}
-		    			public boolean existsGroup(String arg0) {
-		    				return true;
-		    			}
-		    		});
+					.userGroupCallback(new GennyUsersCallback());
 				
 					
 	        for (Map.Entry<String, ResourceType> entry : resources.entrySet()) {
@@ -555,7 +538,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	        RuntimeEnvironment env = envBuilder.get();
 	        
 
-			createRuntimeManager(Strategy.PROCESS_INSTANCE, resources, env, uniqueRuntimeStr);
+			createRuntimeManager(Strategy.SINGLETON, resources, env, uniqueRuntimeStr);
 
 		}
 
@@ -611,7 +594,9 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	}
 
 	private void addWorkItemHandlers(RuntimeEngine rteng) {
-		
+		kieSession.getWorkItemManager().registerWorkItemHandler("SendSignal",
+				new SendSignalWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng));
+
 		kieSession.getWorkItemManager().registerWorkItemHandler("GetProcessesUsingVariable", new GetProcessesUsingVariable());
 		kieSession.getWorkItemManager().registerWorkItemHandler("Awesome", new AwesomeHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("Notification", new NotificationWorkItemHandler());
@@ -627,22 +612,18 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 				new AskQuestionWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng));
 		kieSession.getWorkItemManager().registerWorkItemHandler("ThrowSignal",
 				new ThrowSignalWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng));
-		kieSession.getWorkItemManager().registerWorkItemHandler("SendSignal",
-				new SendSignalWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng));
-		kieSession.getWorkItemManager().registerWorkItemHandler("SendSignal2",
-				new SendSignalWorkItemHandler2(MethodHandles.lookup().lookupClass(),rteng));
-
 		
 		kieSession.getWorkItemManager().registerWorkItemHandler("SendSignal",
 				new SendSignalWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng));
-		kieSession.getWorkItemManager().registerWorkItemHandler("SendSignal2",
-				new SendSignalWorkItemHandler2(MethodHandles.lookup().lookupClass(),rteng));
+
+		
 		kieSession.getWorkItemManager().registerWorkItemHandler("JMSSendTask", new JMSSendTaskWorkItemHandler());
 
 		kieSession.getWorkItemManager().registerWorkItemHandler("AskQuestionTask",
 				new AskQuestionTaskWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng,kieSession));
 
-
+	//	kieSession.getWorkItemManager().registerWorkItemHandler("NotificationHub", new NotificationHubWorkItemHandler());
+		
 		if (workItemHandlers != null) {
 			for (Tuple2<String, WorkItemHandler> wih : workItemHandlers) {
 				kieSession.getWorkItemManager().registerWorkItemHandler(wih._1, wih._2);
