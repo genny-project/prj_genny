@@ -24,6 +24,8 @@ import java.util.stream.Stream;
 
 import javax.persistence.EntityManagerFactory;
 
+import com.google.gson.reflect.TypeToken;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.drools.core.ClockType;
@@ -60,13 +62,12 @@ import org.kie.internal.io.ResourceFactory;
 import org.kie.internal.query.QueryContext;
 import org.kie.internal.task.api.UserGroupCallback;
 
-import com.google.gson.reflect.TypeToken;
-
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import life.genny.jbpm.customworkitemhandlers.AskQuestionTaskWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.AskQuestionWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.AwesomeHandler;
+import life.genny.jbpm.customworkitemhandlers.GetProcessesUsingVariable;
 import life.genny.jbpm.customworkitemhandlers.JMSSendTaskWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.NotificationWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.PrintWorkItemHandler;
@@ -596,6 +597,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		kieSession.getWorkItemManager().registerWorkItemHandler("SendSignal",
 				new SendSignalWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng));
 
+		kieSession.getWorkItemManager().registerWorkItemHandler("GetProcessesUsingVariable", new GetProcessesUsingVariable());
 		kieSession.getWorkItemManager().registerWorkItemHandler("Awesome", new AwesomeHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("Notification", new NotificationWorkItemHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("ShowAllForms", new ShowAllFormsHandler());
