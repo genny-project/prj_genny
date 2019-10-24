@@ -36,6 +36,7 @@ import org.jbpm.executor.impl.ExecutorServiceImpl;
 import org.jbpm.kie.services.impl.query.SqlQueryDefinition;
 import org.jbpm.kie.services.impl.query.mapper.ProcessInstanceQueryMapper;
 import org.jbpm.kie.services.impl.query.persistence.QueryDefinitionEntity;
+import org.jbpm.process.audit.AbstractAuditLogger;
 import org.jbpm.process.audit.JPAWorkingMemoryDbLogger;
 import org.jbpm.services.api.model.ProcessInstanceDesc;
 import org.jbpm.services.api.query.QueryAlreadyRegisteredException;
@@ -76,6 +77,7 @@ import life.genny.jbpm.customworkitemhandlers.SendSignalWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowAllFormsHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 import life.genny.jbpm.customworkitemhandlers.ShowFrameWIthContextList;
+import life.genny.jbpm.customworkitemhandlers.ShowFrames;
 import life.genny.jbpm.customworkitemhandlers.ThrowSignalProcessWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.ThrowSignalWorkItemHandler;
 import life.genny.models.GennyToken;
@@ -97,6 +99,7 @@ import life.genny.qwandautils.JsonUtils;
 import life.genny.rules.GennyUsersCallback;
 import life.genny.rules.listeners.GennyAgendaEventListener;
 import life.genny.rules.listeners.JbpmInitListener;
+import life.genny.rules.listeners.NodeStatusLog;
 import life.genny.utils.RulesUtils;
 import life.genny.utils.SessionFacts;
 import life.genny.utils.VertxUtils;
@@ -501,7 +504,11 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 					
 					
 	        for (Map.Entry<String, ResourceType> entry : resources.entrySet()) {
-	            envBuilder.addAsset(ResourceFactory.newClassPathResource(entry.getKey()), entry.getValue());
+	            try {
+					envBuilder.addAsset(ResourceFactory.newClassPathResource(entry.getKey()), entry.getValue());
+				} catch (Exception e) {
+					System.out.println("Error loading "+entry.getKey()+" :"+e.getLocalizedMessage());
+				}
 	        }
 	        RuntimeEnvironment env = envBuilder.get();
 
@@ -547,7 +554,8 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		
 
 		if (kieSession != null) {
-			logger = new JPAWorkingMemoryDbLogger(kieSession);
+		//	logger = new JPAWorkingMemoryDbLogger(kieSession);
+			AbstractAuditLogger logger = new NodeStatusLog(kieSession);
 
 			// Register handlers
 			addWorkItemHandlers(getRuntimeEngine());
@@ -602,7 +610,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		kieSession.getWorkItemManager().registerWorkItemHandler("Notification", new NotificationWorkItemHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("ShowAllForms", new ShowAllFormsHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("ShowFrame", new ShowFrame());
-		kieSession.getWorkItemManager().registerWorkItemHandler("ShowFrames", new ShowFrame());
+		rteng.getKieSession().getWorkItemManager().registerWorkItemHandler("ShowFrames", new ShowFrames());
 		kieSession.getWorkItemManager().registerWorkItemHandler("Print", new PrintWorkItemHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("ShowFrameWithContextList", new ShowFrameWIthContextList());
 		kieSession.getWorkItemManager().registerWorkItemHandler("RuleFlowGroup", new RuleFlowGroupWorkItemHandler(rteng));
@@ -1017,7 +1025,6 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		QueryContext ctx = new QueryContext(0, 100);
 		Collection<ProcessInstanceDesc> instances = queryService.query("getAllProcessInstances",
 				ProcessInstanceQueryMapper.get(), ctx, QueryParam.equalsTo("value", sessionId));
-
 		return instances.stream().map(d -> d.getId()).findFirst();
 
 	}
@@ -1147,6 +1154,11 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		return  getRuntimeEngine().getTaskService();
 	}
 
+	public RuntimeEngine getGennyRuntimeEngine()
+	{
+		return getRuntimeEngine();
+	}
+	
 	private static String readLineByLineJava8(String filePath)
     {
         StringBuilder contentBuilder = new StringBuilder();
