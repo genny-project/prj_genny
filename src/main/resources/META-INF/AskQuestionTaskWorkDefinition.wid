@@ -1,7 +1,10 @@
 import org.drools.core.process.core.datatype.impl.type.StringDataType;
+import org.drools.core.process.core.datatype.impl.type.ObjectDataType;
+import life.genny.models.GennyToken;
+import life.genny.model.OutputParamTreeSet;
 
 [
-  // the AskQuestionTask work item
+  /* the AskQuestionTask work item */
   [
     "name" : "AskQuestionTask",
     "parameters" : [     
@@ -27,6 +30,19 @@ import org.drools.core.process.core.datatype.impl.type.StringDataType;
       ],
     "displayName" : "SendSignal",
     "icon" : "icons/icon-info.gif"
+  ],
+  
+
+  /* the ShowFrames work item */
+  [
+    "name" : "ShowFrames",
+    "parameters" : [     
+      "dom" : new OutputParamTreeSet(),
+      "userToken"  : new GennyToken()
+     ],
+    "displayName" : "ShowFrames",
+    "icon" : "icons/icon-info.gif"
   ]
+
 
 ]

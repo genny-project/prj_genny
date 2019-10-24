@@ -215,6 +215,9 @@ public class AdamTest {
 						.addToken(userToken)
 						.build();
 				gks.start();
+				
+				gks.injectSignal("initProject", initFacts); // This should initialise everything
+				
 			//	 gks.startProcess("adam_user3");
 				gks.injectEvent(authInitMsg); // This should create a new process
 				gks.advanceSeconds(5, false);
@@ -2079,4 +2082,26 @@ public void testTableHeader() {
 //
 //
 // }  
+	@BeforeClass
+	public static void init() throws FileNotFoundException, SQLException {
+
+		System.out.println("BridgeUrl=" + GennySettings.bridgeServiceUrl);
+		System.out.println("QwandaUrl=" + GennySettings.qwandaServiceUrl);
+
+		// Set up realm
+		realms = new HashSet<String>();
+		realms.add(realm);
+		realms.stream().forEach(System.out::println);
+		realms.remove("genny");
+
+		// Enable the PseudoClock using the following system property.
+		System.setProperty("drools.clockType", "pseudo");
+
+		eventBusMock = new EventBusMock();
+		vertxCache = new VertxCache(); // MockCache
+		VertxUtils.init(eventBusMock, vertxCache);
+		
+	 
+
+	}
 }
