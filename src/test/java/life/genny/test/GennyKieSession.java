@@ -72,6 +72,7 @@ import life.genny.jbpm.customworkitemhandlers.GetProcessesUsingVariable;
 import life.genny.jbpm.customworkitemhandlers.JMSSendTaskWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.NotificationWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.PrintWorkItemHandler;
+import life.genny.jbpm.customworkitemhandlers.ProcessTaskIdWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.RuleFlowGroupWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.SendSignalWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowAllFormsHandler;
@@ -629,6 +630,9 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 		kieSession.getWorkItemManager().registerWorkItemHandler("AskQuestionTask",
 				new AskQuestionTaskWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng,kieSession));
+
+		kieSession.getWorkItemManager().registerWorkItemHandler("ProcessTaskId",
+				new ProcessTaskIdWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng,kieSession));
 
 	//	kieSession.getWorkItemManager().registerWorkItemHandler("NotificationHub", new NotificationHubWorkItemHandler());
 		

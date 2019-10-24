@@ -32,6 +32,17 @@ import life.genny.model.OutputParamTreeSet;
     "icon" : "icons/icon-info.gif"
   ],
   
+   /* the Process Task Id work item */
+  [
+    "name" : "ProcessTaskId",
+    "parameters" : [     
+       "message"  :  new QEventMessage(),
+        "callingWorkflow"  :  new StringDataType()
+      ],
+      
+    "displayName" : "ProcessTaskId",
+    "icon" : "icons/icon-info.gif"
+  ],
 
   /* the ShowFrames work item */
   [

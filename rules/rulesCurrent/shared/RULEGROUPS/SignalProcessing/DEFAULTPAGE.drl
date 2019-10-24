@@ -10,11 +10,11 @@ import life.genny.qwanda.rule.RuleDetails;
 rule "DEFAULTPAGE"
     ruleflow-group 'SignalProcessing'
     no-loop
-    salience 2
+    salience -10000
     when
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
-		output : OutputParam( )
+		output : OutputParam(typeOfResult == "NONE" )
 		msg : QEventMessage (data.code == "DEFAULTPAGE")
 		ruleDetails : RuleDetails()
     then
