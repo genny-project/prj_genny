@@ -26,12 +26,9 @@ rule "DEFAULT_SIGNAL"
 		output : OutputParam( )
 		ruleDetails : RuleDetails()
     then
-	
-		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing Internal Signal " + userToken.getUserCode());
-		System.out.println(ruleDetails+" "+drools.getRule().getName()+" "+output.getTypeOfResult());
 		output.setTypeOfResult("NONE");
-		System.out.println(ruleDetails+" "+drools.getRule().getName()+" "+output.getTypeOfResult());
 		output.setResultCode("");
-		
-		
+	
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing Internal Signal " + userToken.getUserCode()+" "+output.getTypeOfResult());
+		retract(ruleDetails);		 /* end it all */
 end

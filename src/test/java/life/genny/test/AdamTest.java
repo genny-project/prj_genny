@@ -216,14 +216,14 @@ public class AdamTest {
 						.build();
 				gks.start();
 				
-				gks.injectSignal("initProject", initFacts); // This should initialise everything
+		//		gks.injectSignal("initProject", initFacts); // This should initialise everything
 				
 			//	 gks.startProcess("adam_user3");
 				gks.injectEvent(authInitMsg); // This should create a new process
 				gks.advanceSeconds(5, false);
 
 				System.out.println("Invoking AskQuestionTask workItem");
-				// Send an AskQuestion
+				// Send an AskQuestion that should send an internal signal to the userSession
 				AskQuestionTaskWorkItemHandler askQ = new AskQuestionTaskWorkItemHandler(GennyKieSession.class,gks.getGennyRuntimeEngine(),gks.getKieSession());
 				WorkItemManager workItemManager = gks.getKieSession().getWorkItemManager();
 				WorkItemImpl workItem = new WorkItemImpl();
@@ -239,6 +239,7 @@ public class AdamTest {
 		        askQ.executeWorkItem(workItem, workItemManager);
 				
 		        showStatuses(gks);
+		        
 		        
 				gks.injectEvent(msgLogout);
 			} catch (Exception e) {
