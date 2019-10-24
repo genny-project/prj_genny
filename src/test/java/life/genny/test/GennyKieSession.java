@@ -76,6 +76,7 @@ import life.genny.jbpm.customworkitemhandlers.SendSignalWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowAllFormsHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 import life.genny.jbpm.customworkitemhandlers.ShowFrameWIthContextList;
+import life.genny.jbpm.customworkitemhandlers.ShowFrames;
 import life.genny.jbpm.customworkitemhandlers.ThrowSignalProcessWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.ThrowSignalWorkItemHandler;
 import life.genny.models.GennyToken;
@@ -607,7 +608,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		kieSession.getWorkItemManager().registerWorkItemHandler("Notification", new NotificationWorkItemHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("ShowAllForms", new ShowAllFormsHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("ShowFrame", new ShowFrame());
-		rteng.getKieSession().getWorkItemManager().registerWorkItemHandler("ShowFrames", new ShowFrame());
+		rteng.getKieSession().getWorkItemManager().registerWorkItemHandler("ShowFrames", new ShowFrames());
 		kieSession.getWorkItemManager().registerWorkItemHandler("Print", new PrintWorkItemHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("ShowFrameWithContextList", new ShowFrameWIthContextList());
 		kieSession.getWorkItemManager().registerWorkItemHandler("RuleFlowGroup", new RuleFlowGroupWorkItemHandler(rteng));
@@ -1022,7 +1023,6 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		QueryContext ctx = new QueryContext(0, 100);
 		Collection<ProcessInstanceDesc> instances = queryService.query("getAllProcessInstances",
 				ProcessInstanceQueryMapper.get(), ctx, QueryParam.equalsTo("value", sessionId));
-		System.out.println("Number of processes containing sessionId "+sessionId+" = "+instances.size());
 		return instances.stream().map(d -> d.getId()).findFirst();
 
 	}
