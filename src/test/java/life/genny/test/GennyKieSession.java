@@ -563,13 +563,12 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			
 			kieSession.addEventListener(new GennyAgendaEventListener());
 
-			if (tokens.containsKey("PER_SERVICE")) {
-				kieSession.addEventListener(new JbpmInitListener(tokens.get("PER_SERVICE")));
-				this.serviceToken = tokens.get("PER_SERVICE");
-				
-			}
-			if (tokens.containsKey("PER_USER1")) {
-				kieSession.addEventListener(new JbpmInitListener(tokens.get("PER_USER1")));
+			kieSession.addEventListener(new JbpmInitListener(serviceToken));
+
+			for (GennyToken token : tokens.values()) {
+				if (!token.getUserCode().equals("PER_SERVICE")) {
+					kieSession.addEventListener(new JbpmInitListener(tokens.get(token.getUserCode())));
+				}
 			}
 			
 			// Handle attributes ourselves if no background service
