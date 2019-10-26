@@ -43,6 +43,7 @@ import org.jbpm.services.api.query.QueryAlreadyRegisteredException;
 import org.jbpm.services.api.query.QueryService;
 import org.jbpm.services.api.query.model.QueryParam;
 import org.jbpm.services.api.utils.KieServiceConfigurator;
+import org.jbpm.services.task.wih.util.PeopleAssignmentHelper;
 import org.jbpm.test.JbpmJUnitBaseTestCase;
 import org.kie.api.command.Command;
 import org.kie.api.executor.ExecutorService;
@@ -57,10 +58,16 @@ import org.kie.api.runtime.process.ProcessInstance;
 import org.kie.api.runtime.process.WorkItemHandler;
 import org.kie.api.runtime.rule.FactHandle;
 import org.kie.api.task.TaskService;
+import org.kie.api.task.model.Group;
+import org.kie.api.task.model.OrganizationalEntity;
+import org.kie.api.task.model.Status;
+import org.kie.api.task.model.TaskSummary;
+import org.kie.api.task.model.User;
 import org.kie.internal.command.CommandFactory;
 import org.kie.internal.identity.IdentityProvider;
 import org.kie.internal.io.ResourceFactory;
 import org.kie.internal.query.QueryContext;
+import org.kie.internal.task.api.TaskModelProvider;
 import org.kie.internal.task.api.UserGroupCallback;
 
 import io.vavr.Tuple;
@@ -82,11 +89,13 @@ import life.genny.jbpm.customworkitemhandlers.ShowFrames;
 import life.genny.jbpm.customworkitemhandlers.ThrowSignalProcessWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.ThrowSignalWorkItemHandler;
 import life.genny.models.GennyToken;
+import life.genny.qwanda.Answer;
 import life.genny.qwanda.Ask;
 import life.genny.qwanda.attribute.Attribute;
 import life.genny.qwanda.datatype.DataType;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.EntityEntity;
+import life.genny.qwanda.exception.BadDataException;
 import life.genny.qwanda.message.QCmdMessage;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataAttributeMessage;
@@ -133,8 +142,15 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	JPAWorkingMemoryDbLogger logger = null;
 	
 	GennyToken serviceToken = null;
+	GennyToken userToken = null; // for compatibility
 
 	List<Command<?>> cmds = new ArrayList<Command<?>>();
+	
+	Map<String,List<String>> groups = new HashMap<String,List<String>>();
+	
+	   protected Map<String,Object> messages;
+	   List<Status> statuses = new ArrayList<Status>();
+
 	
 
 	/**
@@ -166,11 +182,6 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			cmds.add(CommandFactory.newInsert(serviceToken, serviceToken.getCode()));
 			super.setUp();
 			this.serviceToken = serviceToken;
-			
-
-            // need to add 				
-            // runtimeEnvironment = runtimeEnvironmentBuilder.knowledgeBase(kbase).entityManagerFactory(emf).addEnvironmentEntry("ExecutorService", executorService).get();
-
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -229,69 +240,64 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	public void injectSignalToProcessInstance(String type, Object object, long processInstanceId) {
 		kieSession.signalEvent(type, object, processInstanceId);
 	}
+
+	public void injectSignal(String messageKey, GennyToken gToken) {
+		SessionFacts sig = (SessionFacts)messages.get(messageKey);
+		sig.setUserToken(gToken);
+		kieSession.signalEvent(messageKey, sig);
+	}
+	
+	public void injectSignal(String messageKey) {
+		SessionFacts sig = (SessionFacts)messages.get(messageKey);
+		sig.setUserToken(serviceToken);
+		kieSession.signalEvent(messageKey, sig);
+	}
 	
 	public void injectSignal(String type, Object object) {
 		kieSession.signalEvent(type, object);
 	}
 	
-
+	public void injectEvent(String msgCode, GennyToken gToken) {
+		QMessage msg = (QMessage)messages.get(msgCode);
+		injectEvent(msg, gToken);
+	}
+	
 	public void injectEvent(QMessage msg) {
-		String userCode= "";
-		if (msg.getToken()!=null) {
-			GennyToken uToken = new GennyToken(msg.getToken());
-			userCode = uToken.getUserCode();
-		}
+		injectEvent(msg, this.userToken);
+	}
+
+	public void injectEvent(QMessage msg,GennyToken gToken) {
+		msg.setToken(gToken.getToken());
+		
 		if (msg instanceof QEventMessage) {
 			QEventMessage msgEvent = (QEventMessage)msg;
-		System.out.println("Injecting event "+msg.getMsg_type()+"  "+msgEvent.getData().getCode()+ " user->"+userCode);
+			System.out.println("Injecting event "+msg.getMsg_type()+"  "+msgEvent.getData().getCode()+ " user->"+gToken.getUserCode());
 		} else {
 			QDataMessage msgData = (QDataMessage)msg;
-		System.out.println("Injecting data "+msg.getMsg_type()+"  "+msgData.getData_type()+ " user->"+userCode);
+			System.out.println("Injecting data "+msg.getMsg_type()+"  "+msgData.getData_type()+ " user->"+gToken.getUserCode());
 
 		}
 		QEventMessage eventMsg = null;
 		QDataMessage dataMsg = null;
 		String msg_code = "";
 		String msg_type = "";
-		GennyToken gToken = this.serviceToken;
 		String bridgeSourceAddress = "";
 
 		
-		GennyToken userToken = null;
-		if (msg.getToken() == null ) {
-		for (String tokenKey : this.tokens.keySet()) {
-			GennyToken gt = this.tokens.get(tokenKey);
-			if (!gt.getCode().equals("PER_SERVICE")) {
-				userToken = gt;
-				break;
-			}
-		}
-		} else {
-			GennyToken uToken = new GennyToken(msg.getToken());
-			userToken = uToken;
-			
-			//kieSession.insert(userToken); 
-		}
-		
 			if (msg instanceof QEventMessage)  {
 				eventMsg = (QEventMessage)msg;
-				eventMsg.setToken(userToken.getToken());
 			}
 			if (msg instanceof QDataMessage)  {
 				dataMsg = (QDataMessage)msg;
-				dataMsg.setToken(userToken.getToken());
 			}
 
 			if ((eventMsg != null) && (eventMsg.getData().getCode().equals("INIT_STARTUP"))) {
 				kieSession.startProcess("initProject");
-			} else if (userToken != null) {
+			} else  {
 				// This is a userToken so send the event through
-				String session_state = userToken.getSessionCode();
-				String processIdStr = null;
-				gToken = userToken;
+				String session_state = gToken.getSessionCode();
 				bridgeSourceAddress = "bridge";
 				Long processId  = null;
-				
 				
 				// Check if an existing userSession is there
 				
@@ -303,16 +309,16 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 					processId = processIdBysessionId.get();
 				
 					System.out.println("incoming " + msg_type + " message from " + bridgeSourceAddress + ": "
-							+ userToken.getRealm() + ":" + userToken.getSessionCode() + ":" + userToken.getUserCode()
+							+ gToken.getRealm() + ":" + userToken.getSessionCode() + ":" + gToken.getUserCode()
 							+ "   " + msg_code + " to pid " + processId);
 
 					// So send the event through to the userSession
 					if (eventMsg != null) {
-						SessionFacts sessionFactsEvent = new SessionFacts(serviceToken, userToken , eventMsg);
+						SessionFacts sessionFactsEvent = new SessionFacts(serviceToken, gToken , eventMsg);
 
 						kieSession.signalEvent("event", sessionFactsEvent, processId);
 					} else if (dataMsg != null) {
-						SessionFacts sessionFactsData = new SessionFacts(serviceToken, userToken , dataMsg);
+						SessionFacts sessionFactsData = new SessionFacts(serviceToken, gToken , dataMsg);
 						kieSession.signalEvent("data", sessionFactsData, processId);
 					}
 
@@ -320,11 +326,11 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 					// Must be the AUTH_INIT
 					if ((eventMsg != null) && (eventMsg.getMsg_type().equals("EVT_MSG")) && (eventMsg.getData().getCode().equals("AUTH_INIT"))) {
 						eventMsg.getData().setValue("NEW_SESSION");
-						System.out.println("incominog  message from " + bridgeSourceAddress + ": " + userToken.getRealm() + ":"
-								+ userToken.getSessionCode() + ":" + userToken.getUserCode() + "   " + msg_code
+						System.out.println("incominog  message from " + bridgeSourceAddress + ": " + gToken.getRealm() + ":"
+								+ gToken.getSessionCode() + ":" + gToken.getUserCode() + "   " + msg_code
 								+ " to NEW SESSION");
 						try {
-							SessionFacts sessionFactsEvent = new SessionFacts(serviceToken, userToken , eventMsg);
+							SessionFacts sessionFactsEvent = new SessionFacts(serviceToken, gToken , eventMsg);
 							kieSession.signalEvent("newSession", sessionFactsEvent);
 						} catch (Exception e) {
 							System.out.println("Runtime error: "+e.getLocalizedMessage());
@@ -598,6 +604,12 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		} catch (QueryAlreadyRegisteredException e) {
 			log.warn(query.getName()+" is already registered");
 		}
+		
+		
+		this.setupMessages();
+		this.setupCache();
+		this.userToken = GennyJbpmBaseTest.createGennyToken(serviceToken.getRealm(), "user1", "Barry Allan", "user");
+
 		System.out.println("Completed Setup");
 	}
 
@@ -1177,4 +1189,211 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
  
         return contentBuilder.toString();
     }
+	
+	public void showStatuses(String... userCodes)
+	{
+			List<Status> statuses = new ArrayList<Status>();
+	        statuses.add(Status.Ready);
+	        statuses.add(Status.Completed);
+	        statuses.add(Status.Created);
+	        statuses.add(Status.Error);
+	        statuses.add(Status.Exited);
+	        statuses.add(Status.InProgress);
+	        statuses.add(Status.Obsolete);
+	        statuses.add(Status.Reserved);
+	        statuses.add(Status.Suspended);
+	        
+	        List<String> groups = new ArrayList<String>();
+	        
+            for (String userCode2 : userCodes) {
+            	if (userCode2.startsWith("GRP_")) {                 
+                    String code = this.serviceToken.getRealm()+ "+" + userCode2;
+                    groups.add(code);
+                    System.out.println(userCode2+" "+showTaskNames(getTaskService().getTasksAssignedAsPotentialOwner(null, groups, "en-AU", 0,10)));           		
+            	} else {
+            		System.out.println(userCode2+"  "+showTaskNames(getTaskService().getTasksAssignedAsPotentialOwnerByStatus(this.serviceToken.getRealm()+"+"+userCode2.toUpperCase(), statuses, null)));
+            	}
+            }
+        System.out.println();
+	}
+	
+	 String showTaskNames(List<TaskSummary> tasks)
+	 {
+		 String ret = "";
+		 if (tasks.isEmpty()) {
+			return "(empty)"; 
+		 } 
+		 for (TaskSummary task : tasks) {
+			 ret += "["+task.getName()+"("+task.getProcessId()+"):"+task.getStatusId()+"],";
+		 }
+		 return ret;
+	 }
+	 
+		public void createTestUsersGroups() {
+			
+			PeopleAssignmentHelper peopleAssignmentHelper;
+			peopleAssignmentHelper = new PeopleAssignmentHelper();
+			List<OrganizationalEntity> organizationalEntities = new ArrayList<OrganizationalEntity>();
+			String ids = "Software Developer,Project Manager";
+			//peopleAssignmentHelper.processPeopleAssignments(ids, organizationalEntities, false);
+			//PeopleAssignmentHelper.ACTOR_ID
+			//PeopleAssignmentHelper.BUSINESSADMINISTRATOR_ID
+			//PeopleAssignmentHelper.BUSINESSADMINISTRATOR_GROUP_ID
+			//peopleAssignmentHelper.
+			
+			createTestGroup(this.serviceToken.getRealm(), "GRP_USERS", "Users",serviceToken);
+			createTestGroup(this.serviceToken.getRealm(), "GRP_GADA", "GADA",serviceToken);
+			createTestGroup(this.serviceToken.getRealm(), "GRP_CROWTECH", "Crowtech",serviceToken);
+			createTestGroup(this.serviceToken.getRealm(), "GRP_OUTCOME", "Outcome.Life",serviceToken);
+			createTestGroup(this.serviceToken.getRealm(), "Administrators", "Administrators",serviceToken);
+			List<String> gada =new ArrayList<String>();
+			gada.add("GRP_USERS");
+			gada.add("GRP_GADA");
+			groups.put("gada", gada);
+			
+			List<String> outcome =new ArrayList<String>();
+			outcome.add("GRP_USERS");
+			outcome.add("GRP_OUTCOME");
+			groups.put("outcome", outcome);
+			
+			List<String>crowtech =new ArrayList<String>();
+			crowtech.add("GRP_USERS");
+			crowtech.add("GRP_CROWTECH");
+			crowtech.add("GRP_GADA");
+			crowtech.add("Administrators"); // TODO
+			groups.put("crowtech", crowtech);
+			
+			List<String>both =new ArrayList<String>();
+			both.add("GRP_USERS");
+			both.add("GRP_GADA");
+			both.add("GRP_OUTCOME");
+			groups.put("gada-outcome", both);
+		
+
+			BaseEntity PER_USER1 = createTestUser(serviceToken.getRealm(), "PER_USER1", "Ginger", gada,serviceToken);
+			BaseEntity acrow = createTestUser(serviceToken.getRealm(), "PER_ADAMCROW63_AT_GMAIL_COM", "Adam", crowtech,serviceToken);
+			BaseEntity domenic = createTestUser(serviceToken.getRealm(), "PER_DOMENIC_AT_OUTCOME_LIFE", "Domenic", gada,serviceToken);
+			BaseEntity gerard = createTestUser(serviceToken.getRealm(), "PER_GERARD_AT_OUTCOME_LIFE", "Gerard ", outcome,serviceToken);
+			BaseEntity anish = createTestUser(serviceToken.getRealm(), "PER_ANISH_AT_GADA_IO", "Anish", new ArrayList<String>(),serviceToken);
+			BaseEntity chris = createTestUser(serviceToken.getRealm(), "PER_CHRIS_AT_GADA_IO", "Chris", both,serviceToken);
+
+		}
+
+		private BaseEntity createTestGroup(String realm, String code, String name , GennyToken serviceToken) {
+			BaseEntity group = createTestBaseEntity(realm, code, serviceToken);
+			// save the new group
+			VertxUtils.writeCachedJson(serviceToken.getRealm(), code,
+					JsonUtils.toJson(group), serviceToken.getToken());
+			Group JbpmGroup = (Group) TaskModelProvider.getFactory().newGroup(code);
+			return group;
+			
+		}
+		private BaseEntity createTestUser(String realm, String code, String name , List<String> groups, GennyToken serviceToken) {
+			BaseEntity user = createTestBaseEntity(realm, code, serviceToken);
+			// Link to each group
+			Attribute linkAttribute = RulesUtils.getAttribute("LNK_CORE",serviceToken.getToken());
+
+			for (String groupCode : groups) {
+				 BaseEntity group = VertxUtils.getObject(serviceToken.getRealm(), "", groupCode,
+							BaseEntity.class, serviceToken.getToken());
+				 // now link the new user
+				 try {
+					group.addTarget(user, linkAttribute, 1.0);
+					 VertxUtils.writeCachedJson(serviceToken.getRealm(), groupCode,
+								JsonUtils.toJson(group), serviceToken.getToken());
+				} catch (BadDataException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+			List<String> realmGroups = new ArrayList<String>();
+			for (String str : groups) {
+				realmGroups.add(realm+"+"+str);
+			}
+			String newGroupString = JsonUtils.toJson(realmGroups);
+			Attribute groupsAttribute = RulesUtils.getAttribute("PRI_GROUPS",serviceToken.getToken());
+			try {
+				user.addAnswer(new Answer(user,user,groupsAttribute,newGroupString));
+			} catch (BadDataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// save the new user
+			VertxUtils.writeCachedJson(serviceToken.getRealm(), code,
+					JsonUtils.toJson(user), serviceToken.getToken());
+
+			User JbpmUser = (User) TaskModelProvider.getFactory().newUser(code);
+			
+
+			return user;
+			
+		}
+		
+		private BaseEntity createTestBaseEntity(String realm, String code, GennyToken serviceToken)
+		{
+			code = code.toUpperCase();
+			BaseEntity be = new BaseEntity(code,
+					StringUtils.capitaliseAllWords(serviceToken.getRealm()));
+			be.setRealm(serviceToken.getRealm());
+			VertxUtils.writeCachedJson(serviceToken.getRealm(), code,
+					JsonUtils.toJson(be), serviceToken.getToken());
+		//	VertxUtils.writeCachedJson(realm,  ":" + code,JsonUtils.toJson(be), serviceToken.getToken());
+			return be;
+
+		}
+
+
+		 private void setupMessages()
+		 {
+			 	messages = new HashMap<String,Object>();
+				createMessage("initProject",new SessionFacts(serviceToken, null, new QEventMessage("EVT_MSG", "INIT_STARTUP")));
+				createMessage("authInitMsg",new QEventMessage("EVT_MSG", "AUTH_INIT"));
+
+				createMessage("msgLogout",new QEventMessage("EVT_MSG", "LOGOUT"));
+		 }
+		 
+		 private void setupCache()
+		 {
+
+				// NOW SET UP Some baseentitys
+				BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
+						StringUtils.capitaliseAllWords(serviceToken.getRealm()));
+				project.setRealm(serviceToken.getRealm());
+				
+				createCacheBE("PRJ_" + serviceToken.getRealm().toUpperCase(),project);
+
+				VertxUtils.writeCachedJson(GennySettings.GENNY_REALM,
+						"TOKEN" + serviceToken.getRealm().toUpperCase(),serviceToken.getToken());
+
+		 }
+		 
+		 protected QEventMessage getQEventMessage(String key) {
+			 return (QEventMessage) messages.get(key);
+		 }
+		 
+		 protected SessionFacts getSessionFacts(String key) {
+			 return (SessionFacts) messages.get(key);
+		 }
+		 
+		 private <T extends BaseEntity> void createCacheBE(String code, T be)
+		 {
+			 VertxUtils.writeCachedJson(serviceToken.getRealm(), code,
+						JsonUtils.toJson(be), serviceToken.getToken());
+			 
+		 }
+		 
+		 private Object createMessage(String key,Object payload)
+		 {
+			 messages.put(key, payload);
+			 return payload;
+		 }
+		 
+		 public GennyToken createToken(String code)
+		 {
+			 String name = StringUtils.capitaliseAllWords(code);
+			 return GennyJbpmBaseTest.createGennyToken(this.serviceToken.getRealm(), code, name, "user");
+		 }
+
+
 }
