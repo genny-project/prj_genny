@@ -93,7 +93,14 @@ kcontext.setVariable(&quot;processId&quot;,kcontext.getProcessInstance().getId()
 kcontext.setVariable(&quot;userCode&quot;, userToken.getUserCode());
 callingProcessToken = new CallingProcessToken(userToken,processId,userToken.getUserCode());
 kcontext.setVariable(&quot;callingProcessToken&quot;, callingProcessToken);
-System.out.println(&quot;userValidation: pid=&quot;+processId+&quot; Current User is &quot; + (currentUser==null?&quot;not existing,&quot;:currentUser) + &quot; sending signal to userLifeCycle to create  :&quot;+userToken.getUserCode());</bpmn2:script>
+String existingUserStr = &quot;existing as &quot;+currentUser;
+String newUserStr = &quot;not existing,  sending signal to userLifeCycle to create  :&quot;+userToken.getUserCode();
+if (currentUser==null) {
+    System.out.println(&quot;userValidation: Checking If The User Is present - NO pid=&quot;+processId+&quot; &quot;+newUserStr);
+} else {
+    System.out.println(&quot;userValidation:  Checking If The User Is present - YES  pid=&quot;+processId+&quot; &quot;+existingUserStr);
+}
+</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_5" drools:priority="1" sourceRef="ScriptTask_2" targetRef="ExclusiveGateway_2"/>
       <bpmn2:exclusiveGateway id="ExclusiveGateway_1" name="activeUser" gatewayDirection="Converging" default="SequenceFlow_1">

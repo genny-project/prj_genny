@@ -567,7 +567,12 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 
 	public static GennyToken createGennyToken(final String realm, String username, String name, String role, long expirysecs)
 	{
-		String normalisedUsername = "PER_"+username.toUpperCase();
+		String normalisedUsername = null;
+		if (!username.startsWith("PER_")) {
+			normalisedUsername = "PER_"+username.toUpperCase();
+		} else {
+			normalisedUsername = username.toUpperCase();
+		}
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime expiryTime = now.plusSeconds(expirysecs);
 		GennyToken gennyToken = new GennyToken(normalisedUsername,realm,username,name,role,expiryTime);

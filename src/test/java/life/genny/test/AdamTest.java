@@ -95,6 +95,7 @@ import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventMessage;
+import life.genny.qwanda.message.QMessage;
 import life.genny.qwanda.validation.Validation;
 import life.genny.qwanda.validation.ValidationList;
 import life.genny.qwandautils.GennyCacheInterface;
@@ -115,6 +116,8 @@ public class AdamTest {
 
 	protected static final Logger log = org.apache.logging.log4j.LogManager
 			.getLogger(MethodHandles.lookup().lookupClass().getCanonicalName());
+	
+	protected static Boolean USE_STANDALONE= true;   // sets whether to use standalone or remote service
 
 	protected static String realm = GennySettings.mainrealm;
 	protected static Set<String> realms;
@@ -139,7 +142,11 @@ public class AdamTest {
 	    
 	    protected DeploymentUnit deploymentUnit;  
 	    
- 
+	   protected static  GennyToken userToken;
+	   protected static  GennyToken newUserToken;
+	   protected static  GennyToken serviceToken;
+	   
+	    
 
 	public AdamTest() {
 		 loadServiceConfigurator();
@@ -153,49 +160,7 @@ public class AdamTest {
 		public void askQuestionTest()
 		{
 			System.out.println("AskQuestion Test");
-			GennyToken userToken = null;
-			GennyToken serviceToken = null;
-			QRules qRules = null;
 
-			if (true) {
-				userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
-				serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-				qRules = new QRules(eventBusMock, userToken.getToken());
-				qRules.set("realm", userToken.getRealm());
-				qRules.setServiceToken(serviceToken.getToken());
-				VertxUtils.cachedEnabled = true; // don't send to local Service Cache
-				GennyKieSession.loadAttributesJsonFromResources(userToken);
-
-			} else {
-				qRules = GennyJbpmBaseTest.setupLocalService();
-				userToken = new GennyToken("userToken", qRules.getToken());
-				serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
-			}
-
-			System.out.println("session     =" + userToken.getSessionCode());
-			System.out.println("userToken   =" + userToken.getToken());
-			//System.out.println("userToken2   =" + userToken2.getToken());
-			System.out.println("serviceToken=" + serviceToken.getToken());
-
-			SessionFacts initFacts = new SessionFacts(serviceToken, null, new QEventMessage("EVT_MSG", "INIT_STARTUP"));
-			QEventMessage authInitMsg = new QEventMessage("EVT_MSG", "AUTH_INIT"); authInitMsg.setToken(userToken.getToken());
-			QEventMessage msgLogout = new QEventMessage("EVT_MSG", "LOGOUT");msgLogout.setToken(userToken.getToken());
-
-
-			// NOW SET UP Some baseentitys
-			BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
-					StringUtils.capitaliseAllWords(serviceToken.getRealm()));
-			project.setRealm(serviceToken.getRealm());
-			VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
-					JsonUtils.toJson(project), serviceToken.getToken());
-			VertxUtils.writeCachedJson(realm,  ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(),JsonUtils.toJson(project), serviceToken.getToken());
-			VertxUtils.writeCachedJson(GennySettings.GENNY_REALM,
-					"TOKEN" + realm.toUpperCase(),serviceToken.getToken());
-			JsonObject tokenObj = VertxUtils.readCachedJson(GennySettings.GENNY_REALM,
-					"TOKEN" + realm.toUpperCase());
-			String token = tokenObj.getString("value");
-
-			createTestUsersGroups(serviceToken);
 
 			GennyKieSession gks = null;
 
@@ -212,36 +177,40 @@ public class AdamTest {
 						.addJbpm("AuthInit")
 						.addDrl("InitialiseProject")
 						.addJbpm("InitialiseProject")
-						.addToken(userToken)
 						.build();
+				
+				gks.createTestUsersGroups();
+				
+				GennyToken newUser2 = gks.createToken("PER_USER2"); 
+
 				gks.start();
 				
-		//		gks.injectSignal("initProject", initFacts); // This should initialise everything
-				
-			//	 gks.startProcess("adam_user3");
-				gks.injectEvent(authInitMsg); // This should create a new process
+				gks.injectSignal("initProject"); // This should initialise everything
+				gks.injectEvent("authInitMsg",newUser2); // log in as new user
+				//gks.injectEvent(getQEventMessage("authInitMsg")); // log in as existing user
 				gks.advanceSeconds(5, false);
+				gks.showStatuses("PER_USER1","PER_USER2");
 
-				System.out.println("Invoking AskQuestionTask workItem");
+//				System.out.println("Invoking AskQuestionTask workItem");
 				// Send an AskQuestion that should send an internal signal to the userSession
-				AskQuestionTaskWorkItemHandler askQ = new AskQuestionTaskWorkItemHandler(GennyKieSession.class,gks.getGennyRuntimeEngine(),gks.getKieSession());
-				WorkItemManager workItemManager = gks.getKieSession().getWorkItemManager();
-				WorkItemImpl workItem = new WorkItemImpl();
-		        workItem.setParameter("userToken",
-		                              userToken);
-		        workItem.setParameter("questionCode",
-		                              "QUE_USER_PROFILE_GRP");
-		        workItem.setParameter("callingWorkflow", "AdamTest");
-		        workItem.setParameter("Priority", "10");  // if l;eft out defaults to 0
-		        workItem.setDeploymentId(userToken.getRealm());
-		        workItem.setName("AskQuestion");
-		        workItem.setProcessInstanceId(1234L); // made up processId
-		        askQ.executeWorkItem(workItem, workItemManager);
+//				AskQuestionTaskWorkItemHandler askQ = new AskQuestionTaskWorkItemHandler(GennyKieSession.class,gks.getGennyRuntimeEngine(),gks.getKieSession());
+//				WorkItemManager workItemManager = gks.getKieSession().getWorkItemManager();
+//				WorkItemImpl workItem = new WorkItICEemImpl();
+//		        workItem.setParameter("userToken",
+//		                              userToken);
+//		        workItem.setParameter("questionCode",
+//		                              "QUE_USER_PROFILE_GRP");
+//		        workItem.setParameter("callingWorkflow", "AdamTest");
+//		        workItem.setParameter("Priority", "10");  // if l;eft out defaults to 0
+//		        workItem.setDeploymentId(userToken.getRealm());
+//		        workItem.setName("AskQuestion");
+//		        workItem.setProcessInstanceId(1234L); // made up processId
+//		        askQ.executeWorkItem(workItem, workItemManager);
 				
-		        showStatuses(gks);
+//		        showStatuses(gks);
 		        
 		        
-				gks.injectEvent(msgLogout);
+				gks.injectEvent("msgLogout",newUser2);
 			} catch (Exception e) {
 				e.printStackTrace();
 				
@@ -259,12 +228,11 @@ public class AdamTest {
 		{
 			System.out.println("UserTask Test");
 			GennyToken userToken = null;
-			GennyToken serviceToken = null;
 			QRules qRules = null;
 
 			if (true) {
 				userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
-				serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+				serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "PER_SERVICE", "Service User", "service");
 				qRules = new QRules(eventBusMock, userToken.getToken());
 				qRules.set("realm", userToken.getRealm());
 				qRules.setServiceToken(serviceToken.getToken());
@@ -300,7 +268,6 @@ public class AdamTest {
 					"TOKEN" + realm.toUpperCase());
 			String token = tokenObj.getString("value");
 
-			createTestUsersGroups(serviceToken);
 
 			GennyKieSession gks = null;
 
@@ -319,6 +286,9 @@ public class AdamTest {
 
 						.addToken(userToken)
 						.build();
+				
+				gks.createTestUsersGroups();
+
 				gks.start();
 				
 
@@ -349,7 +319,7 @@ public class AdamTest {
 		        System.out.println("Formname: "+tasky.getFormName());
 		        System.out.println("Description: "+tasky.getDescription());
 		        System.out.println("People Assignments: "+tasky.getPeopleAssignments().getPotentialOwners());
-		        showStatuses(gks);
+		        gks.showStatuses();
 		        
 		        gks.advanceSeconds(5, false);
 		        Map<String,Object> params = new HashMap<String,Object>();
@@ -392,7 +362,7 @@ public class AdamTest {
 
 	              // Do Task Operations
 	            
-	              showStatuses(gks);
+	              gks.showStatuses();
 
 	            
 	            // Add Comment
@@ -406,13 +376,13 @@ public class AdamTest {
 	             System.out.println(content);
 	              // Start Task
 	              gks.getTaskService().start(taskId, realm+"+PER_ADAMCROW63_AT_GMAIL_COM");    
-	              showStatuses(gks);
+	              gks.showStatuses();
 
 	              gks.getTaskService().suspend(taskId, realm+"+PER_ADAMCROW63_AT_GMAIL_COM");    
-	              showStatuses(gks);
+	              gks.showStatuses();
 
 	              gks.getTaskService().resume(taskId, realm+"+PER_ADAMCROW63_AT_GMAIL_COM");    
-	              showStatuses(gks);
+	              gks.showStatuses();
 	              
 	              gks.getTaskService().forward(taskId2, realm+"+PER_DOMENIC_AT_OUTCOME_LIFE", realm+"+PER_ANISH_AT_GADA_IO");
 
@@ -423,7 +393,7 @@ public class AdamTest {
 	              Map<String, Object> results = new HashMap<String, Object>();
 	              results.put("Result", "Done");
 	              gks.getTaskService().complete(taskId, realm+"+PER_ADAMCROW63_AT_GMAIL_COM", results);
-	              showStatuses(gks);
+	              gks.showStatuses();
  
 	              results.put("Result", "some document data");
 
@@ -480,152 +450,37 @@ public class AdamTest {
 		}
 
 
-		private void createTestUsersGroups(GennyToken serviceToken) {
-			
-			if (!serviceToken.getUserCode().equals("PER_SERVICE")) {
-				log.error("serviceToken needs to be serviceToken!");
-				return;
-			}
-			PeopleAssignmentHelper peopleAssignmentHelper;
-			peopleAssignmentHelper = new PeopleAssignmentHelper();
-			List<OrganizationalEntity> organizationalEntities = new ArrayList<OrganizationalEntity>();
-			String ids = "Software Developer,Project Manager";
-			//peopleAssignmentHelper.processPeopleAssignments(ids, organizationalEntities, false);
-			//PeopleAssignmentHelper.ACTOR_ID
-			//PeopleAssignmentHelper.BUSINESSADMINISTRATOR_ID
-			//PeopleAssignmentHelper.BUSINESSADMINISTRATOR_GROUP_ID
-			//peopleAssignmentHelper.
-			BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
-					StringUtils.capitaliseAllWords(serviceToken.getRealm()));
-			project.setRealm(serviceToken.getRealm());
-			VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
-					JsonUtils.toJson(project), serviceToken.getToken());
-			VertxUtils.writeCachedJson(realm,  ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(),JsonUtils.toJson(project), serviceToken.getToken());
-			
-			createTestGroup(realm, "GRP_USERS", "Users",serviceToken);
-			createTestGroup(realm, "GRP_GADA", "GADA",serviceToken);
-			createTestGroup(realm, "GRP_CROWTECH", "Crowtech",serviceToken);
-			createTestGroup(realm, "GRP_OUTCOME", "Outcome.Life",serviceToken);
-			createTestGroup(realm, "Administrators", "Administrators",serviceToken);
-			List<String> gada =new ArrayList<String>();
-			gada.add("GRP_USERS");
-			gada.add("GRP_GADA");
-			List<String> outcome =new ArrayList<String>();
-			outcome.add("GRP_USERS");
-			outcome.add("GRP_OUTCOME");
-			List<String>crowtech =new ArrayList<String>();
-			crowtech.add("GRP_USERS");
-			crowtech.add("GRP_CROWTECH");
-			crowtech.add("GRP_GADA");
-			crowtech.add("Administrators"); // TODO
-			List<String>both =new ArrayList<String>();
-			both.add("GRP_USERS");
-			both.add("GRP_GADA");
-			both.add("GRP_OUTCOME");
-		
-
-			BaseEntity PER_USER1 = createTestUser(realm, "PER_USER1", "Ginger", gada,serviceToken);
-			BaseEntity acrow = createTestUser(realm, "PER_ADAMCROW63_AT_GMAIL_COM", "Adam", crowtech,serviceToken);
-			BaseEntity domenic = createTestUser(realm, "PER_DOMENIC_AT_OUTCOME_LIFE", "Domenic", gada,serviceToken);
-			BaseEntity gerard = createTestUser(realm, "PER_GERARD_AT_OUTCOME_LIFE", "Gerard ", outcome,serviceToken);
-			BaseEntity anish = createTestUser(realm, "PER_ANISH_AT_GADA_IO", "Anish", new ArrayList<String>(),serviceToken);
-			BaseEntity chris = createTestUser(realm, "PER_CHRIS_AT_GADA_IO", "Chris", both,serviceToken);
-
-		}
-
-		private BaseEntity createTestGroup(String realm, String code, String name , GennyToken serviceToken) {
-			BaseEntity group = createTestBaseEntity(realm, code, serviceToken);
-			// save the new group
-			VertxUtils.writeCachedJson(serviceToken.getRealm(), code,
-					JsonUtils.toJson(group), serviceToken.getToken());
-			Group JbpmGroup = (Group) TaskModelProvider.getFactory().newGroup(code);
-			return group;
-			
-		}
-		private BaseEntity createTestUser(String realm, String code, String name , List<String> groups, GennyToken serviceToken) {
-			BaseEntity user = createTestBaseEntity(realm, code, serviceToken);
-			// Link to each group
-			Attribute linkAttribute = RulesUtils.getAttribute("LNK_CORE",serviceToken.getToken());
-
-			for (String groupCode : groups) {
-				 BaseEntity group = VertxUtils.getObject(serviceToken.getRealm(), "", groupCode,
-							BaseEntity.class, serviceToken.getToken());
-				 // now link the new user
-				 try {
-					group.addTarget(user, linkAttribute, 1.0);
-					 VertxUtils.writeCachedJson(serviceToken.getRealm(), groupCode,
-								JsonUtils.toJson(group), serviceToken.getToken());
-				} catch (BadDataException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-			}
-			List<String> realmGroups = new ArrayList<String>();
-			for (String str : groups) {
-				realmGroups.add(realm+"+"+str);
-			}
-			String newGroupString = JsonUtils.toJson(realmGroups);
-			Attribute groupsAttribute = RulesUtils.getAttribute("PRI_GROUPS",serviceToken.getToken());
-			try {
-				user.addAnswer(new Answer(user,user,groupsAttribute,newGroupString));
-			} catch (BadDataException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			// save the new user
-			VertxUtils.writeCachedJson(serviceToken.getRealm(), code,
-					JsonUtils.toJson(user), serviceToken.getToken());
-
-			User JbpmUser = (User) TaskModelProvider.getFactory().newUser(code);
-			
-
-			return user;
-			
-		}
-		
-		private BaseEntity createTestBaseEntity(String realm, String code, GennyToken serviceToken)
-		{
-			code = code.toUpperCase();
-			BaseEntity be = new BaseEntity(code,
-					StringUtils.capitaliseAllWords(serviceToken.getRealm()));
-			be.setRealm(serviceToken.getRealm());
-			VertxUtils.writeCachedJson(serviceToken.getRealm(), code,
-					JsonUtils.toJson(be), serviceToken.getToken());
-		//	VertxUtils.writeCachedJson(realm,  ":" + code,JsonUtils.toJson(be), serviceToken.getToken());
-			return be;
-
-		}
-
-		private void showStatuses(GennyKieSession gks)
-		{
-		       List<Status> statuses = new ArrayList<Status>();
-		        statuses.add(Status.Ready);
-		        statuses.add(Status.Completed);
-		        statuses.add(Status.Created);
-		        statuses.add(Status.Error);
-		        statuses.add(Status.Exited);
-		        statuses.add(Status.InProgress);
-		        statuses.add(Status.Obsolete);
-		        statuses.add(Status.Reserved);
-		        statuses.add(Status.Suspended);
-		        
-	            List<String> groups = new ArrayList<String>();
-	            groups.add(realm+"+GRP_GADA");
-
-
-	        System.out.println("POTENTIAL PER_USER1  "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwnerByStatus(realm+"+PER_USER1", statuses, null)));
-            System.out.println("POTENTIAL acrow      "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwnerByStatus(realm+"+PER_ADAMCROW63_AT_GMAIL_COM", statuses, null)));
-            System.out.println("POTENTIAL dom        "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_DOMENIC_AT_OUTCOME_LIFE", null)));
-            System.out.println("POTENTIAL gerard     "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_GERARD_AT_OUTCOME_LIFE",  null)));
-            System.out.println("POTENTIAL chris      "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_CHRIS_AT_GADA_IO", null)));
-            System.out.println("POTENTIAL anish      "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_ANISH_AT_GADA_IO",  null)));
-            System.out.println("POTENTIAL chris+gada "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_CHRIS_AT_GADA_IO", groups, "en-AU", 0,10)));
-            System.out.println("POTENTIAL gada       "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(null, groups, "en-AU", 0,10)));
-            
-            System.out.println("OWNED acrow          "+showTaskNames(gks.getTaskService().getTasksOwned(realm+"+PER_ADAMCROW63_AT_GMAIL_COM", null)));
-            System.out.println();
-		}
+//
+//		
+//		private void showStatuses(GennyKieSession gks)
+//		{
+//				statuses = new ArrayList<Status>();
+//		        statuses.add(Status.Ready);
+//		        statuses.add(Status.Completed);
+//		        statuses.add(Status.Created);
+//		        statuses.add(Status.Error);
+//		        statuses.add(Status.Exited);
+//		        statuses.add(Status.InProgress);
+//		        statuses.add(Status.Obsolete);
+//		        statuses.add(Status.Reserved);
+//		        statuses.add(Status.Suspended);
+//		        
+//	            List<String> groups = new ArrayList<String>();
+//	            groups.add(realm+"+GRP_GADA");
+//
+//
+//	        System.out.println("POTENTIAL PER_USER1  "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwnerByStatus(realm+"+PER_USER1", statuses, null)));
+//            System.out.println("POTENTIAL acrow      "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwnerByStatus(realm+"+PER_ADAMCROW63_AT_GMAIL_COM", statuses, null)));
+//            System.out.println("POTENTIAL dom        "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_DOMENIC_AT_OUTCOME_LIFE", null)));
+//            System.out.println("POTENTIAL gerard     "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_GERARD_AT_OUTCOME_LIFE",  null)));
+//            System.out.println("POTENTIAL chris      "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_CHRIS_AT_GADA_IO", null)));
+//            System.out.println("POTENTIAL anish      "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_ANISH_AT_GADA_IO",  null)));
+//            System.out.println("POTENTIAL chris+gada "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_CHRIS_AT_GADA_IO", groups, "en-AU", 0,10)));
+//            System.out.println("POTENTIAL gada       "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(null, groups, "en-AU", 0,10)));
+//            
+//            System.out.println("OWNED acrow          "+showTaskNames(gks.getTaskService().getTasksOwned(realm+"+PER_ADAMCROW63_AT_GMAIL_COM", null)));
+//            System.out.println();
+//		}
 		
 //	@Test
 	public void headerTest()
@@ -2083,6 +1938,15 @@ public void testTableHeader() {
 //
 //
 // }  
+ 
+ private static void createUser(final String userCode, String name, boolean makeExisting)
+ {
+	 // Add this user to the map
+	 
+ }
+ 
+ 
+ 
 	@BeforeClass
 	public static void init() throws FileNotFoundException, SQLException {
 
@@ -2102,7 +1966,21 @@ public void testTableHeader() {
 		vertxCache = new VertxCache(); // MockCache
 		VertxUtils.init(eventBusMock, vertxCache);
 		
-	 
+		QRules qRules = null;
 
+		if (USE_STANDALONE) {
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(serviceToken);
+
+		} else {
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+		}
+
+		System.out.println("serviceToken=" + serviceToken.getToken());
+
+		
 	}
 }

@@ -258,8 +258,8 @@ System.out.println(&quot;userlifeCycle: New User Created: pid: &quot;+callingPro
         <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
         <bpmn2:ioSpecification id="InputOutputSpecification_1">
           <bpmn2:dataInput id="DataInput_1" itemSubjectRef="ItemDefinition_201" name="userToken"/>
-          <bpmn2:dataInput id="DataInput_2" name="questionCode"/>
-          <bpmn2:dataInput id="DataInput_3" name="callingWorkflow"/>
+          <bpmn2:dataInput id="DataInput_2"  itemSubjectRef="ItemDefinition_10" name="questionCode"/>
+          <bpmn2:dataInput id="DataInput_3"  itemSubjectRef="ItemDefinition_10" name="callingWorkflow"/>
           <bpmn2:dataOutput id="DataOutput_1" itemSubjectRef="ItemDefinition_65" name="Result"/>
           <bpmn2:dataOutput id="DataOutput_3" itemSubjectRef="ItemDefinition_65" name="results"/>
           <bpmn2:inputSet id="_InputSet_42">
@@ -369,7 +369,7 @@ System.out.println(&quot;userlifeCycle: New User Created: pid: &quot;+callingPro
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_1" bpmnElement="Task_1" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="950.0" y="205.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_5">
           <dc:Bounds height="11.0" width="75.0" x="967.0" y="224.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -419,13 +419,13 @@ System.out.println(&quot;userlifeCycle: New User Created: pid: &quot;+callingPro
         <di:waypoint xsi:type="dc:Point" x="840.0" y="229.0"/>
         <di:waypoint xsi:type="dc:Point" x="895.0" y="230.0"/>
         <di:waypoint xsi:type="dc:Point" x="950.0" y="230.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_15"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_IntermediateCatchEvent_1">
         <di:waypoint xsi:type="dc:Point" x="1060.0" y="230.0"/>
         <di:waypoint xsi:type="dc:Point" x="1105.0" y="229.0"/>
         <di:waypoint xsi:type="dc:Point" x="1150.0" y="229.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_16"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
