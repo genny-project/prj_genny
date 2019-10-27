@@ -181,13 +181,15 @@ public class AdamTest {
 				
 				gks.createTestUsersGroups();
 				
-				GennyToken newUser2 = gks.createToken("PER_USER2"); 
-
+				GennyToken newUser2A = gks.createToken("PER_USER2"); 
+				GennyToken newUser2B = gks.createToken("PER_USER2"); 
+				GennyToken newUser1A = gks.createToken("PER_USER1");
 				gks.start();
 				
 				gks.injectSignal("initProject"); // This should initialise everything
-				gks.injectEvent("authInitMsg",newUser2); // log in as new user
-				//gks.injectEvent(getQEventMessage("authInitMsg")); // log in as existing user
+				gks.injectEvent("authInitMsg",newUser2A); // log in as new user
+				gks.injectEvent("authInitMsg",newUser2B); // log in as same new user
+				gks.injectEvent("authInitMsg",newUser1A); // log in as same new user
 				gks.advanceSeconds(5, false);
 				gks.showStatuses("PER_USER1","PER_USER2");
 
@@ -209,8 +211,16 @@ public class AdamTest {
 				
 //		        showStatuses(gks);
 		        
+				
+				// Now answer a question
+
+				gks.injectAnswer("PRI_FIRSTNAME",newUser2A);
+				
 		        
-				gks.injectEvent("msgLogout",newUser2);
+				gks.injectEvent("msgLogout",newUser2A);
+				gks.advanceSeconds(5, false);
+				gks.injectEvent("msgLogout",newUser2B);
+				gks.injectEvent("msgLogout",newUser1A);
 			} catch (Exception e) {
 				e.printStackTrace();
 				

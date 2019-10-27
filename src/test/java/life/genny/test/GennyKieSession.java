@@ -97,6 +97,7 @@ import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.EntityEntity;
 import life.genny.qwanda.exception.BadDataException;
 import life.genny.qwanda.message.QCmdMessage;
+import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataAttributeMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
@@ -149,6 +150,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	Map<String,List<String>> groups = new HashMap<String,List<String>>();
 	
 	   protected Map<String,Object> messages;
+	   protected Map<String,Answer> answers;
 	   List<Status> statuses = new ArrayList<Status>();
 
 	
@@ -236,6 +238,27 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	public void injectMessage(Object object) {
 		kieSession.insert(object);
 	}
+
+	public  void injectAnswer(final String attributeCode, GennyToken gToken) {
+		injectAnswer(attributeCode,gToken,gToken.getUserCode());
+	}
+	
+	public  void injectAnswer(final String attributeCode, GennyToken gToken, final String targetCode) {
+		Answer[] answerArray = new Answer[1];
+		answerArray[0] = answers.get(attributeCode);
+		answerArray[0].setSourceCode(gToken.getUserCode());
+		answerArray[0].setTargetCode(targetCode);
+		QDataAnswerMessage answerMsg = new QDataAnswerMessage(answerArray);
+		answerMsg.setToken(gToken.getToken()); 
+		
+		injectEvent(answerMsg,gToken);
+	}
+
+	public <T extends QMessage> void injectMessage(T msg, GennyToken gToken) {
+		msg.setToken(gToken.getToken());
+		kieSession.insert(msg);
+	}
+
 	
 	public void injectSignalToProcessInstance(String type, Object object, long processInstanceId) {
 		kieSession.signalEvent(type, object, processInstanceId);
@@ -608,6 +631,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		
 		this.setupMessages();
 		this.setupCache();
+		this.setupAnswers();
 		this.userToken = GennyJbpmBaseTest.createGennyToken(serviceToken.getRealm(), "user1", "Barry Allan", "user");
 
 		System.out.println("Completed Setup");
@@ -1343,6 +1367,27 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 		}
 
+		private void setupAnswers()
+		{
+			answers = new HashMap<String,Answer>();
+			createAnswer("PRI_FIRSTNAME","Bruce");
+			createAnswer("PRI_LASTNAME","Wayne");
+			createAnswer("PRI_ADDRESS_JSON","{\"street_number\":\"64\",\"street_name\":\"Fakenham Road\",\"suburb\":\"Ashburton\",\"state\":\"Victoria\",\"country\":\"AU\",\"postal_code\":\"3147\",\"full_address\":\"64 Fakenham Rd, Ashburton VIC 3147, Australia\",\"latitude\":-37.863208,\"longitude\":145.092359,\"street_address\":\"64 Fakenham Road\"}");
+		}
+		
+		public Answer createAnswer(final String attributeCode, final String value )
+		{
+			return createAnswer(attributeCode, value, false, 1.0);
+		}
+
+		
+		public Answer createAnswer(final String attributeCode, final String value, final Boolean changeEvent, final Double weight )
+		{
+			Answer answer = new Answer("SOURCE","TARGET", attributeCode, value, changeEvent);
+			answer.setWeight(weight);
+			answers.put(attributeCode, answer);
+			return answer;
+		}
 
 		 private void setupMessages()
 		 {
