@@ -67,7 +67,21 @@ import life.genny.model.OutputParamTreeSet;
      ],
     "displayName" : "ShowFrame",
     "icon" : "icons/icon-info.gif"
+  ],
+  
+       // the ProcessAnswers work item
+  [
+    "name" : "ProcessAnswers",
+    "parameters" : [     
+      "serviceToken" : new GennyToken(),
+      "userToken"  : new GennyToken(),
+      "answersToSave" : new Answers(),
+      "callingWorkflow"  :  new StringDataType()
+     ],
+    "displayName" : "ProcessAnswers",
+    "icon" : "icons/icon-info.gif"
   ]
+  
 
 
 ]
