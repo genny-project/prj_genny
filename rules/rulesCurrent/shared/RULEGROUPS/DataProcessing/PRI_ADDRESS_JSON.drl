@@ -4,6 +4,7 @@ import life.genny.models.GennyToken;
 import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.qwanda.Answer;
+import life.genny.qwanda.Answers;
 import io.vertx.core.json.JsonObject;
 import java.util.Map;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ rule "PRI_ADDRESS_JSON"
       beUtils : BaseEntityUtils()
 	  serviceToken : GennyToken( code == "PER_SERVICE") 
 	  answer : Answer( attributeCode == "PRI_ADDRESS_JSON" )
+	  answersToSave : Answers()
      then
  		System.out.println("Rule -> PRI_ADDRESS_JSON :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
 		String sourceCode = beUtils.getGennyToken().getUserCode();
@@ -28,23 +30,24 @@ rule "PRI_ADDRESS_JSON"
 					
 			JsonObject addressDataJson = new JsonObject(answer.getValue());
 
-			List<Answer> answers = new ArrayList<Answer>();
-			answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_COUNTRY", addressDataJson.getString("country")));
-			answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_POSTCODE", addressDataJson.getString("postal_code")));
-			answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_SUBURB", addressDataJson.getString("suburb")));
-			answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_CITY", addressDataJson.getString("suburb")));
-			answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", addressDataJson.getString("state")));
-			answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_ADDRESS1", addressDataJson.getString("street_address")));
-			answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", addressDataJson.getString("full_address")));
+			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_COUNTRY", addressDataJson.getString("country")));
+			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_POSTCODE", addressDataJson.getString("postal_code")));
+			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_SUBURB", addressDataJson.getString("suburb")));
+			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_CITY", addressDataJson.getString("suburb")));
+			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", addressDataJson.getString("state")));
+			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_ADDRESS1", addressDataJson.getString("street_address")));
+			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", addressDataJson.getString("full_address")));
 		
 			Double latitude = addressDataJson.getDouble("latitude");
 			Double longitude = addressDataJson.getDouble("longitude");
 			
-			answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_LATITUDE", latitude+""));
-			answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_LONGITUDE", longitude+""));
+			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_LATITUDE", latitude+""));
+			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_LONGITUDE", longitude+""));
 	
-		beUtils.saveAnswers(answers,true); 
+		/* beUtils.saveAnswers(answers,true); */
+		
 
 		retract(answer);
+		update(answersToSave);
 	
 end
