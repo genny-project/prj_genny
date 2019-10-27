@@ -4,7 +4,7 @@ import life.genny.models.GennyToken;
 import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.qwanda.Answer;
-
+import life.genny.qwanda.Answers;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -16,17 +16,20 @@ rule "DEFAULT_ANSWER"
 	  serviceToken : GennyToken( code == "PER_SERVICE") 
 	  answer : Answer() /* (targetCode == beUtils.getGennyToken().getUserCode()) ) */
 	  output : OutputParam( )
+	  answersToSave : Answers()
      then
  		System.out.println("Rule -> DEFAULT_ANSWER :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
 	
 		answer.setChangeEvent(true);
-		beUtils.saveAnswer(answer); 
+		answersToSave.add(answer);
+		
+		/*beUtils.saveAnswer(answer); */
 		
 		output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */
   	    
 		retract(answer);
-		 update(output);
-		
+		update(output);
+		update(answersToSave);
 
 end
