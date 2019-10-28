@@ -121,7 +121,7 @@ public class LinTestNotificationHub extends GennyJbpmBaseTest {
     GennyToken userToken = null;
     GennyToken serviceToken = null;
     QRules qRules = null;
-    boolean isCreateToken = true;
+    boolean isCreateToken = false;
 
     if (isCreateToken) {
       userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");

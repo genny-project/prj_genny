@@ -10,7 +10,7 @@ import life.genny.utils.OutputParam;
 import java.util.List;
 import java.util.ArrayList;
 
-rule "OFFERED_TO_PLACED"
+rule "PLACED_TO_PROGRESS"
     ruleflow-group 'MoveBucket'
     no-loop true
     salience 1 
@@ -19,23 +19,23 @@ rule "OFFERED_TO_PLACED"
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		newApplication : BaseEntity()
 		output : OutputParam()
-		bucketCode : String(bucketCode.equals("Offered"))
+		bucketCode : String(bucketCode.equals("Placed"))
 		controlSignalCode : String(controlSignalCode.equals("FORWARD"))
 
 	  
      then
- 		System.out.println("OFFERED_TO_PLACED: Rule fired" ); 
- 		System.out.println("OFFERED_TO_PLACED: newApplication = " + newApplication.getCode());
+ 		System.out.println("PLACED_TO_PROGRESS: Rule fired" ); 
+ 		System.out.println("PLACED_TO_PROGRESS: newApplication = " + newApplication.getCode());
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
- 		Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_STATUS","Placed");
+ 		Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_STATUS","Progress");
  		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
  		beUtils.saveAnswer(answer);
 
 	/* insert(answer); */
 		
-		System.out.println("OFFERED_TO_PLACED: Answer = " + answer);
-		System.out.println("OFFERED_TO_PLACED: newApplication = " + newApplication); 
+		System.out.println("PLACED_TO_PROGRESS: Answer = " + answer);
+		System.out.println("PLACED_TO_PROGRESS: newApplication = " + newApplication); 
 		
 		
 	/*  Set the attribute code and value to output */
