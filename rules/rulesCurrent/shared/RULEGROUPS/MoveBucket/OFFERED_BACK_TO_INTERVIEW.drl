@@ -10,7 +10,7 @@ import life.genny.utils.OutputParam;
 import java.util.List;
 import java.util.ArrayList;
 
-rule "OFFERED_TO_PLACED"
+rule "OFFERED_BACK_TO_INTERVIEW"
     ruleflow-group 'MoveBucket'
     no-loop true
     salience 1 
@@ -20,22 +20,22 @@ rule "OFFERED_TO_PLACED"
 		newApplication : BaseEntity()
 		output : OutputParam()
 		bucketCode : String(bucketCode.equals("Offered"))
-		controlSignalCode : String(controlSignalCode.equals("FORWARD"))
+		controlSignalCode : String(controlSignalCode.equals("BACKWARD"))
 
 	  
      then
- 		System.out.println("OFFERED_TO_PLACED: Rule fired" ); 
- 		System.out.println("OFFERED_TO_PLACED: newApplication = " + newApplication.getCode());
+ 		System.out.println("OFFERED_BACK_TO_INTERVIEW: Rule fired" ); 
+ 		System.out.println("OFFERED_BACK_TO_INTERVIEW: newApplication = " + newApplication.getCode());
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
- 		Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_STATUS","Placed");
+ 		Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_STATUS","Interview");
  		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
  		beUtils.saveAnswer(answer);
 
 	/* insert(answer); */
 		
-		System.out.println("OFFERED_TO_PLACED: Answer = " + answer);
-		System.out.println("OFFERED_TO_PLACED: newApplication = " + newApplication); 
+		System.out.println("OFFERED_BACK_TO_INTERVIEW: Answer = " + answer);
+		System.out.println("OFFERED_BACK_TO_INTERVIEW: newApplication = " + newApplication); 
 		
 		
 	/*  Set the attribute code and value to output */
