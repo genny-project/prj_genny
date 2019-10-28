@@ -281,15 +281,15 @@ kcontext.setVariable(&quot;callingProcessId&quot;,callingProcessId);</bpmn2:scri
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_1" bpmnElement="StartEvent_2">
-        <dc:Bounds height="36.0" width="36.0" x="153.0" y="338.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="154.0" y="341.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_8">
-          <dc:Bounds height="11.0" width="53.0" x="145.0" y="374.0"/>
+          <dc:Bounds height="11.0" width="53.0" x="146.0" y="377.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_1" bpmnElement="EndEvent_2">
-        <dc:Bounds height="36.0" width="36.0" x="1430.0" y="338.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="1430.0" y="341.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_10">
-          <dc:Bounds height="11.0" width="50.0" x="1423.0" y="374.0"/>
+          <dc:Bounds height="11.0" width="50.0" x="1423.0" y="377.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_1" targetElement="BPMNShape_ScriptTask_2">
@@ -334,24 +334,22 @@ kcontext.setVariable(&quot;callingProcessId&quot;,callingProcessId);</bpmn2:scri
         <bpmndi:BPMNLabel id="BPMNLabel_15"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="BPMNShape_StartEvent_1" targetElement="BPMNShape_SubProcess_1">
-        <di:waypoint xsi:type="dc:Point" x="189.0" y="356.0"/>
-        <di:waypoint xsi:type="dc:Point" x="204.0" y="356.0"/>
-        <di:waypoint xsi:type="dc:Point" x="204.0" y="359.0"/>
+        <di:waypoint xsi:type="dc:Point" x="190.0" y="359.0"/>
+        <di:waypoint xsi:type="dc:Point" x="205.0" y="359.0"/>
         <di:waypoint xsi:type="dc:Point" x="220.0" y="359.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_16"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_SubProcess_1" targetElement="BPMNShape_EndEvent_1">
         <di:waypoint xsi:type="dc:Point" x="1380.0" y="359.0"/>
         <di:waypoint xsi:type="dc:Point" x="1405.0" y="359.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1405.0" y="356.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1430.0" y="356.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1430.0" y="359.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_17"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="BPMNShape_ExclusiveGateway_4" targetElement="BPMNShape_ScriptTask_4">
         <di:waypoint xsi:type="dc:Point" x="880.0" y="350.0"/>
         <di:waypoint xsi:type="dc:Point" x="1001.0" y="350.0"/>
         <di:waypoint xsi:type="dc:Point" x="1122.0" y="350.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_9"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
