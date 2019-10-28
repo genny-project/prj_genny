@@ -20,6 +20,7 @@ rule "INTERVIEW_TO_OFFERED"
 		newApplication : BaseEntity()
 		output : OutputParam()
 		bucketCode : String(bucketCode.equals("Interview"))
+		controlSignalCode : String(controlSignalCode.equals("FORWARD"))
 
 	  
      then
@@ -27,7 +28,7 @@ rule "INTERVIEW_TO_OFFERED"
  		System.out.println("INTERVIEW_TO_OFFERED: newApplication = " + newApplication.getCode());
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
- 		Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_BUCKET_CODE","Offered");
+ 		Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_STATUS","Offered");
  		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
  		beUtils.saveAnswer(answer);
 
@@ -45,5 +46,6 @@ rule "INTERVIEW_TO_OFFERED"
 		retract(serviceToken)
 		retract(newApplication)
 		retract(bucketCode)
+		retract(controlSignalCode)
 		
 end
