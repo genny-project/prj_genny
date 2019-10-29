@@ -667,7 +667,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		kieSession.getWorkItemManager().registerWorkItemHandler("AskQuestionTask",
 				new AskQuestionTaskWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng,kieSession));
 		kieSession.getWorkItemManager().registerWorkItemHandler("ProcessAnswers",
-				new ProcessAnswersWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng));
+				new ProcessAnswersWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng, kieSession));
 
 		kieSession.getWorkItemManager().registerWorkItemHandler("ProcessTaskId",
 				new ProcessTaskIdWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng,kieSession));
@@ -1376,6 +1376,13 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			createAnswer("PRI_FIRSTNAME","Bruce");
 			createAnswer("PRI_LASTNAME","Wayne");
 			createAnswer("PRI_ADDRESS_JSON","{\"street_number\":\"64\",\"street_name\":\"Fakenham Road\",\"suburb\":\"Ashburton\",\"state\":\"Victoria\",\"country\":\"AU\",\"postal_code\":\"3147\",\"full_address\":\"64 Fakenham Rd, Ashburton VIC 3147, Australia\",\"latitude\":-37.863208,\"longitude\":145.092359,\"street_address\":\"64 Fakenham Road\"}");
+			createAnswer("PRI_MOBILE","0432212321");
+			createAnswer("PRI_DOB","2000-01-02");
+			createAnswer("PRI_EMAIL","bruce@gmail.com");
+			createAnswer("PRI_PREFERRED_NAME","Brucey");
+			createAnswer("PRI_USER_PROFILE_PICTURE","https://image.com");
+			createAnswer("PRI_ADDRESS_FULL","17 Hardware Lane, MELBOURNE, VIC, 3000");
+
 		}
 		
 		public Answer createAnswer(final String attributeCode, final String value )
