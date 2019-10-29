@@ -215,7 +215,7 @@ public class AdamTest {
 				// Now answer a question
 
 				gks.injectAnswer("PRI_FIRSTNAME",newUser2A);
-				
+				gks.injectAnswer("PRI_LASTNAME", newUser2A);
 		        
 				gks.injectEvent("msgLogout",newUser2A);
 				gks.advanceSeconds(5, false);
