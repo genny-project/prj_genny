@@ -32,13 +32,18 @@ import life.genny.models.ThemePosition;
 import life.genny.qwanda.Answer;
 import life.genny.qwanda.Ask;
 import life.genny.qwanda.ContextList;
+import life.genny.qwanda.Question;
 import life.genny.qwanda.VisualControlType;
+import life.genny.qwanda.attribute.Attribute;
+import life.genny.qwanda.datatype.DataType;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventMessage;
+import life.genny.qwanda.validation.Validation;
+import life.genny.qwanda.validation.ValidationList;
 import life.genny.qwandautils.GennyCacheInterface;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
@@ -77,7 +82,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 		super(false);
 	}
 
-	@Test
+	//@Test
 	public void queryTest() {
 		initItem();
 		GennyKieSession gks = GennyKieSession.builder(serviceToken,true)
@@ -89,6 +94,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 	
 	}
 	
+
 	
 	public void initItem() {		
 		boolean runNewLocal = false;
@@ -113,9 +119,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 		//rules.sendAllAttributes();
 		
 		project =  new BaseEntityUtils(serviceToken).getBaseEntityByCode("PRJ_INTERNMATCH");
-		rules.sendAllAttributes();
-		
-
+		rules.sendAllAttributes();		
 
 		THM_SHADOW = Theme.builder("THM_SHADOW")
 					 .addAttribute()
@@ -129,45 +133,67 @@ public class SafalTest extends GennyJbpmBaseTest {
 	               .end()
 	               .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
 	               .build();    
-			
 		
 		THM_CONTENT_WRAPPER = Theme.builder("THM_CONTENT_WRAPPER")
 				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
 				.addAttribute().borderRadius(5).borderWidth(1).borderColor("black").end()
 				.build();
 		
+
 	}
+
 	
-	//@Test
+	@Test
 	public void v7DetailsView() {
 
 		initItem();
 		/* Themes and frames */
 		
 		try {
-			Ask[] askList = new Ask[1];
 			
-			Ask detailViewAsk = getDetailViewAsk();
-			askList[0] = detailViewAsk;
-			
-			/* virtual Asks */
-			QDataAskMessage askMsgs = new QDataAskMessage(askList);
-			askMsgs.setReplace(true);
-			askMsgs.setToken(userToken.getToken());
-			String jsonAsk = JsonUtils.toJson(askMsgs);
-		    
-			/* FRame for detail View */
-		     Theme THM_DETAIL_VIEW= Theme.builder("THM_DETAIL_VIEW")
-						.addAttribute()
-						.end().build();
-		    
-			Frame3 FRM_DETAIL_VIEW = Frame3.builder("FRM_DETAIL_VIEW")
-					.addTheme(THM_DETAIL_VIEW).end()
-					.addFrame(getFrameHeader(), FramePosition.CENTRE).end()
-					.addFrame(getDetailViewBody(), FramePosition.CENTRE).end()
-					.build();
+			DataType dType = new DataType("DTT_IMAGE");
+			Attribute attribute = new Attribute("PRI_IMAGE_URL","Image Url",dType);
+			Question companyImageQuestion = new Question("QUE_COMPANY_LOGO_GRP","Company logo",attribute);
+			companyImageQuestion.setReadonly(true);
+			Ask compnayImageAsk = new Ask(companyImageQuestion);
+			compnayImageAsk.setReadonly(true);
 
-			Frame3 FRM_ROOT = Frame3.builder("FRM_CONTENT").addFrame(FRM_DETAIL_VIEW).end().build();
+			Ask[] askList = new Ask[3];
+			
+			//Ask summaryAsk = getCompanySummaryAsk();
+			//Ask detailViewAsk = getCompanyDetailAsk();
+			Ask summaryAsk = getPersonSummaryAsk();
+			Ask detailViewAsk = getPersonDetailAsk();
+			Ask docViewAsk = getPersonDocumentsAsk();
+			askList[0] = summaryAsk;
+			askList[1] = detailViewAsk;
+			askList[2] = docViewAsk;
+			
+			 /*Frame Detail View BODY */
+		     Theme THM_DETAIL_VIEW_BODY = Theme.builder("THM_DETAIL_VIEW_BODY")
+						.addAttribute().flex(15).justifyContent("flex-start").end()
+						//.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+						.build();
+		     
+		     Theme THM_SCROLL_VERTICAL = Theme.builder("THM_SCROLL_VERTICAL")
+						.addAttribute()
+							.justifyContent("flex-start")
+							.overflowY("auto")
+							.padding(10)
+						.end()
+						.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+						.build();  
+		     
+		     Frame3 FRM_DETAIL_VIEW_BODY = Frame3.builder("FRM_DETAIL_VIEW_BODY")
+		    		 	.addTheme(THM_SCROLL_VERTICAL,ThemePosition.CENTRE).end()
+		    		 	.addTheme(THM_DETAIL_VIEW_BODY, ThemePosition.WRAPPER).end()
+		    			.addFrame(getTopFrame("FRM_PERSON_SUMMARY",rules.getUser().getCode(),"QUE_TEST_PERSON_SUMMARY_GRP"), FramePosition.CENTRE).end()
+		    		    .addFrame(getDetailFrame("FRM_PERSON_DETAIL",rules.getUser().getCode(),"QUE_TEST_PERSON_DETAIL_GRP"), FramePosition.CENTRE).end()
+		    		    .addFrame(getDetailFrame("FRM_PERSON_DOCUMENTS",rules.getUser().getCode(),"QUE_TEST_PERSON_DOC_GRP"), FramePosition.CENTRE).end()
+		    			.build();
+		  
+
+			Frame3 FRM_ROOT = Frame3.builder("FRM_ROOT").addFrame(FRM_DETAIL_VIEW_BODY).end().build();
 
 			/* end */
 			Set<QDataAskMessage> set = new HashSet<QDataAskMessage>();
@@ -176,19 +202,22 @@ public class SafalTest extends GennyJbpmBaseTest {
 			
 			Map<String, QDataAskMessage> virtualAskMap = new HashMap<String, QDataAskMessage>();
 			virtualAskMap.put(askList[0].getQuestionCode(),new QDataAskMessage(askList[0]));
+			virtualAskMap.put(askList[1].getQuestionCode(),new QDataAskMessage(askList[1]));
+			virtualAskMap.put(askList[2].getQuestionCode(),new QDataAskMessage(askList[2]));
 			
+			
+			QDataBaseEntityMessage msgg = new QDataBaseEntityMessage(rules.getUser());
+			msgg.setToken(userToken.getToken());
+			msgg.setReplace(true);
+			
+			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msgg));
 			
 			QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_ROOT, serviceToken, set,contextListMap,virtualAskMap);
-			
 			
 			msg.setToken(userToken.getToken());
 			msg.setReplace(true);
 			
-			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));	
-			
-			/* we publish the  virtual ask with child asks */
-			VertxUtils.writeMsg("webcmds", jsonAsk);
-			
+	
 			/* send message */
 			System.out.println("Sending Asks");
 			for (QDataAskMessage item : set) {
@@ -198,25 +227,26 @@ public class SafalTest extends GennyJbpmBaseTest {
 				VertxUtils.writeMsg("webcmds", json);
 				
 			}
+	
 			
-			QDataBaseEntityMessage msgg = new QDataBaseEntityMessage(rules.getUser());
-			msgg.setToken(userToken.getToken());
+			/* we publish the  virtual ask with child asks */
 			
-			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msgg));
+			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));	
+
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
-	
-	public Frame3 getContextSummary( String name) {
+		
+	public Frame3 getTopFrame( String name, String target, String questionCode) {
 		
 		Theme THM_CONTEXT_SUMMARY = Theme.builder("THM_CONTEXT_SUMMARY").addAttribute().backgroundColor("#faf9fa")
 				.justifyContent("flex-start")
 				.marginBottom(20)
 				.padding(10)
+				.maxWidth(700)
 				.end()
 				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
 				.build();
@@ -227,31 +257,13 @@ public class SafalTest extends GennyJbpmBaseTest {
 			.addAttribute()
 				.alignItems("flex-start")
 				.justifyContent("flex-start")
-				.flex(1)
+				.flex(2)
                 .flexShrink(0)
                 .flexBasis("auto")
                 .flexGrow(0)
                 .width("initial")
 			.end()
 			.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
-			.build();
-
-
-		Theme THM_TEST_FORM_IMAGE_RESTRICTIONS = Theme.builder("THM_TEST_FORM_IMAGE_RESTRICTIONS")
-				.addAttribute()
-					.imageHeight(150)
-					.imageWidth(150)
-					.showName(false)
-					.fit("contain")
-					.maxNumberOfFiles(1)
-				.end()
-			.build();
-		
-		Theme THM_DETAIL_VIEW_IMAGE_FRAME = Theme.builder("THM_DETAIL_VIEW_IMAGE_FRAME")
-				.addAttribute()
-					.height(150)
-					.width(150)
-				.end()
 			.build();
 		
 		/********************/
@@ -264,28 +276,6 @@ public class SafalTest extends GennyJbpmBaseTest {
 		.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
 		.build();
 		
-		Theme THM_CONTEXT_SUMMARY_CONTENT = Theme.builder("THM_CONTEXT_SUMMARY_CONTENT")
-				.addAttribute()
-					.display("flex")
-					.alignItems("stretch")
-					.justifyContent("stretch")
-				.end()
-				.build();
-		
-		Theme THM_LABEL_BOLD = Theme.builder("THM_LABEL_BOLD")
-				.addAttribute()
-								.bold(true)
-								.size("sm")
-								.paddingX(10)
-				.end()
-				.addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end()
-				.build();
-    
-		Theme THM_DISPLAY_HORIZONTAL = Theme.builder("THM_DISPLAY_HORIZONTAL")
-				.addAttribute()
-					.flexDirection("row").margin("1%").end()
-				.build();
-		
 		Theme THM_FLEX_SIZE = Theme.builder("THM_FLEX_SIZE")
                 .addAttribute()
                   .flexShrink(0)
@@ -297,35 +287,7 @@ public class SafalTest extends GennyJbpmBaseTest {
                 .build();
 		
 		try {
-			
-			Theme THM_DYNAMIC_WIDTH = Theme.builder("THM_DYNAMIC_WIDTH")
-					.addAttribute()
-						.dynamicWidth(true)
-					.end()
-					.build();  
-
-			
-			Frame3 FRM_CONTEXT_SUMMARY_CONTENT = Frame3.builder("FRM_CONTEXT_SUMMARY_CONTENT")
-					.addTheme(THM_CONTEXT_SUMMARY_CONTENT).end()
-						.question("QUE_TEST_PERSON_DETAIL_GRP")
-							.addTheme(THM_DYNAMIC_WIDTH).vcl(VisualControlType.VCL_INPUT).end()
-							.addTheme(THM_LABEL_BOLD).vcl(VisualControlType.VCL_LABEL).end()
-							.addTheme(THM_DISPLAY_HORIZONTAL).vcl(VisualControlType.VCL_WRAPPER).end()
-							.addTheme("THM_BACKGROUND_NONE",serviceToken).end()
-					.end()
-					.build();
-			
-			/* Update this
-			 * */
-			
-			Frame3 FRM_PROFILE_PICTURE_GRP = Frame3.builder("FRM_PROFILE_PICTURE_GRP")
-					.question("QUE_TEST_IMAGE_GRP")
-						.targetAlias(userToken.getUserCode())
-						.addTheme(THM_TEST_FORM_IMAGE_RESTRICTIONS).vcl(VisualControlType.INPUT_SELECTED).end()
-						.addTheme(THM_DETAIL_VIEW_IMAGE_FRAME).vcl(VisualControlType.INPUT_SELECTED_WRAPPER).end()
-					.end()
-					.build();
-			
+		
 			/* ******end******* */
 			Frame3 FRM_DETAIL_VIEW_SUMMARY = Frame3.builder(name)
 					.addTheme(THM_CONTEXT_SUMMARY,ThemePosition.WRAPPER).end()
@@ -333,8 +295,9 @@ public class SafalTest extends GennyJbpmBaseTest {
 					.addTheme(THM_CONTEXT_SUMMARY_IMAGE_FRAME,ThemePosition.WEST).end()
 					.addTheme(THM_CONTEXT_SUMMARY_CONTENT_FRAME,ThemePosition.CENTRE).end()
 					.addTheme(THM_SHADOW,ThemePosition.WRAPPER).end()
-					.addFrame(FRM_PROFILE_PICTURE_GRP, FramePosition.WEST).end()
-					.addFrame(FRM_CONTEXT_SUMMARY_CONTENT, FramePosition.CENTRE).end()	
+					.addFrame(getTopPicture("FRM_PROFILE_PICTURE_GRP", target), FramePosition.WEST).end()
+					.addFrame(getTopSummaryContent("FRM_CONTEXT_SUMMARY_CONTENT",target,questionCode), FramePosition.CENTRE).end()	
+					.addFrame(getControls(), FramePosition.EAST).end()	
 			.build();
 			
 			return FRM_DETAIL_VIEW_SUMMARY;
@@ -343,38 +306,185 @@ public class SafalTest extends GennyJbpmBaseTest {
 				System.out.println(e);
 				return null;		
 		}
-	}
-	
-	public Frame3 getDetailViewBody() {
 		
-		 /*Frame Detail View BODY */
-	     Theme THM_DETAIL_VIEW_BODY = Theme.builder("THM_DETAIL_VIEW_BODY")
-					.addAttribute().flex(15).justifyContent("flex-start").end()
-					//.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
-					.build();
-	     
-	     Theme THM_SCROLL_VERTICAL = Theme.builder("THM_SCROLL_VERTICAL")
+	}
+	public Frame3 getTopPicture( String name, String target) {
+	
+		try {
+			Validation validation = new Validation("VLD_IMAGE_URL", "Text", ".*");
+			ValidationList validationsList = new ValidationList();
+			List<Validation> validations = new ArrayList();
+			validations.add(validation);
+			validationsList.setValidationList(validations);
+			DataType dtt_image = new DataType("DTT_IMAGE", validationsList, "Image", "");
+			
+			Theme THM_DETAIL_VIEW_INPUT_FIELD = Theme.builder("THM_DETAIL_VIEW_INPUT_FIELD")
 					.addAttribute()
-						.justifyContent("flex-start")
-						.overflowY("auto")
-						.padding(10)
+						.backgroundColor("#ddd")
 					.end()
-					.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
-					.build();  
-	     
-	     Frame3 FRM_DETAIL_VIEW_BODY = Frame3.builder("FRM_DETAIL_VIEW_BODY")
-	    		 	.addTheme(THM_SCROLL_VERTICAL,ThemePosition.CENTRE).end()
-	    		 	.addTheme(THM_DETAIL_VIEW_BODY, ThemePosition.WRAPPER).end()
-	    			.addFrame(getContextSummary("FRM_PROJECT_DETAIL"), FramePosition.CENTRE).end()
-	    			.addFrame(getContextSummary("FRM_PROJECT_DETAIL1"), FramePosition.CENTRE).end()
-	    			.addFrame(getContextSummary("FRM_PROJECT_DETAIL2"), FramePosition.CENTRE).end()
-	    			.addFrame(getContextSummary("FRM_PROJECT_DETAIL3"), FramePosition.CENTRE).end()
-	    			.build();
-	     
-	     return FRM_DETAIL_VIEW_BODY;
+					.build();
+			
+		Theme THM_TEST_FORM_IMAGE_RESTRICTIONS = Theme.builder("THM_TEST_FORM_IMAGE_RESTRICTIONS")
+				.addAttribute()
+					.imageHeight(150)
+					.imageWidth(150)
+					.showName(false)
+					.fit("contain")
+					.maxNumberOfFiles(1)
+				.end()
+				
+			.build();
+		
+		Theme THM_DETAIL_VIEW_IMAGE_FRAME = Theme.builder("THM_DETAIL_VIEW_IMAGE_FRAME")
+				.addAttribute()
+					.height(150)
+					.width(150)
+				.end()
+			.build();
+		
+		
+		Frame3 FRM_PROFILE_PICTURE_GRP = Frame3.builder(name)
+				.addTheme("THM_PADDING_RIGHT_10", ThemePosition.WRAPPER,serviceToken).end()
+				.question("QUE_TEST_IMAGE_GRP")
+					.targetAlias(target)
+					.addTheme(THM_DETAIL_VIEW_INPUT_FIELD).vcl(VisualControlType.INPUT_FIELD).dataType(dtt_image).end()
+					.addTheme(THM_TEST_FORM_IMAGE_RESTRICTIONS).vcl(VisualControlType.INPUT_SELECTED).end()
+					.addTheme(THM_DETAIL_VIEW_IMAGE_FRAME).vcl(VisualControlType.INPUT_SELECTED_WRAPPER).end()
+				.end()
+				.build();
+		
+			return FRM_PROFILE_PICTURE_GRP;
+		}catch(Exception e) {
+			
+		}
+		return null;
 	}
 	
-	public Ask getDetailViewAsk() {
+	public Frame3 getTopSummaryContent(String name , String target,String questionCode) {
+		
+		try {
+			Theme THM_CONTEXT_SUMMARY_CONTENT = Theme.builder("THM_CONTEXT_SUMMARY_CONTENT")
+					.addAttribute()
+						.display("flex")
+						.alignItems("flex-start")
+						.justifyContent("center")
+					.end()
+					.build();
+	
+			Theme THM_INPUT = Theme.builder("THM_INPUT")
+					.addAttribute()
+						.dynamicWidth(true)
+						.size("xxl")
+						
+					.end()
+					.build();  
+			
+			Frame3 FRM_CONTEXT_SUMMARY_CONTENT = Frame3.builder(name)
+					.addTheme(THM_CONTEXT_SUMMARY_CONTENT).end()
+						.question(questionCode)
+						.targetAlias(target)
+							.addTheme(THM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+							.addTheme("THM_BACKGROUND_NONE",serviceToken).end()
+					.end()
+					.build();
+			
+			return FRM_CONTEXT_SUMMARY_CONTENT;
+		}catch(Exception e) {
+			
+			return null;
+		}
+	}
+	
+	
+	public Frame3 getDetailFrame(String name, String target,String questionCode) {
+		
+			Theme THM_LABEL = Theme.builder("THM_LABEL")
+					.addAttribute(ThemeAttributeType.PRI_HAS_LABEL,true).end()
+					.addAttribute().bold(true).end()
+					.build();  
+			
+			Theme THM_FORM_BEHAVIOUR = Theme.builder("THM_FORM_BEHAVIOUR")
+					.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_LABEL, true).end()
+					.build();
+			
+		Theme THM_FORM_WRAPPER = Theme.builder("THM_FORM_WRAPPER")
+					.addAttribute()
+						.flex(1)
+						.width("100%")
+						.end()
+					.build();
+		
+		Theme THM_FORM_CONTENT_WRAPPER = Theme.builder("THM_FORM_CONTENT_WRAPPER")
+						.addAttribute()	
+						.borderTopWidth(2)
+						.borderStyle("solid")
+						.borderColor("#ddd")
+					.end()
+					.build();
+		
+		Theme THM_VCL_WRAPPER = Theme.builder("THM_VCL_WRAPPER")
+				.addAttribute()
+					.paddingY(5)
+				.end()
+				.build();
+		
+		Theme THM_DETAIL_VIEW_INPUT_FIELD = Theme.builder("THM_DETAIL_VIEW_INPUT_FIELD")
+				.addAttribute()
+					.backgroundColor("#ddd")
+				.end()
+				.build();
+			
+		Theme THM_CONTEXT_SUMMARY = Theme.builder("THM_CONTEXT_SUMMARY_1")
+				.addAttribute().backgroundColor("#faf9fa")
+					.justifyContent("flex-start")
+					.marginBottom(20)
+					.padding(10)
+				    .flexShrink(0)
+	                .flexBasis("auto")
+	                .flexGrow(0)
+	                .height("initial")
+					.maxWidth(700)
+				.end()
+				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+				.build();
+		
+		Validation validation = new Validation("VLD_ANYTHING", "Anything", ".*");
+		ValidationList validationsList = new ValidationList();
+		List<Validation> validations = new ArrayList();
+		validations.add(validation);
+		validationsList.setValidationList(validations);
+		DataType dtt_upload = new DataType("DTT_UPLOAD", validationsList, "Upload", "");
+		
+		
+		try {
+			
+			/* ******end******* */
+			Frame3 FRM_DETAIL_VIEW_SUMMARY = Frame3.builder(name)
+					.addTheme(THM_CONTEXT_SUMMARY,ThemePosition.WRAPPER).end()
+					.addTheme(THM_SHADOW,ThemePosition.WRAPPER).end()
+					.question(questionCode)
+					.targetAlias(target)
+						.addTheme(THM_DETAIL_VIEW_INPUT_FIELD).vcl(VisualControlType.INPUT_FIELD).dataType(dtt_upload).end()
+						.addTheme(THM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+						.addTheme(THM_FORM_BEHAVIOUR).vcl(VisualControlType.GROUP).end()
+						.addTheme(THM_FORM_WRAPPER).vcl(VisualControlType.GROUP_WRAPPER).end()
+						.addTheme(THM_FORM_CONTENT_WRAPPER).vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end()
+						.addTheme(THM_VCL_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+						
+					.end()
+			.build();
+			
+			return FRM_DETAIL_VIEW_SUMMARY;
+			
+		}catch(Exception e){
+				System.out.println(e);
+				return null;		
+		}
+		
+		
+	}
+	
+	public Ask getPersonSummaryAsk() {
 		
 		GennyToken serviceToken = getToken(realm, "service", "Service User", "service");
 
@@ -382,13 +492,74 @@ public class SafalTest extends GennyJbpmBaseTest {
 		TableUtils tableUtils = new TableUtils(beUtils);
 		
 		  SearchEntity searchBE = new SearchEntity("SBE_SEARCH","Search")
-	 		  	     .addFilter("PRI_CODE",SearchEntity.StringFilter.EQUAL,"PER_USER1")
+	 		  	     .addFilter("PRI_CODE",SearchEntity.StringFilter.EQUAL,rules.getUser().getCode())
 	 		  	     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
-	 		  	     .addColumn("PRI_FIRSTNAME", "FirstName")
-	 		  	     .addColumn("PRI_LASTNAME", "LastName")
-	 		      	 .addColumn("PRI_MOBILE", "Mobile")
-	 		  	     .addColumn("PRI_ADDRESS_FULL", "Address")
+	 		  	     .addColumn("PRI_FIRSTNAME", "Name")
+	 		  	     .addColumn("PRI_LASTNAME", "Name")
+	 		  	     .setPageStart(0)
+	 		  	     .setPageSize(10);
+		 
+	 	QDataBaseEntityMessage  msg = tableUtils.fetchSearchResults(searchBE,serviceToken);
+	 	Map<String, String> columns = tableUtils.getTableColumns(searchBE);
+	 	
+	    List<Object> belist = new ArrayList<>(Arrays.asList(msg.getItems()));
+	   
+	    List<BaseEntity> results = (List<BaseEntity>) (List)belist;
+	    
+		List<Ask> asks = TableUtils.generateQuestions(serviceToken, beUtils, results,
+				columns, "PRJ_INTERNMATCH");
+		
+		Ask myAsk = asks.get(0);
+		myAsk.setQuestionCode("QUE_TEST_PERSON_SUMMARY_GRP");
+		
+		return myAsk;
+	}
+	
+	public Ask getPersonDocumentsAsk() {
+		
+		GennyToken serviceToken = getToken(realm, "service", "Service User", "service");
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+		TableUtils tableUtils = new TableUtils(beUtils);
+		
+		  SearchEntity searchBE = new SearchEntity("SBE_SEARCH","Search")
+	 		  	     .addFilter("PRI_CODE",SearchEntity.StringFilter.EQUAL,rules.getUser().getCode())
+	 		  	     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
+	 		  	     .addColumn("PRI_RESUME", "Resume")
+	 		  	     .setPageStart(0)
+	 		  	     .setPageSize(10);
+		 
+	 	QDataBaseEntityMessage  msg = tableUtils.fetchSearchResults(searchBE,serviceToken);
+	 	Map<String, String> columns = tableUtils.getTableColumns(searchBE);
+	 	
+	    List<Object> belist = new ArrayList<>(Arrays.asList(msg.getItems()));
+	   
+	    List<BaseEntity> results = (List<BaseEntity>) (List)belist;
+	    
+		List<Ask> asks = TableUtils.generateQuestions(serviceToken, beUtils, results,
+				columns, "PRJ_INTERNMATCH");
+		
+		Ask myAsk = asks.get(0);
+		myAsk.setQuestionCode("QUE_TEST_PERSON_DOC_GRP");
+		myAsk.setName("Documents");
+		
+		return myAsk;
+	}
+	
+	public Ask getPersonDetailAsk() {
+		
+		GennyToken serviceToken = getToken(realm, "service", "Service User", "service");
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+		TableUtils tableUtils = new TableUtils(beUtils);
+		
+		  SearchEntity searchBE = new SearchEntity("SBE_SEARCH","Search")
+	 		  	     .addFilter("PRI_CODE",SearchEntity.StringFilter.EQUAL,rules.getUser().getCode())
+	 		  	     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
 	 		  	     .addColumn("PRI_EMAIL", "Email")
+	 		      	 .addColumn("PRI_MOBILE", "Phone")
+	 		  	     .addColumn("PRI_ADDRESS_FULL", "Address")
+	 		  	     .addColumn("PRI_GENDER", "Gender")
 	 		  	     .setPageStart(0)
 	 		  	     .setPageSize(10);
 		 
@@ -404,17 +575,83 @@ public class SafalTest extends GennyJbpmBaseTest {
 		
 		Ask myAsk = asks.get(0);
 		myAsk.setQuestionCode("QUE_TEST_PERSON_DETAIL_GRP");
+		myAsk.setName("Details");
+		
+		return myAsk;
+	}
+	
+	
+	public Ask getCompanySummaryAsk() {
+		
+		GennyToken serviceToken = getToken(realm, "service", "Service User", "service");
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+		TableUtils tableUtils = new TableUtils(beUtils);
+		
+		  SearchEntity searchBE = new SearchEntity("SBE_SEARCH","Search")
+	 		  	     .addFilter("PRI_CODE",SearchEntity.StringFilter.EQUAL,rules.getUserCompany().getCode())
+	 		  	     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
+	 		  	     .addColumn("PRI_NAME", "Name")
+	 		  	     .setPageStart(0)
+	 		  	     .setPageSize(10);
+		 
+	 	QDataBaseEntityMessage  msg = tableUtils.fetchSearchResults(searchBE,serviceToken);
+	 	Map<String, String> columns = tableUtils.getTableColumns(searchBE);
+	 	
+	    List<Object> belist = new ArrayList<>(Arrays.asList(msg.getItems()));
+	   
+	    List<BaseEntity> results = (List<BaseEntity>) (List)belist;
+	    
+		List<Ask> asks = TableUtils.generateQuestions(serviceToken, beUtils, results,
+				columns, "PRJ_INTERNMATCH");
+		
+		Ask myAsk = asks.get(0);
+		myAsk.setQuestionCode("QUE_TEST_PERSON_SUMMARY_GRP");
+		
+		return myAsk;
+	}
+	
+	public Ask getCompanyDetailAsk() {
+		
+		GennyToken serviceToken = getToken(realm, "service", "Service User", "service");
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+		TableUtils tableUtils = new TableUtils(beUtils);
+		
+		  SearchEntity searchBE = new SearchEntity("SBE_SEARCH","Search")
+	 		  	     .addFilter("PRI_CODE",SearchEntity.StringFilter.EQUAL,rules.getUserCompany().getCode())
+	 		  	     .addSort("PRI_CREATED","Created",SearchEntity.Sort.DESC)
+	 		  	     .addColumn("PRI_EMAIL", "Email")
+	 		      	 .addColumn("PRI_MOBILE", "LandLine")
+	 		  	     .addColumn("PRI_ADDRESS_FULL", "Address")
+	 		  	     .addColumn("PRI_ABN", "Company ABN")
+	 		  	     .addColumn("PRI_ACN", "Company ACN")
+	 		  	     .setPageStart(0)
+	 		  	     .setPageSize(10);
+		 
+	 	QDataBaseEntityMessage  msg = tableUtils.fetchSearchResults(searchBE,serviceToken);
+	 	Map<String, String> columns = tableUtils.getTableColumns(searchBE);
+	 	
+	    List<Object> belist = new ArrayList<>(Arrays.asList(msg.getItems()));
+	   
+	    List<BaseEntity> results = (List<BaseEntity>) (List)belist;
+	    
+		List<Ask> asks = TableUtils.generateQuestions(serviceToken, beUtils, results,
+				columns, "PRJ_INTERNMATCH");
+		
+		Ask myAsk = asks.get(0);
+		myAsk.setQuestionCode("QUE_TEST_PERSON_DETAIL_GRP");
+		myAsk.setName("Details");
 		
 		return myAsk;
 	}
 		
-	public Frame3 getFrameHeader() {
+	public Frame3 getControls() {
 
 		Theme THM_DETAIL_VIEW_HEADER = Theme.builder("THM_DETAIL_VIEW_HEADER")
 				.addAttribute()
-					.flex(1)
 					.display("flex")
-					.flexDirection("row")
+					.flexDirection("column")
 					.justifyContent("flex-start").end()
 					
 				.build();
@@ -431,15 +668,9 @@ public class SafalTest extends GennyJbpmBaseTest {
 		Theme THM_CONTROLS_COLOR = Theme.builder("THM_CONTROLS_COLOR")
 									.addAttribute()
 										.color("#ffffff")
+										.size("xxs")
 									.end()
 									.build();
-		
-		Theme THM_MARGIN = Theme.builder("THM_MARGIN")
-				.addAttribute()
-					.marginBottom(5).end()
-				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
-				.end()
-				.build();
 		
 		Theme THM_CONTENT_WIDTH_CONTROLS = Theme.builder("THM_CONTENT_WIDTH_CONTROLS")
 							                .addAttribute()
@@ -449,25 +680,17 @@ public class SafalTest extends GennyJbpmBaseTest {
 							                .end()
 							                .build();
 		
-		Theme THM_CONTROLS_ALIGNMENT = Theme.builder("THM_CONTROLS_ALIGNMENT")
-						                .addAttribute()
-							               .justifyContent("flex-end")
-							            .end()
-							            .build();
-		
 		Frame3 frame = Frame3.builder("FRM_DETAIL_VIEW_HEADER")
 										.addTheme(THM_DETAIL_VIEW_HEADER).end()
-										.addTheme(THM_MARGIN,ThemePosition.WRAPPER).end()
 										.question("QUE_TEST_CONTROL_GRP")
-											.addTheme(THM_CONTROLS_ALIGNMENT).vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end()
 											.addTheme(THM_CONTENT_WIDTH_CONTROLS).vcl(VisualControlType.VCL_WRAPPER).end()
 											.addTheme(THM_DETAIL_VIEW_CONTROL).vcl(VisualControlType.INPUT_WRAPPER).end()
 											.addTheme(THM_CONTROLS_COLOR).vcl(VisualControlType.INPUT_FIELD).end()
 										.end()
 										.build();
-		
 		return frame;
 	}
+	
 	
 	//@Test
 	public void beFetchTest() {
@@ -632,9 +855,6 @@ public class SafalTest extends GennyJbpmBaseTest {
 				.build();
 	
 	     gks.startProcess("link");
-	     
-	     
-		
 	}
 	
 	//@Test
