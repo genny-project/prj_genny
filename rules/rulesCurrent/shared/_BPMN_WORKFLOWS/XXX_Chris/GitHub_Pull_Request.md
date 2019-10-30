@@ -300,21 +300,23 @@ Branch 'applicationlc' set up to track remote branch 'applicationlc' from 'origi
 
 ---
 
-**14. Git checkout back to the master branch**
+**14. Go to gihub.com and go to the folder you made the pull rquest to**
+
+---
+
+**15. Click on tab labelled Pull Requests**
+
+---
+
+**16. Click on Compare and Pull Request (Green Button)**
+
+---
+
+**17. Slect your reviewers (eg. Adam) and then click the Create Pull Request**
+
+---
+
+**18. Git checkout back to the master branch**
 prj_genny (applicationlc) $ `git checkout -b v3.1.0`
 
 ---
-
-**15. Go to gihub.com and go to the folder you made the pull rquest to**
-
----
-
-**16. Click on tab labelled Pull Requests**
-
----
-
-**17. Click on Compare and Pull Request (Green Button)**
-
----
-
-**18. Slect your reviewers (eg. Adam) and then click the Create Pull Request**

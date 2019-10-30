@@ -2,9 +2,11 @@
 
 ## The most basic way
 
-`./stop.sh; ./cyrusFetch.sh; ./cyrusBuild.sh; docker volume prune -f; docker system prune -f; ./run.sh dev1 up`
+`./stop.sh; ./cyrusFetch.sh; ./cyrusBuild.sh; ./mysql-clear-workflows.sh;  ./run.sh dev1 up`
 
-`./stop.sh; ./cyrusClone.sh; ./cyrusBuild.sh; docker volume prune -f; docker system prune -f; ./run.sh dev1 up`
+`./stop.sh; ./cyrusFetch.sh; ./cyrusBuild.sh; ./mysql-clear-workflows.sh; docker volume prune -f; docker system prune -f; ./run.sh dev1 up`
+
+`./stop.sh; ./cyrusClone.sh; ./cyrusBuild.sh; ./mysql-clear-workflows.sh; docker volume prune -f; docker system prune -f; ./run.sh dev1 up`
 
 ## The Jenkins way
 1. Go to your local projects directory and create a new directory 

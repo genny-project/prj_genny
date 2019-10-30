@@ -108,7 +108,6 @@ if (callingProcessToken != null) {
 	callingProcessId = callingProcessToken.getProcessId();
 	kcontext.setVariable(&quot;callingProcessId&quot;,callingProcessId);
 	kcontext.setVariable(&quot;serviceToken&quot;, serviceToken);
-	System.out.println(&quot;HERE&quot;);
 }
 </bpmn2:script>
       </bpmn2:scriptTask>

@@ -26,6 +26,7 @@ rule "OFFERED_TO_PLACED"
      then
  		System.out.println("OFFERED_TO_PLACED: Rule fired" ); 
  		System.out.println("OFFERED_TO_PLACED: newApplication = " + newApplication.getCode());
+ 		System.out.println("OFFERED_TO_PLACED: newApplication = " + userToken.getCode());
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
  		Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_STATUS","Placed");

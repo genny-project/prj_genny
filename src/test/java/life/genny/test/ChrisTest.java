@@ -79,7 +79,7 @@ public class ChrisTest {
 	@Test
 	public void userTaskTest()
 	{
-		System.out.println("UserTask TestXXX");
+		System.out.println("ProcessLifecycle Test 123");
 		GennyToken userToken = null;
 		GennyToken serviceToken = null;
 		QRules qRules = null;
@@ -109,10 +109,6 @@ public class ChrisTest {
         BaseEntity hostCompany = new BaseEntity("CPY_HOSTCOMPANY");
 
         /*HashMap<String, BaseEntity> hashBeg = new HashMap<String, BaseEntity>();*/
-        HashMap<String, String> hashBeg = new HashMap<String, String>();
-        
-        hashBeg.put("begstatus", "DUDE");
-        
         /*hashBeg.put("intern", intern);
         hashBeg.put("internship", internship);
         hashBeg.put("hostCompany", hostCompany);*/
@@ -120,6 +116,9 @@ public class ChrisTest {
 		SessionFacts initFacts = new SessionFacts(serviceToken, null, new QEventMessage("EVT_MSG", "INIT_STARTUP"));
 		QEventMessage authInitMsg = new QEventMessage("EVT_MSG", "AUTH_INIT"); authInitMsg.setToken(userToken.getToken());
 		QEventMessage msgLogout = new QEventMessage("EVT_MSG", "LOGOUT");msgLogout.setToken(userToken.getToken());
+		
+		QEventMessage processmsg = new QEventMessage("EVT_MSG", "FORWARD");
+		processmsg.setToken(userToken.getToken());
 
 
 		// NOW SET UP Some baseentitys
@@ -138,21 +137,23 @@ public class ChrisTest {
 				//	.addDrl("SignalProcessing")
 				//	.addDrl("DataProcessing")
 				//	.addJbpm("Lifecycles")
-//					.addJbpm("adam_user1.bpmn")
-					.addJbpm("processLifecycle.bpmn")
-					.addJbpm("placementLifecycle.bpmn")
-					.addJbpm("internshipLifecycle.bpmn")
+					.addJbpm("cards1.bpmn")
+//					.addJbpm("notificationHub2.bpmn")
+//					.addJbpm("processLifecycle.bpmn")
+//					.addJbpm("fakeusersession.bpmn")
+//					.addJbpm("placementLifecycle.bpmn")
+//					.addJbpm("internshipLifecycle.bpmn")
 //					.addDrl("TaskRouting")
-					.addJbpm("internshipLifecycle.bpmn")
-					.addJbpm("baseEntityValidation.bpmn")
-					.addDrl("ADD_APPLICATION_ATTRIBUTES.drl")
-					.addJbpm("placementLifecycle.bpmn")
-					.addDrl("MoveBucket")
-					.addDrl("CommonEnter")
-					.addDrl("SpecificEnter")
-					.addDrl("SpecificReminder")
-					.addDrl("EventProcessing")
-					.addDrl("Timer")
+//					.addJbpm("internshipLifecycle.bpmn")
+//					.addJbpm("baseEntityValidation.bpmn")
+//					.addDrl("ADD_APPLICATION_ATTRIBUTES.drl")
+//					.addJbpm("placementLifecycle.bpmn")
+//					.addDrl("MoveBucket")
+//					.addDrl("CommonEnter")
+//					.addDrl("SpecificEnter")
+//					.addDrl("SpecificReminder")
+//					.addDrl("EventProcessing")
+//					.addDrl("Timer")
 				//	.addJbpm("AuthInit")
 				//	.addDrl("InitialiseProject")
 				//	.addJbpm("InitialiseProject")
@@ -161,22 +162,31 @@ public class ChrisTest {
 					.build();
 			
 			gks.start();
-//			gks.injectEvent();
 			
 //			gks.injectSignal("newCompany", hashBeg);
 //			gks.injectSignal("newTask", "newTask");
-			gks.startProcess("processLifecycle");
+//			gks.startProcess("fakeusersession");
+			gks.startProcess("cards1");
+
 			
-            gks.advanceSeconds(5, false);
-            gks.injectSignal("status", "FORWARD"); 		// Applied to Shortlist
-            gks.advanceSeconds(5, false);
-            gks.injectSignal("status", "FORWARD"); 		// Shortlist to Interview
-            gks.advanceSeconds(5, false);
-            gks.injectSignal("status", "BACKWARD");		// Interview back to Shortlist 
-            gks.advanceSeconds(5, false);
-            gks.injectSignal("status", "FORWARD");		// Shortlist to Interview
-            gks.advanceSeconds(5, false);
-            gks.injectSignal("status", "FORWARD");		// Interview to Offered
+
+			
+//            gks.advanceSeconds(5, false);
+//            gks.injectSignal("status", "FORWARD"); 		// Applied to Shortlist
+//            gks.advanceSeconds(5, false);
+//            gks.injectSignal("status", "FORWARD"); 		// Shortlist to Interview
+//            gks.advanceSeconds(5, false);
+//            gks.injectSignal("status", "BACKWARD");		// Interview back to Shortlist 
+//            gks.advanceSeconds(5, false);
+//            
+////            gks.injectEvent(processmsg);
+//            
+//            gks.injectSignal("status", "FORWARD");		// Shortlist to Interview
+//            gks.advanceSeconds(5, false);
+//            
+////            gks.injectEvent(processmsg);
+//            
+//            gks.injectSignal("status", "FORWARD");		// Interview to Offered
 //            gks.advanceSeconds(5, false);
 //            gks.injectSignal("status", "FORWARD");		// Offered to Placed
 //            gks.advanceSeconds(5, false);
