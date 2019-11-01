@@ -34,16 +34,14 @@ rule "OFFERED_TO_PLACED"
 
 	/* insert(answer); */
 		
-		System.out.println("OFFERED_TO_PLACED: Answer = " + answer);
-		System.out.println("OFFERED_TO_PLACED: newApplication = " + newApplication); 
+		/*System.out.println("OFFERED_TO_PLACED: Answer = " + answer);
+		System.out.println("OFFERED_TO_PLACED: newApplication = " + newApplication); */
 		
 		
 	/*  Set the attribute code and value to output */
 		output.setResultCode(answer.getAttributeCode());
 		output.setTargetCode(answer.getValue());
 	
-		retract(userToken)
-		retract(serviceToken)
 		retract(newApplication)
 		retract(bucketCode)
 		retract(controlSignalCode)

@@ -10,7 +10,7 @@ import life.genny.utils.OutputParam;
 import java.util.List;
 import java.util.ArrayList;
 
-rule "APPLIED_TIMER"
+rule "PROGRESS_TIMER"
     ruleflow-group 'Timer'
     no-loop true
     salience 1 
@@ -18,16 +18,16 @@ rule "APPLIED_TIMER"
 	 	userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam()
-		bucketCode : String(bucketCode.equals("Applied"))
+		bucketCode : String(bucketCode.equals("Progress"))
 
 	  
      then
- 		System.out.println("Applied Timer: Rule fired" );  		
+ 		System.out.println("Progress Timer: Rule fired" );  		
  		
 		output.setResultCode("PT1S");
 		output.setTargetCode("PT2S");
-	
 
+	
 		retract(bucketCode)
 
 		
