@@ -42,8 +42,6 @@ rule "OFFERED_BACK_TO_INTERVIEW"
 		output.setResultCode(answer.getAttributeCode());
 		output.setTargetCode(answer.getValue());
 	
-		retract(userToken)
-		retract(serviceToken)
 		retract(newApplication)
 		retract(bucketCode)
 		retract(controlSignalCode)
