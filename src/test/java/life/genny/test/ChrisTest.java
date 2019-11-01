@@ -138,20 +138,23 @@ public class ChrisTest {
 				//	.addDrl("SignalProcessing")
 				//	.addDrl("DataProcessing")
 				//	.addJbpm("Lifecycles")
-//					.addJbpm("adam_user1.bpmn")
-					.addJbpm("processLifecycle.bpmn")
-					.addJbpm("placementLifecycle.bpmn")
-					.addJbpm("internshipLifecycle.bpmn")
+					.addJbpm("cardsA.bpmn")
+					.addJbpm("cardsB.bpmn")
+					.addJbpm("cardsC.bpmn")
+//					.addJbpm("cardsC.bpmn")
+//					.addJbpm("processLifecycle.bpmn")
+//					.addJbpm("placementLifecycle.bpmn")
+//					.addJbpm("internshipLifecycle.bpmn")
 //					.addDrl("TaskRouting")
-					.addJbpm("internshipLifecycle.bpmn")
+					.addJbpm("notificationHub2.bpmn")
 					.addJbpm("baseEntityValidation.bpmn")
-					.addDrl("ADD_APPLICATION_ATTRIBUTES.drl")
-					.addJbpm("placementLifecycle.bpmn")
+//					.addDrl("ADD_APPLICATION_ATTRIBUTES.drl")
+//					.addJbpm("placementLifecycle.bpmn")
 					.addDrl("MoveBucket")
 					.addDrl("CommonEnter")
 					.addDrl("SpecificEnter")
 					.addDrl("SpecificReminder")
-					.addDrl("EventProcessing")
+//					.addDrl("EventProcessing")
 					.addDrl("Timer")
 				//	.addJbpm("AuthInit")
 				//	.addDrl("InitialiseProject")
@@ -165,18 +168,19 @@ public class ChrisTest {
 			
 //			gks.injectSignal("newCompany", hashBeg);
 //			gks.injectSignal("newTask", "newTask");
-			gks.startProcess("processLifecycle");
+//			gks.startProcess("processLifecycle");
+			gks.startProcess("cardsA");
 			
             gks.advanceSeconds(5, false);
-            gks.injectSignal("status", "FORWARD"); 		// Applied to Shortlist
+//            gks.injectSignal("status", "FORWARD"); 		// Applied to Shortlist
             gks.advanceSeconds(5, false);
-            gks.injectSignal("status", "FORWARD"); 		// Shortlist to Interview
-            gks.advanceSeconds(5, false);
-            gks.injectSignal("status", "BACKWARD");		// Interview back to Shortlist 
-            gks.advanceSeconds(5, false);
-            gks.injectSignal("status", "FORWARD");		// Shortlist to Interview
-            gks.advanceSeconds(5, false);
-            gks.injectSignal("status", "FORWARD");		// Interview to Offered
+//            gks.injectSignal("status", "FORWARD"); 		// Shortlist to Interview
+//            gks.advanceSeconds(5, false);
+//            gks.injectSignal("status", "BACKWARD");		// Interview back to Shortlist 
+//            gks.advanceSeconds(5, false);
+//            gks.injectSignal("status", "FORWARD");		// Shortlist to Interview
+//            gks.advanceSeconds(5, false);
+//            gks.injectSignal("status", "FORWARD");		// Interview to Offered
 //            gks.advanceSeconds(5, false);
 //            gks.injectSignal("status", "FORWARD");		// Offered to Placed
 //            gks.advanceSeconds(5, false);

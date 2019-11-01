@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 rule "PLACED_TO_PROGRESS"
-    ruleflow-group 'MoveBucket'
+    ruleflow-group 'MoveBucket3'
     no-loop true
     salience 1 
     when
@@ -37,13 +37,11 @@ rule "PLACED_TO_PROGRESS"
 		System.out.println("PLACED_TO_PROGRESS: Answer = " + answer);
 		System.out.println("PLACED_TO_PROGRESS: newApplication = " + newApplication); 
 		
-		
 	/*  Set the attribute code and value to output */
 		output.setResultCode(answer.getAttributeCode());
 		output.setTargetCode(answer.getValue());
+		
 	
-		retract(userToken)
-		retract(serviceToken)
 		retract(newApplication)
 		retract(bucketCode)
 		retract(controlSignalCode)
