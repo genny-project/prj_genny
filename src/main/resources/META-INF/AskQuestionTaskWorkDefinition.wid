@@ -2,6 +2,7 @@ import org.drools.core.process.core.datatype.impl.type.StringDataType;
 import org.drools.core.process.core.datatype.impl.type.ObjectDataType;
 import life.genny.models.GennyToken;
 import life.genny.model.OutputParamTreeSet;
+import life.genny.model.OutputParam;
 
 [
   /* the AskQuestionTask work item */
@@ -79,6 +80,18 @@ import life.genny.model.OutputParamTreeSet;
       "callingWorkflow"  :  new StringDataType()
      ],
     "displayName" : "ProcessAnswers",
+    "icon" : "icons/icon-info.gif"
+  ],
+       // the CheckTasks work item
+  [
+    "name" : "CheckTasks",
+    "parameters" : [     
+      "serviceToken" : new GennyToken(),
+      "userToken"  : new GennyToken(),
+      "callingWorkflow"  :  new StringDataType(),
+      "output" : new OutputParam()
+     ],
+    "displayName" : "CheckTasks",
     "icon" : "icons/icon-info.gif"
   ]
   

@@ -12,19 +12,15 @@ rule "DEFAULT_ANSWER"
     ruleflow-group 'DataProcessing'
     salience -10000 
     when
-      beUtils : BaseEntityUtils()
-	  serviceToken : GennyToken( code == "PER_SERVICE") 
-	  answer : Answer() /* (targetCode == beUtils.getGennyToken().getUserCode()) ) */
+ 	  answer : Answer() /* (targetCode == beUtils.getGennyToken().getUserCode()) ) */
 	  output : OutputParam( )
 	  answersToSave : Answers()
      then
- 		System.out.println("Rule -> DEFAULT_ANSWER :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
+ 		System.out.println("Rule -> DEFAULT_ANSWER : "+answer); 
 	
 		answer.setChangeEvent(true);
 		answersToSave.add(answer);
-		
-		/*beUtils.saveAnswer(answer); */
-		
+				
 		output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */
   	    

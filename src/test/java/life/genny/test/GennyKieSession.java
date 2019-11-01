@@ -75,6 +75,7 @@ import io.vavr.Tuple2;
 import life.genny.jbpm.customworkitemhandlers.AskQuestionTaskWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.AskQuestionWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.AwesomeHandler;
+import life.genny.jbpm.customworkitemhandlers.CheckTasksWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.GetProcessesUsingVariable;
 import life.genny.jbpm.customworkitemhandlers.JMSSendTaskWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.NotificationWorkItemHandler;
@@ -330,19 +331,22 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 				Optional<Long> processIdBysessionId = getProcessIdBysessionId(session_state);
 				boolean hasProcessIdBySessionId = processIdBysessionId.isPresent();
 				if (hasProcessIdBySessionId) {
-					processId = processIdBysessionId.get();
-				
+					if (hasProcessIdBySessionId) {
+						processId = processIdBysessionId.get();
+					}
 					System.out.println("incoming " + msg_type + " message from " + bridgeSourceAddress + ": "
-							+ gToken.getRealm() + ":" + userToken.getSessionCode() + ":" + gToken.getUserCode()
+							+ gToken.getRealm() + ":" + gToken.getSessionCode() + ":" + gToken.getUserCode()
 							+ "   " + msg_code + " to pid " + processId);
 
 					// So send the event through to the userSession
 					if (eventMsg != null) {
 						SessionFacts sessionFactsEvent = new SessionFacts(serviceToken, gToken , eventMsg);
-
-						kieSession.signalEvent("event", sessionFactsEvent, processId);
+					//	kieSession.signalEvent("EV_"+session_state, sessionFactsEvent);
+					//	kieSession.signalEvent("EV_"+session_state, sessionFactsEvent, processId);
+					kieSession.signalEvent("event", sessionFactsEvent, processId);
 					} else if (dataMsg != null) {
 						SessionFacts sessionFactsData = new SessionFacts(serviceToken, gToken , dataMsg);
+					//	kieSession.signalEvent("DT_"+session_state, sessionFactsData);
 						kieSession.signalEvent("data", sessionFactsData, processId);
 					}
 
@@ -350,7 +354,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 					// Must be the AUTH_INIT
 					if ((eventMsg != null) && (eventMsg.getMsg_type().equals("EVT_MSG")) && (eventMsg.getData().getCode().equals("AUTH_INIT"))) {
 						eventMsg.getData().setValue("NEW_SESSION");
-						System.out.println("incominog  message from " + bridgeSourceAddress + ": " + gToken.getRealm() + ":"
+						System.out.println("incoming  message from " + bridgeSourceAddress + ": " + gToken.getRealm() + ":"
 								+ gToken.getSessionCode() + ":" + gToken.getUserCode() + "   " + msg_code
 								+ " to NEW SESSION");
 						try {
@@ -666,6 +670,8 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 		kieSession.getWorkItemManager().registerWorkItemHandler("AskQuestionTask",
 				new AskQuestionTaskWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng,kieSession));
+		kieSession.getWorkItemManager().registerWorkItemHandler("CheckTasks",
+				new CheckTasksWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng,kieSession));
 		kieSession.getWorkItemManager().registerWorkItemHandler("ProcessAnswers",
 				new ProcessAnswersWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng, kieSession));
 

@@ -14,7 +14,7 @@ rule "PROCESS_ANSWERS"
 	  userToken : GennyToken ( code != "PER_SERVICE" ) 
 	  dataMsg : QDataAnswerMessage( (items != null) && (items.length > 0) )
     then
- 		System.out.println("Rule -> PROCESS_DATA Processing Answer/Data!! :  user=" + userToken.getUserCode()); 
+ 		System.out.println("Rule -> PROCESS_ANSWERS Processing Answer/Data!! :  user=" + userToken.getUserCode()); 
 
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken); 
 		insert(beUtils);
