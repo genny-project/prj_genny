@@ -35,8 +35,6 @@ rule "ORANGE_REMINDER_SHORTLIST"
 		    
  	/* System.out.println("SUCCESS -> Set notification code to APPLIED" );  */
  		
- 		retract(userToken)
- 		retract(serviceToken)
  		retract(bucketCode)
  		retract(colourCode)
  		

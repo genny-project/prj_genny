@@ -26,11 +26,8 @@ rule "SHORTLIST_TIMER"
  		
 		output.setResultCode("PT1S");
 		output.setTargetCode("PT2S");
-		
-		/*System.out.println("Shortlist output: " + output);*/
+
 	
-		retract(userToken)
-		retract(serviceToken)
 		retract(bucketCode)
 
 		

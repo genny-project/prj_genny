@@ -26,11 +26,9 @@ rule "SPECIFIC_SHORTLIST"
 		jsonTemplates.put("2", "EMAIL_TEMPLATE_SHORTLIST_SCHOOL");
 		jsonTemplates.put("3", "EMAIL_TEMPLATE_SHORTLIST_SALESTEAM");
 		jsonTemplates.put("4", "SMS_TEMPLATE_SHORTLIST_STUDENT");
-		System.out.println("Shortlist Notitificaitons Template Json: " + jsonTemplates.toString());
+		System.out.println("Shortlist Notitifications Template Json: " + jsonTemplates.toString());
 	 
  		
- 		retract(userToken)
- 		retract(serviceToken)
  		retract(bucketCode)
  		
  
