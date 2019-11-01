@@ -68,7 +68,7 @@ import io.vertx.core.json.JsonObject;
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
-import life.genny.jbpm.customworkitemhandlers.AdamTest1WorkItemHandler;
+import life.genny.jbpm.customworkitemhandlers.CheckTasksWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.AskQuestionTaskWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 import life.genny.models.Frame3;
@@ -188,8 +188,8 @@ public class AdamTest {
 				
 				gks.injectSignal("initProject"); // This should initialise everything
 				gks.injectEvent("authInitMsg",newUser2A); // log in as new user
-				gks.injectEvent("authInitMsg",newUser2B); // log in as same new user
-				gks.injectEvent("authInitMsg",newUser1A); // log in as same new user
+			//	gks.injectEvent("authInitMsg",newUser2B); // log in as same new user
+			//	gks.injectEvent("authInitMsg",newUser1A); // log in as same new user
 				gks.advanceSeconds(5, false);
 				gks.showStatuses("PER_USER1","PER_USER2");
 
@@ -216,11 +216,18 @@ public class AdamTest {
 
 				gks.injectAnswer("PRI_FIRSTNAME",newUser2A);
 				gks.injectAnswer("PRI_LASTNAME", newUser2A);
-		        
+				gks.injectAnswer("PRI_DOB", newUser2A);
+				gks.injectAnswer("PRI_PREFERRED_NAME", newUser2A);
+				gks.injectAnswer("PRI_EMAIL", newUser2A);
+				gks.injectAnswer("PRI_MOBILE", newUser2A);
+				gks.injectAnswer("PRI_USER_PROFILE_PICTURE", newUser2A);
+				gks.injectAnswer("PRI_ADDRESS_FULL", newUser2A);
 				gks.injectEvent("msgLogout",newUser2A);
 				gks.advanceSeconds(5, false);
-				gks.injectEvent("msgLogout",newUser2B);
-				gks.injectEvent("msgLogout",newUser1A);
+				
+				gks.showStatuses("PER_USER1","PER_USER2");
+			//	gks.injectEvent("msgLogout",newUser2B);
+			//	gks.injectEvent("msgLogout",newUser1A);
 			} catch (Exception e) {
 				e.printStackTrace();
 				
