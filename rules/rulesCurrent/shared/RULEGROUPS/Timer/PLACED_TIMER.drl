@@ -27,10 +27,7 @@ rule "PLACED_TIMER"
 		output.setResultCode("PT1S");
 		output.setTargetCode("PT2S");
 		
-		/*System.out.println("Placed output: " + output);*/
 	
-		retract(userToken)
-		retract(serviceToken)
 		retract(bucketCode)
 
 		

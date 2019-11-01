@@ -35,8 +35,6 @@ rule "RED_REMINDER_OFFERED"
 		    
  	/* System.out.println("SUCCESS -> Set notification code to APPLIED" );  */
  		
- 		retract(userToken)
- 		retract(serviceToken)
  		retract(bucketCode)
  		retract(colourCode)
  		
