@@ -175,9 +175,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 
 			
 			Frame3 FRM_PERSON_DETAIL= getDetailFrame("FRM_PERSON_DETAIL", rules.getUser().getCode(),"QUE_TEST_PERSON_DETAIL_GRP");
-			Frame3 ss = new Frame3(FRM_PERSON_DETAIL );
-			ss.setCode("Hello");
-			
+		
 			Frame3 FRM_PERSON_DOCUMENTS = getDetailFrame("FRM_PERSON_DOCUMENTS", rules.getUser().getCode(),"QUE_TEST_PERSON_DOC_GRP");
 			
 			
@@ -192,10 +190,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 			
 			System.out.println("Copygin the frames");
 			
-			
-			
-
-			System.out.println("Copied" + ss.getCode());
+		
 			
 			Frame3 FRM_ROOT = Frame3.builder("FRM_CONTENT")
 
