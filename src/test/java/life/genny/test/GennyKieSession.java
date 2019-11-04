@@ -343,7 +343,22 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 						SessionFacts sessionFactsEvent = new SessionFacts(serviceToken, gToken , eventMsg);
 					//	kieSession.signalEvent("EV_"+session_state, sessionFactsEvent);
 					//	kieSession.signalEvent("EV_"+session_state, sessionFactsEvent, processId);
-					kieSession.signalEvent("event", sessionFactsEvent, processId);
+						// HACK
+						if (eventMsg.getData().getCode().equals("QUE_SUBMIT")) {
+							Answer dataAnswer = new Answer(gToken.getUserCode(),gToken.getUserCode(),"PRI_EVENT","QUE_SUBMIT");
+							dataMsg = new QDataAnswerMessage(dataAnswer);
+							SessionFacts sessionFactsData = new SessionFacts(serviceToken, gToken , dataMsg);							
+							kieSession.signalEvent("data", sessionFactsData, processId);
+						}
+							else	if (eventMsg.getData().getCode().equals("QUE_CANCEL")) {
+								Answer dataAnswer = new Answer(gToken.getUserCode(),gToken.getUserCode(),"PRI_EVENT","QUE_CANCEL");
+								dataMsg = new QDataAnswerMessage(dataAnswer);
+								SessionFacts sessionFactsData = new SessionFacts(serviceToken, gToken , dataMsg);							
+								kieSession.signalEvent("data", sessionFactsData, processId);
+						
+						} else {
+							kieSession.signalEvent("event", sessionFactsEvent, processId);
+						}
 					} else if (dataMsg != null) {
 						SessionFacts sessionFactsData = new SessionFacts(serviceToken, gToken , dataMsg);
 					//	kieSession.signalEvent("DT_"+session_state, sessionFactsData);
@@ -1410,7 +1425,9 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			 	messages = new HashMap<String,Object>();
 				createMessage("initProject",new SessionFacts(serviceToken, null, new QEventMessage("EVT_MSG", "INIT_STARTUP")));
 				createMessage("authInitMsg",new QEventMessage("EVT_MSG", "AUTH_INIT"));
-
+				createMessage("QUE_SUBMIT",new QEventMessage("EVT_MSG", "QUE_SUBMIT"));
+				createMessage("QUE_CANCEL",new QEventMessage("EVT_MSG", "QUE_CANCEL"));
+				createMessage("QUE_RESET",new QEventMessage("EVT_MSG", "QUE_RESET"));
 				createMessage("msgLogout",new QEventMessage("EVT_MSG", "LOGOUT"));
 		 }
 		 

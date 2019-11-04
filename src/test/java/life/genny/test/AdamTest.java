@@ -222,6 +222,11 @@ public class AdamTest {
 				gks.injectAnswer("PRI_MOBILE", newUser2A);
 				gks.injectAnswer("PRI_USER_PROFILE_PICTURE", newUser2A);
 				gks.injectAnswer("PRI_ADDRESS_FULL", newUser2A);
+				
+				gks.injectEvent("QUE_SUBMIT",newUser2A);
+				
+				
+				
 				gks.injectEvent("msgLogout",newUser2A);
 				gks.advanceSeconds(5, false);
 				

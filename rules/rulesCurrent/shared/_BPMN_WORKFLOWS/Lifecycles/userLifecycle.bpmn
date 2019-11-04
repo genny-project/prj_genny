@@ -258,8 +258,8 @@ System.out.println(&quot;userlifeCycle: New User Created: pid: &quot;+callingPro
         <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
         <bpmn2:ioSpecification id="InputOutputSpecification_1">
           <bpmn2:dataInput id="DataInput_1" itemSubjectRef="ItemDefinition_201" name="userToken"/>
-          <bpmn2:dataInput id="DataInput_2"  itemSubjectRef="ItemDefinition_10" name="questionCode"/>
-          <bpmn2:dataInput id="DataInput_3"  itemSubjectRef="ItemDefinition_10" name="callingWorkflow"/>
+          <bpmn2:dataInput id="DataInput_2" itemSubjectRef="ItemDefinition_10" name="questionCode"/>
+          <bpmn2:dataInput id="DataInput_3" itemSubjectRef="ItemDefinition_10" name="callingWorkflow"/>
           <bpmn2:dataOutput id="DataOutput_1" itemSubjectRef="ItemDefinition_65" name="Result"/>
           <bpmn2:dataOutput id="DataOutput_3" itemSubjectRef="ItemDefinition_65" name="results"/>
           <bpmn2:inputSet id="_InputSet_42">
@@ -279,7 +279,7 @@ System.out.println(&quot;userlifeCycle: New User Created: pid: &quot;+callingPro
         <bpmn2:dataInputAssociation id="_DataInputAssociation_182">
           <bpmn2:targetRef>DataInput_2</bpmn2:targetRef>
           <bpmn2:assignment id="Assignment_2">
-            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_6">QUE_USER_PROFILE_GRP</bpmn2:from>
+            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_6">QUE_NEW_USER_PROFILE_GRP</bpmn2:from>
             <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_3">DataInput_2</bpmn2:to>
           </bpmn2:assignment>
         </bpmn2:dataInputAssociation>
