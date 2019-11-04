@@ -24,8 +24,6 @@ import java.util.stream.Stream;
 
 import javax.persistence.EntityManagerFactory;
 
-import com.google.gson.reflect.TypeToken;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.drools.core.ClockType;
@@ -70,6 +68,8 @@ import org.kie.internal.query.QueryContext;
 import org.kie.internal.task.api.TaskModelProvider;
 import org.kie.internal.task.api.UserGroupCallback;
 
+import com.google.gson.reflect.TypeToken;
+
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import life.genny.jbpm.customworkitemhandlers.AskQuestionTaskWorkItemHandler;
@@ -77,6 +77,7 @@ import life.genny.jbpm.customworkitemhandlers.AskQuestionWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.AwesomeHandler;
 import life.genny.jbpm.customworkitemhandlers.GetProcessesUsingVariable;
 import life.genny.jbpm.customworkitemhandlers.JMSSendTaskWorkItemHandler;
+import life.genny.jbpm.customworkitemhandlers.NotificationHubWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.NotificationWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.PrintWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.ProcessAnswersWorkItemHandler;
@@ -672,7 +673,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		kieSession.getWorkItemManager().registerWorkItemHandler("ProcessTaskId",
 				new ProcessTaskIdWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng,kieSession));
 
-	//	kieSession.getWorkItemManager().registerWorkItemHandler("NotificationHub", new NotificationHubWorkItemHandler());
+		kieSession.getWorkItemManager().registerWorkItemHandler("NotificationHub", new NotificationHubWorkItemHandler());
 		
 		if (workItemHandlers != null) {
 			for (Tuple2<String, WorkItemHandler> wih : workItemHandlers) {
