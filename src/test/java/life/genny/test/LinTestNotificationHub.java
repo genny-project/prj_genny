@@ -36,6 +36,7 @@ import life.genny.utils.VertxUtils;
 /**
  * @author Dominic Lin
  *     <p>This test class will test Template Lifecycle by using assertions.
+ *     Before Run the testing, must logging at the local internmatch.genny.life to get a valid section
  */
 public class LinTestNotificationHub extends GennyJbpmBaseTest {
 
@@ -143,6 +144,9 @@ public class LinTestNotificationHub extends GennyJbpmBaseTest {
     System.out.println("userToken   =" + userToken.getToken());
     System.out.println("serviceToken=" + serviceToken.getToken());
 
+    Map<String, String> map = System.getenv();
+    map.entrySet().forEach(System.out::println);
+    
     QEventMessage authInitMsg1 = new QEventMessage("EVT_MSG", "AUTH_INIT");
     authInitMsg1.setToken(userToken.getToken());
 
@@ -190,7 +194,7 @@ public class LinTestNotificationHub extends GennyJbpmBaseTest {
       // Kcontext trigger the workflows rules Maunally trigger the workflow
       Map<String, Object> notification = new HashMap<String, Object>();
       notification.put(injectSignal, notificationCode);
-      gks.getKieSession().startProcess("notificationHub", notification);
+      gks.getKieSession().startProcess("notificationHubId", notification);
 
       // This will inject into all started workflows
       // with a signal call "SignalToggleFrame" and event object
