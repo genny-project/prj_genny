@@ -26,11 +26,9 @@ rule "SPECIFIC_INTERVIEW"
 		jsonTemplates.put("2", "EMAIL_TEMPLATE_INTERVIEW_SCHOOL");
 		jsonTemplates.put("3", "EMAIL_TEMPLATE_INTERVIEW_SALESTEAM");
 		jsonTemplates.put("4", "SMS_TEMPLATE_INTERVIEW_STUDENT");
-		System.out.println("Interview Notitificaitons Template Json: " + jsonTemplates.toString());
+		System.out.println("Interview Notitifications Template Json: " + jsonTemplates.toString());
 	 
  		
- 		retract(userToken)
- 		retract(serviceToken)
  		retract(bucketCode)
  		
  
