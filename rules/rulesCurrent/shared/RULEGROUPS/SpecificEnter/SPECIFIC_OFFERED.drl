@@ -26,11 +26,9 @@ rule "SPECIFIC_OFFERED"
 		jsonTemplates.put("2", "EMAIL_TEMPLATE_OFFERED_SCHOOL");
 		jsonTemplates.put("3", "EMAIL_TEMPLATE_OFFERED_SALESTEAM");
 		jsonTemplates.put("4", "SMS_TEMPLATE_OFFERED_STUDENT");
-		System.out.println("Offered Notitificaitons Template Json: " + jsonTemplates.toString());
+		System.out.println("Offered Notitifications Template Json: " + jsonTemplates.toString());
 	 
  		
- 		retract(userToken)
- 		retract(serviceToken)
  		retract(bucketCode)
  		
  

@@ -27,10 +27,6 @@ rule "OFFERED_TIMER"
 		output.setResultCode("PT1S");
 		output.setTargetCode("PT2S");
 		
-		/*System.out.println("Offered output: " + output);*/
-	
-		retract(userToken)
-		retract(serviceToken)
 		retract(bucketCode)
 
 		

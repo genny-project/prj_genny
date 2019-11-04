@@ -5,7 +5,7 @@ import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.qwanda.Answer;
 import life.genny.qwanda.entity.BaseEntity;
-import life.genny.utils.OutputParam;
+
 
 import java.util.List;
 import java.util.ArrayList;
@@ -18,13 +18,11 @@ rule "RED"
 	 	userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		newApplication : BaseEntity()
-		output : OutputParam()
 		colourCode : String(colourCode.equals("Red"))
 
 	  
      then
  		System.out.println("Red: Rule fired" ); 
- 		System.out.println("Red: newApplication = " + newApplication.getCode());
  		
  	/*  green: '#5cb85c' */
 	/*  orange: '#FFCC00' */
@@ -46,12 +44,8 @@ rule "RED"
 	/* System.out.println("GREEN: Answer Attribute Code = " + answer.getAttributeCode()); */
 	/* System.out.println("GREEN: Answer Value = " + answer.getValue());  */
 		
-	/*  Set the attribute code and value to output */
-		output.setResultCode(answer.getAttributeCode());
-		output.setTargetCode(answer.getValue());
 	
-		retract(userToken)
-		retract(serviceToken)
+
 		retract(colourCode)
 		retract(newApplication)
 		

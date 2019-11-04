@@ -42,8 +42,7 @@ rule "APPLIED_TO_SHORTLIST"
 		output.setResultCode(answer.getAttributeCode());
 		output.setTargetCode(answer.getValue());
 	
-		retract(userToken)
-		retract(serviceToken)
+
 		retract(newApplication)
 		retract(bucketCode)
 		retract(controlSignalCode)
