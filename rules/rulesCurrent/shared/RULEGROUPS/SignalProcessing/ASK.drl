@@ -18,12 +18,13 @@ rule "ASK"
 		ruleDetails : RuleDetails()
     then
 		String frameCode = "FRM_"+msg.getData().getValue();
-	
+
+		System.out.println("Test test");
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" " + userToken.getUserCode()+"  Question Code = "+msg.getData().getValue()+" ,FORMCODE="+frameCode);
 		output.setTypeOfResult("FORMCODE");
 		output.setResultCode(frameCode);
 		output.setTargetCode("FRM_CONTENT");
-		
+
 		retract(serviceToken);
 		update(output);
 end
