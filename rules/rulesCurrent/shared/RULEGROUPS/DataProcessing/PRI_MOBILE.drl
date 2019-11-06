@@ -22,6 +22,7 @@ rule "PRI_MOBILE"
 	  answer : Answer( attributeCode == "PRI_MOBILE" )
 	  answersToSave : Answers()
 	  ruleDetails : RuleDetails()
+	  output : OutputParam( )
      then
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+"Processing Answer/Data : " + answer );
 		String sourceCode = beUtils.getGennyToken().getUserCode();
@@ -41,6 +42,10 @@ rule "PRI_MOBILE"
 			}
 			answer.setValue(phonenumber);
 			answersToSave.add(answer);
+
+/* Watch out TODO , this may override other answers */
+		output.setTypeOfResult("NONE");
+  	    output.setResultCode("NONE");  /* dont display anything new */
 
 		retract(answer);
 		update(answersToSave);

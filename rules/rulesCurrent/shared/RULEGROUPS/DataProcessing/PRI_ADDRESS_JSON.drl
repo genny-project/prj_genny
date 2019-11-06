@@ -21,6 +21,7 @@ rule "PRI_ADDRESS_JSON"
 	  serviceToken : GennyToken( code == "PER_SERVICE") 
 	  answer : Answer( attributeCode == "PRI_ADDRESS_JSON" )
 	  answersToSave : Answers()
+	  output : OutputParam( )
      then
  		System.out.println("Rule -> PRI_ADDRESS_JSON :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
 		String sourceCode = beUtils.getGennyToken().getUserCode();
@@ -30,21 +31,23 @@ rule "PRI_ADDRESS_JSON"
 					
 			JsonObject addressDataJson = new JsonObject(answer.getValue());
 
-			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_COUNTRY", addressDataJson.getString("country")));
-			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_POSTCODE", addressDataJson.getString("postal_code")));
-			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_SUBURB", addressDataJson.getString("suburb")));
-			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_CITY", addressDataJson.getString("suburb")));
-			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", addressDataJson.getString("state")));
-			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_ADDRESS1", addressDataJson.getString("street_address")));
-			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", addressDataJson.getString("full_address")));
+			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_COUNTRY", addressDataJson.getString("country"),false,true));
+			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_POSTCODE", addressDataJson.getString("postal_code"),false,true));
+			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_SUBURB", addressDataJson.getString("suburb"),false,true));
+			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_CITY", addressDataJson.getString("suburb"),false,true));
+			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", addressDataJson.getString("state"),false,true));
+			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_ADDRESS1", addressDataJson.getString("street_address"),false,true));
+			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", addressDataJson.getString("full_address"),false,true));
 		
 			Double latitude = addressDataJson.getDouble("latitude");
 			Double longitude = addressDataJson.getDouble("longitude");
 			
-			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_LATITUDE", latitude+""));
-			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_LONGITUDE", longitude+""));
+			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_LATITUDE", latitude+"",false,true));
+			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_LONGITUDE", longitude+"",false,true));
 	
 		/* beUtils.saveAnswers(answers,true); */
+		output.setTypeOfResult("NONE");
+  	    output.setResultCode("NONE");  /* dont display anything new */
 		
 
 		retract(answer);
