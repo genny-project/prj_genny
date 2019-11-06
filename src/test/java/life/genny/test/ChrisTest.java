@@ -79,7 +79,7 @@ public class ChrisTest {
 	@Test
 	public void userTaskTest()
 	{
-		System.out.println("UserTask TestXXX");
+		System.out.println("Process View Test");
 		GennyToken userToken = null;
 		GennyToken serviceToken = null;
 		QRules qRules = null;
@@ -156,6 +156,7 @@ public class ChrisTest {
 					.addDrl("SpecificReminder")
 //					.addDrl("EventProcessing")
 					.addDrl("Timer")
+					.addDrl("Status")
 				//	.addJbpm("AuthInit")
 				//	.addDrl("InitialiseProject")
 				//	.addJbpm("InitialiseProject")
@@ -171,18 +172,27 @@ public class ChrisTest {
 //			gks.startProcess("processLifecycle");
 			gks.startProcess("cardsA");
 			
+//            gks.advanceSeconds(5, false);
+            gks.injectSignal("appTarget", "FORWARD"); 		// Applied to Shortlist
             gks.advanceSeconds(5, false);
-//            gks.injectSignal("status", "FORWARD"); 		// Applied to Shortlist
+            gks.injectSignal("appTarget", "FORWARD"); 		// Shortlist to Interview
             gks.advanceSeconds(5, false);
-//            gks.injectSignal("status", "FORWARD"); 		// Shortlist to Interview
-//            gks.advanceSeconds(5, false);
-//            gks.injectSignal("status", "BACKWARD");		// Interview back to Shortlist 
-//            gks.advanceSeconds(5, false);
-//            gks.injectSignal("status", "FORWARD");		// Shortlist to Interview
-//            gks.advanceSeconds(5, false);
-//            gks.injectSignal("status", "FORWARD");		// Interview to Offered
-//            gks.advanceSeconds(5, false);
-//            gks.injectSignal("status", "FORWARD");		// Offered to Placed
+            gks.injectSignal("appTarget", "BACKWARD");		// Interview back to Shortlist 
+            gks.advanceSeconds(5, false);
+            gks.injectSignal("appTarget", "FORWARD");		// Shortlist to Interview
+            
+            gks.advanceSeconds(5, false);
+            gks.injectSignal("status", "Withdrawn");	
+            
+            gks.advanceSeconds(5, false);
+            gks.injectSignal("appTarget", "FORWARD");		// Interview to Offered
+            gks.advanceSeconds(5, false);
+            gks.injectSignal("appTarget", "FORWARD");		// Offered to Placed
+            gks.advanceSeconds(5, false);
+            gks.injectSignal("appTarget", "FORWARD");		// Placed to Progress
+            gks.advanceSeconds(5, false);
+            gks.injectSignal("appTarget", "FORWARD");		// Complete Progress
+            gks.advanceSeconds(5, false);
 //            gks.advanceSeconds(5, false);
 //            gks.injectSignal("status", "FORWARD");		// Placed to Progress
 
