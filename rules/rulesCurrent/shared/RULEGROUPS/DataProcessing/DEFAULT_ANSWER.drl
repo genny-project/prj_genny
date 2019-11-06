@@ -18,7 +18,7 @@ rule "DEFAULT_ANSWER"
      then
  		System.out.println("Rule -> DEFAULT_ANSWER : "+answer); 
 	
-		answer.setChangeEvent(true);
+		answer.setChangeEvent(false);
 		answersToSave.add(answer);
 				
 		output.setTypeOfResult("NONE");
