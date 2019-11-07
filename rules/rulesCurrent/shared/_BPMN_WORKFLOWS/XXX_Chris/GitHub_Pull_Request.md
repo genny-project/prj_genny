@@ -305,7 +305,7 @@ prj_genny (applicationlc) $ `git checkout -b v3.1.0`
 
 ---
 
-**15. Go to gihub.com and go to the folder you made the pull rquest to**
+**15. Go to github.com and go to the folder you made the pull rquest to**
 
 ---
 
