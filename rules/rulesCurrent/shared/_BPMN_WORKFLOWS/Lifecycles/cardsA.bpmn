@@ -137,8 +137,8 @@ kcontext.setVariable(&quot;sendMsg&quot;, sendMsg);
           <bpmn2:dataInput id="DataInput_6" name="ruleFlowGroup"/>
           <bpmn2:dataInput id="DataInput_7" name="callingWorkflow"/>
           <bpmn2:dataInput id="DataInput_8" itemSubjectRef="ItemDefinition_2016" name="newApplication"/>
-          <bpmn2:dataInput id="DataInput_9" itemSubjectRef="ItemDefinition_2733" name="bucketCode"/>
-          <bpmn2:dataInput id="DataInput_10" name="controlSignalCode"/>
+          <bpmn2:dataInput id="DataInput_9"  itemSubjectRef="ItemDefinition_2733" name="bucketCode"/>
+          <bpmn2:dataInput id="DataInput_10" itemSubjectRef="ItemDefinition_2733" name="controlSignalCode"/>
           <bpmn2:dataOutput id="DataOutput_2" itemSubjectRef="ItemDefinition_3323" name="output"/>
           <bpmn2:inputSet id="_InputSet_45">
             <bpmn2:dataInputRefs>DataInput_4</bpmn2:dataInputRefs>
