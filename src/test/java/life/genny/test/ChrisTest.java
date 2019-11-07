@@ -79,7 +79,7 @@ public class ChrisTest {
 	@Test
 	public void userTaskTest()
 	{
-		System.out.println("UserTask TestXXX");
+		System.out.println("Process View Test");
 		GennyToken userToken = null;
 		GennyToken serviceToken = null;
 		QRules qRules = null;
@@ -150,8 +150,10 @@ public class ChrisTest {
 					.addDrl("SpecificEnter")
 					.addDrl("SpecificReminder")
 					.addDrl("Timer")
+
 					.addDrl("CardStatus")
 					
+
 					.addToken(userToken)
 					.build();
 			
@@ -159,6 +161,7 @@ public class ChrisTest {
 
 			gks.startProcess("cardsA");
 			
+
             gks.advanceSeconds(1, false);
             gks.injectSignal("dynamicStatus", "Reactivate");
             gks.advanceSeconds(5, false);
@@ -173,6 +176,7 @@ public class ChrisTest {
             gks.injectSignal("dynamicControl", "FORWARD");			// Interview to Offered
             gks.advanceSeconds(5, false);
             gks.injectSignal("dynamicControl", "FORWARD");			// Offered to Placed
+
 //            gks.advanceSeconds(5, false);
 //            gks.injectSignal("status", "FORWARD");		
             gks.advanceSeconds(1, false);
