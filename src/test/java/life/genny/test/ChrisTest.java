@@ -84,7 +84,7 @@ public class ChrisTest {
 		GennyToken serviceToken = null;
 		QRules qRules = null;
 
-		if (true) {
+		if (false) {
 			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
 			qRules = new QRules(eventBusMock, userToken.getToken());
@@ -134,58 +134,58 @@ public class ChrisTest {
 		GennyKieSession gks = null;
 
 		try {
-			gks = GennyKieSession.builder(serviceToken,true)
-				//	.addDrl("SignalProcessing")
-				//	.addDrl("DataProcessing")
-				//	.addJbpm("Lifecycles")
+			gks = GennyKieSession
+					.builder(serviceToken,true)
+					
+// ADD THE JBPM WORKFLOWS HERE					
 					.addJbpm("cardsA.bpmn")
 					.addJbpm("cardsB.bpmn")
 					.addJbpm("cardsC.bpmn")
-//					.addJbpm("cardsC.bpmn")
-//					.addJbpm("processLifecycle.bpmn")
-//					.addJbpm("placementLifecycle.bpmn")
-//					.addJbpm("internshipLifecycle.bpmn")
-//					.addDrl("TaskRouting")
 					.addJbpm("notificationHub2.bpmn")
 					.addJbpm("baseEntityValidation.bpmn")
-//					.addDrl("ADD_APPLICATION_ATTRIBUTES.drl")
-//					.addJbpm("placementLifecycle.bpmn")
+					
+// ADD THE DROOLS RULES HERE
 					.addDrl("MoveBucket")
 					.addDrl("CommonEnter")
 					.addDrl("SpecificEnter")
 					.addDrl("SpecificReminder")
-//					.addDrl("EventProcessing")
 					.addDrl("Timer")
-				//	.addJbpm("AuthInit")
-				//	.addDrl("InitialiseProject")
-				//	.addJbpm("InitialiseProject")
-
+					.addDrl("CardStatus")
+					
 					.addToken(userToken)
 					.build();
 			
 			gks.start();
-//			gks.injectEvent();
-			
-//			gks.injectSignal("newCompany", hashBeg);
-//			gks.injectSignal("newTask", "newTask");
-//			gks.startProcess("processLifecycle");
+
 			gks.startProcess("cardsA");
 			
+            gks.advanceSeconds(1, false);
+            gks.injectSignal("dynamicStatus", "Reactivate");
             gks.advanceSeconds(5, false);
-//            gks.injectSignal("status", "FORWARD"); 		// Applied to Shortlist
+            gks.injectSignal("dynamicControl", "FORWARD"); 			// Applied to Shortlist
             gks.advanceSeconds(5, false);
-//            gks.injectSignal("status", "FORWARD"); 		// Shortlist to Interview
+            gks.injectSignal("dynamicControl", "FORWARD"); 			// Shortlist to Interview
+            gks.advanceSeconds(5, false);
+////            gks.injectSignal("status", "BACKWARD");		// Interview back to Shortlist 
+////            gks.advanceSeconds(5, false);
+//            gks.injectSignal("appTarget", "FORWARD");		// Shortlist to Interview
 //            gks.advanceSeconds(5, false);
-//            gks.injectSignal("status", "BACKWARD");		// Interview back to Shortlist 
+            gks.injectSignal("dynamicControl", "FORWARD");			// Interview to Offered
+            gks.advanceSeconds(5, false);
+            gks.injectSignal("dynamicControl", "FORWARD");			// Offered to Placed
 //            gks.advanceSeconds(5, false);
-//            gks.injectSignal("status", "FORWARD");		// Shortlist to Interview
-//            gks.advanceSeconds(5, false);
-//            gks.injectSignal("status", "FORWARD");		// Interview to Offered
-//            gks.advanceSeconds(5, false);
-//            gks.injectSignal("status", "FORWARD");		// Offered to Placed
-//            gks.advanceSeconds(5, false);
-//            gks.injectSignal("status", "FORWARD");		// Placed to Progress
-
+//            gks.injectSignal("status", "FORWARD");		
+            gks.advanceSeconds(1, false);
+            gks.injectSignal("placedStatus", "Withdraw");
+            gks.advanceSeconds(5, false);
+            gks.injectSignal("placedControl", "FORWARD"); 			// Placed to Progress
+            gks.advanceSeconds(1, false);
+            gks.injectSignal("progressStatus", "Onhold");
+            gks.advanceSeconds(5, false);
+            gks.injectSignal("progressControl", "FORWARD"); 		// Progress to Complete
+            gks.advanceSeconds(5, false);
+            
+            
 			/*
 			BaseEntity icn_sort = new BaseEntity("ICN_SORT","Icon Sort");
 			try {
