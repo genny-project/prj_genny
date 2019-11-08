@@ -1397,14 +1397,16 @@ public class TableUtilsTest {
 
 		BaseEntity themeBe = null;
 		themeBe = theme.getBaseEntity();
-		for (ThemeAttribute themeAttribute : theme.getAttributes()) {
-
-			try {
-				themeBe.addAttribute( new EntityAttribute(themeBe, new Attribute(themeAttribute.getCode(), themeAttribute.getCode(), new DataType("DTT_THEME")), 1.0, themeAttribute.getJson()));
-			} catch (BadDataException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		if(theme.getAttributes() != null){
+				for (ThemeAttribute themeAttribute : theme.getAttributes()) {
+		
+					try {
+						themeBe.addAttribute( new EntityAttribute(themeBe, new Attribute(themeAttribute.getCode(), themeAttribute.getCode(), new DataType("DTT_THEME")), 1.0, themeAttribute.getJson()));
+					} catch (BadDataException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 		}
 		return themeBe;
 	}
