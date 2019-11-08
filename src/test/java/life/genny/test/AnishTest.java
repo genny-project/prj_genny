@@ -59,8 +59,7 @@ public class AnishTest extends GennyJbpmBaseTest {
         public AnishTest() {
                 super(false);
         }
-
-       // @Test
+      // @Test
         public void testEmptyProcessView() {
 
                 QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -70,18 +69,22 @@ public class AnishTest extends GennyJbpmBaseTest {
                 TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
 
                 try {
-                        // get the list of bucket searchBEs from the cache
+	                	/* list to collect baseentity */
+	                	List<BaseEntity> beList = new ArrayList<BaseEntity>();
+	                	
+	                	/* list to collect the asks  */
+	                	Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+
+	                	// get the list of bucket searchBEs from the cache
                         List<SearchEntity> searchBeList = getBucketSearchBeListFromCache();
                         System.out.println("size" + searchBeList.size());
+                        
+                        /* add the searchList to beList as well s*/
+                        beList.addAll(searchBeList);
 
                         /* list to collect frames */
                         List<Frame3> bucketFrames = new ArrayList<Frame3>();
                         
-                        /* list to collect baseentity */
-                        List<BaseEntity> beList = new ArrayList<BaseEntity>();
-
-                        /* list to collect the asks  */
-                        Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
 
                         /* get the templat ask for card */
                         Ask templateAsk = getCardTemplate(serviceToken, rules);
@@ -204,7 +207,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                         QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_TAB_CONTENT, serviceToken, askMsgs);
                         rules.publishCmd(msg);
                       
-                        /* publish the asks*/
+                        /* publish the asks */
                         for (QDataAskMessage askMsg : askMsgs) {
                                 askMsg.setToken(beUtils.getGennyToken().getToken());
                                 askMsg.setReplace(false);
@@ -223,7 +226,85 @@ public class AnishTest extends GennyJbpmBaseTest {
                 }
 
         }
+        
         @Test
+        public void updateCards(){
+        	QRules rules = GennyJbpmBaseTest.setupLocalService();
+        	GennyToken userToken = new GennyToken("userToken", rules.getToken());
+        	GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+        	BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+        	TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
+
+        	/* list to collect baseentity */
+        	List<BaseEntity> beList = new ArrayList<BaseEntity>();
+
+        	/* list to collect the asks  */
+        	Ask bucketContentAsk = null;
+
+        	/* get the list of bucket searchBEs from the cache */
+        	List<SearchEntity> searchBeList = getBucketSearchBeListFromCache();
+
+        	/* get the templat ask for card */
+        	Ask templateAsk = getCardTemplate(serviceToken, rules);
+
+        	/* list to collect the asks  */
+        	Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+
+        	try {
+
+        		/* loop through the  searchList */
+        		for (SearchEntity searchBe : searchBeList) {
+
+        			/* get the attributes from searchObj */
+        			Map<String, String> columns = tableUtils.getTableColumns(searchBe);
+
+        			/* fetch the search results */
+        			QDataBaseEntityMessage msg = tableUtils.fetchSearchResults(searchBe, beUtils.getGennyToken());
+
+        			/* get the applications */
+        			List<BaseEntity> appList = Arrays.asList(msg.getItems());
+
+        			/* add the application to the baseentity list */
+        			beList.addAll(appList);
+
+        			/* convert app to asks */
+        			List<Ask> appAsksList = tableUtils.generateQuestions(beUtils.getGennyToken(), beUtils,
+        					appList, columns, beUtils.getGennyToken().getUserCode());
+
+        			/* implement template ask to appAks list */
+        			List<Ask> askList = implementCardTemplate(appAsksList, templateAsk);
+
+        			/* generate bucket content ask group from searchBe */
+        			bucketContentAsk = tableUtils.generateBucketContentAsk(searchBe, serviceToken);
+
+        			/* link bucketContentAsk to application asks */
+        			bucketContentAsk.setChildAsks(askList.toArray(new Ask[askList.size()]));
+
+        			/* add the bucketContentAsk msg to the list */
+        			askMsgs.add(new QDataAskMessage(bucketContentAsk));                        
+
+        		}
+
+        	}catch(Exception e){
+        		System.out.println("something went wrong");
+        	}
+
+
+        	/* publish all the app BE */
+        	QDataBaseEntityMessage appMsg = new QDataBaseEntityMessage(beList.toArray(new BaseEntity[beList.size()]));
+        	rules.publishCmd(appMsg);
+
+        	/* publish the asks */
+        	for (QDataAskMessage askMsg : askMsgs) {
+        		askMsg.setToken(beUtils.getGennyToken().getToken());
+        		askMsg.setReplace(true);
+        		rules.publishCmd(askMsg);
+        		//VertxUtils.writeMsg("webcmds", JsonUtils.toJson(footerAskMsg));
+        	}
+        }
+
+        
+        //@Test
         public void testProcessView() {
 
                 QRules rules = GennyJbpmBaseTest.setupLocalService();
