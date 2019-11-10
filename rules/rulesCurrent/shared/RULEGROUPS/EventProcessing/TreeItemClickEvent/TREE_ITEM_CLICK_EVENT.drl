@@ -12,12 +12,12 @@ rule "TREE_ITEM_CLICK_EVENT"
     no-loop
     when
 		$message : QEventMessage(data.code matches "QUE_.*" && (data.parentCode == "QUE_DASHBOARD_VIEW" || data.parentCode == "QUE_TAB_VIEW"))
-		userToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam( )
+		ruleDetails : RuleDetails()
     then
-	
-		System.out.println("Processing Answer/Data : " + $message );
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
 		System.out.println("Parent code :  " + $message.getData().getParentCode());
 		output.setFormCode("FRM_"+ $message.getData().getCode(),"FRM_CONTENT");
 		retract( $message);
+		
 	end
