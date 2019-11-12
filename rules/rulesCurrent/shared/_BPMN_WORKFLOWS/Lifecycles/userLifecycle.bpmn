@@ -214,8 +214,16 @@ System.out.println(&quot;userLifeCycle: entered: pid &quot;+kcontext.getProcessI
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_37</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_38</bpmn2:outgoing>
-        <bpmn2:script>BaseEntityUtils beUtils = new BaseEntityUtils((GennyToken)userToken);
+        <bpmn2:script>userToken = (GennyToken)userToken;
+BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 newUser = beUtils.create(((GennyToken)userToken).getUserCode(), ((GennyToken)userToken).getUserCode());
+/* copy from userToken */
+Answer firstNameAnswer = new Answer(beUtils.getGennyToken().getUserCode(),newUser.getCode(), &quot;PRI_FIRSTNAME&quot;, userToken.getString(&quot;given_name&quot;));
+Answer lastNameAnswer = new Answer(beUtils.getGennyToken().getUserCode(),newUser.getCode(), &quot;PRI_LASTNAME&quot;, userToken.getString(&quot;family_name&quot;));
+Answer emailAnswer = new Answer(beUtils.getGennyToken().getUserCode(),newUser.getCode(), &quot;PRI_EMAIL&quot;, userToken.getString(&quot;email&quot;));
+newUser = beUtils.updateBaseEntity(newUser, firstNameAnswer,BaseEntity.class);
+newUser = beUtils.updateBaseEntity(newUser, lastNameAnswer,BaseEntity.class);
+newUser = beUtils.updateBaseEntity(newUser, emailAnswer,BaseEntity.class);
 kcontext.setVariable(&quot;newUser&quot;,newUser);
 kcontext.setVariable(&quot;userCode&quot;, ((GennyToken)userToken).getUserCode());
 
