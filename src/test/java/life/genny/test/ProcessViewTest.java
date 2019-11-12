@@ -216,8 +216,9 @@ public class ProcessViewTest extends GennyJbpmBaseTest {
                     .addFrame(bucketFrames.get(5), FramePosition.WEST).end().addTheme(THM_BUCKET).end()
                     .addTheme(THM_BUCKET_WRAPPER, ThemePosition.WEST).end().build();
 
-            Frame3 FRM_BUCKET_VIEW = Frame3.builder("FRM_BUCKET_VIEW").addFrame(FRM_BUCKET_TITLE, FramePosition.NORTH)
-                    .end().addFrame(FRM_BUCKET_WRAPPER, FramePosition.CENTRE).end().build();
+            Frame3 FRM_BUCKET_VIEW = Frame3.builder("FRM_BUCKET_VIEW")
+                    //.addFrame(FRM_BUCKET_TITLE, FramePosition.NORTH).end()
+                    .addFrame(FRM_BUCKET_WRAPPER, FramePosition.CENTRE).end().build();
 
             Frame3 FRM_TAB_CONTENT = Frame3.builder("FRM_TAB_CONTENT").addFrame(FRM_BUCKET_VIEW, FramePosition.NORTH)
                     .end().build();
