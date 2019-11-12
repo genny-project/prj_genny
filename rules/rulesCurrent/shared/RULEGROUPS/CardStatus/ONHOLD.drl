@@ -10,40 +10,37 @@ import life.genny.utils.OutputParam;
 import java.util.List;
 import java.util.ArrayList;
 
-rule "PLACED_TO_PROGRESS"
-    ruleflow-group 'MoveBucket'
+rule "ONHOLD"
+    ruleflow-group 'CardStatus'
     no-loop true
     salience 1 
     when
-	 	userToken : GennyToken (code != "PER_SERVICE" )
+		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		newApplication : BaseEntity()
 		output : OutputParam()
-		bucketCode : String(bucketCode.equals("Placed"))
-		controlSignalCode : String(controlSignalCode.equals("FORWARD"))
+		statusCode : String(statusCode.equals("Onhold"))
 
 	  
      then
- 		System.out.println("PLACED_TO_PROGRESS: Rule fired" ); 
- 		System.out.println("PLACED_TO_PROGRESS: newApplication = " + newApplication.getCode());
+ 		System.out.println("ONHOLD: Rule fired" ); 
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
- 		Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_STATUS","Progress");
+ 		Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_CARD_STATUS","Onhold");
  		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
  		beUtils.saveAnswer(answer);
-
-	/* insert(answer); */
+ 		
 		
-		System.out.println("PLACED_TO_PROGRESS: Answer = " + answer);
-		System.out.println("PLACED_TO_PROGRESS: newApplication = " + newApplication); 
+		System.out.println("ONHOLD: Answer = " + answer);	
+		System.out.println("ONHOLD: newApplication = " + newApplication);
+		
 		
 	/*  Set the attribute code and value to output */
 		output.setResultCode(answer.getAttributeCode());
 		output.setTargetCode(answer.getValue());
-		
-	
+
+
 		retract(newApplication)
-		retract(bucketCode)
-		retract(controlSignalCode)
+		retract(statusCode)
 		
 end
