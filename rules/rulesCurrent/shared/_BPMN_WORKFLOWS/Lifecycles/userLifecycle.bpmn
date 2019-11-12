@@ -253,6 +253,9 @@ System.out.println(&quot;userlifeCycle: New User Created: pid: &quot;+callingPro
           <tns:metaData name="elementname">
             <tns:metaValue><![CDATA[Ask Question Task]]></tns:metaValue>
           </tns:metaData>
+          <tns:onExit-script scriptFormat="http://www.java.com/java">
+            <tns:script>System.out.println(&quot;userLifercycle: About to leave Ask Question Task&quot;);</tns:script>
+          </tns:onExit-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>

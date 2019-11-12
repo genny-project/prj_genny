@@ -79,12 +79,12 @@ public class ChrisTest {
 	@Test
 	public void userTaskTest()
 	{
-		System.out.println("UserTask TestXXX");
+		System.out.println("Process View Test");
 		GennyToken userToken = null;
 		GennyToken serviceToken = null;
 		QRules qRules = null;
 
-		if (true) {
+		if (false) {
 			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
 			qRules = new QRules(eventBusMock, userToken.getToken());
@@ -134,58 +134,65 @@ public class ChrisTest {
 		GennyKieSession gks = null;
 
 		try {
-			gks = GennyKieSession.builder(serviceToken,true)
-				//	.addDrl("SignalProcessing")
-				//	.addDrl("DataProcessing")
-				//	.addJbpm("Lifecycles")
-					.addJbpm("cardsA.bpmn")
-					.addJbpm("cardsB.bpmn")
-					.addJbpm("cardsC.bpmn")
+			gks = GennyKieSession
+					.builder(serviceToken,true)
+					
+// ADD THE JBPM WORKFLOWS HERE					
+//					.addJbpm("cardsA.bpmn")
+//					.addJbpm("cardsB.bpmn")
 //					.addJbpm("cardsC.bpmn")
-//					.addJbpm("processLifecycle.bpmn")
-//					.addJbpm("placementLifecycle.bpmn")
-//					.addJbpm("internshipLifecycle.bpmn")
-//					.addDrl("TaskRouting")
 					.addJbpm("notificationHub2.bpmn")
 					.addJbpm("baseEntityValidation.bpmn")
-//					.addDrl("ADD_APPLICATION_ATTRIBUTES.drl")
-//					.addJbpm("placementLifecycle.bpmn")
+					.addJbpm("dynamicCards.bpmn")
+					.addJbpm("placedCards.bpmn")
+					.addJbpm("progressCards.bpmn")
+//					.addJbpm("userSession.bpmn")
+					
+// ADD THE DROOLS RULES HERE
 					.addDrl("MoveBucket")
 					.addDrl("CommonEnter")
 					.addDrl("SpecificEnter")
 					.addDrl("SpecificReminder")
-//					.addDrl("EventProcessing")
 					.addDrl("Timer")
-				//	.addJbpm("AuthInit")
-				//	.addDrl("InitialiseProject")
-				//	.addJbpm("InitialiseProject")
+
+					.addDrl("CardStatus")
+					
 
 					.addToken(userToken)
 					.build();
 			
 			gks.start();
-//			gks.injectEvent();
-			
-//			gks.injectSignal("newCompany", hashBeg);
-//			gks.injectSignal("newTask", "newTask");
-//			gks.startProcess("processLifecycle");
-			gks.startProcess("cardsA");
-			
-            gks.advanceSeconds(5, false);
-//            gks.injectSignal("status", "FORWARD"); 		// Applied to Shortlist
-            gks.advanceSeconds(5, false);
-//            gks.injectSignal("status", "FORWARD"); 		// Shortlist to Interview
-//            gks.advanceSeconds(5, false);
-//            gks.injectSignal("status", "BACKWARD");		// Interview back to Shortlist 
-//            gks.advanceSeconds(5, false);
-//            gks.injectSignal("status", "FORWARD");		// Shortlist to Interview
-//            gks.advanceSeconds(5, false);
-//            gks.injectSignal("status", "FORWARD");		// Interview to Offered
-//            gks.advanceSeconds(5, false);
-//            gks.injectSignal("status", "FORWARD");		// Offered to Placed
-//            gks.advanceSeconds(5, false);
-//            gks.injectSignal("status", "FORWARD");		// Placed to Progress
 
+			gks.startProcess("dynamicCards");
+			
+
+            gks.advanceSeconds(1, false);
+            gks.injectSignal("dynamicStatus", "Reactivate");
+            gks.advanceSeconds(5, false);
+            gks.injectSignal("dynamicControl", "FORWARD"); 			// Applied to Shortlist
+            gks.advanceSeconds(5, false);
+            gks.injectSignal("dynamicControl", "FORWARD"); 			// Shortlist to Interview
+            gks.advanceSeconds(5, false);
+////            gks.injectSignal("status", "BACKWARD");		// Interview back to Shortlist 
+////            gks.advanceSeconds(5, false);
+//            gks.injectSignal("appTarget", "FORWARD");		// Shortlist to Interview
+//            gks.advanceSeconds(5, false);
+            gks.injectSignal("dynamicControl", "FORWARD");			// Interview to Offered
+            gks.advanceSeconds(5, false);
+            gks.injectSignal("dynamicControl", "FORWARD");			// Offered to Place
+            gks.advanceSeconds(5, false);
+//            gks.injectSignal("status", "FORWARD");		
+//            gks.advanceSeconds(1, false);
+//            gks.injectSignal("placedStatus", "Withdraw");
+            gks.advanceSeconds(5, false);
+            gks.injectSignal("placedControl", "FORWARD"); 			// Placed to Progress
+//            gks.advanceSeconds(1, false);
+//            gks.injectSignal("progressStatus", "Onhold");
+            gks.advanceSeconds(5, false);
+            gks.injectSignal("progressControl", "FORWARD"); 		// Progress to Complete
+            gks.advanceSeconds(5, false);
+            
+            
 			/*
 			BaseEntity icn_sort = new BaseEntity("ICN_SORT","Icon Sort");
 			try {
@@ -471,9 +478,27 @@ public class ChrisTest {
 					.addJbpm("AuthInit")
 //					.addJbpm("userSession.bpmn")
 //					.addJbpm("userValidation.bpmn")
-//					.addJbpm("userLifecycle.bpmn")
+					.addJbpm("userLifecycle.bpmn")
 //					.addJbpm("userApplication.bpmn")
-			//		.addJbpm("auth_init.bpmn")
+					.addJbpm("auth_init.bpmn")
+					
+			
+					.addJbpm("notificationHub2.bpmn")
+					.addJbpm("baseEntityValidation.bpmn")
+					.addJbpm("dynamicCards.bpmn")
+					.addJbpm("placedCards.bpmn")
+					.addJbpm("progressCards.bpmn")
+					.addJbpm("userSession.bpmn")
+			
+//ADD THE DROOLS RULES HERE
+					.addDrl("MoveBucket")
+					.addDrl("CommonEnter")
+					.addDrl("SpecificEnter")
+					.addDrl("SpecificReminder")
+					.addDrl("Timer")
+
+					.addDrl("CardStatus")
+					
 					.addToken(userToken).build();
 			
 			
@@ -488,7 +513,7 @@ public class ChrisTest {
 
 //			gks.injectEvent(answerMsg); // This sends an answer to the first userSessio
 //			gks.advanceSeconds(5, false);
-			gks.injectEvent(msgLogout1);
+//			gks.injectEvent(msgLogout1);
 		} catch (Exception e) {
 			e.printStackTrace();
 
