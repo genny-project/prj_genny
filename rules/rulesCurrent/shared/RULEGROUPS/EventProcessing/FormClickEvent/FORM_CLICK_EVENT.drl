@@ -5,6 +5,7 @@ import life.genny.models.GennyToken;
 import life.genny.utils.VertxUtils;
 import io.vertx.core.json.JsonObject;
 import life.genny.utils.OutputParam;
+import life.genny.qwanda.rule.RuleDetails;
 
 rule "FORM_CLICK_EVENT"
     ruleflow-group 'EventProcessing'
@@ -14,6 +15,7 @@ rule "FORM_CLICK_EVENT"
 		$message : QEventMessage(data.code matches "QUE_.*" && data.parentCode == "QUE_OPTIONS_GRP" )
 		userToken : GennyToken (code != "PER_SERVICE" )
 		output : OutputParam( )
+		ruleDetails : RuleDetails()
     then
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
 		output.setFormCode("FRM_"+ $message.getData().getCode(),"FRM_CONTENT");
