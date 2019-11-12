@@ -32,6 +32,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_20" isCollection="false" structureRef="life.genny.utils.BaseEntityUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_25" isCollection="false" structureRef="life.genny.utils.RulesUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_19" isCollection="false" structureRef="life.genny.qwandautils.JsonUtils"/>
+  <bpmn2:itemDefinition id="ItemDefinition_23" isCollection="false" structureRef="life.genny.qwandautils.QwandaUtils"/>
   <bpmn2:process id="auth_init" drools:packageName="life.genny.jbpm" name="Auth Init" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.qwanda.message.QEventMessage"/>
@@ -65,6 +66,7 @@
       <drools:import name="life.genny.utils.BaseEntityUtils"/>
       <drools:import name="life.genny.utils.RulesUtils"/>
       <drools:import name="life.genny.qwandautils.JsonUtils"/>
+      <drools:import name="life.genny.qwandautils.QwandaUtils"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_1" name="message"/>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_17" name="userToken"/>
@@ -156,12 +158,13 @@ kcontext.setVariable(&quot;userToken&quot;, userToken);
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
-      <bpmn2:script>/* System.out.println(&quot;authInit: SendProject&quot;);
+      <bpmn2:script>System.out.println(&quot;authInit: SendProject&quot;);
 BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 String projectCode = &quot;PRJ_&quot;+userToken.getRealm().toUpperCase();
-BaseEntity project = beUtils.getBaseEntityByCode(projectCode);
+BaseEntity project = QwandaUtils.getBaseEntityByCodeWithAttributes(projectCode, userToken.getToken());
+/* BaseEntity project = beUtils.getBaseEntityByCode(projectCode); */
 System.out.println(&quot;authInit: Sending &quot;+project);
-VertxUtils.publish(currentUser,&quot;webcmds&quot;,project, &quot;PROJECT&quot;, userToken.getToken()); */
+VertxUtils.publish(currentUser,&quot;webcmds&quot;,project, &quot;PROJECT&quot;, userToken.getToken()); 
 
 
 
