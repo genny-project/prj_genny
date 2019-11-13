@@ -1070,64 +1070,24 @@ public class TableUtilsTest {
 				Theme.class, serviceToken.getToken());
 		Theme THM_WIDTH_100_PERCENT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_WIDTH_100_PERCENT",
 				Theme.class, serviceToken.getToken());
-
-		Attribute att = new Attribute("PRI_CONTENT", "content", new DataType(String.class));
-		Attribute inheritableAtt = new Attribute("PRI_IS_INHERITABLE", "inheritable", new DataType(Boolean.class));
-		Attribute hasIconAttribute = new Attribute("PRI_HAS_ICON", "Has Icon?", new DataType(Boolean.class));
-		Attribute hasInputAttribute = new Attribute("PRI_HAS_INPUT", "Has Input?", new DataType(Boolean.class));
-
-		BaseEntity THM_BH_ROW_ONE_GRP_WRAPPER = new BaseEntity("THM_BH_ROW_ONE_GRP_WRAPPER", "table scroll");
-		Set<EntityAttribute> entAttrSet2 = new HashSet<>();
-		entAttrSet2.add(new EntityAttribute(THM_BH_ROW_ONE_GRP_WRAPPER, att, 1.0,
-				"{  \"justifyContent\": \"space-between\", \"marginBottom\": 10}"));
-		THM_BH_ROW_ONE_GRP_WRAPPER.setBaseEntityAttributes(entAttrSet2);
-
-		BaseEntity THM_BH_ROW_ONE_GRP_LABEL = new BaseEntity("THM_BH_ROW_ONE_GRP_LABEL", "table scroll");
-		Set<EntityAttribute> entAttrSet3 = new HashSet<>();
-		entAttrSet3.add(new EntityAttribute(THM_BH_ROW_ONE_GRP_LABEL, att, 1.0, "{  \"marginBottom\": 0}"));
-		THM_BH_ROW_ONE_GRP_LABEL.setBaseEntityAttributes(entAttrSet3);
-
-		BaseEntity THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER = new BaseEntity("THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER",
-				"table scroll");
-		Set<EntityAttribute> entAttrSet4 = new HashSet<>();
-		entAttrSet4
-				.add(new EntityAttribute(THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER, att, 1.0, "{  \"justifyContent\": \"center\"}"));
-		THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER.setBaseEntityAttributes(entAttrSet4);
-
-		BaseEntity THM_BH_ROW_ONE_VCL_INPUT = new BaseEntity("THM_BH_ROW_ONE_VCL_INPUT", "table scroll");
-		Set<EntityAttribute> entAttrSet5 = new HashSet<>();
-		entAttrSet5
-				.add(new EntityAttribute(THM_BH_ROW_ONE_VCL_INPUT, att, 1.0, "{  \"dynamicWidth\": true, \"bold\": true}"));
-		THM_BH_ROW_ONE_VCL_INPUT.setBaseEntityAttributes(entAttrSet5);
-
-		BaseEntity THM_BH_ROW_TWO_VCL_WRAPPER = new BaseEntity("THM_BH_ROW_TWO_VCL_WRAPPER", "table scroll");
-		Set<EntityAttribute> entAttrSet6 = new HashSet<>();
-		entAttrSet6.add(new EntityAttribute(THM_BH_ROW_TWO_VCL_WRAPPER, att, 1.0, "{  \"justifyContent\": \"center\"}"));
-		THM_BH_ROW_TWO_VCL_WRAPPER.setBaseEntityAttributes(entAttrSet6);
-
-		BaseEntity THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER = new BaseEntity("THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER",
-				"table scroll");
-		Set<EntityAttribute> entAttrSet7 = new HashSet<>();
-		entAttrSet7.add(
-				new EntityAttribute(THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER, att, 1.0, "{  \"justifyContent\": \"space-between\"}"));
-		THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER.setBaseEntityAttributes(entAttrSet7);
-
-		BaseEntity THM_BH_ROW_TWO_INPUT_FIELD = new BaseEntity("THM_BH_ROW_TWO_INPUT_FIELD", "table scroll");
-		Set<EntityAttribute> entAttrSet8 = new HashSet<>();
-		entAttrSet8.add(new EntityAttribute(THM_BH_ROW_TWO_INPUT_FIELD, att, 1.0,
-				"{  \"backgroundColor\": \"white\", \"borderRadius\": 5, \"padding\": 5 , \"flex\" : 1}"));
-		THM_BH_ROW_TWO_INPUT_FIELD.setBaseEntityAttributes(entAttrSet8);
-
-		BaseEntity THM_BH_GROUP_WRAPPER = new BaseEntity("THM_BH_GROUP_WRAPPER", "table scroll");
-		Set<EntityAttribute> entAttrSet9 = new HashSet<>();
-		entAttrSet9.add(new EntityAttribute(THM_BH_GROUP_WRAPPER, att, 1.0, "{  \"width\": \"100%\", \"padding\": 10}"));
-		entAttrSet9.add(new EntityAttribute(THM_BH_GROUP_WRAPPER, inheritableAtt, 1.0, "FALSE"));
-		THM_BH_GROUP_WRAPPER.setBaseEntityAttributes(entAttrSet9);
-
-		BaseEntity THM_ICON = new BaseEntity("THM_ICON", "table scroll");
-		Set<EntityAttribute> entAttrSet10 = new HashSet<>();
-		entAttrSet10.add(new EntityAttribute(THM_ICON, hasIconAttribute, 1.0, "TRUE"));
-		THM_ICON.setBaseEntityAttributes(entAttrSet10);
+		Theme THM_BH_ROW_ONE_GRP_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_ROW_ONE_GRP_WRAPPER",
+				Theme.class, serviceToken.getToken());
+		Theme THM_BH_ROW_ONE_GRP_LABEL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_ROW_ONE_GRP_LABEL",
+				Theme.class, serviceToken.getToken());
+		Theme THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
+				"THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER", Theme.class, serviceToken.getToken());
+		Theme THM_BH_ROW_ONE_VCL_INPUT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_ROW_ONE_VCL_INPUT",
+				Theme.class, serviceToken.getToken());
+		Theme THM_BH_ROW_TWO_VCL_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_ROW_TWO_VCL_WRAPPER",
+				Theme.class, serviceToken.getToken());
+		Theme THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
+				"THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER", Theme.class, serviceToken.getToken());
+		Theme THM_BH_ROW_TWO_INPUT_FIELD = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_ROW_TWO_INPUT_FIELD",
+				Theme.class, serviceToken.getToken());
+		Theme THM_ICON = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_ICON", Theme.class,
+				serviceToken.getToken());
+		Theme THM_BH_GROUP_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_GROUP_WRAPPER", Theme.class,
+				serviceToken.getToken());
 
 		BaseEntity ICN_SORT = beUtils.getBaseEntityByCode("ICN_SORT");
 
@@ -1135,16 +1095,16 @@ public class TableUtilsTest {
 		themes.add(THM_QUESTION_GRP_LABEL);
 		themes.add(getThemeBe(THM_DISPLAY_VERTICAL));
 		themes.add(getThemeBe(THM_WIDTH_100_PERCENT));
-		themes.add(THM_BH_ROW_ONE_GRP_WRAPPER);
-		themes.add(THM_BH_ROW_ONE_GRP_LABEL);
-		themes.add(THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER);
-		themes.add(THM_BH_ROW_ONE_VCL_INPUT);
-		themes.add(THM_BH_ROW_TWO_VCL_WRAPPER);
-		themes.add(THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER);
-		themes.add(THM_BH_GROUP_WRAPPER);
-		themes.add(THM_BH_ROW_TWO_INPUT_FIELD);
+		themes.add(getThemeBe(THM_BH_ROW_ONE_GRP_WRAPPER));
+		themes.add(getThemeBe(THM_BH_ROW_ONE_GRP_LABEL));
+		themes.add(getThemeBe(THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER));
+		themes.add(getThemeBe(THM_BH_ROW_ONE_VCL_INPUT));
+		themes.add(getThemeBe(THM_BH_ROW_TWO_VCL_WRAPPER));
+		themes.add(getThemeBe(THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER));
+		themes.add(getThemeBe(THM_BH_GROUP_WRAPPER));
+		themes.add(getThemeBe(THM_BH_ROW_TWO_INPUT_FIELD));
 		themes.add(ICN_SORT);
-		themes.add(THM_ICON);
+		themes.add(getThemeBe(THM_ICON));
 
 		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(themes);
 		msg.setToken(beUtils.getGennyToken().getToken());
@@ -1176,15 +1136,15 @@ public class TableUtilsTest {
 		Question row1Ques = new Question("QUE_BUCKET_HEADER_ROW_ONE_" + code, searchBe.getName(), tableCellAttribute,
 				false);
 		Ask row1Ask = new Ask(row1Ques, beUtils.getGennyToken().getUserCode(), searchBe.getCode());
-		row1Ask = this.createVirtualContext(row1Ask, THM_DISPLAY_HORIZONTAL, ContextType.THEME,
+		row1Ask = this.createVirtualContext(row1Ask, getThemeBe(THM_DISPLAY_HORIZONTAL), ContextType.THEME,
 				VisualControlType.GROUP_WRAPPER);
-		row1Ask = this.createVirtualContext(row1Ask, THM_BH_ROW_ONE_GRP_WRAPPER, ContextType.THEME,
+		row1Ask = this.createVirtualContext(row1Ask, getThemeBe(THM_BH_ROW_ONE_GRP_WRAPPER), ContextType.THEME,
 				VisualControlType.GROUP_WRAPPER);
-		row1Ask = this.createVirtualContext(row1Ask, THM_BH_ROW_ONE_GRP_LABEL, ContextType.THEME,
+		row1Ask = this.createVirtualContext(row1Ask, getThemeBe(THM_BH_ROW_ONE_GRP_LABEL), ContextType.THEME,
 				VisualControlType.GROUP_LABEL);
-		row1Ask = this.createVirtualContext(row1Ask, THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER, ContextType.THEME,
+		row1Ask = this.createVirtualContext(row1Ask, getThemeBe(THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER), ContextType.THEME,
 				VisualControlType.GROUP_CONTENT_WRAPPER);
-		row1Ask = this.createVirtualContext(row1Ask, THM_BH_ROW_ONE_VCL_INPUT, ContextType.THEME,
+		row1Ask = this.createVirtualContext(row1Ask, getThemeBe(THM_BH_ROW_ONE_VCL_INPUT), ContextType.THEME,
 				VisualControlType.VCL_INPUT);
 
 		/* count ask */
@@ -1201,25 +1161,25 @@ public class TableUtilsTest {
 		Question row2Ques = new Question("QUE_BUCKET_HEADER_ROW_TWO_" + code, questionAttribute.getName(),
 				questionAttribute, false);
 		Ask row2Ask = new Ask(row2Ques, beUtils.getGennyToken().getUserCode(), searchBe.getCode());
-		row2Ask = this.createVirtualContext(row2Ask, THM_DISPLAY_HORIZONTAL, ContextType.THEME,
+		row2Ask = this.createVirtualContext(row2Ask, getThemeBe(THM_DISPLAY_HORIZONTAL), ContextType.THEME,
 				VisualControlType.GROUP_CONTENT_WRAPPER);
-		row2Ask = this.createVirtualContext(row2Ask, THM_BH_ROW_TWO_VCL_WRAPPER, ContextType.THEME,
+		row2Ask = this.createVirtualContext(row2Ask, getThemeBe(THM_BH_ROW_TWO_VCL_WRAPPER), ContextType.THEME,
 				VisualControlType.VCL_WRAPPER);
-		row2Ask = this.createVirtualContext(row2Ask, THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER, ContextType.THEME,
+		row2Ask = this.createVirtualContext(row2Ask, getThemeBe(THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER), ContextType.THEME,
 				VisualControlType.GROUP_CONTENT_WRAPPER);
 
 		/* search ask */
 		Question bucketSearchQues = new Question("QUE_SEARCH_" + code, searchAttribute.getName(), searchAttribute, false);
 		Ask bucketSearchAsk = new Ask(bucketSearchQues, beUtils.getGennyToken().getUserCode(), searchBe.getCode());
-		bucketSearchAsk = this.createVirtualContext(bucketSearchAsk, THM_BH_ROW_TWO_INPUT_FIELD, ContextType.THEME,
-				VisualControlType.VCL_WRAPPER);
+		bucketSearchAsk = this.createVirtualContext(bucketSearchAsk, getThemeBe(THM_BH_ROW_TWO_INPUT_FIELD),
+				ContextType.THEME, VisualControlType.VCL_WRAPPER);
 
 		/* sort ask */
 		Question bucketSortQues = new Question("QUE_SORT_" + code, sortAttribute.getName(), sortAttribute, false);
 		Ask bucketSortAsk = new Ask(bucketSortQues, beUtils.getGennyToken().getUserCode(), searchBe.getCode());
 
 		bucketSortAsk = createVirtualContext(bucketSortAsk, ICN_SORT, ContextType.ICON, VisualControlType.VCL_ICON);
-		bucketSortAsk = createVirtualContext(bucketSortAsk, THM_ICON, ContextType.THEME, VisualControlType.VCL);
+		bucketSortAsk = createVirtualContext(bucketSortAsk, getThemeBe(THM_ICON), ContextType.THEME, VisualControlType.VCL);
 
 		Ask[] row2ChildAsks = { bucketSearchAsk, bucketSortAsk };
 		row2Ask.setChildAsks(row2ChildAsks);
@@ -1228,9 +1188,9 @@ public class TableUtilsTest {
 		Ask[] bucketChildAsks = { row1Ask, row2Ask };
 		bucketHeaderAsk.setChildAsks(bucketChildAsks);
 
-		bucketHeaderAsk = this.createVirtualContext(bucketHeaderAsk, THM_DISPLAY_VERTICAL, ContextType.THEME,
+		bucketHeaderAsk = this.createVirtualContext(bucketHeaderAsk, getThemeBe(THM_DISPLAY_VERTICAL), ContextType.THEME,
 				VisualControlType.GROUP_CONTENT_WRAPPER);
-		bucketHeaderAsk = this.createVirtualContext(bucketHeaderAsk, THM_BH_GROUP_WRAPPER, ContextType.THEME,
+		bucketHeaderAsk = this.createVirtualContext(bucketHeaderAsk, getThemeBe(THM_BH_GROUP_WRAPPER), ContextType.THEME,
 				VisualControlType.GROUP_WRAPPER);
 
 		return bucketHeaderAsk;
@@ -1254,8 +1214,6 @@ public class TableUtilsTest {
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
 
 		List<BaseEntity> themes = new ArrayList<>();
-		Attribute hasIconAttribute = new Attribute("PRI_HAS_ICON", "Has Icon?", new DataType(Boolean.class));
-		Attribute att = new Attribute("PRI_CONTENT", "content", new DataType(String.class));
 
 		Theme THM_DISPLAY_HORIZONTAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_HORIZONTAL",
 				Theme.class, serviceToken.getToken());
@@ -1263,10 +1221,8 @@ public class TableUtilsTest {
 		Theme THM_WIDTH_100_PERCENT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_WIDTH_100_PERCENT",
 				Theme.class, serviceToken.getToken());
 
-		BaseEntity THM_ICON = new BaseEntity("THM_ICON", "table scroll");
-		Set<EntityAttribute> entAttrSet = new HashSet<>();
-		entAttrSet.add(new EntityAttribute(THM_ICON, hasIconAttribute, 1.0, "TRUE"));
-		THM_ICON.setBaseEntityAttributes(entAttrSet);
+		Theme THM_ICON = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_ICON", Theme.class,
+				serviceToken.getToken());
 
 		Theme THM_JUSTIFY_CONTENT_SPACE_AROUND = Theme.builder("THM_JUSTIFY_CONTENT_SPACE_AROUND").addAttribute()
 				.justifyContent("space-around").end().build();
@@ -1276,7 +1232,7 @@ public class TableUtilsTest {
 
 		themes.add(ICN_ARROW_FORWARD_IOS);
 		themes.add(ICN_ARROW_BACK_IOS);
-		themes.add(THM_ICON);
+		themes.add(getThemeBe(THM_ICON)); /* already publishing on header */
 		themes.add(getThemeBe(THM_WIDTH_100_PERCENT));
 		themes.add(getThemeBe(THM_JUSTIFY_CONTENT_SPACE_AROUND));
 
@@ -1305,14 +1261,16 @@ public class TableUtilsTest {
 		Ask nextBucketAsk = new Ask(nextBucketQues, beUtils.getGennyToken().getUserCode(), searchBe.getCode());
 		nextBucketAsk = this.createVirtualContext(nextBucketAsk, ICN_ARROW_FORWARD_IOS, ContextType.ICON,
 				VisualControlType.VCL_ICON);
-		nextBucketAsk = this.createVirtualContext(nextBucketAsk, THM_ICON, ContextType.THEME, VisualControlType.VCL);
+		nextBucketAsk = this.createVirtualContext(nextBucketAsk, getThemeBe(THM_ICON), ContextType.THEME,
+				VisualControlType.VCL);
 
 		/* prev ask */
 		Question prevBucketQues = new Question("QUE_PREV_BUCKET", "", prevAttribute, false);
 		Ask prevBucketAsk = new Ask(prevBucketQues, beUtils.getGennyToken().getUserCode(), searchBe.getCode());
 		prevBucketAsk = this.createVirtualContext(prevBucketAsk, ICN_ARROW_BACK_IOS, ContextType.ICON,
 				VisualControlType.VCL_ICON);
-		prevBucketAsk = this.createVirtualContext(prevBucketAsk, THM_ICON, ContextType.THEME, VisualControlType.VCL);
+		prevBucketAsk = this.createVirtualContext(prevBucketAsk, getThemeBe(THM_ICON), ContextType.THEME,
+				VisualControlType.VCL);
 
 		/* set the child asks */
 		Ask[] bucketChildAsksArray = { prevBucketAsk, nextBucketAsk };
