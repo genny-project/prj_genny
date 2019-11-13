@@ -19,6 +19,7 @@ rule "FORM_CLICK_EVENT"
     then
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
 		output.setFormCode("FRM_"+ $message.getData().getCode(),"FRM_CONTENT");
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" ->"+output);
 		/* Now add the allowable answers */
 		
 		retract( $message);
