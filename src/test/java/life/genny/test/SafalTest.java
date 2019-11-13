@@ -92,7 +92,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 	}
 	
 
-	@Test
+//	@Test
 	public void Test1() {
 	
 		initItem();
@@ -106,8 +106,10 @@ public class SafalTest extends GennyJbpmBaseTest {
 		
 		
 		QDataAskMessage[] result = JsonUtils.fromJson(items, QDataAskMessage[].class);
-		for(QDataAskMessage a : result)
-		System.out.println(a);
+		for(QDataAskMessage a : result) {
+			System.out.println(a);
+		}
+		
 		
 	}
 
@@ -161,6 +163,124 @@ public class SafalTest extends GennyJbpmBaseTest {
 				.borderWidth(1).borderColor("black").end().build();
 
 	}
+	
+	
+	@Test
+	public void v7DetailsViewInternship() {
+
+		initItem();
+		/* Themes and frames */
+
+		try {
+
+
+			Ask[] askList = new Ask[1];
+
+			//Ask timeLineAsks = getTimelineAsk();
+
+
+			//THM_DETAIL_VIEW_BODY
+			Theme THM_DETAIL_VIEW_BODY = Theme.builder("THM_DETAIL_VIEW_BODY").addAttribute().flex(15).padding(10)
+					.justifyContent("flex-start").end()
+					// .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+					.build();
+
+			/* No need already exists THM_JUSTIFY_CONTENT_FLEX_START */
+
+			Theme THM_JUSTIFY_CONTENT_FLEX_START = Theme.builder("THM_JUSTIFY_CONTENT_FLEX_START").addAttribute().justifyContent("flex-start")
+					.end().build();
+
+			/* Already exist THM_SCROLL_VERTICAL */
+			Theme THM_SCROLL_VERTICAL = Theme.builder("THM_SCROLL_VERTICAL").addAttribute().overflowY("auto").end()
+					.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+			
+			Frame3 FRM_PERSON_DETAIL= getTimeLineFrame("FRM_TIMELINE", rules.getUser().getCode());
+	
+			Frame3 FRM_DETAIL_VIEW_BODY = Frame3.builder("FRM_DETAIL_VIEW_BODY")
+					.addTheme(THM_SCROLL_VERTICAL, ThemePosition.WRAPPER).end()
+					.addTheme(THM_DETAIL_VIEW_BODY, ThemePosition.WRAPPER).end()
+					.addTheme(THM_JUSTIFY_CONTENT_FLEX_START, ThemePosition.CENTRE).end()
+					.addFrame(FRM_PERSON_DETAIL, FramePosition.CENTRE).end()					
+					.build();
+			
+			Frame3 FRM_ROOT = Frame3.builder("FRM_ROOT")
+					.addFrame(FRM_DETAIL_VIEW_BODY).end().build();
+	
+			/* end */
+			Set<QDataAskMessage> set = new HashSet<QDataAskMessage>();
+
+			Map<String, ContextList> contextListMap = new HashMap<String, ContextList>();
+
+			Map<String, QDataAskMessage> virtualAskMap = new HashMap<String, QDataAskMessage>();
+			//virtualAskMap.put(askList[0].getQuestionCode(), new QDataAskMessage(askList[0]));
+			
+			QDataBaseEntityMessage msgg = new QDataBaseEntityMessage(rules.getUser());
+			msgg.setToken(userToken.getToken());
+			msgg.setReplace(true);
+
+			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msgg));
+
+			QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_ROOT, serviceToken, set, contextListMap,virtualAskMap);
+	
+			msg.setToken(userToken.getToken());
+			msg.setReplace(true);
+			
+			/* send message */
+			System.out.println("Sending Asks");
+			for (QDataAskMessage item : set) {
+					
+				item.setToken(userToken.getToken());
+				
+				
+				String json = JsonUtils.toJson(item);
+				VertxUtils.writeMsg("webcmds", json);
+
+			}
+
+			/* we publish the virtual ask with child asks */
+
+			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public Frame3 getTimeLineFrame(String name, String target) {
+
+		//THM_DETAIL_VIEW_CARD_WRAPPER
+		Theme THM_CONTEXT_SUMMARY = Theme.builder("THM_CONTEXT_SUMMARY").addAttribute().backgroundColor("#faf9fa")
+				.justifyContent("flex-start")
+				.flexShrink(0).flexBasis("auto").flexGrow(0)
+				.height("initial")
+				.marginBottom(20).padding(10).maxWidth(700).end()
+				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+		//THM_DETAIL_VIEW_CARD_CONTENT
+		Theme THM_CONTEXT_SUMMARY_CONTENT_FRAME = Theme.builder("THM_CONTEXT_SUMMARY_CONTENT_FRAME").addAttribute()
+				.width("100%").paddingLeft(10).end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
+				.end().build();
+
+		try {
+
+			/* ******end******* */
+			Frame3 FRM_TIMELINE = Frame3.builder(name)
+					.addTheme(THM_CONTEXT_SUMMARY, ThemePosition.WRAPPER).end()
+					.addTheme(THM_CONTEXT_SUMMARY_CONTENT_FRAME, ThemePosition.CENTRE).end()
+					.addTheme(THM_SHADOW, ThemePosition.WRAPPER).end()						
+					.build();
+
+			return FRM_TIMELINE;
+
+		} catch (Exception e) {
+			System.out.println(e);
+			return null;
+		}
+
+	}
+	
 
 	//@Test
 	public void v7DetailsView() {
@@ -206,8 +326,12 @@ public class SafalTest extends GennyJbpmBaseTest {
 			
 			Frame3 FRM_PERSON_DETAIL= getDetailFrame("FRM_PERSON_DETAIL", rules.getUser().getCode(),"QUE_TEST_PERSON_DETAIL_GRP");
 		
-			Frame3 FRM_PERSON_DOCUMENTS = getDetailFrame("FRM_PERSON_DOCUMENTS", rules.getUser().getCode(),"QUE_TEST_PERSON_DOC_GRP");
-			
+			//Frame3 FRM_PERSON_DOCUMENTS = getDetailFrame("FRM_PERSON_DOCUMENTS", rules.getUser().getCode(),"QUE_TEST_PERSON_DOC_GRP");
+			Frame3 FRM_PERSON_DOCUMENTS = Frame3.clone(FRM_PERSON_DETAIL);
+			FRM_PERSON_DOCUMENTS.setCode("FRM_PERSON_DOCUMENTS");
+			FRM_PERSON_DOCUMENTS.setQuestionCode("QUE_TEST_PERSON_DOC_GRP");
+			FRM_PERSON_DOCUMENTS.getQuestionGroup().setCode("QUE_TEST_PERSON_DOC_GRP");
+					
 			System.out.println("Copying the frames");
 			Frame3 ss = Frame3.clone(FRM_PERSON_DOCUMENTS);
 			
@@ -224,10 +348,10 @@ public class SafalTest extends GennyJbpmBaseTest {
 					.addFrame(FRM_PERSON_DOCUMENTS, FramePosition.CENTRE).end()
 					.build();
 			
-			Frame3 FRM_ROOT = Frame3.builder("FRM_CONTENT")
+			Frame3 FRM_ROOT = Frame3.builder("FRM_ROOT")
 
 					.addFrame(FRM_DETAIL_VIEW_BODY).end().build();
-		
+	
 			/* end */
 			Set<QDataAskMessage> set = new HashSet<QDataAskMessage>();
 
@@ -307,6 +431,8 @@ public class SafalTest extends GennyJbpmBaseTest {
 					.end()
 					
 					.build();
+			
+			
 			
 			return FRM_PROFILE_PICTURE_GRP;
 		} catch (Exception e) {
