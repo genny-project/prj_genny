@@ -10,6 +10,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -18,9 +19,13 @@ import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.logging.log4j.Logger;
 import org.assertj.core.util.Arrays;
 import org.jbpm.ruleflow.core.RuleFlowProcess;
+import org.json.simple.parser.JSONParser;
 import org.junit.Test;
 import org.kie.api.runtime.process.ProcessInstance;
 
+import com.google.gson.Gson;
+
+import io.vertx.core.json.JsonObject;
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
@@ -52,6 +57,7 @@ import life.genny.qwandautils.JsonUtils;
 import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.FrameUtils2;
+import life.genny.utils.QuestionUtils;
 import life.genny.utils.TableUtils;
 import life.genny.utils.VertxUtils;
 
@@ -85,7 +91,27 @@ public class SafalTest extends GennyJbpmBaseTest {
 		super(false);
 	}
 	
+
+//	@Test
+	public void Test1() {
 	
+		initItem();
+		
+		String code = "ASK_" +"FRM_PERSON_DETAIL_VIEW";
+	
+		JsonObject tokenObj = VertxUtils.readCachedJson(userToken.getRealm(),
+				code,userToken.getToken());
+		
+		String items = tokenObj.getString("value");
+		
+		
+		QDataAskMessage[] result = JsonUtils.fromJson(items, QDataAskMessage[].class);
+		for(QDataAskMessage a : result) {
+			System.out.println(a);
+		}
+		
+		
+	}
 
 	//@Test
 	public void queryTest() {
@@ -107,15 +133,20 @@ public class SafalTest extends GennyJbpmBaseTest {
 
 			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
 			GennyKieSession.loadAttributesJsonFromResources(userToken);
+			
+			
 				
-			
-			
 		} else {
 
 			rules = GennyJbpmBaseTest.setupLocalService();
 			userToken = new GennyToken("userToken", rules.getToken());
 			serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 		}
+		
+		userToken.getCode();
+		QDataAskMessage sas = QuestionUtils.getAsks("PER_USER1", "PER_USER1","QUE_PERSON_DETAIL_GRP",userToken.getToken());
+		System.out.println(sas);
+		System.out.println("__________"+ userToken.getCode());
 
 		// rules.sendAllAttributes();
 
@@ -132,8 +163,126 @@ public class SafalTest extends GennyJbpmBaseTest {
 				.borderWidth(1).borderColor("black").end().build();
 
 	}
-
+	
+	
 	@Test
+	public void v7DetailsViewInternship() {
+
+		initItem();
+		/* Themes and frames */
+
+		try {
+
+
+			Ask[] askList = new Ask[1];
+
+			//Ask timeLineAsks = getTimelineAsk();
+
+
+			//THM_DETAIL_VIEW_BODY
+			Theme THM_DETAIL_VIEW_BODY = Theme.builder("THM_DETAIL_VIEW_BODY").addAttribute().flex(15).padding(10)
+					.justifyContent("flex-start").end()
+					// .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+					.build();
+
+			/* No need already exists THM_JUSTIFY_CONTENT_FLEX_START */
+
+			Theme THM_JUSTIFY_CONTENT_FLEX_START = Theme.builder("THM_JUSTIFY_CONTENT_FLEX_START").addAttribute().justifyContent("flex-start")
+					.end().build();
+
+			/* Already exist THM_SCROLL_VERTICAL */
+			Theme THM_SCROLL_VERTICAL = Theme.builder("THM_SCROLL_VERTICAL").addAttribute().overflowY("auto").end()
+					.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+			
+			Frame3 FRM_PERSON_DETAIL= getTimeLineFrame("FRM_TIMELINE", rules.getUser().getCode());
+	
+			Frame3 FRM_DETAIL_VIEW_BODY = Frame3.builder("FRM_DETAIL_VIEW_BODY")
+					.addTheme(THM_SCROLL_VERTICAL, ThemePosition.WRAPPER).end()
+					.addTheme(THM_DETAIL_VIEW_BODY, ThemePosition.WRAPPER).end()
+					.addTheme(THM_JUSTIFY_CONTENT_FLEX_START, ThemePosition.CENTRE).end()
+					.addFrame(FRM_PERSON_DETAIL, FramePosition.CENTRE).end()					
+					.build();
+			
+			Frame3 FRM_ROOT = Frame3.builder("FRM_ROOT")
+					.addFrame(FRM_DETAIL_VIEW_BODY).end().build();
+	
+			/* end */
+			Set<QDataAskMessage> set = new HashSet<QDataAskMessage>();
+
+			Map<String, ContextList> contextListMap = new HashMap<String, ContextList>();
+
+			Map<String, QDataAskMessage> virtualAskMap = new HashMap<String, QDataAskMessage>();
+			//virtualAskMap.put(askList[0].getQuestionCode(), new QDataAskMessage(askList[0]));
+			
+			QDataBaseEntityMessage msgg = new QDataBaseEntityMessage(rules.getUser());
+			msgg.setToken(userToken.getToken());
+			msgg.setReplace(true);
+
+			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msgg));
+
+			QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_ROOT, serviceToken, set, contextListMap,virtualAskMap);
+	
+			msg.setToken(userToken.getToken());
+			msg.setReplace(true);
+			
+			/* send message */
+			System.out.println("Sending Asks");
+			for (QDataAskMessage item : set) {
+					
+				item.setToken(userToken.getToken());
+				
+				
+				String json = JsonUtils.toJson(item);
+				VertxUtils.writeMsg("webcmds", json);
+
+			}
+
+			/* we publish the virtual ask with child asks */
+
+			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public Frame3 getTimeLineFrame(String name, String target) {
+
+		//THM_DETAIL_VIEW_CARD_WRAPPER
+		Theme THM_CONTEXT_SUMMARY = Theme.builder("THM_CONTEXT_SUMMARY").addAttribute().backgroundColor("#faf9fa")
+				.justifyContent("flex-start")
+				.flexShrink(0).flexBasis("auto").flexGrow(0)
+				.height("initial")
+				.marginBottom(20).padding(10).maxWidth(700).end()
+				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+		//THM_DETAIL_VIEW_CARD_CONTENT
+		Theme THM_CONTEXT_SUMMARY_CONTENT_FRAME = Theme.builder("THM_CONTEXT_SUMMARY_CONTENT_FRAME").addAttribute()
+				.width("100%").paddingLeft(10).end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
+				.end().build();
+
+		try {
+
+			/* ******end******* */
+			Frame3 FRM_TIMELINE = Frame3.builder(name)
+					.addTheme(THM_CONTEXT_SUMMARY, ThemePosition.WRAPPER).end()
+					.addTheme(THM_CONTEXT_SUMMARY_CONTENT_FRAME, ThemePosition.CENTRE).end()
+					.addTheme(THM_SHADOW, ThemePosition.WRAPPER).end()						
+					.build();
+
+			return FRM_TIMELINE;
+
+		} catch (Exception e) {
+			System.out.println(e);
+			return null;
+		}
+
+	}
+	
+
+	//@Test
 	public void v7DetailsView() {
 
 		initItem();
@@ -177,8 +326,18 @@ public class SafalTest extends GennyJbpmBaseTest {
 			
 			Frame3 FRM_PERSON_DETAIL= getDetailFrame("FRM_PERSON_DETAIL", rules.getUser().getCode(),"QUE_TEST_PERSON_DETAIL_GRP");
 		
-			Frame3 FRM_PERSON_DOCUMENTS = getDetailFrame("FRM_PERSON_DOCUMENTS", rules.getUser().getCode(),"QUE_TEST_PERSON_DOC_GRP");
+			//Frame3 FRM_PERSON_DOCUMENTS = getDetailFrame("FRM_PERSON_DOCUMENTS", rules.getUser().getCode(),"QUE_TEST_PERSON_DOC_GRP");
+			Frame3 FRM_PERSON_DOCUMENTS = Frame3.clone(FRM_PERSON_DETAIL);
+			FRM_PERSON_DOCUMENTS.setCode("FRM_PERSON_DOCUMENTS");
+			FRM_PERSON_DOCUMENTS.setQuestionCode("QUE_TEST_PERSON_DOC_GRP");
+			FRM_PERSON_DOCUMENTS.getQuestionGroup().setCode("QUE_TEST_PERSON_DOC_GRP");
+					
+			System.out.println("Copying the frames");
+			Frame3 ss = Frame3.clone(FRM_PERSON_DOCUMENTS);
 			
+			ss.setCode("HELLO");
+			System.out.println("Copied From " + FRM_PERSON_DOCUMENTS.getCode());
+			System.out.println("Copied to" + ss.getCode());
 			
 			Frame3 FRM_DETAIL_VIEW_BODY = Frame3.builder("FRM_DETAIL_VIEW_BODY")
 					.addTheme(THM_SCROLL_VERTICAL, ThemePosition.WRAPPER).end()
@@ -189,14 +348,10 @@ public class SafalTest extends GennyJbpmBaseTest {
 					.addFrame(FRM_PERSON_DOCUMENTS, FramePosition.CENTRE).end()
 					.build();
 			
-			System.out.println("Copygin the frames");
-			
-		
-			
-			Frame3 FRM_ROOT = Frame3.builder("FRM_CONTENT")
+			Frame3 FRM_ROOT = Frame3.builder("FRM_ROOT")
 
 					.addFrame(FRM_DETAIL_VIEW_BODY).end().build();
-
+	
 			/* end */
 			Set<QDataAskMessage> set = new HashSet<QDataAskMessage>();
 
@@ -206,25 +361,25 @@ public class SafalTest extends GennyJbpmBaseTest {
 			virtualAskMap.put(askList[0].getQuestionCode(), new QDataAskMessage(askList[0]));
 			virtualAskMap.put(askList[1].getQuestionCode(), new QDataAskMessage(askList[1]));
 			virtualAskMap.put(askList[2].getQuestionCode(), new QDataAskMessage(askList[2]));
-
-
+			
 			QDataBaseEntityMessage msgg = new QDataBaseEntityMessage(rules.getUser());
 			msgg.setToken(userToken.getToken());
 			msgg.setReplace(true);
 
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msgg));
 
-			QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_ROOT, serviceToken, set, contextListMap,
-					virtualAskMap);
-
+			QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_ROOT, serviceToken, set, contextListMap,virtualAskMap);
+	
 			msg.setToken(userToken.getToken());
 			msg.setReplace(true);
-
+			
 			/* send message */
 			System.out.println("Sending Asks");
 			for (QDataAskMessage item : set) {
-
+					
 				item.setToken(userToken.getToken());
+				
+				
 				String json = JsonUtils.toJson(item);
 				VertxUtils.writeMsg("webcmds", json);
 
@@ -244,6 +399,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 	public Frame3 getTopPicture(String name, String target) {
 
 		try {
+			
 			Validation validation = new Validation("VLD_IMAGE_URL", "Text", ".*");
 			ValidationList validationsList = new ValidationList();
 			List<Validation> validations = new ArrayList();
@@ -275,7 +431,8 @@ public class SafalTest extends GennyJbpmBaseTest {
 					.end()
 					
 					.build();
-
+			
+			
 			
 			return FRM_PROFILE_PICTURE_GRP;
 		} catch (Exception e) {
