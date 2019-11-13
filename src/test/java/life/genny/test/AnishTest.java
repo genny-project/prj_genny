@@ -59,7 +59,12 @@ public class AnishTest extends GennyJbpmBaseTest {
         public AnishTest() {
                 super(false);
         }
-      // @Test
+        
+        public void cacheProcessView() {
+
+        }
+        
+        // @Test
         public void testEmptyProcessView() {
 
                 QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -68,14 +73,14 @@ public class AnishTest extends GennyJbpmBaseTest {
                 BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
                 TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
 
-                try {
-	                	/* list to collect baseentity */
-	                	List<BaseEntity> beList = new ArrayList<BaseEntity>();
-	                	
-	                	/* list to collect the asks  */
-	                	Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+               // try {
+                        /* list to collect baseentity */
+                        List<BaseEntity> beList = new ArrayList<BaseEntity>();
+                        
+                        /* list to collect the asks  */
+                        Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
 
-	                	// get the list of bucket searchBEs from the cache
+                        // get the list of bucket searchBEs from the cache
                         List<SearchEntity> searchBeList = getBucketSearchBeListFromCache();
                         System.out.println("size" + searchBeList.size());
                         
@@ -87,7 +92,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                         
 
                         /* get the templat ask for card */
-                        Ask templateAsk = getCardTemplate(serviceToken, rules);
+                        Ask templateAsk = tableUtils.getCardTemplate(serviceToken, rules);
 
                         /* get the themes from cache */
                         Theme THM_BACKGROUND_NONE = VertxUtils.getObject(serviceToken.getRealm(), "",
@@ -221,13 +226,13 @@ public class AnishTest extends GennyJbpmBaseTest {
                                         beList.toArray(new BaseEntity[beList.size()]));
                         rules.publishCmd(appMsg);
 
-                } catch (Exception e) {
-                        System.out.println("Error " + e.getLocalizedMessage());
-                }
+//                } catch (Exception e) {
+//                        System.out.println("Error " + e.getLocalizedMessage());
+//                }
 
         }
         
-        @Test
+       // @Test
         public void updateCards(){
         	QRules rules = GennyJbpmBaseTest.setupLocalService();
         	GennyToken userToken = new GennyToken("userToken", rules.getToken());
@@ -245,7 +250,7 @@ public class AnishTest extends GennyJbpmBaseTest {
         	List<SearchEntity> searchBeList = getBucketSearchBeListFromCache();
 
         	/* get the templat ask for card */
-        	Ask templateAsk = getCardTemplate(serviceToken, rules);
+        	Ask templateAsk = tableUtils.getCardTemplate(serviceToken, rules);
 
         	/* list to collect the asks  */
         	Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
@@ -304,7 +309,7 @@ public class AnishTest extends GennyJbpmBaseTest {
         }
 
         
-        //@Test
+        @Test
         public void testProcessView() {
 
                 QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -328,7 +333,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                         Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
 
                         /* get the templat ask for card */
-                        Ask templateAsk = getCardTemplate(serviceToken, rules);
+                        Ask templateAsk = tableUtils.getCardTemplate(serviceToken, rules);
 
                         /* get the themes from cache */
                         Theme THM_BACKGROUND_NONE = VertxUtils.getObject(serviceToken.getRealm(), "",
@@ -712,18 +717,20 @@ public class AnishTest extends GennyJbpmBaseTest {
 
                         List<Ask> attributeList = new ArrayList<Ask>(Arrays.asList(attributeArr));
 
-                        Ask[] cardStatusChildAsks = { attributeList.get(0) };
-                        cardStatusAsk.setChildAsks(cardStatusChildAsks);
+                        Ask[] cardStatusChildAsks = { attributeList.get(0) };                        cardStatusAsk.setChildAsks(cardStatusChildAsks);
 
                         Ask[] cardLeftChildAsks = { attributeList.get(1) };
+                        cardLeftAsk.setReadonly(true);
                         cardLeftAsk.setChildAsks(cardLeftChildAsks);
 
                         Ask[] cardCentreChildAsks = { attributeList.get(2), attributeList.get(3), attributeList.get(4),
                                         attributeList.get(5) };
+                        cardCentreAsk.setReadonly(true);
                         cardCentreAsk.setChildAsks(cardCentreChildAsks);
 
                         Ask[] cardBottomChildAsks = { attributeList.get(6), attributeList.get(7),
                                         attributeList.get(8) };
+                        cardBottomAsk.setReadonly(true);
                         cardBottomAsk.setChildAsks(cardBottomChildAsks);
 
                         // we create a new ask with all the new groups
@@ -731,6 +738,8 @@ public class AnishTest extends GennyJbpmBaseTest {
 
                         // we set the themes from cardAsk group to the the appAsk
                         app.setContextList(contextList);
+                        app.setReadonly(true);
+
 
                 }
 
