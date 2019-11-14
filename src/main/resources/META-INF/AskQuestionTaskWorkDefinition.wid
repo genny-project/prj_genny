@@ -11,7 +11,9 @@ import life.genny.model.OutputParam;
     "parameters" : [     
        "userToken"  : new GennyToken(),
        "questionCode"  :  new StringDataType(),
-       "callingWorkflow"  :  new StringDataType()
+       "callingWorkflow"  :  new StringDataType(),
+       "formCode"  :  new StringDataType(),
+       "targetCode"  :  new StringDataType()
       ],
       "results" : [
         "Result" : new ObjectDataType(),
