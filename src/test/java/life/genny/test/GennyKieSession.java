@@ -111,6 +111,7 @@ import life.genny.qwanda.validation.Validation;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.rules.GennyUsersCallback;
+import life.genny.rules.RulesLoader;
 import life.genny.rules.listeners.GennyAgendaEventListener;
 import life.genny.rules.listeners.JbpmInitListener;
 import life.genny.rules.listeners.NodeStatusLog;
@@ -562,8 +563,8 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 				}
 	        }
 	        RuntimeEnvironment env = envBuilder.get();
-
-			createRuntimeManager(Strategy.SINGLETON, resources, env, uniqueRuntimeStr);
+	     
+	        RulesLoader.runtimeManager =  createRuntimeManager(Strategy.SINGLETON, resources, env, uniqueRuntimeStr);
 			
 		} else {
 			System.out.println("USINGJMS");
@@ -596,7 +597,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	        RuntimeEnvironment env = envBuilder.get();
 	        
 
-			createRuntimeManager(Strategy.SINGLETON, resources, env, uniqueRuntimeStr);
+			RulesLoader.runtimeManager = createRuntimeManager(Strategy.SINGLETON, resources, env, uniqueRuntimeStr);
 
 		}
 
@@ -655,6 +656,9 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		this.setupAnswers();
 		this.userToken = GennyJbpmBaseTest.createGennyToken(serviceToken.getRealm(), "user1", "Barry Allan", "user");
 
+		// Hack
+		RulesLoader.taskServiceMap.put(serviceToken.getRealm(), this.getTaskService());
+		
 		System.out.println("Completed Setup");
 	}
 
