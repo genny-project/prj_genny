@@ -51,6 +51,8 @@
   <bpmn2:itemDefinition id="ItemDefinition_21" isCollection="false" structureRef="org.kie.internal.runtime.manager.context.EmptyContext"/>
   <bpmn2:itemDefinition id="ItemDefinition_23" isCollection="false" structureRef="org.kie.internal.task.api.InternalTaskService"/>
   <bpmn2:itemDefinition id="ItemDefinition_26" isCollection="false" structureRef="org.jbpm.runtime.manager.impl.task.SynchronizedTaskService"/>
+  <bpmn2:itemDefinition id="ItemDefinition_18" isCollection="false" structureRef="java.util.Map.Entry"/>
+  <bpmn2:itemDefinition id="ItemDefinition_20" isCollection="false" structureRef="java.util.Map"/>
   <bpmn2:signal id="Signal_2" name="event"/>
   <bpmn2:signal id="Signal_3" name="data"/>
   <bpmn2:signal id="Signal_4" name="newSession"/>
@@ -97,6 +99,8 @@
       <tns:import name="org.kie.internal.runtime.manager.context.EmptyContext"/>
       <tns:import name="org.kie.internal.task.api.InternalTaskService"/>
       <tns:import name="org.jbpm.runtime.manager.impl.task.SynchronizedTaskService"/>
+      <tns:import name="java.util.Map"/>
+      <tns:import name="java.util.Map.Entry"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_1329" name="message"/>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_174" name="userToken"/>
@@ -142,14 +146,19 @@ String realm = sessionFacts2.getUserToken().getRealm();
 String userCode = sessionFacts2.getUserToken().getUserCode();
 System.out.println(&quot;closeTask: realm = &quot;+realm);
 System.out.println(&quot;closeTask: KieSession id = &quot;+kieSession.getId()); 
-/*
+
 Map&lt;String, Object> results = (Map&lt;String,Object>)sessionFacts2.getMessage();
+if (results==null) {
+   System.out.println(&quot;Results Map is null&quot;);
+} else {
 Long taskId = (Long)results.get(&quot;taskid&quot;);
+System.out.println(&quot;TaskId = &quot;+taskId);
 RuntimeEngine runtimeEngine = RulesLoader.runtimeManager.getRuntimeEngine(EmptyContext.get());
-SynchronizedTaskService taskServiceSynced = new SynchronizedTaskService(kSession,(InternalTaskService) runtimeEngine.getTaskService());
-taskServiceSynced.complete(iTask.getId(), realm + &quot;+&quot; + userCode, results);
+SynchronizedTaskService taskServiceSynced = new SynchronizedTaskService(kieSession,(InternalTaskService) runtimeEngine.getTaskService());
+taskServiceSynced.complete(taskId, realm + &quot;+&quot; + userCode, results);
 RulesLoader.runtimeManager.disposeRuntimeEngine(runtimeEngine);
-*/</bpmn2:script>
+}
+</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_21" tns:priority="1" sourceRef="_1" targetRef="ScriptTask_4"/>
     <bpmn2:sequenceFlow id="SequenceFlow_33" tns:priority="1" sourceRef="ScriptTask_4" targetRef="EndEvent_8"/>
@@ -170,7 +179,7 @@ RulesLoader.runtimeManager.disposeRuntimeEngine(runtimeEngine);
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_4" bpmnElement="ScriptTask_4" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="210.0" y="292.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_1">
           <dc:Bounds height="11.0" width="44.0" x="243.0" y="311.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -178,13 +187,13 @@ RulesLoader.runtimeManager.disposeRuntimeEngine(runtimeEngine);
         <di:waypoint xsi:type="dc:Point" x="101.0" y="317.0"/>
         <di:waypoint xsi:type="dc:Point" x="155.0" y="317.0"/>
         <di:waypoint xsi:type="dc:Point" x="210.0" y="317.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_3"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_33" bpmnElement="SequenceFlow_33" sourceElement="BPMNShape_ScriptTask_4" targetElement="BPMNShape_EndEvent_8">
         <di:waypoint xsi:type="dc:Point" x="320.0" y="317.0"/>
         <di:waypoint xsi:type="dc:Point" x="370.0" y="317.0"/>
         <di:waypoint xsi:type="dc:Point" x="421.0" y="317.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_4"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">

@@ -1156,15 +1156,17 @@ if (output.getTypeOfResult().equals(&quot;ERROR&quot;)) {
           <bpmn2:incoming>SequenceFlow_35</bpmn2:incoming>
           <bpmn2:outgoing>SequenceFlow_25</bpmn2:outgoing>
           <bpmn2:outgoing>SequenceFlow_31</bpmn2:outgoing>
+          <bpmn2:outgoing>SequenceFlow_21</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
         <bpmn2:exclusiveGateway id="ExclusiveGateway_8" gatewayDirection="Converging">
           <bpmn2:incoming>SequenceFlow_15</bpmn2:incoming>
           <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
+          <bpmn2:incoming>SequenceFlow_21</bpmn2:incoming>
           <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
         <bpmn2:sequenceFlow id="SequenceFlow_25" tns:priority="1" name="AUTH_INIT" sourceRef="ExclusiveGateway_7" targetRef="CallActivity_6"/>
         <bpmn2:sequenceFlow id="SequenceFlow_31" tns:priority="1" name="NOT AUTH_INIT" sourceRef="ExclusiveGateway_7" targetRef="ScriptTask_10">
-          <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_36" language="http://www.java.com/java">return (!message.getData().getCode().equals(&quot;AUTH_INIT&quot;));</bpmn2:conditionExpression>
+          <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_36" language="http://www.java.com/java">return ((!message.getData().getCode().equals(&quot;AUTH_INIT&quot;)) &amp;&amp; (!output.getTypeOfResult().equals(&quot;NONE&quot;)));</bpmn2:conditionExpression>
         </bpmn2:sequenceFlow>
         <bpmn2:scriptTask id="ScriptTask_10" name="Skip Auth Init&#xA;" scriptFormat="http://www.java.com/java">
           <bpmn2:extensionElements>
@@ -1188,20 +1190,21 @@ if (output.getTypeOfResult().equals(&quot;ERROR&quot;)) {
           <bpmn2:script>System.out.println(&quot;userSession: Show Page Handler - Update DOM&quot;);
 SessionFacts sessionFacts2 = (SessionFacts)sessionFacts;
 output = (OutputParam)(sessionFacts2.getMessage());
-System.out.println(&quot;userSession: Show Page Handler - Update DOM - sessionFacts2 created&quot;);
 if (dom == null) {	
 	dom = new OutputParamTreeSet(&quot;FRM_APP&quot;);
 	kcontext.setVariable(&quot;dom&quot;,dom);
 }
 if (output == null) {
-  System.out.println(&quot;userSession: ShowPageHandler - Updste DOM - output is null&quot;);
-} 
+  System.out.println(&quot;userSession: ShowPageHandler - Update DOM - output is null&quot;);
+}  else {
+   kcontext.setVariable(&quot;output&quot;,output);
+}
 
 if (output.getTypeOfResult().equals(&quot;NONE&quot;)) {
 
 } else {
 
-kcontext.setVariable(&quot;output&quot;,output);
+
 System.out.println(&quot;userSession:  Show Page Handler - incoming output &quot;+output+&quot;:&quot;+(message.getData().getCode().equals(&quot;AUTH_INIT&quot;)?&quot;AUTH_INIT&quot;:&quot;&quot;));
 dom.add(output);
 kcontext.setVariable(&quot;dom&quot;,dom);
@@ -1257,6 +1260,9 @@ System.out.println(&quot;KieSession id = &quot;+kieSession.getId());*/
         </bpmn2:task>
         <bpmn2:sequenceFlow id="SequenceFlow_4" tns:priority="1" sourceRef="CallActivity_6" targetRef="Task_6"/>
         <bpmn2:sequenceFlow id="SequenceFlow_8" tns:priority="1" sourceRef="Task_6" targetRef="ExclusiveGateway_8"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_21" tns:priority="1" name="Skip" sourceRef="ExclusiveGateway_7" targetRef="ExclusiveGateway_8">
+          <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_22" language="http://www.java.com/java">return (output.getTypeOfResult().equals(&quot;NONE&quot;));</bpmn2:conditionExpression>
+        </bpmn2:sequenceFlow>
       </bpmn2:subProcess>
       <bpmn2:scriptTask id="ScriptTask_2" name="Get User" scriptFormat="http://www.java.com/java">
         <bpmn2:extensionElements>
@@ -1609,9 +1615,9 @@ System.out.println(&quot;userSession: **************************End Session ****
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_CallActivity_6" bpmnElement="CallActivity_6" isExpanded="true">
-        <dc:Bounds height="50.0" width="72.0" x="1141.0" y="296.0"/>
+        <dc:Bounds height="50.0" width="72.0" x="1170.0" y="385.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_3">
-          <dc:Bounds height="11.0" width="34.0" x="1160.0" y="315.0"/>
+          <dc:Bounds height="11.0" width="34.0" x="1189.0" y="404.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_3" bpmnElement="StartEvent_2">
@@ -1669,9 +1675,9 @@ System.out.println(&quot;userSession: **************************End Session ****
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_13" bpmnElement="EndEvent_13">
-        <dc:Bounds height="36.0" width="36.0" x="1541.0" y="303.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="1541.0" y="392.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_28">
-          <dc:Bounds height="22.0" width="60.0" x="1529.0" y="339.0"/>
+          <dc:Bounds height="22.0" width="60.0" x="1529.0" y="428.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_16" bpmnElement="Task_16" isExpanded="true">
@@ -1717,9 +1723,9 @@ System.out.println(&quot;userSession: **************************End Session ****
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
-        <dc:Bounds height="36.0" width="36.0" x="915.0" y="303.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="920.0" y="392.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_39">
-          <dc:Bounds height="11.0" width="38.0" x="914.0" y="339.0"/>
+          <dc:Bounds height="11.0" width="38.0" x="919.0" y="428.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_1" bpmnElement="ExclusiveGateway_1" isMarkerVisible="true">
@@ -1819,25 +1825,25 @@ System.out.println(&quot;userSession: **************************End Session ****
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_7" bpmnElement="ExclusiveGateway_7" isMarkerVisible="true">
-        <dc:Bounds height="50.0" width="50.0" x="1051.0" y="296.0"/>
+        <dc:Bounds height="50.0" width="50.0" x="1075.0" y="385.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_46">
-          <dc:Bounds height="11.0" width="21.0" x="1065.0" y="346.0"/>
+          <dc:Bounds height="11.0" width="21.0" x="1089.0" y="435.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_8" bpmnElement="ExclusiveGateway_8" isMarkerVisible="true">
-        <dc:Bounds height="50.0" width="50.0" x="1426.0" y="296.0"/>
+        <dc:Bounds height="50.0" width="50.0" x="1430.0" y="385.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_50"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_10" bpmnElement="ScriptTask_10" isExpanded="true">
-        <dc:Bounds height="50.0" width="71.0" x="1141.0" y="490.0"/>
+        <dc:Bounds height="50.0" width="71.0" x="1170.0" y="490.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_51">
-          <dc:Bounds height="11.0" width="53.0" x="1150.0" y="509.0"/>
+          <dc:Bounds height="11.0" width="53.0" x="1179.0" y="509.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_11" bpmnElement="ScriptTask_11" isExpanded="true">
-        <dc:Bounds height="50.0" width="69.0" x="969.0" y="296.0"/>
+        <dc:Bounds height="50.0" width="69.0" x="977.0" y="385.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_52">
-          <dc:Bounds height="11.0" width="53.0" x="977.0" y="315.0"/>
+          <dc:Bounds height="11.0" width="53.0" x="985.0" y="404.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_BoundaryEvent_3" bpmnElement="BoundaryEvent_3">
@@ -1847,9 +1853,9 @@ System.out.println(&quot;userSession: **************************End Session ****
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_6" bpmnElement="Task_6" isExpanded="true">
-        <dc:Bounds height="50.0" width="82.0" x="1285.0" y="296.0"/>
+        <dc:Bounds height="50.0" width="82.0" x="1285.0" y="385.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_8">
-          <dc:Bounds height="11.0" width="54.0" x="1299.0" y="315.0"/>
+          <dc:Bounds height="11.0" width="54.0" x="1299.0" y="404.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_3" bpmnElement="Task_3" isExpanded="true">
@@ -1898,25 +1904,25 @@ System.out.println(&quot;userSession: **************************End Session ****
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_7" bpmnElement="Task_7" isExpanded="true">
         <dc:Bounds height="50.0" width="79.0" x="650.0" y="218.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_18">
           <dc:Bounds height="11.0" width="47.0" x="666.0" y="237.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_8" bpmnElement="Task_8" isExpanded="true">
         <dc:Bounds height="50.0" width="79.0" x="689.0" y="492.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_19">
           <dc:Bounds height="11.0" width="47.0" x="705.0" y="511.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_9" bpmnElement="Task_9" isExpanded="true">
         <dc:Bounds height="50.0" width="79.0" x="659.0" y="716.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_20">
           <dc:Bounds height="11.0" width="47.0" x="675.0" y="735.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_11" bpmnElement="Task_11" isExpanded="true">
         <dc:Bounds height="50.0" width="79.0" x="840.0" y="57.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_21">
           <dc:Bounds height="11.0" width="47.0" x="856.0" y="76.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -2077,49 +2083,49 @@ System.out.println(&quot;userSession: **************************End Session ****
         <bpmndi:BPMNLabel id="BPMNLabel_68"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_25" bpmnElement="SequenceFlow_25" sourceElement="BPMNShape_ExclusiveGateway_7" targetElement="BPMNShape_CallActivity_6">
-        <di:waypoint xsi:type="dc:Point" x="1101.0" y="321.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1121.0" y="321.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1141.0" y="321.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1125.0" y="410.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1147.0" y="410.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1170.0" y="410.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_78">
-          <dc:Bounds height="11.0" width="47.0" x="1098.0" y="322.0"/>
+          <dc:Bounds height="11.0" width="47.0" x="1125.0" y="411.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_31" bpmnElement="SequenceFlow_31" sourceElement="BPMNShape_ExclusiveGateway_7" targetElement="BPMNShape_ScriptTask_10">
-        <di:waypoint xsi:type="dc:Point" x="1076.0" y="346.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1076.0" y="515.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1141.0" y="515.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1100.0" y="435.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1100.0" y="515.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1170.0" y="515.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_82">
-          <dc:Bounds height="11.0" width="68.0" x="1043.0" y="464.0"/>
+          <dc:Bounds height="11.0" width="68.0" x="1067.0" y="511.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_34" bpmnElement="SequenceFlow_34" sourceElement="BPMNShape_StartEvent_2" targetElement="BPMNShape_ScriptTask_11">
-        <di:waypoint xsi:type="dc:Point" x="951.0" y="321.0"/>
-        <di:waypoint xsi:type="dc:Point" x="960.0" y="321.0"/>
-        <di:waypoint xsi:type="dc:Point" x="969.0" y="321.0"/>
+        <di:waypoint xsi:type="dc:Point" x="956.0" y="410.0"/>
+        <di:waypoint xsi:type="dc:Point" x="966.0" y="410.0"/>
+        <di:waypoint xsi:type="dc:Point" x="977.0" y="410.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_85"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_35" bpmnElement="SequenceFlow_35" sourceElement="BPMNShape_ScriptTask_11" targetElement="BPMNShape_ExclusiveGateway_7">
-        <di:waypoint xsi:type="dc:Point" x="1038.0" y="321.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1044.0" y="321.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1051.0" y="321.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1046.0" y="410.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1060.0" y="410.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1075.0" y="410.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_86"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_12" bpmnElement="SequenceFlow_12" sourceElement="BPMNShape_ExclusiveGateway_8" targetElement="BPMNShape_EndEvent_13">
-        <di:waypoint xsi:type="dc:Point" x="1476.0" y="321.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1508.0" y="321.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1541.0" y="321.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1480.0" y="410.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1510.0" y="410.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1541.0" y="410.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_83"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_14" bpmnElement="SequenceFlow_14" sourceElement="BPMNShape_ScriptTask_10" targetElement="BPMNShape_Task_16">
-        <di:waypoint xsi:type="dc:Point" x="1212.0" y="515.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1249.0" y="515.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1241.0" y="515.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1263.0" y="515.0"/>
         <di:waypoint xsi:type="dc:Point" x="1286.0" y="515.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_84"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_15" bpmnElement="SequenceFlow_15" sourceElement="BPMNShape_Task_16" targetElement="BPMNShape_ExclusiveGateway_8">
         <di:waypoint xsi:type="dc:Point" x="1365.0" y="515.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1451.0" y="515.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1451.0" y="346.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1455.0" y="515.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1455.0" y="435.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_87"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_22" bpmnElement="SequenceFlow_22" sourceElement="BPMNShape_ScriptTask_3" targetElement="BPMNShape_CallActivity_3">
@@ -2129,15 +2135,15 @@ System.out.println(&quot;userSession: **************************End Session ****
         <bpmndi:BPMNLabel id="BPMNLabel_73"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="SequenceFlow_4" sourceElement="BPMNShape_CallActivity_6" targetElement="BPMNShape_Task_6">
-        <di:waypoint xsi:type="dc:Point" x="1213.0" y="321.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1249.0" y="321.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1285.0" y="321.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1242.0" y="410.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1263.0" y="410.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1285.0" y="410.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_56"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_8" bpmnElement="SequenceFlow_8" sourceElement="BPMNShape_Task_6" targetElement="BPMNShape_ExclusiveGateway_8">
-        <di:waypoint xsi:type="dc:Point" x="1367.0" y="321.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1396.0" y="321.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1426.0" y="321.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1367.0" y="410.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1398.0" y="410.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1430.0" y="410.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_58"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_ExclusiveGateway_5" targetElement="BPMNShape_ExclusiveGateway_2">
@@ -2265,6 +2271,15 @@ System.out.println(&quot;userSession: **************************End Session ****
         <di:waypoint xsi:type="dc:Point" x="636.0" y="400.0"/>
         <di:waypoint xsi:type="dc:Point" x="666.0" y="400.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_102"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_21" bpmnElement="SequenceFlow_21" sourceElement="BPMNShape_ExclusiveGateway_7" targetElement="BPMNShape_ExclusiveGateway_8">
+        <di:waypoint xsi:type="dc:Point" x="1100.0" y="385.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1100.0" y="322.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1455.0" y="322.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1455.0" y="385.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="11.0" width="18.0" x="1270.0" y="323.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
