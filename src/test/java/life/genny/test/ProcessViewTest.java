@@ -56,11 +56,13 @@ public class ProcessViewTest extends GennyJbpmBaseTest {
 
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getCanonicalName());
 
+    
     public ProcessViewTest() {
         super(false);
     }
 
-    @Test
+//  @Test
+//    @Test
     public void testProcessView() {
 
         QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -103,7 +105,12 @@ public class ProcessViewTest extends GennyJbpmBaseTest {
                     "THM_JUSTIFY_CONTENT_FLEX_START", Theme.class, serviceToken.getToken());
             Theme THM_DISPLAY_HORIZONTAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_HORIZONTAL",
                     Theme.class, serviceToken.getToken());
-
+            
+            // grab the PER_SERVICE user from db and add it to beList
+            BaseEntity PER_SERVICE = beUtils.getBaseEntityByCode("PER_SERVICE");
+            beList.add(PER_SERVICE);
+            
+            
             /* loop through the searchList */
             for (SearchEntity searchBe : searchBeList) {
 
@@ -399,7 +406,7 @@ public class ProcessViewTest extends GennyJbpmBaseTest {
 
     }
 
-    // @Test
+    @Test
     public void updateCards() {
         QRules rules = GennyJbpmBaseTest.setupLocalService();
         GennyToken userToken = new GennyToken("userToken", rules.getToken());
@@ -423,7 +430,7 @@ public class ProcessViewTest extends GennyJbpmBaseTest {
         Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
 
         try {
-
+        	
             /* loop through the searchList */
             for (SearchEntity searchBe : searchBeList) {
 
