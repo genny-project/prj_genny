@@ -32,9 +32,12 @@ rule "SBE_COMPANY_DETAIL_VIEW"
      	
          SearchEntity searchBE = new SearchEntity("SBE_COMPANY_DETAIL_VIEW", "Company Search")
 									/*.addFilter("PRI_CODE", SearchEntity.StringFilter.EQUAL, "CPY_OUTCOME_LIFE")*/
-									.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC).addColumn("PRI_EMAIL", "Email")
-									.addColumn("PRI_MOBILE", "LandLine").addColumn("PRI_ADDRESS_FULL", "Address")
-									.addColumn("PRI_ABN", "Company ABN").addColumn("PRI_ACN", "Company ACN").setPageStart(0)
+									.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
+									.addColumn("PRI_EMAIL", "Email")
+									.addColumn("PRI_MOBILE", "LandLine")
+									.addColumn("PRI_ADDRESS_FULL", "Address")
+									.addColumn("PRI_ABN", "Company ABN")
+									.addColumn("PRI_ACN", "Company ACN").setPageStart(0)
 									.setPageSize(10);
 									   	     
   	     searchBE.setRealm(serviceToken.getRealm());

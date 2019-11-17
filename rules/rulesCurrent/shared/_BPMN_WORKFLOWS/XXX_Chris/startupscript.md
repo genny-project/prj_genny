@@ -35,3 +35,26 @@
 
 9. Now you wait, this will take from about 20 - 45 mins. If you get lucky might be below 20 mins.
 
+
+
+alias _wr='./logs.sh wildfly-rulesservice'
+
+alias _q='./logs.sh qwanda-service'
+
+alias _i='ssh internmatch'
+
+alias _is='ssh internmatch-staging'
+
+alias _g='cd ~/projects/genny/genny-main'
+
+alias _cq='./stop.sh; ./cyrusFetch.sh; ./cyrusBuild.sh; ./run.sh dev1 up'
+
+alias _cf='./stop.sh; ./cyrusFetch.sh; ./cyrusBuild.sh; docker volume prune -f; docker system prune -f; ./run.sh dev1 up'
+
+alias _rw='./restart.sh wildfly-rulesservice'
+
+alias _r='./run.sh dev1 up'
+
+alias _s='./stop.sh'
+
+alias _d='docker ps'
