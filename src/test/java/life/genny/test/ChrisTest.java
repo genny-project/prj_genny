@@ -24,6 +24,7 @@ import org.apache.logging.log4j.Logger;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbpm.services.task.utils.TaskFluent;
 import org.jbpm.services.task.wih.NonManagedLocalHTWorkItemHandler;
+import org.jbpm.workflow.instance.WorkflowProcessInstance;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -76,7 +77,101 @@ public class ChrisTest {
 
 	}
 	
-	@Test
+	//@Test
+	public void many_LC_Test()
+	{
+		System.out.println("many_LC_Test");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (true) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+		} else {
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+		}
+
+		System.out.println("session     =" + userToken.getSessionCode());
+		System.out.println("userToken   =" + userToken.getToken());
+		//System.out.println("userToken2   =" + userToken2.getToken());
+		System.out.println("serviceToken=" + serviceToken.getToken());
+		
+        BaseEntity intern = new BaseEntity("PRI_INTERN");
+        BaseEntity internship = new BaseEntity("BE_INTERNSHIP");        
+        BaseEntity hostCompany = new BaseEntity("CPY_HOSTCOMPANY");
+
+        /*HashMap<String, BaseEntity> hashBeg = new HashMap<String, BaseEntity>();*/
+        HashMap<String, String> hashBeg = new HashMap<String, String>();
+        
+        hashBeg.put("begstatus", "DUDE");
+        
+        /*hashBeg.put("intern", intern);
+        hashBeg.put("internship", internship);
+        hashBeg.put("hostCompany", hostCompany);*/
+
+		SessionFacts initFacts = new SessionFacts(serviceToken, null, new QEventMessage("EVT_MSG", "INIT_STARTUP"));
+		QEventMessage authInitMsg = new QEventMessage("EVT_MSG", "AUTH_INIT"); authInitMsg.setToken(userToken.getToken());
+		QEventMessage msgLogout = new QEventMessage("EVT_MSG", "LOGOUT");msgLogout.setToken(userToken.getToken());
+
+
+		// NOW SET UP Some baseentitys
+		BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
+				StringUtils.capitaliseAllWords(serviceToken.getRealm()));
+		project.setRealm(serviceToken.getRealm());
+		VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
+				JsonUtils.toJson(project), serviceToken.getToken());
+		VertxUtils.writeCachedJson(realm,  ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(),JsonUtils.toJson(project), serviceToken.getToken());
+
+
+		GennyKieSession gks = null;
+
+		try {
+			gks = GennyKieSession
+					.builder(serviceToken,true)
+					
+// ADD THE JBPM WORKFLOWS HERE	
+					.addJbpm("startLC.bpmn")
+					.addJbpm("newHostCompanyLC.bpmn")
+					.addJbpm("newEduProLC.bpmn")
+					
+// ADD THE DROOLS RULES HERE
+//					.addDrl("MoveBucket")
+
+					.addToken(userToken)
+					.build();
+			
+			gks.start();
+
+			gks.startProcess("startLC");
+			
+//            gks.advanceSeconds(5, false);
+//            gks.injectSignal("dynamicControl", "FORWARD"); 			
+            gks.advanceSeconds(5, false);  
+            gks.advanceSeconds(5, false); 
+            gks.advanceSeconds(5, false);
+            gks.advanceSeconds(5, false);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
+		finally {
+			if (gks!=null) {
+				gks.close();
+			}
+		}
+	}
+	
+	//@Test
 	public void userTaskTest()
 	{
 		System.out.println("Process View Test");
@@ -166,31 +261,31 @@ public class ChrisTest {
 			gks.startProcess("dynamicCards");
 			
 
-            gks.advanceSeconds(1, false);
-            gks.injectSignal("dynamicStatus", "Reactivate");
+//            gks.advanceSeconds(1, false);
+//            gks.injectSignal("dynamicStatus", "Reactivate");
             gks.advanceSeconds(5, false);
             gks.injectSignal("dynamicControl", "FORWARD"); 			// Applied to Shortlist
             gks.advanceSeconds(5, false);
-            gks.injectSignal("dynamicControl", "FORWARD"); 			// Shortlist to Interview
-            gks.advanceSeconds(5, false);
+//            gks.injectSignal("dynamicControl", "FORWARD"); 			// Shortlist to Interview
+//            gks.advanceSeconds(5, false);
 ////            gks.injectSignal("status", "BACKWARD");		// Interview back to Shortlist 
 ////            gks.advanceSeconds(5, false);
 //            gks.injectSignal("appTarget", "FORWARD");		// Shortlist to Interview
 //            gks.advanceSeconds(5, false);
-            gks.injectSignal("dynamicControl", "FORWARD");			// Interview to Offered
-            gks.advanceSeconds(5, false);
-            gks.injectSignal("dynamicControl", "FORWARD");			// Offered to Place
-            gks.advanceSeconds(5, false);
+//            gks.injectSignal("dynamicControl", "FORWARD");			// Interview to Offered
+//            gks.advanceSeconds(5, false);
+//            gks.injectSignal("dynamicControl", "FORWARD");			// Offered to Place
+//            gks.advanceSeconds(5, false);
 //            gks.injectSignal("status", "FORWARD");		
 //            gks.advanceSeconds(1, false);
 //            gks.injectSignal("placedStatus", "Withdraw");
-            gks.advanceSeconds(5, false);
-            gks.injectSignal("placedControl", "FORWARD"); 			// Placed to Progress
+//            gks.advanceSeconds(5, false);
+//            gks.injectSignal("placedControl", "FORWARD"); 			// Placed to Progress
 //            gks.advanceSeconds(1, false);
 //            gks.injectSignal("progressStatus", "Onhold");
-            gks.advanceSeconds(5, false);
-            gks.injectSignal("progressControl", "FORWARD"); 		// Progress to Complete
-            gks.advanceSeconds(5, false);
+//            gks.advanceSeconds(5, false);
+//            gks.injectSignal("progressControl", "FORWARD"); 		// Progress to Complete
+//            gks.advanceSeconds(5, false);
             
             
 			/*
@@ -407,7 +502,7 @@ public class ChrisTest {
         
     }
 
-	//@Test
+	@Test
 	public void newUserTest() {
 		System.out.println("New User test");
 		GennyToken userToken = null;
@@ -438,6 +533,24 @@ public class ChrisTest {
 
 		QEventMessage authInitMsg1 = new QEventMessage("EVT_MSG", "AUTH_INIT");
 		authInitMsg1.setToken(userToken.getToken());
+		
+		QEventMessage createEduPro = new QEventMessage("EVT_MSG", "CREATE_EDU_PRO");
+	
+		QEventMessage createHostCpy = new QEventMessage("EVT_MSG", "CREATE_HOST_CPY");
+		
+		QEventMessage createAgency = new QEventMessage("EVT_MSG", "CREATE_AGENCY");
+		
+		QEventMessage createInternship = new QEventMessage("EVT_MSG", "CREATE_INTERNSHIP");
+		
+		QEventMessage createIntern = new QEventMessage("EVT_MSG", "CREATE_INTERN");
+		
+		QEventMessage createAgent = new QEventMessage("EVT_MSG", "CREATE_AGENT");
+		
+		QEventMessage createHCRep = new QEventMessage("EVT_MSG", "CREATE_HC_REP");
+		
+		QEventMessage createEPRep = new QEventMessage("EVT_MSG", "CREATE_EP_REP");
+		
+		
 //		QEventMessage authInitMsg2 = new QEventMessage("EVT_MSG", "AUTH_INIT");
 //		authInitMsg2.setToken(userToken2.getToken());
 //		QEventMessage msg1 = new QEventMessage("EVT_MSG", "INIT_1");
@@ -468,52 +581,64 @@ public class ChrisTest {
 		try {
 			gks = GennyKieSession
 					.builder(serviceToken, true)
+					
+// ADD THE JBPM WORKFLOWS HERE				
+					.addJbpm("InitialiseProject")
+					.addJbpm("Lifecycles")
+					.addJbpm("AuthInit")
+					.addJbpm("userSession.bpmn")
+					.addJbpm("userValidation.bpmn")
+					.addJbpm("userLifecycle.bpmn")
+					.addJbpm("auth_init.bpmn")
+					.addJbpm("newEduProLC.bpmn")
+					.addJbpm("newHostCompanyLC.bpmn")
+					.addJbpm("newAgencyLC.bpmn")
+					.addJbpm("newInternshipLC.bpmn")
+					
+							
+//ADD THE DROOLS RULES HERE
 					.addDrl("SignalProcessing")
 					.addDrl("DataProcessing")
 					.addDrl("EventProcessing")
 					.addDrl("InitialiseProject")
-					.addJbpm("InitialiseProject")
-					.addJbpm("Lifecycles")
 					.addDrl("AuthInit")
-					.addJbpm("AuthInit")
-//					.addJbpm("userSession.bpmn")
-//					.addJbpm("userValidation.bpmn")
-					.addJbpm("userLifecycle.bpmn")
-//					.addJbpm("userApplication.bpmn")
-					.addJbpm("auth_init.bpmn")
-					
-			
-					.addJbpm("notificationHub2.bpmn")
-					.addJbpm("baseEntityValidation.bpmn")
-					.addJbpm("dynamicCards.bpmn")
-					.addJbpm("placedCards.bpmn")
-					.addJbpm("progressCards.bpmn")
-					.addJbpm("userSession.bpmn")
-			
-//ADD THE DROOLS RULES HERE
-					.addDrl("MoveBucket")
-					.addDrl("CommonEnter")
-					.addDrl("SpecificEnter")
-					.addDrl("SpecificReminder")
-					.addDrl("Timer")
-
-					.addDrl("CardStatus")
 					
 					.addToken(userToken).build();
 			
-			
 			gks.start();
-//			gks.injectEvent(initMsg); // This should create a new process
+//			gks.injectEvent(initMsg);
 
-			gks.injectEvent(authInitMsg1); // This should create a new process
+//BEGIN THE SESSION
+			gks.injectEvent(authInitMsg1);
 			gks.advanceSeconds(5, false);
 
-//			gks.injectEvent(authInitMsg1); // This should attach to existing process
-//			gks.advanceSeconds(5, false);
+// SIMULATE FRONT END EVENTS 			
+			gks.injectEvent(createEduPro);
+			gks.advanceSeconds(5, false);
+			
+			gks.injectEvent(createHostCpy);
+			gks.advanceSeconds(5, false);
+			
+			gks.injectEvent(createAgency);
+			gks.advanceSeconds(5, false);
+			
+			gks.injectEvent(createInternship);
+			gks.advanceSeconds(5, false);
+			
+			gks.injectEvent(createIntern);
+			gks.advanceSeconds(5, false);
+			
+			gks.injectEvent(createAgent);
+			gks.advanceSeconds(5, false);
+			
+			gks.injectEvent(createHCRep);
+			gks.advanceSeconds(5, false);
+			
+			gks.injectEvent(createEPRep);
+			gks.advanceSeconds(5, false);
 
-//			gks.injectEvent(answerMsg); // This sends an answer to the first userSessio
-//			gks.advanceSeconds(5, false);
-//			gks.injectEvent(msgLogout1);
+// END SESSION			
+			gks.injectEvent(msgLogout1);
 		} catch (Exception e) {
 			e.printStackTrace();
 
