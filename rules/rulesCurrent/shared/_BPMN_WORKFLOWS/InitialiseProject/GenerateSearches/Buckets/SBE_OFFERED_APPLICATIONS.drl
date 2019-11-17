@@ -34,11 +34,14 @@ rule "SBE_OFFERED_APPLICATIONS"
                                 .addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
                                 .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
                                 .addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "OFFERED")
-                                .addColumn("PRI_STATUS_COLOR", "Status").addColumn("PRI_INTERN_IMAGE_URL", "Image")
+                                .addColumn("PRI_STATUS_COLOR", "Status")
+                                .addColumn("PRI_INTERN_IMAGE_URL", "Image")
                                 .addColumn("PRI_HOST_COMPANY_NAME", "Host Company")
-                                .addColumn("PRI_INTERNSHIP_TITLE", "Internship Title")
-                                .addColumn("PRI_INTERN_NAME", "Name").addColumn("PRI_EDU_PROVIDER_NAME", "Edu Provider")
-                                .addColumn("PRI_INTERN_EMAIL", "Email").addColumn("PRI_INTERN_MOBILE", "Mobile")
+                                .addColumn("PRI_STATUS", "Status")
+                                .addColumn("PRI_INTERN_NAME", "Name")
+                                .addColumn("PRI_EDU_PROVIDER_NAME", "Edu Provider")
+                                .addColumn("PRI_INTERN_EMAIL", "Email")
+                                .addColumn("PRI_INTERN_MOBILE", "Mobile")
                                 .addColumn("PRI_INTERN_STUDENT_ID", "Student ID").setPageStart(0).setPageSize(10);
 
 
