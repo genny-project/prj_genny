@@ -41,6 +41,7 @@ rule "PRI_MOBILE"
 				}
 			}
 			answer.setValue(phonenumber);
+			answer.setChangeEvent(false); /* no attribute change */
 			answersToSave.add(answer);
 
 /* Watch out TODO , this may override other answers */
