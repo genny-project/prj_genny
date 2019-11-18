@@ -235,7 +235,7 @@ public class AdamTest {
 			//	gks.injectEvent("msgLogout",newUser1A);
 			} catch (Exception e) {
 				e.printStackTrace();
-				
+			
 			}
 			finally {
 				if (gks!=null) {
