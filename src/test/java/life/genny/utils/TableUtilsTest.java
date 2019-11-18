@@ -62,9 +62,15 @@ public class TableUtilsTest {
 	static Integer MAX_SEARCH_BAR_TEXT_SIZE = 20;
 
 	BaseEntityUtils beUtils = null;
+	GennyToken serviceToken = null;
 
 	public TableUtilsTest(BaseEntityUtils beUtils) {
 		this.beUtils = beUtils;
+	}
+	
+	public TableUtilsTest(BaseEntityUtils beUtils, GennyToken serviceToken) {
+		this.beUtils = beUtils;
+		this.serviceToken = serviceToken;
 	}
 
 	public static void performSearch(GennyToken serviceToken, BaseEntityUtils beUtils, final String searchBarCode,
@@ -641,6 +647,50 @@ public class TableUtilsTest {
 		return ask;
 	}
 
+	public Ask createVirtualContext(Ask ask, String themeCode, ContextType linkCode, VisualControlType visualControlType, List<BaseEntity> themes) {
+			
+		return this.createVirtualContext(ask, themeCode, linkCode, visualControlType, 1.0, themes);
+	}
+	public Ask createVirtualContext(Ask ask, String themeCode, ContextType linkCode,
+			VisualControlType visualControlType, Double weight, List<BaseEntity> themes) {
+
+		/* get the theme from cache */
+		Theme theme = VertxUtils.getObject(serviceToken.getRealm(), "", themeCode,
+										Theme.class, serviceToken.getToken());
+		
+		if(theme != null){
+			/* add the themeBe to themeList */
+			themes.add(getThemeBe(theme));
+
+			List<Context> completeContext = new ArrayList<>();
+
+			Context context = new Context(linkCode, theme, visualControlType, weight);
+			completeContext.add(context);
+
+			ContextList contextList = ask.getContextList();
+			
+			if (contextList != null) { /*  if ask already has some context */
+				List<Context> contexts = contextList.getContexts();
+				if (contexts.isEmpty()) {
+					contexts = new ArrayList<>();
+					contexts.addAll(completeContext);
+				} else {
+					contexts.addAll(completeContext);
+				}
+				contextList = new ContextList(contexts);
+			} else { /*  if ask doesn't have some context */
+				List<Context> contexts = new ArrayList<>();
+				contexts.addAll(completeContext);
+				contextList = new ContextList(contexts);
+			}
+			ask.setContextList(contextList);
+
+		}else{
+			System.out.println(themeCode + " is not in cache!");
+		}
+		return ask;
+	}
+
 	private Ask getAskForTableHeaderSort(SearchEntity searchBe, String attributeCode, String attributeName,
 			Attribute eventAttribute, List<QDataBaseEntityMessage> themeMsgList) {
 
@@ -1039,22 +1089,7 @@ public class TableUtilsTest {
 		return askList;
 	}
 
-	public List<Ask> getBucketHeaderAsks(List<SearchEntity> searchBeList, GennyToken serviceToken) {
-
-		List<Ask> asks = new ArrayList<>();
-
-		if (searchBeList != null && searchBeList.size() > 0) {
-			for (SearchEntity searchBe : searchBeList) {
-				Ask bucketHeaderAsk = this.getBucketHeaderAsk(searchBe, serviceToken);
-				asks.add(bucketHeaderAsk);
-			}
-		}
-
-		return asks;
-
-	}
-
-	public Ask getBucketHeaderAsk(SearchEntity searchBe, GennyToken serviceToken) {
+	public Ask getBucketHeaderAsk(SearchEntity searchBe, Set<BaseEntity> beList, GennyToken serviceToken) {
 
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
 
@@ -1092,23 +1127,38 @@ public class TableUtilsTest {
 		BaseEntity ICN_SORT = beUtils.getBaseEntityByCode("ICN_SORT");
 
 		List<BaseEntity> themes = new ArrayList<>();
-		themes.add(THM_QUESTION_GRP_LABEL);
-		themes.add(getThemeBe(THM_DISPLAY_VERTICAL));
-		themes.add(getThemeBe(THM_WIDTH_100_PERCENT));
-		themes.add(getThemeBe(THM_BH_ROW_ONE_GRP_WRAPPER));
-		themes.add(getThemeBe(THM_BH_ROW_ONE_GRP_LABEL));
-		themes.add(getThemeBe(THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER));
-		themes.add(getThemeBe(THM_BH_ROW_ONE_VCL_INPUT));
-		themes.add(getThemeBe(THM_BH_ROW_TWO_VCL_WRAPPER));
-		themes.add(getThemeBe(THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER));
-		themes.add(getThemeBe(THM_BH_GROUP_WRAPPER));
-		themes.add(getThemeBe(THM_BH_ROW_TWO_INPUT_FIELD));
-		themes.add(ICN_SORT);
-		themes.add(getThemeBe(THM_ICON));
+		// themes.add(getThemeBe(THM_QUESTION_GRP_LABEL));
+		// themes.add(getThemeBe(THM_DISPLAY_VERTICAL));
+		// themes.add(getThemeBe(THM_WIDTH_100_PERCENT));
+		// themes.add(getThemeBe(THM_BH_ROW_ONE_GRP_WRAPPER));
+		// themes.add(getThemeBe(THM_BH_ROW_ONE_GRP_LABEL));
+		// themes.add(getThemeBe(THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER));
+		// themes.add(getThemeBe(THM_BH_ROW_ONE_VCL_INPUT));
+		// themes.add(getThemeBe(THM_BH_ROW_TWO_VCL_WRAPPER));
+		// themes.add(getThemeBe(THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER));
+		// themes.add(getThemeBe(THM_BH_GROUP_WRAPPER));
+		// themes.add(getThemeBe(THM_BH_ROW_TWO_INPUT_FIELD));
+		// themes.add(getThemeBe(THM_ICON));
+		// themes.add(ICN_SORT);
 
-		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(themes);
-		msg.setToken(beUtils.getGennyToken().getToken());
-		rules.publishCmd(msg);
+		beList.add(getThemeBe(THM_QUESTION_GRP_LABEL));
+		beList.add(getThemeBe(THM_DISPLAY_VERTICAL));
+		beList.add(getThemeBe(THM_WIDTH_100_PERCENT));
+		beList.add(getThemeBe(THM_BH_ROW_ONE_GRP_WRAPPER));
+		beList.add(getThemeBe(THM_BH_ROW_ONE_GRP_LABEL));
+		beList.add(getThemeBe(THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER));
+		beList.add(getThemeBe(THM_BH_ROW_ONE_VCL_INPUT));
+		beList.add(getThemeBe(THM_BH_ROW_TWO_VCL_WRAPPER));
+		beList.add(getThemeBe(THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER));
+		beList.add(getThemeBe(THM_BH_GROUP_WRAPPER));
+		beList.add(getThemeBe(THM_BH_ROW_TWO_INPUT_FIELD));
+		beList.add(getThemeBe(THM_ICON));
+		beList.add(ICN_SORT);
+		
+		// QDataBaseEntityMessage msg = new QDataBaseEntityMessage(themes);
+		// msg.setToken(beUtils.getGennyToken().getToken());
+		// rules.publishCmd(msg);
+		//VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 
 		/* Validation for Search Attribute */
 		Validation validation = new Validation("VLD_NON_EMPTY", "EmptyandBlankValues", "(?!^$|\\s+)");
@@ -1191,7 +1241,7 @@ public class TableUtilsTest {
 		bucketHeaderAsk = this.createVirtualContext(bucketHeaderAsk, getThemeBe(THM_DISPLAY_VERTICAL), ContextType.THEME,
 				VisualControlType.GROUP_CONTENT_WRAPPER);
 		bucketHeaderAsk = this.createVirtualContext(bucketHeaderAsk, getThemeBe(THM_BH_GROUP_WRAPPER), ContextType.THEME,
-				VisualControlType.GROUP_WRAPPER);
+		 		VisualControlType.GROUP_WRAPPER);
 
 		return bucketHeaderAsk;
 	}

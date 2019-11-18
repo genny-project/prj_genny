@@ -60,7 +60,7 @@ public class ProcessViewTest extends GennyJbpmBaseTest {
         super(false);
     }
 
-    @Test
+    //@Test
     public void testProcessView() {
 
         QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -68,6 +68,7 @@ public class ProcessViewTest extends GennyJbpmBaseTest {
         GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
         BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
         TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
+        VertxUtils.cachedEnabled = false;
 
         try {
             // get the list of bucket searchBEs from the cache
@@ -78,7 +79,8 @@ public class ProcessViewTest extends GennyJbpmBaseTest {
             List<Frame3> bucketFrames = new ArrayList<Frame3>();
 
             /* list to collect baseentity */
-            List<BaseEntity> beList = new ArrayList<BaseEntity>();
+            //List<BaseEntity> beList = new ArrayList<BaseEntity>();
+            Set<BaseEntity> beList = new HashSet<BaseEntity>();
 
             /* list to collect the asks */
             Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
@@ -113,7 +115,7 @@ public class ProcessViewTest extends GennyJbpmBaseTest {
                 Map<String, String> columns = tableUtils.getTableColumns(searchBe);
 
                 // generate bucket header asks from searchBe
-                Ask bucketHeaderAsk = tableUtils.getBucketHeaderAsk(searchBe, serviceToken);
+                Ask bucketHeaderAsk = tableUtils.getBucketHeaderAsk(searchBe, beList, serviceToken);
 
                 // generate bucket content ask group from searchBe
                 Ask bucketContentAsk = tableUtils.generateBucketContentAsk(searchBe, serviceToken);
@@ -205,7 +207,8 @@ public class ProcessViewTest extends GennyJbpmBaseTest {
             /* add the updated searchbeList to beList */
             beList.addAll(searchBeList);
 
-            Frame3 FRM_BUCKET_TITLE = Frame3.builder("FRM_BUCKET_TITLE").question("QUE_BUCKET_TITLE").end().build();
+            // Frame3 FRM_BUCKET_TITLE =
+            // Frame3.builder("FRM_BUCKET_TITLE").question("QUE_BUCKET_TITLE").end().build();
 
             Frame3 FRM_BUCKET_WRAPPER = Frame3.builder("FRM_BUCKET_WRAPPER")
                     .addFrame(bucketFrames.get(0), FramePosition.WEST).end()
@@ -217,7 +220,7 @@ public class ProcessViewTest extends GennyJbpmBaseTest {
                     .addTheme(THM_BUCKET_WRAPPER, ThemePosition.WEST).end().build();
 
             Frame3 FRM_BUCKET_VIEW = Frame3.builder("FRM_BUCKET_VIEW")
-                    //.addFrame(FRM_BUCKET_TITLE, FramePosition.NORTH).end()
+                    // .addFrame(FRM_BUCKET_TITLE, FramePosition.NORTH).end()
                     .addFrame(FRM_BUCKET_WRAPPER, FramePosition.CENTRE).end().build();
 
             Frame3 FRM_TAB_CONTENT = Frame3.builder("FRM_TAB_CONTENT").addFrame(FRM_BUCKET_VIEW, FramePosition.NORTH)
@@ -225,19 +228,21 @@ public class ProcessViewTest extends GennyJbpmBaseTest {
 
             QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_TAB_CONTENT, serviceToken, askMsgs);
             rules.publishCmd(msg);
+            //VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 
             /* publish the asks */
             for (QDataAskMessage askMsg : askMsgs) {
                 askMsg.setToken(beUtils.getGennyToken().getToken());
                 askMsg.setReplace(false);
                 rules.publishCmd(askMsg);
-                // VertxUtils.writeMsg("webcmds", JsonUtils.toJson(footerAskMsg));
+                //VertxUtils.writeMsg("webcmds", JsonUtils.toJson(askMsg));
             }
             System.out.println("Sent");
 
             // publish all the baseentity as well
             QDataBaseEntityMessage appMsg = new QDataBaseEntityMessage(beList.toArray(new BaseEntity[beList.size()]));
             rules.publishCmd(appMsg);
+            //VertxUtils.writeMsg("webcmds", JsonUtils.toJson(appMsg));
 
         } catch (Exception e) {
             System.out.println("Error " + e.getLocalizedMessage());
@@ -245,7 +250,7 @@ public class ProcessViewTest extends GennyJbpmBaseTest {
 
     }
 
-    // @Test
+    @Test
     public void testEmptyProcessView() {
 
         QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -256,7 +261,8 @@ public class ProcessViewTest extends GennyJbpmBaseTest {
 
         // try {
         /* list to collect baseentity */
-        List<BaseEntity> beList = new ArrayList<BaseEntity>();
+        //List<BaseEntity> beList = new ArrayList<BaseEntity>();
+        Set<BaseEntity> beList = new HashSet<BaseEntity>();
 
         /* list to collect the asks */
         Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
@@ -301,7 +307,7 @@ public class ProcessViewTest extends GennyJbpmBaseTest {
             Map<String, String> columns = tableUtils.getTableColumns(searchBe);
 
             // generate bucket header asks from searchBe
-            Ask bucketHeaderAsk = tableUtils.getBucketHeaderAsk(searchBe, serviceToken);
+            Ask bucketHeaderAsk = tableUtils.getBucketHeaderAsk(searchBe, beList, serviceToken);
 
             // generate bucket content ask group from searchBe
             Ask bucketContentAsk = tableUtils.generateBucketContentAsk(searchBe, serviceToken);
@@ -360,8 +366,6 @@ public class ProcessViewTest extends GennyJbpmBaseTest {
 
         }
 
-        Frame3 FRM_BUCKET_TITLE = Frame3.builder("FRM_BUCKET_TITLE").question("QUE_BUCKET_TITLE").end().build();
-
         Frame3 FRM_BUCKET_WRAPPER = Frame3.builder("FRM_BUCKET_WRAPPER")
                 .addFrame(bucketFrames.get(0), FramePosition.WEST).end()
                 .addFrame(bucketFrames.get(1), FramePosition.WEST).end()
@@ -371,27 +375,31 @@ public class ProcessViewTest extends GennyJbpmBaseTest {
                 .addFrame(bucketFrames.get(5), FramePosition.WEST).end().addTheme(THM_BUCKET).end()
                 .addTheme(THM_BUCKET_WRAPPER, ThemePosition.WEST).end().build();
 
-        Frame3 FRM_BUCKET_VIEW = Frame3.builder("FRM_BUCKET_VIEW").addFrame(FRM_BUCKET_TITLE, FramePosition.NORTH).end()
-                .addFrame(FRM_BUCKET_WRAPPER, FramePosition.CENTRE).end().build();
-
-        Frame3 FRM_TAB_CONTENT = Frame3.builder("FRM_TAB_CONTENT").addFrame(FRM_BUCKET_VIEW, FramePosition.NORTH).end()
+        Frame3 FRM_BUCKET_VIEW = Frame3.builder("FRM_BUCKET_VIEW")
+                .addFrame(FRM_BUCKET_WRAPPER, FramePosition.CENTRE).end()
                 .build();
+
+        Frame3 FRM_TAB_CONTENT = Frame3.builder("FRM_TAB_CONTENT")
+                                .addFrame(FRM_BUCKET_VIEW, FramePosition.NORTH).end()
+                                .build();
 
         QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_TAB_CONTENT, serviceToken, askMsgs);
         rules.publishCmd(msg);
+        //VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 
         /* publish the asks */
         for (QDataAskMessage askMsg : askMsgs) {
             askMsg.setToken(beUtils.getGennyToken().getToken());
             askMsg.setReplace(false);
             rules.publishCmd(askMsg);
-            // VertxUtils.writeMsg("webcmds", JsonUtils.toJson(footerAskMsg));
+            //VertxUtils.writeMsg("webcmds", JsonUtils.toJson(askMsg));
         }
         System.out.println("Sent");
 
         // publish all the baseentity as well
         QDataBaseEntityMessage appMsg = new QDataBaseEntityMessage(beList.toArray(new BaseEntity[beList.size()]));
         rules.publishCmd(appMsg);
+        //VertxUtils.writeMsg("webcmds", JsonUtils.toJson(appMsg));
 
         // } catch (Exception e) {
         // System.out.println("Error " + e.getLocalizedMessage());
@@ -476,13 +484,14 @@ public class ProcessViewTest extends GennyJbpmBaseTest {
         /* publish all the app BE */
         QDataBaseEntityMessage appMsg = new QDataBaseEntityMessage(beList.toArray(new BaseEntity[beList.size()]));
         rules.publishCmd(appMsg);
+        //VertxUtils.writeMsg("webcmds", JsonUtils.toJson(appMsg));
 
         /* publish the asks */
         for (QDataAskMessage askMsg : askMsgs) {
             askMsg.setToken(beUtils.getGennyToken().getToken());
             askMsg.setReplace(true);
             rules.publishCmd(askMsg);
-            // VertxUtils.writeMsg("webcmds", JsonUtils.toJson(footerAskMsg));
+            //VertxUtils.writeMsg("webcmds", JsonUtils.toJson(askMsg));
         }
     }
 
@@ -490,7 +499,8 @@ public class ProcessViewTest extends GennyJbpmBaseTest {
 
         BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
         TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
-        List<BaseEntity> beList = new ArrayList<BaseEntity>();
+        //List<BaseEntity> beList = new ArrayList<BaseEntity>();
+        Set<BaseEntity> beList = new HashSet<BaseEntity>();
 
         try {
             // get the themes from cache
