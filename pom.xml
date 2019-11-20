@@ -14,7 +14,7 @@
 
 	<properties>
 		<kie.version>7.29.0.Final</kie.version>
-		<version.keycloak>7.0.1</version.keycloak>
+		<version.keycloak>8.0.0</version.keycloak>
 		<genny-verticle.version>${project.version}</genny-verticle.version>
 		<genny-rules.version>${project.version}</genny-rules.version>
 
