@@ -59,7 +59,7 @@ rule "FRM_PERSON_DETAIL_VIEW"
 		personDocSummaryFrame.setQuestionCode("QUE_PERSON_DOC_DETAIL_GRP");
 		personDocSummaryFrame.getQuestionGroup().setCode("QUE_PERSON_DOC_DETAIL_GRP");
 		
- 	  	Frame3 frame = Frame3.builder("FRM_PERSON_DETAIL_VIEW")
+ 	  	Frame3 FRM_PERSON_DETAIL_VIEW = Frame3.builder("FRM_PERSON_DETAIL_VIEW_CONTENT")
 						.addTheme("THM_SCROLL_VERTICAL", ThemePosition.WRAPPER, serviceToken).end()
 						.addTheme("THM_DETAIL_VIEW_BODY", ThemePosition.WRAPPER, serviceToken).end()
 						.addTheme("THM_JUSTIFY_CONTENT_FLEX_START", ThemePosition.CENTRE, serviceToken).end()
@@ -68,6 +68,10 @@ rule "FRM_PERSON_DETAIL_VIEW"
 						.addFrame(personDocSummaryFrame, FramePosition.CENTRE).end()
 						.build();
 
+		Frame3 frame = Frame3.builder("FRM_PERSON_DETAIL_VIEW")
+				.addFrame(FRM_PERSON_DETAIL_VIEW).end()
+				.build();
+				
 		frame.setRealm(serviceToken.getRealm());
 		insert (frame);
 		
