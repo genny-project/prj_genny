@@ -43,6 +43,7 @@ import org.jbpm.services.api.query.model.QueryParam;
 import org.jbpm.services.api.utils.KieServiceConfigurator;
 import org.jbpm.services.task.wih.util.PeopleAssignmentHelper;
 import org.jbpm.test.JbpmJUnitBaseTestCase;
+import org.kie.api.KieBase;
 import org.kie.api.command.Command;
 import org.kie.api.executor.ExecutorService;
 import org.kie.api.io.ResourceType;
@@ -347,13 +348,13 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 					//	kieSession.signalEvent("EV_"+session_state, sessionFactsEvent, processId);
 						// HACK
 						if (eventMsg.getData().getCode().equals("QUE_SUBMIT")) {
-							Answer dataAnswer = new Answer(gToken.getUserCode(),gToken.getUserCode(),"PRI_EVENT","QUE_SUBMIT");
+							Answer dataAnswer = new Answer(gToken.getUserCode(),gToken.getUserCode(),"PRI_SUBMIT","QUE_SUBMIT");
 							dataMsg = new QDataAnswerMessage(dataAnswer);
 							SessionFacts sessionFactsData = new SessionFacts(serviceToken, gToken , dataMsg);							
 							kieSession.signalEvent("data", sessionFactsData, processId);
 						}
 							else	if (eventMsg.getData().getCode().equals("QUE_CANCEL")) {
-								Answer dataAnswer = new Answer(gToken.getUserCode(),gToken.getUserCode(),"PRI_EVENT","QUE_CANCEL");
+								Answer dataAnswer = new Answer(gToken.getUserCode(),gToken.getUserCode(),"PRI_SUBMIT","QUE_CANCEL");
 								dataMsg = new QDataAnswerMessage(dataAnswer);
 								SessionFacts sessionFactsData = new SessionFacts(serviceToken, gToken , dataMsg);							
 								kieSession.signalEvent("data", sessionFactsData, processId);
@@ -565,6 +566,8 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	        RuntimeEnvironment env = envBuilder.get();
 	     
 	        RulesLoader.runtimeManager =  createRuntimeManager(Strategy.SINGLETON, resources, env, uniqueRuntimeStr);
+		       KieBase kieBase =  env.getKieBase();
+		       RulesLoader.getKieBaseCache().put(serviceToken.getRealm(),kieBase);
 			
 		} else {
 			System.out.println("USINGJMS");
@@ -595,7 +598,8 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	            envBuilder.addAsset(ResourceFactory.newClassPathResource(entry.getKey()), entry.getValue());
 	        }
 	        RuntimeEnvironment env = envBuilder.get();
-	        
+	       KieBase kieBase =  env.getKieBase();
+	       RulesLoader.getKieBaseCache().put(serviceToken.getRealm(),kieBase);
 
 			RulesLoader.runtimeManager = createRuntimeManager(Strategy.SINGLETON, resources, env, uniqueRuntimeStr);
 
