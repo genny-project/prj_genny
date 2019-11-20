@@ -230,6 +230,9 @@ kcontext.setVariable(&quot;sessionFacts&quot;,sessionFacts);
             <tns:metaValue><![CDATA[Process Event Handler]]></tns:metaValue>
           </tns:metaData>
           <tns:onEntry-script scriptFormat="http://www.java.com/java"/>
+          <tns:metaData name="customAsync">
+            <tns:metaValue><![CDATA[true]]></tns:metaValue>
+          </tns:metaData>
         </bpmn2:extensionElements>
         <bpmn2:startEvent id="StartEvent_4" name="Start Process Event Handler" isInterrupting="false">
           <bpmn2:extensionElements>
@@ -475,6 +478,9 @@ if (output.getTypeOfResult().equals(&quot;LOGOUT&quot;)) {
             <tns:script>System.out.println(&quot;userSession: PLEASE=&quot; +inputSessionCode);</tns:script>
           </tns:onEntry-script>
           <tns:onExit-script/>
+          <tns:metaData name="customAsync">
+            <tns:metaValue><![CDATA[true]]></tns:metaValue>
+          </tns:metaData>
         </bpmn2:extensionElements>
         <bpmn2:startEvent id="StartEvent_5" name="Start Process Internal Signal  Handler" isInterrupting="false">
           <bpmn2:extensionElements>
@@ -781,6 +787,9 @@ kcontext.setVariable(&quot;sessionFacts&quot;,sessionFacts);</tns:script>
             <tns:metaValue><![CDATA[Process Data Handler]]></tns:metaValue>
           </tns:metaData>
           <tns:onEntry-script scriptFormat="http://www.java.com/java"/>
+          <tns:metaData name="customAsync">
+            <tns:metaValue><![CDATA[true]]></tns:metaValue>
+          </tns:metaData>
         </bpmn2:extensionElements>
         <bpmn2:startEvent id="StartEvent_6" name="Start Process Data Handler" isInterrupting="false">
           <bpmn2:extensionElements>
@@ -1031,6 +1040,9 @@ kcontext.setVariable(&quot;sessionFacts&quot;,sessionFacts);</tns:script>
             <tns:script>System.out.println(&quot;userSession: Show Page Handler processId = &quot;+kcontext.getProcessInstance().getId());
 </tns:script>
           </tns:onEntry-script>
+          <tns:metaData name="customAsync">
+            <tns:metaValue><![CDATA[true]]></tns:metaValue>
+          </tns:metaData>
         </bpmn2:extensionElements>
         <bpmn2:endEvent id="EndEvent_13" name="End Process Event Handler">
           <bpmn2:extensionElements>
@@ -2277,7 +2289,7 @@ System.out.println(&quot;userSession: **************************End Session ****
         <di:waypoint xsi:type="dc:Point" x="1100.0" y="322.0"/>
         <di:waypoint xsi:type="dc:Point" x="1455.0" y="322.0"/>
         <di:waypoint xsi:type="dc:Point" x="1455.0" y="385.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_103">
           <dc:Bounds height="11.0" width="18.0" x="1270.0" y="323.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>

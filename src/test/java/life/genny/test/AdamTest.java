@@ -156,6 +156,78 @@ public class AdamTest {
 	        this.serviceConfigurator = ServiceLoader.load(KieServiceConfigurator.class).iterator().next();
 	    }
 
+		@Test
+		public void addEduProvTest()
+		{
+			System.out.println("AddEduProv Test");
+
+
+			GennyKieSession gks = null;
+
+			try {
+				gks = GennyKieSession.builder(serviceToken,true)
+						.addDrl("SignalProcessing")
+						.addDrl("DataProcessing")
+						.addDrl("EventProcessing")
+						.addJbpm("Lifecycles")
+						.addJbpm("adam_user1.bpmn")
+						.addJbpm("adam_user2.bpmn")
+						.addJbpm("adam_user3.bpmn")
+						.addDrl("AuthInit")
+						.addJbpm("AuthInit")
+						.addDrl("InitialiseProject")
+						.addJbpm("InitialiseProject")
+						.build();
+				
+				gks.createTestUsersGroups();
+				
+				GennyToken newUser2A = gks.createToken("PER_USER2"); 
+				GennyToken newUser2B = gks.createToken("PER_USER2"); 
+				GennyToken newUser1A = gks.createToken("PER_USER1");
+				gks.start();
+				
+				gks.injectSignal("initProject"); // This should initialise everything
+				gks.injectEvent("authInitMsg",newUser2A); // log in as new user
+				gks.advanceSeconds(5, false);
+				gks.showStatuses("PER_USER1","PER_USER2");
+
+				
+				// Now answer a question
+
+				gks.injectAnswer("PRI_FIRSTNAME",newUser2A);
+				gks.injectAnswer("PRI_LASTNAME", newUser2A);
+				gks.injectAnswer("PRI_DOB", newUser2A);
+				gks.injectAnswer("PRI_PREFERRED_NAME", newUser2A);
+				gks.injectAnswer("PRI_EMAIL", newUser2A);
+				gks.injectAnswer("PRI_MOBILE", newUser2A);
+				gks.injectAnswer("PRI_USER_PROFILE_PICTURE", newUser2A);
+				gks.injectAnswer("PRI_ADDRESS_FULL", newUser2A);
+				
+				gks.injectEvent("QUE_SUBMIT",newUser2A);
+				
+
+				// Now add an Edu Provider
+				
+				
+				
+				gks.injectEvent("msgLogout",newUser2A);
+				gks.advanceSeconds(5, false);
+				
+				gks.showStatuses("PER_USER1","PER_USER2");
+			//	gks.injectEvent("msgLogout",newUser2B);
+			//	gks.injectEvent("msgLogout",newUser1A);
+			} catch (Exception e) {
+				e.printStackTrace();
+			
+			}
+			finally {
+				if (gks!=null) {
+					gks.close();
+				}
+			}
+		}
+	   
+	   
 	@Test
 		public void askQuestionTest()
 		{
@@ -235,7 +307,7 @@ public class AdamTest {
 			//	gks.injectEvent("msgLogout",newUser1A);
 			} catch (Exception e) {
 				e.printStackTrace();
-				
+			
 			}
 			finally {
 				if (gks!=null) {
