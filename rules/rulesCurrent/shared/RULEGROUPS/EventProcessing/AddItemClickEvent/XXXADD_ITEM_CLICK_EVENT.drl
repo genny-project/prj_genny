@@ -21,7 +21,8 @@ rule "ADD_ITEM_CLICK_EVENT"
 		
 		switch($message.getData().getCode()){
 			
-			case "QUE_ADD_NEW_INTERNSHIP":output.setFormCode("FRM_QUE_ADD_INTERNSHIP_STEP_ONE_GRP","FRM_CONTENT");  break;
+			case "QUE_ADD_NEW_INTERNSHIP2":    
+			output.setFormCode("FRM_QUE_ADD_INTERNSHIP_STEP_ONE_GRP","FRM_CONTENT");  break;
 			
 			case "QUE_ADD_NEW_COMPANY": output.setFormCode("FRM_QUE_SELECT_COMPANY_TYPE_GRP","FRM_CONTENT");break;
 			

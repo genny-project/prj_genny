@@ -6,7 +6,7 @@ import io.vertx.core.json.JsonObject;
 import life.genny.utils.OutputParam;
 import life.genny.qwanda.rule.RuleDetails;
 
-import life.genny.rules.RulesLoader2;
+import life.genny.rules.RulesLoader;
 
 rule "ASKTASK"
     ruleflow-group 'SignalProcessing'
@@ -21,7 +21,7 @@ rule "ASKTASK"
     then	
 		System.out.println("$$$$$$$$ ASk TASK $$$$$$$$$$$");
 		/* So we need to get the Task from the taskId and display it */
-		output = RulesLoader2.loadOutputFromTask(userToken,Long.parseLong(msg.getData().getValue())); 
+		output = RulesLoader.loadOutputFromTask(userToken,Long.parseLong(msg.getData().getValue())); 
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" " + userToken.getUserCode()+"  TaskId = "+msg.getData().getValue()+": generating "+output);
 
 		retract(msg);

@@ -47,7 +47,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_9" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_14" isCollection="false" structureRef="org.kie.api.runtime.manager.RuntimeEngine"/>
   <bpmn2:itemDefinition id="ItemDefinition_17" isCollection="false" structureRef="org.kie.api.task.TaskService"/>
-  <bpmn2:itemDefinition id="ItemDefinition_19" isCollection="false" structureRef="life.genny.rules.RulesLoader2"/>
+  <bpmn2:itemDefinition id="ItemDefinition_19" isCollection="false" structureRef="life.genny.rules.RulesLoader"/>
   <bpmn2:itemDefinition id="ItemDefinition_21" isCollection="false" structureRef="org.kie.internal.runtime.manager.context.EmptyContext"/>
   <bpmn2:itemDefinition id="ItemDefinition_23" isCollection="false" structureRef="org.kie.internal.task.api.InternalTaskService"/>
   <bpmn2:itemDefinition id="ItemDefinition_26" isCollection="false" structureRef="org.jbpm.runtime.manager.impl.task.SynchronizedTaskService"/>
@@ -95,7 +95,7 @@
       <tns:import name="life.genny.qwanda.Answers"/>
       <tns:import name="org.kie.api.runtime.manager.RuntimeEngine"/>
       <tns:import name="org.kie.api.task.TaskService"/>
-      <tns:import name="life.genny.rules.RulesLoader2"/>
+      <tns:import name="life.genny.rules.RulesLoader"/>
       <tns:import name="org.kie.internal.runtime.manager.context.EmptyContext"/>
       <tns:import name="org.kie.internal.task.api.InternalTaskService"/>
       <tns:import name="org.jbpm.runtime.manager.impl.task.SynchronizedTaskService"/>
@@ -153,10 +153,10 @@ if (results==null) {
 } else {
 Long taskId = (Long)results.get(&quot;taskid&quot;);
 System.out.println(&quot;TaskId = &quot;+taskId);
-RuntimeEngine runtimeEngine = RulesLoader2.runtimeManager.getRuntimeEngine(EmptyContext.get());
+RuntimeEngine runtimeEngine = RulesLoader.runtimeManager.getRuntimeEngine(EmptyContext.get());
 SynchronizedTaskService taskServiceSynced = new SynchronizedTaskService(kieSession,(InternalTaskService) runtimeEngine.getTaskService());
 taskServiceSynced.complete(taskId, realm + &quot;+&quot; + userCode, results);
-RulesLoader2.runtimeManager.disposeRuntimeEngine(runtimeEngine);
+RulesLoader.runtimeManager.disposeRuntimeEngine(runtimeEngine);
 }
 </bpmn2:script>
     </bpmn2:scriptTask>
