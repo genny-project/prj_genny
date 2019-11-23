@@ -21,7 +21,9 @@ rule "CREATE_EDU_PRO"
 		salience 2
     no-loop
     when
-		$message : QEventMessage(data.code matches "CREATE_EDU_PRO")
+		/* $message : QEventMessage(data.code matches "QUE_ADD_EDU_PROVIDER_GRP") */
+		$message : QEventMessage(data.code matches "QUE_ADD_NEW_INTERNSHIP") 
+		
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam( )
@@ -31,7 +33,9 @@ rule "CREATE_EDU_PRO"
 		/* This is an attribute change event */
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
 		System.out.println("FIRED");
-		
+		if (kSession == null) {
+			System.out.println("kSession is NULL");
+		}
 		
 		SessionFacts facts = new SessionFacts(serviceToken, userToken, "StartEduPlease");
 		kSession.signalEvent("createEduPro", facts);
