@@ -38,10 +38,11 @@ rule "CREATE_EDU_PRO"
 		}
 		
 		SessionFacts facts = new SessionFacts(serviceToken, userToken, "StartEduPlease");
-		kSession.signalEvent("createEduPro", facts);
+	/*	kSession.signalEvent("createEduPro", facts); */
 
-		output.setTypeOfResult("NONE");
-
+		output.setTypeOfResult("SIGNAL");
+		output.setResultCode("createEduPro");
+		insert(facts); 
 
 		retract( $message);
 end
