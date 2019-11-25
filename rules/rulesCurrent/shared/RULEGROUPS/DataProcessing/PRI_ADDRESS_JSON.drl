@@ -30,7 +30,7 @@ rule "PRI_ADDRESS_JSON"
 		/* Parse json answer and save the individual answers */
 					
 			JsonObject addressDataJson = new JsonObject(answer.getValue());
-
+			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_JSON", answer.getValue(),false,true));	
 			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_COUNTRY", addressDataJson.getString("country"),false,true));
 			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_POSTCODE", addressDataJson.getString("postal_code"),false,true));
 			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_SUBURB", addressDataJson.getString("suburb"),false,true));
