@@ -16,28 +16,22 @@ import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
 
 
-rule "CREATE_HOST_CPY"
+
+rule "CREATE_INTERNSHIP"
     ruleflow-group 'EventProcessing'
 		salience 2
     no-loop
     when
-		$message : QEventMessage(data.code matches "CREATE_HOST_CPY")
-		userToken : GennyToken (code != "PER_SERVICE" )
-		serviceToken : GennyToken (code == "PER_SERVICE" )
+		$message : QEventMessage(data.code matches "QUE_ADD_NEW_INTERNSHIP") 
+		
 		output : OutputParam( )
 		ruleDetails : RuleDetails()
-		kSession : KieSession( ) 
     then
-		/* This is an attribute change event */
+
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
-		System.out.println("FIRED");
-		
-		
-		SessionFacts facts = new SessionFacts(serviceToken, userToken, "StartEduPlease");
-		kSession.signalEvent("createHostCpy", facts);
 
-		output.setTypeOfResult("NONE");
-
+		output.setTypeOfResult("SIGNAL");
+		output.setResultCode("createInternship");
 
 		retract( $message);
 end
