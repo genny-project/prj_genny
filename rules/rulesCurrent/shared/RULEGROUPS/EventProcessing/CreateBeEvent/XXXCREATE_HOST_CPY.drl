@@ -16,12 +16,13 @@ import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
 
 
-rule "CREATE_EDU_PRO"
+
+rule "CREATE_HOST_CPY"
     ruleflow-group 'EventProcessing'
 		salience 2
     no-loop
     when
-		$message : QEventMessage(data.code matches "QUE_ADD_EDU_PROVIDER_GRP") 
+		$message : QEventMessage(data.code matches "QUE_ADD_NEW_COMPANY") 
 		
 		output : OutputParam( )
 		ruleDetails : RuleDetails()
@@ -30,11 +31,10 @@ rule "CREATE_EDU_PRO"
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
 
 		output.setTypeOfResult("SIGNAL");
-		output.setResultCode("createEduPro");
+		output.setResultCode("createHostCpy");
 
 		retract( $message);
 end
-
 
 
 
