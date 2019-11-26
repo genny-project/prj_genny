@@ -1,7 +1,8 @@
 package life.genny.rules;
-
+import java.util.ArrayList;
+import life.genny.qwandautils.JsonUtils;
 import life.genny.utils.OutputParam;
-
+import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QEventMessage;
 import life.genny.models.GennyToken;
 import life.genny.utils.VertxUtils;
@@ -27,7 +28,22 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 		
 		switch($message.getData().getCode()){
 
-			case "QUE_TAB_BUCKET_VIEW" : output.setFormCode("FRM_BUCKET","FRM_TAB_CONTENT"); break;
+			case "QUE_TAB_BUCKET_VIEW" : 
+		
+				JsonObject tokenObj = VertxUtils.readCachedJson(userToken.getRealm(),"ASK_FRM_BUCKET_VIEW",userToken.getToken());
+		
+				QDataAskMessage[] askSet = JsonUtils.fromJson(tokenObj.getString("value"), QDataAskMessage[].class);
+				
+				System.out.println("Sending Asks");
+				for(QDataAskMessage ask : askSet) {
+					
+					ask.setToken(userToken.getToken());
+					ask.setReplace(false);	
+					String askJson = JsonUtils.toJson(ask);
+					VertxUtils.writeMsg("webcmds",askJson );
+				}
+				output.setFormCode("FRM_BUCKET_VIEW","FRM_TAB_CONTENT"); 
+				break;
 
 			case "QUE_TAB_DETAIL_VIEW" : output.setFormCode("FRM_DETAIL_VIEW","FRM_TAB_CONTENT"); break;
 
