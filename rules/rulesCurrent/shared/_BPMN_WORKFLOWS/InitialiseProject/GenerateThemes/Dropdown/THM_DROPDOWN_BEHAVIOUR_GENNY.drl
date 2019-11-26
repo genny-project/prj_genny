@@ -42,6 +42,7 @@ rule "THM_DROPDOWN_BEHAVIOUR_GENNY"
                   .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_LABEL, true).end()
                   .addAttribute(ThemeAttributeType.PRI_IS_QUESTION_GRP_LABEL_CLICKABLE, true).end()
                   .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+									.addAttribute(ThemeAttributeType.PRI_HAS_CHILD_ASKS, false).end()
                   .build();      
 
 		theme.setRealm(serviceToken.getRealm());
