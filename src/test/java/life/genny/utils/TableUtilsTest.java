@@ -1039,22 +1039,7 @@ public class TableUtilsTest {
 		return askList;
 	}
 
-	public List<Ask> getBucketHeaderAsks(List<SearchEntity> searchBeList, GennyToken serviceToken) {
-
-		List<Ask> asks = new ArrayList<>();
-
-		if (searchBeList != null && searchBeList.size() > 0) {
-			for (SearchEntity searchBe : searchBeList) {
-				Ask bucketHeaderAsk = this.getBucketHeaderAsk(searchBe, serviceToken);
-				asks.add(bucketHeaderAsk);
-			}
-		}
-
-		return asks;
-
-	}
-
-	public Ask getBucketHeaderAsk(SearchEntity searchBe, GennyToken serviceToken) {
+	public Ask getBucketHeaderAsk2(SearchEntity searchBe, GennyToken serviceToken) {
 
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
 
@@ -1589,6 +1574,174 @@ public class TableUtilsTest {
 		}
 		return null;
 
+	}
+
+	public List<SearchEntity> getBucketSearchBeListFromCache() {
+
+		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		GennyToken userToken = new GennyToken("userToken", rules.getToken());
+		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+		TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
+
+		List<SearchEntity> bucketSearchBeList = new ArrayList<SearchEntity>();
+
+		try {
+				SearchEntity SBE_APPLIED_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
+								"SBE_APPLIED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
+				SearchEntity SBE_SHORTLISTED_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
+								"SBE_SHORTLISTED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
+				SearchEntity SBE_INTERVIEWED_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
+								"SBE_INTERVIEWED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
+				SearchEntity SBE_OFFERED_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
+								"SBE_OFFERED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
+				SearchEntity SBE_PLACED_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
+								"SBE_PLACED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
+				SearchEntity SBE_INPROGRESS_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
+								"SBE_INPROGRESS_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
+
+				bucketSearchBeList.add(SBE_APPLIED_APPLICATIONS);
+				bucketSearchBeList.add(SBE_SHORTLISTED_APPLICATIONS);
+				bucketSearchBeList.add(SBE_INTERVIEWED_APPLICATIONS);
+				bucketSearchBeList.add(SBE_OFFERED_APPLICATIONS);
+				bucketSearchBeList.add(SBE_PLACED_APPLICATIONS);
+				bucketSearchBeList.add(SBE_INPROGRESS_APPLICATIONS);
+
+		} catch (Exception e) {
+
+		}
+		return bucketSearchBeList;
+	}
+
+	public Ask getBucketHeaderAsk(Map<String, ContextList> contextListMap, GennyToken serviceToken) {
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+		TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
+
+		Theme THM_QUESTION_GRP_LABEL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_QUESTION_GRP_LABEL",
+				Theme.class, serviceToken.getToken());
+		Theme THM_DISPLAY_VERTICAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_VERTICAL", Theme.class,
+				serviceToken.getToken());
+		Theme THM_DISPLAY_HORIZONTAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_HORIZONTAL",
+				Theme.class, serviceToken.getToken());
+		Theme THM_WIDTH_100_PERCENT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_WIDTH_100_PERCENT",
+				Theme.class, serviceToken.getToken());
+		Theme THM_BH_ROW_ONE_GRP_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_ROW_ONE_GRP_WRAPPER",
+				Theme.class, serviceToken.getToken());
+		Theme THM_BH_ROW_ONE_GRP_LABEL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_ROW_ONE_GRP_LABEL",
+				Theme.class, serviceToken.getToken());
+		Theme THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
+				"THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER", Theme.class, serviceToken.getToken());
+		Theme THM_BH_ROW_ONE_VCL_INPUT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_ROW_ONE_VCL_INPUT",
+				Theme.class, serviceToken.getToken());
+		Theme THM_BH_ROW_TWO_VCL_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_ROW_TWO_VCL_WRAPPER",
+				Theme.class, serviceToken.getToken());
+		Theme THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
+				"THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER", Theme.class, serviceToken.getToken());
+		Theme THM_BH_ROW_TWO_INPUT_FIELD = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_ROW_TWO_INPUT_FIELD",
+				Theme.class, serviceToken.getToken());
+		Theme THM_ICON = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_ICON", Theme.class,
+				serviceToken.getToken());
+		Theme THM_BH_GROUP_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_GROUP_WRAPPER", Theme.class,
+				serviceToken.getToken());
+		
+		BaseEntity ICN_SORT = beUtils.getBaseEntityByCode("ICN_SORT");
+
+		/* 
+			we create context here 
+		*/
+
+		/* row1Context context */
+		List<Context> row1Context = new ArrayList<>();
+		row1Context.add(new Context(ContextType.THEME, tableUtils.getThemeBe(THM_DISPLAY_HORIZONTAL), VisualControlType.GROUP_WRAPPER, 1.0));
+		row1Context.add(new Context(ContextType.THEME, tableUtils.getThemeBe(THM_BH_ROW_ONE_GRP_WRAPPER), VisualControlType.GROUP_WRAPPER, 1.0));
+		row1Context.add(new Context(ContextType.THEME, tableUtils.getThemeBe(THM_BH_ROW_ONE_GRP_LABEL), VisualControlType.GROUP_LABEL, 1.0));
+		row1Context.add(new Context(ContextType.THEME, tableUtils.getThemeBe(THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER), VisualControlType.GROUP_CONTENT_WRAPPER, 1.0));
+		row1Context.add(new Context(ContextType.THEME, tableUtils.getThemeBe(THM_BH_ROW_ONE_VCL_INPUT), VisualControlType.VCL_INPUT, 1.0));
+
+		/* row2Context context */
+		List<Context> row2Context = new ArrayList<>();
+		row2Context.add(new Context(ContextType.THEME, tableUtils.getThemeBe(THM_DISPLAY_HORIZONTAL), VisualControlType.GROUP_CONTENT_WRAPPER, 1.0));
+		row2Context.add(new Context(ContextType.THEME, tableUtils.getThemeBe(THM_BH_ROW_TWO_VCL_WRAPPER), VisualControlType.VCL_WRAPPER, 1.0));
+		row2Context.add(new Context(ContextType.THEME, tableUtils.getThemeBe(THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER), VisualControlType.GROUP_CONTENT_WRAPPER, 1.0));
+
+		
+		/* bucketCountContextList context */
+		List<Context> bucketCountContextList = new ArrayList<>();
+		bucketCountContextList.add(new Context(ContextType.THEME, tableUtils.getThemeBe(THM_QUESTION_GRP_LABEL), VisualControlType.GROUP_WRAPPER, 1.0));
+		
+		/* bucketSearchContextList context */
+		List<Context> bucketSearchContextList = new ArrayList<>();
+		bucketSearchContextList.add(new Context(ContextType.THEME, tableUtils.getThemeBe(THM_BH_ROW_TWO_INPUT_FIELD), VisualControlType.VCL_WRAPPER, 1.0));
+		
+		/* bucketSortContextList context */
+		List<Context> bucketSortContextList = new ArrayList<>();
+		bucketSortContextList.add(new Context(ContextType.THEME, tableUtils.getThemeBe(THM_ICON), VisualControlType.VCL, 1.0));
+		bucketSortContextList.add(new Context(ContextType.ICON, ICN_SORT, VisualControlType.VCL_ICON, 1.0));
+		
+		/* add the contextList to contextMap */
+		contextListMap.put("QUE_BUCKET_HEADER_ROW_ONE_GRP", new ContextList(row1Context));
+		contextListMap.put("QUE_BUCKET_HEADER_ROW_TWO_GRP", new ContextList(row2Context));
+		contextListMap.put("QUE_BUCKET_COUNT", new ContextList(bucketCountContextList));  
+		contextListMap.put("QUE_BUCKET_SEARCH", new ContextList(bucketSearchContextList));
+		contextListMap.put("QUE_BUCKET_SORT", new ContextList(bucketSortContextList));
+
+		/* Validation for Search Attribute */
+		Validation validation = new Validation("VLD_NON_EMPTY", "EmptyandBlankValues", "(?!^$|\\s+)");
+		List<Validation> validations = new ArrayList<>();
+		validations.add(validation);
+		ValidationList searchValidationList = new ValidationList();
+		searchValidationList.setValidationList(validations);
+
+		Attribute countAttribute = RulesUtils.getAttribute("PRI_TOTAL_RESULTS", serviceToken.getToken());
+		Attribute sortAttribute = RulesUtils.getAttribute("PRI_SORT", serviceToken.getToken());
+		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken.getToken());
+
+		Attribute searchAttribute = new Attribute("PRI_NAME", "Search", new DataType("Text", searchValidationList, "Text"));
+
+		Attribute questionAttribute = RulesUtils.getAttribute("QQQ_QUESTION_GROUP", serviceToken.getToken());
+		Attribute tableCellAttribute = RulesUtils.getAttribute("QQQ_QUESTION_GROUP_TABLE_CELL", serviceToken.getToken());
+
+		/* Initialize Bucket Header Ask group */
+		Question bucketHeaderQuestion = new Question("QUE_BUCKET_HEADER_GRP", "Bucket Header", questionAttribute, true);
+		Ask bucketHeaderAsk = new Ask(bucketHeaderQuestion, beUtils.getGennyToken().getUserCode(), "SBE_DUMMY");
+
+		/* row-one-ask */
+		Question row1Ques = new Question("QUE_BUCKET_HEADER_ROW_ONE_GRP", "SearchEntity Name", tableCellAttribute,false);
+		Ask row1Ask = new Ask(row1Ques, beUtils.getGennyToken().getUserCode(), "SBE_DUMMY");
+
+		/* count ask */
+		Question bucketCountQues = new Question("QUE_BUCKET_COUNT", countAttribute.getName(), countAttribute, false);
+		Ask bucketCountAsk = new Ask(bucketCountQues, beUtils.getGennyToken().getUserCode(), "SBE_DUMMY");
+
+		Ask[] row1ChildAsks = { bucketCountAsk };
+		row1Ask = tableUtils.createVirtualContext(row1Ask, getThemeBe(THM_QUESTION_GRP_LABEL), ContextType.THEME,
+				VisualControlType.GROUP);
+		row1Ask.setChildAsks(row1ChildAsks);
+
+		/* row-two-ask */
+		Question row2Ques = new Question("QUE_BUCKET_HEADER_ROW_TWO_GRP", questionAttribute.getName(), questionAttribute, false);
+		Ask row2Ask = new Ask(row2Ques, beUtils.getGennyToken().getUserCode(), "SBE_DUMMY");
+
+		/* search ask */
+		Question bucketSearchQues = new Question("QUE_BUCKET_SEARCH", searchAttribute.getName(), searchAttribute, false);
+		Ask bucketSearchAsk = new Ask(bucketSearchQues, beUtils.getGennyToken().getUserCode(), "SBE_DUMMY");
+
+		bucketSearchAsk = tableUtils.createVirtualContext(bucketSearchAsk, getThemeBe(THM_BH_ROW_TWO_INPUT_FIELD),
+				ContextType.THEME, VisualControlType.VCL_WRAPPER);
+
+		/* sort ask */
+		Question bucketSortQues = new Question("QUE_BUCKET_SORT", sortAttribute.getName(), sortAttribute, false);
+		Ask bucketSortAsk = new Ask(bucketSortQues, beUtils.getGennyToken().getUserCode(), "SBE_DUMMY");
+
+		Ask[] row2ChildAsks = { bucketSearchAsk, bucketSortAsk };
+		row2Ask.setChildAsks(row2ChildAsks);
+
+		/* set the bucketHeader child asks */
+		Ask[] bucketChildAsks = { row1Ask, row2Ask };
+		bucketHeaderAsk.setChildAsks(bucketChildAsks);
+		
+		return bucketHeaderAsk;
 	}
 
 }

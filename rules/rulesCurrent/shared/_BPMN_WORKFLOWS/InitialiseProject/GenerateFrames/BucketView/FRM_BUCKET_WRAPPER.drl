@@ -1,6 +1,5 @@
 package life.genny.rules;
 
-
 global org.apache.logging.log4j.Logger log;
 
 import life.genny.qwanda.message.QCmdMessage;
@@ -24,31 +23,30 @@ import org.kie.api.runtime.process.WorkflowProcessInstance;
 import life.genny.models.Frame3;
 import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
-import life.genny.qwanda.VisualControlType;
-import life.genny.models.FramePosition;
-import life.genny.models.ThemePosition;
+import java.util.Map;
+import life.genny.models.FrameTuple3;
+import life.genny.utils.TableUtils;
 
-
-rule "FRM_BUCKET_VIEW"
+rule "FRM_BUCKET_WRAPPER"
     ruleflow-group 'GenerateFrames'
 
     when
-      not  Frame3(code == "FRM_BUCKET_VIEW")
+      not  Frame3(code == "FRM_BUCKET_WRAPPER")
       serviceToken : GennyToken( code == "PER_SERVICE")
-      FRM_BUCKET_TITLE : Frame3 (code == "FRM_BUCKET_TITLE" )
-      FRM_BUCKET_WRAPPER : Frame3 (code == "FRM_BUCKET_WRAPPER" )
+
+      
     then
-     System.out.println("   Generate FRM_BUCKET_VIEW Rule  "+serviceToken.getUserCode());
+			System.out.println(" Generate FRM_BUCKET_WRAPPER Rule  "+serviceToken.getUserCode());
 
- 	 Frame3 frame = Frame3.builder("FRM_BUCKET_VIEW")
-                  .addFrame(FRM_BUCKET_TITLE, FramePosition.CENTRE).end()
-                  .addFrame(FRM_BUCKET_WRAPPER, FramePosition.CENTRE).end()
-                  .build();
-
+			Frame3 frame = Frame3.builder("FRM_BUCKET_WRAPPER")
+										.addTheme("THM_BUCKET", serviceToken).end()
+										.addTheme("THM_BUCKET_WRAPPER", ThemePosition.WEST, serviceToken).end()
+										.build();
+							
 	frame.setRealm(serviceToken.getRealm());
-
+						
 	insert (frame);
-
+	
 	/* Process and save to cache */
 	FrameUtils2.toMessage(frame, serviceToken);
 
