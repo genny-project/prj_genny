@@ -12,8 +12,8 @@
   <bpmn2:itemDefinition id="ItemDefinition_3679" isCollection="false" structureRef="java.util.UUID"/>
   <bpmn2:signal id="Signal_1" name="createBE"/>
   <bpmn2:signal id="Signal_2" name="makeBe"/>
-  <bpmn2:signal id="Signal_3" name="CREATE_EDU_PROVIDER"/>
-  <bpmn2:process id="EDUCATION_PROVIDER" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="Default Process" isExecutable="true">
+  <bpmn2:signal id="Signal_3" name="CREATE_INTERNSHIP"/>
+  <bpmn2:process id="INTERNSHIP" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="Default Process" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.models.GennyToken"/>
       <drools:import name="life.genny.utils.CallingProcessToken"/>
@@ -32,67 +32,67 @@
     <bpmn2:property id="processId" itemSubjectRef="ItemDefinition_591" name="processId"/>
     <bpmn2:property id="UUID" itemSubjectRef="ItemDefinition_3679" name="UUID"/>
     <bpmn2:property id="uuid" itemSubjectRef="ItemDefinition_3679" name="uuid"/>
-    <bpmn2:subProcess id="SubProcess_1" name="Edu Pro Builder">
+    <bpmn2:subProcess id="SubProcess_1" name="Internship Builder">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Edu Pro Builder]]></drools:metaValue>
+          <drools:metaValue><![CDATA[Internship Builder]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
-      <bpmn2:endEvent id="EndEvent_1" name="End Edu Pro Build">
+      <bpmn2:endEvent id="EndEvent_1" name="End Internship Build">
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
-            <drools:metaValue><![CDATA[End Edu Pro Build]]></drools:metaValue>
+            <drools:metaValue><![CDATA[End Internship Build]]></drools:metaValue>
           </drools:metaData>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_17</bpmn2:incoming>
       </bpmn2:endEvent>
-      <bpmn2:startEvent id="StartEvent_1" name="Start Edu Pro Build">
+      <bpmn2:startEvent id="StartEvent_1" name="Start Internship Build">
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
-            <drools:metaValue><![CDATA[Start Edu Pro Build]]></drools:metaValue>
+            <drools:metaValue><![CDATA[Start Internship Build]]></drools:metaValue>
           </drools:metaData>
         </bpmn2:extensionElements>
         <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
       </bpmn2:startEvent>
-      <bpmn2:scriptTask id="ScriptTask_1" name="Create Education Provider" scriptFormat="http://www.java.com/java">
+      <bpmn2:scriptTask id="ScriptTask_1" name="Create Internship" scriptFormat="http://www.java.com/java">
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
-            <drools:metaValue><![CDATA[Create Education Provider]]></drools:metaValue>
+            <drools:metaValue><![CDATA[Create Internship]]></drools:metaValue>
           </drools:metaData>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
-        <bpmn2:script>System.out.println(&quot;newEduProLC: Starting&quot;);
+        <bpmn2:script>System.out.println(&quot;newInternshipLC: Starting&quot;);
 SessionFacts sessionFacts2 = (SessionFacts)sessionFacts;
 serviceToken = (GennyToken)sessionFacts2.getServiceToken();
 userToken = (GennyToken)sessionFacts2.getUserToken();
 kcontext.setVariable(&quot;serviceToken&quot;, serviceToken);
 kcontext.setVariable(&quot;userToken&quot;, userToken);
-System.out.println(&quot;newEduProLC: userToken = &quot; +userToken.getCode());
-System.out.println(&quot;newEduProLC: serviceToken = &quot; +serviceToken.getCode());
+System.out.println(&quot;newInternshipLC: userToken = &quot; +userToken.getCode());
+System.out.println(&quot;newInternshipLC: serviceToken = &quot; +serviceToken.getCode());
 
 processId = kcontext.getProcessInstance().getId();
 kcontext.setVariable(&quot;processId&quot;,kcontext.getProcessInstance().getId());
-System.out.println(&quot;newEduProLC: processId = &quot; + processId);
+System.out.println(&quot;newInternshipLC: processId = &quot; + processId);
 
 uuid = UUID.randomUUID();
 kcontext.setVariable(&quot;uuid&quot;, uuid);
-System.out.println(&quot;newEduProLC: uuid = &quot; + uuid);
+System.out.println(&quot;newInternshipLC: uuid = &quot; + uuid);
 
 
 callingProcessToken = new CallingProcessToken(userToken, processId, userToken.getUserCode());
 kcontext.setVariable(&quot;callingProcessToken&quot;, callingProcessToken);
-System.out.println(&quot;newEduProLC: callingProcessToken = &quot; + callingProcessToken);
+System.out.println(&quot;newInternshipLC: callingProcessToken = &quot; + callingProcessToken);
 
 userToken = (GennyToken)userToken;
 BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
-String newCode = &quot;CPY_&quot;+uuid;
+String newCode = &quot;BEG_&quot;+uuid;
 newCode = newCode.toUpperCase();
 newBe = beUtils.create(newCode, newCode);
 kcontext.setVariable(&quot;newBe&quot;, newBe);
-System.out.println(&quot;newEduProLC: newBe = &quot; + newBe);
+System.out.println(&quot;newInternshipLC: newBe = &quot; + newBe);
 System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_2" drools:priority="1" sourceRef="StartEvent_1" targetRef="ScriptTask_1"/>
@@ -146,14 +146,14 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
         <bpmn2:dataInputAssociation id="_DataInputAssociation_190">
           <bpmn2:targetRef>DataInput_9</bpmn2:targetRef>
           <bpmn2:assignment id="Assignment_6">
-            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_18">QUE_ADD_EDU_PROVIDER_GRP</bpmn2:from>
+            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_18">QUE_ADD_INTERNSHIP_STEP_ONE_GRP</bpmn2:from>
             <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_16">DataInput_9</bpmn2:to>
           </bpmn2:assignment>
         </bpmn2:dataInputAssociation>
         <bpmn2:dataInputAssociation id="_DataInputAssociation_191">
           <bpmn2:targetRef>DataInput_10</bpmn2:targetRef>
           <bpmn2:assignment id="Assignment_5">
-            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_15">newEduProLC</bpmn2:from>
+            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_15">newInternshipLC</bpmn2:from>
             <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_13">DataInput_10</bpmn2:to>
           </bpmn2:assignment>
         </bpmn2:dataInputAssociation>
@@ -167,15 +167,15 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
         </bpmn2:dataOutputAssociation>
       </bpmn2:task>
       <bpmn2:sequenceFlow id="SequenceFlow_14" drools:priority="1" sourceRef="IntermediateThrowEvent_2" targetRef="Task_2"/>
-      <bpmn2:scriptTask id="ScriptTask_3" name="End newEduProLC" scriptFormat="http://www.java.com/java">
+      <bpmn2:scriptTask id="ScriptTask_3" name="End newInternshipLC" scriptFormat="http://www.java.com/java">
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
-            <drools:metaValue><![CDATA[End newEduProLC]]></drools:metaValue>
+            <drools:metaValue><![CDATA[End newInternshipLC]]></drools:metaValue>
           </drools:metaData>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_19</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_17</bpmn2:outgoing>
-        <bpmn2:script>System.out.println(&quot;newEduProLC: Ending newEduProLC&quot;);</bpmn2:script>
+        <bpmn2:script>System.out.println(&quot;newInternshipLC: Ending newInternshipLC&quot;);</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_17" drools:priority="1" sourceRef="ScriptTask_3" targetRef="EndEvent_1"/>
       <bpmn2:intermediateCatchEvent id="IntermediateCatchEvent_1" name="Keep LC alive">
@@ -193,19 +193,19 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
       <bpmn2:sequenceFlow id="SequenceFlow_18" drools:priority="1" sourceRef="Task_2" targetRef="IntermediateCatchEvent_1"/>
       <bpmn2:sequenceFlow id="SequenceFlow_19" drools:priority="1" sourceRef="IntermediateCatchEvent_1" targetRef="ScriptTask_3"/>
     </bpmn2:subProcess>
-    <bpmn2:endEvent id="EndEvent_2" name="End Edu Pro Builder">
+    <bpmn2:endEvent id="EndEvent_2" name="End Internship Builder">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[End Edu Pro Builder]]></drools:metaValue>
+          <drools:metaValue><![CDATA[End Internship Builder]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
     </bpmn2:endEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_4" drools:priority="1" sourceRef="SubProcess_1" targetRef="EndEvent_2"/>
-    <bpmn2:startEvent id="StartEvent_3" name="Start Edu Pro Builder">
+    <bpmn2:startEvent id="StartEvent_3" name="Start Internship Builder">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Start Edu Pro Builder]]></drools:metaValue>
+          <drools:metaValue><![CDATA[Start Internship Builder]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
@@ -222,41 +222,41 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
     <bpmn2:sequenceFlow id="SequenceFlow_1" drools:priority="1" sourceRef="StartEvent_3" targetRef="SubProcess_1"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Process Diagram">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="EDUCATION_PROVIDER">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="INTERNSHIP">
       <bpmndi:BPMNShape id="BPMNShape_SubProcess_1" bpmnElement="SubProcess_1" isExpanded="true">
         <dc:Bounds height="150.0" width="861.0" x="480.0" y="230.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1">
-          <dc:Bounds height="11.0" width="64.0" x="486.0" y="233.0"/>
+          <dc:Bounds height="11.0" width="71.0" x="486.0" y="233.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_1" bpmnElement="StartEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="530.0" y="292.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_2">
-          <dc:Bounds height="11.0" width="77.0" x="510.0" y="328.0"/>
+          <dc:Bounds height="22.0" width="69.0" x="514.0" y="328.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_2" bpmnElement="EndEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="1280.0" y="292.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_3">
-          <dc:Bounds height="11.0" width="74.0" x="1261.0" y="328.0"/>
+          <dc:Bounds height="22.0" width="66.0" x="1265.0" y="328.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_1" bpmnElement="ScriptTask_1" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="620.0" y="285.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_4">
-          <dc:Bounds height="11.0" width="106.0" x="622.0" y="304.0"/>
+          <dc:Bounds height="11.0" width="70.0" x="640.0" y="304.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_1" bpmnElement="EndEvent_2">
         <dc:Bounds height="36.0" width="36.0" x="1390.0" y="287.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_5">
-          <dc:Bounds height="22.0" width="62.0" x="1377.0" y="323.0"/>
+          <dc:Bounds height="22.0" width="66.0" x="1375.0" y="323.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_2" bpmnElement="StartEvent_3">
         <dc:Bounds height="36.0" width="36.0" x="390.0" y="287.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_6">
-          <dc:Bounds height="22.0" width="65.0" x="376.0" y="323.0"/>
+          <dc:Bounds height="22.0" width="69.0" x="374.0" y="323.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_IntermediateThrowEvent_2" bpmnElement="IntermediateThrowEvent_2">
@@ -274,7 +274,7 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_3" bpmnElement="ScriptTask_3" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="1130.0" y="285.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_9">
-          <dc:Bounds height="11.0" width="77.0" x="1146.0" y="304.0"/>
+          <dc:Bounds height="11.0" width="87.0" x="1141.0" y="304.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_IntermediateCatchEvent_1" bpmnElement="IntermediateCatchEvent_1">
