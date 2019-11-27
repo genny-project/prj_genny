@@ -307,7 +307,7 @@ System.out.println(&quot;userlifeCycle: New User Created: pid: &quot;+callingPro
         <bpmn2:dataInputAssociation id="DataInputAssociation_4">
           <bpmn2:targetRef>DataInput_4</bpmn2:targetRef>
           <bpmn2:assignment id="Assignment_5">
-            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_11">newUser.getCode()</bpmn2:from>
+            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_11">eval(newUser.getCode())</bpmn2:from>
             <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_4">DataInput_4</bpmn2:to>
           </bpmn2:assignment>
         </bpmn2:dataInputAssociation>
