@@ -65,7 +65,7 @@ public class BucketView extends GennyJbpmBaseTest {
         super(false);
     }
 
-    @Test
+   // @Test
     public void smallTest() {
 
       QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -95,7 +95,7 @@ public class BucketView extends GennyJbpmBaseTest {
     
     }
     
-    //  @Test
+      @Test
     public void testProcessView() {
 
       QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -217,7 +217,7 @@ public class BucketView extends GennyJbpmBaseTest {
                     .addFrame(FRM_BUCKET_WRAPPER, FramePosition.CENTRE).end().build();
 
         /* build the tab content frame */
-        Frame3 FRM_TAB_CONTENT = Frame3.builder("FRM_TAB_CONTENT")
+        Frame3 FRM_TAB_CONTENT = Frame3.builder("FRM_ROOT")
                       .addFrame(FRM_BUCKET_VIEW, FramePosition.NORTH)
                     .end().build();
 

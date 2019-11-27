@@ -108,6 +108,39 @@ public class SafalTest extends GennyJbpmBaseTest {
 		}
 	}
 
+	@Test  	
+    public void sss() {
+    	
+    	initItem();
+    	
+    	 /* frame-root */
+        try {
+			Frame3 frame = Frame3.builder("FRM_QUE_TREE_FORM_VIEW")
+			              .addTheme("THM_TREE_ITEM", ThemePosition.WRAPPER, serviceToken).end()
+			              .question("QUE_TREE_FORM_VIEW_GRP")
+			                  .addTheme("THM_TREE_GROUP_BEHAVIOUR", serviceToken).end()
+			                  .addTheme("THM_TREE_GROUP_CLICKABLE_WRAPPER", serviceToken)
+			                  .vcl(VisualControlType.GROUP_CLICKABLE_WRAPPER).end()
+			                  .addTheme("THM_TREE_GROUP_CONTENT_WRAPPER", serviceToken)
+			                  .vcl(VisualControlType.GROUP_CONTENT_WRAPPER)
+			                  .end()
+			                  .addTheme("THM_TREE_GROUP_WRAPPER", serviceToken)
+			                  .vcl(VisualControlType.GROUP_WRAPPER)
+			                  .end()
+			                  .addTheme("THM_TREE_GROUP_LABEL", serviceToken)
+			                  .vcl(VisualControlType.GROUP_LABEL)
+			              .end()
+			               .end()
+			              .build();
+			
+			FrameUtils2.toMessage(frame, serviceToken);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+    }
+
 	// @Test
 	public void queryTest() {
 
@@ -203,7 +236,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 
 	}
 
-	@Test
+	//@Test
 	public void v7DetailsViewInternship() {
 
 		initItem();
@@ -295,14 +328,14 @@ public class SafalTest extends GennyJbpmBaseTest {
 			/* we publish the virtual ask with child asks */
 
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
-
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	// @Test
+	//@Test
 	public void v7DetailsViewTimeLine() {
 
 		initItem();
