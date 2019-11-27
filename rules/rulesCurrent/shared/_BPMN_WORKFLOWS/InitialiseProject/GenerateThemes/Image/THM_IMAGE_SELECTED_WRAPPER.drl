@@ -21,28 +21,32 @@ import life.genny.utils.BaseEntityUtils;
 import life.genny.models.GennyToken;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
 import life.genny.models.Theme;
+import life.genny.models.ThemeAttributeType;
 
 
 
-rule "THM_DUMMY"
+rule "THM_IMAGE_SELECTED_WRAPPER"
     ruleflow-group 'GenerateThemes'
     no-loop true
+
     when
-     not  Theme (code == "THM_DUMMY")
+      not  Theme (code == "THM_IMAGE_SELECTED_WRAPPER")
       serviceToken : GennyToken( code == "PER_SERVICE")
+
     then
-     System.out.println("   Generate THM_DUMMY Rule  "+serviceToken.getUserCode());
- 
-	 Theme theme = Theme.builder("THM_DUMMY")
-							.addAttribute()
-								.height(100)
-								.width(90)
-								.end()
-							.build();
 
-	theme.setRealm(serviceToken.getRealm());
-		
-	insert(theme);
+     	System.out.println("   Generate THM_IMAGE_SELECTED_WRAPPER Rule ");
 
-	 VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
+		Theme theme = Theme.builder("THM_IMAGE_SELECTED_WRAPPER")
+				.addAttribute()
+                      .justifyContent("center")
+                .end()
+		.build();
+
+		theme.setRealm(serviceToken.getRealm());
+
+		insert(theme);
+
+		VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
+
 end
