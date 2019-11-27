@@ -30,14 +30,14 @@ rule "PRI_ADDRESS_JSON"
 		/* Parse json answer and save the individual answers */
 					
 			JsonObject addressDataJson = new JsonObject(answer.getValue());
-
+			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_JSON", answer.getValue(),false,true));	
 			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_COUNTRY", addressDataJson.getString("country"),false,true));
 			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_POSTCODE", addressDataJson.getString("postal_code"),false,true));
 			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_SUBURB", addressDataJson.getString("suburb"),false,true));
 			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_CITY", addressDataJson.getString("suburb"),false,true));
 			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", addressDataJson.getString("state"),false,true));
 			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_ADDRESS1", addressDataJson.getString("street_address"),false,true));
-			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", addressDataJson.getString("full_address"),false,true));
+			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", addressDataJson.getString("full_address"),true,true));
 		
 			Double latitude = addressDataJson.getDouble("latitude");
 			Double longitude = addressDataJson.getDouble("longitude");
