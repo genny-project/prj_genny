@@ -3,6 +3,7 @@ import org.drools.core.process.core.datatype.impl.type.ObjectDataType;
 import life.genny.models.GennyToken;
 import life.genny.model.OutputParamTreeSet;
 import life.genny.model.OutputParam;
+import life.genny.qwanda.entity.BaseEntity;
 
 [
   /* the AskQuestionTask work item */
@@ -12,7 +13,7 @@ import life.genny.model.OutputParam;
        "userToken"  : new GennyToken(),
        "questionCode"  :  new StringDataType(),
        "callingWorkflow"  :  new StringDataType(),
-       "baseEntityTargetCode" : new StringDataType(),
+       "baseEntityTarget" : new BaseEntity(),
        "formCode"  :  new StringDataType(),
        "targetCode"  :  new StringDataType()
       ],
