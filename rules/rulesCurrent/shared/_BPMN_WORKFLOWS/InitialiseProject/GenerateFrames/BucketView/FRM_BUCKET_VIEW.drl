@@ -39,7 +39,7 @@ rule "FRM_BUCKET_VIEW"
 
       
     then
-			System.out.println(" Generate FRM_BUCKET_VIEW Rule  "+serviceToken.getUserCode());
+			System.out.println(" Generate FRM_BUCKET_VIEW Ruless  "+serviceToken.getUserCode());
 
 			/* initialize  beUtils */
 			BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
