@@ -42,7 +42,7 @@ rule "FRM_HEADER_ADD_ITEMS"
 
 	  ValidationList buttonValidationList = new ValidationList();
 	  buttonValidationList.setValidationList(validations);
-	  DataType buttonDataType = new DataType("DTT_EVENT", buttonValidationList, "event", "");
+	  DataType buttonDataType = new DataType("DTT_EVENT", buttonValidationList, "QQQ_QUESTION_GROUP_BUTTON_CANCEL_SUBMIT", "");
 	  
  
       Frame3 frame = Frame3.builder("FRM_HEADER_ADD_ITEMS")
