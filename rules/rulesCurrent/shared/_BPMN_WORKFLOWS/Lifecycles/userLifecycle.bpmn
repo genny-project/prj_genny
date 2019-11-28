@@ -29,6 +29,8 @@
   <bpmn2:itemDefinition id="ItemDefinition_11" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_65" isCollection="false" structureRef="java.util.HashMap"/>
   <bpmn2:itemDefinition id="ItemDefinition_12" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_14" isCollection="false" structureRef="java.util.ArrayList"/>
+  <bpmn2:itemDefinition id="ItemDefinition_17" isCollection="false" structureRef="java.util.List"/>
   <bpmn2:signal id="Signal_1" name="userToken.getUserCode()"/>
   <bpmn2:signal id="Signal_2" name="deleteuser"/>
   <bpmn2:signal id="Signal_3" name="userIsInActive"/>
@@ -64,6 +66,8 @@
       <tns:import name="life.genny.utils.CallingProcessToken"/>
       <tns:import name="life.genny.utils.SessionFacts"/>
       <tns:import name="java.util.HashMap"/>
+      <tns:import name="java.util.ArrayList"/>
+      <tns:import name="java.util.List"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="rules" itemSubjectRef="ItemDefinition_2" name="rules"/>
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_602" name="message"/>
@@ -219,12 +223,17 @@ System.out.println(&quot;userLifeCycle: entered: pid &quot;+kcontext.getProcessI
 BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 newUser = beUtils.create(((GennyToken)userToken).getUserCode(), ((GennyToken)userToken).getUserCode());
 /* copy from userToken */
+List&lt;Answer> answers = new ArrayList&lt;Answer>();
 Answer firstNameAnswer = new Answer(beUtils.getGennyToken().getUserCode(),newUser.getCode(), &quot;PRI_FIRSTNAME&quot;, userToken.getString(&quot;given_name&quot;));
 Answer lastNameAnswer = new Answer(beUtils.getGennyToken().getUserCode(),newUser.getCode(), &quot;PRI_LASTNAME&quot;, userToken.getString(&quot;family_name&quot;));
 Answer emailAnswer = new Answer(beUtils.getGennyToken().getUserCode(),newUser.getCode(), &quot;PRI_EMAIL&quot;, userToken.getString(&quot;email&quot;));
 newUser = beUtils.updateBaseEntity(newUser, firstNameAnswer,BaseEntity.class);
 newUser = beUtils.updateBaseEntity(newUser, lastNameAnswer,BaseEntity.class);
 newUser = beUtils.updateBaseEntity(newUser, emailAnswer,BaseEntity.class);
+answers.add(firstNameAnswer);
+answers.add(lastNameAnswer);
+answers.add(emailAnswer);
+beUtils.saveAnswers(answers,false);
 kcontext.setVariable(&quot;newUser&quot;,newUser);
 kcontext.setVariable(&quot;userCode&quot;, ((GennyToken)userToken).getUserCode());
 
