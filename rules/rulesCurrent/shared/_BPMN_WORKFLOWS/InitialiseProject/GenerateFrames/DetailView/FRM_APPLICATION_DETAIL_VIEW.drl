@@ -36,7 +36,7 @@ rule "FRM_APPLICATION_DETAIL_VIEW"
       FRM_DETAIL_VIEW_TIMELINE : Frame3 (code == "FRM_DETAIL_VIEW_TIMELINE")
       
     then
-        System.out.println("   Generate FRM_APPLICATION_DETAIL_VIEW Rule  "+serviceToken.getUserCode());
+        System.out.println("   Generates FRM_APPLICATION_DETAIL_VIEW Rule  "+serviceToken.getUserCode());
 		
 		/*
 			Setting appropriate question code !!!!	
