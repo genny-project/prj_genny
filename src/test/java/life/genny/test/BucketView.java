@@ -2,47 +2,39 @@ package life.genny.test;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.json.JSONObject;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.amazonaws.services.simpleworkflow.flow.core.TryCatch;
-
+import io.vertx.core.json.JsonObject;
 import life.genny.models.Frame3;
-import life.genny.models.Frame3.Builder;
 import life.genny.models.FramePosition;
 import life.genny.models.FrameTuple3;
 import life.genny.models.GennyToken;
-import life.genny.models.TableData;
 import life.genny.models.Theme;
 import life.genny.models.ThemeAttribute;
 import life.genny.models.ThemeAttributeType;
 import life.genny.models.ThemePosition;
-import life.genny.qwanda.Answer;
 import life.genny.qwanda.Ask;
 import life.genny.qwanda.Context;
 import life.genny.qwanda.ContextList;
 import life.genny.qwanda.ContextType;
-import life.genny.qwanda.Link;
 import life.genny.qwanda.Question;
 import life.genny.qwanda.VisualControlType;
 import life.genny.qwanda.attribute.Attribute;
 import life.genny.qwanda.attribute.EntityAttribute;
+import life.genny.qwanda.datatype.DataType;
 import life.genny.qwanda.entity.BaseEntity;
-import life.genny.qwanda.entity.EntityQuestion;
 import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwanda.exception.BadDataException;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
-import life.genny.qwanda.message.QEventMessage;
 import life.genny.qwanda.validation.Validation;
 import life.genny.qwanda.validation.ValidationList;
 import life.genny.qwandautils.JsonUtils;
@@ -50,11 +42,8 @@ import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.FrameUtils2;
 import life.genny.utils.RulesUtils;
-import life.genny.utils.TableUtils;
 import life.genny.utils.TableUtilsTest;
 import life.genny.utils.VertxUtils;
-import life.genny.qwanda.datatype.DataType;
-import io.vertx.core.json.JsonObject;
 
 public class BucketView extends GennyJbpmBaseTest {
 
@@ -141,10 +130,16 @@ public class BucketView extends GennyJbpmBaseTest {
         Theme THM_BH_GROUP_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_GROUP_WRAPPER", Theme.class,
             serviceToken.getToken());
         BaseEntity ICN_SORT = beUtils.getBaseEntityByCode("ICN_SORT");
+         
+                
+        Context bucketHeaderLabelContext = new Context(ContextType.THEME, tableUtils.getThemeBe(THM_QUESTION_GRP_LABEL), VisualControlType.GROUP, 1.0);
+        bucketHeaderLabelContext.setDataType("Form Submit");
       
       List<Context> bucketHeaderContext = new ArrayList<>();
       bucketHeaderContext.add(new Context(ContextType.THEME, tableUtils.getThemeBe(THM_DISPLAY_VERTICAL), VisualControlType.GROUP_CONTENT_WRAPPER, 1.0));
       bucketHeaderContext.add(new Context(ContextType.THEME, tableUtils.getThemeBe(THM_BH_GROUP_WRAPPER), VisualControlType.GROUP_WRAPPER, 1.0));
+      bucketHeaderContext.add(bucketHeaderLabelContext);
+
       
       try {
         
@@ -158,8 +153,8 @@ public class BucketView extends GennyJbpmBaseTest {
 
         /* get all the bucket related asks group */
         Ask FRM_BUCKET_HEADER_ASK = this.getBucketHeaderAsk(contextListMap, serviceToken);
-        Ask FRM_BUCKET_FOOTER_ASK = this.getBucketFooterAsk(serviceToken);
-        Ask FRM_BUCKET_CONTENT_ASK = this.getBucketContentAsk(serviceToken);
+        Ask FRM_BUCKET_CONTENT_ASK = this.getBucketContentAsk(contextListMap, serviceToken);
+        Ask FRM_BUCKET_FOOTER_ASK = this.getBucketFooterAsk(contextListMap, serviceToken);
 
        /* get the searchBeList */
        List<SearchEntity> searchBeList = tableUtils.getBucketSearchBeListFromCache();
@@ -179,15 +174,17 @@ public class BucketView extends GennyJbpmBaseTest {
          
           Frame3 bucketContent = Frame3.clone(FRM_BUCKET_CONTENT);
           bucketContent.setCode("FRM_BUCKET_CONTENT_" + code);
-          bucketContent.setQuestionCode("QUE_BUCKET_CONTENT_" + code);
+          bucketContent.setQuestionCode("QUE_BUCKET_CONTENT_" + code + "_GRP");
 
           Frame3 bucketFooter = Frame3.clone(FRM_BUCKET_FOOTER);
           bucketFooter.setCode("FRM_BUCKET_FOOTER_" + code);
-          bucketFooter.setQuestionCode("QUE_BUCKET_FOOTER_" + code);
+          bucketFooter.setQuestionCode("QUE_BUCKET_FOOTER_" + code + "_GRP");
           
           Frame3 bucket = Frame3.clone(FRM_BUCKET);
           bucket.setCode("FRM_BUCKET_"+code);
           bucket.getFrames().add(new FrameTuple3(bucketHeader, FramePosition.NORTH, 1.0));
+          bucket.getFrames().add(new FrameTuple3(bucketContent, FramePosition.CENTRE, 1.0));
+          bucket.getFrames().add(new FrameTuple3(bucketFooter, FramePosition.SOUTH, 1.0));
 
           /* add the cloned bucket to wrapper */
           FRM_BUCKET_WRAPPER.getFrames().add(new FrameTuple3(bucket, FramePosition.WEST, 1.0));
@@ -197,19 +194,25 @@ public class BucketView extends GennyJbpmBaseTest {
           /* bucketHeader asks */
           Ask bucketHeaderAsk = Ask.clone(FRM_BUCKET_HEADER_ASK);
           bucketHeaderAsk.setQuestionCode("QUE_BUCKET_HEADER_" + code + "_GRP");
+          bucketHeaderAsk.getQuestion().setName(code);
           bucketHeaderAsk.setName(searchBe.getName());
+          bucketHeaderAsk.setTargetCode(searchBe.getCode());
 
           /* bucketContent asks */
           Ask bucketContentAsk = Ask.clone(FRM_BUCKET_CONTENT_ASK);
-          bucketContentAsk.setQuestionCode("QUE_BUCKET_CONTENT_" + code);
+          bucketContentAsk.setQuestionCode("QUE_BUCKET_CONTENT_" + code + "_GRP");
           bucketContentAsk.setName(searchBe.getName());
+          bucketContentAsk.setTargetCode(searchBe.getCode());
          
           /* bucketFooter asks */
           Ask bucketFooterAsk = Ask.clone(FRM_BUCKET_FOOTER_ASK);
-          bucketFooterAsk.setQuestionCode("QUE_BUCKET_FOOTER_" + code);
+          bucketFooterAsk.setQuestionCode("QUE_BUCKET_FOOTER_" + code + "_GRP");
           bucketFooterAsk.setName(searchBe.getName());
+          bucketFooterAsk.setTargetCode(searchBe.getCode());
 
           virtualAskMap.put(bucketHeaderAsk.getQuestionCode(), new QDataAskMessage(bucketHeaderAsk));
+          virtualAskMap.put(bucketContentAsk.getQuestionCode(), new QDataAskMessage(bucketContentAsk));
+          virtualAskMap.put(bucketFooterAsk.getQuestionCode(), new QDataAskMessage(bucketFooterAsk));
        }
         
         /* build the bucket view frame */
@@ -217,7 +220,7 @@ public class BucketView extends GennyJbpmBaseTest {
                     .addFrame(FRM_BUCKET_WRAPPER, FramePosition.CENTRE).end().build();
 
         /* build the tab content frame */
-        Frame3 FRM_TAB_CONTENT = Frame3.builder("FRM_ROOT")
+        Frame3 FRM_TAB_CONTENT = Frame3.builder("FRM_TAB_CONTENT")
                       .addFrame(FRM_BUCKET_VIEW, FramePosition.NORTH)
                     .end().build();
 
@@ -272,9 +275,25 @@ public class BucketView extends GennyJbpmBaseTest {
     }
     public Frame3 getBucketFooterFrame(String name, String target, String questionCode) {
 
+      Theme THM_DISPLAY_HORIZONTAL = Theme.builder("THM_DISPLAY_HORIZONTAL")
+                      .addAttribute().flexDirection("row").end()
+                      .build();
+      
+      Theme THM_WIDTH_100_PERCENT = Theme.builder("THM_WIDTH_100_PERCENT")
+                      .addAttribute().width("100%").end()
+                      .build();  
+        
+      Theme THM_JUSTIFY_CONTENT_SPACE_BETWEEN = Theme.builder("THM_JUSTIFY_CONTENT_SPACE_BETWEEN")
+                      .addAttribute().justifyContent("space-between").end()
+                      .build();                              
+
       Frame3 bucketFooter = Frame3.builder(name)
-                  .question("QUE_BUCKET_FOOTER_GRP").end()
-    		  				.build();
+                  .question("QUE_BUCKET_FOOTER_GRP")
+	                  .addTheme(THM_DISPLAY_HORIZONTAL).vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end()
+	                  .addTheme(THM_WIDTH_100_PERCENT).vcl(VisualControlType.GROUP_WRAPPER).end()
+	                  .addTheme(THM_JUSTIFY_CONTENT_SPACE_BETWEEN).vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end()
+                  .end()
+  				  .build();
       
       return bucketFooter;                    
     }
@@ -284,7 +303,7 @@ public class BucketView extends GennyJbpmBaseTest {
       Theme THM_JUSTIFY_CONTENT_FLEX_START = Theme.builder("THM_JUSTIFY_CONTENT_FLEX_START")
                     .addAttribute().justifyContent("flex-start").end()
                     .build();
-
+ 
       Theme THM_BACKGROUND_NONE = Theme.builder("THM_BACKGROUND_NONE")
                     .addAttribute()
                       .backgroundColor("none")
@@ -359,12 +378,11 @@ public class BucketView extends GennyJbpmBaseTest {
     /* Generate Asks */
     public Ask getBucketHeaderAsk(Map<String, ContextList> contextListMap, GennyToken serviceToken) {
 
-      QRules rules = GennyJbpmBaseTest.setupLocalService();
       BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
       TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
   
       Theme THM_QUESTION_GRP_LABEL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_QUESTION_GRP_LABEL",
-          Theme.class, serviceToken.getToken());
+           Theme.class, serviceToken.getToken());
       Theme THM_DISPLAY_VERTICAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_VERTICAL", Theme.class,
           serviceToken.getToken());
       Theme THM_DISPLAY_HORIZONTAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_HORIZONTAL",
@@ -452,7 +470,7 @@ public class BucketView extends GennyJbpmBaseTest {
       Ask bucketHeaderAsk = new Ask(bucketHeaderQuestion, beUtils.getGennyToken().getUserCode(), "SBE_DUMMY");
   
       /* row-one-ask */
-      Question row1Ques = new Question("QUE_BUCKET_HEADER_ROW_ONE_GRP", "SearchEntity Name", tableCellAttribute,false);
+      Question row1Ques = new Question("QUE_BUCKET_HEADER_ROW_ONE_GRP", "Row One", tableCellAttribute,false);
       Ask row1Ask = new Ask(row1Ques, beUtils.getGennyToken().getUserCode(), "SBE_DUMMY");
   
       /* count ask */
@@ -465,7 +483,7 @@ public class BucketView extends GennyJbpmBaseTest {
       row1Ask.setChildAsks(row1ChildAsks);
   
       /* row-two-ask */
-      Question row2Ques = new Question("QUE_BUCKET_HEADER_ROW_TWO_GRP", questionAttribute.getName(), questionAttribute, false);
+      Question row2Ques = new Question("QUE_BUCKET_HEADER_ROW_TWO_GRP", "Row Two", tableCellAttribute, false);
       Ask row2Ask = new Ask(row2Ques, beUtils.getGennyToken().getUserCode(), "SBE_DUMMY");
   
       /* search ask */
@@ -489,78 +507,78 @@ public class BucketView extends GennyJbpmBaseTest {
       return bucketHeaderAsk;
     }
 
-    public Ask getBucketFooterAsk(GennyToken serviceToken) {
+    public Ask getBucketFooterAsk(Map<String, ContextList> contextListMap, GennyToken serviceToken) {
 
-      QRules rules = GennyJbpmBaseTest.setupLocalService();
       BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
       TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
   
-      Theme THM_DISPLAY_HORIZONTAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_HORIZONTAL",
-          Theme.class, serviceToken.getToken());
+      /* get the themes */
+      Theme THM_DISPLAY_HORIZONTAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_HORIZONTAL",Theme.class, serviceToken.getToken());
+      Theme THM_WIDTH_100_PERCENT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_WIDTH_100_PERCENT",Theme.class, serviceToken.getToken());
+      Theme THM_ICON = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_ICON", Theme.class,serviceToken.getToken());
+      Theme THM_JUSTIFY_CONTENT_SPACE_AROUND = Theme.builder("THM_JUSTIFY_CONTENT_SPACE_AROUND").addAttribute().justifyContent("space-around").end().build();
   
-      Theme THM_WIDTH_100_PERCENT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_WIDTH_100_PERCENT",
-          Theme.class, serviceToken.getToken());
-  
-      Theme THM_ICON = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_ICON", Theme.class,
-          serviceToken.getToken());
-  
-      Theme THM_JUSTIFY_CONTENT_SPACE_AROUND = Theme.builder("THM_JUSTIFY_CONTENT_SPACE_AROUND").addAttribute()
-          .justifyContent("space-around").end().build();
-  
+      /* get the baseentities */
       BaseEntity ICN_ARROW_FORWARD_IOS = beUtils.getBaseEntityByCode("ICN_ARROW_FORWARD_IOS");
       BaseEntity ICN_ARROW_BACK_IOS = beUtils.getBaseEntityByCode("ICN_ARROW_BACK_IOS");
   
+      /* get the attributes */
       Attribute questionAttribute = RulesUtils.attributeMap.get("QQQ_QUESTION_GROUP");
       Attribute nextAttribute = RulesUtils.attributeMap.get("PRI_NEXT_BTN");
       Attribute prevAttribute = RulesUtils.attributeMap.get("PRI_PREVIOUS_BTN");
+
+      /* we create context here */
+
+      /* bucketFooter context */
+      List<Context> bucketFooterContext = new ArrayList<>();
+      bucketFooterContext.add(new Context(ContextType.THEME, tableUtils.getThemeBe(THM_DISPLAY_HORIZONTAL), VisualControlType.GROUP_CONTENT_WRAPPER, 1.0));
+      bucketFooterContext.add(new Context(ContextType.THEME, tableUtils.getThemeBe(THM_WIDTH_100_PERCENT), VisualControlType.GROUP_WRAPPER, 1.0));
+      bucketFooterContext.add(new Context(ContextType.THEME, tableUtils.getThemeBe(THM_JUSTIFY_CONTENT_SPACE_AROUND), VisualControlType.GROUP_CONTENT_WRAPPER, 1.0));
+
+      /* nextBucket context */
+      List<Context> nextBucketContext = new ArrayList<>();
+      nextBucketContext.add(new Context(ContextType.ICON, ICN_ARROW_FORWARD_IOS, VisualControlType.VCL_ICON, 1.0));
+      nextBucketContext.add(new Context(ContextType.THEME, tableUtils.getThemeBe(THM_ICON), VisualControlType.VCL, 1.0));
+    
+      /* prevBucket context */
+      List<Context> prevBucketContext = new ArrayList<>();
+      prevBucketContext.add(new Context(ContextType.ICON, ICN_ARROW_BACK_IOS, VisualControlType.VCL_ICON, 1.0));
+      prevBucketContext.add(new Context(ContextType.THEME, tableUtils.getThemeBe(THM_ICON), VisualControlType.VCL, 1.0));
+
+      /* add the contextList to contextMap */
+      contextListMap.put("QUE_BUCKET_FOOTER_GRP", new ContextList(bucketFooterContext));
+      contextListMap.put("QUE_NEXT_BUCKET", new ContextList(nextBucketContext));
+      contextListMap.put("QUE_PREV_BUCKET", new ContextList(prevBucketContext));
   
       /* Initialize Bucket Footer Ask group */
-      Question bucketFooterQuestion = new Question("QUE_BUCKET_FOOTER_GRP", "Footer Group",
-          questionAttribute, true);
-  
+      Question bucketFooterQuestion = new Question("QUE_BUCKET_FOOTER_GRP", "Footer Group", questionAttribute, true);
       Ask bucketFooterAsk = new Ask(bucketFooterQuestion, beUtils.getGennyToken().getUserCode(), "SBE_DUMMY");
-      bucketFooterAsk = tableUtils.createVirtualContext(bucketFooterAsk, THM_DISPLAY_HORIZONTAL, ContextType.THEME,
-          VisualControlType.GROUP_CONTENT_WRAPPER);
-      bucketFooterAsk = tableUtils.createVirtualContext(bucketFooterAsk, getThemeBe(THM_WIDTH_100_PERCENT), ContextType.THEME,
-          VisualControlType.GROUP_WRAPPER);
-      bucketFooterAsk = tableUtils.createVirtualContext(bucketFooterAsk, getThemeBe(THM_JUSTIFY_CONTENT_SPACE_AROUND),
-          ContextType.THEME, VisualControlType.GROUP_CONTENT_WRAPPER);
-  
+
       /* next ask */
       Question nextBucketQues = new Question("QUE_NEXT_BUCKET", "", nextAttribute, false);
       Ask nextBucketAsk = new Ask(nextBucketQues, beUtils.getGennyToken().getUserCode(), "SBE_DUMMY");
-      nextBucketAsk = tableUtils.createVirtualContext(nextBucketAsk, ICN_ARROW_FORWARD_IOS, ContextType.ICON,
-          VisualControlType.VCL_ICON);
-      nextBucketAsk = tableUtils.createVirtualContext(nextBucketAsk, getThemeBe(THM_ICON), ContextType.THEME,
-          VisualControlType.VCL);
-  
+
       /* prev ask */
       Question prevBucketQues = new Question("QUE_PREV_BUCKET", "", prevAttribute, false);
       Ask prevBucketAsk = new Ask(prevBucketQues, beUtils.getGennyToken().getUserCode(), "SBE_DUMMY");
-      prevBucketAsk = tableUtils.createVirtualContext(prevBucketAsk, ICN_ARROW_BACK_IOS, ContextType.ICON,
-          VisualControlType.VCL_ICON);
-      prevBucketAsk = tableUtils.createVirtualContext(prevBucketAsk, getThemeBe(THM_ICON), ContextType.THEME,
-          VisualControlType.VCL);
-  
+
       /* set the child asks */
       Ask[] bucketChildAsksArray = { prevBucketAsk, nextBucketAsk };
       bucketFooterAsk.setChildAsks(bucketChildAsksArray);
   
       return bucketFooterAsk;
+     
     }
 
-    public Ask getBucketContentAsk(GennyToken serviceToken) {
+    public Ask getBucketContentAsk(Map<String, ContextList> contextListMap, GennyToken serviceToken) {
+    
+      BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
     	
-	 QRules rules = GennyJbpmBaseTest.setupLocalService();
-	 BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
-	 TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
- 
-
-      Attribute questionAttribute = RulesUtils.attributeMap.get("QQQ_QUESTION_GROUP");
+      Attribute questionAttribute = RulesUtils.getAttribute("QQQ_QUESTION_GROUP", serviceToken.getToken());
       Question bucketContentQuestion = new Question("QUE_BUCKET_CONTENT_GRP", "",questionAttribute, true);
       Ask bucketContentAsk = new Ask(bucketContentQuestion, beUtils.getGennyToken().getUserCode(), "SBE_DUMMY");
-  
       return bucketContentAsk;
+    
     }
 
     public BaseEntity getThemeBe(Theme theme) {
