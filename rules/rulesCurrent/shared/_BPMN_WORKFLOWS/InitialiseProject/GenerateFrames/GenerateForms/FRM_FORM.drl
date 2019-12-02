@@ -69,7 +69,7 @@ rule "FRM_FORM"
                     /* used for testing */
                     questionCodes.add("QUE_JOURNAL_W1D1_GRP");
                 }
-                System.out.println("Array of all the Form Codes");
+                System.out.println("Array of all the Form Code ");
                 System.out.println("Form Codes=" + questionCodes);
                 for (String questionCode : questionCodes){
                     Frame3 frame2 = Frame3.builder("FRM_CONTENT_" +  questionCode)
