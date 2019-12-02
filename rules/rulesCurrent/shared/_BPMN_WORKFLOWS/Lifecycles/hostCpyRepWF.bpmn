@@ -13,8 +13,8 @@
   <bpmn2:itemDefinition id="ItemDefinition_1" isCollection="false" structureRef="Object"/>
   <bpmn2:signal id="Signal_1" name="createBE"/>
   <bpmn2:signal id="Signal_2" name="makeBe"/>
-  <bpmn2:signal id="Signal_3" name="CREATE_HOST_COMPANY_REP"/>
-  <bpmn2:process id="HOST_COMPANY_REP" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="Default Process" isExecutable="true">
+  <bpmn2:signal id="Signal_3" name="START_HOST_CPY_REP"/>
+  <bpmn2:process id="hostCpyRepWF" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="Default Process" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.models.GennyToken"/>
       <drools:import name="life.genny.utils.CallingProcessToken"/>
@@ -65,27 +65,27 @@
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
-        <bpmn2:script>System.out.println(&quot;newHCRepLC: Starting&quot;);
+        <bpmn2:script>System.out.println(&quot;hostCpyRepWF: Starting&quot;);
 SessionFacts sessionFacts2 = (SessionFacts)sessionFacts;
 serviceToken = (GennyToken)sessionFacts2.getServiceToken();
 userToken = (GennyToken)sessionFacts2.getUserToken();
 kcontext.setVariable(&quot;serviceToken&quot;, serviceToken);
 kcontext.setVariable(&quot;userToken&quot;, userToken);
-System.out.println(&quot;newHCRepLC: userToken = &quot; +userToken.getCode());
-System.out.println(&quot;newHCRepLC: serviceToken = &quot; +serviceToken.getCode());
+System.out.println(&quot;hostCpyRepWF: userToken = &quot; +userToken.getCode());
+System.out.println(&quot;hostCpyRepWF: serviceToken = &quot; +serviceToken.getCode());
 
 processId = kcontext.getProcessInstance().getId();
 kcontext.setVariable(&quot;processId&quot;,kcontext.getProcessInstance().getId());
-System.out.println(&quot;newHCRepLC: processId = &quot; + processId);
+System.out.println(&quot;hostCpyRepWF: processId = &quot; + processId);
 
 uuid = UUID.randomUUID();
 kcontext.setVariable(&quot;uuid&quot;, uuid);
-System.out.println(&quot;newHCRepLC: uuid = &quot; + uuid);
+System.out.println(&quot;hostCpyRepWF: uuid = &quot; + uuid);
 
 
 callingProcessToken = new CallingProcessToken(userToken, processId, userToken.getUserCode());
 kcontext.setVariable(&quot;callingProcessToken&quot;, callingProcessToken);
-System.out.println(&quot;newHCRepLC: callingProcessToken = &quot; + callingProcessToken);
+System.out.println(&quot;hostCpyRepWF: callingProcessToken = &quot; + callingProcessToken);
 
 userToken = (GennyToken)userToken;
 BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
@@ -93,7 +93,7 @@ String newCode = &quot;PER_&quot;+uuid;
 newCode = newCode.toUpperCase();
 newBe = beUtils.create(newCode, newCode);
 kcontext.setVariable(&quot;newBe&quot;, newBe);
-System.out.println(&quot;newHCRepLC: newBe = &quot; + newBe);
+System.out.println(&quot;hostCpyRepWF: newBe = &quot; + newBe);
 System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_2" drools:priority="1" sourceRef="StartEvent_1" targetRef="ScriptTask_1"/>
@@ -149,7 +149,7 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
         <bpmn2:dataInputAssociation id="_DataInputAssociation_190">
           <bpmn2:targetRef>DataInput_9</bpmn2:targetRef>
           <bpmn2:assignment id="Assignment_6">
-            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_18">QUE_ADD_HOST_COMPANY_STAFF_GRP</bpmn2:from>
+            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_18">QUE_HOST_CPY_REP_GRP</bpmn2:from>
             <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_16">DataInput_9</bpmn2:to>
           </bpmn2:assignment>
         </bpmn2:dataInputAssociation>
@@ -174,15 +174,15 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
         </bpmn2:dataOutputAssociation>
       </bpmn2:task>
       <bpmn2:sequenceFlow id="SequenceFlow_14" drools:priority="1" sourceRef="IntermediateThrowEvent_2" targetRef="Task_2"/>
-      <bpmn2:scriptTask id="ScriptTask_3" name="End newHCRepLC" scriptFormat="http://www.java.com/java">
+      <bpmn2:scriptTask id="ScriptTask_3" name="End HC Rep" scriptFormat="http://www.java.com/java">
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
-            <drools:metaValue><![CDATA[End newHCRepLC]]></drools:metaValue>
+            <drools:metaValue><![CDATA[End HC Rep]]></drools:metaValue>
           </drools:metaData>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_19</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_17</bpmn2:outgoing>
-        <bpmn2:script>System.out.println(&quot;newHCRepC: Ending newHCRepC&quot;);</bpmn2:script>
+        <bpmn2:script>System.out.println(&quot;hostCpyRepWF: Ending hostCpyRepWF&quot;);</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_17" drools:priority="1" sourceRef="ScriptTask_3" targetRef="EndEvent_1"/>
       <bpmn2:intermediateCatchEvent id="IntermediateCatchEvent_1" name="Keep LC alive">
@@ -229,7 +229,7 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
     <bpmn2:sequenceFlow id="SequenceFlow_1" drools:priority="1" sourceRef="StartEvent_3" targetRef="SubProcess_1"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Process Diagram">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="HOST_COMPANY_REP">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="hostCpyRepWF">
       <bpmndi:BPMNShape id="BPMNShape_SubProcess_1" bpmnElement="SubProcess_1" isExpanded="true">
         <dc:Bounds height="150.0" width="861.0" x="480.0" y="230.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1">
@@ -281,7 +281,7 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_3" bpmnElement="ScriptTask_3" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="1130.0" y="285.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_9">
-          <dc:Bounds height="11.0" width="77.0" x="1146.0" y="304.0"/>
+          <dc:Bounds height="11.0" width="51.0" x="1159.0" y="304.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_IntermediateCatchEvent_1" bpmnElement="IntermediateCatchEvent_1">
