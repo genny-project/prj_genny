@@ -46,6 +46,6 @@ rule "FRM_BUCKETS"
 			insert (frame);
 			
 			/* Process and save to cache */
-			/* FrameUtils2.toMessage(frame, serviceToken); */
+			FrameUtils2.toMessage(frame, serviceToken);
 
 	end
