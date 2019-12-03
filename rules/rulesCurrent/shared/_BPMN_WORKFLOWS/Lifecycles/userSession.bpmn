@@ -45,6 +45,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_8" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_11" isCollection="false" structureRef="life.genny.qwanda.Answers"/>
   <bpmn2:itemDefinition id="ItemDefinition_9" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_15" isCollection="false" structureRef="Object"/>
   <bpmn2:signal id="Signal_2" name="event"/>
   <bpmn2:signal id="Signal_3" name="data"/>
   <bpmn2:signal id="Signal_4" name="newSession"/>
@@ -1115,10 +1116,14 @@ kcontext.setVariable(&quot;sessionFacts&quot;,sessionFacts);</tns:script>
             <bpmn2:dataInput id="DataInput_69" itemSubjectRef="ItemDefinition_10" name="rootFrameCode"/>
             <bpmn2:dataInput id="DataInput_70" name="userToken"/>
             <bpmn2:dataInput id="DataInput_71" itemSubjectRef="ItemDefinition_10" name="targetFrameCode"/>
+            <bpmn2:dataInput id="DataInput_55" itemSubjectRef="ItemDefinition_15" name="callingWorkflow"/>
+            <bpmn2:dataInput id="DataInput_57" itemSubjectRef="ItemDefinition_1081" name="output"/>
             <bpmn2:inputSet id="InputSet_18">
               <bpmn2:dataInputRefs>DataInput_69</bpmn2:dataInputRefs>
               <bpmn2:dataInputRefs>DataInput_70</bpmn2:dataInputRefs>
               <bpmn2:dataInputRefs>DataInput_71</bpmn2:dataInputRefs>
+              <bpmn2:dataInputRefs>DataInput_55</bpmn2:dataInputRefs>
+              <bpmn2:dataInputRefs>DataInput_57</bpmn2:dataInputRefs>
             </bpmn2:inputSet>
             <bpmn2:outputSet id="OutputSet_27" name="Output Set 9"/>
           </bpmn2:ioSpecification>
@@ -1139,6 +1144,17 @@ kcontext.setVariable(&quot;sessionFacts&quot;,sessionFacts);</tns:script>
               <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_51">#{output.getTargetCode()}</bpmn2:from>
               <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_52">DataInput_15</bpmn2:to>
             </bpmn2:assignment>
+          </bpmn2:dataInputAssociation>
+          <bpmn2:dataInputAssociation id="DataInputAssociation_26">
+            <bpmn2:targetRef>DataInput_55</bpmn2:targetRef>
+            <bpmn2:assignment id="Assignment_10">
+              <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_25">&quot;Show Page Handler: Show Frame&quot;</bpmn2:from>
+              <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_22">DataInput_55</bpmn2:to>
+            </bpmn2:assignment>
+          </bpmn2:dataInputAssociation>
+          <bpmn2:dataInputAssociation id="DataInputAssociation_27">
+            <bpmn2:sourceRef>output</bpmn2:sourceRef>
+            <bpmn2:targetRef>DataInput_57</bpmn2:targetRef>
           </bpmn2:dataInputAssociation>
         </bpmn2:task>
         <bpmn2:callActivity id="CallActivity_6" tns:waitForCompletion="true" tns:independent="false" name="Auth Init" calledElement="auth_init">
@@ -1981,13 +1997,13 @@ System.out.println(&quot;userSession: **************************End Session ****
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_10" bpmnElement="EndEvent_10">
         <dc:Bounds height="36.0" width="36.0" x="807.0" y="172.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_61">
           <dc:Bounds height="11.0" width="70.0" x="790.0" y="208.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_IntermediateThrowEvent_1" bpmnElement="IntermediateThrowEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="617.0" y="172.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_62">
           <dc:Bounds height="11.0" width="50.0" x="610.0" y="208.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -2350,7 +2366,7 @@ System.out.println(&quot;userSession: **************************End Session ****
         <di:waypoint xsi:type="dc:Point" x="543.0" y="218.0"/>
         <di:waypoint xsi:type="dc:Point" x="543.0" y="190.0"/>
         <di:waypoint xsi:type="dc:Point" x="617.0" y="190.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_104">
           <dc:Bounds height="11.0" width="50.0" x="542.0" y="191.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
@@ -2358,7 +2374,7 @@ System.out.println(&quot;userSession: **************************End Session ****
         <di:waypoint xsi:type="dc:Point" x="653.0" y="190.0"/>
         <di:waypoint xsi:type="dc:Point" x="730.0" y="190.0"/>
         <di:waypoint xsi:type="dc:Point" x="807.0" y="190.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_105"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
