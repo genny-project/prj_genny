@@ -343,7 +343,7 @@ public class BucketView extends GennyJbpmBaseTest {
 				/* fetch the search results */
 				QDataBaseEntityMessage msg = searchUtils.fetchSearchResults(searchBe, beUtils.getGennyToken());
 
-				/* get the application count */
+				/* get the application counts */
 				long totalResults = msg.getItems().length;
 
 				/* also update the searchBe with the attribute */
