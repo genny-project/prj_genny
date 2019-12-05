@@ -45,7 +45,10 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 				output.setFormCode("FRM_BUCKET_VIEW","FRM_TAB_CONTENT"); 
 				break;
 
-			case "QUE_TAB_DETAIL_VIEW" : output.setFormCode("FRM_DETAIL_VIEW_CONTENT","FRM_TAB_CONTENT"); break;
+			case "QUE_TAB_DETAIL_VIEW" : 
+				output.setFormCode("FRM_TAB_ITEM_DETAIL_VIEW_SELECTED","FRM_TAB_ITEM_DETAIL_VIEW"); 
+				output.setFormCode("FRM_DETAIL_VIEW_CONTENT","FRM_TAB_CONTENT"); 
+				break;
 
 			case "QUE_TAB_TABLE_VIEW" : output.setFormCode("FRM_TABLE_VIEW","FRM_TAB_CONTENT"); break;
 
