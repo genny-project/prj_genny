@@ -22,10 +22,10 @@ rule "ADD_ITEM_CLICK_EVENT"
 		
 		String code = $message.getData().getCode(); /* get click event code e.g. QUE_ADD_EDU_PROVIDER_GRP  */
 		String workflowSignalCode = StringUtils.removeEnd(code, "_GRP");
-		workflowSignalCode = StringUtils.removeStart(workflowSignalCode,"QUE_ADD_");
+		workflowSignalCode = StringUtils.removeStart(workflowSignalCode,"QUE_");
 
 		output.setTypeOfResult("SIGNAL");
-		output.setResultCode("CREATE_"+workflowSignalCode);
+		output.setResultCode("START_"+workflowSignalCode);
 
 		retract( $message);
 	end
