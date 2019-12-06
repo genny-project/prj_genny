@@ -37,7 +37,6 @@ rule "FRM_FORM"
       serviceToken : GennyToken( code == "PER_SERVICE")
     then
         System.out.println("   Generate FRM_FORM  RULE TEST " + serviceToken.getUserCode());
-<<<<<<< HEAD:rules/rulesCurrent/shared/_BPMN_WORKFLOWS/InitialiseProject/GenerateFrames/GenerateForms/FRM_FORM.drl
         Validation validation = new Validation("VLD_ANYTHING", "Anything", ".*");
         Validation validationImage = new Validation("VLD_IMAGE_URL", "Text", ".*");
         Validation validationEvent = new Validation("VLD_ANYTHING", "Anything", ".*");
@@ -109,5 +108,4 @@ rule "FRM_FORM"
             System.out.println(frame.getCode());
             FrameUtils2.toMessage(frame, serviceToken,"PER_SOURCE","PER_TARGET");
         }
-
 end
