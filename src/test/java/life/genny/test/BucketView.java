@@ -44,6 +44,7 @@ import life.genny.qwanda.validation.ValidationList;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
+import life.genny.utils.BucketUtils;
 import life.genny.utils.BucketUtilsTest;
 import life.genny.utils.FrameUtils2;
 import life.genny.utils.OutputParam;
@@ -278,6 +279,29 @@ public class BucketView extends GennyJbpmBaseTest {
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+		BucketUtilsTest bucketUtils = new BucketUtilsTest(beUtils);
+
+		Theme THM_JUSTIFY_CONTENT_FLEX_START = Theme.builder("THM_JUSTIFY_CONTENT_FLEX_START")
+		.addAttribute().justifyContent("flex-start").end()
+		.build();
+
+		Frame3 FRM_BUCKET_CONTENT = Frame3.builder("FRM_BUCKET_CONTENT")
+					.question("QUE_BUCKET_CONTENT_GRP").end()
+						.addTheme(THM_JUSTIFY_CONTENT_FLEX_START, ThemePosition.CENTRE).end()
+					.build();
+
+
+		
+		bucketUtils.sendCards(FRM_BUCKET_CONTENT, userToken);
+
+	}
+	//@Test
+	public void sendCards2() {
+
+		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		GennyToken userToken = new GennyToken("userToken", rules.getToken());
+		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
 		// TableUtilsTest bucketUtils = new //TableUtilsTest(beUtils);
 
 		/* initialize bucketUtils */
@@ -297,9 +321,6 @@ public class BucketView extends GennyJbpmBaseTest {
 
 		/* list to collect baseentity */
 		List<BaseEntity> beList = new ArrayList<BaseEntity>();
-
-//		/* get the templat ask for card */
-//		Ask templateAsk = bucketUtils.getCardTemplate(serviceToken);
 
 		/* get the bucket-content ask */
 		Ask FRM_BUCKET_CONTENT_ASK = bucketUtils.getBucketContentAsk(contextListMap, serviceToken);
@@ -391,20 +412,6 @@ public class BucketView extends GennyJbpmBaseTest {
 						virtualAskMap);
 				msg2.setToken(userToken.getToken());
 				VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg2));
-
-				System.out.println("Done sending toMessage indside loop");
-
-				System.out.println("Sending asks from inside the loop");
-
-				/* Send asks */
-				for (QDataAskMessage askMsg : askSet) {
-
-					askMsg.setToken(userToken.getToken());
-
-					String json = JsonUtils.toJson(askMsg);
-					VertxUtils.writeMsg("webcmds", json);
-
-				}
 
 			}
 
