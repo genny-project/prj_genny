@@ -67,6 +67,8 @@ rule "FRM_BUCKET_VIEW"
 
 			/* get the searchBeList from cache */
 			List<SearchEntity> searchBeList = new ArrayList<SearchEntity>();
+			SearchEntity SBE_AVAILABLE_INTERNS = VertxUtils.getObject(serviceToken.getRealm(), "",
+							"SBE_AVAILABLE_INTERNS", SearchEntity.class, serviceToken.getToken());
 			SearchEntity SBE_APPLIED_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
 							"SBE_APPLIED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
 			SearchEntity SBE_SHORTLISTED_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
@@ -80,6 +82,7 @@ rule "FRM_BUCKET_VIEW"
 			SearchEntity SBE_INPROGRESS_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
 							"SBE_INPROGRESS_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
 
+			searchBeList.add(SBE_AVAILABLE_INTERNS);
 			searchBeList.add(SBE_APPLIED_APPLICATIONS);
 			searchBeList.add(SBE_SHORTLISTED_APPLICATIONS);
 			searchBeList.add(SBE_INTERVIEWED_APPLICATIONS);

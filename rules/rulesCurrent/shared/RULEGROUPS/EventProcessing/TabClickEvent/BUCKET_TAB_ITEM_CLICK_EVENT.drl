@@ -8,6 +8,7 @@ import life.genny.models.GennyToken;
 import life.genny.utils.VertxUtils;
 import io.vertx.core.json.JsonObject;
 import life.genny.utils.OutputParam;
+import life.genny.utils.BucketUtils;
 
 rule "BUCKET_TAB_ITEM_CLICK_EVENT"
     ruleflow-group 'EventProcessing'
@@ -43,10 +44,23 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 					VertxUtils.writeMsg("webcmds",askJson );
 				}
 				output.setFormCode("FRM_BUCKET_VIEW","FRM_TAB_CONTENT"); 
+
+				Theme THM_JUSTIFY_CONTENT_FLEX_START = Theme.builder("THM_JUSTIFY_CONTENT_FLEX_START")
+														.addAttribute().justifyContent("flex-start").end()
+														.build();
+
+				Frame3 FRM_BUCKET_CONTENT = Frame3.builder("FRM_BUCKET_CONTENT")
+										.question("QUE_BUCKET_CONTENT_GRP").end()
+											.addTheme(THM_JUSTIFY_CONTENT_FLEX_START, ThemePosition.CENTRE).end()
+										.build();
+
+				BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+				BucketUtils bucketUtils = new BucketUtils(beUtils);
+
+				bucketUtils.sendCards(FRM_BUCKET_CONTENT, userToken);
 				break;
 
 			case "QUE_TAB_DETAIL_VIEW" : 
-				output.setFormCode("FRM_TAB_ITEM_DETAIL_VIEW_SELECTED","FRM_TAB_ITEM_DETAIL_VIEW"); 
 				output.setFormCode("FRM_DETAIL_VIEW_CONTENT","FRM_TAB_CONTENT"); 
 				break;
 
