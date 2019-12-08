@@ -22,6 +22,7 @@ rule "QUE_TABLE_PREVIOUS_BTN"
 	when
 		$message : QEventMessage(data.code matches "QUE_TABLE_PREVIOUS_BTN" )	
 		userToken : GennyToken ( code != "PER_SERVICE" ) 
+		serviceToken : GennyToken( code == "PER_SERVICE") 
 		output : OutputParam( )
 		ruleDetails : RuleDetails()
 	then
@@ -31,7 +32,9 @@ rule "QUE_TABLE_PREVIOUS_BTN"
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken); 
 		
 		/* get current search */
-		SearchEntity searchBE = TableUtils.getSessionSearch("SBE_SEARCHBAR",userToken);
+		TableUtils tableUtils = new TableUtils(beUtils);
+		
+		SearchEntity searchBE = tableUtils.getSessionSearch("SBE_SEARCHBAR");
 			
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" PREV for "+searchBE.getCode()); 
 		
@@ -56,7 +59,7 @@ rule "QUE_TABLE_PREVIOUS_BTN"
 				beUtils.getGennyToken().getToken());
 			
 	        ShowFrame.display(userToken, "FRM_TABLE_VIEW", "FRM_CONTENT", "Test");
- 		    TableUtils.performSearch(userToken , beUtils, "SBE_SEARCHBAR", null);
+		    tableUtils.performSearch( serviceToken,"SBE_SEARCHBAR",null);
 
 			
   	    output.setTypeOfResult("NONE");

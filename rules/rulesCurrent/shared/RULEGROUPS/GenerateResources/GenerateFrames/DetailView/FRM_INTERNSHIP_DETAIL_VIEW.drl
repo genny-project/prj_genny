@@ -81,11 +81,11 @@ rule "FRM_INTERNSHIP_DETAIL_VIEW"
 		Map<String, QDataAskMessage> virtualAskMap = new HashMap<String, QDataAskMessage>();
 		
 		/* Fetching searh resutls and labels for internship detail view */
-		QDataBaseEntityMessage fetchResultMsg = tableUtils.fetchSearchResults(searchBE, serviceToken);
+		QDataBaseEntityMessage fetchResultMsg = tableUtils.fetchSearchResults(searchBE);
 		Map<String, String> askLabels = tableUtils.getTableColumns(searchBE);
 		List<Object> belist = new ArrayList<>(Arrays.asList(fetchResultMsg.getItems()));
 		List<BaseEntity> results = (List<BaseEntity>) (List) belist;
-		List<Ask> asks = TableUtils.generateQuestions(serviceToken, beUtils, results, askLabels, "PRJ_INTERNMATCH");
+		List<Ask> asks = tableUtils.generateQuestions(results, askLabels, "PRJ_INTERNMATCH");
 
 		/*  Ask Question code should be similar to the frame question code */
 		Ask askInternshipDetail = asks.get(0);
@@ -97,11 +97,11 @@ rule "FRM_INTERNSHIP_DETAIL_VIEW"
 		
 		/* Fetching searh resutls and labels for internship detail view top summary*/
 		searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", "SBE_INTERNSHIP_DETAIL_VIEW_TOP_SUMMARY",SearchEntity.class, serviceToken.getToken());
-		fetchResultMsg = tableUtils.fetchSearchResults(searchBE, serviceToken);
+		fetchResultMsg = tableUtils.fetchSearchResults(searchBE);
 		askLabels = tableUtils.getTableColumns(searchBE);
 		belist = new ArrayList<>(Arrays.asList(fetchResultMsg.getItems()));
 		results = (List<BaseEntity>) (List) belist;
-		asks = TableUtils.generateQuestions(serviceToken, beUtils, results, askLabels, "PRJ_INTERNMATCH");
+		asks = tableUtils.generateQuestions(results, askLabels, "PRJ_INTERNMATCH");
 		
 		/*  Ask Question code should be similar to the frame question code */
 		/*Ask askTopSummary = asks.get(0);
