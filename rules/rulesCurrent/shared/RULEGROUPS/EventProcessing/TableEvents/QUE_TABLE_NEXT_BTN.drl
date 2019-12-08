@@ -41,24 +41,26 @@ rule "QUE_TABLE_NEXT_BTN"
 		
 		Integer pageIndex = searchBE.getValue("SCH_PAGE_START",0);
 		Integer pageSize = searchBE.getValue("SCH_PAGE_SIZE", GennySettings.defaultPageSize);
+		Integer numRecords = searchBE.getValue("PRI_TOTAL_RESULTS", 1000);  /* default 1000 */		
 
 		pageIndex = pageIndex + pageSize;
-		Integer pageNumber = (pageIndex / pageSize) +1;
+		if (pageIndex <= numRecords) {
+			Integer pageNumber = (pageIndex / pageSize) +1;
 		
 
-		Answer pageAnswer = new Answer(userToken.getUserCode(),searchBE.getCode(), "SCH_PAGE_START", pageIndex+"");
-		Answer pageNumberAnswer = new Answer(userToken.getUserCode(),searchBE.getCode(), "PRI_INDEX", pageNumber+"");
+			Answer pageAnswer = new Answer(userToken.getUserCode(),searchBE.getCode(), "SCH_PAGE_START", pageIndex+"");
+			Answer pageNumberAnswer = new Answer(userToken.getUserCode(),searchBE.getCode(), "PRI_INDEX", pageNumber+"");
 
-		searchBE = beUtils.updateBaseEntity(searchBE, pageAnswer,SearchEntity.class);
-		searchBE = beUtils.updateBaseEntity(searchBE, pageNumberAnswer,SearchEntity.class);
+			searchBE = beUtils.updateBaseEntity(searchBE, pageAnswer,SearchEntity.class);
+			searchBE = beUtils.updateBaseEntity(searchBE, pageNumberAnswer,SearchEntity.class);
 		
-		VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
-			beUtils.getGennyToken().getToken());
+			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
+				beUtils.getGennyToken().getToken());
 		
 
-        ShowFrame.display(userToken, "FRM_TABLE_VIEW", "FRM_CONTENT", "Test");
- 		tableUtils.performSearch(serviceToken,"SBE_SEARCHBAR", null);
-			
+        	ShowFrame.display(userToken, "FRM_TABLE_VIEW", "FRM_CONTENT", "Test");
+ 			tableUtils.performSearch(serviceToken,"SBE_SEARCHBAR", null);
+			}
   	       output.setTypeOfResult("NONE");
   	       output.setResultCode("NONE");  /* dont display anything new */
   	     
