@@ -41,7 +41,7 @@ rule "FRM_FORM"
 
     then
 
-        System.out.println("   Generate FRM_FORM  RULE TEST " + serviceToken.getUserCode());
+        System.out.println("   Generate FRM_FORM  RULE TEST (PRJ_GENNY)" + serviceToken.getUserCode());
 
 				Validation validation = new Validation("VLD_ANYTHING", "Anything", ".*");
 				Validation validationImage = new Validation("VLD_IMAGE_URL", "Text", ".*");
