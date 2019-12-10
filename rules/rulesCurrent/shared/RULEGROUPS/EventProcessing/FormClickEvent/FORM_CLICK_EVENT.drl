@@ -6,6 +6,7 @@ import life.genny.utils.VertxUtils;
 import io.vertx.core.json.JsonObject;
 import life.genny.utils.OutputParam;
 import life.genny.qwanda.rule.RuleDetails;
+import org.apache.commons.lang3.StringUtils;
 
 rule "FORM_CLICK_EVENT"
     ruleflow-group 'EventProcessing'
@@ -21,16 +22,14 @@ rule "FORM_CLICK_EVENT"
 
 		String code = $message.getData().getCode();
 
-		if(code.matches("(.*)_MENU_GRP")) {
-			System.out.println("This is a menu question");
+		if(code.matches("(.*)_MENU")) {
+			System.out.println("MENU code found");
+			String tempCode = StringUtils.removeEnd(code, "_MENU");
+			code = tempCode + "_GRP";
 
-			String tempCode = code.split("_MENU_GRP")[0];
-			String newCode = tempCode + "_GRP";
-			code = newCode;
-			System.out.println("newCode :: " + code);
 		}
 
-		output.setFormCode("FRM_"+ $message.getData().getCode(),"FRM_CONTENT");
+		output.setFormCode("FRM_"+ code,"FRM_CONTENT");
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" ->"+output);
 		/* Now add the allowable answers */
 		
