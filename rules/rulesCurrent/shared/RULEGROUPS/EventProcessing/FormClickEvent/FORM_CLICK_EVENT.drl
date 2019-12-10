@@ -18,6 +18,18 @@ rule "FORM_CLICK_EVENT"
 		ruleDetails : RuleDetails()
     then
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
+
+		String code = $message.getData().getCode();
+
+		if(code.matches("(.*)_MENU_GRP")) {
+			System.out.println("This is a menu question");
+
+			String tempCode = code.split("_MENU_GRP")[0];
+			String newCode = tempCode + "_GRP";
+			code = newCode;
+			System.out.println("newCode :: " + code);
+		}
+
 		output.setFormCode("FRM_"+ $message.getData().getCode(),"FRM_CONTENT");
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" ->"+output);
 		/* Now add the allowable answers */
