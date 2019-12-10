@@ -23,6 +23,7 @@ rule "FORM_CLICK_EVENT"
 		String code = $message.getData().getCode();
 
 		if(code.matches("(.*)_MENU")) {
+			System.out.println("MENU code found");
 			String tempCode = StringUtils.removeEnd(code, "_MENU");
 			code = tempCode + "_GRP";
 
