@@ -1,6 +1,7 @@
 package life.genny.test;
 
 import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.amazonaws.services.simpleworkflow.flow.core.TryCatch;
+import com.google.gson.reflect.TypeToken;
 
 import io.vertx.core.json.JsonObject;
 import life.genny.models.Frame3;
@@ -41,7 +43,9 @@ import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.validation.Validation;
 import life.genny.qwanda.validation.ValidationList;
+import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
+import life.genny.qwandautils.QwandaUtils;
 import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.BucketUtils;
@@ -60,6 +64,54 @@ public class BucketView extends GennyJbpmBaseTest {
 
 	public BucketView() {
 		super(false);
+	}
+	
+	@Test
+	public void formsTest() {
+		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		GennyToken userToken = new GennyToken("userToken", rules.getToken());
+		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+
+		String apiUrl = GennySettings.qwandaServiceUrl + "/service/forms";
+		System.out.println("Fetching setup info from " + apiUrl);
+		System.out.println("userToken (ensure user has test role) = " + userToken);
+		try {
+			String jsonFormCodes = QwandaUtils.apiGet(apiUrl, userToken.getToken());
+			if (!"You need to be a test.".equals(jsonFormCodes)) {
+				Type type = new TypeToken<List<String>>() {
+				}.getType();
+				List<String> formCodes = JsonUtils.fromJson(jsonFormCodes, type);
+				System.out.println("Form Codes=" + formCodes);
+
+				for (String formCode : formCodes) {
+					
+					System.out.println("formCode :: " + formCode);
+					
+					String code = formCode.split("_GRP")[0];
+					String menuCode =  code + "_MENU_" + "GRP";
+					
+					System.out.println("menuCode :: " + menuCode);
+					
+					
+					if(menuCode.matches("(.*)_MENU_GRP")) {
+						String tempCode = menuCode.split("_MENU_GRP")[0];
+						String newCode = tempCode + "_GRP";
+						formCode = newCode;
+						System.out.println("formCode :: " + formCode);
+					}
+					System.out.println("----------------------");
+					System.out.println("----------------------");
+					
+					
+				}
+
+			} else {
+				System.out.println("Ensure that the user you are using has a 'test' role ...");
+			}
+
+		} catch (Exception e) {
+
+		}
 	}
 
 	// @Test
@@ -272,7 +324,7 @@ public class BucketView extends GennyJbpmBaseTest {
 
 	}
 
-	@Test
+	// @Test
 	public void sendCards() {
 
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
