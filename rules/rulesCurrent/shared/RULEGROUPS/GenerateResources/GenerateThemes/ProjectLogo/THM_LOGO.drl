@@ -47,7 +47,7 @@ rule "THM_LOGO"
 			Theme theme = Theme.builder("THM_LOGO")
 								.addAttribute()	
 									.imageHeight(100)
-									.imageWidth(100)
+									.imageWidth(170)
 									.showName(false)
 								.end()
 								.build();
