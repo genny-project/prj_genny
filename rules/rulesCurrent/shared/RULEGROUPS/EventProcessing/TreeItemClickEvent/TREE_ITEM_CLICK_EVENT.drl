@@ -17,7 +17,16 @@ rule "TREE_ITEM_CLICK_EVENT"
     then
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
 		System.out.println("Parent code :  " + $message.getData().getParentCode());
-		output.setFormCode("FRM_"+ $message.getData().getCode(),"FRM_CONTENT");
+
+		String code = $message.getData().getCode();
+		if(code.matches("(.*)_MENU_GRP")) {
+			String tempCode = code.split("_MENU_GRP")[0];
+			String newCode = tempCode + "_GRP";
+			code = newCode;
+			System.out.println("newCode :: " + code);
+		}
+
+		output.setFormCode("FRM_"+ code,"FRM_CONTENT");
 		retract( $message);
 		
 	end
