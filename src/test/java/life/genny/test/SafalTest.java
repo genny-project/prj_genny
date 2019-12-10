@@ -2,6 +2,7 @@
 package life.genny.test;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -15,8 +16,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 
 import org.jbpm.ruleflow.core.RuleFlowProcess;
@@ -48,6 +51,7 @@ import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.qwanda.message.QDataAskMessage;
+import life.genny.qwanda.message.QDataAttributeMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventMessage;
 import life.genny.qwanda.validation.Validation;
@@ -55,8 +59,10 @@ import life.genny.qwanda.validation.ValidationList;
 import life.genny.qwandautils.GennyCacheInterface;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
+import life.genny.qwandautils.QwandaUtils;
 import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
+import life.genny.utils.DropdownUtils;
 import life.genny.utils.FrameUtils2;
 import life.genny.utils.QuestionUtils;
 import life.genny.utils.TableUtils;
@@ -108,7 +114,62 @@ public class SafalTest extends GennyJbpmBaseTest {
 		}
 	}
 
-	@Test  	
+	@Test
+	public void DropdownUtilsTest() throws IOException {
+		initItem();
+		
+		       
+		DropdownUtils dropDownUtils = new DropdownUtils();
+		
+		dropDownUtils.setNewSearch("IndustryClassification"," Classificcatino of industry")
+			.addFilter("PRI_CODE",SearchEntity.StringFilter.LIKE,"SEL_%")
+	        .setSourceCode("GRP_INDUSTRY_SELECTION")
+	        .setPageStart(0)
+	        .setPageSize(10000);
+			
+		dropDownUtils.sendSearchResults("GRP_INDUSTRY_SELECTION", "LNK_CORE", "INDUSTRY", userToken);
+		
+	}
+	
+	//@Test
+	public void test1000() {
+		initItem();
+		try {
+		
+		Map<String, Attribute> attributeMap = new ConcurrentHashMap<String, Attribute>();
+		String token = serviceToken.getToken();
+		String jsonString = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/qwanda/attributes", token);
+		
+		if (!StringUtils.isBlank(jsonString)) {
+		VertxUtils.writeCachedJson(realm, "attributes", jsonString, token);
+		
+		QDataAttributeMessage attributesMsg = JsonUtils.fromJson(jsonString, QDataAttributeMessage.class);
+		Attribute[] attributeArray = attributesMsg.getItems();
+		
+		Attribute result = null;
+		
+		for (Attribute attribute : attributeArray) {
+			if(attribute.getCode().equals("LNK_INDUSTRY")) {
+				result = attribute;
+			}
+			attributeMap.put(attribute.getCode(), attribute);
+		}
+		
+		System.out.println("All the attributes have been loaded from api in" + attributeMap.size() + " attributes");
+		} else {
+			log.error("NO ATTRIBUTES LOADED FROM API");
+		}
+		
+		
+		
+		QDataAskMessage sss = QuestionUtils.getAsks("PER_SERVICE", "PER_SERVICE", "QUE_ADD_INTERNSHIP_TEMPLATE_AGENT_GRP",serviceToken.getToken());
+		rules.sendAllAttributes();
+		}catch(Exception e) {
+			
+		}
+	}
+	
+	//@Test  	
     public void sss() {
     	
     	initItem();
