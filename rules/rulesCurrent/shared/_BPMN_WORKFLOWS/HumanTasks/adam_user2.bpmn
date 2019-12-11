@@ -50,8 +50,8 @@
       <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
       <bpmn2:ioSpecification id="InputOutputSpecification_2">
         <bpmn2:dataInput id="DataInput_4" itemSubjectRef="ItemDefinition_5" name="userToken"/>
-        <bpmn2:dataInput id="DataInput_5" name="questionCode"/>
-        <bpmn2:dataInput id="DataInput_6" name="callingWorkflow"/>
+        <bpmn2:dataInput id="DataInput_5" itemSubjectRef="ItemDefinition_1" name="questionCode"/>
+        <bpmn2:dataInput id="DataInput_6" itemSubjectRef="ItemDefinition_1" name="callingWorkflow"/>
         <bpmn2:dataOutput id="DataOutput_3" itemSubjectRef="ItemDefinition_343" name="Result"/>
         <bpmn2:dataOutput id="DataOutput_4" itemSubjectRef="ItemDefinition_343" name="results"/>
         <bpmn2:inputSet id="_InputSet_3">
