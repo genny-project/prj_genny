@@ -324,7 +324,7 @@ public class BucketView extends GennyJbpmBaseTest {
 
 	}
 
-	@Test
+	//@Test
 	public void sendCards() {
 
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -495,6 +495,55 @@ public class BucketView extends GennyJbpmBaseTest {
 	}
 
 	@Test
+	public void testForm() {
+
+		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		GennyToken userToken = new GennyToken("userToken", rules.getToken());
+		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+		// TableUtilsTest bucketUtils = new //TableUtilsTest(beUtils);
+
+		/* initialize bucketUtils */
+		BucketUtilsTest bucketUtils = new BucketUtilsTest(beUtils);
+
+		/* initialize virtualAskMap */
+		Map<String, QDataAskMessage> virtualAskMap = new HashMap<String, QDataAskMessage>();
+
+		/* initialize ask set */
+		Set<QDataAskMessage> askSet = new HashSet<QDataAskMessage>();
+
+		/* initialize contextListMap */
+		Map<String, ContextList> contextListMap = new HashMap<String, ContextList>();
+
+		try {
+
+			Frame3 FRM_QUE_USER_PROFILE_GRP = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_QUE_USER_PROFILE_GRP",
+			Frame3.class, serviceToken.getToken());
+
+			/* build the tab content frame */
+			Frame3 FRM_CONTENT = Frame3.builder("FRM_CONTENT").addFrame(FRM_QUE_USER_PROFILE_GRP, FramePosition.NORTH)
+					.end().build();
+
+			QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_CONTENT, serviceToken, askSet, contextListMap,
+					virtualAskMap);
+			msg.setToken(userToken.getToken());
+			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+
+			for (QDataAskMessage askMsg : askSet) {
+
+				askMsg.setToken(userToken.getToken());
+
+				String json = JsonUtils.toJson(askMsg);
+				VertxUtils.writeMsg("webcmds", json);
+
+			}
+
+			System.out.print("Completed");
+		} catch (Exception e) {
+			System.out.print("Error");
+		}
+	}
+	//@Test
 	public void testProcessView() {
 
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
