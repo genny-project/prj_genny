@@ -324,7 +324,7 @@ public class BucketView extends GennyJbpmBaseTest {
 
 	}
 
-	// @Test
+	@Test
 	public void sendCards() {
 
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -494,7 +494,7 @@ public class BucketView extends GennyJbpmBaseTest {
 		}
 	}
 
-	// @Test
+	@Test
 	public void testProcessView() {
 
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -579,72 +579,77 @@ public class BucketView extends GennyJbpmBaseTest {
 			/* get the searchBeList */
 			List<SearchEntity> searchBeList = bucketUtils.getBucketSearchBeListFromCache(serviceToken);
 			System.out.println("size   ::    " + searchBeList.size());
+			
+			if(searchBeList != null && !searchBeList.isEmpty()) {
+				for (SearchEntity searchBe : searchBeList) {
 
-			/* loop through the searchList */
-			for (SearchEntity searchBe : searchBeList) {
+					String code = searchBe.getCode().split("SBE_")[1];
 
-				String code = searchBe.getCode().split("SBE_")[1];
+					contextListMap.put("QUE_BUCKET_HEADER_" + code + "_GRP", new ContextList(bucketHeaderContext));
 
-				contextListMap.put("QUE_BUCKET_HEADER_" + code + "_GRP", new ContextList(bucketHeaderContext));
+					/* clone the bucket */
+					Frame3 bucketHeader = Frame3.clone(FRM_BUCKET_HEADER);
+					bucketHeader.setCode("FRM_BUCKET_HEADER_" + code);
+					bucketHeader.setQuestionCode("QUE_BUCKET_HEADER_" + code + "_GRP");
 
-				/* clone the bucket */
-				Frame3 bucketHeader = Frame3.clone(FRM_BUCKET_HEADER);
-				bucketHeader.setCode("FRM_BUCKET_HEADER_" + code);
-				bucketHeader.setQuestionCode("QUE_BUCKET_HEADER_" + code + "_GRP");
+					Frame3 bucketContent = Frame3.clone(FRM_BUCKET_CONTENT);
+					bucketContent.setCode("FRM_BUCKET_CONTENT_" + code);
+					bucketContent.setQuestionCode("QUE_BUCKET_CONTENT_" + code + "_GRP");
 
-				Frame3 bucketContent = Frame3.clone(FRM_BUCKET_CONTENT);
-				bucketContent.setCode("FRM_BUCKET_CONTENT_" + code);
-				bucketContent.setQuestionCode("QUE_BUCKET_CONTENT_" + code + "_GRP");
+					Frame3 bucketFooter = Frame3.clone(FRM_BUCKET_FOOTER);
+					bucketFooter.setCode("FRM_BUCKET_FOOTER_" + code);
+					bucketFooter.setQuestionCode("QUE_BUCKET_FOOTER_" + code + "_GRP");
 
-				Frame3 bucketFooter = Frame3.clone(FRM_BUCKET_FOOTER);
-				bucketFooter.setCode("FRM_BUCKET_FOOTER_" + code);
-				bucketFooter.setQuestionCode("QUE_BUCKET_FOOTER_" + code + "_GRP");
+					Frame3 bucket = Frame3.clone(FRM_BUCKETS);
+					bucket.setCode("FRM_BUCKET_" + code);
+					bucket.getFrames().add(new FrameTuple3(bucketHeader, FramePosition.NORTH, 1.0));
+					bucket.getFrames().add(new FrameTuple3(bucketContent, FramePosition.CENTRE, 1.0));
+					bucket.getFrames().add(new FrameTuple3(bucketFooter, FramePosition.SOUTH, 1.0));
 
-				Frame3 bucket = Frame3.clone(FRM_BUCKETS);
-				bucket.setCode("FRM_BUCKET_" + code);
-				bucket.getFrames().add(new FrameTuple3(bucketHeader, FramePosition.NORTH, 1.0));
-				bucket.getFrames().add(new FrameTuple3(bucketContent, FramePosition.CENTRE, 1.0));
-				bucket.getFrames().add(new FrameTuple3(bucketFooter, FramePosition.SOUTH, 1.0));
+					/* add the cloned bucket to wrapper */
+					FRM_BUCKET_WRAPPER.getFrames().add(new FrameTuple3(bucket, FramePosition.WEST, 1.0));
 
-				/* add the cloned bucket to wrapper */
-				FRM_BUCKET_WRAPPER.getFrames().add(new FrameTuple3(bucket, FramePosition.WEST, 1.0));
+					/* clone asks */
 
-				/* clone asks */
+					/* bucketHeader asks */
+					Ask bucketHeaderAsk = Ask.clone(FRM_BUCKET_HEADER_ASK);
+					bucketHeaderAsk.setQuestionCode("QUE_BUCKET_HEADER_" + code + "_GRP");
+					bucketHeaderAsk.getQuestion().setName(code);
+					bucketHeaderAsk.setName(searchBe.getName());
+					bucketHeaderAsk.setTargetCode(searchBe.getCode());
 
-				/* bucketHeader asks */
-				Ask bucketHeaderAsk = Ask.clone(FRM_BUCKET_HEADER_ASK);
-				bucketHeaderAsk.setQuestionCode("QUE_BUCKET_HEADER_" + code + "_GRP");
-				bucketHeaderAsk.getQuestion().setName(code);
-				bucketHeaderAsk.setName(searchBe.getName());
-				bucketHeaderAsk.setTargetCode(searchBe.getCode());
+					/* bucketContent asks */
+					Ask bucketContentAsk = Ask.clone(FRM_BUCKET_CONTENT_ASK);
+					bucketContentAsk.setQuestionCode("QUE_BUCKET_CONTENT_" + code + "_GRP");
+					bucketContentAsk.setName(searchBe.getName());
+					bucketContentAsk.setTargetCode(searchBe.getCode());
 
-				/* bucketContent asks */
-				Ask bucketContentAsk = Ask.clone(FRM_BUCKET_CONTENT_ASK);
-				bucketContentAsk.setQuestionCode("QUE_BUCKET_CONTENT_" + code + "_GRP");
-				bucketContentAsk.setName(searchBe.getName());
-				bucketContentAsk.setTargetCode(searchBe.getCode());
+					/* bucketFooter asks */
+					Ask bucketFooterAsk = Ask.clone(FRM_BUCKET_FOOTER_ASK);
+					bucketFooterAsk.setQuestionCode("QUE_BUCKET_FOOTER_" + code + "_GRP");
+					bucketFooterAsk.setName(searchBe.getName());
+					bucketFooterAsk.setTargetCode(searchBe.getCode());
 
-				/* bucketFooter asks */
-				Ask bucketFooterAsk = Ask.clone(FRM_BUCKET_FOOTER_ASK);
-				bucketFooterAsk.setQuestionCode("QUE_BUCKET_FOOTER_" + code + "_GRP");
-				bucketFooterAsk.setName(searchBe.getName());
-				bucketFooterAsk.setTargetCode(searchBe.getCode());
+					virtualAskMap.put(bucketHeaderAsk.getQuestionCode(), new QDataAskMessage(bucketHeaderAsk));
+					virtualAskMap.put(bucketContentAsk.getQuestionCode(), new QDataAskMessage(bucketContentAsk));
+					virtualAskMap.put(bucketFooterAsk.getQuestionCode(), new QDataAskMessage(bucketFooterAsk));
 
-				virtualAskMap.put(bucketHeaderAsk.getQuestionCode(), new QDataAskMessage(bucketHeaderAsk));
-				virtualAskMap.put(bucketContentAsk.getQuestionCode(), new QDataAskMessage(bucketContentAsk));
-				virtualAskMap.put(bucketFooterAsk.getQuestionCode(), new QDataAskMessage(bucketFooterAsk));
-
+				}
+			}else {
+				System.out.println("searchBeList is empty");
 			}
+			/* loop through the searchList */
+			
 
 			/* build the bucket view frame */
 			Frame3 FRM_BUCKET_VIEW = Frame3.builder("FRM_BUCKET_VIEW")
 					.addFrame(FRM_BUCKET_WRAPPER, FramePosition.CENTRE).end().build();
 
 			/* build the tab content frame */
-			Frame3 FRM_TAB_CONTENT = Frame3.builder("FRM_TAB_CONTENT").addFrame(FRM_BUCKET_VIEW, FramePosition.NORTH)
+			Frame3 FRM_CONTENT = Frame3.builder("FRM_CONTENT").addFrame(FRM_BUCKET_VIEW, FramePosition.NORTH)
 					.end().build();
 
-			QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_TAB_CONTENT, serviceToken, askSet, contextListMap,
+			QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_CONTENT, serviceToken, askSet, contextListMap,
 					virtualAskMap);
 			msg.setToken(userToken.getToken());
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
