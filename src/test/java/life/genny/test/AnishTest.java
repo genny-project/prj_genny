@@ -71,7 +71,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                 GennyToken userToken = new GennyToken("userToken", rules.getToken());
                 GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
                 BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
-                TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
+                TableUtils tableUtils = new TableUtils(beUtils);
 
                // try {
                         /* list to collect baseentity */

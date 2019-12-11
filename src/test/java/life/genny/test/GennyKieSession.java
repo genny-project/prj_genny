@@ -74,7 +74,6 @@ import com.google.gson.reflect.TypeToken;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import life.genny.jbpm.customworkitemhandlers.AskQuestionTaskWorkItemHandler;
-import life.genny.jbpm.customworkitemhandlers.AskQuestionWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.AwesomeHandler;
 import life.genny.jbpm.customworkitemhandlers.CheckTasksWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.GetProcessesUsingVariable;
@@ -681,8 +680,6 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		kieSession.getWorkItemManager().registerWorkItemHandler("RuleFlowGroup", new RuleFlowGroupWorkItemHandler(rteng));
 		kieSession.getWorkItemManager().registerWorkItemHandler("ThrowSignalProcess",
 				new ThrowSignalProcessWorkItemHandler(rteng));
-		kieSession.getWorkItemManager().registerWorkItemHandler("AskQuestion",
-				new AskQuestionWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng));
 		kieSession.getWorkItemManager().registerWorkItemHandler("ThrowSignal",
 				new ThrowSignalWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng));
 		
