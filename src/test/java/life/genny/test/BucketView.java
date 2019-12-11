@@ -66,7 +66,7 @@ public class BucketView extends GennyJbpmBaseTest {
 		super(false);
 	}
 	
-	@Test
+	//@Test
 	public void formsTest() {
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
