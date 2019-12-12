@@ -17,6 +17,11 @@
   <bpmn2:itemDefinition id="ItemDefinition_1449" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_1450" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_1452" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_7" isCollection="false" structureRef="life.genny.utils.DropdownUtils"/>
+  <bpmn2:itemDefinition id="ItemDefinition_16" isCollection="false" structureRef="life.genny.qwanda.entity.SearchEntity.Sort"/>
+  <bpmn2:itemDefinition id="ItemDefinition_18" isCollection="false" structureRef="life.genny.qwanda.entity.SearchEntity.StringFilter"/>
+  <bpmn2:itemDefinition id="ItemDefinition_20" isCollection="false" structureRef="life.genny.qwanda.entity.SearchEntity.Filter"/>
+  <bpmn2:itemDefinition id="ItemDefinition_21" isCollection="false" structureRef="life.genny.qwanda.entity.SearchEntity"/>
   <bpmn2:signal id="Signal_1" name="createBE"/>
   <bpmn2:signal id="Signal_2" name="makeBe"/>
   <bpmn2:signal id="Signal_3" name="START_HOST_CPY"/>
@@ -30,6 +35,11 @@
       <drools:import name="life.genny.utils.SessionFacts"/>
       <drools:import name="java.util.UUID"/>
       <drools:import name="life.genny.utils.OutputParam"/>
+      <drools:import name="life.genny.utils.DropdownUtils"/>
+      <drools:import name="life.genny.qwanda.entity.SearchEntity"/>
+      <drools:import name="life.genny.qwanda.entity.SearchEntity.Sort"/>
+      <drools:import name="life.genny.qwanda.entity.SearchEntity.StringFilter"/>
+      <drools:import name="life.genny.qwanda.entity.SearchEntity.Filter"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_556" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_556" name="serviceToken"/>
@@ -42,6 +52,7 @@
     <bpmn2:property id="uuid" itemSubjectRef="ItemDefinition_3679" name="uuid"/>
     <bpmn2:property id="outputMsg" itemSubjectRef="ItemDefinition_425" name="outputMsg"/>
     <bpmn2:property id="baseEntityType" itemSubjectRef="ItemDefinition_9" name="baseEntityType"/>
+    <bpmn2:property id="dropDownGroup" itemSubjectRef="ItemDefinition_9" name="dropDownGroup"/>
     <bpmn2:subProcess id="SubProcess_1" name="Host Company Builder">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -132,6 +143,12 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[QUE_HOST_CPY_GRP]]></drools:metaValue>
           </drools:metaData>
+          <drools:onEntry-script scriptFormat="http://www.java.com/java">
+            <drools:script>dropDownGroup = &quot;GRP_INDUSTRY_SELECTION&quot;;
+DropdownUtils dropDownUtils = new DropdownUtils();
+dropDownUtils.setNewSearch(&quot;IndustryClassification&quot;, &quot;Classification of industry&quot;).addFilter(&quot;PRI_CODE&quot;,SearchEntity.StringFilter.LIKE,&quot;SEL_%&quot;).setSourceCode(dropDownGroup).setPageStart(0).setPageSize(10000);
+dropDownUtils.sendSearchResults(dropDownGroup, &quot;LNK_CORE&quot;, &quot;INDUSTRY&quot;, userToken);</drools:script>
+          </drools:onEntry-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_14</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_18</bpmn2:outgoing>
@@ -373,7 +390,7 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_1" bpmnElement="Task_1" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="620.0" y="285.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_11">
           <dc:Bounds height="11.0" width="52.0" x="649.0" y="304.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -423,13 +440,13 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
         <di:waypoint xsi:type="dc:Point" x="570.0" y="310.0"/>
         <di:waypoint xsi:type="dc:Point" x="595.0" y="310.0"/>
         <di:waypoint xsi:type="dc:Point" x="620.0" y="310.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_12"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_5" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_IntermediateThrowEvent_2">
         <di:waypoint xsi:type="dc:Point" x="730.0" y="310.0"/>
         <di:waypoint xsi:type="dc:Point" x="760.0" y="310.0"/>
         <di:waypoint xsi:type="dc:Point" x="791.0" y="310.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_17"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

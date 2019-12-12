@@ -419,7 +419,7 @@ public class ChrisTest {
 		}
 	}
 	
-	//@Test
+	@Test
     public void LifecycleTest() {
         GennyToken userToken = null;
         GennyToken serviceToken = null;
@@ -475,22 +475,24 @@ public class ChrisTest {
         try {
             gks = GennyKieSession
             		.builder(serviceToken, true)
-                    .addJbpm("genericApplication.bpmn")
-                    .addJbpm("baseEntityValidation.bpmn")
-//                    .addJbpm("notificationHub.bpmn")
-//                    .addJbpm("placementLifecycle.bpmn")
-//                    .addDrl("GREEN.drl")
-                    .addDrl("ADD_APPLICATION_ATTRIBUTES.drl")
+            		
+// ADD THE JBPM WORKFLOWS HERE	
+                    .addJbpm("workDude.bpmn")
+                    
+// ADD THE DROOLS RULES HERE
+        			.addDrl("IsBaseEntity") 
+        			
                     .addToken(userToken)
                     .build();
             
             gks.start();
 
-            gks.injectSignal("newApplication", hashBeg);
-            
-            gks.advanceSeconds(5, false);
-            
-            gks.injectSignal("controlSignal", "FORWARD");
+            gks.startProcess("workDude");
+//            gks.injectSignal("INTERN_S1", hashBeg);
+//            
+//            gks.advanceSeconds(5, false);
+//            
+//            gks.injectSignal("START_INTERN_S1", "FORWARD");
 
             gks.advanceSeconds(5, false);
             
@@ -502,7 +504,7 @@ public class ChrisTest {
         
     }
 
-	@Test
+	//@Test
 	public void newUserTest() {
 		System.out.println("New User test");
 		GennyToken userToken = null;
@@ -613,29 +615,29 @@ public class ChrisTest {
 			gks.advanceSeconds(5, false);
 
 // SIMULATE FRONT END EVENTS 			
-			gks.injectEvent(createEduPro);
-			gks.advanceSeconds(5, false);
-			
-			gks.injectEvent(createHostCpy);
-			gks.advanceSeconds(5, false);
-			
-			gks.injectEvent(createAgency);
-			gks.advanceSeconds(5, false);
-			
-			gks.injectEvent(createInternship);
-			gks.advanceSeconds(5, false);
-			
-			gks.injectEvent(createIntern);
-			gks.advanceSeconds(5, false);
-			
-			gks.injectEvent(createAgent);
-			gks.advanceSeconds(5, false);
-			
-			gks.injectEvent(createHCRep);
-			gks.advanceSeconds(5, false);
-			
-			gks.injectEvent(createEPRep);
-			gks.advanceSeconds(5, false);
+//			gks.injectEvent(createEduPro);
+//			gks.advanceSeconds(5, false);
+//			
+//			gks.injectEvent(createHostCpy);
+//			gks.advanceSeconds(5, false);
+//			
+//			gks.injectEvent(createAgency);
+//			gks.advanceSeconds(5, false);
+//			
+//			gks.injectEvent(createInternship);
+//			gks.advanceSeconds(5, false);
+//			
+//			gks.injectEvent(createIntern);
+//			gks.advanceSeconds(5, false);
+//			
+//			gks.injectEvent(createAgent);
+//			gks.advanceSeconds(5, false);
+//			
+//			gks.injectEvent(createHCRep);
+//			gks.advanceSeconds(5, false);
+//			
+//			gks.injectEvent(createEPRep);
+//			gks.advanceSeconds(5, false);
 
 // END SESSION			
 			gks.injectEvent(msgLogout1);
