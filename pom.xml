@@ -3,11 +3,20 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<distribution>repo</distribution>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+		</license>
+	</licenses>
+
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>life.genny.jbpm</groupId>
 	<artifactId>prj_genny</artifactId>
 	<version>3.1.0</version>
+
 	<name>jBPM Genny </name>
 	<description>jBPM Genny Maven project</description>
 
@@ -70,7 +79,50 @@
 		<version.gson>2.8.5</version.gson>
 	</properties>
 
+	<scm>
+		<url>https://github.com/genny-project/prj_genny</url>
+	</scm>
+
+	<ciManagement>
+		<system>jenkins</system>
+		<url>https://jenkins.gada.io</url>
+	</ciManagement>
+
+	<distributionManagement>
+		<repository>
+			<id>life.genny</id>
+			<url>https://nexus.outcome-hub.com/nexus/content/repositories/life.genny</url>
+		</repository>
+		<snapshotRepository>
+			<id>nexus-snapshots</id>
+			<url>http://nexus.outcome-hub.com/nexus/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+
 	<repositories>
+		<repository>
+			<url>http://download.java.net/maven/2/</url>
+			<id>hibernate-support</id>
+			<layout>default</layout>
+			<name>Repository for Hibernate Support</name>
+		</repository>
+		<repository>
+			<id>JBoss repository</id>
+			<url>http://repository.jboss.org/nexus/content/groups/public/</url>
+			<name>Repository for JBoss</name>
+		</repository>
+		<repository>
+			<id>java.net</id>
+			<url>https://maven.java.net/content/repositories/public/</url>
+		</repository>
+		<repository>
+			<id>Sonatype repository</id>
+			<url>https://oss.sonatype.org/content/repositories/releases/</url>
+		</repository>
+		<repository>
+			<id>life.genny</id>
+			<url>https://nexus.outcome-hub.com/nexus/content/repositories/life.genny</url>
+		</repository>
 		<repository>
 			<id>jboss-public-repository-group</id>
 			<name>JBoss Public Repository Group</name>
