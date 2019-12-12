@@ -47,7 +47,7 @@ import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.FrameUtils2;
 import life.genny.utils.RulesUtils;
 import life.genny.utils.TableUtils;
-import life.genny.utils.TableUtilsTest;
+
 import life.genny.utils.VertxUtils;
 import life.genny.qwanda.datatype.DataType;
 
@@ -238,7 +238,7 @@ public class AnishTest extends GennyJbpmBaseTest {
         	GennyToken userToken = new GennyToken("userToken", rules.getToken());
         	GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
         	BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
-        	TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
+        	TableUtils tableUtils = new TableUtils(beUtils);
 
         	/* list to collect baseentity */
         	List<BaseEntity> beList = new ArrayList<BaseEntity>();
@@ -316,7 +316,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                 GennyToken userToken = new GennyToken("userToken", rules.getToken());
                 GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
                 BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
-                TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
+                TableUtils tableUtils = new TableUtils(beUtils);
 
                 try {
                         // get the list of bucket searchBEs from the cache
@@ -495,7 +495,7 @@ public class AnishTest extends GennyJbpmBaseTest {
         public Ask getCardTemplate(GennyToken serviceToken, QRules rules) {
 
                 BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
-                TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
+                TableUtils tableUtils = new TableUtils(beUtils);
                 List<BaseEntity> beList = new ArrayList<BaseEntity>();
 
                 try {
@@ -754,7 +754,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                 GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
                 BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
                 BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
-                TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
+                TableUtils tableUtils = new TableUtils(beUtils);
 
                 try {
                         // get list of searches for bucket
@@ -916,7 +916,7 @@ public class AnishTest extends GennyJbpmBaseTest {
                 GennyToken userToken = new GennyToken("userToken", rules.getToken());
                 GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
                 BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
-                TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
+                TableUtils tableUtils = new TableUtils(beUtils);
 
                 List<SearchEntity> bucketSearchBeList = new ArrayList<SearchEntity>();
                 
@@ -1054,12 +1054,12 @@ public class AnishTest extends GennyJbpmBaseTest {
 
                         /* need to call performSearch in TableUtils */
 
-                        // TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
+                        // TableUtils tableUtils = new TableUtils(beUtils);
 
                         // Answer answer = new
                         // Answer(userToken.getUserCode(),userToken.getUserCode(),"PRI_SEARCH_TEXT",
                         // "univ");
-                        // TableUtilsTest.performSearch(serviceToken , beUtils, "SBE_SEARCHBAR",
+                        // TableUtils.performSearch(serviceToken , beUtils, "SBE_SEARCHBAR",
                         // answer);
 
                         /* frame-root */
