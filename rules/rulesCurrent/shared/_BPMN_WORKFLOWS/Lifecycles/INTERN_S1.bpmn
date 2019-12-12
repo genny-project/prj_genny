@@ -144,12 +144,7 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[QUE_INTERN_S1_GRP]]></drools:metaValue>
           </drools:metaData>
-          <drools:onEntry-script scriptFormat="http://www.java.com/java">
-            <drools:script>dropDownGroup = &quot;GRP_GENDERS&quot;;
-DropdownUtils dropDownUtils = new DropdownUtils();
-dropDownUtils.setNewSearch(&quot;GenderClassification&quot;, &quot;Classification of Gender&quot;).addFilter(&quot;PRI_CODE&quot;,SearchEntity.StringFilter.LIKE,&quot;SEL_%&quot;).setSourceCode(dropDownGroup).setPageStart(0).setPageSize(10000);
-dropDownUtils.sendSearchResults(dropDownGroup, &quot;LNK_CORE&quot;, &quot;GENDER&quot;, userToken);</drools:script>
-          </drools:onEntry-script>
+          <drools:onEntry-script scriptFormat="http://www.java.com/java"/>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_14</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
@@ -237,12 +232,7 @@ dropDownUtils.sendSearchResults(dropDownGroup, &quot;LNK_CORE&quot;, &quot;GENDE
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[QUE_INTERN_S2_GRP]]></drools:metaValue>
           </drools:metaData>
-          <drools:onEntry-script scriptFormat="http://www.java.com/java">
-            <drools:script>dropDownGroup = &quot;GRP_EDU_PROVIDER_SELECTION&quot;;
-/*DropdownUtils dropDownUtils = new DropdownUtils();*/
-dropDownUtils.setNewSearch(&quot;EduProviderSelection&quot;, &quot;Selection of Edu Provider&quot;).addFilter(&quot;PRI_CODE&quot;, SearchEntity.StringFilter.LIKE, &quot;CPY_%&quot;).addFilter(&quot;PRI_IS_EDU_PRO&quot;, true).setSourceCode(dropDownGroup).setPageStart(0).setPageSize(10000);
-dropDownUtils.sendSearchResults(dropDownGroup, &quot;LNK_CORE&quot;, &quot;EDU_PRO&quot;, userToken);</drools:script>
-          </drools:onEntry-script>
+          <drools:onEntry-script scriptFormat="http://www.java.com/java"/>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
