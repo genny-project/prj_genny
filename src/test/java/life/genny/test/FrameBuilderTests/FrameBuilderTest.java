@@ -7,7 +7,7 @@ import life.genny.models.GennyToken;
 import life.genny.models.Theme;
 import life.genny.models.ThemeAttributeType;
 import life.genny.qwanda.VisualControlType;
-import life.genny.test.GennyJbpmBaseTest;
+import life.genny.utils.GennyJbpmBaseTest;
 
 public class FrameBuilderTest {
 	@Test

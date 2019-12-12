@@ -1,4 +1,4 @@
-package life.genny.test;
+package life.genny.utils;
 
 /*
  * Copyright 2017 Red Hat, Inc. and/or its affiliates.

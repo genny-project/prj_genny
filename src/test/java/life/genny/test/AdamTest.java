@@ -105,6 +105,8 @@ import life.genny.qwandautils.QwandaUtils;
 import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.FrameUtils2;
+import life.genny.utils.GennyJbpmBaseTest;
+import life.genny.utils.GennyKieSession;
 import life.genny.utils.OutputParam;
 import life.genny.utils.RulesUtils;
 import life.genny.utils.SessionFacts;

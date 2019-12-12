@@ -1,4 +1,4 @@
-package life.genny.test;
+package life.genny.utils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
