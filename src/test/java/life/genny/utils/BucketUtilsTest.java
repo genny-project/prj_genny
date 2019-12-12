@@ -267,6 +267,7 @@ public class BucketUtilsTest {
 
 		String sourceCode = "PER_SERVICE", targetCode = "PER_SERVICE";
 		Attribute questionAttribute = new Attribute("QQQ_QUESTION_GROUP", "link", new DataType(String.class));
+		//Attribute progressAttribute = new Attribute("PRI_PROGRESS", "Progress", new DataType(String.class));
 
 		try {
 
@@ -317,6 +318,13 @@ public class BucketUtilsTest {
 					Question cardBottomQuestion = new Question("QUE_CARD_BOTTOM_GRP", "Card Bottom", questionAttribute, true);
 					Ask cardBottomAsk = new Ask(cardBottomQuestion, sourceCode, targetCode);
 
+						// // progress ask
+						// Question cardProgressQuestion = new Question("QUE_PROGRESS", "Progress", progressAttribute, true);
+						// Ask cardProgressAsk = new Ask(cardProgressQuestion, sourceCode, targetCode);
+
+						// Ask[] cardBottomChildAsks = { cardProgressAsk };
+						// cardBottomAsk.setChildAsks(cardBottomChildAsks);
+
 				Ask[] cardMainChildAsks = { cardContentAsk, cardBottomAsk };
 				cardMainAsk.setChildAsks(cardMainChildAsks);					
 
@@ -347,6 +355,11 @@ public class BucketUtilsTest {
 		Ask cardCentreAsk = cardContentAsk.getChildAsks()[1];
 		Ask cardRightAsk = cardContentAsk.getChildAsks()[2];
 		Ask cardBottomAsk = cardMainAsk.getChildAsks()[1];
+
+		// Attribute progressAttribute = new Attribute("PRI_PROGRESS", "Progress", new DataType(String.class));
+		// // progress ask
+		// Question cardProgressQuestion = new Question("QUE_PROGRESS", "Progress", progressAttribute, true);
+		// Ask cardProgressAsk = new Ask(cardProgressQuestion, "PER_SERVICE", "PER_SERVICE");
 		
 
 		for (Ask app : askList) {
@@ -376,7 +389,7 @@ public class BucketUtilsTest {
 				cardCentreAsk.setChildAsks(cardCentreChildAsks);
 				cardCentreAsk.setTargetCode(app.getTargetCode());
 
-				Ask[] cardBottomChildAsks = { attributeList.get(6), attributeList.get(7), attributeList.get(8) };
+				Ask[] cardBottomChildAsks = { attributeList.get(6), attributeList.get(7), attributeList.get(8), attributeList.get(9) };
 				cardBottomAsk.setReadonly(true);
 				cardBottomAsk.setChildAsks(cardBottomChildAsks);
 				cardBottomAsk.setTargetCode(app.getTargetCode());
