@@ -144,10 +144,8 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
             <drools:metaValue><![CDATA[QUE_HOST_CPY_GRP]]></drools:metaValue>
           </drools:metaData>
           <drools:onEntry-script scriptFormat="http://www.java.com/java">
-            <drools:script>dropDownGroup = &quot;GRP_INDUSTRY_SELECTION&quot;;
-DropdownUtils dropDownUtils = new DropdownUtils();
-dropDownUtils.setNewSearch(&quot;IndustryClassification&quot;, &quot;Classification of industry&quot;).addFilter(&quot;PRI_CODE&quot;,SearchEntity.StringFilter.LIKE,&quot;SEL_%&quot;).setSourceCode(dropDownGroup).setPageStart(0).setPageSize(10000);
-dropDownUtils.sendSearchResults(dropDownGroup, &quot;LNK_CORE&quot;, &quot;INDUSTRY&quot;, userToken);</drools:script>
+            <drools:script>
+</drools:script>
           </drools:onEntry-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_14</bpmn2:incoming>
