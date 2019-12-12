@@ -48,7 +48,7 @@ import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.FrameUtils2;
 import life.genny.utils.RulesUtils;
 import life.genny.utils.TableUtils;
-import life.genny.utils.TableUtilsTest;
+
 import life.genny.utils.VertxUtils;
 import life.genny.qwanda.datatype.DataType;
 
@@ -69,7 +69,7 @@ public class ProcessViewTest extends GennyJbpmBaseTest {
         GennyToken userToken = new GennyToken("userToken", rules.getToken());
         GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
         BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
-        TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
+        TableUtils tableUtils = new TableUtils(beUtils);
 
         try {
             // get the list of bucket searchBEs from the cache

@@ -65,7 +65,7 @@ import life.genny.utils.ContextUtils;
 import life.genny.utils.FrameUtils2;
 import life.genny.utils.RulesUtils;
 import life.genny.utils.TableUtils;
-import life.genny.utils.TableUtilsTest;
+
 import life.genny.utils.VertxUtils;
 
 public class RahulTest {
@@ -299,8 +299,8 @@ public void testTableHeader() {
 	  		 VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken.getToken());
 	 
 		  Answer answer = new Answer(userToken.getUserCode(),userToken.getUserCode(),"PRI_SEARCH_TEXT",searchBarString);
-		  
-		  			TableUtilsTest.performSearch(serviceToken , beUtils, "SBE_SEARCHBAR", answer);
+		  			TableUtils tableUtils = new TableUtils(beUtils);
+		  			tableUtils.performSearch(serviceToken , "SBE_SEARCHBAR", answer);
    		  	     
   		  	     /* Send to front end */
    					
@@ -430,10 +430,10 @@ public void testTableHeader() {
 			// rules.publishCmd(msg2); // Send QDataBaseEntityMessage
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg2));
 	
-	 	     TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
+	 	     TableUtils tableUtils = new TableUtils(beUtils);
 	  	     
-	  	     QDataBaseEntityMessage  msg4 = tableUtils.fetchSearchResults(searchBE,beUtils.getGennyToken());
-	  	     TableData tableData = tableUtils.generateTableAsks(searchBE,beUtils.getGennyToken(),  msg4);
+	  	     QDataBaseEntityMessage  msg4 = tableUtils.fetchSearchResults(searchBE);
+	  	     TableData tableData = tableUtils.generateTableAsks(searchBE);
 	  	     log.info(tableData);
 
 			//"FRM_QUE_DASHBOARD_VIEW","FRM_CONTENT"
