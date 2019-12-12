@@ -224,11 +224,11 @@ public class SafalTest extends GennyJbpmBaseTest {
 		Map<String, QDataAskMessage> virtualAskMap = new HashMap<String, QDataAskMessage>();
 
 		/* Fetching searh resutls and labels for internship detail view */
-		QDataBaseEntityMessage fetchResultMsg = tableUtils.fetchSearchResults(searchBE, serviceToken);
+		QDataBaseEntityMessage fetchResultMsg = tableUtils.fetchSearchResults(searchBE);
 		Map<String, String> askLabels = tableUtils.getTableColumns(searchBE);
 		List<Object> belist = new ArrayList<>(Arrays.asList(fetchResultMsg.getItems()));
 		List<BaseEntity> results = (List<BaseEntity>) (List) belist;
-		List<Ask> asks = TableUtils.generateQuestions(serviceToken, beUtils, results, askLabels, "PRJ_INTERNMATCH");
+		List<Ask> asks = tableUtils.generateQuestions(results, askLabels, "PRJ_INTERNMATCH");
 
 		/* Ask Question code should be similar to the frame question code */
 		Ask askInternshipDetail = asks.get(0);
@@ -241,11 +241,11 @@ public class SafalTest extends GennyJbpmBaseTest {
 		/* Fetching searh resutls and labels for internship detail view top summary */
 		SearchEntity searchBE2 = VertxUtils.getObject(serviceToken.getRealm(), "",
 				"SBE_INTERNSHIP_DETAIL_VIEW_TOP_SUMMARY", SearchEntity.class, serviceToken.getToken());
-		fetchResultMsg = tableUtils.fetchSearchResults(searchBE, serviceToken);
+		fetchResultMsg = tableUtils.fetchSearchResults(searchBE);
 		askLabels = tableUtils.getTableColumns(searchBE);
 		belist = new ArrayList<>(Arrays.asList(fetchResultMsg.getItems()));
 		results = (List<BaseEntity>) (List) belist;
-		asks = TableUtils.generateQuestions(serviceToken, beUtils, results, askLabels, "PRJ_INTERNMATCH");
+		asks = tableUtils.generateQuestions( results, askLabels, "PRJ_INTERNMATCH");
 
 		/* Ask Question code should be similar to the frame question code */
 		Ask askTopSummary = asks.get(0);
@@ -840,14 +840,14 @@ public class SafalTest extends GennyJbpmBaseTest {
 				.addColumn("PRI_INDUSTRY", "Industry").addColumn("PRI_OCCUPATION", "Occupation").setPageStart(0)
 				.setPageSize(10);
 
-		QDataBaseEntityMessage msg = tableUtils.fetchSearchResults(searchBE, serviceToken);
+		QDataBaseEntityMessage msg = tableUtils.fetchSearchResults(searchBE);
 		Map<String, String> columns = tableUtils.getTableColumns(searchBE);
 
 		List<Object> belist = new ArrayList<>(Arrays.asList(msg.getItems()));
 
 		List<BaseEntity> results = (List<BaseEntity>) (List) belist;
 
-		List<Ask> asks = TableUtils.generateQuestions(serviceToken, beUtils, results, columns, "PRJ_INTERNMATCH");
+		List<Ask> asks = tableUtils.generateQuestions(results, columns, "PRJ_INTERNMATCH");
 
 		Ask myAsk = asks.get(0);
 
@@ -869,14 +869,14 @@ public class SafalTest extends GennyJbpmBaseTest {
 				.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC).addColumn("PRI_NAME", "Name")
 				.addColumn("PRI_HOST_COMPANY_NAME", "Host Company").setPageSize(10);
 
-		QDataBaseEntityMessage msg = tableUtils.fetchSearchResults(searchBE, serviceToken);
+		QDataBaseEntityMessage msg = tableUtils.fetchSearchResults(searchBE);
 		Map<String, String> columns = tableUtils.getTableColumns(searchBE);
 
 		List<Object> belist = new ArrayList<>(Arrays.asList(msg.getItems()));
 
 		List<BaseEntity> results = (List<BaseEntity>) (List) belist;
 
-		List<Ask> asks = TableUtils.generateQuestions(serviceToken, beUtils, results, columns, "PRJ_INTERNMATCH");
+		List<Ask> asks = tableUtils.generateQuestions( results, columns, "PRJ_INTERNMATCH");
 
 		Ask myAsk = asks.get(0);
 		myAsk.setQuestionCode("QUE_TEST_INTERNSHIP_SUMMARY_GRP");
@@ -903,14 +903,14 @@ public class SafalTest extends GennyJbpmBaseTest {
 				.addColumn("PRI_CREATOR_NAME", "Representative").addColumn("PRI_EMAIL", "Representative Email")
 				.addColumn("PRI_MOBILE", "Representative Mobile").setPageStart(0).setPageSize(10);
 
-		QDataBaseEntityMessage msg = tableUtils.fetchSearchResults(searchBE, serviceToken);
+		QDataBaseEntityMessage msg = tableUtils.fetchSearchResults(searchBE);
 		Map<String, String> columns = tableUtils.getTableColumns(searchBE);
 
 		List<Object> belist = new ArrayList<>(Arrays.asList(msg.getItems()));
 
 		List<BaseEntity> results = (List<BaseEntity>) (List) belist;
 
-		List<Ask> asks = TableUtils.generateQuestions(serviceToken, beUtils, results, columns, "PRJ_INTERNMATCH");
+		List<Ask> asks = tableUtils.generateQuestions(results, columns, "PRJ_INTERNMATCH");
 
 		Ask myAsk = asks.get(0);
 
@@ -935,14 +935,14 @@ public class SafalTest extends GennyJbpmBaseTest {
 				.addColumn("PRI_INTERNSHIP_DESCRIPTION", "Description").addColumn("PRI_INTERNSHIP_DURATION", "Duration")
 				.addColumn("PRI_HOST_COMPANY_NAME", "Host Company").setPageStart(0).setPageSize(10);
 
-		QDataBaseEntityMessage msg = tableUtils.fetchSearchResults(searchBE, serviceToken);
+		QDataBaseEntityMessage msg = tableUtils.fetchSearchResults(searchBE);
 		Map<String, String> columns = tableUtils.getTableColumns(searchBE);
 
 		List<Object> belist = new ArrayList<>(Arrays.asList(msg.getItems()));
 
 		List<BaseEntity> results = (List<BaseEntity>) (List) belist;
 
-		List<Ask> asks = TableUtils.generateQuestions(serviceToken, beUtils, results, columns, "PRJ_INTERNMATCH");
+		List<Ask> asks = tableUtils.generateQuestions(results, columns, "PRJ_INTERNMATCH");
 
 		Ask myAsk = asks.get(0);
 
@@ -965,14 +965,14 @@ public class SafalTest extends GennyJbpmBaseTest {
 				.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC).addColumn("PRI_INTERNSHIP_TITLE", "Title")
 				.addColumn("PRI_INTERN_NAME", "Student").setPageStart(0).setPageSize(10);
 
-		QDataBaseEntityMessage msg = tableUtils.fetchSearchResults(searchBE, serviceToken);
+		QDataBaseEntityMessage msg = tableUtils.fetchSearchResults(searchBE);
 		Map<String, String> columns = tableUtils.getTableColumns(searchBE);
 
 		List<Object> belist = new ArrayList<>(Arrays.asList(msg.getItems()));
 
 		List<BaseEntity> results = (List<BaseEntity>) (List) belist;
 
-		List<Ask> asks = TableUtils.generateQuestions(serviceToken, beUtils, results, columns, "PRJ_INTERNMATCH");
+		List<Ask> asks = tableUtils.generateQuestions(results, columns, "PRJ_INTERNMATCH");
 
 		Ask myAsk = asks.get(0);
 
@@ -995,14 +995,14 @@ public class SafalTest extends GennyJbpmBaseTest {
 				.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC).addColumn("PRI_FIRSTNAME", "Name")
 				.addColumn("PRI_LASTNAME", "Name").setPageStart(0).setPageSize(10);
 
-		QDataBaseEntityMessage msg = tableUtils.fetchSearchResults(searchBE, serviceToken);
+		QDataBaseEntityMessage msg = tableUtils.fetchSearchResults(searchBE);
 		Map<String, String> columns = tableUtils.getTableColumns(searchBE);
 
 		List<Object> belist = new ArrayList<>(Arrays.asList(msg.getItems()));
 
 		List<BaseEntity> results = (List<BaseEntity>) (List) belist;
 
-		List<Ask> asks = TableUtils.generateQuestions(serviceToken, beUtils, results, columns, "PRJ_INTERNMATCH");
+		List<Ask> asks = tableUtils.generateQuestions(results, columns, "PRJ_INTERNMATCH");
 
 		Ask myAsk = asks.get(0);
 
@@ -1024,14 +1024,14 @@ public class SafalTest extends GennyJbpmBaseTest {
 				.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC).addColumn("PRI_RESUME", "Resume")
 				.setPageStart(0).setPageSize(10);
 
-		QDataBaseEntityMessage msg = tableUtils.fetchSearchResults(searchBE, serviceToken);
+		QDataBaseEntityMessage msg = tableUtils.fetchSearchResults(searchBE);
 		Map<String, String> columns = tableUtils.getTableColumns(searchBE);
 
 		List<Object> belist = new ArrayList<>(Arrays.asList(msg.getItems()));
 
 		List<BaseEntity> results = (List<BaseEntity>) (List) belist;
 
-		List<Ask> asks = TableUtils.generateQuestions(serviceToken, beUtils, results, columns, "PRJ_INTERNMATCH");
+		List<Ask> asks = tableUtils.generateQuestions(results, columns, "PRJ_INTERNMATCH");
 
 		Ask myAsk = asks.get(0);
 		myAsk.setQuestionCode("QUE_TEST_PERSON_DOC_GRP");
@@ -1054,14 +1054,14 @@ public class SafalTest extends GennyJbpmBaseTest {
 				.addColumn("PRI_MOBILE", "Phone").addColumn("PRI_ADDRESS_FULL", "Address")
 				.addColumn("PRI_GENDER", "Gender").setPageStart(0).setPageSize(10);
 
-		QDataBaseEntityMessage msg = tableUtils.fetchSearchResults(searchBE, serviceToken);
+		QDataBaseEntityMessage msg = tableUtils.fetchSearchResults(searchBE);
 		Map<String, String> columns = tableUtils.getTableColumns(searchBE);
 
 		List<Object> belist = new ArrayList<>(Arrays.asList(msg.getItems()));
 
 		List<BaseEntity> results = (List<BaseEntity>) (List) belist;
 
-		List<Ask> asks = TableUtils.generateQuestions(serviceToken, beUtils, results, columns, "PRJ_INTERNMATCH");
+		List<Ask> asks = tableUtils.generateQuestions( results, columns, "PRJ_INTERNMATCH");
 
 		Ask myAsk = asks.get(0);
 		myAsk.setQuestionCode("QUE_TEST_PERSON_DETAIL_GRP");
@@ -1082,14 +1082,14 @@ public class SafalTest extends GennyJbpmBaseTest {
 				.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC).addColumn("PRI_NAME", "Name").setPageStart(0)
 				.setPageSize(10);
 
-		QDataBaseEntityMessage msg = tableUtils.fetchSearchResults(searchBE, serviceToken);
+		QDataBaseEntityMessage msg = tableUtils.fetchSearchResults(searchBE);
 		Map<String, String> columns = tableUtils.getTableColumns(searchBE);
 
 		List<Object> belist = new ArrayList<>(Arrays.asList(msg.getItems()));
 
 		List<BaseEntity> results = (List<BaseEntity>) (List) belist;
 
-		List<Ask> asks = TableUtils.generateQuestions(serviceToken, beUtils, results, columns, "PRJ_INTERNMATCH");
+		List<Ask> asks = tableUtils.generateQuestions(results, columns, "PRJ_INTERNMATCH");
 
 		Ask myAsk = asks.get(0);
 		myAsk.setQuestionCode("QUE_TEST_PERSON_SUMMARY_GRP");
@@ -1112,14 +1112,14 @@ public class SafalTest extends GennyJbpmBaseTest {
 				.addColumn("PRI_ABN", "Company ABN").addColumn("PRI_ACN", "Company ACN").setPageStart(0)
 				.setPageSize(10);
 
-		QDataBaseEntityMessage msg = tableUtils.fetchSearchResults(searchBE, serviceToken);
+		QDataBaseEntityMessage msg = tableUtils.fetchSearchResults(searchBE);
 		Map<String, String> columns = tableUtils.getTableColumns(searchBE);
 
 		List<Object> belist = new ArrayList<>(Arrays.asList(msg.getItems()));
 
 		List<BaseEntity> results = (List<BaseEntity>) (List) belist;
 
-		List<Ask> asks = TableUtils.generateQuestions(serviceToken, beUtils, results, columns, "PRJ_INTERNMATCH");
+		List<Ask> asks =tableUtils.generateQuestions(results, columns, "PRJ_INTERNMATCH");
 
 		Ask myAsk = asks.get(0);
 		myAsk.setQuestionCode("QUE_TEST_PERSON_DETAIL_GRP");
