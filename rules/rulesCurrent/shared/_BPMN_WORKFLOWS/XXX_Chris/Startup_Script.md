@@ -33,7 +33,7 @@
     
     `./cyrusClone.sh;./cyrusBuild.sh;docker volume prune -f;./run.sh dev1 up`
 
-9. Now you wait, this will take from about 20 - 45 mins. If you get lucky might be below 20 mins.
+9. Now you wait, this will take from about 45 - 60 mins. If you get lucky might be below 1 hr.
 
 ## Alias Stuff
 
