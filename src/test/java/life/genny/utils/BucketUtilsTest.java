@@ -360,8 +360,12 @@ public class BucketUtilsTest {
 				cardStatusAsk.setTargetCode(app.getTargetCode());
 				
 				cardMainAsk.setTargetCode(app.getTargetCode());
-
-				Ask[] cardLeftChildAsks = { attributeList.get(1) };
+				
+				// set the image ask read only
+				Ask image = attributeList.get(1);
+				image.setReadonly(true);
+				
+				Ask[] cardLeftChildAsks = { image };
 				cardLeftAsk.setReadonly(true);
 				cardLeftAsk.setChildAsks(cardLeftChildAsks);
 				cardLeftAsk.setTargetCode(app.getTargetCode());
@@ -670,7 +674,7 @@ public class BucketUtilsTest {
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 
 		/* initialize bucketUtils */
-		BucketUtils bucketUtils = new BucketUtils(beUtils);
+		BucketUtilsTest bucketUtils = new BucketUtilsTest(beUtils);
 
 		/* initialize searchUtils */
 		SearchUtils searchUtils = new SearchUtils(beUtils);
