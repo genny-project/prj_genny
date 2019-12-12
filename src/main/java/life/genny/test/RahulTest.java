@@ -1,64 +1,23 @@
 package life.genny.test;
 
-import static org.junit.Assert.assertEquals;
-
+import org.kie.api.runtime.process.ProcessContext;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringReader;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.ServiceLoader;
 import java.util.Set;
 
-import javax.persistence.EntityManagerFactory;
-
 import org.apache.logging.log4j.Logger;
-import org.assertj.core.util.Arrays;
 import org.codehaus.plexus.util.StringUtils;
-import org.drools.core.process.instance.impl.WorkItemImpl;
-import org.jbpm.bpmn2.handler.ServiceTaskHandler;
-import org.jbpm.kie.services.impl.model.UserTaskInstanceDesc;
-import org.jbpm.services.api.DefinitionService;
-import org.jbpm.services.api.ProcessService;
-import org.jbpm.services.api.RuntimeDataService;
-import org.jbpm.services.api.UserTaskService;
-import org.jbpm.services.api.admin.ProcessInstanceAdminService;
-import org.jbpm.services.api.model.DeploymentUnit;
-import org.jbpm.services.api.query.QueryService;
-import org.jbpm.services.api.utils.KieServiceConfigurator;
-import org.jbpm.services.task.impl.factories.TaskFactory;
-import org.jbpm.services.task.internals.lifecycle.MVELLifeCycleManager;
-import org.jbpm.services.task.internals.lifecycle.OperationCommand;
-import org.jbpm.services.task.utils.TaskFluent;
-import org.jbpm.services.task.wih.NonManagedLocalHTWorkItemHandler;
-import org.jbpm.services.task.wih.util.PeopleAssignmentHelper;
-import org.jbpm.test.services.TestIdentityProvider;
-import org.jbpm.test.services.TestUserGroupCallbackImpl;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.kie.api.runtime.manager.RuntimeEngine;
-import org.kie.api.runtime.process.WorkItemManager;
-import org.kie.api.task.model.Comment;
-import org.kie.api.task.model.Group;
-import org.kie.api.task.model.OrganizationalEntity;
-import org.kie.api.task.model.Status;
-import org.kie.api.task.model.Task;
-import org.kie.api.task.model.TaskSummary;
-import org.kie.api.task.model.User;
-import org.kie.internal.runtime.manager.context.EmptyContext;
-import org.kie.internal.task.api.TaskModelProvider;
-import org.kie.internal.task.api.model.InternalComment;
-import org.kie.internal.task.api.model.Operation;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -68,34 +27,32 @@ import io.vertx.core.json.JsonObject;
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
-import life.genny.jbpm.customworkitemhandlers.CheckTasksWorkItemHandler;
-import life.genny.jbpm.customworkitemhandlers.AskQuestionTaskWorkItemHandler;
-import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 import life.genny.models.Frame3;
 import life.genny.models.FramePosition;
 import life.genny.models.GennyToken;
 import life.genny.models.TableData;
 import life.genny.models.Theme;
 import life.genny.models.ThemeAttributeType;
+import life.genny.models.ThemeDouble;
 import life.genny.models.ThemePosition;
 import life.genny.qwanda.Answer;
 import life.genny.qwanda.Ask;
 import life.genny.qwanda.Context;
 import life.genny.qwanda.ContextType;
+import life.genny.qwanda.Question;
 import life.genny.qwanda.VisualControlType;
 import life.genny.qwanda.attribute.Attribute;
-import life.genny.qwanda.attribute.AttributeLink;
-import life.genny.qwanda.attribute.AttributeText;
 import life.genny.qwanda.datatype.DataType;
 import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.entity.EntityEntity;
 import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwanda.exception.BadDataException;
 import life.genny.qwanda.message.MessageData;
+import life.genny.qwanda.message.QBulkMessage;
 import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventMessage;
-import life.genny.qwanda.message.QMessage;
 import life.genny.qwanda.validation.Validation;
 import life.genny.qwanda.validation.ValidationList;
 import life.genny.qwandautils.GennyCacheInterface;
@@ -104,19 +61,17 @@ import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
+import life.genny.utils.ContextUtils;
 import life.genny.utils.FrameUtils2;
-import life.genny.utils.OutputParam;
 import life.genny.utils.RulesUtils;
-import life.genny.utils.SessionFacts;
 import life.genny.utils.TableUtils;
+
 import life.genny.utils.VertxUtils;
 
-public class AdamTest {
+public class RahulTest {
 
 	protected static final Logger log = org.apache.logging.log4j.LogManager
 			.getLogger(MethodHandles.lookup().lookupClass().getCanonicalName());
-	
-	protected static Boolean USE_STANDALONE= true;   // sets whether to use standalone or remote service
 
 	protected static String realm = GennySettings.mainrealm;
 	protected static Set<String> realms;
@@ -125,574 +80,11 @@ public class AdamTest {
 	protected static GennyCacheInterface vertxCache;
 
 	private static final String DRL_SEND_USER_DATA_DIR = "SendUserData";
-	
-	   protected EntityManagerFactory emf;    
-	    protected DefinitionService bpmn2Service;
-	    protected RuntimeDataService runtimeDataService;
-	    protected ProcessService processService;
-	    protected UserTaskService userTaskService;
-	    protected QueryService queryService;
-	    protected ProcessInstanceAdminService processAdminService;
 
-	    protected TestIdentityProvider identityProvider;
-	    protected TestUserGroupCallbackImpl userGroupCallback;
+	public RahulTest() {
 
-	    protected KieServiceConfigurator serviceConfigurator;
-	    
-	    protected DeploymentUnit deploymentUnit;  
-	    
-	   protected static  GennyToken userToken;
-	   protected static  GennyToken newUserToken;
-	   protected static  GennyToken serviceToken;
-	   
-	    
-
-	public AdamTest() {
-		 loadServiceConfigurator();
 	}
-	
-	   protected void loadServiceConfigurator() {
-	        this.serviceConfigurator = ServiceLoader.load(KieServiceConfigurator.class).iterator().next();
-	    }
 
-		@Test
-		public void addEduProvTest()
-		{
-			System.out.println("AddEduProv Test");
-
-
-			GennyKieSession gks = null;
-
-			try {
-				gks = GennyKieSession.builder(serviceToken,true)
-						.addDrl("SignalProcessing")
-						.addDrl("DataProcessing")
-						.addDrl("EventProcessing")
-						.addJbpm("Lifecycles")
-						.addJbpm("adam_user1.bpmn")
-						.addJbpm("adam_user2.bpmn")
-						.addJbpm("adam_user3.bpmn")
-						.addDrl("AuthInit")
-						.addJbpm("AuthInit")
-						.addDrl("InitialiseProject")
-						.addJbpm("InitialiseProject")
-						.build();
-				
-				gks.createTestUsersGroups();
-				
-				GennyToken newUser2A = gks.createToken("PER_USER2"); 
-				GennyToken newUser2B = gks.createToken("PER_USER2"); 
-				GennyToken newUser1A = gks.createToken("PER_USER1");
-				gks.start();
-				
-				gks.injectSignal("initProject"); // This should initialise everything
-				gks.injectEvent("authInitMsg",newUser2A); // log in as new user
-				gks.advanceSeconds(5, false);
-				gks.showStatuses("PER_USER1","PER_USER2");
-
-				
-				// Now answer a question
-
-				gks.injectAnswer("PRI_FIRSTNAME",newUser2A);
-				gks.injectAnswer("PRI_LASTNAME", newUser2A);
-				gks.injectAnswer("PRI_DOB", newUser2A);
-				gks.injectAnswer("PRI_PREFERRED_NAME", newUser2A);
-				gks.injectAnswer("PRI_EMAIL", newUser2A);
-				gks.injectAnswer("PRI_MOBILE", newUser2A);
-				gks.injectAnswer("PRI_USER_PROFILE_PICTURE", newUser2A);
-				gks.injectAnswer("PRI_ADDRESS_FULL", newUser2A);
-				
-				gks.injectEvent("QUE_SUBMIT",newUser2A);
-				
-
-				// Now add an Edu Provider
-				
-				
-				
-				gks.injectEvent("msgLogout",newUser2A);
-				gks.advanceSeconds(5, false);
-				
-				gks.showStatuses("PER_USER1","PER_USER2");
-			//	gks.injectEvent("msgLogout",newUser2B);
-			//	gks.injectEvent("msgLogout",newUser1A);
-			} catch (Exception e) {
-				e.printStackTrace();
-			
-			}
-			finally {
-				if (gks!=null) {
-					gks.close();
-				}
-			}
-		}
-	   
-	   
-//	@Test
-		public void askQuestionTest()
-		{
-			System.out.println("AskQuestion Test");
-
-
-			GennyKieSession gks = null;
-
-			try {
-				gks = GennyKieSession.builder(serviceToken,true)
-						.addDrl("SignalProcessing")
-						.addDrl("DataProcessing")
-						.addDrl("EventProcessing")
-						.addJbpm("Lifecycles")
-						.addJbpm("adam_user1.bpmn")
-						.addJbpm("adam_user2.bpmn")
-						.addJbpm("adam_user3.bpmn")
-						.addDrl("AuthInit")
-						.addJbpm("AuthInit")
-						.addDrl("InitialiseProject")
-						.addJbpm("InitialiseProject")
-						.build();
-				
-				gks.createTestUsersGroups();
-				
-				GennyToken newUser2A = gks.createToken("PER_USER2"); 
-				GennyToken newUser2B = gks.createToken("PER_USER2"); 
-				GennyToken newUser1A = gks.createToken("PER_USER1");
-				gks.start();
-				
-				gks.injectSignal("initProject"); // This should initialise everything
-				gks.injectEvent("authInitMsg",newUser2A); // log in as new user
-			//	gks.injectEvent("authInitMsg",newUser2B); // log in as same new user
-			//	gks.injectEvent("authInitMsg",newUser1A); // log in as same new user
-				gks.advanceSeconds(5, false);
-				gks.showStatuses("PER_USER1","PER_USER2");
-
-//				System.out.println("Invoking AskQuestionTask workItem");
-				// Send an AskQuestion that should send an internal signal to the userSession
-//				AskQuestionTaskWorkItemHandler askQ = new AskQuestionTaskWorkItemHandler(GennyKieSession.class,gks.getGennyRuntimeEngine(),gks.getKieSession());
-//				WorkItemManager workItemManager = gks.getKieSession().getWorkItemManager();
-//				WorkItemImpl workItem = new WorkItICEemImpl();
-//		        workItem.setParameter("userToken",
-//		                              userToken);
-//		        workItem.setParameter("questionCode",
-//		                              "QUE_USER_PROFILE_GRP");
-//		        workItem.setParameter("callingWorkflow", "AdamTest");
-//		        workItem.setParameter("Priority", "10");  // if l;eft out defaults to 0
-//		        workItem.setDeploymentId(userToken.getRealm());
-//		        workItem.setName("AskQuestion");
-//		        workItem.setProcessInstanceId(1234L); // made up processId
-//		        askQ.executeWorkItem(workItem, workItemManager);
-				
-//		        showStatuses(gks);
-		        
-				
-				// Now answer a question
-
-				gks.injectAnswer("PRI_FIRSTNAME",newUser2A);
-				gks.injectAnswer("PRI_LASTNAME", newUser2A);
-				gks.injectAnswer("PRI_DOB", newUser2A);
-				gks.injectAnswer("PRI_PREFERRED_NAME", newUser2A);
-				gks.injectAnswer("PRI_EMAIL", newUser2A);
-				gks.injectAnswer("PRI_MOBILE", newUser2A);
-				gks.injectAnswer("PRI_USER_PROFILE_PICTURE", newUser2A);
-				gks.injectAnswer("PRI_ADDRESS_FULL", newUser2A);
-				
-				gks.injectEvent("QUE_SUBMIT",newUser2A);
-				
-				
-				
-				gks.injectEvent("msgLogout",newUser2A);
-				gks.advanceSeconds(5, false);
-				
-				gks.showStatuses("PER_USER1","PER_USER2");
-			//	gks.injectEvent("msgLogout",newUser2B);
-			//	gks.injectEvent("msgLogout",newUser1A);
-			} catch (Exception e) {
-				e.printStackTrace();
-			
-			}
-			finally {
-				if (gks!=null) {
-					gks.close();
-				}
-			}
-		}
-
-	   
-		//@Test
-		public void userTaskTest()
-		{
-			System.out.println("UserTask Test");
-			GennyToken userToken = null;
-			QRules qRules = null;
-
-			if (true) {
-				userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
-				serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "PER_SERVICE", "Service User", "service");
-				qRules = new QRules(eventBusMock, userToken.getToken());
-				qRules.set("realm", userToken.getRealm());
-				qRules.setServiceToken(serviceToken.getToken());
-				VertxUtils.cachedEnabled = true; // don't send to local Service Cache
-				GennyKieSession.loadAttributesJsonFromResources(userToken);
-
-			} else {
-				qRules = GennyJbpmBaseTest.setupLocalService();
-				userToken = new GennyToken("userToken", qRules.getToken());
-				serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
-			}
-
-			System.out.println("session     =" + userToken.getSessionCode());
-			System.out.println("userToken   =" + userToken.getToken());
-			//System.out.println("userToken2   =" + userToken2.getToken());
-			System.out.println("serviceToken=" + serviceToken.getToken());
-
-			SessionFacts initFacts = new SessionFacts(serviceToken, null, new QEventMessage("EVT_MSG", "INIT_STARTUP"));
-			QEventMessage authInitMsg = new QEventMessage("EVT_MSG", "AUTH_INIT"); authInitMsg.setToken(userToken.getToken());
-			QEventMessage msgLogout = new QEventMessage("EVT_MSG", "LOGOUT");msgLogout.setToken(userToken.getToken());
-
-
-			// NOW SET UP Some baseentitys
-			BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
-					StringUtils.capitaliseAllWords(serviceToken.getRealm()));
-			project.setRealm(serviceToken.getRealm());
-			VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
-					JsonUtils.toJson(project), serviceToken.getToken());
-			VertxUtils.writeCachedJson(realm,  ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(),JsonUtils.toJson(project), serviceToken.getToken());
-			VertxUtils.writeCachedJson(GennySettings.GENNY_REALM,
-					"TOKEN" + realm.toUpperCase(),serviceToken.getToken());
-			JsonObject tokenObj = VertxUtils.readCachedJson(GennySettings.GENNY_REALM,
-					"TOKEN" + realm.toUpperCase());
-			String token = tokenObj.getString("value");
-
-
-			GennyKieSession gks = null;
-
-			try {
-				gks = GennyKieSession.builder(serviceToken,true)
-					//	.addDrl("SignalProcessing")
-					//	.addDrl("DataProcessing")
-					//	.addDrl("EventProcessing")
-					//	.addJbpm("Lifecycles")
-						.addJbpm("adam_user1.bpmn")
-						.addJbpm("adam_user2.bpmn")
-					//	.addDrl("AuthInit")
-					//	.addJbpm("AuthInit")
-					//	.addDrl("InitialiseProject")
-					//	.addJbpm("InitialiseProject")
-
-						.addToken(userToken)
-						.build();
-				
-				gks.createTestUsersGroups();
-
-				gks.start();
-				
-
-				
-				BaseEntity icn_sort = new BaseEntity("ICN_SORT","Icon Sort");
-				try {
-					
-					icn_sort.addAttribute(RulesUtils.getAttribute("PRI_ICON_CODE", serviceToken.getToken()), 1.0, "sort");
-					icn_sort.setRealm(realm);
-					VertxUtils.writeCachedJson(realm,   "ICN_SORT",JsonUtils.toJson(icn_sort), serviceToken.getToken());
-
-				} catch (BadDataException e1) {
-					e1.printStackTrace();
-				}
-
-				//gks.injectSignal("initProject", initFacts); // This should initialise everything
-				gks.advanceSeconds(5, false);
-				
-				gks.getKieSession().getWorkItemManager().registerWorkItemHandler("Human Task", new NonManagedLocalHTWorkItemHandler(gks.getKieSession(),gks.getTaskService()));
-		        List<TaskSummary> tasks = null;
-
-		        
-		        // Start a process
-		        gks.startProcess("adam_user2");
-		        
-		        Task tasky = gks.getTaskService().getTaskById(1L);
-		        System.out.println(tasky);
-		        System.out.println("Formname: "+tasky.getFormName());
-		        System.out.println("Description: "+tasky.getDescription());
-		        System.out.println("People Assignments: "+tasky.getPeopleAssignments().getPotentialOwners());
-		        gks.showStatuses();
-		        
-		        gks.advanceSeconds(5, false);
-		        Map<String,Object> params = new HashMap<String,Object>();
-		        Task task = new TaskFluent().setName("Amazing GADA Stuff")
-		        		.setAdminUser(realm+"+PER_ADAMCROW63_AT_GMAIL_COM")
-		        		.setAdminGroup("Administrators")
-		                .addPotentialGroup(realm+"+GRP_GADA")
-		                .setAdminUser(realm+"+PER_ADAMCROW63_AT_GMAIL_COM")
-		             //   .addPotentialUser("acrow")
-		                .setProcessId("direct")
-		                .setDeploymentID(realm)
-		                .getTask();
-
-
-		        Task task2 = new TaskFluent().setName("Awesome GADA stuff")
-		              //  .addPotentialGroup("GADA")
-		                .setAdminUser(realm+"+PER_ADAMCROW63_AT_GMAIL_COM")
-		                .setAdminGroup("Administrators")
-		                .addPotentialUser(realm+"+PER_DOMENIC_AT_OUTCOME_LIFE")
-		                .setDeploymentID(realm)
-		                .setProcessId("direct")
-		                .getTask();
-
-		        Task task3 = new TaskFluent().setName("Boring Outcome Stuff")
-		                .addPotentialGroup(realm+"+GRP_OUTCOME")
-		                .setAdminUser(realm+"+PER_ADAMCROW63_AT_GMAIL_COM")
-		                .setAdminGroup("Administrators")
-		                .addPotentialUser(realm+"+PER_GERARD_AT_OUTCOME_LIFE")
-		                .setProcessId("direct")
-		                .setDeploymentID(realm)
-		                .getTask();
-
-
-		        gks.getTaskService().addTask(task, params);
-		        gks.getTaskService().addTask(task2, params);
-		        gks.getTaskService().addTask(task3, params);
-		        long taskId = task.getId();
-		        long taskId2 = task2.getId();
-		        long taskId3 = task3.getId();
-
-	              // Do Task Operations
-	            
-	              gks.showStatuses();
-
-	            
-	            // Add Comment
-	              User JbpmUser = (User) TaskModelProvider.getFactory().newUser(realm+"+PER_ADAMCROW63_AT_GMAIL_COM");
-	            InternalComment commentImpl = (InternalComment) TaskModelProvider.getFactory().newComment();
-	            commentImpl.setAddedAt(new Date());
-	            commentImpl.setAddedBy(JbpmUser);
-	            gks.getTaskService().addComment(taskId2, commentImpl);
-	            
-	             Map<String, Object> content = gks.getTaskService().getTaskContent(taskId2 );
-	             System.out.println(content);
-	              // Start Task
-	              gks.getTaskService().start(taskId, realm+"+PER_ADAMCROW63_AT_GMAIL_COM");    
-	              gks.showStatuses();
-
-	              gks.getTaskService().suspend(taskId, realm+"+PER_ADAMCROW63_AT_GMAIL_COM");    
-	              gks.showStatuses();
-
-	              gks.getTaskService().resume(taskId, realm+"+PER_ADAMCROW63_AT_GMAIL_COM");    
-	              gks.showStatuses();
-	              
-	              gks.getTaskService().forward(taskId2, realm+"+PER_DOMENIC_AT_OUTCOME_LIFE", realm+"+PER_ANISH_AT_GADA_IO");
-
-	              // Claim Task
-//	              gks.getTaskService().claim(taskId, "acrow");
-//	              showStatuses(gks);
-//              
-	              Map<String, Object> results = new HashMap<String, Object>();
-	              results.put("Result", "Done");
-	              gks.getTaskService().complete(taskId, realm+"+PER_ADAMCROW63_AT_GMAIL_COM", results);
-	              gks.showStatuses();
- 
-	              results.put("Result", "some document data");
-
-//	              long processInstanceId =
-//	            		  processService.startProcess(deployUnit.getIdentifier(), "org.jbpm.writedocument");
-//	            		  List<Long> taskIds =
-//	            		  runtimeDataService.getTasksByProcessInstanceId(processInstanceId);
-//	            		  Long taskId4 = taskIds.get(0);
-//	            		  userTaskService.start(taskId, "john");
-//	            		  UserTaskInstanceDesc task4 = runtimeDataService.getTaskById(taskId4);
-//	            		  Map<String, Object> results = new HashMap<String, Object>();
-//	            		  results.put("Result", "some document data");
-//	            		  userTaskService.complete(taskId4, "john", results);
-	              
-				gks.injectEvent(authInitMsg); // This should create a new process
-				gks.advanceSeconds(5, false);
-
-				BaseEntity user = VertxUtils.getObject(serviceToken.getRealm(), "", userToken.getUserCode(),
-						BaseEntity.class, serviceToken.getToken());
-
-				
-				// Ok, let's close the PER_USER1 task and see if the workflow continues....
-				System.out.println("CLosing adam_user2 task");
-				// first claim
-				List<TaskSummary> per_user1_tasks = gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_USER1", null);
-				TaskSummary taskSummary = per_user1_tasks.get(0);
-	            gks.getTaskService().claim(taskSummary.getId(), realm+"+PER_USER1");
-		        System.out.println("PER_USER1 CLAIMED "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_USER1", null)));
-	            gks.getTaskService().start(taskSummary.getId(), realm+"+PER_USER1");
-		        System.out.println("PER_USER1 STARTED "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_USER1", null)));
-	            gks.getTaskService().suspend(taskSummary.getId(), realm+"+PER_USER1");
-		        System.out.println("PER_USER1 SUSPENDED "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_USER1", null)));
-	            gks.getTaskService().resume(taskSummary.getId(), realm+"+PER_USER1");
-		        System.out.println("PER_USER1 RESUMED "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_USER1", null)));
-	            
-		        
-		        Map<String, Object> results2 = new HashMap<String, Object>();
-		        results2.put("Status", "good");
-		        gks.getTaskService().complete(taskSummary.getId(), realm+"+PER_USER1",results2);
-		        System.out.println("PER_USER1 COMPLETED  "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_USER1", null))+":results sent="+results2);
-
-
-				
-				gks.injectEvent(msgLogout);
-			} catch (Exception e) {
-				e.printStackTrace();
-				
-			}
-			finally {
-				if (gks!=null) {
-					gks.close();
-				}
-			}
-		}
-
-
-//
-//		
-//		private void showStatuses(GennyKieSession gks)
-//		{
-//				statuses = new ArrayList<Status>();
-//		        statuses.add(Status.Ready);
-//		        statuses.add(Status.Completed);
-//		        statuses.add(Status.Created);
-//		        statuses.add(Status.Error);
-//		        statuses.add(Status.Exited);
-//		        statuses.add(Status.InProgress);
-//		        statuses.add(Status.Obsolete);
-//		        statuses.add(Status.Reserved);
-//		        statuses.add(Status.Suspended);
-//		        
-//	            List<String> groups = new ArrayList<String>();
-//	            groups.add(realm+"+GRP_GADA");
-//
-//
-//	        System.out.println("POTENTIAL PER_USER1  "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwnerByStatus(realm+"+PER_USER1", statuses, null)));
-//            System.out.println("POTENTIAL acrow      "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwnerByStatus(realm+"+PER_ADAMCROW63_AT_GMAIL_COM", statuses, null)));
-//            System.out.println("POTENTIAL dom        "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_DOMENIC_AT_OUTCOME_LIFE", null)));
-//            System.out.println("POTENTIAL gerard     "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_GERARD_AT_OUTCOME_LIFE",  null)));
-//            System.out.println("POTENTIAL chris      "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_CHRIS_AT_GADA_IO", null)));
-//            System.out.println("POTENTIAL anish      "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_ANISH_AT_GADA_IO",  null)));
-//            System.out.println("POTENTIAL chris+gada "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_CHRIS_AT_GADA_IO", groups, "en-AU", 0,10)));
-//            System.out.println("POTENTIAL gada       "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(null, groups, "en-AU", 0,10)));
-//            
-//            System.out.println("OWNED acrow          "+showTaskNames(gks.getTaskService().getTasksOwned(realm+"+PER_ADAMCROW63_AT_GMAIL_COM", null)));
-//            System.out.println();
-//		}
-		
-//	@Test
-	public void headerTest()
-	{
-		System.out.println("Header test");
-		GennyToken userToken = null;
-		GennyToken serviceToken = null;
-		QRules qRules = null;
-
-		if (false) {
-			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
-			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-			qRules = new QRules(eventBusMock, userToken.getToken());
-			qRules.set("realm", userToken.getRealm());
-			qRules.setServiceToken(serviceToken.getToken());
-			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
-			GennyKieSession.loadAttributesJsonFromResources(userToken);
-
-		} else {
-			qRules = GennyJbpmBaseTest.setupLocalService();
-			userToken = new GennyToken("userToken", qRules.getToken());
-			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
-
-		}
-
-		System.out.println("session     =" + userToken.getSessionCode());
-		System.out.println("userToken   =" + userToken.getToken());
-		System.out.println("serviceToken=" + serviceToken.getToken());
-
-		  BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
-		  beUtils.setServiceToken(serviceToken);
-		  
-//		  ShowFrame.display(userToken, "FRM_TABLE_VIEW", "FRM_CONTENT", "Test");
-//		  String searchCode = "SBE_SEARCH_TEST";
-//		  
-//		  Answer answer = new Answer(userToken.getUserCode(),userToken.getUserCode(),"PRI_SEARCH_TEXT","univ");
-//
-// 
-//   		  SearchEntity searchBE = new SearchEntity(searchCode,"Test Search")
-//   		  	     .addSort("PRI_NAME","Created",SearchEntity.Sort.ASC)
-//   		  	     .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%"+answer.getValue()+"%")
-//   		  	     .addColumn("PRI_NAME", "Name")
-//   		      	 .addColumn("PRI_LANDLINE", "Phone")
-//   		  	     .addColumn("PRI_EMAIL", "Email")
-//   		  	     .addColumn("PRI_ADDRESS_CITY","City")
-//   		  	     .addColumn("PRI_ADDRESS_STATE","State")
-//   		  	     .setPageStart(0)
-//   		  	     .setPageSize(20);
-//
-//   		VertxUtils.putObject(userToken.getRealm(), "", searchCode, searchBE,
-//				userToken.getToken());  
-//   		
-//   		TableUtils.performSearch(serviceToken , beUtils, searchCode, answer);
-//
- 		
-		BaseEntityUtils beUtils2 = new BaseEntityUtils(userToken); 
-		
-		/* get current search */
-//		SearchEntity searchBE2 = TableUtils.getSessionSearch("SBE_SEARCHBAR",userToken);
-//
-//		
-//		System.out.println("NEXT for "+searchBE2.getCode()); 
-//		
-//		Integer pageIndex = searchBE2.getValue("SCH_PAGE_START",0);
-//		Integer pageSize = searchBE2.getValue("SCH_PAGE_SIZE", GennySettings.defaultPageSize);
-//		pageIndex = pageIndex + pageSize;
-//		
-//		Integer pageNumber = 1;
-//
-//		if(pageIndex != 0){
-//			pageNumber = pageIndex / pageSize;
-//		}
-//
-//		Answer pageAnswer = new Answer(userToken.getUserCode(),searchBE2.getCode(), "SCH_PAGE_START", pageIndex+"");
-//		Answer pageNumberAnswer = new Answer(userToken.getUserCode(),searchBE2.getCode(), "PRI_INDEX", pageNumber+"");
-//
-//		searchBE2 = beUtils2.updateBaseEntity(searchBE2, pageAnswer,SearchEntity.class);
-//		searchBE2 = beUtils2.updateBaseEntity(searchBE2, pageNumberAnswer,SearchEntity.class);
-//		
-//		VertxUtils.putObject(beUtils2.getGennyToken().getRealm(), "", searchBE2.getCode(), searchBE2,
-//			beUtils2.getGennyToken().getToken());
-//		
-//
-//        ShowFrame.display(userToken, "FRM_TABLE_VIEW", "FRM_CONTENT", "Test");
-//		TableUtils.performSearch(userToken , beUtils2, "SBE_SEARCHBAR", null);
-		
-		/* get current search */
-		TableUtils tableUtils = new TableUtils(beUtils2);
-		SearchEntity searchBE = tableUtils.getSessionSearch("SBE_SEARCHBAR");
-			
-		System.out.println("PREV for "+searchBE.getCode()); 
-		
-		Integer pageIndex = searchBE.getValue("SCH_PAGE_START",0);
-		Integer pageSize = searchBE.getValue("SCH_PAGE_SIZE",GennySettings.defaultPageSize); // TODO, don't let this be 0
-		pageIndex = pageIndex - pageSize;
-		
-		if (pageIndex <0) {
-			pageIndex = 0;
-		}
-		
-		Integer pageNumber = (pageIndex / pageSize) + 1;
-		
-
-		
-			Answer pageAnswer = new Answer(beUtils.getGennyToken().getUserCode(),searchBE.getCode(), "SCH_PAGE_START", pageIndex+"");
-			Answer pageNumberAnswer = new Answer(beUtils.getGennyToken().getUserCode(),searchBE.getCode(), "PRI_INDEX", pageNumber+"");
-
-		searchBE = beUtils.updateBaseEntity(searchBE, pageAnswer,SearchEntity.class);
-		searchBE = beUtils.updateBaseEntity(searchBE, pageNumberAnswer,SearchEntity.class);
-			
-			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
-				beUtils.getGennyToken().getToken());
-			
-	        ShowFrame.display(userToken, "FRM_TABLE_VIEW", "FRM_CONTENT", "Test");
- 		    tableUtils.performSearch(userToken , "SBE_SEARCHBAR", null);
-	
-   		
-	}
-		
 	//@Test
 	public void paginationTest()
 	{
@@ -791,7 +183,6 @@ public class AdamTest {
 					.build();
 			gks.start();
 			
-
 			
 			BaseEntity icn_sort = new BaseEntity("ICN_SORT","Icon Sort");
 			try {
@@ -908,8 +299,8 @@ public void testTableHeader() {
 	  		 VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken.getToken());
 	 
 		  Answer answer = new Answer(userToken.getUserCode(),userToken.getUserCode(),"PRI_SEARCH_TEXT",searchBarString);
-			TableUtils tableUtils = new TableUtils(beUtils);
-			  			tableUtils.performSearch(serviceToken , "SBE_SEARCHBAR", answer);
+		  			TableUtils tableUtils = new TableUtils(beUtils);
+		  			tableUtils.performSearch(serviceToken , "SBE_SEARCHBAR", answer);
    		  	     
   		  	     /* Send to front end */
    					
@@ -922,6 +313,8 @@ public void testTableHeader() {
 
 
 
+	
+	//@Test
 	public void tableTest()
 	{
 		System.out.println("Table test");
@@ -1391,7 +784,81 @@ public void testTableHeader() {
 		
 		System.out.println(user);
 	}
+	
+	@Test
+	public void aaplicationLCTest() {
+		
+		System.out.println("Show UserSession");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
 
+		if (true) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+		} else {
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+		}
+
+		System.out.println("session     =" + userToken.getSessionCode());
+		System.out.println("userToken   =" + userToken.getToken());
+		System.out.println("serviceToken=" + serviceToken.getToken());
+
+		QEventMessage authInitMsg = new QEventMessage("EVT_MSG", "AUTH_INIT");
+		QEventMessage msg1 = new QEventMessage("EVT_MSG", "INIT_1");
+		QEventMessage msgLogout = new QEventMessage("EVT_MSG", "LOGOUT");
+		
+		BaseEntity intern = new BaseEntity("PRI_INTERN");
+		BaseEntity internship = new BaseEntity("BE_INTERNSHIP");		
+		BaseEntity hostCompany = new BaseEntity("CPY_HOSTCOMPANY");
+
+	    HashMap<String, BaseEntity> hashBeg = new HashMap<String, BaseEntity>();
+	    
+	    hashBeg.put("intern", intern);
+	    hashBeg.put("internship", internship);
+	    hashBeg.put("hostCompany", hostCompany);
+
+		// NOW SET UP Some baseentitys
+		BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
+				StringUtils.capitaliseAllWords(serviceToken.getRealm()));
+		project.setRealm(serviceToken.getRealm());
+		VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
+				JsonUtils.toJson(project), serviceToken.getToken());
+		
+		// Log out to begin
+		VertxUtils.writeCachedJson(userToken.getRealm(),userToken.getSessionCode(),null,userToken.getToken());
+
+		GennyKieSession gks = null;
+
+		try {
+			gks = GennyKieSession.builder(serviceToken, true)
+					.addDrl("ADD_APPLICATION_ATTRIBUTES.drl")
+					.addJbpm("applicationLifecycle.bpmn")
+					.addJbpm("baseEntityValidation.bpmn")
+//					.addJbpm("applicationTestLifecycle.bpmn")
+					.addToken(userToken)
+					.build();
+			gks.start();
+			
+			gks.advanceSeconds(5, true);
+
+			gks.injectSignal("newApplication", hashBeg);
+			
+			gks.advanceSeconds(5, true);
+
+		} catch (Exception e) {
+			System.out.println(e.getLocalizedMessage());
+		} finally {
+			gks.close();
+		}
+		
+	}
 	
 	//@Test
 	public void userSessionTest() {
@@ -1996,51 +1463,757 @@ public void testTableHeader() {
 		}
 	}
 	
- String showTaskNames(List<TaskSummary> tasks)
- {
-	 String ret = "";
-	 if (tasks.isEmpty()) {
-		return "(empty)"; 
-	 } 
-	 for (TaskSummary task : tasks) {
-		 ret += "["+task.getName()+"("+task.getProcessId()+"):"+task.getStatusId()+"],";
-	 }
-	 return ret;
- }
- 
-// public static Map<Operation, List<OperationCommand>> initMVELOperations() {  
-//	  
-//     Map<String, Object> vars = new HashMap<String, Object>();  
-//
-//     // Search operations-dsl.mvel, if necessary using superclass if TaskService is subclassed  
-//     InputStream is = null;  
-//     // for (Class<?> c = getClass(); c != null; c = c.getSuperclass()) {  
-//     is = MVELLifeCycleManager.class.getResourceAsStream("/operations-dsl.mvel");  
-////         if (is != null) {  
-////             break;  
-////         }  
-//     //}  
-//     if (is == null) {  
-//         throw new RuntimeException("Unable To initialise TaskService, could not find Operations DSL");  
-//     }  
-//     Reader reader = new InputStreamReader(is);  
-//     try {  
-//         return (Map<Operation, List<OperationCommand>>) eval(toString(reader), vars);  
-//     } catch (IOException e) {  
-//         throw new RuntimeException("Unable To initialise TaskService, could not load Operations DSL");  
-//     }  
-//
-//
-// }  
- 
- private static void createUser(final String userCode, String name, boolean makeExisting)
- {
-	 // Add this user to the map
-	 
- }
- 
- 
- 
+    // @Test
+    public void virtualAskAndContextTest() {
+            QRules rules = GennyJbpmBaseTest.setupLocalService();
+            GennyToken userToken = new GennyToken("userToken", rules.getToken());
+            GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+
+            rules.sendAllAttributes();
+
+            Frame3 FRM_HEADER = this.generateHeader();
+
+            Theme THM_MAIN = Theme.builder("THM_MAIN").addAttribute().backgroundColor("grey").color("#18639F")
+                            // .height(80)
+                            .end().build();
+
+            Frame3 FRM_MAIN = Frame3.builder("FRM_MAIN").addTheme(THM_MAIN).end().question("QUE_NAME_TWO").end()
+                            .build();
+
+            try {
+                    /* frame-root */
+                    Frame3 FRM_ROOT = Frame3.builder("FRM_ROOT").addFrame(FRM_HEADER, FramePosition.NORTH).end()
+                                    .addFrame(FRM_MAIN, FramePosition.CENTRE).end().build();
+
+                    Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
+                    QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_ROOT, serviceToken, askMsgs);
+                    rules.publishCmd(msg);
+                    for (QDataAskMessage askMsg : askMsgs) {
+                            rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode());
+                    }
+                    System.out.println("Sent");
+            } catch (Exception e) {
+                    System.out.println("Failed " + e.getLocalizedMessage());
+            }
+
+    }
+
+    public Frame3 generateHeader() {
+            QRules rules = GennyJbpmBaseTest.setupLocalService();
+            GennyToken userToken = new GennyToken("userToken", rules.getToken());
+            GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+            BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+            BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
+
+            try {
+
+                    Theme THM_DROPDOWN_BEHAVIOUR_GENNY = Theme.builder("THM_DROPDOWN_BEHAVIOUR_GENNY")
+                                    .addAttribute(ThemeAttributeType.PRI_IS_DROPDOWN, true).end()
+                                    .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_LABEL, true).end()
+                                    .addAttribute(ThemeAttributeType.PRI_IS_QUESTION_GRP_LABEL_CLICKABLE, true)
+                                    .end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                    Theme THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY = Theme.builder("THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY")
+                                    .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_LABEL, false).end()
+                                    .build();
+
+                    Theme THM_BACKGROUND_NONE = Theme.builder("THM_BACKGROUND_NONE").addAttribute()
+                                    .backgroundColor("none").end().build();
+
+                    Theme THM_DROPDOWN_HEADER_WRAPPER_GENNY = Theme.builder("THM_DROPDOWN_HEADER_WRAPPER_GENNY")
+                                    .addAttribute()
+                                            .padding(5)
+                                            .backgroundColor(project.getValue("PRI_COLOR_PRIMARY_VARIANT_LIGHT", "#395268"))
+                                    .end()
+                                    .build();
+
+                    Theme THM_DROPDOWN_GROUP_LABEL_GENNY = Theme.builder("THM_DROPDOWN_GROUP_LABEL_GENNY")
+                                    .addAttribute().marginBottom(0).size("sm").bold(false).end().build();
+
+                    Theme THM_DROPDOWN_CONTENT_WRAPPER_GENNY = Theme.builder("THM_DROPDOWN_CONTENT_WRAPPER_GENNY")
+                                    .addAttribute()
+                                    .backgroundColor(project.getValue("PRI_COLOR_SURFACE", "#FFFFFF"))
+                                    .color("green").width(200).end()
+                                    .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                    Theme THM_BOX_SHADOW_SM = Theme.builder("THM_BOX_SHADOW_SM").addAttribute().shadowColor("#000")
+                                    .shadowOpacity(0.4).shadowRadius(10).shadowOffset().width(0).height(0).end()
+                                    .end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                    Theme THM_DROPDOWN_VCL_GENNY = Theme.builder("THM_DROPDOWN_VCL_GENNY").addAttribute()
+                                    .color(project.getValue("PRI_COLOR_SURFACE_ON", "#000000"))
+                                    .end().build();
+
+                    Theme THM_DASHBOARD_ITEM_INPUT = Theme.builder("THM_DASHBOARD_ITEM_INPUT")
+                                                    .addAttribute().dynamicWidth(true).end()
+                                                    .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                                    .build();
+
+                    Theme THM_HEADER_PROFILE_PICTURE = Theme.builder("THM_HEADER_PROFILE_PICTURE")
+                                            .addAttribute()
+                                                    .height(32)
+                                                    .width(32)
+                                                    .fit("cover")
+                                                    .borderRadius(50)
+                                            .end()
+                                            .build();
+                    
+                    Theme THM_PANEL_CONTENT_FIT = Theme.builder("THM_PANEL_CONTENT_FIT")
+                                            .addAttribute()
+                                                    .flexShrink(0)
+                                                    .flexBasis("auto")
+                                                    .flexGrow(0)
+                                                    .width("auto")
+                                            .end()
+                                            .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                            .build();
+
+                    Theme THM_PADDING_RIGHT_10 = Theme.builder("THM_PADDING_RIGHT_10")
+                                            .addAttribute()
+                                                    .paddingRight(10)
+                                            .end()
+                                            .build();
+                    
+                    Theme THM_BORDER_RADIUS_50 = Theme.builder("THM_BORDER_RADIUS_50")
+                                            .addAttribute()
+                                                    .borderRadius(50)
+                                            .end()
+                                            .build();
+
+                    Frame3 FRM_HEADER_FIRSTNAME = Frame3.builder("FRM_HEADER_FIRSTNAME")                               
+                                            .question("QUE_FIRSTNAME")
+                                            .end()
+                                            .build();
+                    Frame3 FRM_HEADER_LASTNAME = Frame3.builder("FRM_HEADER_LASTNAME")                                        
+                                            .question("QUE_LASTNAME")
+                                            .end()
+                                            .build();
+
+                    Frame3 FRM_HEADER_USERNAME = Frame3.builder("FRM_HEADER_USERNAME")                                                         
+                                            .addTheme(THM_PANEL_CONTENT_FIT, ThemePosition.WRAPPER).end()
+                                            .question("QUE_NAME")
+                                                    .targetAlias("PER_USER1")
+                                                    .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                            .end()
+                                            .build();
+
+                    
+                    Frame3 FRM_HEADER_PROFILE_PICTURE = Frame3.builder("FRM_HEADER_PROFILE_PICTURE")                                                                                        
+                                            .addTheme(THM_PANEL_CONTENT_FIT, ThemePosition.WRAPPER).end()
+                                            .addTheme(THM_PADDING_RIGHT_10, ThemePosition.WRAPPER).end()
+                                            .question("QUE_IMAGE_URL")
+                                                    .addTheme(THM_HEADER_PROFILE_PICTURE).vcl(VisualControlType.VCL_INPUT).end()
+                                                    .addTheme(THM_BORDER_RADIUS_50).vcl(VisualControlType.INPUT_FIELD).end()
+                                            .end()
+                                            .build();
+
+                    Frame3 FRM_HEADER_OPTIONS = Frame3.builder("FRM_HEADER_OPTIONS")
+                                            .addTheme(THM_PANEL_CONTENT_FIT, ThemePosition.WRAPPER).end()
+                                            .question("QUE_OPTIONS_GRP")
+                                                    .addTheme(THM_BACKGROUND_NONE).vcl(VisualControlType.GROUP).weight(1.0).end()
+                                                    .addTheme(THM_DROPDOWN_BEHAVIOUR_GENNY).vcl(VisualControlType.GROUP).weight(2.0).end()
+                                                    .addTheme(THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY).vcl(VisualControlType.GROUP).weight(1.0).end()
+                                                    .addTheme(THM_DROPDOWN_HEADER_WRAPPER_GENNY).vcl(VisualControlType.GROUP_HEADER_WRAPPER).weight(2.0).end()
+                                                    .addTheme(THM_DROPDOWN_GROUP_LABEL_GENNY)
+                                                            .vcl(VisualControlType.GROUP_LABEL).end()
+                                                    .addTheme(THM_DROPDOWN_CONTENT_WRAPPER_GENNY)
+                                                            .vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end()
+                                                    .addTheme(THM_BOX_SHADOW_SM)
+                                                            .vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end()
+                                                    .addTheme(THM_DROPDOWN_VCL_GENNY)
+                                                            .vcl(VisualControlType.VCL).end()
+                                            .end()
+                                            .build();
+
+                    Frame3 FRM_HEADER_ADD_ITEMS = Frame3.builder("FRM_HEADER_ADD_ITEMS")
+                                    .addTheme(THM_PANEL_CONTENT_FIT, ThemePosition.WRAPPER).end()
+                                    .question("QUE_ADD_ITEMS_GRP").addTheme(THM_BACKGROUND_NONE)
+                                    .vcl(VisualControlType.GROUP).weight(2.0).end()
+                                    .addTheme(THM_DROPDOWN_BEHAVIOUR_GENNY).vcl(VisualControlType.GROUP).end()
+                                    .addTheme(THM_DROPDOWN_HEADER_WRAPPER_GENNY)
+                                    .vcl(VisualControlType.GROUP_HEADER_WRAPPER).end()
+                                    .addTheme(THM_DROPDOWN_GROUP_LABEL_GENNY).vcl(VisualControlType.GROUP_LABEL)
+                                    .end().addTheme(THM_DROPDOWN_CONTENT_WRAPPER_GENNY)
+                                    .vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end().addTheme(THM_BOX_SHADOW_SM)
+                                    .vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end()
+                                    .addTheme(THM_DROPDOWN_VCL_GENNY).vcl(VisualControlType.VCL).end().end()
+                                    .build();
+
+                    Theme THM_PADDING = Theme.builder("THM_PADDING").addAttribute().padding(10).flexGrow(0)
+                                    .flexShrink(0).width(0).flexBasis("initial").end().build();
+
+                    Frame3 FRM_PADDING = Frame3.builder("FRM_PADDING").addTheme(THM_PADDING).end().build();
+
+                    Theme THM_HEADER = Theme.builder("THM_HEADER")
+                                    .addAttribute()
+                                            .height(80)
+                                            //.paddingRight(20)
+                                    .end()
+                                    .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                    .build();
+
+                    BaseEntity sortIconBe = beUtils.getBaseEntityByCode("ICN_SORT");
+
+                    Context context = new Context(ContextType.ICON, sortIconBe, VisualControlType.VCL_ICON, 1.0);
+
+                    /* Test Context */
+                    Frame3 FRM_HAMBURGER_MENU = Frame3.builder("FRM_HAMBURGER_MENU").question("QUE_NAME_TWO")
+                                    .addContext(context).end()
+                                    .end().build();
+
+                    /* Test Virtual Ask */
+                    /*
+                     * Frame3 FRM_HAMBURGER_MENU = Frame3.builder("FRM_HAMBURGER_MENU")
+                     * .question("PRI-EVENT", "Nothing") .addContext(context).end() .end() .build();
+                     *
+                     */
+
+                    Theme THM_FRAME_ALIGN_EAST = Theme.builder("THM_FRAME_ALIGN_EAST").addAttribute()
+                                    .marginLeft("auto").flexGrow(0).flexBasis("initial").end()
+                                    .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+                    Theme THM_FRAME_ALIGN_WEST = Theme.builder("THM_FRAME_ALIGN_WEST").addAttribute()
+                                    .marginRight("auto").flexGrow(0).flexBasis("initial").end()
+                                    .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+                 
+
+                    Theme THM_SEARCH_BAR = Theme.builder("THM_SEARCH_BAR")
+                                    .addAttribute()
+                                            .backgroundColor("white")
+                                            .color("black")
+                                            .end()
+                                            .build();
+                                            
+                    Theme THM_SEARCH_BAR_WRAPPER = Theme.builder("THM_SEARCH_BAR_WRAPPER")
+                                            .addAttribute()
+                                                    .maxWidth(700)
+                                                    .padding(10)
+                                                    .borderRadius(5)
+                                                    .width("100%")
+                                            .end()
+                                            .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                            .build();
+                    
+                    Theme THM_SEARCH_BAR_CENTRE = Theme.builder("THM_SEARCH_BAR_CENTRE")
+                                            .addAttribute()
+                                                    .justifyContent("flex-start")
+                                                    .flexDirection("row")
+                                            .end()
+                                            .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                            .build();
+                    
+                    
+                    Frame3 FRM_SEARCH_BAR = Frame3.builder("FRM_SEARCH_BAR")
+                                    .addTheme(THM_SEARCH_BAR_CENTRE, ThemePosition.CENTRE).end()
+                                    .question("QUE_SEARCH")
+                                            .addTheme(THM_SEARCH_BAR)
+                                            .vcl(VisualControlType.VCL)
+                                            .end()
+                                            .addTheme(THM_SEARCH_BAR_WRAPPER)
+                                            .vcl(VisualControlType.VCL_WRAPPER)
+                                            .end()
+                                    .end()
+                                    .build();
+                    
+                    Theme THM_PROJECT_NAME = Theme.builder("THM_PROJECT_NAME")
+                                    .addAttribute()
+                                            .flexGrow(0)
+                                    .end()
+                                    .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE,false).end()
+                                    .build();
+
+
+                    Frame3  FRM_PROJECT_NAME = Frame3.builder("FRM_PROJECT_NAME")
+                                    .addTheme("THM_SIDEBAR_WIDTH", ThemePosition.WRAPPER, serviceToken).end()                        
+                                    .addTheme(THM_PROJECT_NAME, ThemePosition.WRAPPER).end()                        
+                                    .question("QUE_NAME_TWO")
+                                            .targetAlias("PRJ_"+serviceToken.getRealm().toUpperCase())
+                                            .addTheme("THM_TITLE_LABEL", serviceToken).vcl(VisualControlType.VCL_LABEL).end()
+                                    .end()
+                                    .build();
+
+
+                    Frame3 FRM_HEADER = Frame3.builder("FRM_HEADER").addTheme(THM_HEADER).end()
+                                    .addTheme(THM_HEADER).end()
+                                    //.addTheme(THM_FRAME_ALIGN_WEST, ThemePosition.WEST).end()
+                                    //.addTheme(THM_FRAME_ALIGN_EAST, ThemePosition.EAST).end()
+                                    .addFrame(FRM_HAMBURGER_MENU, FramePosition.WEST).end()
+                                    .addFrame(FRM_PROJECT_NAME, FramePosition.WEST).end()
+                                    .addFrame(FRM_SEARCH_BAR, FramePosition.CENTRE).end()
+                                    .addFrame(FRM_HEADER_OPTIONS, FramePosition.EAST).end()
+                                    .addFrame(FRM_HEADER_USERNAME, FramePosition.EAST).end()
+                                    .addFrame(FRM_HEADER_PROFILE_PICTURE, FramePosition.EAST).end()
+                                    .addFrame(FRM_PADDING, FramePosition.EAST).end()
+                                    .addFrame(FRM_HEADER_ADD_ITEMS, FramePosition.EAST).end().build();
+
+                    System.out.println("Generated Header Frame");
+                    return FRM_HEADER;
+
+            } catch (Exception e) {
+                    System.out.println("Error " + e.getLocalizedMessage());
+            }
+            return null;
+    }
+
+    public Frame3 generateSidebar() {
+            QRules rules = GennyJbpmBaseTest.setupLocalService();
+            GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+            BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+            BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
+
+            try {
+
+                    Theme THM_SIDEBAR = Theme.builder("THM_SIDEBAR").addAttribute()
+                                    .backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E")).end()
+                                    .build();
+
+                    Theme THM_SIDEBAR_WIDTH = Theme.builder("THM_SIDEBAR_WIDTH").addAttribute().minWidth(300)
+                                    .width(100).end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
+                                    .end().build();
+
+                    Theme THM_TREE_ITEM = Theme.builder("THM_TREE_ITEM").addAttribute().color("white")
+                                    .height("auto").flexGrow(0).flexBasis("auto").end().build();
+
+                    Theme THM_LOGO = Theme.builder("THM_LOGO")
+                                    .addAttribute()
+                                            .fit("contain")
+                                            .height(100)
+                                            .width(100)
+                                    .end()
+                                    .build();
+                    
+                    Theme THM_LOGO_CENTRE = Theme.builder("THM_LOGO_CENTRE")
+                                    .addAttribute()
+                                            .justifyContent("center")
+                                            .width("100%")
+                                    .end()
+                                    .build();
+                    
+                    Theme THM_MARGIN_BOTTOM_20 = Theme.builder("THM_MARGIN_BOTTOM_20")
+                                    .addAttribute()
+                                            .marginBottom(20)
+                                    .end()
+                                    .build();
+
+                    Frame3 FRM_LOGO = Frame3.builder("FRM_LOGO")
+                                    .addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER).end()
+                                    .addTheme(THM_MARGIN_BOTTOM_20, ThemePosition.WRAPPER).end()
+                                    .addTheme(THM_LOGO_CENTRE, ThemePosition.CENTRE).end()
+                                    .question("QUE_PROJECT_SIDEBAR_GRP")
+                                            .addTheme(THM_LOGO)
+                                            .vcl(VisualControlType.VCL_WRAPPER).end().end().build();
+
+                    Theme THM_TREE_GROUP_BEHAVIOUR = Theme.builder("THM_TREE_GROUP_BEHAVIOUR")
+                                    .addAttribute(ThemeAttributeType.PRI_IS_EXPANDABLE, true).end()
+                                    .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                    .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_LABEL, true).end()
+                                    .addAttribute(ThemeAttributeType.PRI_IS_QUESTION_GRP_LABEL_CLICKABLE, true)
+                                    .end().build();
+
+                    Theme THM_TREE_GROUP_LABEL = Theme.builder("THM_TREE_GROUP_LABEL").addAttribute().bold(false)
+                                    .size("sm").end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
+                                    .end().build();
+
+                    Theme THM_TREE_GROUP_WRAPPER = Theme.builder("THM_TREE_GROUP_WRAPPER").addAttribute()
+                                    .width("100%").paddingX(20).end()
+                                    .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                    Theme THM_TREE_GROUP_CLICKABLE_WRAPPER = Theme.builder("THM_TREE_GROUP_CLICKABLE_WRAPPER")
+                                    .addAttribute().width("100%").justifyContent("space-between").end()
+                                    .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                    Theme THM_TREE_GROUP_CONTENT_WRAPPER = Theme.builder("THM_TREE_GROUP_CONTENT_WRAPPER")
+                                    .addAttribute().paddingLeft(10).end()
+                                    .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                    Frame3 FRM_TREE_FORM_VIEW = Frame3.builder("FRM_TREE_FORM_VIEW")
+                                    .addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER).end()
+                                    .question("QUE_TREE_FORM_VIEW_GRP").addTheme(THM_TREE_GROUP_BEHAVIOUR).end()
+                                    .addTheme(THM_TREE_GROUP_CLICKABLE_WRAPPER)
+                                    .vcl(VisualControlType.GROUP_CLICKABLE_WRAPPER).end()
+                                    .addTheme(THM_TREE_GROUP_CONTENT_WRAPPER)
+                                    .vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end()
+                                    .addTheme(THM_TREE_GROUP_WRAPPER).vcl(VisualControlType.GROUP_WRAPPER).end()
+                                    .addTheme(THM_TREE_GROUP_LABEL).vcl(VisualControlType.GROUP_LABEL).end().end()
+                                    .build();
+
+                    Frame3 FRM_TREE_BUCKET_VIEW = Frame3.builder("FRM_TREE_BUCKET_VIEW")
+                                    .addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER).end()
+                                    .question("QUE_TREE_BUCKET_VIEW").end().build();
+
+                    Frame3 FRM_TREE_DETAIL_VIEW = Frame3.builder("FRM_TREE_DETAIL_VIEW")
+                                    .addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER).end()
+                                    .question("QUE_TREE_DETAIL_VIEW").addTheme(THM_TREE_GROUP_WRAPPER)
+                                    .vcl(VisualControlType.VCL_WRAPPER).end().end().build();
+
+                    Frame3 FRM_TREE_TABLE_VIEW = Frame3.builder("FRM_TREE_TABLE_VIEW")
+                                    .addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER).end()
+                                    .question("QUE_TREE_TABLE_VIEW").end().build();
+
+                    Frame3 FRM_SIDEBAR = Frame3.builder("FRM_SIDEBAR").addTheme(THM_SIDEBAR).end()
+                                    .addTheme(THM_SIDEBAR_WIDTH).end().addFrame(FRM_LOGO, FramePosition.NORTH).end()
+                                    .addFrame(FRM_TREE_TABLE_VIEW, FramePosition.NORTH).end()
+                                    .addFrame(FRM_TREE_BUCKET_VIEW, FramePosition.NORTH).end()
+                                    .addFrame(FRM_TREE_DETAIL_VIEW, FramePosition.NORTH).end()
+                                    .addFrame(FRM_TREE_FORM_VIEW, FramePosition.NORTH).end().build();
+
+                    System.out.println("Generated Sidebar Frame");
+                    return FRM_SIDEBAR;
+            } catch (Exception e) {
+                    System.out.println("Error " + e.getLocalizedMessage());
+            }
+            return null;
+    }
+
+    public Frame3 generateFooter() {
+            QRules rules = GennyJbpmBaseTest.setupLocalService();
+            GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+            BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+            BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
+
+            try {
+                    Theme THM_LABEL_BOLD = Theme.builder("THM_LABEL_BOLD").addAttribute().bold(true).size("md")
+                                    .paddingX(10).end().addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end()
+                                    .build();
+
+                    Theme THM_FOOTER = Theme.builder("THM_FOOTER").addAttribute()
+                                    .backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E")).height(50)
+                                    .paddingX(20).end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
+                                    .end().build();
+
+                    Frame3 FRM_POWERED_BY = Frame3.builder("FRM_POWERED_BY").question("QUE_POWERED_BY_GRP")
+                                    .addTheme(THM_LABEL_BOLD).vcl(VisualControlType.VCL_LABEL).end()
+
+                                    .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken)
+                                    .vcl(VisualControlType.VCL_WRAPPER).end()
+
+                                    .end().build();
+
+                    Theme THM_FRAME_ALIGN_EAST = Theme.builder("THM_FRAME_ALIGN_EAST").addAttribute()
+                                    .marginLeft("auto").flexGrow(0).flexBasis("initial").end()
+                                    .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+                    Theme THM_FRAME_ALIGN_WEST = Theme.builder("THM_FRAME_ALIGN_WEST").addAttribute()
+                                    .marginRight("auto").flexGrow(0).flexBasis("initial").end()
+                                    .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                    Frame3 FRM_FOOTER = Frame3.builder("FRM_FOOTER").addTheme(THM_FOOTER).end()
+                                    .addTheme(THM_FRAME_ALIGN_EAST, ThemePosition.EAST).end()
+                                    .addFrame(FRM_POWERED_BY, FramePosition.EAST).end().build();
+
+                    System.out.println("Generated Footer Frame");
+                    return FRM_FOOTER;
+            } catch (Exception e) {
+                    System.out.println("Error :: " + e.getLocalizedMessage());
+            }
+            return null;
+    }
+
+    public Frame3 getDashboard() {
+        QRules rules = GennyJbpmBaseTest.setupLocalService();
+        GennyToken userToken = new GennyToken("userToken", rules.getToken());
+        GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+        BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+        BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
+
+        try {
+
+                /* -------------------- THEMES ------------------------------ */
+
+                Theme THM_PROJECT_COLOR_BACKGROUND = Theme.builder("THM_PROJECT_COLOR_BACKGROUND")
+                                .addAttribute()
+                                .backgroundColor(project.getValue("PRI_COLOR_BACKGROUND", "#F6F6F6"))
+                                .color(project.getValue("PRI_COLOR_BACKGROUND_ON", "#000000")).end().build();
+
+                Theme THM_DASHBOARD = Theme.builder("THM_DASHBOARD").addAttribute()
+                                // .backgroundColor("green")
+                                .maxWidth(900)
+                                .width("100%")
+                                .end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                Theme THM_VERTICAL_SCROLL = Theme.builder("THM_VERTICAL_SCROLL")
+                                .addAttribute()
+                                        .overflowY("auto")
+                                        .padding(40)
+                                .end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                .build();
+                
+                Theme THM_PADDING_40 = Theme.builder("THM_PADDING_40")
+                                .addAttribute()
+                                        .padding(40)
+                                .end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                .build();
+
+                Theme THM_DASHBOARD_WRAPPER = Theme.builder("THM_DASHBOARD_WRAPPER").addAttribute()
+                                .flexShrink(0)
+                                .height("initial")
+                                .flexBasis("auto")
+                                .end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                Theme THM_DASHBOARD_ITEM = Theme.builder("THM_DASHBOARD_ITEM").addAttribute()
+                                .borderStyle("solid").borderColor("grey").borderBottomWidth(1)
+                                .maxHeight("fit-content").padding(10).end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                Theme THM_DASHBOARD_ITEM_COLOR = Theme.builder("THM_DASHBOARD_ITEM_COLOR").addAttribute()
+                                .backgroundColor(project.getValue("PRI_COLOR_SURFACE", "#FFFFFF"))
+                                .color(project.getValue("PRI_COLOR_SURFACE_ON", "#000000")).end().build();
+
+                Theme THM_DASHBOARD_ITEM_INPUT = Theme.builder("THM_DASHBOARD_ITEM_INPUT").addAttribute()
+                                .dynamicWidth(true).end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                Theme THM_DASHBOARD_ITEM_LABEL = Theme.builder("THM_DASHBOARD_ITEM_LABEL").addAttribute()
+                                .bold(true).end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
+                                .end().build();
+
+                Theme THM_DASHBOARD_ITEM_WRAPPER = Theme.builder("THM_DASHBOARD_ITEM_WRAPPER").addAttribute()
+                                .flexDirection("row").justifyContent("space-between").width("100%").end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                Theme THM_DASHBOARD_ITEM_BEHAVIOUR = Theme.builder("THM_DASHBOARD_ITEM_BEHAVIOUR")
+                                .addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end().build();
+
+                Theme THM_TITLE_LABEL = Theme.builder("THM_TITLE_LABEL").addAttribute().textAlign("center")
+                                .bold(true).size("lg").end().build();
+
+                Theme THM_TITLE_WRAPPER = Theme.builder("THM_TITLE_WRAPPER").addAttribute().padding(20).end()
+                                .build();
+
+                Theme THM_TITLE_BEHAVIOUR = Theme.builder("THM_TITLE_BEHAVIOUR")
+                                .addAttribute(ThemeAttributeType.PRI_HAS_INPUT, false).end()
+                                .addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end().build();
+
+                Theme THM_DASHBOARD_CONTENT_WRAPPER = Theme.builder("THM_DASHBOARD_CONTENT_WRAPPER")
+                                .addAttribute().flexGrow(0).flexBasis("initial").height("initial")
+                                .end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                Theme THM_DASHBOARD_CONTENT_NORTH = Theme.builder("THM_DASHBOARD_CONTENT_NORTH").addAttribute()
+                                .flexBasis("initial").end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+                /* -------------------- INTERNS - FRAMES ------------------------------ */
+
+                Frame3 FRM_COUNT_ALL_INTERNS = Frame3.builder("FRM_COUNT_ALL_INTERNS")
+                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end().question("QUE_COUNT_ALL_INTERNS")
+                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end().end().build();
+
+                Frame3 FRM_COUNT_AVAILABLE_INTERNS = Frame3.builder("FRM_COUNT_AVAILABLE_INTERNS")
+                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                .question("QUE_COUNT_AVAILABLE_INTERNS").addTheme(THM_DASHBOARD_ITEM_WRAPPER)
+                                .vcl(VisualControlType.VCL_WRAPPER).end().addTheme(THM_DASHBOARD_ITEM_INPUT)
+                                .vcl(VisualControlType.VCL_INPUT).end().addTheme(THM_DASHBOARD_ITEM_LABEL)
+                                .vcl(VisualControlType.VCL_LABEL).end().addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR)
+                                .end().end().build();
+
+                Frame3 FRM_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNS = Frame3
+                                .builder("FRM_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNS")
+                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                .question("QUE_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNS")
+                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end().end().build();
+
+                Frame3 FRM_COUNT_OFFERED_INTERNS = Frame3.builder("FRM_COUNT_OFFERED_INTERNS")
+                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end().question("QUE_COUNT_OFFERED_INTERNS")
+                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end().end().build();
+
+                Frame3 FRM_COUNT_PLACED_INTERNS = Frame3.builder("FRM_COUNT_PLACED_INTERNS")
+                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end().question("QUE_COUNT_PLACED_INTERNS")
+                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end().end().build();
+
+                Frame3 FRM_COUNT_IN_PROGRESS_INTERNS = Frame3.builder("FRM_COUNT_IN_PROGRESS_INTERNS")
+                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                .question("QUE_COUNT_IN_PROGRESS_INTERNS").addTheme(THM_DASHBOARD_ITEM_WRAPPER)
+                                .vcl(VisualControlType.VCL_WRAPPER).end().addTheme(THM_DASHBOARD_ITEM_INPUT)
+                                .vcl(VisualControlType.VCL_INPUT).end().addTheme(THM_DASHBOARD_ITEM_LABEL)
+                                .vcl(VisualControlType.VCL_LABEL).end().addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR)
+                                .end().end().build();
+
+                Frame3 FRM_COUNT_COMPLETED_INTERNS = Frame3.builder("FRM_COUNT_COMPLETED_INTERNS")
+                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                .question("QUE_COUNT_COMPLETED_INTERNS").addTheme(THM_DASHBOARD_ITEM_WRAPPER)
+                                .vcl(VisualControlType.VCL_WRAPPER).end().addTheme(THM_DASHBOARD_ITEM_INPUT)
+                                .vcl(VisualControlType.VCL_INPUT).end().addTheme(THM_DASHBOARD_ITEM_LABEL)
+                                .vcl(VisualControlType.VCL_LABEL).end().addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR)
+                                .end().end().build();
+
+                /* DASHBOARD - INTERN - CONTENT */
+
+                Frame3 FRM_DASHBOARD_INTERNS_CONTENT = Frame3.builder("FRM_DASHBOARD_INTERNS_CONTENT")
+                                .addTheme(THM_DASHBOARD_CONTENT_WRAPPER, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_CONTENT_NORTH, ThemePosition.NORTH).end()
+                                .addFrame(FRM_COUNT_ALL_INTERNS, FramePosition.NORTH).end()
+                                .addFrame(FRM_COUNT_AVAILABLE_INTERNS, FramePosition.NORTH).end()
+                                .addFrame(FRM_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNS,
+                                                FramePosition.NORTH)
+                                .end().addFrame(FRM_COUNT_OFFERED_INTERNS, FramePosition.NORTH).end()
+                                .addFrame(FRM_COUNT_PLACED_INTERNS, FramePosition.NORTH).end()
+                                .addFrame(FRM_COUNT_IN_PROGRESS_INTERNS, FramePosition.NORTH).end()
+                                .addFrame(FRM_COUNT_COMPLETED_INTERNS, FramePosition.NORTH).end().build();
+
+                /* DASHBOARD - INTERN - HEADER */
+
+                Frame3 FRM_DASHBOARD_INTERNS_HEADER = Frame3.builder("FRM_DASHBOARD_INTERNS_HEADER")
+                                .addTheme(THM_DASHBOARD_CONTENT_WRAPPER, ThemePosition.WRAPPER).end()
+                                .question("QUE_DASHBOARD_ALL_INTERNS").addTheme(THM_TITLE_LABEL)
+                                .vcl(VisualControlType.VCL_LABEL).end().addTheme(THM_TITLE_WRAPPER)
+                                .vcl(VisualControlType.VCL_WRAPPER).end().addTheme(THM_TITLE_BEHAVIOUR).end()
+                                .end().build();
+
+                /* DASHBOARD - INTERN */
+
+                Frame3 FRM_DASHBOARD_INTERNS = Frame3.builder("FRM_DASHBOARD_INTERNS")
+                                .addTheme(THM_DASHBOARD).end()
+                                .addTheme(THM_DASHBOARD_WRAPPER, ThemePosition.WRAPPER).end()
+                                .addFrame(FRM_DASHBOARD_INTERNS_HEADER, FramePosition.NORTH).end()
+                                .addFrame(FRM_DASHBOARD_INTERNS_CONTENT, FramePosition.NORTH).end().build();
+
+                /*
+                 * =============================================================================
+                 * ===========================================
+                 * =============================================================================
+                 * ===========================================
+                 */
+
+                /* -------------------- INTERNSHIPS - FRAMES ------------------------------ */
+
+                Frame3 FRM_COUNT_ALL_INTERNSHIPS = Frame3.builder("FRM_COUNT_ALL_INTERNSHIPS")
+                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end().question("QUE_COUNT_ALL_INTERNSHIPS")
+                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end().end().build();
+
+                Frame3 FRM_COUNT_AVAILABLE_INTERNSHIPS = Frame3.builder("FRM_COUNT_AVAILABLE_INTERNSHIPS")
+                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                .question("QUE_COUNT_AVAILABLE_INTERNSHIPS")
+                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end().end().build();
+
+                Frame3 FRM_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNSHIPS = Frame3
+                                .builder("FRM_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNSHIPS")
+                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                .question("QUE_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNSHIPS")
+                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end().end().build();
+
+                Frame3 FRM_COUNT_OFFERED_INTERNSHIPS = Frame3.builder("FRM_COUNT_OFFERED_INTERNSHIPS")
+                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                .question("QUE_COUNT_OFFERED_INTERNSHIPS").addTheme(THM_DASHBOARD_ITEM_WRAPPER)
+                                .vcl(VisualControlType.VCL_WRAPPER).end().addTheme(THM_DASHBOARD_ITEM_INPUT)
+                                .vcl(VisualControlType.VCL_INPUT).end().addTheme(THM_DASHBOARD_ITEM_LABEL)
+                                .vcl(VisualControlType.VCL_LABEL).end().addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR)
+                                .end().end().build();
+
+                Frame3 FRM_COUNT_PLACED_INTERNSHIPS = Frame3.builder("FRM_COUNT_PLACED_INTERNSHIPS")
+                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                .question("QUE_COUNT_PLACED_INTERNSHIPS").addTheme(THM_DASHBOARD_ITEM_WRAPPER)
+                                .vcl(VisualControlType.VCL_WRAPPER).end().addTheme(THM_DASHBOARD_ITEM_INPUT)
+                                .vcl(VisualControlType.VCL_INPUT).end().addTheme(THM_DASHBOARD_ITEM_LABEL)
+                                .vcl(VisualControlType.VCL_LABEL).end().addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR)
+                                .end().end().build();
+
+                Frame3 FRM_COUNT_IN_PROGRESS_INTERNSHIPS = Frame3.builder("FRM_COUNT_IN_PROGRESS_INTERNSHIPS")
+                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                .question("QUE_COUNT_IN_PROGRESS_INTERNSHIPS")
+                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end().end().build();
+
+                Frame3 FRM_COUNT_COMPLETED_INTERNSHIPS = Frame3.builder("FRM_COUNT_COMPLETED_INTERNSHIPS")
+                                .addTheme(THM_DASHBOARD_ITEM, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_COLOR).end()
+                                .question("QUE_COUNT_COMPLETED_INTERNSHIPS")
+                                .addTheme(THM_DASHBOARD_ITEM_WRAPPER).vcl(VisualControlType.VCL_WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_ITEM_INPUT).vcl(VisualControlType.VCL_INPUT).end()
+                                .addTheme(THM_DASHBOARD_ITEM_LABEL).vcl(VisualControlType.VCL_LABEL).end()
+                                .addTheme(THM_DASHBOARD_ITEM_BEHAVIOUR).end().end().build();
+
+                /* DASHBOARD - INTERNSHIPS - CONTENT */
+
+                Frame3 FRM_DASHBOARD_INTERNSHIPS_CONTENT = Frame3.builder("FRM_DASHBOARD_INTERNSHIPS_CONTENT")
+                                // .addTheme("THM_BOX_SHADOW_SM", ThemePosition.WRAPPER, serviceToken).end()
+                                .addTheme(THM_DASHBOARD_CONTENT_WRAPPER, ThemePosition.WRAPPER).end()
+                                .addTheme(THM_DASHBOARD_CONTENT_NORTH, ThemePosition.NORTH).end()
+                                .addFrame(FRM_COUNT_ALL_INTERNSHIPS, FramePosition.NORTH).end()
+                                .addFrame(FRM_COUNT_AVAILABLE_INTERNSHIPS, FramePosition.NORTH).end()
+                                .addFrame(FRM_COUNT_APPLIED_SHORTLISTED_INTERVIEWED_INTERNSHIPS,
+                                                FramePosition.NORTH)
+                                .end().addFrame(FRM_COUNT_OFFERED_INTERNSHIPS, FramePosition.NORTH).end()
+                                .addFrame(FRM_COUNT_PLACED_INTERNSHIPS, FramePosition.NORTH).end()
+                                .addFrame(FRM_COUNT_IN_PROGRESS_INTERNSHIPS, FramePosition.NORTH).end()
+                                .addFrame(FRM_COUNT_COMPLETED_INTERNSHIPS, FramePosition.NORTH).end().build();
+
+                /* DASHBOARD - INTERNSHIPS - HEADER */
+
+                Frame3 FRM_DASHBOARD_INTERNSHIPS_HEADER = Frame3.builder("FRM_DASHBOARD_INTERNSHIPS_HEADER")
+                               .addTheme(THM_DASHBOARD_CONTENT_WRAPPER, ThemePosition.WRAPPER).end()
+                                .question("QUE_DASHBOARD_ALL_INTERNSHIPS").addTheme(THM_TITLE_LABEL)
+                                .vcl(VisualControlType.VCL_LABEL).end().addTheme(THM_TITLE_WRAPPER)
+                                .vcl(VisualControlType.VCL_WRAPPER).end().addTheme(THM_TITLE_BEHAVIOUR).end()
+                                .end().build();
+
+                /* DASHBOARD - INTERNSHIPS */
+
+                Frame3 FRM_DASHBOARD_INTERNSHIPS = Frame3.builder("FRM_DASHBOARD_INTERNSHIPS")
+                                .addTheme(THM_DASHBOARD).end()
+                                .addTheme(THM_DASHBOARD_WRAPPER, ThemePosition.WRAPPER).end()
+                                .addFrame(FRM_DASHBOARD_INTERNSHIPS_HEADER, FramePosition.NORTH).end()
+                                .addFrame(FRM_DASHBOARD_INTERNSHIPS_CONTENT, FramePosition.NORTH).end().build();
+
+                Frame3 FRM_CONTENT = Frame3.builder("FRM_CONTENT")
+                                .addTheme(THM_PROJECT_COLOR_BACKGROUND).end()
+                                .addTheme(THM_VERTICAL_SCROLL, ThemePosition.NORTH).end()
+                                .addTheme(THM_PADDING_40, ThemePosition.NORTH).end()
+                                .addFrame(FRM_DASHBOARD_INTERNS, FramePosition.NORTH).end()
+                                .addFrame(FRM_DASHBOARD_INTERNSHIPS, FramePosition.NORTH).end().build();
+
+                Theme THM_TREE_GROUP_BEHAVIOUR = Theme.builder("THM_TREE_GROUP_BEHAVIOUR")
+                                .addAttribute(ThemeAttributeType.PRI_IS_EXPANDABLE, true).end()
+                                .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_LABEL, true).end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_QUESTION_GRP_LABEL_CLICKABLE, true)
+                                .end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                                .addAttribute(ThemeAttributeType.PRI_HAS_CHILD_ASKS, false).end().build();
+
+                return FRM_CONTENT;
+
+        } catch (Exception e) {
+                // TODO: handle exception
+        }
+        return null;
+}
+
 	@BeforeClass
 	public static void init() throws FileNotFoundException, SQLException {
 
@@ -2059,22 +2232,7 @@ public void testTableHeader() {
 		eventBusMock = new EventBusMock();
 		vertxCache = new VertxCache(); // MockCache
 		VertxUtils.init(eventBusMock, vertxCache);
-		
-		QRules qRules = null;
 
-		if (USE_STANDALONE) {
-			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
-			GennyKieSession.loadAttributesJsonFromResources(serviceToken);
-
-		} else {
-			qRules = GennyJbpmBaseTest.setupLocalService();
-			userToken = new GennyToken("userToken", qRules.getToken());
-			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
-		}
-
-		System.out.println("serviceToken=" + serviceToken.getToken());
-
-		
 	}
+
 }

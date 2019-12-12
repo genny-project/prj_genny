@@ -227,7 +227,7 @@ public class AdamTest {
 		}
 	   
 	   
-//	@Test
+	@Test
 		public void askQuestionTest()
 		{
 			System.out.println("AskQuestion Test");
