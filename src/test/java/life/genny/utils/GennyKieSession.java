@@ -514,7 +514,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		
 		System.setProperty("org.kie.server.bypass.auth.user", "true");
 
-		if (System.getenv("USE_JMS")==null) {
+		if (!GennySettings.useJMS) {
 			System.out.println("NOT USING JMS");
 			EntityManagerFactory emf = super.getEmf();
 
