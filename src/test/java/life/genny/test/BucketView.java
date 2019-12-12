@@ -219,7 +219,7 @@ public class BucketView extends GennyJbpmBaseTest {
 		bucketHeaderContext.add(bucketHeaderLabelContext);
 
 		/* get all the bucket related asks group */
-		Ask FRM_BUCKET_HEADER_ASK = bucketUtils.getBucketHeaderAsk(contextListMap, serviceToken);
+		Ask FRM_BUCKET_HEADER_ASK = bucketUtils.getBucketHeaderAsk(contextListMap);
 		Ask FRM_BUCKET_CONTENT_ASK = bucketUtils.getBucketContentAsk(contextListMap, serviceToken);
 		Ask FRM_BUCKET_FOOTER_ASK = bucketUtils.getBucketFooterAsk(contextListMap, serviceToken);
 
