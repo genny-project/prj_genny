@@ -29,6 +29,7 @@ import life.genny.qwanda.message.QEventMessage;
 import life.genny.qwandautils.GennySettings;
 import life.genny.rules.QRules;
 import life.genny.rules.RulesLoader;
+import life.genny.utils.GennyJbpmBaseTest;
 
 public class PersistenceTest extends GennyJbpmBaseTest {
 

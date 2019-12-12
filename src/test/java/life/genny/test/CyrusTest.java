@@ -41,6 +41,7 @@ import life.genny.rules.QRules;
 import life.genny.rules.listeners.JbpmInitListener;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.FrameUtils2;
+import life.genny.utils.GennyJbpmBaseTest;
 import life.genny.utils.VertxUtils;
 import life.genny.qwanda.datatype.DataType;
 

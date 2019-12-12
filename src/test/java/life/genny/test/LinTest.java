@@ -18,6 +18,7 @@ import life.genny.qwanda.message.QCmdMessage;
 import life.genny.qwandautils.GennyCacheInterface;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
+import life.genny.utils.GennyJbpmBaseTest;
 import life.genny.utils.VertxUtils;
 
 public class LinTest extends GennyJbpmBaseTest {

@@ -30,6 +30,8 @@ import life.genny.qwandautils.GennyCacheInterface;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.rules.QRules;
+import life.genny.utils.GennyJbpmBaseTest;
+import life.genny.utils.GennyKieSession;
 import life.genny.utils.VertxUtils;
 
 /**

@@ -9,6 +9,8 @@ import life.genny.models.GennyToken;
 import life.genny.qwanda.message.QEventMessage;
 import life.genny.rules.QRules;
 import life.genny.rules.listeners.JbpmInitListener;
+import life.genny.utils.GennyJbpmBaseTest;
+import life.genny.utils.GennyKieSession;
 
 public class SessionWFTest extends GennyJbpmBaseTest {
 
