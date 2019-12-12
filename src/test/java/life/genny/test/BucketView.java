@@ -56,6 +56,7 @@ import life.genny.utils.RulesUtils;
 import life.genny.utils.SearchUtilsTest;
 import life.genny.utils.TableUtils;
 //import life.genny.utils.//TableUtilsTest;
+import org.apache.commons.lang3.StringUtils;
 import life.genny.utils.VertxUtils;
 
 public class BucketView extends GennyJbpmBaseTest {
@@ -64,6 +65,33 @@ public class BucketView extends GennyJbpmBaseTest {
 
 	public BucketView() {
 		super(false);
+	}
+	
+	//@Test
+	public void stringTest() {
+		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		GennyToken userToken = new GennyToken("userToken", rules.getToken());
+		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+
+		String apiUrl = GennySettings.qwandaServiceUrl + "/service/forms";
+		System.out.println("Fetching setup info from " + apiUrl);
+		System.out.println("userToken (ensure user has test role) = " + userToken);
+		try {
+			String code = "QUE_USER_PROFILE_MENU";
+
+			if(code.matches("(.*)_MENU")) {
+				System.out.println("MENU code found");
+				String tempCode = StringUtils.removeEnd(code, "_MENU");
+				
+				System.out.println("tempCode :: " + tempCode);
+				
+				code = tempCode + "_GRP";
+				System.out.println("code :: " + code);
+
+			}
+		}catch(Exception e){
+
+		}
 	}
 	
 	//@Test
@@ -324,7 +352,7 @@ public class BucketView extends GennyJbpmBaseTest {
 
 	}
 
-	//@Test
+	@Test
 	public void sendCards() {
 
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -494,7 +522,7 @@ public class BucketView extends GennyJbpmBaseTest {
 		}
 	}
 
-	@Test
+	//@Test
 	public void testForm() {
 
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
