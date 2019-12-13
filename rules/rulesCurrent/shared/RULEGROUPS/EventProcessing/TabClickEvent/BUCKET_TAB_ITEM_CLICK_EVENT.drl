@@ -10,6 +10,7 @@ import io.vertx.core.json.JsonObject;
 import life.genny.utils.OutputParam;
 import life.genny.utils.BucketUtils;
 import life.genny.models.ThemePosition;
+import life.genny.models.ThemeAttributeType;
 
 rule "BUCKET_TAB_ITEM_CLICK_EVENT"
     ruleflow-group 'EventProcessing'
