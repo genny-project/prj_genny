@@ -396,7 +396,7 @@ public class BucketUtilsTest {
 		return askList;
 	}
 
-	/* get the search BE related to bucket from cache */
+	/* get the search BE related to bucket from cache */ 
 	public List<SearchEntity> getBucketSearchBeListFromCache(GennyToken serviceToken) {
 
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
@@ -575,7 +575,7 @@ public class BucketUtilsTest {
 		Ask bucketCountAsk = new Ask(bucketCountQues, beUtils.getGennyToken().getUserCode(), "SBE_DUMMY");
 
 		Ask[] row1ChildAsks = { bucketCountAsk };
-		row1Ask.setChildAsks(row1ChildAsks);
+		//row1Ask.setChildAsks(row1ChildAsks);
 
 		/* row-two-ask */
 		Question row2Ques = new Question("QUE_BUCKET_HEADER_ROW_TWO_GRP", "Row Two", tableCellAttribute, false);
@@ -699,6 +699,16 @@ public class BucketUtilsTest {
 		/* get the bucket-content ask */
 		//Frame3 FRM_BUCKET_CONTENT = bucketUtils.getBucketContentFrame("FRM_BUCKET_CONTENT", "test", "test");
 
+		/* get the themes */
+		Theme THM_WIDTH_100_PERCENT_NO_INHERIT = VertxUtils.getObject(userToken.getRealm(), "", "THM_WIDTH_100_PERCENT_NO_INHERIT",
+				Theme.class, userToken.getToken());
+
+		/* bucketContent context */
+		List<Context> bucketContentContext = new ArrayList<>();
+		bucketContentContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_WIDTH_100_PERCENT_NO_INHERIT),
+				VisualControlType.GROUP_WRAPPER, 1.0));
+
+
 		try {
 
 			/* get the list of bucket searchBEs from the cache */
@@ -764,6 +774,9 @@ public class BucketUtilsTest {
 				Ask bucketContentAsk = Ask.clone(FRM_BUCKET_CONTENT_ASK);
 				bucketContentAsk.setQuestionCode("QUE_BUCKET_CONTENT_" + code + "_GRP");
 				bucketContentAsk.setName(searchBe.getName());
+
+				/* add the contextList to contextMap */
+				contextListMap.put("QUE_BUCKET_CONTENT_" + code + "_GRP", new ContextList(bucketContentContext));
 
 				/* link bucketContentAsk to application asks */
 				bucketContentAsk.setChildAsks(askList.toArray(new Ask[askList.size()]));

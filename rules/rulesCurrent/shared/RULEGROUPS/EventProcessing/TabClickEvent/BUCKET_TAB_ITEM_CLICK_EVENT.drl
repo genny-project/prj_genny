@@ -49,10 +49,18 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 				Theme THM_JUSTIFY_CONTENT_FLEX_START = Theme.builder("THM_JUSTIFY_CONTENT_FLEX_START")
 														.addAttribute().justifyContent("flex-start").end()
 														.build();
+				
+				Theme THM_PADDING_15 = Theme.builder("THM_PADDING_15")
+									.addAttribute()
+										.padding(15)
+									.end()
+									.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+									.build();  
 
 				Frame3 FRM_BUCKET_CONTENT = Frame3.builder("FRM_BUCKET_CONTENT")
 										.question("QUE_BUCKET_CONTENT_GRP").end()
-											.addTheme(THM_JUSTIFY_CONTENT_FLEX_START, ThemePosition.CENTRE).end()
+										.addTheme(THM_JUSTIFY_CONTENT_FLEX_START, ThemePosition.CENTRE).end()
+										.addTheme(THM_PADDING_15, ThemePosition.WRAPPER).end()
 										.build();
 
 				BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
