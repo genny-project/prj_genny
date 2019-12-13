@@ -590,38 +590,26 @@
 				</includes>
 			</resource>
 			<resource>
+				<directory>src/main/resources/META-INF</directory>
+			</resource>
+
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>rules</directory>
+			</resource>
+			<resource>
 				<directory>src/test/resources/META-INF</directory>
 			</resource>
 
 			<resource>
 				<directory>src/test/resources</directory>
 			</resource>
-			<resource>
-				<directory>rules</directory>
-			</resource>
+
 
 		</resources>
-		<testResources>
-			<testResource>
-				<directory>${shared.resources.dir}</directory>
-				<includes>
-					<include>common.properties</include>
-					<include>${module.file}.properties</include>
-				</includes>
-			</testResource>
-			<!-- any other test resources here -->
 
-			<testResource>
-				<directory>src/test/resources/META-INF</directory>
-			</testResource>
-
-			<testResource>
-				<directory>src/test/resources</directory>
-			</testResource>
-			<testResource>
-				<directory>rules</directory>
-			</testResource>
-		</testResources>
 		<plugins>
 			<!-- Starts an minimal embedded ActiveMQ broker for the test. -->
 			<plugin>
@@ -729,8 +717,7 @@
 						<additionalClasspathElement>rules</additionalClasspathElement>
 						<additionalClasspathElement>src/main/resources</additionalClasspathElement>
 						<additionalClasspathElement>src/main/resources/META-INF</additionalClasspathElement>
-						<additionalClasspathElement>src/test/resources</additionalClasspathElement>
-						<additionalClasspathElement>src/test/resources/META-INF</additionalClasspathElement>					</additionalClasspathElements>
+					</additionalClasspathElements>
 				</configuration>
 			</plugin>
 
