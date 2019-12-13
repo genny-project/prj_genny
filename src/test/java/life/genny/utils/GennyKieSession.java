@@ -864,7 +864,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		if (!"/rules".equals(GennySettings.rulesDir)) {
 			baseRulesDir = GennySettings.rulesDir;
 		}
-		String testRulesDir = baseRulesDir;
+		final String testRulesDir = baseRulesDir;
 		File base = new File(testRulesDir);
 		File found = searchFile(new File(testRulesDir), dirname);
 		String finalFile = found.getAbsoluteFile().getPath().substring(base.getAbsoluteFile().getPath().length() + 1);
@@ -878,7 +878,8 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			
 			String fullPath = findFullPath(f.toString());
 			if ((!fullPath.contains("XXX")) ||allowXXX) {
-				files.add(findFullPath(f.toString()));
+				String addFilePath = findFullPath(f.toString());
+				files.add(addFilePath);
 			}
 		});
 		return files;
@@ -1106,7 +1107,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		
 		
 	    String jsonString;
-			jsonString = readLineByLineJava8( "src/test/resources/attributes.json" );
+			jsonString = readLineByLineJava8( "src/main/resources/attributes.json" );
 			VertxUtils.writeCachedJson(gToken.getRealm(), "attributes", jsonString, gToken.getToken());
 			
 			QDataAttributeMessage attributesMsg = JsonUtils.fromJson(jsonString, QDataAttributeMessage.class);

@@ -119,8 +119,7 @@ public class SearchUtilsTest {
 
 		/* initialize an empty ask list */
 		List<Ask> askList = new ArrayList<>();
-		List<QDataBaseEntityMessage> themeMsgList = new ArrayList<QDataBaseEntityMessage>();
-		
+		List<QDataBaseEntityMessage> themeMsgList = new ArrayList<QDataBaseEntityMessage>();		
 		TableUtils tableUtils = new TableUtils(beUtils);
 
 		if (columns != null) {
