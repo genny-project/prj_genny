@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.1.Final-v20190425-2005-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.4.3.Final-v20180418-1358-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
   <bpmn2:itemDefinition id="ItemDefinition_9" isCollection="false" structureRef="java.lang.String"/>
   <bpmn2:itemDefinition id="ItemDefinition_556" isCollection="false" structureRef="life.genny.models.GennyToken"/>
   <bpmn2:itemDefinition id="ItemDefinition_576" isCollection="false" structureRef="life.genny.utils.CallingProcessToken"/>
@@ -138,7 +138,34 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[QUE_INTERNSHIP_S1_GRP]]></drools:metaValue>
           </drools:metaData>
-          <drools:onEntry-script scriptFormat="http://www.java.com/java"/>
+          <drools:onEntry-script scriptFormat="http://www.java.com/java">
+            <drools:script>DropdownUtils dropDownUtils = new DropdownUtils();
+
+dropDownUtils.setNewSearch(&quot;HostCompany&quot;,&quot;Host Company Selection&quot;)
+       		.addFilter(&quot;PRI_CODE&quot;, SearchEntity.StringFilter.LIKE, &quot;CPY_%&quot;)
+	        .addFilter(&quot;PRI_IS_HOST_COMPANY&quot;, true)
+	        .setSourceCode(&quot;GRP_HOST_COMPANY_SELECTION&quot;)
+	        .setPageStart(0)
+	        .setPageSize(10000);
+			
+dropDownUtils.sendSearchResults(&quot;GRP_HOST_COMPANY_SELECTION&quot;, &quot;LNK_CORE&quot;, &quot;DURATION&quot;, userToken);
+
+dropDownUtils.setNewSearch(&quot;HostCompanyRep&quot;,&quot;Host Company Rep Selection&quot;)
+			.addFilter(&quot;PRI_CODE&quot;,SearchEntity.StringFilter.LIKE,&quot;SEL_%&quot;)
+	        .setSourceCode(&quot;GRP_HOST_COMPANY_REP_SELECTION&quot;)
+	        .setPageStart(0)
+	        .setPageSize(10000);
+			
+dropDownUtils.sendSearchResults(&quot;GRP_HOST_COMPANY_REP_SELECTION&quot;, &quot;LNK_CORE&quot;, &quot;INTERN&quot;, userToken);
+
+dropDownUtils.setNewSearch(&quot;InternSupervisor&quot;,&quot;Intern Supervisor Selection&quot;)
+			.addFilter(&quot;PRI_CODE&quot;,SearchEntity.StringFilter.LIKE,&quot;SEL_%&quot;)
+	        .setSourceCode(&quot;GRP_INTERN_SUPERVISOR_SELECTION&quot;)
+	        .setPageStart(0)
+	        .setPageSize(10000);
+			
+dropDownUtils.sendSearchResults(&quot;GRP_INTERN_SUPERVISOR_SELECTION&quot;, &quot;LNK_CORE&quot;, &quot;INTERN&quot;, userToken);</drools:script>
+          </drools:onEntry-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_14</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
@@ -286,7 +313,17 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[QUE_INTERNSHIP_S2_GRP]]></drools:metaValue>
           </drools:metaData>
-          <drools:onEntry-script scriptFormat="http://www.java.com/java"/>
+          <drools:onEntry-script scriptFormat="http://www.java.com/java">
+            <drools:script>
+DropdownUtils dropDownUtils = new DropdownUtils();
+dropDownUtils.setNewSearch(&quot;IndustryClassification&quot;,&quot; Classificcatino of industry&quot;)
+			.addFilter(&quot;PRI_CODE&quot;,SearchEntity.StringFilter.LIKE,&quot;SEL_%&quot;)
+	        .setSourceCode(&quot;GRP_INDUSTRY_SELECTION&quot;)
+	        .setPageStart(0)
+	        .setPageSize(10000);
+			
+dropDownUtils.sendSearchResults(&quot;GRP_INDUSTRY_SELECTION&quot;, &quot;LNK_CORE&quot;, &quot;INDUSTRY&quot;, userToken);</drools:script>
+          </drools:onEntry-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
@@ -354,7 +391,24 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[QUE_INTERNSHIP_S3_GRP]]></drools:metaValue>
           </drools:metaData>
-          <drools:onEntry-script scriptFormat="http://www.java.com/java"/>
+          <drools:onEntry-script scriptFormat="http://www.java.com/java">
+            <drools:script>DropdownUtils dropDownUtils = new DropdownUtils();
+dropDownUtils.setNewSearch(&quot;Internship&quot;,&quot;Internship Durations&quot;)
+			.addFilter(&quot;PRI_CODE&quot;,SearchEntity.StringFilter.LIKE,&quot;SEL_%&quot;)
+	        .setSourceCode(&quot;GRP_INTERNSHIP_DURATION&quot;)
+	        .setPageStart(0)
+	        .setPageSize(10000);
+			
+dropDownUtils.sendSearchResults(&quot;GRP_INTERNSHIP_DURATION&quot;, &quot;LNK_CORE&quot;, &quot;DURATION&quot;, userToken);
+
+dropDownUtils.setNewSearch(&quot;Number&quot;,&quot;Intern's Number&quot;)
+			.addFilter(&quot;PRI_CODE&quot;,SearchEntity.StringFilter.LIKE,&quot;SEL_%&quot;)
+	        .setSourceCode(&quot;GRP_NO_OF_INTERNS&quot;)
+	        .setPageStart(0)
+	        .setPageSize(10000);
+			
+dropDownUtils.sendSearchResults(&quot;GRP_NO_OF_INTERNS&quot;, &quot;LNK_CORE&quot;, &quot;INTERN&quot;, userToken);</drools:script>
+          </drools:onEntry-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
