@@ -107,7 +107,14 @@ rule "FRM_BUCKET_VIEW"
 
 			Theme THM_QUESTION_GRP_LABEL = Theme.builder("THM_QUESTION_GRP_LABEL")
                   .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_LABEL, true).end()
-                  .build();   
+                  .build();  
+
+			Theme THM_WIDTH_100_PERCENT_NO_INHERIT = Theme.builder("THM_WIDTH_100_PERCENT_NO_INHERIT")
+                  .addAttribute()
+                    .width("100%")                
+                  .end()
+                  .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                  .build(); 
 			
 			/* get sort icon */
 			BaseEntity ICN_SORT = beUtils.getBaseEntityByCode("ICN_SORT");
@@ -122,6 +129,10 @@ rule "FRM_BUCKET_VIEW"
       bucketHeaderContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_BH_GROUP_WRAPPER), VisualControlType.GROUP_WRAPPER, 1.0));
       bucketHeaderContext.add(bucketHeaderLabelContext);
 
+			/* cardContext */
+			List<Context> bucketContentContext = new ArrayList<>();
+			bucketContentContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_WIDTH_100_PERCENT_NO_INHERIT),
+					VisualControlType.GROUP_WRAPPER, 1.0));
 
 			/* get all the bucket related asks group */
 			Ask FRM_BUCKET_HEADER_ASK = bucketUtils.getBucketHeaderAsk(contextListMap, serviceToken);
@@ -134,7 +145,9 @@ rule "FRM_BUCKET_VIEW"
 				String code = searchBe.getCode().split("SBE_")[1];
 				System.out.println("Current Code   ::    " + code);
 
+				/* add the contextList for the bucketHeaderAsk and bucketContentAsk */
 				contextListMap.put("QUE_BUCKET_HEADER_" + code + "_GRP", new ContextList(bucketHeaderContext));
+				contextListMap.put("QUE_BUCKET_CONTENT_" + code + "_GRP", new ContextList(bucketContentContext));
 
 				Frame3 bucketHeader = Frame3.clone(FRM_BUCKET_HEADER);
 				bucketHeader.setCode("FRM_BUCKET_HEADER_" + code);

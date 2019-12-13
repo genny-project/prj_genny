@@ -36,7 +36,8 @@ rule "FRM_BUCKET_CONTENT"
 
 			Frame3 frame = Frame3.builder("FRM_BUCKET_CONTENT")
 										.question("QUE_BUCKET_CONTENT_GRP").end()
-											.addTheme("THM_JUSTIFY_CONTENT_FLEX_START", ThemePosition.CENTRE, serviceToken).end()
+										.addTheme("THM_JUSTIFY_CONTENT_FLEX_START", ThemePosition.CENTRE, serviceToken).end()
+										.addTheme("THM_PADDING_15", ThemePosition.WRAPPER, serviceToken).end()
 										.build();
 							
 	frame.setRealm(serviceToken.getRealm());

@@ -39,6 +39,7 @@ rule "FRM_BUCKETS"
 										.addTheme("THM_BACKGROUND_E4E4E4", ThemePosition.WRAPPER, serviceToken).end()
 										.addTheme("THM_BUCKET_COLUMN", ThemePosition.WRAPPER, serviceToken).end()
 										.addTheme("THM_BUCKET_COLUMN_PADDING", ThemePosition.CENTRE, serviceToken).end()
+										.addTheme("THM_SCROLL_VERTICAL", ThemePosition.CENTRE, serviceToken).end()
 										.build();
 							
 			frame.setRealm(serviceToken.getRealm());
