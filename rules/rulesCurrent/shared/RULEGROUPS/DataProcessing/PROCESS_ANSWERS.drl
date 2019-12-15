@@ -13,8 +13,10 @@ rule "PROCESS_ANSWERS"
     when
 	  userToken : GennyToken ( code != "PER_SERVICE" ) 
 	  dataMsg : QDataAnswerMessage( (items != null) && (items.length > 0) )
+	  dom : OutputParamTreeSet()
     then
  		System.out.println("Rule -> PROCESS_ANSWERS Processing Answer/Data!! :  user=" + userToken.getUserCode()); 
+ 		System.out.println("dom = "+dom);
 
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken); 
 		insert(beUtils);
