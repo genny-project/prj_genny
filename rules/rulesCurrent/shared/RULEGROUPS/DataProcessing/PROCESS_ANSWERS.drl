@@ -6,7 +6,7 @@ import life.genny.utils.BaseEntityUtils;
 import life.genny.qwanda.Answer;
 import java.util.List;
 import java.util.ArrayList;
-import life.genny.model.OutputParamTreeSet()
+import life.genny.model.OutputParamTreeSet;
 
 rule "PROCESS_ANSWERS"
     ruleflow-group 'DataProcessing'
