@@ -46,6 +46,8 @@
   <bpmn2:itemDefinition id="ItemDefinition_11" isCollection="false" structureRef="life.genny.qwanda.Answers"/>
   <bpmn2:itemDefinition id="ItemDefinition_9" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_15" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_14" isCollection="false" structureRef="life.genny.utils.BaseEntityUtils"/>
+  <bpmn2:itemDefinition id="ItemDefinition_18" isCollection="false" structureRef="life.genny.qwanda.message.QDataBaseEntityMessage"/>
   <bpmn2:signal id="Signal_2" name="event"/>
   <bpmn2:signal id="Signal_3" name="data"/>
   <bpmn2:signal id="Signal_4" name="newSession"/>
@@ -92,6 +94,8 @@
       <tns:import name="org.kie.api.runtime.KieSession.AtomicAction"/>
       <tns:import name="life.genny.jbpm.customworkitemhandlers.SendSignalWorkItemHandler"/>
       <tns:import name="life.genny.qwanda.Answers"/>
+      <tns:import name="life.genny.utils.BaseEntityUtils"/>
+      <tns:import name="life.genny.qwanda.message.QDataBaseEntityMessage"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_1329" name="message"/>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_174" name="userToken"/>
@@ -215,6 +219,7 @@ kcontext.setVariable(&quot;dataSessionCode&quot;, &quot;DT_&quot;+sessionCode);
 kcontext.setVariable(&quot;eventSessionCode&quot;, &quot;EV_&quot;+sessionCode);
 kcontext.setVariable(&quot;displaySessionCode&quot;, &quot;DL_&quot;+sessionCode);
 System.out.println(&quot;userSession:Entering userSession - Setup pid = &quot;+kcontext.getProcessInstance().getId()+&quot;:msg Code->&quot;+message.getData().getCode()+&quot; for &quot;+userToken.getUserCode()+&quot;:&quot;+sessionCode+&quot; timeout=&quot;+timeout+&quot;s&quot;);
+
 dom = new OutputParamTreeSet(&quot;FRM_APP&quot;);
 kcontext.setVariable(&quot;dom&quot;,dom);
 output = new OutputParam(&quot;FORMCODE&quot;,&quot;FRM_APP&quot;,&quot;FRM_ROOT&quot;);
@@ -308,6 +313,7 @@ if (output.getTypeOfResult().equals(&quot;LOGOUT&quot;)) {
             <bpmn2:dataInput id="DataInput_15" name="userToken"/>
             <bpmn2:dataInput id="DataInput_17" itemSubjectRef="ItemDefinition_1" name="ruleFlowGroup"/>
             <bpmn2:dataInput id="DataInput_23" itemSubjectRef="ItemDefinition_4" name="callingWorkflow"/>
+            <bpmn2:dataInput id="DataInput_53" itemSubjectRef="ItemDefinition_24" name="dom"/>
             <bpmn2:dataOutput id="DataOutput_19" itemSubjectRef="ItemDefinition_1081" name="output"/>
             <bpmn2:dataOutput id="DataOutput_14" name="facts"/>
             <bpmn2:inputSet id="InputSet_16">
@@ -317,6 +323,7 @@ if (output.getTypeOfResult().equals(&quot;LOGOUT&quot;)) {
               <bpmn2:dataInputRefs>DataInput_15</bpmn2:dataInputRefs>
               <bpmn2:dataInputRefs>DataInput_17</bpmn2:dataInputRefs>
               <bpmn2:dataInputRefs>DataInput_23</bpmn2:dataInputRefs>
+              <bpmn2:dataInputRefs>DataInput_53</bpmn2:dataInputRefs>
             </bpmn2:inputSet>
             <bpmn2:outputSet id="OutputSet_24" name="Output Set 6">
               <bpmn2:dataOutputRefs>DataOutput_19</bpmn2:dataOutputRefs>
@@ -352,6 +359,10 @@ if (output.getTypeOfResult().equals(&quot;LOGOUT&quot;)) {
               <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_23">&quot;userSession&quot;</bpmn2:from>
               <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_4">DataInput_23</bpmn2:to>
             </bpmn2:assignment>
+          </bpmn2:dataInputAssociation>
+          <bpmn2:dataInputAssociation id="DataInputAssociation_40">
+            <bpmn2:sourceRef>dom</bpmn2:sourceRef>
+            <bpmn2:targetRef>DataInput_53</bpmn2:targetRef>
           </bpmn2:dataInputAssociation>
           <bpmn2:dataOutputAssociation id="DataOutputAssociation_19">
             <bpmn2:sourceRef>DataOutput_19</bpmn2:sourceRef>
@@ -1181,6 +1192,16 @@ if (output.getTypeOfResult().equals(&quot;ERROR&quot;)) {
 	System.out.println(&quot;userSession: Forcing session to logout&quot;);
 		output.setResultCode(&quot;USER_LOGOUT&quot;);
 		output.setTypeOfResult(&quot;LOGOUT&quot;);
+} else {
+/* send out targets that are in output */
+BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+ for (String targetCode : output.getAttributeTargetCodeMap().values())
+{
+	BaseEntity be = beUtils.getBaseEntityByCode(targetCode);
+	QDataBaseEntityMessage msg = new QDataBaseEntityMessage(be);
+	msg.setToken(userToken.getToken());
+	VertxUtils.writeMsg(&quot;webdata&quot;,msg);
+}
 }</tns:script>
             </tns:onExit-script>
           </bpmn2:extensionElements>

@@ -11,6 +11,7 @@ import life.genny.qwandautils.JsonUtils;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.rule.RuleDetails;
+import life.genny.model.OutputParamTreeSet;
 
 
 rule "AUTH_INIT_EVENT"
@@ -22,12 +23,17 @@ rule "AUTH_INIT_EVENT"
 		userToken : GennyToken (code != "PER_SERVICE" )
 		output : OutputParam( )
 		ruleDetails : RuleDetails()
+		dom : OutputParamTreeSet()
     then
 	
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
 
-		output.setFormCode("FRM_APP","FRM_ROOT");
-
+		if (dom == null) {
+		
+			output.setFormCode("FRM_APP","FRM_ROOT");
+		} else {
+			output = dom.getLast();
+		}
 
 		retract( $message);
 end
