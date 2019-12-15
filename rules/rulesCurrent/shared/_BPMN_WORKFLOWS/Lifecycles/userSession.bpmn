@@ -1193,7 +1193,7 @@ if (output.getTypeOfResult().equals(&quot;ERROR&quot;)) {
 		output.setResultCode(&quot;USER_LOGOUT&quot;);
 		output.setTypeOfResult(&quot;LOGOUT&quot;);
 } else {
-/* send out targets that are in output */
+/* send out targets that are in output 
 BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
  for (String targetCode : output.getAttributeTargetCodeMap().values())
 {
@@ -1201,7 +1201,7 @@ BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 	QDataBaseEntityMessage msg2 = new QDataBaseEntityMessage(be);
 	msg2.setToken(userToken.getToken());
 	VertxUtils.writeMsg(&quot;webdata&quot;,msg2);
-}
+} */
 }</tns:script>
             </tns:onExit-script>
           </bpmn2:extensionElements>
