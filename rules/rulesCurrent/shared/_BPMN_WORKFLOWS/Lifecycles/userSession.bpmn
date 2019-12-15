@@ -1198,9 +1198,9 @@ BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
  for (String targetCode : output.getAttributeTargetCodeMap().values())
 {
 	BaseEntity be = beUtils.getBaseEntityByCode(targetCode);
-	QDataBaseEntityMessage msg = new QDataBaseEntityMessage(be);
-	msg.setToken(userToken.getToken());
-	VertxUtils.writeMsg(&quot;webdata&quot;,msg);
+	QDataBaseEntityMessage msg2 = new QDataBaseEntityMessage(be);
+	msg2.setToken(userToken.getToken());
+	VertxUtils.writeMsg(&quot;webdata&quot;,msg2);
 }
 }</tns:script>
             </tns:onExit-script>
