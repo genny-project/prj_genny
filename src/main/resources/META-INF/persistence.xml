@@ -11,7 +11,7 @@
     <jta-data-source>jdbc/jbpm-ds</jta-data-source>        
     
  		<mapping-file>META-INF/JBPMorm.xml</mapping-file>
-		<mapping-file>Servicesorm.xml</mapping-file>
+		<mapping-file>META-INF/Servicesorm.xml</mapping-file>
  		<mapping-file>META-INF/Taskorm.xml</mapping-file>
 		<mapping-file>META-INF/TaskAuditorm.xml</mapping-file> 
 		<mapping-file>META-INF/Executor-orm.xml</mapping-file> 
