@@ -16,7 +16,7 @@
 	<groupId>life.genny.jbpm</groupId>
 	<artifactId>prj_genny</artifactId>
 	<version>3.1.0</version>
-	<packaging>pom</packaging>
+	<packaging>jar</packaging>
 	<name>jBPM Genny </name>
 	<description>jBPM Genny Maven project</description>
 
