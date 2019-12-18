@@ -157,10 +157,11 @@ public class SideBarTest extends GennyJbpmBaseTest {
 		
 		Theme THM_TREE_GROUP_BEHAVIOUR = Theme.builder("THM_TREE_GROUP_BEHAVIOUR")
 		.addAttribute(ThemeAttributeType.PRI_IS_EXPANDABLE, true).end()
-		.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+		.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, true).end()
 		.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_LABEL, true).end()
 		.addAttribute(ThemeAttributeType.PRI_IS_QUESTION_GRP_LABEL_CLICKABLE, true).end()
-		.addAttribute(ThemeAttributeType.PRI_HAS_CHILD_ASKS, false).end()
+		.addAttribute(ThemeAttributeType.PRI_HAS_CHILD_ASKS, true).end()
+		.addAttribute(ThemeAttributeType.PRI_IS_DROPDOWN, false).end()
 		.build();
 
 		Theme THM_TREE_GROUP_CLICKABLE_WRAPPER = Theme.builder("THM_TREE_GROUP_CLICKABLE_WRAPPER")
@@ -168,14 +169,14 @@ public class SideBarTest extends GennyJbpmBaseTest {
 										.width("100%")
 										.justifyContent("space-between")
 									.end()
-									.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+									.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, true).end()
 									.build();
 
 		Theme THM_TREE_GROUP_CONTENT_WRAPPER = Theme.builder("THM_TREE_GROUP_CONTENT_WRAPPER")
 									.addAttribute()
 										.paddingLeft(20)
 										.end()
-									.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+									.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, true).end()
 									.build();
 
 		Theme THM_TREE_GROUP_WRAPPER = Theme.builder("THM_TREE_GROUP_WRAPPER")
@@ -183,7 +184,7 @@ public class SideBarTest extends GennyJbpmBaseTest {
 										.width("100%")
 										.paddingX(20)
 										.end()
-									.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+									.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, true).end()
 									.build();
 		
 		Theme THM_TREE_GROUP_LABEL = Theme.builder("THM_TREE_GROUP_LABEL")
@@ -191,8 +192,36 @@ public class SideBarTest extends GennyJbpmBaseTest {
 											.bold(false)
 											.size("sm")
 										.end()
-										.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+										.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, true).end()
 										.build();
+		
+//		Theme THM_TREE_GROUP_SECOND_TIER = Theme.builder("THM_TREE_GROUP_LABEL")
+//				.addAttribute()
+//					.bold(false)
+//					.size("sm")
+//				.end()
+//				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+//				.build();
+		
+//		Frame3 FRM_TREE_ITEM_INTERNS_GRP = Frame3.builder("FRM_TREE_ITEM_ITEMS_GRP")
+//				.addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER).end()
+//				.question("QUE_TREE_ITEM_INTERNS_GRP")
+//					.addTheme(THM_TREE_GROUP_BEHAVIOUR).end()
+//					.addTheme(THM_TREE_GROUP_CLICKABLE_WRAPPER)
+//								.vcl(VisualControlType.GROUP_CLICKABLE_WRAPPER)
+//					.end()
+//					.addTheme(THM_TREE_GROUP_CONTENT_WRAPPER)
+//						.vcl(VisualControlType.GROUP_CONTENT_WRAPPER)
+//					.end()
+//					.addTheme(THM_TREE_GROUP_WRAPPER)
+//								.vcl(VisualControlType.GROUP_WRAPPER)
+//					.end()
+//					.addTheme(THM_TREE_GROUP_LABEL)
+//							.vcl(VisualControlType.GROUP_LABEL)
+//					.end()
+//				.end()
+//				.build();
+				
 		/* build the frame */
 		Frame3 FRM_TREE_ITEM_CONTACTS = Frame3.builder("FRM_TREE_ITEM_CONTACTS")
 				.addTheme(THM_TREE_ITEM, ThemePosition.WRAPPER).end()
