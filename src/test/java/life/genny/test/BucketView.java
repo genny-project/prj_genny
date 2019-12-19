@@ -107,6 +107,9 @@ public class BucketView extends GennyJbpmBaseTest {
 		bucketUtils.sendCards(FRM_BUCKET_CONTENT, userToken);
 
 	}
+
+
+
 	//@Test
 	public void testProcessView() {
 
