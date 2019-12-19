@@ -103,6 +103,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 	public void Test1() {
 
 		initItem();
+		System.out.println(userToken.getToken());
 
 		String code = "ASK_" + "FRM_PERSON_DETAIL_VIEW";
 
@@ -120,17 +121,13 @@ public class SafalTest extends GennyJbpmBaseTest {
 	public void DropdownUtilsTest() throws IOException {
 		initItem();
 		
-		       
 		DropdownUtils dropDownUtils = new DropdownUtils();
+		dropDownUtils.setNewSearch("Dropdown", "Fetch Dropdown Items")
+			.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "SEL_%").setSourceCode("GRP_ROLES")
+			.setPageStart(0).setPageSize(10000);
 		
-		dropDownUtils.setNewSearch("IndustryClassification"," Classificcatino of industry")
-			.addFilter("PRI_CODE",SearchEntity.StringFilter.LIKE,"SEL_%")
-	        .setSourceCode("GRP_INDUSTRY_SELECTION")
-	        .setPageStart(0)
-	        .setPageSize(10000);
-			
-		dropDownUtils.sendSearchResults("GRP_INDUSTRY_SELECTION", "LNK_CORE", "INDUSTRY", userToken);
-		
+		dropDownUtils.sendSearchResults("GRP_ROLES", "LNK_CORE", "ROLE", userToken);
+		System.out.println(rules.getUser().getCode());
 	}
 	
 	//@Test
@@ -262,7 +259,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 		boolean runNewLocal = false;
 
 		if (runNewLocal) {
-			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "safal+201912181352@gmail.com", "Barry Allan", "user");
 
 			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
 			rules = new QRules(eventBusMock, userToken.getToken());
@@ -389,6 +386,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 			}
 
 			/* we publish the virtual ask with child asks */
+			
 
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 			

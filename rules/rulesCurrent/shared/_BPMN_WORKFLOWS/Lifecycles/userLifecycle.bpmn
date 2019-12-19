@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:g="http://www.jboss.org/drools/flow/gpd" xmlns:java="http://www.java.com/javaTypes" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.1.Final-v20190425-2005-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:g="http://www.jboss.org/drools/flow/gpd" xmlns:java="http://www.java.com/javaTypes" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.4.3.Final-v20180418-1358-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
   <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false" structureRef="life.genny.rules.QRules"/>
   <bpmn2:itemDefinition id="ItemDefinition_10" isCollection="false" structureRef="java.lang.String"/>
   <bpmn2:itemDefinition id="ItemDefinition_1014" isCollection="false" structureRef="life.genny.qwanda.entity.BaseEntity"/>
@@ -32,6 +32,35 @@
   <bpmn2:itemDefinition id="ItemDefinition_14" isCollection="false" structureRef="java.util.ArrayList"/>
   <bpmn2:itemDefinition id="ItemDefinition_17" isCollection="false" structureRef="java.util.List"/>
   <bpmn2:itemDefinition id="ItemDefinition_13" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_212" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_213" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_16" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_18" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_20" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_21" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_22" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_23" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_24" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_25" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_27" isCollection="false" structureRef="life.genny.utils.DropdownUtils"/>
+  <bpmn2:itemDefinition id="ItemDefinition_30" isCollection="false" structureRef="life.genny.qwanda.entity.SearchEntity.Sort"/>
+  <bpmn2:itemDefinition id="ItemDefinition_32" isCollection="false" structureRef="life.genny.qwanda.entity.SearchEntity.StringFilter"/>
+  <bpmn2:itemDefinition id="ItemDefinition_34" isCollection="false" structureRef="life.genny.qwanda.entity.SearchEntity.Filter"/>
+  <bpmn2:itemDefinition id="ItemDefinition_35" isCollection="false" structureRef="life.genny.qwanda.entity.SearchEntity"/>
+  <bpmn2:itemDefinition id="ItemDefinition_36" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_37" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_38" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_39" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_40" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_41" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_42" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_43" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_44" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_45" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_46" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_47" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_62" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_63" isCollection="false"/>
   <bpmn2:signal id="Signal_1" name="userToken.getUserCode()"/>
   <bpmn2:signal id="Signal_2" name="deleteuser"/>
   <bpmn2:signal id="Signal_3" name="userIsInActive"/>
@@ -69,6 +98,11 @@
       <tns:import name="java.util.HashMap"/>
       <tns:import name="java.util.ArrayList"/>
       <tns:import name="java.util.List"/>
+      <tns:import name="life.genny.utils.DropdownUtils"/>
+      <tns:import name="life.genny.qwanda.entity.SearchEntity"/>
+      <tns:import name="life.genny.qwanda.entity.SearchEntity.Sort"/>
+      <tns:import name="life.genny.qwanda.entity.SearchEntity.StringFilter"/>
+      <tns:import name="life.genny.qwanda.entity.SearchEntity.Filter"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="rules" itemSubjectRef="ItemDefinition_2" name="rules"/>
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_602" name="message"/>
@@ -86,6 +120,8 @@
     <bpmn2:property id="defaultPageSessionFacts" itemSubjectRef="ItemDefinition_576" name="defaultPageSessionFacts"/>
     <bpmn2:property id="inputSessionCode" itemSubjectRef="ItemDefinition_10" name="inputSessionCode"/>
     <bpmn2:property id="results" itemSubjectRef="ItemDefinition_65" name="results"/>
+    <bpmn2:property id="serviceToken" name="serviceToken"/>
+    <bpmn2:property id="baseEntityType" itemSubjectRef="ItemDefinition_10" name="baseEntityType"/>
     <bpmn2:startEvent id="StartEvent_1" name="Start userLifecycle">
       <bpmn2:extensionElements>
         <tns:metaData name="elementname">
@@ -276,7 +312,7 @@ System.out.println(&quot;userlifeCycle: New User Created: pid: &quot;+callingPro
             <tns:script>System.out.println(&quot;userLifercycle: About to leave Ask Question Task&quot;);</tns:script>
           </tns:onExit-script>
         </bpmn2:extensionElements>
-        <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
+        <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
         <bpmn2:ioSpecification id="InputOutputSpecification_1">
           <bpmn2:dataInput id="DataInput_1" itemSubjectRef="ItemDefinition_201" name="userToken"/>
@@ -342,9 +378,17 @@ System.out.println(&quot;userlifeCycle: New User Created: pid: &quot;+callingPro
           <tns:metaData name="elementname">
             <tns:metaValue><![CDATA[QUE_SELECT_ROLE_GRP]]></tns:metaValue>
           </tns:metaData>
+          <tns:onExit-script scriptFormat="http://www.java.com/java">
+            <tns:script>
+System.out.println(&quot;Working out if ti WORKS @@@@@@@@@@ &quot;);</tns:script>
+          </tns:onExit-script>
+          <tns:onEntry-script scriptFormat="http://www.java.com/java">
+            <tns:script>
+System.out.println(&quot;userlifeCycle: Sending roles selection form: pid: &quot;+callingProcessId +&quot;:&quot; +newUser+&quot; now sendng to channel callback :[&quot;+((GennyToken)userToken).getUserCode()+&quot;]&quot; );</tns:script>
+          </tns:onEntry-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
-        <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
+        <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
         <bpmn2:ioSpecification id="InputOutputSpecification_2">
           <bpmn2:dataInput id="DataInput_13" itemSubjectRef="ItemDefinition_201" name="userToken"/>
           <bpmn2:dataInput id="DataInput_14" name="questionCode"/>
@@ -391,9 +435,17 @@ System.out.println(&quot;userlifeCycle: New User Created: pid: &quot;+callingPro
         </bpmn2:dataInputAssociation>
         <bpmn2:dataInputAssociation id="_DataInputAssociation_210">
           <bpmn2:targetRef>DataInput_19</bpmn2:targetRef>
+          <bpmn2:assignment id="Assignment_8">
+            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_18">&quot;NONE&quot;</bpmn2:from>
+            <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_12">DataInput_19</bpmn2:to>
+          </bpmn2:assignment>
         </bpmn2:dataInputAssociation>
         <bpmn2:dataInputAssociation id="_DataInputAssociation_211">
           <bpmn2:targetRef>DataInput_20</bpmn2:targetRef>
+          <bpmn2:assignment id="Assignment_9">
+            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_21">&quot;NONE&quot;</bpmn2:from>
+            <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_19">DataInput_20</bpmn2:to>
+          </bpmn2:assignment>
         </bpmn2:dataInputAssociation>
         <bpmn2:dataOutputAssociation id="_DataOutputAssociation_6">
           <bpmn2:sourceRef>DataOutput_4</bpmn2:sourceRef>
@@ -405,7 +457,7 @@ System.out.println(&quot;userlifeCycle: New User Created: pid: &quot;+callingPro
         </bpmn2:dataOutputAssociation>
       </bpmn2:task>
       <bpmn2:sequenceFlow id="SequenceFlow_3" tns:priority="1" sourceRef="Task_4" targetRef="Task_2"/>
-      <bpmn2:sequenceFlow id="SequenceFlow_4" tns:priority="1" sourceRef="Task_2" targetRef="Task_1"/>
+      <bpmn2:sequenceFlow id="SequenceFlow_1" tns:priority="1" sourceRef="Task_2" targetRef="Task_1"/>
     </bpmn2:subProcess>
     <bpmn2:sequenceFlow id="SequenceFlow_25" tns:priority="1" sourceRef="StartEvent_1" targetRef="SubProcess_1"/>
     <bpmn2:sequenceFlow id="SequenceFlow_27" tns:priority="1" sourceRef="SubProcess_1" targetRef="EndEvent_3"/>
@@ -467,20 +519,20 @@ System.out.println(&quot;userlifeCycle: New User Created: pid: &quot;+callingPro
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_IntermediateCatchEvent_1" bpmnElement="IntermediateCatchEvent_1">
-        <dc:Bounds height="36.0" width="36.0" x="1228.0" y="211.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="1188.0" y="211.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_11">
-          <dc:Bounds height="22.0" width="60.0" x="1216.0" y="247.0"/>
+          <dc:Bounds height="22.0" width="60.0" x="1176.0" y="247.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_1" bpmnElement="Task_1" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="1088.0" y="204.0"/>
+        <dc:Bounds height="50.0" width="110.0" x="996.0" y="204.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_5">
-          <dc:Bounds height="11.0" width="75.0" x="1105.0" y="223.0"/>
+          <dc:Bounds height="11.0" width="75.0" x="1013.0" y="223.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_2" bpmnElement="Task_2" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="780.0" y="204.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_10">
           <dc:Bounds height="22.0" width="94.0" x="788.0" y="218.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -515,8 +567,8 @@ System.out.println(&quot;userlifeCycle: New User Created: pid: &quot;+callingPro
         <bpmndi:BPMNLabel id="BPMNLabel_14"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="BPMNShape_IntermediateCatchEvent_1" targetElement="BPMNShape_ScriptTask_10">
-        <di:waypoint xsi:type="dc:Point" x="1264.0" y="229.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1286.0" y="229.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1224.0" y="229.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1266.0" y="229.0"/>
         <di:waypoint xsi:type="dc:Point" x="1308.0" y="230.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_17"/>
       </bpmndi:BPMNEdge>
@@ -527,21 +579,21 @@ System.out.println(&quot;userlifeCycle: New User Created: pid: &quot;+callingPro
         <bpmndi:BPMNLabel id="BPMNLabel_19"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_IntermediateCatchEvent_1">
-        <di:waypoint xsi:type="dc:Point" x="1198.0" y="229.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1213.0" y="229.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1228.0" y="229.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1106.0" y="229.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1147.0" y="229.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1188.0" y="229.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_16"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_Task_4" targetElement="BPMNShape_Task_2">
         <di:waypoint xsi:type="dc:Point" x="756.0" y="230.0"/>
         <di:waypoint xsi:type="dc:Point" x="768.0" y="229.0"/>
         <di:waypoint xsi:type="dc:Point" x="780.0" y="229.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_15"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="SequenceFlow_4" sourceElement="BPMNShape_Task_2" targetElement="BPMNShape_Task_1">
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="BPMNShape_Task_2" targetElement="BPMNShape_Task_1">
         <di:waypoint xsi:type="dc:Point" x="890.0" y="229.0"/>
-        <di:waypoint xsi:type="dc:Point" x="989.0" y="229.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1088.0" y="229.0"/>
+        <di:waypoint xsi:type="dc:Point" x="943.0" y="229.0"/>
+        <di:waypoint xsi:type="dc:Point" x="996.0" y="229.0"/>
         <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
