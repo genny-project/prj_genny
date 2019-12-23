@@ -29,7 +29,6 @@ rule "SBE_GRP_ROLES"
      	System.out.println("   Generate SBE_GRP_ROLES ");
  		
          SearchEntity searchBE = new SearchEntity("SBE_GRP_ROLES","All ROLES")	
-         .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "SEL_%")
 	        .setSourceCode("GRP_ROLES")
 	        .setPageStart(0)
 	        .setPageSize(10000);

@@ -116,18 +116,29 @@ public class SafalTest extends GennyJbpmBaseTest {
 			System.out.println(a);
 		}
 	}
-
+	//@Test
+	public void st() {
+		String sas ="as";
+		String d = null;
+		String a = sas+d;
+		System.out.println(a);
+	}
+	
 	@Test
 	public void DropdownUtilsTest() throws IOException {
-		initItem();
 		
+		
+        SearchEntity searchBE = new SearchEntity("SBE_GRP_ROLES","All ROLES")	
+	        .setSourceCode("GRP_ROLES")
+	        .setPageStart(0)
+	        .setPageSize(10000);
+        searchBE.setRealm("internmatch");
+        
 		DropdownUtils dropDownUtils = new DropdownUtils();
-		dropDownUtils.setNewSearch("Dropdown", "Fetch Dropdown Items")
-			.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "SEL_%").setSourceCode("GRP_ROLES")
-			.setPageStart(0).setPageSize(10000);
-		
-		dropDownUtils.sendSearchResults("GRP_ROLES", "LNK_CORE", "ROLE", userToken);
-		System.out.println(rules.getUser().getCode());
+		dropDownUtils.setSearch(searchBE);
+		initItem();
+		dropDownUtils.sendSearchResults("GRP_ROLES", "LNK_CORE", "ITEM", userToken);
+		System.out.println(userToken.getUserCode());
 	}
 	
 	//@Test
