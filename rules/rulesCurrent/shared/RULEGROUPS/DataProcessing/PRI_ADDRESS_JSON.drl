@@ -1,5 +1,7 @@
 package life.genny.rules;
 import life.genny.qwanda.message.QDataAnswerMessage;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.qwanda.entity.BaseEntity;
 import life.genny.models.GennyToken;
 import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
@@ -8,6 +10,8 @@ import life.genny.qwanda.Answers;
 import io.vertx.core.json.JsonObject;
 import java.util.Map;
 import java.util.HashMap;
+import life.genny.utils.VertxUtils;
+import life.genny.qwandautils.JsonUtils;
 
 
 import java.util.List;
@@ -37,17 +41,19 @@ rule "PRI_ADDRESS_JSON"
 			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_CITY", addressDataJson.getString("suburb"),false,true));
 			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", addressDataJson.getString("state"),false,true));
 			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_ADDRESS1", addressDataJson.getString("street_address"),false,true));
-			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", addressDataJson.getString("full_address"),true,true));
+			Answer addressFull = new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", addressDataJson.getString("full_address"),true,true);
+			answersToSave.add(addressFull);
 		
 			Double latitude = addressDataJson.getDouble("latitude");
 			Double longitude = addressDataJson.getDouble("longitude");
 			
 			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_LATITUDE", latitude+"",false,true));
 			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_LONGITUDE", longitude+"",false,true));
-	
-		/* beUtils.saveAnswers(answers,true); */
+			
+			
 		output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */
+		
 		
 
 		retract(answer);
