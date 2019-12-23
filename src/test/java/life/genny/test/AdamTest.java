@@ -157,7 +157,40 @@ public class AdamTest {
 	        this.serviceConfigurator = ServiceLoader.load(KieServiceConfigurator.class).iterator().next();
 	    }
 
-		@Test
+	   @Test
+	   public void generateCapabilitiesTest()
+	   {
+			System.out.println("GenerateCapabilities Test");
+
+
+			GennyKieSession gks = null;
+
+			try {
+				gks = GennyKieSession.builder(serviceToken,true)
+						.addDrl("AuthInit")
+						.addJbpm("AuthInit")
+						.addDrl("InitialiseProject")
+						.addJbpm("InitialiseProject")
+						.addDrl("GenerateCapabilities")
+						.build();
+				
+				gks.start();
+				
+				gks.injectSignal("initProject"); // This should initialise everything
+
+				
+			} catch (Exception e) {
+				
+			}
+			finally {
+				if (gks!=null) {
+					gks.close();
+				}
+			}
+	   }
+	   
+	   
+		//@Test
 		public void addEduProvTest()
 		{
 			System.out.println("AddEduProv Test");
