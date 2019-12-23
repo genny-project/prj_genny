@@ -67,8 +67,136 @@ public class BucketView extends GennyJbpmBaseTest {
 	public BucketView() {
 		super(false);
 	}
-
+	
 	@Test
+	public void tableTest() {
+
+		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		GennyToken userToken = new GennyToken("userToken", rules.getToken());
+		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+		BucketUtilsTest bucketUtils = new BucketUtilsTest(beUtils);
+		
+		/* initialize  virtualAskMap */
+	      Map<String, QDataAskMessage> virtualAskMap = new HashMap<String, QDataAskMessage>();
+	      
+	      /*  initialize ask set */
+	      Set<QDataAskMessage> askSet = new HashSet<QDataAskMessage>();
+	      
+	      /* initialize  contextListMap */
+	      Map<String, ContextList> contextListMap = new HashMap<String, ContextList>();
+
+		TableUtils tableUtils = new TableUtils(beUtils);
+		
+		System.out.println("running the test");
+
+		String searchBarString = "";
+		
+		SearchEntity searchBE1 = new SearchEntity("SBE_EDU_PROVIDERS_ACTIVE", "Active")
+				.addSort("PRI_LEGAL_NAME","Title",SearchEntity.Sort.ASC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "CPY_%")
+				.addFilter("PRI_IS_EDU_PRO", true)
+				.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "Active")
+				.addColumn("PRI_LEGAL_NAME", "Name")
+				.addColumn("PRI_STATUS", "Status")
+				.addColumn("PRI_LANDLINE", "Phone")
+				.addColumn("PRI_ADDRESS_FULL","Address")
+				.setPageStart(0).setPageSize(10);
+		
+		SearchEntity searchBE = new SearchEntity("SBE_INTERNS_1BC9F1C8-10BA-4489-AEBF-E1CD0D74447D", "Interns")
+				.addSort("PRI_INTERN_NAME","Name",SearchEntity.Sort.ASC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
+				.addFilter("PRI_IS_INTERN", true)
+				.addColumn("PRI_NAME", "Name")
+				.addColumn("PRI_STATUS", "Status")
+				.addColumn("PRI_INTERN_MOBILE", "Mobile")
+				.setPageStart(0).setPageSize(10);
+		
+		//VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE, beUtils.getGennyToken().getToken());
+
+		
+		//tableUtils.performSearch(userToken,searchBE.getCode(), null);
+		
+		Frame3 FRM_TABLE_VIEW = VertxUtils.getObject(userToken.getRealm(), "", "FRM_TABLE_VIEW", Frame3.class,
+				userToken.getToken());
+		
+		Frame3 FRM_CONTENT = Frame3.builder("FRM_CONTENT").addFrame(FRM_TABLE_VIEW, FramePosition.NORTH)
+				.end().build();
+
+		QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_CONTENT, serviceToken, askSet, contextListMap,
+				virtualAskMap);
+		msg.setToken(userToken.getToken());
+		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+
+		for (QDataAskMessage askMsg : askSet) {
+
+			askMsg.setToken(userToken.getToken());
+
+			String json = JsonUtils.toJson(askMsg);
+			VertxUtils.writeMsg("webcmds", json);
+
+		}
+
+		System.out.print("Completed");
+		
+		tableUtils.performSearch(userToken, serviceToken, searchBE.getCode(), null);
+		//tableUtils.fetchSearchResults(searchBE);
+		
+
+	}
+	//@Test
+	public void testSearchBe() {
+
+		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		GennyToken userToken = new GennyToken("userToken", rules.getToken());
+		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+		BucketUtilsTest bucketUtils = new BucketUtilsTest(beUtils);
+
+		TableUtils tableUtils = new TableUtils(beUtils);
+		
+		System.out.println("running the test");
+
+		String searchBarString = "";
+
+		SearchEntity searchBE3 = new SearchEntity("SBE_INTERNS", "Interns")
+			.addSort("PRI_INTERN_NAME","Name",SearchEntity.Sort.ASC)
+			.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
+			.addFilter("PRI_IS_INTERN", true)
+			.addColumn("PRI_NAME", "Name")
+			.addColumn("PRI_STATUS", "Status")
+			.addColumn("PRI_INTERN_MOBILE", "Mobile")
+			.addFilter("PRI_NAME", SearchEntity.StringFilter.LIKE, "%" + searchBarString + "%")
+			.setPageStart(0).setPageSize(10);
+		
+		SearchEntity searchBE = new SearchEntity("SBE_EDU_PROVIDERS_ACTIVE", "Active")
+				.addSort("PRI_LEGAL_NAME","Title",SearchEntity.Sort.ASC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "CPY_%")
+				.addFilter("PRI_IS_EDU_PRO", true)
+				.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "Active")
+				.addColumn("PRI_LEGAL_NAME", "Name")
+				.addColumn("PRI_STATUS", "Status")
+				.addColumn("PRI_LANDLINE", "Phone")
+				.addColumn("PRI_ADDRESS_FULL","Address")
+				.setPageStart(0).setPageSize(10);
+
+		/* send out the search */
+		QDataBaseEntityMessage msg = tableUtils.fetchSearchResults(searchBE);
+		BaseEntity[] beList = msg.getItems();
+		
+		SearchEntity searchBE2 = tableUtils.getSessionSearch(searchBE.getCode());
+		
+		
+		QDataBaseEntityMessage msg2 = tableUtils.fetchSearchResults(searchBE2);
+		BaseEntity[] beList2 = msg2.getItems();
+		
+		tableUtils.performSearch(userToken,searchBE.getCode(), null);
+
+		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+		
+
+	}
+	//@Test
 	public void sendCards() {
 
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
