@@ -39,7 +39,7 @@ rule "THM_IMAGE_PLACEHOLDER"
 
 		Theme theme = Theme.builder("THM_IMAGE_PLACEHOLDER")
 				.addAttribute()
-					.name("person").type("icon").color("white")
+					.name("person").type("icon").color("#233a4e")
 				.end()
 		.build();
 
