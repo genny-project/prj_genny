@@ -42,6 +42,9 @@ rule "THM_HEADER_PROFILE_PICTURE"
                   	.fit("contain")
                     .imageHeight(32)
                     .imageWidth(32)
+                    .padding(5)
+                    .backgroundColor("#ffffff")
+                    .borderRadius("50%")
                     .showName(false)
                   .end()
                   .build();
