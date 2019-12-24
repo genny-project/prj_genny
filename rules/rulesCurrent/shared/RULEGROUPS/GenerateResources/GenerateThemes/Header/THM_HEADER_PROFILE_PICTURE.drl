@@ -44,7 +44,7 @@ rule "THM_HEADER_PROFILE_PICTURE"
                     .imageWidth(32)
                     .padding(5)
                     .backgroundColor("#ffffff")
-                    .borderRadiusString("50%")
+                    .borderRadius("50%")
                     .showName(false)
                   .end()
                   .build();

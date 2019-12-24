@@ -42,7 +42,7 @@ rule "FRM_HEADER_PROFILE_PICTURE"
                   .question("QUE_HEADER_USER_PICTURE_GRP")
                     .addTheme("THM_IMAGE_PLACEHOLDER", serviceToken).vcl(VisualControlType.INPUT_PLACEHOLDER).end()
                     .addTheme("THM_HEADER_PROFILE_PICTURE", serviceToken)
-                    .vcl(VisualControlType.INPUT-SELECTED-WRAPPER)
+                    .vcl(VisualControlType.INPUT_SELECTED_WRAPPER)
                     .end()
                     .addTheme("THM_BORDER_RADIUS_50", serviceToken)
                     .vcl(VisualControlType.INPUT_FIELD)
