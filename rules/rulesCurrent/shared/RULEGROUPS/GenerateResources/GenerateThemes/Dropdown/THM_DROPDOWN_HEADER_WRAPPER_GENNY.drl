@@ -36,7 +36,6 @@ rule "THM_DROPDOWN_HEADER_WRAPPER_GENNY"
 
 		Theme theme = Theme.builder("THM_DROPDOWN_HEADER_WRAPPER_GENNY")
                   .addAttribute()
-                  .padding(5)
                   .backgroundColor(project.getValue("PRI_COLOR_PRIMARY_VARIANT_LIGHT", "#395268"))
                   .end()
                   .build();                         
