@@ -127,17 +127,17 @@ public class SafalTest extends GennyJbpmBaseTest {
 	@Test
 	public void DropdownUtilsTest() throws IOException {
 		
-		
-        SearchEntity searchBE = new SearchEntity("SBE_GRP_ROLES","All ROLES")	
-	        .setSourceCode("GRP_ROLES")
-	        .setPageStart(0)
-	        .setPageSize(10000);
-        searchBE.setRealm("internmatch");
-        
-		DropdownUtils dropDownUtils = new DropdownUtils();
-		dropDownUtils.setSearch(searchBE);
 		initItem();
-		dropDownUtils.sendSearchResults("GRP_ROLES", "LNK_CORE", "ITEM", userToken);
+	     SearchEntity searchBE = new SearchEntity("Dropdown", "List of All Host Companies")
+	    		 
+					.setSourceCode("GRP_NO_OF_INTERNS")
+					.setPageStart(0).setPageSize(10000);
+				
+
+		DropdownUtils dropDownUtils = new DropdownUtils(serviceToken);
+		dropDownUtils.setSearch(searchBE);
+		
+		dropDownUtils.sendSearchResults("GRP_NO_OF_INTERNS", "LNK_CORE", "ITEM", userToken);
 		System.out.println(userToken.getUserCode());
 	}
 	

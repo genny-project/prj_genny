@@ -23,6 +23,8 @@
   <bpmn2:itemDefinition id="ItemDefinition_21" isCollection="false" structureRef="life.genny.qwanda.entity.SearchEntity.StringFilter"/>
   <bpmn2:itemDefinition id="ItemDefinition_23" isCollection="false" structureRef="life.genny.qwanda.entity.SearchEntity.Filter"/>
   <bpmn2:itemDefinition id="ItemDefinition_24" isCollection="false" structureRef="life.genny.qwanda.entity.SearchEntity"/>
+  <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_4" isCollection="false" structureRef="Object"/>
   <bpmn2:signal id="Signal_1" name="createBE"/>
   <bpmn2:signal id="Signal_2" name="makeBe"/>
   <bpmn2:signal id="Signal_3" name="START_INTERN_S1"/>
@@ -144,16 +146,7 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[QUE_INTERN_S1_GRP]]></drools:metaValue>
           </drools:metaData>
-          <drools:onEntry-script scriptFormat="http://www.java.com/java">
-            <drools:script>DropdownUtils dropDownUtils = new DropdownUtils();
-dropDownUtils.setNewSearch(&quot;Genger&quot;,&quot;Gender&quot;)
-			.addFilter(&quot;PRI_CODE&quot;,SearchEntity.StringFilter.LIKE,&quot;SEL_%&quot;)
-	        .setSourceCode(&quot;GRP_GENDERS&quot;)
-	        .setPageStart(0)
-	        .setPageSize(10000);
-
-dropDownUtils.sendSearchResults(&quot;GRP_GENDERS&quot;, &quot;LNK_CORE&quot;, &quot;GENDER&quot;, userToken);</drools:script>
-          </drools:onEntry-script>
+          <drools:onEntry-script scriptFormat="http://www.java.com/java"/>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_14</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
@@ -241,16 +234,7 @@ dropDownUtils.sendSearchResults(&quot;GRP_GENDERS&quot;, &quot;LNK_CORE&quot;, &
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[QUE_INTERN_S2_GRP]]></drools:metaValue>
           </drools:metaData>
-          <drools:onEntry-script scriptFormat="http://www.java.com/java">
-            <drools:script>DropdownUtils dropDownUtils = new DropdownUtils();
-dropDownUtils.setNewSearch(&quot;Degree&quot;,&quot;Level of Degree Selection&quot;)
-			.addFilter(&quot;PRI_CODE&quot;,SearchEntity.StringFilter.LIKE,&quot;SEL_%&quot;)
-	        .setSourceCode(&quot;GRP_DEGREE_SELECTION&quot;)
-	        .setPageStart(0)
-	        .setPageSize(10000);
-
-dropDownUtils.sendSearchResults(&quot;GRP_DEGREE_SELECTION&quot;, &quot;LNK_CORE&quot;, &quot;DEGREE&quot;, userToken);</drools:script>
-          </drools:onEntry-script>
+          <drools:onEntry-script scriptFormat="http://www.java.com/java"/>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
