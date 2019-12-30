@@ -98,6 +98,14 @@ public class SafalTest extends GennyJbpmBaseTest {
 
 		super(false);
 	}
+	
+	@Test 
+	public void d() {
+		double s= -1.0;
+		s++;
+		System.out.println(s);
+		
+	}
 
 //	@Test
 	public void Test1() {
@@ -124,7 +132,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 		System.out.println(a);
 	}
 	
-	@Test
+	//@Test
 	public void DropdownUtilsTest() throws IOException {
 		
 		initItem();
