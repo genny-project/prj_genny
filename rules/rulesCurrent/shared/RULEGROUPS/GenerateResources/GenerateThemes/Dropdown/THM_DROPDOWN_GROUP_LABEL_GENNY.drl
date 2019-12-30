@@ -37,10 +37,12 @@ rule "THM_DROPDOWN_GROUP_LABEL_GENNY"
 		Theme theme = Theme.builder("THM_DROPDOWN_GROUP_LABEL_GENNY")
                   .addAttribute()
                           .marginBottom(0)
-                          .size("sm")
+                          .size("32px")
+                          .paddingLeft(10)
+                          .paddingRight(10)
                           .bold(false)
                   .end()
-                  .build();                                    
+                  .build();
 
 		theme.setRealm(serviceToken.getRealm());
 
