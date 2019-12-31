@@ -17,6 +17,10 @@
   <bpmn2:itemDefinition id="ItemDefinition_13" isCollection="false" structureRef="life.genny.qwanda.entity.SearchEntity.Filter"/>
   <bpmn2:itemDefinition id="ItemDefinition_14" isCollection="false" structureRef="life.genny.qwanda.entity.SearchEntity"/>
   <bpmn2:itemDefinition id="ItemDefinition_16" isCollection="false" structureRef="life.genny.utils.DropdownUtils"/>
+  <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_3" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_4" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_5" isCollection="false"/>
   <bpmn2:signal id="Signal_1" name="createBE"/>
   <bpmn2:signal id="Signal_2" name="makeBe"/>
   <bpmn2:signal id="Signal_3" name="START_INTERNSHIP_S1"/>
@@ -138,34 +142,7 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[QUE_INTERNSHIP_S1_GRP]]></drools:metaValue>
           </drools:metaData>
-          <drools:onEntry-script scriptFormat="http://www.java.com/java">
-            <drools:script>DropdownUtils dropDownUtils = new DropdownUtils();
-
-dropDownUtils.setNewSearch(&quot;HostCompany&quot;,&quot;Host Company Selection&quot;)
-       		.addFilter(&quot;PRI_CODE&quot;, SearchEntity.StringFilter.LIKE, &quot;CPY_%&quot;)
-	        .addFilter(&quot;PRI_IS_HOST_COMPANY&quot;, true)
-	        .setSourceCode(&quot;GRP_HOST_COMPANY_SELECTION&quot;)
-	        .setPageStart(0)
-	        .setPageSize(10000);
-			
-dropDownUtils.sendSearchResults(&quot;GRP_HOST_COMPANY_SELECTION&quot;, &quot;LNK_CORE&quot;, &quot;DURATION&quot;, userToken);
-
-dropDownUtils.setNewSearch(&quot;HostCompanyRep&quot;,&quot;Host Company Rep Selection&quot;)
-			.addFilter(&quot;PRI_CODE&quot;,SearchEntity.StringFilter.LIKE,&quot;SEL_%&quot;)
-	        .setSourceCode(&quot;GRP_HOST_COMPANY_REP_SELECTION&quot;)
-	        .setPageStart(0)
-	        .setPageSize(10000);
-			
-dropDownUtils.sendSearchResults(&quot;GRP_HOST_COMPANY_REP_SELECTION&quot;, &quot;LNK_CORE&quot;, &quot;INTERN&quot;, userToken);
-
-dropDownUtils.setNewSearch(&quot;InternSupervisor&quot;,&quot;Intern Supervisor Selection&quot;)
-			.addFilter(&quot;PRI_CODE&quot;,SearchEntity.StringFilter.LIKE,&quot;SEL_%&quot;)
-	        .setSourceCode(&quot;GRP_INTERN_SUPERVISOR_SELECTION&quot;)
-	        .setPageStart(0)
-	        .setPageSize(10000);
-			
-dropDownUtils.sendSearchResults(&quot;GRP_INTERN_SUPERVISOR_SELECTION&quot;, &quot;LNK_CORE&quot;, &quot;INTERN&quot;, userToken);</drools:script>
-          </drools:onEntry-script>
+          <drools:onEntry-script scriptFormat="http://www.java.com/java"/>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_14</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
@@ -313,17 +290,7 @@ dropDownUtils.sendSearchResults(&quot;GRP_INTERN_SUPERVISOR_SELECTION&quot;, &qu
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[QUE_INTERNSHIP_S2_GRP]]></drools:metaValue>
           </drools:metaData>
-          <drools:onEntry-script scriptFormat="http://www.java.com/java">
-            <drools:script>
-DropdownUtils dropDownUtils = new DropdownUtils();
-dropDownUtils.setNewSearch(&quot;IndustryClassification&quot;,&quot; Classificcatino of industry&quot;)
-			.addFilter(&quot;PRI_CODE&quot;,SearchEntity.StringFilter.LIKE,&quot;SEL_%&quot;)
-	        .setSourceCode(&quot;GRP_INDUSTRY_SELECTION&quot;)
-	        .setPageStart(0)
-	        .setPageSize(10000);
-			
-dropDownUtils.sendSearchResults(&quot;GRP_INDUSTRY_SELECTION&quot;, &quot;LNK_CORE&quot;, &quot;INDUSTRY&quot;, userToken);</drools:script>
-          </drools:onEntry-script>
+          <drools:onEntry-script scriptFormat="http://www.java.com/java"/>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
@@ -391,24 +358,7 @@ dropDownUtils.sendSearchResults(&quot;GRP_INDUSTRY_SELECTION&quot;, &quot;LNK_CO
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[QUE_INTERNSHIP_S3_GRP]]></drools:metaValue>
           </drools:metaData>
-          <drools:onEntry-script scriptFormat="http://www.java.com/java">
-            <drools:script>DropdownUtils dropDownUtils = new DropdownUtils();
-dropDownUtils.setNewSearch(&quot;Internship&quot;,&quot;Internship Durations&quot;)
-			.addFilter(&quot;PRI_CODE&quot;,SearchEntity.StringFilter.LIKE,&quot;SEL_%&quot;)
-	        .setSourceCode(&quot;GRP_INTERNSHIP_DURATION&quot;)
-	        .setPageStart(0)
-	        .setPageSize(10000);
-			
-dropDownUtils.sendSearchResults(&quot;GRP_INTERNSHIP_DURATION&quot;, &quot;LNK_CORE&quot;, &quot;DURATION&quot;, userToken);
-
-dropDownUtils.setNewSearch(&quot;Number&quot;,&quot;Intern's Number&quot;)
-			.addFilter(&quot;PRI_CODE&quot;,SearchEntity.StringFilter.LIKE,&quot;SEL_%&quot;)
-	        .setSourceCode(&quot;GRP_NO_OF_INTERNS&quot;)
-	        .setPageStart(0)
-	        .setPageSize(10000);
-			
-dropDownUtils.sendSearchResults(&quot;GRP_NO_OF_INTERNS&quot;, &quot;LNK_CORE&quot;, &quot;INTERN&quot;, userToken);</drools:script>
-          </drools:onEntry-script>
+          <drools:onEntry-script scriptFormat="http://www.java.com/java"/>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
