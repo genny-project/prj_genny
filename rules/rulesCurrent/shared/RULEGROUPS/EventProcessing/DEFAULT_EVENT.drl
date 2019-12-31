@@ -17,7 +17,7 @@ rule "DEFAULT_EVENT"
 		ruleDetails : RuleDetails()
     then
 	
-		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing DEFAULT  : " + $message );
+		System.out.println( ruleDetails + " " + drools.getRule().getName() + " Processing DEFAULT : " + $message );
 		/* output.setFormCode("FRM_APP","FRM_ROOT"); */
 		output.setFormCode("FRM_QUE_DASHBOARD_VIEW","FRM_CONTENT"); 
 		retract($message);
