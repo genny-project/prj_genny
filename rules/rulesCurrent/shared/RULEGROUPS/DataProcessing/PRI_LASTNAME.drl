@@ -39,7 +39,6 @@ rule "PRI_LASTNAME"
 		BaseEntity person = beUtils.getBaseEntityByCode(targetCode);
 		String firstname = person.getValue("PRI_FIRSTNAME","");
 					
-		JsonObject addressDataJson = new JsonObject(answer.getValue());
 		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_LASTNAME", answer.getValue(),false,true));	
 			
 		String name = lastname + " "+lastname;

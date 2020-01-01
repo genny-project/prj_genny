@@ -29,17 +29,15 @@ rule "PRI_FIRSTNAME"
 	  answersToSave : Answers()
 	  output : OutputParam( )
      then
- 		System.out.println("Rule -> PRI_FIRSTNAMEE :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
+ 		System.out.println("Rule -> PRI_FIRSTNAME :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		String targetCode = answer.getTargetCode();
 		
 		/* Parse json answer and save the individual answers */
 		String firstname = answer.getValue();
-		
 		BaseEntity person = beUtils.getBaseEntityByCode(targetCode);
 		String lastname = person.getValue("PRI_LASTNAME","");
 					
-		JsonObject addressDataJson = new JsonObject(answer.getValue());
 		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_FIRSTNAME", answer.getValue(),false,true));	
 			
 		String name = firstname + " "+lastname;
