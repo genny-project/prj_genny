@@ -33,9 +33,6 @@ rule "IS_REF_PART"
 
 		System.out.println("IS_REF_PART: Answer = " + answer); 
 		
-		output.setResultCode(answer.getAttributeCode());
-		output.setTargetCode(answer.getValue());
-		
 		retract(newBe)
 	
 end

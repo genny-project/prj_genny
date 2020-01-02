@@ -59,6 +59,8 @@ alias _s='./stop.sh'
 
 alias _d='docker ps'
 
+alias _ss='./cyrusStop.sh; ./run.sh dev1 up'
+
 ## Preload Database
 
 1. Move this database file (`genny-2019_12_03__12_58_14.bz2`) to your **genny folder** (`cd projects/genny/`)
