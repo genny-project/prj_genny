@@ -27,14 +27,11 @@ rule "IS_EDU_PRO"
  		System.out.println("IS_EDU_PRO: newBe = " + newBe.getCode()); 
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
- 		Answer answer = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_EDU_PRO", "true");
+ 		Answer answer = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_EDU_PROVIDER", "true");
  		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
  		beUtils.saveAnswer(answer);
 
 		System.out.println("IS_EDU_PRO: Answer = " + answer); 
-		
-		output.setResultCode(answer.getAttributeCode());
-		output.setTargetCode(answer.getValue());
 		
 		retract(newBe)
 	
