@@ -154,7 +154,7 @@ if (ruleGroup==null) {
 System.out.println(&quot;RunRules: RuleGroup = &quot;+ruleGroup);
 kcontext.setVariable(&quot;ruleGroup&quot;,ruleGroup); 
 kcontext.setVariable(&quot;userToken&quot;,userToken);
-kcontext.setVariable('serviceToken&quot;,serviceToken);
+kcontext.setVariable(&quot;serviceToken&quot;,serviceToken);
 }
 </tns:script>
         </tns:onEntry-script>
