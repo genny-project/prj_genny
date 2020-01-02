@@ -41,7 +41,7 @@ rule "PRI_LASTNAME"
 					
 		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_LASTNAME", answer.getValue(),false,true));	
 			
-		String name = lastname + " "+lastname;
+		String name = firstname + " "+lastname;
 		name = name.trim();	
 			
 		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_NAME", name,false,true));
