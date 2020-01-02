@@ -38,6 +38,7 @@ rule "FRM_HEADER"
       FRM_HEADER_OPTIONS : Frame3 ( code == "FRM_HEADER_OPTIONS" )
       FRM_PADDING : Frame3 ( code == "FRM_PADDING" )
       FRM_HEADER_ADD_ITEMS : Frame3 ( code == "FRM_HEADER_ADD_ITEMS" ) 
+      FRM_HEADER_DRAFTS : Frame3 ( code == "FRM_HEADER_DRAFTS" ) 
       FRM_HEADER_USERNAME : Frame3 ( code == "FRM_HEADER_USERNAME" ) 
       FRM_HEADER_PROFILE_PICTURE : Frame3 ( code == "FRM_HEADER_PROFILE_PICTURE" ) 
     then
@@ -51,6 +52,7 @@ rule "FRM_HEADER"
                         .addFrame(FRM_HEADER_USERNAME, FramePosition.EAST).end()
                         .addFrame(FRM_HEADER_PROFILE_PICTURE, FramePosition.EAST).end()
                         .addFrame(FRM_HEADER_ADD_ITEMS, FramePosition.EAST).end()
+                        .addFrame(FRM_HEADER_DRAFTS, FramePosition.EAST).end()
                         .addFrame(FRM_PADDING, FramePosition.EAST).end()
                         .build();
       
