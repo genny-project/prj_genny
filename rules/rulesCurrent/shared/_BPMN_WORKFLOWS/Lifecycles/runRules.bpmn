@@ -146,7 +146,7 @@ String userCode = sessionFacts2.getUserToken().getUserCode();
 System.out.println(&quot;closeTask: realm = &quot;+realm);
 System.out.println(&quot;runRules: KieSession id = &quot;+kieSession.getId()); 
 
-String ruleGroup = (String)sessionFacts2.getMessage();
+ruleGroup = (String)sessionFacts2.getMessage();
 if (ruleGroup==null) {
    System.out.println(&quot;RuleGroup is null&quot;);
 } else {
