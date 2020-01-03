@@ -1,4 +1,3 @@
-
 package life.genny.rules;
 
 
@@ -26,25 +25,28 @@ import life.genny.utils.FrameUtils2;
 import life.genny.models.FramePosition;
 import life.genny.qwanda.VisualControlType;
 
-rule "THM_TABLE_ROW_CONTENT_WRAPPER"
+rule "THM_TABLE_HEADER_FONT"
   ruleflow-group 'GenerateThemes'
 
   no-loop true
 
   when
-    not  Theme(code == "THM_TABLE_ROW_CONTENT_WRAPPER")
+    not  Theme(code == "THM_TABLE_HEADER_FONT")
     serviceToken : GennyToken( code == "PER_SERVICE")
 
   then
-    System.out.println(" Generate THM_TABLE_ROW_CONTENT_WRAPPER Rule  ");
+    System.out.println(" Generate THM_TABLE_HEADER_FONT Rule  ");
 
-    Theme theme = Theme.builder("THM_TABLE_ROW_CONTENT_WRAPPER")
+    Theme theme = Theme.builder("THM_TABLE_HEADER_FONT")
                   .addAttribute()
-                    .width("100%")
-                    .flexDirection("row")
+             		.bold(true)
+             		.size("24px")
                   .end()
+                  .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
                   .build();
-     theme.setRealm(serviceToken.getRealm());
+  
+    
+    theme.setRealm(serviceToken.getRealm());
     insert (theme);
 
     VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, 
