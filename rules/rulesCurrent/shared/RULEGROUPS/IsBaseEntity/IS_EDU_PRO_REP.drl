@@ -32,7 +32,10 @@ rule "IS_EDU_PRO_REP"
  		beUtils.saveAnswer(answer);
 
 		System.out.println("IS_EDU_PRO_REP: Answer = " + answer); 
-	
+		
+		output.setTypeOfResult("NONE");
+  	    output.setResultCode("NONE");  /* dont display anything new */
+		
 		retract(newBe)
 	
 end
