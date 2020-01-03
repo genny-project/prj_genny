@@ -33,6 +33,9 @@ rule "IS_EDU_PRO"
 
 		System.out.println("IS_EDU_PRO: Answer = " + answer); 
 		
+		output.setTypeOfResult("NONE");
+  	    output.setResultCode("NONE");  /* dont display anything new */
+		
 		retract(newBe)
 	
 end

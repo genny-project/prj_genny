@@ -36,6 +36,9 @@ rule "IS_INTERN"
 		System.out.println("IS_INTERN: Answer = " + answer);
 		System.out.println("IS_INTERN: Answer = " + answer2); 
 		
+		output.setTypeOfResult("NONE");
+  	    output.setResultCode("NONE");  /* dont display anything new */
+		
 		retract(newBe)
 	
 end

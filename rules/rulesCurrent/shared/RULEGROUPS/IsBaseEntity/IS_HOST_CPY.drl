@@ -33,6 +33,8 @@ rule "IS_HOST_CPY"
 
 		System.out.println("IS_HOST_CPY: Answer = " + answer); 
 	
+		output.setTypeOfResult("NONE");
+  	    output.setResultCode("NONE");  /* dont display anything new */
 		
 		retract(newBe)
 	
