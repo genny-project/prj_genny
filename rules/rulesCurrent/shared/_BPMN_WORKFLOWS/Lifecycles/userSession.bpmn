@@ -48,6 +48,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_15" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_14" isCollection="false" structureRef="life.genny.utils.BaseEntityUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_18" isCollection="false" structureRef="life.genny.qwanda.message.QDataBaseEntityMessage"/>
+  <bpmn2:itemDefinition id="ItemDefinition_19" isCollection="false" structureRef="life.genny.utils.TaskUtils"/>
   <bpmn2:signal id="Signal_2" name="event"/>
   <bpmn2:signal id="Signal_3" name="data"/>
   <bpmn2:signal id="Signal_4" name="newSession"/>
@@ -96,6 +97,7 @@
       <tns:import name="life.genny.qwanda.Answers"/>
       <tns:import name="life.genny.utils.BaseEntityUtils"/>
       <tns:import name="life.genny.qwanda.message.QDataBaseEntityMessage"/>
+      <tns:import name="life.genny.utils.TaskUtils"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_1329" name="message"/>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_174" name="userToken"/>
@@ -1335,6 +1337,9 @@ KieSession kieSession = ((StatefulKnowledgeSession)kcontext.getKnowledgeRuntime(
 System.out.println(&quot;KieSession id = &quot;+kieSession.getId());*/
 </tns:script>
             </tns:onEntry-script>
+            <tns:onExit-script scriptFormat="http://www.java.com/java">
+              <tns:script>TaskUtils.sendTaskAskItems(userToken);</tns:script>
+            </tns:onExit-script>
           </bpmn2:extensionElements>
           <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
           <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
