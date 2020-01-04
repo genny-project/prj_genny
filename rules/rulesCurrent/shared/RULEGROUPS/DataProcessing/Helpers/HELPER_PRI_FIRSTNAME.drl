@@ -24,7 +24,7 @@ rule "HELPER_PRI_FIRSTNAME.drl"
         salience 5000 
     when
       beUtils : BaseEntityUtils()
-      not Answer( attributeCode == "PRI_GENDER" )
+      not Answer( attributeCode == "LNK_GENDER_SELECT" )
 	  answer : Answer( attributeCode == "PRI_FIRSTNAME")
 	  answersToSave : Answers()
 	  ruleDetails : RuleDetails()
@@ -43,23 +43,42 @@ rule "HELPER_PRI_FIRSTNAME.drl"
         System.out.println("gender   ::   " + gender);
         System.out.println("weight   ::   " + weight);
 
+		Answer genderAnswer = null;
         if(gender !=null ) {
-            Answer genderAnswer = new Answer(sourceCode, targetCode, "PRI_GENDER", gender,false,true);
+
+            switch (gender) {
+            	case "male":
+            		genderAnswer = new Answer(sourceCode, targetCode, "LNK_GENDER_SELECT", "SEL_GENDER_MALE",false,true);
+            		answersToSave.add(genderAnswer);
+            		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_GENDER", "MALE",false,true));
+            		break;
+            	case "female":
+           			genderAnswer = new Answer(sourceCode, targetCode, "LNK_GENDER_SELECT", "SEL_GENDER_FEMALE",false,true);
+            		answersToSave.add(genderAnswer);
+            		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_GENDER", "FEMALE",false,true));
+            		break;
+           		default:
+           			genderAnswer = new Answer(sourceCode, targetCode, "LNK_GENDER_SELECT", "SEL_GENDER_UNKNOWN",false,true);
+            		answersToSave.add(genderAnswer);
+            		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_GENDER", "UNKNOWN",false,true));
+             		
+		    }
             genderAnswer.setWeight(weight);
             genderAnswer.setInferred(true);
             System.out.println(genderAnswer);
-            answersToSave.add(genderAnswer);
-		
+            insert(genderAnswer); /* push this inferred answer into the rules to prevent refiring of this rule and to possibly invoke others */           		
+           
+		    
 			BaseEntity baseEntity = beUtils.updateBaseEntity(targetCode,genderAnswer);
 		
 			QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
 			msg.setToken(beUtils.getGennyToken().getToken());
 			
 			VertxUtils.writeMsg("webcmds",JsonUtils.toJson(msg));		  /* push out to frontend */
-            insert(genderAnswer); /* push this inferred answer into the rules to prevent refiring of this rule and to possibly invoke others */
-			update(answersToSave);
+
+ 			update(answersToSave);
             
-         }else{
+        }else {
             System.out.println("Sorry, No Inferred Rule was executed ");
         }
  
