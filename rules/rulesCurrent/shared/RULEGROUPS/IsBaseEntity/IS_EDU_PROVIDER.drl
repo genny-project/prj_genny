@@ -10,7 +10,7 @@ import life.genny.utils.OutputParam;
 import java.util.List;
 import java.util.ArrayList;
 
-rule "IS_EDU_PRO"
+rule "IS_EDU_PROVIDER"
     ruleflow-group 'IsBaseEntity'
     no-loop true
     salience 1 
@@ -23,8 +23,8 @@ rule "IS_EDU_PRO"
 
 	  
      then
- 		System.out.println("IS_EDU_PRO: Rule fired" );
- 		System.out.println("IS_EDU_PRO: newBe = " + newBe.getCode()); 
+ 		System.out.println("IS_EDU_PROVIDER: Rule fired" );
+ 		System.out.println("IS_EDU_PROVIDER: newBe = " + newBe.getCode()); 
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
  		Answer answer = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_EDU_PROVIDER", "true");
@@ -33,7 +33,7 @@ rule "IS_EDU_PRO"
  		beUtils.saveAnswer(answer);
  		beUtils.saveAnswer(answer2);
 
-		System.out.println("IS_EDU_PRO: Answer = " + answer); 
+		System.out.println("IS_EDU_PROVIDER: Answer = " + answer); 
 		
 		output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */
