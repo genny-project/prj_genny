@@ -173,7 +173,7 @@ public class ChrisTest {
 		}
 	}
 	
-	@Test
+	//@Test
 	public void userTaskTest()
 	{
 		System.out.println("Process View Test");
@@ -415,7 +415,7 @@ public class ChrisTest {
 		}
 	}
 	
-	//@Test
+	@Test
     public void LifecycleTest() {
         GennyToken userToken = null;
         GennyToken serviceToken = null;
@@ -473,17 +473,17 @@ public class ChrisTest {
             		.builder(serviceToken, true)
             		
 // ADD THE JBPM WORKFLOWS HERE	
-                    .addJbpm("workDude.bpmn")
+                    .addJbpm("progressJournals.bpmn")
                     
 // ADD THE DROOLS RULES HERE
-        			.addDrl("IsBaseEntity") 
+//        			.addDrl("IsBaseEntity") 
         			
                     .addToken(userToken)
                     .build();
             
             gks.start();
 
-            gks.startProcess("workDude");
+            gks.startProcess("progressJournals");
 //            gks.injectSignal("INTERN_S1", hashBeg);
 //            
 //            gks.advanceSeconds(5, false);
