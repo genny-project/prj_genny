@@ -476,7 +476,7 @@ public class ChrisTest {
                     .addJbpm("progressJournals.bpmn")
                     
 // ADD THE DROOLS RULES HERE
-//        			.addDrl("IsBaseEntity") 
+        			.addDrl("CardStatus") 
         			
                     .addToken(userToken)
                     .build();
@@ -484,13 +484,16 @@ public class ChrisTest {
             gks.start();
 
             gks.startProcess("progressJournals");
-//            gks.injectSignal("INTERN_S1", hashBeg);
-//            
-            gks.advanceSeconds(5, false);
-//            
-            gks.injectSignal("lockedDoor", "Key");
+            
+            int totalNumJournals = Integer.parseInt("12");
+            
+            for(int i=0;i<totalNumJournals;i++){  
+                gks.advanceSeconds(5, false);           
+                gks.injectSignal("lockedDoor", "Key");   
+            }
 
             gks.advanceSeconds(5, false);
+
             
         } catch (Exception e) {
             System.out.println(e.getLocalizedMessage());
