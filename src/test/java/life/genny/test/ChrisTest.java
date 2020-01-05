@@ -173,7 +173,7 @@ public class ChrisTest {
 		}
 	}
 	
-	//@Test
+	@Test
 	public void userTaskTest()
 	{
 		System.out.println("Process View Test");
@@ -235,15 +235,11 @@ public class ChrisTest {
 					.builder(serviceToken,true)
 					
 // ADD THE JBPM WORKFLOWS HERE					
-//					.addJbpm("cardsA.bpmn")
-//					.addJbpm("cardsB.bpmn")
-//					.addJbpm("cardsC.bpmn")
 					.addJbpm("notificationHub2.bpmn")
 					.addJbpm("baseEntityValidation.bpmn")
 					.addJbpm("dynamicCards.bpmn")
 					.addJbpm("placedCards.bpmn")
 					.addJbpm("progressCards.bpmn")
-//					.addJbpm("userSession.bpmn")
 					
 // ADD THE DROOLS RULES HERE
 					.addDrl("MoveBucket")
@@ -251,9 +247,7 @@ public class ChrisTest {
 					.addDrl("SpecificEnter")
 					.addDrl("SpecificReminder")
 					.addDrl("Timer")
-
 					.addDrl("CardStatus")
-					
 
 					.addToken(userToken)
 					.build();
@@ -268,26 +262,26 @@ public class ChrisTest {
             gks.advanceSeconds(5, false);
             gks.injectSignal("dynamicControl", "FORWARD"); 			// Applied to Shortlist
             gks.advanceSeconds(5, false);
-//            gks.injectSignal("dynamicControl", "FORWARD"); 			// Shortlist to Interview
-//            gks.advanceSeconds(5, false);
+            gks.injectSignal("dynamicControl", "FORWARD"); 			// Shortlist to Interview
+            gks.advanceSeconds(5, false);
 ////            gks.injectSignal("status", "BACKWARD");		// Interview back to Shortlist 
 ////            gks.advanceSeconds(5, false);
 //            gks.injectSignal("appTarget", "FORWARD");		// Shortlist to Interview
-//            gks.advanceSeconds(5, false);
-//            gks.injectSignal("dynamicControl", "FORWARD");			// Interview to Offered
-//            gks.advanceSeconds(5, false);
-//            gks.injectSignal("dynamicControl", "FORWARD");			// Offered to Place
+            gks.advanceSeconds(5, false);
+            gks.injectSignal("dynamicControl", "FORWARD");			// Interview to Offered
+            gks.advanceSeconds(5, false);
+            gks.injectSignal("dynamicControl", "FORWARD");			// Offered to Place
 //            gks.advanceSeconds(5, false);
 //            gks.injectSignal("status", "FORWARD");		
 //            gks.advanceSeconds(1, false);
 //            gks.injectSignal("placedStatus", "Withdraw");
-//            gks.advanceSeconds(5, false);
-//            gks.injectSignal("placedControl", "FORWARD"); 			// Placed to Progress
+            gks.advanceSeconds(5, false);
+            gks.injectSignal("placedControl", "FORWARD"); 			// Placed to Progress
 //            gks.advanceSeconds(1, false);
 //            gks.injectSignal("progressStatus", "Onhold");
-//            gks.advanceSeconds(5, false);
-//            gks.injectSignal("progressControl", "FORWARD"); 		// Progress to Complete
-//            gks.advanceSeconds(5, false);
+            gks.advanceSeconds(5, false);
+            gks.injectSignal("progressControl", "FORWARD"); 		// Progress to Complete
+            gks.advanceSeconds(5, false);
             
             
 			/*
@@ -421,7 +415,7 @@ public class ChrisTest {
 		}
 	}
 	
-	@Test
+	//@Test
     public void LifecycleTest() {
         GennyToken userToken = null;
         GennyToken serviceToken = null;
