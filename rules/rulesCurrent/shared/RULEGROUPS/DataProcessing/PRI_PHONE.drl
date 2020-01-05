@@ -13,13 +13,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
-rule "PRI_MOBILE"
+rule "PRI_PHONE"
     ruleflow-group 'DataProcessing'
         salience 500 
     when
       beUtils : BaseEntityUtils()
 	  serviceToken : GennyToken( code == "PER_SERVICE") 
-	  answer : Answer( attributeCode == "PRI_MOBILE" )
+	  answer : Answer( attributeCode == "PRI_MOBILE" || attributeCode == "PRI_LANDLINE" ||  attributeCode == "PRI_PHONE"  || attributeCode == "PRI_FAX" ||  attributeCode == "PRI_PHONE_ADDITIONAL" )
 	  answersToSave : Answers()
 	  ruleDetails : RuleDetails()
 	  output : OutputParam( )
