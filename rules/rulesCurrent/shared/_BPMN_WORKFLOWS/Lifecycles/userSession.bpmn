@@ -111,7 +111,7 @@
     <bpmn2:property id="targetPage" itemSubjectRef="ItemDefinition_10" name="targetPage"/>
     <bpmn2:property id="signalMessage" itemSubjectRef="ItemDefinition_540" name="signalMessage"/>
     <bpmn2:property id="outerFrame" itemSubjectRef="ItemDefinition_10" name="outerFrame"/>
-    <bpmn2:property id="sessionFacts" name="sessionFacts"/>
+    <bpmn2:property id="sessionFacts" itemSubjectRef="ItemDefinition_16" name="sessionFacts"/>
     <bpmn2:property id="inputSessionCode" itemSubjectRef="ItemDefinition_10" name="inputSessionCode"/>
     <bpmn2:property id="dataSessionCode" itemSubjectRef="ItemDefinition_10" name="dataSessionCode"/>
     <bpmn2:property id="eventSessionCode" itemSubjectRef="ItemDefinition_10" name="eventSessionCode"/>
