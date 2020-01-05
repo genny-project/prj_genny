@@ -27,7 +27,7 @@ rule "IS_HOST_CPY"
  		System.out.println("IS_HOST_CPY: newBe = " + newBe.getCode()); 
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
- 		Answer answer = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_HOST_COMPANY", "true");
+ 		Answer answer = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_HOST_CPY", "true");
  		Answer answer2 = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE");
  		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
  		beUtils.saveAnswer(answer);
