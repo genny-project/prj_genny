@@ -26,7 +26,7 @@ rule "WITHDRAW"
  		System.out.println("WITHDRAW: Rule fired" ); 
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
- 		Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_CARD_STATUS","Withdraw");
+ 		Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_CARD_STATUS","WITHDRAW");
  		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
  		beUtils.saveAnswer(answer);
  		

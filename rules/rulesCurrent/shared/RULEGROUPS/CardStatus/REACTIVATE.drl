@@ -26,7 +26,7 @@ rule "REACTIVATE"
  		System.out.println("REACTIVATE: Rule fired" ); 
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
- 		Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_CARD_STATUS","Reactivate");
+ 		Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_CARD_STATUS","ACTIVE");
  		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
  		beUtils.saveAnswer(answer);
  		
