@@ -486,9 +486,9 @@ public class ChrisTest {
             gks.startProcess("progressJournals");
 //            gks.injectSignal("INTERN_S1", hashBeg);
 //            
-//            gks.advanceSeconds(5, false);
+            gks.advanceSeconds(5, false);
 //            
-//            gks.injectSignal("START_INTERN_S1", "FORWARD");
+            gks.injectSignal("lockedDoor", "Key");
 
             gks.advanceSeconds(5, false);
             
