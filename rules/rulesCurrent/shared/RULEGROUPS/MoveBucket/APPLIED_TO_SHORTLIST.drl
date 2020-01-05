@@ -28,7 +28,7 @@ rule "APPLIED_TO_SHORTLIST"
  		System.out.println("APPLIED_TO_SHORTLIST: newApplication = " + newApplication.getCode());
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
- 		Answer answer = new Answer(userToken.getUserCode(),"APP_APPLICATION_ONE","PRI_STATUS","SHORTLISTED");
+ 		Answer answer = new Answer(userToken.getUserCode(),"APP_APPLICATION_ONE","PRI_STATUS","Shortlist");
  		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
  		beUtils.saveAnswer(answer);
 
