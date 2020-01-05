@@ -35,7 +35,8 @@ rule "PRI_TRADING_NAME"
 		
 		/* Parse json answer and save the individual answers */
 		BaseEntity company = beUtils.getBaseEntityByCode(targetCode);
-					
+		
+		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_TRADING_NAME", answer.getValue(),false,true));			
 		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_NAME", answer.getValue(),false,true));	
 		
 			
