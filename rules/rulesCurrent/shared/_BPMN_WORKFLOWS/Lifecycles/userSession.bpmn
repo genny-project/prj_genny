@@ -988,7 +988,7 @@ kcontext.setVariable(&quot;dataMessage&quot;,(QDataMessage)dataMessage); </bpmn2
             <tns:onExit-script scriptFormat="http://www.java.com/java">
               <tns:script>/* clear answers */
 answersToSave.getAnswers().clear();
-kcontext.setVariable(&quot;answersToSave&quot;,answersToSave);
+/*kcontext.setVariable(&quot;answersToSave&quot;,answersToSave);*/
 sessionFacts = new SessionFacts(serviceToken,userToken,output);
 kcontext.setVariable(&quot;sessionFacts&quot;,sessionFacts);</tns:script>
             </tns:onExit-script>
