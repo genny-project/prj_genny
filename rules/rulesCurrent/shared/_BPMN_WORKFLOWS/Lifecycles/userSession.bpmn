@@ -292,7 +292,7 @@ System.out.println(&quot;userSession: Custom Process Event - Rules Finished Even
             <tns:onExit-script scriptFormat="http://www.java.com/java">
               <tns:script>System.out.println(&quot;userSession: Process Event Handler Event Message Processed = &quot; + message);
 System.out.println(&quot;userSession: Process Event Handler output = &quot; + output);
-kcontext.setVariable(&quot;output&quot;,output);
+/* kcontext.setVariable(&quot;output&quot;,output); */
 if (output.getTypeOfResult().equals(&quot;LOGOUT&quot;)) {
 	System.out.println(&quot;userSession: Process Event Handler - LOGOUT detected!&quot;);
 } else if (!output.getTypeOfResult().equals(&quot;SIGNAL&quot;))  {

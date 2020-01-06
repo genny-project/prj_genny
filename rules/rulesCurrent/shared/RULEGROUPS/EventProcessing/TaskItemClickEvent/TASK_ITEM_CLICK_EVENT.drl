@@ -27,7 +27,7 @@ rule "TASK_ITEM_CLICK_EVENT"
 		code = code.substring("QUE_TASK-".length());
 		System.out.println("TASK_ITEM_CLICK_EVENT: TaskIdStr="+code);
 		Long taskId = Long.parseLong(code);
-		System.out.println("TASK_ITEM_CLICK_EVENT: TaskI="+taskId);
+		System.out.println("TASK_ITEM_CLICK_EVENT: TaskId="+taskId);
 		output = TaskUtils.getTaskOutputParam(userToken,taskId);
 		System.out.println("TASK_ITEM_CLICK_EVENT: output="+output);
 		update(output);
