@@ -58,7 +58,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_47" isCollection="false"/>
   <bpmn2:itemDefinition id="ItemDefinition_62" isCollection="false"/>
   <bpmn2:itemDefinition id="ItemDefinition_63" isCollection="false"/>
-  <bpmn2:itemDefinition id="ItemDefinition_14" isCollection="false" structureRef="java.util.ArrayList"/>
+  <bpmn2:itemDefinition id="ItemDefinition_14" isCollection="false" structureRef="java.util.concurrent.CopyOnWriteArrayList"/>
   <bpmn2:itemDefinition id="ItemDefinition_26" isCollection="false" structureRef="java.util.List"/>
   <bpmn2:signal id="Signal_1" name="userToken.getUserCode()"/>
   <bpmn2:signal id="Signal_2" name="deleteuser"/>
@@ -99,7 +99,7 @@
       <tns:import name="life.genny.qwanda.entity.SearchEntity.Sort"/>
       <tns:import name="life.genny.qwanda.entity.SearchEntity.StringFilter"/>
       <tns:import name="life.genny.qwanda.entity.SearchEntity.Filter"/>
-      <tns:import name="java.util.ArrayList"/>
+      <tns:import name="java.util.concurrent.CopyOnWriteArrayList"/>
       <tns:import name="java.util.List"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_602" name="message"/>
@@ -257,7 +257,7 @@ System.out.println(&quot;userLifeCycle: entered: pid &quot;+kcontext.getProcessI
 BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 newUser = beUtils.create(((GennyToken)userToken).getUserCode(), ((GennyToken)userToken).getUserCode());
 /* copy from userToken */
-List&lt;Answer> answers = new ArrayList&lt;Answer>();
+List&lt;Answer> answers = new CopyOnWriteArrayList&lt;Answer>();
 Answer firstNameAnswer = new Answer(beUtils.getGennyToken().getUserCode(),newUser.getCode(), &quot;PRI_FIRSTNAME&quot;, userToken.getString(&quot;given_name&quot;));
 Answer lastNameAnswer = new Answer(beUtils.getGennyToken().getUserCode(),newUser.getCode(), &quot;PRI_LASTNAME&quot;, userToken.getString(&quot;family_name&quot;));
 Answer emailAnswer = new Answer(beUtils.getGennyToken().getUserCode(),newUser.getCode(), &quot;PRI_EMAIL&quot;, userToken.getString(&quot;email&quot;));
