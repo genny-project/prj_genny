@@ -24,8 +24,6 @@ import life.genny.utils.OutputParam;
 import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 
 
-import java.util.List;
-import java.util.ArrayList;
 
 rule "PRI_SEARCH_TEXT"
     ruleflow-group 'DataProcessing'
