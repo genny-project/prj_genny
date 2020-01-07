@@ -42,7 +42,7 @@ rule "THM_TABLE_HEADER_FONT"
              		.bold(true)
              		.size("24px")
                   .end()
-                  .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                  .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, true).end()
                   .build();
   
     
