@@ -102,7 +102,7 @@ public class TableView extends GennyJbpmBaseTest {
 			
 				/* BODY */
 				Frame3 FRM_TABLE_BODY= getTableBodyFrame("FRM_TABLE_BODY", "test", "test");
-				Frame3 FRM_TABLE_HEADER= getTableHeaderFrame("FRM_TABLE_HEADER", "test", "test");
+				/*Frame3 FRM_TABLE_HEADER= getTableHeaderFrame("FRM_TABLE_HEADER", "test", "test");*/
 				Frame3 FRM_TABLE_CONTENT= getTableContentFrame("FRM_TABLE_CONTENT", "test", "test");
 				
 				/* FOOTER */

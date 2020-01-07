@@ -40,8 +40,9 @@ rule "THM_TABLE_HEADER_JUSTIFY_CONTENT"
     Theme theme = Theme.builder("THM_TABLE_HEADER_JUSTIFY_CONTENT")
                   .addAttribute()
                    .justifyContent("center")
+                   .alignItems("center")
                   .end()
-                  .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                  .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, true).end()
                   .build();
   
     
