@@ -291,8 +291,7 @@ System.out.println(&quot;userSession: Custom Process Event - Rules Finished Even
             </tns:onEntry-script>
             <tns:onExit-script scriptFormat="http://www.java.com/java">
               <tns:script>System.out.println(&quot;userSession: Process Event Handler Event Message Processed = &quot; + message);
-System.out.println(&quot;userSession: Process Event Handler output = &quot; + output);
-/* kcontext.setVariable(&quot;output&quot;,output); */
+System.out.println(&quot;userSession: Process Event Handler output =&quot; + output);
 if (output.getTypeOfResult().equals(&quot;LOGOUT&quot;)) {
 	System.out.println(&quot;userSession: Process Event Handler - LOGOUT detected!&quot;);
 } else if (!output.getTypeOfResult().equals(&quot;SIGNAL&quot;))  {
@@ -358,7 +357,7 @@ if (output.getTypeOfResult().equals(&quot;LOGOUT&quot;)) {
           <bpmn2:dataInputAssociation id="DataInputAssociation_22">
             <bpmn2:targetRef>DataInput_23</bpmn2:targetRef>
             <bpmn2:assignment id="Assignment_16">
-              <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_23">&quot;userSession&quot;</bpmn2:from>
+              <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_23">&quot;userSession: Event Processing&quot;</bpmn2:from>
               <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_4">DataInput_23</bpmn2:to>
             </bpmn2:assignment>
           </bpmn2:dataInputAssociation>
@@ -950,7 +949,7 @@ kcontext.setVariable(&quot;dataMessage&quot;,(QDataMessage)dataMessage); </bpmn2
           <bpmn2:dataInputAssociation id="DataInputAssociation_24">
             <bpmn2:targetRef>DataInput_41</bpmn2:targetRef>
             <bpmn2:assignment id="Assignment_18">
-              <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_42">&quot;userSession&quot;</bpmn2:from>
+              <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_42">&quot;userSession: Data Processing&quot;</bpmn2:from>
               <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_40">DataInput_41</bpmn2:to>
             </bpmn2:assignment>
           </bpmn2:dataInputAssociation>
