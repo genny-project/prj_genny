@@ -173,7 +173,7 @@ public class ChrisTest {
 		}
 	}
 	
-	//@Test
+	@Test
 	public void userTaskTest()
 	{
 		System.out.println("Process View Test");
@@ -181,7 +181,7 @@ public class ChrisTest {
 		GennyToken serviceToken = null;
 		QRules qRules = null;
 
-		if (false) {
+		if (true) {
 			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
 			qRules = new QRules(eventBusMock, userToken.getToken());
@@ -415,7 +415,7 @@ public class ChrisTest {
 		}
 	}
 	
-	@Test
+	//@Test
     public void LifecycleTest() {
         GennyToken userToken = null;
         GennyToken serviceToken = null;
@@ -484,14 +484,18 @@ public class ChrisTest {
             gks.start();
 
             gks.startProcess("progressJournals");
+            gks.advanceSeconds(5, false);
             
             int totalNumJournals = Integer.parseInt("12");
             
             for(int i=0;i<totalNumJournals;i++){  
                 gks.advanceSeconds(5, false);           
-                gks.injectSignal("lockedDoor", "Key");   
+                gks.injectSignal("whichJournal", "NORMAL");   
             }
 
+            gks.advanceSeconds(5, false);           
+            gks.injectSignal("lockedDoor", "Key");
+            
             gks.advanceSeconds(5, false);
 
             
