@@ -23,8 +23,6 @@ import org.kie.api.runtime.process.WorkflowProcessInstance;
 import life.genny.models.Theme;
 import life.genny.models.ThemeAttributeType;
 
-
-
 rule "THM_PADDING_X_10"
     ruleflow-group 'GenerateThemes'
     no-loop true
@@ -39,7 +37,8 @@ rule "THM_PADDING_X_10"
 
 			Theme theme = Theme.builder("THM_PADDING_X_10")
 										.addAttribute()
-											.paddingX(10)
+											.paddingX(100)
+											.bold(true)
 										.end()
 										.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
 										.build();
