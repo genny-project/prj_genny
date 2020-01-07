@@ -40,8 +40,7 @@ rule "THM_TABLE_ROW_CELL"
     Theme theme = Theme.builder("THM_TABLE_ROW_CELL")
                   .addAttribute()
                     .flexGrow(1)
-/*                     .flexBasis(0) */
-                    .flexBasis("auto")
+                     .flexBasis(0) 
                   .end()
                   .build();
      theme.setRealm(serviceToken.getRealm());
