@@ -1,4 +1,5 @@
 package life.genny.rules;
+
 import life.genny.qwanda.message.QCmdMessage;
 import life.genny.qwanda.message.QBulkMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
@@ -14,8 +15,8 @@ import life.genny.utils.VertxUtils;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.models.GennyToken;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
-import life.genny.validation.ValidationList;
-import life.genny.validation.Validation;
+import life.genny.qwanda.validation.ValidationList;
+import life.genny.qwanda.validation.Validation;
 
 rule "SBE_PERSON_DETAIL_VIEW"
     ruleflow-group 'GenerateSearches'
@@ -29,7 +30,7 @@ rule "SBE_PERSON_DETAIL_VIEW"
      	System.out.println("   Generate SBE_PERSON_DETAIL_VIEW ");
      	
          SearchEntity searchBE = new SearchEntity("SBE_PERSON_DETAIL_VIEW", "Person Search")
-									/*.addFilter("PRI_CODE", SearchEntity.StringFilter.EQUAL, "PER_USER1")*/
+									.addFilter("PRI_CODE", SearchEntity.StringFilter.EQUAL, "PER_USER1")
 									.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC).addColumn("PRI_EMAIL", "Email")
 									.addColumn("PRI_MOBILE", "LandLine").addColumn("PRI_ADDRESS_FULL", "Address")
 									.addColumn("PRI_ABN", "Company ABN").addColumn("PRI_ACN", "Company ACN").setPageStart(0)

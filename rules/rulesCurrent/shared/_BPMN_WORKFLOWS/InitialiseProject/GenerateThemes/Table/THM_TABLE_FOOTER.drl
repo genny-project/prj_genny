@@ -29,8 +29,8 @@ import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
 import life.genny.models.FramePosition;
 import life.genny.qwanda.VisualControlType;
-import life.genny.validation.ValidationList;
-import life.genny.validation.Validation;
+import life.genny.qwanda.validation.ValidationList;
+import life.genny.qwanda.validation.Validation;
 
 rule "THM_TABLE_FOOTER"
   ruleflow-group 'GenerateThemes'

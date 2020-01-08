@@ -1,36 +1,5 @@
 package life.genny.rules;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 global org.apache.logging.log4j.Logger log;
 import life.genny.qwanda.message.QBulkMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
@@ -61,8 +30,9 @@ import java.lang.reflect.Type;
 import com.google.gson.reflect.TypeToken;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.GennySettings;
-import life.genny.validation.Validation;
-import life.genny.validation.ValidationList;
+import life.genny.qwanda.validation.Validation;
+import life.genny.qwanda.validation.ValidationList;
+import life.genny.qwanda.datatype.DataType;
 
 rule "FRM_FORM"
     ruleflow-group 'GenerateFrames'

@@ -272,12 +272,6 @@ public class ChrisTest {
 			
 			gks = GennyKieSession
 					.builder(serviceToken,true)
-					.addDrl("FRM_DETAIL_VIEW.drl")
-					.addToken(userToken)
-					.build();
-			
-			gks = GennyKieSession
-					.builder(serviceToken,true)
 					.addDrl("InitialiseProject")
 					.addJbpm("InitialiseProject")
 					
