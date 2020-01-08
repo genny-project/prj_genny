@@ -26,6 +26,7 @@ import life.genny.models.Frame3;
 import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
 import org.apache.commons.beanutils.BeanUtilsBean;
+import life.genny.models.ThemePosition;
 
 rule "FRM_PERSON_DETAIL_VIEW"
     ruleflow-group 'GenerateFrames'

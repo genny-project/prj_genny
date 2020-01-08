@@ -29,7 +29,8 @@ import java.lang.reflect.Type;
 import com.google.gson.reflect.TypeToken;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.GennySettings;
-
+import life.genny.validation.Validation;
+import life.genny.validation.ValidationList;
 
 rule "FRM_FORM"
     ruleflow-group 'GenerateFrames'

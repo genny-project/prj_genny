@@ -26,6 +26,7 @@ import life.genny.models.Frame3;
 import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
 import life.genny.qwanda.VisualControlType;
+import life.genny.models.ThemePosition;
 
 rule "FRM_QUE_TREE_BUCKET_VIEW"
     ruleflow-group 'GenerateFrames'
