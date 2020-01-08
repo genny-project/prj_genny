@@ -1,0 +1,104 @@
+import org.drools.core.process.core.datatype.impl.type.StringDataType;
+import org.drools.core.process.core.datatype.impl.type.ObjectDataType;
+import life.genny.models.GennyToken;
+import life.genny.model.OutputParamTreeSet;
+import life.genny.model.OutputParam;
+import life.genny.qwanda.entity.BaseEntity;
+
+[
+  /* the AskQuestionTask work item */
+  [
+    "name" : "AskQuestionTask",
+    "parameters" : [     
+       "userToken"  : new GennyToken(),
+       "questionCode"  :  new StringDataType(),
+       "callingWorkflow"  :  new StringDataType(),
+       "baseEntityTarget" : new BaseEntity(),
+       "formCode"  :  new StringDataType(),
+       "targetCode"  :  new StringDataType()
+      ],
+      "results" : [
+        "Result" : new ObjectDataType(),
+    ],
+    "displayName" : "Ask Question Task",
+    "icon" : "icons/icon-info.gif"
+  ],
+
+  /* the Send Signal work item */
+  [
+    "name" : "SendSignal",
+    "parameters" : [     
+       "userToken"  : new GennyToken(),
+       "signalCode"  :  new StringDataType(),
+       "payloadObject"  :  new ObjectDataType(),
+       "callingWorkflow"  :  new StringDataType()
+      ],
+    "displayName" : "SendSignal",
+    "icon" : "icons/icon-info.gif"
+  ],
+  
+   /* the Process Task Id work item */
+  [
+    "name" : "ProcessTaskId",
+    "parameters" : [     
+       "message"  :  new QEventMessage(),
+        "callingWorkflow"  :  new StringDataType()
+      ],
+      
+    "displayName" : "ProcessTaskId",
+    "icon" : "icons/icon-info.gif"
+  ],
+
+  /* the ShowFrames work item */
+  [
+    "name" : "ShowFrames",
+    "parameters" : [     
+      "dom" : new OutputParamTreeSet(),
+      "userToken"  : new GennyToken(),
+      "callingWorkflow"  :  new StringDataType()
+     ],
+    "displayName" : "ShowFrames",
+    "icon" : "icons/icon-info.gif"
+  ],
+  
+    // the ShowFrame work item
+  [
+    "name" : "ShowFrame",
+    "parameters" : [     
+      "rootFrameCode" : new StringDataType(),
+      "userToken"  : new GennyToken(),
+      "targetFrameCode" : new StringDataType(),
+      "callingWorkflow"  :  new StringDataType()
+     ],
+    "displayName" : "ShowFrame",
+    "icon" : "icons/icon-info.gif"
+  ],
+  
+       // the ProcessAnswers work item
+  [
+    "name" : "ProcessAnswers",
+    "parameters" : [     
+      "serviceToken" : new GennyToken(),
+      "userToken"  : new GennyToken(),
+      "answersToSave" : new Answers(),
+      "callingWorkflow"  :  new StringDataType()
+     ],
+    "displayName" : "ProcessAnswers",
+    "icon" : "icons/icon-info.gif"
+  ],
+       // the CheckTasks work item
+  [
+    "name" : "CheckTasks",
+    "parameters" : [     
+      "serviceToken" : new GennyToken(),
+      "userToken"  : new GennyToken(),
+      "callingWorkflow"  :  new StringDataType(),
+      "output" : new OutputParam()
+     ],
+    "displayName" : "CheckTasks",
+    "icon" : "icons/icon-info.gif"
+  ]
+  
+
+
+]

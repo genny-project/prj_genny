@@ -76,153 +76,153 @@ public class TableView extends GennyJbpmBaseTest {
 	@Test
 	public void test() {
 
-		QRules rules = GennyJbpmBaseTest.setupLocalService();
-		GennyToken userToken = new GennyToken("userToken", rules.getToken());
-		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
-		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
-
-		/* initialize bucketUtils */
-		TableUtilsTest bucketUtils = new TableUtilsTest(beUtils);
-		//TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
-		TableUtilsNew tableUtils = new TableUtilsNew(beUtils);
-
-		/* get the list of bucket searchBEs to generate tables */
-		//List<SearchEntity> searchBeList = getSearchBeList();
-		List<SearchEntity> searchBeList = tableUtils.getSearchBeList();
-
-
-		/* get all the table frames */
-		Frame3 FRM_TABLE= getTableViewFrame("FRM_TABLE", "test", "test");
-
-		/* TITLE */
-			Frame3 FRM_TABLE_TITLE= getTableTitleFame("FRM_TABLE_TITLE", "test", "test");
-			
-			/* WRAPPER */
-			Frame3 FRM_TABLE_WRAPPER= getTableWrapperFrame("FRM_TABLE_WRAPPER", "test", "test");
-			
-				/* BODY */
-				Frame3 FRM_TABLE_BODY= getTableBodyFrame("FRM_TABLE_BODY", "test", "test");
-				/*Frame3 FRM_TABLE_HEADER= getTableHeaderFrame("FRM_TABLE_HEADER", "test", "test");*/
-				Frame3 FRM_TABLE_CONTENT= getTableContentFrame("FRM_TABLE_CONTENT", "test", "test");
-				
-				/* FOOTER */
-				Frame3 FRM_TABLE_FOOTER_PAGINATION= getTableFooterPaginationFrame("FRM_TABLE_FOOTER_PAGINATION", "test", "test");
-				Frame3 FRM_TABLE_RESULT_COUNT= getTableResultCountFrame("FRM_TABLE_RESULT_COUNT", "test", "test");
-				Frame3 FRM_TABLE_PAGE_INDEX= getTablePageIndexFrame("FRM_TABLE_PAGE_INDEX", "test", "test");
-				Frame3 FRM_TABLE_FOOTER= getTableFooterFame("FRM_TABLE_FOOTER", "test", "test");
-				
-				//Frame3 FRM_CONTENT = Frame3.builder("FRM_CONTENT").build();
-				
-				/* loop through the search */
-				for (SearchEntity searchBe : searchBeList) {
-
-					/* initialize virtualAskMap */
-					Map<String, QDataAskMessage> virtualAskMap = new HashMap<String, QDataAskMessage>();
-
-					/* initialize ask set */
-					Set<QDataAskMessage> askSet = new HashSet<QDataAskMessage>();
-
-					/* initialize contextListMap */
-					Map<String, ContextList> contextListMap = new HashMap<String, ContextList>();
-					
-					String code = searchBe.getCode().split("SBE_")[1];
-
-					Ask tableHeaderAsk = tableUtils.generateTableHeaderAsk(searchBe, contextListMap, serviceToken);
-					virtualAskMap.put(tableHeaderAsk.getQuestionCode(), new QDataAskMessage(tableHeaderAsk));
-					
-					Frame3 tableTitle = Frame3.clone(FRM_TABLE_TITLE);
-					tableTitle.setCode("FRM_TABLE_TITLE_" + code);
-				
-					Frame3 tableHeader = Frame3.clone(FRM_TABLE_HEADER);
-					tableHeader.setCode("FRM_TABLE_HEADER_" + code);
-					tableHeader.setQuestionCode(tableHeaderAsk.getQuestionCode());
-				
-					Frame3 tableContent = Frame3.clone(FRM_TABLE_HEADER);
-					tableContent.setCode("FRM_TABLE_CONTENT_" + code);
-				
-					Frame3 tableBody = Frame3.clone(FRM_TABLE_BODY);
-					tableBody.setCode("FRM_TABLE_BODY_" + code);
-					tableBody.getFrames().add(new FrameTuple3(tableHeader, FramePosition.NORTH, 1.0));
-					tableBody.getFrames().add(new FrameTuple3(FRM_TABLE_CONTENT, FramePosition.CENTRE, 1.0));
-
-					Frame3 tableFooter = Frame3.clone(FRM_TABLE_FOOTER);
-					tableFooter.setCode("FRM_TABLE_FOOTER_" + code);
-					tableFooter.getFrames().add(new FrameTuple3(FRM_TABLE_RESULT_COUNT, FramePosition.WEST, 1.0));
-					tableFooter.getFrames().add(new FrameTuple3(FRM_TABLE_PAGE_INDEX, FramePosition.WEST, 1.0));
-					tableFooter.getFrames().add(new FrameTuple3(FRM_TABLE_FOOTER_PAGINATION, FramePosition.EAST, 1.0));
-
-					Frame3 tableWrapper = Frame3.clone(FRM_TABLE_WRAPPER);
-					tableWrapper.setCode("FRM_TABLE_WRAPPER_" + code);
-					tableWrapper.getFrames().add(new FrameTuple3(tableBody, FramePosition.CENTRE, 1.0));
-					tableWrapper.getFrames().add(new FrameTuple3(tableFooter, FramePosition.SOUTH, 1.0));
-
-					Frame3 frame = Frame3.clone(FRM_TABLE);
-					frame.setCode("FRM_TABLE_" + code);
-					frame.getFrames().add(new FrameTuple3(tableTitle, FramePosition.NORTH, 1.0));
-					frame.getFrames().add(new FrameTuple3(tableWrapper, FramePosition.CENTRE, 1.0));
-
-					/* build the tab content frame */
-//					Frame3 frameContent = Frame3.clone(FRM_CONTENT);
-//					frameContent.getFrames().add(new FrameTuple3(frame, FramePosition.NORTH, 1.0));
-					
-					Frame3 frameContent = Frame3.builder("FRM_CONTENT")
-							.addFrame(frame, FramePosition.NORTH).end()
-							.build();
-
-					QDataBaseEntityMessage msg = FrameUtils2.toMessage(frameContent, serviceToken, askSet, contextListMap,
-					virtualAskMap);
-					msg.setToken(userToken.getToken());
-					msg.setReplace(true);
-					
-					System.out.println("code :: " + "FRM_TABLE_" + code);
-					VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
-
-					for (QDataAskMessage askMsg : askSet) {
-
-							askMsg.setToken(userToken.getToken());
-
-							String json = JsonUtils.toJson(askMsg);
-							VertxUtils.writeMsg("webcmds", json);
-
-					}
-					System.out.println("Sent");
-
-					// /* generating frame msg and saving to cache */
-          // QDataBaseEntityMessage frameMsg = FrameUtils2.toMessage(frame, serviceToken, askSet, contextListMap, virtualAskMap);
-
-          // /* cache the frame */
-          // VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode(), frame, serviceToken.getToken());
-
-          // /* cache the QDataBaseEntityMessage */
-          // VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode() + "_MSG", frameMsg, serviceToken.getToken());
-          
-          // /* cache the ask */
-          // VertxUtils.writeCachedJson(serviceToken.getRealm(),"ASK_" + frame.getCode(), JsonUtils.toJson(askSet.toArray()),serviceToken.getToken());
-
-				}
-				
-
-			// 	/* build the tab content frame */
-			// Frame3 FRM_CONTENT = Frame3.builder("FRM_CONTENT")
-			// 					.addFrame(table, FramePosition.NORTH).end()
-			// 					.build();
-
-			// QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_CONTENT, serviceToken, askSet, contextListMap,
-			// 		virtualAskMap);
-			// msg.setToken(userToken.getToken());
-			// VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
-
-			// for (QDataAskMessage askMsg : askSet) {
-
-			// 	askMsg.setToken(userToken.getToken());
-
-			// 	String json = JsonUtils.toJson(askMsg);
-			// 	VertxUtils.writeMsg("webcmds", json);
-
-			// }
-			
-			System.out.println("Success");
-	
+//		QRules rules = GennyJbpmBaseTest.setupLocalService();
+//		GennyToken userToken = new GennyToken("userToken", rules.getToken());
+//		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+//		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+//
+//		/* initialize bucketUtils */
+//		TableUtilsTest bucketUtils = new TableUtilsTest(beUtils);
+//		//TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
+//		TableUtilsNew tableUtils = new TableUtilsNew(beUtils);
+//
+//		/* get the list of bucket searchBEs to generate tables */
+//		//List<SearchEntity> searchBeList = getSearchBeList();
+//		List<SearchEntity> searchBeList = tableUtils.getSearchBeList();
+//
+//
+//		/* get all the table frames */
+//		Frame3 FRM_TABLE= getTableViewFrame("FRM_TABLE", "test", "test");
+//
+//		/* TITLE */
+//			Frame3 FRM_TABLE_TITLE= getTableTitleFame("FRM_TABLE_TITLE", "test", "test");
+//			
+//			/* WRAPPER */
+//			Frame3 FRM_TABLE_WRAPPER= getTableWrapperFrame("FRM_TABLE_WRAPPER", "test", "test");
+//			
+//				/* BODY */
+//				Frame3 FRM_TABLE_BODY= getTableBodyFrame("FRM_TABLE_BODY", "test", "test");
+//				/*Frame3 FRM_TABLE_HEADER= getTableHeaderFrame("FRM_TABLE_HEADER", "test", "test");*/
+//				Frame3 FRM_TABLE_CONTENT= getTableContentFrame("FRM_TABLE_CONTENT", "test", "test");
+//				
+//				/* FOOTER */
+//				Frame3 FRM_TABLE_FOOTER_PAGINATION= getTableFooterPaginationFrame("FRM_TABLE_FOOTER_PAGINATION", "test", "test");
+//				Frame3 FRM_TABLE_RESULT_COUNT= getTableResultCountFrame("FRM_TABLE_RESULT_COUNT", "test", "test");
+//				Frame3 FRM_TABLE_PAGE_INDEX= getTablePageIndexFrame("FRM_TABLE_PAGE_INDEX", "test", "test");
+//				Frame3 FRM_TABLE_FOOTER= getTableFooterFame("FRM_TABLE_FOOTER", "test", "test");
+//				
+//				//Frame3 FRM_CONTENT = Frame3.builder("FRM_CONTENT").build();
+//				
+//				/* loop through the search */
+//				for (SearchEntity searchBe : searchBeList) {
+//
+//					/* initialize virtualAskMap */
+//					Map<String, QDataAskMessage> virtualAskMap = new HashMap<String, QDataAskMessage>();
+//
+//					/* initialize ask set */
+//					Set<QDataAskMessage> askSet = new HashSet<QDataAskMessage>();
+//
+//					/* initialize contextListMap */
+//					Map<String, ContextList> contextListMap = new HashMap<String, ContextList>();
+//					
+//					String code = searchBe.getCode().split("SBE_")[1];
+//
+//					Ask tableHeaderAsk = tableUtils.generateTableHeaderAsk(searchBe, contextListMap, serviceToken);
+//					virtualAskMap.put(tableHeaderAsk.getQuestionCode(), new QDataAskMessage(tableHeaderAsk));
+//					
+//					Frame3 tableTitle = Frame3.clone(FRM_TABLE_TITLE);
+//					tableTitle.setCode("FRM_TABLE_TITLE_" + code);
+//				
+////					Frame3 tableHeader = Frame3.clone(FRM_TABLE_HEADER);
+////					tableHeader.setCode("FRM_TABLE_HEADER_" + code);
+////					tableHeader.setQuestionCode(tableHeaderAsk.getQuestionCode());
+//				
+////					Frame3 tableContent = Frame3.clone(FRM_TABLE_HEADER);
+////					tableContent.setCode("FRM_TABLE_CONTENT_" + code);
+//				
+////					Frame3 tableBody = Frame3.clone(FRM_TABLE_BODY);
+////					tableBody.setCode("FRM_TABLE_BODY_" + code);
+////					tableBody.getFrames().add(new FrameTuple3(tableHeader, FramePosition.NORTH, 1.0));
+////					tableBody.getFrames().add(new FrameTuple3(FRM_TABLE_CONTENT, FramePosition.CENTRE, 1.0));
+//
+//					Frame3 tableFooter = Frame3.clone(FRM_TABLE_FOOTER);
+//					tableFooter.setCode("FRM_TABLE_FOOTER_" + code);
+//					tableFooter.getFrames().add(new FrameTuple3(FRM_TABLE_RESULT_COUNT, FramePosition.WEST, 1.0));
+//					tableFooter.getFrames().add(new FrameTuple3(FRM_TABLE_PAGE_INDEX, FramePosition.WEST, 1.0));
+//					tableFooter.getFrames().add(new FrameTuple3(FRM_TABLE_FOOTER_PAGINATION, FramePosition.EAST, 1.0));
+//
+////					Frame3 tableWrapper = Frame3.clone(FRM_TABLE_WRAPPER);
+////					tableWrapper.setCode("FRM_TABLE_WRAPPER_" + code);
+////					tableWrapper.getFrames().add(new FrameTuple3(tableBody, FramePosition.CENTRE, 1.0));
+////					tableWrapper.getFrames().add(new FrameTuple3(tableFooter, FramePosition.SOUTH, 1.0));
+//
+////					Frame3 frame = Frame3.clone(FRM_TABLE);
+////					frame.setCode("FRM_TABLE_" + code);
+////					frame.getFrames().add(new FrameTuple3(tableTitle, FramePosition.NORTH, 1.0));
+////					frame.getFrames().add(new FrameTuple3(tableWrapper, FramePosition.CENTRE, 1.0));
+//
+//					/* build the tab content frame */
+////					Frame3 frameContent = Frame3.clone(FRM_CONTENT);
+////					frameContent.getFrames().add(new FrameTuple3(frame, FramePosition.NORTH, 1.0));
+//					
+//					Frame3 frameContent = Frame3.builder("FRM_CONTENT")
+//							.addFrame(frame, FramePosition.NORTH).end()
+//							.build();
+//
+//					QDataBaseEntityMessage msg = FrameUtils2.toMessage(frameContent, serviceToken, askSet, contextListMap,
+//					virtualAskMap);
+//					msg.setToken(userToken.getToken());
+//					msg.setReplace(true);
+//					
+//					System.out.println("code :: " + "FRM_TABLE_" + code);
+//					VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+//
+//					for (QDataAskMessage askMsg : askSet) {
+//
+//							askMsg.setToken(userToken.getToken());
+//
+//							String json = JsonUtils.toJson(askMsg);
+//							VertxUtils.writeMsg("webcmds", json);
+//
+//					}
+//					System.out.println("Sent");
+//
+//					// /* generating frame msg and saving to cache */
+//          // QDataBaseEntityMessage frameMsg = FrameUtils2.toMessage(frame, serviceToken, askSet, contextListMap, virtualAskMap);
+//
+//          // /* cache the frame */
+//          // VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode(), frame, serviceToken.getToken());
+//
+//          // /* cache the QDataBaseEntityMessage */
+//          // VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode() + "_MSG", frameMsg, serviceToken.getToken());
+//          
+//          // /* cache the ask */
+//          // VertxUtils.writeCachedJson(serviceToken.getRealm(),"ASK_" + frame.getCode(), JsonUtils.toJson(askSet.toArray()),serviceToken.getToken());
+//
+//				}
+//				
+//
+//			// 	/* build the tab content frame */
+//			// Frame3 FRM_CONTENT = Frame3.builder("FRM_CONTENT")
+//			// 					.addFrame(table, FramePosition.NORTH).end()
+//			// 					.build();
+//
+//			// QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_CONTENT, serviceToken, askSet, contextListMap,
+//			// 		virtualAskMap);
+//			// msg.setToken(userToken.getToken());
+//			// VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+//
+//			// for (QDataAskMessage askMsg : askSet) {
+//
+//			// 	askMsg.setToken(userToken.getToken());
+//
+//			// 	String json = JsonUtils.toJson(askMsg);
+//			// 	VertxUtils.writeMsg("webcmds", json);
+//
+//			// }
+//			
+//			System.out.println("Success");
+//	
 	}
 
 
