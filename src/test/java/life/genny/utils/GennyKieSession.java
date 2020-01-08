@@ -284,6 +284,10 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		kieSession.signalEvent(type, object);
 	}
 	
+	public void injectSignal(String type, Object object, GennyToken gToken) {
+		kieSession.signalEvent(type, object);
+	}
+	
 	public void injectEvent(String msgCode, GennyToken gToken) {
 		QMessage msg = (QMessage)messages.get(msgCode);
 		injectEvent(msg, gToken);
@@ -1436,6 +1440,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 				createMessage("QUE_CANCEL",new QEventMessage("EVT_MSG", "QUE_CANCEL"));
 				createMessage("QUE_RESET",new QEventMessage("EVT_MSG", "QUE_RESET"));
 				createMessage("msgLogout",new QEventMessage("EVT_MSG", "LOGOUT"));
+				createMessage("QUE_ADD_APPLICATION",new QEventMessage("EVT_MSG", "QUE_ADD_APPLICATION"));
 		 }
 		 
 		 private void setupCache()

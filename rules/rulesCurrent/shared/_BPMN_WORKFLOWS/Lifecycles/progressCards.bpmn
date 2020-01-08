@@ -657,7 +657,7 @@ System.out.println(&quot;colourCode: &quot; + colourCode);</drools:script>
           </bpmn2:extensionElements>
           <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
           <bpmn2:outgoing>SequenceFlow_17</bpmn2:outgoing>
-          <bpmn2:script>System.out.println(&quot;cardsB: Hello from the other side&quot;);
+          <bpmn2:script>System.out.println(&quot;progressCards: You reached the Movement Event Handler&quot;);
 
 kcontext.setVariable(&quot;progressControlCode&quot;, progressControlCode);
 controlSignalCode = progressControlCode;
@@ -755,11 +755,11 @@ System.out.println(&quot;cardsB: controlSignalCode = &quot; +controlSignalCode);
               <drools:script>kcontext.setVariable(&quot;progressStatusCode&quot;, progressStatusCode);
 statusCode  = progressStatusCode;
 kcontext.setVariable(&quot;statusCode&quot;, statusCode);
-System.out.println(&quot;cardsA: statusCode = &quot; + statusCode);</drools:script>
+System.out.println(&quot;progressCards: statusCode = &quot; + statusCode);</drools:script>
             </drools:onEntry-script>
             <drools:onExit-script scriptFormat="http://www.java.com/java">
               <drools:script>broadcastCode = outputMsg.getTargetCode();
-System.out.println(&quot;cardsA: broadcastCode = &quot; + broadcastCode);</drools:script>
+System.out.println(&quot;progressCards: broadcastCode = &quot; + broadcastCode);</drools:script>
             </drools:onExit-script>
           </bpmn2:extensionElements>
           <bpmn2:incoming>SequenceFlow_27</bpmn2:incoming>
@@ -1293,7 +1293,7 @@ System.out.println(&quot;skipJournals&quot; + skipJournals);</bpmn2:script>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_IntermediateThrowEvent_1" bpmnElement="IntermediateThrowEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="540.0" y="230.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_41">
           <dc:Bounds height="22.0" width="61.0" x="528.0" y="266.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -1520,13 +1520,13 @@ System.out.println(&quot;skipJournals&quot; + skipJournals);</bpmn2:script>
         <di:waypoint xsi:type="dc:Point" x="490.0" y="248.0"/>
         <di:waypoint xsi:type="dc:Point" x="515.0" y="248.0"/>
         <di:waypoint xsi:type="dc:Point" x="540.0" y="248.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_57"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_IntermediateThrowEvent_1" targetElement="BPMNShape_ScriptTask_2">
         <di:waypoint xsi:type="dc:Point" x="576.0" y="248.0"/>
         <di:waypoint xsi:type="dc:Point" x="598.0" y="248.0"/>
         <di:waypoint xsi:type="dc:Point" x="620.0" y="248.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_58"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
