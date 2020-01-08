@@ -217,6 +217,7 @@ public class ChrisTest {
 		SessionFacts initFacts = new SessionFacts(serviceToken, null, new QEventMessage("EVT_MSG", "INIT_STARTUP"));
 		QEventMessage authInitMsg = new QEventMessage("EVT_MSG", "AUTH_INIT"); authInitMsg.setToken(userToken.getToken());
 		QEventMessage msgLogout = new QEventMessage("EVT_MSG", "LOGOUT");msgLogout.setToken(userToken.getToken());
+		QEventMessage addApplication = new QEventMessage("EVT_MSG", "QUE_ADD_APPLICATION");addApplication.setToken(userToken.getToken());
 
 
 		// NOW SET UP Some baseentitys
@@ -253,12 +254,22 @@ public class ChrisTest {
 					.build();
 			
 			gks.start();
-
-			gks.startProcess("dynamicCards");
 			
+			GennyToken newUser2A = gks.createToken("PER_USER2"); 
+			GennyToken newUser2B = gks.createToken("PER_USER2"); 
+			GennyToken newUser1A = gks.createToken("PER_USER1");
+//			
+			gks.injectSignal("initProject"); // This should initialise everything
+			gks.injectEvent("authInitMsg",newUser2A);
 
-//            gks.advanceSeconds(1, false);
-//            gks.injectSignal("dynamicStatus", "Reactivate");
+//			gks.startProcess("dynamicCards");
+
+			gks.injectEvent(addApplication, newUser2A);
+			gks.advanceSeconds(5, false);
+
+            gks.advanceSeconds(1, false);
+            gks.injectSignal("dynamicStatus", "Reactivate");
+//            gks.injectSignal("dynamicStatus", "Reactivate", newUser2A);
             gks.advanceSeconds(5, false);
             gks.injectSignal("dynamicControl", "FORWARD"); 			// Applied to Shortlist
             gks.advanceSeconds(5, false);
@@ -273,137 +284,17 @@ public class ChrisTest {
             gks.injectSignal("dynamicControl", "FORWARD");			// Offered to Place
 //            gks.advanceSeconds(5, false);
 //            gks.injectSignal("status", "FORWARD");		
-//            gks.advanceSeconds(1, false);
-//            gks.injectSignal("placedStatus", "Withdraw");
+            gks.advanceSeconds(1, false);
+            gks.injectSignal("placedStatus", "Withdraw");
             gks.advanceSeconds(5, false);
             gks.injectSignal("placedControl", "FORWARD"); 			// Placed to Progress
-//            gks.advanceSeconds(1, false);
-//            gks.injectSignal("progressStatus", "Onhold");
+            gks.advanceSeconds(1, false);
+            gks.injectSignal("progressStatus", "Onhold");
             gks.advanceSeconds(5, false);
             gks.injectSignal("progressControl", "FORWARD"); 		// Progress to Complete
             gks.advanceSeconds(5, false);
+          
             
-            
-			/*
-			BaseEntity icn_sort = new BaseEntity("ICN_SORT","Icon Sort");
-			try {
-				
-				icn_sort.addAttribute(RulesUtils.getAttribute("PRI_ICON_CODE", serviceToken.getToken()), 1.0, "sort");
-				icn_sort.setRealm(realm);
-				VertxUtils.writeCachedJson(realm,   "ICN_SORT",JsonUtils.toJson(icn_sort), serviceToken.getToken());
-
-			} catch (BadDataException e1) {
-				e1.printStackTrace();
-			}
-
-			//gks.injectSignal("initProject", initFacts); // This should initialise everything
-			gks.advanceSeconds(5, false);
-			
-			gks.getKieSession().getWorkItemManager().registerWorkItemHandler("Human Task", new NonManagedLocalHTWorkItemHandler(gks.getKieSession(),gks.getTaskService()));
-			
-		       // One potential owner, should go straight to state Reserved
-//	        String str = "(with (new Task()) { priority = 55, taskData = (with( new TaskData()) { } ), ";
-//	        str += "peopleAssignments = (with ( new PeopleAssignments() ) { potentialOwners = [new User('Bobba Fet'), new User('Darth Vader') ], excludedOwners = [new User('Darth Vader')],businessAdministrators = [ new User('Administrator') ], }),";
-//	        str += "name =  'This is my task name' })";
-//	        Task task = TaskFactory.evalTask(new StringReader(str));
-//	        gks.getTaskService().addTask(task, new HashMap<String, Object>());
-			//gks.getTaskService().
-	        List<TaskSummary> tasks = null;
-
-	        User acrow = (User) TaskModelProvider.getFactory().newUser("acrow");
-	        // Start a process
-	        gks.startProcess("adam_user1");
-	        gks.advanceSeconds(5, false);
-	        Map<String,Object> params = new HashMap<String,Object>();
-	        Task task = new TaskFluent().setName("Amazing GADA Stuff")
-	                .addPotentialGroup("GADA")
-	                .setAdminUser("acrow")
-	             //   .addPotentialUser("acrow")
-	                .setProcessId("direct")
-	                .setDeploymentID("genny")
-	                .getTask();
-
-	        Task task2 = new TaskFluent().setName("Awesome GADA stuff")
-	              //  .addPotentialGroup("GADA")
-	                .setAdminUser("Administrator")
-	                .addPotentialUser("domenic")
-	                .setDeploymentID("genny")
-	                .setProcessId("direct")
-	                .getTask();
-
-	        Task task3 = new TaskFluent().setName("Boring Outcome Stuff")
-	                .addPotentialGroup("OUTCOME")
-	                .setAdminUser("Administrator")
-	                .addPotentialUser("gerard")
-	                .setProcessId("direct")
-	                .setDeploymentID("genny")
-	                .getTask();
-
-
-	        gks.getTaskService().addTask(task, params);
-	        gks.getTaskService().addTask(task2, params);
-	        gks.getTaskService().addTask(task3, params);
-	        long taskId = task.getId();
-	        long taskId2 = task2.getId();
-	        long taskId3 = task3.getId();
-
-              // Do Task Operations
-            
-              showStatuses(gks);
-
-            
-            // Add Comment
-            InternalComment commentImpl = (InternalComment) TaskModelProvider.getFactory().newComment();
-            
-            commentImpl.setAddedAt(new Date());
-            commentImpl.setAddedBy(acrow);
-            gks.getTaskService().addComment(taskId2, commentImpl);
-            
-             Map<String, Object> content = gks.getTaskService().getTaskContent(taskId2 );
-             System.out.println(content);
-              // Start Task
-              gks.getTaskService().start(taskId, "acrow");    
-              showStatuses(gks);
-
-              gks.getTaskService().suspend(taskId, "acrow");    
-              showStatuses(gks);
-
-              gks.getTaskService().resume(taskId, "acrow");    
-              showStatuses(gks);
-              
-              gks.getTaskService().forward(taskId2, "domenic", "anish");
-
-              // Claim Task
-//              gks.getTaskService().claim(taskId, "acrow");
-//              showStatuses(gks);
-//          
-              Map<String, Object> results = new HashMap<String, Object>();
-              results.put("Result", "Done");
-              gks.getTaskService().complete(taskId, "acrow", results);
-              showStatuses(gks);
-
-              results.put("Result", "some document data");
-
-//              long processInstanceId =
-//            		  processService.startProcess(deployUnit.getIdentifier(), "org.jbpm.writedocument");
-//            		  List<Long> taskIds =
-//            		  runtimeDataService.getTasksByProcessInstanceId(processInstanceId);
-//            		  Long taskId4 = taskIds.get(0);
-//            		  userTaskService.start(taskId, "john");
-//            		  UserTaskInstanceDesc task4 = runtimeDataService.getTaskById(taskId4);
-//            		  Map<String, Object> results = new HashMap<String, Object>();
-//            		  results.put("Result", "some document data");
-//            		  userTaskService.complete(taskId4, "john", results);
-             
-			gks.injectEvent(authInitMsg); // This should create a new process
-			gks.advanceSeconds(5, false);
-
-			BaseEntity user = VertxUtils.getObject(serviceToken.getRealm(), "", userToken.getUserCode(),
-					BaseEntity.class, serviceToken.getToken());
-
-			gks.injectEvent(msgLogout);
-			
-			*/
 		} catch (Exception e) {
 			e.printStackTrace();
 			
