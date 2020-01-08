@@ -26,8 +26,8 @@ import life.genny.utils.BaseEntityUtils;
 import life.genny.models.GennyToken;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
 import life.genny.models.Theme;
-import life.genny.validation.ValidationList;
-import life.genny.validation.Validation;
+import life.genny.qwanda.validation.ValidationList;
+import life.genny.qwanda.validation.Validation;
 
 
 
