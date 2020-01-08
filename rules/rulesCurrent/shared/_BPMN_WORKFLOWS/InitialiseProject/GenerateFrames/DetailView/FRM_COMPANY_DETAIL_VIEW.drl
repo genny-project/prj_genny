@@ -2,6 +2,8 @@ package life.genny.rules;
 
 
 
+
+
 global org.apache.logging.log4j.Logger log;
 import java.util.Map;
 import life.genny.qwanda.message.QCmdMessage;

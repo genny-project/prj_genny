@@ -4,51 +4,79 @@ package life.genny.rules;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+global org.apache.logging.log4j.Logger log;
+
 import life.genny.qwanda.message.QCmdMessage;
 import life.genny.qwanda.message.QBulkMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventMessage;
+import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.rules.QRules;
 import io.vertx.core.json.JsonObject;
 import life.genny.qwandautils.JsonUtils;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.SearchEntity;
 import life.genny.utils.VertxUtils;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.models.GennyToken;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
+import life.genny.models.Frame3;
 import life.genny.models.Theme;
-import life.genny.models.ThemeAttributeType;
+import life.genny.utils.FrameUtils2;
 
-
-
-rule "THM_DETAIL_VIEW_BODY"
-   ruleflow-group 'GenerateThemes'
-    no-loop true
+rule "FRM_DUMMY"
+    ruleflow-group 'GenerateFrames'
 
     when
-      not  Theme (code == "THM_DETAIL_VIEW_BODY")
+      not  Frame3(code == "FRM_DUMMY")
       serviceToken : GennyToken( code == "PER_SERVICE")
-
+      
     then
+     System.out.println(" Generate FRM_DUMMY Rule ..wyz0  "+serviceToken.getUserCode());
 
-     	System.out.println("   Generate THM_DETAIL_VIEW_BODY Rule ");
-
-		Theme theme = Theme.builder("THM_DETAIL_VIEW_BODY")
-						.addAttribute()
-							.flex(15)
-							.padding(10)
-							.justifyContent("flex-start")
-						.end()
+ 	Frame3 frame = Frame3.builder("FRM_DUMMY")
+						.addTheme("THM_DUMMY",serviceToken)
+							.end()
 						.build();
 						
-		theme.setRealm(serviceToken.getRealm());
-		insert(theme);
+	frame.setRealm(serviceToken.getRealm());
+						
+	insert (frame);
+	
+	/* Process and save to cache */
+	FrameUtils2.toMessage(frame, serviceToken);
 
-		VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
-	end
+end
+
+
+ 

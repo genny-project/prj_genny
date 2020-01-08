@@ -1,6 +1,4 @@
 package life.genny.rules;
-
-
 import life.genny.qwanda.message.QCmdMessage;
 import life.genny.qwanda.message.QBulkMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
@@ -8,8 +6,6 @@ import life.genny.qwanda.message.QEventMessage;
 import life.genny.rules.QRules;
 import life.genny.qwandautils.JsonUtils;
 import org.apache.logging.log4j.Logger;
-
-
 import java.util.List;
 import java.util.ArrayList;
 import life.genny.qwanda.entity.BaseEntity;
@@ -18,6 +14,8 @@ import life.genny.utils.VertxUtils;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.models.GennyToken;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
+import life.genny.validation.ValidationList;
+import life.genny.validation.Validation;
 
 rule "SBE_PERSON_DETAIL_VIEW"
     ruleflow-group 'GenerateSearches'

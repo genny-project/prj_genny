@@ -1,4 +1,5 @@
 package life.genny.rules;
+
 import java.util.ArrayList;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.utils.OutputParam;
