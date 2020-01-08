@@ -67,6 +67,8 @@ import life.genny.utils.GennyKieSession;
 import life.genny.utils.RulesUtils;
 import life.genny.utils.SessionFacts;
 import life.genny.utils.VertxUtils;
+import life.genny.qwanda.validation.ValidationList;
+import life.genny.qwanda.validation.Validation;
 
 public class ChrisTest {
 
@@ -266,6 +268,14 @@ public class ChrisTest {
 		GennyKieSession gks = null;
 
 		try {
+			
+			
+			gks = GennyKieSession
+					.builder(serviceToken,true)
+					.addDrl("FRM_DETAIL_VIEW.drl")
+					.addToken(userToken)
+					.build();
+			
 			gks = GennyKieSession
 					.builder(serviceToken,true)
 					.addDrl("InitialiseProject")

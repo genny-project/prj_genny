@@ -1,10 +1,5 @@
 package life.genny.rules;
 
-
-
-
-
-
 global org.apache.logging.log4j.Logger log;
 
 import life.genny.qwanda.message.QCmdMessage;
@@ -30,6 +25,7 @@ import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import life.genny.models.ThemePosition;
+import life.genny.qwanda.ContextList;
 
 rule "FRM_PERSON_DETAIL_VIEW"
     ruleflow-group 'GenerateFrames'
