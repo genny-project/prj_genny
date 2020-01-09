@@ -1,0 +1,68 @@
+package life.genny.rules;
+
+
+global org.apache.logging.log4j.Logger log;
+
+import life.genny.qwanda.message.QCmdMessage;
+import life.genny.qwanda.message.QBulkMessage;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.qwanda.message.QEventMessage;
+import life.genny.qwanda.message.QDataAskMessage;
+import life.genny.rules.QRules;
+import io.vertx.core.json.JsonObject;
+import life.genny.qwandautils.JsonUtils;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
+import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.entity.SearchEntity;
+import life.genny.utils.VertxUtils;
+import life.genny.utils.BaseEntityUtils;
+import life.genny.models.GennyToken;
+import org.kie.api.runtime.process.WorkflowProcessInstance;
+import life.genny.models.Frame3;
+import life.genny.models.Theme;
+import life.genny.utils.FrameUtils2;
+import life.genny.models.FramePosition;
+import life.genny.qwanda.VisualControlType.*;
+
+rule "FRM_HEADER_OPTIONS"
+    ruleflow-group 'GenerateFrames'
+    when
+      not  Frame3(code == "FRM_HEADER_OPTIONS")
+      serviceToken : GennyToken( code == "PER_SERVICE")
+    then
+      System.out.println("   Generate FRM_HEADER_OPTIONS Rule  "+serviceToken.getUserCode());
+      Validation validation = new Validation("VLD_ANYTHING", "Anything", ".*");
+
+	  List<Validation> validations = new ArrayList<>();
+	  validations.add(validation);
+
+	  ValidationList buttonValidationList = new ValidationList();
+	  buttonValidationList.setValidationList(validations);
+      
+      
+      DataType buttonDataType = new DataType("DTT_EVENT", buttonValidationList, "Form Submit Cancel", "");
+
+      Frame3 frame = Frame3.builder("FRM_HEADER_OPTIONS")
+                    .addTheme("THM_PANEL_CONTENT_FIT", ThemePosition.WRAPPER, serviceToken).end()
+                    .question("QUE_OPTIONS_GRP")
+                      .addTheme("THM_DROPDOWN_ICON_ALT",serviceToken).vcl(VisualControlType.GROUP_ICON).end()
+                      .addTheme("THM_BACKGROUND_NONE", serviceToken).vcl(VisualControlType.GROUP).weight(2.0).end()
+                      .addTheme("THM_DROPDOWN_BEHAVIOUR_GENNY", serviceToken).vcl(VisualControlType.GROUP).weight(2.0).end()
+                      .addTheme("THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY", serviceToken).vcl(VisualControlType.GROUP).weight(1.0).end()
+                      .addTheme("THM_DROPDOWN_HEADER_WRAPPER_GENNY", serviceToken).vcl(VisualControlType.GROUP_HEADER_WRAPPER).weight(2.0).end()
+                      .addTheme("THM_DROPDOWN_GROUP_LABEL_GENNY", serviceToken).vcl(VisualControlType.GROUP_LABEL).end()
+                      .addTheme("THM_DROPDOWN_CONTENT_WRAPPER_GENNY", serviceToken).vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end()
+                      .addTheme("THM_PROJECT_COLOR_SURFACE", serviceToken).vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end()                      
+                      .addTheme("THM_BOX_SHADOW_SM", serviceToken).vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end()
+                      .addTheme("THM_DROPDOWN_VCL_GENNY", serviceToken).vcl(VisualControlType.VCL).end()
+                      .addTheme("THM_DROPDOWN_ITEM", serviceToken).dataType(buttonDataType).vcl(VisualControlType.VCL).end()
+                    .end()
+                    .build();
+						
+      frame.setRealm(serviceToken.getRealm());
+      insert (frame);
+      FrameUtils2.toMessage(frame, serviceToken);
+end
