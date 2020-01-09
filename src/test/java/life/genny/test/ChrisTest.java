@@ -304,20 +304,21 @@ public class ChrisTest {
 			
 			gks.start();
 			
+			GennyToken newUser1A = gks.createToken("PER_USER1"); 
 			GennyToken newUser2A = gks.createToken("PER_USER2"); 
 			GennyToken newUser2B = gks.createToken("PER_USER2"); 
 
 			gks.injectSignal("initProject"); // This should initialise everything
-			gks.injectEvent("authInitMsg",newUser2A);
+			gks.injectEvent("authInitMsg",newUser1A);
 
 //			gks.startProcess("dynamicCards");
 
-			gks.injectEvent("QUE_ADD_APPLICATION", newUser2A);
+			gks.injectEvent("QUE_ADD_APPLICATION", newUser1A);
 			gks.advanceSeconds(5, false);
 
             gks.advanceSeconds(1, false);
 //            gks.injectSignal("dynamicStatus", "Reactivate");
-            gks.injectSignal("dynamicStatus", "Reactivate", newUser2A);
+            gks.injectSignal("dynamicStatus", "Reactivate", newUser1A);
             gks.advanceSeconds(5, false);
             gks.injectSignal("dynamicControl", "FORWARD"); 			// Applied to Shortlist
             gks.advanceSeconds(5, false);
