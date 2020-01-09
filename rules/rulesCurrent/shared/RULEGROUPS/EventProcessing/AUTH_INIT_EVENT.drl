@@ -1,6 +1,5 @@
 package life.genny.rules;
 
-
 import life.genny.qwanda.message.QEventMessage;
 import life.genny.qwanda.message.QDataAttributeMessage;
 import life.genny.models.GennyToken;

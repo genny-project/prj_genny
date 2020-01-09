@@ -1,5 +1,4 @@
 package life.genny.rules;
-
 import io.vertx.core.json.JsonObject;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventBtnClickMessage;
