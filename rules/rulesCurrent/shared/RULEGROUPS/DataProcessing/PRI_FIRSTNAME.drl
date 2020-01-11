@@ -21,7 +21,8 @@ import java.util.ArrayList;
 
 rule "PRI_FIRSTNAME"
     ruleflow-group 'DataProcessing'
-        salience 500 
+        salience 1000 
+        no-loop
     when
       beUtils : BaseEntityUtils()
 	  serviceToken : GennyToken( code == "PER_SERVICE") 
@@ -56,7 +57,7 @@ rule "PRI_FIRSTNAME"
 		
 		
 
-		retract(answer);
+		retract(answer); 
 		update(answersToSave);
 	
 end
