@@ -19,7 +19,7 @@ rule "OFFERED_TO_PLACED"
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		newApplication : BaseEntity()
 		output : OutputParam()
-		bucketCode : String(bucketCode.equals("Offered"))
+		bucketCode : String(bucketCode.equals("OFFERED"))
 		controlSignalCode : String(controlSignalCode.equals("FORWARD"))
 
 	  
@@ -28,7 +28,7 @@ rule "OFFERED_TO_PLACED"
  		System.out.println("OFFERED_TO_PLACED: newApplication = " + newApplication.getCode());
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
- 		Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_STATUS","Placed");
+ 		Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_STATUS","PLACED");
  		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
  		beUtils.saveAnswer(answer);
 

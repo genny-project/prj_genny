@@ -19,7 +19,7 @@ rule "INTERVIEW_TO_OFFERED"
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		newApplication : BaseEntity()
 		output : OutputParam()
-		bucketCode : String(bucketCode.equals("Interview"))
+		bucketCode : String(bucketCode.equals("INTERVIEWED"))
 		controlSignalCode : String(controlSignalCode.equals("FORWARD"))
 
 	  
@@ -28,7 +28,7 @@ rule "INTERVIEW_TO_OFFERED"
  		System.out.println("INTERVIEW_TO_OFFERED: newApplication = " + newApplication.getCode());
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
- 		Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_STATUS","Offered");
+ 		Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_STATUS","OFFERED");
  		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
  		beUtils.saveAnswer(answer);
 

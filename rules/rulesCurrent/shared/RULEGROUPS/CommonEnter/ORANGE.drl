@@ -17,7 +17,7 @@ rule "ORANGE"
 	 	userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		newApplication : BaseEntity()
-		colourCode : String(colourCode.equals("Orange"))
+		colourCode : String(colourCode.equals("ORANGE"))
 
 	  
      then

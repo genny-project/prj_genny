@@ -19,7 +19,7 @@ rule "PLACED_TO_PROGRESS"
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		newApplication : BaseEntity()
 		output : OutputParam()
-		bucketCode : String(bucketCode.equals("Placed"))
+		bucketCode : String(bucketCode.equals("PLACED"))
 		controlSignalCode : String(controlSignalCode.equals("FORWARD"))
 
 	  
@@ -28,7 +28,7 @@ rule "PLACED_TO_PROGRESS"
  		System.out.println("PLACED_TO_PROGRESS: newApplication = " + newApplication.getCode());
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
- 		Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_STATUS","Progress");
+ 		Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_STATUS","PROGRESS");
  		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
  		beUtils.saveAnswer(answer);
 

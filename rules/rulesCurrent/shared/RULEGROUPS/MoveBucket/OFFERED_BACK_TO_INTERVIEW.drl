@@ -19,7 +19,7 @@ rule "OFFERED_BACK_TO_INTERVIEW"
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		newApplication : BaseEntity()
 		output : OutputParam()
-		bucketCode : String(bucketCode.equals("Offered"))
+		bucketCode : String(bucketCode.equals("OFFERED"))
 		controlSignalCode : String(controlSignalCode.equals("BACKWARD"))
 
 	  
@@ -28,7 +28,7 @@ rule "OFFERED_BACK_TO_INTERVIEW"
  		System.out.println("OFFERED_BACK_TO_INTERVIEW: newApplication = " + newApplication.getCode());
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
- 		Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_STATUS","Interview");
+ 		Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_STATUS","INTERVIEWED");
  		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
  		beUtils.saveAnswer(answer);
 
