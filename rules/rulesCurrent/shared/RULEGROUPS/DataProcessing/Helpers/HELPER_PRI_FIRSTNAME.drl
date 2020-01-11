@@ -52,7 +52,7 @@ rule "HELPER_PRI_FIRSTNAME.drl"
             	case "male":
             		genderAnswer = new Answer(sourceCode, targetCode, "LNK_GENDER_SELECT", "SEL_GENDER_MALE",false,true);
             		answersToSave.add(genderAnswer);
-            		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_GENDER", "SEL_GENDER_MALE",false,true));
+            		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_GENDER", "MALE",false,true));
             		break;
             	case "female":
            			genderAnswer = new Answer(sourceCode, targetCode, "LNK_GENDER_SELECT", "SEL_GENDER_FEMALE",false,true);
