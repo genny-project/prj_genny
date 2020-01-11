@@ -973,7 +973,9 @@ newCode = newCode.toUpperCase();
 newApplication = beUtils.create(newCode, newCode);
 kcontext.setVariable(&quot;newApplication&quot;, newApplication);
 System.out.println(&quot;newApplication = &quot; + newApplication);
-System.out.println(&quot;>>>>>>>>>>>> &quot; + newApplication.getCode() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);</bpmn2:script>
+System.out.println(&quot;>>>>>>>>>>>> &quot; + newApplication.getCode() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);
+
+</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:exclusiveGateway id="ExclusiveGateway_1" name="Enter" gatewayDirection="Converging">
       <bpmn2:incoming>SequenceFlow_28</bpmn2:incoming>
@@ -1435,13 +1437,13 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newApplication.getCode() + &quot;
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_1" bpmnElement="StartEvent_2">
         <dc:Bounds height="36.0" width="36.0" x="25.0" y="362.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_6">
           <dc:Bounds height="11.0" width="53.0" x="17.0" y="398.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_4" bpmnElement="ScriptTask_4" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="495.0" y="355.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_29">
           <dc:Bounds height="11.0" width="52.0" x="524.0" y="374.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -1660,25 +1662,25 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newApplication.getCode() + &quot;
         <di:waypoint xsi:type="dc:Point" x="61.0" y="380.0"/>
         <di:waypoint xsi:type="dc:Point" x="80.0" y="380.0"/>
         <di:waypoint xsi:type="dc:Point" x="99.0" y="381.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_59"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_18" bpmnElement="SequenceFlow_18" sourceElement="BPMNShape_ExclusiveGateway_1" targetElement="BPMNShape_ScriptTask_4">
         <di:waypoint xsi:type="dc:Point" x="462.0" y="380.0"/>
         <di:waypoint xsi:type="dc:Point" x="478.0" y="380.0"/>
         <di:waypoint xsi:type="dc:Point" x="495.0" y="380.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_73"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_22" bpmnElement="SequenceFlow_22" sourceElement="BPMNShape_ScriptTask_4" targetElement="BPMNShape_SubProcess_1">
         <di:waypoint xsi:type="dc:Point" x="605.0" y="380.0"/>
         <di:waypoint xsi:type="dc:Point" x="615.0" y="380.0"/>
         <di:waypoint xsi:type="dc:Point" x="625.0" y="380.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_75"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_38" bpmnElement="SequenceFlow_38" sourceElement="BPMNShape_ScriptTask_3" targetElement="BPMNShape_Task_5">
         <di:waypoint xsi:type="dc:Point" x="209.0" y="381.0"/>
         <di:waypoint xsi:type="dc:Point" x="235.0" y="380.0"/>
         <di:waypoint xsi:type="dc:Point" x="262.0" y="380.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_76"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
