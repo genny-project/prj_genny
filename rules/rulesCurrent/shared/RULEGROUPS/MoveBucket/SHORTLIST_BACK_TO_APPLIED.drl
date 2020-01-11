@@ -19,7 +19,7 @@ rule "SHORTLIST_BACK_TO_APPLIED"
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		newApplication : BaseEntity()
 		output : OutputParam()
-		bucketCode : String(bucketCode.equals("Shortlist"))
+		bucketCode : String(bucketCode.equals("SHORTLISTED"))
 		controlSignalCode : String(controlSignalCode.equals("BACKWARD"))
 
 	  
@@ -28,7 +28,7 @@ rule "SHORTLIST_BACK_TO_APPLIED"
  		System.out.println("SHORTLIST_BACK_TO_APPLIED: newApplication = " + newApplication.getCode());
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
- 		Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_STATUS","Applied");
+ 		Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_STATUS","APPLIED");
  		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
  		beUtils.saveAnswer(answer);
 

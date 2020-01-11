@@ -19,7 +19,7 @@ rule "APPLIED_TO_APPLIED"
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		newApplication : BaseEntity()
 		output : OutputParam()
-		bucketCode : String(bucketCode.equals("Applied"))
+		bucketCode : String(bucketCode.equals("APPLIED"))
 		controlSignalCode : String(controlSignalCode.equals("First"))
 
 	  

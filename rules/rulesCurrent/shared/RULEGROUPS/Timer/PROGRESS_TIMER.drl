@@ -24,8 +24,8 @@ rule "PROGRESS_TIMER"
      then
  		System.out.println("Progress Timer: Rule fired" );  		
  		
-		output.setResultCode("PT1S");
-		output.setTargetCode("PT2S");
+		output.setResultCode("PT15S");
+		output.setTargetCode("PT30S");
 
 	
 		retract(bucketCode)

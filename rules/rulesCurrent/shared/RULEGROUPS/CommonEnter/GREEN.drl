@@ -17,7 +17,7 @@ rule "GREEN"
 	 	userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		newApplication : BaseEntity()
-		colourCode : String(colourCode.equals("Green"))
+		colourCode : String(colourCode.equals("GREEN"))
 
 	  
      then
@@ -28,7 +28,6 @@ rule "GREEN"
 	/*  red: '#cc0000' */
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
- 	/* Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_BUCKET_CODE","SHORTLIST"); */
  		Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_STATUS_COLOR","#5cb85c");
  		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
  		beUtils.saveAnswer(answer);
