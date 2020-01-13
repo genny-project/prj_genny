@@ -46,8 +46,13 @@ import org.jbpm.test.services.TestIdentityProvider;
 import org.jbpm.test.services.TestUserGroupCallbackImpl;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.kie.api.KieBase;
+import org.kie.api.KieServices;
+import org.kie.api.runtime.KieSession;
+import org.kie.api.runtime.KieSessionConfiguration;
 import org.kie.api.runtime.manager.RuntimeEngine;
 import org.kie.api.runtime.process.WorkItemManager;
+import org.kie.api.runtime.rule.FactHandle;
 import org.kie.api.task.model.Comment;
 import org.kie.api.task.model.Group;
 import org.kie.api.task.model.OrganizationalEntity;
@@ -55,6 +60,7 @@ import org.kie.api.task.model.Status;
 import org.kie.api.task.model.Task;
 import org.kie.api.task.model.TaskSummary;
 import org.kie.api.task.model.User;
+import org.kie.internal.runtime.StatefulKnowledgeSession;
 import org.kie.internal.runtime.manager.context.EmptyContext;
 import org.kie.internal.task.api.TaskModelProvider;
 import org.kie.internal.task.api.model.InternalComment;
@@ -74,6 +80,7 @@ import life.genny.eventbus.VertxCache;
 import life.genny.jbpm.customworkitemhandlers.CheckTasksWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.AskQuestionTaskWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowFrame;
+import life.genny.model.OutputParamTreeSet;
 import life.genny.models.BaseEntityImport;
 import life.genny.models.Frame3;
 import life.genny.models.FramePosition;
@@ -83,6 +90,7 @@ import life.genny.models.Theme;
 import life.genny.models.ThemeAttributeType;
 import life.genny.models.ThemePosition;
 import life.genny.qwanda.Answer;
+import life.genny.qwanda.Answers;
 import life.genny.qwanda.Ask;
 import life.genny.qwanda.Context;
 import life.genny.qwanda.ContextType;
@@ -107,6 +115,7 @@ import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.rules.QRules;
+import life.genny.rules.RulesLoader;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.FrameUtils2;
 import life.genny.utils.GennyJbpmBaseTest;
@@ -193,6 +202,23 @@ public class AdamTest {
 				gks.start();
 				
 				gks.injectSignal("initProject"); // This should initialise everything
+				gks.injectEvent("authInitMsg",newUser2A); // log in as new user
+				gks.advanceSeconds(5, false);
+				gks.showStatuses("PER_USER1","PER_USER2");
+
+				
+				// Now answer a question
+
+				gks.injectAnswer("PRI_FIRSTNAME",newUser2A);
+				gks.injectAnswer("PRI_LASTNAME", newUser2A);
+				gks.injectAnswer("PRI_DOB", newUser2A);
+				gks.injectAnswer("PRI_PREFERRED_NAME", newUser2A);
+				gks.injectAnswer("PRI_EMAIL", newUser2A);
+				gks.injectAnswer("PRI_MOBILE", newUser2A);
+				gks.injectAnswer("PRI_USER_PROFILE_PICTURE", newUser2A);
+				gks.injectAnswer("PRI_ADDRESS_FULL", newUser2A);
+				
+				gks.injectEvent("QUE_SUBMIT",newUser2A);
 				
 				
 				// Now import a google doc/ xls file and generate a List of BaseEntityImports
@@ -207,14 +233,17 @@ public class AdamTest {
 					 BaseEntity be = beUtils.create(beImport.getCode(), beImport.getName());
 					 List<Answer> answers = new ArrayList<Answer>();
 					 for (Tuple2<String,String> attributeCodeValue : beImport.getAttributeValuePairList()) {
-						 Answer answer = new Answer(be.getCode(),be.getCode(),attributeCodeValue._1,attributeCodeValue._1);
+						 Answer answer = new Answer(be.getCode(),be.getCode(),attributeCodeValue._1,attributeCodeValue._2);
 						 answers.add(answer);
 					 }
 					
 					 QDataAnswerMessage msg = new QDataAnswerMessage(answers);
 					 msg.setToken(newUser2A.getToken());
-					 // now inject into teh rules!
-					 gks.injectMessage(msg);
+					 // now inject into a rulegroup
+					 gks.injectEvent(msg, newUser2A);
+
+					 
+					 
 				 }
 				 
 				 
@@ -230,6 +259,25 @@ public class AdamTest {
 				}
 			}
 		}
+	   
+	   private void runRules(GennyToken serviceToken, GennyToken userToken)
+	   {
+			KieSessionConfiguration ksconf = KieServices.Factory.get().newKieSessionConfiguration();
+			// ksconf.setOption(TimedRuleExecutionOption.YES);
+
+			KieSession newKieSession = null;
+
+			OutputParam output = new OutputParam();
+			Answers answersToSave = new Answers();
+
+				KieBase kieBase = RulesLoader.getKieBaseCache().get(serviceToken.getRealm());
+				newKieSession = (StatefulKnowledgeSession) kieBase.newKieSession(ksconf, RulesLoader.env);
+
+//			newKieSession = (StatefulKnowledgeSession)this.runtimeEngine.getKieSession();
+
+				FactHandle outputParamTreeSetHandle = newKieSession.insert(new OutputParamTreeSet());
+
+	   }
 	   
 		public Map<String,String> getFieldMappings()
 		{
