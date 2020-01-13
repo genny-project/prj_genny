@@ -31,7 +31,7 @@ rule "PRI_SEARCH_TEXT"
     when
       beUtils : BaseEntityUtils()
 	  serviceToken : GennyToken( code == "PER_SERVICE")
-	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" )
+	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" && (!value.contains(":")) )   /* this is a pure search */
 	  output : OutputParam( )
 
      then

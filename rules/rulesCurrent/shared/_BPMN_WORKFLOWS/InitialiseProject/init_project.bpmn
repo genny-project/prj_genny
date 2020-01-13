@@ -179,7 +179,7 @@
           <drools:metaValue><![CDATA[GenerateFrames]]></drools:metaValue>
         </drools:metaData>
         <drools:onEntry-script scriptFormat="http://www.java.com/java">
-          <drools:script>System.out.println(&quot;Denerating Frame&quot;);</drools:script>
+          <drools:script>System.out.println(&quot;Generating Frames in initPrject&quot;);</drools:script>
         </drools:onEntry-script>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_15</bpmn2:incoming>
@@ -478,7 +478,7 @@ kcontext.setVariable(&quot;message&quot;,(QEventMessage)sessionFacts.getMessage(
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_5" bpmnElement="Task_5" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="770.0" y="95.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_12">
           <dc:Bounds height="11.0" width="87.0" x="781.0" y="114.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -557,7 +557,7 @@ kcontext.setVariable(&quot;message&quot;,(QEventMessage)sessionFacts.getMessage(
         <di:waypoint xsi:type="dc:Point" x="880.0" y="120.0"/>
         <di:waypoint xsi:type="dc:Point" x="915.0" y="120.0"/>
         <di:waypoint xsi:type="dc:Point" x="950.0" y="120.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_22"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">

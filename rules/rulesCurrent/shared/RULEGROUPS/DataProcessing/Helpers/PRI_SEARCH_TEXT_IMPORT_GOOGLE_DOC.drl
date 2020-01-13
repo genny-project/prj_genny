@@ -1,0 +1,92 @@
+package life.genny.rules;
+import life.genny.qwanda.message.QDataAnswerMessage;
+import life.genny.models.GennyToken;
+import life.genny.rules.QRules;
+import life.genny.utils.BaseEntityUtils;
+import life.genny.qwanda.Answer;
+import io.vertx.core.json.JsonObject;
+import java.util.Map;
+import java.util.HashMap;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import com.google.gson.reflect.TypeToken;
+import life.genny.qwandautils.JsonUtils;
+import life.genny.utils.VertxUtils;
+import life.genny.utils.TableUtils;
+import life.genny.models.TableData;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.entity.SearchEntity;
+import life.genny.qwanda.Ask;
+import life.genny.qwanda.message.QDataAskMessage;
+import life.genny.utils.OutputParam;
+import life.genny.jbpm.customworkitemhandlers.ShowFrame;
+import life.genny.models.BaseEntityImport;
+import io.vavr.Tuple;
+import io.vavr.Tuple2;
+import life.genny.utils.ImportUtils;
+
+
+
+rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC"
+    ruleflow-group 'DataProcessing'
+        salience 500
+    when
+      beUtils : BaseEntityUtils()
+	  serviceToken : GennyToken( code == "PER_SERVICE")
+	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" && (value.startsWith("googleid:atmc")) )   /* this is a pure search */
+	  output : OutputParam( )
+
+     then
+  		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer);
+				/* Now import a google doc/ xls file and generate a List of BaseEntityImports */
+				String googleDocId = null;
+				String sheetId = "Sheet1"; /* default */
+				String[] split = answer.getValue().split(":");
+				
+				if (split.length == 3) {
+					googleDocId = split[2];
+				} else if (split.length == 4) {
+					googleDocId = split[2];
+					sheetId = split[3];
+				}
+				
+			 Map<String,String> fieldMapping = new HashMap<String,String>();
+			 fieldMapping.put("Batch".toLowerCase(), "PRI_BATCH_NO");
+			 fieldMapping.put("State".toLowerCase(), "PRI_IMPORT_STATE");
+			 fieldMapping.put("Student ID".toLowerCase(), "PRI_STUDENT_ID");
+			 fieldMapping.put("Disp".toLowerCase(), "PRI_DISP");
+			 fieldMapping.put("First Name".toLowerCase(), "PRI_FIRSTNAME");
+			 fieldMapping.put("Last Name".toLowerCase(), "PRI_LASTNAME");
+			 fieldMapping.put("PHONE".toLowerCase(), "PRI_PHONE");
+			 fieldMapping.put("EMAIL".toLowerCase(), "PRI_EMAIL");
+			 fieldMapping.put("TARGET START DATE".toLowerCase(), "PRI_TARGET_START_DATE");
+			 fieldMapping.put("ADDRESS".toLowerCase(), "PRI_IMPORT_ADDRESS");
+			 fieldMapping.put("SUBURB".toLowerCase(), "PRI_IMPORT_SUBURB");
+			 fieldMapping.put("Postcode".toLowerCase(), "PRI_IMPORT_POSTCODE");
+				
+				 List<BaseEntityImport> beImports = ImportUtils.importGoogleDoc(googleDocId, sheetId,fieldMapping);
+				 
+				 /* now generate the baseentity and send through all the answers */
+				 for (BaseEntityImport beImport : beImports) {
+					 BaseEntity be = beUtils.create(beImport.getCode(), beImport.getName());
+					 for (Tuple2<String,String> attributeCodeValue : beImport.getAttributeValuePairList()) {
+						 Answer answer2 = new Answer(be.getCode(),be.getCode(),attributeCodeValue._1,attributeCodeValue._2);
+						 insert(answer2); /* inject the answer */
+					 }
+					Answer isIntern = new Answer(be.getCode(),be.getCode(),"PRI_IS_INTERN","true");
+					insert(isIntern); /* inject the answer */
+					Answer status = new Answer(be.getCode(),be.getCode(),"PRI_STATUS","AVAILABLE");
+					insert(status); /* inject the answer */
+					
+				 }
+
+ 
+  	     output.setTypeOfResult("NONE");
+  	     output.setResultCode("NONE");  /* dont display anything new */
+
+		retract(answer);
+		 update(output);
+
+end

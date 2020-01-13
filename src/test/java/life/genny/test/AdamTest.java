@@ -201,6 +201,7 @@ public class AdamTest {
 				GennyToken newUser1A = gks.createToken("PER_USER1");
 				gks.start();
 				
+
 				gks.injectSignal("initProject"); // This should initialise everything
 				gks.injectEvent("authInitMsg",newUser2A); // log in as new user
 				gks.advanceSeconds(5, false);
@@ -241,9 +242,6 @@ public class AdamTest {
 					 msg.setToken(newUser2A.getToken());
 					 // now inject into a rulegroup
 					 gks.injectEvent(msg, newUser2A);
-
-					 
-					 
 				 }
 				 
 				 

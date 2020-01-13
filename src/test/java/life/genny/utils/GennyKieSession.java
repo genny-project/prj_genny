@@ -1434,8 +1434,17 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		 private void setupMessages()
 		 {
 			 	messages = new HashMap<String,Object>();
-				createMessage("initProject",new SessionFacts(serviceToken, null, new QEventMessage("EVT_MSG", "INIT_STARTUP")));
-				createMessage("authInitMsg",new QEventMessage("EVT_MSG", "AUTH_INIT"));
+			 	QEventMessage initProjMsg = new QEventMessage("EVT_MSG", "INIT_STARTUP");
+		//	 	initProjMsg.getData().setValue("NO_RULES_CHANGED");
+				createMessage("initProject",new SessionFacts(serviceToken, null, initProjMsg));
+
+//			 	QEventMessage initProjMsgFrames = new QEventMessage("EVT_MSG", "INIT_STARTUP");
+//			 	initProjMsgFrames.getData().setValue("NO_RULES_CHANGED");
+//				createMessage("initProjectFrames",new SessionFacts(serviceToken, null, initProjMsgFrames));
+
+				QEventMessage authMsg = new QEventMessage("EVT_MSG", "AUTH_INIT");
+				createMessage("authInitMsg",authMsg);
+
 				createMessage("QUE_SUBMIT",new QEventMessage("EVT_MSG", "QUE_SUBMIT"));
 				createMessage("QUE_CANCEL",new QEventMessage("EVT_MSG", "QUE_CANCEL"));
 				createMessage("QUE_RESET",new QEventMessage("EVT_MSG", "QUE_RESET"));
