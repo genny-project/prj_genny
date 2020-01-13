@@ -34,6 +34,8 @@ rule "PRI_PHONE"
 			/* convert to E64 */
 			System.out.println("Phone number is "+phonenumber);
 			if (phonenumber != null) {
+				/* remove all non digits */
+				phonenumber  = phonenumber.replaceAll("[^\\d]", "");
 				if (!phonenumber.startsWith("+")) {
 					if (phonenumber.startsWith("0")) {
 						phonenumber = "61"+phonenumber.substring(1); /* remove the 0  and assume Australian*/
