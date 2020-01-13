@@ -67,26 +67,31 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC"
 			 fieldMapping.put("Postcode".toLowerCase(), "PRI_IMPORT_POSTCODE");
 				
 				 List<BaseEntityImport> beImports = ImportUtils.importGoogleDoc(googleDocId, sheetId,fieldMapping);
-				 
+				 System.out.println("Importing Rule : "+beImports.size()+" items");
 				 /* now generate the baseentity and send through all the answers */
+				 List<Answer> answers = new ArrayList<Answer>();
 				 for (BaseEntityImport beImport : beImports) {
 					 BaseEntity be = beUtils.create(beImport.getCode(), beImport.getName());
 					 for (Tuple2<String,String> attributeCodeValue : beImport.getAttributeValuePairList()) {
 						 Answer answer2 = new Answer(be.getCode(),be.getCode(),attributeCodeValue._1,attributeCodeValue._2);
-						 insert(answer2); /* inject the answer */
+						 System.out.println("Importing "+answer2);
+						/* insert(answer2);*/ /* inject the answer */
+						answers.add(answer2);
 					 }
 					Answer isIntern = new Answer(be.getCode(),be.getCode(),"PRI_IS_INTERN","true");
-					insert(isIntern); /* inject the answer */
+				/*	insert(isIntern);*/ /* inject the answer */
+				answers.add(isIntern);
 					Answer status = new Answer(be.getCode(),be.getCode(),"PRI_STATUS","AVAILABLE");
-					insert(status); /* inject the answer */
-					
+				/*	insert(status);*/ /* inject the answer */
+					answers.add(status);
 				 }
-
- 
+		QDataAnswerMessage msg = new QDataAnswerMessage(answers);
+		
+ 			System.out.println("Injected all Answers ");
   	     output.setTypeOfResult("NONE");
   	     output.setResultCode("NONE");  /* dont display anything new */
 
 		retract(answer);
 		 update(output);
-
+		insert(msg);
 end
