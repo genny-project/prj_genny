@@ -65,12 +65,16 @@ import com.google.gson.reflect.TypeToken;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import io.vertx.core.json.JsonObject;
+import life.genny.bootxport.bootx.GoogleImportService;
+import life.genny.bootxport.bootx.XlsxImport;
+import life.genny.bootxport.bootx.XlsxImportOnline;
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
 import life.genny.jbpm.customworkitemhandlers.CheckTasksWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.AskQuestionTaskWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowFrame;
+import life.genny.models.BaseEntityImport;
 import life.genny.models.Frame3;
 import life.genny.models.FramePosition;
 import life.genny.models.GennyToken;
@@ -107,6 +111,7 @@ import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.FrameUtils2;
 import life.genny.utils.GennyJbpmBaseTest;
 import life.genny.utils.GennyKieSession;
+import life.genny.utils.ImportUtils;
 import life.genny.utils.OutputParam;
 import life.genny.utils.RulesUtils;
 import life.genny.utils.SessionFacts;
@@ -158,6 +163,117 @@ public class AdamTest {
 	    }
 
 	   @Test
+		public void importGoogleIdTest()
+		{
+			System.out.println("Import Google IDTest");
+
+
+			GennyKieSession gks = null;
+
+			try {
+				gks = GennyKieSession.builder(serviceToken,true)
+						.addDrl("SignalProcessing")
+						.addDrl("DataProcessing")
+						.addDrl("EventProcessing")
+						.addJbpm("Lifecycles")
+						.addJbpm("adam_user1.bpmn")
+						.addJbpm("adam_user2.bpmn")
+						.addJbpm("adam_user3.bpmn")
+						.addDrl("AuthInit")
+						.addJbpm("AuthInit")
+						.addDrl("InitialiseProject")
+						.addJbpm("InitialiseProject")
+						.build();
+				
+				gks.createTestUsersGroups();
+				
+				GennyToken newUser2A = gks.createToken("PER_USER2"); 
+				GennyToken newUser2B = gks.createToken("PER_USER2"); 
+				GennyToken newUser1A = gks.createToken("PER_USER1");
+				gks.start();
+				
+				gks.injectSignal("initProject"); // This should initialise everything
+				
+				
+				// Now import a google doc/ xls file and generate a List of BaseEntityImports
+				
+				String googleDocId = System.getenv("GOOGLE_DOC_ID");
+				 List<BaseEntityImport> beImports = ImportUtils.importGoogleDoc(googleDocId, "Sheet1",getFieldMappings());
+				 System.out.println(beImports);
+				} catch (Exception e) {
+				e.printStackTrace();
+			
+			}
+			finally {
+				if (gks!=null) {
+					gks.close();
+				}
+			}
+		}
+	   
+		public Map<String,String> getFieldMappings()
+		{
+			 Map<String,String> fieldMapping = new HashMap<String,String>();
+			 fieldMapping.put("Batch".toLowerCase(), "PRI_BATCH_NO");
+			 fieldMapping.put("State".toLowerCase(), "PRI_IMPORT_STATE");
+			 fieldMapping.put("Student ID".toLowerCase(), "PRI_STUDENT_ID");
+			 fieldMapping.put("Disp".toLowerCase(), "PRI_IMPORT_DISP");
+			 fieldMapping.put("First Name".toLowerCase(), "PRI_FIRSTNAME");
+			 fieldMapping.put("Last Name".toLowerCase(), "PRI_LASTNAME");
+			 fieldMapping.put("PHONE".toLowerCase(), "PRI_IMPORT_PHONE");
+			 fieldMapping.put("EMAIL".toLowerCase(), "PRI_EMAIL");
+			 fieldMapping.put("TARGET START DATE".toLowerCase(), "PRI_TARGET_START_DATE");
+			 fieldMapping.put("ADDRESS".toLowerCase(), "PRI_IMPORT_ADDRESS");
+			 fieldMapping.put("SUBURB".toLowerCase(), "PRI_IMPORT_SUBURB");
+			 fieldMapping.put("Postcode".toLowerCase(), "PRI_IMPORT_POSTCODE");
+
+			 return fieldMapping;
+			 
+
+		}
+	   
+		public Integer importGoogleDoc(final String id, Map<String,String> fieldMapping)
+		{					
+			
+			log.info("Importing "+id);
+			Integer count = 0;
+			   try {
+				   GoogleImportService gs = GoogleImportService.getInstance();
+				    XlsxImport xlsImport = new XlsxImportOnline(gs.getService());
+			//	    Realm realm = new Realm(xlsImport,id);
+//				    realm.getDataUnits().stream()
+//				        .forEach(data -> System.out.println(data.questions.size()));
+				    Set<String> keys = new HashSet<String>();
+				    for (String field : fieldMapping.keySet()) {
+				    	keys.add(field);
+				    }
+				      Map<String, Map<String,String>> mapData = xlsImport.mappingRawToHeaderAndValuesFmt(id, "Sheet1", keys);
+				      Integer rowIndex = 0;
+				      for (Map<String,String> row : mapData.values()) 
+				      {
+				    	  String rowStr = "Row:"+rowIndex+"->";
+				    	  for (String col : row.keySet()) {
+				    		  String val = row.get(col.trim());
+				    		  if (val!=null) {
+				    			  val = val.trim();
+				    		  }
+				    		  String attributeCode = fieldMapping.get(col);
+				    		  rowStr += attributeCode+"="+val + ",";
+				    	  }
+				    	  rowIndex++;
+				    	  System.out.println(rowStr);
+				      }
+				      
+				    } catch (Exception e1) {
+				      return 0;
+				    }
+
+			
+			return count;
+		}
+	   
+	   
+	 //  @Test
 	   public void generateCapabilitiesTest()
 	   {
 			System.out.println("GenerateCapabilities Test");
