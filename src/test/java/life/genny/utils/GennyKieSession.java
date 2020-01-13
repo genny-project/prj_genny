@@ -1490,6 +1490,18 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		
 			 return gToken;
 		 }
+		 
+		 public GennyToken createToken(String code, String rolesString)
+		 {
+			 String name = StringUtils.capitaliseAllWords(code);
+			 GennyToken gToken = GennyJbpmBaseTest.createGennyToken(this.serviceToken.getRealm(), code, name, rolesString);
+			 // create the user!
+			 BaseEntityUtils beUtils = new BaseEntityUtils(gToken);
+			 beUtils.setServiceToken(this.serviceToken);
+			 
+		
+			 return gToken;
+		 }
 
 
 }
