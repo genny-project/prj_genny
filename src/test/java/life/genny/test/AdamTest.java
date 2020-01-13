@@ -187,7 +187,7 @@ public class AdamTest {
 				
 				gks.createTestUsersGroups();
 				
-				GennyToken newUser2A = gks.createToken("PER_USER2"); 
+				GennyToken newUser2A = gks.createToken("PER_USER2","user,test,admin"); 
 				GennyToken newUser2B = gks.createToken("PER_USER2"); 
 				GennyToken newUser1A = gks.createToken("PER_USER1");
 				gks.start();
@@ -199,6 +199,26 @@ public class AdamTest {
 				
 				String googleDocId = System.getenv("GOOGLE_DOC_ID");
 				 List<BaseEntityImport> beImports = ImportUtils.importGoogleDoc(googleDocId, "Sheet1",getFieldMappings());
+				 
+				 // now generate the baseentity and send through all the answers
+				 BaseEntityUtils beUtils = new BaseEntityUtils(newUser2A);
+				 beUtils.setServiceToken(serviceToken);
+				 for (BaseEntityImport beImport : beImports) {
+					 BaseEntity be = beUtils.create(beImport.getCode(), beImport.getName());
+					 List<Answer> answers = new ArrayList<Answer>();
+					 for (Tuple2<String,String> attributeCodeValue : beImport.getAttributeValuePairList()) {
+						 Answer answer = new Answer(be.getCode(),be.getCode(),attributeCodeValue._1,attributeCodeValue._1);
+						 answers.add(answer);
+					 }
+					
+					 QDataAnswerMessage msg = new QDataAnswerMessage(answers);
+					 msg.setToken(newUser2A.getToken());
+					 // now inject into teh rules!
+					 gks.injectMessage(msg);
+				 }
+				 
+				 
+				 
 				 System.out.println(beImports);
 				} catch (Exception e) {
 				e.printStackTrace();
