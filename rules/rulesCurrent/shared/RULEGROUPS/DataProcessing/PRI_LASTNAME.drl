@@ -35,11 +35,11 @@ rule "PRI_LASTNAME"
 		
 		/* Parse json answer and save the individual answers */
 		String lastname = answer.getValue();
-		
+		lastname = WordUtils.Capitalize(lastname);
 		BaseEntity person = beUtils.getBaseEntityByCode(targetCode);
 		String firstname = person.getValue("PRI_FIRSTNAME","");
 					
-		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_LASTNAME", answer.getValue(),false,true));	
+		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_LASTNAME", lastname,false,true));	
 			
 		String name = firstname + " "+lastname;
 		name = name.trim();	

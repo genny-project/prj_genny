@@ -24,7 +24,7 @@ rule "PRI_PHONE"
 	  ruleDetails : RuleDetails()
 	  output : OutputParam( )
      then
-		System.out.println(ruleDetails+" "+drools.getRule().getName()+"Processing Answer/Data : " + answer );
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing Answer/Data : " + answer );
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		String targetCode = answer.getTargetCode();
 		
@@ -32,7 +32,7 @@ rule "PRI_PHONE"
 					
 			String phonenumber = answer.getValue();
 			/* convert to E64 */
-			System.out.println("Phone number is "+phonenumber);
+			
 			if (phonenumber != null) {
 				/* remove all non digits */
 				phonenumber  = phonenumber.replaceAll("[^\\d]", "");
@@ -42,6 +42,7 @@ rule "PRI_PHONE"
 					}
 				}
 			}
+			System.out.println(ruleDetails+" "+drools.getRule().getName()+" RAw Phone number is "+answer.getValue()+" , fixed number is "+phonenumber);
 			answer.setValue(phonenumber);
 			answer.setChangeEvent(false); /* no attribute change */
 			answersToSave.add(answer);
