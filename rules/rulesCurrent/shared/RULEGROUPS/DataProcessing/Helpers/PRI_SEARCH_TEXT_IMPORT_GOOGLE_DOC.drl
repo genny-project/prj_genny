@@ -89,5 +89,6 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC"
   	     output.setResultCode("NONE");  /* dont display anything new */
 
 		retract(answer);
+		retract(beUtils);
 		insert(msg);
 end
