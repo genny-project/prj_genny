@@ -50,7 +50,7 @@ rule "HELPER_PRI_FIRSTNAME.drl"
         } catch (UnsupportedEncodingException ex) {
            
         }
-		
+		System.out.println("HELPER FIRSTNAME: raw="+firstnameRaw+" : encoded="+encodedFirstname);
 		
         JsonObject genderObj = new JsonObject( QwandaUtils.apiGet("https://api.genderize.io/?name=" +encodedFirstname , null));
         String gender = genderObj.getString("gender");

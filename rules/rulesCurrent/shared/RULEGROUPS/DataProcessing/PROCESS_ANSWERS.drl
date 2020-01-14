@@ -19,7 +19,7 @@ rule "PROCESS_ANSWERS"
 	  dom : OutputParamTreeSet()
     then
  		System.out.println("Rule -> PROCESS_ANSWERS Processing Answer/Data!! :  user=" + userToken.getUserCode()); 
- 		System.out.println("dom = "+dom);
+ 		/* System.out.println("dom = "+dom); */
  		BaseEntityUtils beUtils = new BaseEntityUtils(userToken); 
 		beUtils.setServiceToken(serviceToken);
 		System.out.println("Process Answwers: beUtils created ");
@@ -30,7 +30,7 @@ rule "PROCESS_ANSWERS"
  		for (Answer answer : dataMsg.getItems()) {
  			answer.setInferred(false); /* force inference from the user to be off. This ensures that if this flag is set it is from internal */
  			insert(answer);
- 			System.out.println("Process Answwers: inserted answer  "+answer);
+ 			System.out.println("Process Answers: inserted answer  "+answer.getTargetCode()+":"+answer.getAttributeCode()); 
  		}
  		insert(beUtils);
 end
