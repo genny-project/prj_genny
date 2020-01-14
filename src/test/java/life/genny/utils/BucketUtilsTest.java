@@ -429,8 +429,8 @@ public class BucketUtilsTest {
 		List<SearchEntity> bucketSearchBeList = new ArrayList<SearchEntity>();
 
 		try {
-			SearchEntity SBE_AVAILABLE_INTERNS = VertxUtils.getObject(serviceToken.getRealm(), "",
-							"SBE_AVAILABLE_INTERNS", SearchEntity.class, serviceToken.getToken());
+//			SearchEntity SBE_AVAILABLE_INTERNS = VertxUtils.getObject(serviceToken.getRealm(), "",
+//							"SBE_AVAILABLE_INTERNS", SearchEntity.class, serviceToken.getToken());
 			SearchEntity SBE_APPLIED_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
 					"SBE_APPLIED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
 			SearchEntity SBE_SHORTLISTED_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
@@ -444,7 +444,7 @@ public class BucketUtilsTest {
 			SearchEntity SBE_INPROGRESS_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
 					"SBE_INPROGRESS_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
 
-			bucketSearchBeList.add(SBE_AVAILABLE_INTERNS);
+			//bucketSearchBeList.add(SBE_AVAILABLE_INTERNS);
 			bucketSearchBeList.add(SBE_APPLIED_APPLICATIONS);
 			bucketSearchBeList.add(SBE_SHORTLISTED_APPLICATIONS);
 			bucketSearchBeList.add(SBE_INTERVIEWED_APPLICATIONS);
@@ -696,10 +696,11 @@ public class BucketUtilsTest {
 
 	}
 
-	public void sendCards(Frame3 FRM_BUCKET_CONTENT, GennyToken userToken) {
+	public void sendCards(Frame3 FRM_BUCKET_CONTENT, GennyToken userToken, GennyToken serviceToken ) {
 		
 		/* initialize beUtils */
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		beUtils.setServiceToken(serviceToken);
 
 		/* initialize bucketUtils */
 		BucketUtilsTest bucketUtils = new BucketUtilsTest(beUtils);
@@ -763,16 +764,19 @@ public class BucketUtilsTest {
 			/* loop through the s */
 			for (SearchEntity searchBe : searchBeList) {
 
+				System.out.println("inside search loop  ::");
 				String code = searchBe.getCode().split("SBE_")[1];
+				System.out.println("code  ::" +code );
 
 				/* get the attributes from searchObj */
 				Map<String, String> columns = searchUtils.getTableColumns(searchBe);
 
 				/* fetch the search results */
-				QDataBaseEntityMessage msg = searchUtils.fetchSearchResults(searchBe, beUtils.getGennyToken());
+				QDataBaseEntityMessage msg = searchUtils.fetchSearchResults(searchBe, serviceToken);
 
 				/* get the application counts */
 				long totalResults = msg.getItems().length;
+				System.out.println("items in bucket " + code + " is :: " + totalResults );
 
 				/* also update the searchBe with the attribute */
 				Answer totalAnswer = new Answer(beUtils.getGennyToken().getUserCode(), searchBe.getCode(),
@@ -836,6 +840,8 @@ public class BucketUtilsTest {
 
 			/* Send asks */
 			for (QDataAskMessage askMsg : askSet) {
+				
+				System.out.println("Cards in the bucket :: " + askMsg.getItems()[0].getName() + " are  :: " + askMsg.getItems()[0].getChildAsks().length);
 
 				askMsg.setToken(userToken.getToken());
 
