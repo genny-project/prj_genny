@@ -13,6 +13,7 @@ import java.util.HashMap;
 import life.genny.utils.VertxUtils;
 import life.genny.qwandautils.JsonUtils;
 import org.apache.commons.lang3.text.WordUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ rule "PRI_FIRSTNAME"
 		
 		/* Parse json answer and save the individual answers */
 		String firstname = answer.getValue();
-		firstname = WordUtils.Capitalize(firstname);
+		firstname = StringUtils.Capitalize(firstname);
 		BaseEntity person = beUtils.getBaseEntityByCode(targetCode);
 		String lastname = person.getValue("PRI_LASTNAME","");
 					
