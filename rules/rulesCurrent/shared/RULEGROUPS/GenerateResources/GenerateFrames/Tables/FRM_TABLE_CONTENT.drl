@@ -59,7 +59,8 @@ rule "FRM_TABLE_CONTENT"
                                 .addTheme("THM_TABLE_ROW_CONTENT_WRAPPER", serviceToken).dataType(tableRowDataType).vcl(VisualControlType.GROUP).weight(1.0).end()
                                 .addTheme("THM_TABLE_ROW", serviceToken).dataType(tableRowDataType).weight(1.0).end()
                                 .addTheme("THM_TABLE_CONTENT", serviceToken).vcl(VisualControlType.GROUP).end()			
-                                .addTheme("THM_TABLE_ROW_CELL", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()			
+                                .addTheme("THM_TABLE_ROW_CELL", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
+                                .addTheme("THM_TABLE_PADDING_RIGHT", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()			
                         .end()
                         .build();
     
