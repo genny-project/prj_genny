@@ -43,12 +43,12 @@ rule "HELPER_PRI_FIRSTNAME.drl"
 		/* Parse json answer and save the individual answers */
 		
 		String firstnameRaw = answer.getValue();
-		
+		String encodedFirstname = firstnameRaw;
 		if (!StringUtils.isBlank(firstnameRaw)) {
 		try {
             encodedFirstname =  URLEncoder.encode(firstnameRaw, StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException(ex.getCause());
+           
         }
 		
 		
