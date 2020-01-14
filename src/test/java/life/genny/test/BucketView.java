@@ -68,7 +68,7 @@ public class BucketView extends GennyJbpmBaseTest {
 		super(false);
 	}
 	
-	@Test
+	//@Test
 	public void tableTest() {
 
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -196,7 +196,7 @@ public class BucketView extends GennyJbpmBaseTest {
 		
 
 	}
-	//@Test
+	@Test
 	public void sendCards() {
 
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -204,6 +204,7 @@ public class BucketView extends GennyJbpmBaseTest {
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
 		BucketUtilsTest bucketUtils = new BucketUtilsTest(beUtils);
+		BucketUtils bucketUtils2 = new BucketUtils(beUtils);
 		
 		System.out.println("running the test");
 
@@ -232,7 +233,8 @@ public class BucketView extends GennyJbpmBaseTest {
 
 
 		
-		bucketUtils.sendCards(FRM_BUCKET_CONTENT, userToken);
+		bucketUtils.sendCards(FRM_BUCKET_CONTENT, userToken, serviceToken);
+		//bucketUtils2.sendCards(FRM_BUCKET_CONTENT, userToken, serviceToken);
 
 	}
 
@@ -911,6 +913,8 @@ public class BucketView extends GennyJbpmBaseTest {
 			for (QDataAskMessage askMsg : askSet) {
 
 				askMsg.setToken(userToken.getToken());
+				
+				System.out.println("Cards in this bucket :: " + askMsg.getItems()[0].getName() + "are" + askMsg.getItems()[0].getChildAsks().length);
 
 				String json = JsonUtils.toJson(askMsg);
 				VertxUtils.writeMsg("webcmds", json);
