@@ -37,7 +37,7 @@ rule "PRI_FIRSTNAME"
 		
 		/* Parse json answer and save the individual answers */
 		String firstname = answer.getValue();
-		firstname = StringUtils.Capitalize(firstname);
+		firstname = StringUtils.capitalize(firstname);
 		BaseEntity person = beUtils.getBaseEntityByCode(targetCode);
 		String lastname = person.getValue("PRI_LASTNAME","");
 					
