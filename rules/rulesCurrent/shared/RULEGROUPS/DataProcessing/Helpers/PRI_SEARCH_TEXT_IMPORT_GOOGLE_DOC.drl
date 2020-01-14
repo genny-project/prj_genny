@@ -77,10 +77,10 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC"
 						 Answer answer2 = new Answer(be.getCode(),be.getCode(),attributeCodeValue._1,attributeCodeValue._2);
 						 System.out.println("Importing "+answer2);
 						answers.add(answer2);
-						if (index > 3) {
+					/*	if (index > 3) {
 						   break;
 						}
-						index++;
+						index++; */
 					 }
 					Answer isIntern = new Answer(be.getCode(),be.getCode(),"PRI_IS_INTERN","true");
 				answers.add(isIntern);
