@@ -37,7 +37,7 @@ rule "THM_PADDING_X_10"
 
 			Theme theme = Theme.builder("THM_PADDING_X_10")
 										.addAttribute()
-											.paddingX(100)
+											.paddingX(10)
 											.bold(true)
 										.end()
 										.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
