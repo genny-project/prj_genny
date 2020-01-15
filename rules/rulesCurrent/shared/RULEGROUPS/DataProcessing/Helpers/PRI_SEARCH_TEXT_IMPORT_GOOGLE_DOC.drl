@@ -92,7 +92,7 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC"
  					/*break;*/
  					count++;
  					if (count > 2) {
- 						break;
+ 						/*break;*/
  					}
 				 }
 				 System.out.println("Aggregated  all Answers ");
