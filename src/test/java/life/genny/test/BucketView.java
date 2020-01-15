@@ -196,6 +196,7 @@ public class BucketView extends GennyJbpmBaseTest {
 		
 
 	}
+	
 	@Test
 	public void sendCards() {
 
@@ -315,7 +316,7 @@ public class BucketView extends GennyJbpmBaseTest {
 			contextListMap = bucketUtils.getCardContextListMap(contextListMap, serviceToken);
 
 			/* get the templat ask for card */
-			Ask templateAsk = bucketUtils.getCardTemplate(serviceToken);
+			//Ask templateAsk = bucketUtils.getCardTemplate();
 
 			/* get all the bucket frames */
 			Frame3 FRM_BUCKET_HEADER = getBucketHeaderFame("FRM_BUCKET_HEADER", "test", "test");
@@ -869,7 +870,7 @@ public class BucketView extends GennyJbpmBaseTest {
 						columns, beUtils.getGennyToken().getUserCode());
 				
 				/* get the templat ask for card */
-				Ask templateAsk = bucketUtils.getCardTemplate(serviceToken);
+				Ask templateAsk = bucketUtils.getCardTemplate();
 
 				/* implement template ask to appAks list */
 				List<Ask> askList = bucketUtils.implementCardTemplate(appAsksList, templateAsk, contextListMap);
