@@ -66,19 +66,24 @@ rule "PRI_ATMC_ADDRESS_GROUP"
 		JsonObject results = json.getJsonArray("results").getJsonObject(0);
 		System.out.println(results);
 		JsonArray address_components = results.getJsonArray("address_components");
-		JsonObject streetNumberJson = address_components.getJsonObject(0);
-
-		JsonObject streetJson = address_components.getJsonObject(1);
-		String street_address = streetNumberJson.getString("short_name")+" "+streetJson.getString("short_name");
-		JsonObject cityJson = address_components.getJsonObject(2);
-		String suburb = cityJson.getString("short_name");
-		JsonObject countryJson = address_components.getJsonObject(5);
-		String country = countryJson.getString("short_name");
-		JsonObject stateJson = address_components.getJsonObject(4);
-		String state2 = stateJson.getString("short_name");
-
-		JsonObject postcodeJson = address_components.getJsonObject(6);
-		String postcode2 = postcodeJson.getString("short_name");
+		
+		/* loop through address_components */
+		Integer index = 0;
+		Integer count = address_components.size();
+		Map<String,String> addressMap = new HashMap<String,String>();
+		for (index=0;index<count;index++) {
+			
+			JsonObject addressComponent = address_components.getJsonObject(index);
+			JsonArray types = addressComponent.getJsonArray("types");
+			String mainType = types.getString(0);
+			addressMap.put(mainType, addressComponent.getString("short_name"));
+		}
+		
+		String streetNumber = (addressMap.get("street_number")==null)?"":addressMap.get("street_number");
+		String streetName = (addressMap.get("route")==null)?"":addressMap.get("route");
+		
+		String street_address = (streetNumber+" "+streetName).trim();
+		
 		JsonObject geometry = results.getJsonObject("geometry");
 		JsonObject location = geometry.getJsonObject("location");
 		Double lat = location.getDouble("lat");
@@ -88,16 +93,16 @@ rule "PRI_ATMC_ADDRESS_GROUP"
 		
 		JsonObject address_json = new JsonObject();
 		address_json.put("street_address", street_address);
-		address_json.put("suburb", suburb);
-		address_json.put("state", state2);
-		address_json.put("country", country);
-		address_json.put("postcode", postcode2);
+		address_json.put("suburb", (addressMap.get("locality")==null?"":addressMap.get("locality")));
+		address_json.put("state",  (addressMap.get("administrative_area_level_1")==null?"":addressMap.get("administrative_area_level_1")));
+		address_json.put("country",  (addressMap.get("country")==null?"":addressMap.get("country")));
+		address_json.put("postcode",  (addressMap.get("postal_code")==null?"":addressMap.get("postal_code")));
 		address_json.put("full_address", full_address);
 		address_json.put("latitude", lat);
 		address_json.put("longitude", lng);
 		
 		String PRI_ADDRESS_JSON = address_json.toString();
-		System.out.println("PRI_ADDRESS_JSON="+PRI_ADDRESS_JSON);			
+		System.out.println("PRI_ADDRESS_JSON="+PRI_ADDRESS_JSON);		
 		Answer fixedAddress = new Answer(sourceCode, targetCode, "PRI_ADDRESS_JSON", PRI_ADDRESS_JSON,false,true);			
 			insert(fixedAddress);
 		}
