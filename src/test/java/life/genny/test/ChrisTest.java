@@ -176,21 +176,29 @@ public class ChrisTest {
 		try {
 			gks = GennyKieSession
 					.builder(serviceToken,true)
-					
-// ADD THE JBPM WORKFLOWS HERE	
-					.addJbpm("startLC.bpmn")
-					.addJbpm("newHostCompanyLC.bpmn")
-					.addJbpm("newEduProLC.bpmn")
+
+
+// ADD THE JBPM WORKFLOWS HERE					
+					.addJbpm("notificationHub2.bpmn")
+					.addJbpm("baseEntityValidation.bpmn")
+					.addJbpm("applicationWorkflow.bpmn")
+					.addJbpm("placementWorkflow.bpmn")
+					.addJbpm("internshipWorkflow.bpmn")
 					
 // ADD THE DROOLS RULES HERE
-//					.addDrl("MoveBucket")
+					.addDrl("MoveBucket")
+					.addDrl("CommonEnter")
+					.addDrl("SpecificEnter")
+					.addDrl("SpecificReminder")
+					.addDrl("Timer")
+					.addDrl("CardStatus")
 
 					.addToken(userToken)
 					.build();
 			
 			gks.start();
 
-			gks.startProcess("startLC");
+			gks.startProcess("applicationWorkflow");
 			
 //            gks.advanceSeconds(5, false);
 //            gks.injectSignal("dynamicControl", "FORWARD"); 			
