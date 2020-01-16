@@ -48,7 +48,7 @@ rule "PRI_PHONE"
 			answersToSave.add(answer);
 			
 			/* Now check if it is an Australian mobile */
-			if ((phonenumber.startsWith("614"))|| (phonenumber.startsWith("615")) {
+			if ((phonenumber.startsWith("614"))|| (phonenumber.startsWith("615"))) {
 				Answer mobile = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_MOBILE",phonenumber);
 				mobile.setChangeEvent(false); /* no attribute change */
 				answersToSave.add(mobile);
