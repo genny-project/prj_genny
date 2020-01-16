@@ -24,10 +24,11 @@ rule "PROCESS_ANSWERS"
 		beUtils.setServiceToken(serviceToken);
 		System.out.println("Process Answwers: beUtils created ");
 		
-		/* Now set up capability for the user */
-		BaseEntity user = beUtils.getBaseEntityByCode(userToken.getUserCode());
+		/* Now set up capability for the user and make it available to all the rules */
+		CapabilityUtils capabilityUtils = new CapabilityUtils(beUtils);
+		insert(capabilityUtils);
 		
-		System.out.println("User roles are ");
+		System.out.println("Capabilitys are "+capabilityUtils.getCapabilityManifest());
 		
 
 		retract(dataMsg); /* stop this rule from firing again */

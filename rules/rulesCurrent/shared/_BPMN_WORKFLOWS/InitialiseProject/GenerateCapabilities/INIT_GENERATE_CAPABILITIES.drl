@@ -44,6 +44,7 @@ rule "INIT_GENERATE_CAPABILITIES"
 		CapabilityUtils capabilityUtils = new CapabilityUtils(beUtils);
 		
 		/* Add all Capabilities in the prj_genny system */
+		capabilityUtils.addCapability( "IMPORT", "Import");
 		
 		capabilityUtils.addCapability( "LOGIN", "Login");
 		capabilityUtils.addCapability( "LOGOUT", "Logout");
