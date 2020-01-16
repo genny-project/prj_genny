@@ -40,9 +40,11 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC"
   		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer);
    		retract(answer);
    		
-				/* Now import a google doc/ xls file and generate a List of BaseEntityImports */
+				/* Now import a google doc xls file and generate a List of BaseEntityImports */
 				String googleDocId = null;
 				String sheetId = "Sheet1"; /* default */
+				Integer start=0;
+				Integer finish=10000;
 				String[] split = answer.getValue().split(":");
 				
 				if (split.length == 3) {
@@ -50,6 +52,12 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC"
 				} else if (split.length == 4) {
 					googleDocId = split[2];
 					sheetId = split[3];
+				}
+				if  (split.length == 6) {
+					googleDocId = split[2];
+					sheetId = split[3];
+					start = Integer.parseInt(split[4]);
+					finish = Integer.parseInt(split[5]);
 				}
 				
 			 Map<String,String> fieldMapping = new HashMap<String,String>();
@@ -73,12 +81,9 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC"
 				 Integer count=0;
 				 for (BaseEntityImport beImport : beImports) {
 					 BaseEntity be = beUtils.create(beImport.getCode(), beImport.getName());
-					 Integer index=0;
 					 for (Tuple2<String,String> attributeCodeValue : beImport.getAttributeValuePairList()) {
 						 Answer answer2 = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),attributeCodeValue._1,attributeCodeValue._2);
-						/*  System.out.println("Importing "+answer2); */
 						answers.add(answer2);
-						index++; 
 					 }
 					Answer isIntern = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IS_INTERN","true");
 					answers.add(isIntern);
@@ -88,12 +93,14 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC"
 					System.out.println("created QDataAnswerMessage  for "+beImport.getCode());
 					msg.setToken(beUtils.getGennyToken().getToken());
  					System.out.println("inserting message ");
- 					insert(msg);
- 					/*break;*/
+ 					if ((count >=start) && (count <= finish))	
+ 					{				
+ 						insert(msg);
+ 					} else {
+ 						break;
+					}
  					count++;
- 					if (count > 2) {
- 						/*break;*/
- 					}
+
 				 }
 				 System.out.println("Aggregated  all Answers ");
 			
