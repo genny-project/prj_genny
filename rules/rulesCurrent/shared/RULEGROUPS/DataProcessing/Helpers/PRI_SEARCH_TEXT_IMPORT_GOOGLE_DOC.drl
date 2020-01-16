@@ -70,8 +70,8 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC"
 			 fieldMapping.put("State".toLowerCase(), "PRI_IMPORT_STATE");
 			 fieldMapping.put("Student ID".toLowerCase(), "PRI_STUDENT_ID");
 			 fieldMapping.put("Disp".toLowerCase(), "PRI_DISCIPLINE");
-			 fieldMapping.put("First Name".toLowerCase(), "PRI_FIRSTNAME");
-			 fieldMapping.put("Last Name".toLowerCase(), "PRI_LASTNAME");
+			 fieldMapping.put("First Name".toLowerCase(), "PRI_IMPORT_FIRSTNAME");
+			 fieldMapping.put("Last Name".toLowerCase(), "PRI_IMPORT_LASTNAME");
 			 fieldMapping.put("PHONE".toLowerCase(), "PRI_PHONE");
 			 fieldMapping.put("EMAIL".toLowerCase(), "PRI_EMAIL");
 			 fieldMapping.put("TARGET START DATE".toLowerCase(), "PRI_TARGET_START_DATE");
