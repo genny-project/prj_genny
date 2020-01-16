@@ -17,7 +17,7 @@ rule "PROCESS_ANSWERS_IMPORT"
 	  serviceToken : GennyToken ( code == "PER_SERVICE" ) 
 	  dataMsg : QDataAnswerMessage( (items != null) && (items.length > 0) )
 	  dom : OutputParamTreeSet()
-	  beUtils : BaseEntityUtils()
+	  beUtils : BaseEntityUtils() /* This is not present initially and so does not conflict with the original */
     then
  		System.out.println("Rule -> PROCESS_ANSWERS Processing Answer/Data!! :  user=" + userToken.getUserCode()); 
 
