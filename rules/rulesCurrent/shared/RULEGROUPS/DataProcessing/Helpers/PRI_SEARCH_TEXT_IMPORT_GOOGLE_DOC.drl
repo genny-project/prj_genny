@@ -86,7 +86,7 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC"
 				 	/* check if already there */
 
 				 	BaseEntity be = beUtils.getBaseEntityByCode(beImport.getCode());
-				 	if (existing == null) {
+				 	if (be == null) {
 					 	be = beUtils.create(beImport.getCode(), beImport.getName());
 					 } 
 					 for (Tuple2<String,String> attributeCodeValue : beImport.getAttributeValuePairList()) {
