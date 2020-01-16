@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.codehaus.plexus.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 import io.vavr.Tuple2;
@@ -23,7 +23,7 @@ public void stringTest()
 {
 	String str = "GANGODAGE";
 	str = str.toLowerCase();
-	String strc = StringUtils.capitalizeFirstLetter(str);
+	String strc = StringUtils.capitalize(str);
 	System.out.println(strc);
 }
 	
