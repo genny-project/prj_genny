@@ -1,15 +1,33 @@
 package life.genny.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.codehaus.plexus.util.StringUtils;
 import org.junit.Test;
 
+import io.vavr.Tuple2;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import life.genny.models.BaseEntityImport;
+import life.genny.qwanda.Answer;
+import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.message.QDataAnswerMessage;
 
 public class JsonTest {
+	
 @Test
+public void stringTest()
+{
+	String str = "GANGODAGE";
+	str = str.toLowerCase();
+	String strc = StringUtils.capitalizeFirstLetter(str);
+	System.out.println(strc);
+}
+	
+//@Test
 public void AddressTest()
 {
 	
@@ -129,4 +147,7 @@ if (true || "OK".equals(json.getString("status"))) {
 
 	}
 }
+
+
+
 }
