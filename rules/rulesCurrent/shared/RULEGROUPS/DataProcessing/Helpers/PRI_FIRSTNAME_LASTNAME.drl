@@ -13,43 +13,43 @@ import java.util.HashMap;
 import life.genny.utils.VertxUtils;
 import life.genny.qwandautils.JsonUtils;
 import org.apache.commons.lang3.text.WordUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.ArrayList;
+import org.apache.commons.lang3.StringUtils;
 
 
 
-rule "PRI_FIRSTNAME"
+rule "PRI_FIRSTNAME_LASTNAME"
     ruleflow-group 'DataProcessing'
-        salience 10000 
-        no-loop
+        salience 3 
     when
       beUtils : BaseEntityUtils()
-	  serviceToken : GennyToken( code == "PER_SERVICE") 
-	  answer : Answer( attributeCode == "PRI_FIRSTNAME" )
+	  firstnameAnswer : Answer( attributeCode == "PRI_FIRSTNAME" )
+	  lastnameAnswer : Answer( attributeCode == "PRI_LASTNAME" )
 	  answersToSave : Answers()
 	  output : OutputParam( )
      then
- 		System.out.println("Rule -> PRI_FIRSTNAME :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
+ 		System.out.println("Rule -> PRI_FIRSTNAME_LASTNAME :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		String targetCode = answer.getTargetCode();
 		
 		/* Parse json answer and save the individual answers */
-		String firstname = answer.getValue();
+		String lastname = lastnameAnswer.getValue();
+		String firstname = firstnameAnswer.getValue();
+		lastname = lastname.toLowerCase().trim();
+		lastname = StringUtils.capitalize(lastname);
 		firstname = firstname.toLowerCase().trim();
 		firstname = StringUtils.capitalize(firstname);
-					
-		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_FIRSTNAME", firstname,false,true));	
+
 			
-		String name = firstname  + " "+lastname;
+		String name = firstname + " "+lastname;
 		name = name.trim();	
-			
+		System.out.println("Rule -> PRI_FIRSTNAME_LASTNAME 2 Name="+name);
 		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_NAME", name,false,true));
 			
-		String initials = 	WordUtils.initials(name).toUpperCase();
-		
-			
+		String initials = 	WordUtils.initials(name);
+		System.out.println("Rule -> PRI_FIRSTNAME_LASTNAME 3 initials="+initials);
 		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_INITIALS", initials,false,true));
 		
 			
@@ -58,7 +58,7 @@ rule "PRI_FIRSTNAME"
 		
 		
 
-		retract(answer); 
+		retract(answer);
 		update(answersToSave);
 	
 end
