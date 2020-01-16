@@ -95,10 +95,9 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC"
  					System.out.println("inserting message ");
  					if ((count >=start) && (count <= finish))	
  					{			
- 						
  						insert(msg);
  					} else {
- 						if (count > finish)	
+ 						if (count > finish)	{
  							break;
  						}
 					}
