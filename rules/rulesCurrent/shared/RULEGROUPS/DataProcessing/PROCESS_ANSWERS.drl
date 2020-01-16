@@ -3,6 +3,7 @@ import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.models.GennyToken;
 import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
+import life.genny.utils.CapabilityUtils;
 import life.genny.qwanda.Answer;
 import java.util.List;
 import java.util.ArrayList;
@@ -25,10 +26,10 @@ rule "PROCESS_ANSWERS"
 		System.out.println("Process Answwers: beUtils created ");
 		
 		/* Now set up capability for the user and make it available to all the rules */
-		CapabilityUtils capabilityUtils = new CapabilityUtils(beUtils);
-		insert(capabilityUtils);
+	/*	CapabilityUtils capabilityUtils = new CapabilityUtils(beUtils);
+		insert(capabilityUtils); 
 		
-		System.out.println("Capabilitys are "+capabilityUtils.getCapabilityManifest());
+		System.out.println("Capabilitys are "+capabilityUtils.getCapabilityManifest()); */
 		
 
 		retract(dataMsg); /* stop this rule from firing again */
