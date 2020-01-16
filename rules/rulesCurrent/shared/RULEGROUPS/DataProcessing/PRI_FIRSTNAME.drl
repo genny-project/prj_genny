@@ -38,7 +38,7 @@ rule "PRI_FIRSTNAME"
 		/* Parse json answer and save the individual answers */
 		String firstname = answer.getValue();
 		firstname = firstname.toLowerCase();
-		firstname = StringUtils.capitalizeFirstLetter(firstname);
+		firstname = StringUtils.capitalize(firstname);
 		BaseEntity person = beUtils.getBaseEntityByCode(targetCode);
 		String lastname = person.getValue("PRI_LASTNAME","");
 					
@@ -49,7 +49,7 @@ rule "PRI_FIRSTNAME"
 			
 		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_NAME", name,false,true));
 			
-		String initials = 	WordUtils.initials(name);
+		String initials = 	WordUtils.initials(name).toUpperCase();
 		
 			
 		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_INITIALS", initials,false,true));
