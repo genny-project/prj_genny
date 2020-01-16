@@ -94,10 +94,13 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC"
 					msg.setToken(beUtils.getGennyToken().getToken());
  					System.out.println("inserting message ");
  					if ((count >=start) && (count <= finish))	
- 					{				
+ 					{			
+ 						
  						insert(msg);
  					} else {
- 						break;
+ 						if (count > finish)	
+ 							break;
+ 						}
 					}
  					count++;
 
