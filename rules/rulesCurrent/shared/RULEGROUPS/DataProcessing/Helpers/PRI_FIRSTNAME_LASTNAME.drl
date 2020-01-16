@@ -25,18 +25,18 @@ rule "PRI_FIRSTNAME_LASTNAME"
         salience 3 
     when
       beUtils : BaseEntityUtils()
-	  firstnameAnswer : Answer( attributeCode == "PRI_IMPORT_FIRSTNAME" )
-	  lastnameAnswer : Answer( attributeCode == "PRI_IMPORT_LASTNAME" )
+	  $firstnameAnswer : Answer( attributeCode == "PRI_IMPORT_FIRSTNAME" )
+	  lastnameAnswer : Answer( attributeCode == "PRI_IMPORT_LASTNAME" && targetCode == $firstnameAnswer.targetCode)
 	  answersToSave : Answers()
 	  output : OutputParam( )
      then
  		System.out.println("Rule -> PRI_FIRSTNAME_LASTNAME :  user=" + beUtils.getGennyToken().getUserCode()+" : "); 
 		String sourceCode = beUtils.getGennyToken().getUserCode();
-		String targetCode = answer.getTargetCode();
+		String targetCode = $firstnameAnswer.getTargetCode();
 		
 		/* Parse json answer and save the individual answers */
 		String lastname = lastnameAnswer.getValue();
-		String firstname = firstnameAnswer.getValue();
+		String firstname = $firstnameAnswer.getValue();
 		lastname = lastname.toLowerCase().trim();
 		lastname = StringUtils.capitalize(lastname);
 		firstname = firstname.toLowerCase().trim();
@@ -61,7 +61,7 @@ rule "PRI_FIRSTNAME_LASTNAME"
 		
 		
 
-		retract(firstnameAnswer);
+		retract($firstnameAnswer);
 		retract(lastnameAnswer);
 		update(answersToSave);
 	
