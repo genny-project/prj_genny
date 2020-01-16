@@ -22,7 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 
 rule "PRI_LASTNAME"
     ruleflow-group 'DataProcessing'
-        salience 500 
+        salience 50 
     when
       beUtils : BaseEntityUtils()
 	  answer : Answer( attributeCode == "PRI_LASTNAME" )
