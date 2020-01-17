@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.lang.invoke.MethodHandles;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,6 +24,7 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.plexus.util.StringUtils;
+import org.jbpm.compiler.xml.processes.OutPortHandler;
 import org.jbpm.services.api.DefinitionService;
 import org.jbpm.services.api.ProcessService;
 import org.jbpm.services.api.RuntimeDataService;
@@ -69,6 +71,7 @@ import life.genny.utils.SessionFacts;
 import life.genny.utils.VertxUtils;
 import life.genny.qwanda.validation.ValidationList;
 import life.genny.qwanda.validation.Validation;
+import life.genny.utils.OutputParam;
 
 public class ChrisTest {
 
@@ -106,6 +109,28 @@ public class ChrisTest {
 
 	public ChrisTest() {
 
+	}
+	
+	@Test
+	public void testing() {
+		String[] codes = {"apple", "grapes"};
+		System.out.println(codes[0]);
+		
+		OutputParam op = new OutputParam();
+		op.setTargetCode("APP_44B1146B-9966-4934-ACEA-656DBFF2B7D7,APPLIED");
+		String targetCode = op.getTargetCode();
+		String[] codes2 = targetCode.split(",");
+		System.out.println(codes2[0]);
+		System.out.println(codes2[1]);
+		
+		String str = "SPP_44B1146B-9966-4934-ACEA-656DBFF2B7D7,SAPPLIED";
+		List<String> elephantList = Arrays.asList(str.split(","));
+		System.out.println(elephantList.get(0));
+		System.out.println(elephantList.get(1));
+
+		
+		//List<String> myList = new ArrayList<String>(Arrays.asList(s.split(",")));
+		
 	}
 	
 	//@Test
@@ -218,7 +243,7 @@ public class ChrisTest {
 		}
 	}
 	
-	@Test
+	//@Test
 	public void userTaskTest()
 	{
 		System.out.println("Process View Test");

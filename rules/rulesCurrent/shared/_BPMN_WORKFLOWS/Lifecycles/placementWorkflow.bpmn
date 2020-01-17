@@ -840,7 +840,7 @@ System.out.println(&quot;cardsA: broadcastCode = &quot; + broadcastCode);</drool
         <bpmn2:incoming>SequenceFlow_39</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_40</bpmn2:outgoing>
         <bpmn2:timerEventDefinition id="TimerEventDefinition_5">
-          <bpmn2:timeDuration xsi:type="bpmn2:tFormalExpression" id="FormalExpression_28">PT15S</bpmn2:timeDuration>
+          <bpmn2:timeDuration xsi:type="bpmn2:tFormalExpression" id="FormalExpression_28">PT60S</bpmn2:timeDuration>
         </bpmn2:timerEventDefinition>
       </bpmn2:intermediateCatchEvent>
       <bpmn2:sequenceFlow id="SequenceFlow_39" drools:priority="1" sourceRef="ParallelGateway_1" targetRef="IntermediateCatchEvent_6"/>
@@ -1357,49 +1357,49 @@ kieSession.signalEvent(&quot;cardiC&quot;, sessionFacts);</bpmn2:script>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ParallelGateway_2" bpmnElement="ParallelGateway_2" isMarkerVisible="true">
         <dc:Bounds height="50.0" width="50.0" x="242.0" y="493.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_20">
           <dc:Bounds height="11.0" width="76.0" x="229.0" y="543.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ParallelGateway_3" bpmnElement="ParallelGateway_3" isMarkerVisible="true">
         <dc:Bounds height="50.0" width="50.0" x="835.0" y="493.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_27">
           <dc:Bounds height="11.0" width="76.0" x="822.0" y="543.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_9" bpmnElement="Task_9" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="620.0" y="415.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_33">
           <dc:Bounds height="11.0" width="56.0" x="647.0" y="434.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_10" bpmnElement="Task_10" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="620.0" y="493.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_35">
           <dc:Bounds height="11.0" width="61.0" x="644.0" y="512.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_11" bpmnElement="Task_11" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="620.0" y="572.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_36">
           <dc:Bounds height="11.0" width="60.0" x="645.0" y="591.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_12" bpmnElement="Task_12" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="400.0" y="415.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_37">
           <dc:Bounds height="11.0" width="75.0" x="417.0" y="434.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_IntermediateCatchEvent_4" bpmnElement="IntermediateCatchEvent_4">
         <dc:Bounds height="36.0" width="36.0" x="1380.0" y="307.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_38">
           <dc:Bounds height="22.0" width="60.0" x="1368.0" y="343.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_IntermediateCatchEvent_7" bpmnElement="IntermediateCatchEvent_7">
         <dc:Bounds height="36.0" width="36.0" x="1380.0" y="383.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_39">
           <dc:Bounds height="22.0" width="60.0" x="1368.0" y="419.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -1551,31 +1551,31 @@ kieSession.signalEvent(&quot;cardiC&quot;, sessionFacts);</bpmn2:script>
         <di:waypoint xsi:type="dc:Point" x="730.0" y="440.0"/>
         <di:waypoint xsi:type="dc:Point" x="860.0" y="440.0"/>
         <di:waypoint xsi:type="dc:Point" x="860.0" y="493.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_45"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_47" bpmnElement="SequenceFlow_47" sourceElement="BPMNShape_Task_10" targetElement="BPMNShape_ParallelGateway_3">
         <di:waypoint xsi:type="dc:Point" x="730.0" y="518.0"/>
         <di:waypoint xsi:type="dc:Point" x="782.0" y="518.0"/>
         <di:waypoint xsi:type="dc:Point" x="835.0" y="518.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_46"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_49" bpmnElement="SequenceFlow_49" sourceElement="BPMNShape_Task_11" targetElement="BPMNShape_ParallelGateway_3">
         <di:waypoint xsi:type="dc:Point" x="730.0" y="597.0"/>
         <di:waypoint xsi:type="dc:Point" x="860.0" y="597.0"/>
         <di:waypoint xsi:type="dc:Point" x="860.0" y="543.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_51"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_51" bpmnElement="SequenceFlow_51" sourceElement="BPMNShape_ParallelGateway_2" targetElement="BPMNShape_Task_10">
         <di:waypoint xsi:type="dc:Point" x="292.0" y="518.0"/>
         <di:waypoint xsi:type="dc:Point" x="456.0" y="518.0"/>
         <di:waypoint xsi:type="dc:Point" x="620.0" y="518.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_52"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_52" bpmnElement="SequenceFlow_52" sourceElement="BPMNShape_ParallelGateway_2" targetElement="BPMNShape_Task_11">
         <di:waypoint xsi:type="dc:Point" x="267.0" y="543.0"/>
         <di:waypoint xsi:type="dc:Point" x="267.0" y="597.0"/>
         <di:waypoint xsi:type="dc:Point" x="620.0" y="597.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_53"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_53" bpmnElement="SequenceFlow_53" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_ParallelGateway_2">
         <di:waypoint xsi:type="dc:Point" x="240.0" y="256.0"/>
@@ -1583,50 +1583,50 @@ kieSession.signalEvent(&quot;cardiC&quot;, sessionFacts);</bpmn2:script>
         <di:waypoint xsi:type="dc:Point" x="221.0" y="518.0"/>
         <di:waypoint xsi:type="dc:Point" x="232.0" y="518.0"/>
         <di:waypoint xsi:type="dc:Point" x="242.0" y="518.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_54"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_54" bpmnElement="SequenceFlow_54" sourceElement="BPMNShape_ParallelGateway_3" targetElement="BPMNShape_Task_2">
         <di:waypoint xsi:type="dc:Point" x="860.0" y="493.0"/>
         <di:waypoint xsi:type="dc:Point" x="860.0" y="383.0"/>
         <di:waypoint xsi:type="dc:Point" x="535.0" y="383.0"/>
         <di:waypoint xsi:type="dc:Point" x="535.0" y="273.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_55"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_55" bpmnElement="SequenceFlow_55" sourceElement="BPMNShape_ParallelGateway_2" targetElement="BPMNShape_Task_12">
         <di:waypoint xsi:type="dc:Point" x="267.0" y="493.0"/>
         <di:waypoint xsi:type="dc:Point" x="267.0" y="440.0"/>
         <di:waypoint xsi:type="dc:Point" x="400.0" y="440.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_56"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_56" bpmnElement="SequenceFlow_56" sourceElement="BPMNShape_Task_12" targetElement="BPMNShape_Task_9">
         <di:waypoint xsi:type="dc:Point" x="510.0" y="440.0"/>
         <di:waypoint xsi:type="dc:Point" x="565.0" y="440.0"/>
         <di:waypoint xsi:type="dc:Point" x="620.0" y="440.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_57"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_57" bpmnElement="SequenceFlow_57" sourceElement="BPMNShape_ParallelGateway_1" targetElement="BPMNShape_IntermediateCatchEvent_4">
         <di:waypoint xsi:type="dc:Point" x="1315.0" y="273.0"/>
         <di:waypoint xsi:type="dc:Point" x="1315.0" y="325.0"/>
         <di:waypoint xsi:type="dc:Point" x="1380.0" y="325.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_58"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_58" bpmnElement="SequenceFlow_58" sourceElement="BPMNShape_IntermediateCatchEvent_4" targetElement="BPMNShape_Task_1">
         <di:waypoint xsi:type="dc:Point" x="1416.0" y="325.0"/>
         <di:waypoint xsi:type="dc:Point" x="1434.0" y="325.0"/>
         <di:waypoint xsi:type="dc:Point" x="1453.0" y="325.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_59"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_59" bpmnElement="SequenceFlow_59" sourceElement="BPMNShape_ParallelGateway_1" targetElement="BPMNShape_IntermediateCatchEvent_7">
         <di:waypoint xsi:type="dc:Point" x="1315.0" y="273.0"/>
         <di:waypoint xsi:type="dc:Point" x="1315.0" y="401.0"/>
         <di:waypoint xsi:type="dc:Point" x="1380.0" y="401.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_60"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_60" bpmnElement="SequenceFlow_60" sourceElement="BPMNShape_IntermediateCatchEvent_7" targetElement="BPMNShape_Task_7">
         <di:waypoint xsi:type="dc:Point" x="1416.0" y="401.0"/>
         <di:waypoint xsi:type="dc:Point" x="1434.0" y="401.0"/>
         <di:waypoint xsi:type="dc:Point" x="1453.0" y="401.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_61"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
