@@ -35,18 +35,26 @@ rule "FRM_HEADER_PROFILE_PICTURE"
   then
     System.out.println(" Generate FRM_HEADER_PROFILE_PICTURE Rule  "+serviceToken.getUserCode());
 
+    		Validation validationImage = new Validation("VLD_IMAGE_URL", "Text", ".*");
+
+    		List<Validation> imageValidations = new ArrayList<>();
+				imageValidations.add(validationImage);
+
+				ValidationList imageValidationsList = new ValidationList();
+				imageValidationsList.setValidationList(imageValidations);
+
+        DataType imageDataType = new DataType("DTT_IMAGE",imageValidationsList,"Image", "");
+
     Frame3 frame = Frame3.builder("FRM_HEADER_PROFILE_PICTURE")
                   .addTheme("THM_PANEL_CONTENT_FIT", ThemePosition.WRAPPER, serviceToken).end()
                   .addTheme("THM_PADDING_RIGHT_10", ThemePosition.WRAPPER, serviceToken).end()
                   /* .addTheme("THM_BORDER_RADIUS_50",ThemePosition.VCL_WRAPPER serviceToken).end() */
                   .question("QUE_HEADER_USER_PICTURE_GRP")
                     .addTheme("THM_IMAGE_PLACEHOLDER", serviceToken).vcl(VisualControlType.INPUT_PLACEHOLDER).end()
-                    .addTheme("THM_HEADER_PROFILE_PICTURE", serviceToken)
-                    .vcl(VisualControlType.INPUT_SELECTED_WRAPPER)
-                    .end()
-                    .addTheme("THM_BORDER_RADIUS_50", serviceToken)
-                    .vcl(VisualControlType.INPUT_FIELD)
-                    .end()
+                    .addTheme("THM_HEADER_PROFILE_PICTURE", serviceToken).vcl(VisualControlType.INPUT_SELECTED_WRAPPER).end()
+                    .addTheme("THM_BORDER_RADIUS_50", serviceToken).vcl(VisualControlType.INPUT_FIELD).end()
+                    .addTheme("THM_FORM_IMAGE_RESTRICTIONS", serviceToken).dataType(imageDataType).vcl(VisualControlType.VCL_INPUT).end()
+
                   .end()
                   .build();
     frame.setRealm(serviceToken.getRealm());
