@@ -26,7 +26,7 @@
   <bpmn2:signal id="Signal_4" name="dynamicStatus"/>
   <bpmn2:signal id="Signal_5" name="broadcast"/>
   <bpmn2:signal id="Signal_6" name="startDynamic"/>
-  <bpmn2:signal id="Signal_7" name="START_PRI_EVENT_APPLY"/>
+  <bpmn2:signal id="Signal_7" name="START_PRI_EVENT_APPLY_1"/>
   <bpmn2:signal id="Signal_8" name="signature"/>
   <bpmn2:signal id="Signal_9" name="START_MOVE"/>
   <bpmn2:process id="applicationWorkflow" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="Default Process" isExecutable="true">
@@ -1507,7 +1507,7 @@ kcontext.setVariable(&quot;newApplication&quot;, beUtils.getBaseEntityByCode(new
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_7" bpmnElement="ScriptTask_7" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="340.0" y="356.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_37">
           <dc:Bounds height="11.0" width="38.0" x="376.0" y="375.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -1743,13 +1743,13 @@ kcontext.setVariable(&quot;newApplication&quot;, beUtils.getBaseEntityByCode(new
         <di:waypoint xsi:type="dc:Point" x="300.0" y="381.0"/>
         <di:waypoint xsi:type="dc:Point" x="320.0" y="381.0"/>
         <di:waypoint xsi:type="dc:Point" x="340.0" y="381.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_65"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_5" sourceElement="BPMNShape_ScriptTask_7" targetElement="BPMNShape_ExclusiveGateway_1">
         <di:waypoint xsi:type="dc:Point" x="450.0" y="381.0"/>
         <di:waypoint xsi:type="dc:Point" x="479.0" y="381.0"/>
         <di:waypoint xsi:type="dc:Point" x="508.0" y="381.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_76"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
