@@ -46,6 +46,20 @@ rule "PRI_PHONE"
 			answer.setValue(phonenumber);
 			answer.setChangeEvent(false); /* no attribute change */
 			answersToSave.add(answer);
+			
+			/* Now check if it is an Australian mobile */
+			if ((phonenumber.startsWith("614"))|| (phonenumber.startsWith("615"))) {
+				Answer mobile = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_MOBILE",phonenumber);
+				mobile.setChangeEvent(false); /* no attribute change */
+				answersToSave.add(mobile);
+			} else {
+				Answer landline = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_LANDLINE",phonenumber);
+				landline.setChangeEvent(false); /* no attribute change */
+				answersToSave.add(landline);
+			
+			}
+			
+			
 
 /* Watch out TODO , this may override other answers */
 		output.setTypeOfResult("NONE");

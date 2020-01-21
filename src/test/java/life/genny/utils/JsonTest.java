@@ -24,6 +24,7 @@ public void stringTest()
 	String str = "GANGODAGE";
 	str = str.toLowerCase();
 	String strc = StringUtils.capitalize(str);
+	//if (strc.startsWith(prefix))
 	System.out.println(strc);
 }
 	

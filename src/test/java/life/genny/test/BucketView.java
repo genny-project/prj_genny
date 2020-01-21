@@ -199,6 +199,7 @@ public class BucketView extends GennyJbpmBaseTest {
 	
 	@Test
 	public void sendCards() {
+		Frame3 test = this.getBucketHeaderFame("test","test", "test");
 
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
@@ -426,7 +427,7 @@ public class BucketView extends GennyJbpmBaseTest {
 			System.out.print("Error");
 		}
 	}
-
+	
 	public Frame3 getBucketHeaderFame(String name, String target, String questionCode) {
 
 		/* build the theme */
@@ -434,11 +435,18 @@ public class BucketView extends GennyJbpmBaseTest {
 				.justifyContent("flex-start").end().build();
 
 		/* build the frame */
-		Frame3 bucketHeader = Frame3.builder(name).question("QUE_BUCKET_HEADER_GRP").end()
+		Frame3 bucketHeader2 = Frame3.builder(name).question("QUE_BUCKET_HEADER_GRP").end()
 				.addTheme(THM_JUSTIFY_CONTENT_FLEX_START, ThemePosition.CENTRE).end().build();
+		
+		
+		Frame3 bucketHeader = Frame3.clone(bucketHeader2);
+		bucketHeader.setCode("FRM_BUCKET_HEADER_");
+		bucketHeader.setQuestionCode("QUE_BUCKET_HEADER_GRP");
+		bucketHeader.getQuestionGroup().setTargetAlias("bucketHeader");
 
 		/* return the frame */
 		return bucketHeader;
+		
 	}
 
 	public Frame3 getBucketContentFrame(String name, String target, String questionCode) {
@@ -535,6 +543,7 @@ public class BucketView extends GennyJbpmBaseTest {
 		/* build the frame */
 		Frame3 FRM_BUCKET_WRAPPER = Frame3.builder(name).addTheme(THM_BUCKET).end()
 				.addTheme(THM_BUCKET_WRAPPER, ThemePosition.WEST).end().build();
+		
 
 		return FRM_BUCKET_WRAPPER;
 	}
@@ -873,7 +882,7 @@ public class BucketView extends GennyJbpmBaseTest {
 				Ask templateAsk = bucketUtils.getCardTemplate();
 
 				/* implement template ask to appAks list */
-				List<Ask> askList = bucketUtils.implementCardTemplate(appAsksList, templateAsk, contextListMap);
+				List<Ask> askList = bucketUtils.implementCardTemplate(code, appAsksList, templateAsk, contextListMap);
 
 				/* generate bucketContent asks for each bucket */
 				Ask bucketContentAsk = Ask.clone(FRM_BUCKET_CONTENT_ASK);
