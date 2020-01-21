@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 rule "PRI_FIRSTNAME"
     ruleflow-group 'DataProcessing'
-        salience 1000 
+        salience 10000 
         no-loop
     when
       beUtils : BaseEntityUtils()
@@ -37,12 +37,13 @@ rule "PRI_FIRSTNAME"
 		
 		/* Parse json answer and save the individual answers */
 		String firstname = answer.getValue();
-		firstname = firstname.toLowerCase();
+		firstname = firstname.toLowerCase().trim();
 		firstname = StringUtils.capitalize(firstname);
-		BaseEntity person = beUtils.getBaseEntityByCode(targetCode);
-		String lastname = person.getValue("PRI_LASTNAME","");
 					
 		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_FIRSTNAME", firstname,false,true));	
+			
+		BaseEntity person = beUtils.getBaseEntityByCode(targetCode);
+		String lastname = person.getValue("PRI_LASTNAME","");
 			
 		String name = firstname  + " "+lastname;
 		name = name.trim();	
