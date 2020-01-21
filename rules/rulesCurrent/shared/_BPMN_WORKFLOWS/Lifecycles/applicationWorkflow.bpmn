@@ -1507,7 +1507,7 @@ kcontext.setVariable(&quot;newApplication&quot;, beUtils.getBaseEntityByCode(new
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_7" bpmnElement="ScriptTask_7" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="340.0" y="356.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_37">
+        <bpmndi:BPMNLabel>
           <dc:Bounds height="11.0" width="38.0" x="376.0" y="375.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -1743,13 +1743,13 @@ kcontext.setVariable(&quot;newApplication&quot;, beUtils.getBaseEntityByCode(new
         <di:waypoint xsi:type="dc:Point" x="300.0" y="381.0"/>
         <di:waypoint xsi:type="dc:Point" x="320.0" y="381.0"/>
         <di:waypoint xsi:type="dc:Point" x="340.0" y="381.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_65"/>
+        <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_5" sourceElement="BPMNShape_ScriptTask_7" targetElement="BPMNShape_ExclusiveGateway_1">
         <di:waypoint xsi:type="dc:Point" x="450.0" y="381.0"/>
         <di:waypoint xsi:type="dc:Point" x="479.0" y="381.0"/>
         <di:waypoint xsi:type="dc:Point" x="508.0" y="381.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_76"/>
+        <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
