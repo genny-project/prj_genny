@@ -20,6 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.logging.log4j.Logger;
 
 import org.jbpm.ruleflow.core.RuleFlowProcess;
@@ -35,6 +36,7 @@ import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
 import life.genny.model.NodeStatus;
 import life.genny.models.Frame3;
+import life.genny.models.Frame3.Builder;
 import life.genny.models.FramePosition;
 import life.genny.models.GennyToken;
 import life.genny.models.Theme;
@@ -59,6 +61,7 @@ import life.genny.qwanda.validation.ValidationList;
 import life.genny.qwandautils.GennyCacheInterface;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
+import life.genny.qwandautils.QwandaMessage;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
@@ -99,7 +102,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 		super(false);
 	}
 	
-	@Test 
+	//@Test 
 	public void d() {
 		double s= -1.0;
 		s++;
@@ -107,6 +110,18 @@ public class SafalTest extends GennyJbpmBaseTest {
 		
 	}
 
+	@Test
+	public void test() throws ClientProtocolException, IOException {
+		initItem();
+		QwandaMessage askMsg= QuestionUtils.getQuestions("PER_USER1", "PER_USER1", "QUE_STT_S1_A_GRP", userToken.getToken());
+		
+		Ask[] asks =askMsg.asks.getItems();
+		for(Ask ask : asks) {
+			String code = ask.getQuestion().getCode();
+			System.out.println("code  :: " + code);
+		}
+
+	}
 //	@Test
 	public void Test1() {
 
@@ -114,6 +129,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 		System.out.println(userToken.getToken());
 
 		String code = "ASK_" + "FRM_PERSON_DETAIL_VIEW";
+		code.startsWith("");
 
 		JsonObject tokenObj = VertxUtils.readCachedJson(userToken.getRealm(), code, userToken.getToken());
 
@@ -209,8 +225,9 @@ public class SafalTest extends GennyJbpmBaseTest {
 			                  .addTheme("THM_TREE_GROUP_LABEL", serviceToken)
 			                  .vcl(VisualControlType.GROUP_LABEL)
 			              .end()
-			               .end()
-			              .build();
+			               .end().build();
+		
+			          
 			
 			FrameUtils2.toMessage(frame, serviceToken);
 		} catch (Exception e) {
