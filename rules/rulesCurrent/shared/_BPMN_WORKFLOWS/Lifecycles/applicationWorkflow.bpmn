@@ -26,7 +26,7 @@
   <bpmn2:signal id="Signal_4" name="dynamicStatus"/>
   <bpmn2:signal id="Signal_5" name="broadcast"/>
   <bpmn2:signal id="Signal_6" name="startDynamic"/>
-  <bpmn2:signal id="Signal_7" name="START_PRI_EVENT_APPLY_1"/>
+  <bpmn2:signal id="Signal_7" name="START_PRI_EVENT_APPLY"/>
   <bpmn2:signal id="Signal_8" name="signature"/>
   <bpmn2:signal id="Signal_9" name="START_MOVE"/>
   <bpmn2:process id="applicationWorkflow" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="Default Process" isExecutable="true">
