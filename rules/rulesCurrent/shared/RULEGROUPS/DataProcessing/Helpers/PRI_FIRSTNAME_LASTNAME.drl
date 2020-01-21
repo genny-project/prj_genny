@@ -20,36 +20,39 @@ import org.apache.commons.lang3.StringUtils;
 
 
 
-rule "PRI_LASTNAME"
+rule "PRI_FIRSTNAME_LASTNAME"
     ruleflow-group 'DataProcessing'
-        salience 50 
+        salience 3 
     when
       beUtils : BaseEntityUtils()
-	  answer : Answer( attributeCode == "PRI_LASTNAME" )
+	  $firstnameAnswer : Answer( attributeCode == "PRI_IMPORT_FIRSTNAME" )
+	  lastnameAnswer : Answer( attributeCode == "PRI_IMPORT_LASTNAME" && targetCode == $firstnameAnswer.targetCode)
 	  answersToSave : Answers()
 	  output : OutputParam( )
      then
- 		System.out.println("Rule -> PRI_LASTNAME :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
+ 		System.out.println("Rule -> PRI_FIRSTNAME_LASTNAME :  user=" + beUtils.getGennyToken().getUserCode()+" : "); 
 		String sourceCode = beUtils.getGennyToken().getUserCode();
-		String targetCode = answer.getTargetCode();
+		String targetCode = $firstnameAnswer.getTargetCode();
 		
 		/* Parse json answer and save the individual answers */
-		String lastname = answer.getValue();
+		String lastname = lastnameAnswer.getValue();
+		String firstname = $firstnameAnswer.getValue();
 		lastname = lastname.toLowerCase().trim();
 		lastname = StringUtils.capitalize(lastname);
-		BaseEntity person = beUtils.getBaseEntityByCode(targetCode);
-		String firstname = person.getValue("PRI_FIRSTNAME","");
-		System.out.println("Rule -> PRI_LASTNAME 1 lastname="+lastname);	
-		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_LASTNAME", lastname,false,true));	
+		firstname = firstname.toLowerCase().trim();
+		firstname = StringUtils.capitalize(firstname);
+
+		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_FIRSTNAME", firstname,false,true));
+		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_LASTNAME", lastname,false,true));
+
 			
 		String name = firstname + " "+lastname;
 		name = name.trim();	
-		name = StringUtils.capitalize(name);
-		System.out.println("Rule -> PRI_LASTNAME 2 Name="+name);
+		System.out.println("Rule -> PRI_FIRSTNAME_LASTNAME 2 Name="+name);
 		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_NAME", name,false,true));
 			
 		String initials = 	WordUtils.initials(name);
-		System.out.println("Rule -> PRI_LASTNAME 3 initials="+initials);
+		System.out.println("Rule -> PRI_FIRSTNAME_LASTNAME 3 initials="+initials);
 		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_INITIALS", initials,false,true));
 		
 			
@@ -58,7 +61,8 @@ rule "PRI_LASTNAME"
 		
 		
 
-		retract(answer);
+		retract($firstnameAnswer);
+		retract(lastnameAnswer);
 		update(answersToSave);
 	
 end
