@@ -15,7 +15,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_123" isCollection="false" structureRef="life.genny.utils.SessionFacts"/>
   <bpmn2:signal id="Signal_1" name="whichJournal"/>
   <bpmn2:signal id="Signal_2" name="lockedDoor"/>
-  <bpmn2:signal id="Signal_3" name="START_UNITY_EVENT"/>
+  <bpmn2:signal id="Signal_3" name="START_UNITY_EVENT_TEST"/>
   <bpmn2:process id="progressJournals" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="Default Process" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.models.GennyToken"/>
