@@ -41,7 +41,7 @@ rule "THM_FORM_GROUP_WRAPPER_GENNY"
 				.addAttribute()
 					.backgroundColor("white")
 					.padding(10)
-					.maxWidth(600)
+					.maxWidth(700)
 					.width("100%")
 					.borderWidth(1)
 					.borderColor("silver")
