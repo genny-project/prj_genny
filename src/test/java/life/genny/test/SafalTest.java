@@ -115,6 +115,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 
 		String code = "ASK_" + "FRM_PERSON_DETAIL_VIEW";
 
+
 		JsonObject tokenObj = VertxUtils.readCachedJson(userToken.getRealm(), code, userToken.getToken());
 
 		String items = tokenObj.getString("value");

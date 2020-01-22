@@ -91,6 +91,10 @@ rule "FRM_FORM"
 				System.out.println("Form Codes=" + questionCodes);
 
 				for (String questionCode : questionCodes){
+					/* adding a skip for STT questions*/
+					if(questionCode.startsWith("QUE_STT_")) {
+						continue;
+					}
 
 					Frame3 frame2 = Frame3.builder("FRM_CONTENT_" +  questionCode)
 								.addTheme("THM_FORM_ATTRIBUTES_GENNY", serviceToken).end()
