@@ -41,7 +41,7 @@ rule "FRM_SIDEBAR"
       FRM_TREE_ITEM_SCENARIO_VIEW : Frame3 ( code == "FRM_TREE_ITEM_SCENARIO_VIEW" )
     then
     
-      System.out.println("  Generate FRM_SIDEBAR Rule  "+serviceToken.getUserCode());
+      System.out.println("    Generate FRM_SIDEBAR Rule  "+serviceToken.getUserCode());
 
       Frame3 frame = Frame3.builder("FRM_SIDEBAR")
                       .addTheme("THM_SIDEBAR", serviceToken).end()
