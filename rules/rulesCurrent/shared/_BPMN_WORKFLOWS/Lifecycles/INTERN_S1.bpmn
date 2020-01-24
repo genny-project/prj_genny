@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.1.Final-v20190425-2005-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.4.3.Final-v20180418-1358-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
   <bpmn2:itemDefinition id="ItemDefinition_9" isCollection="false" structureRef="java.lang.String"/>
   <bpmn2:itemDefinition id="ItemDefinition_556" isCollection="false" structureRef="life.genny.models.GennyToken"/>
   <bpmn2:itemDefinition id="ItemDefinition_576" isCollection="false" structureRef="life.genny.utils.CallingProcessToken"/>
@@ -297,7 +297,7 @@ kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCod
 String eduProCodeList = beUtils.getBaseEntityValue(newBe.getCode(), &quot;LNK_EDU_PROVIDER&quot;).toString();
 System.out.println(&quot;UserLifecycle:  ********* &quot; + eduProCodeList);
 JSONArray jsonArray = new JSONArray(eduProCodeList);
-beUtils.createLink(jsonArray.get(0).toString(), newBe.getCode(), &quot;LNK_EDU&quot;, &quot;STUDENT&quot;, 1.0);
+beUtils.createLink(jsonArray.get(0).toString(), newBe.getCode(), &quot;LNK_CPY&quot;, &quot;STUDENT&quot;, 1.0);
 kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCode()));</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_9" drools:priority="1" sourceRef="Task_4" targetRef="ScriptTask_2"/>
@@ -395,7 +395,7 @@ kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCod
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_2" bpmnElement="ScriptTask_2" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="970.0" y="328.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_10">
           <dc:Bounds height="11.0" width="77.0" x="986.0" y="347.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -445,13 +445,13 @@ kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCod
         <di:waypoint xsi:type="dc:Point" x="945.0" y="353.0"/>
         <di:waypoint xsi:type="dc:Point" x="957.0" y="353.0"/>
         <di:waypoint xsi:type="dc:Point" x="970.0" y="353.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_16"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_11" bpmnElement="SequenceFlow_11" sourceElement="BPMNShape_ScriptTask_2" targetElement="BPMNShape_IntermediateThrowEvent_2">
         <di:waypoint xsi:type="dc:Point" x="1080.0" y="353.0"/>
         <di:waypoint xsi:type="dc:Point" x="1105.0" y="353.0"/>
         <di:waypoint xsi:type="dc:Point" x="1130.0" y="353.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_17"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
