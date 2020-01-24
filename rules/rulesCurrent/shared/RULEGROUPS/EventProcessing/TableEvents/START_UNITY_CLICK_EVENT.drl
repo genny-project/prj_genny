@@ -16,7 +16,7 @@ import life.genny.utils.SessionFacts;
 
 rule "START_UNITY_CLICK_EVENT"
     ruleflow-group 'EventProcessing'
-		salience 2
+		salience 3
     no-loop
     when
 		$message : QEventMessage(data.code matches "QUE_TREE_ITEM_MESSAGES_NOTIFICATIONS" && (data.rootCode == "QUE_TREE_ITEM_MESSAGES_GRP"))
@@ -26,8 +26,7 @@ rule "START_UNITY_CLICK_EVENT"
 		ruleDetails : RuleDetails()
 		
     then
-		System.out.println("Processing APPLY EVENT : " + $message );
-		/*output.setFormCode("FRM_QUE_ADD_APPLICATION_GRP","FRM_CONTENT");*/
+		System.out.println("Processing UNITY APPLY EVENT : " + $message );
 		
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
 		
@@ -35,22 +34,8 @@ rule "START_UNITY_CLICK_EVENT"
 
 		output.setTypeOfResult("SIGNAL");
 		output.setResultCode("START_"+workflowSignalCode);
-		output.setTargetCode($message.getData().getTargetCode());
-		
-		/*String assIntBeCode = output.getTargetCode();
-		String s1 = assIntBeCode.substring(assIntBeCode.indexOf("target=")+1);
-		s1.trim();*/
-		/*String s1 = assIntBeCode.split("=")[3];*/
-		/*String s2 = s1.split(":")[0];
-		System.out.println(s2);
-		
-		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$ targetCode: " + assIntBeCode);
-		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$ targetCode: " + s2);*/
-		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$ targetCode: " + output.getTargetCode());
-		
-		SessionFacts facts = new SessionFacts(serviceToken, userToken, output.getTargetCode());
-		/*SessionFacts facts = new SessionFacts(serviceToken, userToken, output.getTargetCode());*/
-		
+		output.setTargetCode("SCENARIO_1");
+				
 		System.out.println("START SIGNAL: " +workflowSignalCode);
 		System.out.println("STARTING THE NEW APPLICATION WITH: " +output);
 	
