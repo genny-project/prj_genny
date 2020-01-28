@@ -37,6 +37,20 @@ import life.genny.qwanda.entity.BaseEntity;
     "icon" : "icons/icon-info.gif"
   ],
   
+    /* the Send Signal To Workflow work item */
+  [
+    "name" : "SendSignalToWorkflow",
+    "parameters" : [     
+       "userToken"  : new GennyToken(),
+       "signalCode"  :  new StringDataType(),
+       "payloadObject"  :  new ObjectDataType(),
+       "callingWorkflow"  :  new StringDataType(),
+       "workflowBeCode" : new StringDataType()
+      ],
+    "displayName" : "SendSignalToWorkflow",
+    "icon" : "icons/icon-info.gif"
+  ],
+  
    /* the Process Task Id work item */
   [
     "name" : "ProcessTaskId",
