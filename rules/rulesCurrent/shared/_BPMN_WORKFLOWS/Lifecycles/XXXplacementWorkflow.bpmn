@@ -1061,7 +1061,7 @@ System.out.println(&quot;cardsA: broadcastCode = &quot; + broadcastCode);</drool
           </bpmn2:assignment>
         </bpmn2:dataInputAssociation>
         <bpmn2:dataInputAssociation id="_DataInputAssociation_421">
-          <bpmn2:sourceRef>project</bpmn2:sourceRef>
+          <bpmn2:sourceRef>newApplication</bpmn2:sourceRef>
           <bpmn2:targetRef>DataInput_70</bpmn2:targetRef>
         </bpmn2:dataInputAssociation>
         <bpmn2:dataInputAssociation id="_DataInputAssociation_422">
@@ -1674,14 +1674,14 @@ kieSession.signalEvent(&quot;cardiC&quot;, sessionFacts);</bpmn2:script>
         <di:waypoint xsi:type="dc:Point" x="230.0" y="385.0"/>
         <di:waypoint xsi:type="dc:Point" x="230.0" y="518.0"/>
         <di:waypoint xsi:type="dc:Point" x="242.0" y="518.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_55"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_9" bpmnElement="SequenceFlow_9" sourceElement="BPMNShape_ParallelGateway_3" targetElement="BPMNShape_Task_2">
         <di:waypoint xsi:type="dc:Point" x="860.0" y="493.0"/>
         <di:waypoint xsi:type="dc:Point" x="860.0" y="383.0"/>
         <di:waypoint xsi:type="dc:Point" x="535.0" y="383.0"/>
         <di:waypoint xsi:type="dc:Point" x="535.0" y="273.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_62"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
