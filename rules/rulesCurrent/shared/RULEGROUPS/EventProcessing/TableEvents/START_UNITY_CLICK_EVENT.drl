@@ -19,24 +19,28 @@ rule "START_UNITY_CLICK_EVENT"
 		salience 3
     no-loop
     when
-		$message : QEventMessage(data.code matches "QUE_TREE_ITEM_MESSAGES_NOTIFICATIONS" && (data.rootCode == "QUE_TREE_ITEM_MESSAGES_GRP"))
+		$message : QEventMessage ( ( data.code matches "QUE_STT_SCENARIO_.*" ) && ( data.parentCode matches "QUE_SCENARIO_VIEW_GRP" ) )
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam( )
 		ruleDetails : RuleDetails()
 		
-    then
-		System.out.println("Processing UNITY APPLY EVENT : " + $message );
-		
+    then		
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
 		
-		String workflowSignalCode = "UNITY_EVENT";
-
+		/* Send a Signal */
 		output.setTypeOfResult("SIGNAL");
-		output.setResultCode("START_"+workflowSignalCode);
-		output.setTargetCode("SCENARIO_1");
+		
+		/* Signal to send */
+		output.setResultCode("START_UNITY_EVENT");
+		
+		/* Strip message code to get scenario */
+		String scenario = StringUtils.stripEnd(StringUtils.stripStart($message.getData().getCode(), "QUE_STT_"), "_GRP");
+		
+		/* Send scenario in output target code */
+		output.setTargetCode(scenario);
 				
-		System.out.println("START SIGNAL: " +workflowSignalCode);
+		System.out.println("START SIGNAL: START_UNITY_EVENT");
 		System.out.println("STARTING THE NEW APPLICATION WITH: " +output);
 	
 		retract( $message);

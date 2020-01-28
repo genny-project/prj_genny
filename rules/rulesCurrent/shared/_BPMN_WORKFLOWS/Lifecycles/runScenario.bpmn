@@ -69,10 +69,10 @@
       </bpmn2:outputSet>
       <bpmn2:signalEventDefinition id="SignalEventDefinition_1" signalRef="Signal_1"/>
     </bpmn2:startEvent>
-    <bpmn2:intermediateCatchEvent id="IntermediateCatchEvent_4" name="Intermediate Catch Event 4">
+    <bpmn2:intermediateCatchEvent id="IntermediateCatchEvent_4" name="Catch Loop">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Intermediate Catch Event 4]]></drools:metaValue>
+          <drools:metaValue><![CDATA[Catch Loop]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:outgoing>SequenceFlow_22</bpmn2:outgoing>
@@ -81,10 +81,10 @@
       </bpmn2:linkEventDefinition>
     </bpmn2:intermediateCatchEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_22" drools:priority="1" sourceRef="IntermediateCatchEvent_4" targetRef="ExclusiveGateway_1"/>
-    <bpmn2:intermediateCatchEvent id="IntermediateCatchEvent_2" name="Intermediate Catch Event 2">
+    <bpmn2:intermediateCatchEvent id="IntermediateCatchEvent_2" name="Wait 5">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Intermediate Catch Event 2]]></drools:metaValue>
+          <drools:metaValue><![CDATA[Wait 5]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
@@ -104,10 +104,10 @@
       <bpmn2:outgoing>SequenceFlow_39</bpmn2:outgoing>
       <bpmn2:script>System.out.println(&quot;Scenario 1 Test Questions Finished!&quot;);</bpmn2:script>
     </bpmn2:scriptTask>
-    <bpmn2:intermediateThrowEvent id="IntermediateThrowEvent_1" name="Intermediate Throw Event 1">
+    <bpmn2:intermediateThrowEvent id="IntermediateThrowEvent_1" name="Throw Loop">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Intermediate Throw Event 1]]></drools:metaValue>
+          <drools:metaValue><![CDATA[Throw Loop]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_21</bpmn2:incoming>
@@ -174,10 +174,10 @@ kcontext.setVariable(&quot;groupCLength&quot;, groupCLength);
 System.out.println(&quot;Number of group C asks: &quot; + groupCLength);</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_28" drools:priority="1" sourceRef="ScriptTask_1" targetRef="ExclusiveGateway_1"/>
-    <bpmn2:scriptTask id="ScriptTask_3" name="Script Task 3" scriptFormat="http://www.java.com/java">
+    <bpmn2:scriptTask id="ScriptTask_3" name="Increment counter" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Script Task 3]]></drools:metaValue>
+          <drools:metaValue><![CDATA[Increment counter]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_16</bpmn2:incoming>
@@ -212,10 +212,10 @@ kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
 System.out.println(&quot;scenario1: questionGroup is &quot; + questionGroup);</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_17" drools:priority="1" sourceRef="ScriptTask_3" targetRef="Task_1"/>
-    <bpmn2:task id="Task_1" drools:taskName="AskQuestionTask" drools:displayName="Ask Question Task" drools:icon="icons/icon-info.gif" name="Question 1 Test">
+    <bpmn2:task id="Task_1" drools:taskName="AskQuestionTask" drools:displayName="Ask Question Task" drools:icon="icons/icon-info.gif" name="Ask STT Question">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Question 1 Test]]></drools:metaValue>
+          <drools:metaValue><![CDATA[Ask STT Question]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_17</bpmn2:incoming>
@@ -303,7 +303,7 @@ System.out.println(&quot;scenario1: questionGroup is &quot; + questionGroup);</b
       <bpmndi:BPMNShape id="BPMNShape_Task_1" bpmnElement="Task_1" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="540.0" y="220.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_4">
-          <dc:Bounds height="11.0" width="63.0" x="563.0" y="239.0"/>
+          <dc:Bounds height="11.0" width="73.0" x="558.0" y="239.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_2" bpmnElement="ScriptTask_2" isExpanded="true">
@@ -315,7 +315,7 @@ System.out.println(&quot;scenario1: questionGroup is &quot; + questionGroup);</b
       <bpmndi:BPMNShape id="BPMNShape_IntermediateCatchEvent_2" bpmnElement="IntermediateCatchEvent_2">
         <dc:Bounds height="36.0" width="36.0" x="699.0" y="227.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_6">
-          <dc:Bounds height="22.0" width="60.0" x="687.0" y="263.0"/>
+          <dc:Bounds height="11.0" width="26.0" x="704.0" y="263.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_1" bpmnElement="ExclusiveGateway_1" isMarkerVisible="true">
@@ -327,7 +327,7 @@ System.out.println(&quot;scenario1: questionGroup is &quot; + questionGroup);</b
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_3" bpmnElement="ScriptTask_3" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="377.0" y="220.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_8">
-          <dc:Bounds height="11.0" width="52.0" x="406.0" y="239.0"/>
+          <dc:Bounds height="11.0" width="73.0" x="395.0" y="239.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_2" bpmnElement="ExclusiveGateway_2" isMarkerVisible="true">
@@ -339,18 +339,18 @@ System.out.println(&quot;scenario1: questionGroup is &quot; + questionGroup);</b
       <bpmndi:BPMNShape id="BPMNShape_IntermediateThrowEvent_1" bpmnElement="IntermediateThrowEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="804.0" y="147.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_10">
-          <dc:Bounds height="22.0" width="61.0" x="792.0" y="183.0"/>
+          <dc:Bounds height="11.0" width="48.0" x="798.0" y="183.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_IntermediateCatchEvent_4" bpmnElement="IntermediateCatchEvent_4">
         <dc:Bounds height="36.0" width="36.0" x="294.0" y="147.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_11">
-          <dc:Bounds height="22.0" width="60.0" x="282.0" y="183.0"/>
+          <dc:Bounds height="11.0" width="47.0" x="289.0" y="183.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_1" bpmnElement="StartEvent_2">
         <dc:Bounds height="36.0" width="36.0" x="59.0" y="227.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_1">
           <dc:Bounds height="11.0" width="53.0" x="51.0" y="263.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -400,19 +400,19 @@ System.out.println(&quot;scenario1: questionGroup is &quot; + questionGroup);</b
         <di:waypoint xsi:type="dc:Point" x="260.0" y="245.0"/>
         <di:waypoint xsi:type="dc:Point" x="273.0" y="245.0"/>
         <di:waypoint xsi:type="dc:Point" x="287.0" y="245.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_12"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_39" bpmnElement="SequenceFlow_39" sourceElement="BPMNShape_ScriptTask_2" targetElement="BPMNShape_2">
         <di:waypoint xsi:type="dc:Point" x="1027.0" y="245.0"/>
         <di:waypoint xsi:type="dc:Point" x="1058.0" y="245.0"/>
         <di:waypoint xsi:type="dc:Point" x="1090.0" y="244.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_13"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_40" bpmnElement="SequenceFlow_40" sourceElement="BPMNShape_StartEvent_1" targetElement="BPMNShape_ScriptTask_1">
         <di:waypoint xsi:type="dc:Point" x="95.0" y="245.0"/>
         <di:waypoint xsi:type="dc:Point" x="122.0" y="245.0"/>
         <di:waypoint xsi:type="dc:Point" x="150.0" y="245.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_15"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
