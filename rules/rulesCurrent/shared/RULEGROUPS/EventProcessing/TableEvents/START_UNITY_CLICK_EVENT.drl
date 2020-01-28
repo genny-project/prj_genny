@@ -35,7 +35,7 @@ rule "START_UNITY_CLICK_EVENT"
 		output.setResultCode("START_UNITY_EVENT");
 		
 		/* Strip message code to get scenario */
-		String scenario = StringUtils.stripEnd(StringUtils.stripStart($message.getData().getCode(), "QUE_STT_"), "_GRP");
+		String scenario = StringUtils.stripStart($message.getData().getCode(), "QUE_STT_");
 		
 		/* Send scenario in output target code */
 		output.setTargetCode(scenario);
