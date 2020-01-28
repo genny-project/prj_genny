@@ -81,19 +81,6 @@
       </bpmn2:linkEventDefinition>
     </bpmn2:intermediateCatchEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_22" drools:priority="1" sourceRef="IntermediateCatchEvent_4" targetRef="ExclusiveGateway_1"/>
-    <bpmn2:intermediateCatchEvent id="IntermediateCatchEvent_2" name="Wait 5">
-      <bpmn2:extensionElements>
-        <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Wait 5]]></drools:metaValue>
-        </drools:metaData>
-      </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_18</bpmn2:outgoing>
-      <bpmn2:timerEventDefinition id="TimerEventDefinition_1">
-        <bpmn2:timeDuration xsi:type="bpmn2:tFormalExpression" id="FormalExpression_10">5S</bpmn2:timeDuration>
-      </bpmn2:timerEventDefinition>
-    </bpmn2:intermediateCatchEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_18" drools:priority="1" sourceRef="IntermediateCatchEvent_2" targetRef="ExclusiveGateway_2"/>
     <bpmn2:scriptTask id="ScriptTask_2" name="Exit" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -116,7 +103,7 @@
       </bpmn2:linkEventDefinition>
     </bpmn2:intermediateThrowEvent>
     <bpmn2:exclusiveGateway id="ExclusiveGateway_2" name="Exclusive Gateway 2" gatewayDirection="Diverging" default="SequenceFlow_21">
-      <bpmn2:incoming>SequenceFlow_18</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_19</bpmn2:outgoing>
       <bpmn2:outgoing>SequenceFlow_21</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
@@ -219,7 +206,7 @@ System.out.println(&quot;scenario1: questionGroup is &quot; + questionGroup);</b
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_17</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
       <bpmn2:ioSpecification id="InputOutputSpecification_1">
         <bpmn2:dataInput id="DataInput_1" itemSubjectRef="ItemDefinition_132" name="userToken"/>
         <bpmn2:dataInput id="DataInput_2" itemSubjectRef="ItemDefinition_4388" name="questionCode"/>
@@ -276,7 +263,6 @@ System.out.println(&quot;scenario1: questionGroup is &quot; + questionGroup);</b
         <bpmn2:targetRef>results</bpmn2:targetRef>
       </bpmn2:dataOutputAssociation>
     </bpmn2:task>
-    <bpmn2:sequenceFlow id="SequenceFlow_8" drools:priority="1" sourceRef="Task_1" targetRef="IntermediateCatchEvent_2"/>
     <bpmn2:exclusiveGateway id="ExclusiveGateway_1" name="Exclusive Gateway 1" gatewayDirection="Converging">
       <bpmn2:incoming>SequenceFlow_22</bpmn2:incoming>
       <bpmn2:incoming>SequenceFlow_28</bpmn2:incoming>
@@ -285,6 +271,7 @@ System.out.println(&quot;scenario1: questionGroup is &quot; + questionGroup);</b
     <bpmn2:sequenceFlow id="SequenceFlow_16" drools:priority="1" sourceRef="ExclusiveGateway_1" targetRef="ScriptTask_3"/>
     <bpmn2:sequenceFlow id="SequenceFlow_39" drools:priority="1" sourceRef="ScriptTask_2" targetRef="EndEvent_1"/>
     <bpmn2:sequenceFlow id="SequenceFlow_40" drools:priority="1" sourceRef="StartEvent_2" targetRef="ScriptTask_1"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_1" drools:priority="1" sourceRef="Task_1" targetRef="ExclusiveGateway_2"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Process Diagram">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="runScenario">
@@ -310,12 +297,6 @@ System.out.println(&quot;scenario1: questionGroup is &quot; + questionGroup);</b
         <dc:Bounds height="50.0" width="110.0" x="917.0" y="220.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_5">
           <dc:Bounds height="11.0" width="16.0" x="964.0" y="239.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_IntermediateCatchEvent_2" bpmnElement="IntermediateCatchEvent_2">
-        <dc:Bounds height="36.0" width="36.0" x="699.0" y="227.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_6">
-          <dc:Bounds height="11.0" width="26.0" x="704.0" y="263.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_1" bpmnElement="ExclusiveGateway_1" isMarkerVisible="true">
@@ -354,12 +335,6 @@ System.out.println(&quot;scenario1: questionGroup is &quot; + questionGroup);</b
           <dc:Bounds height="11.0" width="53.0" x="51.0" y="263.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_8" bpmnElement="SequenceFlow_8" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_IntermediateCatchEvent_2">
-        <di:waypoint xsi:type="dc:Point" x="650.0" y="245.0"/>
-        <di:waypoint xsi:type="dc:Point" x="674.0" y="245.0"/>
-        <di:waypoint xsi:type="dc:Point" x="699.0" y="245.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_14"/>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_16" bpmnElement="SequenceFlow_16" sourceElement="BPMNShape_ExclusiveGateway_1" targetElement="BPMNShape_ScriptTask_3">
         <di:waypoint xsi:type="dc:Point" x="337.0" y="245.0"/>
         <di:waypoint xsi:type="dc:Point" x="357.0" y="245.0"/>
@@ -371,12 +346,6 @@ System.out.println(&quot;scenario1: questionGroup is &quot; + questionGroup);</b
         <di:waypoint xsi:type="dc:Point" x="513.0" y="245.0"/>
         <di:waypoint xsi:type="dc:Point" x="540.0" y="245.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_17"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_18" bpmnElement="SequenceFlow_18" sourceElement="BPMNShape_IntermediateCatchEvent_2" targetElement="BPMNShape_ExclusiveGateway_2">
-        <di:waypoint xsi:type="dc:Point" x="735.0" y="245.0"/>
-        <di:waypoint xsi:type="dc:Point" x="766.0" y="245.0"/>
-        <di:waypoint xsi:type="dc:Point" x="797.0" y="245.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_18"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_19" bpmnElement="SequenceFlow_19" sourceElement="BPMNShape_ExclusiveGateway_2" targetElement="BPMNShape_ScriptTask_2">
         <di:waypoint xsi:type="dc:Point" x="847.0" y="245.0"/>
@@ -413,6 +382,12 @@ System.out.println(&quot;scenario1: questionGroup is &quot; + questionGroup);</b
         <di:waypoint xsi:type="dc:Point" x="122.0" y="245.0"/>
         <di:waypoint xsi:type="dc:Point" x="150.0" y="245.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_15"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_ExclusiveGateway_2">
+        <di:waypoint xsi:type="dc:Point" x="650.0" y="245.0"/>
+        <di:waypoint xsi:type="dc:Point" x="723.0" y="245.0"/>
+        <di:waypoint xsi:type="dc:Point" x="797.0" y="245.0"/>
+        <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
