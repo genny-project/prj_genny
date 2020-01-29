@@ -923,7 +923,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	}
 
 	public void close() {
-		System.out.println("Completed");
+		System.out.println("Completed GennyKieSession");
 		if (executorService != null) {
 			executorService.destroy();
 		}

@@ -1,13 +1,6 @@
 package life.genny.test;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringReader;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
 import java.sql.SQLException;
@@ -23,11 +16,7 @@ import java.util.Set;
 import javax.persistence.EntityManagerFactory;
 
 import org.apache.logging.log4j.Logger;
-import org.assertj.core.util.Arrays;
 import org.codehaus.plexus.util.StringUtils;
-import org.drools.core.process.instance.impl.WorkItemImpl;
-import org.jbpm.bpmn2.handler.ServiceTaskHandler;
-import org.jbpm.kie.services.impl.model.UserTaskInstanceDesc;
 import org.jbpm.services.api.DefinitionService;
 import org.jbpm.services.api.ProcessService;
 import org.jbpm.services.api.RuntimeDataService;
@@ -36,12 +25,8 @@ import org.jbpm.services.api.admin.ProcessInstanceAdminService;
 import org.jbpm.services.api.model.DeploymentUnit;
 import org.jbpm.services.api.query.QueryService;
 import org.jbpm.services.api.utils.KieServiceConfigurator;
-import org.jbpm.services.task.impl.factories.TaskFactory;
-import org.jbpm.services.task.internals.lifecycle.MVELLifeCycleManager;
-import org.jbpm.services.task.internals.lifecycle.OperationCommand;
 import org.jbpm.services.task.utils.TaskFluent;
 import org.jbpm.services.task.wih.NonManagedLocalHTWorkItemHandler;
-import org.jbpm.services.task.wih.util.PeopleAssignmentHelper;
 import org.jbpm.test.services.TestIdentityProvider;
 import org.jbpm.test.services.TestUserGroupCallbackImpl;
 import org.junit.BeforeClass;
@@ -50,35 +35,26 @@ import org.kie.api.KieBase;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.KieSessionConfiguration;
-import org.kie.api.runtime.manager.RuntimeEngine;
-import org.kie.api.runtime.process.WorkItemManager;
+import org.kie.api.runtime.process.ProcessInstance;
 import org.kie.api.runtime.rule.FactHandle;
-import org.kie.api.task.model.Comment;
-import org.kie.api.task.model.Group;
-import org.kie.api.task.model.OrganizationalEntity;
-import org.kie.api.task.model.Status;
 import org.kie.api.task.model.Task;
 import org.kie.api.task.model.TaskSummary;
 import org.kie.api.task.model.User;
 import org.kie.internal.runtime.StatefulKnowledgeSession;
-import org.kie.internal.runtime.manager.context.EmptyContext;
 import org.kie.internal.task.api.TaskModelProvider;
 import org.kie.internal.task.api.model.InternalComment;
-import org.kie.internal.task.api.model.Operation;
 
 import com.google.gson.reflect.TypeToken;
 
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import io.vertx.core.json.JsonObject;
-import life.genny.bootxport.bootx.GoogleImportService;
-import life.genny.bootxport.bootx.XlsxImport;
-import life.genny.bootxport.bootx.XlsxImportOnline;
+//import life.genny.bootxport.bootx.GoogleImportService;
+//import life.genny.bootxport.bootx.XlsxImport;
+//import life.genny.bootxport.bootx.XlsxImportOnline;
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
-import life.genny.jbpm.customworkitemhandlers.CheckTasksWorkItemHandler;
-import life.genny.jbpm.customworkitemhandlers.AskQuestionTaskWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 import life.genny.model.OutputParamTreeSet;
 import life.genny.models.BaseEntityImport;
@@ -95,9 +71,6 @@ import life.genny.qwanda.Ask;
 import life.genny.qwanda.Context;
 import life.genny.qwanda.ContextType;
 import life.genny.qwanda.VisualControlType;
-import life.genny.qwanda.attribute.Attribute;
-import life.genny.qwanda.attribute.AttributeLink;
-import life.genny.qwanda.attribute.AttributeText;
 import life.genny.qwanda.datatype.DataType;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.SearchEntity;
@@ -107,7 +80,6 @@ import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventMessage;
-import life.genny.qwanda.message.QMessage;
 import life.genny.qwanda.validation.Validation;
 import life.genny.qwanda.validation.ValidationList;
 import life.genny.qwandautils.GennyCacheInterface;
@@ -250,12 +222,15 @@ public class AdamTest {
 				GennyToken newUser2B = gks.createToken("PER_USER2"); 
 				/* Start Process */
 				
-				gks.startProcess("pidTest");
-				
+				ProcessInstance pid = gks.startProcess("pidTest");
+				log.info("PID is "+pid.getId()+":"+pid.getProcessId()+":"+pid.getProcessName());
+
+				gks.advanceSeconds(5, false);
+				gks.advanceSeconds(5, false);
 				/* Query Process */
 				
 				/* Send a signal to it */
-				
+			
 				
 	            
 			} catch (Exception e) {
@@ -396,46 +371,46 @@ public class AdamTest {
 
 		}
 	   
-		public Integer importGoogleDoc(final String id, Map<String,String> fieldMapping)
-		{					
-			
-			log.info("Importing "+id);
-			Integer count = 0;
-			   try {
-				   GoogleImportService gs = GoogleImportService.getInstance();
-				    XlsxImport xlsImport = new XlsxImportOnline(gs.getService());
-			//	    Realm realm = new Realm(xlsImport,id);
-//				    realm.getDataUnits().stream()
-//				        .forEach(data -> System.out.println(data.questions.size()));
-				    Set<String> keys = new HashSet<String>();
-				    for (String field : fieldMapping.keySet()) {
-				    	keys.add(field);
-				    }
-				      Map<String, Map<String,String>> mapData = xlsImport.mappingRawToHeaderAndValuesFmt(id, "Sheet1", keys);
-				      Integer rowIndex = 0;
-				      for (Map<String,String> row : mapData.values()) 
-				      {
-				    	  String rowStr = "Row:"+rowIndex+"->";
-				    	  for (String col : row.keySet()) {
-				    		  String val = row.get(col.trim());
-				    		  if (val!=null) {
-				    			  val = val.trim();
-				    		  }
-				    		  String attributeCode = fieldMapping.get(col);
-				    		  rowStr += attributeCode+"="+val + ",";
-				    	  }
-				    	  rowIndex++;
-				    	  System.out.println(rowStr);
-				      }
-				      
-				    } catch (Exception e1) {
-				      return 0;
-				    }
-
-			
-			return count;
-		}
-	   
+//		public Integer importGoogleDoc(final String id, Map<String,String> fieldMapping)
+//		{					
+//			
+//			log.info("Importing "+id);
+//			Integer count = 0;
+//			   try {
+//				   GoogleImportService gs = GoogleImportService.getInstance();
+//				    XlsxImport xlsImport = new XlsxImportOnline(gs.getService());
+//			//	    Realm realm = new Realm(xlsImport,id);
+////				    realm.getDataUnits().stream()
+////				        .forEach(data -> System.out.println(data.questions.size()));
+//				    Set<String> keys = new HashSet<String>();
+//				    for (String field : fieldMapping.keySet()) {
+//				    	keys.add(field);
+//				    }
+//				      Map<String, Map<String,String>> mapData = xlsImport.mappingRawToHeaderAndValuesFmt(id, "Sheet1", keys);
+//				      Integer rowIndex = 0;
+//				      for (Map<String,String> row : mapData.values()) 
+//				      {
+//				    	  String rowStr = "Row:"+rowIndex+"->";
+//				    	  for (String col : row.keySet()) {
+//				    		  String val = row.get(col.trim());
+//				    		  if (val!=null) {
+//				    			  val = val.trim();
+//				    		  }
+//				    		  String attributeCode = fieldMapping.get(col);
+//				    		  rowStr += attributeCode+"="+val + ",";
+//				    	  }
+//				    	  rowIndex++;
+//				    	  System.out.println(rowStr);
+//				      }
+//				      
+//				    } catch (Exception e1) {
+//				      return 0;
+//				    }
+//
+//			
+//			return count;
+//		}
+//	   
 	   
 	 //  @Test
 	   public void generateCapabilitiesTest()
