@@ -222,6 +222,17 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		return processInstance;
 	}
 
+	public ProcessInstance startProcess(String processId, final SessionFacts sf) {
+		Map<String,Object> msgMap = new HashMap<String,Object>();
+		msgMap.put("message", sf);
+		msgMap.put("userToken", sf.getUserToken());
+		msgMap.put("serviceToken", sf.getServiceToken());
+		processInstance = kieSession.startProcess(processId,msgMap);
+		sessionClock = kieSession.getSessionClock();
+
+		return processInstance;
+	}
+
 	public void broadcastSignal(final String type, final Object event) {
 		kieSession.signalEvent(type, event);
 	}

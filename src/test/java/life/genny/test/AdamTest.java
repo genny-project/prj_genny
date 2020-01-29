@@ -222,8 +222,12 @@ public class AdamTest {
 				GennyToken newUser2B = gks.createToken("PER_USER2"); 
 				/* Start Process */
 				
-				ProcessInstance pid = gks.startProcess("pidTest");
-				log.info("PID is "+pid.getId()+":"+pid.getProcessId()+":"+pid.getProcessName());
+				SessionFacts sf = new SessionFacts(serviceToken,userToken,"APP_ONE");
+				gks.injectSignal("START_MOVE", sf);
+				SessionFacts sf2 = new SessionFacts(serviceToken,userToken,"APP_TWO");
+				gks.injectSignal("START_MOVE", sf2);
+
+			//	log.info("PID is "+pid.getId()+":"+pid.getProcessId()+":"+pid.getProcessName());
 
 				gks.advanceSeconds(5, false);
 				gks.advanceSeconds(5, false);
