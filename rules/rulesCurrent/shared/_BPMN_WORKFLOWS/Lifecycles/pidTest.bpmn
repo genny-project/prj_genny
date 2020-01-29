@@ -104,6 +104,7 @@
         <bpmn2:script>System.out.println(&quot;SessionFacts=&quot;+sessionFacts);
 String code = (String)sessionFacts.getMessage();
 System.out.println(&quot;SessionFacts CODE=&quot;+code);
+kcontext.setVariable(&quot;workflowBeCode&quot;,code);
 bucketCode = &quot;EMPTY&quot;;
 kcontext.setVariable(&quot;bucketCode&quot;, bucketCode);
 System.out.println(&quot;dynamicCards: bucketCode = &quot; + bucketCode);

@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.Set;
 
@@ -226,9 +227,16 @@ public class AdamTest {
 				gks.injectSignal("START_MOVE", sf);
 				SessionFacts sf2 = new SessionFacts(serviceToken,userToken,"APP_TWO");
 				gks.injectSignal("START_MOVE", sf2);
-
-			//	log.info("PID is "+pid.getId()+":"+pid.getProcessId()+":"+pid.getProcessName());
-
+				
+				Optional<Long> pid = GennyKieSession.getProcessIdByWorkflowBeCode("APP_TWO");
+				if (pid.isPresent()) {
+ 				log.info("PID is "+pid);
+				}
+				
+				Optional<Long> pid2 = GennyKieSession.getProcessIdByWorkflowBeCode("APP_ONE");
+				if (pid2.isPresent()) {
+ 				log.info("PID2 is "+pid2);
+				}
 				gks.advanceSeconds(5, false);
 				gks.advanceSeconds(5, false);
 				/* Query Process */
