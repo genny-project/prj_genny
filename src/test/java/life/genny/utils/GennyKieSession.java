@@ -22,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 import org.apache.commons.lang.StringUtils;
@@ -49,6 +50,7 @@ import org.kie.api.KieBase;
 import org.kie.api.command.Command;
 import org.kie.api.executor.ExecutorService;
 import org.kie.api.io.ResourceType;
+import org.kie.api.runtime.Environment;
 import org.kie.api.runtime.EnvironmentName;
 import org.kie.api.runtime.ExecutionResults;
 import org.kie.api.runtime.KieSession;
@@ -1153,6 +1155,23 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 				ProcessInstanceQueryMapper.get(), ctx, QueryParam.equalsTo("workflowBeCode", workflowBeCode));
 		return instances.stream().map(d -> d.getId()).findFirst();
 
+	}
+	
+	/**
+	 * This method creates a entity manager.
+	 */
+	public EntityManager getEntityManager() {
+		Environment env;
+		EntityManager em = (EntityManager) env.get(EnvironmentName.CMD_SCOPED_ENTITY_MANAGER);
+		if (em != null) {
+			return em;
+		}
+		EntityManagerFactory emf = (EntityManagerFactory) env.get(EnvironmentName.ENTITY_MANAGER_FACTORY);
+		if (emf != null) {
+			return emf.createEntityManager();
+		}
+		throw new RuntimeException(
+				"Could not find EntityManager, both command-scoped EM and EMF in environment are null");
 	}
 
 	public static void loadAttributesJsonFromResources(GennyToken gToken) {
