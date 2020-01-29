@@ -171,7 +171,105 @@ public class AdamTest {
 	        this.serviceConfigurator = ServiceLoader.load(KieServiceConfigurator.class).iterator().next();
 	    }
 
-	   @Test
+		@Test
+		public void queryTest()
+		{
+			System.out.println("Process View Test");
+			GennyToken userToken = null;
+			GennyToken serviceToken = null;
+			QRules qRules = null;
+
+			if (true) {
+				userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+				serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+				qRules = new QRules(eventBusMock, userToken.getToken());
+				qRules.set("realm", userToken.getRealm());
+				qRules.setServiceToken(serviceToken.getToken());
+				VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+				GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+			} else {
+				qRules = GennyJbpmBaseTest.setupLocalService();
+				userToken = new GennyToken("userToken", qRules.getToken());
+				serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+			}
+
+			System.out.println("session     =" + userToken.getSessionCode());
+			System.out.println("userToken   =" + userToken.getToken());
+			//System.out.println("userToken2   =" + userToken2.getToken());
+			System.out.println("serviceToken=" + serviceToken.getToken());
+			
+	        BaseEntity intern = new BaseEntity("PRI_INTERN");
+	        BaseEntity internship = new BaseEntity("BE_INTERNSHIP");        
+	        BaseEntity hostCompany = new BaseEntity("CPY_HOSTCOMPANY");
+
+	        /*HashMap<String, BaseEntity> hashBeg = new HashMap<String, BaseEntity>();*/
+	        HashMap<String, String> hashBeg = new HashMap<String, String>();
+	        
+	        hashBeg.put("begstatus", "DUDE");
+	        
+	        /*hashBeg.put("intern", intern);
+	        hashBeg.put("internship", internship);
+	        hashBeg.put("hostCompany", hostCompany);*/
+
+			SessionFacts initFacts = new SessionFacts(serviceToken, null, new QEventMessage("EVT_MSG", "INIT_STARTUP"));
+			QEventMessage authInitMsg = new QEventMessage("EVT_MSG", "AUTH_INIT"); authInitMsg.setToken(userToken.getToken());
+			QEventMessage msgLogout = new QEventMessage("EVT_MSG", "LOGOUT");msgLogout.setToken(userToken.getToken());
+
+
+			// NOW SET UP Some baseentitys
+			BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
+					StringUtils.capitaliseAllWords(serviceToken.getRealm()));
+			project.setRealm(serviceToken.getRealm());
+			VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
+					JsonUtils.toJson(project), serviceToken.getToken());
+			VertxUtils.writeCachedJson(realm,  ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(),JsonUtils.toJson(project), serviceToken.getToken());
+
+
+			GennyKieSession gks = null;
+
+			try {
+				
+				
+				gks = GennyKieSession
+						.builder(serviceToken,true)
+
+	// ADD THE JBPM WORKFLOWS HERE					
+
+						.addJbpm("pidTest.bpmn")
+						
+	// ADD THE DROOLS RULES HERE
+
+
+						.addToken(userToken)
+						.build();
+				
+				gks.start();
+				
+				GennyToken newUser2A = gks.createToken("PER_USER2"); 
+				GennyToken newUser2B = gks.createToken("PER_USER2"); 
+				/* Start Process */
+				
+				gks.startProcess("pidTest");
+				
+				/* Query Process */
+				
+				/* Send a signal to it */
+				
+				
+	            
+			} catch (Exception e) {
+				e.printStackTrace();
+				
+			}
+			finally {
+				if (gks!=null) {
+					gks.close();
+				}
+			}
+		}
+	   
+	//   @Test
 		public void importGoogleIdTest()
 		{
 			System.out.println("Import Google IDTest");

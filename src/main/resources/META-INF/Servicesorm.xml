@@ -1192,7 +1192,7 @@
      select
       new life.genny.model.NodeStatus(
       ns.id,
-      ns.log_date,
+      ns.date,
       ns.nodeId,
       ns.nodeName,
       ns.processId,
@@ -1201,10 +1201,10 @@
       ns.status,
       ns.userCode,
       ns.workflowStatus,
-      ns.workflowBeCode,
+      ns.workflowBeCode
       )
       from
-        nodestatus ns
+        NodeStatus ns
       where
         ns.realm= 'internmatch' and
         ns.workflowBeCode=: workflowBeCode 
