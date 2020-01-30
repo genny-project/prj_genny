@@ -36,11 +36,11 @@ rule "SETUP_UNITY_CONTEXT"
 		System.out.println("Fetching Asks for quesitonCode " + questionCode);
 		QwandaMessage msg = QuestionUtils.getQuestions(userToken.getUserCode(), userToken.getUserCode(), questionCode, serviceToken.getToken());
 		Ask ask = msg.asks.getItems()[0];
-		*/
+		
 		Double weight = 1.0;
 		System.out.println("Creating new Context object");
 		Context context = new Context(ContextType.UNITY, baseEntity, VisualControlType.VCL_DEFAULT, weight);
-        /* List<Context> contexts = new ArrayList<Context>();
+        List<Context> contexts = new ArrayList<Context>();
         contexts.add(context);
 		ContextList contextList = new ContextList(contexts);
 
