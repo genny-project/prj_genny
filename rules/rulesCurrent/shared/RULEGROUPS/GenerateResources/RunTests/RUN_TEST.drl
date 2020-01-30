@@ -33,7 +33,7 @@ rule "RUN_TEST"
 				SessionFacts sf2 = new SessionFacts(serviceToken,serviceToken,"APP_TWO");
 				kieSession.signalEvent("START_MOVE", sf2);
 				
-				Optional<Long> pid = RulesLoader.getProcessIdByWorkflowBeCode("APP_TWO");
+				Optional<Long> pid = RulesLoader.getProcessIdByWorkflowBeCode("internmatch","APP_57AB12A4-C96C-4095-AD2E-1BAC96259F3B");
 				if (pid.isPresent()) {
  					System.out.println("PID is "+pid);
 				} else {
