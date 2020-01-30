@@ -21,6 +21,7 @@ rule "TASK_ITEM_CLEAR_ITEMS_EVENT"
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
 		System.out.println("TASK_ITEM_CLEAR_ITEMS_EVENT: Parent code :  " + $message.getData().getParentCode());
 		
+		TaskUtils.clearAllTasks(userToken);
 		output.setTypeOfResult("NONE");
 		
 		
