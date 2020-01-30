@@ -52,7 +52,8 @@ rule "FRM_TABLE_CONTENT"
                         .addTheme("THM_TABLE_BORDER", serviceToken).end()
 			.addTheme("THM_TABLE_CONTENT_CENTRE", ThemePosition.CENTRE, serviceToken).end()
                         .question("QUE_TABLE_RESULTS_GRP")
-                                .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).weight(1.0).end()
+                                /* .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).weight(1.0).end() */
+                                .addTheme("THM_WIDTH_100_PERCENT_NO_INHERIT", serviceToken).vcl(VisualControlType.GROUP_WRAPPER).weight(1.0).end()
                                 .addTheme("THM_TABLE_ROW_CONTENT_WRAPPER", serviceToken).vcl(VisualControlType.GROUP).weight(1.0).end()
                                 .addTheme("THM_TABLE_ROW", serviceToken).weight(1.0).end()
                                 .addTheme("THM_TABLE_CONTENT_BORDER", serviceToken).vcl(VisualControlType.GROUP_WRAPPER).weight(1.0).end()

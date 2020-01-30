@@ -41,7 +41,7 @@ rule "THM_TABLE_ROW_CONTENT_WRAPPER"
     Theme theme = Theme.builder("THM_TABLE_ROW_CONTENT_WRAPPER")
                   .addAttribute()
                     .width("100%")
-                    .flexDirection("row")
+                    .flexDirection("column")
                   .end()
                   .build();
      theme.setRealm(serviceToken.getRealm());
