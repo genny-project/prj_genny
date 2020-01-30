@@ -8,7 +8,7 @@ import life.genny.utils.OutputParam;
 import life.genny.utils.TaskUtils;
 
 
-rule "TASK_ITEM_CLICK_EVENT"
+rule "TASK_ITEM_CLEAR_ITEMS_EVENT"
     ruleflow-group 'EventProcessing'
 		salience 10000
     no-loop
