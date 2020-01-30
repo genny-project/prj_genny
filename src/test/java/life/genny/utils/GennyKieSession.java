@@ -664,14 +664,15 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			log.warn(query.getName() + " is already registered");
 		}
 
-		SqlQueryDefinition query2 = new SqlQueryDefinition("getAllNodeStatuses", "jdbc/jbpm-ds");
-		query2.setExpression("select * from NodeStatus");
+		SqlQueryDefinition query2 = new SqlQueryDefinition("getAllNodeStatuses2", "jdbc/jbpm-ds");
+//		query2.setExpression("select  new life.genny.model.NodeStatus( ns.id,ns.date,ns.nodeId,ns.nodeName,ns.processId,ns.processInstanceId,ns.realm,ns.status,ns.userCode,ns.workflowStatus,ns.workflowBeCode) from NodeStatus ns where ns.realm= 'internmatch' and ns.workflowBeCode=: workflowBeCode");
+		query2.setExpression("select  * from nodestatus");
+
 		try {
 			queryService.registerQuery(query2);
 		} catch (QueryAlreadyRegisteredException e) {
 			log.warn(query2.getName() + " is already registered");
 		}
-
 		/* Setup the find by workflowBeCode */
 //		SqlQueryDefinition query2 = new SqlQueryDefinition("getAllNodeStatuses", "jdbc/jbpm-ds");
 //		query2.setExpression(" select\n" + 
@@ -1148,15 +1149,23 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 	}
 	
-	public static Optional<Long> getProcessIdByWorkflowBeCode(String workflowBeCode) {
+	public static Optional<Long> getProcessIdByWorkflowBeCode(String realm,String workflowBeCode) {
 		// Do pagination here
 		QueryContext ctx = new QueryContext(0, 100);
-		Collection<ProcessInstanceDesc> instances = queryService.query("getAllNodeStatuses",
-				ProcessInstanceQueryMapper.get(), ctx, QueryParam.equalsTo("workflowBeCode", workflowBeCode));
+		Collection<NodeStatus> instances = queryService.query("getAllNodeStatuses2",
+				NodeStatusQueryMapper.get(), ctx, QueryParam.equalsTo("workflowBeCode", workflowBeCode),QueryParam.equalsTo("realm", realm));
 		return instances.stream().map(d -> d.getId()).findFirst();
 
 	}
-	
+	public static List<String> getWorkflowBeCodeByWorkflowStage(String realm,String workflowStage) {
+		// Do pagination here
+		QueryContext ctx = new QueryContext(0, 100);
+		Collection<NodeStatus> instances = queryService.query("getAllNodeStatuses2",
+				NodeStatusQueryMapper.get(), ctx, QueryParam.equalsTo("workflowStage", workflowStage),QueryParam.equalsTo("realm", realm));
+		return instances.stream().map(d -> d.getWorkflowBeCode()).collect(Collectors.toList());
+
+	}
+
 
 	public static void loadAttributesJsonFromResources(GennyToken gToken) {
 		// This file can be created by using the script locally and placing in the

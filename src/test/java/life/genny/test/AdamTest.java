@@ -228,12 +228,12 @@ public class AdamTest {
 				SessionFacts sf2 = new SessionFacts(serviceToken,userToken,"APP_TWO");
 				gks.injectSignal("START_MOVE", sf2);
 				
-				Optional<Long> pid = GennyKieSession.getProcessIdByWorkflowBeCode("APP_TWO");
+				Optional<Long> pid = GennyKieSession.getProcessIdByWorkflowBeCode(realm,"APP_TWO");
 				if (pid.isPresent()) {
  				log.info("PID is "+pid);
 				}
 				
-				Optional<Long> pid2 = GennyKieSession.getProcessIdByWorkflowBeCode("APP_ONE");
+				Optional<Long> pid2 = GennyKieSession.getProcessIdByWorkflowBeCode(realm,"APP_ONE");
 				if (pid2.isPresent()) {
  				log.info("PID2 is "+pid2);
 				}
