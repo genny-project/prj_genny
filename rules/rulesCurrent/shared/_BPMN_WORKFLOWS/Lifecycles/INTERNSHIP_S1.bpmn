@@ -285,10 +285,14 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
         <bpmn2:script>BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
 
 kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCode()));
+System.out.println(&quot;@@@@@@@@@@@@@@@@@newBe : &quot; + newBe.getCode());
 
 String hostCpyCodeList = beUtils.getBaseEntityValue(newBe.getCode(), &quot;LNK_HOST_COMPANY&quot;).toString();
+System.out.println(&quot;@@@@@@@@@@@@@@@@@hostcompanyCodeList : &quot; + hostCpyCodeList);
 
 JSONArray jsonArray = new JSONArray(hostCpyCodeList);
+System.out.println(&quot;@@@@@@@@@@@@@@@@@hostcompanyCodeList jsonify: &quot; + jsonArray.get(0).toString());
+
 beUtils.createLink(jsonArray.get(0).toString(), newBe.getCode(), &quot;LNK_CPY&quot;, &quot;INTERNSHIP&quot;, 1.0);
 kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCode()));</bpmn2:script>
       </bpmn2:scriptTask>
@@ -333,13 +337,13 @@ kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCod
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_1" bpmnElement="StartEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="245.0" y="301.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_2">
+        <bpmndi:BPMNLabel id="BPMNLabel_2" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
           <dc:Bounds height="22.0" width="69.0" x="229.0" y="337.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_2" bpmnElement="EndEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="1240.0" y="301.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_3">
+        <bpmndi:BPMNLabel id="BPMNLabel_3" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
           <dc:Bounds height="22.0" width="66.0" x="1225.0" y="337.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -351,13 +355,13 @@ kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCod
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_1" bpmnElement="EndEvent_2">
         <dc:Bounds height="36.0" width="36.0" x="1380.0" y="296.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_5">
+        <bpmndi:BPMNLabel id="BPMNLabel_5" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
           <dc:Bounds height="22.0" width="66.0" x="1365.0" y="332.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_2" bpmnElement="StartEvent_3">
         <dc:Bounds height="36.0" width="36.0" x="90.0" y="296.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_6">
+        <bpmndi:BPMNLabel id="BPMNLabel_6" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
           <dc:Bounds height="22.0" width="69.0" x="74.0" y="332.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -387,7 +391,7 @@ kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCod
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_2" bpmnElement="ScriptTask_2" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="810.0" y="294.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_10">
           <dc:Bounds height="11.0" width="49.0" x="840.0" y="313.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -437,14 +441,17 @@ kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCod
         <di:waypoint xsi:type="dc:Point" x="745.0" y="319.0"/>
         <di:waypoint xsi:type="dc:Point" x="777.0" y="319.0"/>
         <di:waypoint xsi:type="dc:Point" x="810.0" y="319.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_15"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_9" bpmnElement="SequenceFlow_9" sourceElement="BPMNShape_ScriptTask_2" targetElement="BPMNShape_IntermediateThrowEvent_2">
         <di:waypoint xsi:type="dc:Point" x="920.0" y="319.0"/>
         <di:waypoint xsi:type="dc:Point" x="960.0" y="319.0"/>
         <di:waypoint xsi:type="dc:Point" x="1000.0" y="319.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_16"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
+    <bpmndi:BPMNLabelStyle>
+      <dc:Font name="arial" size="9.0"/>
+    </bpmndi:BPMNLabelStyle>
   </bpmndi:BPMNDiagram>
 </bpmn2:definitions>
