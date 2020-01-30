@@ -1157,22 +1157,6 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 	}
 	
-	/**
-	 * This method creates a entity manager.
-	 */
-	public EntityManager getEntityManager() {
-		Environment env;
-		EntityManager em = (EntityManager) env.get(EnvironmentName.CMD_SCOPED_ENTITY_MANAGER);
-		if (em != null) {
-			return em;
-		}
-		EntityManagerFactory emf = (EntityManagerFactory) env.get(EnvironmentName.ENTITY_MANAGER_FACTORY);
-		if (emf != null) {
-			return emf.createEntityManager();
-		}
-		throw new RuntimeException(
-				"Could not find EntityManager, both command-scoped EM and EMF in environment are null");
-	}
 
 	public static void loadAttributesJsonFromResources(GennyToken gToken) {
 		// This file can be created by using the script locally and placing in the
