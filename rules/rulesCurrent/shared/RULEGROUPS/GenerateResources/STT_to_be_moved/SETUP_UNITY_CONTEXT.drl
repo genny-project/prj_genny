@@ -49,7 +49,7 @@ rule "SETUP_UNITY_CONTEXT"
 
 		System.out.println("Writing Ask to cache");
 		VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", ask.getQuestionCode(), ask, beUtils.getGennyToken().getToken());*/
-		VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", "CTX_TEST", context, beUtils.getGennyToken().getToken()); 
+		/*VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", "CTX_TEST", context, beUtils.getGennyToken().getToken()); */
 
 		System.out.println("Finished running rule: SETUP_UNITY_CONTEXT");
 	end
