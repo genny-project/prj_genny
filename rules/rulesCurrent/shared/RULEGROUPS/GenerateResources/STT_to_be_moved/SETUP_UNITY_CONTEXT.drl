@@ -1,0 +1,55 @@
+package life.genny.rules;
+import io.vertx.core.json.JsonObject;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.qwanda.message.QEventBtnClickMessage;
+import life.genny.models.GennyToken;
+import life.genny.utils.VertxUtils;
+import life.genny.utils.OutputParam;
+import life.genny.qwanda.message.QDataAskMessage;
+import life.genny.utils.BaseEntityUtils;
+import life.genny.qwanda.entity.BaseEntity;
+import life.genny.utils.QuestionUtils;
+import life.genny.qwandautils.JsonUtils;
+import java.util.ArrayList;
+import java.util.List;
+import life.genny.utils.SessionFacts;
+import life.genny.qwanda.Context;
+import life.genny.qwanda.ContextType;
+
+rule "SETUP_UNITY_CONTEXT"
+    ruleflow-group 'GenerateCapabilities'
+	salience 10000
+    when
+  		serviceToken : GennyToken (code == "PER_SERVICE")
+  		
+     then
+     	System.out.println("   Initialise Unity Context Setup");
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+
+		
+		BaseEntity baseEntity = beUtils.getBaseEntityByCode("UNT_S1_DATA");
+
+		/*
+		String questionCode = "QUE_STT_S1_A_Q1_GRP";
+
+		System.out.println("Fetching Asks for quesitonCode " + questionCode);
+		QwandaMessage msg = QuestionUtils.getQuestions(userToken.getUserCode(), userToken.getUserCode(), questionCode, serviceToken.getToken());
+		Ask ask = msg.asks.getItems()[0];
+		*/
+		Double weight = 1.0;
+		System.out.println("Creating new Context object");
+		Context context = new Context(ContextType.UNITY, baseEntity, VisualControlType.VCL_DEFAULT, weight);
+        /* List<Context> contexts = new ArrayList<Context>();
+        contexts.add(context);
+		ContextList contextList = new ContextList(contexts);
+
+		System.out.println("Setting Context list for Ask");
+        ask.setContextList(contextList);
+
+		System.out.println("Writing Ask to cache");
+		VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", ask.getQuestionCode(), ask, beUtils.getGennyToken().getToken());*/
+		VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", "CTX_TEST", context, beUtils.getGennyToken().getToken()); 
+
+		System.out.println("Finished running rule: SETUP_UNITY_CONTEXT");
+	end

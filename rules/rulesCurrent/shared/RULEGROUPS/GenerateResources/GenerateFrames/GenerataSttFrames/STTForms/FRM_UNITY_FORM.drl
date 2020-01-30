@@ -42,7 +42,7 @@ rule "FRM_UNITY_FORM"
 
     then
 
-        System.out.println(" Generate FRM_UNITY_FORM  RULE TEST (PRJ_STT)" + serviceToken.getUserCode());
+        System.out.println(" Generate  FRM_UNITY_FORM  RULE TEST (PRJ_STT)" + serviceToken.getUserCode());
 
 				Validation validation = new Validation("VLD_ANYTHING", "Anything", ".*");
 				Validation validationImage = new Validation("VLD_IMAGE_URL", "Text", ".*");
@@ -71,53 +71,61 @@ rule "FRM_UNITY_FORM"
 				DataType eventDataType = new DataType("DTT_EVENT",eventValidationList,"Button", "");
 				
 				QwandaMessage askMsg= QuestionUtils.getQuestions("PER_USER1", "PER_USER1", "QUE_STT_S1_A_GRP", serviceToken.getToken());
-		
-				Ask[] asks = askMsg.asks.getItems();
+				QwandaMessage askMsg2= QuestionUtils.getQuestions("PER_USER1", "PER_USER1", "QUE_STT_S1_B_GRP", serviceToken.getToken());
+				QwandaMessage askMsg3= QuestionUtils.getQuestions("PER_USER1", "PER_USER1", "QUE_STT_S1_C_GRP", serviceToken.getToken());	
 				
-				for (Ask ask : asks[0].getChildAsks()){
+				List<Ask[]> asksList = new ArrayList<Ask[]>();
+				asksList.add(askMsg.asks.getItems());
+				asksList.add(askMsg2.asks.getItems());
+				asksList.add(askMsg3.asks.getItems());
 				
-					String questionCode = ask.getQuestionCode();
-					System.out.println("STT QUESTION  :: "+ questionCode);
+				for(Ask[] asks : asksList ){
+				
+					for (Ask ask : asks[0].getChildAsks()){
 					
-					Frame3	frame2 = Frame3.builder("FRM_CONTENT_" +  questionCode)
-						.addTheme("THM_FORM_ATTRIBUTES_GENNY", serviceToken).end()
-						.question(questionCode)
-							.addTheme("THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHT", serviceToken).dataType(buttonDataType).end()
-							.addTheme("THM_FORM_BUTTONS", serviceToken).dataType(buttonDataType).vcl(VisualControlType.INPUT_WRAPPER).end()
-							.addTheme("THM_FORM_BUTTONS_BEHAVIOUR", serviceToken).dataType(buttonDataType).end()
-							.addTheme("THM_FORM_EVENT_BUTTONS_BEHAVIOUR", serviceToken).dataType(eventDataType).end()
-							.addTheme("THM_FORM_BUTTONS_BORDER", serviceToken).dataType(buttonDataType).vcl(VisualControlType.INPUT_FIELD).end()
-							.addTheme("THM_FORM_IMAGE_RESTRICTIONS", serviceToken).dataType(imageDataType).vcl(VisualControlType.VCL_INPUT).end()
-							.addTheme("THM_FORM_IMAGE_RESTRICTIONS_DIMENSION", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_SELECTED).end()
-							.addTheme("THM_FORM_VCL_INPUT_GENNY", serviceToken).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
-							.addTheme("THM_FORM_VCL_LABEL_GENNY", serviceToken).vcl(VisualControlType.VCL_LABEL).end()
-							.addTheme("THM_FORM_VCL_WRAPPER_GENNY", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
-							.addTheme("THM_FORM_VCL_ERROR_GENNY", serviceToken).vcl(VisualControlType.VCL_ERROR).end()
-							.addTheme("THM_FORM_BEHAVIOUR_GENNY", serviceToken).weight(3.0).end()
-							.addTheme("THM_FORM_GROUP_LABEL_GENNY", serviceToken).vcl(VisualControlType.GROUP_LABEL).weight(3.0).end()
-							.addTheme("THM_BACKGROUND_NONE", serviceToken).weight(3.0).end()
-							.addTheme("THM_FORM_GROUP_WRAPPER_GENNY", serviceToken).vcl(VisualControlType.GROUP_WRAPPER).weight(3.0).end()
-							.addTheme("THM_PROJECT_COLOR_SURFACE", serviceToken).vcl(VisualControlType.INPUT_ITEM_WRAPPER).end()
-							.addTheme("THM_PROFILE_IMAGE_FORM", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_SELECTED).end()
-							.addTheme("THM_PROFILE_IMAGE_PLACEHOLDER_FORM", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_PLACEHOLDER).end()
-							.addTheme("THM_PROFILE_IMAGE_FIELD_FORM", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_FIELD).end()
-							.addTheme("THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHT", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_FIELD).end()
-							.addTheme("THM_FORM_BUTTONS", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_FIELD).end()
-							.addTheme("THM_FORM_BUTTONS_BORDER", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_FIELD).end()
-							.addTheme("THM_IS_UNITY_GRP", serviceToken).end()
-						.end().build();
-							
-					frame2.setRealm(serviceToken.getRealm());
-
-					Frame3 frame = Frame3.builder("FRM_" +  questionCode)
-							.addFrame(frame2,FramePosition.CENTRE)
-							.end()
-							.build();
-
-					frame.setRealm(serviceToken.getRealm());
-					System.out.println(frame.getCode());
-					FrameUtils2.toMessage(frame, serviceToken);
-					
-					/*FrameUtils2.toMessage(frame, serviceToken, asks,contextListMap);*/ 
+						String questionCode = ask.getQuestionCode();
+						System.out.println("STT QUESTION  :: "+ questionCode);
+						
+						Frame3	frame2 = Frame3.builder("FRM_CONTENT_" +  questionCode)
+							.addTheme("THM_FORM_ATTRIBUTES_GENNY", serviceToken).end()
+							.question(questionCode)
+								.addTheme("THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHT", serviceToken).dataType(buttonDataType).end()
+								.addTheme("THM_FORM_BUTTONS", serviceToken).dataType(buttonDataType).vcl(VisualControlType.INPUT_WRAPPER).end()
+								.addTheme("THM_FORM_BUTTONS_BEHAVIOUR", serviceToken).dataType(buttonDataType).end()
+								.addTheme("THM_FORM_EVENT_BUTTONS_BEHAVIOUR", serviceToken).dataType(eventDataType).end()
+								.addTheme("THM_FORM_BUTTONS_BORDER", serviceToken).dataType(buttonDataType).vcl(VisualControlType.INPUT_FIELD).end()
+								.addTheme("THM_FORM_IMAGE_RESTRICTIONS", serviceToken).dataType(imageDataType).vcl(VisualControlType.VCL_INPUT).end()
+								.addTheme("THM_FORM_IMAGE_RESTRICTIONS_DIMENSION", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_SELECTED).end()
+								.addTheme("THM_FORM_VCL_INPUT_GENNY", serviceToken).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
+								.addTheme("THM_FORM_VCL_LABEL_GENNY", serviceToken).vcl(VisualControlType.VCL_LABEL).end()
+								.addTheme("THM_FORM_VCL_WRAPPER_GENNY", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
+								.addTheme("THM_FORM_VCL_ERROR_GENNY", serviceToken).vcl(VisualControlType.VCL_ERROR).end()
+								.addTheme("THM_FORM_BEHAVIOUR_GENNY", serviceToken).weight(3.0).end()
+								.addTheme("THM_FORM_GROUP_LABEL_GENNY", serviceToken).vcl(VisualControlType.GROUP_LABEL).weight(3.0).end()
+								.addTheme("THM_BACKGROUND_NONE", serviceToken).weight(3.0).end()
+								.addTheme("THM_FORM_GROUP_WRAPPER_GENNY", serviceToken).vcl(VisualControlType.GROUP_WRAPPER).weight(3.0).end()
+								.addTheme("THM_PROJECT_COLOR_SURFACE", serviceToken).vcl(VisualControlType.INPUT_ITEM_WRAPPER).end()
+								.addTheme("THM_PROFILE_IMAGE_FORM", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_SELECTED).end()
+								.addTheme("THM_PROFILE_IMAGE_PLACEHOLDER_FORM", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_PLACEHOLDER).end()
+								.addTheme("THM_PROFILE_IMAGE_FIELD_FORM", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_FIELD).end()
+								.addTheme("THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHT", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_FIELD).end()
+								.addTheme("THM_FORM_BUTTONS", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_FIELD).end()
+								.addTheme("THM_FORM_BUTTONS_BORDER", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_FIELD).end()
+								.addTheme("THM_IS_UNITY_GRP", serviceToken).end()
+							.end().build();
+								
+						frame2.setRealm(serviceToken.getRealm());
+	
+						Frame3 frame = Frame3.builder("FRM_" +  questionCode)
+								.addFrame(frame2,FramePosition.CENTRE)
+								.end()
+								.build();
+	
+						frame.setRealm(serviceToken.getRealm());
+						System.out.println(frame.getCode());
+						FrameUtils2.toMessage(frame, serviceToken);
+						
+						/*FrameUtils2.toMessage(frame, serviceToken, asks,contextListMap);*/ 
+					}
 				}
 end
