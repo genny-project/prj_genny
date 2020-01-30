@@ -78,10 +78,10 @@
 		<!--  executorservice -->
 		<class>org.jbpm.executor.entities.ErrorInfo</class>
     	<class>org.jbpm.executor.entities.RequestInfo</class>
-
-		<!--  Genny -->
+    	
+    			<!--  Genny -->
 		<class>life.genny.model.NodeStatus</class>
-		
+
 		<properties>
       <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
 

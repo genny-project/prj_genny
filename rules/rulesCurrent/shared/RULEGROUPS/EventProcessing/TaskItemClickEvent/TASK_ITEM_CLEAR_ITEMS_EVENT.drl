@@ -13,7 +13,7 @@ rule "TASK_ITEM_CLEAR_ITEMS_EVENT"
 		salience 10000
     no-loop
     when
-		$message : QEventMessage(data.code matches "QUE_CLEAR_ITEMS" && (data.parentCode == "QUE_DRAFTS_GRP"))
+		$message : QEventMessage(data.code matches "QUE_CLEAR_TASKS" && (data.parentCode == "QUE_DRAFTS_GRP"))
 		userToken : GennyToken (code != "PER_SERVICE" )
 		output : OutputParam( )
 		ruleDetails : RuleDetails()
