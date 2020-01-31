@@ -26,6 +26,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_4" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_383" isCollection="false" structureRef="org.json.JSONArray"/>
+  <bpmn2:itemDefinition id="ItemDefinition_6" isCollection="false" structureRef="life.genny.qwanda.Answer"/>
   <bpmn2:signal id="Signal_1" name="createBE"/>
   <bpmn2:signal id="Signal_2" name="makeBe"/>
   <bpmn2:signal id="Signal_3" name="START_INTERN_S1"/>
@@ -45,6 +46,7 @@
       <drools:import name="life.genny.qwanda.entity.SearchEntity.StringFilter"/>
       <drools:import name="life.genny.qwanda.entity.SearchEntity.Filter"/>
       <drools:import name="org.json.JSONArray"/>
+      <drools:import name="life.genny.qwanda.Answer"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_556" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_556" name="serviceToken"/>
@@ -297,7 +299,12 @@ kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCod
 String eduProCodeList = beUtils.getBaseEntityValue(newBe.getCode(), &quot;LNK_EDU_PROVIDER&quot;).toString();
 System.out.println(&quot;UserLifecycle:  ********* &quot; + eduProCodeList);
 JSONArray jsonArray = new JSONArray(eduProCodeList);
+
 beUtils.createLink(jsonArray.get(0).toString(), newBe.getCode(), &quot;LNK_CPY&quot;, &quot;STUDENT&quot;, 1.0);
+
+beUtils.getBaseEntityByCode(jsonArray.get(0).toString()).getValue(&quot;PRI_NAME&quot;, &quot;PRI_LEGAL_NAME&quot;);
+beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,&quot;PRI_CPY_NAME&quot;, jsonArray.get(0).toString()));
+
 kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCode()));</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_9" drools:priority="1" sourceRef="Task_4" targetRef="ScriptTask_2"/>
