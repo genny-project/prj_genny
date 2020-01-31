@@ -30,6 +30,15 @@ rule "HELPER_PRI_LEGAL_ABN.drl"
 	  output : OutputParam( )
      then
  		System.out.println(ruleDetails+" "+drools.getRule().getName()+"Processing Answer/Data : " + answer );
+ 		if (beUtils.getGennyToken() == null) {
+ 			System.out.println("beUtils.getGennyToken is NULL");
+ 		} else if (beUtils.getGennyToken().getUserCode() == null) {
+ 			System.out.println("beUtils.getGennyToken.userCode is NULL");
+ 		}
+ 		if (answersToSave != null) {
+ 			System.out.println("answersToSave is not null");
+ 			
+ 		}
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		String targetCode = answer.getTargetCode();
 		

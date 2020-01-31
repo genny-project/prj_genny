@@ -280,32 +280,13 @@ public class ChrisTest {
 			
 			gks = GennyKieSession
 					.builder(serviceToken,true)
-					.addDrl("InitialiseProject")
-					.addJbpm("InitialiseProject")
-					
-					.addDrl("AuthInit")
-					.addJbpm("AuthInit")
-
-
-					.addDrl("SignalProcessing")
-					.addDrl("DataProcessing")
-					.addDrl("EventProcessing")
-					.addJbpm("Lifecycles")
 
 // ADD THE JBPM WORKFLOWS HERE					
-					.addJbpm("notificationHub2.bpmn")
-					.addJbpm("baseEntityValidation.bpmn")
-					.addJbpm("dynamicCards.bpmn")
-					.addJbpm("placedCards.bpmn")
-					.addJbpm("progressCards.bpmn")
+
+					.addJbpm("pidTest.bpmn")
 					
 // ADD THE DROOLS RULES HERE
-					.addDrl("MoveBucket")
-					.addDrl("CommonEnter")
-					.addDrl("SpecificEnter")
-					.addDrl("SpecificReminder")
-					.addDrl("Timer")
-					.addDrl("CardStatus")
+
 
 					.addToken(userToken)
 					.build();
@@ -314,42 +295,15 @@ public class ChrisTest {
 			
 			GennyToken newUser2A = gks.createToken("PER_USER2"); 
 			GennyToken newUser2B = gks.createToken("PER_USER2"); 
-
-			gks.injectSignal("initProject"); // This should initialise everything
-			gks.injectEvent("authInitMsg",newUser2A);
-
-//			gks.startProcess("dynamicCards");
-
-			gks.injectEvent("QUE_ADD_APPLICATION", newUser2A);
-			gks.advanceSeconds(5, false);
-
-            gks.advanceSeconds(1, false);
-//            gks.injectSignal("dynamicStatus", "Reactivate");
-            gks.injectSignal("dynamicStatus", "Reactivate", newUser2A);
-            gks.advanceSeconds(5, false);
-            gks.injectSignal("dynamicControl", "FORWARD"); 			// Applied to Shortlist
-            gks.advanceSeconds(5, false);
-            gks.injectSignal("dynamicControl", "FORWARD"); 			// Shortlist to Interview
-            gks.advanceSeconds(5, false);
-////            gks.injectSignal("status", "BACKWARD");		// Interview back to Shortlist 
-////            gks.advanceSeconds(5, false);
-//            gks.injectSignal("appTarget", "FORWARD");		// Shortlist to Interview
-            gks.advanceSeconds(5, false);
-            gks.injectSignal("dynamicControl", "FORWARD");			// Interview to Offered
-            gks.advanceSeconds(5, false);
-            gks.injectSignal("dynamicControl", "FORWARD");			// Offered to Place
-//            gks.advanceSeconds(5, false);
-//            gks.injectSignal("status", "FORWARD");		
-            gks.advanceSeconds(1, false);
-            gks.injectSignal("placedStatus", "Withdraw");
-            gks.advanceSeconds(5, false);
-            gks.injectSignal("placedControl", "FORWARD"); 			// Placed to Progress
-            gks.advanceSeconds(1, false);
-            gks.injectSignal("progressStatus", "Onhold");
-            gks.advanceSeconds(5, false);
-            gks.injectSignal("progressControl", "FORWARD"); 		// Progress to Complete
-            gks.advanceSeconds(5, false);
-          
+			/* Start Process */
+			
+			gks.startProcess("pidTest");
+			
+			/* Query Process */
+			
+			/* Send a signal to it */
+			
+			
             
 		} catch (Exception e) {
 			e.printStackTrace();

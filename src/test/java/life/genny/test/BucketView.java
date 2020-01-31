@@ -137,7 +137,7 @@ public class BucketView extends GennyJbpmBaseTest {
 
 		}
 
-		System.out.print("Completed");
+		System.out.print("Completed ");
 		
 		tableUtils.performSearch(userToken, serviceToken, searchBE.getCode(), null);
 		//tableUtils.fetchSearchResults(searchBE);

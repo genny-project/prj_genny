@@ -16,42 +16,31 @@ import life.genny.utils.SessionFacts;
 
 rule "START_UNITY_CLICK_EVENT"
     ruleflow-group 'EventProcessing'
-		salience 2
+		salience 3
     no-loop
     when
-		$message : QEventMessage(data.code matches "QUE_TREE_ITEM_MESSAGES_NOTIFICATIONS" && (data.rootCode == "QUE_TREE_ITEM_MESSAGES_GRP"))
+		$message : QEventMessage ( ( data.code matches "QUE_STT_SCENARIO_.*" ) && ( data.parentCode matches "QUE_SCENARIO_VIEW_GRP" ) )
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam( )
 		ruleDetails : RuleDetails()
 		
-    then
-		System.out.println("Processing APPLY EVENT : " + $message );
-		/*output.setFormCode("FRM_QUE_ADD_APPLICATION_GRP","FRM_CONTENT");*/
-		
+    then		
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
 		
-		String workflowSignalCode = "UNITY_EVENT";
-
+		/* Send a Signal */
 		output.setTypeOfResult("SIGNAL");
-		output.setResultCode("START_"+workflowSignalCode);
-		output.setTargetCode($message.getData().getTargetCode());
 		
-		/*String assIntBeCode = output.getTargetCode();
-		String s1 = assIntBeCode.substring(assIntBeCode.indexOf("target=")+1);
-		s1.trim();*/
-		/*String s1 = assIntBeCode.split("=")[3];*/
-		/*String s2 = s1.split(":")[0];
-		System.out.println(s2);
+		/* Signal to send */
+		output.setResultCode("START_UNITY_EVENT");
 		
-		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$ targetCode: " + assIntBeCode);
-		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$ targetCode: " + s2);*/
-		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$ targetCode: " + output.getTargetCode());
+		/* Strip message code to get scenario */
+		String scenario = StringUtils.stripStart($message.getData().getCode(), "QUE_STT_");
 		
-		SessionFacts facts = new SessionFacts(serviceToken, userToken, output.getTargetCode());
-		/*SessionFacts facts = new SessionFacts(serviceToken, userToken, output.getTargetCode());*/
-		
-		System.out.println("START SIGNAL: " +workflowSignalCode);
+		/* Send scenario in output target code */
+		output.setTargetCode(scenario);
+				
+		System.out.println("START SIGNAL: START_UNITY_EVENT");
 		System.out.println("STARTING THE NEW APPLICATION WITH: " +output);
 	
 		retract( $message);

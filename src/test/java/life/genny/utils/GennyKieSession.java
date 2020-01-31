@@ -22,12 +22,14 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.drools.core.ClockType;
 import org.drools.core.time.impl.PseudoClockScheduler;
+
 import org.jbpm.executor.ExecutorServiceFactory;
 import org.jbpm.executor.impl.ExecutorImpl;
 import org.jbpm.executor.impl.ExecutorServiceImpl;
@@ -39,6 +41,7 @@ import org.jbpm.process.audit.JPAWorkingMemoryDbLogger;
 import org.jbpm.services.api.model.ProcessInstanceDesc;
 import org.jbpm.services.api.query.QueryAlreadyRegisteredException;
 import org.jbpm.services.api.query.QueryService;
+import org.jbpm.services.api.query.model.QueryDefinition;
 import org.jbpm.services.api.query.model.QueryParam;
 import org.jbpm.services.api.utils.KieServiceConfigurator;
 import org.jbpm.services.task.wih.util.PeopleAssignmentHelper;
@@ -47,6 +50,7 @@ import org.kie.api.KieBase;
 import org.kie.api.command.Command;
 import org.kie.api.executor.ExecutorService;
 import org.kie.api.io.ResourceType;
+import org.kie.api.runtime.Environment;
 import org.kie.api.runtime.EnvironmentName;
 import org.kie.api.runtime.ExecutionResults;
 import org.kie.api.runtime.KieSession;
@@ -66,6 +70,7 @@ import org.kie.internal.command.CommandFactory;
 import org.kie.internal.identity.IdentityProvider;
 import org.kie.internal.io.ResourceFactory;
 import org.kie.internal.query.QueryContext;
+import org.kie.internal.runtime.manager.SessionFactory;
 import org.kie.internal.task.api.TaskModelProvider;
 import org.kie.internal.task.api.UserGroupCallback;
 
@@ -84,6 +89,7 @@ import life.genny.jbpm.customworkitemhandlers.PrintWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.ProcessAnswersWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.ProcessTaskIdWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.RuleFlowGroupWorkItemHandler;
+import life.genny.jbpm.customworkitemhandlers.SendSignalToWorkflowWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.SendSignalWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowAllFormsHandler;
 import life.genny.jbpm.customworkitemhandlers.ShowFrame;
@@ -91,6 +97,7 @@ import life.genny.jbpm.customworkitemhandlers.ShowFrameWIthContextList;
 import life.genny.jbpm.customworkitemhandlers.ShowFrames;
 import life.genny.jbpm.customworkitemhandlers.ThrowSignalProcessWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.ThrowSignalWorkItemHandler;
+import life.genny.model.NodeStatus;
 import life.genny.models.GennyToken;
 import life.genny.qwanda.Answer;
 import life.genny.qwanda.Ask;
@@ -115,6 +122,7 @@ import life.genny.rules.RulesLoader;
 import life.genny.rules.listeners.GennyAgendaEventListener;
 import life.genny.rules.listeners.JbpmInitListener;
 import life.genny.rules.listeners.NodeStatusLog;
+import life.genny.test.qwanda.util.HibernateUtil;
 import life.genny.utils.RulesUtils;
 import life.genny.utils.SessionFacts;
 import life.genny.utils.VertxUtils;
@@ -143,41 +151,39 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	private Map<String, GennyToken> tokens = new HashMap<String, GennyToken>();
 
 	PseudoClockScheduler sessionClock;
-	
+
 	JPAWorkingMemoryDbLogger logger = null;
-	
+
 	GennyToken serviceToken = null;
 	GennyToken userToken = null; // for compatibility
 
 	List<Command<?>> cmds = new ArrayList<Command<?>>();
-	
-	Map<String,List<String>> groups = new HashMap<String,List<String>>();
-	
-	   protected Map<String,Object> messages;
-	   protected Map<String,Answer> answers;
-	   List<Status> statuses = new ArrayList<Status>();
 
-	
+	Map<String, List<String>> groups = new HashMap<String, List<String>>();
+
+	protected Map<String, Object> messages;
+	protected Map<String, Answer> answers;
+	List<Status> statuses = new ArrayList<Status>();
 
 	/**
 	 * static factory method for builder
 	 */
 	public static Builder builder(GennyToken serviceToken) {
-		
-		return new GennyKieSession.Builder(serviceToken,false);
+
+		return new GennyKieSession.Builder(serviceToken, false);
 	}
 
 	/**
 	 * static factory method for builder
 	 */
-	public static Builder builder(GennyToken serviceToken,boolean persistence) {
-		return new GennyKieSession.Builder(serviceToken,persistence);
+	public static Builder builder(GennyToken serviceToken, boolean persistence) {
+		return new GennyKieSession.Builder(serviceToken, persistence);
 	}
 
 	/**
 	 * forces use of the Builder
 	 */
-	private GennyKieSession(GennyToken serviceToken,boolean persistence) {
+	private GennyKieSession(GennyToken serviceToken, boolean persistence) {
 		super(persistence, persistence);
 		try {
 			if (!"PER_SERVICE".equals(serviceToken.getUserCode())) {
@@ -188,7 +194,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			cmds.add(CommandFactory.newInsert(serviceToken, serviceToken.getCode()));
 			super.setUp();
 			this.serviceToken = serviceToken;
-			
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -223,6 +229,17 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		return processInstance;
 	}
 
+	public ProcessInstance startProcess(String processId, final SessionFacts sf) {
+		Map<String,Object> msgMap = new HashMap<String,Object>();
+		msgMap.put("message", sf);
+		msgMap.put("userToken", sf.getUserToken());
+		msgMap.put("serviceToken", sf.getServiceToken());
+		processInstance = kieSession.startProcess(processId,msgMap);
+		sessionClock = kieSession.getSessionClock();
+
+		return processInstance;
+	}
+
 	public void broadcastSignal(final String type, final Object event) {
 		kieSession.signalEvent(type, event);
 	}
@@ -238,24 +255,24 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	public long advanceSeconds(long amount) {
 		return advanceSeconds(amount, false);
 	}
-	
+
 	public void injectMessage(Object object) {
 		kieSession.insert(object);
 	}
 
-	public  void injectAnswer(final String attributeCode, GennyToken gToken) {
-		injectAnswer(attributeCode,gToken,gToken.getUserCode());
+	public void injectAnswer(final String attributeCode, GennyToken gToken) {
+		injectAnswer(attributeCode, gToken, gToken.getUserCode());
 	}
-	
-	public  void injectAnswer(final String attributeCode, GennyToken gToken, final String targetCode) {
+
+	public void injectAnswer(final String attributeCode, GennyToken gToken, final String targetCode) {
 		Answer[] answerArray = new Answer[1];
 		answerArray[0] = answers.get(attributeCode);
 		answerArray[0].setSourceCode(gToken.getUserCode());
 		answerArray[0].setTargetCode(targetCode);
 		QDataAnswerMessage answerMsg = new QDataAnswerMessage(answerArray);
-		answerMsg.setToken(gToken.getToken()); 
-		
-		injectEvent(answerMsg,gToken);
+		answerMsg.setToken(gToken.getToken());
+
+		injectEvent(answerMsg, gToken);
 	}
 
 	public <T extends QMessage> void injectMessage(T msg, GennyToken gToken) {
@@ -263,49 +280,50 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		kieSession.insert(msg);
 	}
 
-	
 	public void injectSignalToProcessInstance(String type, Object object, long processInstanceId) {
 		kieSession.signalEvent(type, object, processInstanceId);
 	}
 
 	public void injectSignal(String messageKey, GennyToken gToken) {
-		SessionFacts sig = (SessionFacts)messages.get(messageKey);
+		SessionFacts sig = (SessionFacts) messages.get(messageKey);
 		sig.setUserToken(gToken);
 		kieSession.signalEvent(messageKey, sig);
 	}
-	
+
 	public void injectSignal(String messageKey) {
-		SessionFacts sig = (SessionFacts)messages.get(messageKey);
+		SessionFacts sig = (SessionFacts) messages.get(messageKey);
 		sig.setUserToken(serviceToken);
 		kieSession.signalEvent(messageKey, sig);
 	}
-	
+
 	public void injectSignal(String type, Object object) {
 		kieSession.signalEvent(type, object);
 	}
-	
+
 	public void injectSignal(String type, Object object, GennyToken gToken) {
 		kieSession.signalEvent(type, object);
 	}
-	
+
 	public void injectEvent(String msgCode, GennyToken gToken) {
-		QMessage msg = (QMessage)messages.get(msgCode);
+		QMessage msg = (QMessage) messages.get(msgCode);
 		injectEvent(msg, gToken);
 	}
-	
+
 	public void injectEvent(QMessage msg) {
 		injectEvent(msg, this.userToken);
 	}
 
-	public void injectEvent(QMessage msg,GennyToken gToken) {
+	public void injectEvent(QMessage msg, GennyToken gToken) {
 		msg.setToken(gToken.getToken());
-		
+
 		if (msg instanceof QEventMessage) {
-			QEventMessage msgEvent = (QEventMessage)msg;
-			System.out.println("Injecting event "+msg.getMsg_type()+"  "+msgEvent.getData().getCode()+ " user->"+gToken.getUserCode());
+			QEventMessage msgEvent = (QEventMessage) msg;
+			System.out.println("Injecting event " + msg.getMsg_type() + "  " + msgEvent.getData().getCode() + " user->"
+					+ gToken.getUserCode());
 		} else {
-			QDataMessage msgData = (QDataMessage)msg;
-			System.out.println("Injecting data "+msg.getMsg_type()+"  "+msgData.getData_type()+ " user->"+gToken.getUserCode());
+			QDataMessage msgData = (QDataMessage) msg;
+			System.out.println("Injecting data " + msg.getMsg_type() + "  " + msgData.getData_type() + " user->"
+					+ gToken.getUserCode());
 
 		}
 		QEventMessage eventMsg = null;
@@ -314,84 +332,83 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		String msg_type = "";
 		String bridgeSourceAddress = "";
 
-		
-			if (msg instanceof QEventMessage)  {
-				eventMsg = (QEventMessage)msg;
-			}
-			if (msg instanceof QDataMessage)  {
-				dataMsg = (QDataMessage)msg;
-			}
+		if (msg instanceof QEventMessage) {
+			eventMsg = (QEventMessage) msg;
+		}
+		if (msg instanceof QDataMessage) {
+			dataMsg = (QDataMessage) msg;
+		}
 
-			if ((eventMsg != null) && (eventMsg.getData().getCode().equals("INIT_STARTUP"))) {
-				kieSession.startProcess("initProject");
-			} else  {
-				// This is a userToken so send the event through
-				String session_state = gToken.getSessionCode();
-				bridgeSourceAddress = "bridge";
-				Long processId  = null;
-				
-				// Check if an existing userSession is there
-				
+		if ((eventMsg != null) && (eventMsg.getData().getCode().equals("INIT_STARTUP"))) {
+			kieSession.startProcess("initProject");
+		} else {
+			// This is a userToken so send the event through
+			String session_state = gToken.getSessionCode();
+			bridgeSourceAddress = "bridge";
+			Long processId = null;
 
+			// Check if an existing userSession is there
 
-				Optional<Long> processIdBysessionId = getProcessIdBysessionId(session_state);
-				boolean hasProcessIdBySessionId = processIdBysessionId.isPresent();
+			Optional<Long> processIdBysessionId = getProcessIdBysessionId(session_state);
+			boolean hasProcessIdBySessionId = processIdBysessionId.isPresent();
+			if (hasProcessIdBySessionId) {
 				if (hasProcessIdBySessionId) {
-					if (hasProcessIdBySessionId) {
-						processId = processIdBysessionId.get();
-					}
-					System.out.println("incoming " + msg_type + " message from " + bridgeSourceAddress + ": "
-							+ gToken.getRealm() + ":" + gToken.getSessionCode() + ":" + gToken.getUserCode()
-							+ "   " + msg_code + " to pid " + processId);
-
-					// So send the event through to the userSession
-					if (eventMsg != null) {
-						SessionFacts sessionFactsEvent = new SessionFacts(serviceToken, gToken , eventMsg);
-					//	kieSession.signalEvent("EV_"+session_state, sessionFactsEvent);
-					//	kieSession.signalEvent("EV_"+session_state, sessionFactsEvent, processId);
-						// HACK
-						if (eventMsg.getData().getCode().equals("QUE_SUBMIT")) {
-							Answer dataAnswer = new Answer(gToken.getUserCode(),gToken.getUserCode(),"PRI_SUBMIT","QUE_SUBMIT");
-							dataMsg = new QDataAnswerMessage(dataAnswer);
-							SessionFacts sessionFactsData = new SessionFacts(serviceToken, gToken , dataMsg);							
-							kieSession.signalEvent("data", sessionFactsData, processId);
-						}
-							else	if (eventMsg.getData().getCode().equals("QUE_CANCEL")) {
-								Answer dataAnswer = new Answer(gToken.getUserCode(),gToken.getUserCode(),"PRI_SUBMIT","QUE_CANCEL");
-								dataMsg = new QDataAnswerMessage(dataAnswer);
-								SessionFacts sessionFactsData = new SessionFacts(serviceToken, gToken , dataMsg);							
-								kieSession.signalEvent("data", sessionFactsData, processId);
-						
-						} else {
-							kieSession.signalEvent("event", sessionFactsEvent, processId);
-						}
-					} else if (dataMsg != null) {
-						SessionFacts sessionFactsData = new SessionFacts(serviceToken, gToken , dataMsg);
-					//	kieSession.signalEvent("DT_"+session_state, sessionFactsData);
-						kieSession.signalEvent("data", sessionFactsData, processId);
-					}
-
-				} else {
-					// Must be the AUTH_INIT
-					if ((eventMsg != null) && (eventMsg.getMsg_type().equals("EVT_MSG")) && (eventMsg.getData().getCode().equals("AUTH_INIT"))) {
-						eventMsg.getData().setValue("NEW_SESSION");
-						System.out.println("incoming  message from " + bridgeSourceAddress + ": " + gToken.getRealm() + ":"
-								+ gToken.getSessionCode() + ":" + gToken.getUserCode() + "   " + msg_code
-								+ " to NEW SESSION");
-						try {
-							SessionFacts sessionFactsEvent = new SessionFacts(serviceToken, gToken , eventMsg);
-							kieSession.signalEvent("newSession", sessionFactsEvent);
-						} catch (Exception e) {
-							System.out.println("Runtime error: "+e.getLocalizedMessage());
-						}
-					} else {
-						log.error("NO EXISTING SESSION AND NOT AUTH_INIT");
-						;
-					}
+					processId = processIdBysessionId.get();
 				}
-			} 
+				System.out.println("incoming " + msg_type + " message from " + bridgeSourceAddress + ": "
+						+ gToken.getRealm() + ":" + gToken.getSessionCode() + ":" + gToken.getUserCode() + "   "
+						+ msg_code + " to pid " + processId);
+
+				// So send the event through to the userSession
+				if (eventMsg != null) {
+					SessionFacts sessionFactsEvent = new SessionFacts(serviceToken, gToken, eventMsg);
+					// kieSession.signalEvent("EV_"+session_state, sessionFactsEvent);
+					// kieSession.signalEvent("EV_"+session_state, sessionFactsEvent, processId);
+					// HACK
+					if (eventMsg.getData().getCode().equals("QUE_SUBMIT")) {
+						Answer dataAnswer = new Answer(gToken.getUserCode(), gToken.getUserCode(), "PRI_SUBMIT",
+								"QUE_SUBMIT");
+						dataMsg = new QDataAnswerMessage(dataAnswer);
+						SessionFacts sessionFactsData = new SessionFacts(serviceToken, gToken, dataMsg);
+						kieSession.signalEvent("data", sessionFactsData, processId);
+					} else if (eventMsg.getData().getCode().equals("QUE_CANCEL")) {
+						Answer dataAnswer = new Answer(gToken.getUserCode(), gToken.getUserCode(), "PRI_SUBMIT",
+								"QUE_CANCEL");
+						dataMsg = new QDataAnswerMessage(dataAnswer);
+						SessionFacts sessionFactsData = new SessionFacts(serviceToken, gToken, dataMsg);
+						kieSession.signalEvent("data", sessionFactsData, processId);
+
+					} else {
+						kieSession.signalEvent("event", sessionFactsEvent, processId);
+					}
+				} else if (dataMsg != null) {
+					SessionFacts sessionFactsData = new SessionFacts(serviceToken, gToken, dataMsg);
+					// kieSession.signalEvent("DT_"+session_state, sessionFactsData);
+					kieSession.signalEvent("data", sessionFactsData, processId);
+				}
+
+			} else {
+				// Must be the AUTH_INIT
+				if ((eventMsg != null) && (eventMsg.getMsg_type().equals("EVT_MSG"))
+						&& (eventMsg.getData().getCode().equals("AUTH_INIT"))) {
+					eventMsg.getData().setValue("NEW_SESSION");
+					System.out.println("incoming  message from " + bridgeSourceAddress + ": " + gToken.getRealm() + ":"
+							+ gToken.getSessionCode() + ":" + gToken.getUserCode() + "   " + msg_code
+							+ " to NEW SESSION");
+					try {
+						SessionFacts sessionFactsEvent = new SessionFacts(serviceToken, gToken, eventMsg);
+						kieSession.signalEvent("newSession", sessionFactsEvent);
+					} catch (Exception e) {
+						System.out.println("Runtime error: " + e.getLocalizedMessage());
+					}
+				} else {
+					log.error("NO EXISTING SESSION AND NOT AUTH_INIT");
+					;
+				}
+			}
+		}
 	}
-	
+
 	public long advanceSeconds(long amount, boolean humanTime) {
 		long absoluteTime = 0;
 		for (int sec = 0; sec < (amount * 2); sec++) {
@@ -399,8 +416,8 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			if (humanTime) {
 				sleepMS(500);
 			}
-			if ((sec % 2)==0) {
-				System.out.print(((amount)-(sec/2))+"s..");
+			if ((sec % 2) == 0) {
+				System.out.print(((amount) - (sec / 2)) + "s..");
 			}
 		}
 		System.out.println();
@@ -441,8 +458,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	}
 
 	private void setup() {
-		
-		
+
 		if (clockType.equals(ClockType.PSEUDO_CLOCK)) {
 			System.setProperty("drools.clockType", "pseudo"/* clockType.name() */);
 		} else if (clockType.equals(ClockType.REALTIME_CLOCK)) {
@@ -454,7 +470,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		// config.setOption( ClockTypeOption.get("realtime") );
 
 		/* Set up RulesEngine Hooks Setup */
-		if (this.drls==null) {
+		if (this.drls == null) {
 			this.drls = new ArrayList<String>();
 		}
 		this.drls.add(DRL_RULESENGINE_HOOKS_DIR);
@@ -467,7 +483,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 					System.out.println("Loading " + fullJbpmPath);
 				} else {
 					// Is a directory
-					List<String> fullJbpmPaths = findFullPaths(p, "bpmn",false);
+					List<String> fullJbpmPaths = findFullPaths(p, "bpmn", false);
 					fullJbpmPaths.forEach(f -> {
 						resources.put(f, ResourceType.BPMN2);
 						System.out.println("Loading " + f.toString());
@@ -485,7 +501,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 					System.out.println("Loading " + fullDrlPath);
 				} else {
 					// Is a directory
-					List<String> fullPaths = findFullPaths(p, "drl",false);
+					List<String> fullPaths = findFullPaths(p, "drl", false);
 					fullPaths.forEach(f -> {
 						resources.put(f, ResourceType.DRL);
 						System.out.println("Loading " + f.toString());
@@ -502,7 +518,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 					System.out.println("Loading " + fullDtablePath);
 				} else {
 					// Is a directory
-					List<String> fullPaths = findFullPaths(p, "xls",false);
+					List<String> fullPaths = findFullPaths(p, "xls", false);
 					fullPaths.forEach(f -> {
 						resources.put(f, ResourceType.DTABLE);
 						System.out.println("Loading " + f.toString());
@@ -514,23 +530,19 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 		System.out.println("Loaded in All Resources");
 
-		String uniqueRuntimeStr = this.serviceToken.getRealm();//UUID.randomUUID().toString();
-		
+		String uniqueRuntimeStr = this.serviceToken.getRealm();// UUID.randomUUID().toString();
+
 		System.setProperty("org.kie.server.bypass.auth.user", "true");
 
 		if (!GennySettings.useJMS) {
 			System.out.println("NOT USING JMS");
 			EntityManagerFactory emf = super.getEmf();
 
-
-			RuntimeEnvironmentBuilder envBuilder = RuntimeEnvironmentBuilder.Factory
-					.get()
-					.newEmptyBuilder()
+			RuntimeEnvironmentBuilder envBuilder = RuntimeEnvironmentBuilder.Factory.get().newEmptyBuilder()
 					// remember to register the executor service
-					.addEnvironmentEntry( EnvironmentName.ENTITY_MANAGER_FACTORY, emf )
-					.entityManagerFactory(emf)
+					.addEnvironmentEntry(EnvironmentName.ENTITY_MANAGER_FACTORY, emf).entityManagerFactory(emf)
 					.persistence(sessionPersistence)
-					
+
 //					.userGroupCallback(new UserGroupCallback() {
 //		    			public List<String> getGroupsForUser(String userId) {  // could actually send token rather than user
 //		    				List<String> result = new ArrayList<String>();
@@ -557,68 +569,61 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 //		    			}
 //		    		});
 					.userGroupCallback(new GennyUsersCallback());
-					
-					
-	        for (Map.Entry<String, ResourceType> entry : resources.entrySet()) {
-	            try {
+
+			for (Map.Entry<String, ResourceType> entry : resources.entrySet()) {
+				try {
 					envBuilder.addAsset(ResourceFactory.newClassPathResource(entry.getKey()), entry.getValue());
 				} catch (Exception e) {
-					System.out.println("Error loading "+entry.getKey()+" :"+e.getLocalizedMessage());
+					System.out.println("Error loading " + entry.getKey() + " :" + e.getLocalizedMessage());
 				}
-	        }
-	        RuntimeEnvironment env = envBuilder.get();
-	     
-	        RulesLoader.runtimeManager =  createRuntimeManager(Strategy.SINGLETON, resources, env, uniqueRuntimeStr);
-		       KieBase kieBase =  env.getKieBase();
-		       RulesLoader.getKieBaseCache().put(serviceToken.getRealm(),kieBase);
-			
+			}
+			RuntimeEnvironment env = envBuilder.get();
+
+			RulesLoader.runtimeManager = createRuntimeManager(Strategy.SINGLETON, resources, env, uniqueRuntimeStr);
+			KieBase kieBase = env.getKieBase();
+			RulesLoader.getKieBaseCache().put(serviceToken.getRealm(), kieBase);
+
 		} else {
 			System.out.println("USINGJMS");
 			EntityManagerFactory emf = super.getEmf();
 			String executorQueueName = "queue/KIE.SERVER.EXECUTOR";
 			// build executor service
-	        executorService = ExecutorServiceFactory.newExecutorService(emf);
-	        executorService.setInterval(3);
-	        executorService.setRetries(3);
-	        executorService.setThreadPoolSize(1);
-	        executorService.setTimeunit(TimeUnit.valueOf( "SECONDS"));
+			executorService = ExecutorServiceFactory.newExecutorService(emf);
+			executorService.setInterval(3);
+			executorService.setRetries(3);
+			executorService.setThreadPoolSize(1);
+			executorService.setTimeunit(TimeUnit.valueOf("SECONDS"));
 
-	        ((ExecutorImpl) ((ExecutorServiceImpl) executorService).getExecutor()).setQueueName(executorQueueName);
+			((ExecutorImpl) ((ExecutorServiceImpl) executorService).getExecutor()).setQueueName(executorQueueName);
 
-	        executorService.init();
-			
-			RuntimeEnvironmentBuilder envBuilder = RuntimeEnvironmentBuilder.Factory
-					.get()
-					.newEmptyBuilder()
+			executorService.init();
+
+			RuntimeEnvironmentBuilder envBuilder = RuntimeEnvironmentBuilder.Factory.get().newEmptyBuilder()
 					// remember to register the executor service
-					.addEnvironmentEntry("ExecutorService", executorService) 
-					.addEnvironmentEntry( EnvironmentName.ENTITY_MANAGER_FACTORY, emf )
-					.entityManagerFactory(emf)
+					.addEnvironmentEntry("ExecutorService", executorService)
+					.addEnvironmentEntry(EnvironmentName.ENTITY_MANAGER_FACTORY, emf).entityManagerFactory(emf)
 					.userGroupCallback(new GennyUsersCallback());
-				
-					
-	        for (Map.Entry<String, ResourceType> entry : resources.entrySet()) {
-	            envBuilder.addAsset(ResourceFactory.newClassPathResource(entry.getKey()), entry.getValue());
-	        }
-	        RuntimeEnvironment env = envBuilder.get();
-	       KieBase kieBase =  env.getKieBase();
-	       RulesLoader.getKieBaseCache().put(serviceToken.getRealm(),kieBase);
+
+			for (Map.Entry<String, ResourceType> entry : resources.entrySet()) {
+				envBuilder.addAsset(ResourceFactory.newClassPathResource(entry.getKey()), entry.getValue());
+			}
+			RuntimeEnvironment env = envBuilder.get();
+			KieBase kieBase = env.getKieBase();
+			RulesLoader.getKieBaseCache().put(serviceToken.getRealm(), kieBase);
 
 			RulesLoader.runtimeManager = createRuntimeManager(Strategy.SINGLETON, resources, env, uniqueRuntimeStr);
 
 		}
 
 		kieSession = getRuntimeEngine().getKieSession();
-		
-		
 
 		if (kieSession != null) {
-		//	logger = new JPAWorkingMemoryDbLogger(kieSession);
+			// logger = new JPAWorkingMemoryDbLogger(kieSession);
 			AbstractAuditLogger logger = new NodeStatusLog(kieSession);
 
 			// Register handlers
 			addWorkItemHandlers(getRuntimeEngine());
-			
+
 			kieSession.addEventListener(new GennyAgendaEventListener());
 
 			kieSession.addEventListener(new JbpmInitListener(serviceToken));
@@ -628,14 +633,14 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 					kieSession.addEventListener(new JbpmInitListener(tokens.get(token.getUserCode())));
 				}
 			}
-			
+
 			// Handle attributes ourselves if no background service
 			if (VertxUtils.cachedEnabled) {
 				loadAttributesJsonFromResources(this.serviceToken);
 			}
 
-			kieSession.getEnvironment().set("Autoclaim", "true");  // for JBPM
-		//	kieSession.setGlobal("log", log);
+			kieSession.getEnvironment().set("Autoclaim", "true"); // for JBPM
+			// kieSession.setGlobal("log", log);
 
 			// Add any tokens
 //			for (String tokenKey : this.tokens.keySet()) {
@@ -646,18 +651,57 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		} else {
 			log.error("KieSession not initialised");
 		}
-		
+
 		QueryDefinitionEntity qde = new QueryDefinitionEntity();
 		configureServices();
+		
+		/* Setup the find by sessionId */
 		SqlQueryDefinition query = new SqlQueryDefinition("getAllProcessInstances", "jdbc/jbpm-ds");
 		query.setExpression("select * from VariableInstanceLog");
 		try {
 			queryService.registerQuery(query);
 		} catch (QueryAlreadyRegisteredException e) {
-			log.warn(query.getName()+" is already registered");
+			log.warn(query.getName() + " is already registered");
 		}
-		
-		
+
+		SqlQueryDefinition query2 = new SqlQueryDefinition("getAllNodeStatuses2", "jdbc/jbpm-ds");
+//		query2.setExpression("select  new life.genny.model.NodeStatus( ns.id,ns.date,ns.nodeId,ns.nodeName,ns.processId,ns.processInstanceId,ns.realm,ns.status,ns.userCode,ns.workflowStatus,ns.workflowBeCode) from NodeStatus ns where ns.realm= 'internmatch' and ns.workflowBeCode=: workflowBeCode");
+		query2.setExpression("select  * from nodestatus");
+
+		try {
+			queryService.registerQuery(query2);
+		} catch (QueryAlreadyRegisteredException e) {
+			log.warn(query2.getName() + " is already registered");
+		}
+		/* Setup the find by workflowBeCode */
+//		SqlQueryDefinition query2 = new SqlQueryDefinition("getAllNodeStatuses", "jdbc/jbpm-ds");
+//		query2.setExpression(" select\n" + 
+//				"      new life.genny.model.NodeStatus(\n" + 
+//				"      ns.id,\n" + 
+//				"      ns.date,\n" + 
+//				"      ns.nodeId,\n" + 
+//				"      ns.nodeName,\n" + 
+//				"      ns.processId,\n" + 
+//				"      ns.processInstanceId,\n" + 
+//				"      ns.realm,\n" + 
+//				"      ns.status,\n" + 
+//				"      ns.userCode,\n" + 
+//				"      ns.workflowStatus,\n" + 
+//				"      ns.workflowBeCode\n" + 
+//				"      )\n" + 
+//				"      from\n" + 
+//				"        NodeStatus ns\n" + 
+//				"      where\n" + 
+//				"        ns.realm= 'internmatch' and\n" + 
+//				"        ns.workflowBeCode=: workflowBeCode \n" + 
+//				"      order by \n" + 
+//				"        ns.id DESC");
+//		try {
+//			queryService.registerQuery(query2);
+//		} catch (QueryAlreadyRegisteredException e) {
+//			log.warn(query2.getName() + " is already registered");
+//		}
+
 		this.setupMessages();
 		this.setupCache();
 		this.setupAnswers();
@@ -665,46 +709,49 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 		// Hack
 		RulesLoader.taskServiceMap.put(serviceToken.getRealm(), this.getTaskService());
-		
+
 		System.out.println("Completed Setup");
 	}
 
 	private void addWorkItemHandlers(RuntimeEngine rteng) {
 		kieSession.getWorkItemManager().registerWorkItemHandler("SendSignal",
-				new SendSignalWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng));
+				new SendSignalWorkItemHandler(MethodHandles.lookup().lookupClass(), rteng));
 
-		kieSession.getWorkItemManager().registerWorkItemHandler("GetProcessesUsingVariable", new GetProcessesUsingVariable());
+		kieSession.getWorkItemManager().registerWorkItemHandler("SendSignalByWorkflowBeCode",
+				new SendSignalToWorkflowWorkItemHandler(MethodHandles.lookup().lookupClass(), rteng));
+
+		kieSession.getWorkItemManager().registerWorkItemHandler("GetProcessesUsingVariable",
+				new GetProcessesUsingVariable());
 		kieSession.getWorkItemManager().registerWorkItemHandler("Awesome", new AwesomeHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("Notification", new NotificationWorkItemHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("ShowAllForms", new ShowAllFormsHandler());
 		kieSession.getWorkItemManager().registerWorkItemHandler("ShowFrame", new ShowFrame());
 		rteng.getKieSession().getWorkItemManager().registerWorkItemHandler("ShowFrames", new ShowFrames());
 		kieSession.getWorkItemManager().registerWorkItemHandler("Print", new PrintWorkItemHandler());
-		kieSession.getWorkItemManager().registerWorkItemHandler("ShowFrameWithContextList", new ShowFrameWIthContextList());
-		kieSession.getWorkItemManager().registerWorkItemHandler("RuleFlowGroup", new RuleFlowGroupWorkItemHandler(rteng));
+		kieSession.getWorkItemManager().registerWorkItemHandler("ShowFrameWithContextList",
+				new ShowFrameWIthContextList());
+		kieSession.getWorkItemManager().registerWorkItemHandler("RuleFlowGroup",
+				new RuleFlowGroupWorkItemHandler(rteng));
 		kieSession.getWorkItemManager().registerWorkItemHandler("ThrowSignalProcess",
 				new ThrowSignalProcessWorkItemHandler(rteng));
 		kieSession.getWorkItemManager().registerWorkItemHandler("ThrowSignal",
-				new ThrowSignalWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng));
-		
-		kieSession.getWorkItemManager().registerWorkItemHandler("SendSignal",
-				new SendSignalWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng));
+				new ThrowSignalWorkItemHandler(MethodHandles.lookup().lookupClass(), rteng));
 
-		
 		kieSession.getWorkItemManager().registerWorkItemHandler("JMSSendTask", new JMSSendTaskWorkItemHandler());
 
 		kieSession.getWorkItemManager().registerWorkItemHandler("AskQuestionTask",
-				new AskQuestionTaskWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng,kieSession));
+				new AskQuestionTaskWorkItemHandler(MethodHandles.lookup().lookupClass(), rteng, kieSession));
 		kieSession.getWorkItemManager().registerWorkItemHandler("CheckTasks",
-				new CheckTasksWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng,kieSession));
+				new CheckTasksWorkItemHandler(MethodHandles.lookup().lookupClass(), rteng, kieSession));
 		kieSession.getWorkItemManager().registerWorkItemHandler("ProcessAnswers",
-				new ProcessAnswersWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng, kieSession));
+				new ProcessAnswersWorkItemHandler(MethodHandles.lookup().lookupClass(), rteng, kieSession));
 
 		kieSession.getWorkItemManager().registerWorkItemHandler("ProcessTaskId",
-				new ProcessTaskIdWorkItemHandler(MethodHandles.lookup().lookupClass(),rteng,kieSession));
+				new ProcessTaskIdWorkItemHandler(MethodHandles.lookup().lookupClass(), rteng, kieSession));
 
-		kieSession.getWorkItemManager().registerWorkItemHandler("NotificationHub", new NotificationHubWorkItemHandler());
-		
+		kieSession.getWorkItemManager().registerWorkItemHandler("NotificationHub",
+				new NotificationHubWorkItemHandler());
+
 		if (workItemHandlers != null) {
 			for (Tuple2<String, WorkItemHandler> wih : workItemHandlers) {
 				kieSession.getWorkItemManager().registerWorkItemHandler(wih._1, wih._2);
@@ -760,9 +807,8 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		return found.getAbsoluteFile().getPath().substring(base.getAbsoluteFile().getPath().length() + 1);
 
 	}
-	
-	public static void  displayForm(final String rootFrameCode, String targetFrameCode, GennyToken userToken)
-	{
+
+	public static void displayForm(final String rootFrameCode, String targetFrameCode, GennyToken userToken) {
 
 		if (userToken == null) {
 			log.error("Must supply userToken!");
@@ -852,15 +898,15 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 			}
 
-		}	}
-	
-	public void sendLogout(GennyToken userToken)
-	{
-		QCmdMessage msg = new QCmdMessage("LOGOUT","LOGOUT");
+		}
+	}
+
+	public void sendLogout(GennyToken userToken) {
+		QCmdMessage msg = new QCmdMessage("LOGOUT", "LOGOUT");
 		msg.setToken(userToken.getToken());
 		String jsonStr = JsonUtils.toJson(msg);
-		VertxUtils.writeMsg("webcmds", jsonStr);  
-		
+		VertxUtils.writeMsg("webcmds", jsonStr);
+
 	}
 
 	private List<String> findFullPaths(String dirname, String extension, boolean allowXXX) {
@@ -877,11 +923,11 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		Set<Path> resourcePaths = getAllFilesInDirectory(found.getAbsoluteFile().getPath(), extension);
 
 		List<String> files = new ArrayList<String>();
-		resourcePaths.forEach(f -> { 
+		resourcePaths.forEach(f -> {
 			String filename = f.getFileName().toString();
-			
+
 			String fullPath = findFullPath(f.toString());
-			if ((!fullPath.contains("XXX")) ||allowXXX) {
+			if ((!fullPath.contains("XXX")) || allowXXX) {
 				String addFilePath = findFullPath(f.toString());
 				files.add(addFilePath);
 			}
@@ -924,10 +970,10 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	}
 
 	public void close() {
-		System.out.println("Completed");
-	       if (executorService != null) {
-	            executorService.destroy();
-	        }
+		System.out.println("Completed GennyKieSession");
+		if (executorService != null) {
+			executorService.destroy();
+		}
 		kieSession.dispose();
 		try {
 			super.tearDown();
@@ -945,11 +991,11 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		private GennyKieSession managedInstance = null;
 
 		public Builder(GennyToken serviceToken) {
-			managedInstance = new GennyKieSession(serviceToken,false);
+			managedInstance = new GennyKieSession(serviceToken, false);
 		}
 
-		public Builder(GennyToken serviceToken,boolean persistence) {
-			managedInstance = new GennyKieSession(serviceToken,persistence);
+		public Builder(GennyToken serviceToken, boolean persistence) {
+			managedInstance = new GennyKieSession(serviceToken, persistence);
 		}
 
 		/**
@@ -984,6 +1030,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 			return this;
 		}
+
 		/**
 		 * fluent setter for dtables in the list
 		 * 
@@ -1090,10 +1137,9 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 		serviceConfigurator.configureServices("org.jbpm.persistence.jpa", identityProvider, userGroupCallback);
 		queryService = serviceConfigurator.getQueryService();
-		
 
 	}
-	
+
 	public static Optional<Long> getProcessIdBysessionId(String sessionId) {
 		// Do pagination here
 		QueryContext ctx = new QueryContext(0, 100);
@@ -1103,33 +1149,49 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 	}
 	
-	public static void loadAttributesJsonFromResources(GennyToken gToken)
-	{
-		// This file can be created by using the script locally and placing in the src/test/resources
-		//TOKEN=$(./gettoken-prod.sh )
-		// curl -X GET --header 'Accept: application/json'  --header "Authorization: Bearer $TOKEN" 'http://alyson7.genny.life/qwanda/attributes'
-		
-		
-	    String jsonString;
-			jsonString = readLineByLineJava8( "src/main/resources/attributes.json" );
-			VertxUtils.writeCachedJson(gToken.getRealm(), "attributes", jsonString, gToken.getToken());
-			
-			QDataAttributeMessage attributesMsg = JsonUtils.fromJson(jsonString, QDataAttributeMessage.class);
-			Attribute[] attributeArray = attributesMsg.getItems();
+	public static Optional<Long> getProcessIdByWorkflowBeCode(String realm,String workflowBeCode) {
+		// Do pagination here
+		QueryContext ctx = new QueryContext(0, 100);
+		Collection<NodeStatus> instances = queryService.query("getAllNodeStatuses2",
+				NodeStatusQueryMapper.get(), ctx, QueryParam.equalsTo("workflowBeCode", workflowBeCode),QueryParam.equalsTo("realm", realm));
+		return instances.stream().map(d -> d.getId()).findFirst();
 
-			for (Attribute attribute : attributeArray) {
-				RulesUtils.attributeMap.put(attribute.getCode(), attribute);
-			}
+	}
+	public static List<String> getWorkflowBeCodeByWorkflowStage(String realm,String workflowStage) {
+		// Do pagination here
+		QueryContext ctx = new QueryContext(0, 100);
+		Collection<NodeStatus> instances = queryService.query("getAllNodeStatuses2",
+				NodeStatusQueryMapper.get(), ctx, QueryParam.equalsTo("workflowStage", workflowStage),QueryParam.equalsTo("realm", realm));
+		return instances.stream().map(d -> d.getWorkflowBeCode()).collect(Collectors.toList());
+
 	}
 
-	
+
+	public static void loadAttributesJsonFromResources(GennyToken gToken) {
+		// This file can be created by using the script locally and placing in the
+		// src/test/resources
+		// TOKEN=$(./gettoken-prod.sh )
+		// curl -X GET --header 'Accept: application/json' --header "Authorization:
+		// Bearer $TOKEN" 'http://alyson7.genny.life/qwanda/attributes'
+
+		String jsonString;
+		jsonString = readLineByLineJava8("src/main/resources/attributes.json");
+		VertxUtils.writeCachedJson(gToken.getRealm(), "attributes", jsonString, gToken.getToken());
+
+		QDataAttributeMessage attributesMsg = JsonUtils.fromJson(jsonString, QDataAttributeMessage.class);
+		Attribute[] attributeArray = attributesMsg.getItems();
+
+		for (Attribute attribute : attributeArray) {
+			RulesUtils.attributeMap.put(attribute.getCode(), attribute);
+		}
+	}
+
 	public static Optional<Long> getProcessIdBySessionId(String sessionId) {
 		return GennyKieSession.getProcessIdBysessionId(sessionId);
 	}
 
-	
-	public static void sendData(GennyToken serviceToken, GennyToken userToken,String rootFrameCode, String targetFrameCode,   List<QDataBaseEntityMessage> msgs , Set<QDataAskMessage> askMsgs2)
-	{
+	public static void sendData(GennyToken serviceToken, GennyToken userToken, String rootFrameCode,
+			String targetFrameCode, List<QDataBaseEntityMessage> msgs, Set<QDataAskMessage> askMsgs2) {
 
 		if (userToken == null) {
 			log.error("Must supply userToken!");
@@ -1151,33 +1213,35 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 					}
 
 					for (QDataBaseEntityMessage msg : msgs) {
-					for (BaseEntity targetFrame : msg.getItems()) {
-						if (targetFrame.getCode().equals(targetFrameCode)) {
+						for (BaseEntity targetFrame : msg.getItems()) {
+							if (targetFrame.getCode().equals(targetFrameCode)) {
 
-							log.info("ShowFrame : Found Targeted Frame BaseEntity : " + targetFrame);
+								log.info("ShowFrame : Found Targeted Frame BaseEntity : " + targetFrame);
 
-							/* Adding the links in the targeted BaseEntity */
-							Attribute attribute = new Attribute("LNK_FRAME", "LNK_FRAME", new DataType(String.class));
+								/* Adding the links in the targeted BaseEntity */
+								Attribute attribute = new Attribute("LNK_FRAME", "LNK_FRAME",
+										new DataType(String.class));
 
-							for (BaseEntity sourceFrame : FRM_MSG.getItems()) {
-								if (sourceFrame.getCode().equals(rootFrameCode)) {
+								for (BaseEntity sourceFrame : FRM_MSG.getItems()) {
+									if (sourceFrame.getCode().equals(rootFrameCode)) {
 
-									System.out.println("ShowFrame : Found Source Frame BaseEntity : " + sourceFrame);
-									EntityEntity entityEntity = new EntityEntity(targetFrame, sourceFrame, attribute,
-											1.0, "CENTRE");
-									Set<EntityEntity> entEntList = targetFrame.getLinks();
-									entEntList.add(entityEntity);
-									targetFrame.setLinks(entEntList);
+										System.out
+												.println("ShowFrame : Found Source Frame BaseEntity : " + sourceFrame);
+										EntityEntity entityEntity = new EntityEntity(targetFrame, sourceFrame,
+												attribute, 1.0, "CENTRE");
+										Set<EntityEntity> entEntList = targetFrame.getLinks();
+										entEntList.add(entityEntity);
+										targetFrame.setLinks(entEntList);
 
-									/* Adding Frame to Targeted Frame BaseEntity Message */
-									FRM_MSG.add(targetFrame);
-									FRM_MSG.setReplace(true);
-									break;
+										/* Adding Frame to Targeted Frame BaseEntity Message */
+										FRM_MSG.add(targetFrame);
+										FRM_MSG.setReplace(true);
+										break;
+									}
 								}
+								break;
 							}
-							break;
 						}
-					}
 					}
 
 					FRM_MSG.setToken(userToken.getToken());
@@ -1185,7 +1249,6 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 					FRM_MSG.setReplace(true);
 
 					VertxUtils.writeMsg("webcmds", JsonUtils.toJson(FRM_MSG));
-
 
 					// System.out.println("Sending Asks");
 					if ((askMsgs2 != null) && (!askMsgs2.isEmpty())) {
@@ -1213,304 +1276,284 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 		}
 	}
-	
-	
-	
-	
-    //Read file content into string with - Files.lines(Path path, Charset cs)
-	 
- 
+
+	// Read file content into string with - Files.lines(Path path, Charset cs)
 
 	/**
 	 * @return the taskService
 	 */
 	public TaskService getTaskService() {
-		return  getRuntimeEngine().getTaskService();
+		return getRuntimeEngine().getTaskService();
 	}
 
-	public RuntimeEngine getGennyRuntimeEngine()
-	{
+	public RuntimeEngine getGennyRuntimeEngine() {
 		return getRuntimeEngine();
 	}
-	
-	private static String readLineByLineJava8(String filePath)
-    {
-        StringBuilder contentBuilder = new StringBuilder();
- 
-        try (Stream<String> stream = Files.lines( Paths.get(filePath), StandardCharsets.UTF_8))
-        {
-            stream.forEach(s -> contentBuilder.append(s).append("\n"));
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
- 
-        return contentBuilder.toString();
-    }
-	
-	public void showStatuses(String... userCodes)
-	{
-			List<Status> statuses = new ArrayList<Status>();
-	        statuses.add(Status.Ready);
-	        statuses.add(Status.Completed);
-	        statuses.add(Status.Created);
-	        statuses.add(Status.Error);
-	        statuses.add(Status.Exited);
-	        statuses.add(Status.InProgress);
-	        statuses.add(Status.Obsolete);
-	        statuses.add(Status.Reserved);
-	        statuses.add(Status.Suspended);
-	        
-	        List<String> groups = new ArrayList<String>();
-	        
-            for (String userCode2 : userCodes) {
-            	if (userCode2.startsWith("GRP_")) {                 
-                    String code = this.serviceToken.getRealm()+ "+" + userCode2;
-                    groups.add(code);
-                    System.out.println(userCode2+" "+showTaskNames(getTaskService().getTasksAssignedAsPotentialOwner(null, groups, "en-AU", 0,10)));           		
-            	} else {
-            		System.out.println(userCode2+"  "+showTaskNames(getTaskService().getTasksAssignedAsPotentialOwnerByStatus(this.serviceToken.getRealm()+"+"+userCode2.toUpperCase(), statuses, null)));
-            	}
-            }
-        System.out.println();
+
+	private static String readLineByLineJava8(String filePath) {
+		StringBuilder contentBuilder = new StringBuilder();
+
+		try (Stream<String> stream = Files.lines(Paths.get(filePath), StandardCharsets.UTF_8)) {
+			stream.forEach(s -> contentBuilder.append(s).append("\n"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return contentBuilder.toString();
 	}
-	
-	 String showTaskNames(List<TaskSummary> tasks)
-	 {
-		 String ret = "";
-		 if (tasks.isEmpty()) {
-			return "(empty)"; 
-		 } 
-		 for (TaskSummary task : tasks) {
-			 ret += "["+task.getName()+"("+task.getProcessId()+"):"+task.getStatusId()+"],";
-		 }
-		 return ret;
-	 }
-	 
-		public void createTestUsersGroups() {
-			
-			PeopleAssignmentHelper peopleAssignmentHelper;
-			peopleAssignmentHelper = new PeopleAssignmentHelper();
-			List<OrganizationalEntity> organizationalEntities = new ArrayList<OrganizationalEntity>();
-			String ids = "Software Developer,Project Manager";
-			//peopleAssignmentHelper.processPeopleAssignments(ids, organizationalEntities, false);
-			//PeopleAssignmentHelper.ACTOR_ID
-			//PeopleAssignmentHelper.BUSINESSADMINISTRATOR_ID
-			//PeopleAssignmentHelper.BUSINESSADMINISTRATOR_GROUP_ID
-			//peopleAssignmentHelper.
-			
-			createTestGroup(this.serviceToken.getRealm(), "GRP_USERS", "Users",serviceToken);
-			createTestGroup(this.serviceToken.getRealm(), "GRP_GADA", "GADA",serviceToken);
-			createTestGroup(this.serviceToken.getRealm(), "GRP_CROWTECH", "Crowtech",serviceToken);
-			createTestGroup(this.serviceToken.getRealm(), "GRP_OUTCOME", "Outcome.Life",serviceToken);
-			createTestGroup(this.serviceToken.getRealm(), "Administrators", "Administrators",serviceToken);
-			List<String> gada =new ArrayList<String>();
-			gada.add("GRP_USERS");
-			gada.add("GRP_GADA");
-			groups.put("gada", gada);
-			
-			List<String> outcome =new ArrayList<String>();
-			outcome.add("GRP_USERS");
-			outcome.add("GRP_OUTCOME");
-			groups.put("outcome", outcome);
-			
-			List<String>crowtech =new ArrayList<String>();
-			crowtech.add("GRP_USERS");
-			crowtech.add("GRP_CROWTECH");
-			crowtech.add("GRP_GADA");
-			crowtech.add("Administrators"); // TODO
-			groups.put("crowtech", crowtech);
-			
-			List<String>both =new ArrayList<String>();
-			both.add("GRP_USERS");
-			both.add("GRP_GADA");
-			both.add("GRP_OUTCOME");
-			groups.put("gada-outcome", both);
-		
 
-			BaseEntity PER_USER1 = createTestUser(serviceToken.getRealm(), "PER_USER1", "Ginger", gada,serviceToken);
-			BaseEntity acrow = createTestUser(serviceToken.getRealm(), "PER_ADAMCROW63_AT_GMAIL_COM", "Adam", crowtech,serviceToken);
-			BaseEntity domenic = createTestUser(serviceToken.getRealm(), "PER_DOMENIC_AT_OUTCOME_LIFE", "Domenic", gada,serviceToken);
-			BaseEntity gerard = createTestUser(serviceToken.getRealm(), "PER_GERARD_AT_OUTCOME_LIFE", "Gerard ", outcome,serviceToken);
-			BaseEntity anish = createTestUser(serviceToken.getRealm(), "PER_ANISH_AT_GADA_IO", "Anish", new ArrayList<String>(),serviceToken);
-			BaseEntity chris = createTestUser(serviceToken.getRealm(), "PER_CHRIS_AT_GADA_IO", "Chris", both,serviceToken);
+	public void showStatuses(String... userCodes) {
+		List<Status> statuses = new ArrayList<Status>();
+		statuses.add(Status.Ready);
+		statuses.add(Status.Completed);
+		statuses.add(Status.Created);
+		statuses.add(Status.Error);
+		statuses.add(Status.Exited);
+		statuses.add(Status.InProgress);
+		statuses.add(Status.Obsolete);
+		statuses.add(Status.Reserved);
+		statuses.add(Status.Suspended);
 
-		}
+		List<String> groups = new ArrayList<String>();
 
-		private BaseEntity createTestGroup(String realm, String code, String name , GennyToken serviceToken) {
-			BaseEntity group = createTestBaseEntity(realm, code, serviceToken);
-			// save the new group
-			VertxUtils.writeCachedJson(serviceToken.getRealm(), code,
-					JsonUtils.toJson(group), serviceToken.getToken());
-			Group JbpmGroup = (Group) TaskModelProvider.getFactory().newGroup(code);
-			return group;
-			
-		}
-		private BaseEntity createTestUser(String realm, String code, String name , List<String> groups, GennyToken serviceToken) {
-			BaseEntity user = createTestBaseEntity(realm, code, serviceToken);
-			// Link to each group
-			Attribute linkAttribute = RulesUtils.getAttribute("LNK_CORE",serviceToken.getToken());
-
-			for (String groupCode : groups) {
-				 BaseEntity group = VertxUtils.getObject(serviceToken.getRealm(), "", groupCode,
-							BaseEntity.class, serviceToken.getToken());
-				 // now link the new user
-				 try {
-					group.addTarget(user, linkAttribute, 1.0);
-					 VertxUtils.writeCachedJson(serviceToken.getRealm(), groupCode,
-								JsonUtils.toJson(group), serviceToken.getToken());
-				} catch (BadDataException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
+		for (String userCode2 : userCodes) {
+			if (userCode2.startsWith("GRP_")) {
+				String code = this.serviceToken.getRealm() + "+" + userCode2;
+				groups.add(code);
+				System.out.println(userCode2 + " " + showTaskNames(
+						getTaskService().getTasksAssignedAsPotentialOwner(null, groups, "en-AU", 0, 10)));
+			} else {
+				System.out.println(
+						userCode2 + "  " + showTaskNames(getTaskService().getTasksAssignedAsPotentialOwnerByStatus(
+								this.serviceToken.getRealm() + "+" + userCode2.toUpperCase(), statuses, null)));
 			}
-			List<String> realmGroups = new ArrayList<String>();
-			for (String str : groups) {
-				realmGroups.add(realm+"+"+str);
-			}
-			String newGroupString = JsonUtils.toJson(realmGroups);
-			Attribute groupsAttribute = RulesUtils.getAttribute("PRI_GROUPS",serviceToken.getToken());
+		}
+		System.out.println();
+	}
+
+	String showTaskNames(List<TaskSummary> tasks) {
+		String ret = "";
+		if (tasks.isEmpty()) {
+			return "(empty)";
+		}
+		for (TaskSummary task : tasks) {
+			ret += "[" + task.getName() + "(" + task.getProcessId() + "):" + task.getStatusId() + "],";
+		}
+		return ret;
+	}
+
+	public void createTestUsersGroups() {
+
+		PeopleAssignmentHelper peopleAssignmentHelper;
+		peopleAssignmentHelper = new PeopleAssignmentHelper();
+		List<OrganizationalEntity> organizationalEntities = new ArrayList<OrganizationalEntity>();
+		String ids = "Software Developer,Project Manager";
+		// peopleAssignmentHelper.processPeopleAssignments(ids, organizationalEntities,
+		// false);
+		// PeopleAssignmentHelper.ACTOR_ID
+		// PeopleAssignmentHelper.BUSINESSADMINISTRATOR_ID
+		// PeopleAssignmentHelper.BUSINESSADMINISTRATOR_GROUP_ID
+		// peopleAssignmentHelper.
+
+		createTestGroup(this.serviceToken.getRealm(), "GRP_USERS", "Users", serviceToken);
+		createTestGroup(this.serviceToken.getRealm(), "GRP_GADA", "GADA", serviceToken);
+		createTestGroup(this.serviceToken.getRealm(), "GRP_CROWTECH", "Crowtech", serviceToken);
+		createTestGroup(this.serviceToken.getRealm(), "GRP_OUTCOME", "Outcome.Life", serviceToken);
+		createTestGroup(this.serviceToken.getRealm(), "Administrators", "Administrators", serviceToken);
+		List<String> gada = new ArrayList<String>();
+		gada.add("GRP_USERS");
+		gada.add("GRP_GADA");
+		groups.put("gada", gada);
+
+		List<String> outcome = new ArrayList<String>();
+		outcome.add("GRP_USERS");
+		outcome.add("GRP_OUTCOME");
+		groups.put("outcome", outcome);
+
+		List<String> crowtech = new ArrayList<String>();
+		crowtech.add("GRP_USERS");
+		crowtech.add("GRP_CROWTECH");
+		crowtech.add("GRP_GADA");
+		crowtech.add("Administrators"); // TODO
+		groups.put("crowtech", crowtech);
+
+		List<String> both = new ArrayList<String>();
+		both.add("GRP_USERS");
+		both.add("GRP_GADA");
+		both.add("GRP_OUTCOME");
+		groups.put("gada-outcome", both);
+
+		BaseEntity PER_USER1 = createTestUser(serviceToken.getRealm(), "PER_USER1", "Ginger", gada, serviceToken);
+		BaseEntity acrow = createTestUser(serviceToken.getRealm(), "PER_ADAMCROW63_AT_GMAIL_COM", "Adam", crowtech,
+				serviceToken);
+		BaseEntity domenic = createTestUser(serviceToken.getRealm(), "PER_DOMENIC_AT_OUTCOME_LIFE", "Domenic", gada,
+				serviceToken);
+		BaseEntity gerard = createTestUser(serviceToken.getRealm(), "PER_GERARD_AT_OUTCOME_LIFE", "Gerard ", outcome,
+				serviceToken);
+		BaseEntity anish = createTestUser(serviceToken.getRealm(), "PER_ANISH_AT_GADA_IO", "Anish",
+				new ArrayList<String>(), serviceToken);
+		BaseEntity chris = createTestUser(serviceToken.getRealm(), "PER_CHRIS_AT_GADA_IO", "Chris", both, serviceToken);
+
+	}
+
+	private BaseEntity createTestGroup(String realm, String code, String name, GennyToken serviceToken) {
+		BaseEntity group = createTestBaseEntity(realm, code, serviceToken);
+		// save the new group
+		VertxUtils.writeCachedJson(serviceToken.getRealm(), code, JsonUtils.toJson(group), serviceToken.getToken());
+		Group JbpmGroup = (Group) TaskModelProvider.getFactory().newGroup(code);
+		return group;
+
+	}
+
+	private BaseEntity createTestUser(String realm, String code, String name, List<String> groups,
+			GennyToken serviceToken) {
+		BaseEntity user = createTestBaseEntity(realm, code, serviceToken);
+		// Link to each group
+		Attribute linkAttribute = RulesUtils.getAttribute("LNK_CORE", serviceToken.getToken());
+
+		for (String groupCode : groups) {
+			BaseEntity group = VertxUtils.getObject(serviceToken.getRealm(), "", groupCode, BaseEntity.class,
+					serviceToken.getToken());
+			// now link the new user
 			try {
-				user.addAnswer(new Answer(user,user,groupsAttribute,newGroupString));
+				group.addTarget(user, linkAttribute, 1.0);
+				VertxUtils.writeCachedJson(serviceToken.getRealm(), groupCode, JsonUtils.toJson(group),
+						serviceToken.getToken());
 			} catch (BadDataException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			// save the new user
-			VertxUtils.writeCachedJson(serviceToken.getRealm(), code,
-					JsonUtils.toJson(user), serviceToken.getToken());
-
-			User JbpmUser = (User) TaskModelProvider.getFactory().newUser(code);
-			
-
-			return user;
-			
-		}
-		
-		private BaseEntity createTestBaseEntity(String realm, String code, GennyToken serviceToken)
-		{
-			code = code.toUpperCase();
-			BaseEntity be = new BaseEntity(code,
-					StringUtils.capitaliseAllWords(serviceToken.getRealm()));
-			be.setRealm(serviceToken.getRealm());
-			VertxUtils.writeCachedJson(serviceToken.getRealm(), code,
-					JsonUtils.toJson(be), serviceToken.getToken());
-		//	VertxUtils.writeCachedJson(realm,  ":" + code,JsonUtils.toJson(be), serviceToken.getToken());
-			return be;
 
 		}
-
-		private void setupAnswers()
-		{
-			answers = new HashMap<String,Answer>();
-			createAnswer("PRI_FIRSTNAME","Bruce");
-			createAnswer("PRI_LASTNAME","Wayne");
-			createAnswer("PRI_ADDRESS_JSON","{\"street_number\":\"64\",\"street_name\":\"Fakenham Road\",\"suburb\":\"Ashburton\",\"state\":\"Victoria\",\"country\":\"AU\",\"postal_code\":\"3147\",\"full_address\":\"64 Fakenham Rd, Ashburton VIC 3147, Australia\",\"latitude\":-37.863208,\"longitude\":145.092359,\"street_address\":\"64 Fakenham Road\"}");
-			createAnswer("PRI_MOBILE","0432212321");
-			createAnswer("PRI_DOB","2000-01-02");
-			createAnswer("PRI_EMAIL","bruce@gmail.com");
-			createAnswer("PRI_PREFERRED_NAME","Brucey");
-			createAnswer("PRI_USER_PROFILE_PICTURE","https://image.com");
-			createAnswer("PRI_ADDRESS_FULL","17 Hardware Lane, MELBOURNE, VIC, 3000");
-
+		List<String> realmGroups = new ArrayList<String>();
+		for (String str : groups) {
+			realmGroups.add(realm + "+" + str);
 		}
-		
-		public Answer createAnswer(final String attributeCode, final String value )
-		{
-			return createAnswer(attributeCode, value, false, 1.0);
+		String newGroupString = JsonUtils.toJson(realmGroups);
+		Attribute groupsAttribute = RulesUtils.getAttribute("PRI_GROUPS", serviceToken.getToken());
+		try {
+			user.addAnswer(new Answer(user, user, groupsAttribute, newGroupString));
+		} catch (BadDataException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		// save the new user
+		VertxUtils.writeCachedJson(serviceToken.getRealm(), code, JsonUtils.toJson(user), serviceToken.getToken());
 
-		
-		public Answer createAnswer(final String attributeCode, final String value, final Boolean changeEvent, final Double weight )
-		{
-			Answer answer = new Answer("SOURCE","TARGET", attributeCode, value, changeEvent);
-			answer.setWeight(weight);
-			answers.put(attributeCode, answer);
-			return answer;
-		}
+		User JbpmUser = (User) TaskModelProvider.getFactory().newUser(code);
 
-		 private void setupMessages()
-		 {
-			 	messages = new HashMap<String,Object>();
-			 	QEventMessage initProjMsg = new QEventMessage("EVT_MSG", "INIT_STARTUP");
-		//	 	initProjMsg.getData().setValue("NO_RULES_CHANGED");
-				createMessage("initProject",new SessionFacts(serviceToken, null, initProjMsg));
+		return user;
+
+	}
+
+	private BaseEntity createTestBaseEntity(String realm, String code, GennyToken serviceToken) {
+		code = code.toUpperCase();
+		BaseEntity be = new BaseEntity(code, StringUtils.capitaliseAllWords(serviceToken.getRealm()));
+		be.setRealm(serviceToken.getRealm());
+		VertxUtils.writeCachedJson(serviceToken.getRealm(), code, JsonUtils.toJson(be), serviceToken.getToken());
+		// VertxUtils.writeCachedJson(realm, ":" + code,JsonUtils.toJson(be),
+		// serviceToken.getToken());
+		return be;
+
+	}
+
+	private void setupAnswers() {
+		answers = new HashMap<String, Answer>();
+		createAnswer("PRI_FIRSTNAME", "Bruce");
+		createAnswer("PRI_LASTNAME", "Wayne");
+		createAnswer("PRI_ADDRESS_JSON",
+				"{\"street_number\":\"64\",\"street_name\":\"Fakenham Road\",\"suburb\":\"Ashburton\",\"state\":\"Victoria\",\"country\":\"AU\",\"postal_code\":\"3147\",\"full_address\":\"64 Fakenham Rd, Ashburton VIC 3147, Australia\",\"latitude\":-37.863208,\"longitude\":145.092359,\"street_address\":\"64 Fakenham Road\"}");
+		createAnswer("PRI_MOBILE", "0432212321");
+		createAnswer("PRI_DOB", "2000-01-02");
+		createAnswer("PRI_EMAIL", "bruce@gmail.com");
+		createAnswer("PRI_PREFERRED_NAME", "Brucey");
+		createAnswer("PRI_USER_PROFILE_PICTURE", "https://image.com");
+		createAnswer("PRI_ADDRESS_FULL", "17 Hardware Lane, MELBOURNE, VIC, 3000");
+
+	}
+
+	public Answer createAnswer(final String attributeCode, final String value) {
+		return createAnswer(attributeCode, value, false, 1.0);
+	}
+
+	public Answer createAnswer(final String attributeCode, final String value, final Boolean changeEvent,
+			final Double weight) {
+		Answer answer = new Answer("SOURCE", "TARGET", attributeCode, value, changeEvent);
+		answer.setWeight(weight);
+		answers.put(attributeCode, answer);
+		return answer;
+	}
+
+	private void setupMessages() {
+		messages = new HashMap<String, Object>();
+		QEventMessage initProjMsg = new QEventMessage("EVT_MSG", "INIT_STARTUP");
+		// initProjMsg.getData().setValue("NO_RULES_CHANGED");
+		createMessage("initProject", new SessionFacts(serviceToken, null, initProjMsg));
 
 //			 	QEventMessage initProjMsgFrames = new QEventMessage("EVT_MSG", "INIT_STARTUP");
 //			 	initProjMsgFrames.getData().setValue("NO_RULES_CHANGED");
 //				createMessage("initProjectFrames",new SessionFacts(serviceToken, null, initProjMsgFrames));
 
-				QEventMessage authMsg = new QEventMessage("EVT_MSG", "AUTH_INIT");
-				createMessage("authInitMsg",authMsg);
+		QEventMessage authMsg = new QEventMessage("EVT_MSG", "AUTH_INIT");
+		createMessage("authInitMsg", authMsg);
 
-				createMessage("QUE_SUBMIT",new QEventMessage("EVT_MSG", "QUE_SUBMIT"));
-				createMessage("QUE_CANCEL",new QEventMessage("EVT_MSG", "QUE_CANCEL"));
-				createMessage("QUE_RESET",new QEventMessage("EVT_MSG", "QUE_RESET"));
-				createMessage("msgLogout",new QEventMessage("EVT_MSG", "LOGOUT"));
-				createMessage("QUE_ADD_APPLICATION",new QEventMessage("EVT_MSG", "QUE_ADD_APPLICATION"));
-		 }
-		 
-		 private void setupCache()
-		 {
+		createMessage("QUE_SUBMIT", new QEventMessage("EVT_MSG", "QUE_SUBMIT"));
+		createMessage("QUE_CANCEL", new QEventMessage("EVT_MSG", "QUE_CANCEL"));
+		createMessage("QUE_RESET", new QEventMessage("EVT_MSG", "QUE_RESET"));
+		createMessage("msgLogout", new QEventMessage("EVT_MSG", "LOGOUT"));
+		createMessage("QUE_ADD_APPLICATION", new QEventMessage("EVT_MSG", "QUE_ADD_APPLICATION"));
+	}
 
-				// NOW SET UP Some baseentitys
-				BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
-						StringUtils.capitaliseAllWords(serviceToken.getRealm()));
-				project.setRealm(serviceToken.getRealm());
-				
-				createCacheBE("PRJ_" + serviceToken.getRealm().toUpperCase(),project);
+	private void setupCache() {
 
-				VertxUtils.writeCachedJson(GennySettings.GENNY_REALM,
-						"TOKEN" + serviceToken.getRealm().toUpperCase(),serviceToken.getToken());
+		// NOW SET UP Some baseentitys
+		BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
+				StringUtils.capitaliseAllWords(serviceToken.getRealm()));
+		project.setRealm(serviceToken.getRealm());
 
-		 }
-		 
-		 protected QEventMessage getQEventMessage(String key) {
-			 return (QEventMessage) messages.get(key);
-		 }
-		 
-		 protected SessionFacts getSessionFacts(String key) {
-			 return (SessionFacts) messages.get(key);
-		 }
-		 
-		 private <T extends BaseEntity> void createCacheBE(String code, T be)
-		 {
-			 VertxUtils.writeCachedJson(serviceToken.getRealm(), code,
-						JsonUtils.toJson(be), serviceToken.getToken());
-			 
-		 }
-		 
-		 private Object createMessage(String key,Object payload)
-		 {
-			 messages.put(key, payload);
-			 return payload;
-		 }
-		 
-		 public GennyToken createToken(String code)
-		 {
-			 String name = StringUtils.capitaliseAllWords(code);
-			 GennyToken gToken = GennyJbpmBaseTest.createGennyToken(this.serviceToken.getRealm(), code, name, "user");
-			 // create the user!
-			 BaseEntityUtils beUtils = new BaseEntityUtils(gToken);
-			 beUtils.setServiceToken(this.serviceToken);
-			 
-		
-			 return gToken;
-		 }
-		 
-		 public GennyToken createToken(String code, String rolesString)
-		 {
-			 String name = StringUtils.capitaliseAllWords(code);
-			 GennyToken gToken = GennyJbpmBaseTest.createGennyToken(this.serviceToken.getRealm(), code, name, rolesString);
-			 // create the user!
-			 BaseEntityUtils beUtils = new BaseEntityUtils(gToken);
-			 beUtils.setServiceToken(this.serviceToken);
-			 
-		
-			 return gToken;
-		 }
+		createCacheBE("PRJ_" + serviceToken.getRealm().toUpperCase(), project);
 
+		VertxUtils.writeCachedJson(GennySettings.GENNY_REALM, "TOKEN" + serviceToken.getRealm().toUpperCase(),
+				serviceToken.getToken());
+
+	}
+
+	protected QEventMessage getQEventMessage(String key) {
+		return (QEventMessage) messages.get(key);
+	}
+
+	protected SessionFacts getSessionFacts(String key) {
+		return (SessionFacts) messages.get(key);
+	}
+
+	private <T extends BaseEntity> void createCacheBE(String code, T be) {
+		VertxUtils.writeCachedJson(serviceToken.getRealm(), code, JsonUtils.toJson(be), serviceToken.getToken());
+
+	}
+
+	private Object createMessage(String key, Object payload) {
+		messages.put(key, payload);
+		return payload;
+	}
+
+	public GennyToken createToken(String code) {
+		String name = StringUtils.capitaliseAllWords(code);
+		GennyToken gToken = GennyJbpmBaseTest.createGennyToken(this.serviceToken.getRealm(), code, name, "user");
+		// create the user!
+		BaseEntityUtils beUtils = new BaseEntityUtils(gToken);
+		beUtils.setServiceToken(this.serviceToken);
+
+		return gToken;
+	}
+
+	public GennyToken createToken(String code, String rolesString) {
+		String name = StringUtils.capitaliseAllWords(code);
+		GennyToken gToken = GennyJbpmBaseTest.createGennyToken(this.serviceToken.getRealm(), code, name, rolesString);
+		// create the user!
+		BaseEntityUtils beUtils = new BaseEntityUtils(gToken);
+		beUtils.setServiceToken(this.serviceToken);
+
+		return gToken;
+	}
 
 }
