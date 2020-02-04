@@ -34,6 +34,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_800" isCollection="false" structureRef="life.genny.utils.VertxUtils.ESubscriptionType"/>
   <bpmn2:itemDefinition id="ItemDefinition_801" isCollection="false" structureRef="life.genny.utils.VertxUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_803" isCollection="false" structureRef="life.genny.qwandautils.JsonUtils"/>
+  <bpmn2:itemDefinition id="ItemDefinition_7" isCollection="false" structureRef="life.genny.qwanda.Answer"/>
   <bpmn2:signal id="Signal_1" name="createBE"/>
   <bpmn2:signal id="Signal_2" name="makeBe"/>
   <bpmn2:signal id="Signal_3" name="START_INTERN_S1"/>
@@ -57,6 +58,7 @@
       <drools:import name="life.genny.utils.VertxUtils"/>
       <drools:import name="life.genny.utils.VertxUtils.ESubscriptionType"/>
       <drools:import name="life.genny.qwandautils.JsonUtils"/>
+      <drools:import name="life.genny.qwanda.Answer"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_556" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_556" name="serviceToken"/>
@@ -71,6 +73,9 @@
     <bpmn2:property id="baseEntityType" itemSubjectRef="ItemDefinition_9" name="baseEntityType"/>
     <bpmn2:property id="dropDownGroup" itemSubjectRef="ItemDefinition_9" name="dropDownGroup"/>
     <bpmn2:property id="eventMsg" itemSubjectRef="ItemDefinition_3346" name="eventMsg"/>
+    <bpmn2:property id="hold_str" itemSubjectRef="ItemDefinition_9" name="hold_str"/>
+    <bpmn2:property id="intEP" itemSubjectRef="ItemDefinition_9" name="intEP"/>
+    <bpmn2:property id="intEPBe" itemSubjectRef="ItemDefinition_1076" name="intEPBe"/>
     <bpmn2:subProcess id="SubProcess_1" name="Intern Builder">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -254,7 +259,51 @@ System.out.println(&quot;Exiting the INTERN_S1: QUE_INTERN_S1_GRP - results is n
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_17</bpmn2:outgoing>
-        <bpmn2:script>System.out.println(&quot;INTERN: Ending INTERN Builder&quot;);</bpmn2:script>
+        <bpmn2:script>System.out.println(&quot;INTERN: Ending INTERN Builder&quot;);
+
+
+intEP = newBe.getValue(&quot;LNK_EDU_PROVIDER&quot;, null);
+
+kcontext.setVariable(&quot;intEP&quot;, intEP);
+System.out.println(&quot;@@@@@@@@@@@@@ intEP : &quot; + intEP);
+
+hold_str = intEP.replace(&quot;\&quot;&quot;, &quot;&quot;);
+kcontext.setVariable(&quot;hold_str&quot;, hold_str);
+System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ hold_str: &quot; + hold_str);
+
+hold_str = hold_str.replace(&quot;[&quot;, &quot;&quot;);
+kcontext.setVariable(&quot;hold_str&quot;, hold_str);
+System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ hold_str: &quot; + hold_str);
+
+hold_str = hold_str.replace(&quot;]&quot;, &quot;&quot;);
+kcontext.setVariable(&quot;hold_str&quot;, hold_str);
+System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ hold_str: &quot; + hold_str);
+
+BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+
+intEPBe = beUtils.getBaseEntityByCode(hold_str);
+kcontext.setVariable(&quot;intEPBe&quot;, intEPBe);
+System.out.println(kcontext.getVariable(&quot;intEPBe&quot;));
+System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ intEPBe: &quot; + intEPBe);
+
+
+
+
+String ep_name = intEPBe.getValue(&quot;PRI_NAME&quot;, null);
+kcontext.setVariable(&quot;ep_name&quot;, ep_name);
+System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ep_name: &quot; + ep_name);
+
+
+System.out.println(&quot;##################################### WORKFLOW: ep_name = &quot; +ep_name);
+
+Answer answer = new Answer(userToken.getUserCode(), newBe.getCode(),&quot;PRI_ASSOC_EP&quot;, ep_name);
+kcontext.setVariable(&quot;answer&quot;, answer);
+System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ answer: &quot; + answer);
+
+
+beUtils.saveAnswer(answer);
+
+System.out.println(&quot;##################################### WORKFLOW: ANSWER = &quot; +answer);</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_17" drools:priority="1" sourceRef="ScriptTask_3" targetRef="EndEvent_1"/>
       <bpmn2:task id="Task_4" drools:taskName="RuleFlowGroup" drools:displayName="RunRuleFlowGroup" drools:icon="icons/icon-info.gif" name="is_Intern">
@@ -465,13 +514,13 @@ System.out.println(&quot;INTERN_S1: Exiting Set EDU PRO Link&quot;);</bpmn2:scri
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_1" bpmnElement="StartEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="320.0" y="335.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_2">
+        <bpmndi:BPMNLabel id="BPMNLabel_2" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
           <dc:Bounds height="11.0" width="68.0" x="304.0" y="371.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_2" bpmnElement="EndEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="1370.0" y="335.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_3">
+        <bpmndi:BPMNLabel id="BPMNLabel_3" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
           <dc:Bounds height="11.0" width="65.0" x="1356.0" y="371.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -483,13 +532,13 @@ System.out.println(&quot;INTERN_S1: Exiting Set EDU PRO Link&quot;);</bpmn2:scri
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_1" bpmnElement="EndEvent_2">
         <dc:Bounds height="36.0" width="36.0" x="1474.0" y="330.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_5">
+        <bpmndi:BPMNLabel id="BPMNLabel_5" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
           <dc:Bounds height="11.0" width="73.0" x="1456.0" y="366.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_2" bpmnElement="StartEvent_3">
         <dc:Bounds height="36.0" width="36.0" x="200.0" y="330.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_6">
+        <bpmndi:BPMNLabel id="BPMNLabel_6" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
           <dc:Bounds height="11.0" width="76.0" x="180.0" y="366.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -587,8 +636,11 @@ System.out.println(&quot;INTERN_S1: Exiting Set EDU PRO Link&quot;);</bpmn2:scri
         <di:waypoint xsi:type="dc:Point" x="1170.0" y="353.0"/>
         <di:waypoint xsi:type="dc:Point" x="1195.0" y="353.0"/>
         <di:waypoint xsi:type="dc:Point" x="1220.0" y="353.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_15"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
+    <bpmndi:BPMNLabelStyle>
+      <dc:Font name="arial" size="9.0"/>
+    </bpmndi:BPMNLabelStyle>
   </bpmndi:BPMNDiagram>
 </bpmn2:definitions>
