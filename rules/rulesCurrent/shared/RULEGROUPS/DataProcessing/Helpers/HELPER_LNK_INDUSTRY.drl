@@ -49,6 +49,22 @@ rule "HELPER_LNK_INDUSTRY"
 		String code = industryCode.replace("\"", "").replace("[", "").replace("]", "");
 		System.out.println("industryCode after  :: " + code);
 
+		Answer occupationAnswer = new Answer(sourceCode, targetCode, "LNK_OCCUPATION", " ",false,true);
+		answersToSave.add(occupationAnswer);
+
+		BaseEntity baseEntity = beUtils.updateBaseEntity(targetCode,occupationAnswer);
+		beUtils.updateBaseEntity(targetCode,occupationAnswer);
+
+		insert(occupationAnswer);
+
+		/* Update the baseenetity in frontend */
+		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
+		msg.setToken(beUtils.getGennyToken().getToken());
+		msg.setReplace(true);
+		VertxUtils.writeMsg("webcmds",JsonUtils.toJson(msg));
+
+		update(answersToSave);
+
 		/* do the search here */
 		DropdownUtils dropdown = new DropdownUtils(serviceToken);
 		
