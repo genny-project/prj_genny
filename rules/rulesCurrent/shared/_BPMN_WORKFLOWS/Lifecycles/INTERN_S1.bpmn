@@ -182,8 +182,10 @@ System.out.println(&quot;RESULTS! -> serviceToken: &quot;+serviceToken);
 if (results==null) {
 System.out.println(&quot;Exiting the INTERN_S1: QUE_INTERN_S1_GRP - results is null&quot;);
 /*kcontext.setVariable(&quot;userToken&quot;, userToken);
-	serviceToken = (GennyToken)results.get(&quot;serviceToken&quot;);
-	kcontext.setVariable(&quot;serviceToken&quot;, serviceToken); */
+	serviceToken = (GennyToken)results.get(&quot;serviceToken&quot;); */
+String serviceTokenStr = VertxUtils.getObject(userToken.getRealm(), &quot;CACHE&quot;, &quot;SERVICE_TOKEN&quot;, String.class);
+serviceToken = new GennyToken(&quot;PER_SERVICE&quot;,serviceTokenStr);
+	kcontext.setVariable(&quot;serviceToken&quot;, serviceToken); 
   
 } else {
 	/* userToken = (GennyToken)results.get(&quot;userToken&quot;); */
@@ -297,6 +299,7 @@ System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ep_name: &quot; + ep_name
 System.out.println(&quot;##################################### WORKFLOW: ep_name = &quot; +ep_name);
 
 Answer answer = new Answer(userToken.getUserCode(), newBe.getCode(),&quot;PRI_ASSOC_EP&quot;, ep_name);
+answer.setChangeEvent(false); /* do not permit a changeEvent to be sent from api */
 kcontext.setVariable(&quot;answer&quot;, answer);
 System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ answer: &quot; + answer);
 
@@ -514,13 +517,13 @@ System.out.println(&quot;INTERN_S1: Exiting Set EDU PRO Link&quot;);</bpmn2:scri
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_1" bpmnElement="StartEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="320.0" y="335.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_2" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
+        <bpmndi:BPMNLabel id="BPMNLabel_2" labelStyle="BPMNLabelStyle_1">
           <dc:Bounds height="11.0" width="68.0" x="304.0" y="371.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_2" bpmnElement="EndEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="1370.0" y="335.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_3" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
+        <bpmndi:BPMNLabel id="BPMNLabel_3" labelStyle="BPMNLabelStyle_1">
           <dc:Bounds height="11.0" width="65.0" x="1356.0" y="371.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -532,13 +535,13 @@ System.out.println(&quot;INTERN_S1: Exiting Set EDU PRO Link&quot;);</bpmn2:scri
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_1" bpmnElement="EndEvent_2">
         <dc:Bounds height="36.0" width="36.0" x="1474.0" y="330.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_5" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
+        <bpmndi:BPMNLabel id="BPMNLabel_5" labelStyle="BPMNLabelStyle_1">
           <dc:Bounds height="11.0" width="73.0" x="1456.0" y="366.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_2" bpmnElement="StartEvent_3">
         <dc:Bounds height="36.0" width="36.0" x="200.0" y="330.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_6" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
+        <bpmndi:BPMNLabel id="BPMNLabel_6" labelStyle="BPMNLabelStyle_1">
           <dc:Bounds height="11.0" width="76.0" x="180.0" y="366.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -574,7 +577,7 @@ System.out.println(&quot;INTERN_S1: Exiting Set EDU PRO Link&quot;);</bpmn2:scri
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_1" bpmnElement="Task_1" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="1060.0" y="328.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_11">
           <dc:Bounds height="11.0" width="45.0" x="1092.0" y="347.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -630,7 +633,7 @@ System.out.println(&quot;INTERN_S1: Exiting Set EDU PRO Link&quot;);</bpmn2:scri
         <di:waypoint xsi:type="dc:Point" x="1006.0" y="353.0"/>
         <di:waypoint xsi:type="dc:Point" x="1033.0" y="353.0"/>
         <di:waypoint xsi:type="dc:Point" x="1060.0" y="353.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_15"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_8" bpmnElement="SequenceFlow_8" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_ScriptTask_3">
         <di:waypoint xsi:type="dc:Point" x="1170.0" y="353.0"/>
@@ -639,7 +642,7 @@ System.out.println(&quot;INTERN_S1: Exiting Set EDU PRO Link&quot;);</bpmn2:scri
         <bpmndi:BPMNLabel id="BPMNLabel_15"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
-    <bpmndi:BPMNLabelStyle>
+    <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
       <dc:Font name="arial" size="9.0"/>
     </bpmndi:BPMNLabelStyle>
   </bpmndi:BPMNDiagram>
