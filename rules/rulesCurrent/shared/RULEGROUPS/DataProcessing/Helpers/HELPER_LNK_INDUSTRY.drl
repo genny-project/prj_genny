@@ -49,7 +49,23 @@ rule "HELPER_LNK_INDUSTRY"
 		String code = industryCode.replace("\"", "").replace("[", "").replace("]", "");
 		System.out.println("industryCode after  :: " + code);
 
-		/* do the search here */
+		Answer occupationAnswer = new Answer(sourceCode, targetCode, "LNK_OCCUPATION", " ",false,true);
+		answersToSave.add(occupationAnswer);
+		update(answersToSave);
+
+		BaseEntity baseEntity = beUtils.updateBaseEntity(targetCode,occupationAnswer);
+		beUtils.updateBaseEntity(targetCode,occupationAnswer);
+
+		insert(occupationAnswer);
+
+		/* Update the baseenetity in frontend */
+		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
+		msg.setToken(beUtils.getGennyToken().getToken());
+		msg.setReplace(true);
+		VertxUtils.writeMsg("webcmds",JsonUtils.toJson(msg));
+
+
+		/* dropdown search here */
 		DropdownUtils dropdown = new DropdownUtils(serviceToken);
 		
 		dropdown.setNewSearch("Dropdown", "Fetch Dropdown Items")
@@ -59,7 +75,8 @@ rule "HELPER_LNK_INDUSTRY"
 											.setPageSize(1000);
 
 		dropdown.sendSearchResults("GRP_OCCUPATION_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
-
+		
+		retract(answer);
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
 end
