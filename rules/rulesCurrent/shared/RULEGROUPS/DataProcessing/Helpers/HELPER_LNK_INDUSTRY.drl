@@ -65,7 +65,7 @@ rule "HELPER_LNK_INDUSTRY"
 		VertxUtils.writeMsg("webcmds",JsonUtils.toJson(msg));
 
 
-		/* do the search here */
+		/* dropdown search here */
 		DropdownUtils dropdown = new DropdownUtils(serviceToken);
 		
 		dropdown.setNewSearch("Dropdown", "Fetch Dropdown Items")
@@ -75,9 +75,8 @@ rule "HELPER_LNK_INDUSTRY"
 											.setPageSize(1000);
 
 		dropdown.sendSearchResults("GRP_OCCUPATION_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
-
-		output.setTypeOfResult("NONE");
-		output.setResultCode("NONE");  /* dont display anything new */
 		
 		retract(answer);
+		output.setTypeOfResult("NONE");
+		output.setResultCode("NONE");  /* dont display anything new */
 end
