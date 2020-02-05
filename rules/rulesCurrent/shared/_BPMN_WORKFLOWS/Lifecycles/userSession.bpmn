@@ -291,10 +291,12 @@ System.out.println(&quot;userSession: Custom Process Event - Rules Finished Even
             </tns:onEntry-script>
             <tns:onExit-script scriptFormat="http://www.java.com/java">
               <tns:script>System.out.println(&quot;userSession: Process Event Handler Event Message Processed = &quot; + message);
-/* HACK - ACC 
+/* HACK - ACC */
 if (message.getData().getCode().startsWith(&quot;QUE_TREE_ITEM_&quot;)) {
-  output = new OutputParam(FRM_TABLE_VIEW,FRM_TAB_CONTENT);
-} */
+ System.out.println(&quot;userSession: ProcessEvent eexit: ADAM HACK&quot;);
+  output = new OutputParam(&quot;NONE&quot;,&quot;NONE&quot;,&quot;NONE&quot;);
+kcontext.setVariable(&quot;output&quot;,output);
+} 
 System.out.println(&quot;userSession: Process Event Handler output =&quot; + output);
 if (output.getTypeOfResult().equals(&quot;LOGOUT&quot;)) {
 	System.out.println(&quot;userSession: Process Event Handler - LOGOUT detected!&quot;);
