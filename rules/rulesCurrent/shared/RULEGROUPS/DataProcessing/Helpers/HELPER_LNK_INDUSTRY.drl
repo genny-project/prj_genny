@@ -51,6 +51,7 @@ rule "HELPER_LNK_INDUSTRY"
 
 		Answer occupationAnswer = new Answer(sourceCode, targetCode, "LNK_OCCUPATION", " ",false,true);
 		answersToSave.add(occupationAnswer);
+		update(answersToSave);
 
 		BaseEntity baseEntity = beUtils.updateBaseEntity(targetCode,occupationAnswer);
 		beUtils.updateBaseEntity(targetCode,occupationAnswer);
@@ -63,7 +64,6 @@ rule "HELPER_LNK_INDUSTRY"
 		msg.setReplace(true);
 		VertxUtils.writeMsg("webcmds",JsonUtils.toJson(msg));
 
-		update(answersToSave);
 
 		/* do the search here */
 		DropdownUtils dropdown = new DropdownUtils(serviceToken);
@@ -78,4 +78,6 @@ rule "HELPER_LNK_INDUSTRY"
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
+		
+		retract(answer);
 end
