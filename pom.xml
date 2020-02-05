@@ -21,7 +21,7 @@
 	<description>jBPM Genny Maven project</description>
 
 	<properties>
-		<kie.version>7.31.0.Final</kie.version>
+		<kie.version>7.32.0.Final</kie.version>
 		<version.keycloak>8.0.1</version.keycloak>
 		<genny-verticle.version>${project.version}</genny-verticle.version>
 		<genny-rules.version>${project.version}</genny-rules.version>
