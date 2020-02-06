@@ -279,7 +279,7 @@ serviceToken = new GennyToken(&quot;PER_SERVICE&quot;,serviceTokenStr);
 
 
 intEP = newBe.getValue(&quot;LNK_EDU_PROVIDER&quot;, null);
-
+if (intEP != null) {
 kcontext.setVariable(&quot;intEP&quot;, intEP);
 System.out.println(&quot;@@@@@@@@@@@@@ intEP : &quot; + intEP);
 
@@ -319,6 +319,7 @@ System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ answer: &quot; + answer);
 
 
 beUtils.saveAnswer(answer);
+}
 
 System.out.println(&quot;##################################### WORKFLOW: ANSWER = &quot; +answer);</bpmn2:script>
       </bpmn2:scriptTask>
