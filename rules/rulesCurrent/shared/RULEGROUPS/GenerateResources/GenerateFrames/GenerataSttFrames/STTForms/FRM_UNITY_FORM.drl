@@ -8,6 +8,10 @@ import life.genny.rules.QRules;
 import io.vertx.core.json.JsonObject;
 import java.util.List;
 import java.util.ArrayList;
+<<<<<<< Updated upstream
+=======
+import java.util.Arrays;
+>>>>>>> Stashed changes
 import life.genny.models.Frame3;
 import life.genny.models.FramePosition;
 import life.genny.qwanda.entity.BaseEntity;
@@ -30,6 +34,14 @@ import java.lang.reflect.Type;
 import com.google.gson.reflect.TypeToken;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.GennySettings;
+<<<<<<< Updated upstream
+=======
+import life.genny.qwanda.ContextList;
+import life.genny.qwanda.ContextType;
+import life.genny.qwanda.Question;
+import java.util.Map;
+import java.util.Set;
+>>>>>>> Stashed changes
 
 
 rule "FRM_UNITY_FORM"
@@ -78,6 +90,20 @@ rule "FRM_UNITY_FORM"
 				asksList.add(askMsg.asks.getItems());
 				asksList.add(askMsg2.asks.getItems());
 				asksList.add(askMsg3.asks.getItems());
+
+				/* Read Unity Context from cache */
+				Context ctx = VertxUtils.getObject(serviceToken.getRealm(), "", "CTX_UNITY_CONTEXT", Context.class, serviceToken.getToken());
+
+				/* Get the BaseEntity using the context's entity code */
+				/* This is a bit of a hack since the entity is not currently being parsed properly */
+				BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+				BaseEntity unityBe = beUtils.getBaseEntityByCode(ctx.getContextCode());
+				ctx.setEntity(unityBe);
+				System.out.println("CTX Entity: " + ctx.getEntity());
+
+				/* create a ContextList with the Unity context */
+				List<Context> ctxList = Arrays.asList(ctx);
+				ContextList contextList = new ContextList(ctxList);
 				
 				for(Ask[] asks : asksList ){
 				
@@ -120,12 +146,27 @@ rule "FRM_UNITY_FORM"
 								.addFrame(frame2,FramePosition.CENTRE)
 								.end()
 								.build();
-	
+						
 						frame.setRealm(serviceToken.getRealm());
 						System.out.println(frame.getCode());
-						FrameUtils2.toMessage(frame, serviceToken);
 						
-						/*FrameUtils2.toMessage(frame, serviceToken, asks,contextListMap);*/ 
+						/* Create a context list Map */
+						Map<String, ContextList> contextListMap = new HashMap<String, ContextList>();
+
+						for (Ask childAsk : ask.getChildAsks()) {
+							/* Create a map entry for each child ask that isn't a submit button */
+							if (!childAsk.getQuestionCode().equals("QUE_SUBMIT")) {
+								contextListMap.put(childAsk.getQuestionCode(), contextList);
+								System.out.println(childAsk.getQuestionCode() + " : " + contextListMap.get(childAsk.getQuestionCode()));
+							}
+						}
+						/* Cache the Context Map as Json */
+						JsonObject ctxMapObj = new JsonObject(JsonUtils.toJson(contextListMap));
+						/* VertxUtils.writeCachedJson(serviceToken.getRealm(), "CTX_MAP_" + ask.getQuestionCode(), ctxMapObj.toString(), serviceToken.getToken()); */
+						/* To message for frames on demand */
+						Set<QDataAskMessage> askSet = new HashSet<QDataAskMessage>();
+						FrameUtils2.toMessage(frame, serviceToken, askSet, contextListMap);
+
 					}
 				}
 end

@@ -1,5 +1,9 @@
 package life.genny.rules;
 import io.vertx.core.json.JsonObject;
+<<<<<<< Updated upstream
+=======
+import org.json.JSONObject;
+>>>>>>> Stashed changes
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventBtnClickMessage;
 import life.genny.models.GennyToken;
@@ -9,15 +13,17 @@ import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.utils.QuestionUtils;
+import life.genny.qwandautils.QwandaMessage;
 import life.genny.qwandautils.JsonUtils;
 import java.util.ArrayList;
 import java.util.List;
 import life.genny.utils.SessionFacts;
 import life.genny.qwanda.Context;
+import life.genny.qwanda.ContextList;
 import life.genny.qwanda.ContextType;
 
 rule "SETUP_UNITY_CONTEXT"
-    ruleflow-group 'GenerateCapabilities'
+    ruleflow-group 'GenerateThemes'
 	salience 10000
     when
   		serviceToken : GennyToken (code == "PER_SERVICE")
@@ -27,29 +33,27 @@ rule "SETUP_UNITY_CONTEXT"
 
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
 
-		
-		BaseEntity baseEntity = beUtils.getBaseEntityByCode("UNT_S1_DATA");
+		BaseEntity unityBe = beUtils.getBaseEntityByCode("UNT_S1_DATA");
 
-		/*
-		String questionCode = "QUE_STT_S1_A_Q1_GRP";
-
-		System.out.println("Fetching Asks for quesitonCode " + questionCode);
-		QwandaMessage msg = QuestionUtils.getQuestions(userToken.getUserCode(), userToken.getUserCode(), questionCode, serviceToken.getToken());
-		Ask ask = msg.asks.getItems()[0];
+		System.out.println("UnityBE: " + unityBe);
+     	
+     	String questionCode = "QUE_STT_S1_A_Q1_GRP";
 		
-		Double weight = 1.0;
+		/* Get the ask we are looking for */		
+		// QwandaMessage msg = QuestionUtils.getQuestions("PER_USER1", "PER_USER1", questionCode, serviceToken.getToken());
+		// Ask ask = msg.asks.getItems()[0];
+		// Ask childAsk = ask.getChildAsks()[0];
+		
+		/* construct the Context */
 		System.out.println("Creating new Context object");
-		Context context = new Context(ContextType.UNITY, baseEntity, VisualControlType.VCL_DEFAULT, weight);
-        List<Context> contexts = new ArrayList<Context>();
-        contexts.add(context);
-		ContextList contextList = new ContextList(contexts);
+		Context context = new Context(ContextType.UNITY, unityBe);
+		System.out.println("Context object: " + context);
+		System.out.println("Context enitity: " + context.getEntity());
 
-		System.out.println("Setting Context list for Ask");
-        ask.setContextList(contextList);
+		System.out.println("SETUP_UNITY_CONTEXT - Caching Context: CTX_UNITY_CONTEXT");
+		/*VertxUtils.writeCachedJson(serviceToken.getRealm(), "CTX_UNITY_CONTEXT", ctxString, serviceToken.getToken());*/
+		VertxUtils.putObject(serviceToken.getRealm(), "", "CTX_UNITY_CONTEXT", context, serviceToken.getToken());
 
-		System.out.println("Writing Ask to cache");
-		VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", ask.getQuestionCode(), ask, beUtils.getGennyToken().getToken());*/
-		/*VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", "CTX_TEST", context, beUtils.getGennyToken().getToken()); */
 
 		System.out.println("Finished running rule: SETUP_UNITY_CONTEXT");
 	end
