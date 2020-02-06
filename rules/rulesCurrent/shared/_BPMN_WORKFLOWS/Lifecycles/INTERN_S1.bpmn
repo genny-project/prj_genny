@@ -319,9 +319,12 @@ System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ answer: &quot; + answer);
 
 
 beUtils.saveAnswer(answer);
-}
 
-System.out.println(&quot;##################################### WORKFLOW: ANSWER = &quot; +answer);</bpmn2:script>
+
+System.out.println(&quot;##################################### WORKFLOW: ANSWER = &quot; +answer);
+} else {
+System.out.println(&quot;inEP is null &quot;);
+}</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:task id="Task_4" drools:taskName="RuleFlowGroup" drools:displayName="RunRuleFlowGroup" drools:icon="icons/icon-info.gif" name="is_Intern">
         <bpmn2:extensionElements>
