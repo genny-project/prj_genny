@@ -37,12 +37,6 @@ rule "SETUP_UNITY_CONTEXT"
 
 		System.out.println("UnityBE: " + unityBe);
      	
-     	String questionCode = "QUE_STT_S1_A_Q1_GRP";
-		
-		/* Get the ask we are looking for */		
-		// QwandaMessage msg = QuestionUtils.getQuestions("PER_USER1", "PER_USER1", questionCode, serviceToken.getToken());
-		// Ask ask = msg.asks.getItems()[0];
-		// Ask childAsk = ask.getChildAsks()[0];
 		
 		/* construct the Context */
 		System.out.println("Creating new Context object");
