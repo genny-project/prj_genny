@@ -647,19 +647,19 @@ System.out.println(&quot;INTERN_S1: Exiting Set EDU PRO Link&quot;);</bpmn2:scri
         <di:waypoint xsi:type="dc:Point" x="1006.0" y="353.0"/>
         <di:waypoint xsi:type="dc:Point" x="1041.0" y="353.0"/>
         <di:waypoint xsi:type="dc:Point" x="1076.0" y="353.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_14"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_10" bpmnElement="SequenceFlow_10" sourceElement="BPMNShape_ScriptTask_3" targetElement="BPMNShape_Task_1">
         <di:waypoint xsi:type="dc:Point" x="1186.0" y="353.0"/>
         <di:waypoint xsi:type="dc:Point" x="1213.0" y="353.0"/>
         <di:waypoint xsi:type="dc:Point" x="1240.0" y="353.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_15"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_12" bpmnElement="SequenceFlow_12" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_2">
         <di:waypoint xsi:type="dc:Point" x="1350.0" y="353.0"/>
         <di:waypoint xsi:type="dc:Point" x="1360.0" y="353.0"/>
         <di:waypoint xsi:type="dc:Point" x="1370.0" y="353.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_18"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
