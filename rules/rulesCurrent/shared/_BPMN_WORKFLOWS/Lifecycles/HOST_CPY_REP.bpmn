@@ -146,7 +146,7 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
         <bpmn2:script>System.out.println(&quot;HOST_CPY_REP: Ending HOST_CPY_REP Builder&quot;);
 
 hcrHC = newBe.getValue(&quot;LNK_HOST_COMPANY&quot;, null);
-
+if (hcrHC != null) {
 kcontext.setVariable(&quot;hcrHC&quot;, hcrHC);
 System.out.println(&quot;@@@@@@@@@@@@@ hcrHC : &quot; + hcrHC);
 
@@ -198,6 +198,7 @@ System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ answer2: &quot; + answer2
 
 beUtils.saveAnswer(answer);
 beUtils.saveAnswer(answer2);
+}
 /*
 System.out.println(&quot;##################################### WORKFLOW: ANSWER = &quot; +answer);*/
 </bpmn2:script>
