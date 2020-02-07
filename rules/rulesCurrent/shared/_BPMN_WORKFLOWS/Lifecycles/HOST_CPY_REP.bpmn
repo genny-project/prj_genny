@@ -18,6 +18,9 @@
   <bpmn2:itemDefinition id="ItemDefinition_1150" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_6" isCollection="false" structureRef="org.json.JSONArray"/>
   <bpmn2:itemDefinition id="ItemDefinition_2119" isCollection="false" structureRef="life.genny.qwanda.Answer"/>
+  <bpmn2:itemDefinition id="ItemDefinition_235" isCollection="false" structureRef="life.genny.utils.VertxUtils.ESubscriptionType"/>
+  <bpmn2:itemDefinition id="ItemDefinition_236" isCollection="false" structureRef="life.genny.utils.VertxUtils"/>
+  <bpmn2:itemDefinition id="ItemDefinition_238" isCollection="false" structureRef="life.genny.qwanda.message.QEventBtnClickMessage"/>
   <bpmn2:signal id="Signal_1" name="createBE"/>
   <bpmn2:signal id="Signal_2" name="makeBe"/>
   <bpmn2:signal id="Signal_3" name="START_HOST_CPY_REP"/>
@@ -33,6 +36,9 @@
       <drools:import name="life.genny.utils.OutputParam"/>
       <drools:import name="org.json.JSONArray"/>
       <drools:import name="life.genny.qwanda.Answer"/>
+      <drools:import name="life.genny.utils.VertxUtils"/>
+      <drools:import name="life.genny.utils.VertxUtils.ESubscriptionType"/>
+      <drools:import name="life.genny.qwanda.message.QEventBtnClickMessage"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_556" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_556" name="serviceToken"/>
