@@ -49,6 +49,8 @@ rule "HELPER_LNK_INDUSTRY"
 		String code = industryCode.replace("\"", "").replace("[", "").replace("]", "");
 		System.out.println("industryCode after  :: " + code);
 
+		answersToSave.add(answer);
+		
 		Answer occupationAnswer = new Answer(sourceCode, targetCode, "LNK_OCCUPATION", " ",false,true);
 		answersToSave.add(occupationAnswer);
 		update(answersToSave);
