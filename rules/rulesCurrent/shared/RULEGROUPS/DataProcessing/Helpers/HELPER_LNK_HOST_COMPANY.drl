@@ -53,6 +53,7 @@ rule "HELPER_LNK_HOST_COMPANY"
 
 		Answer repAnswer = new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", " ",false,true);
 		Answer supervisorAnswer = new Answer(sourceCode, targetCode, "LNK_INTERN_SUPERVISOR", " ",false,true);
+		answersToSave.add(answer);
 		answersToSave.add(repAnswer);
 		answersToSave.add(supervisorAnswer);
 
