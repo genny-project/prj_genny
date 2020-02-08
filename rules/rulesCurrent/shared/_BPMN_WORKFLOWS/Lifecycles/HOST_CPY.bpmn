@@ -24,6 +24,8 @@
   <bpmn2:itemDefinition id="ItemDefinition_21" isCollection="false" structureRef="life.genny.qwanda.entity.SearchEntity"/>
   <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_17" isCollection="false" structureRef="life.genny.qwanda.message.QEventBtnClickMessage"/>
+  <bpmn2:itemDefinition id="ItemDefinition_6" isCollection="false" structureRef="life.genny.utils.VertxUtils.ESubscriptionType"/>
+  <bpmn2:itemDefinition id="ItemDefinition_8" isCollection="false" structureRef="life.genny.utils.VertxUtils"/>
   <bpmn2:signal id="Signal_1" name="createBE"/>
   <bpmn2:signal id="Signal_2" name="makeBe"/>
   <bpmn2:signal id="Signal_3" name="START_HOST_CPY"/>
@@ -43,6 +45,8 @@
       <drools:import name="life.genny.qwanda.entity.SearchEntity.StringFilter"/>
       <drools:import name="life.genny.qwanda.entity.SearchEntity.Filter"/>
       <drools:import name="life.genny.qwanda.message.QEventBtnClickMessage"/>
+      <drools:import name="life.genny.utils.VertxUtils"/>
+      <drools:import name="life.genny.utils.VertxUtils.ESubscriptionType"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_556" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_556" name="serviceToken"/>
@@ -459,7 +463,7 @@ serviceToken = new GennyToken(&quot;PER_SERVICE&quot;,serviceTokenStr);
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_3" bpmnElement="Task_3" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="1000.0" y="294.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_10">
           <dc:Bounds height="11.0" width="45.0" x="1032.0" y="313.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -510,14 +514,14 @@ serviceToken = new GennyToken(&quot;PER_SERVICE&quot;,serviceTokenStr);
         <di:waypoint xsi:type="dc:Point" x="960.0" y="323.0"/>
         <di:waypoint xsi:type="dc:Point" x="960.0" y="319.0"/>
         <di:waypoint xsi:type="dc:Point" x="1000.0" y="319.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_14"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_9" bpmnElement="SequenceFlow_9" sourceElement="BPMNShape_Task_3" targetElement="BPMNShape_2">
         <di:waypoint xsi:type="dc:Point" x="1110.0" y="319.0"/>
         <di:waypoint xsi:type="dc:Point" x="1135.0" y="319.0"/>
         <di:waypoint xsi:type="dc:Point" x="1135.0" y="323.0"/>
         <di:waypoint xsi:type="dc:Point" x="1160.0" y="323.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_15"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

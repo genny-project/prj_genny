@@ -55,7 +55,7 @@
     <bpmn2:property id="hcrHCBe" itemSubjectRef="ItemDefinition_1076" name="hcrHCBe"/>
     <bpmn2:property id="oldCode" itemSubjectRef="ItemDefinition_9" name="oldCode"/>
     <bpmn2:property id="hold_str" itemSubjectRef="ItemDefinition_9" name="hold_str"/>
-    <bpmn2:property id="eventMsg" name="eventMsg"/>
+    <bpmn2:property id="eventMsg" itemSubjectRef="ItemDefinition_238" name="eventMsg"/>
     <bpmn2:subProcess id="SubProcess_1" name="HC Rep Builder">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
