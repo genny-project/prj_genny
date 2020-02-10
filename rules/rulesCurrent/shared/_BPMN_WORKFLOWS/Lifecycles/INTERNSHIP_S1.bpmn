@@ -25,6 +25,11 @@
   <bpmn2:itemDefinition id="ItemDefinition_87" isCollection="false" structureRef="life.genny.qwanda.message.QEventBtnClickMessage"/>
   <bpmn2:itemDefinition id="ItemDefinition_807" isCollection="false" structureRef="life.genny.utils.VertxUtils.ESubscriptionType"/>
   <bpmn2:itemDefinition id="ItemDefinition_808" isCollection="false" structureRef="life.genny.utils.VertxUtils"/>
+  <bpmn2:itemDefinition id="ItemDefinition_1209" isCollection="false" structureRef="java.lang.Integer"/>
+  <bpmn2:itemDefinition id="ItemDefinition_1314" isCollection="false" structureRef="java.time.LocalDateTime"/>
+  <bpmn2:itemDefinition id="ItemDefinition_1841" isCollection="false" structureRef="life.genny.qwanda.Answer"/>
+  <bpmn2:itemDefinition id="ItemDefinition_2373" isCollection="false" structureRef="java.lang.Double"/>
+  <bpmn2:itemDefinition id="ItemDefinition_2821" isCollection="false" structureRef="java.time.LocalDate"/>
   <bpmn2:signal id="Signal_1" name="createBE"/>
   <bpmn2:signal id="Signal_2" name="makeBe"/>
   <bpmn2:signal id="Signal_3" name="START_INTERNSHIP_S1"/>
@@ -47,6 +52,9 @@
       <drools:import name="life.genny.qwanda.message.QEventBtnClickMessage"/>
       <drools:import name="life.genny.utils.VertxUtils"/>
       <drools:import name="life.genny.utils.VertxUtils.ESubscriptionType"/>
+      <drools:import name="java.time.LocalDateTime"/>
+      <drools:import name="life.genny.qwanda.Answer"/>
+      <drools:import name="java.time.LocalDate"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_556" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_556" name="serviceToken"/>
@@ -61,6 +69,20 @@
     <bpmn2:property id="baseEntityType" itemSubjectRef="ItemDefinition_9" name="baseEntityType"/>
     <bpmn2:property id="dropDownGroup" itemSubjectRef="ItemDefinition_9" name="dropDownGroup"/>
     <bpmn2:property id="eventMsg" itemSubjectRef="ItemDefinition_87" name="eventMsg"/>
+    <bpmn2:property id="muddleDuration" itemSubjectRef="ItemDefinition_9" name="muddleDuration"/>
+    <bpmn2:property id="whichDays" itemSubjectRef="ItemDefinition_9" name="whichDays"/>
+    <bpmn2:property id="duration" itemSubjectRef="ItemDefinition_9" name="duration"/>
+    <bpmn2:property id="startDate" itemSubjectRef="ItemDefinition_9" name="startDate"/>
+    <bpmn2:property id="daysPerWeekString" itemSubjectRef="ItemDefinition_9" name="daysPerWeekString"/>
+    <bpmn2:property id="daysPerWeek" itemSubjectRef="ItemDefinition_2373" name="daysPerWeek"/>
+    <bpmn2:property id="longDuration" itemSubjectRef="ItemDefinition_591" name="longDuration"/>
+    <bpmn2:property id="dumbStartDate" itemSubjectRef="ItemDefinition_2821" name="dumbStartDate"/>
+    <bpmn2:property id="dumbEndDate" itemSubjectRef="ItemDefinition_2821" name="dumbEndDate"/>
+    <bpmn2:property id="localDate" itemSubjectRef="ItemDefinition_2821" name="localDate"/>
+    <bpmn2:property id="hoursPerWeek" itemSubjectRef="ItemDefinition_2373" name="hoursPerWeek"/>
+    <bpmn2:property id="startDateTime" itemSubjectRef="ItemDefinition_2821" name="startDateTime"/>
+    <bpmn2:property id="strHoursPerWeek" itemSubjectRef="ItemDefinition_9" name="strHoursPerWeek"/>
+    <bpmn2:property id="addressFull" itemSubjectRef="ItemDefinition_9" name="addressFull"/>
     <bpmn2:subProcess id="SubProcess_1" name="Internship Builder">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -154,7 +176,130 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
-        <bpmn2:script>System.out.println(&quot;INTERNSHIP: Ending INTERNSHIP Builder&quot;);</bpmn2:script>
+        <bpmn2:script>System.out.println(&quot;@@@@@@@@@@@@@ INTERNSHIP: SAVING DURATION AND WHICH DAYS&quot;);
+
+BaseEntityUtils beUtilsTwo = new BaseEntityUtils(userToken);
+
+muddleDuration = newBe.getValue(&quot;LNK_INTERNSHIP_DURATION&quot;, null);
+whichDays = newBe.getValue(&quot;LNK_WHICH_DAYS&quot;, null);
+addressFull = newBe.getValue(&quot;PRI_ADDRESS_FULL&quot;, &quot;ADDRESS_NOT_THERE&quot;);
+
+kcontext.setVariable(&quot;muddleDuration&quot;, muddleDuration);
+kcontext.setVariable(&quot;whichDays&quot;, whichDays);
+kcontext.setVariable(&quot;addressFull&quot;, addressFull);
+
+System.out.println(&quot;@@@@@@@@@@@@@ muddleDuration : &quot; + muddleDuration);
+System.out.println(&quot;@@@@@@@@@@@@@ whichDays : &quot; + whichDays);
+System.out.println(&quot;@@@@@@@@@@@@@ addressFull : &quot; + addressFull);
+
+muddleDuration = muddleDuration.replace(&quot;\&quot;&quot;, &quot;&quot;).replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;);
+whichDays = whichDays.replace(&quot;\&quot;&quot;, &quot;&quot;).replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;);
+whichDays = whichDays.split(&quot;_&quot;)[3];
+
+duration = muddleDuration.split(&quot;_&quot;)[2];
+
+kcontext.setVariable(&quot;duration&quot;, duration);
+kcontext.setVariable(&quot;whichDays&quot;, whichDays);
+
+System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ duration: &quot; + duration);
+System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ whichDays: &quot; + whichDays);
+
+Answer answer = new Answer(userToken.getUserCode(), newBe.getCode(),&quot;PRI_INTERNSHIP_DURATION_STRIPPED&quot;, duration);
+Answer answer2 = new Answer(userToken.getUserCode(), newBe.getCode(),&quot;PRI_WHICH_DAYS_STRIPPED&quot;, whichDays);
+
+kcontext.setVariable(&quot;answer&quot;, answer);
+kcontext.setVariable(&quot;answer2&quot;, answer2);
+
+System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ answer: &quot; + answer);
+System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ answer2: &quot; + answer2);
+
+beUtilsTwo.saveAnswer(answer);
+beUtilsTwo.saveAnswer(answer2);
+
+System.out.println(&quot;##################################### PRI_INTERNSHIP_DURATION_STRIPPED: ANSWER = &quot; +answer);
+System.out.println(&quot;##################################### PRI_WHICH_DAYS_STRIPPED: ANSWER = &quot; +answer2);
+
+
+
+System.out.println(&quot;@@@@@@@@@@@@@ INTERNSHIP: CALCULATING DATES AND TIMES&quot;);
+
+String str_newBeCode = newBe.getCode().toString();
+System.out.println(&quot;##################################### str_newBeCode&quot; +str_newBeCode);
+/*startDate = newBe.getValue(&quot;PRI_START_DATE&quot;, null);*/
+
+startDateTime = beUtilsTwo.getBaseEntityValueAsLocalDate(str_newBeCode, &quot;PRI_START_DATE&quot;);
+System.out.println(&quot;##################################### startDateTime&quot; +startDateTime);
+
+startDate = startDateTime.toString();
+
+daysPerWeekString = newBe.getValue(&quot;PRI_DAYS_PER_WEEK&quot;, null);
+
+daysPerWeek = Double.parseDouble(daysPerWeekString);
+longDuration = Long.parseLong(duration);
+
+kcontext.setVariable(&quot;startDate&quot;, startDate);
+kcontext.setVariable(&quot;daysPerWeek&quot;, daysPerWeek);
+
+System.out.println(&quot;@@@@@@@@@@@@@ startDate : &quot; + startDate);
+System.out.println(&quot;@@@@@@@@@@@@@ daysPerWeek : &quot; + daysPerWeek);
+
+hoursPerWeek = 7.5 * daysPerWeek;
+strHoursPerWeek = hoursPerWeek+&quot;&quot;;
+kcontext.setVariable(&quot;hoursPerWeek&quot;, hoursPerWeek);
+System.out.println(&quot;@@@@@@@@@@@@@ hoursPerWeek : &quot; + hoursPerWeek);
+
+String str_year = &quot;&quot;;
+String str_month = &quot;&quot;;
+String str_day = &quot;&quot;;
+System.out.println(str_year + &quot; &quot; + str_month + &quot; &quot; + str_day);
+
+int int_year = 0;
+int int_month = 0;
+int int_day = 0;
+System.out.println(int_year + &quot; &quot; + int_month + &quot; &quot; + int_day);
+
+str_year = startDate.split(&quot;-&quot;)[0];
+str_month = startDate.split(&quot;-&quot;)[1];
+str_day = startDate.split(&quot;-&quot;)[2];
+System.out.println(str_year + &quot; &quot; + str_month + &quot; &quot; + str_day);
+
+int_year = Integer.parseInt(str_year);
+int_month = Integer.parseInt(str_month);
+int_day = Integer.parseInt(str_day);
+System.out.println(int_year + &quot; &quot; + int_month + &quot; &quot; + int_day);
+
+kcontext.setVariable(&quot;int_year&quot;, int_year);
+kcontext.setVariable(&quot;int_month&quot;, int_month);
+kcontext.setVariable(&quot;int_day&quot;, int_day);
+
+System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ int_year: &quot; + int_year);
+System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ int_month: &quot; + int_month);
+System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ int_day: &quot; + int_day);
+
+
+dumbStartDate = localDate.of(int_year, int_month, int_day);
+dumbEndDate = dumbStartDate.plusWeeks(longDuration);
+
+kcontext.setVariable(&quot;dumbEndDate&quot;, dumbEndDate);
+System.out.println(&quot;@@@@@@@@@@@@@ dumbEndDate : &quot; + dumbEndDate);
+
+
+Answer answer3 = new Answer(userToken.getUserCode(), newBe.getCode(),&quot;PRI_HOURS_PER_WEEK&quot;, strHoursPerWeek);
+Answer answer4 = new Answer(userToken.getUserCode(), newBe.getCode(),&quot;PRI_END_DATE&quot;, dumbEndDate.toString());
+
+kcontext.setVariable(&quot;answer3&quot;, answer3);
+kcontext.setVariable(&quot;answer4&quot;, answer4);
+
+System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ answer3: &quot; + answer3);
+System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ answer4: &quot; + answer4);
+
+beUtilsTwo.saveAnswer(answer3);
+beUtilsTwo.saveAnswer(answer4);
+
+System.out.println(&quot;##################################### PRI_HOURS_PER_WEEK: ANSWER = &quot; +answer3);
+System.out.println(&quot;##################################### PRI_INTERNSHIP_END_DATE: ANSWER = &quot; +answer4);
+
+</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_6" drools:priority="1" sourceRef="IntermediateThrowEvent_2" targetRef="ScriptTask_3"/>
       <bpmn2:task id="Task_2" drools:taskName="AskQuestionTask" drools:displayName="Ask Question Task" drools:icon="icons/icon-info.gif" name="QUE_INTERNSHIP_S1_GRP">
@@ -484,7 +629,7 @@ kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCod
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_3" bpmnElement="Task_3" isExpanded="true">
         <dc:Bounds height="50.0" width="100.0" x="1140.0" y="294.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_12">
           <dc:Bounds height="11.0" width="92.0" x="1144.0" y="313.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -540,13 +685,13 @@ kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCod
         <di:waypoint xsi:type="dc:Point" x="1111.0" y="319.0"/>
         <di:waypoint xsi:type="dc:Point" x="1125.0" y="319.0"/>
         <di:waypoint xsi:type="dc:Point" x="1140.0" y="319.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_14"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_7" bpmnElement="SequenceFlow_7" sourceElement="BPMNShape_Task_3" targetElement="BPMNShape_2">
         <di:waypoint xsi:type="dc:Point" x="1240.0" y="319.0"/>
         <di:waypoint xsi:type="dc:Point" x="1255.0" y="319.0"/>
         <di:waypoint xsi:type="dc:Point" x="1270.0" y="319.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_17"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
