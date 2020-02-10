@@ -52,12 +52,12 @@ rule "FRM_TABLE_CONTENT"
                         .addTheme("THM_TABLE_BORDER", serviceToken).end()
 			.addTheme("THM_TABLE_CONTENT_CENTRE", ThemePosition.CENTRE, serviceToken).end()
                         .question("QUE_TABLE_RESULTS_GRP")
-                                .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).weight(1.0).end()
-                                .addTheme("THM_TABLE_ROW_CONTENT_WRAPPER", serviceToken).vcl(VisualControlType.GROUP).weight(1.0).end()
-                                .addTheme("THM_TABLE_ROW", serviceToken).weight(1.0).end()
-                                .addTheme("THM_TABLE_CONTENT_BORDER", serviceToken).vcl(VisualControlType.GROUP_WRAPPER).weight(1.0).end()
-                                .addTheme("THM_TABLE_CONTENT", serviceToken).vcl(VisualControlType.GROUP).end()
-                                .addTheme("THM_TABLE_ROW_CELL", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
+                                /* .addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).dataType(tableRowDataType).weight(1.0).end()
+                                .addTheme("THM_TABLE_ROW_CONTENT_WRAPPER", serviceToken).dataType(tableRowDataType).vcl(VisualControlType.GROUP).weight(1.0).end()
+                                .addTheme("THM_TABLE_ROW", serviceToken).dataType(tableRowDataType).weight(1.0).end()
+                                .addTheme("THM_TABLE_CONTENT_BORDER", serviceToken).dataType(tableRowDataType).vcl(VisualControlType.GROUP_WRAPPER).weight(1.0).end()
+                                .addTheme("THM_TABLE_CONTENT", serviceToken).dataType(tableRowDataType).vcl(VisualControlType.GROUP).end()
+                                .addTheme("THM_TABLE_ROW_CELL", serviceToken).dataType(tableRowDataType).vcl(VisualControlType.VCL_WRAPPER).end() */
                         .end()
                         .build();
 
