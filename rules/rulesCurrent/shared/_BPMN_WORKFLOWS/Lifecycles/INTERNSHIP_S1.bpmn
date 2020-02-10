@@ -193,8 +193,11 @@ System.out.println(&quot;@@@@@@@@@@@@@ whichDays : &quot; + whichDays);
 System.out.println(&quot;@@@@@@@@@@@@@ addressFull : &quot; + addressFull);
 
 muddleDuration = muddleDuration.replace(&quot;\&quot;&quot;, &quot;&quot;).replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;);
-whichDays = whichDays.replace(&quot;\&quot;&quot;, &quot;&quot;).replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;);
-whichDays = whichDays.split(&quot;_&quot;)[3];
+
+whichDays = whichDays.replace(&quot;\'&quot;, &quot;&quot;).replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;).replace(&quot;SEL_WHICH_DAYS_&quot;, &quot;&quot;).replace(&quot;,&quot;, &quot;, &quot;).toString();
+
+/*whichDays = whichDays.replace(&quot;\&quot;&quot;, &quot;&quot;).replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;);
+whichDays = whichDays.split(&quot;_&quot;)[3];*/
 
 duration = muddleDuration.split(&quot;_&quot;)[2];
 
