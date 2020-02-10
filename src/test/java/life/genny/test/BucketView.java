@@ -68,7 +68,7 @@ public class BucketView extends GennyJbpmBaseTest {
 		super(false);
 	}
 	
-	//@Test
+	@Test
 	public void tableTest() {
 
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -103,7 +103,7 @@ public class BucketView extends GennyJbpmBaseTest {
 				.addColumn("PRI_ADDRESS_FULL","Address")
 				.setPageStart(0).setPageSize(10);
 		
-		SearchEntity searchBE = new SearchEntity("SBE_INTERNS_1BC9F1C8-10BA-4489-AEBF-E1CD0D74447D", "Interns")
+		SearchEntity searchBE = new SearchEntity("SBE_INTERNS", "Interns")
 				.addSort("PRI_INTERN_NAME","Name",SearchEntity.Sort.ASC)
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
 				.addFilter("PRI_IS_INTERN", true)
@@ -197,7 +197,7 @@ public class BucketView extends GennyJbpmBaseTest {
 
 	}
 	
-	@Test
+	//@Test
 	public void sendCards() {
 		Frame3 test = this.getBucketHeaderFame("test","test", "test");
 
