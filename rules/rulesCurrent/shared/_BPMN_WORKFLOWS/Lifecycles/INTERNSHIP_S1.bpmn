@@ -313,8 +313,8 @@ System.out.println(&quot;##################################### PRI_INTERNSHIP_EN
           <drools:onEntry-script scriptFormat="http://www.java.com/java"/>
           <drools:onExit-script scriptFormat="http://www.java.com/java">
             <drools:script>System.out.println(&quot;Exiting the INTERNSHIP_S1: QUE_INTERNSHIP_S1_GRP&quot;);
-eventMsg = new QEventBtnClickMessage(&quot;QUE_INTERNSHIP_S1_GRP&quot;);
-eventMsg.getData().setParentCode(&quot;QUE_TAB_VIEW&quot;);
+eventMsg = new QEventBtnClickMessage(&quot;QUE_TREE_ITEM_INTERNSHIPS_ACTIVE&quot;);
+eventMsg.getData().setParentCode(&quot;&quot;QUE_TREE_ITEM_INTERNSHIPS_GRP&quot;&quot;);
 eventMsg.setToken(userToken.getToken());
 kcontext.setVariable(&quot;eventMsg&quot;, eventMsg);
 
