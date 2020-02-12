@@ -8,21 +8,23 @@ import life.genny.qwanda.Answer;
 import java.util.List;
 import java.util.ArrayList;
 import life.genny.model.OutputParamTreeSet;
+import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.qwanda.message.QBulkMessage;
 
-rule "PROCESS_STATELESS_ANSWERS"
-    ruleflow-group 'DataProcessing'
+rule "RETURN_SETUP_DATA"
+    ruleflow-group 'Stateless'
      salience 10000
      no-loop true
     when
 	  userToken : GennyToken ( code != "PER_SERVICE" ) 
 	  serviceToken : GennyToken ( code == "PER_SERVICE" ) 
 	  dataMsg : QDataAnswerMessage( (items != null) && (items.length > 0) && (aliasCode == "STATELESS"))
+	  payload : QBulkMessage()
     then
- 		System.out.println("Rule -> PROCESS_STATELESS_ANSWERS Processing Answer/Data!! :  user=" + userToken.getUserCode()); 
- 		/* System.out.println("dom = "+dom); */
+ 		System.out.println("Rule -> RETURN_SETUP_DATA Processing Answer/Data!! :  user=" + userToken.getUserCode()); 
  		BaseEntityUtils beUtils = new BaseEntityUtils(userToken); 
 		beUtils.setServiceToken(serviceToken);
-		System.out.println("Process Answwers: beUtils created ");
 		
 		/* Now set up capability for the user and make it available to all the rules */
 		CapabilityUtils capabilityUtils = new CapabilityUtils(beUtils);
@@ -33,11 +35,16 @@ rule "PROCESS_STATELESS_ANSWERS"
 
 		retract(dataMsg); /* stop this rule from firing again */
 
+		/* fetch user details and return */
+		String projectCode = "PRJ_"+userToken.getRealm().toUpperCase();
+		BaseEntity project = beUtils.getBaseEntityByCode(projectCode); 
+
 		
- 		for (Answer answer : dataMsg.getItems()) {
- 			answer.setInferred(false); /* force inference from the user to be off. This ensures that if this flag is set it is from internal */
- 			insert(answer); 
- 			System.out.println("Process Stateless Answers: inserted answer  "+answer.getTargetCode()+":"+answer.getAttributeCode()); 
- 		}
- 		insert(beUtils);
+		QDataBaseEntityMessage prjMsg = new QDataBaseEntityMessage(project);
+		prjMsg.setAliasCode("PROJECT");
+		
+		payload.add(prjMsg);
+		System.out.println("project = "+JsonUtils.toJson(payload));
+		update(payload);
+
 end
