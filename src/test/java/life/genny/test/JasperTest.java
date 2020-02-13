@@ -395,8 +395,8 @@ public class JasperTest {
      		answer = new Answer(userToken.getUserCode(), codes.get(key), "PRI_CODE", codes.get(key));
      		beUtils.saveAnswer(answer);
      		
-     		
-     		answer = new Answer(userToken.getUserCode(), application.getCode(),"PRI_ASSOC_BEG", internship.getCode());
+     		String internshipName = beUtils.getBaseEntityValue(internship.getCode(), "PRI_Name").toString();
+     		answer = new Answer(userToken.getUserCode(), codes.get(key),"PRI_ASSOC_INTERNSHIP", internshipName);
      		beUtils.saveAnswer(answer);
      		
      		String companyName = beUtils.getBaseEntityValue(hostCompany.getCode(), "PRI_NAME").toString();
