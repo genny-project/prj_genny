@@ -37,6 +37,13 @@ rule "RETURN_SETUP_DATA"
 		
 		System.out.println("Capabilitys are "+capabilityUtils.getCapabilityManifest()); 
 		
+		BaseEntity user = beUtils.getBaseEntityByCode(userToken.getUserCode()); 
+		insert(user);				
+				
+		String projectCode = "PRJ_"+userToken.getRealm().toUpperCase();
+		BaseEntity project = beUtils.getBaseEntityByCode(projectCode); 
+		insert(project);		
+		
 		retract(dataMsg); /* stop this rule from firing again */
 
 end
