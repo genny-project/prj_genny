@@ -20,33 +20,36 @@ rule "RETURN_SETUP_USER_PROJECT"
      salience 5000
      no-loop true
     when
-	  userToken : GennyToken ( code != "PER_SERVICE" ) 
-	  serviceToken : GennyToken ( code == "PER_SERVICE" ) 
+	  $userToken : GennyToken ( code != "PER_SERVICE" ) 
+	  $user : BaseEntity()
+	  eval($user.getCode()  == $userToken.getUserCode())
+	/*  serviceToken : GennyToken ( code == "PER_SERVICE" ) 
+	  $project : BaseEntity ( code matches  "PRJ_*" )*/
 	  beUtils : BaseEntityUtils()
-	  capabilityUtils : CapabilityUtils()
+	  $capabilityUtils : CapabilityUtils( )
+ 	/* ( Allowed(code == "IMPORT" && mode == CapabilityMode.EDIT) or eval(beUtils.getGennyToken().hasRole("intern")) ) */
+ 	/*  eval($capabilityUtils.hasCapability("IMPORT",CapabilityMode.DELETE)) */
+	  
     then
    		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode());
    		
 		/* fetch user details and return */
 		
-		BaseEntity user = beUtils.getBaseEntityByCode(userToken.getUserCode()); 
 		String[] userFilterStrArray = { "PRI_FIRSTNAME", "PRI_LASTNAME", "PRI_MOBILE", "PRI_IS_INTERN",
 				"PRI_IMAGE_URL", "PRI_CODE", "PRI_NAME", "PRI_USERNAME", "PRI_EMAIL" };
-		user = VertxUtils.privacyFilter(user, userFilterStrArray);		
-		QDataBaseEntityMessage userMsg = new QDataBaseEntityMessage(user);
+		$user = VertxUtils.privacyFilter($user, userFilterStrArray);		
+		QDataBaseEntityMessage userMsg = new QDataBaseEntityMessage($user);
 		userMsg.setAliasCode("USER");	
 		payload.add(userMsg);
 				
 				
-		String projectCode = "PRJ_"+userToken.getRealm().toUpperCase();
-		BaseEntity project = beUtils.getBaseEntityByCode(projectCode); 
-		String[] projectFilterStrArray = { "ENV_REALM", "PRI_NAME", "ENV_SIGNATURE_URL", "ENV_UPPY_URL",
+/*		String[] projectFilterStrArray = { "ENV_REALM", "PRI_NAME", "ENV_SIGNATURE_URL", "ENV_UPPY_URL",
 				"PRI_FAVICON", "PRI_CODE", "PRI_COLOR", "PRI_GOOGLE_API_KEY", "PRI_LOGO","PRI_POWERED_BY","PRI_VERSION" };		
-		project = VertxUtils.privacyFilter(project, projectFilterStrArray);		
-		QDataBaseEntityMessage projectMsg = new QDataBaseEntityMessage(project);
+		$project = VertxUtils.privacyFilter($project, projectFilterStrArray);		
+		QDataBaseEntityMessage projectMsg = new QDataBaseEntityMessage($project);
 		projectMsg.setAliasCode("PROJECT");	
 		payload.add(projectMsg);
-		
+		*/
 		
 		drools.getKnowledgeRuntime().setGlobal("payload", payload);
 
