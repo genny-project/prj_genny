@@ -181,31 +181,55 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
 BaseEntityUtils beUtilsTwo = new BaseEntityUtils(userToken);
 
 muddleDuration = newBe.getValue(&quot;LNK_INTERNSHIP_DURATION&quot;, null);
-whichDays = newBe.getValue(&quot;LNK_WHICH_DAYS&quot;, null);
+muddleWhichDays = newBe.getValue(&quot;LNK_WHICH_DAYS&quot;, null);
 addressFull = newBe.getValue(&quot;PRI_ADDRESS_FULL&quot;, &quot;ADDRESS_NOT_THERE&quot;);
 
 kcontext.setVariable(&quot;muddleDuration&quot;, muddleDuration);
-kcontext.setVariable(&quot;whichDays&quot;, whichDays);
+kcontext.setVariable(&quot;muddleWhichDays&quot;, muddleWhichDays);
 kcontext.setVariable(&quot;addressFull&quot;, addressFull);
 
 System.out.println(&quot;@@@@@@@@@@@@@ muddleDuration : &quot; + muddleDuration);
-System.out.println(&quot;@@@@@@@@@@@@@ whichDays : &quot; + whichDays);
+System.out.println(&quot;@@@@@@@@@@@@@ muddleWhichDays : &quot; + muddleWhichDays);
 System.out.println(&quot;@@@@@@@@@@@@@ addressFull : &quot; + addressFull);
 
-muddleDuration = muddleDuration.replace(&quot;\&quot;&quot;, &quot;&quot;).replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;);
+/*muddleDuration = muddleDuration.replace('\&quot;', '').replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;);*/
 
-whichDays = whichDays.replace(&quot;\'&quot;, &quot;&quot;).replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;).replace(&quot;SEL_WHICH_DAYS_&quot;, &quot;&quot;).replace(&quot;,&quot;, &quot;, &quot;).toString();
+JSONArray jsonArrayDuration = new JSONArray(beUtilsTwo.getBaseEntityValue(newBe.getCode(), &quot;LNK_INTERNSHIP_DURATION&quot;).toString());
+BaseEntity durationEntity = beUtilsTwo.getBaseEntityByCode(jsonArrayDuration.get(0).toString());
+duration = durationEntity.getName();
 
-/*whichDays = whichDays.replace(&quot;\&quot;&quot;, &quot;&quot;).replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;);
-whichDays = whichDays.split(&quot;_&quot;)[3];*/
+JSONArray jsonArrayWhichDays = new JSONArray(beUtilsTwo.getBaseEntityValue(newBe.getCode(), &quot;LNK_WHICH_DAYS&quot;).toString());
+jsonArrayWhichDaysLength = jsonArrayWhichDays.length();
+System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ jsonArrayWhichDaysLength: &quot; + jsonArrayWhichDaysLength);
 
-duration = muddleDuration.split(&quot;_&quot;)[2];
+whichDays = &quot;&quot;;
+
+for(int i=0; i&lt;jsonArrayWhichDaysLength; i++)
+{
+	BaseEntity whichDaysEntity = beUtilsTwo.getBaseEntityByCode(jsonArrayWhichDays.get(i).toString());
+	System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ whichDaysEntity: &quot; + whichDaysEntity);
+	if(i==0)
+	{
+		whichDays = whichDays + &quot;, &quot; + whichDaysEntity.getName();
+	}
+	else {
+		whichDays = whichDays + &quot;, &quot; + whichDaysEntity.getName();
+	}
+	System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ whichDays: &quot; + whichDays);
+}
+
+/*BaseEntity whichDaysEntity = beUtilsTwo.getBaseEntityByCode(jsonArrayWhichDays.get(0).toString());
+whichDays = whichDaysEntity.getName();*/
+
+/*whichDays = whichDays.replace('\&quot;', '').replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;).replace(&quot;SEL_WHICH_DAYS_&quot;, &quot;&quot;).replace(&quot;,&quot;, &quot;, &quot;).toString();
+
+duration = muddleDuration.split(&quot;_&quot;)[2];*/
 
 kcontext.setVariable(&quot;duration&quot;, duration);
 kcontext.setVariable(&quot;whichDays&quot;, whichDays);
 
-System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ duration: &quot; + duration);
-System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ whichDays: &quot; + whichDays);
+System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Just before answer - duration: &quot; + duration);
+System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Just before answer - whichDays: &quot; + whichDays);
 
 Answer answer = new Answer(userToken.getUserCode(), newBe.getCode(),&quot;PRI_INTERNSHIP_DURATION_STRIPPED&quot;, duration);
 Answer answer2 = new Answer(userToken.getUserCode(), newBe.getCode(),&quot;PRI_WHICH_DAYS_STRIPPED&quot;, whichDays);
@@ -231,7 +255,7 @@ System.out.println(&quot;##################################### str_newBeCode&quo
 /*startDate = newBe.getValue(&quot;PRI_START_DATE&quot;, null);*/
 
 startDateTime = beUtilsTwo.getBaseEntityValueAsLocalDate(str_newBeCode, &quot;PRI_START_DATE&quot;);
-System.out.println(&quot;##################################### startDateTime&quot; +startDateTime);
+System.out.println(&quot;##################################### startDateTime = &quot; +startDateTime);
 
 startDate = startDateTime.toString();
 
