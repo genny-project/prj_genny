@@ -26,12 +26,20 @@ rule "IS_INTERNSHIP"
  		System.out.println("IS_INTERNSHIP: Rule fired" );
  		System.out.println("IS_INTERNSHIP: newBe = " + newBe.getCode()); 
  		
- 	/*  Construct answer with Source, Target, Attribute Code, Value */
- 		Answer answer = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_INTERNSHIP", "true");
- 		Answer answer2 = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE");
  		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+ 		
+ 		/* Construct answer with Source, Target, Attribute Code, Value */
+ 		Answer answer = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_INTERNSHIP", "true");
  		beUtils.saveAnswer(answer);
- 		beUtils.saveAnswer(answer2);
+ 		
+ 		answer = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE");
+ 		beUtils.saveAnswer(answer);
+ 		
+ 		answer = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_FULL", "false");
+ 		beUtils.saveAnswer(answer);
+ 		
+ 		answer = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_CURRENT_INTERNS", "0");
+ 		beUtils.saveAnswer(answer);
 
 		System.out.println("IS_INTERNSHIP: Answer = " + answer); 
 		
