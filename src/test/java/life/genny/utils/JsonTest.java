@@ -13,8 +13,22 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import life.genny.models.BaseEntityImport;
 import life.genny.qwanda.Answer;
+import life.genny.qwanda.attribute.Attribute;
+import life.genny.qwanda.attribute.AttributeBoolean;
+import life.genny.qwanda.attribute.AttributeDate;
+import life.genny.qwanda.attribute.AttributeDateTime;
+import life.genny.qwanda.attribute.AttributeDouble;
+import life.genny.qwanda.attribute.AttributeLong;
+import life.genny.qwanda.attribute.AttributeText;
+import life.genny.qwanda.converter.ValidationListConverter;
 import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.entity.Person;
+import life.genny.qwanda.exception.BadDataException;
+import life.genny.qwanda.message.QBulkMessage;
 import life.genny.qwanda.message.QDataAnswerMessage;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.qwanda.validation.Validation;
+import life.genny.qwandautils.JsonUtils;
 
 public class JsonTest {
 	
@@ -28,6 +42,56 @@ public void stringTest()
 	System.out.println(strc);
 }
 	
+
+@Test
+public void jsonTest()
+{
+	ValidationListConverter vc = new ValidationListConverter();
+	List<Validation> validationList = vc.convertToEntityAttribute("\"VLD_EMAIL\",\"Email\",\"^(\\w[-._+\\w]*\\w@\\w[-._\\w]*\\w\\.\\w{2,20})$\",\"[\"\"]\",\"FALSE\",\"FALSE\"");
+	AttributeText attributeText1 = new AttributeText(AttributeText.getDefaultCodePrefix()+"TEST1","Test 1");
+	
+	Attribute attributeDouble = new AttributeDouble(AttributeDouble.getDefaultCodePrefix()+"TEST4","Test Double 4");
+	Attribute attributeLong = new AttributeLong(AttributeLong.getDefaultCodePrefix()+"TEST5","Test Long 5");	
+	Attribute attributeBoolean = new AttributeBoolean(AttributeBoolean.getDefaultCodePrefix()+"TEST6","Test Boolean 6");	
+	Attribute attributeDateTime = new AttributeDateTime(AttributeDateTime.getDefaultCodePrefix()+"TEST7","Test DateTiume 7");	
+	Attribute attributeDate = new AttributeDate(AttributeDate.getDefaultCodePrefix()+"TEST8","Test Date 8");	
+	
+	
+	BaseEntity person = new Person("PER_BARRY_ALLEN","Barry Allen");
+	BaseEntity person2 = new Person("PER_CLARK_KENT","Clark Kent");
+	
+	try {
+		person.addAttribute(attributeText1, 1.0);
+		person.addAttribute(attributeDouble, 1.0);
+		person.addAttribute(attributeDateTime, 1.0);
+	} catch (BadDataException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	try {
+		person2.addAttribute(attributeText1, 1.0);
+		person2.addAttribute(attributeDouble, 1.0);
+		person2.addAttribute(attributeDateTime, 1.0);
+	} catch (BadDataException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	QDataBaseEntityMessage beMsg1 = new QDataBaseEntityMessage(person);
+	beMsg1.setAliasCode("USER");
+	
+	QDataBaseEntityMessage beMsg2 = new QDataBaseEntityMessage(person2);
+	beMsg2.setAliasCode("SUPERVISOR");
+	
+	QBulkMessage msg = new QBulkMessage();
+	msg.add(beMsg1);
+	msg.add(beMsg2);
+	
+	String json = JsonUtils.toJson(msg);
+	System.out.println(json);
+}
+
 //@Test
 public void AddressTest()
 {

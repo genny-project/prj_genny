@@ -1,4 +1,7 @@
 package life.genny.rules;
+
+global life.genny.qwanda.message.QBulkMessage payload;
+
 import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.models.GennyToken;
 import life.genny.rules.QRules;
@@ -20,31 +23,20 @@ rule "RETURN_SETUP_DATA"
 	  userToken : GennyToken ( code != "PER_SERVICE" ) 
 	  serviceToken : GennyToken ( code == "PER_SERVICE" ) 
 	  dataMsg : QDataAnswerMessage( (items != null) && (items.length > 0) && (aliasCode == "STATELESS"))
-	  payload : QBulkMessage()
+
     then
- 		System.out.println("Rule -> RETURN_SETUP_DATA Processing Answer/Data!! :  user=" + userToken.getUserCode()); 
- 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken); 
+   		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + userToken.getUserCode());
+   		
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken); 
 		beUtils.setServiceToken(serviceToken);
-		
+		insert(beUtils); 
+				
 		/* Now set up capability for the user and make it available to all the rules */
 		CapabilityUtils capabilityUtils = new CapabilityUtils(beUtils);
 		insert(capabilityUtils); 
 		
 		System.out.println("Capabilitys are "+capabilityUtils.getCapabilityManifest()); 
 		
-
 		retract(dataMsg); /* stop this rule from firing again */
-
-		/* fetch user details and return */
-		String projectCode = "PRJ_"+userToken.getRealm().toUpperCase();
-		BaseEntity project = beUtils.getBaseEntityByCode(projectCode); 
-
-		
-		QDataBaseEntityMessage prjMsg = new QDataBaseEntityMessage(project);
-		prjMsg.setAliasCode("PROJECT");
-		
-		payload.add(prjMsg);
-		System.out.println("project = "+JsonUtils.toJson(payload));
-		update(payload);
 
 end
