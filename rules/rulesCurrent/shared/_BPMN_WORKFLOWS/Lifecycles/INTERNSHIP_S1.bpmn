@@ -212,7 +212,7 @@ for(int i=0; i&lt;jsonArrayWhichDaysLength; i++)
 	System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ whichDaysEntity: &quot; + whichDaysEntity);
 	if(i==0)
 	{
-		whichDays = whichDays + &quot;, &quot; + whichDaysEntity.getName();
+		whichDays = whichDaysEntity.getName();
 	}
 	else {
 		whichDays = whichDays + &quot;, &quot; + whichDaysEntity.getName();
