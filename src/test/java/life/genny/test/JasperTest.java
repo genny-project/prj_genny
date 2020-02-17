@@ -95,7 +95,7 @@ public class JasperTest {
 
 	}
 	
-	//@Test
+	@Test
     public void SBETest() {
         GennyToken userToken = null;
         GennyToken serviceToken = null;
@@ -307,7 +307,7 @@ public class JasperTest {
 	
 	
 	
-	@Test
+	//@Test
     public void OfferedLimitTest() {
         GennyToken userToken = null;
         GennyToken serviceToken = null;
@@ -354,9 +354,7 @@ public class JasperTest {
         beUtils.create("APP_TEST_APPLICATION3", "Test Application 3");
         beUtils.create("APP_TEST_APPLICATION4", "Test Application 4");
         beUtils.create("APP_TEST_APPLICATION5", "Test Application 5");
-        
-        beUtils.removeBaseEntity("APP_16BB475B-A837-40EB-B359-C5DD8717CB00");
-        
+                
         System.out.println("Created BEs");
         
         
