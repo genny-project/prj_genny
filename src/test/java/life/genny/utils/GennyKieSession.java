@@ -655,14 +655,23 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		QueryDefinitionEntity qde = new QueryDefinitionEntity();
 		configureServices();
 		
-		/* Setup the find by sessionId */
-		SqlQueryDefinition query = new SqlQueryDefinition("getAllProcessInstances", "jdbc/jbpm-ds");
-		query.setExpression("select * from VariableInstanceLog");
+		
+		SqlQueryDefinition query = new SqlQueryDefinition("getAllSessionPids", "jdbc/jbpm-ds");
+		query.setExpression("select * from session_pid");
 		try {
 			queryService.registerQuery(query);
 		} catch (QueryAlreadyRegisteredException e) {
 			log.warn(query.getName() + " is already registered");
 		}
+		
+		/* Setup the find by sessionId */
+//		SqlQueryDefinition query = new SqlQueryDefinition("getAllProcessInstances", "jdbc/jbpm-ds");
+//		query.setExpression("select * from VariableInstanceLog");
+//		try {
+//			queryService.registerQuery(query);
+//		} catch (QueryAlreadyRegisteredException e) {
+//			log.warn(query.getName() + " is already registered");
+//		}
 
 		SqlQueryDefinition query2 = new SqlQueryDefinition("getAllNodeStatuses2", "jdbc/jbpm-ds");
 //		query2.setExpression("select  new life.genny.model.NodeStatus( ns.id,ns.date,ns.nodeId,ns.nodeName,ns.processId,ns.processInstanceId,ns.realm,ns.status,ns.userCode,ns.workflowStatus,ns.workflowBeCode) from NodeStatus ns where ns.realm= 'internmatch' and ns.workflowBeCode=: workflowBeCode");
@@ -1140,15 +1149,24 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 	}
 
+//	public static Optional<Long> getProcessIdBysessionId(String sessionId) {
+//		// Do pagination here
+//		QueryContext ctx = new QueryContext(0, 100);
+//		Collection<ProcessInstanceDesc> instances = queryService.query("getAllProcessInstances",
+//				ProcessInstanceQueryMapper.get(), ctx, QueryParam.equalsTo("value", sessionId));
+//		return instances.stream().map(d -> d.getId()).findFirst();
+//
+//	}
+
 	public static Optional<Long> getProcessIdBysessionId(String sessionId) {
 		// Do pagination here
 		QueryContext ctx = new QueryContext(0, 100);
-		Collection<ProcessInstanceDesc> instances = queryService.query("getAllProcessInstances",
-				ProcessInstanceQueryMapper.get(), ctx, QueryParam.equalsTo("value", sessionId));
+		Collection<ProcessInstanceDesc> instances = queryService.query("getAllSessionPids",
+				ProcessInstanceQueryMapper.get(), ctx, QueryParam.equalsTo("sessionCode", sessionId));
 		return instances.stream().map(d -> d.getId()).findFirst();
 
 	}
-	
+
 	public static Optional<Long> getProcessIdByWorkflowBeCode(String realm,String workflowBeCode) {
 		// Do pagination here
 		QueryContext ctx = new QueryContext(0, 100);
