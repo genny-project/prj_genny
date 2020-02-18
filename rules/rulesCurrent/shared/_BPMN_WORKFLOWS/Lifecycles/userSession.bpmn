@@ -216,6 +216,7 @@ kcontext.setVariable(&quot;session_state&quot;,userToken.getSessionCode());
 kcontext.setVariable(&quot;serviceToken&quot;,serviceToken); 
 kcontext.setVariable(&quot;userToken&quot;,userToken); 
 kcontext.setVariable(&quot;sessionCode&quot;, sessionCode);
+kcontext.setVariable(&quot;userCode&quot;, sessionCode);
 kcontext.setVariable(&quot;inputSessionCode&quot;, &quot;IS_&quot;+sessionCode);
 kcontext.setVariable(&quot;dataSessionCode&quot;, &quot;DT_&quot;+sessionCode);
 kcontext.setVariable(&quot;eventSessionCode&quot;, &quot;EV_&quot;+sessionCode);
