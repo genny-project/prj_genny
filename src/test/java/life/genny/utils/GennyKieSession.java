@@ -98,6 +98,7 @@ import life.genny.jbpm.customworkitemhandlers.ShowFrames;
 import life.genny.jbpm.customworkitemhandlers.ThrowSignalProcessWorkItemHandler;
 import life.genny.jbpm.customworkitemhandlers.ThrowSignalWorkItemHandler;
 import life.genny.model.NodeStatus;
+import life.genny.model.SessionPid;
 import life.genny.models.GennyToken;
 import life.genny.qwanda.Answer;
 import life.genny.qwanda.Ask;
@@ -1161,11 +1162,27 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	public static Optional<Long> getProcessIdBysessionId(String sessionId) {
 		// Do pagination here
 		QueryContext ctx = new QueryContext(0, 100);
-		Collection<ProcessInstanceDesc> instances = queryService.query("getAllSessionPids",
-				ProcessInstanceQueryMapper.get(), ctx, QueryParam.equalsTo("sessionCode", sessionId));
+		Collection<SessionPid> instances = queryService.query("getAllSessionPids",
+				SessionPidQueryMapper.get(), ctx, QueryParam.equalsTo("sessionCode", sessionId)/*,QueryParam.equalsTo("realm", realm)*/);
 		return instances.stream().map(d -> d.getId()).findFirst();
 
 	}
+	
+	public static Optional<Long> getProcessIdBysessionId(String realm,String sessionId) {
+		// Do pagination here
+		QueryContext ctx = new QueryContext(0, 100);
+		try {
+			Collection<SessionPid> instances = queryService.query("getAllSessionPids",
+					SessionPidQueryMapper.get(), ctx, QueryParam.equalsTo("sessionCode", sessionId)/*,QueryParam.equalsTo("realm", realm)*/);
+
+			return instances.stream().map(d -> d.getProcessInstanceId()).findFirst();
+		} catch (Exception e) {
+			log.warn("No pid found for sessionCode="+sessionId);
+		}
+		return Optional.empty();
+
+	}
+
 
 	public static Optional<Long> getProcessIdByWorkflowBeCode(String realm,String workflowBeCode) {
 		// Do pagination here
