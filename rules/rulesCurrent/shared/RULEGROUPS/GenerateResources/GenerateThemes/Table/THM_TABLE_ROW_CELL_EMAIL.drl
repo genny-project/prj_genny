@@ -41,7 +41,7 @@ rule "THM_TABLE_ROW_CELL_EMAIL"
                   .addAttribute()
                     .flexGrow(0)
                     .flexShrink(0)
-                    .flexBasis(200)
+                    .flexBasis(250)
                   .end()
                   .build();
      theme.setRealm(serviceToken.getRealm());
