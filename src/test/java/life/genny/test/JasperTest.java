@@ -27,6 +27,7 @@ import org.jbpm.services.task.utils.TaskFluent;
 import org.jbpm.services.task.wih.NonManagedLocalHTWorkItemHandler;
 import org.jbpm.workflow.instance.WorkflowProcessInstance;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -61,6 +62,7 @@ import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.BucketUtils;
 import life.genny.utils.GennyJbpmBaseTest;
 import life.genny.utils.GennyKieSession;
+import life.genny.utils.OutputParam;
 import life.genny.utils.RulesUtils;
 import life.genny.utils.SearchUtils;
 import life.genny.utils.SessionFacts;
@@ -95,7 +97,7 @@ public class JasperTest {
 
 	}
 	
-	@Test
+	//@Test
     public void SBETest() {
         GennyToken userToken = null;
         GennyToken serviceToken = null;
@@ -257,13 +259,13 @@ public class JasperTest {
     }
 	
 	
-	//@Test
+    //@Test
     public void WorkflowTest() {
         GennyToken userToken = null;
         GennyToken serviceToken = null;
         QRules qRules = null;
 
-        if (true) {
+        if (false) {
             userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
             serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
             qRules = new QRules(eventBusMock, userToken.getToken());
@@ -277,37 +279,50 @@ public class JasperTest {
             serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
         }
         
+        System.out.println("userToken: " + userToken.getToken());
+        System.out.println("serviceToken: " + serviceToken.getToken());
+      	
         
-        GennyKieSession gks = null;
+        JSONObject json = new JSONObject();
+        json.put("targetEntity", "APP_TEST_APPLICATION1");
+        json.put("targetStatus", "OFFERED");
       
-      	String message = "Hello World";
+
+		OutputParam output = new OutputParam("SIGNAL", "START_MOVE_FORWARD", json.toString());
       
-      //SessionFacts sessionFacts = new SessionFacts(serviceToken, userToken, message);
+		SessionFacts sessionFacts = new SessionFacts(serviceToken, userToken, output);
+		
+      	GennyKieSession gks = null;
       
       	try {
-      		gks = GennyKieSession.builder(serviceToken,true)
-					.addJbpm("appliedBucket.bpmn")
-					.addJbpm("shortlistBucket.bpmn")
-					.addJbpm("interviewBucket.bpmn")
-					.addJbpm("offeredBucket.bpmn")
-
+      		gks = GennyKieSession
+					.builder(serviceToken,true)				
 					.addToken(userToken)
-                  	.build();
-          
-          	gks.start();
-          	gks.startProcess("apply");
+					.addJbpm("codeTest.bpmn")
+					.addDrl("JASPER_TEST.drl")
+					.build();
+			
+			gks.start();
+			gks.startProcess("codeTest");
+//          	gks.injectSignal("START_SET_STATUS", sessionFacts); 
+          	
+          	System.out.println("DEBUG");
           
       	} catch (Exception e) {
+      		System.out.println("[*] Might not be able to find the workflow!");
       		e.printStackTrace();
       	} 	finally {
-          	gks.close();
+      		if (gks != null) {
+      			gks.close();
+      		}
+      		System.out.println("Finishing...");
       	}
         
 	}
 	
 	
 	
-	//@Test
+	@Test
     public void OfferedLimitTest() {
         GennyToken userToken = null;
         GennyToken serviceToken = null;
@@ -400,7 +415,7 @@ public class JasperTest {
         beUtils.saveAnswer(answer);
         answer = new Answer(userToken.getUserCode(), intern1.getCode(), "PRI_STATUS_COLOR", "5cb85c");
         beUtils.saveAnswer(answer);
-        answer = new Answer(userToken.getUserCode(), intern1.getCode(), "PRI_DISABLED", "true");
+        answer = new Answer(userToken.getUserCode(), intern1.getCode(), "PRI_DISABLED", "false");
         beUtils.saveAnswer(answer);
         
         answer = new Answer(userToken.getUserCode(), intern2.getCode(), "PRI_FIRSTNAME", "John");
@@ -417,7 +432,7 @@ public class JasperTest {
         beUtils.saveAnswer(answer);
         answer = new Answer(userToken.getUserCode(), intern2.getCode(), "PRI_STATUS_COLOR", "5cb85c");
         beUtils.saveAnswer(answer);
-        answer = new Answer(userToken.getUserCode(), intern2.getCode(), "PRI_DISABLED", "true");
+        answer = new Answer(userToken.getUserCode(), intern2.getCode(), "PRI_DISABLED", "false");
         beUtils.saveAnswer(answer);
         
         answer = new Answer(userToken.getUserCode(), intern3.getCode(), "PRI_FIRSTNAME", "Chris");
@@ -434,7 +449,7 @@ public class JasperTest {
         beUtils.saveAnswer(answer);
         answer = new Answer(userToken.getUserCode(), intern3.getCode(), "PRI_STATUS_COLOR", "5cb85c");
         beUtils.saveAnswer(answer);
-        answer = new Answer(userToken.getUserCode(), intern3.getCode(), "PRI_DISABLED", "true");
+        answer = new Answer(userToken.getUserCode(), intern3.getCode(), "PRI_DISABLED", "false");
         beUtils.saveAnswer(answer);
 
         answer = new Answer(userToken.getUserCode(), intern4.getCode(), "PRI_FIRSTNAME", "Jasper");
@@ -451,7 +466,7 @@ public class JasperTest {
         beUtils.saveAnswer(answer);
         answer = new Answer(userToken.getUserCode(), intern4.getCode(), "PRI_STATUS_COLOR", "5cb85c");
         beUtils.saveAnswer(answer);
-        answer = new Answer(userToken.getUserCode(), intern4.getCode(), "PRI_DISABLED", "true");
+        answer = new Answer(userToken.getUserCode(), intern4.getCode(), "PRI_DISABLED", "false");
         beUtils.saveAnswer(answer);
         
         answer = new Answer(userToken.getUserCode(), intern5.getCode(), "PRI_FIRSTNAME", "Super");
@@ -468,7 +483,7 @@ public class JasperTest {
         beUtils.saveAnswer(answer);
         answer = new Answer(userToken.getUserCode(), intern5.getCode(), "PRI_STATUS_COLOR", "5cb85c");
         beUtils.saveAnswer(answer);
-        answer = new Answer(userToken.getUserCode(), intern5.getCode(), "PRI_DISABLED", "true");
+        answer = new Answer(userToken.getUserCode(), intern5.getCode(), "PRI_DISABLED", "false");
         beUtils.saveAnswer(answer);
        
        
@@ -563,7 +578,7 @@ public class JasperTest {
 
         for (String key : codes.keySet()) {
         	System.out.println("Key: " + key);
-        	answer = new Answer(userToken.getUserCode(), codes.get(key), "PRI_STATUS","INTERVIEWED");
+        	answer = new Answer(userToken.getUserCode(), codes.get(key), "PRI_STATUS","APPLIED");
      		beUtils.saveAnswer(answer);
      		answer = new Answer(userToken.getUserCode(), codes.get(key), "PRI_DISABLED","false");
      		beUtils.saveAnswer(answer);
