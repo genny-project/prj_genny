@@ -25,23 +25,23 @@ import life.genny.utils.FrameUtils2;
 import life.genny.models.FramePosition;
 import life.genny.qwanda.VisualControlType;
 
-rule "THM_TABLE_ROW_CELL"
+rule "THM_TABLE_ROW_CELL_VIEW"
   ruleflow-group 'GenerateThemes'
 
   no-loop true
 
   when
-    not  Theme(code == "THM_TABLE_ROW_CELL")
+    not  Theme(code == "THM_TABLE_ROW_CELL_VIEW")
     serviceToken : GennyToken( code == "PER_SERVICE")
 
   then
-    System.out.println(" Generate THM_TABLE_ROW_CELL Rule  ");
+    System.out.println(" Generate THM_TABLE_ROW_CELL_VIEW Rule  ");
 
-    Theme theme = Theme.builder("THM_TABLE_ROW_CELL")
+    Theme theme = Theme.builder("THM_TABLE_ROW_CELL_VIEW")
                   .addAttribute()
-                    .flexGrow(1)
-                     /* .flexBasis(0)  */
-                     .flexBasis("auto")
+                    .flexGrow(0)
+                    .flexShrink(0)
+                    .flexBasis(90)
                   .end()
                   .build();
      theme.setRealm(serviceToken.getRealm());
