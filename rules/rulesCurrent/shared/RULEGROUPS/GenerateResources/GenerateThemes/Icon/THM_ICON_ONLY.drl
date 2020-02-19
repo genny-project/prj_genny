@@ -29,7 +29,7 @@ rule "THM_ICON_ONLY"
       not  Theme (code == "THM_ICON_ONLY")
       serviceToken : GennyToken( code == "PER_SERVICE")
     then
-      System.out.println("   Generate THM_ICON_ONLY Rule ");
+      System.out.println("   Generates THM_ICON_ONLY Rule ");
       Theme theme = Theme.builder("THM_ICON_ONLY")
                     .addAttribute(ThemeAttributeType.PRI_HAS_ICON, true).end()
                     .addAttribute(ThemeAttributeType.PRI_IS_ICON_ONLY, true).end()
