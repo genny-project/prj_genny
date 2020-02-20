@@ -81,6 +81,7 @@
     	
     			<!--  Genny -->
 		<class>life.genny.model.NodeStatus</class>
+		<class>life.genny.model.SessionPid</class>
 
 		<properties>
       <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
