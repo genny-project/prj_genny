@@ -32,7 +32,7 @@ rule "THM_ICON_ONLY"
       System.out.println("   Generates THM_ICON_ONLY Rule ");
       Theme theme = Theme.builder("THM_ICON_ONLY")
                     .addAttribute(ThemeAttributeType.PRI_HAS_ICON, true).end()
-                    /*.addAttribute(ThemeAttributeType.PRI_IS_ICON_ONLY, true).end()*/
+                    .addAttribute(ThemeAttributeType.PRI_IS_ICON_ONLY, true).end()
                     .build();
 
       theme.setRealm(serviceToken.getRealm());
