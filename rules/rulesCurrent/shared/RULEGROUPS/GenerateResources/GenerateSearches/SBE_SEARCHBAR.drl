@@ -30,32 +30,30 @@ rule "SBE_SEARCHBAR"
      then
      	System.out.println("   Generate "+drools.getRule().getName() );
      	BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
-     	
+
      	String projectCode = "PRJ_"+serviceToken.getRealm().toUpperCase();
-     	
+
  		 BaseEntity project = beUtils.getBaseEntityByCode(projectCode);
- 		 
+
 		if (project != null) {
          SearchEntity searchBE = new SearchEntity(drools.getRule().getName(),project.getValue("PRI_NAME",projectCode)+" Search")
   	     .addSort("PRI_NAME","Name",SearchEntity.Sort.ASC)
   	     .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%")
-	  		  	     .addColumn("PRI_EVENT_VIEW", "View")
-	  		  	     .addColumn("PRI_NAME", "Name")
-	  		      	 .addColumn("PRI_LANDLINE", "Phone")
-	  		  	     .addColumn("PRI_EMAIL", "Email")
-	  		  	     .addColumn("PRI_MOBILE", "Mobile") 
-	  		  	     .addColumn("PRI_ADDRESS_CITY","City")
-	  		  	     .addColumn("PRI_ADDRESS_STATE","State")
+					.addColumn("PRI_EVENT_VIEW", "View")
+					.addColumn("PRI_NAME", "Name")
+					.addColumn("PRI_LANDLINE", "Phone")
+					.addColumn("PRI_EMAIL", "Email")
+					.addColumn("PRI_ADDRESS_FULL","Address")
   	     .setPageStart(0)
   	     .setPageSize(GennySettings.defaultPageSize);
-  	     
-   	     
+
+
   	     searchBE.setRealm(serviceToken.getRealm());
-  	     
+
  		 insert(searchBE);
- 		 
+
   		 VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken.getToken());
-  		 
+
    		 } else {
    		 	System.out.println("PROJECT is not in cache "+projectCode);
    		 }

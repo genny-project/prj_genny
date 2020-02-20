@@ -1213,5 +1213,23 @@
     </query>
     <!-- hint name="org.hibernate.timeout" value="200"/ -->
   </named-query>
-  
+    <named-query name="getAllSessionPids">
+    <query>
+     select
+      new life.genny.model.SessionPid(
+      ns.id,
+      ns.date,
+      ns.sessionCode,
+      ns.realm,
+      ns.processInstanceId
+      )
+      from
+        SessionPid ns
+      where
+        ns.sessionCode=: sessionCode 
+      order by 
+        ns.id DESC
+    </query>
+    <!-- hint name="org.hibernate.timeout" value="200"/ -->
+  </named-query>        
 </entity-mappings>
