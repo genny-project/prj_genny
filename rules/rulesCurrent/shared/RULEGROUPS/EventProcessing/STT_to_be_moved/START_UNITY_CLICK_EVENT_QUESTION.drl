@@ -1,0 +1,50 @@
+package life.genny.rules;
+import io.vertx.core.json.JsonObject;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.qwanda.message.QEventBtnClickMessage;
+import life.genny.models.GennyToken;
+import life.genny.utils.VertxUtils;
+import life.genny.utils.OutputParam;
+import life.genny.qwanda.message.QDataAskMessage;
+import life.genny.utils.BaseEntityUtils;
+import life.genny.qwanda.entity.BaseEntity;
+import life.genny.utils.QuestionUtils;
+import life.genny.qwandautils.JsonUtils;
+import java.util.ArrayList;
+import java.util.List;
+import life.genny.utils.SessionFacts;
+
+rule "START_UNITY_CLICK_EVENT_QUESTION"
+    ruleflow-group 'EventProcessing'
+		salience 3
+    no-loop
+    when
+		$message : QEventMessage ( ( data.code matches "QUE_STT_S.*_.*_Q.*" ) && ( data.parentCode matches "QUE_STT_SCENARIO_.*_ALL_GRP" ) )
+		userToken : GennyToken (code != "PER_SERVICE" )
+		serviceToken : GennyToken (code == "PER_SERVICE" )
+		output : OutputParam( )
+		ruleDetails : RuleDetails()
+		
+    then		
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
+		
+		/* Send a Signal */
+		output.setTypeOfResult("SIGNAL");
+		
+		/* Signal to send */
+		output.setResultCode("START_UNITY_EVENT_QUESTION");
+		
+		/* Strip message code to get scenario and group*/
+		String[] str = StringUtils.stripStart($message.getData().getCode(), "QUE_STT_S").split("_");
+		String scenario = str[0];
+		String group = str[1];
+		String question = StringUtils.stripStart(str[2], "Q");
+		
+		/* Send scenario in output target code */
+		output.setTargetCode("SCENARIO_" + scenario + ":" + "GROUP_" + group + ":" + "QUESTION_" + question);
+				
+		System.out.println("START SIGNAL: START_UNITY_EVENT_QUESTION");
+		System.out.println("STARTING THE NEW APPLICATION WITH: " +output);
+	
+		retract( $message);
+	end

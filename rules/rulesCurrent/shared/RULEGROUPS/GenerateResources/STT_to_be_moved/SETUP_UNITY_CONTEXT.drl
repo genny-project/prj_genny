@@ -1,0 +1,52 @@
+package life.genny.rules;
+import io.vertx.core.json.JsonObject;
+import org.json.JSONObject;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.qwanda.message.QEventBtnClickMessage;
+import life.genny.models.GennyToken;
+import life.genny.utils.VertxUtils;
+import life.genny.utils.OutputParam;
+import life.genny.qwanda.message.QDataAskMessage;
+import life.genny.utils.BaseEntityUtils;
+import life.genny.qwanda.entity.BaseEntity;
+import life.genny.utils.QuestionUtils;
+import life.genny.qwandautils.QwandaMessage;
+import life.genny.qwandautils.JsonUtils;
+import java.util.ArrayList;
+import java.util.List;
+import life.genny.utils.SessionFacts;
+import life.genny.qwanda.Context;
+import life.genny.qwanda.ContextList;
+import life.genny.qwanda.ContextType;
+
+rule "SETUP_UNITY_CONTEXT"
+    ruleflow-group 'GenerateThemes'
+	salience 10000
+    when
+  		serviceToken : GennyToken (code == "PER_SERVICE")
+  		
+     then
+     	System.out.println("   Initialise Unity Context Setup");
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+
+		BaseEntity unityBe = beUtils.getBaseEntityByCode("UNT_S1_DATA");
+		System.out.println("UnityBE: " + unityBe);
+		/* construct the Context */
+		System.out.println("Creating new Context object");
+		Context context = new Context(ContextType.UNITY, unityBe);
+		System.out.println("Context object: " + context);
+		System.out.println("Context enitity: " + context.getEntity());
+
+		QwandaMessage askMsg = QuestionUtils.getQuestions("PER_USER1", "PER_USER1", "QUE_STT_S1_A_Q1", serviceToken.getToken());
+		Ask unityAsk = askMsg.asks.getItems()[0];
+
+		List<Context> ctxList = unityAsk.getContextList().getContextList();
+		ctxList.add(context);
+
+		System.out.println("Ask JSON: " + JsonUtils.toJson(unityAsk));
+		System.out.println("SETUP_UNITY_CONTEXT - Caching Ask: QUE_STT_S1_A_Q1");
+		VertxUtils.putObject(serviceToken.getRealm(), "", "QUE_STT_S1_A_Q1", unityAsk, serviceToken.getToken());
+
+		System.out.println("Finished running rule: SETUP_UNITY_CONTEXT");
+	end
