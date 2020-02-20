@@ -39,7 +39,7 @@ rule "SETUP_UNITY_CONTEXT"
 		System.out.println("Context object: " + context);
 		System.out.println("Context enitity: " + context.getEntity());
 
-		QwandaMessage askMsg = QuestionUtils.getQuestions("PER_USER1", "PER_USER1", "QUE_STT_S1_A_Q1", serviceToken.getToken());
+		QwandaMessage askMsg = QuestionUtils.getQuestions("PER_USER1", "PER_USER1", "QUE_STT_S1_A_Q1_QUES", serviceToken.getToken());
 		System.out.println("askMsg: " + askMsg);
 		Ask unityAsk = askMsg.asks.getItems()[0];
 		System.out.println("UnityAsk: " + unityAsk);
