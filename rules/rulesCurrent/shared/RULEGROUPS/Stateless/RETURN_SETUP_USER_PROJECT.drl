@@ -23,8 +23,8 @@ rule "RETURN_SETUP_USER_PROJECT"
 	  $userToken : GennyToken ( code != "PER_SERVICE" ) 
 	  $user : BaseEntity()
 	  eval($user.getCode()  == $userToken.getUserCode())
-	/*  serviceToken : GennyToken ( code == "PER_SERVICE" ) 
-	  $project : BaseEntity ( code matches  "PRJ_*" )*/
+	  serviceToken : GennyToken ( code == "PER_SERVICE" ) 
+	  $project : BaseEntity ( code matches  "PRJ_*" )
 	  beUtils : BaseEntityUtils()
 	  $capabilityUtils : CapabilityUtils( )
  	/* ( Allowed(code == "IMPORT" && mode == CapabilityMode.EDIT) or eval(beUtils.getGennyToken().hasRole("intern")) ) */
@@ -43,13 +43,13 @@ rule "RETURN_SETUP_USER_PROJECT"
 		payload.add(userMsg);
 				
 				
-/*		String[] projectFilterStrArray = { "ENV_REALM", "PRI_NAME", "ENV_SIGNATURE_URL", "ENV_UPPY_URL",
+		String[] projectFilterStrArray = { "ENV_REALM", "PRI_NAME", "ENV_SIGNATURE_URL", "ENV_UPPY_URL",
 				"PRI_FAVICON", "PRI_CODE", "PRI_COLOR", "PRI_GOOGLE_API_KEY", "PRI_LOGO","PRI_POWERED_BY","PRI_VERSION" };		
 		$project = VertxUtils.privacyFilter($project, projectFilterStrArray);		
 		QDataBaseEntityMessage projectMsg = new QDataBaseEntityMessage($project);
 		projectMsg.setAliasCode("PROJECT");	
 		payload.add(projectMsg);
-		*/
+		
 		
 		drools.getKnowledgeRuntime().setGlobal("payload", payload);
 
