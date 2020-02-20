@@ -13,6 +13,7 @@ import life.genny.utils.QuestionUtils;
 import life.genny.qwandautils.QwandaMessage;
 import life.genny.qwandautils.JsonUtils;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import life.genny.utils.SessionFacts;
 import life.genny.qwanda.Context;
@@ -39,10 +40,22 @@ rule "SETUP_UNITY_CONTEXT"
 		System.out.println("Context enitity: " + context.getEntity());
 
 		QwandaMessage askMsg = QuestionUtils.getQuestions("PER_USER1", "PER_USER1", "QUE_STT_S1_A_Q1", serviceToken.getToken());
+		System.out.println("askMsg: " + askMsg);
 		Ask unityAsk = askMsg.asks.getItems()[0];
+		System.out.println("UnityAsk: " + unityAsk);
 
-		List<Context> ctxList = unityAsk.getContextList().getContextList();
-		ctxList.add(context);
+		Question unityQuestion = unityAsk.getQuestion();
+		System.out.println("Question: " + unityQuestion);
+
+		List<Context> ctxList = Arrays.asList(context);
+		ContextList contextList = new ContextList(ctxList);
+		System.out.println("contextList: " + contextList);
+
+		System.out.println("ctxList pre addition: " + ctxList);
+		unityQuestion.setContextList(contextList);
+		System.out.println("ctxList post addition: " + ctxList);
+
+
 
 		System.out.println("Ask JSON: " + JsonUtils.toJson(unityAsk));
 		System.out.println("SETUP_UNITY_CONTEXT - Caching Ask: QUE_STT_S1_A_Q1");
