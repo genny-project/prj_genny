@@ -35,7 +35,7 @@ rule "FRM_APP"
       FRM_HEADER : Frame3 ( code == "FRM_HEADER" ) 
       FRM_CONTENT_WRAPPER : Frame3 ( code == "FRM_CONTENT_WRAPPER" ) 
       FRM_FOOTER : Frame3 ( code == "FRM_FOOTER" ) 
-     FRM_SIDEBAR : Frame3 ( code == "FRM_SIDEBAR" ) 
+      FRM_SIDEBAR : Frame3 ( code == "FRM_SIDEBAR" ) 
  
     then
 			System.out.println("    Generate FRM_APP_CONTENT Rule  "+serviceToken.getUserCode());
