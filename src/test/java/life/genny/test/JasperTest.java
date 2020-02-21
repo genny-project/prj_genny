@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.lang.invoke.MethodHandles;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,6 +27,7 @@ import org.jbpm.services.task.utils.TaskFluent;
 import org.jbpm.services.task.wih.NonManagedLocalHTWorkItemHandler;
 import org.jbpm.workflow.instance.WorkflowProcessInstance;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -43,19 +45,26 @@ import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
 import life.genny.models.GennyToken;
 import life.genny.qwanda.Answer;
+import life.genny.qwanda.Ask;
+import life.genny.qwanda.ContextList;
 import life.genny.qwanda.Link;
 import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwanda.exception.BadDataException;
 import life.genny.qwanda.message.QDataAnswerMessage;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventMessage;
 import life.genny.qwandautils.GennyCacheInterface;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
+import life.genny.utils.BucketUtils;
 import life.genny.utils.GennyJbpmBaseTest;
 import life.genny.utils.GennyKieSession;
+import life.genny.utils.OutputParam;
 import life.genny.utils.RulesUtils;
+import life.genny.utils.SearchUtils;
 import life.genny.utils.SessionFacts;
 import life.genny.utils.VertxUtils;
 
@@ -88,14 +97,13 @@ public class JasperTest {
 
 	}
 	
-	
 	//@Test
-    public void WorkflowTest() {
+    public void SBETest() {
         GennyToken userToken = null;
         GennyToken serviceToken = null;
         QRules qRules = null;
 
-        if (true) {
+        if (false) {
             userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
             serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
             qRules = new QRules(eventBusMock, userToken.getToken());
@@ -110,36 +118,211 @@ public class JasperTest {
         }
         
         
-        GennyKieSession gks = null;
+        BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+        SearchUtils searchUtils = new SearchUtils(beUtils);
+		BucketUtils bucketUtils = new BucketUtils(beUtils);
+		
+		
+		Map<String, ContextList> contextListMap = new HashMap<String, ContextList>();
+		
+
+		Ask FRM_BUCKET_CONTENT_ASK = bucketUtils.getBucketContentAsk(contextListMap, userToken);
+		
+		
+		contextListMap = bucketUtils.getCardContextListMap(contextListMap, userToken);
+
+        
+		List<BaseEntity> beList = new ArrayList<BaseEntity>();
+        
+        SearchEntity searchBe = new SearchEntity("SBE_AVAILABLE_APPLICATIONS", "Available")
+                .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
+                .addFilter("PRI_IS_INTERN", true)
+                .addFilter("PRI_DISABLED", false) 
+                .addColumn("PRI_STATUS_COLOR", "Status")
+                .addColumn("PRI_INTERN_IMAGE_URL", "Image")
+                .addColumn("PRI_NAME", "Name")
+                .addColumn("PRI_EMAIL", "Email")
+                .addColumn("PRI_MOBILE", "Mobile")
+                .addColumn("PRI_STUDENT_ID", "Student ID")
+                .addColumn("PRI_STATUS", "Status")
+                .addColumn("PRI_NAME", "Name")
+                .addColumn("PRI_CURRENT_COURSE", "Current Course")
+                .addColumn("PRI_PROGRESS", "Progress")
+                .setPageStart(0).setPageSize(1000);
+        
+        /* fetch the search results */
+		QDataBaseEntityMessage msg = searchUtils.fetchSearchResults(searchBe, serviceToken);
+
+		/* get the application counts */
+		System.out.println("Item count: " + msg.getItems().length);
+		
+		for (BaseEntity entity : msg.getItems()) {
+			System.out.println(entity);
+		}
+		
+    }
+	
+	
+	//@Test
+    public void BucketTest() {
+        GennyToken userToken = null;
+        GennyToken serviceToken = null;
+        QRules qRules = null;
+
+        if (false) {
+            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+            qRules = new QRules(eventBusMock, userToken.getToken());
+            qRules.set("realm", userToken.getRealm());
+            qRules.setServiceToken(serviceToken.getToken());
+            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+        } else {
+        	VertxUtils.cachedEnabled = false;
+            qRules = GennyJbpmBaseTest.setupLocalService();
+            userToken = new GennyToken("userToken", qRules.getToken());
+            serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+        }
+        
+        
+        BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+        SearchUtils searchUtils = new SearchUtils(beUtils);
+		BucketUtils bucketUtils = new BucketUtils(beUtils);
+		
+		
+		Map<String, ContextList> contextListMap = new HashMap<String, ContextList>();
+		
+
+		Ask FRM_BUCKET_CONTENT_ASK = bucketUtils.getBucketContentAsk(contextListMap, userToken);
+		
+		
+		contextListMap = bucketUtils.getCardContextListMap(contextListMap, userToken);
+
+        
+		List<BaseEntity> beList = new ArrayList<BaseEntity>();
+        
+        SearchEntity searchBe = new SearchEntity("SBE_INTERVIEWED_APPLICATIONS", "Interviewed")
+                .addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
+                .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+                .addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "INTERVIEWED")
+                .addFilter("PRI_DISABLED", false)
+              	.addColumn("PRI_STATUS_COLOR", "Status")
+              	.addColumn("PRI_INTERN_IMAGE_URL", "Image")
+              	.addColumn("PRI_ASSOC_INTERNSHIP", "Internship")
+              	.addColumn("PRI_ASSOC_HC", "Host Company")
+              /*.addColumn("PRI_HOST_COMPANY_NAME", "Host Company")*/
+              	.addColumn("PRI_INTERN_NAME", "Name")
+              	.addColumn("PRI_STATUS", "Status")
+              	.addColumn("PRI_EDU_PROVIDER_NAME", "Edu Provider")
+              	.addColumn("PRI_INTERN_EMAIL", "Email")
+              	.addColumn("PRI_INTERN_MOBILE", "Mobile")
+              	.addColumn("PRI_INTERN_STUDENT_ID", "Student ID")
+              /*.addColumn("PRI_PROGRESS", "Progress")*/
+                .setPageStart(0).setPageSize(1000);
+        
+        System.out.println("inside search loop  ::");
+		String code = searchBe.getCode().split("SBE_")[1];
+		System.out.println("code  ::" +code );
+
+		/* get the attributes from searchObj */
+		Map<String, String> columns = searchUtils.getTableColumns(searchBe);
+
+		/* fetch the search results */
+		QDataBaseEntityMessage msg = searchUtils.fetchSearchResults(searchBe, serviceToken);
+
+		/* get the application counts */
+		long totalResults = msg.getItems().length;
+		System.out.println("items in bucket " + code + " is :: " + totalResults );
+
+		/* also update the searchBe with the attribute */
+		Answer totalAnswer = new Answer(beUtils.getGennyToken().getUserCode(), searchBe.getCode(),
+				"PRI_TOTAL_RESULTS", totalResults + "");
+		beUtils.addAnswer(totalAnswer);
+		beUtils.updateBaseEntity(searchBe, totalAnswer);
+
+		/* get the applications */
+		List<BaseEntity> appList = Arrays.asList(msg.getItems());
+
+		/* add the application to the baseentity list */
+		beList.addAll(appList);
+
+		/* convert app to asks */
+		List<Ask> appAsksList = searchUtils.generateQuestions(beUtils.getGennyToken(), beUtils, appList,
+				columns, beUtils.getGennyToken().getUserCode());
+		
+		/* get the templat ask for card */
+		Ask templateAsk = bucketUtils.getCardTemplate();
+
+		/* implement template ask to appAks list */
+		List<Ask> askList = bucketUtils.implementCardTemplate(code, appAsksList, templateAsk, contextListMap);
+		
+        
+    }
+	
+	
+    //@Test
+    public void WorkflowTest() {
+        GennyToken userToken = null;
+        GennyToken serviceToken = null;
+        QRules qRules = null;
+
+        if (false) {
+            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+            qRules = new QRules(eventBusMock, userToken.getToken());
+            qRules.set("realm", userToken.getRealm());
+            qRules.setServiceToken(serviceToken.getToken());
+            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+        } else {
+        	VertxUtils.cachedEnabled = false;
+            qRules = GennyJbpmBaseTest.setupLocalService();
+            userToken = new GennyToken("userToken", qRules.getToken());
+            serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+        }
+        
+        System.out.println("userToken: " + userToken.getToken());
+        System.out.println("serviceToken: " + serviceToken.getToken());
+      	
+        
+        JSONObject json = new JSONObject();
+        json.put("targetEntity", "APP_TEST_APPLICATION1");
+        json.put("targetStatus", "OFFERED");
       
-      	String message = "Hello World";
+
+		OutputParam output = new OutputParam("SIGNAL", "START_MOVE_FORWARD", json.toString());
       
-      //SessionFacts sessionFacts = new SessionFacts(serviceToken, userToken, message);
+		SessionFacts sessionFacts = new SessionFacts(serviceToken, userToken, output);
+		
+      	GennyKieSession gks = null;
       
       	try {
-      		gks = GennyKieSession.builder(serviceToken,true)
-					.addJbpm("appliedBucket.bpmn")
-					.addJbpm("shortlistBucket.bpmn")
-					.addJbpm("interviewBucket.bpmn")
-					.addJbpm("offeredBucket.bpmn")
-
+      		gks = GennyKieSession
+					.builder(serviceToken,true)				
 					.addToken(userToken)
-                  	.build();
-          
-          	gks.start();
-          	gks.startProcess("apply");
+					.addJbpm("codeTest.bpmn")
+					.addDrl("JASPER_TEST.drl")
+					.build();
+			
+			gks.start();
+			gks.startProcess("codeTest");
+//          	gks.injectSignal("START_SET_STATUS", sessionFacts); 
+          	
+          	System.out.println("DEBUG");
           
       	} catch (Exception e) {
+      		System.out.println("[*] Might not be able to find the workflow!");
       		e.printStackTrace();
       	} 	finally {
-          	gks.close();
+      		if (gks != null) {
+      			gks.close();
+      		}
+      		System.out.println("Finishing...");
       	}
         
 	}
 	
 	
 	
-	//@Test
+	@Test
     public void OfferedLimitTest() {
         GennyToken userToken = null;
         GennyToken serviceToken = null;
@@ -167,7 +350,7 @@ public class JasperTest {
         BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
         
         /* Create all test BaseEntitys */
-        beUtils.create("PER_TEST_INTERN", "Test Intern ");
+        beUtils.create("PER_TEST_INTERN1", "Test Intern 1");
         beUtils.create("PER_TEST_INTERN2", "Test Intern 2");
         beUtils.create("PER_TEST_INTERN3", "Test Intern 3");
         beUtils.create("PER_TEST_INTERN4", "Test Intern 4");
@@ -181,18 +364,17 @@ public class JasperTest {
 
         beUtils.create("BEG_TEST_INTERNSHIP", "Test Internship");
         
-        beUtils.create("APP_TEST_APPLICATION", "Test Application");
+        beUtils.create("APP_TEST_APPLICATION1", "Test Application 1");
         beUtils.create("APP_TEST_APPLICATION2", "Test Application 2");
         beUtils.create("APP_TEST_APPLICATION3", "Test Application 3");
         beUtils.create("APP_TEST_APPLICATION4", "Test Application 4");
         beUtils.create("APP_TEST_APPLICATION5", "Test Application 5");
-        
+                
         System.out.println("Created BEs");
         
         
         /* Get the BaseEntitys just created */
-//        BaseEntity intern = beUtils.getBaseEntityByCode("PER_TEST_INTERN");
-        BaseEntity intern = beUtils.getBaseEntityByCode("PER_TEST_INTERN");
+        BaseEntity intern1 = beUtils.getBaseEntityByCode("PER_TEST_INTERN1");
         BaseEntity intern2 = beUtils.getBaseEntityByCode("PER_TEST_INTERN2");
         BaseEntity intern3 = beUtils.getBaseEntityByCode("PER_TEST_INTERN3");
         BaseEntity intern4 = beUtils.getBaseEntityByCode("PER_TEST_INTERN4");
@@ -206,7 +388,7 @@ public class JasperTest {
         
         BaseEntity internship = beUtils.getBaseEntityByCode("BEG_TEST_INTERNSHIP");
         
-        BaseEntity application = beUtils.getBaseEntityByCode("APP_TEST_APPLICATION");
+        BaseEntity application1 = beUtils.getBaseEntityByCode("APP_TEST_APPLICATION1");
         BaseEntity application2 = beUtils.getBaseEntityByCode("APP_TEST_APPLICATION2");
         BaseEntity application3 = beUtils.getBaseEntityByCode("APP_TEST_APPLICATION3");
         BaseEntity application4 = beUtils.getBaseEntityByCode("APP_TEST_APPLICATION4");
@@ -219,17 +401,21 @@ public class JasperTest {
         
         /* INTERNS */
         
-        answer = new Answer(userToken.getUserCode(), intern.getCode(), "PRI_FIRSTNAME", "Greg");
+        answer = new Answer(userToken.getUserCode(), intern1.getCode(), "PRI_FIRSTNAME", "Greg");
         beUtils.saveAnswer(answer);
-        answer = new Answer(userToken.getUserCode(), intern.getCode(), "PRI_LASTNAME", "Legg");
+        answer = new Answer(userToken.getUserCode(), intern1.getCode(), "PRI_LASTNAME", "Legg");
         beUtils.saveAnswer(answer);
-        answer = new Answer(userToken.getUserCode(), intern.getCode(), "PRI_EMAIL", "peg.leg.greg@gmail.com");
+        answer = new Answer(userToken.getUserCode(), intern1.getCode(), "PRI_EMAIL", "peg.leg.greg@gmail.com");
         beUtils.saveAnswer(answer);
-        answer = new Answer(userToken.getUserCode(), intern.getCode(), "PRI_IS_INTERN", "true");
+        answer = new Answer(userToken.getUserCode(), intern1.getCode(), "PRI_MOBILE", "0478926738");
         beUtils.saveAnswer(answer);
-        answer = new Answer(userToken.getUserCode(), intern.getCode(), "PRI_STATUS", "AVAILABLE");
+        answer = new Answer(userToken.getUserCode(), intern1.getCode(), "PRI_IS_INTERN", "true");
         beUtils.saveAnswer(answer);
-        answer = new Answer(userToken.getUserCode(), intern.getCode(), "PRI_STATUS_COLOR", "5cb85c");
+        answer = new Answer(userToken.getUserCode(), intern1.getCode(), "PRI_STATUS", "AVAILABLE");
+        beUtils.saveAnswer(answer);
+        answer = new Answer(userToken.getUserCode(), intern1.getCode(), "PRI_STATUS_COLOR", "5cb85c");
+        beUtils.saveAnswer(answer);
+        answer = new Answer(userToken.getUserCode(), intern1.getCode(), "PRI_DISABLED", "false");
         beUtils.saveAnswer(answer);
         
         answer = new Answer(userToken.getUserCode(), intern2.getCode(), "PRI_FIRSTNAME", "John");
@@ -238,11 +424,15 @@ public class JasperTest {
         beUtils.saveAnswer(answer);
         answer = new Answer(userToken.getUserCode(), intern2.getCode(), "PRI_EMAIL", "jsmith@gmail.com");
         beUtils.saveAnswer(answer);
+        answer = new Answer(userToken.getUserCode(), intern2.getCode(), "PRI_MOBILE", "0478937286");
+        beUtils.saveAnswer(answer);
         answer = new Answer(userToken.getUserCode(), intern2.getCode(), "PRI_IS_INTERN", "true");
         beUtils.saveAnswer(answer);
         answer = new Answer(userToken.getUserCode(), intern2.getCode(), "PRI_STATUS", "AVAILABLE");
         beUtils.saveAnswer(answer);
         answer = new Answer(userToken.getUserCode(), intern2.getCode(), "PRI_STATUS_COLOR", "5cb85c");
+        beUtils.saveAnswer(answer);
+        answer = new Answer(userToken.getUserCode(), intern2.getCode(), "PRI_DISABLED", "false");
         beUtils.saveAnswer(answer);
         
         answer = new Answer(userToken.getUserCode(), intern3.getCode(), "PRI_FIRSTNAME", "Chris");
@@ -251,11 +441,15 @@ public class JasperTest {
         beUtils.saveAnswer(answer);
         answer = new Answer(userToken.getUserCode(), intern3.getCode(), "PRI_EMAIL", "cp@gmail.com");
         beUtils.saveAnswer(answer);
+        answer = new Answer(userToken.getUserCode(), intern3.getCode(), "PRI_MOBILE", "0478027818");
+        beUtils.saveAnswer(answer);
         answer = new Answer(userToken.getUserCode(), intern3.getCode(), "PRI_IS_INTERN", "true");
         beUtils.saveAnswer(answer);
         answer = new Answer(userToken.getUserCode(), intern3.getCode(), "PRI_STATUS", "AVAILABLE");
         beUtils.saveAnswer(answer);
         answer = new Answer(userToken.getUserCode(), intern3.getCode(), "PRI_STATUS_COLOR", "5cb85c");
+        beUtils.saveAnswer(answer);
+        answer = new Answer(userToken.getUserCode(), intern3.getCode(), "PRI_DISABLED", "false");
         beUtils.saveAnswer(answer);
 
         answer = new Answer(userToken.getUserCode(), intern4.getCode(), "PRI_FIRSTNAME", "Jasper");
@@ -264,11 +458,15 @@ public class JasperTest {
         beUtils.saveAnswer(answer);
         answer = new Answer(userToken.getUserCode(), intern4.getCode(), "PRI_EMAIL", "jrob@gmail.com");
         beUtils.saveAnswer(answer);
+        answer = new Answer(userToken.getUserCode(), intern4.getCode(), "PRI_MOBILE", "0473896738");
+        beUtils.saveAnswer(answer);
         answer = new Answer(userToken.getUserCode(), intern4.getCode(), "PRI_IS_INTERN", "true");
         beUtils.saveAnswer(answer);
         answer = new Answer(userToken.getUserCode(), intern4.getCode(), "PRI_STATUS", "AVAILABLE");
         beUtils.saveAnswer(answer);
         answer = new Answer(userToken.getUserCode(), intern4.getCode(), "PRI_STATUS_COLOR", "5cb85c");
+        beUtils.saveAnswer(answer);
+        answer = new Answer(userToken.getUserCode(), intern4.getCode(), "PRI_DISABLED", "false");
         beUtils.saveAnswer(answer);
         
         answer = new Answer(userToken.getUserCode(), intern5.getCode(), "PRI_FIRSTNAME", "Super");
@@ -277,11 +475,15 @@ public class JasperTest {
         beUtils.saveAnswer(answer);
         answer = new Answer(userToken.getUserCode(), intern5.getCode(), "PRI_EMAIL", "superman@gmail.com");
         beUtils.saveAnswer(answer);
+        answer = new Answer(userToken.getUserCode(), intern5.getCode(), "PRI_MOBILE", "0478029175");
+        beUtils.saveAnswer(answer);
         answer = new Answer(userToken.getUserCode(), intern5.getCode(), "PRI_IS_INTERN", "true");
         beUtils.saveAnswer(answer);
         answer = new Answer(userToken.getUserCode(), intern5.getCode(), "PRI_STATUS", "AVAILABLE");
         beUtils.saveAnswer(answer);
         answer = new Answer(userToken.getUserCode(), intern5.getCode(), "PRI_STATUS_COLOR", "5cb85c");
+        beUtils.saveAnswer(answer);
+        answer = new Answer(userToken.getUserCode(), intern5.getCode(), "PRI_DISABLED", "false");
         beUtils.saveAnswer(answer);
        
        
@@ -322,7 +524,7 @@ public class JasperTest {
         answer = new Answer(userToken.getUserCode(), eduProvider.getCode(), "PRI_STATUS", "ACTIVE");
         beUtils.saveAnswer(answer);
         
-        beUtils.createLink(eduProvider.getCode(), intern.getCode(), "LNK_CPY", "STUDENT", 1.0);
+        beUtils.createLink(eduProvider.getCode(), intern1.getCode(), "LNK_CPY", "STUDENT", 1.0);
         beUtils.createLink(eduProvider.getCode(), intern2.getCode(), "LNK_CPY", "STUDENT", 1.0);
         beUtils.createLink(eduProvider.getCode(), intern3.getCode(), "LNK_CPY", "STUDENT", 1.0);
         beUtils.createLink(eduProvider.getCode(), intern4.getCode(), "LNK_CPY", "STUDENT", 1.0);
@@ -367,7 +569,7 @@ public class JasperTest {
         
         Map<String, String> codes = new HashMap<String, String>();
         
-        codes.put(intern.getCode(), application.getCode());
+        codes.put(intern1.getCode(), application1.getCode());
         codes.put(intern2.getCode(), application2.getCode());
         codes.put(intern3.getCode(), application3.getCode());
         codes.put(intern4.getCode(), application4.getCode());
@@ -375,12 +577,15 @@ public class JasperTest {
         
 
         for (String key : codes.keySet()) {
-        	answer = new Answer(userToken.getUserCode(), codes.get(key), "PRI_STATUS","INTERVIEWED");
+        	System.out.println("Key: " + key);
+        	answer = new Answer(userToken.getUserCode(), codes.get(key), "PRI_STATUS","APPLIED");
      		beUtils.saveAnswer(answer);
      		answer = new Answer(userToken.getUserCode(), codes.get(key), "PRI_DISABLED","false");
      		beUtils.saveAnswer(answer);
      		
-     		String name = beUtils.getBaseEntityValue(key, "PRI_NAME").toString();
+     		String firstName = beUtils.getBaseEntityValue(key, "PRI_FIRSTNAME").toString();
+     		String lastName = beUtils.getBaseEntityValue(key, "PRI_LASTNAME").toString();
+     		String name = firstName + " " + lastName;
      		answer = new Answer(userToken.getUserCode(), codes.get(key),"PRI_INTERN_NAME", name);
      		beUtils.saveAnswer(answer);
      		
@@ -395,12 +600,12 @@ public class JasperTest {
      		answer = new Answer(userToken.getUserCode(), codes.get(key), "PRI_CODE", codes.get(key));
      		beUtils.saveAnswer(answer);
      		
-     		String internshipName = beUtils.getBaseEntityValue(internship.getCode(), "PRI_Name").toString();
-     		answer = new Answer(userToken.getUserCode(), codes.get(key),"PRI_ASSOC_INTERNSHIP", internshipName);
+     		String internshipName = beUtils.getBaseEntityValue(internship.getCode(), "PRI_NAME").toString();
+     		answer = new Answer(userToken.getUserCode(), codes.get(key), "PRI_ASSOC_INTERNSHIP", internshipName);
      		beUtils.saveAnswer(answer);
      		
      		String companyName = beUtils.getBaseEntityValue(hostCompany.getCode(), "PRI_NAME").toString();
-     		answer = new Answer(userToken.getUserCode(), application.getCode(),"PRI_ASSOC_HC", companyName);
+     		answer = new Answer(userToken.getUserCode(), codes.get(key),"PRI_ASSOC_HC", companyName);
      		beUtils.saveAnswer(answer);
      		
         }
@@ -411,8 +616,8 @@ public class JasperTest {
  		
  	
  		
- 		beUtils.createLink(internship.getCode(), application.getCode(), "LNK_BEG", "APPLICATION", 1.0);
- 		beUtils.createLink(intern.getCode(), application.getCode(), "LNK_PER", "APPLICATION", 1.0);
+ 		beUtils.createLink(internship.getCode(), application1.getCode(), "LNK_BEG", "APPLICATION", 1.0);
+ 		beUtils.createLink(intern1.getCode(), application1.getCode(), "LNK_PER", "APPLICATION", 1.0);
 
         beUtils.createLink(internship.getCode(), application2.getCode(), "LNK_BEG", "APPLICATION", 1.0);
         beUtils.createLink(intern2.getCode(), application2.getCode(), "LNK_PER", "APPLICATION", 1.0);
@@ -428,7 +633,7 @@ public class JasperTest {
         
  		
     
- 		BaseEntity internshipBe = beUtils.getParent(application.getCode(), "LNK_BEG");
+ 		BaseEntity internshipBe = beUtils.getParent(application1.getCode(), "LNK_BEG");
         System.out.println("internshipBe: " + internshipBe);
         
  		List<BaseEntity> childApplications = beUtils.getLinkedBaseEntities("BEG_TEST_INTERNSHIP", "LNK_BEG");
