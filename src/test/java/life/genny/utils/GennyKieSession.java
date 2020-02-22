@@ -22,26 +22,21 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.drools.core.ClockType;
 import org.drools.core.time.impl.PseudoClockScheduler;
-
 import org.jbpm.executor.ExecutorServiceFactory;
 import org.jbpm.executor.impl.ExecutorImpl;
 import org.jbpm.executor.impl.ExecutorServiceImpl;
 import org.jbpm.kie.services.impl.query.SqlQueryDefinition;
-import org.jbpm.kie.services.impl.query.mapper.ProcessInstanceQueryMapper;
 import org.jbpm.kie.services.impl.query.persistence.QueryDefinitionEntity;
 import org.jbpm.process.audit.AbstractAuditLogger;
 import org.jbpm.process.audit.JPAWorkingMemoryDbLogger;
-import org.jbpm.services.api.model.ProcessInstanceDesc;
 import org.jbpm.services.api.query.QueryAlreadyRegisteredException;
 import org.jbpm.services.api.query.QueryService;
-import org.jbpm.services.api.query.model.QueryDefinition;
 import org.jbpm.services.api.query.model.QueryParam;
 import org.jbpm.services.api.utils.KieServiceConfigurator;
 import org.jbpm.services.task.wih.util.PeopleAssignmentHelper;
@@ -50,7 +45,6 @@ import org.kie.api.KieBase;
 import org.kie.api.command.Command;
 import org.kie.api.executor.ExecutorService;
 import org.kie.api.io.ResourceType;
-import org.kie.api.runtime.Environment;
 import org.kie.api.runtime.EnvironmentName;
 import org.kie.api.runtime.ExecutionResults;
 import org.kie.api.runtime.KieSession;
@@ -70,7 +64,6 @@ import org.kie.internal.command.CommandFactory;
 import org.kie.internal.identity.IdentityProvider;
 import org.kie.internal.io.ResourceFactory;
 import org.kie.internal.query.QueryContext;
-import org.kie.internal.runtime.manager.SessionFactory;
 import org.kie.internal.task.api.TaskModelProvider;
 import org.kie.internal.task.api.UserGroupCallback;
 
@@ -123,10 +116,6 @@ import life.genny.rules.RulesLoader;
 import life.genny.rules.listeners.GennyAgendaEventListener;
 import life.genny.rules.listeners.JbpmInitListener;
 import life.genny.rules.listeners.NodeStatusLog;
-import life.genny.test.qwanda.util.HibernateUtil;
-import life.genny.utils.RulesUtils;
-import life.genny.utils.SessionFacts;
-import life.genny.utils.VertxUtils;
 
 public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoCloseable {
 

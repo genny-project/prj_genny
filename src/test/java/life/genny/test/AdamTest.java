@@ -134,7 +134,92 @@ public class AdamTest {
 	   protected static  GennyToken newUserToken;
 	   protected static  GennyToken serviceToken;
 	   
-	    
+	   @Test
+		public void importGoogleIdTest()
+		{
+			System.out.println("Import Google IDTest");
+
+
+			GennyKieSession gks = null;
+
+			try {
+				gks = GennyKieSession.builder(serviceToken,true)
+						.addDrl("SignalProcessing")
+						.addDrl("DataProcessing")
+						.addDrl("EventProcessing")
+						.addJbpm("Lifecycles")
+						.addJbpm("adam_user1.bpmn")
+						.addJbpm("adam_user2.bpmn")
+						.addJbpm("adam_user3.bpmn")
+						.addDrl("AuthInit")
+						.addJbpm("AuthInit")
+						.addDrl("InitialiseProject")
+						.addJbpm("InitialiseProject")
+						.build();
+				
+				gks.createTestUsersGroups();
+				
+				GennyToken newUser2A = gks.createToken("PER_USER2","user,test,admin"); 
+				GennyToken newUser2B = gks.createToken("PER_USER2"); 
+				GennyToken newUser1A = gks.createToken("PER_USER1");
+				gks.start();
+				
+
+				gks.injectSignal("initProject"); // This should initialise everything
+				gks.injectEvent("authInitMsg",newUser2A); // log in as new user
+				gks.advanceSeconds(5, false);
+				gks.showStatuses("PER_USER1","PER_USER2");
+
+				
+				// Now answer a question
+
+				gks.injectAnswer("PRI_FIRSTNAME",newUser2A);
+				gks.injectAnswer("PRI_LASTNAME", newUser2A);
+				gks.injectAnswer("PRI_DOB", newUser2A);
+				gks.injectAnswer("PRI_PREFERRED_NAME", newUser2A);
+				gks.injectAnswer("PRI_EMAIL", newUser2A);
+				gks.injectAnswer("PRI_MOBILE", newUser2A);
+				gks.injectAnswer("PRI_USER_PROFILE_PICTURE", newUser2A);
+				gks.injectAnswer("PRI_ADDRESS_FULL", newUser2A);
+				
+				gks.injectEvent("QUE_SUBMIT",newUser2A);
+				
+				
+				// Now import a google doc/ xls file and generate a List of BaseEntityImports
+				
+				String googleDocId = System.getenv("GOOGLE_DOC_ID");
+				 List<BaseEntityImport> beImports = ImportUtils.importGoogleDoc(googleDocId, "Sheet1",getFieldMappings());
+				 
+				 // now generate the baseentity and send through all the answers
+				 BaseEntityUtils beUtils = new BaseEntityUtils(newUser2A);
+				 beUtils.setServiceToken(serviceToken);
+				 for (BaseEntityImport beImport : beImports) {
+					 BaseEntity be = beUtils.create(beImport.getCode(), beImport.getName());
+					 List<Answer> answers = new ArrayList<Answer>();
+					 for (Tuple2<String,String> attributeCodeValue : beImport.getAttributeValuePairList()) {
+						 Answer answer = new Answer(be.getCode(),be.getCode(),attributeCodeValue._1,attributeCodeValue._2);
+						 answers.add(answer);
+					 }
+					
+					 QDataAnswerMessage msg = new QDataAnswerMessage(answers);
+					 msg.setToken(newUser2A.getToken());
+					 // now inject into a rulegroup
+					 gks.injectEvent(msg, newUser2A);
+				 }
+				 
+				 
+				 
+				 System.out.println(beImports);
+				} catch (Exception e) {
+				e.printStackTrace();
+			
+			}
+			finally {
+				if (gks!=null) {
+					gks.close();
+				}
+			}
+		}
 
 	public AdamTest() {
 		 loadServiceConfigurator();
@@ -144,7 +229,7 @@ public class AdamTest {
 	        this.serviceConfigurator = ServiceLoader.load(KieServiceConfigurator.class).iterator().next();
 	    }
 
-		@Test
+		//@Test
 		public void queryTest()
 		{
 			System.out.println("Process View Test");
@@ -256,92 +341,7 @@ public class AdamTest {
 			}
 		}
 	   
-	//   @Test
-		public void importGoogleIdTest()
-		{
-			System.out.println("Import Google IDTest");
 
-
-			GennyKieSession gks = null;
-
-			try {
-				gks = GennyKieSession.builder(serviceToken,true)
-						.addDrl("SignalProcessing")
-						.addDrl("DataProcessing")
-						.addDrl("EventProcessing")
-						.addJbpm("Lifecycles")
-						.addJbpm("adam_user1.bpmn")
-						.addJbpm("adam_user2.bpmn")
-						.addJbpm("adam_user3.bpmn")
-						.addDrl("AuthInit")
-						.addJbpm("AuthInit")
-						.addDrl("InitialiseProject")
-						.addJbpm("InitialiseProject")
-						.build();
-				
-				gks.createTestUsersGroups();
-				
-				GennyToken newUser2A = gks.createToken("PER_USER2","user,test,admin"); 
-				GennyToken newUser2B = gks.createToken("PER_USER2"); 
-				GennyToken newUser1A = gks.createToken("PER_USER1");
-				gks.start();
-				
-
-				gks.injectSignal("initProject"); // This should initialise everything
-				gks.injectEvent("authInitMsg",newUser2A); // log in as new user
-				gks.advanceSeconds(5, false);
-				gks.showStatuses("PER_USER1","PER_USER2");
-
-				
-				// Now answer a question
-
-				gks.injectAnswer("PRI_FIRSTNAME",newUser2A);
-				gks.injectAnswer("PRI_LASTNAME", newUser2A);
-				gks.injectAnswer("PRI_DOB", newUser2A);
-				gks.injectAnswer("PRI_PREFERRED_NAME", newUser2A);
-				gks.injectAnswer("PRI_EMAIL", newUser2A);
-				gks.injectAnswer("PRI_MOBILE", newUser2A);
-				gks.injectAnswer("PRI_USER_PROFILE_PICTURE", newUser2A);
-				gks.injectAnswer("PRI_ADDRESS_FULL", newUser2A);
-				
-				gks.injectEvent("QUE_SUBMIT",newUser2A);
-				
-				
-				// Now import a google doc/ xls file and generate a List of BaseEntityImports
-				
-				String googleDocId = System.getenv("GOOGLE_DOC_ID");
-				 List<BaseEntityImport> beImports = ImportUtils.importGoogleDoc(googleDocId, "Sheet1",getFieldMappings());
-				 
-				 // now generate the baseentity and send through all the answers
-				 BaseEntityUtils beUtils = new BaseEntityUtils(newUser2A);
-				 beUtils.setServiceToken(serviceToken);
-				 for (BaseEntityImport beImport : beImports) {
-					 BaseEntity be = beUtils.create(beImport.getCode(), beImport.getName());
-					 List<Answer> answers = new ArrayList<Answer>();
-					 for (Tuple2<String,String> attributeCodeValue : beImport.getAttributeValuePairList()) {
-						 Answer answer = new Answer(be.getCode(),be.getCode(),attributeCodeValue._1,attributeCodeValue._2);
-						 answers.add(answer);
-					 }
-					
-					 QDataAnswerMessage msg = new QDataAnswerMessage(answers);
-					 msg.setToken(newUser2A.getToken());
-					 // now inject into a rulegroup
-					 gks.injectEvent(msg, newUser2A);
-				 }
-				 
-				 
-				 
-				 System.out.println(beImports);
-				} catch (Exception e) {
-				e.printStackTrace();
-			
-			}
-			finally {
-				if (gks!=null) {
-					gks.close();
-				}
-			}
-		}
 	   
 	   private void runRules(GennyToken serviceToken, GennyToken userToken)
 	   {
