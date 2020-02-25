@@ -15,7 +15,7 @@ import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QBulkMessage;
 
-rule "RETURN_SETUP_DATA"
+rule "STATELESS_SETUP_DATA"
     ruleflow-group 'Stateless'
      salience 10000
      no-loop true
@@ -38,6 +38,7 @@ rule "RETURN_SETUP_DATA"
 		System.out.println("Capabilitys are "+capabilityUtils.getCapabilityManifest()); 
 		
 		BaseEntity user = beUtils.getBaseEntityByCode(userToken.getUserCode()); 
+		System.out.println("User is "+user);
 		insert(user);				
 				
 		String projectCode = "PRJ_"+userToken.getRealm().toUpperCase();
