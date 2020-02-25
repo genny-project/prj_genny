@@ -20,18 +20,22 @@ rule "RETURN_SETUP_USER_PROJECT"
      salience 5000
      no-loop true
     when
+    	beUtils : BaseEntityUtils()
 	  $userToken : GennyToken ( code != "PER_SERVICE" ) 
-	  $user : BaseEntity()
+	  $user : BaseEntity( )
+	  serviceToken : GennyToken ( code == "PER_SERVICE" )
+	   $project : BaseEntity ( code == "PRJ_INTERNMATCH" )
+/*	   $capabilityUtils : CapabilityUtils( )
 	  eval($user.getCode()  == $userToken.getUserCode())
-	  serviceToken : GennyToken ( code == "PER_SERVICE" ) 
-	  $project : BaseEntity ( code matches  "PRJ_*" )
-	  beUtils : BaseEntityUtils()
-	  $capabilityUtils : CapabilityUtils( )
+	   
+	 
+	  
+	  */
  	/* ( Allowed(code == "IMPORT" && mode == CapabilityMode.EDIT) or eval(beUtils.getGennyToken().hasRole("intern")) ) */
  	/*  eval($capabilityUtils.hasCapability("IMPORT",CapabilityMode.DELETE)) */
 	  
     then
-   		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode());
+   		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + $userToken.getUserCode());
    		
 		/* fetch user details and return */
 		
@@ -48,9 +52,10 @@ rule "RETURN_SETUP_USER_PROJECT"
 		$project = VertxUtils.privacyFilter($project, projectFilterStrArray);		
 		QDataBaseEntityMessage projectMsg = new QDataBaseEntityMessage($project);
 		projectMsg.setAliasCode("PROJECT");	
-		payload.add(projectMsg);
+		payload.add(projectMsg); 
 		
 		
 		drools.getKnowledgeRuntime().setGlobal("payload", payload);
+		retract($user);
 
 end
