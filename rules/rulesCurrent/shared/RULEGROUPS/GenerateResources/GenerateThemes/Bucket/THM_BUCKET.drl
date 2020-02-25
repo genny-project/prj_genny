@@ -39,7 +39,7 @@ rule "THM_BUCKET"
  
 		Theme theme = Theme.builder("THM_BUCKET")
                                 .addAttribute()
-                                        .backgroundColor("#F8F9FA")
+                                        /* .backgroundColor("#F8F9FA") */
                                         .overflowX("auto")
                                         .overflowY("auto")
                                         .width("100%")

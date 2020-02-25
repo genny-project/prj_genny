@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - BucketView",
+            "request": "launch",
+            "mainClass": "life.genny.test.BucketView",
+            "projectName": "prj_genny"
+        },
+        {
+            "type": "java",
             "name": "Debug (Launch) - Current File",
             "request": "launch",
             "mainClass": "${file}"

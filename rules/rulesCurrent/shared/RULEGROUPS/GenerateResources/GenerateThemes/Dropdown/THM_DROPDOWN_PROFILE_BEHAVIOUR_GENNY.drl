@@ -39,6 +39,8 @@ rule "THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY"
 
     Theme theme = Theme.builder("THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY")
                   .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_LABEL, false).end()
+                  .addAttribute(ThemeAttributeType.PRI_IS_DROPDOWN, true).end()
+                  .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
                   .build();
     theme.setRealm(serviceToken.getRealm());
     insert (theme);

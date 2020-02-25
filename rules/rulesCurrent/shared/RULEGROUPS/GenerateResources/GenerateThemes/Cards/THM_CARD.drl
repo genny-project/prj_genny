@@ -46,6 +46,8 @@ rule "THM_CARD"
 
       Theme theme = Theme.builder("THM_CARD")
                     .addAttribute()
+                      .overflowX("hidden") /* NEW */
+                      .borderRadius(8) /* NEW */
                       .backgroundColor("white")
                       .height("auto")
                       .width("100%")
@@ -53,7 +55,7 @@ rule "THM_CARD"
                       .flexBasis("initial")
                       .flexGrow(0)
                       .flexShrink(0)
-                      .marginBottom(20)
+                      .marginBottom(8)
                       .shadowColor("#000")
                       .shadowOffset()
                         .height(0)

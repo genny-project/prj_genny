@@ -38,11 +38,12 @@ rule "FRM_APP"
      FRM_SIDEBAR : Frame3 ( code == "FRM_SIDEBAR" ) 
  
     then
-			System.out.println("    Generate FRM_APP_CONTENT Rule  "+serviceToken.getUserCode());
+			System.out.println("    Generating FRM_APP_CONTENT Rule  "+serviceToken.getUserCode());
 
 		  /* frame-root */
       		Frame3 frame = Frame3.builder("FRM_APP_CONTENT")
                       .addTheme("THM_PROJECT", ThemePosition.FRAME, serviceToken).end()
+                      /* .addTheme("THM_FONT_FAMILY_ROBOTO", ThemePosition.FRAME, serviceToken).end() */
                      .addFrame(FRM_HEADER, FramePosition.NORTH).end() 
                       .addFrame(FRM_SIDEBAR, FramePosition.WEST).end() 
                       .addFrame(FRM_CONTENT_WRAPPER, FramePosition.CENTRE).end() 

@@ -25,32 +25,24 @@ import life.genny.models.ThemeAttributeType;
 
 
 
-rule "THM_BUCKET_COLUMN"
+rule "THM_BUCKET_PANEL_NORTH"
    ruleflow-group 'GenerateThemes'
     no-loop true
 
     when
-      not  Theme (code == "THM_BUCKET_COLUMN")
+      not  Theme (code == "THM_BUCKET_PANEL_NORTH")
       serviceToken : GennyToken( code == "PER_SERVICE")
 
     then
 
-     	System.out.println("   Generate THM_BUCKET_COLUMN Rule ");
+     	System.out.println("   Generate THM_BUCKET_PANEL_NORTH Rule ");
 
-		Theme theme = Theme.builder("THM_BUCKET_COLUMN")
+		Theme theme = Theme.builder("THM_BUCKET_PANEL_NORTH")
                                 .addAttribute()
-                                        /* .backgroundColor("#EAEAEA") */
-                                        /* .minWidth(300) */
-                                        .minWidth(344) /* NEW */
-                                        .width("100%")
-                                        /* .margin(20) */
-                                        /* .marginLeft(10)
-                                        .marginRight(10) */
-                                        .textAlign("center")
-                                        .flexDirection("column")
-                                        .end()
-                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
-                                	.end()
+                                  .paddingX(4)
+										              .paddingTop(8)
+                                .end()
+                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
                                 .build();
 
 		theme.setRealm(serviceToken.getRealm());

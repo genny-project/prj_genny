@@ -192,7 +192,7 @@ rule "FRM_BUCKET_VIEW"
 				/* add the ask to virtualAskMap */
 				virtualAskMap.put(bucketHeaderAsk.getQuestionCode(), new QDataAskMessage(bucketHeaderAsk));
 				virtualAskMap.put(bucketContentAsk.getQuestionCode(), new QDataAskMessage(bucketContentAsk));
-        virtualAskMap.put(bucketFooterAsk.getQuestionCode(), new QDataAskMessage(bucketFooterAsk));
+        /*virtualAskMap.put(bucketFooterAsk.getQuestionCode(), new QDataAskMessage(bucketFooterAsk)); */ /*NEW*/
 			}
 
 			Frame3 FRM_BUCKET_VIEW_CONTENT = Frame3.builder("FRM_BUCKET_VIEW_CONTENT")
