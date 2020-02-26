@@ -21,8 +21,7 @@ rule "RETURN_SETUP_HOST_COMPANY"
      no-loop true
     when
  	  $userToken : GennyToken ( code != "PER_SERVICE" ) 
- 	  $user : BaseEntity ()
- 	  eval( $user.getCode() == $userToken.getUserCode() )
+ 	  $user : BaseEntity (  code == $userToken.getUserCode() )
  	  $project : BaseEntity ( code matches "PRJ_\\S+" )
 	  serviceToken : GennyToken ( code == "PER_SERVICE" )
 	  beUtils : BaseEntityUtils()
@@ -35,6 +34,8 @@ rule "RETURN_SETUP_HOST_COMPANY"
 				"PRI_ADDRESS_ADDRESS1", "PRI_CODE", "PRI_ADDRESS_CITY", "PRI_ADDRESS_POSTCODE", 
 				"PRI_LOGO","PRI_ADDRESS_STATE","PRI_ADDRESS_COUNTRY",
 				"PRI_ADDRESS_LATITUDE","PRI_ADDRESS_LONGITUDE" };	
+		
+		/* fetch the 
 		
 		BaseEntity hostCompany = beUtils.getBaseEntityByCode("CPY_HOSTCOMPANY1");			
 		hostCompany = VertxUtils.privacyFilter(hostCompany, hostCompanyFilterStrArray);		
