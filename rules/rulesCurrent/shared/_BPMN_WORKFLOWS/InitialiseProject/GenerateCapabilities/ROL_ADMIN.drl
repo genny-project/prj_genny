@@ -42,10 +42,10 @@ rule "ROL_ADMIN"
    	     capabilityUtils.addCapabilityToRole(role,"LOGIN",CapabilityMode.EDIT);
    	     capabilityUtils.addCapabilityToRole(role,"LOGOUT",CapabilityMode.EDIT);
  
-  	     
+  	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
  		 insert(role);
- 		 
-   		 VertxUtils.putObject(capabilityUtils.getBeUtils().getServiceToken().getRealm(), "", role.getCode(), role, capabilityUtils.getBeUtils().getServiceToken().getToken());
+ 		 		 
+ 		 VertxUtils.writeCachedJson(capabilityUtils.getBeUtils().getServiceToken().getRealm(), role.getCode(), JsonUtils.toJson(role), capabilityUtils.getBeUtils().getServiceToken().getToken());
  		 
 
 

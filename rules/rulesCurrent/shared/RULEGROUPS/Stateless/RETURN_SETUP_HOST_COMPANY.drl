@@ -1,0 +1,47 @@
+package life.genny.rules;
+
+global life.genny.qwanda.message.QBulkMessage payload;
+
+import life.genny.qwanda.message.QDataAnswerMessage;
+import life.genny.models.GennyToken;
+import life.genny.rules.QRules;
+import life.genny.utils.BaseEntityUtils;
+import life.genny.utils.CapabilityUtils;
+import life.genny.qwanda.Answer;
+import java.util.List;
+import java.util.ArrayList;
+import life.genny.model.OutputParamTreeSet;
+import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.qwanda.message.QBulkMessage;
+
+rule "RETURN_SETUP_HOST_COMPANY"
+    ruleflow-group 'Stateless'
+     salience 5000
+     no-loop true
+    when
+ 	  $userToken : GennyToken ( code != "PER_SERVICE" ) 
+ 	  $user : BaseEntity ()
+ 	  eval( $user.getCode() == $userToken.getUserCode() )
+ 	  $project : BaseEntity ( code matches "PRJ_\\S+" )
+	  serviceToken : GennyToken ( code == "PER_SERVICE" )
+	  beUtils : BaseEntityUtils()
+	  allowed : Allowed(code == "READ_HOST_COMPANY" && mode == CapabilityMode.VIEW)
+	  
+    then
+   		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + $userToken.getUserCode());
+   		
+		String[] hostCompanyFilterStrArray = { "ENV_REALM", "PRI_NAME",
+				"PRI_ADDRESS_ADDRESS1", "PRI_CODE", "PRI_ADDRESS_CITY", "PRI_ADDRESS_POSTCODE", 
+				"PRI_LOGO","PRI_ADDRESS_STATE","PRI_ADDRESS_COUNTRY",
+				"PRI_ADDRESS_LATITUDE","PRI_ADDRESS_LONGITUDE" };	
+		
+		BaseEntity hostCompany = beUtils.getBaseEntityByCode("CPY_HOSTCOMPANY1");			
+		hostCompany = VertxUtils.privacyFilter(hostCompany, hostCompanyFilterStrArray);		
+		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(hostCompany);
+		msg.setAliasCode("HOST_COMPANY");	
+		payload.add(msg); 
+				
+		drools.getKnowledgeRuntime().setGlobal("payload", payload);
+		retract(allowed); /* no longer needed */
+end
