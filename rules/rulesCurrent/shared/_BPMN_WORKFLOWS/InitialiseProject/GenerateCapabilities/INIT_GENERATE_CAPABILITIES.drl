@@ -63,6 +63,7 @@ rule "INIT_GENERATE_CAPABILITIES"
   	 	
   	 	capabilityUtils.addCapability( "READ_USER", "Read User");
  		capabilityUtils.addCapability( "READ_PROJECT", "Read Project");
+ 		capabilityUtils.addCapability( "READ_HOST_COMPANY", "Read Host Company");
  		capabilityUtils.addCapability( "CREATE_JOURNALS", "Create Journals");
  		capabilityUtils.addCapability( "APPROVE_JOURNALS", "Approve Journals");
    

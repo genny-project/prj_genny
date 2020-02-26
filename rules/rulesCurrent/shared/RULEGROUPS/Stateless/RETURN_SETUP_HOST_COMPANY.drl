@@ -26,6 +26,7 @@ rule "RETURN_SETUP_HOST_COMPANY"
 	  serviceToken : GennyToken ( code == "PER_SERVICE" )
 	  beUtils : BaseEntityUtils()
 	  allowed : Allowed(code == "READ_HOST_COMPANY" && mode == CapabilityMode.VIEW)
+	  allowed2 : Allowed(code == "INTERN") or Allowed (code == "SUPERVISOR") 
 	  
     then
    		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + $userToken.getUserCode());
