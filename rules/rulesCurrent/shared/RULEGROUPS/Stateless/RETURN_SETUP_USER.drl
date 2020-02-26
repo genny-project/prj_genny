@@ -15,24 +15,17 @@ import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QBulkMessage;
 
-rule "RETURN_SETUP_USER_PROJECT"
+rule "RETURN_SETUP_USER"
     ruleflow-group 'Stateless'
      salience 5000
      no-loop true
     when
-    	beUtils : BaseEntityUtils()
+      beUtils : BaseEntityUtils()
 	  $userToken : GennyToken ( code != "PER_SERVICE" ) 
-	  $user : BaseEntity( )
-	  serviceToken : GennyToken ( code == "PER_SERVICE" )
-	   $project : BaseEntity ( code == "PRJ_INTERNMATCH" )
-/*	   $capabilityUtils : CapabilityUtils( )
-	  eval($user.getCode()  == $userToken.getUserCode())
-	   
+	  $user : BaseEntity( code == $userToken.getUserCode() )
 	 
-	  
-	  */
- 	/* ( Allowed(code == "IMPORT" && mode == CapabilityMode.EDIT) or eval(beUtils.getGennyToken().hasRole("intern")) ) */
- 	/*  eval($capabilityUtils.hasCapability("IMPORT",CapabilityMode.DELETE)) */
+	  serviceToken : GennyToken ( code == "PER_SERVICE" )
+	  allowed: Allowed(code == "READ_USER" && mode == CapabilityMode.VIEW)
 	  
     then
    		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + $userToken.getUserCode());
@@ -46,16 +39,7 @@ rule "RETURN_SETUP_USER_PROJECT"
 		userMsg.setAliasCode("USER");	
 		payload.add(userMsg);
 				
-				
-		String[] projectFilterStrArray = { "ENV_REALM", "PRI_NAME", "ENV_SIGNATURE_URL", "ENV_UPPY_URL",
-				"PRI_FAVICON", "PRI_CODE", "PRI_COLOR", "PRI_GOOGLE_API_KEY", "PRI_LOGO","PRI_POWERED_BY","PRI_VERSION" };		
-		$project = VertxUtils.privacyFilter($project, projectFilterStrArray);		
-		QDataBaseEntityMessage projectMsg = new QDataBaseEntityMessage($project);
-		projectMsg.setAliasCode("PROJECT");	
-		payload.add(projectMsg); 
-		
 		
 		drools.getKnowledgeRuntime().setGlobal("payload", payload);
-		retract($user);
-
+		retract(allowed);  /* no longer needed */
 end

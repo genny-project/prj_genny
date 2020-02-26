@@ -45,9 +45,10 @@ rule "ROL_INTERN"
   	     capabilityUtils.addCapabilityToRole(role,"READ_PROJECT",CapabilityMode.VIEW);
   	     capabilityUtils.addCapabilityToRole(role,"CREATE_JOURNALS",CapabilityMode.DELETE);
   	     
+  	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
  		 insert(role);
  		 
-  		 VertxUtils.putObject(capabilityUtils.getBeUtils().getServiceToken().getRealm(), "", role.getCode(), role, capabilityUtils.getBeUtils().getServiceToken().getToken());
+  		 VertxUtils.writeCachedJson(capabilityUtils.getBeUtils().getServiceToken().getRealm(), role.getCode(), JsonUtils.toJson(role), capabilityUtils.getBeUtils().getServiceToken().getToken());
   		 
 
 

@@ -26,9 +26,10 @@ import life.genny.utils.CapabilityUtils;
 rule "INIT_GENERATE_CAPABILITIES"
     ruleflow-group 'GenerateCapabilities'
 	salience 10000
+	no-loop true
     when
   		serviceToken : GennyToken (code == "PER_SERVICE")
-  		
+  		capabilityUtils : CapabilityUtils()
      then
      	System.out.println("   Initialise Generate Capabilities");
  		
@@ -41,7 +42,7 @@ rule "INIT_GENERATE_CAPABILITIES"
  		BaseEntity project = beUtils.getBaseEntityByCode(projectCode);
  		
  
-		CapabilityUtils capabilityUtils = new CapabilityUtils(beUtils);
+	/*	CapabilityUtils capabilityUtils = new CapabilityUtils(beUtils); */
 		
 		/* Add all Capabilities in the prj_genny system */
 		capabilityUtils.addCapability( "IMPORT", "Import");
@@ -67,8 +68,8 @@ rule "INIT_GENERATE_CAPABILITIES"
    
 		capabilityUtils.process();
 		
-		System.out.println("   Completed initial setup of Capabilities");
+		System.out.println("   Completed initial setup of Capabilities - "+capabilityUtils);
 		
- 		insert(capabilityUtils);  		
+ 		update(capabilityUtils);  		
  		insert(project);
 end
