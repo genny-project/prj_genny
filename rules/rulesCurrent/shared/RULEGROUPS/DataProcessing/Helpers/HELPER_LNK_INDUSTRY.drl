@@ -39,7 +39,7 @@ rule "HELPER_LNK_INDUSTRY"
 		userToken : GennyToken( code != "PER_SERVICE")
 
 	then
-		System.out.println(ruleDetails+" "+drools.getRule().getName()+"Processing Helper INDUSTRY SELECTION Answer/Data : " + answer );
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing Helper INDUSTRY SELECTION Answer/Data : " + answer );
 		
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		String targetCode = answer.getTargetCode();
@@ -55,28 +55,32 @@ rule "HELPER_LNK_INDUSTRY"
 		answersToSave.add(occupationAnswer);
 		update(answersToSave);
 
+		System.out.println("Rule Processing Helper INDUSTRY SELECTION Answer/Data 2");
+
 		BaseEntity baseEntity = beUtils.updateBaseEntity(targetCode,occupationAnswer);
 		beUtils.updateBaseEntity(targetCode,occupationAnswer);
-
+		System.out.println("Rule Processing Helper INDUSTRY SELECTION Answer/Data 3");
 		insert(occupationAnswer);
-
+		System.out.println("Rule Processing Helper INDUSTRY SELECTION Answer/Data 4");
 		/* Update the baseenetity in frontend */
 		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
 		msg.setToken(beUtils.getGennyToken().getToken());
 		msg.setReplace(true);
 		VertxUtils.writeMsg("webcmds",JsonUtils.toJson(msg));
-
+		System.out.println("Rule Processing Helper INDUSTRY SELECTION Answer/Data 5");
 
 		/* dropdown search here */
 		DropdownUtils dropdown = new DropdownUtils(serviceToken);
-		
+		System.out.println("Rule Processing Helper INDUSTRY SELECTION Answer/Data 6");
 		dropdown.setNewSearch("Dropdown", "Fetch Dropdown Items")
 											.addColumn("PRI_NAME","Name")
 											.setSourceCode(code)
 											.setPageStart(0)
 											.setPageSize(1000);
+		System.out.println("Rule Processing Helper INDUSTRY SELECTION Answer/Data 7");
 
 		dropdown.sendSearchResults("GRP_OCCUPATION_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
+		System.out.println("Rule Processing Helper INDUSTRY SELECTION Answer/Data 8");
 		
 		retract(answer);
 		output.setTypeOfResult("NONE");
