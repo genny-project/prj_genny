@@ -30,7 +30,7 @@ rule "FRM_TABLE_TITLE"
   ruleflow-group 'GenerateFrames'
 
   when
-    not  Frame3(code == "FRM_TAB_HEADER")
+    not  Frame3(code == "FRM_TABLE_TITLE")
     serviceToken : GennyToken( code == "PER_SERVICE")
 
   then
