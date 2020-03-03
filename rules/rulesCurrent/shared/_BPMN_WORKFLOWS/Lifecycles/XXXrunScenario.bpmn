@@ -16,6 +16,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_2315" isCollection="false" structureRef="org.codehaus.plexus.util.StringUtils"/>
   <bpmn2:signal id="Signal_1" name="START_UNITY_EVENT"/>
   <bpmn2:signal id="Signal_2" name="START_MAIN"/>
+  <bpmn2:signal id="Signal_3" name="DO_NOT_START"/>
   <bpmn2:process id="runScenario" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="runScenario" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.models.GennyToken"/>
@@ -290,7 +291,7 @@ System.out.println(&quot;scenario1: questionGroup is &quot; + questionGroup);</b
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="runScenario">
       <bpmndi:BPMNShape id="BPMNShape_2" bpmnElement="EndEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="1090.0" y="226.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_2">
+        <bpmndi:BPMNLabel id="BPMNLabel_2" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
           <dc:Bounds height="11.0" width="50.0" x="1083.0" y="262.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -350,7 +351,7 @@ System.out.println(&quot;scenario1: questionGroup is &quot; + questionGroup);</b
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_1" bpmnElement="StartEvent_2">
         <dc:Bounds height="36.0" width="36.0" x="59.0" y="227.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_1">
+        <bpmndi:BPMNLabel id="BPMNLabel_1" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
           <dc:Bounds height="11.0" width="53.0" x="51.0" y="263.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -415,5 +416,8 @@ System.out.println(&quot;scenario1: questionGroup is &quot; + questionGroup);</b
         <bpmndi:BPMNLabel id="BPMNLabel_15"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
+    <bpmndi:BPMNLabelStyle>
+      <dc:Font name="arial" size="9.0"/>
+    </bpmndi:BPMNLabelStyle>
   </bpmndi:BPMNDiagram>
 </bpmn2:definitions>
