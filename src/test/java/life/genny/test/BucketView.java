@@ -68,7 +68,7 @@ public class BucketView extends GennyJbpmBaseTest {
 		super(false);
 	}
 	
-	@Test
+	//@Test
 	public void tableTest() {
 
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -242,7 +242,7 @@ public class BucketView extends GennyJbpmBaseTest {
 
 
 
-	//@Test
+	@Test
 	public void testProcessView() {
 
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -406,7 +406,7 @@ public class BucketView extends GennyJbpmBaseTest {
 
 			/* build the tab content frame */
 			Frame3 FRM_CONTENT = Frame3.builder("FRM_CONTENT").addFrame(FRM_BUCKET_VIEW, FramePosition.NORTH)
-					.end().build();
+					.end().build();	
 
 			QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_CONTENT, serviceToken, askSet, contextListMap,
 					virtualAskMap);
