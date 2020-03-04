@@ -80,8 +80,31 @@ public class BucketUtilsTest {
 			Theme THM_JUSTIFY_CONTENT_FLEX_START = VertxUtils.getObject(serviceToken.getRealm(), "",
 					"THM_JUSTIFY_CONTENT_FLEX_START", Theme.class, serviceToken.getToken());
 
-			Theme THM_CARD = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_CARD", Theme.class,
-					serviceToken.getToken());
+			/* Theme THM_CARD = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_CARD", Theme.class,
+					serviceToken.getToken()); */
+
+			Theme THM_CARD = Theme.builder("THM_CARD")
+                    .addAttribute()
+                      .overflowX("hidden") /* NEW */
+                      .borderRadius(8) /* NEW */
+                      .backgroundColor("white")
+                      .height("auto")
+                      .width("100%")
+                      .backgroundColor("#F8F9FA")
+                      .flexBasis("initial")
+                      .flexGrow(0)
+                      .flexShrink(0)
+                      .marginBottom(8)
+                      .shadowColor("#000")
+                      .shadowOffset()
+                        .height(0)
+                        .width(0)                                        
+                      .end()
+                      .shadowOpacity(0.4)
+                      .shadowRadius(5)
+                    .end()
+                    .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+                    .build();
 
 			Theme THM_DISPLAY_HORIZONTAL = Theme.builder("THM_DISPLAY_HORIZONTAL").addAttribute().flexDirection("row")
 					.end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
@@ -97,6 +120,12 @@ public class BucketUtilsTest {
 
 			Theme THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY = VertxUtils.getObject(serviceToken.getRealm(), "",
 					"THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY", Theme.class, serviceToken.getToken());
+
+			// Theme THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY = Theme.builder("THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY")
+            //       .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_LABEL, false).end()
+            //       .addAttribute(ThemeAttributeType.PRI_IS_DROPDOWN, true).end()
+            //       .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+            //       .build();
 
 			Theme THM_DROPDOWN_HEADER_WRAPPER_GENNY = VertxUtils.getObject(serviceToken.getRealm(), "",
 					"THM_DROPDOWN_HEADER_WRAPPER_GENNY", Theme.class, serviceToken.getToken());
@@ -145,6 +174,15 @@ public class BucketUtilsTest {
 					
 			Theme THM_EXPANDABLE = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_EXPANDABLE", Theme.class,
 					serviceToken.getToken());
+
+	// 		Theme THM_EXPANDABLE = Theme.builder("THM_EXPANDABLE")
+    //               .addAttribute(ThemeAttributeType.PRI_IS_EXPANDABLE, true).end()
+    //               .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+	// 			  .build();
+	// 			  THM_EXPANDABLE.setRealm(serviceToken.getRealm());
+			
+	// 			  VertxUtils.putObject(serviceToken.getRealm(), "", THM_EXPANDABLE.getCode(), THM_EXPANDABLE, 
+    // serviceToken.getToken());
 					
 			Theme THM_WIDTH_100_PERCENT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_WIDTH_100_PERCENT",
 					Theme.class, serviceToken.getToken());
@@ -183,6 +221,156 @@ public class BucketUtilsTest {
 			Theme THM_EXPANDABLE_ICON = VertxUtils.getObject(serviceToken.getRealm(), "",
 					"THM_EXPANDABLE_ICON", Theme.class, serviceToken.getToken());
 
+			/* NEW THEMES */
+
+			/* cached */
+			Theme THM_CARD_STATUS_INPUT_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
+					"THM_CARD_STATUS_INPUT_WRAPPER", Theme.class, serviceToken.getToken());
+
+			Theme THM_CARD_THUMBNAIL_VCL_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
+			"THM_CARD_THUMBNAIL_VCL_WRAPPER", Theme.class, serviceToken.getToken());
+
+			// Theme THM_CARD_THUMBNAIL_INPUT_PLACEHOLDER = VertxUtils.getObject(serviceToken.getRealm(), "",
+			// "THM_CARD_THUMBNAIL_INPUT_PLACEHOLDER", Theme.class, serviceToken.getToken());
+			/* end cached */
+
+			// Theme THM_CARD_STATUS_INPUT_WRAPPER = Theme.builder("THM_CARD_STATUS_INPUT_WRAPPER")
+			// 		.addAttribute()
+			// 			.width(8)
+			// 		.end()
+			// 		.build();  
+			// Theme THM_CARD_THUMBNAIL_VCL_WRAPPER = Theme.builder("THM_CARD_THUMBNAIL_VCL_WRAPPER")
+			// 		.addAttribute()
+			// 			.borderRadius(20)
+			// 			.width(40)
+			// 			.height(40)
+			// 			.alignItems("center")
+			// 			.justifyContent("center")
+			// 			.backgroundColor("red")
+			// 		.end()
+			// 		.build();  
+			Theme THM_CARD_THUMBNAIL_INPUT_PLACEHOLDER = Theme.builder("THM_CARD_THUMBNAIL_INPUT_PLACEHOLDER")
+					.addAttribute()
+						.size("md")
+						.color("white")
+						.name("person_outline")
+					.end()
+					.build();  
+			
+			Theme THM_CARD_MAIN_GROUP_WRAPPER = Theme.builder("THM_CARD_MAIN_GROUP_WRAPPER")
+					.addAttribute()
+						.padding(8)
+					.end()
+					.build();  
+			
+			Theme THM_CARD_CENTRE_GROUP_WRAPPER = Theme.builder("THM_CARD_CENTRE_GROUP_WRAPPER")
+					.addAttribute()
+						.paddingX(8)
+					.end()
+					.build();  
+					
+			Theme THM_DROPDOWN_ICON_MORE_VERT = Theme.builder("THM_DROPDOWN_ICON_MORE_VERT")
+					.addAttribute()
+                      	.transform("initial")    
+						.name("more_vert")
+					.end()
+					.build();  
+			
+			Theme THM_CARD_BOTTOM_GROUP_CLICKABLE_WRAPPER = Theme.builder("THM_CARD_BOTTOM_GROUP_CLICKABLE_WRAPPER")
+					.addAttribute()
+                      	.justifyContent("flex-end")    
+					.end()
+					.build();  
+			
+			Theme THM_CARD_HEADER_INPUT_FIELD = Theme.builder("THM_CARD_HEADER_INPUT_FIELD")
+					.addAttribute()
+                      	.size("md")    
+                      	.fontWeight("bold")    
+					.end()
+					.build();  
+			Theme THM_CARD_HEADER_INPUT_FIELD_INTERN = Theme.builder("THM_CARD_HEADER_INPUT_FIELD_INTERN")
+					.addAttribute()
+                      	.size("md")    
+                      	.fontWeight("bold")    
+					.end()
+					.build();  
+					
+			Theme THM_CARD_BOTTOM_VCL_ICON = Theme.builder("THM_CARD_BOTTOM_VCL_ICON")
+					.addAttribute()
+                      	.color("#888")
+						.paddingRight(8)
+						.size("sm")
+					.end()
+					.build();  
+
+			/* ICON TYPES */
+			Theme THM_ICON_HOME = Theme.builder("THM_ICON_HOME")
+					.addAttribute()
+                      	.name("home")
+					.end()
+					.build();  
+			Theme THM_ICON_WORK = Theme.builder("THM_ICON_WORK")
+					.addAttribute()
+                      	.name("work")
+					.end()
+					.build();  
+			Theme THM_ICON_LOCATION_ON = Theme.builder("THM_ICON_LOCATION_ON")
+					.addAttribute()
+                      	.name("location_on")
+					.end()
+					.build();  
+			Theme THM_ICON_STAR = Theme.builder("THM_ICON_STAR")
+					.addAttribute()
+                      	.name("star")
+					.end()
+					.build();  
+			Theme THM_ICON_DIRECTIONS_BUS = Theme.builder("THM_ICON_DIRECTIONS_BUS")
+					.addAttribute()
+                      	.name("directions_bus")
+					.end()
+					.build();  
+			Theme THM_ICON_PHONE = Theme.builder("THM_ICON_PHONE")
+					.addAttribute()
+                      	.name("phone")
+					.end()
+					.build();  
+			Theme THM_ICON_EMAIL = Theme.builder("THM_ICON_EMAIL")
+					.addAttribute()
+                      	.name("email")
+					.end()
+					.build();  
+			
+			Theme THM_ICON = VertxUtils.getObject(serviceToken.getRealm(), "",
+					"THM_ICON", Theme.class, serviceToken.getToken());
+
+			
+			Theme THM_HIDE_INPUT = Theme.builder("THM_HIDE_INPUT")
+					.addAttribute(ThemeAttributeType.PRI_HAS_INPUT, false).end()
+					.build();  	
+			
+	// 		Theme THM_CARD_DATE = Theme.builder("THM_CARD_DATE")
+	// 				.addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end()
+	// 				.build();  
+
+	// 		THM_CARD_DATE.setRealm(serviceToken.getRealm());
+	
+	// 		VertxUtils.putObject(serviceToken.getRealm(), "", THM_CARD_DATE.getCode(), THM_CARD_DATE, 
+	// serviceToken.getToken());
+	
+
+		Theme THM_CARD_DATE = VertxUtils.getObject(serviceToken.getRealm(), "",
+			"THM_CARD_DATE", Theme.class, serviceToken.getToken());
+
+		Theme THM_CARD_DATE_WRAPPER = Theme.builder("THM_CARD_DATE_WRAPPER")
+					.addAttribute()
+						.flexDirection("row")
+					.end()
+					.build();  
+
+			
+
+
+			/* END */
 
 			/* prepare context for progress bar */
 			Context progressVclInputContext = new Context(ContextType.THEME,
@@ -192,12 +380,45 @@ public class BucketUtilsTest {
 					bucketUtils.getThemeBe(THM_PROGRESS_INPUT_WRAPPER), VisualControlType.INPUT_WRAPPER, 1.0);
 			progressInputWrapperContext.setDataType("Progress");
 
+			/* prepare context for status bar */
+			Context statusContext = new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_CARD_STATUS_INPUT_WRAPPER),
+					VisualControlType.INPUT_WRAPPER, 1.0);
+			statusContext.setDataType("Color");
+			
+			/* prepare context for image-thumbnail */
+			Context thumbnailVclWrapperContext = new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_CARD_THUMBNAIL_VCL_WRAPPER),
+					VisualControlType.VCL_WRAPPER, 1.0);
+			thumbnailVclWrapperContext.setDataType("Image");
+			
+			Context thumbnailInputPlaceholderContext = new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_CARD_THUMBNAIL_INPUT_PLACEHOLDER),
+					VisualControlType.INPUT_PLACEHOLDER, 1.0);
+			thumbnailInputPlaceholderContext.setDataType("Image");
+
 			/* cardContext */
 			List<Context> cardContext = new ArrayList<>();
 			cardContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_DISPLAY_HORIZONTAL),
 					VisualControlType.GROUP_CONTENT_WRAPPER, 1.0));
 			cardContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_CARD),
 					VisualControlType.GROUP_WRAPPER, 1.0));
+			
+			Context hideContext = new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_HIDE_INPUT),
+			VisualControlType.GROUP_CONTENT_WRAPPER, 1.0);
+			hideContext.setDttCode("DTT_MOBILE");
+
+			Context dateContext = new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_CARD_DATE),
+			VisualControlType.VCL_DEFAULT, 1.0);
+			dateContext.setDttCode("DTT_DATE ");
+
+			Context dateWrapperContext = new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_CARD_DATE_WRAPPER),
+			VisualControlType.VCL_WRAPPER, 1.0);
+			dateContext.setDttCode("DTT_DATE ");
+			
+			cardContext.add(hideContext);
+			cardContext.add(dateContext);
+			cardContext.add(dateWrapperContext);
+			cardContext.add(statusContext);
+			cardContext.add(thumbnailVclWrapperContext);
+			cardContext.add(thumbnailInputPlaceholderContext);
 
 			/* cardStatusContext */
 			List<Context> cardStatusContext = new ArrayList<>();
@@ -214,6 +435,13 @@ public class BucketUtilsTest {
 					VisualControlType.GROUP_CONTENT_WRAPPER, 1.0));
 			cardMainContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_FLEX_ONE),
 					VisualControlType.GROUP_WRAPPER, 1.0));
+			/* NEW */
+			Context cardMainGrpWrapperContext = new Context(ContextType.THEME,
+					bucketUtils.getThemeBe(THM_CARD_MAIN_GROUP_WRAPPER), VisualControlType.GROUP_WRAPPER, 1.0);
+			cardMainGrpWrapperContext.setDataType("Card Main Group");	
+			cardMainContext.add(cardMainGrpWrapperContext);
+
+			/* NEW END */
 
 			/* cardContentContext */
 			List<Context> cardContentContext = new ArrayList<>();
@@ -237,36 +465,119 @@ public class BucketUtilsTest {
 					VisualControlType.GROUP_CONTENT_WRAPPER, 1.0));
 			cardCentreContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_FLEX_ONE),
 					VisualControlType.GROUP_WRAPPER, 1.0));
+			
+			/* NEW */
+			Context cardheaderInputFieldContext = new Context(ContextType.THEME,
+					bucketUtils.getThemeBe(THM_CARD_HEADER_INPUT_FIELD), VisualControlType.INPUT_FIELD, 1.0);
+			cardheaderInputFieldContext.setDttCode("DTT_TEXT_NAME");	
+			cardCentreContext.add(cardheaderInputFieldContext);
+			
+			Context cardheaderInputFieldInternContext = new Context(ContextType.THEME,
+					bucketUtils.getThemeBe(THM_CARD_HEADER_INPUT_FIELD_INTERN), VisualControlType.INPUT_FIELD, 1.0);
+			cardheaderInputFieldInternContext.setDttCode("DTT_TEXT_INTERN_NAME");	
+			cardCentreContext.add(cardheaderInputFieldInternContext);
+
+			/* NEW END */
+
+			cardCentreContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_FLEX_ONE),
+					VisualControlType.GROUP_WRAPPER, 1.0));
+			
+			/* NEW */
+			Context cardCentreGrpWrapperContext = new Context(ContextType.THEME,
+					bucketUtils.getThemeBe(THM_CARD_CENTRE_GROUP_WRAPPER), VisualControlType.GROUP_WRAPPER, 1.0);
+			cardCentreGrpWrapperContext.setDataType("Card Centre Group");	
+			cardCentreContext.add(cardCentreGrpWrapperContext);
+
+			/* NEW END */
 
 			/* cardRightContext */
 			List<Context> cardRightContext = new ArrayList<>();
 			cardRightContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_DISPLAY_VERTICAL),
 					VisualControlType.GROUP_CONTENT_WRAPPER, 1.0));
 			cardRightContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_DROPDOWN_BEHAVIOUR_GENNY),
-					VisualControlType.GROUP, 1.0));
+					VisualControlType.GROUP, 2.0));
 			cardRightContext.add(new Context(ContextType.THEME,
 					bucketUtils.getThemeBe(THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY), VisualControlType.GROUP, 1.0));
 			cardRightContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_PROJECT_COLOR_SURFACE),
 					VisualControlType.GROUP_CONTENT_WRAPPER, 1.0));
-			cardRightContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_DROPDOWN_ICON_MORE_HORIZ),
+			// cardRightContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_DROPDOWN_ICON_MORE_HORIZ),
+			// 		VisualControlType.GROUP_ICON, 1.0));
+			cardRightContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_DROPDOWN_ICON_MORE_VERT),
 					VisualControlType.GROUP_ICON, 1.0));
+			
 
 			/* cardBottomContext */
 			List<Context> cardBottomContext = new ArrayList<>();
-			cardBottomContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_JUSTIFY_CONTENT_CENTRE),
+			//cardBottomContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_JUSTIFY_CONTENT_CENTRE),
+					//VisualControlType.GROUP_CLICKABLE_WRAPPER, 1.0));
+			cardBottomContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_CARD_BOTTOM_GROUP_CLICKABLE_WRAPPER),
 					VisualControlType.GROUP_CLICKABLE_WRAPPER, 1.0));
 			cardBottomContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_EXPANDABLE),
 					VisualControlType.GROUP, 1.0));
 			cardBottomContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_WIDTH_100_PERCENT),
 					VisualControlType.GROUP, 1.0));
-			cardBottomContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_PADDING_X_10),
-					VisualControlType.GROUP_CONTENT_WRAPPER, 1.0));
-			cardBottomContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_EXPANDABLE_ICON),
-					VisualControlType.GROUP_ICON, 1.0));
+			// cardBottomContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_PADDING_X_10),
+			// 		VisualControlType.GROUP_CONTENT_WRAPPER, 1.0));
+			// cardBottomContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_EXPANDABLE_ICON),
+			// 		VisualControlType.GROUP_ICON, 1.0));
 			cardBottomContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_DISPLAY_VERTICAL),
 					VisualControlType.GROUP_CONTENT_WRAPPER, 1.0));
 			cardBottomContext.add(progressVclInputContext);
 			cardBottomContext.add(progressInputWrapperContext);
+
+			/* adding icons here */	
+
+
+			Context workContext = new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_ICON_WORK),
+			VisualControlType.VCL_ICON, 1.0);
+			workContext.setDttCode("DTT_TEXT_OCCUPATION");
+			Context locationOnContext = new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_ICON_LOCATION_ON),
+			VisualControlType.VCL_ICON, 1.0);
+			locationOnContext.setDttCode("DTT_TEXT_COMPASS");
+			Context starContext = new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_ICON_STAR),
+			VisualControlType.VCL_ICON, 1.0);
+			starContext.setDttCode("DTT_DOUBLE_STAR_RATING");
+			Context directionsBusContext = new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_ICON_DIRECTIONS_BUS),
+			VisualControlType.VCL_ICON, 1.0);
+			directionsBusContext.setDttCode("DTT_TEXT_TRANSPORT");
+			Context phoneContext = new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_ICON_PHONE),
+			VisualControlType.VCL_ICON, 1.0);
+			phoneContext.setDttCode("DTT_MOBILE");
+			Context emailContext = new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_ICON_EMAIL),
+			VisualControlType.VCL_ICON, 1.0);
+			emailContext.setDttCode("DTT_EMAIL");
+
+			cardBottomContext.add(workContext);
+			cardBottomContext.add(locationOnContext);
+			cardBottomContext.add(starContext);
+			cardBottomContext.add(directionsBusContext);
+			cardBottomContext.add(phoneContext);
+			cardBottomContext.add(emailContext);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			
+			/* NEW */
+			Context iconContext = new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_CARD_BOTTOM_VCL_ICON),
+					VisualControlType.VCL_ICON, 1.0);
+			cardBottomContext.add(iconContext);
+			cardBottomContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_ICON),
+					VisualControlType.VCL_INPUT, 1.0));
+			/* NEW END */
+
 
 			contextListMap.put("QUE_CARD_APPLICATION_TEMPLATE_GRP", new ContextList(cardContext));
 			contextListMap.put("QUE_CARD_STATUS_GRP", new ContextList(cardStatusContext));
@@ -381,6 +692,13 @@ public class BucketUtilsTest {
 
 		String sourceCode = "PER_SERVICE", targetCode = "PER_SERVICE";
 		Attribute questionAttribute = new Attribute("QQQ_QUESTION_GROUP", "link", new DataType(String.class));
+		Attribute statusAttribute = new Attribute("QQQ_QUESTION_GROUP_CARD_STATUS", "link", new DataType(String.class));
+		Attribute mainAttribute = new Attribute("QQQ_QUESTION_GROUP_CARD_MAIN", "link", new DataType(String.class));
+		Attribute contentAttribute = new Attribute("QQQ_QUESTION_GROUP_CARD_CONTENT", "link", new DataType(String.class));
+		Attribute leftAttribute = new Attribute("QQQ_QUESTION_GROUP_CARD_LEFT", "link", new DataType(String.class));
+		Attribute centreAttribute = new Attribute("QQQ_QUESTION_GROUP_CARD_CENTRE", "link", new DataType(String.class));
+		Attribute rightAttribute = new Attribute("QQQ_QUESTION_GROUP_CARD_RIGHT", "link", new DataType(String.class));
+		Attribute bottomAttribute = new Attribute("QQQ_QUESTION_GROUP_CARD_BOTTOM", "link", new DataType(String.class));
 
 		try {
 
@@ -389,28 +707,28 @@ public class BucketUtilsTest {
 			Ask cardAsk = new Ask(cardQuestion, sourceCode, targetCode);
 
 				// status ask
-				Question cardStatusQuestion = new Question("QUE_CARD_STATUS_GRP", "Card Status", questionAttribute, true);
+				Question cardStatusQuestion = new Question("QUE_CARD_STATUS_GRP", "Card Status", statusAttribute, true);
 				Ask cardStatusAsk = new Ask(cardStatusQuestion, sourceCode, targetCode);
 
 				// main ask
-				Question cardMainQuestion = new Question("QUE_CARD_MAIN_GRP", "Card Main", questionAttribute, true);
+				Question cardMainQuestion = new Question("QUE_CARD_MAIN_GRP", "Card Main", mainAttribute, true);
 				Ask cardMainAsk = new Ask(cardMainQuestion, sourceCode, targetCode);
 				cardMainAsk.setReadonly(true);
 
 					// content ask
-					Question cardContentQuestion = new Question("QUE_CARD_CONTENT_GRP", "Card Content", questionAttribute, true);
+					Question cardContentQuestion = new Question("QUE_CARD_CONTENT_GRP", "Card Content", contentAttribute, true);
 					Ask cardContentAsk = new Ask(cardContentQuestion, sourceCode, targetCode);
 
 						// left ask
-						Question cardLeftQuestion = new Question("QUE_CARD_LEFT_GRP", "Card Left", questionAttribute, true);
+						Question cardLeftQuestion = new Question("QUE_CARD_LEFT_GRP", "Card Left", leftAttribute, true);
 						Ask cardLeftAsk = new Ask(cardLeftQuestion, sourceCode, targetCode);
 
 						// centre ask
-						Question cardCentreQuestion = new Question("QUE_CARD_CENTRE_GRP", "Card Centre", questionAttribute, true);
+						Question cardCentreQuestion = new Question("QUE_CARD_CENTRE_GRP", "Card Centre", centreAttribute, true);
 						Ask cardCentreAsk = new Ask(cardCentreQuestion, sourceCode, targetCode);
 
 						// right ask
-						Question cardRightQuestion = new Question("QUE_CARD_RIGHT_GRP", "Card Right", questionAttribute, true);
+						Question cardRightQuestion = new Question("QUE_CARD_RIGHT_GRP", "Card Right", rightAttribute, true);
 						Ask cardRightAsk = new Ask(cardRightQuestion, sourceCode, targetCode);
 
 //							// forward ask
@@ -428,7 +746,7 @@ public class BucketUtilsTest {
 					cardContentAsk.setChildAsks(cardContentChildAsks);
 
 					// bottom ask
-					Question cardBottomQuestion = new Question("QUE_CARD_BOTTOM_GRP", "Card Bottom", questionAttribute, true);
+					Question cardBottomQuestion = new Question("QUE_CARD_BOTTOM_GRP", "Card Bottom", bottomAttribute, true);
 					Ask cardBottomAsk = new Ask(cardBottomQuestion, sourceCode, targetCode);
 
 				Ask[] cardMainChildAsks = { cardContentAsk, cardBottomAsk };
@@ -496,12 +814,12 @@ public class BucketUtilsTest {
 			cardLeftAsk.setTargetCode(app.getTargetCode());
 
 			Ask[] cardCentreChildAsks = { attributeList.get(2), attributeList.get(3), attributeList.get(4),
-							attributeList.get(5) };
+							attributeList.get(5), attributeList.get(6) };
 			cardCentreAsk.setReadonly(true);
 			cardCentreAsk.setChildAsks(cardCentreChildAsks);
 			cardCentreAsk.setTargetCode(app.getTargetCode());
 
-			Ask[] cardBottomChildAsks = { attributeList.get(6), attributeList.get(7), attributeList.get(8) };
+			Ask[] cardBottomChildAsks = { attributeList.get(7), attributeList.get(8), attributeList.get(9),attributeList.get(10),attributeList.get(11),attributeList.get(12) };
 			cardBottomAsk.setReadonly(true);
 			cardBottomAsk.setChildAsks(cardBottomChildAsks);
 			cardBottomAsk.setTargetCode(app.getTargetCode());
@@ -529,21 +847,229 @@ public class BucketUtilsTest {
 		List<SearchEntity> bucketSearchBeList = new ArrayList<SearchEntity>();
 
 		try {
-			SearchEntity SBE_AVAILABLE_INTERNS = VertxUtils.getObject(serviceToken.getRealm(), "",
-							"SBE_AVAILABLE_INTERNS", SearchEntity.class, serviceToken.getToken());
-			SearchEntity SBE_APPLIED_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
-					"SBE_APPLIED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
-			SearchEntity SBE_SHORTLISTED_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
-					"SBE_SHORTLISTED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
-			SearchEntity SBE_INTERVIEWED_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
-					"SBE_INTERVIEWED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
-			SearchEntity SBE_OFFERED_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
-					"SBE_OFFERED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
-			SearchEntity SBE_PLACED_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
-					"SBE_PLACED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
-			SearchEntity SBE_INPROGRESS_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
-					"SBE_INPROGRESS_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
+			// SearchEntity SBE_AVAILABLE_INTERNS = VertxUtils.getObject(serviceToken.getRealm(), "",
+			// 				"SBE_AVAILABLE_INTERNS", SearchEntity.class, serviceToken.getToken());
+			// SearchEntity SBE_APPLIED_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
+			// 		"SBE_APPLIED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
+			// SearchEntity SBE_SHORTLISTED_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
+			// 		"SBE_SHORTLISTED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
+			// SearchEntity SBE_INTERVIEWED_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
+			// 		"SBE_INTERVIEWED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
+			// SearchEntity SBE_OFFERED_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
+			// 		"SBE_OFFERED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
+			// SearchEntity SBE_PLACED_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
+			// 		"SBE_PLACED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
+			// SearchEntity SBE_INPROGRESS_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
+			// 		"SBE_INPROGRESS_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
 
+								 
+			SearchEntity SBE_AVAILABLE_INTERNS = new SearchEntity("SBE_AVAILABLE_INTERNS", "Available")
+								 .addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
+								 .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
+								 .addFilter("PRI_DISABLED", false)
+								 //.addFilter("PRI_IS_INTERN", true)
+								 
+								 /* status and image */
+								 .addColumn("PRI_STATUS_COLOR", "Status")
+								 .addColumn("PRI_INTERN_IMAGE_URL", "Image")
+								 
+										  /* Centre Card */
+								 .addColumn("PRI_NAME", "Name")
+								 .addColumn("PRI_STUDENT_ID", "Student ID")
+								 .addColumn("PRI_INDUSTRY", "Industry")
+								 .addColumn("PRI_EDU_PROVIDER_NAME", "Edu Provider")
+								 .addColumn("PRI_DUMMY", "Dummy")
+								 .addColumn("PRI_DUMMY", "Dummy")
+								 .addColumn("PRI_DUMMY", "Dummy")
+								 
+								 /* Bottom Card */
+								 .addColumn("PRI_OCCUPATION", "Occupation")
+								 .addColumn("PRI_COMPASS", "Address")
+								 .addColumn("PRI_STAR_RATING", "Rating")
+								 .addColumn("PRI_TRANSPORT", "Transport")
+								 .addColumn("PRI_MOBILE", "Mobile")
+								 .addColumn("PRI_EMAIL", "Email")
+								 .addColumn("PRI_INTERN_EMAIL", "Dummy")
+								 .setPageStart(0).setPageSize(1000);	
+			
+			SearchEntity SBE_APPLIED_APPLICATIONS = new SearchEntity("SBE_APPLIED_APPLICATIONS", "Applied")
+                                 .addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
+                                 .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+                                 .addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "APPLIED")
+                                 .addFilter("PRI_DISABLED", false)
+								 
+								 /* status and image */
+								 .addColumn("PRI_STATUS_COLOR", "Status")
+                                 .addColumn("PRI_INTERN_IMAGE_URL", "Image")
+								 
+								 /* Centre Card */
+                                 .addColumn("PRI_INTERN_NAME", "Name")
+                                 .addColumn("PRI_INTERN_STUDENT_ID", "Student ID")
+                                 .addColumn("PRI_INDUSTRY", "Industry")
+                                 .addColumn("PRI_EDU_PROVIDER_NAME", "Edu Provider")
+								 .addColumn("PRI_HOST_COMPANY_NAME", "Host Company")
+								 .addColumn("PRI_DUMMY", "Dummy")
+								 .addColumn("PRI_DUMMY", "Dummy")
+
+								 
+								 /* Bottom Card */
+								 .addColumn("PRI_OCCUPATION", "Occupation")
+								 .addColumn("PRI_COMPASS", "Address")
+								 .addColumn("PRI_STAR_RATING", "Rating")
+                                 .addColumn("PRI_TRANSPORT", "Transport")
+                                 .addColumn("PRI_INTERN_MOBILE", "Mobile")
+                                 .addColumn("PRI_INTERN_EMAIL", "Email")
+								 
+								 .setPageStart(0).setPageSize(1000);
+
+			SearchEntity SBE_SHORTLISTED_APPLICATIONS = new SearchEntity("SBE_SHORTLISTED_APPLICATIONS", "Shortlisted")
+                                 .addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
+                                 .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+                                 .addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "SHORLISTED")
+                                 .addFilter("PRI_DISABLED", false)
+								 
+								 /* status and image */
+								 .addColumn("PRI_STATUS_COLOR", "Status")
+                                 .addColumn("PRI_INTERN_IMAGE_URL", "Image")
+								 
+								 /* Centre Card */
+                                 .addColumn("PRI_INTERN_NAME", "Name")
+                                 .addColumn("PRI_INTERN_STUDENT_ID", "Student ID")
+                                 .addColumn("PRI_INDUSTRY", "Industry")
+                                 .addColumn("PRI_EDU_PROVIDER_NAME", "Edu Provider")
+								 .addColumn("PRI_HOST_COMPANY_NAME", "Host Company")
+								 .addColumn("PRI_DUMMY", "Dummy")
+								 .addColumn("PRI_DUMMY", "Dummy")
+
+								 
+								 /* Bottom Card */
+								 .addColumn("PRI_OCCUPATION", "Occupation")
+								 .addColumn("PRI_COMPASS", "Address")
+								 .addColumn("PRI_STAR_RATING", "Rating")
+                                 .addColumn("PRI_TRANSPORT", "Transport")
+                                 .addColumn("PRI_INTERN_MOBILE", "Mobile")
+                                 .addColumn("PRI_INTERN_EMAIL", "Email")
+								 
+								 .setPageStart(0).setPageSize(1000);
+
+			SearchEntity SBE_INTERVIEWED_APPLICATIONS = new SearchEntity("SBE_INTERVIEWED_APPLICATIONS", "Interviewed")
+                              .addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
+                              .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+                              .addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "INTERVIEWED")
+                              .addFilter("PRI_DISABLED", false)
+								 
+                              /* status and image */
+                              .addColumn("PRI_STATUS_COLOR", "Status")
+                              .addColumn("PRI_INTERN_IMAGE_URL", "Image")
+								 
+							  /* Centre Card */
+                              .addColumn("PRI_INTERN_NAME", "Name")
+                              .addColumn("PRI_INTERN_STUDENT_ID", "Student ID")
+                              .addColumn("PRI_INDUSTRY", "Industry")
+                              .addColumn("PRI_EDU_PROVIDER_NAME", "Edu Provider")
+                              .addColumn("PRI_HOST_COMPANY_NAME", "Host Company")
+                              .addColumn("PRI_INTERVIEW_START_DATE", "Interview Date:  ")
+							  .addColumn("PRI_DUMMY", "Dummy")
+								 
+                              /* Bottom Card */
+                              .addColumn("PRI_OCCUPATION", "Occupation")
+                              .addColumn("PRI_COMPASS", "Address")
+                              .addColumn("PRI_STAR_RATING", "Rating")
+                              .addColumn("PRI_TRANSPORT", "Transport")
+                              .addColumn("PRI_INTERN_MOBILE", "Mobile")
+                              .addColumn("PRI_INTERN_EMAIL", "Email")
+                        
+							  .setPageStart(0).setPageSize(1000);
+
+			SearchEntity SBE_OFFERED_APPLICATIONS = new SearchEntity("SBE_OFFERED_APPLICATIONS", "Offered")
+                              .addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
+                              .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+                              .addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "OFFERED")
+                              .addFilter("PRI_DISABLED", false)
+								 
+                              /* status and image */
+                              .addColumn("PRI_STATUS_COLOR", "Status")
+                              .addColumn("PRI_INTERN_IMAGE_URL", "Image")
+								 
+			      		        			 /* Centre Card */
+                              .addColumn("PRI_INTERN_NAME", "Name")
+                              .addColumn("PRI_INTERN_STUDENT_ID", "Student ID")
+                              .addColumn("PRI_INDUSTRY", "Industry")
+                              .addColumn("PRI_EDU_PROVIDER_NAME", "Edu Provider")
+                              .addColumn("PRI_HOST_COMPANY_NAME", "Host Company")
+							  .addColumn("PRI_INTERNSHIP_START_DATE", "Start Date:  ")
+							  .addColumn("PRI_DUMMY", "Dummy")
+								 
+                              /* Bottom Card */
+                              .addColumn("PRI_OCCUPATION", "Occupation")
+                              .addColumn("PRI_COMPASS", "Address")
+                              .addColumn("PRI_STAR_RATING", "Rating")
+                              .addColumn("PRI_TRANSPORT", "Transport")
+                              .addColumn("PRI_INTERN_MOBILE", "Mobile")
+                              .addColumn("PRI_INTERN_EMAIL", "Email")
+                        
+							  .setPageStart(0).setPageSize(1000);
+			
+			SearchEntity SBE_PLACED_APPLICATIONS = new SearchEntity("SBE_PLACED_APPLICATIONS", "Placed")
+                              .addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
+                              .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+                              .addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "PLACED")
+                              .addFilter("PRI_DISABLED", false)
+								 
+                              /* status and image */
+                              .addColumn("PRI_STATUS_COLOR", "Status")
+                              .addColumn("PRI_INTERN_IMAGE_URL", "Image")
+								 
+			      		        			 /* Centre Card */
+                              .addColumn("PRI_INTERN_NAME", "Name")
+                              .addColumn("PRI_INTERN_STUDENT_ID", "Student ID")
+                              .addColumn("PRI_INDUSTRY", "Industry")
+                              .addColumn("PRI_EDU_PROVIDER_NAME", "Edu Provider")
+                              .addColumn("PRI_HOST_COMPANY_NAME", "Host Company")
+							  .addColumn("PRI_INTERNSHIP_START_DATE", "Start Date:  ")
+							  .addColumn("PRI_DUMMY", "Dummy")
+								 
+                              /* Bottom Card */
+                              .addColumn("PRI_OCCUPATION", "Occupation")
+                              .addColumn("PRI_COMPASS", "Address")
+                              .addColumn("PRI_STAR_RATING", "Rating")
+                              .addColumn("PRI_TRANSPORT", "Transport")
+                              .addColumn("PRI_INTERN_MOBILE", "Mobile")
+                              .addColumn("PRI_INTERN_EMAIL", "Email")
+                        
+							  .setPageStart(0).setPageSize(1000);
+							  
+			SearchEntity SBE_INPROGRESS_APPLICATIONS = new SearchEntity("SBE_INPROGRESS_APPLICATIONS", "In Progress")
+								 .addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
+								 .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+								 .addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "IN_PROGRESS")
+								 .addFilter("PRI_DISABLED", false)
+									
+								 /* status and image */
+								 .addColumn("PRI_STATUS_COLOR", "Status")
+								 .addColumn("PRI_INTERN_IMAGE_URL", "Image")
+									
+								 /* Centre Card */
+								 .addColumn("PRI_INTERN_NAME", "Name")
+								 .addColumn("PRI_INTERN_STUDENT_ID", "Student ID")
+								 .addColumn("PRI_INDUSTRY", "Industry")
+								 .addColumn("PRI_EDU_PROVIDER_NAME", "Edu Provider")
+								 .addColumn("PRI_HOST_COMPANY_NAME", "Host Company")
+								 .addColumn("PRI_INTERNSHIP_START_DATE", "Start Date: ")
+								 .addColumn("PRI_PROGRESS", "Progress")
+
+									
+								 /* Bottom Card */
+								 .addColumn("PRI_OCCUPATION", "Occupation")
+								 .addColumn("PRI_COMPASS", "Address")
+								 .addColumn("PRI_STAR_RATING", "Rating")
+								 .addColumn("PRI_TRANSPORT", "Transport")
+								 .addColumn("PRI_INTERN_MOBILE", "Mobile")
+								 .addColumn("PRI_INTERN_EMAIL", "Email")
+						   
+								 .setPageStart(0).setPageSize(1000);
+
+			
 			bucketSearchBeList.add(SBE_AVAILABLE_INTERNS);
 			bucketSearchBeList.add(SBE_APPLIED_APPLICATIONS);
 			bucketSearchBeList.add(SBE_SHORTLISTED_APPLICATIONS);
@@ -667,8 +1193,8 @@ public class BucketUtilsTest {
 		contextListMap.put("QUE_BUCKET_HEADER_ROW_ONE_GRP", new ContextList(row1Context));
 		contextListMap.put("QUE_BUCKET_HEADER_ROW_TWO_GRP", new ContextList(row2Context));
 		contextListMap.put("QUE_BUCKET_COUNT", new ContextList(bucketCountContextList));
-		contextListMap.put("QUE_BUCKET_SEARCH", new ContextList(bucketSearchContextList));
-		contextListMap.put("QUE_BUCKET_SORT", new ContextList(bucketSortContextList));
+		// contextListMap.put("QUE_BUCKET_SEARCH", new ContextList(bucketSearchContextList));
+		// contextListMap.put("QUE_BUCKET_SORT", new ContextList(bucketSortContextList));
 
 		/* Validation for Search Attribute */
 		Validation validation = new Validation("VLD_NON_EMPTY", "EmptyandBlankValues", "(?!^$|\\s+)");
@@ -720,7 +1246,8 @@ public class BucketUtilsTest {
 		row2Ask.setChildAsks(row2ChildAsks);
 
 		/* set the bucketHeader child asks */
-		Ask[] bucketChildAsks = { row1Ask, row2Ask };
+		// Ask[] bucketChildAsks = { row1Ask, row2Ask };
+		Ask[] bucketChildAsks = { row1Ask };
 		bucketHeaderAsk.setChildAsks(bucketChildAsks);
 
 		return bucketHeaderAsk;
