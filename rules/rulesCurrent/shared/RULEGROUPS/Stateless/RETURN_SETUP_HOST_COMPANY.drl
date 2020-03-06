@@ -36,7 +36,7 @@ rule "RETURN_SETUP_HOST_COMPANY"
 				"PRI_LOGO","PRI_ADDRESS_STATE","PRI_ADDRESS_COUNTRY",
 				"PRI_ADDRESS_LATITUDE","PRI_ADDRESS_LONGITUDE" };	
 		
-		/* fetch the 
+		/* fetch the */
 		
 		BaseEntity hostCompany = beUtils.getBaseEntityByCode("CPY_HOSTCOMPANY1");			
 		hostCompany = VertxUtils.privacyFilter(hostCompany, hostCompanyFilterStrArray);		
