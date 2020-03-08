@@ -168,12 +168,12 @@ public class AdamTest {
 
 		SearchEntity searchBE = new SearchEntity("ADAMTEST", "Test Search")
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-				.addFilter("PRI_NAME", SearchEntity.StringFilter.LIKE, "%Thomas%")
+				.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%PER_INTERN3%")
 				.addColumn("PRI_NAME", "Name")
-				.addColumn("PRI_LANDLINE", "Phone")
-				.addColumn("PRI_EMAIL", "Email")
-				.addColumn("PRI_ADDRESS_CITY", "City")
-				.addColumn("PRI_ADDRESS_STATE", "State")
+				.addColumn("LNK_INTERNSHIP","Internship")
+				.addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
+				.addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep")
+				.addColumn("LNK_HOST_COMPANY", "Host Company")
 				.setPageStart(0)
 				.setPageSize(20);
 
@@ -184,6 +184,8 @@ public class AdamTest {
 					jsonSearchBE, beUtils.getServiceToken().getToken());
 			try {
 				QDataBaseEntityMessage msg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
+				BaseEntity[] bes = msg.getItems();
+				System.out.println("Number of bes returned is "+bes.length);
 			} catch (Exception e) {
 				log.info("The result of getSearchResults was null Exception ::  ");
 			}
