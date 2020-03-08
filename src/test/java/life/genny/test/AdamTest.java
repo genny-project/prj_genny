@@ -166,16 +166,28 @@ public class AdamTest {
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		beUtils.setServiceToken(serviceToken);
 
-		SearchEntity searchBE = new SearchEntity("ADAMTEST", "Test Search")
+//		SearchEntity searchBE = new SearchEntity("ADAMTEST", "Test Search")
+//				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+//				.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%PER_INTERN3%")
+//				.addColumn("PRI_NAME", "Name")
+//				.addColumn("LNK_INTERNSHIP","Internship")
+//				.addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
+//				.addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep")
+//				.addColumn("LNK_HOST_COMPANY", "Host Company")
+//				.setPageStart(0)
+//				.setPageSize(20);
+		
+		SearchEntity searchBE = new SearchEntity("ADAMTEST", "Intern Apps")
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-				.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%PER_INTERN3%")
+				.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%PER_INTERN1%") 
 				.addColumn("PRI_NAME", "Name")
 				.addColumn("LNK_INTERNSHIP","Internship")
 				.addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
 				.addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep")
 				.addColumn("LNK_HOST_COMPANY", "Host Company")
 				.setPageStart(0)
-				.setPageSize(20);
+				.setPageSize(100);
+
 
 		String jsonSearchBE = JsonUtils.toJson(searchBE);
 		String resultJson;
@@ -186,6 +198,7 @@ public class AdamTest {
 				QDataBaseEntityMessage msg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
 				BaseEntity[] bes = msg.getItems();
 				System.out.println("Number of bes returned is "+bes.length);
+				
 			} catch (Exception e) {
 				log.info("The result of getSearchResults was null Exception ::  ");
 			}
@@ -193,7 +206,7 @@ public class AdamTest {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-
+		
 	}
 
 	// @Test
