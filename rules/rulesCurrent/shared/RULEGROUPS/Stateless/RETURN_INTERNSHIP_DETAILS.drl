@@ -33,7 +33,7 @@ rule "RETURN_INTERNSHIP_DETAILS"
 	  serviceToken : GennyToken ( code == "PER_SERVICE" )
 	  beUtils : BaseEntityUtils()
 	  allowed : Allowed(code == "READ_HOST_COMPANY" && mode == CapabilityMode.VIEW)
-	  allowed2 : Allowed(code == "INTERN") or Allowed (code == "SUPERVISOR") 
+	  allowed2 : Allowed(code == "INTERN")
 	  
     then
    		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + $userToken.getUserCode());
@@ -158,5 +158,5 @@ rule "RETURN_INTERNSHIP_DETAILS"
 
 				
 		drools.getKnowledgeRuntime().setGlobal("payload", payload);
-		retract(allowed); /* no longer needed */
+		retract(allowed2); /* no longer needed */
 end

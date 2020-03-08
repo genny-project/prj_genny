@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -31,6 +32,7 @@ import org.jbpm.services.task.utils.TaskFluent;
 import org.jbpm.services.task.wih.NonManagedLocalHTWorkItemHandler;
 import org.jbpm.test.services.TestIdentityProvider;
 import org.jbpm.test.services.TestUserGroupCallbackImpl;
+import org.joda.time.LocalDateTime;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.kie.api.KieBase;
@@ -87,6 +89,7 @@ import life.genny.qwanda.validation.ValidationList;
 import life.genny.qwandautils.GennyCacheInterface;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
+import life.genny.qwandautils.KeycloakUtils;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.rules.QRules;
 import life.genny.rules.RulesLoader;
@@ -136,6 +139,45 @@ public class AdamTest {
 	protected static GennyToken serviceToken;
 
 	@Test
+	public void registerUser()
+	{
+		System.out.println("Search test");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+		} else {
+			VertxUtils.cachedEnabled = false;
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+			
+		}
+
+		System.out.println("session     =" + userToken.getSessionCode());
+		System.out.println("userToken   =" + userToken.getToken());
+		System.out.println("serviceToken=" + serviceToken.getToken());
+		
+		LocalDateTime now = LocalDateTime.now();
+		String mydatetime = new SimpleDateFormat("yyyyMMddHHmmss").format(now.toDate());
+		try {
+			KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(), "adamcrow63+"+mydatetime+"@gmail.com", "Adam", "Crow",  "adamcrow63+"+mydatetime+"@gmail.com", "user", "user");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	//@Test
 	public void searchTest() {
 		System.out.println("Search test");
 		GennyToken userToken = null;
