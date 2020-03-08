@@ -43,6 +43,7 @@ rule "ROL_INTERN"
  	 
   	     capabilityUtils.addCapabilityToRole(role,"READ_USER",CapabilityMode.EDIT);
   	     capabilityUtils.addCapabilityToRole(role,"READ_PROJECT",CapabilityMode.VIEW);
+  	     capabilityUtils.addCapabilityToRole(role,"READ_HOST_COMPANY",CapabilityMode.VIEW);
   	     capabilityUtils.addCapabilityToRole(role,"CREATE_JOURNALS",CapabilityMode.DELETE);
   	     
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
