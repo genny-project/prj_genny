@@ -61,7 +61,7 @@ rule "INIT_GENERATE_CAPABILITIES"
   	 	capabilityUtils.addCapability( "PROCESS7", "Process 7");
   	 	capabilityUtils.addCapability( "DASHBOARD", "Dashboard");
   	 	
-  	 	capabilityUtils.addCapability( "PRM_EDIT_ACCOUNT","Edit Account");
+  	 	capabilityUtils.addCapability( "EDIT_ACCOUNT","Edit Account");
   	 	
   	 	capabilityUtils.addCapability( "READ_USER", "Read User");
  		capabilityUtils.addCapability( "READ_PROJECT", "Read Project");
