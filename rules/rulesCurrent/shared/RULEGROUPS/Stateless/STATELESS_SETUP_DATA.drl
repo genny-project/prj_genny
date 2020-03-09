@@ -45,6 +45,8 @@ rule "STATELESS_SETUP_DATA"
 		BaseEntity project = beUtils.getBaseEntityByCode(projectCode); 
 		insert(project);		
 		
+		
+		
 		retract(dataMsg); /* stop this rule from firing again */
 
 end
