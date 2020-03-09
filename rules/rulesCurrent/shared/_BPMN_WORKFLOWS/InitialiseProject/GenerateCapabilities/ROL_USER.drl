@@ -40,6 +40,7 @@ rule "ROL_USER"
    	     
    	     capabilityUtils.addCapabilityToRole(role,"LOGIN",CapabilityMode.EDIT);
    	     capabilityUtils.addCapabilityToRole(role,"LOGOUT",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"EDIT_ACCOUNT",CapabilityMode.SELF);
  	 
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
  		 insert(role);
