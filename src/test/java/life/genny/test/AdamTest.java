@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.persistence.EntityManagerFactory;
 
@@ -169,13 +170,15 @@ public class AdamTest {
 		
 		LocalDateTime now = LocalDateTime.now();
 		String mydatetime = new SimpleDateFormat("yyyyMMddHHmmss").format(now.toDate());
+		String password = UUID.randomUUID().toString().substring(0,8);
 		try {
-			KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(), "adamcrow63+"+mydatetime+"@gmail.com", "Adam", "Crow",  "adamcrow63+"+mydatetime+"@gmail.com", "user", "user");
+			KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(), "adamcrow63+"+mydatetime+"@gmail.com", "Adam", "Crow",  "adamcrow63+"+mydatetime+"@gmail.com", password,"user", "user");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
+	}	
+	
 	
 	//@Test
 	public void searchTest() {
