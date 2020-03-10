@@ -19,6 +19,10 @@ import java.util.UUID;
 
 import javax.persistence.EntityManagerFactory;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbpm.services.api.DefinitionService;
@@ -147,39 +151,65 @@ public class AdamTest {
 		GennyToken serviceToken = null;
 		QRules qRules = null;
 
-		if (false) {
-			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
-			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-			qRules = new QRules(eventBusMock, userToken.getToken());
-			qRules.set("realm", userToken.getRealm());
-			qRules.setServiceToken(serviceToken.getToken());
-			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
-			GennyKieSession.loadAttributesJsonFromResources(userToken);
-
-		} else {
-			VertxUtils.cachedEnabled = false;
-			qRules = GennyJbpmBaseTest.setupLocalService();
-			userToken = new GennyToken("userToken", qRules.getToken());
-			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
-			
+//		if (false) {
+//			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+//			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+//			qRules = new QRules(eventBusMock, userToken.getToken());
+//			qRules.set("realm", userToken.getRealm());
+//			qRules.setServiceToken(serviceToken.getToken());
+//			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+//			GennyKieSession.loadAttributesJsonFromResources(userToken);
+//
+//		} else {
+//			VertxUtils.cachedEnabled = false;
+//			qRules = GennyJbpmBaseTest.setupLocalService();
+//			userToken = new GennyToken("userToken", qRules.getToken());
+//			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+//
+//		}
+		String password = System.getenv("SERVICE_PASSWORD");
+		String userPassword = System.getenv("USER_PASSWORD");
+		String token = null;
+		String userId = null;
+		try {
+			token = KeycloakUtils.getAccessToken("https://keycloak.gada.io", "internmatch", "internmatch", "dc7d0960-2e1d-4a78-9eef-77678066dbd3", "service", password);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 
-		System.out.println("session     =" + userToken.getSessionCode());
-		System.out.println("userToken   =" + userToken.getToken());
-		System.out.println("serviceToken=" + serviceToken.getToken());
-		
+//		System.out.println("session     =" + userToken.getSessionCode());
+//		System.out.println("userToken   =" + userToken.getToken());
+		System.out.println("serviceToken=" + token);
+
 		LocalDateTime now = LocalDateTime.now();
 		String mydatetime = new SimpleDateFormat("yyyyMMddHHmmss").format(now.toDate());
-		String password = UUID.randomUUID().toString().substring(0,8);
+		password = UUID.randomUUID().toString().substring(0,8);
 		try {
-			KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(), "adamcrow63+"+mydatetime+"@gmail.com", "Adam", "Crow",  "adamcrow63+"+mydatetime+"@gmail.com", password,"user", "user");
+			KeycloakUtils.createUser(token, "internmatch", "rahul.samaranayake+2@outcomelife.com.au", "Rahul", "Sam",  "rahul.samaranayake+2@outcomelife.com.au", userPassword,"user", "user");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}	
-	
-	
+		
+		HttpClient httpClient = new DefaultHttpClient();
+
+		HttpPut putRequest = new HttpPut("https://keycloak.gada.io" + "/auth/admin/realms/" + "internmatch" + "/users/" + userId + "/send-verify-email");
+
+		log.info("https://keycloak.gada.io" + "/auth/admin/realms/" + "internmatch" + "/users/" + userId + "/send-verify-email");
+
+		putRequest.addHeader("Content-Type", "application/json");
+		putRequest.addHeader("Authorization", "Bearer " + token);
+
+		HttpResponse response = httpClient.execute(putRequest);
+
+		int statusCode = response.getStatusLine().getStatusCode();
+
+		System.out.println("Status Code=" + statusCode);
+
+	}
+
+
 	//@Test
 	public void searchTest() {
 		System.out.println("Search test");
@@ -201,7 +231,7 @@ public class AdamTest {
 			qRules = GennyJbpmBaseTest.setupLocalService();
 			userToken = new GennyToken("userToken", qRules.getToken());
 			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
-			
+
 		}
 
 		System.out.println("session     =" + userToken.getSessionCode());
@@ -221,10 +251,10 @@ public class AdamTest {
 //				.addColumn("LNK_HOST_COMPANY", "Host Company")
 //				.setPageStart(0)
 //				.setPageSize(20);
-		
+
 		SearchEntity searchBE = new SearchEntity("ADAMTEST", "Intern Apps")
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-				.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%PER_INTERN1%") 
+				.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%PER_INTERN1%")
 				.addColumn("PRI_NAME", "Name")
 				.addColumn("LNK_INTERNSHIP","Internship")
 				.addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
@@ -243,7 +273,7 @@ public class AdamTest {
 				QDataBaseEntityMessage msg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
 				BaseEntity[] bes = msg.getItems();
 				System.out.println("Number of bes returned is "+bes.length);
-				
+
 			} catch (Exception e) {
 				log.info("The result of getSearchResults was null Exception ::  ");
 			}
@@ -251,7 +281,7 @@ public class AdamTest {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 	}
 
 	// @Test
@@ -477,8 +507,8 @@ public class AdamTest {
 	}
 
 //		public Integer importGoogleDoc(final String id, Map<String,String> fieldMapping)
-//		{					
-//			
+//		{
+//
 //			log.info("Importing "+id);
 //			Integer count = 0;
 //			   try {
@@ -493,7 +523,7 @@ public class AdamTest {
 //				    }
 //				      Map<String, Map<String,String>> mapData = xlsImport.mappingRawToHeaderAndValuesFmt(id, "Sheet1", keys);
 //				      Integer rowIndex = 0;
-//				      for (Map<String,String> row : mapData.values()) 
+//				      for (Map<String,String> row : mapData.values())
 //				      {
 //				    	  String rowStr = "Row:"+rowIndex+"->";
 //				    	  for (String col : row.keySet()) {
@@ -507,15 +537,15 @@ public class AdamTest {
 //				    	  rowIndex++;
 //				    	  System.out.println(rowStr);
 //				      }
-//				      
+//
 //				    } catch (Exception e1) {
 //				      return 0;
 //				    }
 //
-//			
+//
 //			return count;
 //		}
-//	   
+//
 
 	// @Test
 	public void generateCapabilitiesTest() {
@@ -816,7 +846,7 @@ public class AdamTest {
 			// Claim Task
 //	              gks.getTaskService().claim(taskId, "acrow");
 //	              showStatuses(gks);
-//              
+//
 			Map<String, Object> results = new HashMap<String, Object>();
 			results.put("Result", "Done");
 			gks.getTaskService().complete(taskId, realm + "+PER_ADAMCROW63_AT_GMAIL_COM", results);
@@ -879,7 +909,7 @@ public class AdamTest {
 	}
 
 //
-//		
+//
 //		private void showStatuses(GennyKieSession gks)
 //		{
 //				statuses = new ArrayList<Status>();
@@ -892,7 +922,7 @@ public class AdamTest {
 //		        statuses.add(Status.Obsolete);
 //		        statuses.add(Status.Reserved);
 //		        statuses.add(Status.Suspended);
-//		        
+//
 //	            List<String> groups = new ArrayList<String>();
 //	            groups.add(realm+"+GRP_GADA");
 //
@@ -905,7 +935,7 @@ public class AdamTest {
 //            System.out.println("POTENTIAL anish      "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_ANISH_AT_GADA_IO",  null)));
 //            System.out.println("POTENTIAL chris+gada "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_CHRIS_AT_GADA_IO", groups, "en-AU", 0,10)));
 //            System.out.println("POTENTIAL gada       "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(null, groups, "en-AU", 0,10)));
-//            
+//
 //            System.out.println("OWNED acrow          "+showTaskNames(gks.getTaskService().getTasksOwned(realm+"+PER_ADAMCROW63_AT_GMAIL_COM", null)));
 //            System.out.println();
 //		}
@@ -942,10 +972,10 @@ public class AdamTest {
 
 //		  ShowFrame.display(userToken, "FRM_TABLE_VIEW", "FRM_CONTENT", "Test");
 //		  String searchCode = "SBE_SEARCH_TEST";
-//		  
+//
 //		  Answer answer = new Answer(userToken.getUserCode(),userToken.getUserCode(),"PRI_SEARCH_TEXT","univ");
 //
-// 
+//
 //   		  SearchEntity searchBE = new SearchEntity(searchCode,"Test Search")
 //   		  	     .addSort("PRI_NAME","Created",SearchEntity.Sort.ASC)
 //   		  	     .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%"+answer.getValue()+"%")
@@ -958,8 +988,8 @@ public class AdamTest {
 //   		  	     .setPageSize(20);
 //
 //   		VertxUtils.putObject(userToken.getRealm(), "", searchCode, searchBE,
-//				userToken.getToken());  
-//   		
+//				userToken.getToken());
+//
 //   		TableUtils.performSearch(serviceToken , beUtils, searchCode, answer);
 //
 
@@ -968,13 +998,13 @@ public class AdamTest {
 		/* get current search */
 //		SearchEntity searchBE2 = TableUtils.getSessionSearch("SBE_SEARCHBAR",userToken);
 //
-//		
-//		System.out.println("NEXT for "+searchBE2.getCode()); 
-//		
+//
+//		System.out.println("NEXT for "+searchBE2.getCode());
+//
 //		Integer pageIndex = searchBE2.getValue("SCH_PAGE_START",0);
 //		Integer pageSize = searchBE2.getValue("SCH_PAGE_SIZE", GennySettings.defaultPageSize);
 //		pageIndex = pageIndex + pageSize;
-//		
+//
 //		Integer pageNumber = 1;
 //
 //		if(pageIndex != 0){
@@ -986,10 +1016,10 @@ public class AdamTest {
 //
 //		searchBE2 = beUtils2.updateBaseEntity(searchBE2, pageAnswer,SearchEntity.class);
 //		searchBE2 = beUtils2.updateBaseEntity(searchBE2, pageNumberAnswer,SearchEntity.class);
-//		
+//
 //		VertxUtils.putObject(beUtils2.getGennyToken().getRealm(), "", searchBE2.getCode(), searchBE2,
 //			beUtils2.getGennyToken().getToken());
-//		
+//
 //
 //        ShowFrame.display(userToken, "FRM_TABLE_VIEW", "FRM_CONTENT", "Test");
 //		TableUtils.performSearch(userToken , beUtils2, "SBE_SEARCHBAR", null);
@@ -2271,30 +2301,30 @@ public class AdamTest {
 		return ret;
 	}
 
-// public static Map<Operation, List<OperationCommand>> initMVELOperations() {  
-//	  
-//     Map<String, Object> vars = new HashMap<String, Object>();  
+// public static Map<Operation, List<OperationCommand>> initMVELOperations() {
 //
-//     // Search operations-dsl.mvel, if necessary using superclass if TaskService is subclassed  
-//     InputStream is = null;  
-//     // for (Class<?> c = getClass(); c != null; c = c.getSuperclass()) {  
-//     is = MVELLifeCycleManager.class.getResourceAsStream("/operations-dsl.mvel");  
-////         if (is != null) {  
-////             break;  
-////         }  
-//     //}  
-//     if (is == null) {  
-//         throw new RuntimeException("Unable To initialise TaskService, could not find Operations DSL");  
-//     }  
-//     Reader reader = new InputStreamReader(is);  
-//     try {  
-//         return (Map<Operation, List<OperationCommand>>) eval(toString(reader), vars);  
-//     } catch (IOException e) {  
-//         throw new RuntimeException("Unable To initialise TaskService, could not load Operations DSL");  
-//     }  
+//     Map<String, Object> vars = new HashMap<String, Object>();
+//
+//     // Search operations-dsl.mvel, if necessary using superclass if TaskService is subclassed
+//     InputStream is = null;
+//     // for (Class<?> c = getClass(); c != null; c = c.getSuperclass()) {
+//     is = MVELLifeCycleManager.class.getResourceAsStream("/operations-dsl.mvel");
+////         if (is != null) {
+////             break;
+////         }
+//     //}
+//     if (is == null) {
+//         throw new RuntimeException("Unable To initialise TaskService, could not find Operations DSL");
+//     }
+//     Reader reader = new InputStreamReader(is);
+//     try {
+//         return (Map<Operation, List<OperationCommand>>) eval(toString(reader), vars);
+//     } catch (IOException e) {
+//         throw new RuntimeException("Unable To initialise TaskService, could not load Operations DSL");
+//     }
 //
 //
-// }  
+// }
 
 	private static void createUser(final String userCode, String name, boolean makeExisting) {
 		// Add this user to the map
