@@ -2,14 +2,19 @@ package life.genny.test;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,8 +24,11 @@ import java.util.UUID;
 
 import javax.persistence.EntityManagerFactory;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.logging.log4j.Logger;
@@ -40,6 +48,8 @@ import org.jbpm.test.services.TestUserGroupCallbackImpl;
 import org.joda.time.LocalDateTime;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.keycloak.representations.idm.UserRepresentation;
+import org.keycloak.util.JsonSerialization;
 import org.kie.api.KieBase;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieSession;
@@ -177,38 +187,90 @@ public class AdamTest {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-
-//		System.out.println("session     =" + userToken.getSessionCode());
-//		System.out.println("userToken   =" + userToken.getToken());
-		System.out.println("serviceToken=" + token);
-
 		LocalDateTime now = LocalDateTime.now();
 		String mydatetime = new SimpleDateFormat("yyyyMMddHHmmss").format(now.toDate());
+
+		String username = "gerard.holland+"+mydatetime+"@outcome.life";		
+		String firstname = "Gerard";
+		String lastname = "Holland";
+
+//		String username = "domenic.saporito+"+mydatetime+"@outcome.life";		
+//		String firstname = "Domenic";
+//		String lastname = "Saporito";
+
+		System.out.println("serviceToken=" + token);
+
 		password = UUID.randomUUID().toString().substring(0,8);
-		try {
-			KeycloakUtils.createUser(token, "internmatch", "rahul.samaranayake+2@outcomelife.com.au", "Rahul", "Sam",  "rahul.samaranayake+2@outcomelife.com.au", userPassword,"user", "user");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		List<LinkedHashMap> results = new ArrayList<LinkedHashMap>();
+//	    final HttpClient client = new DefaultHttpClient();
+//	    
+//	    try {
+//	    	String encodedUsername = encodeValue("adamcrow63@gmail.com");
+//	      final HttpGet get =
+//	          new HttpGet("https://keycloak.gada.io" + "/auth/admin/realms/" + realm + "/users?username=" + encodedUsername);
+//	      get.addHeader("Authorization", "Bearer " + token);
+//	      try {
+//	        final HttpResponse response = client.execute(get);
+//	        if (response.getStatusLine().getStatusCode() != 200) {
+//	          throw new IOException();
+//	        }
+//	        final HttpEntity entity = response.getEntity();
+//	        final InputStream is = entity.getContent();
+//	        try {
+//	          results =  JsonSerialization.readValue(is, (new ArrayList<UserRepresentation>()).getClass());
+//	        } finally {
+//	          is.close();
+//	        }
+//	      } catch (final IOException e) {
+//	        throw new RuntimeException(e);
+//	      }
+//	    } finally {
+//	      client.getConnectionManager().shutdown();
+//	    }
 		
-		HttpClient httpClient = new DefaultHttpClient();
-
-		HttpPut putRequest = new HttpPut("https://keycloak.gada.io" + "/auth/admin/realms/" + "internmatch" + "/users/" + userId + "/send-verify-email");
-
-		log.info("https://keycloak.gada.io" + "/auth/admin/realms/" + "internmatch" + "/users/" + userId + "/send-verify-email");
-
-		putRequest.addHeader("Content-Type", "application/json");
-		putRequest.addHeader("Authorization", "Bearer " + token);
-
-		HttpResponse response = httpClient.execute(putRequest);
-
-		int statusCode = response.getStatusLine().getStatusCode();
-
-		System.out.println("Status Code=" + statusCode);
+		
+//		try {
+//			userId = KeycloakUtils.createUser(token, realm, username, firstname, lastname,  username, userPassword,"user", "user");
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+		userId = KeycloakUtils.sendVerifyEmail(realm, username, token);
+		
+//		HttpClient httpClient = new DefaultHttpClient();
+//
+//		HttpPut putRequest = new HttpPut("https://keycloak.gada.io" + "/auth/admin/realms/" + "internmatch" + "/users/" + userId + "/send-verify-email");
+//
+//		log.info("https://keycloak.gada.io" + "/auth/admin/realms/" + "internmatch" + "/users/" + userId + "/send-verify-email");
+//
+//		putRequest.addHeader("Content-Type", "application/json");
+//		putRequest.addHeader("Authorization", "Bearer " + token);
+//
+//		HttpResponse response = null;
+//		try {
+//			response = httpClient.execute(putRequest);
+//		} catch (ClientProtocolException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//
+//		int statusCode = response.getStatusLine().getStatusCode();
+//
+		System.out.println("UserId=" + userId);
 
 	}
 
+	private static String encodeValue(String value) {
+        try {
+            return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException(ex.getCause());
+        }
+    }
 
 	//@Test
 	public void searchTest() {
