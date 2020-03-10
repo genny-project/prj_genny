@@ -24,7 +24,7 @@ import life.genny.qwandautils.GennySettings;
 
 rule "RETURN_JOURNALS_INTERN"
     ruleflow-group 'Stateless'
-     salience 5000
+     salience 1000
      no-loop true
     when
  	  $userToken : GennyToken ( code != "PER_SERVICE" ) 

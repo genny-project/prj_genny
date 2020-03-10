@@ -35,10 +35,10 @@ rule "STATELESS_SETUP_DATA"
 		CapabilityUtils capabilityUtils = new CapabilityUtils(beUtils);
 		insert(capabilityUtils); 
 		
-		System.out.println("Capabilitys are "+capabilityUtils.getCapabilityManifest()); 
+		System.out.println(drools.getRule().getName()+" Capabilitys are "+capabilityUtils.getCapabilityManifest()); 
 		
 		BaseEntity user = beUtils.getBaseEntityByCode(userToken.getUserCode()); 
-		System.out.println("User is "+user);
+		System.out.println(drools.getRule().getName()+" User is "+user);
 		insert(user);				
 				
 		String projectCode = "PRJ_"+userToken.getRealm().toUpperCase();

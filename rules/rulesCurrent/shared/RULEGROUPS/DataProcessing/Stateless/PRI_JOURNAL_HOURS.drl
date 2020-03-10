@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 rule "PRI_JOURNAL_HOURS"
     ruleflow-group 'DataProcessing'
-        salience 10000 
+        salience 5000 
         no-loop
     when
       beUtils : BaseEntityUtils()
@@ -37,15 +37,18 @@ rule "PRI_JOURNAL_HOURS"
 		
 		BaseEntity journal = beUtils.getBaseEntityByCode(targetCode);
 		if (journal == null) {
-			/* ToDO - work out good name, say date */
+			System.out.println(drools.getRule().getName()+" Creating new journal be "+targetCode);
 			journal = beUtils.create(targetCode, targetCode);
 			beUtils.saveAnswer(new Answer(sourceCode, targetCode, "LNK_INTERN", "[\""+sourceCode+"\"]",false,true));
 			beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_SYNC", "TRUE",false,true)); /* set to have synced */
 
 			SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Internship Details")
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%") 
+				.addFilter("PRI_IS_INTERNSHIP", true) 
 				.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%"+sourceCode+"%") 
 				.addColumn("PRI_NAME", "Name")
+				.addColumn("PRI_CODE", "Code")
 				.addColumn("LNK_INTERNSHIP","Internship")
 				.addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
 				.addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep")
@@ -98,6 +101,8 @@ rule "PRI_JOURNAL_HOURS"
 				System.out.println("Error in establishing new journal be");
 			}
 
+		} else {
+				System.out.println(drools.getRule().getName()+" journal be existing "+targetCode);
 		}
 					
 		beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_JOURNAL_HOURS", answer.getValue(),false,true));	
