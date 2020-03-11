@@ -61,11 +61,14 @@ rule "INIT_GENERATE_CAPABILITIES"
   	 	capabilityUtils.addCapability( "PROCESS7", "Process 7");
   	 	capabilityUtils.addCapability( "DASHBOARD", "Dashboard");
   	 	
+  	 	capabilityUtils.addCapability( "EDIT_ACCOUNT","Edit Account");
+  	 	
   	 	capabilityUtils.addCapability( "READ_USER", "Read User");
  		capabilityUtils.addCapability( "READ_PROJECT", "Read Project");
  		capabilityUtils.addCapability( "READ_HOST_COMPANY", "Read Host Company");
  		capabilityUtils.addCapability( "CREATE_JOURNALS", "Create Journals");
  		capabilityUtils.addCapability( "APPROVE_JOURNALS", "Approve Journals");
+ 		capabilityUtils.addCapability( "READ_JOURNALS", "Read Journals");
    
 		capabilityUtils.process();
 		

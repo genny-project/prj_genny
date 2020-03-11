@@ -41,9 +41,11 @@ rule "ROL_INTERN"
    	     capabilityUtils.addCapabilityToRole(role,"LOGIN",CapabilityMode.EDIT);
    	     capabilityUtils.addCapabilityToRole(role,"LOGOUT",CapabilityMode.VIEW);
  	 
-  	     capabilityUtils.addCapabilityToRole(role,"READ_USER",CapabilityMode.EDIT);
+  	     capabilityUtils.addCapabilityToRole(role,"READ_USER",CapabilityMode.SELF);
   	     capabilityUtils.addCapabilityToRole(role,"READ_PROJECT",CapabilityMode.VIEW);
-  	     capabilityUtils.addCapabilityToRole(role,"CREATE_JOURNALS",CapabilityMode.DELETE);
+  	     capabilityUtils.addCapabilityToRole(role,"READ_HOST_COMPANY",CapabilityMode.VIEW);
+  	     capabilityUtils.addCapabilityToRole(role,"READ_JOURNALS",CapabilityMode.SELF);
+  	     capabilityUtils.addCapabilityToRole(role,"CREATE_JOURNALS",CapabilityMode.SELF);
   	     
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
  		 insert(role);
