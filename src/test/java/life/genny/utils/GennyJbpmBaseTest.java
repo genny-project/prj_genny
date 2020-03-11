@@ -553,8 +553,8 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		GennyToken userToken = localService.getToken(realm, "user1", "Barry Allan", "hero");
+		String uToken = projectParms.getString("userToken");
+		GennyToken userToken = new GennyToken("userToken",uToken);
 		QRules rules = localService.getQRules(userToken); // defaults to user anyway
 
 		return rules;

@@ -1,0 +1,78 @@
+package life.genny.rules;
+
+import java.io.IOException;
+
+global life.genny.qwanda.message.QBulkMessage payload;
+
+import life.genny.qwanda.message.QDataAnswerMessage;
+import life.genny.models.GennyToken;
+import life.genny.rules.QRules;
+import life.genny.utils.BaseEntityUtils;
+import life.genny.utils.CapabilityUtils;
+import life.genny.qwanda.Answer;
+import java.util.List;
+import java.util.ArrayList;
+import life.genny.model.OutputParamTreeSet;
+import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.qwanda.message.QBulkMessage;
+import life.genny.utils.TableUtils;
+import life.genny.qwanda.entity.SearchEntity;
+import life.genny.qwandautils.JsonUtils;
+import life.genny.qwandautils.QwandaUtils;
+import life.genny.qwandautils.GennySettings;
+
+rule "RETURN_JOURNALS_INTERN"
+    ruleflow-group 'Stateless'
+     salience 1000
+     no-loop true
+    when
+ 	  $userToken : GennyToken ( code != "PER_SERVICE" ) 
+ 	  $user : BaseEntity (  code == $userToken.getUserCode() )
+ 	  $project : BaseEntity ( code matches "PRJ_\\S+" )
+	  serviceToken : GennyToken ( code == "PER_SERVICE" )
+	  beUtils : BaseEntityUtils()
+	  allowed : Allowed(code == "READ_JOURNALS" && mode == CapabilityMode.EDIT)
+	  allowed2 : Allowed(code == "INTERN")
+	  
+    then
+   		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + $userToken.getUserCode());
+   		
+  		 System.out.println("User code is "+$user.getCode());
+		SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Intern Journals")
+				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%") 
+				.addFilter("PRI_SYNC", SearchEntity.StringFilter.LIKE, "FALSE") 
+				.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%"+$user.getCode()+"%") 
+				.addColumn("PRI_NAME", "Name")
+				.addColumn("LNK_INTERNSHIP","Internship")
+				.addColumn("LNK_INTERN_SUPERVISOR", "Intern")
+				.addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep")
+				.addColumn("LNK_HOST_COMPANY", "Host Company")
+				.addColumn("PRI_JOURNAL_DATE","Date")
+				.addColumn("PRI_JOURNAL_HOURS","Hours")
+				.addColumn("PRI_JOURNAL_TASKS","Tasks")
+				.addColumn("PRI_JOURNAL_LEARNING_OUTCOMES","Learning Outcomes")
+				.setPageStart(0)
+				.setPageSize(100);
+		
+		searchBE.setRealm(serviceToken.getRealm());
+		
+ 		String jsonSearchBE = JsonUtils.toJson(searchBE);
+ 		/* System.out.println(jsonSearchBE); */
+		String resultJson;
+		BaseEntity result = null; 
+		try {
+			resultJson = QwandaUtils.apiPostEntity(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search",
+					jsonSearchBE, serviceToken.getToken());
+				QDataBaseEntityMessage resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
+				System.out.println("Got to here in RETURN INTERNSHIP DETAILS "+resultJson);
+				BaseEntity[] bes = resultMsg.getItems();
+				payload.add(resultMsg);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}		
+		
+		drools.getKnowledgeRuntime().setGlobal("payload", payload);
+		retract(allowed2); /* no longer needed */
+end

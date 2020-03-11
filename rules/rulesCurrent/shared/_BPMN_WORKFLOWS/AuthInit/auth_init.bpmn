@@ -33,6 +33,9 @@
   <bpmn2:itemDefinition id="ItemDefinition_25" isCollection="false" structureRef="life.genny.utils.RulesUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_19" isCollection="false" structureRef="life.genny.qwandautils.JsonUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_23" isCollection="false" structureRef="life.genny.qwandautils.QwandaUtils"/>
+  <bpmn2:itemDefinition id="ItemDefinition_26" isCollection="false" structureRef="java.util.Optional"/>
+  <bpmn2:itemDefinition id="ItemDefinition_31" isCollection="false" structureRef="life.genny.qwanda.Answer"/>
+  <bpmn2:itemDefinition id="ItemDefinition_35" isCollection="false" structureRef="java.util.concurrent.CopyOnWriteArrayList"/>
   <bpmn2:process id="auth_init" drools:packageName="life.genny.jbpm" name="Auth Init" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.qwanda.message.QEventMessage"/>
@@ -67,6 +70,9 @@
       <drools:import name="life.genny.utils.RulesUtils"/>
       <drools:import name="life.genny.qwandautils.JsonUtils"/>
       <drools:import name="life.genny.qwandautils.QwandaUtils"/>
+      <drools:import name="java.util.Optional"/>
+      <drools:import name="life.genny.qwanda.Answer"/>
+      <drools:import name="java.util.concurrent.CopyOnWriteArrayList"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_1" name="message"/>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_17" name="userToken"/>
@@ -188,8 +194,23 @@ VertxUtils.publish(currentUser,&quot;webcmds&quot;,project, &quot;PROJECT&quot;,
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
-      <bpmn2:script>/*BaseEntityUtils beUtils = new BaseEntityUtils(userToken); */
+      <bpmn2:script>BaseEntityUtils beUtils = new BaseEntityUtils(userToken); 
 System.out.println(&quot;authInit: Sending user - &quot;+currentUser);
+
+
+/* Check if this user has logged in */
+Optional&lt;Boolean> optHasLoggedIn = currentUser.getValue(&quot;PRI_HAS_LOGGED_IN&quot;);
+if (optHasLoggedIn.isPresent()) {
+	/* add the attribute to flag that this user has logged in at least once! */
+List&lt;Answer> answers = new CopyOnWriteArrayList&lt;Answer>();
+Answer hasLoggedInAnswer = new Answer(beUtils.getGennyToken().getUserCode(),currentUser.getCode(), &quot;PRI_HAS_LOGGED_IN&quot;, &quot;TRUE&quot;);
+currentUser = beUtils.updateBaseEntity(currentUser, hasLoggedInAnswer,BaseEntity.class);
+answers.add(hasLoggedInAnswer);
+beUtils.saveAnswers(answers,false);
+kcontext.setVariable(&quot;currentUser&quot;,currentUser);
+
+}
+
 /* BaseEntity currentUser = QwandaUtils.getBaseEntityByCodeWithAttributes(userToken.getUserCode(), userToken.getToken()); */
 
 VertxUtils.publish(currentUser,&quot;webcmds&quot;,currentUser, &quot;USER&quot;, userToken.getToken());
@@ -229,9 +250,9 @@ VertxUtils.publish(currentUser,&quot;webcmds&quot;,currentUser, &quot;USER&quot;
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_1" bpmnElement="EndEvent_2">
-        <dc:Bounds height="36.0" width="36.0" x="650.0" y="104.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="820.0" y="104.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_8" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="52.0" x="642.0" y="140.0"/>
+          <dc:Bounds height="11.0" width="52.0" x="812.0" y="140.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_2" bpmnElement="ScriptTask_2" isExpanded="true">
@@ -266,8 +287,8 @@ VertxUtils.publish(currentUser,&quot;webcmds&quot;,currentUser, &quot;USER&quot;
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_ScriptTask_2" targetElement="BPMNShape_EndEvent_1">
         <di:waypoint xsi:type="dc:Point" x="600.0" y="122.0"/>
-        <di:waypoint xsi:type="dc:Point" x="625.0" y="122.0"/>
-        <di:waypoint xsi:type="dc:Point" x="650.0" y="122.0"/>
+        <di:waypoint xsi:type="dc:Point" x="710.0" y="122.0"/>
+        <di:waypoint xsi:type="dc:Point" x="820.0" y="122.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_6"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
