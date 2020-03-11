@@ -200,7 +200,7 @@ System.out.println(&quot;authInit: Sending user - &quot;+currentUser);
 
 /* Check if this user has logged in */
 Optional&lt;Boolean> optHasLoggedIn = currentUser.getValue(&quot;PRI_HAS_LOGGED_IN&quot;);
-if (optHasLoggedIn.isPresent()) {
+if (!optHasLoggedIn.isPresent()) {
 	/* add the attribute to flag that this user has logged in at least once! */
 List&lt;Answer> answers = new CopyOnWriteArrayList&lt;Answer>();
 Answer hasLoggedInAnswer = new Answer(beUtils.getGennyToken().getUserCode(),currentUser.getCode(), &quot;PRI_HAS_LOGGED_IN&quot;, &quot;TRUE&quot;);
