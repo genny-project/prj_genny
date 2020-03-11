@@ -153,7 +153,7 @@ public class AdamTest {
 	protected static GennyToken newUserToken;
 	protected static GennyToken serviceToken;
 
-//	@Test
+	@Test
 	public void registerUser()
 	{
 		System.out.println("Search test");
@@ -192,13 +192,13 @@ public class AdamTest {
 
 	
 
-		String username = "rahul.samaranayake+"+mydatetime+"@outcomelife.com.au";		
-		String firstname = "Rahul";
-		String lastname = "Samaranayake";
-
-//		String username = "adamcrow63+"+mydatetime+"@gmail.com";		
-//		String firstname = "Adam";
-//		String lastname = "Crow";
+///		String username = "rahul.samaranayake+"+mydatetime+"@outcomelife.com.au";		
+//		String firstname = "Rahul";
+//		String lastname = "Samaranayake";
+//
+		String username = "adamcrow63+"+mydatetime+"@gmail.com";		
+		String firstname = "Adam";
+		String lastname = "Crow";
 
 //		String username = "gerard.holland+"+mydatetime+"@outcome.life";		
 //		String firstname = "Gerard";
@@ -208,7 +208,7 @@ public class AdamTest {
 //		String firstname = "Domenic";
 //		String lastname = "Saporito";
 
-		System.out.println("serviceToken=" + token);
+		System.out.println(username+" serviceToken=" + token);
 
 		password = UUID.randomUUID().toString().substring(0,8);
 //		List<LinkedHashMap> results = new ArrayList<LinkedHashMap>();
@@ -356,7 +356,7 @@ public class AdamTest {
 
 	}
 
-	@Test
+	//@Test
 	public void importGoogleIdTest() {
 		System.out.println("Import Google IDTest");
 
