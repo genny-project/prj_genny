@@ -32,10 +32,9 @@ rule "THM_CARD_BOTTOM_VCL_ICON"
       System.out.println("   Generate THM_CARD_BOTTOM_VCL_ICON Rule ");
       Theme theme = Theme.builder("THM_CARD_BOTTOM_VCL_ICON")
                     .addAttribute()
-                      .color("black")
+                      .color("#888")
                       .paddingRight(8)
-                      .size("md")
-                      .name("home")
+                      .size("sm")
                     .end()
                     .build();
 
