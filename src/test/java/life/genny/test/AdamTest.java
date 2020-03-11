@@ -559,7 +559,7 @@ public class AdamTest {
 
 	}
 
-	public Map<String, String> getFieldMappings() {
+	public Map<String, String> getFieldMappings2() {
 		Map<String, String> fieldMapping = new HashMap<String, String>();
 		fieldMapping.put("Batch".toLowerCase(), "PRI_BATCH_NO");
 		fieldMapping.put("State".toLowerCase(), "PRI_IMPORT_STATE");
@@ -574,6 +574,22 @@ public class AdamTest {
 		fieldMapping.put("SUBURB".toLowerCase(), "PRI_IMPORT_SUBURB");
 		fieldMapping.put("Postcode".toLowerCase(), "PRI_IMPORT_POSTCODE");
 
+		return fieldMapping;
+
+	}
+
+	public Map<String, String> getFieldMappings() {
+
+	 Map<String,String> fieldMapping = new HashMap<String,String>();
+	 fieldMapping.put("Education Provider".toLowerCase(), "PRI_ASSOC_EDU_PROV");
+	 fieldMapping.put("Student ID".toLowerCase(), "PRI_STUDENT_ID");
+	 fieldMapping.put("Student First Name".toLowerCase(), "PRI_IMPORT_FIRSTNAME");
+	 fieldMapping.put("Last Name".toLowerCase(), "PRI_IMPORT_LASTNAME");
+	 fieldMapping.put("Student Email".toLowerCase(), "PRI_EMAIL");
+	 fieldMapping.put("Industry".toLowerCase(), "PRI_INDUSTRY");
+	 fieldMapping.put("Host Company".toLowerCase(), "PRI_ASSOC_HOST_COMPANY");
+	 fieldMapping.put("Host Company Rep".toLowerCase(), "PRI_ASSOC_HCR");
+	 fieldMapping.put("Host Company Email".toLowerCase(), "PRI_ASSOC_HOST_COMPANY_EMAIL");
 		return fieldMapping;
 
 	}
