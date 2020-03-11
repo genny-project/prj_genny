@@ -21,16 +21,16 @@ import org.kie.api.runtime.process.WorkflowProcessInstance;
 import life.genny.models.Theme;
 import life.genny.models.ThemeAttributeType;
 
-rule "THM_ICON_LOCATION_ICON"
+rule "THM_ICON_LOCATION_ON"
   ruleflow-group 'GenerateThemes'
   no-loop true
 
     when
-      not  Theme (code == "THM_ICON_LOCATION_ICON")
+      not  Theme (code == "THM_ICON_LOCATION_ON")
       serviceToken : GennyToken( code == "PER_SERVICE")
     then
-      System.out.println("   Generate THM_ICON_LOCATION_ICON Rule ");
-      Theme theme = Theme.builder("THM_ICON_LOCATION_ICON")
+      System.out.println("   Generate THM_ICON_LOCATION_ON Rule ");
+      Theme theme = Theme.builder("THM_ICON_LOCATION_ON")
                     .addAttribute()
                       .name("location_on")
                     .end()
