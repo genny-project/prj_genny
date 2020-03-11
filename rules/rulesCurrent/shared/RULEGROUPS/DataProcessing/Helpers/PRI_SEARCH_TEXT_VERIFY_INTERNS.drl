@@ -38,7 +38,7 @@ rule "PRI_SEARCH_TEXT_VERIFY_INTERNS"
     when
  	  beUtils : BaseEntityUtils()
  	  $capabilityUtils : CapabilityUtils( )
- 	  eval(beUtils.getGennyToken().hasRole("admin")) ) 
+ 	  eval(beUtils.getGennyToken().hasRole("admin")) 
 	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" && (value.startsWith("verify:interns")) )   /* this is a pure search */
 	  
     then
