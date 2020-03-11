@@ -144,6 +144,7 @@ public class BucketView extends GennyJbpmBaseTest {
 		
 
 	}
+
 	//@Test
 	public void testSearchBe() {
 
@@ -205,8 +206,8 @@ public class BucketView extends GennyJbpmBaseTest {
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
-		BucketUtilsTest bucketUtils = new BucketUtilsTest(beUtils);
-		BucketUtils bucketUtils2 = new BucketUtils(beUtils);
+		//BucketUtilsTest bucketUtils = new BucketUtilsTest(beUtils);
+		BucketUtils bucketUtils = new BucketUtils(beUtils);
 		
 		System.out.println("running the test");
 
@@ -252,7 +253,8 @@ public class BucketView extends GennyJbpmBaseTest {
 		// TableUtilsTest bucketUtils = new //TableUtilsTest(beUtils);
 
 		/* initialize bucketUtils */
-		BucketUtilsTest bucketUtils = new BucketUtilsTest(beUtils);
+		//BucketUtilsTest bucketUtils = new BucketUtilsTest(beUtils);
+		BucketUtils bucketUtils = new BucketUtils(beUtils);
 
 		/* initialize virtualAskMap */
 		Map<String, QDataAskMessage> virtualAskMap = new HashMap<String, QDataAskMessage>();
