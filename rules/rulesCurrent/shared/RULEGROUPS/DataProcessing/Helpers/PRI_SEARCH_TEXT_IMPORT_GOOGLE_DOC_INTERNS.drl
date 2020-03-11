@@ -140,7 +140,7 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_INTERNS"
 						String firstname = kv.get("PRI_IMPORT_FIRSTNAME").trim();
 						String lastname = kv.get("PRI_IMPORT_LASTNAME").trim();
 						String userPassword = UUID.randomUUID().toString().substring(0,10);
-						System.out.println(KeycloakUtils.getKeycloakUrl()+" keycloak token is "+beUtils.getServiceToken().getToken());
+						System.out.println(" keycloak token is "+serviceToken.getToken());
 						String userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(),email , firstname, lastname,  email, userPassword,"user", "user");
 						Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_UUID",userId);
 						answers.add(keycloakId);						
