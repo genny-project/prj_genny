@@ -153,7 +153,7 @@ public class AdamTest {
 	protected static GennyToken newUserToken;
 	protected static GennyToken serviceToken;
 
-	@Test
+//	@Test
 	public void registerUser()
 	{
 		System.out.println("Search test");
@@ -356,7 +356,7 @@ public class AdamTest {
 
 	}
 
-	// @Test
+	@Test
 	public void importGoogleIdTest() {
 		System.out.println("Import Google IDTest");
 
