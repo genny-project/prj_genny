@@ -194,7 +194,7 @@ VertxUtils.publish(currentUser,&quot;webcmds&quot;,project, &quot;PROJECT&quot;,
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
-      <bpmn2:script>/*BaseEntityUtils beUtils = new BaseEntityUtils(userToken); */
+      <bpmn2:script>BaseEntityUtils beUtils = new BaseEntityUtils(userToken); 
 System.out.println(&quot;authInit: Sending user - &quot;+currentUser);
 
 
