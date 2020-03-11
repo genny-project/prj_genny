@@ -195,6 +195,7 @@ public class AdamTest {
 			e1.printStackTrace();
 		}
 		
+
 		
 		// create all the users in keycloak
 		for (BaseEntityImport beImport : beImports) {
@@ -211,6 +212,9 @@ public class AdamTest {
 			System.out.println("firstname is "+kv.get("PRI_IMPORT_FIRSTNAME"));
 			System.out.println("last name is "+kv.get("PRI_IMPORT_LASTNAME"));
 			System.out.println("email is "+kv.get("PRI_EMAIL"));
+			
+		//	userId = KeycloakUtils.sendVerifyEmail(realm, email, token);
+
 		try {
 			userId = KeycloakUtils.createUser(token, realm,email , firstname, lastname,  email, userPassword,"user", "user");
 		} catch (IOException e) {
