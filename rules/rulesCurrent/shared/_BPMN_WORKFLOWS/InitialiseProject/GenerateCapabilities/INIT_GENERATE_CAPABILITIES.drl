@@ -62,7 +62,7 @@ rule "INIT_GENERATE_CAPABILITIES"
   	 	capabilityUtils.addCapability( "DASHBOARD", "Dashboard");
   	 	
   	 	capabilityUtils.addCapability( "EDIT_ACCOUNT","Edit Account");
-  	 	
+  	 	capabilityUtils.addCapability( "IMPORT_INTERNS","Import Interns");
   	 	capabilityUtils.addCapability( "READ_USER", "Read User");
  		capabilityUtils.addCapability( "READ_PROJECT", "Read Project");
  		capabilityUtils.addCapability( "READ_HOST_COMPANY", "Read Host Company");
