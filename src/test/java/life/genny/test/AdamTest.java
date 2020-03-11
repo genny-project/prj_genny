@@ -190,9 +190,19 @@ public class AdamTest {
 		LocalDateTime now = LocalDateTime.now();
 		String mydatetime = new SimpleDateFormat("yyyyMMddHHmmss").format(now.toDate());
 
-		String username = "gerard.holland+"+mydatetime+"@outcome.life";		
-		String firstname = "Gerard";
-		String lastname = "Holland";
+	
+
+		String username = "rahul.samaranayake+"+mydatetime+"@outcomelife.com.au";		
+		String firstname = "Rahul";
+		String lastname = "Samaranayake";
+
+//		String username = "adamcrow63+"+mydatetime+"@gmail.com";		
+//		String firstname = "Adam";
+//		String lastname = "Crow";
+
+//		String username = "gerard.holland+"+mydatetime+"@outcome.life";		
+//		String firstname = "Gerard";
+//		String lastname = "Holland";
 
 //		String username = "domenic.saporito+"+mydatetime+"@outcome.life";		
 //		String firstname = "Domenic";
@@ -229,12 +239,12 @@ public class AdamTest {
 //	    }
 		
 		
-//		try {
-//			userId = KeycloakUtils.createUser(token, realm, username, firstname, lastname,  username, userPassword,"user", "user");
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		try {
+			userId = KeycloakUtils.createUser(token, realm, username, firstname, lastname,  username, userPassword,"user", "user");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		userId = KeycloakUtils.sendVerifyEmail(realm, username, token);
 		
