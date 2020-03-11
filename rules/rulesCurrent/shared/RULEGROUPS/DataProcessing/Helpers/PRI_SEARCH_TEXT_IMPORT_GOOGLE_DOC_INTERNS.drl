@@ -66,6 +66,8 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_INTERNS"
 					finish = Integer.parseInt(split[5]);
 				}
 		
+			googleDocId = googleDocId.trim();
+		
 		/* Education Provider	Student ID	Student First Name	Last Name	Student Email	Industry		Host Company 	Host Company Rep	Host Company Email																  */
 				
 			 Map<String,String> fieldMapping = new HashMap<String,String>();

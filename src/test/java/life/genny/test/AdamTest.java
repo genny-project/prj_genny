@@ -396,6 +396,7 @@ public class AdamTest {
 //			// Now import a google doc/ xls file and generate a List of BaseEntityImports
 
 			String googleDocId = System.getenv("GOOGLE_DOC_ID");
+			googleDocId = googleDocId.trim();
 			List<BaseEntityImport> beImports = ImportUtils.importGoogleDoc(googleDocId, "Sheet1", getFieldMappings());
 
 			// now generate the baseentity and send through all the answers
