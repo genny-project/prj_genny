@@ -153,7 +153,78 @@ public class AdamTest {
 	protected static GennyToken newUserToken;
 	protected static GennyToken serviceToken;
 
+	
 	@Test
+	public void verifyInterns()
+	{
+		System.out.println("Verify Interns");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+//		if (true) {
+//			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+//			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+//			qRules = new QRules(eventBusMock, userToken.getToken());
+//			qRules.set("realm", userToken.getRealm());
+//			qRules.setServiceToken(serviceToken.getToken());
+//			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+//			GennyKieSession.loadAttributesJsonFromResources(userToken);
+//
+//		} else {
+//			VertxUtils.cachedEnabled = false;
+//			qRules = GennyJbpmBaseTest.setupLocalService();
+//			userToken = new GennyToken("userToken", qRules.getToken());
+//			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+//
+//		}
+		String password = System.getenv("SERVICE_PASSWORD");
+		String userPassword = System.getenv("USER_PASSWORD");
+		String token = null;
+		String userId = null;
+		userPassword = UUID.randomUUID().toString().substring(0,10);
+		String googleDocId = System.getenv("GOOGLE_DOC_ID");
+		googleDocId = googleDocId.trim();
+		List<BaseEntityImport> beImports = ImportUtils.importGoogleDoc(googleDocId, "Sheet1", getFieldMappings());
+		
+	
+		try {
+			token = KeycloakUtils.getAccessToken("https://keycloak.gada.io", "internmatch", "internmatch", "dc7d0960-2e1d-4a78-9eef-77678066dbd3", "service", password);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		
+		// create all the users in keycloak
+		for (BaseEntityImport beImport : beImports) {
+			List<Tuple2<String,String>> pairs = beImport.getAttributeValuePairList();
+			Map<String,String> kv = new HashMap<String,String>();
+			for (Tuple2<String,String> p : pairs) {
+				kv.put(p._1, p._2);
+			}
+			
+			String email = kv.get("PRI_EMAIL").trim();
+			String firstname = kv.get("PRI_IMPORT_FIRSTNAME").trim();
+			String lastname = kv.get("PRI_IMPORT_LASTNAME").trim();
+			
+			System.out.println("firstname is "+kv.get("PRI_IMPORT_FIRSTNAME"));
+			System.out.println("last name is "+kv.get("PRI_IMPORT_LASTNAME"));
+			System.out.println("email is "+kv.get("PRI_EMAIL"));
+		try {
+			userId = KeycloakUtils.createUser(token, realm,email , firstname, lastname,  email, userPassword,"user", "user");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			if (e.getMessage().contains("Email is already taken")) {
+				System.out.println();
+			}
+		}
+		}
+		System.out.println("Finished");
+	}
+	
+	
+	//@Test
 	public void registerUser()
 	{
 		System.out.println("Search test");
