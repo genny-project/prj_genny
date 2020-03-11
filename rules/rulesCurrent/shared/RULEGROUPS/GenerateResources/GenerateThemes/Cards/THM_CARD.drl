@@ -46,6 +46,8 @@ rule "THM_CARD"
 
       Theme theme = Theme.builder("THM_CARD")
                     .addAttribute()
+                      .overflowX("hidden") /* NEW */
+                      .borderRadius(8) /* NEW */
                       .backgroundColor("white")
                       .height("auto")
                       .width("100%")
