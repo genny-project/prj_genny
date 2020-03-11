@@ -26,10 +26,10 @@ rule "PROCESS_ANSWERS"
 		System.out.println("Process Answwers: beUtils created ");
 		
 		/* Now set up capability for the user and make it available to all the rules */
-	/*	CapabilityUtils capabilityUtils = new CapabilityUtils(beUtils);
+		CapabilityUtils capabilityUtils = new CapabilityUtils(beUtils);
 		insert(capabilityUtils); 
 		
-		System.out.println("Capabilitys are "+capabilityUtils.getCapabilityManifest()); */
+		System.out.println("Capabilitys are "+capabilityUtils.getCapabilityManifest()); 
 		
 
 		retract(dataMsg); /* stop this rule from firing again */
