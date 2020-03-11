@@ -41,7 +41,7 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_INTERNS"
  	  beUtils : BaseEntityUtils()
  	  allowed : Allowed(code == "IMPORT_INTERNS" || code == "TEST") 
 	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" && (value.startsWith("googleid:interns")) )   /* this is a pure search */
-	  
+	  serviceToken : GennyToken (code == "PER_SERVICE")
     then
   		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer);
    		retract(answer);
@@ -140,7 +140,8 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_INTERNS"
 						String firstname = kv.get("PRI_IMPORT_FIRSTNAME").trim();
 						String lastname = kv.get("PRI_IMPORT_LASTNAME").trim();
 						String userPassword = UUID.randomUUID().toString().substring(0,10);
-						String userId = KeycloakUtils.createUser(beUtils.getServiceToken().getToken(), beUtils.getServiceToken().getRealm(),email , firstname, lastname,  email, userPassword,"user", "user");
+						System.out.println(KeycloakUtils.getKeycloakUrl()+" keycloak token is "+beUtils.getServiceToken().getToken());
+						String userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(),email , firstname, lastname,  email, userPassword,"user", "user");
 						Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_UUID",userId);
 						answers.add(keycloakId);						
 					} catch (IOException e) {
