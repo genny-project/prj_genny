@@ -39,7 +39,7 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_INTERNS"
         no-loop true
     when
  	  beUtils : BaseEntityUtils()
- 	  allowed : Allowed(code == "IMPORT_INTERNS" || code == "TEST") 
+ 	/*  allowed : Allowed(code == "IMPORT_INTERNS" || code == "TEST") */
 	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" && (value.startsWith("googleid:interns")) )   /* this is a pure search */
 	  serviceToken : GennyToken (code == "PER_SERVICE")
     then
