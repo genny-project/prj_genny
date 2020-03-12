@@ -32,8 +32,8 @@ rule "IS_INTERN"
  		System.out.println("IS_INTERN: newBe = " + newBe.getCode()); 
  		
  		/* Now we have some details we can create a proper Intern be with an emaily code */
- 		String internCode = "PER_"+QwandaUtils.getNormalisedUsername(newBe.getValue("PRI_EMAIL").get());
- 		BaseEntity intern = beUtils.create(internCode,newBe.getValue("PRI_NAME").get());
+ 		String internCode = "PER_"+QwandaUtils.getNormalisedUsername((String)newBe.getValue("PRI_EMAIL").get());
+ 		BaseEntity intern = beUtils.create(internCode,(String)newBe.getValue("PRI_NAME").get());
  		
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
