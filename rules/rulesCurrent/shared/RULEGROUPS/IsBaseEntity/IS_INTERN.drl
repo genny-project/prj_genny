@@ -26,30 +26,24 @@ rule "IS_INTERN"
 		output : OutputParam()
 		baseEntityType : String(baseEntityType.equals("Intern"))
 		newBe : BaseEntity()
-		beUtils : BaseEntityUtils();
+		beUtils : BaseEntityUtils()
 	  
      then
  		System.out.println("IS_INTERN: Rule fired" );
  		System.out.println("IS_INTERN: newBe = " + newBe.getCode()); 
  		
- 		/* Now we have some details we can create a proper Intern be with an emaily code */
+
  		String internCode = "PER_"+QwandaUtils.getNormalisedUsername((String)(newBe.getValue("PRI_EMAIL").get()));
  		BaseEntity intern = beUtils.create(internCode,(String)(newBe.getValue("PRI_NAME").get()));
  		
  		
- 	/*  Construct answer with Source, Target, Attribute Code, Value */
  		Answer answer = new Answer(userToken.getUserCode(), internCode ,"PRI_IS_INTERN", "true");
  		Answer answer2 = new Answer(userToken.getUserCode(), internCode ,"PRI_STATUS", "AVAILABLE");
  		Answer answer3 = new Answer(userToken.getUserCode(), internCode,"PRI_DISABLED", "false");
  		Answer answerCardColour = new Answer(userToken.getUserCode(),internCode,"PRI_STATUS_COLOR","#5cb85c");
  		
- 		/* 		Answer answer = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_INTERN", "true");
- 		Answer answer2 = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "AVAILABLE");
- 		Answer answer3 = new Answer(userToken.getUserCode(), newBe.getCode(),"PRI_DISABLED", "false");
- 		Answer answerCardColour = new Answer(userToken.getUserCode(),newBe.getCode(),"PRI_STATUS_COLOR","#5cb85c");
- */
- 		
- 	/*	BaseEntityUtils beUtils = new BaseEntityUtils(userToken); */
+
+
  		beUtils.saveAnswer(answer);
  		beUtils.saveAnswer(answer2);
  		beUtils.saveAnswer(answer3);
