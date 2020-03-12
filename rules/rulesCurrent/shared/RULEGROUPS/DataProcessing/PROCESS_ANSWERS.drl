@@ -18,7 +18,7 @@ rule "PROCESS_ANSWERS"
 	  serviceToken : GennyToken ( code == "PER_SERVICE" ) 
 	  dataMsg : QDataAnswerMessage( (items != null) && (items.length > 0) && (aliasCode != "STATELESS"))
 	  dom : OutputParamTreeSet()
-	  capabilityUtils : CapabilityUtils()
+	 /* capabilityUtils : CapabilityUtils() */
     then
  		System.out.println("Rule -> PROCESS_ANSWERS Processing Answer/Data!! :  user=" + userToken.getUserCode()); 
  		/* System.out.println("dom = "+dom); */
