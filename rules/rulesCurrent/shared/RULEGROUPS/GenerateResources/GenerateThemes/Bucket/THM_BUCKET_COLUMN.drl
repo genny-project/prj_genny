@@ -39,17 +39,12 @@ rule "THM_BUCKET_COLUMN"
 
 		Theme theme = Theme.builder("THM_BUCKET_COLUMN")
                                 .addAttribute()
-                                        /* .backgroundColor("#EAEAEA") */
-                                        .minWidth(300)
-                                        .width("100%")
-                                        /* .margin(20) */
-                                        .marginLeft(10)
-                                        .marginRight(10)
-                                        .textAlign("center")
-                                        .flexDirection("column")
-                                        .end()
-                                .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
-                                	.end()
+                                  .minWidth(344)
+                                  .width("100%")
+				                          .textAlign("center")
+                                  .flexDirection("column")
+                                .end()
+				                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
                                 .build();
 
 		theme.setRealm(serviceToken.getRealm());
