@@ -785,187 +785,187 @@ public class BucketUtilsTest {
 		List<SearchEntity> bucketSearchBeList = new ArrayList<SearchEntity>();
 
 		try {
-			SearchEntity SBE_AVAILABLE_INTERNS =
-			VertxUtils.getObject(serviceToken.getRealm(), "",
-			"SBE_AVAILABLE_INTERNS", SearchEntity.class, serviceToken.getToken());
-			SearchEntity SBE_APPLIED_APPLICATIONS =
-			VertxUtils.getObject(serviceToken.getRealm(), "",
-			"SBE_APPLIED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
-			SearchEntity SBE_SHORTLISTED_APPLICATIONS =
-			VertxUtils.getObject(serviceToken.getRealm(), "",
-			"SBE_SHORTLISTED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
-			SearchEntity SBE_INTERVIEWED_APPLICATIONS =
-			VertxUtils.getObject(serviceToken.getRealm(), "",
-			"SBE_INTERVIEWED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
-			SearchEntity SBE_OFFERED_APPLICATIONS =
-			VertxUtils.getObject(serviceToken.getRealm(), "",
-			"SBE_OFFERED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
-			SearchEntity SBE_PLACED_APPLICATIONS =
-			VertxUtils.getObject(serviceToken.getRealm(), "",
-			"SBE_PLACED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
-			SearchEntity SBE_INPROGRESS_APPLICATIONS =
-			VertxUtils.getObject(serviceToken.getRealm(), "",
-			"SBE_INPROGRESS_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
+			// SearchEntity SBE_AVAILABLE_INTERNS =
+			// VertxUtils.getObject(serviceToken.getRealm(), "",
+			// "SBE_AVAILABLE_INTERNS", SearchEntity.class, serviceToken.getToken());
+			// SearchEntity SBE_APPLIED_APPLICATIONS =
+			// VertxUtils.getObject(serviceToken.getRealm(), "",
+			// "SBE_APPLIED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
+			// SearchEntity SBE_SHORTLISTED_APPLICATIONS =
+			// VertxUtils.getObject(serviceToken.getRealm(), "",
+			// "SBE_SHORTLISTED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
+			// SearchEntity SBE_INTERVIEWED_APPLICATIONS =
+			// VertxUtils.getObject(serviceToken.getRealm(), "",
+			// "SBE_INTERVIEWED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
+			// SearchEntity SBE_OFFERED_APPLICATIONS =
+			// VertxUtils.getObject(serviceToken.getRealm(), "",
+			// "SBE_OFFERED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
+			// SearchEntity SBE_PLACED_APPLICATIONS =
+			// VertxUtils.getObject(serviceToken.getRealm(), "",
+			// "SBE_PLACED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
+			// SearchEntity SBE_INPROGRESS_APPLICATIONS =
+			// VertxUtils.getObject(serviceToken.getRealm(), "",
+			// "SBE_INPROGRESS_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
 
-			// SearchEntity SBE_AVAILABLE_INTERNS = new SearchEntity("SBE_AVAILABLE_INTERNS", "Available")
-			// 		.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
-			// 		.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%").addFilter("PRI_DISABLED", false)
-			// 		// .addFilter("PRI_IS_INTERN", true)
+			SearchEntity SBE_AVAILABLE_INTERNS = new SearchEntity("SBE_AVAILABLE_INTERNS", "Available")
+					.addSort("PRI_CREATED", "Created", SearchEntity.Sort.ASC)
+					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%").addFilter("PRI_DISABLED", false)
+					// .addFilter("PRI_IS_INTERN", true)
 
-			// 		/* status and image */
-			// 		.addColumn("PRI_STATUS_COLOR", "Status")
-			// 		.addColumn("PRI_INTERN_IMAGE_URL", "Image")
+					/* status and image */
+					.addColumn("PRI_STATUS_COLOR", "Status")
+					.addColumn("PRI_INTERN_IMAGE_URL", "Image")
 
-			// 		/* Centre Card */
-			// 		.addColumn("PRI_NAME", "Name")
-			// 		.addColumn("PRI_STUDENT_ID", "Student ID")
-			// 		.addColumn("PRI_INDUSTRY", "Industry")
-			// 		.addColumn("PRI_EDU_PROVIDER_NAME", "Edu Provider")
-			// 		.addColumn("PRI_DUMMY", "Dummy")
-			// 		.addColumn("PRI_DUMMY_ONE", "Dummy")
-			// 		.addColumn("PRI_DUMMY_TWO", "Dummy")
+					/* Centre Card */
+					.addColumn("PRI_NAME", "Name")
+					.addColumn("PRI_STUDENT_ID", "Student ID")
+					.addColumn("PRI_INDUSTRY", "Industry")
+					.addColumn("PRI_EDU_PROVIDER_NAME", "Edu Provider")
+					.addColumn("PRI_DUMMY", "Dummy")
+					.addColumn("PRI_DUMMY_ONE", "Dummy")
+					.addColumn("PRI_DUMMY_TWO", "Dummy")
 
-			// 		/* Bottom Card */
-			// 		.addColumn("PRI_OCCUPATION", "Occupation").addColumn("PRI_COMPASS", "Address")
-			// 		.addColumn("PRI_STAR_RATING", "Rating").addColumn("PRI_TRANSPORT", "Transport")
-			// 		.addColumn("PRI_MOBILE", "Mobile").addColumn("PRI_EMAIL", "Email")
-			// 		.addColumn("PRI_INTERN_EMAIL", "Dummy").setPageStart(0).setPageSize(1000);
+					/* Bottom Card */
+					.addColumn("PRI_OCCUPATION", "Occupation").addColumn("PRI_COMPASS", "Address")
+					.addColumn("PRI_STAR_RATING", "Rating").addColumn("PRI_TRANSPORT", "Transport")
+					.addColumn("PRI_MOBILE", "Mobile").addColumn("PRI_EMAIL", "Email")
+					.addColumn("PRI_INTERN_EMAIL", "Dummy").setPageStart(0).setPageSize(1000);
 
-			// SearchEntity SBE_APPLIED_APPLICATIONS = new SearchEntity("SBE_APPLIED_APPLICATIONS", "Applied")
-			// 		.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
-			// 		.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
-			// 		.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "APPLIED")
-			// 		.addFilter("PRI_DISABLED", false)
+			SearchEntity SBE_APPLIED_APPLICATIONS = new SearchEntity("SBE_APPLIED_APPLICATIONS", "Applied")
+					.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
+					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+					.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "APPLIED")
+					.addFilter("PRI_DISABLED", false)
 
-			// 		/* status and image */
-			// 		.addColumn("PRI_STATUS_COLOR", "Status")
-			// 		.addColumn("PRI_INTERN_IMAGE_URL", "Image")
+					/* status and image */
+					.addColumn("PRI_STATUS_COLOR", "Status")
+					.addColumn("PRI_INTERN_IMAGE_URL", "Image")
 
-			// 		/* Centre Card */
-			// 		.addColumn("PRI_INTERN_NAME", "Name").addColumn("PRI_INTERN_STUDENT_ID", "Student ID")
-			// 		.addColumn("PRI_INDUSTRY", "Industry").addColumn("PRI_EDU_PROVIDER_NAME", "Edu Provider")
-			// 		.addColumn("PRI_HOST_COMPANY_NAME", "Host Company").addColumn("PRI_DUMMY", "Dummy")
-			// 		.addColumn("PRI_DUMMY_ONE", "Dummy")
+					/* Centre Card */
+					.addColumn("PRI_INTERN_NAME", "Name").addColumn("PRI_INTERN_STUDENT_ID", "Student ID")
+					.addColumn("PRI_INDUSTRY", "Industry").addColumn("PRI_EDU_PROVIDER_NAME", "Edu Provider")
+					.addColumn("PRI_HOST_COMPANY_NAME", "Host Company").addColumn("PRI_DUMMY", "Dummy")
+					.addColumn("PRI_DUMMY_ONE", "Dummy")
 
-			// 		/* Bottom Card */
-			// 		.addColumn("PRI_OCCUPATION", "Occupation").addColumn("PRI_COMPASS", "Address")
-			// 		.addColumn("PRI_STAR_RATING", "Rating").addColumn("PRI_TRANSPORT", "Transport")
-			// 		.addColumn("PRI_INTERN_MOBILE", "Mobile").addColumn("PRI_INTERN_EMAIL", "Email")
+					/* Bottom Card */
+					.addColumn("PRI_OCCUPATION", "Occupation").addColumn("PRI_COMPASS", "Address")
+					.addColumn("PRI_STAR_RATING", "Rating").addColumn("PRI_TRANSPORT", "Transport")
+					.addColumn("PRI_INTERN_MOBILE", "Mobile").addColumn("PRI_INTERN_EMAIL", "Email")
 
-			// 		.setPageStart(0).setPageSize(1000);
+					.setPageStart(0).setPageSize(1000);
 
-			// SearchEntity SBE_SHORTLISTED_APPLICATIONS = new SearchEntity("SBE_SHORTLISTED_APPLICATIONS", "Shortlisted")
-			// 		.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
-			// 		.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
-			// 		.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "SHORLISTED")
-			// 		.addFilter("PRI_DISABLED", false)
+			SearchEntity SBE_SHORTLISTED_APPLICATIONS = new SearchEntity("SBE_SHORTLISTED_APPLICATIONS", "Shortlisted")
+					.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
+					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+					.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "SHORLISTED")
+					.addFilter("PRI_DISABLED", false)
 
-			// 		/* status and image */
-			// 		.addColumn("PRI_STATUS_COLOR", "Status")
-			// 		.addColumn("PRI_INTERN_IMAGE_URL", "Image")
+					/* status and image */
+					.addColumn("PRI_STATUS_COLOR", "Status")
+					.addColumn("PRI_INTERN_IMAGE_URL", "Image")
 
-			// 		/* Centre Card */
-			// 		.addColumn("PRI_INTERN_NAME", "Name").addColumn("PRI_INTERN_STUDENT_ID", "Student ID")
-			// 		.addColumn("PRI_INDUSTRY", "Industry").addColumn("PRI_EDU_PROVIDER_NAME", "Edu Provider")
-			// 		.addColumn("PRI_HOST_COMPANY_NAME", "Host Company").addColumn("PRI_DUMMY", "Dummy")
-			// 		.addColumn("PRI_DUMMY_ONE", "Dummy")
+					/* Centre Card */
+					.addColumn("PRI_INTERN_NAME", "Name").addColumn("PRI_INTERN_STUDENT_ID", "Student ID")
+					.addColumn("PRI_INDUSTRY", "Industry").addColumn("PRI_EDU_PROVIDER_NAME", "Edu Provider")
+					.addColumn("PRI_HOST_COMPANY_NAME", "Host Company").addColumn("PRI_DUMMY", "Dummy")
+					.addColumn("PRI_DUMMY_ONE", "Dummy")
 
-			// 		/* Bottom Card */
-			// 		.addColumn("PRI_OCCUPATION", "Occupation").addColumn("PRI_COMPASS", "Address")
-			// 		.addColumn("PRI_STAR_RATING", "Rating").addColumn("PRI_TRANSPORT", "Transport")
-			// 		.addColumn("PRI_INTERN_MOBILE", "Mobile").addColumn("PRI_INTERN_EMAIL", "Email")
+					/* Bottom Card */
+					.addColumn("PRI_OCCUPATION", "Occupation").addColumn("PRI_COMPASS", "Address")
+					.addColumn("PRI_STAR_RATING", "Rating").addColumn("PRI_TRANSPORT", "Transport")
+					.addColumn("PRI_INTERN_MOBILE", "Mobile").addColumn("PRI_INTERN_EMAIL", "Email")
 
-			// 		.setPageStart(0).setPageSize(1000);
+					.setPageStart(0).setPageSize(1000);
 
-			// SearchEntity SBE_INTERVIEWED_APPLICATIONS = new SearchEntity("SBE_INTERVIEWED_APPLICATIONS", "Interviewed")
-			// 		.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
-			// 		.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
-			// 		.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "INTERVIEWED")
-			// 		.addFilter("PRI_DISABLED", false)
+			SearchEntity SBE_INTERVIEWED_APPLICATIONS = new SearchEntity("SBE_INTERVIEWED_APPLICATIONS", "Interviewed")
+					.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
+					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+					.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "INTERVIEWED")
+					.addFilter("PRI_DISABLED", false)
 
-			// 		/* status and image */
-			// 		.addColumn("PRI_STATUS_COLOR", "Status")
-			// 		.addColumn("PRI_INTERN_IMAGE_URL", "Image")
+					/* status and image */
+					.addColumn("PRI_STATUS_COLOR", "Status")
+					.addColumn("PRI_INTERN_IMAGE_URL", "Image")
 
-			// 		/* Centre Card */
-			// 		.addColumn("PRI_INTERN_NAME", "Name").addColumn("PRI_INTERN_STUDENT_ID", "Student ID")
-			// 		.addColumn("PRI_INDUSTRY", "Industry").addColumn("PRI_EDU_PROVIDER_NAME", "Edu Provider")
-			// 		.addColumn("PRI_HOST_COMPANY_NAME", "Host Company")
-			// 		.addColumn("PRI_INTERVIEW_START_DATE", "Interview Date:  ").addColumn("PRI_DUMMY", "Dummy")
+					/* Centre Card */
+					.addColumn("PRI_INTERN_NAME", "Name").addColumn("PRI_INTERN_STUDENT_ID", "Student ID")
+					.addColumn("PRI_INDUSTRY", "Industry").addColumn("PRI_EDU_PROVIDER_NAME", "Edu Provider")
+					.addColumn("PRI_HOST_COMPANY_NAME", "Host Company")
+					.addColumn("PRI_INTERVIEW_START_DATETIME", "Interview Date:  ").addColumn("PRI_DUMMY", "Dummy")
 
-			// 		/* Bottom Card */
-			// 		.addColumn("PRI_OCCUPATION", "Occupation").addColumn("PRI_COMPASS", "Address")
-			// 		.addColumn("PRI_STAR_RATING", "Rating").addColumn("PRI_TRANSPORT", "Transport")
-			// 		.addColumn("PRI_INTERN_MOBILE", "Mobile").addColumn("PRI_INTERN_EMAIL", "Email")
+					/* Bottom Card */
+					.addColumn("PRI_OCCUPATION", "Occupation").addColumn("PRI_COMPASS", "Address")
+					.addColumn("PRI_STAR_RATING", "Rating").addColumn("PRI_TRANSPORT", "Transport")
+					.addColumn("PRI_INTERN_MOBILE", "Mobile").addColumn("PRI_INTERN_EMAIL", "Email")
 
-			// 		.setPageStart(0).setPageSize(1000);
+					.setPageStart(0).setPageSize(1000);
 
-			// SearchEntity SBE_OFFERED_APPLICATIONS = new SearchEntity("SBE_OFFERED_APPLICATIONS", "Offered")
-			// 		.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
-			// 		.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
-			// 		.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "OFFERED")
-			// 		.addFilter("PRI_DISABLED", false)
+			SearchEntity SBE_OFFERED_APPLICATIONS = new SearchEntity("SBE_OFFERED_APPLICATIONS", "Offered")
+					.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
+					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+					.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "OFFERED")
+					.addFilter("PRI_DISABLED", false)
 
-			// 		/* status and image */
-			// 		.addColumn("PRI_STATUS_COLOR", "Status")
-			// 		.addColumn("PRI_INTERN_IMAGE_URL", "Image")
+					/* status and image */
+					.addColumn("PRI_STATUS_COLOR", "Status")
+					.addColumn("PRI_INTERN_IMAGE_URL", "Image")
 
-			// 		/* Centre Card */
-			// 		.addColumn("PRI_INTERN_NAME", "Name").addColumn("PRI_INTERN_STUDENT_ID", "Student ID")
-			// 		.addColumn("PRI_INDUSTRY", "Industry").addColumn("PRI_EDU_PROVIDER_NAME", "Edu Provider")
-			// 		.addColumn("PRI_HOST_COMPANY_NAME", "Host Company")
-			// 		.addColumn("PRI_INTERNSHIP_START_DATE", "Start Date:  ").addColumn("PRI_DUMMY", "Dummy")
+					/* Centre Card */
+					.addColumn("PRI_INTERN_NAME", "Name").addColumn("PRI_INTERN_STUDENT_ID", "Student ID")
+					.addColumn("PRI_INDUSTRY", "Industry").addColumn("PRI_EDU_PROVIDER_NAME", "Edu Provider")
+					.addColumn("PRI_HOST_COMPANY_NAME", "Host Company")
+					.addColumn("PRI_INTERNSHIP_START_DATE", "Start Date:  ").addColumn("PRI_DUMMY", "Dummy")
 
-			// 		/* Bottom Card */
-			// 		.addColumn("PRI_OCCUPATION", "Occupation").addColumn("PRI_COMPASS", "Address")
-			// 		.addColumn("PRI_STAR_RATING", "Rating").addColumn("PRI_TRANSPORT", "Transport")
-			// 		.addColumn("PRI_INTERN_MOBILE", "Mobile").addColumn("PRI_INTERN_EMAIL", "Email")
+					/* Bottom Card */
+					.addColumn("PRI_OCCUPATION", "Occupation").addColumn("PRI_COMPASS", "Address")
+					.addColumn("PRI_STAR_RATING", "Rating").addColumn("PRI_TRANSPORT", "Transport")
+					.addColumn("PRI_INTERN_MOBILE", "Mobile").addColumn("PRI_INTERN_EMAIL", "Email")
 
-			// 		.setPageStart(0).setPageSize(1000);
+					.setPageStart(0).setPageSize(1000);
 
-			// SearchEntity SBE_PLACED_APPLICATIONS = new SearchEntity("SBE_PLACED_APPLICATIONS", "Placed")
-			// 		.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
-			// 		.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
-			// 		.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "PLACED").addFilter("PRI_DISABLED", false)
+			SearchEntity SBE_PLACED_APPLICATIONS = new SearchEntity("SBE_PLACED_APPLICATIONS", "Placed")
+					.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
+					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+					.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "PLACED").addFilter("PRI_DISABLED", false)
 
-			// 		/* status and image */
-			// 		.addColumn("PRI_STATUS_COLOR", "Status")
-			// 		.addColumn("PRI_INTERN_IMAGE_URL", "Image")
+					/* status and image */
+					.addColumn("PRI_STATUS_COLOR", "Status")
+					.addColumn("PRI_INTERN_IMAGE_URL", "Image")
 
-			// 		/* Centre Card */
-			// 		.addColumn("PRI_INTERN_NAME", "Name").addColumn("PRI_INTERN_STUDENT_ID", "Student ID")
-			// 		.addColumn("PRI_INDUSTRY", "Industry").addColumn("PRI_EDU_PROVIDER_NAME", "Edu Provider")
-			// 		.addColumn("PRI_HOST_COMPANY_NAME", "Host Company")
-			// 		.addColumn("PRI_INTERNSHIP_START_DATE", "Start Date:  ").addColumn("PRI_DUMMY", "Dummy")
+					/* Centre Card */
+					.addColumn("PRI_INTERN_NAME", "Name").addColumn("PRI_INTERN_STUDENT_ID", "Student ID")
+					.addColumn("PRI_INDUSTRY", "Industry").addColumn("PRI_EDU_PROVIDER_NAME", "Edu Provider")
+					.addColumn("PRI_HOST_COMPANY_NAME", "Host Company")
+					.addColumn("PRI_INTERNSHIP_START_DATE", "Start Date:  ").addColumn("PRI_DUMMY", "Dummy")
 
-			// 		/* Bottom Card */
-			// 		.addColumn("PRI_OCCUPATION", "Occupation").addColumn("PRI_COMPASS", "Address")
-			// 		.addColumn("PRI_STAR_RATING", "Rating").addColumn("PRI_TRANSPORT", "Transport")
-			// 		.addColumn("PRI_INTERN_MOBILE", "Mobile").addColumn("PRI_INTERN_EMAIL", "Email")
+					/* Bottom Card */
+					.addColumn("PRI_OCCUPATION", "Occupation").addColumn("PRI_COMPASS", "Address")
+					.addColumn("PRI_STAR_RATING", "Rating").addColumn("PRI_TRANSPORT", "Transport")
+					.addColumn("PRI_INTERN_MOBILE", "Mobile").addColumn("PRI_INTERN_EMAIL", "Email")
 
-			// 		.setPageStart(0).setPageSize(1000);
+					.setPageStart(0).setPageSize(1000);
 
-			// SearchEntity SBE_INPROGRESS_APPLICATIONS = new SearchEntity("SBE_INPROGRESS_APPLICATIONS", "In Progress")
-			// 		.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
-			// 		.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
-			// 		.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "IN_PROGRESS")
-			// 		.addFilter("PRI_DISABLED", false)
+			SearchEntity SBE_INPROGRESS_APPLICATIONS = new SearchEntity("SBE_INPROGRESS_APPLICATIONS", "In Progress")
+					.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
+					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+					.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "IN_PROGRESS")
+					.addFilter("PRI_DISABLED", false)
 
-			// 		/* status and image */
-			// 		.addColumn("PRI_STATUS_COLOR", "Status").addColumn("PRI_INTERN_IMAGE_URL", "Image")
+					/* status and image */
+					.addColumn("PRI_STATUS_COLOR", "Status").addColumn("PRI_INTERN_IMAGE_URL", "Image")
 
-			// 		/* Centre Card */
-			// 		.addColumn("PRI_INTERN_NAME", "Name").addColumn("PRI_INTERN_STUDENT_ID", "Student ID")
-			// 		.addColumn("PRI_INDUSTRY", "Industry").addColumn("PRI_EDU_PROVIDER_NAME", "Edu Provider")
-			// 		.addColumn("PRI_HOST_COMPANY_NAME", "Host Company")
-			// 		.addColumn("PRI_INTERNSHIP_START_DATE", "Start Date: ").addColumn("PRI_PROGRESS", "Progress")
+					/* Centre Card */
+					.addColumn("PRI_INTERN_NAME", "Name").addColumn("PRI_INTERN_STUDENT_ID", "Student ID")
+					.addColumn("PRI_INDUSTRY", "Industry").addColumn("PRI_EDU_PROVIDER_NAME", "Edu Provider")
+					.addColumn("PRI_HOST_COMPANY_NAME", "Host Company")
+					.addColumn("PRI_INTERNSHIP_START_DATE", "Start Date: ").addColumn("PRI_PROGRESS", "Progress")
 
-			// 		/* Bottom Card */
-			// 		.addColumn("PRI_OCCUPATION", "Occupation").addColumn("PRI_COMPASS", "Address")
-			// 		.addColumn("PRI_STAR_RATING", "Rating").addColumn("PRI_TRANSPORT", "Transport")
-			// 		.addColumn("PRI_INTERN_MOBILE", "Mobile").addColumn("PRI_INTERN_EMAIL", "Email")
+					/* Bottom Card */
+					.addColumn("PRI_OCCUPATION", "Occupation").addColumn("PRI_COMPASS", "Address")
+					.addColumn("PRI_STAR_RATING", "Rating").addColumn("PRI_TRANSPORT", "Transport")
+					.addColumn("PRI_INTERN_MOBILE", "Mobile").addColumn("PRI_INTERN_EMAIL", "Email")
 
-			// 		.setPageStart(0).setPageSize(1000);
+					.setPageStart(0).setPageSize(1000);
 
 			bucketSearchBeList.add(SBE_AVAILABLE_INTERNS);
 			bucketSearchBeList.add(SBE_APPLIED_APPLICATIONS);
