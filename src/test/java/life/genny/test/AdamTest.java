@@ -154,7 +154,7 @@ public class AdamTest {
 	protected static GennyToken serviceToken;
 
 	
-	@Test
+	//@Test
 	public void verifyInterns()
 	{
 		System.out.println("Verify Interns");
@@ -431,18 +431,20 @@ public class AdamTest {
 
 	}
 
-	//@Test
+	@Test
 	public void importGoogleIdTest() {
 		System.out.println("Import Google IDTest");
 
 		GennyKieSession gks = null;
 
-//		try {
+		try {
+			gks = GennyKieSession.builder(serviceToken, true).addDrl("IS_INTERN.drl").build();
+
 //			gks = GennyKieSession.builder(serviceToken, true).addDrl("SignalProcessing").addDrl("DataProcessing")
 //					.addDrl("EventProcessing").addJbpm("Lifecycles").addJbpm("adam_user1.bpmn")
 //					.addJbpm("adam_user2.bpmn").addJbpm("adam_user3.bpmn").addDrl("AuthInit").addJbpm("AuthInit")
 //					.addDrl("InitialiseProject").addJbpm("InitialiseProject").build();
-//
+////
 //			gks.createTestUsersGroups();
 //
 //			GennyToken newUser2A = gks.createToken("PER_USER2", "user,test,admin");
@@ -492,15 +494,15 @@ public class AdamTest {
 ////				gks.injectEvent(msg, newUser2A);
 //			}
 
-			System.out.println(beImports);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//
-//		} finally {
-//			if (gks != null) {
-//				gks.close();
-//			}
-//		}
+	//		System.out.println(beImports);
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		} finally {
+			if (gks != null) {
+				gks.close();
+			}
+		}
 	}
 
 	public AdamTest() {
