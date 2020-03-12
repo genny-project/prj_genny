@@ -266,69 +266,44 @@ public class BucketView extends GennyJbpmBaseTest {
 		Map<String, ContextList> contextListMap = new HashMap<String, ContextList>();
 
 		/* get the theme */
-		Theme THM_QUESTION_GRP_LABEL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_QUESTION_GRP_LABEL",
-				Theme.class, serviceToken.getToken());
 		Theme THM_DISPLAY_VERTICAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_VERTICAL",
 				Theme.class, serviceToken.getToken());
-		Theme THM_DISPLAY_HORIZONTAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_HORIZONTAL",
+		Theme THM_QUESTION_GRP_LABEL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_QUESTION_GRP_LABEL",
 				Theme.class, serviceToken.getToken());
-		Theme THM_WIDTH_100_PERCENT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_WIDTH_100_PERCENT",
-				Theme.class, serviceToken.getToken());
-		// Theme THM_BH_ROW_ONE_GRP_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
-		// 		"THM_BH_ROW_ONE_GRP_WRAPPER", Theme.class, serviceToken.getToken());
-		Theme THM_BH_ROW_ONE_GRP_WRAPPER = Theme.builder("THM_BH_ROW_ONE_GRP_WRAPPER")
-											.addAttribute()
-											.justifyContent("space-between")
-											.end()
-											.build();
+		
 
-		Theme THM_BH_ROW_ONE_GRP_LABEL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_ROW_ONE_GRP_LABEL",
-				Theme.class, serviceToken.getToken());
-		// Theme THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
-		// 		"THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER", Theme.class, serviceToken.getToken());
+		
 		Theme THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER = Theme.builder("THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER")
 													.addAttribute()
 													.justifyContent("center")
 													.alignItems("center")
 													.end()
 													.build();
-		Theme THM_BH_ROW_ONE_VCL_INPUT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_ROW_ONE_VCL_INPUT",
-				Theme.class, serviceToken.getToken());
-		Theme THM_BH_ROW_TWO_VCL_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
-				"THM_BH_ROW_TWO_VCL_WRAPPER", Theme.class, serviceToken.getToken());
-		Theme THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
-				"THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER", Theme.class, serviceToken.getToken());
-		Theme THM_BH_ROW_TWO_INPUT_FIELD = VertxUtils.getObject(serviceToken.getRealm(), "",
-				"THM_BH_ROW_TWO_INPUT_FIELD", Theme.class, serviceToken.getToken());
-		Theme THM_ICON = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_ICON", Theme.class,
-				serviceToken.getToken());
-		Theme THM_BH_GROUP_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_GROUP_WRAPPER",
-				Theme.class, serviceToken.getToken());
-		BaseEntity ICN_SORT = beUtils.getBaseEntityByCode("ICN_SORT");
+		
 		Theme THM_WIDTH_100_PERCENT_NO_INHERIT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_WIDTH_100_PERCENT_NO_INHERIT", 
 				Theme.class, serviceToken.getToken());
 
 		// NEW THEMES START HERE
 		Theme THM_BUCKET_HEADER_GROUP_WRAPPER = Theme.builder("THM_BUCKET_HEADER_GROUP_WRAPPER")
                     .addAttribute()
-						.flexDirection("row")
-						.width("100%")
-						.paddingLeft(8)
-					  	.paddingRight(4)
+											.flexDirection("row")
+											.width("100%")
+											.paddingLeft(8)
+											.paddingRight(4)
                     .end()
                     .build();
 		
 		Theme THM_BUCKET_HEADER_GROUP_HEADER_WRAPPER = Theme.builder("THM_BUCKET_HEADER_GROUP_HEADER_WRAPPER")
                     .addAttribute()
-					  .flexGrow(1)
-					  .marginBottom(4)
+											.flexGrow(1)
+											.marginBottom(4)
                     .end()
                     .build();		
 
 		Theme THM_BUCKET_HEADER_GROUP_LABEL = Theme.builder("THM_BUCKET_HEADER_GROUP_LABEL")
                     .addAttribute()
                       .justifyContent("center")
-					  .marginBottom(0)
+					  					.marginBottom(0)
                     .end()
                     .build();		
 		Theme THM_FONT_FAMILY_ROBOTO = Theme.builder("THM_FONT_FAMILY_ROBOTO")
@@ -398,8 +373,11 @@ public class BucketView extends GennyJbpmBaseTest {
 				for (SearchEntity searchBe : searchBeList) {
 
 					String code = searchBe.getCode().split("SBE_")[1];
+					System.out.println("Current BUCKET Code   ::    " + code);
 
+					/* add the contextList for the bucketHeaderAsk and bucketContentAsk */
 					contextListMap.put("QUE_BUCKET_HEADER_" + code + "_GRP", new ContextList(bucketHeaderContext));
+					contextListMap.put("QUE_BUCKET_CONTENT_" + code + "_GRP", new ContextList(bucketContentContext));
 
 					/* clone the bucket */
 					Frame3 bucketHeader = Frame3.clone(FRM_BUCKET_HEADER);
@@ -437,9 +415,6 @@ public class BucketView extends GennyJbpmBaseTest {
 					bucketContentAsk.setQuestionCode("QUE_BUCKET_CONTENT_" + code + "_GRP");
 					bucketContentAsk.setName(searchBe.getName());
 					bucketContentAsk.setTargetCode(searchBe.getCode());
-
-					/* add the contextList for the bucketContentAsk */
-					contextListMap.put("QUE_BUCKET_CONTENT_" + code + "_GRP", new ContextList(bucketContentContext));
 
 					/* bucketFooter asks */
 					Ask bucketFooterAsk = Ask.clone(FRM_BUCKET_FOOTER_ASK);
@@ -597,7 +572,8 @@ public class BucketView extends GennyJbpmBaseTest {
 									.build();  
 
 		/* build the frame */
-		Frame3 bucket = Frame3.builder(name).addTheme(THM_BACKGROUND_NONE).end()
+		Frame3 bucket = Frame3.builder(name)
+				.addTheme(THM_BACKGROUND_NONE).end()
 				.addTheme(THM_BACKGROUND_E4E4E4, ThemePosition.WRAPPER).end()
 				.addTheme(THM_BUCKET_COLUMN, ThemePosition.WRAPPER).end()
 				.addTheme(THM_BUCKET_COLUMN_PADDING2, ThemePosition.CENTRE).end()
@@ -731,6 +707,7 @@ public class BucketView extends GennyJbpmBaseTest {
 		ValidationList searchValidationList = new ValidationList();
 		searchValidationList.setValidationList(validations);
 
+		/* get the attributes */
 		Attribute countAttribute = RulesUtils.getAttribute("PRI_TOTAL_RESULTS", serviceToken.getToken());
 		Attribute sortAttribute = RulesUtils.getAttribute("PRI_SORT", serviceToken.getToken());
 		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken.getToken());
