@@ -36,8 +36,6 @@
   <bpmn2:itemDefinition id="ItemDefinition_803" isCollection="false" structureRef="life.genny.qwandautils.JsonUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_7" isCollection="false" structureRef="life.genny.qwanda.Answer"/>
   <bpmn2:itemDefinition id="ItemDefinition_11" isCollection="false" structureRef="Object"/>
-  <bpmn2:itemDefinition id="ItemDefinition_8" isCollection="false" structureRef="life.genny.qwanda.message.QBulkMessage"/>
-  <bpmn2:itemDefinition id="ItemDefinition_600" isCollection="false" structureRef="life.genny.qwanda.message.QDataBaseEntityMessage"/>
   <bpmn2:signal id="Signal_1" name="createBE"/>
   <bpmn2:signal id="Signal_2" name="makeBe"/>
   <bpmn2:signal id="Signal_3" name="START_INTERN_S1"/>
@@ -62,8 +60,6 @@
       <drools:import name="life.genny.utils.VertxUtils.ESubscriptionType"/>
       <drools:import name="life.genny.qwandautils.JsonUtils"/>
       <drools:import name="life.genny.qwanda.Answer"/>
-      <drools:import name="life.genny.qwanda.message.QBulkMessage"/>
-      <drools:import name="life.genny.qwanda.message.QDataBaseEntityMessage"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_556" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_556" name="serviceToken"/>
@@ -81,7 +77,6 @@
     <bpmn2:property id="hold_str" itemSubjectRef="ItemDefinition_9" name="hold_str"/>
     <bpmn2:property id="intEP" itemSubjectRef="ItemDefinition_9" name="intEP"/>
     <bpmn2:property id="intEPBe" itemSubjectRef="ItemDefinition_1076" name="intEPBe"/>
-    <bpmn2:property id="payload" itemSubjectRef="ItemDefinition_8" name="payload"/>
     <bpmn2:subProcess id="SubProcess_1" name="Intern Builder">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -141,7 +136,6 @@ System.out.println(&quot;INTERN: callingProcessToken = &quot; + callingProcessTo
 
 userToken = (GennyToken)userToken;
 BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
-
 String newCode = &quot;PER_&quot;+uuid;
 newCode = newCode.toUpperCase();
 newBe = beUtils.create(newCode, newCode);
@@ -341,24 +335,7 @@ System.out.println(&quot;inEP is null &quot;);
             <drools:script>System.out.println(&quot;INTERN_S1: Entering Is_Intern&quot;);</drools:script>
           </drools:onEntry-script>
           <drools:onExit-script scriptFormat="http://www.java.com/java">
-            <drools:script>System.out.println(&quot;INTERN_S1: Exiting Is_Intern&quot;);
-/* get the propeer intern be */
-QBulkMessage bMsg = (QBulkMessage)payload;
-if (bMsg != null) {
-     /* delete old temp newBe */
-     
-    /* set replacement */
-    if (bMsg.getItems() != null) {
-	if (bMsg.getItems().length > 0) {
-		QDataBaseEntityMessage beMsg = bMsg.getItems()[0];
-		if (beMsg != null) {
-			BaseEntity intern = beMsg.getItems()[0];
-                  	newBe = intern;
-			kcontext.setVariable(&quot;newBe&quot;, intern);
-		}
-	}
-    }
-}</drools:script>
+            <drools:script>System.out.println(&quot;INTERN_S1: Exiting Is_Intern&quot;);</drools:script>
           </drools:onExit-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
@@ -371,7 +348,6 @@ if (bMsg != null) {
           <bpmn2:dataInput id="DataInput_37" itemSubjectRef="ItemDefinition_1076" name="newBe"/>
           <bpmn2:dataInput id="DataInput_40" itemSubjectRef="ItemDefinition_9" name="baseEntityType"/>
           <bpmn2:dataOutput id="DataOutput_6" itemSubjectRef="ItemDefinition_2368" name="output"/>
-          <bpmn2:dataOutput id="DataOutput_4" itemSubjectRef="ItemDefinition_8" name="payload"/>
           <bpmn2:inputSet id="_InputSet_47">
             <bpmn2:dataInputRefs>DataInput_33</bpmn2:dataInputRefs>
             <bpmn2:dataInputRefs>DataInput_34</bpmn2:dataInputRefs>
@@ -382,7 +358,6 @@ if (bMsg != null) {
           </bpmn2:inputSet>
           <bpmn2:outputSet id="OutputSet_3" name="Output Set 3">
             <bpmn2:dataOutputRefs>DataOutput_6</bpmn2:dataOutputRefs>
-            <bpmn2:dataOutputRefs>DataOutput_4</bpmn2:dataOutputRefs>
           </bpmn2:outputSet>
         </bpmn2:ioSpecification>
         <bpmn2:dataInputAssociation id="_DataInputAssociation_202">
@@ -418,10 +393,6 @@ if (bMsg != null) {
         <bpmn2:dataOutputAssociation id="DataOutputAssociation_4">
           <bpmn2:sourceRef>DataOutput_6</bpmn2:sourceRef>
           <bpmn2:targetRef>outputMsg</bpmn2:targetRef>
-        </bpmn2:dataOutputAssociation>
-        <bpmn2:dataOutputAssociation id="DataOutputAssociation_5">
-          <bpmn2:sourceRef>DataOutput_4</bpmn2:sourceRef>
-          <bpmn2:targetRef>payload</bpmn2:targetRef>
         </bpmn2:dataOutputAssociation>
       </bpmn2:task>
       <bpmn2:sequenceFlow id="SequenceFlow_5" drools:priority="1" sourceRef="ScriptTask_1" targetRef="Task_2"/>
