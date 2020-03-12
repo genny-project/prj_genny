@@ -351,9 +351,11 @@ if (bMsg != null) {
     if (bMsg.getItems() != null) {
 	if (bMsg.getItems().length > 0) {
 		QDataBaseEntityMessage beMsg = bMsg.getItems()[0];
-		BaseEntity intern = beMsg.getItems()[0];
-                  newBe = intern;
-		kcontext.setVariable(&quot;newBe&quot;, newBe);
+		if (beMsg != null) {
+			BaseEntity intern = beMsg.getItems()[0];
+                  	newBe = intern;
+			kcontext.setVariable(&quot;newBe&quot;, intern);
+		}
 	}
     }
 }</drools:script>
