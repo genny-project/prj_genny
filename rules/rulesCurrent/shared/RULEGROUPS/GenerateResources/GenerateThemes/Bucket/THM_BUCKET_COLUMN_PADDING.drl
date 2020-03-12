@@ -39,7 +39,6 @@ rule "THM_BUCKET_COLUMN_PADDING"
  
 		Theme theme = Theme.builder("THM_BUCKET_COLUMN_PADDING")
                   .addAttribute()
-                    .padding(20)
                     .justifyContent("flex-start")
                   .end()
                   .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
