@@ -22,12 +22,12 @@ rule "PROCESS_ANSWERS"
     then
  		System.out.println("Rule -> PROCESS_ANSWERS Processing Answer/Data!! :  user=" + userToken.getUserCode()); 
  		/* System.out.println("dom = "+dom); */
- 	/*	BaseEntityUtils beUtils = new BaseEntityUtils(userToken); 
+ 		/*BaseEntityUtils beUtils = new BaseEntityUtils(userToken); 
 		beUtils.setServiceToken(serviceToken);
 		System.out.println("Process Answers: beUtils created "); */
 		
-		/* Now set up capability for the user and make it available to all the rules 
-		CapabilityUtils capabilityUtils = new CapabilityUtils(beUtils);
+		/* Now set up capability for the user and make it available to all the rules - NEEDS Alloweds to be created */
+	/*	CapabilityUtils capabilityUtils = new CapabilityUtils(beUtils);
 		insert(capabilityUtils); */
 		
 		System.out.println("Capabilitys are "+capabilityUtils.getCapabilityManifest()); 

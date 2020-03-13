@@ -199,9 +199,10 @@ System.out.println(&quot;authInit: Sending user - &quot;+currentUser);
 
 
 /* Check if this user has logged in */
+/*
 Optional&lt;Boolean> optHasLoggedIn = currentUser.getValue(&quot;PRI_HAS_LOGGED_IN&quot;);
 if ((!optHasLoggedIn.isPresent()) || (!optHasLoggedIn.get())) {
-	/* add the attribute to flag that this user has logged in at least once! */
+         System.out.println(&quot;auth_init: currentUser has never logged in before&quot;);
 	List&lt;Answer> answers = new CopyOnWriteArrayList&lt;Answer>();
 	Answer hasLoggedInAnswer = new Answer(beUtils.getGennyToken().getUserCode(),currentUser.getCode(), &quot;PRI_HAS_LOGGED_IN&quot;, &quot;TRUE&quot;);
 	currentUser = beUtils.updateBaseEntity(currentUser, hasLoggedInAnswer,BaseEntity.class);
@@ -209,7 +210,7 @@ if ((!optHasLoggedIn.isPresent()) || (!optHasLoggedIn.get())) {
 	beUtils.saveAnswers(answers,false);
 	kcontext.setVariable(&quot;currentUser&quot;,currentUser);
  }
-
+*/
 /* BaseEntity currentUser = QwandaUtils.getBaseEntityByCodeWithAttributes(userToken.getUserCode(), userToken.getToken()); */
 
 VertxUtils.publish(currentUser,&quot;webcmds&quot;,currentUser, &quot;USER&quot;, userToken.getToken());
