@@ -35,10 +35,15 @@ rule "PRI_ADDRESS_JSON"
 					
 			JsonObject addressDataJson = null;
 			try {
+			
 				addressDataJson = new JsonObject(answer.getValue());
+				String postcode = addressDataJson.getString("postal_code");
+				if (postcode == null) {
+					postcode = addressDataJson.getString("postcode");
+				}
 				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_JSON", answer.getValue(),false,true));	
 				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_COUNTRY", addressDataJson.getString("country"),false,true));
-				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_POSTCODE", addressDataJson.getString("postal_code"),false,true));
+				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_POSTCODE",postcode,false,true));
 				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_SUBURB", addressDataJson.getString("suburb"),false,true));
 				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_CITY", addressDataJson.getString("suburb"),false,true));
 				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", addressDataJson.getString("state"),false,true));
