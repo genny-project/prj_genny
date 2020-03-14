@@ -63,6 +63,8 @@ rule "INIT_GENERATE_CAPABILITIES"
   	 	
   	 	capabilityUtils.addCapability( "EDIT_ACCOUNT","Edit Account");
   	 	capabilityUtils.addCapability( "IMPORT_INTERNS","Import Interns");
+  	 	capabilityUtils.addCapability( "IMPORT_HC","Import Host Companies");
+  	 	capabilityUtils.addCapability( "IMPORT_HCR","Import Host Company Reps");
   	 	capabilityUtils.addCapability( "READ_USER", "Read User");
  		capabilityUtils.addCapability( "READ_PROJECT", "Read Project");
  		capabilityUtils.addCapability( "READ_HOST_COMPANY", "Read Host Company");
