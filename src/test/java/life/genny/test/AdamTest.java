@@ -269,7 +269,7 @@ public class AdamTest {
 				}
 				 BaseEntity rep = ImportUtils.processAttribute(beUtils,be.getCode(),attributeCodeValue,"PRI_ASSOC_HCR","PRI_NAME","PER_","LNK_HOST_COMPANY_REP",answers);
 				 if (rep!=null) {
-					System.out.println("Found link to "+sup.getName()+" as LNK_HOST_COMPANY_REP");
+					System.out.println("Found link to "+rep.getName()+" as LNK_HOST_COMPANY_REP");
 					Answer assocREP = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_ASSOC_HCR",rep.getName());
 					answers.add(assocREP);				
 				}
@@ -294,7 +294,7 @@ public class AdamTest {
 			answers.add(isImported);
 			Answer hasLoggedIn = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_HAS_LOGGED_IN","false");
 			answers.add(hasLoggedIn);
-			Answer status = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_STATUS","AVAILABLE");
+			Answer status = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_STATUS","ACTIVE");
 			answers.add(status);
 			Answer ilastname = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_LASTNAME",kv.get("PRI_IMPORT_LASTNAME"));
 			answers.add(ilastname);
@@ -304,7 +304,7 @@ public class AdamTest {
 			answers.add(iemail);
 			Answer isid = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_STUDENT_ID",kv.get("PRI_INTERN_STUDENT_ID"));
 			answers.add(isid);
-			Answer iname = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_INTERN_NAME",(ifirstname+" "+ilastname).trim());
+			Answer iname = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_INTERN_NAME",(ifirstname.getValue()+" "+ilastname.getValue()).trim());
 			answers.add(iname);
 			Answer accepted = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_INTERN_ACCEPTED","true");
 			answers.add(accepted);
