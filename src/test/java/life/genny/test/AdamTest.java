@@ -153,9 +153,13 @@ public class AdamTest {
 	protected static GennyToken newUserToken;
 	protected static GennyToken serviceToken;
 
-
-	
 	@Test
+	public void importHostCompaniesTest() { this.importHostCompanies();}
+	@Test
+	public void importHostCompaniesRepsTest() { this.importHostCompaniesReps();}
+	@Test
+	public void importInternsTest() { this.importInterns();}
+	//@Test
 	public void importInterns()
 	{
 		System.out.println("Import Interns test");
@@ -184,7 +188,7 @@ public class AdamTest {
 		beUtils.setServiceToken(serviceToken);
 		
 		String searchBarValue = "googleid:interns:"+System.getenv("GOOGLE_DOC_ID")+":CQU T1";
-		System.out.println("searchBarText="+searchBarValue./stop);
+		System.out.println("searchBarText="+searchBarValue);
 		Answer answer = new Answer(userToken.getUserCode(),userToken.getUserCode(),"PRI_SEARCH_BAR",searchBarValue);
 
 
@@ -335,7 +339,7 @@ System.out.println("Finished insertion of QDataAnswerMessage containing imported
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		beUtils.setServiceToken(serviceToken);
 
-		String searchBarValue = "googleid:hc:"+System.getenv("GOOGLE_DOC_ID_4")+":"+"Host Company List";
+		String searchBarValue = "googleid:hc:"+System.getenv("GOOGLE_DOC_ID")+":"+"Host Company List";
 		//String searchBarValue = "googleid:hc:"+System.getenv("GOOGLE_DOC_ID_4")+":"+"Form Responses 1";
 		Answer answer = new Answer(userToken.getUserCode(),userToken.getUserCode(),"PRI_SEARCH_BAR",searchBarValue);
 
@@ -344,18 +348,18 @@ System.out.println("Finished insertion of QDataAnswerMessage containing imported
 		String googleDocId = null;
 		String sheetId = "Sheet1"; /* default */
 		Integer start=0;
-		Integer finish=5;
+		Integer finish=1000;
 		String[] split = answer.getValue().split(":");
 		
 		if (split.length == 3) {
 			googleDocId = split[2];
 		} else if (split.length == 4) {
 			googleDocId = split[2];
-			sheetId = split[3];
+			sheetId = split[3].trim();
 		}
 		if  (split.length == 6) {
 			googleDocId = split[2];
-			sheetId = split[3];
+			sheetId = split[3].trim();
 			start = Integer.parseInt(split[4]);
 			finish = Integer.parseInt(split[5]);
 		}
@@ -388,6 +392,9 @@ System.out.println("Finished insertion of QDataAnswerMessage containing imported
 		 /* First create The Host Company reps */
 		 
 		 for (BaseEntityImport beImport : beImports) {
+			 if (beImport.getAttributeValuePairList().isEmpty()) {
+				 continue;
+			 }
 		 	/* check if already there */
 		 	BaseEntity be = beUtils.getBaseEntityByCode(beImport.getCode());
 		 	if (be == null) {
@@ -398,6 +405,10 @@ System.out.println("Finished insertion of QDataAnswerMessage containing imported
 			 for (Tuple2<String,String> attributeCodeValue : beImport.getAttributeValuePairList()) {
 			 	String value = StringUtils.isBlank(attributeCodeValue._2)?"":attributeCodeValue._2; 
 			 	value = value.trim();
+			 	if (value.contains("'")) {
+			 		value = value.replace("'", "\\'");
+			 	}
+
 			 	kv.put(attributeCodeValue._1,value);
 				Answer answer2 = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),attributeCodeValue._1,value);
 				answers.add(answer2);
@@ -410,20 +421,20 @@ System.out.println("Finished insertion of QDataAnswerMessage containing imported
 			answers.add(isEntity);
 			Answer isImported = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IMPORTED","true");
 			answers.add(isImported);
-			Answer fullname = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_NAME",kv.get("PRI_FIRSTNAME").trim()+" "+kv.get("PRI_LASTNAME").trim());
+			String firstname = kv.get("PRI_FIRSTNAME");
+			String lastname = kv.get("PRI_LASTNAME");
+			Answer fullname = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_NAME",firstname.trim()+" "+lastname.trim());
 			answers.add(fullname);
 
 			QDataAnswerMessage msg = new QDataAnswerMessage(answers);
-			System.out.println("created QDataAnswerMessage  for "+beImport.getCode());
+			System.out.println("created QDataAnswerMessage  for "+beImport.getCode()+":"+be.getName());
 			msg.setToken(beUtils.getGennyToken().getToken());
 			/* creating new user in keycloak */
 			/* ASSUME FIRSTNAME, LASTNAME, EMAIL ARE GOOD!!! TODO */
 			try {
 				String email = kv.get("PRI_EMAIL");
-				String firstname = kv.get("PRI_FIRSTNAME").trim();
-				String lastname = kv.get("PRI_LASTNAME").trim();
 				String userPassword = UUID.randomUUID().toString().substring(0,10);
-				System.out.println(" keycloak token is "+serviceToken.getToken());
+				/*System.out.println(" keycloak token is "+serviceToken.getToken());*/
 				String userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(),email , firstname, lastname,  email, userPassword,"user", "user");
 				Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_UUID",userId);
 				answers.add(keycloakId);						
@@ -448,7 +459,7 @@ System.out.println("Finished insertion of QDataAnswerMessage containing imported
 		
 	}
 	
-	//@Test
+
 	public void importHostCompanies()
 	{
 		System.out.println("Import Host Companies test");
@@ -461,7 +472,7 @@ System.out.println("Finished insertion of QDataAnswerMessage containing imported
 			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
 			qRules = new QRules(eventBusMock, userToken.getToken());
 			qRules.set("realm", userToken.getRealm());
-			qRules.setServiceToken(serviceToken.getToken());
+		;	qRules.setServiceToken(serviceToken.getToken());
 			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
 			GennyKieSession.loadAttributesJsonFromResources(userToken);
 
@@ -475,7 +486,7 @@ System.out.println("Finished insertion of QDataAnswerMessage containing imported
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		beUtils.setServiceToken(serviceToken);
 
-		String searchBarValue = "googleid:hc:"+System.getenv("GOOGLE_DOC_ID_4")+":"+"Host Company List";
+		String searchBarValue = "googleid:hc:"+System.getenv("GOOGLE_DOC_ID")+":"+"Host Company List";
 		//String searchBarValue = "googleid:hc:"+System.getenv("GOOGLE_DOC_ID_4")+":"+"Form Responses 1";
 		Answer answer = new Answer(userToken.getUserCode(),userToken.getUserCode(),"PRI_SEARCH_BAR",searchBarValue);
 
@@ -484,18 +495,18 @@ System.out.println("Finished insertion of QDataAnswerMessage containing imported
 		String googleDocId = null;
 		String sheetId = "Sheet1"; /* default */
 		Integer start=0;
-		Integer finish=5;
+		Integer finish=1000;
 		String[] split = answer.getValue().split(":");
 		
 		if (split.length == 3) {
 			googleDocId = split[2];
 		} else if (split.length == 4) {
 			googleDocId = split[2];
-			sheetId = split[3];
+			sheetId = split[3].trim();
 		}
 		if  (split.length == 6) {
 			googleDocId = split[2];
-			sheetId = split[3];
+			sheetId = split[3].trim();
 			start = Integer.parseInt(split[4]);
 			finish = Integer.parseInt(split[5]);
 		}
@@ -507,9 +518,6 @@ System.out.println("Finished insertion of QDataAnswerMessage containing imported
 	 fieldMapping.put("Company Trading Name", "PRI_NAME");
 	 fieldMapping.put("ABN", "PRI_ABN");
 	 fieldMapping.put("HC Website", "PRI_WEBSITE");
-	// fieldMapping.put("Supervisor First Name".toLowerCase(), "PRI_FIRSTNAME");
-	// fieldMapping.put("Supervisor Surname".toLowerCase(), "PRI_LASTNAME");
-	// fieldMapping.put("Supervisor Position", "PRI_JOB_TITLE");
 	 fieldMapping.put("Supervisor Phone Number", "PRI_PHONE");
 	 fieldMapping.put("Supervisor Email", "PRI_EMAIL");
 	 fieldMapping.put("HC Address", "PRI_IMPORT_FULL_ADDRESS");
@@ -519,18 +527,6 @@ System.out.println("Finished insertion of QDataAnswerMessage containing imported
 	 fieldMapping.put("PREFIX", "CPY_");
 
 	 
-//	 fieldMapping.put("Legal Company Name".toLowerCase(), "PRI_HOST_COMPANY_LEGAL_NAME");
-//	 fieldMapping.put("Company ABN (format: XX XXX XXX XXX)".toLowerCase(), "PRI_ABN");
-//	 fieldMapping.put("Company Phone Number".toLowerCase(), "PRI_PHONE");
-//	 fieldMapping.put("Head Office Address".toLowerCase(), "PRI_IMPORT_FULL_ADDRESS");
-//	 fieldMapping.put("Key Contacts Name".toLowerCase(), "PRI_ASSOC_HCR");
-//	 fieldMapping.put("Key Contacts Phone Number".toLowerCase(), "PRI_HCR_PHONE");
-//	 fieldMapping.put("Key Contacts Email Address".toLowerCase(), "PRI_HCR_EMAIL");
-//	 fieldMapping.put("Website Address".toLowerCase(), "PRI_WEBSITE");
-//	 
-//	 fieldMapping.put("UNIQUE_KEY_FIELD", "Company ABN (format: XX XXX XXX XXX)");
-//	 fieldMapping.put("NAME_KEY_FIELD", "Legal Company Name");
-//	 fieldMapping.put("PREFIX", "CPY_");
 	 				
 		 List<BaseEntityImport> beImports = ImportUtils.importGoogleDoc(googleDocId, sheetId,fieldMapping);
 		 System.out.println("Importing Rule : "+beImports.size()+" items");
@@ -538,9 +534,13 @@ System.out.println("Finished insertion of QDataAnswerMessage containing imported
 		 List<Answer> answers = new ArrayList<Answer>();
 		 Integer count=0;
 		 
-		 // First create The Host Company reps
+		 /* First create The Host Company reps */
 		 
 		 for (BaseEntityImport beImport : beImports) {
+			 if (beImport.getAttributeValuePairList().isEmpty()) {
+				 continue;
+			 }
+			System.out.println("Import Host Company :"+beImport.getCode()+":"+beImport.getName());
 		 	/* check if already there */
 		 	BaseEntity be = beUtils.getBaseEntityByCode(beImport.getCode());
 		 	if (be == null) {
@@ -550,42 +550,24 @@ System.out.println("Finished insertion of QDataAnswerMessage containing imported
 			 
 			 for (Tuple2<String,String> attributeCodeValue : beImport.getAttributeValuePairList()) {
 			 	String value = StringUtils.isBlank(attributeCodeValue._2)?"":attributeCodeValue._2; 
-			 	if (value.startsWith("Char")) {
-			 		log.info("test here");
+			 	if (value.contains("'")) {
+			 		value = value.replace("'", "\\'");
 			 	}
 			 	value = value.trim();
 			 	kv.put(attributeCodeValue._1,value);
 				Answer answer2 = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),attributeCodeValue._1,value);
 				answers.add(answer2);
-		//		BaseEntity hcr = ImportUtils.processAttribute(beUtils,be.getCode(),attributeCodeValue,"PRI_EMAIL","PRI_EMAIL","PER_","LNK_HOST_COMPANY_REP",answers);
-
 			 }
 			Answer isEntity = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IS_HOST_CPY_","true");
 			answers.add(isEntity);
 			Answer isImported = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IMPORTED","true");
 			answers.add(isImported);
-//			Answer iemail = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_EMAIL",kv.get("PRI_HCR_EMAIL"));
-//			answers.add(iemail);
 
 			QDataAnswerMessage msg = new QDataAnswerMessage(answers);
-			System.out.println("created QDataAnswerMessage  for "+beImport.getCode());
+			System.out.println("created QDataAnswerMessage  for "+beImport.getCode()+":"+be.getName());
 			msg.setToken(beUtils.getGennyToken().getToken());
-			/* creating new user in keycloak */
-			/* ASSUME FIRSTNAME, LASTNAME, EMAIL ARE GOOD!!! TODO */
-//			try {
-//				String email = kv.get("PRI_EMAIL").trim();
-//				String firstname = kv.get("PRI_FIRSTNAME").trim();
-//				String lastname = kv.get("PRI_LASTNAME").trim();
-//				String userPassword = UUID.randomUUID().toString().substring(0,10);
-//				System.out.println(" keycloak token is "+serviceToken.getToken());
-//				String userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(),email , firstname, lastname,  email, userPassword,"user", "user");
-//				Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_UUID",userId);
-//				answers.add(keycloakId);						
-//			} catch (IOException e) {
-//				/* keycloak exception spits the answer */
-//			}
 			
-				System.out.println("inserting new host company message containing all their new attributes");
+			System.out.println("inserting new host company message containing all their new attributes");
 				if ((count >=start) && (count <= finish))	
 				{			
 					insert(msg);
@@ -598,56 +580,45 @@ System.out.println("Finished insertion of QDataAnswerMessage containing imported
 		 }
 		 System.out.println("Aggregated  all Answers ");
 	
-System.out.println("Finished insertion of QDataAnswerMessage containing imported");		
+		 System.out.println("Finished insertion of QDataAnswerMessage containing imported");		
 		
 		
 	}
-	//@Test
+	@Test
 	public void sendVerify2Test()
 	{
 		System.out.println("Search test");
 		String password = System.getenv("SERVICE_PASSWORD");
-		String userPassword = System.getenv("USER_PASSWORD");
 		String token = null;
-		String userId = null;
+
 		try {
-			token = KeycloakUtils.getAccessToken("https://keycloak-interns.gada.io", "internmatch", "internmatch", "dc7d0960-2e1d-4a78-9eef-77678066dbd3", "service", password);
+			token = KeycloakUtils.getAccessToken("https://keycloak.gada.io", "internmatch", "internmatch", "dc7d0960-2e1d-4a78-9eef-77678066dbd3", "service", password);
 		} catch (IOException e1) {
 		}
-		LocalDateTime now = LocalDateTime.now();
-		String mydatetime = new SimpleDateFormat("yyyyMMddHHmmss").format(now.toDate());
-//		String username = "christopher.pyke+"+mydatetime+"@gada.io";		
-//		String firstname = "Christopher";
-//		String lastname = "Pyke";
 
-		String username = "stephenie.pulis-cassar+"+mydatetime+"@outcome.life";		
-		String firstname = "Stephenie";
-		String lastname = "Pulis-Cassar";
+		sendVerifyMail(token, "gerard.holland", "outcome.life","Gerard", "Holland");
+		sendVerifyMail(token, "domenic.saporito", "outcome.life","Domenic", "Saporito");
+		sendVerifyMail(token, "adamcrow63", "gmail.com","Adam", "Crow");
+		sendVerifyMail(token, "christopher.pyke", "gada.io","Christopher", "Pyke");
+		sendVerifyMail(token, "stephenie.pulis-cassar", "outcome.life","Stephenie", "Pulis-Cassar");
 
-//		String username = "adamcrow63+"+mydatetime+"@gmail.com";		
-//		String firstname = "Adam";
-//		String lastname = "Crow";
-////		String username = "gerard.holland+"+mydatetime+"@outcome.life";		
-//		String firstname = "Gerard";
-//		String lastname = "Holland";
-
-//		String username = "domenic.saporito+"+mydatetime+"@outcome.life";		
-//		String firstname = "Domenic";
-//		String lastname = "Saporito";
-
-		System.out.println(username+" serviceToken=" + token);
-
-		password = UUID.randomUUID().toString().substring(0,8);
-
-		try {
-			userId = KeycloakUtils.createUser(token, realm, username, firstname, lastname,  username, userPassword,"user", "user");
-		} catch (IOException e) {
-		}		
-		userId = KeycloakUtils.sendVerifyEmail(realm, username, token);
-		System.out.println("UserId=" + userId);
 	}
 	
+	private void sendVerifyMail(String token, String username,String domain, String firstname, String lastname) {
+		LocalDateTime now = LocalDateTime.now();
+		String mydatetime = new SimpleDateFormat("yyyyMMddHHmmss").format(now.toDate());
+	//	System.out.println(username+" serviceToken=" + token);
+		String emailusername = username+"+"+mydatetime+"@"+domain;	
 
+		String password = UUID.randomUUID().toString().substring(0,8);
+		String userId;
+		try {
+			userId = KeycloakUtils.createUser(token, realm, emailusername, firstname, lastname,  emailusername, password,"user", "user");
+		} catch (IOException e) {
+		}		
+		userId = KeycloakUtils.sendVerifyEmail(realm, emailusername, token);
+		System.out.println("UserId=" + userId);
+	}
 	
 	
 	//@Test
@@ -3040,6 +3011,6 @@ System.out.println("Finished insertion of QDataAnswerMessage containing imported
 	}
 	private void insert(Object obj)
 	{
-		log.info("Insert fact "+obj+" in rules engine");
+		//log.info("Insert fact "+obj+" in rules engine");
 	}
 }

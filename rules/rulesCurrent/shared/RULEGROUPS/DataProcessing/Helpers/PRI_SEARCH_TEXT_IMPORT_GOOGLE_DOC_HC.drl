@@ -48,7 +48,7 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_HC"
    		
 				/* Now import a google doc xls file and generate a List of BaseEntityImports */
 				String googleDocId = null;
-				String sheetId = "Sheet1"; /* default */
+				String sheetId = "Host Company List"; /* default */
 				Integer start=0;
 				Integer finish=10000;
 				String[] split = answer.getValue().split(":");
@@ -68,7 +68,7 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_HC"
 		
 			googleDocId = googleDocId.trim();
 		
-	 Map<String,String> fieldMapping = new HashMap<String,String>();
+ Map<String,String> fieldMapping = new HashMap<String,String>();
 	 fieldMapping.put("Company Trading Name", "PRI_NAME");
 	 fieldMapping.put("ABN", "PRI_ABN");
 	 fieldMapping.put("HC Website", "PRI_WEBSITE");
@@ -76,19 +76,26 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_HC"
 	 fieldMapping.put("Supervisor Email", "PRI_EMAIL");
 	 fieldMapping.put("HC Address", "PRI_IMPORT_FULL_ADDRESS");
 	 
-	 fieldMapping.put("UNIQUE_KEY_FIELD", "ABN".toLowerCase());
-	 fieldMapping.put("NAME_KEY_FIELD", "Company Trading Name".toLowerCase());
-	 fieldMapping.put("PREFIX", "CPY_".toLowerCase());
+	 fieldMapping.put("UNIQUE_KEY_FIELD", "ABN");
+	 fieldMapping.put("NAME_KEY_FIELD", "Company Trading Name");
+	 fieldMapping.put("PREFIX", "CPY_");
 
+	 
+	 				
 		 List<BaseEntityImport> beImports = ImportUtils.importGoogleDoc(googleDocId, sheetId,fieldMapping);
 		 System.out.println("Importing Rule : "+beImports.size()+" items");
 		 /* now generate the baseentity and send through all the answers */
 		 List<Answer> answers = new ArrayList<Answer>();
 		 Integer count=0;
 		 
+		 /* First create The Host Company reps */
+		 
 		 for (BaseEntityImport beImport : beImports) {
+			 if (beImport.getAttributeValuePairList().isEmpty()) {
+				 continue;
+			 }
+			System.out.println("Import Host Company :"+beImport.getCode()+":"+beImport.getName());
 		 	/* check if already there */
-
 		 	BaseEntity be = beUtils.getBaseEntityByCode(beImport.getCode());
 		 	if (be == null) {
 			 	be = beUtils.create(beImport.getCode(), beImport.getName());
@@ -97,24 +104,24 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_HC"
 			 
 			 for (Tuple2<String,String> attributeCodeValue : beImport.getAttributeValuePairList()) {
 			 	String value = StringUtils.isBlank(attributeCodeValue._2)?"":attributeCodeValue._2; 
+			 	if (value.contains("'")) {
+			 		value = value.replace("'", "\\'");
+			 	}
 			 	value = value.trim();
 			 	kv.put(attributeCodeValue._1,value);
 				Answer answer2 = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),attributeCodeValue._1,value);
 				answers.add(answer2);
 			 }
-			Answer isEntity = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IS_HOST_CPY","true");
+			Answer isEntity = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IS_HOST_CPY_","true");
 			answers.add(isEntity);
 			Answer isImported = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IMPORTED","true");
 			answers.add(isImported);
-			Answer isActive = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_STATUS","ACTIVE");
-			answers.add(isActive);
 
 			QDataAnswerMessage msg = new QDataAnswerMessage(answers);
-			System.out.println("created QDataAnswerMessage  for "+beImport.getCode());
+			System.out.println("created QDataAnswerMessage  for "+beImport.getCode()+":"+be.getName());
 			msg.setToken(beUtils.getGennyToken().getToken());
-			/* creating new user in keycloak */
-			/* ASSUME FIRSTNAME, LASTNAME, EMAIL ARE GOOD!!! TODO */
-				System.out.println("inserting new host company message containing all their new attributes");
+			
+			System.out.println("inserting new host company message containing all their new attributes");
 				if ((count >=start) && (count <= finish))	
 				{			
 					insert(msg);
@@ -127,6 +134,9 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_HC"
 		 }
 		 System.out.println("Aggregated  all Answers ");
 	
-System.out.println("Finished insertion of QDataAnswerMessage containing imported");		
+		 System.out.println("Finished insertion of QDataAnswerMessage containing imported");		
+		
+		
+		
 		
 end

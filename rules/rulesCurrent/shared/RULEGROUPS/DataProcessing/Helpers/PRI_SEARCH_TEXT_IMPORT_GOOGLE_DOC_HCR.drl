@@ -79,8 +79,8 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_HCR"
 	 fieldMapping.put("Supervisor Email", "PRI_EMAIL");
 	 fieldMapping.put("HC Address", "PRI_IMPORT_FULL_ADDRESS");
 	 
-	 fieldMapping.put("UNIQUE_KEY_FIELD", "Supervisor Email".toLowerCase());
-	 fieldMapping.put("PREFIX", "PER_".toLowerCase());
+	 fieldMapping.put("UNIQUE_KEY_FIELD", "Supervisor Email");
+	 fieldMapping.put("PREFIX", "PER_");
 
 
 	 				
@@ -93,6 +93,9 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_HCR"
 		 /* First create The Host Company reps */
 		 
 		 for (BaseEntityImport beImport : beImports) {
+			 if (beImport.getAttributeValuePairList().isEmpty()) {
+				 continue;
+			 }
 		 	/* check if already there */
 		 	BaseEntity be = beUtils.getBaseEntityByCode(beImport.getCode());
 		 	if (be == null) {
@@ -115,20 +118,20 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_HCR"
 			answers.add(isEntity);
 			Answer isImported = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IMPORTED","true");
 			answers.add(isImported);
-			Answer fullname = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_NAME",kv.get("PRI_FIRSTNAME").trim()+" "+kv.get("PRI_LASTNAME").trim());
+			String firstname = kv.get("PRI_FIRSTNAME");
+			String lastname = kv.get("PRI_LASTNAME");
+			Answer fullname = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_NAME",firstname.trim()+" "+lastname.trim());
 			answers.add(fullname);
 
 			QDataAnswerMessage msg = new QDataAnswerMessage(answers);
-			System.out.println("created QDataAnswerMessage  for "+beImport.getCode());
+			System.out.println("created QDataAnswerMessage  for "+beImport.getCode()+":"+be.getName());
 			msg.setToken(beUtils.getGennyToken().getToken());
 			/* creating new user in keycloak */
 			/* ASSUME FIRSTNAME, LASTNAME, EMAIL ARE GOOD!!! TODO */
 			try {
 				String email = kv.get("PRI_EMAIL");
-				String firstname = kv.get("PRI_FIRSTNAME").trim();
-				String lastname = kv.get("PRI_LASTNAME").trim();
 				String userPassword = UUID.randomUUID().toString().substring(0,10);
-				System.out.println(" keycloak token is "+serviceToken.getToken());
+				/*System.out.println(" keycloak token is "+serviceToken.getToken());*/
 				String userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(),email , firstname, lastname,  email, userPassword,"user", "user");
 				Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_UUID",userId);
 				answers.add(keycloakId);						
@@ -149,7 +152,7 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_HCR"
 		 }
 		 System.out.println("Aggregated  all Answers ");
 	
-System.out.println("Finished insertion of QDataAnswerMessage containing imported");		
+System.out.println("Finished insertion of QDataAnswerMessage containing imported");			
 		
 		
 end
