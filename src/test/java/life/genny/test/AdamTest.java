@@ -421,7 +421,10 @@ System.out.println("Finished insertion of QDataAnswerMessage containing imported
 				BaseEntity hc = ImportUtils.linkToFind(beUtils,be.getCode(),attributeCodeValue,"PRI_ABN","PRI_ABN","CPY_","LNK_HOST_COMPANY_REP",answers);
 				if (hc!=null) {
 					log.info("Found link to "+hc.getName()+" as LNK_HOST_COMPANY_REP");
-				}
+					Answer assocHC = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_ASSOC_HC",hc.getName());
+					answers.add(assocHC);
+
+				} 
 			 }
 			Answer isEntity = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IS_HOST_CPY_REP","true");
 			answers.add(isEntity);
