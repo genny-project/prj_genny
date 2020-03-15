@@ -131,6 +131,7 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_INTERNS"
 			answers.add(iname);
 			Answer accepted = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_INTERN_ACCEPTED","true");
 			answers.add(accepted);
+			
 
 			QDataAnswerMessage msg = new QDataAnswerMessage(answers);
 			System.out.println("created QDataAnswerMessage  for "+beImport.getCode());
