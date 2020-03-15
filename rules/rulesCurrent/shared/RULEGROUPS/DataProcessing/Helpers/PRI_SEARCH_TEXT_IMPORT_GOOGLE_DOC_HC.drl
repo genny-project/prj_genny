@@ -112,10 +112,19 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_HC"
 				Answer answer2 = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),attributeCodeValue._1,value);
 				answers.add(answer2);
 			 }
-			Answer isEntity = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IS_HOST_CPY_","true");
+			Answer isEntity = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IS_HOST_CPY","true");
 			answers.add(isEntity);
 			Answer isImported = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IMPORTED","true");
 			answers.add(isImported);
+			Answer status = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_STATUS","ACTIVE");
+			answers.add(status);
+
+			System.out.println("PRI_PHONE="+kv.get("PRI_PHONE")+" EMAIL="+kv.get("PRI_EMAIL"));
+			Answer isLandline = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_LANDLINE",kv.get("PRI_PHONE"));
+			answers.add(isLandline);
+			Answer isEmail = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_EMAIL",kv.get("PRI_EMAIL"));
+			answers.add(isEmail);
+			
 
 			QDataAnswerMessage msg = new QDataAnswerMessage(answers);
 			System.out.println("created QDataAnswerMessage  for "+beImport.getCode()+":"+be.getName());
