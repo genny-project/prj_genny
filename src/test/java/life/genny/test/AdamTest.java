@@ -395,6 +395,8 @@ System.out.println("Finished insertion of QDataAnswerMessage containing imported
 			 if (beImport.getAttributeValuePairList().isEmpty()) {
 				 continue;
 			 }
+				System.out.println("Import Host Company Rep :"+beImport.getCode()+":"+beImport.getName());
+
 		 	/* check if already there */
 		 	BaseEntity be = beUtils.getBaseEntityByCode(beImport.getCode());
 		 	if (be == null) {
@@ -412,6 +414,10 @@ System.out.println("Finished insertion of QDataAnswerMessage containing imported
 			 	kv.put(attributeCodeValue._1,value);
 				Answer answer2 = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),attributeCodeValue._1,value);
 				answers.add(answer2);
+				if (beUtils == null) {
+					log.error("beUtils is null! abort!");
+					return;
+				}
 				BaseEntity hc = ImportUtils.linkToFind(beUtils,be.getCode(),attributeCodeValue,"PRI_ABN","PRI_ABN","CPY_","LNK_HOST_COMPANY_REP",answers);
 				if (hc!=null) {
 					log.info("Found link to "+hc.getName()+" as LNK_HOST_COMPANY_REP");
@@ -596,11 +602,12 @@ System.out.println("Finished insertion of QDataAnswerMessage containing imported
 		} catch (IOException e1) {
 		}
 
-		sendVerifyMail(token, "gerard.holland", "outcome.life","Gerard", "Holland");
-		sendVerifyMail(token, "domenic.saporito", "outcome.life","Domenic", "Saporito");
-		sendVerifyMail(token, "adamcrow63", "gmail.com","Adam", "Crow");
-		sendVerifyMail(token, "christopher.pyke", "gada.io","Christopher", "Pyke");
-		sendVerifyMail(token, "stephenie.pulis-cassar", "outcome.life","Stephenie", "Pulis-Cassar");
+//		sendVerifyMail(token, "gerard.holland", "outcome.life","Gerard", "Holland");
+//		sendVerifyMail(token, "domenic.saporito", "outcome.life","Domenic", "Saporito");
+//		sendVerifyMail(token, "adamcrow63", "gmail.com","Adam", "Crow");
+//		sendVerifyMail(token, "christopher.pyke", "gada.io","Christopher", "Pyke");
+//		sendVerifyMail(token, "stephenie.pulis-cassar", "outcomelife.com.au","Stephenie", "Pulis-Cassar");
+		sendVerifyMail(token, "spc", "outcome.life","Stephenie", "Pulis-Cassar");
 
 	}
 	
