@@ -18,18 +18,19 @@ rule "PROCESS_ANSWERS"
 	  serviceToken : GennyToken ( code == "PER_SERVICE" ) 
 	  dataMsg : QDataAnswerMessage( (items != null) && (items.length > 0) && (aliasCode != "STATELESS"))
 	  dom : OutputParamTreeSet()
+	  capabilityUtils : CapabilityUtils()
     then
  		System.out.println("Rule -> PROCESS_ANSWERS Processing Answer/Data!! :  user=" + userToken.getUserCode()); 
  		/* System.out.println("dom = "+dom); */
- 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken); 
+ 		/*BaseEntityUtils beUtils = new BaseEntityUtils(userToken); 
 		beUtils.setServiceToken(serviceToken);
-		System.out.println("Process Answwers: beUtils created ");
+		System.out.println("Process Answers: beUtils created "); */
 		
-		/* Now set up capability for the user and make it available to all the rules */
+		/* Now set up capability for the user and make it available to all the rules - NEEDS Alloweds to be created */
 	/*	CapabilityUtils capabilityUtils = new CapabilityUtils(beUtils);
-		insert(capabilityUtils); 
+		insert(capabilityUtils); */
 		
-		System.out.println("Capabilitys are "+capabilityUtils.getCapabilityManifest()); */
+		System.out.println("Capabilitys are "+capabilityUtils.getCapabilityManifest()); 
 		
 
 		retract(dataMsg); /* stop this rule from firing again */
@@ -40,5 +41,5 @@ rule "PROCESS_ANSWERS"
  			insert(answer);
  			System.out.println("Process Answers: inserted answer  "+answer.getTargetCode()+":"+answer.getAttributeCode()); 
  		}
- 		insert(beUtils);
+ 		/* insert(beUtils);*/
 end
