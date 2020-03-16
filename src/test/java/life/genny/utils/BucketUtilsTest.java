@@ -64,6 +64,312 @@ public class BucketUtilsTest {
 		this.beUtils = beUtils;
 	}
 
+	public void sendBucketContexts(GennyToken serviceToken){
+
+		System.out.println("Sending contexts for buckets");
+
+		Theme THM_DISPLAY_VERTICAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_VERTICAL",
+					Theme.class, serviceToken.getToken());
+
+		Theme THM_JUSTIFY_CONTENT_FLEX_START = VertxUtils.getObject(serviceToken.getRealm(), "",
+				"THM_JUSTIFY_CONTENT_FLEX_START", Theme.class, serviceToken.getToken());
+
+		Theme THM_CARD = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_CARD", Theme.class,
+				serviceToken.getToken());
+
+		Theme THM_DISPLAY_HORIZONTAL = Theme.builder("THM_DISPLAY_HORIZONTAL").addAttribute().flexDirection("row")
+				.end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
+
+		Theme THM_DROPDOWN_ICON_ALT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DROPDOWN_ICON_ALT",
+				Theme.class, serviceToken.getToken());
+
+		Theme THM_DROPDOWN_BEHAVIOUR_GENNY = VertxUtils.getObject(serviceToken.getRealm(), "",
+				"THM_DROPDOWN_BEHAVIOUR_GENNY", Theme.class, serviceToken.getToken());
+
+		Theme THM_BACKGROUND_NONE = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BACKGROUND_NONE",
+				Theme.class, serviceToken.getToken());
+
+		Theme THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY = VertxUtils.getObject(serviceToken.getRealm(), "",
+				"THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY", Theme.class, serviceToken.getToken());
+
+		Theme THM_DROPDOWN_HEADER_WRAPPER_GENNY = VertxUtils.getObject(serviceToken.getRealm(), "",
+				"THM_DROPDOWN_HEADER_WRAPPER_GENNY", Theme.class, serviceToken.getToken());
+
+		Theme THM_DROPDOWN_GROUP_LABEL_GENNY = VertxUtils.getObject(serviceToken.getRealm(), "",
+				"THM_DROPDOWN_GROUP_LABEL_GENNY", Theme.class, serviceToken.getToken());
+
+		Theme THM_DROPDOWN_CONTENT_WRAPPER_GENNY = VertxUtils.getObject(serviceToken.getRealm(), "",
+				"THM_DROPDOWN_CONTENT_WRAPPER_GENNY", Theme.class, serviceToken.getToken());
+
+		Theme THM_BOX_SHADOW_SM = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BOX_SHADOW_SM",
+				Theme.class, serviceToken.getToken());
+
+		Theme THM_DROPDOWN_VCL_GENNY = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DROPDOWN_VCL_GENNY",
+				Theme.class, serviceToken.getToken());
+
+		Theme THM_IMAGE_PLACEHOLDER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_IMAGE_PLACEHOLDER",
+				Theme.class, serviceToken.getToken());
+				
+		Theme THM_HEADER_PROFILE_PICTURE = VertxUtils.getObject(serviceToken.getRealm(), "",
+				"THM_HEADER_PROFILE_PICTURE", Theme.class, serviceToken.getToken());
+
+		Theme THM_PROGRESS_VCL_INPUT = VertxUtils.getObject(serviceToken.getRealm(), "",
+				"THM_PROGRESS_VCL_INPUT", Theme.class, serviceToken.getToken());
+
+		Theme THM_PROGRESS_INPUT_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
+				"THM_PROGRESS_INPUT_WRAPPER", Theme.class, serviceToken.getToken());
+				
+		Theme THM_BORDER_RADIUS_50 = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BORDER_RADIUS_50",
+				Theme.class, serviceToken.getToken());
+				
+		Theme THM_EXPANDABLE = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_EXPANDABLE", Theme.class,
+				serviceToken.getToken());
+				
+		Theme THM_WIDTH_100_PERCENT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_WIDTH_100_PERCENT",
+				Theme.class, serviceToken.getToken());
+				
+		Theme THM_JUSTIFY_CONTENT_CENTRE = VertxUtils.getObject(serviceToken.getRealm(), "",
+				"THM_JUSTIFY_CONTENT_CENTRE", Theme.class, serviceToken.getToken());
+				
+		Theme THM_IMAGE_PLACEHOLDER_PERSON = VertxUtils.getObject(serviceToken.getRealm(), "",
+				"THM_IMAGE_PLACEHOLDER_PERSON", Theme.class, serviceToken.getToken());
+				
+		Theme THM_PROFILE_IMAGE = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_PROFILE_IMAGE",
+				Theme.class, serviceToken.getToken());
+				
+		Theme THM_PROJECT_COLOR_SURFACE = VertxUtils.getObject(serviceToken.getRealm(), "",
+				"THM_PROJECT_COLOR_SURFACE", Theme.class, serviceToken.getToken());
+				
+		Theme THM_PADDING_X_10 = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_PADDING_X_10", Theme.class,
+				serviceToken.getToken());
+				
+		Theme THM_FLEX_ONE = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_FLEX_ONE", Theme.class,
+				serviceToken.getToken());
+				
+		Theme THM_FLEX_ONE_INHERITABLE = VertxUtils.getObject(serviceToken.getRealm(), "",
+				"THM_FLEX_ONE_INHERITABLE", Theme.class, serviceToken.getToken());
+		
+		Theme THM_DROPDOWN_ICON_MORE_HORIZ = VertxUtils.getObject(serviceToken.getRealm(), "",
+				"THM_DROPDOWN_ICON_MORE_HORIZ", Theme.class, serviceToken.getToken());
+		
+		Theme THM_EXPANDABLE_ICON = VertxUtils.getObject(serviceToken.getRealm(), "",
+				"THM_EXPANDABLE_ICON", Theme.class, serviceToken.getToken());
+
+		/* new themes */
+		Theme THM_CARD_STATUS_INPUT_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
+					"THM_CARD_STATUS_INPUT_WRAPPER", Theme.class, serviceToken.getToken());
+
+		Theme THM_CARD_THUMBNAIL_VCL_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
+		"THM_CARD_THUMBNAIL_VCL_WRAPPER", Theme.class, serviceToken.getToken());
+
+		Theme THM_CARD_THUMBNAIL_INPUT_PLACEHOLDER = VertxUtils.getObject(serviceToken.getRealm(), "",
+		"THM_CARD_THUMBNAIL_INPUT_PLACEHOLDER", Theme.class, serviceToken.getToken());
+
+		Theme THM_CARD_MAIN_GROUP_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
+		"THM_CARD_MAIN_GROUP_WRAPPER", Theme.class, serviceToken.getToken());
+
+		Theme THM_CARD_CENTRE_GROUP_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
+		"THM_CARD_CENTRE_GROUP_WRAPPER", Theme.class, serviceToken.getToken());
+		
+		Theme THM_DROPDOWN_ICON_MORE_VERT = VertxUtils.getObject(serviceToken.getRealm(), "",
+		"THM_DROPDOWN_ICON_MORE_VERT", Theme.class, serviceToken.getToken());
+
+		Theme THM_CARD_BOTTOM_GROUP_CLICKABLE_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
+		"THM_CARD_BOTTOM_GROUP_CLICKABLE_WRAPPER", Theme.class, serviceToken.getToken());
+
+		Theme THM_CARD_HEADER_INPUT_FIELD = VertxUtils.getObject(serviceToken.getRealm(), "",
+		"THM_CARD_HEADER_INPUT_FIELD", Theme.class, serviceToken.getToken());
+
+		Theme THM_CARD_HEADER_INPUT_FIELD_INTERN = VertxUtils.getObject(serviceToken.getRealm(), "",
+		"THM_CARD_HEADER_INPUT_FIELD_INTERN", Theme.class, serviceToken.getToken());
+
+		Theme THM_CARD_BOTTOM_VCL_ICON = VertxUtils.getObject(serviceToken.getRealm(), "",
+		"THM_CARD_BOTTOM_VCL_ICON", Theme.class, serviceToken.getToken());
+
+		/* ICON TYPES */
+		Theme THM_ICON_WORK = VertxUtils.getObject(serviceToken.getRealm(), "",
+					"THM_ICON_WORK", Theme.class, serviceToken.getToken());
+
+		Theme THM_ICON_LOCATION_ON = VertxUtils.getObject(serviceToken.getRealm(), "",
+					"THM_ICON_LOCATION_ON", Theme.class, serviceToken.getToken());
+
+		Theme THM_ICON_STAR = VertxUtils.getObject(serviceToken.getRealm(), "",
+					"THM_ICON_STAR", Theme.class, serviceToken.getToken());
+
+		Theme THM_ICON_DIRECTIONS_BUS = VertxUtils.getObject(serviceToken.getRealm(), "",
+					"THM_ICON_DIRECTIONS_BUS", Theme.class, serviceToken.getToken());
+
+		Theme THM_ICON_PHONE = VertxUtils.getObject(serviceToken.getRealm(), "",
+					"THM_ICON_PHONE", Theme.class, serviceToken.getToken());
+
+		Theme THM_ICON_EMAIL = VertxUtils.getObject(serviceToken.getRealm(), "",
+				"THM_ICON_EMAIL", Theme.class, serviceToken.getToken());
+	
+		Theme THM_ICON = VertxUtils.getObject(serviceToken.getRealm(), "",
+					"THM_ICON", Theme.class, serviceToken.getToken());
+		
+		Theme THM_HIDE_INPUT = VertxUtils.getObject(serviceToken.getRealm(), "",
+					"THM_HIDE_INPUT", Theme.class, serviceToken.getToken());
+
+		Theme THM_CARD_DATE = VertxUtils.getObject(serviceToken.getRealm(), "",
+					"THM_CARD_DATE", Theme.class, serviceToken.getToken());
+		
+		Theme THM_CARD_DATE_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
+					"THM_CARD_DATE_WRAPPER", Theme.class, serviceToken.getToken());
+		
+		Theme THM_CARD_MENU_GROUP_CONTENT_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
+					"THM_CARD_MENU_GROUP_CONTENT_WRAPPER", Theme.class, serviceToken.getToken());
+
+		Theme THM_QUESTION_GRP_LABEL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_QUESTION_GRP_LABEL",
+				Theme.class, serviceToken.getToken());
+		Theme THM_BH_ROW_ONE_GRP_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
+				"THM_BH_ROW_ONE_GRP_WRAPPER", Theme.class, serviceToken.getToken());
+		Theme THM_BH_ROW_ONE_GRP_LABEL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_ROW_ONE_GRP_LABEL",
+				Theme.class, serviceToken.getToken());
+		Theme THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
+				"THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER", Theme.class, serviceToken.getToken());
+		Theme THM_BH_ROW_ONE_VCL_INPUT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_ROW_ONE_VCL_INPUT",
+				Theme.class, serviceToken.getToken());
+		Theme THM_BH_ROW_TWO_VCL_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
+				"THM_BH_ROW_TWO_VCL_WRAPPER", Theme.class, serviceToken.getToken());
+		Theme THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
+				"THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER", Theme.class, serviceToken.getToken());
+		Theme THM_BH_ROW_TWO_INPUT_FIELD = VertxUtils.getObject(serviceToken.getRealm(), "",
+				"THM_BH_ROW_TWO_INPUT_FIELD", Theme.class, serviceToken.getToken());
+		Theme THM_BH_GROUP_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_GROUP_WRAPPER",
+				Theme.class, serviceToken.getToken());
+
+
+		/* get the theme baseentioty */
+		BaseEntity THM_DISPLAY_VERTICAL_BE = this.getThemeBe(THM_DISPLAY_VERTICAL);
+		BaseEntity THM_JUSTIFY_CONTENT_FLEX_START_BE = this.getThemeBe(THM_JUSTIFY_CONTENT_FLEX_START);
+		BaseEntity THM_CARD_BE = this.getThemeBe(THM_CARD);
+		BaseEntity THM_DROPDOWN_ICON_ALT_BE = this.getThemeBe(THM_DROPDOWN_ICON_ALT);
+		BaseEntity THM_DROPDOWN_BEHAVIOUR_GENNY_BE = this.getThemeBe(THM_DROPDOWN_BEHAVIOUR_GENNY);
+		BaseEntity THM_BACKGROUND_NONE_BE = this.getThemeBe(THM_BACKGROUND_NONE);
+		BaseEntity THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY_BE = this.getThemeBe(THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY);
+		BaseEntity THM_DROPDOWN_HEADER_WRAPPER_GENNY_BE = this.getThemeBe(THM_DROPDOWN_HEADER_WRAPPER_GENNY);
+		BaseEntity THM_DROPDOWN_GROUP_LABEL_GENNY_BE = this.getThemeBe(THM_DROPDOWN_GROUP_LABEL_GENNY);
+		BaseEntity THM_DROPDOWN_CONTENT_WRAPPER_GENNY_BE = this.getThemeBe(THM_DROPDOWN_CONTENT_WRAPPER_GENNY);
+		BaseEntity THM_BOX_SHADOW_SM_BE = this.getThemeBe(THM_BOX_SHADOW_SM);
+		BaseEntity THM_DROPDOWN_VCL_GENNY_BE = this.getThemeBe(THM_DROPDOWN_VCL_GENNY);
+		BaseEntity THM_IMAGE_PLACEHOLDER_BE = this.getThemeBe(THM_IMAGE_PLACEHOLDER);
+		BaseEntity THM_HEADER_PROFILE_PICTURE_BE = this.getThemeBe(THM_HEADER_PROFILE_PICTURE);
+		BaseEntity THM_PROGRESS_VCL_INPUT_BE = this.getThemeBe(THM_PROGRESS_VCL_INPUT);
+		BaseEntity THM_PROGRESS_INPUT_WRAPPER_BE = this.getThemeBe(THM_PROGRESS_INPUT_WRAPPER);
+		BaseEntity THM_BORDER_RADIUS_50_BE = this.getThemeBe(THM_BORDER_RADIUS_50);
+		BaseEntity THM_EXPANDABLE_BE = this.getThemeBe(THM_EXPANDABLE);
+		BaseEntity THM_WIDTH_100_PERCENT_BE = this.getThemeBe(THM_WIDTH_100_PERCENT);
+		BaseEntity THM_JUSTIFY_CONTENT_CENTRE_BE = this.getThemeBe(THM_JUSTIFY_CONTENT_CENTRE);
+		BaseEntity THM_IMAGE_PLACEHOLDER_PERSON_BE = this.getThemeBe(THM_IMAGE_PLACEHOLDER_PERSON);
+		BaseEntity THM_PROFILE_IMAGE_BE = this.getThemeBe(THM_PROFILE_IMAGE);
+		BaseEntity THM_PROJECT_COLOR_SURFACE_BE = this.getThemeBe(THM_PROJECT_COLOR_SURFACE);
+		BaseEntity THM_PADDING_X_10_BE = this.getThemeBe(THM_PADDING_X_10);
+		BaseEntity THM_FLEX_ONE_BE = this.getThemeBe(THM_FLEX_ONE);
+		BaseEntity THM_FLEX_ONE_INHERITABLE_BE = this.getThemeBe(THM_FLEX_ONE_INHERITABLE);
+		BaseEntity THM_DROPDOWN_ICON_MORE_HORIZ_BE = this.getThemeBe(THM_DROPDOWN_ICON_MORE_HORIZ);
+		BaseEntity THM_EXPANDABLE_ICON_BE = this.getThemeBe(THM_EXPANDABLE_ICON);
+		BaseEntity THM_CARD_STATUS_INPUT_WRAPPER_BE = this.getThemeBe(THM_CARD_STATUS_INPUT_WRAPPER);
+		BaseEntity THM_CARD_THUMBNAIL_VCL_WRAPPER_BE = this.getThemeBe(THM_CARD_THUMBNAIL_VCL_WRAPPER);
+		BaseEntity THM_CARD_THUMBNAIL_INPUT_PLACEHOLDER_BE = this.getThemeBe(THM_CARD_THUMBNAIL_INPUT_PLACEHOLDER);
+		BaseEntity THM_CARD_MAIN_GROUP_WRAPPER_BE = this.getThemeBe(THM_CARD_MAIN_GROUP_WRAPPER);
+		BaseEntity THM_CARD_CENTRE_GROUP_WRAPPER_BE = this.getThemeBe(THM_CARD_CENTRE_GROUP_WRAPPER);
+		BaseEntity THM_DROPDOWN_ICON_MORE_VERT_BE = this.getThemeBe(THM_DROPDOWN_ICON_MORE_VERT);
+		BaseEntity THM_CARD_BOTTOM_GROUP_CLICKABLE_WRAPPER_BE = this.getThemeBe(THM_CARD_BOTTOM_GROUP_CLICKABLE_WRAPPER);
+		BaseEntity THM_CARD_HEADER_INPUT_FIELD_BE = this.getThemeBe(THM_CARD_HEADER_INPUT_FIELD);
+		BaseEntity THM_CARD_HEADER_INPUT_FIELD_INTERN_BE = this.getThemeBe(THM_CARD_HEADER_INPUT_FIELD_INTERN);
+		BaseEntity THM_CARD_BOTTOM_VCL_ICON_BE = this.getThemeBe(THM_CARD_BOTTOM_VCL_ICON);
+		BaseEntity THM_ICON_WORK_BE = this.getThemeBe(THM_ICON_WORK);
+		BaseEntity THM_ICON_LOCATION_ON_BE = this.getThemeBe(THM_ICON_LOCATION_ON);
+		BaseEntity THM_ICON_STAR_BE = this.getThemeBe(THM_ICON_STAR);
+		BaseEntity THM_ICON_DIRECTIONS_BUS_BE = this.getThemeBe(THM_ICON_DIRECTIONS_BUS);
+		BaseEntity THM_ICON_PHONE_BE = this.getThemeBe(THM_ICON_PHONE);
+		BaseEntity THM_ICON_EMAIL_BE = this.getThemeBe(THM_ICON_EMAIL);
+		BaseEntity THM_ICON_BE = this.getThemeBe(THM_ICON);
+		BaseEntity THM_HIDE_INPUT_BE = this.getThemeBe(THM_HIDE_INPUT);
+		BaseEntity THM_CARD_DATE_BE = this.getThemeBe(THM_CARD_DATE);
+		BaseEntity THM_CARD_DATE_WRAPPER_BE = this.getThemeBe(THM_CARD_DATE_WRAPPER);
+		BaseEntity THM_CARD_MENU_GROUP_CONTENT_WRAPPER_BE = this.getThemeBe(THM_CARD_MENU_GROUP_CONTENT_WRAPPER);
+		BaseEntity THM_QUESTION_GRP_LABEL_BE = this.getThemeBe(THM_QUESTION_GRP_LABEL);
+		BaseEntity THM_BH_ROW_ONE_GRP_WRAPPER_BE = this.getThemeBe(THM_BH_ROW_ONE_GRP_WRAPPER);
+		BaseEntity THM_BH_ROW_ONE_GRP_LABEL_BE = this.getThemeBe(THM_BH_ROW_ONE_GRP_LABEL);
+		BaseEntity THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER_BE = this.getThemeBe(THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER);
+		BaseEntity THM_BH_ROW_ONE_VCL_INPUT_BE = this.getThemeBe(THM_BH_ROW_ONE_VCL_INPUT);
+		BaseEntity THM_BH_ROW_TWO_VCL_WRAPPER_BE = this.getThemeBe(THM_BH_ROW_TWO_VCL_WRAPPER);
+		BaseEntity THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER_BE = this.getThemeBe(THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER);
+		BaseEntity THM_BH_ROW_TWO_INPUT_FIELD_BE = this.getThemeBe(THM_BH_ROW_TWO_INPUT_FIELD);
+		BaseEntity THM_BH_GROUP_WRAPPER_BE = this.getThemeBe(THM_BH_GROUP_WRAPPER);
+
+		List<BaseEntity> themes = new ArrayList<BaseEntity>();		
+		themes.add(THM_DISPLAY_VERTICAL_BE);
+		themes.add(THM_JUSTIFY_CONTENT_FLEX_START_BE);
+		themes.add(THM_CARD_BE);
+		themes.add(THM_DROPDOWN_ICON_ALT_BE);
+		themes.add(THM_DROPDOWN_BEHAVIOUR_GENNY_BE);
+		themes.add(THM_BACKGROUND_NONE_BE);
+		themes.add(THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY_BE);
+		themes.add(THM_DROPDOWN_HEADER_WRAPPER_GENNY_BE);
+		themes.add(THM_DROPDOWN_GROUP_LABEL_GENNY_BE);
+		themes.add(THM_DROPDOWN_CONTENT_WRAPPER_GENNY_BE);
+		themes.add(THM_BOX_SHADOW_SM_BE);
+		themes.add(THM_DROPDOWN_VCL_GENNY_BE);
+		themes.add(THM_IMAGE_PLACEHOLDER_BE);
+		themes.add(THM_HEADER_PROFILE_PICTURE_BE);
+		themes.add(THM_PROGRESS_VCL_INPUT_BE);
+		themes.add(THM_PROGRESS_INPUT_WRAPPER_BE);
+		themes.add(THM_BORDER_RADIUS_50_BE);
+		themes.add(THM_EXPANDABLE_BE);
+		themes.add(THM_WIDTH_100_PERCENT_BE);
+		themes.add(THM_JUSTIFY_CONTENT_CENTRE_BE);
+		themes.add(THM_IMAGE_PLACEHOLDER_PERSON_BE);
+		themes.add(THM_PROFILE_IMAGE_BE);
+		themes.add(THM_PROJECT_COLOR_SURFACE_BE);
+		themes.add(THM_PADDING_X_10_BE);
+		themes.add(THM_FLEX_ONE_BE);
+		themes.add(THM_FLEX_ONE_INHERITABLE_BE);
+		themes.add(THM_DROPDOWN_ICON_MORE_HORIZ_BE);
+		themes.add(THM_EXPANDABLE_ICON_BE);
+		themes.add(THM_CARD_STATUS_INPUT_WRAPPER_BE);
+		themes.add(THM_CARD_THUMBNAIL_VCL_WRAPPER_BE);
+		themes.add(THM_CARD_THUMBNAIL_INPUT_PLACEHOLDER_BE);
+		themes.add(THM_CARD_MAIN_GROUP_WRAPPER_BE);
+		themes.add(THM_CARD_CENTRE_GROUP_WRAPPER_BE);
+		themes.add(THM_DROPDOWN_ICON_MORE_VERT_BE);
+		themes.add(THM_CARD_BOTTOM_GROUP_CLICKABLE_WRAPPER_BE);
+		themes.add(THM_CARD_HEADER_INPUT_FIELD_BE);
+		themes.add(THM_CARD_HEADER_INPUT_FIELD_INTERN_BE);
+		themes.add(THM_CARD_BOTTOM_VCL_ICON_BE);
+		themes.add(THM_ICON_WORK_BE);
+		themes.add(THM_ICON_LOCATION_ON_BE);
+		themes.add(THM_ICON_STAR_BE);
+		themes.add(THM_ICON_DIRECTIONS_BUS_BE);
+		themes.add(THM_ICON_PHONE_BE);
+		themes.add(THM_ICON_EMAIL_BE);
+		themes.add(THM_ICON_BE);
+		themes.add(THM_HIDE_INPUT_BE);
+		themes.add(THM_CARD_DATE_BE);
+		themes.add(THM_CARD_DATE_WRAPPER_BE);
+		themes.add(THM_CARD_MENU_GROUP_CONTENT_WRAPPER_BE);
+		themes.add(THM_QUESTION_GRP_LABEL_BE);
+		themes.add(THM_BH_ROW_ONE_GRP_WRAPPER_BE);
+		themes.add(THM_BH_ROW_ONE_GRP_LABEL_BE);
+		themes.add(THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER_BE);
+		themes.add(THM_BH_ROW_ONE_VCL_INPUT_BE);
+		themes.add(THM_BH_ROW_TWO_VCL_WRAPPER_BE);
+		themes.add(THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER_BE);
+		themes.add(THM_BH_ROW_TWO_INPUT_FIELD_BE);
+		themes.add(THM_BH_GROUP_WRAPPER_BE);
+
+		System.out.println("**************** Themes in the list :: "+ themes.size() +" ********************");
+
+		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(themes);
+		msg.setToken(beUtils.getGennyToken().getToken());
+		System.out.println("**************** Sending all the bucket themes ********************");
+		VertxUtils.writeMsg("webcmds",JsonUtils.toJson(msg));
+		System.out.println("**************** Sent all the bucket themes ********************");
+
+	}
+
 	/* generates all the contextListMap for card */
 	public Map<String, ContextList> getCardContextListMap(Map<String, ContextList> contextListMap,
 			GennyToken serviceToken) {
@@ -83,29 +389,6 @@ public class BucketUtilsTest {
 			Theme THM_CARD = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_CARD", Theme.class,
 					serviceToken.getToken());
 
-			// Theme THM_CARD = Theme.builder("THM_CARD")
-			// .addAttribute()
-			// .overflowX("hidden") /* NEW */
-			// .borderRadius(8) /* NEW */
-			// .backgroundColor("white")
-			// .height("auto")
-			// .width("100%")
-			// .backgroundColor("#F8F9FA")
-			// .flexBasis("initial")
-			// .flexGrow(0)
-			// .flexShrink(0)
-			// .marginBottom(8)
-			// .shadowColor("#000")
-			// .shadowOffset()
-			// .height(0)
-			// .width(0)
-			// .end()
-			// .shadowOpacity(0.4)
-			// .shadowRadius(5)
-			// .end()
-			// .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
-			// .build();
-
 			Theme THM_DISPLAY_HORIZONTAL = Theme.builder("THM_DISPLAY_HORIZONTAL").addAttribute().flexDirection("row")
 					.end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
 
@@ -120,13 +403,6 @@ public class BucketUtilsTest {
 
 			Theme THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY = VertxUtils.getObject(serviceToken.getRealm(), "",
 					"THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY", Theme.class, serviceToken.getToken());
-
-			// Theme THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY =
-			// Theme.builder("THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY")
-			// .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_LABEL, false).end()
-			// .addAttribute(ThemeAttributeType.PRI_IS_DROPDOWN, true).end()
-			// .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
-			// .build();
 
 			Theme THM_DROPDOWN_HEADER_WRAPPER_GENNY = VertxUtils.getObject(serviceToken.getRealm(), "",
 					"THM_DROPDOWN_HEADER_WRAPPER_GENNY", Theme.class, serviceToken.getToken());
@@ -184,12 +460,8 @@ public class BucketUtilsTest {
 			Theme THM_PROFILE_IMAGE = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_PROFILE_IMAGE",
 					Theme.class, serviceToken.getToken());
 
-			// Theme THM_PROJECT_COLOR_SURFACE =
-			// VertxUtils.getObject(serviceToken.getRealm(), "",
-			// "THM_PROJECT_COLOR_SURFACE", Theme.class, serviceToken.getToken());
-
-			Theme THM_PROJECT_COLOR_SURFACE = Theme.builder("THM_PROJECT_COLOR_SURFACE").addAttribute()
-					.backgroundColor("#FFFFFF").color("#000000").end().build();
+			Theme THM_PROJECT_COLOR_SURFACE = VertxUtils.getObject(serviceToken.getRealm(), "",
+			"THM_PROJECT_COLOR_SURFACE", Theme.class, serviceToken.getToken());
 
 			Theme THM_PADDING_X_10 = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_PADDING_X_10", Theme.class,
 					serviceToken.getToken());
@@ -215,29 +487,6 @@ public class BucketUtilsTest {
 			Theme THM_CARD_THUMBNAIL_VCL_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
 					"THM_CARD_THUMBNAIL_VCL_WRAPPER", Theme.class, serviceToken.getToken());
 
-			// Theme THM_CARD_THUMBNAIL_INPUT_PLACEHOLDER =
-			// VertxUtils.getObject(serviceToken.getRealm(), "",
-			// "THM_CARD_THUMBNAIL_INPUT_PLACEHOLDER", Theme.class,
-			// serviceToken.getToken());
-			/* end cached */
-
-			// Theme THM_CARD_STATUS_INPUT_WRAPPER =
-			// Theme.builder("THM_CARD_STATUS_INPUT_WRAPPER")
-			// .addAttribute()
-			// .width(8)
-			// .end()
-			// .build();
-			// Theme THM_CARD_THUMBNAIL_VCL_WRAPPER =
-			// Theme.builder("THM_CARD_THUMBNAIL_VCL_WRAPPER")
-			// .addAttribute()
-			// .borderRadius(20)
-			// .width(40)
-			// .height(40)
-			// .alignItems("center")
-			// .justifyContent("center")
-			// .backgroundColor("red")
-			// .end()
-			// .build();
 			Theme THM_CARD_THUMBNAIL_INPUT_PLACEHOLDER = Theme.builder("THM_CARD_THUMBNAIL_INPUT_PLACEHOLDER")
 					.addAttribute().size("md").color("white").name("person_outline").end().build();
 
@@ -274,38 +523,20 @@ public class BucketUtilsTest {
 			Theme THM_ICON = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_ICON", Theme.class,
 					serviceToken.getToken());
 
-			Theme THM_HIDE_INPUT = Theme.builder("THM_HIDE_INPUT").addAttribute(ThemeAttributeType.PRI_HAS_INPUT, false)
-					.end().build();
-
-			// Theme THM_CARD_DATE = Theme.builder("THM_CARD_DATE")
-			// .addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end()
-			// .build();
-
-			// THM_CARD_DATE.setRealm(serviceToken.getRealm());
-
-			// VertxUtils.putObject(serviceToken.getRealm(), "", THM_CARD_DATE.getCode(),
-			// THM_CARD_DATE,
-			// serviceToken.getToken());
+			Theme THM_HIDE_INPUT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_HIDE_INPUT", Theme.class,
+					serviceToken.getToken());
 
 			Theme THM_CARD_DATE = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_CARD_DATE", Theme.class,
 					serviceToken.getToken());
 
-			Theme THM_CARD_DATE_WRAPPER = Theme.builder("THM_CARD_DATE_WRAPPER").addAttribute().flexDirection("row")
-					.end().build();
+			Theme THM_CARD_DATE_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_CARD_DATE_WRAPPER", Theme.class,
+					serviceToken.getToken());
+			
+			Theme THM_CARD_MENU_GROUP_CONTENT_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_CARD_MENU_GROUP_CONTENT_WRAPPER", Theme.class,
+					serviceToken.getToken());
 
-			/* -------------------------------- */
-			Theme THM_CARD_MENU_GROUP_CONTENT_WRAPPER = Theme.builder("THM_CARD_MENU_GROUP_CONTENT_WRAPPER")
-																								.addAttribute()
-																									.padding(4)
-																									.borderRadius(4)
-																									.position("right")
-																								.end()
-																								.build();
-			/* -------------------------------- */
-			/* END */
-
-
-
+			/* end new themes */
+			
 			/* prepare context for progress bar */
 			Context progressVclInputContext = new Context(ContextType.THEME,
 					bucketUtils.getThemeBe(THM_PROGRESS_VCL_INPUT), VisualControlType.VCL_INPUT, 1.0);
@@ -438,9 +669,6 @@ public class BucketUtilsTest {
 					bucketUtils.getThemeBe(THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY), VisualControlType.GROUP, 1.0));
 			cardRightContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_PROJECT_COLOR_SURFACE),
 					VisualControlType.GROUP_CONTENT_WRAPPER, 1.0));
-			// cardRightContext.add(new Context(ContextType.THEME,
-			// bucketUtils.getThemeBe(THM_DROPDOWN_ICON_MORE_HORIZ),
-			// VisualControlType.GROUP_ICON, 1.0));
 			cardRightContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_DROPDOWN_ICON_MORE_VERT),
 					VisualControlType.GROUP_ICON, 1.0));
 			cardRightContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_CARD_MENU_GROUP_CONTENT_WRAPPER),
@@ -448,9 +676,6 @@ public class BucketUtilsTest {
 
 			/* cardBottomContext */
 			List<Context> cardBottomContext = new ArrayList<>();
-			// cardBottomContext.add(new Context(ContextType.THEME,
-			// bucketUtils.getThemeBe(THM_JUSTIFY_CONTENT_CENTRE),
-			// VisualControlType.GROUP_CLICKABLE_WRAPPER, 1.0));
 			cardBottomContext
 					.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_CARD_BOTTOM_GROUP_CLICKABLE_WRAPPER),
 							VisualControlType.GROUP_CLICKABLE_WRAPPER, 1.0));
@@ -458,12 +683,6 @@ public class BucketUtilsTest {
 					VisualControlType.GROUP, 1.0));
 			cardBottomContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_WIDTH_100_PERCENT),
 					VisualControlType.GROUP, 1.0));
-			// cardBottomContext.add(new Context(ContextType.THEME,
-			// bucketUtils.getThemeBe(THM_PADDING_X_10),
-			// VisualControlType.GROUP_CONTENT_WRAPPER, 1.0));
-			// cardBottomContext.add(new Context(ContextType.THEME,
-			// bucketUtils.getThemeBe(THM_EXPANDABLE_ICON),
-			// VisualControlType.GROUP_ICON, 1.0));
 			cardBottomContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_DISPLAY_VERTICAL),
 					VisualControlType.GROUP_CONTENT_WRAPPER, 1.0));
 			cardBottomContext.add(progressVclInputContext);
@@ -501,8 +720,8 @@ public class BucketUtilsTest {
 			Context iconContext = new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_CARD_BOTTOM_VCL_ICON),
 					VisualControlType.VCL_ICON, 1.0);
 			cardBottomContext.add(iconContext);
-			cardBottomContext.add(
-					new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_ICON), VisualControlType.VCL_INPUT, 1.0));
+			cardBottomContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_ICON), 
+					VisualControlType.VCL_INPUT, 1.0));
 			/* NEW END */
 
 			contextListMap.put("QUE_CARD_APPLICATION_TEMPLATE_GRP", new ContextList(cardContext));
@@ -1090,10 +1309,6 @@ public class BucketUtilsTest {
 		contextListMap.put("QUE_BUCKET_HEADER_ROW_ONE_GRP", new ContextList(row1Context));
 		contextListMap.put("QUE_BUCKET_HEADER_ROW_TWO_GRP", new ContextList(row2Context));
 		contextListMap.put("QUE_BUCKET_COUNT", new ContextList(bucketCountContextList));
-		// contextListMap.put("QUE_BUCKET_SEARCH", new
-		// ContextList(bucketSearchContextList));
-		// contextListMap.put("QUE_BUCKET_SORT", new
-		// ContextList(bucketSortContextList));
 
 		/* Validation for Search Attribute */
 		Validation validation = new Validation("VLD_NON_EMPTY", "EmptyandBlankValues", "(?!^$|\\s+)");
@@ -1102,13 +1317,16 @@ public class BucketUtilsTest {
 		ValidationList searchValidationList = new ValidationList();
 		searchValidationList.setValidationList(validations);
 
-		Attribute searchAttribute = new Attribute("PRI_NAME", "Search",
-				new DataType("Text", searchValidationList, "Text"));
-
+		/* get the attributes */
+		
 		/* get the attributes */
 		Attribute countAttribute = RulesUtils.getAttribute("PRI_TOTAL_RESULTS", serviceToken.getToken());
 		Attribute sortAttribute = RulesUtils.getAttribute("PRI_SORT", serviceToken.getToken());
 		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken.getToken());
+		
+		Attribute searchAttribute = new Attribute("PRI_NAME", "Search",
+				new DataType("Text", searchValidationList, "Text"));
+				
 		Attribute questionAttribute = RulesUtils.getAttribute("QQQ_QUESTION_GROUP", serviceToken.getToken());
 		Attribute tableCellAttribute = RulesUtils.getAttribute("QQQ_QUESTION_GROUP_TABLE_CELL",
 				serviceToken.getToken());
@@ -1126,7 +1344,7 @@ public class BucketUtilsTest {
 		Ask bucketCountAsk = new Ask(bucketCountQues, beUtils.getGennyToken().getUserCode(), "SBE_DUMMY");
 
 		Ask[] row1ChildAsks = { bucketCountAsk };
-		// row1Ask.setChildAsks(row1ChildAsks);
+		row1Ask.setChildAsks(row1ChildAsks);
 
 		/* row-two-ask */
 		Question row2Ques = new Question("QUE_BUCKET_HEADER_ROW_TWO_GRP", "Row Two", tableCellAttribute, false);
