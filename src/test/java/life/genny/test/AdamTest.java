@@ -165,15 +165,22 @@ public class AdamTest {
 		} catch (IOException e1) {
 		}
 //		sendVerifyMail(token, "gerard+intern31@outcome.life", "Gerard", "Holland");
-
+//		sendVerifyMail(token, "kanika.gulati+intern@gada.io", "Kanika Intern Test", "two");
+//		sendVerifyMail(token, "thomas.crow+intern@gada.io", "Thomas Intern Test", "three");
+//		sendVerifyMail(token, "barad.ghimire+intern@gada.io", "Barad Intern Test", "four");
+//		sendVerifyMail(token, "cto+intern@gada.io", "Adam Intern Test", "five");
+//		sendVerifyMail(token, "christopher.pyke+intern@gada.io", "Chris Testing App", "Six");
 //		sendVerifyMail(token, "gerard.holland", "outcome.life","Gerard", "Holland");
 //		sendVerifyMail(token, "domenic.saporito", "outcome.life","Domenic", "Saporito");
 //		sendVerifyMail(token, "adamcrow63", "gmail.com","Adam", "Crow");
 //		sendVerifyMail(token, "christopher.pyke", "gada.io","Christopher", "Pyke");
 //		sendVerifyMail(token, "stephenie.pulis-cassar", "outcomelife.com.au","Stephenie", "Pulis-Cassar");
 //		sendVerifyMail(token, "joshua.tinner+intern31@outcome.life", "Stephenie", "Pulis-Cassar");
-		sendVerifyMail(token, "sonamdolkar.sherpa@cqumail.com", "Sonam Dolkar", "Sherpa");
-		    
+	}
+	
+	private void sendVerifyMail(String token, String emailusername) {
+		String userId = KeycloakUtils.sendVerifyEmail(realm, emailusername, token);
+		System.out.println("UserId=" + userId);
 	}
 	private void sendVerifyMail(String token, String emailusername, String firstname, String lastname) {
 //		LocalDateTime now = LocalDateTime.now();
