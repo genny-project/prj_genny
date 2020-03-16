@@ -20,7 +20,6 @@ rule "IS_INTERN"
 		output : OutputParam()
 		baseEntityType : String(baseEntityType.equals("Intern"))
 		newBe : BaseEntity()
-
 	  
      then
  		System.out.println("IS_INTERN: Rule fired" );
