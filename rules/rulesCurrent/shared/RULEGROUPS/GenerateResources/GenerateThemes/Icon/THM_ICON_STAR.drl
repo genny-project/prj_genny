@@ -32,7 +32,7 @@ rule "THM_ICON_STAR"
       System.out.println("   Generate THM_ICON_STAR Rule ");
       Theme theme = Theme.builder("THM_ICON_STAR")
                     .addAttribute()
-                      .name("location_on")
+                      .name("star")
                     .end()
                     .build();
 
