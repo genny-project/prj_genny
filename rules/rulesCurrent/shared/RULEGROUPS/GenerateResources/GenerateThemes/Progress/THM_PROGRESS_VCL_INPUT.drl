@@ -41,6 +41,7 @@ rule "THM_PROGRESS_VCL_INPUT"
 										.addAttribute()
 											.sections(12)
 											.color("green")
+											.backgroundColor("green")
 										.end()
 										.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
 										.build();   
