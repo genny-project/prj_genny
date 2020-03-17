@@ -144,6 +144,7 @@ public class BucketView extends GennyJbpmBaseTest {
 		
 
 	}
+
 	//@Test
 	public void testSearchBe() {
 
@@ -205,8 +206,8 @@ public class BucketView extends GennyJbpmBaseTest {
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
-		BucketUtilsTest bucketUtils = new BucketUtilsTest(beUtils);
-		BucketUtils bucketUtils2 = new BucketUtils(beUtils);
+		//BucketUtilsTest bucketUtils = new BucketUtilsTest(beUtils);
+		BucketUtils bucketUtils = new BucketUtils(beUtils);
 		
 		System.out.println("running the test");
 
@@ -229,7 +230,7 @@ public class BucketView extends GennyJbpmBaseTest {
 		Frame3 FRM_BUCKET_CONTENT = Frame3.builder("FRM_BUCKET_CONTENT")
 					//.addTheme(THM_SCROLL_VERTICAL2, ThemePosition.CENTRE).end()
 					.question("QUE_BUCKET_CONTENT_GRP").end()
-					.addTheme(THM_PADDING_15, ThemePosition.WRAPPER).end()
+					//.addTheme(THM_PADDING_15, ThemePosition.WRAPPER).end()
 					.addTheme(THM_JUSTIFY_CONTENT_FLEX_START, ThemePosition.CENTRE).end()
 					.build();
 
@@ -252,7 +253,8 @@ public class BucketView extends GennyJbpmBaseTest {
 		// TableUtilsTest bucketUtils = new //TableUtilsTest(beUtils);
 
 		/* initialize bucketUtils */
-		BucketUtilsTest bucketUtils = new BucketUtilsTest(beUtils);
+		//BucketUtilsTest bucketUtils = new BucketUtilsTest(beUtils);
+		BucketUtils bucketUtils = new BucketUtils(beUtils);
 
 		/* initialize virtualAskMap */
 		Map<String, QDataAskMessage> virtualAskMap = new HashMap<String, QDataAskMessage>();
@@ -264,46 +266,77 @@ public class BucketView extends GennyJbpmBaseTest {
 		Map<String, ContextList> contextListMap = new HashMap<String, ContextList>();
 
 		/* get the theme */
-		Theme THM_QUESTION_GRP_LABEL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_QUESTION_GRP_LABEL",
-				Theme.class, serviceToken.getToken());
 		Theme THM_DISPLAY_VERTICAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_VERTICAL",
 				Theme.class, serviceToken.getToken());
-		Theme THM_DISPLAY_HORIZONTAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_HORIZONTAL",
+		Theme THM_QUESTION_GRP_LABEL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_QUESTION_GRP_LABEL",
 				Theme.class, serviceToken.getToken());
-		Theme THM_WIDTH_100_PERCENT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_WIDTH_100_PERCENT",
-				Theme.class, serviceToken.getToken());
-		Theme THM_BH_ROW_ONE_GRP_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
-				"THM_BH_ROW_ONE_GRP_WRAPPER", Theme.class, serviceToken.getToken());
-		Theme THM_BH_ROW_ONE_GRP_LABEL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_ROW_ONE_GRP_LABEL",
-				Theme.class, serviceToken.getToken());
-		Theme THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
-				"THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER", Theme.class, serviceToken.getToken());
-		Theme THM_BH_ROW_ONE_VCL_INPUT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_ROW_ONE_VCL_INPUT",
-				Theme.class, serviceToken.getToken());
-		Theme THM_BH_ROW_TWO_VCL_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
-				"THM_BH_ROW_TWO_VCL_WRAPPER", Theme.class, serviceToken.getToken());
-		Theme THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
-				"THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER", Theme.class, serviceToken.getToken());
-		Theme THM_BH_ROW_TWO_INPUT_FIELD = VertxUtils.getObject(serviceToken.getRealm(), "",
-				"THM_BH_ROW_TWO_INPUT_FIELD", Theme.class, serviceToken.getToken());
-		Theme THM_ICON = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_ICON", Theme.class,
-				serviceToken.getToken());
-		Theme THM_BH_GROUP_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_GROUP_WRAPPER",
-				Theme.class, serviceToken.getToken());
-		BaseEntity ICN_SORT = beUtils.getBaseEntityByCode("ICN_SORT");
+		
+
+		
+		Theme THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER = Theme.builder("THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER")
+													.addAttribute()
+													.justifyContent("center")
+													.alignItems("center")
+													.end()
+													.build();
+		
 		Theme THM_WIDTH_100_PERCENT_NO_INHERIT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_WIDTH_100_PERCENT_NO_INHERIT", 
 				Theme.class, serviceToken.getToken());
 
+		// NEW THEMES START HERE
+		Theme THM_BUCKET_HEADER_GROUP_WRAPPER = Theme.builder("THM_BUCKET_HEADER_GROUP_WRAPPER")
+                    .addAttribute()
+											.flexDirection("row")
+											.width("100%")
+											.paddingLeft(8)
+											.paddingRight(4)
+                    .end()
+                    .build();
+		
+		Theme THM_BUCKET_HEADER_GROUP_HEADER_WRAPPER = Theme.builder("THM_BUCKET_HEADER_GROUP_HEADER_WRAPPER")
+                    .addAttribute()
+											.flexGrow(1)
+											.marginBottom(4)
+                    .end()
+                    .build();		
+
+		Theme THM_BUCKET_HEADER_GROUP_LABEL = Theme.builder("THM_BUCKET_HEADER_GROUP_LABEL")
+                    .addAttribute()
+                      .justifyContent("center")
+					  					.marginBottom(0)
+                    .end()
+                    .build();		
+		Theme THM_FONT_FAMILY_ROBOTO = Theme.builder("THM_FONT_FAMILY_ROBOTO")
+                    .addAttribute()
+                      .fontFamily("Roboto")
+                    .end()
+                    .build();					
+
 		Context bucketHeaderLabelContext = new Context(ContextType.THEME,
 				bucketUtils.getThemeBe(THM_QUESTION_GRP_LABEL), VisualControlType.GROUP, 1.0);
-		bucketHeaderLabelContext.setDataType("Form Submit");
+		//bucketHeaderLabelContext.setDataType("Form Submit");
+		bucketHeaderLabelContext.setDttCode("DTT_SUBMIT_BUTTON");
 
 		List<Context> bucketHeaderContext = new ArrayList<>();
 		bucketHeaderContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_DISPLAY_VERTICAL),
 				VisualControlType.GROUP_CONTENT_WRAPPER, 1.0));
-		bucketHeaderContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_BH_GROUP_WRAPPER),
-				VisualControlType.GROUP_WRAPPER, 1.0));
+		/* bucketHeaderContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_BH_GROUP_WRAPPER),
+				VisualControlType.GROUP_WRAPPER, 1.0)); */
 		bucketHeaderContext.add(bucketHeaderLabelContext);
+		bucketHeaderContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER),
+				VisualControlType.GROUP_CONTENT_WRAPPER, 1.0));
+		
+		// NEW
+		bucketHeaderContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_BUCKET_HEADER_GROUP_WRAPPER),
+				VisualControlType.GROUP_WRAPPER, 1.0));
+		bucketHeaderContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_BUCKET_HEADER_GROUP_HEADER_WRAPPER),
+				VisualControlType.GROUP_HEADER_WRAPPER, 1.0));
+		bucketHeaderContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_BUCKET_HEADER_GROUP_LABEL),
+				VisualControlType.GROUP_LABEL, 1.0));
+		bucketHeaderContext.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_FONT_FAMILY_ROBOTO),
+				VisualControlType.VCL_DEFAULT, 1.0));
+
+
 
 		/* cardContext */
 		List<Context> bucketContentContext = new ArrayList<>();
@@ -340,8 +373,11 @@ public class BucketView extends GennyJbpmBaseTest {
 				for (SearchEntity searchBe : searchBeList) {
 
 					String code = searchBe.getCode().split("SBE_")[1];
+					System.out.println("Current BUCKET Code   ::    " + code);
 
+					/* add the contextList for the bucketHeaderAsk and bucketContentAsk */
 					contextListMap.put("QUE_BUCKET_HEADER_" + code + "_GRP", new ContextList(bucketHeaderContext));
+					contextListMap.put("QUE_BUCKET_CONTENT_" + code + "_GRP", new ContextList(bucketContentContext));
 
 					/* clone the bucket */
 					Frame3 bucketHeader = Frame3.clone(FRM_BUCKET_HEADER);
@@ -360,7 +396,7 @@ public class BucketView extends GennyJbpmBaseTest {
 					bucket.setCode("FRM_BUCKET_" + code);
 					bucket.getFrames().add(new FrameTuple3(bucketHeader, FramePosition.NORTH, 1.0));
 					bucket.getFrames().add(new FrameTuple3(bucketContent, FramePosition.CENTRE, 1.0));
-					bucket.getFrames().add(new FrameTuple3(bucketFooter, FramePosition.SOUTH, 1.0));
+					//bucket.getFrames().add(new FrameTuple3(bucketFooter, FramePosition.SOUTH, 1.0));
 
 					/* add the cloned bucket to wrapper */
 					FRM_BUCKET_WRAPPER.getFrames().add(new FrameTuple3(bucket, FramePosition.WEST, 1.0));
@@ -380,9 +416,6 @@ public class BucketView extends GennyJbpmBaseTest {
 					bucketContentAsk.setName(searchBe.getName());
 					bucketContentAsk.setTargetCode(searchBe.getCode());
 
-					/* add the contextList for the bucketContentAsk */
-					contextListMap.put("QUE_BUCKET_CONTENT_" + code + "_GRP", new ContextList(bucketContentContext));
-
 					/* bucketFooter asks */
 					Ask bucketFooterAsk = Ask.clone(FRM_BUCKET_FOOTER_ASK);
 					bucketFooterAsk.setQuestionCode("QUE_BUCKET_FOOTER_" + code + "_GRP");
@@ -391,7 +424,7 @@ public class BucketView extends GennyJbpmBaseTest {
 
 					virtualAskMap.put(bucketHeaderAsk.getQuestionCode(), new QDataAskMessage(bucketHeaderAsk));
 					virtualAskMap.put(bucketContentAsk.getQuestionCode(), new QDataAskMessage(bucketContentAsk));
-					virtualAskMap.put(bucketFooterAsk.getQuestionCode(), new QDataAskMessage(bucketFooterAsk));
+					//virtualAskMap.put(bucketFooterAsk.getQuestionCode(), new QDataAskMessage(bucketFooterAsk));
 
 				}
 			}else {
@@ -405,8 +438,10 @@ public class BucketView extends GennyJbpmBaseTest {
 					.addFrame(FRM_BUCKET_WRAPPER, FramePosition.CENTRE).end().build();
 
 			/* build the tab content frame */
-			Frame3 FRM_CONTENT = Frame3.builder("FRM_CONTENT").addFrame(FRM_BUCKET_VIEW, FramePosition.NORTH)
-					.end().build();	
+			Frame3 FRM_CONTENT = Frame3.builder("FRM_CONTENT")
+					.addFrame(FRM_BUCKET_VIEW, FramePosition.NORTH).end()
+					.addTheme(THM_FONT_FAMILY_ROBOTO).end()
+					.build();
 
 			QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_CONTENT, serviceToken, askSet, contextListMap,
 					virtualAskMap);
@@ -423,6 +458,8 @@ public class BucketView extends GennyJbpmBaseTest {
 			}
 
 			System.out.print("Completed");
+			System.out.print("Sending cards now");
+			this.sendCards();
 		} catch (Exception e) {
 			System.out.print("Error");
 		}
@@ -466,7 +503,7 @@ public class BucketView extends GennyJbpmBaseTest {
 		Frame3 bucketContent = Frame3.builder(name)
 				.question("QUE_BUCKET_CONTENT_GRP").end()
 				.addTheme(THM_JUSTIFY_CONTENT_FLEX_START, ThemePosition.CENTRE).end()
-				.addTheme(THM_PADDING_15, ThemePosition.WRAPPER).end()
+				/* .addTheme(THM_PADDING_15, ThemePosition.WRAPPER).end() */
 				.build();
 
 		return bucketContent;
@@ -502,8 +539,9 @@ public class BucketView extends GennyJbpmBaseTest {
 		Theme THM_BACKGROUND_E4E4E4 = Theme.builder("THM_BACKGROUND_E4E4E4").addAttribute().backgroundColor("#E4E4E4")
 				.end().build();
 
-		Theme THM_BUCKET_COLUMN = Theme.builder("THM_BUCKET_COLUMN").addAttribute().minWidth(300).width("100%")
-				.marginLeft(10).marginRight(10).textAlign("center").flexDirection("column").end()
+		Theme THM_BUCKET_COLUMN = Theme.builder("THM_BUCKET_COLUMN")
+				.addAttribute().minWidth(344).width("100%")
+				.textAlign("center").flexDirection("column").end()
 				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
 
 		Theme THM_BUCKET_COLUMN_PADDING2 = Theme.builder("THM_BUCKET_COLUMN_PADDING2")
@@ -518,13 +556,30 @@ public class BucketView extends GennyJbpmBaseTest {
 									.addAttribute().overflowY("auto").end()
 									.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
 									.build();  
+		
+		Theme THM_BUCKET_PANEL_NORTH = Theme.builder("THM_BUCKET_PANEL_NORTH")
+									.addAttribute()
+										.paddingX(4)
+										.paddingTop(8)
+									.end()
+									.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+									.build(); 
+		Theme THM_BUCKET_PANEL_CENTRE = Theme.builder("THM_BUCKET_PANEL_CENTRE")
+									.addAttribute()
+										.padding(4)
+									.end()
+									.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
+									.build();  
 
 		/* build the frame */
-		Frame3 bucket = Frame3.builder(name).addTheme(THM_BACKGROUND_NONE).end()
+		Frame3 bucket = Frame3.builder(name)
+				.addTheme(THM_BACKGROUND_NONE).end()
 				.addTheme(THM_BACKGROUND_E4E4E4, ThemePosition.WRAPPER).end()
 				.addTheme(THM_BUCKET_COLUMN, ThemePosition.WRAPPER).end()
 				.addTheme(THM_BUCKET_COLUMN_PADDING2, ThemePosition.CENTRE).end()
 				.addTheme(THM_SCROLL_VERTICAL, ThemePosition.CENTRE).end()
+				.addTheme(THM_BUCKET_PANEL_NORTH, ThemePosition.NORTH).end()
+				.addTheme(THM_BUCKET_PANEL_CENTRE, ThemePosition.CENTRE).end()
 				.build();
 
 		return bucket;
@@ -541,8 +596,10 @@ public class BucketView extends GennyJbpmBaseTest {
 				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
 
 		/* build the frame */
-		Frame3 FRM_BUCKET_WRAPPER = Frame3.builder(name).addTheme(THM_BUCKET).end()
-				.addTheme(THM_BUCKET_WRAPPER, ThemePosition.WEST).end().build();
+		Frame3 FRM_BUCKET_WRAPPER = Frame3.builder(name)
+				.addTheme(THM_BUCKET).end()
+				//.addTheme(THM_BUCKET_WRAPPER, ThemePosition.WEST).end()
+				.build();
 		
 
 		return FRM_BUCKET_WRAPPER;
@@ -582,20 +639,32 @@ public class BucketView extends GennyJbpmBaseTest {
 
 		BaseEntity ICN_SORT = beUtils.getBaseEntityByCode("ICN_SORT");
 
+		// NEW THEMES START HERE
+//		THM_BUCKET_HEADER_GROUP_WRAPPER = Theme.builder("THM_BUCKET_HEADER_GROUP_WRAPPER")
+//                    .addAttribute()
+//                      .flexDirection("row")
+//                    .end()
+//                    .build();
+
+		
+		// NEW THEMES END HERE
+
+		
+
 		/*
 		 * we create context here
 		 */
 
 		/* row1Context context */
 		List<Context> row1Context = new ArrayList<>();
-		row1Context.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_DISPLAY_HORIZONTAL),
-				VisualControlType.GROUP_WRAPPER, 1.0));
-		row1Context.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_BH_ROW_ONE_GRP_WRAPPER),
-				VisualControlType.GROUP_WRAPPER, 1.0));
-		row1Context.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_BH_ROW_ONE_GRP_LABEL),
-				VisualControlType.GROUP_LABEL, 1.0));
-		row1Context.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER),
-				VisualControlType.GROUP_CONTENT_WRAPPER, 1.0));
+		// row1Context.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_DISPLAY_HORIZONTAL),
+		// 		VisualControlType.GROUP_WRAPPER, 1.0));
+		// row1Context.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_BH_ROW_ONE_GRP_WRAPPER),
+		// 		VisualControlType.GROUP_WRAPPER, 1.0));
+		// row1Context.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_BH_ROW_ONE_GRP_LABEL),
+		// 		VisualControlType.GROUP_LABEL, 1.0));
+		// // row1Context.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER),
+		// // 		VisualControlType.GROUP_CONTENT_WRAPPER, 1.0));
 		row1Context.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_BH_ROW_ONE_VCL_INPUT),
 				VisualControlType.VCL_INPUT, 1.0));
 
@@ -611,7 +680,7 @@ public class BucketView extends GennyJbpmBaseTest {
 		/* bucketCountContextList context */
 		List<Context> bucketCountContextList = new ArrayList<>();
 		bucketCountContextList.add(new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_QUESTION_GRP_LABEL),
-				VisualControlType.GROUP_WRAPPER, 1.0));
+				VisualControlType.GROUP, 1.0));
 
 		/* bucketSearchContextList context */
 		List<Context> bucketSearchContextList = new ArrayList<>();
@@ -626,10 +695,10 @@ public class BucketView extends GennyJbpmBaseTest {
 
 		/* add the contextList to contextMap */
 		contextListMap.put("QUE_BUCKET_HEADER_ROW_ONE_GRP", new ContextList(row1Context));
-		contextListMap.put("QUE_BUCKET_HEADER_ROW_TWO_GRP", new ContextList(row2Context));
 		contextListMap.put("QUE_BUCKET_COUNT", new ContextList(bucketCountContextList));
-		contextListMap.put("QUE_BUCKET_SEARCH", new ContextList(bucketSearchContextList));
-		contextListMap.put("QUE_BUCKET_SORT", new ContextList(bucketSortContextList));
+		// contextListMap.put("QUE_BUCKET_HEADER_ROW_TWO_GRP", new ContextList(row2Context));
+		// contextListMap.put("QUE_BUCKET_SEARCH", new ContextList(bucketSearchContextList));
+		// contextListMap.put("QUE_BUCKET_SORT", new ContextList(bucketSortContextList));
 
 		/* Validation for Search Attribute */
 		Validation validation = new Validation("VLD_NON_EMPTY", "EmptyandBlankValues", "(?!^$|\\s+)");
@@ -638,6 +707,7 @@ public class BucketView extends GennyJbpmBaseTest {
 		ValidationList searchValidationList = new ValidationList();
 		searchValidationList.setValidationList(validations);
 
+		/* get the attributes */
 		Attribute countAttribute = RulesUtils.getAttribute("PRI_TOTAL_RESULTS", serviceToken.getToken());
 		Attribute sortAttribute = RulesUtils.getAttribute("PRI_SORT", serviceToken.getToken());
 		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken.getToken());
@@ -681,7 +751,8 @@ public class BucketView extends GennyJbpmBaseTest {
 		row2Ask.setChildAsks(row2ChildAsks);
 
 		/* set the bucketHeader child asks */
-		Ask[] bucketChildAsks = { row1Ask, row2Ask };
+		//Ask[] bucketChildAsks = { row1Ask, row2Ask };
+		Ask[] bucketChildAsks = { row1Ask }; // NEW
 		bucketHeaderAsk.setChildAsks(bucketChildAsks);
 
 		return bucketHeaderAsk;
