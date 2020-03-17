@@ -40,7 +40,7 @@ rule "PRI_SEARCH_TEXT_VERIFY_INTERNS"
  	  $capabilityUtils : CapabilityUtils( )
  	  eval(beUtils.getGennyToken().hasRole("admin")) 
 	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" && (value.startsWith("verify:interns")) )   /* this is a pure search */
-	  
+	  output : OutputParam( )
     then
   		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer);
    		retract(answer);
@@ -48,4 +48,7 @@ rule "PRI_SEARCH_TEXT_VERIFY_INTERNS"
 	
 			
 		System.out.println("Finished sending verifications to all interns");
+		output.setTypeOfResult("NONE");
+  	    output.setResultCode("NONE");  /* dont display anything new */
+		
 end

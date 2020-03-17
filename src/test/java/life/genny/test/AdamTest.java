@@ -172,7 +172,7 @@ public class AdamTest {
 //		sendVerifyMail(token, "christopher.pyke+intern@gada.io", "Chris Testing App", "Six");
 //		sendVerifyMail(token, "gerard.holland", "outcome.life","Gerard", "Holland");
 //		sendVerifyMail(token, "domenic.saporito", "outcome.life","Domenic", "Saporito");
-//		sendVerifyMail(token, "adamcrow63", "gmail.com","Adam", "Crow");
+		sendVerifyMail(token, "adamcrow63", "gmail.com","Adam", "Crow");
 //		sendVerifyMail(token, "christopher.pyke", "gada.io","Christopher", "Pyke");
 //		sendVerifyMail(token, "stephenie.pulis-cassar", "outcomelife.com.au","Stephenie", "Pulis-Cassar");
 //		sendVerifyMail(token, "joshua.tinner+intern31@outcome.life", "Stephenie", "Pulis-Cassar");

@@ -42,6 +42,7 @@ rule "PRI_SEARCH_TEXT_VERIFY_EMAIL"
  	  allowed : Allowed(code == "VERIFY_EMAIL" || code == "TEST") 
 	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" && (value.startsWith("verify:")) )   /* this is a pure search */
 	  serviceToken : GennyToken (code == "PER_SERVICE")
+	  output : OutputParam( )
     then
   		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer);
    		retract(answer);
@@ -56,6 +57,8 @@ rule "PRI_SEARCH_TEXT_VERIFY_EMAIL"
 					KeycloakUtils.sendVerifyEmail(email,serviceToken.getToken());
 					System.out.println("Sent verification Email to "+email);
 				} 
+		output.setTypeOfResult("NONE");
+  	    output.setResultCode("NONE");  /* dont display anything new */
 		
 		
 end
