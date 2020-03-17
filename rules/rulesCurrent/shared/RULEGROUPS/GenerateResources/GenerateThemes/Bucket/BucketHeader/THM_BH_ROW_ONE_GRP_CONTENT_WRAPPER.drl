@@ -33,6 +33,7 @@ rule "THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER"
       Theme theme = Theme.builder("THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER")
                     .addAttribute()
                       .justifyContent("center")
+                      .alignItems("center")
                     .end()
                     .build();
 

@@ -1,6 +1,5 @@
 package life.genny.rules;
 
-global org.apache.logging.log4j.Logger log;
 
 import life.genny.qwanda.message.QCmdMessage;
 import life.genny.qwanda.message.QBulkMessage;
@@ -23,31 +22,31 @@ import org.kie.api.runtime.process.WorkflowProcessInstance;
 import life.genny.models.Frame3;
 import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
-import java.util.Map;
-import life.genny.models.FrameTuple3;
-import life.genny.utils.TableUtils;
+import life.genny.models.FramePosition;
+import life.genny.qwanda.VisualControlType;
 
-rule "FRM_BUCKET_WRAPPER"
-    ruleflow-group 'GenerateFrames'
+rule "THM_DROPDOWN_ICON_MORE_VERT"
+  ruleflow-group 'GenerateThemes'
 
-    when
-      not  Frame3(code == "FRM_BUCKET_WRAPPER")
-      serviceToken : GennyToken( code == "PER_SERVICE")
+  no-loop true
 
-      
-    then
-			System.out.println(" Generate FRM_BUCKET_WRAPPER Rule  "+serviceToken.getUserCode());
+  when
+    not  Theme(code == "THM_DROPDOWN_ICON_MORE_VERT")
+    serviceToken : GennyToken( code == "PER_SERVICE")
 
-			Frame3 frame = Frame3.builder("FRM_BUCKET_WRAPPER")
-										.addTheme("THM_BUCKET", serviceToken).end()
-										/* .addTheme("THM_BUCKET_WRAPPER", ThemePosition.WEST, serviceToken).end() */
-										.build();
-							
-	frame.setRealm(serviceToken.getRealm());
-						
-	insert (frame);
-	
-	/* Process and save to cache */
-	FrameUtils2.toMessage(frame, serviceToken);
+  then
+    System.out.println(" Generate THM_DROPDOWN_ICON_MORE_VERT Rule  ");
 
+    Theme theme = Theme.builder("THM_DROPDOWN_ICON_MORE_VERT")
+                  	.addAttribute()
+                      .transform("initial")    
+                      .name("more_vert")
+                    .end()
+                  .build();
+                  
+    theme.setRealm(serviceToken.getRealm());
+    insert (theme);
+
+    VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, 
+    serviceToken.getToken());
 end

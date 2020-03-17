@@ -21,35 +21,38 @@ import life.genny.utils.BaseEntityUtils;
 import life.genny.models.GennyToken;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
 import life.genny.models.Theme;
-import life.genny.models.ThemeAttributeType;
 
 
 
-rule "THM_BUCKET_COLUMN"
-   ruleflow-group 'GenerateThemes'
+rule "THM_CARD_THUMBNAIL_VCL_WRAPPER"
+    ruleflow-group 'GenerateThemes'
     no-loop true
-
+    
     when
-      not  Theme (code == "THM_BUCKET_COLUMN")
+      not  Theme (code == "THM_CARD_THUMBNAIL_VCL_WRAPPER")
       serviceToken : GennyToken( code == "PER_SERVICE")
-
+      
     then
-
-     	System.out.println("   Generate THM_BUCKET_COLUMN Rule ");
-
-		Theme theme = Theme.builder("THM_BUCKET_COLUMN")
+    
+     	System.out.println("   Generate THM_CARD_THUMBNAIL_VCL_WRAPPER Rule ");
+      BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+			BaseEntity project = beUtils.getBaseEntityByCode( "PRJ_" + serviceToken.getRealm().toUpperCase());
+ 
+		Theme theme = Theme.builder("THM_CARD_THUMBNAIL_VCL_WRAPPER")
                                 .addAttribute()
-                                  .minWidth(344)
-                                  .width("100%")
-				                          .textAlign("center")
-                                  .flexDirection("column")
+                                  .borderRadius(20)
+                                  .width(40)
+                                  .height(40)
+                                  .alignItems("center")
+						                      .justifyContent("center")
+                                  .backgroundColor(project.getValue("PRI_COLOR_PRIMARY", "#233A4E"))
                                 .end()
-				                        .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
                                 .build();
 
 		theme.setRealm(serviceToken.getRealm());
-
+		
 		insert(theme);
 
 		VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
+	 
 end
