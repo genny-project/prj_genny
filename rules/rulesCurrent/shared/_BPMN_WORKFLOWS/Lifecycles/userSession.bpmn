@@ -1274,7 +1274,7 @@ BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
           <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
         <bpmn2:sequenceFlow id="SequenceFlow_25" tns:priority="1" name="AUTH_INIT" sourceRef="ExclusiveGateway_7" targetRef="CallActivity_6">
-          <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_63" language="http://www.java.com/java">return (message.getData().getCode().equals(&quot;AUTH_INIT&quot;) );</bpmn2:conditionExpression>
+          <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_63" language="http://www.java.com/java">return (message.getData().getCode().equals(&quot;AUTH_INIT&quot;) &amp;&amp; (!&quot;NONE&quot;.equals(output.getResultCode())) );</bpmn2:conditionExpression>
         </bpmn2:sequenceFlow>
         <bpmn2:sequenceFlow id="SequenceFlow_31" tns:priority="1" name="NOT AUTH_INIT" sourceRef="ExclusiveGateway_7" targetRef="ScriptTask_10">
           <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_36" language="http://www.java.com/java">return ((!message.getData().getCode().equals(&quot;AUTH_INIT&quot;)) &amp;&amp; (!output.getTypeOfResult().equals(&quot;NONE&quot;)));</bpmn2:conditionExpression>
