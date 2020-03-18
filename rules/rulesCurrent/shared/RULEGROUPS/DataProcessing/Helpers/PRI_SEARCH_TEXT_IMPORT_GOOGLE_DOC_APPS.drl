@@ -205,7 +205,7 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_APPS"
 			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_STAR_RATING","3.5"));
 			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_OCCUPATION",industry));
 			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_HOST_COMPANY_NAME",hostCompany));
-			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_SINTERN_SUPERVISTOR_NAME",supName));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_INTERN_SUPERVISOR_NAME",supName));
 			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_EDU_PROVIDER_NAME",kv.get("PRI_ASSOC_EP")));
 			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_COMPASS","Unknown"));
 			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_INDUSTRY",industry));
