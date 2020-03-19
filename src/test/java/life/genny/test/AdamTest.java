@@ -213,7 +213,7 @@ public class AdamTest {
 			 fieldMapping.put("firstname", "PRI_FIRSTNAME");
 			 fieldMapping.put("lastname", "PRI_LASTNAME");
 			 fieldMapping.put("email", "PRI_EMAIL");
-			 fieldMapping.put("host company", "PRI_ASSOC_HC");
+			 fieldMapping.put("company", "PRI_ASSOC_COMPANY");
 			 fieldMapping.put("password", "PRI_PASSWORD");
 			 fieldMapping.put("roles", "PRI_ROLES");
 			 fieldMapping.put("mobile", "PRI_PHONE");
@@ -255,12 +255,42 @@ public class AdamTest {
 						}
 					 }
 
+						Boolean intern = false;
 					String[] roles = kv.get("PRI_ROLES").split(",");
 					for (String role : roles) {
 						Answer isSomething = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IS_"+role.toUpperCase(),"TRUE");
 						answers.add(isSomething);
+						if ("INTERN".equals(role.toUpperCase())) {
+							Answer isImported = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_STATUS","AVAILABLE");
+							answers.add(isImported);
+							intern = true;
+						}
+ 					}
+					
+					String hostCompany = kv.get("PRI_ASSOC_COMPANY");
+					BaseEntity hc = ImportUtils.fetchBaseEntityByName(beUtils, hostCompany,"CPY_");
+
+					if (intern) {
+						if (hc != null) {
+							Answer lnkHC = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"LNK_HOST_COMPANY","[\""+hc.getCode()+"\"]");
+							answers.add(lnkHC);			 
+
+						Answer isHC = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_ASSOC_HC",kv.get("PRI_ASSOC_COMPANY"));
+						answers.add(isHC);
+						}
+						
+					} else {
+						if (hc != null) {
+							Answer lnkHC = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"LNK_COMPANY","[\""+hc.getCode()+"\"]");
+							answers.add(lnkHC);			 
+
+						Answer isHC = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_ASSOC_COMPANY",kv.get("PRI_ASSOC_COMPANY"));
+						answers.add(isHC);
+						}
+
 					}
-					Answer isImported = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IMPORTED","true");
+					
+					Answer isImported = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IMPORTED","TRUE");
 					answers.add(isImported);
 					Answer isFirstname = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_FIRSTNAME",kv.get("PRI_FIRSTNAME"));
 					answers.add(isFirstname);
@@ -270,18 +300,10 @@ public class AdamTest {
 					answers.add(isEmail);
 					Answer isMobile = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_PHONE",kv.get("PRI_PHONE"));
 					answers.add(isMobile);
-					Answer isPhone = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_MOBILE",kv.get("PRI_MOBILE"));
+					Answer isPhone = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_MOBILE",kv.get("PRI_PHONE"));
 					answers.add(isPhone);
 
-					String hostCompany = kv.get("PRI_ASSOC_HC");
-					BaseEntity hc = ImportUtils.fetchBaseEntityByName(beUtils, hostCompany,"CPY_");
-					if (hc != null) {
-						Answer lnkHC = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_LNK_HOST_COMPANY","[\""+hc.getCode()+"\"]");
-						answers.add(lnkHC);			 
 
-					Answer isHC = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_ASSOC_HC",kv.get("PRI_ASSOC_HC"));
-					answers.add(isHC);
-					}
 					
 
 					QDataAnswerMessage msg = new QDataAnswerMessage(answers);
