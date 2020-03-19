@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.reflect.TypeToken;
 import life.genny.qwandautils.JsonUtils;
+import life.genny.qwandautils.KeycloakUtils;
 import life.genny.utils.VertxUtils;
 import life.genny.utils.TableUtils;
 import life.genny.models.TableData;
@@ -28,27 +29,36 @@ import io.vavr.Tuple2;
 import life.genny.utils.ImportUtils;
 import life.genny.qwanda.datatype.Allowed;
 import life.genny.utils.CapabilityUtils;
+import java.util.UUID;
 
 
 
-rule "PRI_SEARCH_TEXT_VERIFY_INTERNS"
+rule "PRI_SEARCH_TEXT_VERIFY_EMAIL"
     ruleflow-group 'DataProcessing'
         salience 500
         no-loop true
     when
  	  beUtils : BaseEntityUtils()
- 	  $capabilityUtils : CapabilityUtils( )
- 	  eval(beUtils.getGennyToken().hasRole("admin")) 
-	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" && (value.startsWith("verify:interns")) )   /* this is a pure search */
+ 	  allowed : Allowed(code == "VERIFY_EMAIL" || code == "TEST") 
+	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" && (value.startsWith("verify:")) )   /* this is a pure search */
+	  serviceToken : GennyToken (code == "PER_SERVICE")
 	  output : OutputParam( )
     then
   		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer);
    		retract(answer);
    		
-	
-			
-		System.out.println("Finished sending verifications to all interns");
+				/* Now import a google doc xls file and generate a List of BaseEntityImports */
+				String email = null;
+				String[] split = answer.getValue().split(":");
+				
+				if (split.length == 2) {
+					email = split[1];
+					
+					KeycloakUtils.sendVerifyEmail(email,serviceToken.getToken());
+					System.out.println("Sent verification Email to "+email);
+				} 
 		output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */
+		
 		
 end

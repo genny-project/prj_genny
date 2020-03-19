@@ -26,11 +26,11 @@ import life.genny.qwanda.datatype.CapabilityMode;
 
 import org.apache.commons.lang3.text.WordUtils;
 
-rule "ROL_ADMIN"
+rule "ROL_AGENT"
     ruleflow-group 'GenerateCapabilities'
      no-loop true
     when
-       not  BaseEntity (code == "ROL_ADMIN")
+       not  BaseEntity (code == "ROL_AGENT")
         capabilityUtils : CapabilityUtils()
              
      then
@@ -39,10 +39,8 @@ rule "ROL_ADMIN"
    	     BaseEntity role = capabilityUtils.getBeUtils().create(drools.getRule().getName(),WordUtils.capitalize(drools.getRule().getName().substring(4)));
    	     
    	     capabilityUtils.addCapabilityToRole(role,"VERIFY_EMAIL",CapabilityMode.DELETE);
-   	     capabilityUtils.addCapabilityToRole(role,"IMPORT_INTERNS",CapabilityMode.DELETE);
-  	     capabilityUtils.addCapabilityToRole(role,"IMPORT_HC",CapabilityMode.DELETE);
-   	     capabilityUtils.addCapabilityToRole(role,"IMPORT_HCR",CapabilityMode.DELETE);
-    	 capabilityUtils.addCapabilityToRole(role,"LOGIN",CapabilityMode.EDIT);
+ 
+     	 capabilityUtils.addCapabilityToRole(role,"LOGIN",CapabilityMode.EDIT);
    	     capabilityUtils.addCapabilityToRole(role,"LOGOUT",CapabilityMode.EDIT);
  
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
