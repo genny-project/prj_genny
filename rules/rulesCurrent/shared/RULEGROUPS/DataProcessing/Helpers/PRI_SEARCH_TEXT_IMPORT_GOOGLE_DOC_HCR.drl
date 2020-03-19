@@ -42,6 +42,7 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_HCR"
  	  allowed : Allowed(code == "IMPORT_HCR" || code == "TEST") 
 	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" && (value.startsWith("googleid:hcr:")) )   /* this is a pure search */
 	  serviceToken : GennyToken (code == "PER_SERVICE")
+	  output : OutputParam( )
     then
   		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer);
    		retract(answer);

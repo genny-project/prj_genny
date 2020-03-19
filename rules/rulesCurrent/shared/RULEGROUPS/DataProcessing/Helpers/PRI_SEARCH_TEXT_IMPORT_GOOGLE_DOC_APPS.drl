@@ -33,14 +33,14 @@ import java.util.UUID;
 
 
 
-rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_INTERNSHIPS"
+rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_APPS"
     ruleflow-group 'DataProcessing'
         salience 500
         no-loop true
     when
  	  beUtils : BaseEntityUtils()
  	  allowed : Allowed(code == "IMPORT_INTERNS" || code == "TEST") 
-	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" && (value.startsWith("googleid:internships:")) )   /* this is a pure search */
+	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" && (value.startsWith("googleid:applications:")) )   /* this is a pure search */
 	  serviceToken : GennyToken (code == "PER_SERVICE")
 	  output : OutputParam( )
     then
@@ -83,9 +83,9 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_INTERNSHIPS"
 	 fieldMapping.put("Host Company Rep", "PRI_ASSOC_HCR");
 	 fieldMapping.put("Host Company Rep Email", "PRI_ASSOC_HOST_COMPANY_EMAIL");
 	 
-	/* fieldMapping.put("UNIQUE_KEY_FIELD", "Student Email".toLowerCase()); */
-	 fieldMapping.put("NAME_KEY_FIELD", "Internship Title".toLowerCase());
-	 fieldMapping.put("PREFIX", "BEG_");
+	 fieldMapping.put("UNIQUE_KEY_FIELD", "Student Email".toLowerCase()); 
+	 fieldMapping.put("NAME_KEY_FIELD", "Student ID".toLowerCase());
+	 fieldMapping.put("PREFIX", "APP_");
 	 				
 		 List<BaseEntityImport> beImports = ImportUtils.importGoogleDoc(googleDocId, sheetId,fieldMapping);
 		 System.out.println("Importing Rule : "+beImports.size()+" items");
@@ -192,12 +192,60 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_INTERNSHIPS"
 			msg.setToken(beUtils.getGennyToken().getToken());
 
 			
+			/* create application */
+			 String appCode = "APP_"+beImport.getCode().substring(4);
+			BaseEntity app = beUtils.getBaseEntityByCode(appCode);
+		 	if (app == null) {
+			 	app = beUtils.create(appCode, "APPLICATION");
+			 } 
+			List<Answer> answers2 = new ArrayList<Answer>();
+			
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_HOST_COMPANY_REP_LEGAL_NAME",hostCompany));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_DISABLED","FALSE"));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_STAR_RATING","3.5"));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_OCCUPATION",industry));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_HOST_COMPANY_NAME",hostCompany));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_INTERN_SUPERVISOR_NAME",supName));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_EDU_PROVIDER_NAME",kv.get("PRI_ASSOC_EP")));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_COMPASS","Unknown"));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_INDUSTRY",industry));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_INTERN_STUDENT_ID",kv.get("PRI_INTERN_STUDENT_ID")));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_INTERN_EMAIL",kv.get("PRI_EMAIL")));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_TRANSPORT","Both"));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_HOST_COMPANY_REP_EMAIL",hcrEmail));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_INTERNSHIP_TITLE",kv.get("PRI_NAME")));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_STATUS","APPLIED"));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_INTERN_ACCEPTED","TRUE"));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_INTERN_NAME",iname.getValue()));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_INTERN_MOBILE","61434321230"));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_HOST_COMPANY_ACCEPTED","FALSE"));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_EDU_PROVIDER_REP_LEGAL_NAME",kv.get("PRI_ASSOC_EP")));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_EDU_PROVIDER_ACCEPTED","TRUE"));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_INTERNSHIP_DURATION","12 weeks"));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_STATUS_COLOR","#5CB85C"));
+	/*		answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_STAR_RATING","3.5"));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_STAR_RATING","3.5"));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_STAR_RATING","3.5"));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_STAR_RATING","3.5"));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_STAR_RATING","3.5"));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_STAR_RATING","3.5"));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_STAR_RATING","3.5")); */
 	
+			/* create baseentity_link from the app to the intern */
+			/* intern code is a PER */
+			System.out.println("Interen code is "+internCode);
+			beUtils.createLink(appCode, internCode, "LNK_APP", "APPLICANT", 1.0);
+			
+			QDataAnswerMessage msg2 = new QDataAnswerMessage(answers2);
+			System.out.println("created QDataAnswerMessage 2 for "+appCode);
+			msg2.setToken(beUtils.getGennyToken().getToken());
+
+
 			
 				System.out.println("inserting new internship message containing all their new attributes");
 				if ((count >=start) && (count <= finish))	
 				{			
-					insert(msg);
+					insert(msg2);
 				} else {
 					if (count > finish)	{
 						break;
