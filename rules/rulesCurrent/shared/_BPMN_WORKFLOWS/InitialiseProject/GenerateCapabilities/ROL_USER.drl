@@ -38,6 +38,8 @@ rule "ROL_USER"
  		 
    	     BaseEntity role = capabilityUtils.getBeUtils().create(drools.getRule().getName(),WordUtils.capitalize(drools.getRule().getName().substring(4)));
    	     
+   	     capabilityUtils.addCapabilityToRole(role,"READ_PROJECT",CapabilityMode.VIEW);
+ 
    	     capabilityUtils.addCapabilityToRole(role,"LOGIN",CapabilityMode.EDIT);
    	     capabilityUtils.addCapabilityToRole(role,"LOGOUT",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"EDIT_ACCOUNT",CapabilityMode.SELF);
