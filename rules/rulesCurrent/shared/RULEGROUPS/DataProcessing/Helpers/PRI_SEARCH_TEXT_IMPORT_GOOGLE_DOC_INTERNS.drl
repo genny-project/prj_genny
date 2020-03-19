@@ -120,6 +120,8 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_INTERNS"
 			answers.add(hasLoggedIn);
 			Answer status = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_STATUS","AVAILABLE");
 			answers.add(status);
+			Answer statusColor = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_STATUS_COLOR","#5cb85c");
+			answers.add(statusColor);
 			Answer ilastname = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_LASTNAME",kv.get("PRI_IMPORT_LASTNAME"));
 			answers.add(ilastname);
 			Answer ifirstname = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_FIRSTNAME",kv.get("PRI_IMPORT_FIRSTNAME"));
