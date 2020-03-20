@@ -153,9 +153,67 @@ public class AdamTest {
 	protected static GennyToken newUserToken;
 	protected static GennyToken serviceToken;
 	
-	
-
 	@Test
+	public void showFramesTest() {
+		System.out.println("showFrame Test");
+
+		GennyKieSession gks = null;
+
+		try {
+			gks = GennyKieSession.builder(serviceToken, true)
+					.addDrl("SignalProcessing")
+					.addDrl("DataProcessing")
+					.addDrl("EventProcessing")
+					.addJbpm("Lifecycles")
+					.addDrl("AuthInit")
+					.addJbpm("AuthInit")
+					.addDrl("InitialiseProject")
+					.addJbpm("InitialiseProject")
+					.build();
+
+			gks.createTestUsersGroups();
+
+			GennyToken newUser1A = gks.createToken("PER_USER1");
+			gks.start();
+
+			gks.injectSignal("initProject"); // This should initialise everything
+			gks.injectEvent("authInitMsg", newUser1A); // log in as new user
+			gks.advanceSeconds(5, false);
+			gks.displayTasks(newUser1A);
+
+			gks.showStatuses();
+			// Now answer a question
+
+			gks.injectAnswer("PRI_FIRSTNAME", newUser1A);
+			gks.injectAnswer("PRI_LASTNAME", newUser1A);
+			gks.injectAnswer("PRI_DOB", newUser1A);
+			gks.injectAnswer("PRI_PREFERRED_NAME", newUser1A);
+			gks.injectAnswer("PRI_EMAIL", newUser1A);
+			gks.injectAnswer("PRI_MOBILE", newUser1A);
+			gks.injectAnswer("PRI_USER_PROFILE_PICTURE", newUser1A);
+			gks.injectAnswer("PRI_ADDRESS_FULL", newUser1A);
+
+			gks.injectEvent("QUE_SUBMIT", newUser1A);
+
+			// Now add an Edu Provider
+
+			gks.injectEvent("msgLogout", newUser1A);
+			gks.advanceSeconds(5, false);
+
+			gks.showStatuses("PER_USER1", "PER_USER2");
+			// gks.injectEvent("msgLogout",newUser2B);
+			// gks.injectEvent("msgLogout",newUser1A);
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		} finally {
+			if (gks != null) {
+				gks.close();
+			}
+		}
+	}
+
+	//@Test
 	public void importUsers() {
 		System.out.println("Import Users test");
 		GennyToken userToken = null;
@@ -352,7 +410,7 @@ public class AdamTest {
 	}
 
 	
-	@Test
+	//@Test
 	public void sendVerify2Test() {
 		System.out.println("Search test");
 		String password = System.getenv("SERVICE_PASSWORD");
@@ -414,28 +472,27 @@ public class AdamTest {
 		userId = KeycloakUtils.sendVerifyEmail(realm, emailusername, token);
 		System.out.println("UserId=" + userId);
 	}
-	
-	@Test
+	//@Test
 	public void importHostCompaniesTest() {
 		this.importHostCompanies();
 	}
 
-	@Test
+	//@Test
 	public void importHostCompaniesRepsTest() {
 		this.importHostCompaniesReps();
 	}
 
-	@Test
+	//@Test
 	public void importInternsTest() {
 		this.importInterns();
 	}
 
-	@Test
+	//@Test
 	public void importInternshipsTest() {
 		this.importInternships();
 	}
 
-	@Test
+	//@Test
 	public void verifyInternsTest() {
 		verifyInterns();
 	}

@@ -1580,4 +1580,11 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		return gToken;
 	}
 
+	public void displayTasks(GennyToken userToken) {
+		
+	System.out.println("Tasks for "+userToken.getUserCode()+" "
+			+ showTaskNames(getTaskService().getTasksAssignedAsPotentialOwner(userToken.getRealm() + "+"+userToken.getUserCode() , null))
+			);
+	}
+	
 }
