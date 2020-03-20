@@ -220,7 +220,7 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_APPS"
 			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_INTERN_MOBILE","61434321230"));
 			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_HOST_COMPANY_ACCEPTED","FALSE"));
 			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_EDU_PROVIDER_REP_LEGAL_NAME",kv.get("PRI_ASSOC_EP")));
-			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_EDU_PROVIDER_ACCEPTED","TRUE"));
+			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_EDU_PROVIDER_ACCEPTED","FALSE"));
 			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_INTERNSHIP_DURATION","12 weeks"));
 			answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_STATUS_COLOR","#5CB85C"));
 	/*		answers2.add(new Answer(beUtils.getGennyToken().getUserCode(),appCode,"PRI_STAR_RATING","3.5"));

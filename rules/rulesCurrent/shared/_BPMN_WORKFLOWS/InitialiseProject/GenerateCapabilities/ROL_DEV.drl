@@ -26,29 +26,28 @@ import life.genny.qwanda.datatype.CapabilityMode;
 
 import org.apache.commons.lang3.text.WordUtils;
 
-rule "ROL_INTERN"
+rule "ROL_DEV"
     ruleflow-group 'GenerateCapabilities'
      no-loop true
     when
-       not  BaseEntity (code == "ROL_INTERN")
-       capabilityUtils : CapabilityUtils()
-       user : BaseEntity (code == "ROL_USER")
+       not  BaseEntity (code == "ROL_DEV")
+        capabilityUtils : CapabilityUtils()
+        superuser : BaseEntity (code == "ROL_SUPERUSER")
+             
      then
      	System.out.println("   Generate "+drools.getRule().getName() );
  		 
    	     BaseEntity role = capabilityUtils.getBeUtils().create(drools.getRule().getName(),WordUtils.capitalize(drools.getRule().getName().substring(4)));
    	     
-   	     capabilityUtils.inheritRole(role,user);
- 
-  	     capabilityUtils.addCapabilityToRole(role,"READ_HOST_COMPANY",CapabilityMode.VIEW);
-  	     capabilityUtils.addCapabilityToRole(role,"READ_JOURNALS",CapabilityMode.SELF);
-  	     capabilityUtils.addCapabilityToRole(role,"CREATE_JOURNALS",CapabilityMode.SELF);
-  	     
+   	     capabilityUtils.inheritRole(role,superuser);
+   	     
+   	     capabilityUtils.addCapabilityToRole(role,"SHOW_DEV_INFO",CapabilityMode.DELETE);
+  
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
  		 insert(role);
+ 		 		 
+ 		 VertxUtils.writeCachedJson(capabilityUtils.getBeUtils().getServiceToken().getRealm(), role.getCode(), JsonUtils.toJson(role), capabilityUtils.getBeUtils().getServiceToken().getToken());
  		 
-  		 VertxUtils.writeCachedJson(capabilityUtils.getBeUtils().getServiceToken().getRealm(), role.getCode(), JsonUtils.toJson(role), capabilityUtils.getBeUtils().getServiceToken().getToken());
-  		 
 
 
 end

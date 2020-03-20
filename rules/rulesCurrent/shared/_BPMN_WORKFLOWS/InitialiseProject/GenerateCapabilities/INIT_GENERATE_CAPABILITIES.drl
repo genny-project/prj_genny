@@ -61,8 +61,11 @@ rule "INIT_GENERATE_CAPABILITIES"
   	 	capabilityUtils.addCapability( "PROCESS7", "Process 7");
   	 	capabilityUtils.addCapability( "DASHBOARD", "Dashboard");
   	 	
+  	 	capabilityUtils.addCapability( "SHOW_DEV_INFO","Show Dev Info");
+  	 	
   	 	capabilityUtils.addCapability( "VERIFY_EMAIL","Send a Keycloak Verify Email");
   	 	capabilityUtils.addCapability( "EDIT_ACCOUNT","Edit Account");
+  	 	capabilityUtils.addCapability( "IMPORT_USERS","Import Users");
   	 	capabilityUtils.addCapability( "IMPORT_INTERNS","Import Interns");
   	 	capabilityUtils.addCapability( "IMPORT_INTERNSHIPS","Import Internships");
   	 	capabilityUtils.addCapability( "IMPORT_HC","Import Host Companies");

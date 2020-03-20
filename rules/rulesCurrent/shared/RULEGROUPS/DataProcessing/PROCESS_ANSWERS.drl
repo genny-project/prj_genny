@@ -27,8 +27,7 @@ rule "PROCESS_ANSWERS"
 		System.out.println("Process Answers: beUtils created "); */
 		
 		/* Now set up capability for the user and make it available to all the rules - NEEDS Alloweds to be created */
-	/*	CapabilityUtils capabilityUtils = new CapabilityUtils(beUtils);
-		insert(capabilityUtils); */
+
 		
 		System.out.println("Capabilitys are "+capabilityUtils.getCapabilityManifest()); 
 		
@@ -41,5 +40,5 @@ rule "PROCESS_ANSWERS"
  			insert(answer);
  			System.out.println("Process Answers: inserted answer  "+answer.getTargetCode()+":"+answer.getAttributeCode()); 
  		}
- 		/* insert(beUtils);*/
+
 end

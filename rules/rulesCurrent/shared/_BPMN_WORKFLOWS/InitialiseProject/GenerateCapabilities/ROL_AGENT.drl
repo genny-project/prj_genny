@@ -32,16 +32,15 @@ rule "ROL_AGENT"
     when
        not  BaseEntity (code == "ROL_AGENT")
         capabilityUtils : CapabilityUtils()
-             
+        user : BaseEntity (code == "ROL_USER")              
      then
      	System.out.println("   Generate "+drools.getRule().getName() );
  		 
    	     BaseEntity role = capabilityUtils.getBeUtils().create(drools.getRule().getName(),WordUtils.capitalize(drools.getRule().getName().substring(4)));
-   	     
+  
+    	 capabilityUtils.inheritRole(role,user);
+  	     
    	     capabilityUtils.addCapabilityToRole(role,"VERIFY_EMAIL",CapabilityMode.DELETE);
- 
-     	 capabilityUtils.addCapabilityToRole(role,"LOGIN",CapabilityMode.EDIT);
-   	     capabilityUtils.addCapabilityToRole(role,"LOGOUT",CapabilityMode.EDIT);
  
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
  		 insert(role);
