@@ -44,6 +44,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_29" isCollection="false" structureRef="life.genny.utils.CapabilityUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_39" isCollection="false" structureRef="life.genny.utils.BaseEntityUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_43" isCollection="false" structureRef="life.genny.qwandautils.JsonUtils"/>
+  <bpmn2:itemDefinition id="ItemDefinition_35" isCollection="false" structureRef="life.genny.utils.RulesUtils"/>
   <bpmn2:signal id="Signal_1" name="initProject"/>
   <bpmn2:process id="init_project" drools:packageName="life.genny.jbpm" name="Initialise Project" isExecutable="true">
     <bpmn2:extensionElements>
@@ -82,6 +83,7 @@
       <drools:import name="life.genny.utils.CapabilityUtils"/>
       <drools:import name="life.genny.utils.BaseEntityUtils"/>
       <drools:import name="life.genny.qwandautils.JsonUtils"/>
+      <drools:import name="life.genny.utils.RulesUtils"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_1" name="message"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_8" name="serviceToken"/>
@@ -342,7 +344,8 @@
       <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
       <bpmn2:script>System.out.println(&quot;InitialiseProject: Runnig init Project&quot;);
-kcontext.setVariable(&quot;message&quot;,(QEventMessage)sessionFacts.getMessage()); </bpmn2:script>
+kcontext.setVariable(&quot;message&quot;,(QEventMessage)sessionFacts.getMessage()); 
+RulesUtils.loadAllAttributesIntoCache(serviceToken);</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_3" drools:priority="1" sourceRef="ScriptTask_2" targetRef="Task_1"/>
     <bpmn2:startEvent id="StartEvent_1" name="Init Project">
