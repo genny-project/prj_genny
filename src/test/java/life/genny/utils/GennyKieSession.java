@@ -100,6 +100,7 @@ import life.genny.qwanda.datatype.DataType;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.EntityEntity;
 import life.genny.qwanda.exception.BadDataException;
+import life.genny.qwanda.message.QBulkMessage;
 import life.genny.qwanda.message.QCmdMessage;
 import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.qwanda.message.QDataAskMessage;
@@ -329,6 +330,10 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			dataMsg = (QDataMessage) msg;
 		}
 
+		QBulkMessage payload = new QBulkMessage();
+		kieSession.setGlobal("payload", payload);
+
+		
 		if ((eventMsg != null) && (eventMsg.getData().getCode().equals("INIT_STARTUP"))) {
 			kieSession.startProcess("initProject");
 		} else {
