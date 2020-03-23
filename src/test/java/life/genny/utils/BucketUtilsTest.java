@@ -1516,16 +1516,30 @@ public class BucketUtilsTest {
 
 				/* fetch the search results */
 				QDataBaseEntityMessage msg = searchUtils.fetchSearchResults(searchBe, serviceToken);
+				
+				if (msg == null) {
+					System.out.println("The msg in " +code+" was null");
+				} else {
+					System.out.println("The items in " + code + " was " + msg.getItems().length + " items , with total="
+					+ msg.getTotal());
+				}
 
 				/* get the application counts */
 				long totalResults = msg.getItems().length;
 				System.out.println("items in bucket " + code + " is :: " + totalResults);
 
 				/* also update the searchBe with the attribute */
-				Answer totalAnswer = new Answer(beUtils.getGennyToken().getUserCode(), searchBe.getCode(),
-						"PRI_TOTAL_RESULTS", totalResults + "");
-				beUtils.addAnswer(totalAnswer);
-				beUtils.updateBaseEntity(searchBe, totalAnswer);
+				// Answer totalAnswer = new Answer(beUtils.getGennyToken().getUserCode(), searchBe.getCode(),
+				// 		"PRI_TOTAL_RESULTS", totalResults + "");
+				// beUtils.addAnswer(totalAnswer);
+				// beUtils.updateBaseEntity(searchBe, totalAnswer);
+
+				Attribute countAttribute = RulesUtils.getAttribute("PRI_TOTAL_RESULTS", serviceToken.getToken());
+				EntityAttribute eAttribute = new EntityAttribute(searchBe, countAttribute,1.0);
+				eAttribute.setValueInteger(Integer.parseInt(totalResults+""));
+
+				searchBe.getBaseEntityAttributes().add(eAttribute);
+
 
 				/* get the applications */
 				List<BaseEntity> appList = Arrays.asList(msg.getItems());
