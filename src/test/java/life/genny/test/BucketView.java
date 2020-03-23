@@ -198,7 +198,7 @@ public class BucketView extends GennyJbpmBaseTest {
 
 	}
 	
-	//@Test
+	@Test
 	public void sendCards() {
 		Frame3 test = this.getBucketHeaderFame("test","test", "test");
 
@@ -206,8 +206,8 @@ public class BucketView extends GennyJbpmBaseTest {
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
-		//BucketUtilsTest bucketUtils = new BucketUtilsTest(beUtils);
-		BucketUtils bucketUtils = new BucketUtils(beUtils);
+		BucketUtilsTest bucketUtils = new BucketUtilsTest(beUtils);
+		//BucketUtils bucketUtils = new BucketUtils(beUtils);
 		
 		System.out.println("running the test");
 
@@ -243,7 +243,7 @@ public class BucketView extends GennyJbpmBaseTest {
 
 
 
-	@Test
+	//@Test
 	public void testProcessView() {
 
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
