@@ -35,7 +35,7 @@ import java.util.UUID;
 
 rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_APPS"
     ruleflow-group 'DataProcessing'
-        salience 500
+        salience 460
         no-loop true
     when
  	  beUtils : BaseEntityUtils()
