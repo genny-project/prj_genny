@@ -164,6 +164,8 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_USERS"
 					answers.add(isMobile);
 					Answer isPhone = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_MOBILE",kv.get("PRI_PHONE"));
 					answers.add(isPhone);
+					Answer disabled = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_DISABLED","FALSE");
+					answers.add(disabled);
 
 
 					
