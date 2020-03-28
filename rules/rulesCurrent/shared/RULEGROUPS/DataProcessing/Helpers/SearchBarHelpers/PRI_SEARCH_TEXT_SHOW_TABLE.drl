@@ -52,7 +52,7 @@ rule "PRI_SEARCH_TEXT_SHOW_TABLE"
 		String[] split = answer.getValue().split(":");
 		if (split.length == 2) {
 			searchBeCode = split[1];		
-			searchBeCode = searchBeCode.toUppercase();
+			searchBeCode = searchBeCode.toUpperCase();
 			
 			/* get current search */
  	   		 TableUtils tableUtils = new TableUtils(beUtils);
