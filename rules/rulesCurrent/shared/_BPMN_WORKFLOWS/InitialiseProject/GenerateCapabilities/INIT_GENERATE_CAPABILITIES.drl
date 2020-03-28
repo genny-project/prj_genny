@@ -63,6 +63,7 @@ rule "INIT_GENERATE_CAPABILITIES"
   	 	
   	 	capabilityUtils.addCapability( "SHOW_DEV_INFO","Show Dev Info");
   	 	
+  	 	capabilityUtils.addCapability( "SHOW_TABLE","Show a table from searchBar Command");
   	 	capabilityUtils.addCapability( "VERIFY_EMAIL","Send a Keycloak Verify Email");
   	 	capabilityUtils.addCapability( "EDIT_ACCOUNT","Edit Account");
   	 	capabilityUtils.addCapability( "IMPORT_USERS","Import Users");

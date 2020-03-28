@@ -40,6 +40,7 @@ rule "ROL_SUPERUSER"
    	     
    	     capabilityUtils.inheritRole(role,admin);
    	     
+   	     capabilityUtils.addCapabilityToRole(role,"SHOW_TABLE",CapabilityMode.DELETE);
    	     capabilityUtils.addCapabilityToRole(role,"VERIFY_EMAIL",CapabilityMode.DELETE);
    	     capabilityUtils.addCapabilityToRole(role,"IMPORT_USERS",CapabilityMode.DELETE);
    	     capabilityUtils.addCapabilityToRole(role,"IMPORT_INTERNS",CapabilityMode.DELETE);
