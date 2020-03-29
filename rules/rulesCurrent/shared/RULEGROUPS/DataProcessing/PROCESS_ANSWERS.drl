@@ -20,7 +20,7 @@ rule "PROCESS_ANSWERS"
 	  dom : OutputParamTreeSet()
 	  capabilityUtils : CapabilityUtils()
     then
- 		System.out.println("Rule -> PROCESS_ANSWERS Processing Answer/Data!! :  user=" + userToken.getUserCode()); 
+ 		System.out.println("Rule -> PROCESS_ANSWERS Processing Answer/Data!!! :  user=" + userToken.getUserCode()); 
  		retract(dataMsg); /* stop this rule from firing again */
  		
  		/* System.out.println("dom = "+dom); */
