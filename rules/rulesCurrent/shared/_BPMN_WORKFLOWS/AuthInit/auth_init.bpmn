@@ -80,6 +80,8 @@
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_17" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_17" name="serviceToken"/>
     <bpmn2:property id="currentUser" itemSubjectRef="ItemDefinition_16" name="currentUser"/>
+    <bpmn2:property id="processVar1" name="processVar1"/>
+    <bpmn2:property id="payload" itemSubjectRef="ItemDefinition_29" name="payload"/>
     <bpmn2:startEvent id="StartEvent_1" name="AuthInit">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -243,7 +245,7 @@ VertxUtils.publish(currentUser,&quot;webcmds&quot;,currentUser, &quot;USER&quot;
         <bpmn2:dataInput id="DataInput_2" itemSubjectRef="ItemDefinition_17" name="userToken"/>
         <bpmn2:dataInput id="DataInput_3" name="ruleFlowGroup"/>
         <bpmn2:dataInput id="DataInput_4" name="callingWorkflow"/>
-        <bpmn2:dataOutput id="DataOutput_1" itemSubjectRef="ItemDefinition_1" name="payload"/>
+        <bpmn2:dataOutput id="DataOutput_1" itemSubjectRef="ItemDefinition_29" name="payload"/>
         <bpmn2:inputSet id="_InputSet_2">
           <bpmn2:dataInputRefs>DataInput_1</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>DataInput_2</bpmn2:dataInputRefs>
@@ -278,7 +280,7 @@ VertxUtils.publish(currentUser,&quot;webcmds&quot;,currentUser, &quot;USER&quot;
       </bpmn2:dataInputAssociation>
       <bpmn2:dataOutputAssociation id="DataOutputAssociation_1">
         <bpmn2:sourceRef>DataOutput_1</bpmn2:sourceRef>
-        <bpmn2:targetRef>message</bpmn2:targetRef>
+        <bpmn2:targetRef>payload</bpmn2:targetRef>
       </bpmn2:dataOutputAssociation>
     </bpmn2:task>
     <bpmn2:sequenceFlow id="SequenceFlow_1" drools:priority="1" sourceRef="ScriptTask_2" targetRef="Task_1"/>
