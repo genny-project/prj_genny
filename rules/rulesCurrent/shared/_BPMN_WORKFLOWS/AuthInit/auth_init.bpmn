@@ -228,6 +228,13 @@ VertxUtils.publish(currentUser,&quot;webcmds&quot;,currentUser, &quot;USER&quot;
         <drools:metaData name="elementname">
           <drools:metaValue><![CDATA[SendActionCaches]]></drools:metaValue>
         </drools:metaData>
+        <drools:onExit-script scriptFormat="http://www.java.com/java">
+          <drools:script>if (payload != null) {
+
+	System.out.println(&quot;auth_init:SendActionCaches&quot;);
+	VertxUtils.writeMsg(&quot;webcmds&quot;,payload);
+}</drools:script>
+        </drools:onExit-script>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
