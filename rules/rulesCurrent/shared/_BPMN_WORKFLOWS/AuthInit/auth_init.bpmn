@@ -231,10 +231,11 @@ VertxUtils.publish(currentUser,&quot;webcmds&quot;,currentUser, &quot;USER&quot;
           <drools:metaValue><![CDATA[SendActionCaches]]></drools:metaValue>
         </drools:metaData>
         <drools:onExit-script scriptFormat="http://www.java.com/java">
-          <drools:script>if (payload != null) {
+          <drools:script>QBulkMessage qp = (QBulkMessage)kcontext.getVariable(&quot;payload&quot;);
+if (qp != null) {
 
 	System.out.println(&quot;auth_init:SendActionCaches&quot;);
-	VertxUtils.writeMsg(&quot;webcmds&quot;,payload);
+	/* VertxUtils.writeMsg(&quot;webcmds&quot;,qp);  */
 }</drools:script>
         </drools:onExit-script>
       </bpmn2:extensionElements>
