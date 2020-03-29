@@ -33,8 +33,9 @@ rule "ACTION_CACHE_LOGOUT"
  		msg.setCache("QUE_OPTIONS_GRP:QUE_OPTIONS_GRP:QUE_LOGOUT"); /* trigger codes */
 		msg.setToken(userToken.getToken());
   		
-		payload.add(msg);
+  		VertxUtils.writeMsg("webcmds",msg);
+		/* payload.add(msg); */
 				
-		drools.getKnowledgeRuntime().setGlobal("payload", payload);
+	/*	drools.getKnowledgeRuntime().setGlobal("payload", payload); */
 		insert(msg); /* to stop refire */
 end
