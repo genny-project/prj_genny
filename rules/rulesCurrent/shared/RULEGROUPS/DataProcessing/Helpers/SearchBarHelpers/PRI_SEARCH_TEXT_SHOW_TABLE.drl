@@ -76,6 +76,8 @@ rule "PRI_SEARCH_TEXT_SHOW_TABLE"
  			tableUtils.performSearch(beUtils.getGennyToken(), serviceToken,searchBeCode, null);			
 		}
 				 
+		output.setTypeOfResult("NONE");
+  	    output.setResultCode("NONE");  /* dont display anything new */
 
 		
 		
