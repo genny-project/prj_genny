@@ -57,7 +57,7 @@ rule "PRI_SEARCH_TEXT_VERIFY_EMAIL"
 					KeycloakUtils.sendVerifyEmail(email,serviceToken.getToken());
 					System.out.println("Sent verification Email to "+email);
 				} 
-		output.setTypeOfResult("NONE");
+		output.setTypeOfResult("NO_PROCESSING");
   	    output.setResultCode("NONE");  /* dont display anything new */
 		
 		
