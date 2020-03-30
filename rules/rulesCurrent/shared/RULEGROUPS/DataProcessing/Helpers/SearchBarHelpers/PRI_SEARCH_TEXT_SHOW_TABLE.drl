@@ -52,29 +52,38 @@ rule "PRI_SEARCH_TEXT_SHOW_TABLE"
 		String[] split = answer.getValue().split(":");
 		if (split.length == 2) {
 			searchBeCode = split[1];		
-			searchBeCode = searchBeCode.toUpperCase();
-			
+			searchBeCode = searchBeCode.toUpperCase().trim();
+			System.out.println("searchBEcode = "+searchBeCode);
 			/* get current search */
  	   		 TableUtils tableUtils = new TableUtils(beUtils);
+ 	   		 System.out.println("Got to here 0");
 			 SearchEntity searchBE = tableUtils.getSessionSearch(searchBeCode);
-
+			System.out.println("Got to here 1");
  	        Answer pageAnswer = new Answer(beUtils.getGennyToken().getUserCode(),searchBE.getCode(), "SCH_PAGE_START", "0");
 			Answer pageNumberAnswer = new Answer(beUtils.getGennyToken().getUserCode(),searchBE.getCode(), "PRI_INDEX", "1");
+			System.out.println("Got to here 2");
 
 			searchBE = beUtils.updateBaseEntity(searchBE, pageAnswer,SearchEntity.class);
 			searchBE = beUtils.updateBaseEntity(searchBE, pageNumberAnswer,SearchEntity.class);
+			System.out.println("Got to here 3");
 
 			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
 			beUtils.getGennyToken().getToken());
+			System.out.println("Got to here 4");
 
 			/* show tab-view first */
  	   		 ShowFrame.display(beUtils.getGennyToken(), "FRM_QUE_TAB_VIEW", "FRM_CONTENT", "Test");
+			System.out.println("Got to here 5");
 
 			/* show table-view inside tab-content */
 			ShowFrame.display(beUtils.getGennyToken(), "FRM_TABLE_VIEW", "FRM_TAB_CONTENT", "Test");
+			System.out.println("Got to here 6");
 
- 			tableUtils.performSearch(beUtils.getGennyToken(), serviceToken,searchBeCode, null);			
+ 			tableUtils.performSearch(beUtils.getGennyToken(), serviceToken,searchBeCode, null);	
+ 			System.out.println("Got to here 7");
+ 					
 		}
+		System.out.println("Got to here 8");
 				 
 		output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */
