@@ -132,7 +132,7 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_HC"
 			QDataAnswerMessage msg = new QDataAnswerMessage(answers);
 			System.out.println("created QDataAnswerMessage  for "+beImport.getCode()+":"+be.getName());
 			msg.setToken(beUtils.getGennyToken().getToken());
-			
+			msg.setAliasCode("IMPORT");
 			System.out.println("inserting new host company message containing all their new attributes");
 				if ((count >=start) && (count <= finish))	
 				{			

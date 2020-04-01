@@ -16,7 +16,7 @@ rule "PROCESS_ANSWERS"
     when
 	  userToken : GennyToken ( code != "PER_SERVICE" ) 
 	  serviceToken : GennyToken ( code == "PER_SERVICE" ) 
-	  dataMsg : QDataAnswerMessage( (items != null) && (items.length > 0) && (aliasCode != "STATELESS"))
+	  dataMsg : QDataAnswerMessage( (items != null) && (items.length > 0) && (aliasCode != "STATELESS") && (aliasCode != "IMPORT"))
 	  dom : OutputParamTreeSet()
 	  capabilityUtils : CapabilityUtils()
     then
