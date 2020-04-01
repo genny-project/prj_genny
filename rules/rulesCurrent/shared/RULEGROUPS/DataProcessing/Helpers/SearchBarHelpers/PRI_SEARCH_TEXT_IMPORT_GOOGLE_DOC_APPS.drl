@@ -239,6 +239,7 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_APPS"
 			QDataAnswerMessage msg2 = new QDataAnswerMessage(answers2);
 			System.out.println("created QDataAnswerMessage 2 for "+appCode);
 			msg2.setToken(beUtils.getGennyToken().getToken());
+			msg2.setAliasCode("IMPORT");
 
 
 			
