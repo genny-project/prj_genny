@@ -88,8 +88,6 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_USERS"
 				 List<BaseEntityImport> beImports = ImportUtils.importGoogleDoc(googleDocId, sheetId,fieldMapping);
 				 System.out.println("Importing Rule : "+beImports.size()+" items");
 				 /* now generate the baseentity and send through all the answers */
-				 List<Answer> answers = new ArrayList<Answer>();
-				 Integer count=0;
 				 
 				 /* First create The Host Company reps */
 				 
@@ -97,6 +95,9 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_USERS"
 					 if (beImport.getAttributeValuePairList().isEmpty()) {
 						 continue;
 					 }
+				List<Answer> answers = new ArrayList<Answer>();
+				 Integer count=0;
+					 
 					 System.out.println("Import User :"+beImport.getCode()+":"+beImport.getName());
 					 
 				 	/* check if already there */
