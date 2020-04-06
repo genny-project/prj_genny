@@ -114,13 +114,22 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_INTERNS"
 			 	String value = StringUtils.isBlank(attributeCodeValue._2)?"":attributeCodeValue._2; 
 			 	value = value.trim();
 			 	if (be.getCode().equals("PRI_GENDER")) {
-			 		value = value.toUpperCase();
-			 	}
-			 	kv.put(attributeCodeValue._1,value);
-				Answer answer2 = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),attributeCodeValue._1,value);
-				answers.add(answer2);
-				ImportUtils.processAttribute(beUtils,be.getCode(),attributeCodeValue,"PRI_ASSOC_EP","PRI_NAME","CPY_","LNK_EDU_PROVIDER",answers);
-				
+			 		if ("X".equals(value) || (StringUtils.isBlank())) {
+			 			/* let the gender lookup do it */
+			 		} else {
+			 			value = value.toUpperCase();
+			 			kv.put(attributeCodeValue._1,value);
+						Answer answer2 = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),attributeCodeValue._1,value);
+						answers.add(answer2);
+						ImportUtils.processAttribute(beUtils,be.getCode(),attributeCodeValue,"PRI_ASSOC_EP","PRI_NAME","CPY_","LNK_EDU_PROVIDER",answers);
+			 			
+			 		}
+			 	} else {
+			 		kv.put(attributeCodeValue._1,value);
+					Answer answer2 = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),attributeCodeValue._1,value);
+					answers.add(answer2);
+					ImportUtils.processAttribute(beUtils,be.getCode(),attributeCodeValue,"PRI_ASSOC_EP","PRI_NAME","CPY_","LNK_EDU_PROVIDER",answers);
+				}
 
 			 }
 			Answer isPhone = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IS_PHONE",kv.get("PRI_MOBILE"));
