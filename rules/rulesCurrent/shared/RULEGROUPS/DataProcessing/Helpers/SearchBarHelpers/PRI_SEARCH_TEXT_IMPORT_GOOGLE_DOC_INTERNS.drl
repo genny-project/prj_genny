@@ -114,7 +114,7 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_INTERNS"
 			 	String value = StringUtils.isBlank(attributeCodeValue._2)?"":attributeCodeValue._2; 
 			 	value = value.trim();
 			 	if (be.getCode().equals("PRI_GENDER")) {
-			 		if ("X".equals(value) || (StringUtils.isBlank())) {
+			 		if ("X".equals(value) || (StringUtils.isBlank(value))) {
 			 			/* let the gender lookup do it */
 			 		} else {
 			 			value = value.toUpperCase();
