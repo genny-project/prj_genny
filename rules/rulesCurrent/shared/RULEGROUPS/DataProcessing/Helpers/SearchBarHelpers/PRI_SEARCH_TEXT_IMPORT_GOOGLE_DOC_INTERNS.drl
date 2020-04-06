@@ -76,7 +76,13 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_INTERNS"
 	 fieldMapping.put("Student First Name", "PRI_IMPORT_FIRSTNAME");
 	 fieldMapping.put("Last Name", "PRI_IMPORT_LASTNAME");
 	 fieldMapping.put("Student Email", "PRI_EMAIL");
+	 fieldMapping.put("Mobile", "PRI_MOBILE");
+	 fieldMapping.put("PRI_BATCH_CODE", "PRI_BATCH_CODE");
+	 fieldMapping.put("Gender", "PRI_GENDER");
+	 fieldMapping.put("Address", "PRI_IMPORT_FULL_ADDRESS");
 	 fieldMapping.put("Industry", "PRI_INDUSTRY");
+	 fieldMapping.put("Current Course", "PRI_CURRENT_COURSE");
+	 fieldMapping.put("Specialisation", "PRI_SPECIALISATION");
 	 fieldMapping.put("Company Trading Name", "PRI_ASSOC_HOST_COMPANY");
 	 fieldMapping.put("ABN", "PRI_ASSOC_HOST_COMPANY");
 	 fieldMapping.put("Host Company Supervisor", "PRI_ASSOC_SUPERVISOR");
@@ -107,6 +113,9 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_INTERNS"
 			 for (Tuple2<String,String> attributeCodeValue : beImport.getAttributeValuePairList()) {
 			 	String value = StringUtils.isBlank(attributeCodeValue._2)?"":attributeCodeValue._2; 
 			 	value = value.trim();
+			 	if (be.getCode().equals("PRI_GENDER")) {
+			 		value = value.toUpperCase();
+			 	}
 			 	kv.put(attributeCodeValue._1,value);
 				Answer answer2 = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),attributeCodeValue._1,value);
 				answers.add(answer2);
@@ -114,6 +123,14 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_INTERNS"
 				
 
 			 }
+			Answer isPhone = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IS_PHONE",kv.get("PRI_MOBILE"));
+			answers.add(isPhone);
+			String gender = kv.get("PRI_GENDER");
+			gender = gender.toUpperCase();
+			gender = "[\""+gender+"\"]";
+			Answer isGenderSelect = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"LNK_GENDER_SELECT",gender);
+			answers.add(isGenderSelect);
+
 			Answer isIntern = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IS_INTERN","true");
 			answers.add(isIntern);
 			Answer isImported = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IMPORTED","true");
