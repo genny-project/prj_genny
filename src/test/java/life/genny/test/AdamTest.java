@@ -155,6 +155,11 @@ public class AdamTest {
 	
 	@Test
 	public void showFramesTest() {
+		GennyToken tokenUser = GennyJbpmBaseTest.createGennyToken("ABCDEFGH","internmatch", "adam.crow@gada.io", "Adam Crow", "intern,user");
+		GennyToken tokenSupervisor = GennyJbpmBaseTest.createGennyToken("BCDEFGSHS","internmatch", "kanika.gulati@gada.io", "Kanika Gulati", "supervisor,user");
+		System.out.println(tokenUser.getToken());
+		System.out.println(tokenSupervisor.getToken());
+		
 		System.out.println("showFrame Test");
 
 		GennyKieSession gks = null;

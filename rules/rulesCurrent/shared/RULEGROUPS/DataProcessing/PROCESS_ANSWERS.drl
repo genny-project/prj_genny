@@ -16,12 +16,11 @@ rule "PROCESS_ANSWERS"
     when
 	  userToken : GennyToken ( code != "PER_SERVICE" ) 
 	  serviceToken : GennyToken ( code == "PER_SERVICE" ) 
-	  dataMsg : QDataAnswerMessage( (items != null) && (items.length > 0) && (aliasCode != "STATELESS"))
+	  dataMsg : QDataAnswerMessage( (items != null) && (items.length > 0) && (aliasCode != "STATELESS") && (aliasCode != "IMPORT"))
 	  dom : OutputParamTreeSet()
 	  capabilityUtils : CapabilityUtils()
     then
  		System.out.println("Rule -> PROCESS_ANSWERS Processing Answer/Data!!! :  user=" + userToken.getUserCode()); 
- 		retract(dataMsg); /* stop this rule from firing again */
  		
  		/* System.out.println("dom = "+dom); */
  		/*BaseEntityUtils beUtils = new BaseEntityUtils(userToken); 
@@ -36,7 +35,7 @@ rule "PROCESS_ANSWERS"
 
 		if (dataMsg.getItems()!=null) {
 			Integer count = dataMsg.getItems().length;
-			Integer index=0;
+			Integer index=1;
  			for (Answer answer : dataMsg.getItems()) {
  				answer.setInferred(false); /* force inference from the user to be off. This ensures that if this flag is set it is from internal */
  				insert(answer);
@@ -45,5 +44,6 @@ rule "PROCESS_ANSWERS"
  			}
  		}
 		System.out.println("Completed PROCESS_ANSWERS RULE"); 
-	
+		retract(dataMsg); /* stop this rule from firing again */
+ 
 end

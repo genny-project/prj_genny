@@ -560,6 +560,13 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 		return rules;
 	}
 
+	public static GennyToken createGennyToken(final String uuid, final String realm, String username, String name, String role)
+	{
+		return createGennyToken(uuid,realm, username, name, role,24*60*60);
+	}
+
+
+
 	public static GennyToken createGennyToken(final String realm, String username, String name, String role)
 	{
 		return createGennyToken(realm, username, name, role,24*60*60);
@@ -576,6 +583,19 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime expiryTime = now.plusSeconds(expirysecs);
 		GennyToken gennyToken = new GennyToken(normalisedUsername,realm,username,name,role,expiryTime);
+		return gennyToken;
+	}			
+	public static GennyToken createGennyToken(String uuid,final String realm, String username, String name, String role, long expirysecs)
+	{
+		String normalisedUsername = null;
+		if (!username.startsWith("PER_")) {
+			normalisedUsername = "PER_"+username.toUpperCase();
+		} else {
+			normalisedUsername = username.toUpperCase();
+		}
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime expiryTime = now.plusSeconds(expirysecs);
+		GennyToken gennyToken = new GennyToken(uuid,normalisedUsername,realm,username,name,role,expiryTime);
 		return gennyToken;
 	}			
 }

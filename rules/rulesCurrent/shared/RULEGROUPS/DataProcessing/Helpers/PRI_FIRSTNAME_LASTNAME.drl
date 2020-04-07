@@ -17,7 +17,7 @@ import org.apache.commons.lang3.text.WordUtils;
 import java.util.List;
 import java.util.ArrayList;
 import org.apache.commons.lang3.StringUtils;
-
+import org.apache.commons.lang3.text.WordUtils;
 
 
 rule "PRI_FIRSTNAME_LASTNAME"
@@ -48,10 +48,11 @@ rule "PRI_FIRSTNAME_LASTNAME"
 			
 		String name = firstname + " "+lastname;
 		name = name.trim();	
+		name = WordUtils.capitalizeFully(name);
 		System.out.println("Rule -> PRI_FIRSTNAME_LASTNAME 2 Name="+name);
 		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_NAME", name,false,true));
 			
-		String initials = 	WordUtils.initials(name);
+		String initials = 	WordUtils.initials(name).toUpperCase();
 		System.out.println("Rule -> PRI_FIRSTNAME_LASTNAME 3 initials="+initials);
 		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_INITIALS", initials,false,true));
 		
