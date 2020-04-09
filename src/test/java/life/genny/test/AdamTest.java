@@ -155,8 +155,8 @@ public class AdamTest {
 	
 	@Test
 	public void showFramesTest() {
-		GennyToken tokenUser = GennyJbpmBaseTest.createGennyToken("ABCDEFGH","internmatch", "adam.crow@gada.io", "Adam Crow", "intern,user");
-		GennyToken tokenSupervisor = GennyJbpmBaseTest.createGennyToken("BCDEFGSHS","internmatch", "kanika.gulati@gada.io", "Kanika Gulati", "supervisor,user");
+		GennyToken tokenUser = GennyJbpmBaseTest.createGennyToken("ABCDEFGH","internmatch", "adam.crow@gada.io", "Adam Crow", "intern");
+		GennyToken tokenSupervisor = GennyJbpmBaseTest.createGennyToken("BCDEFGSHS","internmatch", "kanika.gulati@gada.io", "Kanika Gulati", "supervisor");
 		System.out.println(tokenUser.getToken());
 		System.out.println(tokenSupervisor.getToken());
 		
@@ -3488,6 +3488,13 @@ public class AdamTest {
 		System.out.println("BridgeUrl=" + GennySettings.bridgeServiceUrl);
 		System.out.println("QwandaUrl=" + GennySettings.qwandaServiceUrl);
 
+		
+		GennyToken tokenUser = GennyJbpmBaseTest.createGennyToken("ABCDEFGH","internmatch", "adam.crow@gada.io", "Adam Crow", "intern");
+		GennyToken tokenSupervisor = GennyJbpmBaseTest.createGennyToken("BCDEFGSHS","internmatch", "kanika.gulati@gada.io", "Kanika Gulati", "supervisor");
+		System.out.println(tokenUser.getToken());
+		System.out.println(tokenSupervisor.getToken());
+
+		
 		// Set up realm
 		realms = new HashSet<String>();
 		realms.add(realm);
