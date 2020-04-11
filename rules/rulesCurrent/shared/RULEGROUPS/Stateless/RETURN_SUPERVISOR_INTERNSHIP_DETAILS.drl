@@ -22,7 +22,7 @@ import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.qwandautils.GennySettings;
 
-rule "RETURN_INTERNSHIP_DETAILS"
+rule "RETURN_SUPERVISOR_INTERNSHIP_DETAILS"
     ruleflow-group 'Stateless'
      salience 5000
      no-loop true
@@ -32,8 +32,8 @@ rule "RETURN_INTERNSHIP_DETAILS"
  	  $project : BaseEntity ( code matches "PRJ_\\S+" )
 	  serviceToken : GennyToken ( code == "PER_SERVICE" )
 	  beUtils : BaseEntityUtils()
-	  allowed : Allowed(code == "READ_HOST_COMPANY" && mode == CapabilityMode.VIEW)
-	  allowed2 : Allowed(code == "INTERN")
+	  allowed : Allowed(code == "READ_INTERNSHIPS" && mode == CapabilityMode.VIEW)
+	  allowed2 : Allowed(code == "SUPERVISOR")
 	  
     then
    		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + $userToken.getUserCode());
@@ -41,7 +41,7 @@ rule "RETURN_INTERNSHIP_DETAILS"
   		 System.out.println("User code is "+$user.getCode());
 		SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Intern Apps")
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-				.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%"+$user.getCode()+"%") 
+				.addFilter("LNK_INTERN_SUPERVISOR", SearchEntity.StringFilter.LIKE, "%"+$user.getCode()+"%") 
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%") 
 			/*	.addFilter("PRI_SYNC", SearchEntity.StringFilter.LIKE, "FALSE") */ 				
 				.addColumn("PRI_NAME", "Name")
