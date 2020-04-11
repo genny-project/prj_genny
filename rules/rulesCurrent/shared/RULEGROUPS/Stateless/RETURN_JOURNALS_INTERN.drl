@@ -42,7 +42,7 @@ rule "RETURN_JOURNALS_INTERN"
 		SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Intern Journals")
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%") 
-				.addFilter("PRI_SYNC", SearchEntity.StringFilter.LIKE, "FALSE") 
+				/* .addFilter("PRI_SYNC", SearchEntity.StringFilter.LIKE, "FALSE") */
 				.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%"+$user.getCode()+"%") 
 				.addColumn("PRI_NAME", "Name")
 				.addColumn("LNK_INTERNSHIP","Internship")
