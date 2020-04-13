@@ -42,19 +42,22 @@ rule "RETURN_JOURNALS_SUPERVISOR"
 		SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Intern Journals")
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%") 
-				.addFilter("PRI_SYNC", SearchEntity.StringFilter.LIKE, "FALSE") 
+				/* .addFilter("PRI_SYNC", SearchEntity.StringFilter.LIKE, "FALSE") */
 				.addFilter("LNK_INTERN_SUPERVISOR", SearchEntity.StringFilter.LIKE, "%"+$user.getCode()+"%") 
 				.addColumn("PRI_NAME", "Name")
 				.addColumn("LNK_INTERNSHIP","Internship")
 				.addColumn("LNK_INTERN", "Intern")
 				.addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep")
 				.addColumn("LNK_HOST_COMPANY", "Host Company")
+				.addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
 				.addColumn("PRI_JOURNAL_DATE","Date")
 				.addColumn("PRI_JOURNAL_HOURS","Hours")
-				.addColumn("PRI_JOURNAL_TASKS","Tasks")
+				.addColumn("PRI_JOURNAL_TASKS","Tasks")				
 				.addColumn("PRI_JOURNAL_LEARNING_OUTCOMES","Learning Outcomes")
+				.addColumn("PRI_FEEDBACK","Feedback")
+				.addColumn("PRI_SYNC","Synced")
 				.setPageStart(0)
-				.setPageSize(100);
+				.setPageSize(2000);
 		
 		searchBE.setRealm(serviceToken.getRealm());
 		
@@ -68,12 +71,24 @@ rule "RETURN_JOURNALS_SUPERVISOR"
 				QDataBaseEntityMessage resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
 				System.out.println(drools.getRule().getName()+" Got to here in RETURN INTERNSHIP DETAILS "+resultJson);
 				BaseEntity[] bes = resultMsg.getItems();
+				/* Now only send the ones that are not synced */
+				List<BaseEntity> unsyncedItemList = new ArrayList<BaseEntity>();
+				for (BaseEntity be : bes) {
+					Optional<String> unsynced = be.getValue("PRI_SYNCED");
+					if ((!unsynced.isPresent()) || ("FALSE".equals(unsynced))) {
+						Answer ans = new Answer($user.getCode(),be.getCode(),"PRI_SYNCED","TRUE");
+						beUtils.saveAnswer(ans);
+						be = beUtils.getBaseEntityByCode(be.getCode());
+						unsyncedItemList.add(be);
+					}
+				}
 				
+				resultMsg.setItems(unsyncedItemList.toArray(new BaseEntity[0]));
 				payload.add(resultMsg);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}		
 		
 		drools.getKnowledgeRuntime().setGlobal("payload", payload);
-		retract(allowed2); /* no longer needed */
+		retract(allowed); /* no longer needed */
 end
