@@ -69,14 +69,14 @@ rule "RETURN_JOURNALS_SUPERVISOR"
 			resultJson = QwandaUtils.apiPostEntity(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search",
 					jsonSearchBE, serviceToken.getToken());
 				QDataBaseEntityMessage resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
-				System.out.println(drools.getRule().getName()+" Got to here in RETURN INTERNSHIP DETAILS "+resultJson);
+				System.out.println(drools.getRule().getName()+" Got to here in RETURN JOURNALS "+resultJson);
 				BaseEntity[] bes = resultMsg.getItems();
 				/* Now only send the ones that are not synced */
 				List<BaseEntity> unsyncedItemList = new ArrayList<BaseEntity>();
 				for (BaseEntity be : bes) {
-					Optional<String> unsynced = be.getValue("PRI_SYNCED");
+					Optional<String> unsynced = be.getValue("PRI_SYNC");
 					if ((!unsynced.isPresent()) || ("FALSE".equals(unsynced))) {
-						Answer ans = new Answer($user.getCode(),be.getCode(),"PRI_SYNCED","TRUE");
+						Answer ans = new Answer($user.getCode(),be.getCode(),"PRI_SYNC","TRUE");
 						beUtils.saveAnswer(ans);
 						be = beUtils.getBaseEntityByCode(be.getCode());
 						unsyncedItemList.add(be);
