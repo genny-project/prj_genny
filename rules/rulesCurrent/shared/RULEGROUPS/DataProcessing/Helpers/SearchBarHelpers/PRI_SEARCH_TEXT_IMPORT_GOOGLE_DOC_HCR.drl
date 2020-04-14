@@ -126,6 +126,8 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_HCR"
 						System.out.println("Found link to "+hc.getName()+" as LNK_HOST_COMPANY_REP");
 						Answer assocHC = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_ASSOC_HC",hc.getName());
 						answers.add(assocHC);
+						Answer lnkHC = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"LNK_HOST_COMPANY","[\""+hc.getCode()+"\"]");
+						answers.add(lnkHC);			 
 						
 					}
 				}
