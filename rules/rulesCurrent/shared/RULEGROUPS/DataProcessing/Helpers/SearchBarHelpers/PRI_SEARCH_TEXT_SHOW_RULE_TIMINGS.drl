@@ -49,7 +49,7 @@ rule "PRI_SEARCH_TEXT_SHOW_RULE_TIMINGS"
    		retract(answer);
    		
    		String[] split = answer.getValue().split(":");
-		filer = " ";
+		String filter = " ";
 		if (split.length >= 2) {
 				filter = split[1]+":"+split[2];
    		
