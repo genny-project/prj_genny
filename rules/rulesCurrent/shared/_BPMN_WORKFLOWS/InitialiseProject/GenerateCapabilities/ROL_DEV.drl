@@ -42,7 +42,7 @@ rule "ROL_DEV"
    	     capabilityUtils.inheritRole(role,superuser);
    	     
    	     capabilityUtils.addCapabilityToRole(role,"SHOW_DEV_INFO",CapabilityMode.DELETE);
-  
+  		 capabilityUtils.addCapabilityToRole(role,"RULE_TIMINGS",CapabilityMode.DELETE);
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
  		 insert(role);
  		 		 
