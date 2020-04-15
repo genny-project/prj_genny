@@ -94,8 +94,11 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_INTERNSHIPS"
 		 	/* check if already there */
 		 List<Answer> answers = new ArrayList<Answer>();
 		 Integer count=0;
-
-		 	BaseEntity be = beUtils.getBaseEntityByCode(beImport.getCode());
+			String studentEmail = beImport.getValue("PRI_EMAIL");
+			BaseEntity student = ImportUtils.fetchBaseEntityByLink(beUtils, "PRI_EMAIL", studentEmail,"PER_");
+			BaseEntity be = ImportUtils.fetchBaseEntityByLink(beUtils,"LNK_INTERN", student.getCode(),"BEG_");
+			
+		 /*	BaseEntity be = beUtils.getBaseEntityByCode(beImport.getCode()); */
 		 	if (be == null) {
 			 	be = beUtils.create(beImport.getCode(), beImport.getName());
 			 } 
