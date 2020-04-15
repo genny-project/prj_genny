@@ -134,7 +134,7 @@ rule "RETURN_SUPERVISOR_INTERNSHIP_DETAILS"
 							itemCode = itemCode.substring(0,(itemCode.length()-2));
 							String[] filterStrArray = { "ENV_REALM", "PRI_NAME", "PRI_LANDLINE","PRI_PHONE","PRI_MOBILE","PRI_EMAIL",
 								"PRI_ADDRESS_ADDRESS1", "PRI_CODE", "PRI_ADDRESS_CITY", "PRI_ADDRESS_POSTCODE", 
-								"PRI_LOGO","PRI_ADDRESS_STATE","PRI_ADDRESS_COUNTRY" };	
+								"PRI_LOGO","PRI_ADDRESS_STATE","PRI_ADDRESS_COUNTRY","PRI_IS_HOST_CPY_REP" };	
 		
 							BaseEntity be = beUtils.getBaseEntityByCode(itemCode);			
 							be = VertxUtils.privacyFilter(be, filterStrArray);	
@@ -155,7 +155,7 @@ rule "RETURN_SUPERVISOR_INTERNSHIP_DETAILS"
 							String[] filterStrArray = { "ENV_REALM", "PRI_NAME", "PRI_LANDLINE","PRI_PHONE",
 								"PRI_ADDRESS_ADDRESS1", "PRI_CODE", "PRI_ADDRESS_CITY", "PRI_ADDRESS_POSTCODE", 
 								"PRI_LOGO","PRI_ADDRESS_STATE","PRI_ADDRESS_COUNTRY",
-								"PRI_ADDRESS_LATITUDE","PRI_ADDRESS_LONGITUDE" };	
+								"PRI_ADDRESS_LATITUDE","PRI_ADDRESS_LONGITUDE","PRI_IS_HOST_CPY" };	
 		
 							BaseEntity be = beUtils.getBaseEntityByCode(itemCode);		
 							if (be != null) {	
