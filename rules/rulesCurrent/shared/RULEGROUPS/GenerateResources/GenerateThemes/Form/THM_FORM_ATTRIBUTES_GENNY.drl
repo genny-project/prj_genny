@@ -28,18 +28,18 @@ import life.genny.models.ThemeAttributeType;
 rule "THM_FORM_ATTRIBUTES_GENNY"
     ruleflow-group 'GenerateThemes'
     no-loop true
-    
+
     when
       not  Theme (code == "THM_FORM_ATTRIBUTES_GENNY")
       serviceToken : GennyToken( code == "PER_SERVICE")
-      
+
     then
-    
+
      	System.out.println("   Generate THM_FORM_ATTRIBUTES_GENNY Rule ");
 
 			 BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
 			BaseEntity project = beUtils.getBaseEntityByCode( "PRJ_" + serviceToken.getRealm().toUpperCase());
- 
+
 		Theme theme = Theme.builder("THM_FORM_ATTRIBUTES_GENNY")
 										.addAttribute().color("black").end()
 										.addAttribute().overflowY("auto").end()
@@ -48,15 +48,15 @@ rule "THM_FORM_ATTRIBUTES_GENNY"
 										.addAttribute().color(project.getValue("PRI_COLOR_SURFACE_ON", "#ffffff")).end()
 										.addAttribute().borderColor("black").end()
 										.addAttribute().borderWidth(1).end()
-										.addAttribute().justifyContent("start").end()
+										.addAttribute().justifyContent("flex-start").end()
 										.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
 									.end()
 								.build();
 
 		theme.setRealm(serviceToken.getRealm());
-		
+
 		insert(theme);
 
 		VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
-	 
+
 end
