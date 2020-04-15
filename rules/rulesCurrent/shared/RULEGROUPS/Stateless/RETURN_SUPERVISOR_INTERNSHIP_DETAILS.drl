@@ -98,7 +98,8 @@ rule "RETURN_SUPERVISOR_INTERNSHIP_DETAILS"
 						String hostCompanyRepCode = null;
 						String hostCompanySupervisorCode = null;
 						String internshipCode = null;
-					
+						String internCode = null;
+						
 						QDataBaseEntityMessage msg2 = new QDataBaseEntityMessage(result);
 						payload.add(msg2); 
 					
@@ -106,7 +107,29 @@ rule "RETURN_SUPERVISOR_INTERNSHIP_DETAILS"
 						Optional<String> optHostCompanyCode = result.getValue("LNK_HOST_COMPANY");		
 						Optional<String> optHostCompanyRepCode = result.getValue("LNK_HOST_COMPANY_REP");		
 						Optional<String> optHostCompanySupervisorCode = result.getValue("LNK_INTERN_SUPERVISOR");		
+						Optional<String> optInternCode = result.getValue("LNK_INTERN");
 
+						if (optInternCode.isPresent()) {
+							String itemCode = optInternCode.get();
+							itemCode = itemCode.substring(2);
+							itemCode = itemCode.substring(0,(itemCode.length()-2));
+							String[] filterStrArray = { "ENV_REALM", "PRI_NAME", "PRI_LANDLINE","PRI_PHONE","PRI_MOBILE","PRI_EMAIL",
+								"PRI_ADDRESS_ADDRESS1", "PRI_CODE", "PRI_ADDRESS_CITY", "PRI_ADDRESS_POSTCODE","PRI_IS_INTERN", 
+								"PRI_ADDRESS_STATE","PRI_ADDRESS_COUNTRY","PRI_IMAGE_URL","PRI_CODE", "PRI_USERNAME" };	
+		
+							BaseEntity be = beUtils.getBaseEntityByCode(itemCode);	
+							if (be != null) {		
+								be = VertxUtils.privacyFilter(be, filterStrArray);		
+								QDataBaseEntityMessage msg = new QDataBaseEntityMessage(be);
+								msg.setAliasCode("INTERN");	
+								payload.add(msg); 
+							} else {
+								System.out.println(drools.getRule().getName()+" No Intern matches the code "+itemCode);
+							}
+						} else {
+							System.out.println("ERROR IN RETURN_INTERNSHIP_DETAILS: No Intern Found");
+						}		
+						
 						if (optHostCompanySupervisorCode.isPresent()) {
 							String itemCode = optHostCompanySupervisorCode.get();
 							itemCode = itemCode.substring(2);
