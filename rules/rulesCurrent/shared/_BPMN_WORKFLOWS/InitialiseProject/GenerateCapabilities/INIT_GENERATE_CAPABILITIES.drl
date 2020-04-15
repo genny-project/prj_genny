@@ -62,6 +62,7 @@ rule "INIT_GENERATE_CAPABILITIES"
   	 	capabilityUtils.addCapability( "DASHBOARD", "Dashboard");
   	 	
   	 	capabilityUtils.addCapability( "SHOW_DEV_INFO","Show Dev Info");
+  	 	capabilityUtils.addCapability( "RULE_TIMINGS","Show Rules Timings");
   	 	
   	 	capabilityUtils.addCapability( "SHOW_TABLE","Show a table from searchBar Command");
   	 	capabilityUtils.addCapability( "VERIFY_EMAIL","Send a Keycloak Verify Email");
