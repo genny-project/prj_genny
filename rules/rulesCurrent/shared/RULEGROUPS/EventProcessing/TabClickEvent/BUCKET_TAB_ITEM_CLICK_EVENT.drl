@@ -33,6 +33,10 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 		switch($message.getData().getCode()){
 
 			case "QUE_TAB_BUCKET_VIEW" : 
+
+				BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+				BucketUtils bucketUtils = new BucketUtils(beUtils);
+				insert(beUtils);		
 		
 				JsonObject tokenObj = VertxUtils.readCachedJson(userToken.getRealm(),"ASK_FRM_BUCKET_VIEW",userToken.getToken());
 		
@@ -46,6 +50,7 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 					String askJson = JsonUtils.toJson(ask);
 					VertxUtils.writeMsg("webcmds",askJson );
 				}
+				ShowFrame.display(beUtils.getGennyToken(), "FRM_BUCKET_VIEW", "FRM_TAB_CONTENT", "Test");
 				output.setFormCode("FRM_BUCKET_VIEW","FRM_TAB_CONTENT"); 
 
 				Theme THM_JUSTIFY_CONTENT_FLEX_START = Theme.builder("THM_JUSTIFY_CONTENT_FLEX_START")
@@ -64,9 +69,6 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 										.addTheme(THM_JUSTIFY_CONTENT_FLEX_START, ThemePosition.CENTRE).end()
 										.addTheme(THM_PADDING_15, ThemePosition.WRAPPER).end()
 										.build();
-
-				BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
-				BucketUtils bucketUtils = new BucketUtils(beUtils);
 
 				bucketUtils.sendBucketContexts(serviceToken);
 				bucketUtils.sendCards(FRM_BUCKET_CONTENT, userToken, serviceToken);

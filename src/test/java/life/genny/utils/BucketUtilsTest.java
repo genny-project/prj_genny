@@ -1483,7 +1483,32 @@ public class BucketUtilsTest {
 		try {
 
 			/* get the list of bucket searchBEs from the cache */
-			List<SearchEntity> searchBeList = bucketUtils.getBucketSearchBeListFromCache(userToken);
+			//List<SearchEntity> searchBeList = bucketUtils.getBucketSearchBeListFromCache(userToken);
+
+			SearchEntity SBE_INPROGRESS_APPLICATIONS = new SearchEntity("SBE_INPROGRESS_APPLICATIONS", "Notes")
+                              .addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
+                              .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+                              /* .addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "PROGRESS") */
+								 
+                              /* status and image */
+                              .addColumn("PRI_STATUS_COLOR", "Status").addColumn("PRI_INTERN_IMAGE_URL", "Image")
+
+                              /* Centre Card */
+                              .addColumn("PRI_INTERN_NAME", "Name").addColumn("PRI_INTERN_STUDENT_ID", "Student ID")
+                              .addColumn("PRI_INDUSTRY", "Industry").addColumn("PRI_EDU_PROVIDER_NAME", "Edu Provider")
+                              .addColumn("PRI_HOST_COMPANY_NAME", "Host Company")
+                              .addColumn("PRI_INTERNSHIP_START_DATE", "Start Date: ").addColumn("PRI_PROGRESS", "Progress")
+
+                              /* Bottom Card */
+                              .addColumn("PRI_OCCUPATION", "Occupation").addColumn("PRI_COMPASS", "Address")
+                              .addColumn("PRI_STAR_RATING", "Rating").addColumn("PRI_TRANSPORT", "Transport")
+                              .addColumn("PRI_INTERN_MOBILE", "Mobile").addColumn("PRI_INTERN_EMAIL", "Email")
+
+															.setPageStart(0).setPageSize(1000);
+															
+
+			List<SearchEntity> searchBeList = new ArrayList<SearchEntity>();
+			searchBeList.add(SBE_INPROGRESS_APPLICATIONS);
 
 			/* get all the contextListMap for card */
 			contextListMap = bucketUtils.getCardContextListMap(contextListMap, userToken);
