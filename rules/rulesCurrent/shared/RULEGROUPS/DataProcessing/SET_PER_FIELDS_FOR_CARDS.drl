@@ -84,9 +84,8 @@ rule "SET_PER_FIELDS_FOR_CARDS"
  		System.out.println("##################################### DUDE: ANSWER = " +answers);
   		System.out.println("##################################### DUDE: NEW_APPLICATION = " + newApplication);
 	
-		retract(newApplication)
-		retract(bucketCode)
-		retract(controlSignalCode)
-		retract(associatedInternBe)
+		retract(newBe)
+		retract(baseEntityType)
+
 		
 end
