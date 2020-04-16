@@ -59,7 +59,7 @@ rule "QUE_TABLE_PREVIOUS_BTN"
 				beUtils.getGennyToken().getToken());
 			
 	        ShowFrame.display(userToken, "FRM_TABLE_VIEW", "FRM_CONTENT", "Test");
-		    tableUtils.performSearch( serviceToken,"SBE_SEARCHBAR",null);
+		    tableUtils.performSearch( serviceToken,"SBE_SEARCHBAR",null, null, null);
 
 			
   	    output.setTypeOfResult("NONE");
