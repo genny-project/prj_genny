@@ -32,13 +32,13 @@ rule "ROL_INTERN"
     when
        not  BaseEntity (code == "ROL_INTERN")
        capabilityUtils : CapabilityUtils()
-       user : BaseEntity (code == "ROL_USER")
+       userRole : BaseEntity (code == "ROL_USER")
      then
      	System.out.println("   Generate "+drools.getRule().getName() );
  		 
    	     BaseEntity role = capabilityUtils.getBeUtils().create(drools.getRule().getName(),WordUtils.capitalize(drools.getRule().getName().substring(4)));
    	     
-   	     capabilityUtils.inheritRole(role,user);
+   	     capabilityUtils.inheritRole(role,userRole);
  
   	     capabilityUtils.addCapabilityToRole(role,"READ_HOST_COMPANY",CapabilityMode.VIEW);
   	     capabilityUtils.addCapabilityToRole(role,"READ_JOURNALS",CapabilityMode.SELF);
