@@ -59,7 +59,7 @@ rule "QUE_TABLE_NEXT_BTN"
 		
 
         	ShowFrame.display(userToken, "FRM_TABLE_VIEW", "FRM_CONTENT", "Test");
- 			tableUtils.performSearch(serviceToken,"SBE_SEARCHBAR", null);
+ 			tableUtils.performSearch(serviceToken,"SBE_SEARCHBAR", null, null, null);
 			}
   	       output.setTypeOfResult("NONE");
   	       output.setResultCode("NONE");  /* dont display anything new */
