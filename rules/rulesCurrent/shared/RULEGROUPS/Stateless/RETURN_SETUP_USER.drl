@@ -32,7 +32,7 @@ rule "RETURN_SETUP_USER"
    		
 		/* fetch user details and return */
 		
-		String[] userFilterStrArray = { "PRI_FIRSTNAME", "PRI_LASTNAME", "PRI_MOBILE", "PRI_IS_INTERN",
+		String[] userFilterStrArray = { "PRI_FIRSTNAME", "PRI_LASTNAME", "PRI_MOBILE", "PRI_IS_INTERN","PRI_IS_INTERN","PRI_IS_HOST_CPY_REP","PRI_IS_ADMIN","PRI_IS_USER","PRI_IS_DEV","PRI_IS_SUPERUSER",
 				"PRI_IMAGE_URL", "PRI_CODE", "PRI_NAME", "PRI_USERNAME", "PRI_EMAIL" };
 		$user = VertxUtils.privacyFilter($user, userFilterStrArray);		
 		QDataBaseEntityMessage userMsg = new QDataBaseEntityMessage($user);

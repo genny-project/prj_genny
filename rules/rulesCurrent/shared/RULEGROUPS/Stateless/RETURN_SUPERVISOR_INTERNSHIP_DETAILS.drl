@@ -21,6 +21,8 @@ import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.qwandautils.GennySettings;
+import java.util.Map;
+import java.util.HashMap;
 
 rule "RETURN_SUPERVISOR_INTERNSHIP_DETAILS"
     ruleflow-group 'Stateless'
@@ -85,6 +87,10 @@ rule "RETURN_SUPERVISOR_INTERNSHIP_DETAILS"
 			resultJson = QwandaUtils.apiPostEntity(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search",
 					jsonSearchBE, serviceToken.getToken());
 			try {
+			
+				List<String> existingBes = new ArrayList<String>();
+			
+			
 				QDataBaseEntityMessage resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
 				System.out.println(drools.getRule().getName()+" Got to here in RETURN INTERNSHIP DETAILS "+resultJson);
 				BaseEntity[] bes = resultMsg.getItems();
@@ -113,18 +119,22 @@ rule "RETURN_SUPERVISOR_INTERNSHIP_DETAILS"
 							String itemCode = optInternCode.get();
 							itemCode = itemCode.substring(2);
 							itemCode = itemCode.substring(0,(itemCode.length()-2));
-							String[] filterStrArray = { "ENV_REALM", "PRI_NAME", "PRI_LANDLINE","PRI_PHONE","PRI_MOBILE","PRI_EMAIL",
-								"PRI_ADDRESS_ADDRESS1", "PRI_CODE", "PRI_ADDRESS_CITY", "PRI_ADDRESS_POSTCODE","PRI_IS_INTERN", 
-								"PRI_ADDRESS_STATE","PRI_ADDRESS_COUNTRY","PRI_IMAGE_URL","PRI_CODE", "PRI_USERNAME" };	
+							
+							if (!existingBes.contains(itemCode)) {
+								String[] filterStrArray = { "ENV_REALM", "PRI_NAME", "PRI_LANDLINE","PRI_PHONE","PRI_MOBILE","PRI_EMAIL",
+									"PRI_ADDRESS_ADDRESS1", "PRI_CODE", "PRI_ADDRESS_CITY", "PRI_ADDRESS_POSTCODE","PRI_IS_INTERN", 
+									"PRI_ADDRESS_STATE","PRI_ADDRESS_COUNTRY","PRI_IMAGE_URL","PRI_CODE", "PRI_USERNAME" };	
 		
-							BaseEntity be = beUtils.getBaseEntityByCode(itemCode);	
-							if (be != null) {		
-								be = VertxUtils.privacyFilter(be, filterStrArray);		
-								QDataBaseEntityMessage msg = new QDataBaseEntityMessage(be);
-								msg.setAliasCode("INTERN");	
-								payload.add(msg); 
-							} else {
-								System.out.println(drools.getRule().getName()+" No Intern matches the code "+itemCode);
+								BaseEntity be = beUtils.getBaseEntityByCode(itemCode);	
+								if (be != null) {		
+									be = VertxUtils.privacyFilter(be, filterStrArray);		
+									QDataBaseEntityMessage msg = new QDataBaseEntityMessage(be);
+									msg.setAliasCode("INTERN");	
+									payload.add(msg); 
+									existingBes.add(itemCode);
+								} else {
+									System.out.println(drools.getRule().getName()+" No Intern matches the code "+itemCode);
+								}
 							}
 						} else {
 							System.out.println("ERROR IN RETURN_INTERNSHIP_DETAILS: No Intern Found");
@@ -134,6 +144,8 @@ rule "RETURN_SUPERVISOR_INTERNSHIP_DETAILS"
 							String itemCode = optHostCompanySupervisorCode.get();
 							itemCode = itemCode.substring(2);
 							itemCode = itemCode.substring(0,(itemCode.length()-2));
+							if (!existingBes.contains(itemCode)) {
+							
 							String[] filterStrArray = { "ENV_REALM", "PRI_NAME", "PRI_LANDLINE","PRI_PHONE","PRI_MOBILE","PRI_EMAIL",
 								"PRI_ADDRESS_ADDRESS1", "PRI_CODE", "PRI_ADDRESS_CITY", "PRI_ADDRESS_POSTCODE","PRI_IS_SUPERVISOR", 
 								"PRI_LOGO","PRI_ADDRESS_STATE","PRI_ADDRESS_COUNTRY" };	
@@ -144,8 +156,10 @@ rule "RETURN_SUPERVISOR_INTERNSHIP_DETAILS"
 								QDataBaseEntityMessage msg = new QDataBaseEntityMessage(be);
 								msg.setAliasCode("SUPERVISOR");	
 								payload.add(msg); 
+								existingBes.add(itemCode);
 							} else {
 								System.out.println(drools.getRule().getName()+" No Supervisor matches the code "+itemCode);
+							}
 							}
 						} else {
 							System.out.println("ERROR IN RETURN_INTERNSHIP_DETAILS: No Supervisor Found");
@@ -155,6 +169,8 @@ rule "RETURN_SUPERVISOR_INTERNSHIP_DETAILS"
 							String itemCode = optHostCompanyRepCode.get();
 							itemCode = itemCode.substring(2);
 							itemCode = itemCode.substring(0,(itemCode.length()-2));
+							if (!existingBes.contains(itemCode)) {
+							
 							String[] filterStrArray = { "ENV_REALM", "PRI_NAME", "PRI_LANDLINE","PRI_PHONE","PRI_MOBILE","PRI_EMAIL",
 								"PRI_ADDRESS_ADDRESS1", "PRI_CODE", "PRI_ADDRESS_CITY", "PRI_ADDRESS_POSTCODE", 
 								"PRI_LOGO","PRI_ADDRESS_STATE","PRI_ADDRESS_COUNTRY","PRI_IS_HOST_CPY_REP" };	
@@ -165,8 +181,10 @@ rule "RETURN_SUPERVISOR_INTERNSHIP_DETAILS"
 								QDataBaseEntityMessage msg = new QDataBaseEntityMessage(be);
 								msg.setAliasCode("HOST_COMPANY_REP");	
 								payload.add(msg); 
+								existingBes.add(itemCode);
 							} else {
 								System.out.println(drools.getRule().getName()+" No Host Company Rep matches the code "+itemCode);
+							}
 							}
 						} else {
 							System.out.println(drools.getRule().getName()+" ERROR IN RETURN_INTERNSHIP_DETAILS: No Host Company Rep Found");
@@ -175,6 +193,8 @@ rule "RETURN_SUPERVISOR_INTERNSHIP_DETAILS"
 							String itemCode = optHostCompanyCode.get();
 							itemCode = itemCode.substring(2);
 							itemCode = itemCode.substring(0,(itemCode.length()-2));
+							if (!existingBes.contains(itemCode)) {
+							
 							String[] filterStrArray = { "ENV_REALM", "PRI_NAME", "PRI_LANDLINE","PRI_PHONE",
 								"PRI_ADDRESS_ADDRESS1", "PRI_CODE", "PRI_ADDRESS_CITY", "PRI_ADDRESS_POSTCODE", 
 								"PRI_LOGO","PRI_ADDRESS_STATE","PRI_ADDRESS_COUNTRY",
@@ -186,8 +206,10 @@ rule "RETURN_SUPERVISOR_INTERNSHIP_DETAILS"
 								QDataBaseEntityMessage msg = new QDataBaseEntityMessage(be);
 								msg.setAliasCode("HOST_COMPANY");	
 								payload.add(msg); 
+								existingBes.add(itemCode);
 							} else {
 								System.out.println(drools.getRule().getName()+" No Host Company matches the code "+itemCode);
+							}
 							}
 						} else {
 							System.out.println(drools.getRule().getName()+" ERROR IN RETURN_INTERNSHIP_DETAILS: No Host Company Found");
