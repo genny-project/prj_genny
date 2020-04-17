@@ -71,18 +71,18 @@ rule "SET_PER_FIELDS_FOR_CARDS"
  	
  		List<Answer> answers = new ArrayList<Answer>();
  		
- 		answers.add(new Answer(userToken.getUserCode(), newApplication.getCode(),"PRI_INDUSTRY", industry));
- 		answers.add(new Answer(userToken.getUserCode(), newApplication.getCode(),"PRI_OCCUPATION", occupation));
- 		answers.add(new Answer(userToken.getUserCode(), newApplication.getCode(),"PRI_STAR_RATING", star_rating));
- 		answers.add(new Answer(userToken.getUserCode(), newApplication.getCode(),"PRI_COMPASS", compass));
- 		answers.add(new Answer(userToken.getUserCode(), newApplication.getCode(),"PRI_TRANSPORT", transport));
+ 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode(),"PRI_INDUSTRY", industry));
+ 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode(),"PRI_OCCUPATION", occupation));
+ 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode(),"PRI_STAR_RATING", star_rating));
+ 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode(),"PRI_COMPASS", compass));
+ 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode(),"PRI_TRANSPORT", transport));
 
  		
  		beUtils.saveAnswers(answers);
  		
  	
  		System.out.println("##################################### DUDE: ANSWER = " +answers);
-  		System.out.println("##################################### DUDE: NEW_APPLICATION = " + newApplication);
+  		System.out.println("##################################### DUDE: NEW_APPLICATION = " + newBe);
 	
 		retract(newBe)
 		retract(baseEntityType)
