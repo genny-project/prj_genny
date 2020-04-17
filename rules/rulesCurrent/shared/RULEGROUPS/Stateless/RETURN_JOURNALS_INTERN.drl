@@ -55,6 +55,7 @@ rule "RETURN_JOURNALS_INTERN"
 				.addColumn("PRI_JOURNAL_TASKS","Tasks")				
 				.addColumn("PRI_JOURNAL_LEARNING_OUTCOMES","Learning Outcomes")
 				.addColumn("PRI_FEEDBACK","Feedback")
+				.addColumn("PRI_STATUS","Status")				
 				.addColumn("PRI_SYNC","Synced")
 				.setPageStart(0)
 				.setPageSize(2000);
@@ -89,6 +90,6 @@ rule "RETURN_JOURNALS_INTERN"
 			e1.printStackTrace();
 		}		
 		
-		drools.getKnowledgeRuntime().setGlobal("payload", payload);
+		/*drools.getKnowledgeRuntime().setGlobal("payload", payload);*/
 		retract(allowed); /* no longer needed */
 end

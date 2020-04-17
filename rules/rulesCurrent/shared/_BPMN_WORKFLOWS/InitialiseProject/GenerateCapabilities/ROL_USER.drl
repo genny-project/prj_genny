@@ -42,7 +42,7 @@ rule "ROL_USER"
  
    	     capabilityUtils.addCapabilityToRole(role,"LOGIN",CapabilityMode.EDIT);
    	     capabilityUtils.addCapabilityToRole(role,"LOGOUT",CapabilityMode.VIEW);
- 	     capabilityUtils.addCapabilityToRole(role,"READ_USER",CapabilityMode.VIEW);
+ 	     capabilityUtils.addCapabilityToRole(role,"READ_USER",CapabilityMode.SELF);
   	     capabilityUtils.addCapabilityToRole(role,"READ_PROJECT",CapabilityMode.VIEW);
      	     capabilityUtils.addCapabilityToRole(role,"EDIT_ACCOUNT",CapabilityMode.SELF);
  	 

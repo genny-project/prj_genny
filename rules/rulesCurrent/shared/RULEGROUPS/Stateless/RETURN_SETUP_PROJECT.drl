@@ -36,6 +36,6 @@ rule "RETURN_SETUP_PROJECT"
 		payload.add(projectMsg); 
 		
 		
-		drools.getKnowledgeRuntime().setGlobal("payload", payload);
+		/*drools.getKnowledgeRuntime().setGlobal("payload", payload);*/
 		retract(allowed); /* no longer needed */
 end

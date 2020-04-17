@@ -87,7 +87,7 @@ rule "RETURN_INTERNSHIP_DETAILS"
 					jsonSearchBE, serviceToken.getToken());
 			try {
 				QDataBaseEntityMessage resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
-				System.out.println(drools.getRule().getName()+" Got to here in RETURN INTERNSHIP DETAILS "+resultJson);
+			/*	System.out.println(drools.getRule().getName()+" Got to here in RETURN INTERNSHIP DETAILS "+resultJson); */
 				BaseEntity[] bes = resultMsg.getItems();
 				System.out.println(drools.getRule().getName()+" The number of items is "+(bes ==null?"NULL":bes.length));
 				if ((bes!=null) && (bes.length > 0)) {
@@ -182,6 +182,6 @@ rule "RETURN_INTERNSHIP_DETAILS"
 		
 
 				
-		drools.getKnowledgeRuntime().setGlobal("payload", payload);
+		/* drools.getKnowledgeRuntime().setGlobal("payload", payload); */
 		retract(allowed2); /* no longer needed */
 end

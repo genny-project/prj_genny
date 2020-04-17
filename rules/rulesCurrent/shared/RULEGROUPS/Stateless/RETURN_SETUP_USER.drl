@@ -20,26 +20,21 @@ rule "RETURN_SETUP_USER"
      salience 5000
      no-loop true
     when
-      beUtils : BaseEntityUtils()
-	  $userToken : GennyToken ( code != "PER_SERVICE" ) 
-	  $user : BaseEntity( code == $userToken.getUserCode() )
-	 
-	  serviceToken : GennyToken ( code == "PER_SERVICE" )
-	  allowed: Allowed(code == "READ_USER" && mode == CapabilityMode.VIEW)
-	  
+      beUtils : BaseEntityUtils()	 
+/*	  allowed: Allowed(code == "READ_USER") */
     then
-   		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + $userToken.getUserCode());
+   		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode());
    		
 		/* fetch user details and return */
-		
-		String[] userFilterStrArray = { "PRI_FIRSTNAME", "PRI_LASTNAME", "PRI_MOBILE", "PRI_IS_INTERN","PRI_IS_INTERN","PRI_IS_HOST_CPY_REP","PRI_IS_ADMIN","PRI_IS_USER","PRI_IS_DEV","PRI_IS_SUPERUSER",
+		BaseEntity user = beUtils.getBaseEntityByCode(beUtils.getGennyToken().getUserCode());
+		String[] userFilterStrArray = { "PRI_FIRSTNAME", "PRI_LASTNAME", "PRI_MOBILE", "PRI_IS_INTERN","PRI_IS_SUPERVISOR","PRI_IS_INTERN","PRI_IS_HOST_CPY_REP","PRI_IS_ADMIN","PRI_IS_USER","PRI_IS_DEV","PRI_IS_SUPERUSER",
 				"PRI_IMAGE_URL", "PRI_CODE", "PRI_NAME", "PRI_USERNAME", "PRI_EMAIL" };
-		$user = VertxUtils.privacyFilter($user, userFilterStrArray);		
-		QDataBaseEntityMessage userMsg = new QDataBaseEntityMessage($user);
+		user = VertxUtils.privacyFilter(user, userFilterStrArray);		
+		QDataBaseEntityMessage userMsg = new QDataBaseEntityMessage(user);
 		userMsg.setAliasCode("USER");	
 		payload.add(userMsg);
 				
 		
 		drools.getKnowledgeRuntime().setGlobal("payload", payload);
-		retract(allowed);  /* no longer needed */
+		/* retract(allowed);*/  /* no longer needed */
 end
