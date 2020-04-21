@@ -183,5 +183,5 @@ rule "RETURN_INTERNSHIP_DETAILS"
 
 				
 		/* drools.getKnowledgeRuntime().setGlobal("payload", payload); */
-		retract(allowed2); /* no longer needed */
+		retract(allowed); /* no longer needed */
 end

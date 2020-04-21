@@ -1391,7 +1391,7 @@ public class AdamTest {
 
 		SearchEntity searchBE = new SearchEntity("ADAMTEST", "Intern Apps")
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-				.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%PER_INTERN1%").addColumn("PRI_NAME", "Name")
+				.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%PER_KANIKA_DOT_GULATI_AT_GADA_DOT_IO").addColumn("PRI_NAME", "Name")
 				.addColumn("LNK_INTERNSHIP", "Internship").addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
 				.addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep").addColumn("LNK_HOST_COMPANY", "Host Company")
 				.setPageStart(0).setPageSize(100);
