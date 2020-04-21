@@ -41,9 +41,9 @@ rule "ROL_INTERN"
    	     capabilityUtils.inheritRole(role,userRole);
  
   	     capabilityUtils.addCapabilityToRole(role,"READ_HOST_COMPANY",CapabilityMode.VIEW);
-  	     capabilityUtils.addCapabilityToRole(role,"READ_JOURNALS",CapabilityMode.SELF);
+  	     capabilityUtils.addCapabilityToRole(role,"READ_JOURNALS",CapabilityMode.VIEW);
   	     capabilityUtils.addCapabilityToRole(role,"CREATE_JOURNALS",CapabilityMode.SELF);
-  	     capabilityUtils.addCapabilityToRole(role,"READ_INTERNSHIPS",CapabilityMode.SELF);
+  	     capabilityUtils.addCapabilityToRole(role,"READ_INTERNSHIPS",CapabilityMode.VIEW);
   	     
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
  		 insert(role);

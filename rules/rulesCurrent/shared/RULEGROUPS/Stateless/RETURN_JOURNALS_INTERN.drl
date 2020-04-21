@@ -32,7 +32,7 @@ rule "RETURN_JOURNALS_INTERN"
  	  $project : BaseEntity ( code matches "PRJ_\\S+" )
 	  serviceToken : GennyToken ( code == "PER_SERVICE" )
 	  beUtils : BaseEntityUtils()
-	  allowed : Allowed(code == "READ_JOURNALS" && mode == CapabilityMode.EDIT)
+	  allowed : Allowed(code == "READ_JOURNALS" && mode == CapabilityMode.VIEW)
 	  allowed2 : Allowed(code == "INTERN")
 	  
     then
@@ -60,6 +60,8 @@ rule "RETURN_JOURNALS_INTERN"
 				.setPageStart(0)
 				.setPageSize(2000);
 		
+
+		
 		searchBE.setRealm(serviceToken.getRealm());
 		
  		String jsonSearchBE = JsonUtils.toJson(searchBE);
@@ -70,26 +72,29 @@ rule "RETURN_JOURNALS_INTERN"
 			resultJson = QwandaUtils.apiPostEntity(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search",
 					jsonSearchBE, serviceToken.getToken());
 				QDataBaseEntityMessage resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
-				System.out.println(drools.getRule().getName()+" Got to here in RETURN JOURNALS DETAILS "+resultJson);
+				/* System.out.println(drools.getRule().getName()+" Got to here in RETURN JOURNALS "+resultJson);*/
 				BaseEntity[] bes = resultMsg.getItems();
 				/* Now only send the ones that are not synced */
 				List<BaseEntity> unsyncedItemList = new ArrayList<BaseEntity>();
 				for (BaseEntity be : bes) {
-					Optional<String> unsynced = be.getValue("PRI_SYNC");
-					if ((!unsynced.isPresent()) || ("FALSE".equals(unsynced))) {
+					/*Optional<String> unsynced = be.getValue("PRI_SYNC");
+					if (!((unsynced.isPresent()) && ("TRUE".equals(unsynced.get())))) {
 						Answer ans = new Answer($user.getCode(),be.getCode(),"PRI_SYNC","TRUE");
 						beUtils.saveAnswer(ans);
 						be = beUtils.getBaseEntityByCode(be.getCode());
 						unsyncedItemList.add(be);
-					}
+					} */
+					be = beUtils.getBaseEntityByCode(be.getCode());
+					unsyncedItemList.add(be);
 				}
 				
 				resultMsg.setItems(unsyncedItemList.toArray(new BaseEntity[0]));
 				payload.add(resultMsg);
+				System.out.println("payloadd in return journals intern = "+payload);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}		
 		
-		/*drools.getKnowledgeRuntime().setGlobal("payload", payload);*/
+		drools.getKnowledgeRuntime().setGlobal("payload", payload); 
 		retract(allowed); /* no longer needed */
 end
