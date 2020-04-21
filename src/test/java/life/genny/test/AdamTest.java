@@ -153,7 +153,7 @@ public class AdamTest {
 	protected static GennyToken newUserToken;
 	protected static GennyToken serviceToken;
 	
-	@Test
+	//@Test
 	public void showFramesTest() {
 		GennyToken tokenUser = GennyJbpmBaseTest.createGennyToken("ABCDEFGH","internmatch", "adam.crow@gada.io", "Adam Crow", "intern");
 		GennyToken tokenSupervisor = GennyJbpmBaseTest.createGennyToken("BCDEFGSHS","internmatch", "kanika.gulati@gada.io", "Kanika Gulati", "supervisor");
@@ -1347,7 +1347,7 @@ public class AdamTest {
 		}
 	}
 
-	// @Test
+	 @Test
 	public void searchTest() {
 		System.out.println("Search test");
 		GennyToken userToken = null;
@@ -1389,13 +1389,35 @@ public class AdamTest {
 //				.setPageStart(0)
 //				.setPageSize(20);
 
-		SearchEntity searchBE = new SearchEntity("ADAMTEST", "Intern Apps")
-				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-				.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%PER_KANIKA_DOT_GULATI_AT_GADA_DOT_IO").addColumn("PRI_NAME", "Name")
-				.addColumn("LNK_INTERNSHIP", "Internship").addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
-				.addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep").addColumn("LNK_HOST_COMPANY", "Host Company")
-				.setPageStart(0).setPageSize(100);
+//		SearchEntity searchBE = new SearchEntity("ADAMTEST", "Intern Apps")
+//				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+//				.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%PER_KANIKA_DOT_GULATI_AT_GADA_DOT_IO").addColumn("PRI_NAME", "Name")
+//				.addColumn("LNK_INTERNSHIP", "Internship").addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
+//				.addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep").addColumn("LNK_HOST_COMPANY", "Host Company")
+//				.setPageStart(0).setPageSize(100);
 
+		SearchEntity searchBE = new SearchEntity("ADAMTEST", "Intern Journals")
+				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%") 
+				/* .addFilter("PRI_SYNC", SearchEntity.StringFilter.LIKE, "FALSE") */
+				.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%"+"PER_KANIKA_DOT_GULATI_PLUS_INTERN_AT_GADA_DOT_IO"+"%") 
+				.addColumn("PRI_NAME", "Name")
+				.addColumn("LNK_INTERNSHIP","Internship")
+				.addColumn("LNK_INTERN", "Intern")
+				.addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep")
+				.addColumn("LNK_HOST_COMPANY", "Host Company")
+				.addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
+				.addColumn("PRI_JOURNAL_DATE","Date")
+				.addColumn("PRI_JOURNAL_HOURS","Hours")
+				.addColumn("PRI_JOURNAL_TASKS","Tasks")				
+				.addColumn("PRI_JOURNAL_LEARNING_OUTCOMES","Learning Outcomes")
+				.addColumn("PRI_FEEDBACK","Feedback")
+				.addColumn("PRI_STATUS","Status")				
+				.addColumn("PRI_SYNC","Synced")
+				.setPageStart(0)
+				.setPageSize(2000);	
+		
+		
 		String jsonSearchBE = JsonUtils.toJson(searchBE);
 		String resultJson;
 		try {

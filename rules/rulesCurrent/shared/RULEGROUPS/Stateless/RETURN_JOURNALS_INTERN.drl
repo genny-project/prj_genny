@@ -90,7 +90,7 @@ rule "RETURN_JOURNALS_INTERN"
 				
 				resultMsg.setItems(unsyncedItemList.toArray(new BaseEntity[0]));
 				payload.add(resultMsg);
-				System.out.println("payloadd in return journals intern = "+payload);
+				System.out.println("payload in return journals intern = "+payload);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}		
