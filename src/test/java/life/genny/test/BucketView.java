@@ -59,6 +59,8 @@ import life.genny.utils.TableUtils;
 //import life.genny.utils.//TableUtilsTest;
 import org.apache.commons.lang3.StringUtils;
 import life.genny.utils.VertxUtils;
+import life.genny.jbpm.customworkitemhandlers.ShowFrame;
+
 
 public class BucketView extends GennyJbpmBaseTest {
 
@@ -145,7 +147,7 @@ public class BucketView extends GennyJbpmBaseTest {
 
 	}
 
-	//@Test
+	@Test
 	public void testSearchBe() {
 
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -158,47 +160,12 @@ public class BucketView extends GennyJbpmBaseTest {
 		
 		System.out.println("running the test");
 
-		String searchBarString = "";
-
-		SearchEntity searchBE3 = new SearchEntity("SBE_INTERNS", "Interns")
-			.addSort("PRI_INTERN_NAME","Name",SearchEntity.Sort.ASC)
-			.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
-			.addFilter("PRI_IS_INTERN", true)
-			.addColumn("PRI_NAME", "Name")
-			.addColumn("PRI_STATUS", "Status")
-			.addColumn("PRI_INTERN_MOBILE", "Mobile")
-			.addFilter("PRI_NAME", SearchEntity.StringFilter.LIKE, "%" + searchBarString + "%")
-			.setPageStart(0).setPageSize(10);
-		
-		SearchEntity searchBE = new SearchEntity("SBE_EDU_PROVIDERS_ACTIVE", "Active")
-				.addSort("PRI_LEGAL_NAME","Title",SearchEntity.Sort.ASC)
-				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "CPY_%")
-				.addFilter("PRI_IS_EDU_PRO", true)
-				.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "Active")
-				.addColumn("PRI_LEGAL_NAME", "Name")
-				.addColumn("PRI_STATUS", "Status")
-				.addColumn("PRI_LANDLINE", "Phone")
-				.addColumn("PRI_ADDRESS_FULL","Address")
-				.setPageStart(0).setPageSize(10);
-
-		/* send out the search */
-		QDataBaseEntityMessage msg = tableUtils.fetchSearchResults(searchBE);
-		BaseEntity[] beList = msg.getItems();
-		
-		SearchEntity searchBE2 = tableUtils.getSessionSearch(searchBE.getCode());
-		
-		
-		QDataBaseEntityMessage msg2 = tableUtils.fetchSearchResults(searchBE2);
-		BaseEntity[] beList2 = msg2.getItems();
-		
-		tableUtils.performSearch(userToken,searchBE.getCode(), null);
-
-		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+		ShowFrame.display(beUtils.getGennyToken(), "FRM_TABLE_VIEW", "FRM_TAB_CONTENT", "Test");
 		
 
 	}
 	
-	@Test
+	//@Test
 	public void sendCards() {
 		Frame3 test = this.getBucketHeaderFame("test","test", "test");
 
