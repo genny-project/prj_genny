@@ -37,7 +37,7 @@ rule "FRM_TABLE_VIEW"
       FRM_TABLE_WRAPPER : Frame3 ( code == "FRM_TABLE_WRAPPER" )
       
     then
-        System.out.println("   Generate FRM_TABLE_VIEW Rule  "+serviceToken.getUserCode());
+        System.out.println("   Generates FRM_TABLE_VIEW Rule  "+serviceToken.getUserCode());
 
         Theme THM_TABLE = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TABLE",
         				Theme.class, serviceToken.getToken());
@@ -48,12 +48,14 @@ rule "FRM_TABLE_VIEW"
                       .addTheme("THM_WIDTH_100_PERCENT", ThemePosition.WRAPPER, serviceToken).end()
                       .addTheme("THM_PROJECT_COLOR_BACKGROUND", serviceToken).end()
                       .addTheme("THM_PADDING_20", ThemePosition.WRAPPER, serviceToken).end()
-                      /*.addFrame(FRM_TABLE_TITLE, FramePosition.NORTH).end()*/
+                      .addFrame(FRM_TABLE_TITLE, FramePosition.NORTH).end()
                       .addFrame(FRM_TABLE_WRAPPER, FramePosition.CENTRE).end()
                       .build();
     
         frame.setRealm(serviceToken.getRealm());
-        insert (frame);
-        FrameUtils2.toMessage(frame, serviceToken);
+
+        /* cache the frame */
+			  VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode(), frame, serviceToken.getToken());
 			
+        insert (frame);
 end
