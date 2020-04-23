@@ -41,7 +41,7 @@ rule "THM_TABLE_ROW_CELL_DATE"
                   .addAttribute()
                     .flexGrow(0)
                     .flexShrink(0)
-                    .flexBasis(100)
+                    .flexBasis(80)
                   .end()
                   .build();
      theme.setRealm(serviceToken.getRealm());
