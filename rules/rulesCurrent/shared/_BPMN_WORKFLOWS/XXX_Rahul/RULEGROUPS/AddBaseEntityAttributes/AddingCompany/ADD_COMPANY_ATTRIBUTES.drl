@@ -9,13 +9,13 @@ rule "ADD_COMPANY_ATTRIBUTES"
     no-loop
 
     when
-    
+
 	  	bePrefix : String ( )
 		output : OutputParam( )
-     
+
      then
-     
+
 		output.setResultCode("CPY");
-		output.setTypeOfResult("COMPANY");
-		
+		output.setTypeOfResult("COMPANYyyyyyy");
+
 end
