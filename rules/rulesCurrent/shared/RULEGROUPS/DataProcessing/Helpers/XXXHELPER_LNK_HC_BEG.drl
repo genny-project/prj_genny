@@ -26,12 +26,12 @@ import life.genny.utils.DropdownUtils;
 import java.util.List;
 import java.util.ArrayList;
 
-rule "HELPER_LNK_INDUSTRY"
+rule "HELPER_LNK_HC_BEG"
 	ruleflow-group 'DataProcessing'
 			salience 5000
 	when
 		beUtils : BaseEntityUtils()
-		answer : Answer( attributeCode == "LNK_INDUSTRY")
+		answer : Answer( attributeCode == "LNK_HC_BEG")
 		answersToSave : Answers()
 		ruleDetails : RuleDetails()
 		output : OutputParam( )
@@ -39,56 +39,52 @@ rule "HELPER_LNK_INDUSTRY"
 		userToken : GennyToken( code != "PER_SERVICE")
 
 	then
-		System.out.println("HELPER_LNK_INDUSTRY fired");
-		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing Helper INDUSTRY SELECTION Answer/Data : " + answer );
-		
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+"Processing Helper HOST COMPANY SELECTION Answer/Data : " + answer );
+
 		String sourceCode = beUtils.getGennyToken().getUserCode();
-		System.out.println("sourceCode :: " + sourceCode);
-		
 		String targetCode = answer.getTargetCode();
-		System.out.println("targetCode :: " + targetCode);
-		
-		String industryCode = answer.getValue();
-		System.out.println("industryCode :: " + industryCode);
-		
-		String code = industryCode.replace("\"", "").replace("[", "").replace("]", "");
-		System.out.println("code  :: " + code);
+		String hostCompanyCode = answer.getValue();
 
+		System.out.println("hostCompanyCode :: " + hostCompanyCode);
+		String code = hostCompanyCode.replace("\"", "").replace("[", "").replace("]", "");
+		System.out.println("hostCompanyCode after  :: " + code);
+
+		/* clear the associated attribute's answer here */
+
+		Answer repAnswer = new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", " ",false,true);
+		Answer supervisorAnswer = new Answer(sourceCode, targetCode, "LNK_INTERN_SUPERVISOR", " ",false,true);
 		answersToSave.add(answer);
-		
-		Answer occupationAnswer = new Answer(sourceCode, targetCode, "LNK_OCCUPATION", " ",false,true);
-		System.out.println("occupationAnswer  :: " + occupationAnswer);
-		answersToSave.add(occupationAnswer);
-		update(answersToSave);
+		answersToSave.add(repAnswer);
+		answersToSave.add(supervisorAnswer);
 
-		BaseEntity baseEntity = beUtils.updateBaseEntity(targetCode,occupationAnswer);
-		beUtils.updateBaseEntity(targetCode,occupationAnswer);
-		System.out.println("baseEntity  :: " + baseEntity);
-		
-		insert(occupationAnswer);
-		System.out.println("occupationAnswer  :: " + occupationAnswer);
-		
-		/* Update the baseenetity in frontend */
+		BaseEntity baseEntity = beUtils.updateBaseEntity(targetCode,repAnswer);
+		beUtils.updateBaseEntity(targetCode,repAnswer);
+
+		baseEntity = beUtils.updateBaseEntity(targetCode,supervisorAnswer);
+		beUtils.updateBaseEntity(targetCode,supervisorAnswer);
+
+		insert(repAnswer);
+		insert(supervisorAnswer);
+
 		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
 		msg.setToken(beUtils.getGennyToken().getToken());
 		msg.setReplace(true);
 		VertxUtils.writeMsg("webcmds",JsonUtils.toJson(msg));
-		System.out.println("msg  :: " + msg);
 
-		/* dropdown search here */
+		update(answersToSave);
+
+		/* do the search here */
 		DropdownUtils dropdown = new DropdownUtils(serviceToken);
-		System.out.println("dropdown  :: " + dropdown);
+
 		dropdown.setNewSearch("Dropdown", "Fetch Dropdown Items")
-											.addColumn("PRI_NAME","Name")
+											.addFilter("PRI_IS_HOST_CPY_REP", true)
 											.setSourceCode(code)
 											.setPageStart(0)
 											.setPageSize(1000);
-		System.out.println("dropdown  :: " + dropdown);
 
-		dropdown.sendSearchResults("GRP_OCCUPATION_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
-		System.out.println("dropdown  :: " + dropdown);
-		
+		dropdown.sendSearchResults("GRP_HOST_COMPANY_REP_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
 		retract(answer);
+
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
 end
