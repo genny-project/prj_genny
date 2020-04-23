@@ -30,7 +30,7 @@ rule "PROCESS_ANSWERS_IMPORT"
  				answer.setInferred(false); /* force inference from the user to be off. This ensures that if this flag is set it is from internal */
  				answer.setChangeEvent(false); 
  				insert(answer);
- 				System.out.println("Process Answers Import: inserted answer "+index+" of "+count+"  "+answer.getTargetCode()+":"+answer.getAttributeCode()); 
+ 				System.out.println("Process Answers Import: inserted answer "+index+" of "+count+"  "+answer.getTargetCode()+":"+answer.getAttributeCode()+":"+answer);  
  				index++;
  			}
  		}
