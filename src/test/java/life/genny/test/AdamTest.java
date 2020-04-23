@@ -1396,11 +1396,32 @@ public class AdamTest {
 //				.addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep").addColumn("LNK_HOST_COMPANY", "Host Company")
 //				.setPageStart(0).setPageSize(100);
 
-		SearchEntity searchBE = new SearchEntity("ADAMTEST", "Intern Journals")
+//		SearchEntity searchBE = new SearchEntity("ADAMTEST", "Intern Journals")
+//				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+//				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%") 
+//				/* .addFilter("PRI_SYNC", SearchEntity.StringFilter.LIKE, "FALSE") */
+//				.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%"+"PER_KANIKA_DOT_GULATI_PLUS_INTERN_AT_GADA_DOT_IO"+"%") 
+//				.addColumn("PRI_NAME", "Name")
+//				.addColumn("LNK_INTERNSHIP","Internship")
+//				.addColumn("LNK_INTERN", "Intern")
+//				.addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep")
+//				.addColumn("LNK_HOST_COMPANY", "Host Company")
+//				.addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
+//				.addColumn("PRI_JOURNAL_DATE","Date")
+//				.addColumn("PRI_JOURNAL_HOURS","Hours")
+//				.addColumn("PRI_JOURNAL_TASKS","Tasks")				
+//				.addColumn("PRI_JOURNAL_LEARNING_OUTCOMES","Learning Outcomes")
+//				.addColumn("PRI_FEEDBACK","Feedback")
+//				.addColumn("PRI_STATUS","Status")				
+//				.addColumn("PRI_SYNC","Synced")
+//				.setPageStart(0)
+//				.setPageSize(2000);	
+	
+		SearchEntity searchBE = new SearchEntity("SBE_SUPERVISOR_JOOURNALS", "Supervisor Journals")
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%") 
 				/* .addFilter("PRI_SYNC", SearchEntity.StringFilter.LIKE, "FALSE") */
-				.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%"+"PER_KANIKA_DOT_GULATI_PLUS_INTERN_AT_GADA_DOT_IO"+"%") 
+				.addFilter("LNK_INTERN_SUPERVISOR", SearchEntity.StringFilter.LIKE, "%"+"PER_SUPERVISOR1"+"%") 
 				.addColumn("PRI_NAME", "Name")
 				.addColumn("LNK_INTERNSHIP","Internship")
 				.addColumn("LNK_INTERN", "Intern")
@@ -1412,10 +1433,10 @@ public class AdamTest {
 				.addColumn("PRI_JOURNAL_TASKS","Tasks")				
 				.addColumn("PRI_JOURNAL_LEARNING_OUTCOMES","Learning Outcomes")
 				.addColumn("PRI_FEEDBACK","Feedback")
-				.addColumn("PRI_STATUS","Status")				
+				.addColumn("PRI_STATUS","Status")								
 				.addColumn("PRI_SYNC","Synced")
 				.setPageStart(0)
-				.setPageSize(2000);	
+				.setPageSize(2000);
 		
 		
 		String jsonSearchBE = JsonUtils.toJson(searchBE);
@@ -1427,7 +1448,9 @@ public class AdamTest {
 				QDataBaseEntityMessage msg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
 				BaseEntity[] bes = msg.getItems();
 				System.out.println("Number of bes returned is " + bes.length);
-
+				for (BaseEntity be : bes) {
+					System.out.println("Be code = "+be.getCode());
+				}
 			} catch (Exception e) {
 				log.info("The result of getSearchResults was null Exception ::  ");
 			}
