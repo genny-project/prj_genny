@@ -41,7 +41,7 @@ rule "THM_TABLE_ROW_CELL_VIEW_JOURNAL"
                   .addAttribute()
                     .flexGrow(0)
                     .flexShrink(0)
-                    .flexBasis(90)
+                    .flexBasis(80)
                   .end()
                   .build();
      theme.setRealm(serviceToken.getRealm());
