@@ -41,7 +41,7 @@ rule "THM_TABLE_ROW_CELL_VIEW"
                   .addAttribute()
                     .flexGrow(0)
                     .flexShrink(0)
-                    .flexBasis(90)
+                    .flexBasis(60)
                   .end()
                   .build();
      theme.setRealm(serviceToken.getRealm());
