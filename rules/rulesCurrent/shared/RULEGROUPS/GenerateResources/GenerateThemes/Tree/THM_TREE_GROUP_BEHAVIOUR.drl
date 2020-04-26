@@ -40,9 +40,11 @@ rule "THM_TREE_GROUP_BEHAVIOUR"
 			Theme theme = Theme.builder("THM_TREE_GROUP_BEHAVIOUR")
 										.addAttribute(ThemeAttributeType.PRI_IS_EXPANDABLE, true).end()
 										.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
-										.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_LABEL, true).end()
+										.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_LABEL, false).end()
 										.addAttribute(ThemeAttributeType.PRI_IS_QUESTION_GRP_LABEL_CLICKABLE, true).end()
 										.addAttribute(ThemeAttributeType.PRI_HAS_CHILD_ASKS, false).end()
+										.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_INPUT, true).end()
+										.addAttribute(ThemeAttributeType.PRI_IS_QUESTION_GRP_INPUT_CLICKABLE, true).end()
 										.build();
 
 			theme.setRealm(serviceToken.getRealm());

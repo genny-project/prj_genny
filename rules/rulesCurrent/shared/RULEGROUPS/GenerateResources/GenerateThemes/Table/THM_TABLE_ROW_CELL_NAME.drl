@@ -41,7 +41,7 @@ rule "THM_TABLE_ROW_CELL_NAME"
                   .addAttribute()
                     .flexGrow(1)
                     .flexShrink(0)
-                    .flexBasis(300)
+                    .flexBasis(200)
                   .end()
                   .build();
      theme.setRealm(serviceToken.getRealm());
