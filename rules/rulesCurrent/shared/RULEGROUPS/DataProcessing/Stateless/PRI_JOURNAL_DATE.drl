@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.HashMap;
 import life.genny.utils.VertxUtils;
 import life.genny.qwandautils.JsonUtils;
+import life.genny.qwandautils.DateTimeUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.commons.lang3.StringUtils;
 import java.util.Optional;
@@ -22,6 +23,8 @@ import java.util.List;
 import java.util.ArrayList;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.qwandautils.GennySettings;
+import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 
 rule "PRI_JOURNAL_DATE"
@@ -33,6 +36,7 @@ rule "PRI_JOURNAL_DATE"
 	  serviceToken : GennyToken( code == "PER_SERVICE") 
 	  answer : Answer( attributeCode == "PRI_JOURNAL_DATE" )
 	  answersToSave : Answers()
+	  
 	  output : OutputParam( )
      then
  		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
@@ -42,7 +46,21 @@ rule "PRI_JOURNAL_DATE"
 		BaseEntity journal = beUtils.getBaseEntityByCode(targetCode);
 		if (journal == null) {
 			System.out.println(drools.getRule().getName()+" Creating new journal be "+targetCode);
-			journal = beUtils.create(targetCode, targetCode);
+			/* Reconstructing name */
+			String dateStr = answer.getValue();
+			LocalDate journalDate = DateTimeUtils.getLocalDateFromString(dateStr);
+			String niceDateStr = DateTimeUtils.getNiceDateStr(journalDate);
+			System.out.println("NiceDateString="+niceDateStr);
+			String userCode = beUtils.getGennyToken().getUserCode();
+			System.out.println("userCode="+userCode);
+			BaseEntity user = beUtils.getBaseEntityByCode(userCode);
+			String firstName = user.getValue("PRI_FIRSTNAME",beUtils.getGennyToken().getString("given_name"));
+			System.out.println("Firstname="+firstName);
+			String niceName = niceDateStr + " " + firstName;
+			System.out.println("NiceName="+niceName);
+			beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_NAME", niceName,false,true)); 
+			
+			journal = beUtils.create(targetCode, niceName);
 			beUtils.saveAnswer(new Answer(sourceCode, targetCode, "LNK_INTERN", "[\""+sourceCode+"\"]",false,true));
 			beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_SYNC", "TRUE",false,true)); /* set to have synced */
 
