@@ -84,7 +84,6 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_HCR"
 	 fieldMapping.put("UNIQUE_KEY_FIELD", "Supervisor Email");
 	 fieldMapping.put("PREFIX", "PER_");
 
-
 	 				
 		 List<BaseEntityImport> beImports = ImportUtils.importGoogleDoc(googleDocId, sheetId,fieldMapping);
 		 System.out.println("Importing Rule : "+beImports.size()+" items");
