@@ -47,7 +47,7 @@ rule "PRI_JOURNAL_DATE"
 		if (journal == null) {
 			System.out.println(drools.getRule().getName()+" Creating new journal be "+targetCode);
 			/* Reconstructing name */
-			String dateStr = answer.getValue();
+			String dateStr = answer.getValue().substring(0,10); /* clip to just date */
 			LocalDate journalDate = DateTimeUtils.getLocalDateFromString(dateStr);
 			String niceDateStr = DateTimeUtils.getNiceDateStr(journalDate);
 			System.out.println("NiceDateString="+niceDateStr);
@@ -128,7 +128,7 @@ rule "PRI_JOURNAL_DATE"
 				System.out.println(drools.getRule().getName()+" journal be existing "+targetCode);
 		}
 					
-		beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_JOURNAL_DATE", answer.getValue(),false,true));	
+		beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_JOURNAL_DATE", answer.getValue().subString(0,10),false,true));	
 
 		output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */
