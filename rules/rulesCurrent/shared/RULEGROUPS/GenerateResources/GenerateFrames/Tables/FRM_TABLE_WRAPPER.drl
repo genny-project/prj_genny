@@ -33,7 +33,7 @@ rule "FRM_TABLE_WRAPPER"
     not  Frame3(code == "FRM_TABLE_WRAPPER")
     serviceToken : GennyToken( code == "PER_SERVICE")
     FRM_TABLE_BODY : Frame3 ( code == "FRM_TABLE_BODY" )
-    FRM_TABLE_FOOTER : Frame3 ( code == "FRM_TABLE_FOOTER" )
+    /* FRM_TABLE_FOOTER : Frame3 ( code == "FRM_TABLE_FOOTER" ) */
   then
     System.out.println(" Generate FRM_TABLE_WRAPPER Rule  "+serviceToken.getUserCode());
 
@@ -42,7 +42,7 @@ rule "FRM_TABLE_WRAPPER"
                   .addTheme("THM_BOX_SHADOW_XS",ThemePosition.WRAPPER,serviceToken).end()
                   .addTheme("THM_PROJECT_COLOR_SURFACE", serviceToken).end()
                   .addFrame(FRM_TABLE_BODY, FramePosition.CENTRE).end()
-                  .addFrame(FRM_TABLE_FOOTER, FramePosition.SOUTH).end()
+                  /* .addFrame(FRM_TABLE_FOOTER, FramePosition.SOUTH).end() */
                   .build();
 
     frame.setRealm(serviceToken.getRealm());
