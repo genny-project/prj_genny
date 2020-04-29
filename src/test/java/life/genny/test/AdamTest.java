@@ -10,6 +10,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -101,6 +102,7 @@ import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventMessage;
 import life.genny.qwanda.validation.Validation;
 import life.genny.qwanda.validation.ValidationList;
+import life.genny.qwandautils.DateTimeUtils;
 import life.genny.qwandautils.GennyCacheInterface;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
@@ -152,6 +154,105 @@ public class AdamTest {
 	protected static GennyToken userToken;
 	protected static GennyToken newUserToken;
 	protected static GennyToken serviceToken;
+	
+	
+	@Test
+	public void FixJournalNamesTest()
+	{
+		System.out.println("Import Users test");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+		} else {
+			VertxUtils.cachedEnabled = false;
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+		}
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		beUtils.setServiceToken(serviceToken);
+		
+		SearchEntity searchBE = new SearchEntity("SBE_SEARCH", "Intern Journals")
+				.addSort("PRI_CODE", "Created", SearchEntity.Sort.ASC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%") 
+				.addColumn("PRI_JOURNAL_DATE", "Date")
+				.addColumn("LNK_INTERN", "Intern")
+				.setPageStart(0)
+				.setPageSize(20000);
+		
+		searchBE.setRealm(serviceToken.getRealm());
+		
+ 		String jsonSearchBE = JsonUtils.toJson(searchBE);
+ 		/* System.out.println(jsonSearchBE); */
+		String resultJson;
+		BaseEntity result = null; 
+		try {
+			resultJson = QwandaUtils.apiPostEntity(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search",
+					jsonSearchBE, serviceToken.getToken());
+				QDataBaseEntityMessage resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
+				BaseEntity[] bes = resultMsg.getItems();
+				Map<String,BaseEntity> supervisors = new HashMap<String,BaseEntity>();
+				for (BaseEntity be : bes) {
+					String niceDate="";
+					String firstname="" ;
+					BaseEntity intern = null;
+					System.out.println("Processing JNL "+be.getCode());
+					Optional<LocalDate> optDate = be.getValue("PRI_JOURNAL_DATE");
+					Optional<String> optIntern = be.getValue("LNK_INTERN");
+					Optional<String> optSupervisor = be.getValue("LNK_INTERN_SUPERVISOR");
+					if (optDate.isPresent()) {
+						LocalDate date = optDate.get();
+						System.out.println("Journal date = "+date);
+						niceDate = DateTimeUtils.getNiceDateStr(date);
+						System.out.println("Journal nice date = "+niceDate);
+					}
+					if (optIntern.isPresent()) {
+						String internCode = optIntern.get();
+						internCode = internCode.substring(2,internCode.length()-2);
+						System.out.println("Intern = "+internCode);
+						intern = beUtils.getBaseEntityByCode(internCode);
+						if (intern != null) {
+							String name = intern.getName();
+							String[] names = name.split(" ");
+							firstname = intern.getValue("PRI_FIRSTNAME",names[0]);
+						} else {
+							firstname = "";
+						}
+						
+					}
+					if (optSupervisor.isPresent()) {
+						String supervisorCode = optSupervisor.get();
+						supervisorCode = supervisorCode.substring(2,supervisorCode.length()-2);
+						if (!supervisors.containsKey(supervisorCode)) {
+						System.out.println("Supervisor = "+supervisorCode);
+						BaseEntity supervisor  = beUtils.getBaseEntityByCode(supervisorCode);
+						beUtils.updateBaseEntity(supervisor, new Answer(supervisor.getCode(),supervisor.getCode(),"PRI_IS_SUPERVISOR","TRUE"));
+						beUtils.updateBaseEntity(supervisor, new Answer(supervisor.getCode(),supervisor.getCode(),"PRI_DISABLED","FALSE"));
+						supervisors.put(supervisorCode, supervisor);
+						}
+					}
+					String niceName = niceDate+" "+firstname;
+					niceName = niceName.trim();
+					beUtils.updateBaseEntityAttribute(be.getCode(), be.getCode(), "PRI_NAME", niceName);
+					
+				}
+				System.out.println("Finished Fixing Journals");
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}		
+	}
+	
 	
 	//@Test
 	public void showFramesTest() {
