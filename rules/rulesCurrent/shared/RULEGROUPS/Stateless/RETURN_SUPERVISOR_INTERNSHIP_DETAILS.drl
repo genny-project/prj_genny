@@ -123,7 +123,7 @@ rule "RETURN_SUPERVISOR_INTERNSHIP_DETAILS"
 							if (!existingBes.contains(itemCode)) {
 								String[] filterStrArray = { "ENV_REALM", "PRI_NAME", "PRI_LANDLINE","PRI_PHONE","PRI_MOBILE","PRI_EMAIL",
 									"PRI_ADDRESS_ADDRESS1", "PRI_CODE", "PRI_ADDRESS_CITY", "PRI_ADDRESS_POSTCODE","PRI_IS_INTERN", 
-									"PRI_ADDRESS_STATE","PRI_ADDRESS_COUNTRY","PRI_IMAGE_URL","PRI_CODE", "PRI_USERNAME" };	
+									"PRI_ADDRESS_STATE","PRI_ADDRESS_COUNTRY","PRI_IMAGE_URL","PRI_CODE", "PRI_USERNAME", "PRI_FIRSTNAME","PRI_LASTNAME" };	
 		
 								BaseEntity be = beUtils.getBaseEntityByCode(itemCode);	
 								if (be != null) {		
@@ -133,11 +133,11 @@ rule "RETURN_SUPERVISOR_INTERNSHIP_DETAILS"
 									payload.add(msg); 
 									existingBes.add(itemCode);
 								} else {
-									System.out.println(drools.getRule().getName()+" No Intern matches the code "+itemCode);
+									System.out.println(drools.getRule().getName()+" No Intern matches the code "+itemCode+"  for "+result.getCode());
 								}
 							}
 						} else {
-							System.out.println("ERROR IN RETURN_INTERNSHIP_DETAILS: No Intern Found");
+							System.out.println("ERROR IN RETURN_INTERNSHIP_DETAILS: No Intern Found for "+result.getCode());
 						}		
 						
 						if (optHostCompanySupervisorCode.isPresent()) {
@@ -227,6 +227,6 @@ rule "RETURN_SUPERVISOR_INTERNSHIP_DETAILS"
 		
 
 				
-		/* drools.getKnowledgeRuntime().setGlobal("payload", payload); */
+		drools.getKnowledgeRuntime().setGlobal("payload", payload); 
 		retract(allowed); /* no longer needed */
 end
