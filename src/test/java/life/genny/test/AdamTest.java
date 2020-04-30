@@ -198,7 +198,7 @@ public class AdamTest {
 		String resultJson;
 		BaseEntity result = null; 
 		try {
-			resultJson = QwandaUtils.apiPostEntity(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search",
+			resultJson = QwandaUtils.apiPostEntity("https://internmatch-cyrus.gada.io/qwanda/baseentitys/search",
 					jsonSearchBE, serviceToken.getToken());
 				QDataBaseEntityMessage resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
 				BaseEntity[] bes = resultMsg.getItems();
