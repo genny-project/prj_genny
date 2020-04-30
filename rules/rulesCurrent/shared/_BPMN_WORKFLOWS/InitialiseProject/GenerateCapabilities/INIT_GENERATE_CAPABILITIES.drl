@@ -80,6 +80,7 @@ rule "INIT_GENERATE_CAPABILITIES"
  		capabilityUtils.addCapability( "APPROVE_JOURNALS", "Approve Journals");
  		capabilityUtils.addCapability( "READ_JOURNALS", "Read Journals");
    
+   		capabilityUtils.addCapability( "SEARCHBAR_CMDS", "Run Commands From SearchBar");
 		capabilityUtils.process();
 		
 		System.out.println("   Completed initial setup of Capabilities - "+capabilityUtils);
