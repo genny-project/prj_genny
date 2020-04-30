@@ -47,6 +47,8 @@ rule "ROL_SUPERUSER"
    	     capabilityUtils.addCapabilityToRole(role,"IMPORT_INTERNSHIPS",CapabilityMode.DELETE);
   	     capabilityUtils.addCapabilityToRole(role,"IMPORT_HC",CapabilityMode.DELETE);
    	     capabilityUtils.addCapabilityToRole(role,"IMPORT_HCR",CapabilityMode.DELETE);
+   	     
+   	     capabilityUtils.addCapabilityToRole(role,"SEARCHBAR_CMDS",CapabilityMode.DELETE);  /* makes the others a bit obsolete */
  
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
  		 insert(role);
