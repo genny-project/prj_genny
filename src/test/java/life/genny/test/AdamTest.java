@@ -157,9 +157,9 @@ public class AdamTest {
 	
 	
 	@Test
-	public void FixJournalNamesTest()
+	public void FixMissingSupervisorsTest()
 	{
-		System.out.println("Import Users test");
+		System.out.println("Fix Missing Supervisors test");
 		GennyToken userToken = null;
 		GennyToken serviceToken = null;
 		QRules qRules = null;
@@ -183,11 +183,12 @@ public class AdamTest {
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		beUtils.setServiceToken(serviceToken);
 		
-		SearchEntity searchBE = new SearchEntity("SBE_SEARCH", "Intern Journals")
+		SearchEntity searchBE = new SearchEntity("SBE_SEARCH", "Fix Missing Supervisors")
 				.addSort("PRI_CODE", "Created", SearchEntity.Sort.ASC)
-				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%") 
-				.addColumn("PRI_JOURNAL_DATE", "Date")
-				.addColumn("LNK_INTERN", "Intern")
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%") 
+				.addColumn("PRI_ASSOC_HOST_COMPANY_EMAIL", "Host Company Rep Email")
+				.addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
+				.addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep")
 				.setPageStart(0)
 				.setPageSize(20000);
 		
@@ -198,54 +199,51 @@ public class AdamTest {
 		String resultJson;
 		BaseEntity result = null; 
 		try {
-			resultJson = QwandaUtils.apiPostEntity("https://internmatch-cyrus.gada.io/qwanda/baseentitys/search",
+			resultJson = QwandaUtils.apiPostEntity(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search",
 					jsonSearchBE, serviceToken.getToken());
 				QDataBaseEntityMessage resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
 				BaseEntity[] bes = resultMsg.getItems();
+				System.out.println("Processing "+resultMsg.getItems().length+" Internships");
 				Map<String,BaseEntity> supervisors = new HashMap<String,BaseEntity>();
 				for (BaseEntity be : bes) {
-					String niceDate="";
-					String firstname="" ;
-					BaseEntity intern = null;
-					System.out.println("Processing JNL "+be.getCode());
-					Optional<LocalDate> optDate = be.getValue("PRI_JOURNAL_DATE");
-					Optional<String> optIntern = be.getValue("LNK_INTERN");
+if (be.getCode().equals("BEG_32650251AD874EEA9252740795D6F9D6")) {
+					BaseEntity hcr = null;
+					BaseEntity supervisor = null;
+					String lnkHCR = null;
+					
+					System.out.println("Processing Internship "+be.getCode());
+					Optional<String> optEmail = be.getValue("PRI_ASSOC_HOST_COMPANY_EMAIL");
+					Optional<String> optHCR = be.getValue("LNK_HOST_COMPANY_REP");
 					Optional<String> optSupervisor = be.getValue("LNK_INTERN_SUPERVISOR");
-					if (optDate.isPresent()) {
-						LocalDate date = optDate.get();
-						System.out.println("Journal date = "+date);
-						niceDate = DateTimeUtils.getNiceDateStr(date);
-						System.out.println("Journal nice date = "+niceDate);
-					}
-					if (optIntern.isPresent()) {
-						String internCode = optIntern.get();
-						internCode = internCode.substring(2,internCode.length()-2);
-						System.out.println("Intern = "+internCode);
-						intern = beUtils.getBaseEntityByCode(internCode);
-						if (intern != null) {
-							String name = intern.getName();
-							String[] names = name.split(" ");
-							firstname = intern.getValue("PRI_FIRSTNAME",names[0]);
-						} else {
-							firstname = "";
-						}
+					if (optHCR.isPresent()) {
+						String hcrCode = optHCR.get();
+						hcrCode = hcrCode.substring(2,hcrCode.length()-2);
+						System.out.println("HCR = "+hcrCode);
+						hcr = beUtils.getBaseEntityByCode(hcrCode); 
+						
 						
 					}
-					if (optSupervisor.isPresent()) {
-						String supervisorCode = optSupervisor.get();
-						supervisorCode = supervisorCode.substring(2,supervisorCode.length()-2);
-						if (!supervisors.containsKey(supervisorCode)) {
-						System.out.println("Supervisor = "+supervisorCode);
-						BaseEntity supervisor  = beUtils.getBaseEntityByCode(supervisorCode);
-						beUtils.updateBaseEntity(supervisor, new Answer(supervisor.getCode(),supervisor.getCode(),"PRI_IS_SUPERVISOR","TRUE"));
-						beUtils.updateBaseEntity(supervisor, new Answer(supervisor.getCode(),supervisor.getCode(),"PRI_DISABLED","FALSE"));
-						supervisors.put(supervisorCode, supervisor);
+					if (optEmail.isPresent()) {
+						String email = optEmail.get();
+						System.out.println("Email = "+email);
+						String code = "PER_"+QwandaUtils.getNormalisedUsername(email);
+						if (!optHCR.isPresent()) {
+							 lnkHCR = "[\""+code+"\"]";
+							beUtils.saveAnswer(new Answer(be.getCode(),be.getCode(),"LNK_HOST_COMPANY_REP",lnkHCR));
 						}
 					}
-					String niceName = niceDate+" "+firstname;
-					niceName = niceName.trim();
-					beUtils.updateBaseEntityAttribute(be.getCode(), be.getCode(), "PRI_NAME", niceName);
 					
+					if (!optSupervisor.isPresent()) {
+							System.out.println("Setting Supervisor "+lnkHCR);
+							if (lnkHCR != null) {
+								beUtils.saveAnswer(new Answer(be.getCode(),be.getCode(),"LNK_INTERN_SUPERVISOR",lnkHCR));
+							} else 
+							if (hcr != null) {
+								lnkHCR = "[\""+hcr.getCode()+"\"]";
+								beUtils.saveAnswer(new Answer(be.getCode(),be.getCode(),"LNK_INTERN_SUPERVISOR",lnkHCR));
+							}
+					}
+}
 				}
 				System.out.println("Finished Fixing Journals");
 		} catch (Exception e1) {
