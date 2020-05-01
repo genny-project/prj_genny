@@ -43,7 +43,7 @@ rule "PRI_FEEDBACK"
 				String userCode = beUtils.getGennyToken().getUserCode();
 				if (supervisorCode.contains(userCode)) {
 					System.out.println("Supervisor is Valid -> Setting Status");		
-					beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_FEEDBACK", answer.getValue(),false,true));	
+					answersToSave.add(new Answer(sourceCode, targetCode, "PRI_FEEDBACK", answer.getValue(),false,true));	
 				} else {
 					System.out.println(sourceCode+" IS NOT THE Supervisor for journal "+journal.getCode());
 				}
