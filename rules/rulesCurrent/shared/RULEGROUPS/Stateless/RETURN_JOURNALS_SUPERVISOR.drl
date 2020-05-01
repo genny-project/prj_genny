@@ -38,6 +38,8 @@ rule "RETURN_JOURNALS_SUPERVISOR"
     then
    		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + $userToken.getUserCode());
    		long starttime = System.currentTimeMillis();
+   		long looptime = 0;
+   		long searchtime = 0;
   		 System.out.println("User code is "+$user.getCode());
 		SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Intern Journals")
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
@@ -69,7 +71,7 @@ rule "RETURN_JOURNALS_SUPERVISOR"
 		try {
 			resultJson = QwandaUtils.apiPostEntity(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search",
 					jsonSearchBE, serviceToken.getToken());
-					long searchtime = System.currentTimeMillis();
+					searchtime = System.currentTimeMillis();
 				QDataBaseEntityMessage resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
 				/* System.out.println(drools.getRule().getName()+" Got to here in RETURN JOURNALS "+resultJson);*/
 				BaseEntity[] bes = resultMsg.getItems();
@@ -86,7 +88,7 @@ rule "RETURN_JOURNALS_SUPERVISOR"
 					be = beUtils.getBaseEntityByCode(be.getCode());
 					unsyncedItemList.add(be);
 				}
-				long looptime = System.currentTimeMillis();
+				looptime = System.currentTimeMillis();
 				resultMsg.setItems(unsyncedItemList.toArray(new BaseEntity[0]));
 				payload.add(resultMsg);
 				System.out.println("payload in return journals supervisoor = "+payload);
