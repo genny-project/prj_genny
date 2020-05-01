@@ -57,6 +57,10 @@ rule "RETURN_JOURNALS_INTERN"
 				.addColumn("PRI_FEEDBACK","Feedback")
 				.addColumn("PRI_STATUS","Status")				
 				.addColumn("PRI_SYNC","Synced")
+				.addColumn("PRI_LAST_UPDATED")
+				.addColumn("PRI_INTERN_LAST_UPDATE")
+				.addColumn("PRI_SUPERVISOR_LAST_UPDATE")
+				.addColumn("PRI_LAST_CHANGED_BY")
 				.setPageStart(0)
 				.setPageSize(2000);
 		
