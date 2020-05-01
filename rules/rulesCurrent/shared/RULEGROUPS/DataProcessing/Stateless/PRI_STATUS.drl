@@ -39,6 +39,8 @@ rule "PRI_STATUS"
 		if (journal != null) {	
 		
 			String supervisorCode = journal.getValue("LNK_INTERN_SUPERVISOR",null);	
+			String internCode = journal.getValue("LNK_INTERN",null);
+				
 			if (supervisorCode != null) {
 				System.out.println("Supervisor code for journal "+journal.getCode()+ " is "+supervisorCode);
 				String userCode = beUtils.getGennyToken().getUserCode();
@@ -48,6 +50,14 @@ rule "PRI_STATUS"
 				} else {
 					System.out.println(sourceCode+" IS NOT THE Supervisor for journal "+journal.getCode());
 				}
+				
+				if (internCode != null) {
+					if (internCode.contains(userCode)) {
+						beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_STATUS", answer.getValue(),false,true));	
+					}
+				
+				}
+				
 			} else {
 				System.out.println("Supervisor code for journal "+journal.getCode()+ " is NULL");
 			}
