@@ -37,7 +37,7 @@ rule "RETURN_JOURNALS_SUPERVISOR"
 	  
     then
    		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + $userToken.getUserCode());
-   		
+   		long starttime = System.currentTimeMillis();
   		 System.out.println("User code is "+$user.getCode());
 		SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Intern Journals")
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
@@ -69,6 +69,7 @@ rule "RETURN_JOURNALS_SUPERVISOR"
 		try {
 			resultJson = QwandaUtils.apiPostEntity(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search",
 					jsonSearchBE, serviceToken.getToken());
+					long searchtime = System.currentTimeMillis();
 				QDataBaseEntityMessage resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
 				/* System.out.println(drools.getRule().getName()+" Got to here in RETURN JOURNALS "+resultJson);*/
 				BaseEntity[] bes = resultMsg.getItems();
@@ -85,14 +86,19 @@ rule "RETURN_JOURNALS_SUPERVISOR"
 					be = beUtils.getBaseEntityByCode(be.getCode());
 					unsyncedItemList.add(be);
 				}
-				
+				long looptime = System.currentTimeMillis();
 				resultMsg.setItems(unsyncedItemList.toArray(new BaseEntity[0]));
 				payload.add(resultMsg);
-				System.out.println("payloadd in return journals supervisoor = "+payload);
+				System.out.println("payload in return journals supervisoor = "+payload);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}		
 		
 		drools.getKnowledgeRuntime().setGlobal("payload", payload); 
 		retract(allowed); /* no longer needed */
+		long endtime = System.currentTimeMillis();
+		System.out.println("search took "+(searchtime-starttime)+" ms");
+		System.out.println("loop took "+(looptime-searchtime)+" ms");
+		System.out.println("finish took "+(endtime-looptime)+" ms");
+		System.out.println("total took "+(endtime-starttime)+" ms");
 end
