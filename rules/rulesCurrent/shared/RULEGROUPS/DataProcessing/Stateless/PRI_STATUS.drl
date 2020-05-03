@@ -46,14 +46,14 @@ rule "PRI_STATUS"
 				String userCode = beUtils.getGennyToken().getUserCode();
 				if (supervisorCode.contains(userCode)) {
 					System.out.println("Supervisor is Valid -> Setting Status");		
-					answersToSave.add(new Answer(sourceCode, targetCode, "PRI_STATUS", answer.getValue(),false,true));	
+					beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_STATUS", answer.getValue(),false,true));	
 				} else {
 					System.out.println(sourceCode+" IS NOT THE Supervisor for journal "+journal.getCode());
 				}
 				
 				if (internCode != null) {
 					if (internCode.contains(userCode)) {
-						answersToSave.add(new Answer(sourceCode, targetCode, "PRI_STATUS", answer.getValue(),false,true));	
+						beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_STATUS", answer.getValue(),false,true));	
 					}
 				
 				}

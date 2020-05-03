@@ -58,11 +58,11 @@ rule "PRI_JOURNAL_DATE"
 			System.out.println("Firstname="+firstName);
 			String niceName = niceDateStr + " " + firstName;
 			System.out.println("NiceName="+niceName);
-			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_NAME", niceName,false,true)); 
+			beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_NAME", niceName,false,true)); 
 			
 			journal = beUtils.create(targetCode, niceName);
-			answersToSave.add(new Answer(sourceCode, targetCode, "LNK_INTERN", "[\""+sourceCode+"\"]",false,true));
-			answersToSave.add(new Answer(sourceCode, targetCode, "PRI_SYNC", "TRUE",false,true)); /* set to have synced */
+			beUtils.saveAnswer(new Answer(sourceCode, targetCode, "LNK_INTERN", "[\""+sourceCode+"\"]",false,true));
+			beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_SYNC", "TRUE",false,true)); /* set to have synced */
 			
 			SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Internship Details")
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
@@ -106,16 +106,16 @@ rule "PRI_JOURNAL_DATE"
 					Optional<String> optInternshipCode = result.getValue("LNK_INTERNSHIP");		
 					
 					if (optHostCompanyCode.isPresent()) {
-						answersToSave.add(new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY", optHostCompanyCode.get(),false,true));
+						beUtils.saveAnswer(new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY", optHostCompanyCode.get(),false,true));
 					}
 					if (optHostCompanyRepCode.isPresent()) {
-						answersToSave.add(new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", optHostCompanyRepCode.get(),false,true));
+						beUtils.saveAnswer(new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", optHostCompanyRepCode.get(),false,true));
 					}
 					if (optHostCompanySupervisorCode.isPresent()) {
-						answersToSave.add(new Answer(sourceCode, targetCode, "LNK_INTERN_SUPERVISOR", optHostCompanySupervisorCode.get(),false,true));
+						beUtils.saveAnswer(new Answer(sourceCode, targetCode, "LNK_INTERN_SUPERVISOR", optHostCompanySupervisorCode.get(),false,true));
 					}
 					if (optInternshipCode.isPresent()) {
-						answersToSave.add(new Answer(sourceCode, targetCode, "LNK_INTERNSHIP", optInternshipCode.get(),false,true));
+						beUtils.saveAnswer(new Answer(sourceCode, targetCode, "LNK_INTERNSHIP", optInternshipCode.get(),false,true));
 					}
 					
 					
@@ -128,7 +128,7 @@ rule "PRI_JOURNAL_DATE"
 				System.out.println(drools.getRule().getName()+" journal be existing "+targetCode);
 		}
 					
-		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_JOURNAL_DATE", answer.getValue().substring(0,10),false,true));	
+		beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_JOURNAL_DATE", answer.getValue().substring(0,10),false,true));	
 
 		output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */
