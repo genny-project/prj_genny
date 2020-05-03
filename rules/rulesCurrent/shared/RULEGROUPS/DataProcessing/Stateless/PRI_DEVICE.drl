@@ -41,7 +41,7 @@ rule "PRI_DEVICE"
 		
 		BaseEntity user = beUtils.getBaseEntityByCode(targetCode);
 
-		answersToSave.add(new Answer(sourceCode, targetCode, answer.getAttributeCode(), answer.getValue(),false,true));	
+		beUtils.saveAnswer(new Answer(sourceCode, targetCode, answer.getAttributeCode(), answer.getValue(),false,true));	
 
 		output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */

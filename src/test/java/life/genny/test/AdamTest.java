@@ -182,7 +182,6 @@ public class AdamTest {
 
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		beUtils.setServiceToken(serviceToken);
-		
 		SearchEntity searchBE = new SearchEntity("SBE_SEARCH", "Fix Missing Supervisors")
 				.addSort("PRI_CODE", "Created", SearchEntity.Sort.ASC)
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%") 
@@ -206,7 +205,7 @@ public class AdamTest {
 				System.out.println("Processing "+resultMsg.getItems().length+" Internships");
 				Map<String,BaseEntity> supervisors = new HashMap<String,BaseEntity>();
 				for (BaseEntity be : bes) {
-if (be.getCode().equals("BEG_32650251AD874EEA9252740795D6F9D6")) {
+
 					BaseEntity hcr = null;
 					BaseEntity supervisor = null;
 					String lnkHCR = null;
@@ -217,14 +216,20 @@ if (be.getCode().equals("BEG_32650251AD874EEA9252740795D6F9D6")) {
 					Optional<String> optSupervisor = be.getValue("LNK_INTERN_SUPERVISOR");
 					if (optHCR.isPresent()) {
 						String hcrCode = optHCR.get();
-						hcrCode = hcrCode.substring(2,hcrCode.length()-2);
-						System.out.println("HCR = "+hcrCode);
-						hcr = beUtils.getBaseEntityByCode(hcrCode); 
-						
+						System.out.println("HCR found is"+hcrCode);
+						if ((hcrCode != null)&&(hcrCode.length() > 2)) {
+							hcrCode = hcrCode.substring(2,hcrCode.length()-2);
+							System.out.println("HCR = "+hcrCode);
+							hcr = beUtils.getBaseEntityByCode(hcrCode); 
+						} else {
+							System.out.println("BAD HCRCODE !!!");
+						}
 						
 					}
 					if (optEmail.isPresent()) {
+						
 						String email = optEmail.get();
+						System.out.println("Setting Host Company Rep"+email);
 						System.out.println("Email = "+email);
 						String code = "PER_"+QwandaUtils.getNormalisedUsername(email);
 						if (!optHCR.isPresent()) {
@@ -241,14 +246,104 @@ if (be.getCode().equals("BEG_32650251AD874EEA9252740795D6F9D6")) {
 							if (hcr != null) {
 								lnkHCR = "[\""+hcr.getCode()+"\"]";
 								beUtils.saveAnswer(new Answer(be.getCode(),be.getCode(),"LNK_INTERN_SUPERVISOR",lnkHCR));
+								
+								beUtils.saveAnswer(new Answer(hcr.getCode(),hcr.getCode(),"PRI_IS_SUPERVISOR",true));
+								beUtils.saveAnswer(new Answer(hcr.getCode(),hcr.getCode(),"PRI_DISABLED",false));
 							}
+					} else {
+						
+						// Fix supeervisor
+						String supervisorCode = optSupervisor.get();
+						System.out.println("Supervisor found is"+supervisorCode);
+						if ((supervisorCode != null)&&(supervisorCode.length() > 2)) {
+							supervisorCode = supervisorCode.substring(2,supervisorCode.length()-2);
+							System.out.println("SUPERVISOR = "+supervisorCode);
+							supervisor = beUtils.getBaseEntityByCode(supervisorCode); 
+							if (supervisor != null) {
+							beUtils.saveAnswer(new Answer(supervisor.getCode(),supervisor.getCode(),"PRI_IS_SUPERVISOR",true));
+							beUtils.saveAnswer(new Answer(supervisor.getCode(),supervisor.getCode(),"PRI_DISABLED",false));
+							} else {
+								System.out.println("NO SUPERVISOR EXISTS !!!");
+							}
+						} else {
+							System.out.println("BAD SUPERVISOR CODE !!!");
+						}
+
 					}
-}
+
 				}
 				System.out.println("Finished Fixing Journals");
 		} catch (Exception e1) {
 			e1.printStackTrace();
-		}		
+		}
+		
+		
+//		SearchEntity searchBE = new SearchEntity("SBE_SEARCH", "Fix Missing Supervisors")
+//				.addSort("PRI_CODE", "Created", SearchEntity.Sort.ASC)
+//				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%") 
+//				.addColumn("PRI_ASSOC_HOST_COMPANY_EMAIL", "Host Company Rep Email")
+//				.addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
+//				.addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep")
+//				.setPageStart(0)
+//				.setPageSize(20000);
+//		
+//		searchBE.setRealm(serviceToken.getRealm());
+//		
+// 		String jsonSearchBE = JsonUtils.toJson(searchBE);
+// 		/* System.out.println(jsonSearchBE); */
+//		String resultJson;
+//		BaseEntity result = null; 
+//		try {
+//			resultJson = QwandaUtils.apiPostEntity(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search",
+//					jsonSearchBE, serviceToken.getToken());
+//				QDataBaseEntityMessage resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
+//				BaseEntity[] bes = resultMsg.getItems();
+//				System.out.println("Processing "+resultMsg.getItems().length+" Internships");
+//				Map<String,BaseEntity> supervisors = new HashMap<String,BaseEntity>();
+//				for (BaseEntity be : bes) {
+//if (be.getCode().equals("BEG_32650251AD874EEA9252740795D6F9D6")) {
+//					BaseEntity hcr = null;
+//					BaseEntity supervisor = null;
+//					String lnkHCR = null;
+//					
+//					System.out.println("Processing Internship "+be.getCode());
+//					Optional<String> optEmail = be.getValue("PRI_ASSOC_HOST_COMPANY_EMAIL");
+//					Optional<String> optHCR = be.getValue("LNK_HOST_COMPANY_REP");
+//					Optional<String> optSupervisor = be.getValue("LNK_INTERN_SUPERVISOR");
+//					if (optHCR.isPresent()) {
+//						String hcrCode = optHCR.get();
+//						hcrCode = hcrCode.substring(2,hcrCode.length()-2);
+//						System.out.println("HCR = "+hcrCode);
+//						hcr = beUtils.getBaseEntityByCode(hcrCode); 
+//						
+//						
+//					}
+//					if (optEmail.isPresent()) {
+//						String email = optEmail.get();
+//						System.out.println("Email = "+email);
+//						String code = "PER_"+QwandaUtils.getNormalisedUsername(email);
+//						if (!optHCR.isPresent()) {
+//							 lnkHCR = "[\""+code+"\"]";
+//							beUtils.saveAnswer(new Answer(be.getCode(),be.getCode(),"LNK_HOST_COMPANY_REP",lnkHCR));
+//						}
+//					}
+//					
+//					if (!optSupervisor.isPresent()) {
+//							System.out.println("Setting Supervisor "+lnkHCR);
+//							if (lnkHCR != null) {
+//								beUtils.saveAnswer(new Answer(be.getCode(),be.getCode(),"LNK_INTERN_SUPERVISOR",lnkHCR));
+//							} else 
+//							if (hcr != null) {
+//								lnkHCR = "[\""+hcr.getCode()+"\"]";
+//								beUtils.saveAnswer(new Answer(be.getCode(),be.getCode(),"LNK_INTERN_SUPERVISOR",lnkHCR));
+//							}
+//					}
+//}
+//				}
+//				System.out.println("Finished Fixing Journals");
+//		} catch (Exception e1) {
+//			e1.printStackTrace();
+//		}		
 	}
 	
 	
@@ -2348,7 +2443,7 @@ if (be.getCode().equals("BEG_32650251AD874EEA9252740795D6F9D6")) {
 				beUtils.getGennyToken().getToken());
 
 		ShowFrame.display(userToken, "FRM_TABLE_VIEW", "FRM_CONTENT", "Test");
-		tableUtils.performSearch(userToken, "SBE_SEARCHBAR", null);
+		//tableUtils.performSearch(userToken, "SBE_SEARCHBAR", null);
 
 	}
 
@@ -2552,7 +2647,7 @@ if (be.getCode().equals("BEG_32650251AD874EEA9252740795D6F9D6")) {
 			Answer answer = new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_SEARCH_TEXT",
 					searchBarString);
 			TableUtils tableUtils = new TableUtils(beUtils);
-			tableUtils.performSearch(serviceToken, "SBE_SEARCHBAR", answer);
+			//tableUtils.performSearch(serviceToken, "SBE_SEARCHBAR", answer);
 
 			/* Send to front end */
 
