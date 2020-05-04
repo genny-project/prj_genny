@@ -41,6 +41,7 @@ rule "THM_FORM_GROUP_WRAPPER_UNITY"
 				.addAttribute()
 					.backgroundColor("white")
 					.padding(10)
+					.width("100%")
 					.borderWidth(1)
 					.borderColor("silver")
 					.borderStyle("solid")
