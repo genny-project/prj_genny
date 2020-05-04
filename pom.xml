@@ -323,6 +323,26 @@
 			</exclusions>
 
 		</dependency>
+		<dependency>
+			<groupId>life.genny</groupId>
+			<artifactId>qwanda-services</artifactId>
+			<version>${genny-rules.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.hazelcast</groupId>
+					<artifactId>hazelcast</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>io.vertx</groupId>
+					<artifactId>vertx-hazelcast</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.hazelcast</groupId>
+					<artifactId>hazelcast-client</artifactId>
+				</exclusion>
+			</exclusions>
+
+		</dependency>
 
 
 		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
