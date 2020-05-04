@@ -302,7 +302,7 @@ public void testTableHeader() {
 	 
 		  Answer answer = new Answer(userToken.getUserCode(),userToken.getUserCode(),"PRI_SEARCH_TEXT",searchBarString);
 		  			TableUtils tableUtils = new TableUtils(beUtils);
-		  			tableUtils.performSearch(serviceToken , "SBE_SEARCHBAR", answer);
+		  		//	tableUtils.performSearch(serviceToken , "SBE_SEARCHBAR", answer);
    		  	     
   		  	     /* Send to front end */
    					

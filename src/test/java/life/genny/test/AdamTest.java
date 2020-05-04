@@ -110,6 +110,7 @@ import life.genny.qwandautils.KeycloakUtils;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.rules.QRules;
 import life.genny.rules.RulesLoader;
+import life.genny.services.BaseEntityService2;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.FrameUtils2;
 import life.genny.utils.GennyJbpmBaseTest;
@@ -182,16 +183,43 @@ public class AdamTest {
 
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		beUtils.setServiceToken(serviceToken);
-		SearchEntity searchBE = new SearchEntity("SBE_SEARCH", "Fix Missing Supervisors")
-				.addSort("PRI_CODE", "Created", SearchEntity.Sort.ASC)
-				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%") 
-				.addColumn("PRI_ASSOC_HOST_COMPANY_EMAIL", "Host Company Rep Email")
-				.addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
+		
+   		long starttime = System.currentTimeMillis();
+   		long looptime = 0;
+   		long searchtime = 0;
+		SearchEntity searchBE = new SearchEntity("SBE_TEST", "Supervsior Journals")
+				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%") 
+				/* .addFilter("PRI_SYNC", SearchEntity.StringFilter.LIKE, "FALSE") */
+				.addFilter("LNK_INTERN_SUPERVISOR", SearchEntity.StringFilter.LIKE, "%PER_HOLGER_AT_SPACETRUNKSTUDIO_DOT_COM_DOT_AU%") 
+				.addColumn("PRI_NAME", "Name")
+				.addColumn("LNK_INTERNSHIP","Internship")
+				.addColumn("LNK_INTERN", "Intern")
 				.addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep")
+				.addColumn("LNK_HOST_COMPANY", "Host Company")
+				.addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
+				.addColumn("PRI_JOURNAL_DATE","Date")
+				.addColumn("PRI_JOURNAL_HOURS","Hours")
+				.addColumn("PRI_JOURNAL_TASKS","Tasks")				
+				.addColumn("PRI_JOURNAL_LEARNING_OUTCOMES","Learning Outcomes")
+				.addColumn("PRI_FEEDBACK","Feedback")
+				.addColumn("PRI_STATUS","Status")								
+				.addColumn("PRI_SYNC","Synced")
+				.addColumn("PRI_LAST_UPDATED","Last Updated")
+				.addColumn("PRI_INTERN_LAST_UPDATE","Intern last update")
+				.addColumn("PRI_SUPERVISOR_LAST_UPDATE","Last Supervisor Update")
+				.addColumn("PRI_LAST_CHANGED_BY","Last Changed By")
 				.setPageStart(0)
-				.setPageSize(20000);
+				.setPageSize(2000);
 		
 		searchBE.setRealm(serviceToken.getRealm());
+		
+		
+		BaseEntityService2 service = new BaseEntityService2(null);
+		service.findBySearchBECount(searchBE);
+		
+		
+		
 		
  		String jsonSearchBE = JsonUtils.toJson(searchBE);
  		/* System.out.println(jsonSearchBE); */
@@ -200,82 +228,134 @@ public class AdamTest {
 		try {
 			resultJson = QwandaUtils.apiPostEntity(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search",
 					jsonSearchBE, serviceToken.getToken());
+					searchtime = System.currentTimeMillis();
 				QDataBaseEntityMessage resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
+				/* System.out.println(drools.getRule().getName()+" Got to here in RETURN JOURNALS "+resultJson);*/
 				BaseEntity[] bes = resultMsg.getItems();
-				System.out.println("Processing "+resultMsg.getItems().length+" Internships");
-				Map<String,BaseEntity> supervisors = new HashMap<String,BaseEntity>();
+				System.out.println("Returned "+bes.length+" items");
+				System.out.println("The count return "+resultMsg.getTotal());
+				/* Now only send the ones that are not synced */
+				List<BaseEntity> unsyncedItemList = new ArrayList<BaseEntity>();
 				for (BaseEntity be : bes) {
-
-					BaseEntity hcr = null;
-					BaseEntity supervisor = null;
-					String lnkHCR = null;
-					
-					System.out.println("Processing Internship "+be.getCode());
-					Optional<String> optEmail = be.getValue("PRI_ASSOC_HOST_COMPANY_EMAIL");
-					Optional<String> optHCR = be.getValue("LNK_HOST_COMPANY_REP");
-					Optional<String> optSupervisor = be.getValue("LNK_INTERN_SUPERVISOR");
-					if (optHCR.isPresent()) {
-						String hcrCode = optHCR.get();
-						System.out.println("HCR found is"+hcrCode);
-						if ((hcrCode != null)&&(hcrCode.length() > 2)) {
-							hcrCode = hcrCode.substring(2,hcrCode.length()-2);
-							System.out.println("HCR = "+hcrCode);
-							hcr = beUtils.getBaseEntityByCode(hcrCode); 
-						} else {
-							System.out.println("BAD HCRCODE !!!");
-						}
-						
-					}
-					if (optEmail.isPresent()) {
-						
-						String email = optEmail.get();
-						System.out.println("Setting Host Company Rep"+email);
-						System.out.println("Email = "+email);
-						String code = "PER_"+QwandaUtils.getNormalisedUsername(email);
-						if (!optHCR.isPresent()) {
-							 lnkHCR = "[\""+code+"\"]";
-							beUtils.saveAnswer(new Answer(be.getCode(),be.getCode(),"LNK_HOST_COMPANY_REP",lnkHCR));
-						}
-					}
-					
-					if (!optSupervisor.isPresent()) {
-							System.out.println("Setting Supervisor "+lnkHCR);
-							if (lnkHCR != null) {
-								beUtils.saveAnswer(new Answer(be.getCode(),be.getCode(),"LNK_INTERN_SUPERVISOR",lnkHCR));
-							} else 
-							if (hcr != null) {
-								lnkHCR = "[\""+hcr.getCode()+"\"]";
-								beUtils.saveAnswer(new Answer(be.getCode(),be.getCode(),"LNK_INTERN_SUPERVISOR",lnkHCR));
-								
-								beUtils.saveAnswer(new Answer(hcr.getCode(),hcr.getCode(),"PRI_IS_SUPERVISOR",true));
-								beUtils.saveAnswer(new Answer(hcr.getCode(),hcr.getCode(),"PRI_DISABLED",false));
-							}
-					} else {
-						
-						// Fix supeervisor
-						String supervisorCode = optSupervisor.get();
-						System.out.println("Supervisor found is"+supervisorCode);
-						if ((supervisorCode != null)&&(supervisorCode.length() > 2)) {
-							supervisorCode = supervisorCode.substring(2,supervisorCode.length()-2);
-							System.out.println("SUPERVISOR = "+supervisorCode);
-							supervisor = beUtils.getBaseEntityByCode(supervisorCode); 
-							if (supervisor != null) {
-							beUtils.saveAnswer(new Answer(supervisor.getCode(),supervisor.getCode(),"PRI_IS_SUPERVISOR",true));
-							beUtils.saveAnswer(new Answer(supervisor.getCode(),supervisor.getCode(),"PRI_DISABLED",false));
-							} else {
-								System.out.println("NO SUPERVISOR EXISTS !!!");
-							}
-						} else {
-							System.out.println("BAD SUPERVISOR CODE !!!");
-						}
-
-					}
-
+					Optional<String> unsynced = be.getValue("PRI_SYNC");
+				/*	if (!((unsynced.isPresent()) && ("TRUE".equals(unsynced.get())))) {
+						Answer ans = new Answer($user.getCode(),be.getCode(),"PRI_SYNC","TRUE");
+						beUtils.saveAnswer(ans);
+						be = beUtils.getBaseEntityByCode(be.getCode());
+						unsyncedItemList.add(be);
+					} */
+					be = beUtils.getBaseEntityByCode(be.getCode());
+					unsyncedItemList.add(be);
 				}
-				System.out.println("Finished Fixing Journals");
+				looptime = System.currentTimeMillis();
+				resultMsg.setItems(unsyncedItemList.toArray(new BaseEntity[0]));
+				
+				
 		} catch (Exception e1) {
 			e1.printStackTrace();
-		}
+		}		
+		
+		long endtime = System.currentTimeMillis();
+		System.out.println("search took "+(searchtime-starttime)+" ms");
+		System.out.println("loop took "+(looptime-searchtime)+" ms");
+		System.out.println("finish took "+(endtime-looptime)+" ms");
+		System.out.println("total took "+(endtime-starttime)+" ms");
+//		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+//		beUtils.setServiceToken(serviceToken);
+//		SearchEntity searchBE = new SearchEntity("SBE_SEARCH", "Fix Missing Supervisors")
+//				.addSort("PRI_CODE", "Created", SearchEntity.Sort.ASC)
+//				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%") 
+//				.addColumn("PRI_ASSOC_HOST_COMPANY_EMAIL", "Host Company Rep Email")
+//				.addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
+//				.addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep")
+//				.setPageStart(0)
+//				.setPageSize(20000);
+//		
+//		searchBE.setRealm(serviceToken.getRealm());
+//		
+// 		String jsonSearchBE = JsonUtils.toJson(searchBE);
+// 		/* System.out.println(jsonSearchBE); */
+//		String resultJson;
+//		BaseEntity result = null; 
+//		try {
+//			resultJson = QwandaUtils.apiPostEntity(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search",
+//					jsonSearchBE, serviceToken.getToken());
+//				QDataBaseEntityMessage resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
+//				BaseEntity[] bes = resultMsg.getItems();
+//				System.out.println("Processing "+resultMsg.getItems().length+" Internships");
+//				Map<String,BaseEntity> supervisors = new HashMap<String,BaseEntity>();
+//				for (BaseEntity be : bes) {
+//
+//					BaseEntity hcr = null;
+//					BaseEntity supervisor = null;
+//					String lnkHCR = null;
+//					
+//					System.out.println("Processing Internship "+be.getCode());
+//					Optional<String> optEmail = be.getValue("PRI_ASSOC_HOST_COMPANY_EMAIL");
+//					Optional<String> optHCR = be.getValue("LNK_HOST_COMPANY_REP");
+//					Optional<String> optSupervisor = be.getValue("LNK_INTERN_SUPERVISOR");
+//					if (optHCR.isPresent()) {
+//						String hcrCode = optHCR.get();
+//						System.out.println("HCR found is"+hcrCode);
+//						if ((hcrCode != null)&&(hcrCode.length() > 2)) {
+//							hcrCode = hcrCode.substring(2,hcrCode.length()-2);
+//							System.out.println("HCR = "+hcrCode);
+//							hcr = beUtils.getBaseEntityByCode(hcrCode); 
+//						} else {
+//							System.out.println("BAD HCRCODE !!!");
+//						}
+//						
+//					}
+//					if (optEmail.isPresent()) {
+//						
+//						String email = optEmail.get();
+//						System.out.println("Setting Host Company Rep"+email);
+//						System.out.println("Email = "+email);
+//						String code = "PER_"+QwandaUtils.getNormalisedUsername(email);
+//						if (!optHCR.isPresent()) {
+//							 lnkHCR = "[\""+code+"\"]";
+//							beUtils.saveAnswer(new Answer(be.getCode(),be.getCode(),"LNK_HOST_COMPANY_REP",lnkHCR));
+//						}
+//					}
+//					
+//					if (!optSupervisor.isPresent()) {
+//							System.out.println("Setting Supervisor "+lnkHCR);
+//							if (lnkHCR != null) {
+//								beUtils.saveAnswer(new Answer(be.getCode(),be.getCode(),"LNK_INTERN_SUPERVISOR",lnkHCR));
+//							} else 
+//							if (hcr != null) {
+//								lnkHCR = "[\""+hcr.getCode()+"\"]";
+//								beUtils.saveAnswer(new Answer(be.getCode(),be.getCode(),"LNK_INTERN_SUPERVISOR",lnkHCR));
+//								
+//								beUtils.saveAnswer(new Answer(hcr.getCode(),hcr.getCode(),"PRI_IS_SUPERVISOR",true));
+//								beUtils.saveAnswer(new Answer(hcr.getCode(),hcr.getCode(),"PRI_DISABLED",false));
+//							}
+//					} else {
+//						
+//						// Fix supeervisor
+//						String supervisorCode = optSupervisor.get();
+//						System.out.println("Supervisor found is"+supervisorCode);
+//						if ((supervisorCode != null)&&(supervisorCode.length() > 2)) {
+//							supervisorCode = supervisorCode.substring(2,supervisorCode.length()-2);
+//							System.out.println("SUPERVISOR = "+supervisorCode);
+//							supervisor = beUtils.getBaseEntityByCode(supervisorCode); 
+//							if (supervisor != null) {
+//							beUtils.saveAnswer(new Answer(supervisor.getCode(),supervisor.getCode(),"PRI_IS_SUPERVISOR",true));
+//							beUtils.saveAnswer(new Answer(supervisor.getCode(),supervisor.getCode(),"PRI_DISABLED",false));
+//							} else {
+//								System.out.println("NO SUPERVISOR EXISTS !!!");
+//							}
+//						} else {
+//							System.out.println("BAD SUPERVISOR CODE !!!");
+//						}
+//
+//					}
+//
+//				}
+//				System.out.println("Finished Fixing Journals");
+//		} catch (Exception e1) {
+//			e1.printStackTrace();
+//		}
 		
 		
 //		SearchEntity searchBE = new SearchEntity("SBE_SEARCH", "Fix Missing Supervisors")
