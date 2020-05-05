@@ -599,6 +599,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 						rpath = rpath.substring(baseDirFilePath.length() + 1);
 					}
 					File fullfile = new File(rpath);
+					String ruleFilename = fullfile.getName();
 					String ffileAbs = baseDirFilePath+"/"+rpath;
 					String resourceFile = ffileAbs.substring(baseDirFilePath.length() + 1);
 
@@ -608,7 +609,9 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 						envBuilder.addAsset(r, rt);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						System.out.println("ERROR with rule "+ruleFilename);
+						System.out.println("Located at  "+rpath);
+						System.out.println(e.getMessage());
 					}
 					if (r.getSourcePath().endsWith("drl")) {
 						String ruleText = readLineByLineJava8(ffileAbs);
