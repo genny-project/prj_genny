@@ -19,11 +19,14 @@ import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.persistence.EntityManagerFactory;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.drools.core.ClockType;
@@ -44,6 +47,7 @@ import org.jbpm.test.JbpmJUnitBaseTestCase;
 import org.kie.api.KieBase;
 import org.kie.api.command.Command;
 import org.kie.api.executor.ExecutorService;
+import org.kie.api.io.Resource;
 import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.EnvironmentName;
 import org.kie.api.runtime.ExecutionResults;
@@ -221,11 +225,11 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	}
 
 	public ProcessInstance startProcess(String processId, final SessionFacts sf) {
-		Map<String,Object> msgMap = new HashMap<String,Object>();
+		Map<String, Object> msgMap = new HashMap<String, Object>();
 		msgMap.put("message", sf);
 		msgMap.put("userToken", sf.getUserToken());
 		msgMap.put("serviceToken", sf.getServiceToken());
-		processInstance = kieSession.startProcess(processId,msgMap);
+		processInstance = kieSession.startProcess(processId, msgMap);
 		sessionClock = kieSession.getSessionClock();
 
 		return processInstance;
@@ -333,7 +337,6 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		QBulkMessage payload = new QBulkMessage();
 		kieSession.setGlobal("payload", payload);
 
-		
 		if ((eventMsg != null) && (eventMsg.getData().getCode().equals("INIT_STARTUP"))) {
 			kieSession.startProcess("initProject");
 		} else {
@@ -498,7 +501,19 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 					// Is a directory
 					List<String> fullPaths = findFullPaths(p, "drl", false);
 					fullPaths.forEach(f -> {
-						resources.put(f, ResourceType.DRL);
+						
+//						resources.put(f, ResourceType.DRL);
+//						System.out.println("Loading " + f.toString());
+						String baseRulesDir = "./rules"; // default for project
+						if (!"/rules".equals(GennySettings.rulesDir)) {
+							baseRulesDir = GennySettings.rulesDir;
+						}
+						File fullfile = new File(f);
+						File baseFileDir = new File(baseRulesDir);
+						String baseDirFilePath = baseFileDir.getAbsoluteFile().getPath();
+						String resourceFile = fullfile.getAbsoluteFile().getPath().substring(baseDirFilePath.length() + 1);
+					
+						resources.put(resourceFile, ResourceType.DRL);
 						System.out.println("Loading " + f.toString());
 					});
 				}
@@ -522,6 +537,9 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 			}
 		}
+
+		log.info("Creating RulesGraph");
+		FrameUtils2.rulesGraph = FrameUtils2.graphBuilder.createDirectedGraph();
 
 		System.out.println("Loaded in All Resources");
 
@@ -567,7 +585,60 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 			for (Map.Entry<String, ResourceType> entry : resources.entrySet()) {
 				try {
-					envBuilder.addAsset(ResourceFactory.newClassPathResource(entry.getKey()), entry.getValue());
+					String rpath = entry.getKey();
+					// ugly but
+
+					String baseRulesDir = "./rules"; // default for project
+					if (!"/rules".equals(GennySettings.rulesDir)) {
+						baseRulesDir = GennySettings.rulesDir;
+					}
+					File baseFileDir = new File(baseRulesDir);
+					String baseDirFilePath = baseFileDir.getAbsoluteFile().getPath();
+
+					if (rpath.startsWith(baseDirFilePath)) {
+						rpath = rpath.substring(baseDirFilePath.length() + 1);
+					}
+					File fullfile = new File(rpath);
+					String ffileAbs = baseDirFilePath+"/"+rpath;
+					String resourceFile = ffileAbs.substring(baseDirFilePath.length() + 1);
+
+					Resource r = ResourceFactory.newClassPathResource(rpath);
+					ResourceType rt = entry.getValue();
+					try {
+						envBuilder.addAsset(r, rt);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					if (r.getSourcePath().endsWith("drl")) {
+						String ruleText = readLineByLineJava8(ffileAbs);
+
+						Pattern p = Pattern.compile("(FRM_[A-Z0-9_-]+|THM_[A-Z0-9_-]+)");
+						File f = new File(r.getSourcePath());
+						String ruleName = f.getName().replaceAll("\\.[^.]*$", "");
+
+						if (ruleName.startsWith("FRM_") || ruleName.startsWith("THM")) {
+							// Parse rule text to identify child rules
+							Set<String> children = new HashSet<String>();
+							Matcher m = p.matcher(ruleText);
+							while (m.find()) {
+								String child = m.group();
+								children.add(child);
+
+							}
+							if (!children.isEmpty()) {
+								for (String child : children) {
+									FrameUtils2.graphBuilder.connect(ruleName).to(child).withEdge("PARENT");
+									FrameUtils2.graphBuilder.connect(child).to(ruleName).withEdge("CHILD");
+									log.info("Rule : " + ruleName + " --- child -> " + child);
+								}
+							}
+
+						}
+
+					}
+
+					// If Rule is a theme or Frame
 				} catch (Exception e) {
 					System.out.println("Error loading " + entry.getKey() + " :" + e.getLocalizedMessage());
 				}
@@ -649,8 +720,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 		QueryDefinitionEntity qde = new QueryDefinitionEntity();
 		configureServices();
-		
-		
+
 		SqlQueryDefinition query = new SqlQueryDefinition("getAllSessionPids", "jdbc/jbpm-ds");
 		query.setExpression("select * from session_pid");
 		try {
@@ -658,7 +728,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		} catch (QueryAlreadyRegisteredException e) {
 			log.warn(query.getName() + " is already registered");
 		}
-		
+
 		/* Setup the find by sessionId */
 //		SqlQueryDefinition query = new SqlQueryDefinition("getAllProcessInstances", "jdbc/jbpm-ds");
 //		query.setExpression("select * from VariableInstanceLog");
@@ -808,8 +878,10 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		String testRulesDir = baseRulesDir;
 		File base = new File(testRulesDir);
 		File found = searchFile(new File(testRulesDir), filename);
-		return found.getAbsoluteFile().getPath().substring(base.getAbsoluteFile().getPath().length() + 1);
-
+		// return
+		// found.getAbsoluteFile().getPath().substring(base.getAbsoluteFile().getPath().length()
+		// + 1);
+		return found.getPath();
 	}
 
 	public static void displayForm(final String rootFrameCode, String targetFrameCode, GennyToken userToken) {
@@ -914,28 +986,38 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	}
 
 	private List<String> findFullPaths(String dirname, String extension, boolean allowXXX) {
+		Set<String> setFiles = new HashSet<String>(); // used to ensure only first file lives
+		List<String> files = new ArrayList<String>();
+
 		String baseRulesDir = "./rules"; // default for project
 		if (!"/rules".equals(GennySettings.rulesDir)) {
 			baseRulesDir = GennySettings.rulesDir;
 		}
-		final String testRulesDir = baseRulesDir;
-		File base = new File(testRulesDir);
-		File found = searchFile(new File(testRulesDir), dirname);
-		String finalFile = found.getAbsoluteFile().getPath().substring(base.getAbsoluteFile().getPath().length() + 1);
-		// System.out.println("Found finalDir = " + finalFile);
+		String[] prjDirs = baseRulesDir.split(";");  // permit multiple project ruile dirs (order is important!
+		for (String testRulesDir : prjDirs) {
+			File base = new File(testRulesDir);
+			File found = searchFile(new File(testRulesDir), dirname);
+			String finalFile = found.getAbsoluteFile().getPath()
+					.substring(base.getAbsoluteFile().getPath().length() + 1);
+			// System.out.println("Found finalDir = " + finalFile);
 
-		Set<Path> resourcePaths = getAllFilesInDirectory(found.getAbsoluteFile().getPath(), extension);
+			Set<Path> resourcePaths = getAllFilesInDirectory(found.getAbsoluteFile().getPath(), extension);
 
-		List<String> files = new ArrayList<String>();
-		resourcePaths.forEach(f -> {
-			String filename = f.getFileName().toString();
+			resourcePaths.forEach(f -> {
+				String filename = f.getFileName().toString();
 
-			String fullPath = findFullPath(f.toString());
-			if ((!fullPath.contains("XXX")) || allowXXX) {
-				String addFilePath = findFullPath(f.toString());
-				files.add(addFilePath);
-			}
-		});
+				String fullPath = findFullPath(f.toString());
+				if ((!fullPath.contains("XXX")) || allowXXX) {
+					String addFilePath = findFullPath(f.toString());
+					File thisFile = new File(addFilePath);
+					String actualFile = thisFile.getName();
+					if (!setFiles.contains(actualFile)) {
+						files.add(addFilePath);
+						setFiles.add(actualFile);
+					}
+				}
+			});
+		}
 		return files;
 	}
 
@@ -1030,6 +1112,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			}
 			for (String drl : drls) {
 				managedInstance.drls.add(drl);
+
 			}
 
 			return this;
@@ -1156,45 +1239,44 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	public static Optional<Long> getProcessIdBysessionId(String sessionId) {
 		// Do pagination here
 		QueryContext ctx = new QueryContext(0, 100);
-		Collection<SessionPid> instances = queryService.query("getAllSessionPids",
-				SessionPidQueryMapper.get(), ctx, QueryParam.equalsTo("sessionCode", sessionId)/*,QueryParam.equalsTo("realm", realm)*/);
+		Collection<SessionPid> instances = queryService.query("getAllSessionPids", SessionPidQueryMapper.get(), ctx,
+				QueryParam.equalsTo("sessionCode", sessionId)/* ,QueryParam.equalsTo("realm", realm) */);
 		return instances.stream().map(d -> d.getId()).findFirst();
 
 	}
-	
-	public static Optional<Long> getProcessIdBysessionId(String realm,String sessionId) {
+
+	public static Optional<Long> getProcessIdBysessionId(String realm, String sessionId) {
 		// Do pagination here
 		QueryContext ctx = new QueryContext(0, 100);
 		try {
-			Collection<SessionPid> instances = queryService.query("getAllSessionPids",
-					SessionPidQueryMapper.get(), ctx, QueryParam.equalsTo("sessionCode", sessionId)/*,QueryParam.equalsTo("realm", realm)*/);
+			Collection<SessionPid> instances = queryService.query("getAllSessionPids", SessionPidQueryMapper.get(), ctx,
+					QueryParam.equalsTo("sessionCode", sessionId)/* ,QueryParam.equalsTo("realm", realm) */);
 
 			return instances.stream().map(d -> d.getProcessInstanceId()).findFirst();
 		} catch (Exception e) {
-			log.warn("No pid found for sessionCode="+sessionId);
+			log.warn("No pid found for sessionCode=" + sessionId);
 		}
 		return Optional.empty();
 
 	}
 
-
-	public static Optional<Long> getProcessIdByWorkflowBeCode(String realm,String workflowBeCode) {
+	public static Optional<Long> getProcessIdByWorkflowBeCode(String realm, String workflowBeCode) {
 		// Do pagination here
 		QueryContext ctx = new QueryContext(0, 100);
-		Collection<NodeStatus> instances = queryService.query("getAllNodeStatuses2",
-				NodeStatusQueryMapper.get(), ctx, QueryParam.equalsTo("workflowBeCode", workflowBeCode),QueryParam.equalsTo("realm", realm));
+		Collection<NodeStatus> instances = queryService.query("getAllNodeStatuses2", NodeStatusQueryMapper.get(), ctx,
+				QueryParam.equalsTo("workflowBeCode", workflowBeCode), QueryParam.equalsTo("realm", realm));
 		return instances.stream().map(d -> d.getId()).findFirst();
 
 	}
-	public static List<String> getWorkflowBeCodeByWorkflowStage(String realm,String workflowStage) {
+
+	public static List<String> getWorkflowBeCodeByWorkflowStage(String realm, String workflowStage) {
 		// Do pagination here
 		QueryContext ctx = new QueryContext(0, 100);
-		Collection<NodeStatus> instances = queryService.query("getAllNodeStatuses2",
-				NodeStatusQueryMapper.get(), ctx, QueryParam.equalsTo("workflowStage", workflowStage),QueryParam.equalsTo("realm", realm));
+		Collection<NodeStatus> instances = queryService.query("getAllNodeStatuses2", NodeStatusQueryMapper.get(), ctx,
+				QueryParam.equalsTo("workflowStage", workflowStage), QueryParam.equalsTo("realm", realm));
 		return instances.stream().map(d -> d.getWorkflowBeCode()).collect(Collectors.toList());
 
 	}
-
 
 	public static void loadAttributesJsonFromResources(GennyToken gToken) {
 		// This file can be created by using the script locally and placing in the
@@ -1586,10 +1668,9 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	}
 
 	public void displayTasks(GennyToken userToken) {
-		
-	System.out.println("Tasks for "+userToken.getUserCode()+" "
-			+ showTaskNames(getTaskService().getTasksAssignedAsPotentialOwner(userToken.getRealm() + "+"+userToken.getUserCode() , null))
-			);
+
+		System.out.println("Tasks for " + userToken.getUserCode() + " " + showTaskNames(getTaskService()
+				.getTasksAssignedAsPotentialOwner(userToken.getRealm() + "+" + userToken.getUserCode(), null)));
 	}
-	
+
 }
