@@ -45,6 +45,7 @@ rule "THM_FORM_BUTTONS"
 			.justifyContent("center")
 			.borderWidth(1)
 			.borderColor("black")
+			.borderRadius(4)
 		.end()
 		.build();
 
