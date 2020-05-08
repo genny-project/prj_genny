@@ -41,8 +41,8 @@ rule "THM_IMAGE_PLACEHOLDER_PERSON"
 				.addAttribute()
 					.type("icon")
 					.name("person")
-					.color("#cbcaca")
-					.size("xl")
+					.color("#ffffff")
+					.size("lg")
 				.end()
 		.build();
 
