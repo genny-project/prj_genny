@@ -33,7 +33,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.plexus.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jbpm.services.api.DefinitionService;
 import org.jbpm.services.api.ProcessService;
 import org.jbpm.services.api.RuntimeDataService;
@@ -99,6 +99,7 @@ import life.genny.qwanda.message.MessageData;
 import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.qwanda.message.QEventBtnClickMessage;
 import life.genny.qwanda.message.QEventMessage;
 import life.genny.qwanda.validation.Validation;
 import life.genny.qwanda.validation.ValidationList;
@@ -116,6 +117,7 @@ import life.genny.utils.FrameUtils2;
 import life.genny.utils.GennyJbpmBaseTest;
 import life.genny.utils.GennyKieSession;
 import life.genny.utils.ImportUtils;
+import life.genny.utils.JunitCache;
 import life.genny.utils.OutputParam;
 import life.genny.utils.RulesUtils;
 import life.genny.utils.SessionFacts;
@@ -155,11 +157,104 @@ public class AdamTest {
 	protected static GennyToken userToken;
 	protected static GennyToken newUserToken;
 	protected static GennyToken serviceToken;
-	
-	
+
 	@Test
-	public void FixMissingSupervisorsTest()
-	{
+	public void testTableTest() {
+		System.out.println("Fix Missing Supervisors test");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+		} else {
+			//VertxUtils.cachedEnabled = false;
+			VertxUtils.cachedEnabled = false;
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+			eventBusMock = new EventBusMock();
+			vertxCache = new JunitCache(); // MockCache
+			VertxUtils.init(eventBusMock, vertxCache);
+		}
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		beUtils.setServiceToken(serviceToken);
+
+		QEventBtnClickMessage message = new QEventBtnClickMessage("QUE_TREE_ITEM_INTERNS_GRP");
+
+		long starttime = System.currentTimeMillis();
+		long looptime = 0;
+		long searchtime = 0;
+
+		String code = message.getData().getCode();
+		System.out.println("QUESTION CODE   ::   " + code);
+
+		code = StringUtils.removeStart(code, "QUE_TREE_ITEM_");
+		System.out.println("removing prefix CODE   ::   " + code);
+
+		code = StringUtils.removeEnd(code, "_GRP");
+
+		System.out.println("FINAL CODE   ::   " + code);
+
+		String searchBeCode = "SBE_" + code;
+		System.out.println("SBE CODE   ::   " + searchBeCode);
+
+		String frameCode = "FRM_TABLE_" + code;
+		System.out.println("FRAME CODE   ::   " + frameCode);
+
+		long s1time = System.currentTimeMillis();
+		/* get current search */
+		TableUtils tableUtils = new TableUtils(beUtils);
+		SearchEntity searchBE = tableUtils.getSessionSearch(searchBeCode);
+
+		long s2time = System.currentTimeMillis();
+		Answer pageAnswer = new Answer(beUtils.getGennyToken().getUserCode(), searchBE.getCode(), "SCH_PAGE_START",
+				"0");
+		Answer pageNumberAnswer = new Answer(beUtils.getGennyToken().getUserCode(), searchBE.getCode(), "PRI_INDEX",
+				"1");
+
+		searchBE = beUtils.updateBaseEntity(searchBE, pageAnswer, SearchEntity.class);
+		searchBE = beUtils.updateBaseEntity(searchBE, pageNumberAnswer, SearchEntity.class);
+
+		VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
+				beUtils.getGennyToken().getToken());
+
+		long s3time = System.currentTimeMillis();
+
+		/* show tab-view first */
+		ShowFrame.display(beUtils.getGennyToken(), "FRM_QUE_TAB_VIEW", "FRM_CONTENT", "Test");
+
+		/* show table-view inside tab-content */
+		ShowFrame.display(beUtils.getGennyToken(), "FRM_TABLE_VIEW", "FRM_TAB_CONTENT", "Test");
+		long s4time = System.currentTimeMillis();
+		tableUtils.performSearch(userToken, serviceToken, searchBeCode, null);
+		long s5time = System.currentTimeMillis();
+		/* Send to front end */
+		/* output.setTypeOfResult("NONE"); */
+		/* output.setResultCode("NONE"); */ /* dont display anything new */
+
+		retract(message);
+		/* update(output); */
+		long endtime = System.currentTimeMillis();
+		System.out.println("init setup took " + (s1time - starttime) + " ms");
+		System.out.println("search session setup took " + (s2time - s1time) + " ms");
+		System.out.println("update searchBE BE setup took " + (s3time - s2time) + " ms");
+		System.out.println("send frame table and tab display setup took " + (s4time - s3time) + " ms");
+		System.out.println("searching took " + (s5time - s4time) + " ms");
+		System.out.println("finish took " + (endtime - s5time) + " ms");
+		System.out.println("total took " + (endtime - starttime) + " ms");
+	}
+
+	// @Test
+	public void FixMissingSupervisorsTest() {
 		System.out.println("Fix Missing Supervisors test");
 		GennyToken userToken = null;
 		GennyToken serviceToken = null;
@@ -183,83 +278,72 @@ public class AdamTest {
 
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		beUtils.setServiceToken(serviceToken);
-		
-   		long starttime = System.currentTimeMillis();
-   		long looptime = 0;
-   		long searchtime = 0;
+
+		long starttime = System.currentTimeMillis();
+		long looptime = 0;
+		long searchtime = 0;
 		SearchEntity searchBE = new SearchEntity("SBE_TEST", "Supervsior Journals")
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%") 
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
 				/* .addFilter("PRI_SYNC", SearchEntity.StringFilter.LIKE, "FALSE") */
-				.addFilter("LNK_INTERN_SUPERVISOR", SearchEntity.StringFilter.LIKE, "%PER_HOLGER_AT_SPACETRUNKSTUDIO_DOT_COM_DOT_AU%") 
-				.addColumn("PRI_NAME", "Name")
-				.addColumn("LNK_INTERNSHIP","Internship")
-				.addColumn("LNK_INTERN", "Intern")
-				.addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep")
-				.addColumn("LNK_HOST_COMPANY", "Host Company")
-				.addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
-				.addColumn("PRI_JOURNAL_DATE","Date")
-				.addColumn("PRI_JOURNAL_HOURS","Hours")
-				.addColumn("PRI_JOURNAL_TASKS","Tasks")				
-				.addColumn("PRI_JOURNAL_LEARNING_OUTCOMES","Learning Outcomes")
-				.addColumn("PRI_FEEDBACK","Feedback")
-				.addColumn("PRI_STATUS","Status")								
-				.addColumn("PRI_SYNC","Synced")
-				.addColumn("PRI_LAST_UPDATED","Last Updated")
-				.addColumn("PRI_INTERN_LAST_UPDATE","Intern last update")
-				.addColumn("PRI_SUPERVISOR_LAST_UPDATE","Last Supervisor Update")
-				.addColumn("PRI_LAST_CHANGED_BY","Last Changed By")
-				.setPageStart(0)
-				.setPageSize(2000);
-		
+				.addFilter("LNK_INTERN_SUPERVISOR", SearchEntity.StringFilter.LIKE,
+						"%PER_HOLGER_AT_SPACETRUNKSTUDIO_DOT_COM_DOT_AU%")
+				.addColumn("PRI_NAME", "Name").addColumn("LNK_INTERNSHIP", "Internship")
+				.addColumn("LNK_INTERN", "Intern").addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep")
+				.addColumn("LNK_HOST_COMPANY", "Host Company").addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
+				.addColumn("PRI_JOURNAL_DATE", "Date").addColumn("PRI_JOURNAL_HOURS", "Hours")
+				.addColumn("PRI_JOURNAL_TASKS", "Tasks").addColumn("PRI_JOURNAL_LEARNING_OUTCOMES", "Learning Outcomes")
+				.addColumn("PRI_FEEDBACK", "Feedback").addColumn("PRI_STATUS", "Status").addColumn("PRI_SYNC", "Synced")
+				.addColumn("PRI_LAST_UPDATED", "Last Updated").addColumn("PRI_INTERN_LAST_UPDATE", "Intern last update")
+				.addColumn("PRI_SUPERVISOR_LAST_UPDATE", "Last Supervisor Update")
+				.addColumn("PRI_LAST_CHANGED_BY", "Last Changed By").setPageStart(0).setPageSize(2000);
+
 		searchBE.setRealm(serviceToken.getRealm());
-		
-		
+
 		BaseEntityService2 service = new BaseEntityService2(null);
 		service.findBySearchBECount(searchBE);
-		
-		
-		
-		
- 		String jsonSearchBE = JsonUtils.toJson(searchBE);
- 		/* System.out.println(jsonSearchBE); */
+
+		String jsonSearchBE = JsonUtils.toJson(searchBE);
+		/* System.out.println(jsonSearchBE); */
 		String resultJson;
-		BaseEntity result = null; 
+		BaseEntity result = null;
 		try {
 			resultJson = QwandaUtils.apiPostEntity(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search",
 					jsonSearchBE, serviceToken.getToken());
-					searchtime = System.currentTimeMillis();
-				QDataBaseEntityMessage resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
-				/* System.out.println(drools.getRule().getName()+" Got to here in RETURN JOURNALS "+resultJson);*/
-				BaseEntity[] bes = resultMsg.getItems();
-				System.out.println("Returned "+bes.length+" items");
-				System.out.println("The count return "+resultMsg.getTotal());
-				/* Now only send the ones that are not synced */
-				List<BaseEntity> unsyncedItemList = new ArrayList<BaseEntity>();
-				for (BaseEntity be : bes) {
-					Optional<String> unsynced = be.getValue("PRI_SYNC");
-				/*	if (!((unsynced.isPresent()) && ("TRUE".equals(unsynced.get())))) {
-						Answer ans = new Answer($user.getCode(),be.getCode(),"PRI_SYNC","TRUE");
-						beUtils.saveAnswer(ans);
-						be = beUtils.getBaseEntityByCode(be.getCode());
-						unsyncedItemList.add(be);
-					} */
-					be = beUtils.getBaseEntityByCode(be.getCode());
-					unsyncedItemList.add(be);
-				}
-				looptime = System.currentTimeMillis();
-				resultMsg.setItems(unsyncedItemList.toArray(new BaseEntity[0]));
-				
-				
+			searchtime = System.currentTimeMillis();
+			QDataBaseEntityMessage resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
+			/*
+			 * System.out.println(drools.getRule().getName()
+			 * +" Got to here in RETURN JOURNALS "+resultJson);
+			 */
+			BaseEntity[] bes = resultMsg.getItems();
+			System.out.println("Returned " + bes.length + " items");
+			System.out.println("The count return " + resultMsg.getTotal());
+			/* Now only send the ones that are not synced */
+			List<BaseEntity> unsyncedItemList = new ArrayList<BaseEntity>();
+			for (BaseEntity be : bes) {
+				Optional<String> unsynced = be.getValue("PRI_SYNC");
+				/*
+				 * if (!((unsynced.isPresent()) && ("TRUE".equals(unsynced.get())))) { Answer
+				 * ans = new Answer($user.getCode(),be.getCode(),"PRI_SYNC","TRUE");
+				 * beUtils.saveAnswer(ans); be = beUtils.getBaseEntityByCode(be.getCode());
+				 * unsyncedItemList.add(be); }
+				 */
+				be = beUtils.getBaseEntityByCode(be.getCode());
+				unsyncedItemList.add(be);
+			}
+			looptime = System.currentTimeMillis();
+			resultMsg.setItems(unsyncedItemList.toArray(new BaseEntity[0]));
+
 		} catch (Exception e1) {
 			e1.printStackTrace();
-		}		
-		
+		}
+
 		long endtime = System.currentTimeMillis();
-		System.out.println("search took "+(searchtime-starttime)+" ms");
-		System.out.println("loop took "+(looptime-searchtime)+" ms");
-		System.out.println("finish took "+(endtime-looptime)+" ms");
-		System.out.println("total took "+(endtime-starttime)+" ms");
+		System.out.println("search took " + (searchtime - starttime) + " ms");
+		System.out.println("loop took " + (looptime - searchtime) + " ms");
+		System.out.println("finish took " + (endtime - looptime) + " ms");
+		System.out.println("total took " + (endtime - starttime) + " ms");
 //		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 //		beUtils.setServiceToken(serviceToken);
 //		SearchEntity searchBE = new SearchEntity("SBE_SEARCH", "Fix Missing Supervisors")
@@ -356,8 +440,7 @@ public class AdamTest {
 //		} catch (Exception e1) {
 //			e1.printStackTrace();
 //		}
-		
-		
+
 //		SearchEntity searchBE = new SearchEntity("SBE_SEARCH", "Fix Missing Supervisors")
 //				.addSort("PRI_CODE", "Created", SearchEntity.Sort.ASC)
 //				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%") 
@@ -425,30 +508,24 @@ public class AdamTest {
 //			e1.printStackTrace();
 //		}		
 	}
-	
-	
-	//@Test
+
+	// @Test
 	public void showFramesTest() {
-		GennyToken tokenUser = GennyJbpmBaseTest.createGennyToken("ABCDEFGH","internmatch", "adam.crow@gada.io", "Adam Crow", "intern");
-		GennyToken tokenSupervisor = GennyJbpmBaseTest.createGennyToken("BCDEFGSHS","internmatch", "kanika.gulati@gada.io", "Kanika Gulati", "supervisor");
+		GennyToken tokenUser = GennyJbpmBaseTest.createGennyToken("ABCDEFGH", "internmatch", "adam.crow@gada.io",
+				"Adam Crow", "intern");
+		GennyToken tokenSupervisor = GennyJbpmBaseTest.createGennyToken("BCDEFGSHS", "internmatch",
+				"kanika.gulati@gada.io", "Kanika Gulati", "supervisor");
 		System.out.println(tokenUser.getToken());
 		System.out.println(tokenSupervisor.getToken());
-		
+
 		System.out.println("showFrame Test");
 
 		GennyKieSession gks = null;
 
 		try {
-			gks = GennyKieSession.builder(serviceToken, true)
-					.addDrl("SignalProcessing")
-					.addDrl("DataProcessing")
-					.addDrl("EventProcessing")
-					.addJbpm("Lifecycles")
-					.addDrl("AuthInit")
-					.addJbpm("AuthInit")
-					.addDrl("InitialiseProject")
-					.addJbpm("InitialiseProject")
-					.build();
+			gks = GennyKieSession.builder(serviceToken, true).addDrl("SignalProcessing").addDrl("DataProcessing")
+					.addDrl("EventProcessing").addJbpm("Lifecycles").addDrl("AuthInit").addJbpm("AuthInit")
+					.addDrl("InitialiseProject").addJbpm("InitialiseProject").build();
 
 			gks.createTestUsersGroups();
 
@@ -492,7 +569,7 @@ public class AdamTest {
 		}
 	}
 
-	//@Test
+	// @Test
 	public void importUsers() {
 		System.out.println("Import Users test");
 		GennyToken userToken = null;
@@ -545,151 +622,159 @@ public class AdamTest {
 
 		googleDocId = googleDocId.trim();
 
-		 Map<String,String> fieldMapping = new HashMap<String,String>();
-			/* fieldMapping.put("Company Trading Name".toLowerCase(), "PRI_NAME"); */
-			 fieldMapping.put("firstname", "PRI_FIRSTNAME");
-			 fieldMapping.put("lastname", "PRI_LASTNAME");
-			 fieldMapping.put("email", "PRI_EMAIL");
-			 fieldMapping.put("company", "PRI_ASSOC_COMPANY");
-			 fieldMapping.put("password", "PRI_PASSWORD");
-			 fieldMapping.put("roles", "PRI_ROLES");
-			 fieldMapping.put("mobile", "PRI_PHONE");
-			 
-			 fieldMapping.put("UNIQUE_KEY_FIELD", "email");
-			 fieldMapping.put("PREFIX", "PER_");
+		Map<String, String> fieldMapping = new HashMap<String, String>();
+		/* fieldMapping.put("Company Trading Name".toLowerCase(), "PRI_NAME"); */
+		fieldMapping.put("firstname", "PRI_FIRSTNAME");
+		fieldMapping.put("lastname", "PRI_LASTNAME");
+		fieldMapping.put("email", "PRI_EMAIL");
+		fieldMapping.put("company", "PRI_ASSOC_COMPANY");
+		fieldMapping.put("password", "PRI_PASSWORD");
+		fieldMapping.put("roles", "PRI_ROLES");
+		fieldMapping.put("mobile", "PRI_PHONE");
 
+		fieldMapping.put("UNIQUE_KEY_FIELD", "email");
+		fieldMapping.put("PREFIX", "PER_");
 
-			 				
-				 List<BaseEntityImport> beImports = ImportUtils.importGoogleDoc(googleDocId, sheetId,fieldMapping);
-				 System.out.println("Importing Rule : "+beImports.size()+" items");
-				 /* now generate the baseentity and send through all the answers */
-				 List<Answer> answers = new ArrayList<Answer>();
-				 Integer count=0;
-				 
-				 /* First create The Host Company reps */
-				 
-				 for (BaseEntityImport beImport : beImports) {
-					 if (beImport.getAttributeValuePairList().isEmpty()) {
-						 continue;
-					 }
-					 System.out.println("Import User :"+beImport.getCode()+":"+beImport.getName());
-					 
-				 	/* check if already there */
-				 	BaseEntity be = beUtils.getBaseEntityByCode(beImport.getCode());
-				 	if (be == null) {
-					 	be = beUtils.create(beImport.getCode(), beImport.getName());
-					 } 
-					Map<String,String> kv = new HashMap<String,String>();
-					 
-					 for (Tuple2<String,String> attributeCodeValue : beImport.getAttributeValuePairList()) {
-					 	if (attributeCodeValue != null) {
-					 		String value = StringUtils.isBlank(attributeCodeValue._2)?"":attributeCodeValue._2; 
-					 		value = value.trim();
-					 		if (value.contains("'")) {
-					 			value = value.replace("'", "\\'");
-					 		}
-					 		kv.put(attributeCodeValue._1,value);
-						}
-					 }
+		List<BaseEntityImport> beImports = ImportUtils.importGoogleDoc(googleDocId, sheetId, fieldMapping);
+		System.out.println("Importing Rule : " + beImports.size() + " items");
+		/* now generate the baseentity and send through all the answers */
+		List<Answer> answers = new ArrayList<Answer>();
+		Integer count = 0;
 
-						Boolean intern = false;
-					String[] roles = kv.get("PRI_ROLES").split(",");
-					for (String role : roles) {
-						Answer isSomething = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IS_"+role.toUpperCase(),"TRUE");
-						answers.add(isSomething);
-						if ("INTERN".equals(role.toUpperCase())) {
-							Answer isImported = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_STATUS","AVAILABLE");
-							answers.add(isImported);
-							intern = true;
-						}
- 					}
-					
-					String hostCompany = kv.get("PRI_ASSOC_COMPANY");
-					BaseEntity hc = ImportUtils.fetchBaseEntityByName(beUtils, hostCompany,"CPY_");
+		/* First create The Host Company reps */
 
-					if (intern) {
-						if (hc != null) {
-							Answer lnkHC = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"LNK_HOST_COMPANY","[\""+hc.getCode()+"\"]");
-							answers.add(lnkHC);			 
+		for (BaseEntityImport beImport : beImports) {
+			if (beImport.getAttributeValuePairList().isEmpty()) {
+				continue;
+			}
+			System.out.println("Import User :" + beImport.getCode() + ":" + beImport.getName());
 
-						Answer isHC = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_ASSOC_HC",kv.get("PRI_ASSOC_COMPANY"));
-						answers.add(isHC);
-						}
-						
-					} else {
-						if (hc != null) {
-							Answer lnkHC = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"LNK_COMPANY","[\""+hc.getCode()+"\"]");
-							answers.add(lnkHC);			 
+			/* check if already there */
+			BaseEntity be = beUtils.getBaseEntityByCode(beImport.getCode());
+			if (be == null) {
+				be = beUtils.create(beImport.getCode(), beImport.getName());
+			}
+			Map<String, String> kv = new HashMap<String, String>();
 
-						Answer isHC = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_ASSOC_COMPANY",kv.get("PRI_ASSOC_COMPANY"));
-						answers.add(isHC);
-						}
-
+			for (Tuple2<String, String> attributeCodeValue : beImport.getAttributeValuePairList()) {
+				if (attributeCodeValue != null) {
+					String value = StringUtils.isBlank(attributeCodeValue._2) ? "" : attributeCodeValue._2;
+					value = value.trim();
+					if (value.contains("'")) {
+						value = value.replace("'", "\\'");
 					}
-					
-					Answer isImported = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IMPORTED","TRUE");
+					kv.put(attributeCodeValue._1, value);
+				}
+			}
+
+			Boolean intern = false;
+			String[] roles = kv.get("PRI_ROLES").split(",");
+			for (String role : roles) {
+				Answer isSomething = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(),
+						"PRI_IS_" + role.toUpperCase(), "TRUE");
+				answers.add(isSomething);
+				if ("INTERN".equals(role.toUpperCase())) {
+					Answer isImported = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_STATUS",
+							"AVAILABLE");
 					answers.add(isImported);
-					Answer isFirstname = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_FIRSTNAME",kv.get("PRI_FIRSTNAME"));
-					answers.add(isFirstname);
-					Answer isLastname = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_LASTNAME",kv.get("PRI_LASTNAME"));
-					answers.add(isLastname);
-					Answer isEmail = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_EMAIL",kv.get("PRI_EMAIL"));
-					answers.add(isEmail);
-					Answer isMobile = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_PHONE",kv.get("PRI_PHONE"));
-					answers.add(isMobile);
-					Answer isPhone = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_MOBILE",kv.get("PRI_PHONE"));
-					answers.add(isPhone);
+					intern = true;
+				}
+			}
 
+			String hostCompany = kv.get("PRI_ASSOC_COMPANY");
+			BaseEntity hc = ImportUtils.fetchBaseEntityByName(beUtils, hostCompany, "CPY_");
 
-					
+			if (intern) {
+				if (hc != null) {
+					Answer lnkHC = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "LNK_HOST_COMPANY",
+							"[\"" + hc.getCode() + "\"]");
+					answers.add(lnkHC);
 
-					QDataAnswerMessage msg = new QDataAnswerMessage(answers);
-					System.out.println("created QDataAnswerMessage  for "+beImport.getCode()+":"+be.getName());
-					msg.setToken(beUtils.getGennyToken().getToken());
-					/* creating new user in keycloak */
-					/* ASSUME FIRSTNAME, LASTNAME, EMAIL ARE GOOD!!! TODO */
-					try {
-						String email = kv.get("PRI_EMAIL");
-						String userPassword = kv.get("PRI_PASSWORD");
-						String userId = "";
-						/*System.out.println(" keycloak token is "+serviceToken.getToken());*/
-						if (kv.get("PRI_ROLES").contains("DEV")) {
-							userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(),email , kv.get("PRI_FIRSTNAME"), kv.get("PRI_LASTNAME"),  email, userPassword,"dev,admin,test,user", "dev,test,admin,user");
-						} else
+					Answer isHC = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_ASSOC_HC",
+							kv.get("PRI_ASSOC_COMPANY"));
+					answers.add(isHC);
+				}
 
-						if (kv.get("PRI_ROLES").contains("ADMIN")) {
-							userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(),email , kv.get("PRI_FIRSTNAME"), kv.get("PRI_LASTNAME"),  email, userPassword,"admin,user", "admin,user");
-						} else if (kv.get("PRI_ROLES").contains("AGENT")) {
-							userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(),email , kv.get("PRI_FIRSTNAME"), kv.get("PRI_LASTNAME"),  email, userPassword,"user", "user");
-							
-						}
-						Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_UUID",userId);
-						answers.add(keycloakId);
-						
-					} catch (IOException e) {
-						/* keycloak exception spits the answer */
-					}
-					
-						System.out.println("inserting new user  message containing all their new attributes");
-						if ((count >=start) && (count <= finish))	
-						{			
-							insert(msg);
-						} else {
-							if (count > finish)	{
-								break;
-							}
-					}
-						count++;
-				 }
-				 System.out.println("Aggregated  all Answers ");
-			
-		System.out.println("Finished insertion of QDataAnswerMessage containing imported");		
-				
+			} else {
+				if (hc != null) {
+					Answer lnkHC = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "LNK_COMPANY",
+							"[\"" + hc.getCode() + "\"]");
+					answers.add(lnkHC);
+
+					Answer isHC = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_ASSOC_COMPANY",
+							kv.get("PRI_ASSOC_COMPANY"));
+					answers.add(isHC);
+				}
+
+			}
+
+			Answer isImported = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_IMPORTED", "TRUE");
+			answers.add(isImported);
+			Answer isFirstname = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_FIRSTNAME",
+					kv.get("PRI_FIRSTNAME"));
+			answers.add(isFirstname);
+			Answer isLastname = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_LASTNAME",
+					kv.get("PRI_LASTNAME"));
+			answers.add(isLastname);
+			Answer isEmail = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_EMAIL",
+					kv.get("PRI_EMAIL"));
+			answers.add(isEmail);
+			Answer isMobile = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_PHONE",
+					kv.get("PRI_PHONE"));
+			answers.add(isMobile);
+			Answer isPhone = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_MOBILE",
+					kv.get("PRI_PHONE"));
+			answers.add(isPhone);
+
+			QDataAnswerMessage msg = new QDataAnswerMessage(answers);
+			System.out.println("created QDataAnswerMessage  for " + beImport.getCode() + ":" + be.getName());
+			msg.setToken(beUtils.getGennyToken().getToken());
+			/* creating new user in keycloak */
+			/* ASSUME FIRSTNAME, LASTNAME, EMAIL ARE GOOD!!! TODO */
+			try {
+				String email = kv.get("PRI_EMAIL");
+				String userPassword = kv.get("PRI_PASSWORD");
+				String userId = "";
+				/* System.out.println(" keycloak token is "+serviceToken.getToken()); */
+				if (kv.get("PRI_ROLES").contains("DEV")) {
+					userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(), email,
+							kv.get("PRI_FIRSTNAME"), kv.get("PRI_LASTNAME"), email, userPassword, "dev,admin,test,user",
+							"dev,test,admin,user");
+				} else
+
+				if (kv.get("PRI_ROLES").contains("ADMIN")) {
+					userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(), email,
+							kv.get("PRI_FIRSTNAME"), kv.get("PRI_LASTNAME"), email, userPassword, "admin,user",
+							"admin,user");
+				} else if (kv.get("PRI_ROLES").contains("AGENT")) {
+					userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(), email,
+							kv.get("PRI_FIRSTNAME"), kv.get("PRI_LASTNAME"), email, userPassword, "user", "user");
+
+				}
+				Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_UUID", userId);
+				answers.add(keycloakId);
+
+			} catch (IOException e) {
+				/* keycloak exception spits the answer */
+			}
+
+			System.out.println("inserting new user  message containing all their new attributes");
+			if ((count >= start) && (count <= finish)) {
+				insert(msg);
+			} else {
+				if (count > finish) {
+					break;
+				}
+			}
+			count++;
+		}
+		System.out.println("Aggregated  all Answers ");
+
+		System.out.println("Finished insertion of QDataAnswerMessage containing imported");
 
 	}
 
-	
-	//@Test
+	// @Test
 	public void sendVerify2Test() {
 		System.out.println("Search test");
 		String password = System.getenv("SERVICE_PASSWORD");
@@ -708,16 +793,17 @@ public class AdamTest {
 //		sendVerifyMail(token, "christopher.pyke+intern@gada.io", "Chris Testing App", "Six");
 //		sendVerifyMail(token, "gerard.holland", "outcome.life","Gerard", "Holland");
 //		sendVerifyMail(token, "domenic.saporito", "outcome.life","Domenic", "Saporito");
-		sendVerifyMail(token, "adamcrow63", "gmail.com","Adam", "Crow");
+		sendVerifyMail(token, "adamcrow63", "gmail.com", "Adam", "Crow");
 //		sendVerifyMail(token, "christopher.pyke", "gada.io","Christopher", "Pyke");
 //		sendVerifyMail(token, "stephenie.pulis-cassar", "outcomelife.com.au","Stephenie", "Pulis-Cassar");
 //		sendVerifyMail(token, "joshua.tinner+intern31@outcome.life", "Stephenie", "Pulis-Cassar");
 	}
-	
+
 	private void sendVerifyMail(String token, String emailusername) {
 		String userId = KeycloakUtils.sendVerifyEmail(realm, emailusername, token);
 		System.out.println("UserId=" + userId);
 	}
+
 	private void sendVerifyMail(String token, String emailusername, String firstname, String lastname) {
 //		LocalDateTime now = LocalDateTime.now();
 //		String mydatetime = new SimpleDateFormat("yyyyMMddHHmmss").format(now.toDate());
@@ -734,7 +820,7 @@ public class AdamTest {
 		userId = KeycloakUtils.sendVerifyEmail(realm, emailusername, token);
 		System.out.println("UserId=" + userId);
 	}
-	
+
 	private void sendVerifyMail(String token, String username, String domain, String firstname, String lastname) {
 		LocalDateTime now = LocalDateTime.now();
 		String mydatetime = new SimpleDateFormat("yyyyMMddHHmmss").format(now.toDate());
@@ -751,27 +837,28 @@ public class AdamTest {
 		userId = KeycloakUtils.sendVerifyEmail(realm, emailusername, token);
 		System.out.println("UserId=" + userId);
 	}
-	//@Test
+
+	// @Test
 	public void importHostCompaniesTest() {
 		this.importHostCompanies();
 	}
 
-	//@Test
+	// @Test
 	public void importHostCompaniesRepsTest() {
 		this.importHostCompaniesReps();
 	}
 
-	//@Test
+	// @Test
 	public void importInternsTest() {
 		this.importInterns();
 	}
 
-	//@Test
+	// @Test
 	public void importInternshipsTest() {
 		this.importInternships();
 	}
 
-	//@Test
+	// @Test
 	public void verifyInternsTest() {
 		verifyInterns();
 	}
@@ -829,145 +916,162 @@ public class AdamTest {
 
 		googleDocId = googleDocId.trim();
 
-		 Map<String,String> fieldMapping = new HashMap<String,String>();
-		 fieldMapping.put("Education Provider", "PRI_ASSOC_EP");
-		 fieldMapping.put("Student ID", "PRI_STUDENT_ID");
-		 fieldMapping.put("Student First Name", "PRI_IMPORT_FIRSTNAME");
-		 fieldMapping.put("Last Name", "PRI_IMPORT_LASTNAME");
-		 fieldMapping.put("Student Email", "PRI_EMAIL");
-		 fieldMapping.put("Industry", "PRI_INDUSTRY");
-		 fieldMapping.put("Internship Title", "PRI_NAME");
-		 fieldMapping.put("Company Trading Name", "PRI_ASSOC_HOST_COMPANY");
-		 fieldMapping.put("ABN", "PRI_ABN");
-		 fieldMapping.put("Host Company Supervisor", "PRI_ASSOC_SUPERVISOR");
-		 fieldMapping.put("Host Company Rep", "PRI_ASSOC_HCR");
-		 fieldMapping.put("Host Company Rep Email", "PRI_ASSOC_HOST_COMPANY_EMAIL");
-		 
+		Map<String, String> fieldMapping = new HashMap<String, String>();
+		fieldMapping.put("Education Provider", "PRI_ASSOC_EP");
+		fieldMapping.put("Student ID", "PRI_STUDENT_ID");
+		fieldMapping.put("Student First Name", "PRI_IMPORT_FIRSTNAME");
+		fieldMapping.put("Last Name", "PRI_IMPORT_LASTNAME");
+		fieldMapping.put("Student Email", "PRI_EMAIL");
+		fieldMapping.put("Industry", "PRI_INDUSTRY");
+		fieldMapping.put("Internship Title", "PRI_NAME");
+		fieldMapping.put("Company Trading Name", "PRI_ASSOC_HOST_COMPANY");
+		fieldMapping.put("ABN", "PRI_ABN");
+		fieldMapping.put("Host Company Supervisor", "PRI_ASSOC_SUPERVISOR");
+		fieldMapping.put("Host Company Rep", "PRI_ASSOC_HCR");
+		fieldMapping.put("Host Company Rep Email", "PRI_ASSOC_HOST_COMPANY_EMAIL");
+
 		/* fieldMapping.put("UNIQUE_KEY_FIELD", "Student Email".toLowerCase()); */
-		 fieldMapping.put("NAME_KEY_FIELD", "Internship Title".toLowerCase());
-		 fieldMapping.put("PREFIX", "BEG_");
-		 				
-			 List<BaseEntityImport> beImports = ImportUtils.importGoogleDoc(googleDocId, sheetId,fieldMapping);
-			 System.out.println("Importing Rule : "+beImports.size()+" items");
-			 /* now generate the baseentity and send through all the answers */
-			 List<Answer> answers = new ArrayList<Answer>();
-			 Integer count=0;
-			 for (BaseEntityImport beImport : beImports) {
-			 	/* check if already there */
+		fieldMapping.put("NAME_KEY_FIELD", "Internship Title".toLowerCase());
+		fieldMapping.put("PREFIX", "BEG_");
 
-			 	BaseEntity be = beUtils.getBaseEntityByCode(beImport.getCode());
-			 	if (be == null) {
-				 	be = beUtils.create(beImport.getCode(), beImport.getName());
-				 } 
-				 
-				 
-				 
-				Map<String,String> kv = new HashMap<String,String>();
-				String hostCompany = "";
-				String supName = "";
-				String eduName = "";
-				String hcrEmail = "";
-				 
-				 for (Tuple2<String,String> attributeCodeValue : beImport.getAttributeValuePairList()) {
-				 	String value = StringUtils.isBlank(attributeCodeValue._2)?"":attributeCodeValue._2; 
-				 	value = value.trim();
-				 	kv.put(attributeCodeValue._1,value);
-					Answer answer2 = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),attributeCodeValue._1,value);
-					answers.add(answer2);
-					 ImportUtils.processAttribute(beUtils,be.getCode(),attributeCodeValue,"PRI_ASSOC_EP","PRI_NAME","CPY_","LNK_EDU_PROVIDER",answers);
-					 BaseEntity hc = ImportUtils.processAttribute(beUtils,be.getCode(),attributeCodeValue,"PRI_ABN","PRI_ABN","CPY_","LNK_HOST_COMPANY",answers);
-					 if (hc!=null) {
-						System.out.println("Found link to "+hc.getName()+" as LNK_HOST_COMPANY");
-						Answer assocHC = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_ASSOC_HC",hc.getName());
-						hostCompany = hc.getName();
-						answers.add(assocHC);	
-						if (hc.getValue("PRI_ADDRESS_FULL_JSON").isPresent()) {
-					    	Answer assocHCloc = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_ADDRESS_FULL_JSON",(String)(hc.getValue("PRI_ADDRESS_FULL_JSON").get()));
-							answers.add(assocHCloc);
-						}				
-									
-					}
-					 BaseEntity sup = ImportUtils.processAttribute(beUtils,be.getCode(),attributeCodeValue,"PRI_ASSOC_SUPERVISOR","PRI_NAME","PER_","LNK_INTERN_SUPERVISOR",answers);
-					 if (sup!=null) {
-						System.out.println("Found link to "+sup.getName()+" as LNK_INTERN_SUPERVISOR");
-						Answer assocSUP = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_ASSOC_SUPERVISOR",sup.getName());
-						supName = sup.getName();
-						answers.add(assocSUP);				
-					}
-					 BaseEntity rep = ImportUtils.processAttribute(beUtils,be.getCode(),attributeCodeValue,"PRI_ASSOC_HCR","PRI_NAME","PER_","LNK_HOST_COMPANY_REP",answers);
-					 if (rep!=null) {
-						System.out.println("Found link to "+rep.getName()+" as LNK_HOST_COMPANY_REP");
-						Answer assocREP = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_ASSOC_HCR",rep.getName());
-						if (rep.getValue("PRI_EMAIL").isPresent()) {
-							hcrEmail = (String)(rep.getValue("PRI_EMAIL").get());
-						}
-						answers.add(assocREP);	
-									
-					}
-					
-				 }
-				 String industry = kv.get("PRI_INDUSTRY");
-				 if (industry != null) {
-						Answer industryAns = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_LNK_INDUSTRY","[\"SEL_INDUSTRY_"+industry.toUpperCase()+"\"]");
-						answers.add(industryAns);			 
-				 }
-					Answer duration = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_INTERNSHIP_DURATION_STRIPPED","12");
-					answers.add(duration);
-				 
-				Answer internCount = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"LNK_NO_OF_INTERNS","[\"SEL_NO_OF_INTERNS_ONE\"]");
-				answers.add(internCount);
-				Answer daysperweek = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_DAYS_PER_WEEK","3");
-				answers.add(daysperweek);
-				Answer currentInterns = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_CURRENT_INTERNS","1");
-				answers.add(currentInterns);
-				Answer isInternship = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IS_INTERNSHIP","true");
-				answers.add(isInternship);
-				Answer isImported = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IMPORTED","true");
-				answers.add(isImported);
-				Answer hasLoggedIn = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_HAS_LOGGED_IN","false");
-				answers.add(hasLoggedIn);
-				Answer status = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_STATUS","ACTIVE");
-				answers.add(status);
-				Answer ilastname = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_LASTNAME",kv.get("PRI_IMPORT_LASTNAME"));
-				answers.add(ilastname);
-				Answer ifirstname = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_FIRSTNAME",kv.get("PRI_IMPORT_FIRSTNAME"));
-				answers.add(ifirstname);
-				Answer iemail = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_EMAIL",kv.get("PRI_EMAIL"));
-				answers.add(iemail);
-				
-				String internCode = "PER_"+QwandaUtils.getNormalisedUsername(kv.get("PRI_EMAIL"));
-				System.out.println("Linking Internship "+be.getCode()+" to intern "+internCode);
-				Answer intern = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"LNK_INTERN","[\""+internCode+"\"]");
-				answers.add(intern);			 
-				
-				Answer isid = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_STUDENT_ID",kv.get("PRI_INTERN_STUDENT_ID"));
-				answers.add(isid);
-				Answer iname = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_INTERN_NAME",(ifirstname.getValue()+" "+ilastname.getValue()).trim());
-				answers.add(iname);
-				Answer accepted = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_INTERN_ACCEPTED","true");
-				answers.add(accepted);
+		List<BaseEntityImport> beImports = ImportUtils.importGoogleDoc(googleDocId, sheetId, fieldMapping);
+		System.out.println("Importing Rule : " + beImports.size() + " items");
+		/* now generate the baseentity and send through all the answers */
+		List<Answer> answers = new ArrayList<Answer>();
+		Integer count = 0;
+		for (BaseEntityImport beImport : beImports) {
+			/* check if already there */
 
-				QDataAnswerMessage msg = new QDataAnswerMessage(answers);
-				System.out.println("created QDataAnswerMessage  for "+beImport.getCode());
-				msg.setToken(beUtils.getGennyToken().getToken());
+			BaseEntity be = beUtils.getBaseEntityByCode(beImport.getCode());
+			if (be == null) {
+				be = beUtils.create(beImport.getCode(), beImport.getName());
+			}
 
-				
-		
-				
-					System.out.println("inserting new internship message containing all their new attributes");
-					if ((count >=start) && (count <= finish))	
-					{			
-						insert(msg);
-					} else {
-						if (count > finish)	{
-							break;
-						}
+			Map<String, String> kv = new HashMap<String, String>();
+			String hostCompany = "";
+			String supName = "";
+			String eduName = "";
+			String hcrEmail = "";
+
+			for (Tuple2<String, String> attributeCodeValue : beImport.getAttributeValuePairList()) {
+				String value = StringUtils.isBlank(attributeCodeValue._2) ? "" : attributeCodeValue._2;
+				value = value.trim();
+				kv.put(attributeCodeValue._1, value);
+				Answer answer2 = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), attributeCodeValue._1,
+						value);
+				answers.add(answer2);
+				ImportUtils.processAttribute(beUtils, be.getCode(), attributeCodeValue, "PRI_ASSOC_EP", "PRI_NAME",
+						"CPY_", "LNK_EDU_PROVIDER", answers);
+				BaseEntity hc = ImportUtils.processAttribute(beUtils, be.getCode(), attributeCodeValue, "PRI_ABN",
+						"PRI_ABN", "CPY_", "LNK_HOST_COMPANY", answers);
+				if (hc != null) {
+					System.out.println("Found link to " + hc.getName() + " as LNK_HOST_COMPANY");
+					Answer assocHC = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_ASSOC_HC",
+							hc.getName());
+					hostCompany = hc.getName();
+					answers.add(assocHC);
+					if (hc.getValue("PRI_ADDRESS_FULL_JSON").isPresent()) {
+						Answer assocHCloc = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(),
+								"PRI_ADDRESS_FULL_JSON", (String) (hc.getValue("PRI_ADDRESS_FULL_JSON").get()));
+						answers.add(assocHCloc);
+					}
+
 				}
-					count++;
-			 }
-			 System.out.println("Aggregated  all Answers ");
-		
-			System.out.println("Finished insertion of QDataAnswerMessage containing imported");		
+				BaseEntity sup = ImportUtils.processAttribute(beUtils, be.getCode(), attributeCodeValue,
+						"PRI_ASSOC_SUPERVISOR", "PRI_NAME", "PER_", "LNK_INTERN_SUPERVISOR", answers);
+				if (sup != null) {
+					System.out.println("Found link to " + sup.getName() + " as LNK_INTERN_SUPERVISOR");
+					Answer assocSUP = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(),
+							"PRI_ASSOC_SUPERVISOR", sup.getName());
+					supName = sup.getName();
+					answers.add(assocSUP);
+				}
+				BaseEntity rep = ImportUtils.processAttribute(beUtils, be.getCode(), attributeCodeValue,
+						"PRI_ASSOC_HCR", "PRI_NAME", "PER_", "LNK_HOST_COMPANY_REP", answers);
+				if (rep != null) {
+					System.out.println("Found link to " + rep.getName() + " as LNK_HOST_COMPANY_REP");
+					Answer assocREP = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_ASSOC_HCR",
+							rep.getName());
+					if (rep.getValue("PRI_EMAIL").isPresent()) {
+						hcrEmail = (String) (rep.getValue("PRI_EMAIL").get());
+					}
+					answers.add(assocREP);
+
+				}
+
+			}
+			String industry = kv.get("PRI_INDUSTRY");
+			if (industry != null) {
+				Answer industryAns = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_LNK_INDUSTRY",
+						"[\"SEL_INDUSTRY_" + industry.toUpperCase() + "\"]");
+				answers.add(industryAns);
+			}
+			Answer duration = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(),
+					"PRI_INTERNSHIP_DURATION_STRIPPED", "12");
+			answers.add(duration);
+
+			Answer internCount = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "LNK_NO_OF_INTERNS",
+					"[\"SEL_NO_OF_INTERNS_ONE\"]");
+			answers.add(internCount);
+			Answer daysperweek = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_DAYS_PER_WEEK",
+					"3");
+			answers.add(daysperweek);
+			Answer currentInterns = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(),
+					"PRI_CURRENT_INTERNS", "1");
+			answers.add(currentInterns);
+			Answer isInternship = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_IS_INTERNSHIP",
+					"true");
+			answers.add(isInternship);
+			Answer isImported = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_IMPORTED", "true");
+			answers.add(isImported);
+			Answer hasLoggedIn = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_HAS_LOGGED_IN",
+					"false");
+			answers.add(hasLoggedIn);
+			Answer status = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_STATUS", "ACTIVE");
+			answers.add(status);
+			Answer ilastname = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_LASTNAME",
+					kv.get("PRI_IMPORT_LASTNAME"));
+			answers.add(ilastname);
+			Answer ifirstname = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_FIRSTNAME",
+					kv.get("PRI_IMPORT_FIRSTNAME"));
+			answers.add(ifirstname);
+			Answer iemail = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_EMAIL",
+					kv.get("PRI_EMAIL"));
+			answers.add(iemail);
+
+			String internCode = "PER_" + QwandaUtils.getNormalisedUsername(kv.get("PRI_EMAIL"));
+			System.out.println("Linking Internship " + be.getCode() + " to intern " + internCode);
+			Answer intern = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "LNK_INTERN",
+					"[\"" + internCode + "\"]");
+			answers.add(intern);
+
+			Answer isid = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_STUDENT_ID",
+					kv.get("PRI_INTERN_STUDENT_ID"));
+			answers.add(isid);
+			Answer iname = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_INTERN_NAME",
+					(ifirstname.getValue() + " " + ilastname.getValue()).trim());
+			answers.add(iname);
+			Answer accepted = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_INTERN_ACCEPTED",
+					"true");
+			answers.add(accepted);
+
+			QDataAnswerMessage msg = new QDataAnswerMessage(answers);
+			System.out.println("created QDataAnswerMessage  for " + beImport.getCode());
+			msg.setToken(beUtils.getGennyToken().getToken());
+
+			System.out.println("inserting new internship message containing all their new attributes");
+			if ((count >= start) && (count <= finish)) {
+				insert(msg);
+			} else {
+				if (count > finish) {
+					break;
+				}
+			}
+			count++;
+		}
+		System.out.println("Aggregated  all Answers ");
+
+		System.out.println("Finished insertion of QDataAnswerMessage containing imported");
 
 	}
 
@@ -1024,104 +1128,110 @@ public class AdamTest {
 
 		googleDocId = googleDocId.trim();
 
-		 Map<String,String> fieldMapping = new HashMap<String,String>();
-		 fieldMapping.put("Education Provider", "PRI_ASSOC_EP");
-		 fieldMapping.put("Student ID", "PRI_STUDENT_ID");
-		 fieldMapping.put("Student First Name", "PRI_IMPORT_FIRSTNAME");
-		 fieldMapping.put("Last Name", "PRI_IMPORT_LASTNAME");
-		 fieldMapping.put("Student Email", "PRI_EMAIL");
-		 fieldMapping.put("Industry", "PRI_INDUSTRY");
-		 fieldMapping.put("Company Trading Name", "PRI_ASSOC_HOST_COMPANY");
-		 fieldMapping.put("ABN", "PRI_ASSOC_HOST_COMPANY");
-		 fieldMapping.put("Host Company Supervisor", "PRI_ASSOC_SUPERVISOR");
-		 fieldMapping.put("Host Company Rep", "PRI_ASSOC_HCR");
-		 fieldMapping.put("Host Company Rep Email", "PRI_ASSOC_HOST_COMPANY_EMAIL");
-		 
-		 fieldMapping.put("UNIQUE_KEY_FIELD", "Student Email".toLowerCase());
-		 fieldMapping.put("NAME_KEY_FIELD", "Student Email".toLowerCase());
-		 fieldMapping.put("PREFIX", "PER_");
-		 				
-			 List<BaseEntityImport> beImports = ImportUtils.importGoogleDoc(googleDocId, sheetId,fieldMapping);
-			 System.out.println("Importing Rule : "+beImports.size()+" items");
-			 /* now generate the baseentity and send through all the answers */
-			 List<Answer> answers = new ArrayList<Answer>();
-			 Integer count=0;
-			 for (BaseEntityImport beImport : beImports) {
-			 	/* check if already there */
+		Map<String, String> fieldMapping = new HashMap<String, String>();
+		fieldMapping.put("Education Provider", "PRI_ASSOC_EP");
+		fieldMapping.put("Student ID", "PRI_STUDENT_ID");
+		fieldMapping.put("Student First Name", "PRI_IMPORT_FIRSTNAME");
+		fieldMapping.put("Last Name", "PRI_IMPORT_LASTNAME");
+		fieldMapping.put("Student Email", "PRI_EMAIL");
+		fieldMapping.put("Industry", "PRI_INDUSTRY");
+		fieldMapping.put("Company Trading Name", "PRI_ASSOC_HOST_COMPANY");
+		fieldMapping.put("ABN", "PRI_ASSOC_HOST_COMPANY");
+		fieldMapping.put("Host Company Supervisor", "PRI_ASSOC_SUPERVISOR");
+		fieldMapping.put("Host Company Rep", "PRI_ASSOC_HCR");
+		fieldMapping.put("Host Company Rep Email", "PRI_ASSOC_HOST_COMPANY_EMAIL");
 
-			 	BaseEntity be = beUtils.getBaseEntityByCode(beImport.getCode());
-			 	if (be == null) {
-				 	be = beUtils.create(beImport.getCode(), beImport.getName());
-				 } 
-				System.out.println("Import Intern:"+beImport.getCode()+":"+beImport.getName());
+		fieldMapping.put("UNIQUE_KEY_FIELD", "Student Email".toLowerCase());
+		fieldMapping.put("NAME_KEY_FIELD", "Student Email".toLowerCase());
+		fieldMapping.put("PREFIX", "PER_");
 
-				Map<String,String> kv = new HashMap<String,String>();
-				 
-				 for (Tuple2<String,String> attributeCodeValue : beImport.getAttributeValuePairList()) {
-				 	String value = StringUtils.isBlank(attributeCodeValue._2)?"":attributeCodeValue._2; 
-				 	value = value.trim();
-				 	kv.put(attributeCodeValue._1,value);
-					Answer answer2 = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),attributeCodeValue._1,value);
-					answers.add(answer2);
-					ImportUtils.processAttribute(beUtils,be.getCode(),attributeCodeValue,"PRI_ASSOC_EP","PRI_NAME","CPY_","LNK_EDU_PROVIDER",answers);
-					
+		List<BaseEntityImport> beImports = ImportUtils.importGoogleDoc(googleDocId, sheetId, fieldMapping);
+		System.out.println("Importing Rule : " + beImports.size() + " items");
+		/* now generate the baseentity and send through all the answers */
+		List<Answer> answers = new ArrayList<Answer>();
+		Integer count = 0;
+		for (BaseEntityImport beImport : beImports) {
+			/* check if already there */
 
-				 }
-				Answer isIntern = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IS_INTERN","true");
-				answers.add(isIntern);
-				Answer isImported = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IMPORTED","true");
-				answers.add(isImported);
-				Answer hasLoggedIn = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_HAS_LOGGED_IN","false");
-				answers.add(hasLoggedIn);
-				Answer status = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_STATUS","AVAILABLE");
-				answers.add(status);
-				Answer ilastname = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_LASTNAME",kv.get("PRI_IMPORT_LASTNAME"));
-				answers.add(ilastname);
-				Answer ifirstname = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_FIRSTNAME",kv.get("PRI_IMPORT_FIRSTNAME"));
-				answers.add(ifirstname);
-				Answer iemail = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_EMAIL",kv.get("PRI_INTERN_EMAIL"));
-				answers.add(iemail);
-				Answer isid = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_STUDENT_ID",kv.get("PRI_INTERN_STUDENT_ID"));
-				answers.add(isid);
-				Answer iname = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_INTERN_NAME",(ifirstname+" "+ilastname).trim());
-				answers.add(iname);
-				Answer accepted = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_INTERN_ACCEPTED","true");
-				answers.add(accepted);
-				
+			BaseEntity be = beUtils.getBaseEntityByCode(beImport.getCode());
+			if (be == null) {
+				be = beUtils.create(beImport.getCode(), beImport.getName());
+			}
+			System.out.println("Import Intern:" + beImport.getCode() + ":" + beImport.getName());
 
-				QDataAnswerMessage msg = new QDataAnswerMessage(answers);
-				System.out.println("created QDataAnswerMessage  for "+beImport.getCode());
-				msg.setToken(beUtils.getGennyToken().getToken());
-				/* creating new user in keycloak */
-				/* ASSUME FIRSTNAME, LASTNAME, EMAIL ARE GOOD!!! TODO */
-				try {
-					String email = kv.get("PRI_EMAIL").trim();
-					String firstname = kv.get("PRI_IMPORT_FIRSTNAME").trim();
-					String lastname = kv.get("PRI_IMPORT_LASTNAME").trim();
-					String userPassword = UUID.randomUUID().toString().substring(0,10);
-					/* System.out.println(" keycloak token is "+serviceToken.getToken()); */
-					String userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(),email , firstname, lastname,  email, userPassword,"user", "user");
-					Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_UUID",userId);
-					answers.add(keycloakId);						
-				} catch (IOException e) {
-					/* keycloak exception spits the answer */
+			Map<String, String> kv = new HashMap<String, String>();
+
+			for (Tuple2<String, String> attributeCodeValue : beImport.getAttributeValuePairList()) {
+				String value = StringUtils.isBlank(attributeCodeValue._2) ? "" : attributeCodeValue._2;
+				value = value.trim();
+				kv.put(attributeCodeValue._1, value);
+				Answer answer2 = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), attributeCodeValue._1,
+						value);
+				answers.add(answer2);
+				ImportUtils.processAttribute(beUtils, be.getCode(), attributeCodeValue, "PRI_ASSOC_EP", "PRI_NAME",
+						"CPY_", "LNK_EDU_PROVIDER", answers);
+
+			}
+			Answer isIntern = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_IS_INTERN", "true");
+			answers.add(isIntern);
+			Answer isImported = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_IMPORTED", "true");
+			answers.add(isImported);
+			Answer hasLoggedIn = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_HAS_LOGGED_IN",
+					"false");
+			answers.add(hasLoggedIn);
+			Answer status = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_STATUS", "AVAILABLE");
+			answers.add(status);
+			Answer ilastname = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_LASTNAME",
+					kv.get("PRI_IMPORT_LASTNAME"));
+			answers.add(ilastname);
+			Answer ifirstname = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_FIRSTNAME",
+					kv.get("PRI_IMPORT_FIRSTNAME"));
+			answers.add(ifirstname);
+			Answer iemail = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_EMAIL",
+					kv.get("PRI_INTERN_EMAIL"));
+			answers.add(iemail);
+			Answer isid = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_STUDENT_ID",
+					kv.get("PRI_INTERN_STUDENT_ID"));
+			answers.add(isid);
+			Answer iname = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_INTERN_NAME",
+					(ifirstname + " " + ilastname).trim());
+			answers.add(iname);
+			Answer accepted = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_INTERN_ACCEPTED",
+					"true");
+			answers.add(accepted);
+
+			QDataAnswerMessage msg = new QDataAnswerMessage(answers);
+			System.out.println("created QDataAnswerMessage  for " + beImport.getCode());
+			msg.setToken(beUtils.getGennyToken().getToken());
+			/* creating new user in keycloak */
+			/* ASSUME FIRSTNAME, LASTNAME, EMAIL ARE GOOD!!! TODO */
+			try {
+				String email = kv.get("PRI_EMAIL").trim();
+				String firstname = kv.get("PRI_IMPORT_FIRSTNAME").trim();
+				String lastname = kv.get("PRI_IMPORT_LASTNAME").trim();
+				String userPassword = UUID.randomUUID().toString().substring(0, 10);
+				/* System.out.println(" keycloak token is "+serviceToken.getToken()); */
+				String userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(), email,
+						firstname, lastname, email, userPassword, "user", "user");
+				Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_UUID", userId);
+				answers.add(keycloakId);
+			} catch (IOException e) {
+				/* keycloak exception spits the answer */
+			}
+
+			System.out.println("inserting new intern message containing all their new attributes");
+			if ((count >= start) && (count <= finish)) {
+				insert(msg);
+			} else {
+				if (count > finish) {
+					break;
 				}
-				
-					System.out.println("inserting new intern message containing all their new attributes");
-					if ((count >=start) && (count <= finish))	
-					{			
-						insert(msg);
-					} else {
-						if (count > finish)	{
-							break;
-						}
-				}
-					count++;
-			 }
-			 System.out.println("Aggregated  all Answers ");
-		
-			System.out.println("Finished insertion of QDataAnswerMessage containing imported");		
-			
+			}
+			count++;
+		}
+		System.out.println("Aggregated  all Answers ");
+
+		System.out.println("Finished insertion of QDataAnswerMessage containing imported");
 
 	}
 
@@ -1178,105 +1288,107 @@ public class AdamTest {
 
 		googleDocId = googleDocId.trim();
 
-		 Map<String,String> fieldMapping = new HashMap<String,String>();
-			/* fieldMapping.put("Company Trading Name".toLowerCase(), "PRI_NAME"); */
-			 fieldMapping.put("ABN", "PRI_ABN");
-			 fieldMapping.put("HC Website", "PRI_WEBSITE");
-			 fieldMapping.put("Supervisor First Name", "PRI_FIRSTNAME");
-			 fieldMapping.put("Supervisor Surname", "PRI_LASTNAME");
-			 fieldMapping.put("Supervisor Position", "PRI_JOB_TITLE");
-			 fieldMapping.put("Supervisor Phone Number", "PRI_PHONE");
-			 fieldMapping.put("Supervisor Email", "PRI_EMAIL");
-			 fieldMapping.put("HC Address", "PRI_IMPORT_FULL_ADDRESS");
-			 
-			 fieldMapping.put("UNIQUE_KEY_FIELD", "Supervisor Email");
-			 fieldMapping.put("PREFIX", "PER_");
+		Map<String, String> fieldMapping = new HashMap<String, String>();
+		/* fieldMapping.put("Company Trading Name".toLowerCase(), "PRI_NAME"); */
+		fieldMapping.put("ABN", "PRI_ABN");
+		fieldMapping.put("HC Website", "PRI_WEBSITE");
+		fieldMapping.put("Supervisor First Name", "PRI_FIRSTNAME");
+		fieldMapping.put("Supervisor Surname", "PRI_LASTNAME");
+		fieldMapping.put("Supervisor Position", "PRI_JOB_TITLE");
+		fieldMapping.put("Supervisor Phone Number", "PRI_PHONE");
+		fieldMapping.put("Supervisor Email", "PRI_EMAIL");
+		fieldMapping.put("HC Address", "PRI_IMPORT_FULL_ADDRESS");
 
+		fieldMapping.put("UNIQUE_KEY_FIELD", "Supervisor Email");
+		fieldMapping.put("PREFIX", "PER_");
 
-			 				
-				 List<BaseEntityImport> beImports = ImportUtils.importGoogleDoc(googleDocId, sheetId,fieldMapping);
-				 System.out.println("Importing Rule : "+beImports.size()+" items");
-				 /* now generate the baseentity and send through all the answers */
-				 List<Answer> answers = new ArrayList<Answer>();
-				 Integer count=0;
-				 
-				 /* First create The Host Company reps */
-				 
-				 for (BaseEntityImport beImport : beImports) {
-					 if (beImport.getAttributeValuePairList().isEmpty()) {
-						 continue;
-					 }
-					 System.out.println("Import Host Company Rep :"+beImport.getCode()+":"+beImport.getName());
-					 
-				 	/* check if already there */
-				 	BaseEntity be = beUtils.getBaseEntityByCode(beImport.getCode());
-				 	if (be == null) {
-					 	be = beUtils.create(beImport.getCode(), beImport.getName());
-					 } 
-					Map<String,String> kv = new HashMap<String,String>();
-					 
-					 for (Tuple2<String,String> attributeCodeValue : beImport.getAttributeValuePairList()) {
-					 	if (attributeCodeValue != null) {
-					 		String value = StringUtils.isBlank(attributeCodeValue._2)?"":attributeCodeValue._2; 
-					 		value = value.trim();
-					 		if (value.contains("'")) {
-					 			value = value.replace("'", "\\'");
-					 		}
+		List<BaseEntityImport> beImports = ImportUtils.importGoogleDoc(googleDocId, sheetId, fieldMapping);
+		System.out.println("Importing Rule : " + beImports.size() + " items");
+		/* now generate the baseentity and send through all the answers */
+		List<Answer> answers = new ArrayList<Answer>();
+		Integer count = 0;
 
-					 		kv.put(attributeCodeValue._1,value);
-							Answer answer2 = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),attributeCodeValue._1,value);
-							answers.add(answer2);
-							String beCode = be.getCode();
-							BaseEntity hc = ImportUtils.linkToFind(beUtils,beCode,attributeCodeValue,"PRI_ABN","PRI_ABN","CPY_","LNK_HOST_COMPANY_REP",answers);
-						
-							if (hc!=null) {
-								System.out.println("Found link to "+hc.getName()+" as LNK_HOST_COMPANY_REP");
-								Answer assocHC = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_ASSOC_HC",hc.getName());
-								answers.add(assocHC);
-								
-							}
-						}
-					 }
+		/* First create The Host Company reps */
 
-					Answer isEntity = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IS_HOST_CPY_REP","true");
-					answers.add(isEntity);
-					Answer isImported = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IMPORTED","true");
-					answers.add(isImported);
-					String firstname = kv.get("PRI_FIRSTNAME");
-					String lastname = kv.get("PRI_LASTNAME");
-					Answer fullname = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_NAME",firstname.trim()+" "+lastname.trim());
-					answers.add(fullname);
-					QDataAnswerMessage msg = new QDataAnswerMessage(answers);
-					System.out.println("created QDataAnswerMessage  for "+beImport.getCode()+":"+be.getName());
-					msg.setToken(beUtils.getGennyToken().getToken());
-					/* creating new user in keycloak */
-					/* ASSUME FIRSTNAME, LASTNAME, EMAIL ARE GOOD!!! TODO */
-					try {
-						String email = kv.get("PRI_EMAIL");
-						String userPassword = UUID.randomUUID().toString().substring(0,10);
-						/*System.out.println(" keycloak token is "+serviceToken.getToken());*/
-						String userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(),email , firstname, lastname,  email, userPassword,"user", "user");
-						Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_UUID",userId);
-						answers.add(keycloakId);						
-					} catch (IOException e) {
-						/* keycloak exception spits the answer */
+		for (BaseEntityImport beImport : beImports) {
+			if (beImport.getAttributeValuePairList().isEmpty()) {
+				continue;
+			}
+			System.out.println("Import Host Company Rep :" + beImport.getCode() + ":" + beImport.getName());
+
+			/* check if already there */
+			BaseEntity be = beUtils.getBaseEntityByCode(beImport.getCode());
+			if (be == null) {
+				be = beUtils.create(beImport.getCode(), beImport.getName());
+			}
+			Map<String, String> kv = new HashMap<String, String>();
+
+			for (Tuple2<String, String> attributeCodeValue : beImport.getAttributeValuePairList()) {
+				if (attributeCodeValue != null) {
+					String value = StringUtils.isBlank(attributeCodeValue._2) ? "" : attributeCodeValue._2;
+					value = value.trim();
+					if (value.contains("'")) {
+						value = value.replace("'", "\\'");
 					}
-					
-						System.out.println("inserting new host company rep message containing all their new attributes");
-						if ((count >=start) && (count <= finish))	
-						{			
-							insert(msg);
-						} else {
-							if (count > finish)	{
-								break;
-							}
+
+					kv.put(attributeCodeValue._1, value);
+					Answer answer2 = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(),
+							attributeCodeValue._1, value);
+					answers.add(answer2);
+					String beCode = be.getCode();
+					BaseEntity hc = ImportUtils.linkToFind(beUtils, beCode, attributeCodeValue, "PRI_ABN", "PRI_ABN",
+							"CPY_", "LNK_HOST_COMPANY_REP", answers);
+
+					if (hc != null) {
+						System.out.println("Found link to " + hc.getName() + " as LNK_HOST_COMPANY_REP");
+						Answer assocHC = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_ASSOC_HC",
+								hc.getName());
+						answers.add(assocHC);
+
 					}
-						count++;
-				 }
-				 System.out.println("Aggregated  all Answers ");
-			
-		System.out.println("Finished insertion of QDataAnswerMessage containing imported");		
-				
+				}
+			}
+
+			Answer isEntity = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_IS_HOST_CPY_REP",
+					"true");
+			answers.add(isEntity);
+			Answer isImported = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_IMPORTED", "true");
+			answers.add(isImported);
+			String firstname = kv.get("PRI_FIRSTNAME");
+			String lastname = kv.get("PRI_LASTNAME");
+			Answer fullname = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_NAME",
+					firstname.trim() + " " + lastname.trim());
+			answers.add(fullname);
+			QDataAnswerMessage msg = new QDataAnswerMessage(answers);
+			System.out.println("created QDataAnswerMessage  for " + beImport.getCode() + ":" + be.getName());
+			msg.setToken(beUtils.getGennyToken().getToken());
+			/* creating new user in keycloak */
+			/* ASSUME FIRSTNAME, LASTNAME, EMAIL ARE GOOD!!! TODO */
+			try {
+				String email = kv.get("PRI_EMAIL");
+				String userPassword = UUID.randomUUID().toString().substring(0, 10);
+				/* System.out.println(" keycloak token is "+serviceToken.getToken()); */
+				String userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(), email,
+						firstname, lastname, email, userPassword, "user", "user");
+				Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_UUID", userId);
+				answers.add(keycloakId);
+			} catch (IOException e) {
+				/* keycloak exception spits the answer */
+			}
+
+			System.out.println("inserting new host company rep message containing all their new attributes");
+			if ((count >= start) && (count <= finish)) {
+				insert(msg);
+			} else {
+				if (count > finish) {
+					break;
+				}
+			}
+			count++;
+		}
+		System.out.println("Aggregated  all Answers ");
+
+		System.out.println("Finished insertion of QDataAnswerMessage containing imported");
 
 	}
 
@@ -1333,88 +1445,84 @@ public class AdamTest {
 
 		googleDocId = googleDocId.trim();
 
-		 Map<String,String> fieldMapping = new HashMap<String,String>();
-		 fieldMapping.put("Company Trading Name", "PRI_NAME");
-		 fieldMapping.put("ABN", "PRI_ABN");
-		 fieldMapping.put("HC Website", "PRI_WEBSITE");
-		 fieldMapping.put("Supervisor Phone Number", "PRI_PHONE");
-		 fieldMapping.put("Supervisor Email", "PRI_EMAIL");
-		 fieldMapping.put("HC Address", "PRI_IMPORT_FULL_ADDRESS");
-		 
-		 fieldMapping.put("UNIQUE_KEY_FIELD", "ABN");
-		 fieldMapping.put("NAME_KEY_FIELD", "Company Trading Name");
-		 fieldMapping.put("PREFIX", "CPY_");
+		Map<String, String> fieldMapping = new HashMap<String, String>();
+		fieldMapping.put("Company Trading Name", "PRI_NAME");
+		fieldMapping.put("ABN", "PRI_ABN");
+		fieldMapping.put("HC Website", "PRI_WEBSITE");
+		fieldMapping.put("Supervisor Phone Number", "PRI_PHONE");
+		fieldMapping.put("Supervisor Email", "PRI_EMAIL");
+		fieldMapping.put("HC Address", "PRI_IMPORT_FULL_ADDRESS");
 
-		 
-		 				
-			 List<BaseEntityImport> beImports = ImportUtils.importGoogleDoc(googleDocId, sheetId,fieldMapping);
-			 System.out.println("Importing Rule : "+beImports.size()+" items");
-			 /* now generate the baseentity and send through all the answers */
-			 List<Answer> answers = new ArrayList<Answer>();
-			 Integer count=0;
-			 
-			 /* First create The Host Company reps */
-			 
-			 for (BaseEntityImport beImport : beImports) {
-				 if (beImport.getAttributeValuePairList().isEmpty()) {
-					 continue;
-				 }
-				System.out.println("Import Host Company :"+beImport.getCode()+":"+beImport.getName());
-			 	/* check if already there */
-			 	BaseEntity be = beUtils.getBaseEntityByCode(beImport.getCode());
-			 	if (be == null) {
-				 	be = beUtils.create(beImport.getCode(), beImport.getName());
-				 } 
-				Map<String,String> kv = new HashMap<String,String>();
-				 
-				 for (Tuple2<String,String> attributeCodeValue : beImport.getAttributeValuePairList()) {
-				 	String value = StringUtils.isBlank(attributeCodeValue._2)?"":attributeCodeValue._2; 
-				 	if (value.contains("'")) {
-				 		value = value.replace("'", "\\'");
-				 	}
-				 	value = value.trim();
-				 	kv.put(attributeCodeValue._1,value);
-					Answer answer2 = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),attributeCodeValue._1,value);
-					answers.add(answer2);
-				 }
-				Answer isEntity = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IS_HOST_CPY","true");
-				answers.add(isEntity);
-				Answer isImported = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IMPORTED","true");
-				answers.add(isImported);
-				Answer status = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_STATUS","ACTIVE");
-				answers.add(status);
+		fieldMapping.put("UNIQUE_KEY_FIELD", "ABN");
+		fieldMapping.put("NAME_KEY_FIELD", "Company Trading Name");
+		fieldMapping.put("PREFIX", "CPY_");
 
-				System.out.println("PRI_PHONE="+kv.get("PRI_PHONE")+" EMAIL="+kv.get("PRI_EMAIL"));
-				Answer isLandline = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_LANDLINE",kv.get("PRI_PHONE"));
-				answers.add(isLandline);
-				Answer isEmail = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_EMAIL",kv.get("PRI_EMAIL"));
-				answers.add(isEmail);
-				
+		List<BaseEntityImport> beImports = ImportUtils.importGoogleDoc(googleDocId, sheetId, fieldMapping);
+		System.out.println("Importing Rule : " + beImports.size() + " items");
+		/* now generate the baseentity and send through all the answers */
+		List<Answer> answers = new ArrayList<Answer>();
+		Integer count = 0;
 
-				QDataAnswerMessage msg = new QDataAnswerMessage(answers);
-				System.out.println("created QDataAnswerMessage  for "+beImport.getCode()+":"+be.getName());
-				msg.setToken(beUtils.getGennyToken().getToken());
-				
-				System.out.println("inserting new host company message containing all their new attributes");
-					if ((count >=start) && (count <= finish))	
-					{			
-						insert(msg);
-					} else {
-						if (count > finish)	{
-							break;
-						}
+		/* First create The Host Company reps */
+
+		for (BaseEntityImport beImport : beImports) {
+			if (beImport.getAttributeValuePairList().isEmpty()) {
+				continue;
+			}
+			System.out.println("Import Host Company :" + beImport.getCode() + ":" + beImport.getName());
+			/* check if already there */
+			BaseEntity be = beUtils.getBaseEntityByCode(beImport.getCode());
+			if (be == null) {
+				be = beUtils.create(beImport.getCode(), beImport.getName());
+			}
+			Map<String, String> kv = new HashMap<String, String>();
+
+			for (Tuple2<String, String> attributeCodeValue : beImport.getAttributeValuePairList()) {
+				String value = StringUtils.isBlank(attributeCodeValue._2) ? "" : attributeCodeValue._2;
+				if (value.contains("'")) {
+					value = value.replace("'", "\\'");
 				}
-					count++;
-			 }
-			 System.out.println("Aggregated  all Answers ");
-		
-			 System.out.println("Finished insertion of QDataAnswerMessage containing imported");	
+				value = value.trim();
+				kv.put(attributeCodeValue._1, value);
+				Answer answer2 = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), attributeCodeValue._1,
+						value);
+				answers.add(answer2);
+			}
+			Answer isEntity = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_IS_HOST_CPY",
+					"true");
+			answers.add(isEntity);
+			Answer isImported = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_IMPORTED", "true");
+			answers.add(isImported);
+			Answer status = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_STATUS", "ACTIVE");
+			answers.add(status);
+
+			System.out.println("PRI_PHONE=" + kv.get("PRI_PHONE") + " EMAIL=" + kv.get("PRI_EMAIL"));
+			Answer isLandline = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_LANDLINE",
+					kv.get("PRI_PHONE"));
+			answers.add(isLandline);
+			Answer isEmail = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_EMAIL",
+					kv.get("PRI_EMAIL"));
+			answers.add(isEmail);
+
+			QDataAnswerMessage msg = new QDataAnswerMessage(answers);
+			System.out.println("created QDataAnswerMessage  for " + beImport.getCode() + ":" + be.getName());
+			msg.setToken(beUtils.getGennyToken().getToken());
+
+			System.out.println("inserting new host company message containing all their new attributes");
+			if ((count >= start) && (count <= finish)) {
+				insert(msg);
+			} else {
+				if (count > finish) {
+					break;
+				}
+			}
+			count++;
+		}
+		System.out.println("Aggregated  all Answers ");
+
+		System.out.println("Finished insertion of QDataAnswerMessage containing imported");
 
 	}
-
-
-
-
 
 	public void verifyInterns() {
 		System.out.println("Verify Interns");
@@ -1621,7 +1729,7 @@ public class AdamTest {
 		}
 	}
 
-	 @Test
+	@Test
 	public void searchTest() {
 		System.out.println("Search test");
 		GennyToken userToken = null;
@@ -1690,29 +1798,20 @@ public class AdamTest {
 //				.addColumn("PRI_SYNC","Synced")
 //				.setPageStart(0)
 //				.setPageSize(2000);	
-	
+
 		SearchEntity searchBE = new SearchEntity("SBE_SUPERVISOR_JOOURNALS", "Supervisor Journals")
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%") 
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
 				/* .addFilter("PRI_SYNC", SearchEntity.StringFilter.LIKE, "FALSE") */
-				.addFilter("LNK_INTERN_SUPERVISOR", SearchEntity.StringFilter.LIKE, "%"+"PER_SUPERVISOR1"+"%") 
-				.addColumn("PRI_NAME", "Name")
-				.addColumn("LNK_INTERNSHIP","Internship")
-				.addColumn("LNK_INTERN", "Intern")
-				.addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep")
-				.addColumn("LNK_HOST_COMPANY", "Host Company")
-				.addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
-				.addColumn("PRI_JOURNAL_DATE","Date")
-				.addColumn("PRI_JOURNAL_HOURS","Hours")
-				.addColumn("PRI_JOURNAL_TASKS","Tasks")				
-				.addColumn("PRI_JOURNAL_LEARNING_OUTCOMES","Learning Outcomes")
-				.addColumn("PRI_FEEDBACK","Feedback")
-				.addColumn("PRI_STATUS","Status")								
-				.addColumn("PRI_SYNC","Synced")
-				.setPageStart(0)
-				.setPageSize(2000);
-		
-		
+				.addFilter("LNK_INTERN_SUPERVISOR", SearchEntity.StringFilter.LIKE, "%" + "PER_SUPERVISOR1" + "%")
+				.addColumn("PRI_NAME", "Name").addColumn("LNK_INTERNSHIP", "Internship")
+				.addColumn("LNK_INTERN", "Intern").addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep")
+				.addColumn("LNK_HOST_COMPANY", "Host Company").addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
+				.addColumn("PRI_JOURNAL_DATE", "Date").addColumn("PRI_JOURNAL_HOURS", "Hours")
+				.addColumn("PRI_JOURNAL_TASKS", "Tasks").addColumn("PRI_JOURNAL_LEARNING_OUTCOMES", "Learning Outcomes")
+				.addColumn("PRI_FEEDBACK", "Feedback").addColumn("PRI_STATUS", "Status").addColumn("PRI_SYNC", "Synced")
+				.setPageStart(0).setPageSize(2000);
+
 		String jsonSearchBE = JsonUtils.toJson(searchBE);
 		String resultJson;
 		try {
@@ -1723,7 +1822,7 @@ public class AdamTest {
 				BaseEntity[] bes = msg.getItems();
 				System.out.println("Number of bes returned is " + bes.length);
 				for (BaseEntity be : bes) {
-					System.out.println("Be code = "+be.getCode());
+					System.out.println("Be code = " + be.getCode());
 				}
 			} catch (Exception e) {
 				log.info("The result of getSearchResults was null Exception ::  ");
@@ -2523,7 +2622,7 @@ public class AdamTest {
 				beUtils.getGennyToken().getToken());
 
 		ShowFrame.display(userToken, "FRM_TABLE_VIEW", "FRM_CONTENT", "Test");
-		//tableUtils.performSearch(userToken, "SBE_SEARCHBAR", null);
+		// tableUtils.performSearch(userToken, "SBE_SEARCHBAR", null);
 
 	}
 
@@ -2727,7 +2826,7 @@ public class AdamTest {
 			Answer answer = new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_SEARCH_TEXT",
 					searchBarString);
 			TableUtils tableUtils = new TableUtils(beUtils);
-			//tableUtils.performSearch(serviceToken, "SBE_SEARCHBAR", answer);
+			// tableUtils.performSearch(serviceToken, "SBE_SEARCHBAR", answer);
 
 			/* Send to front end */
 
@@ -3807,13 +3906,13 @@ public class AdamTest {
 		System.out.println("BridgeUrl=" + GennySettings.bridgeServiceUrl);
 		System.out.println("QwandaUrl=" + GennySettings.qwandaServiceUrl);
 
-		
-		GennyToken tokenUser = GennyJbpmBaseTest.createGennyToken("ABCDEFGH","internmatch", "adam.crow@gada.io", "Adam Crow", "intern");
-		GennyToken tokenSupervisor = GennyJbpmBaseTest.createGennyToken("BCDEFGSHS","internmatch", "kanika.gulati@gada.io", "Kanika Gulati", "supervisor");
+		GennyToken tokenUser = GennyJbpmBaseTest.createGennyToken("ABCDEFGH", "internmatch", "adam.crow@gada.io",
+				"Adam Crow", "intern");
+		GennyToken tokenSupervisor = GennyJbpmBaseTest.createGennyToken("BCDEFGSHS", "internmatch",
+				"kanika.gulati@gada.io", "Kanika Gulati", "supervisor");
 		System.out.println(tokenUser.getToken());
 		System.out.println(tokenSupervisor.getToken());
 
-		
 		// Set up realm
 		realms = new HashSet<String>();
 		realms.add(realm);
