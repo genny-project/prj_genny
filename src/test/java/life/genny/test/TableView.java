@@ -56,7 +56,7 @@ import life.genny.utils.OutputParam;
 import life.genny.utils.RulesUtils;
 import life.genny.utils.SearchUtilsTest;
 import life.genny.utils.TableUtils;
-import life.genny.utils.TableUtilsNew;
+
 //import life.genny.utils.//TableUtilsTest;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
@@ -226,54 +226,7 @@ public class TableView extends GennyJbpmBaseTest {
 	}
 
 
-	//@Test
-	public void treeTest() {
-
-		QRules rules = GennyJbpmBaseTest.setupLocalService();
-		GennyToken userToken = new GennyToken("userToken", rules.getToken());
-		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
-		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
-
-		/* initialize bucketUtils */
-		TableUtilsTest bucketUtils = new TableUtilsTest(beUtils);
-		//TableUtilsTest tableUtils = new TableUtilsTest(beUtils);
-		TableUtilsNew tableUtils = new TableUtilsNew(beUtils);
-
-		/* initialize virtualAskMap */
-		Map<String, QDataAskMessage> virtualAskMap = new HashMap<String, QDataAskMessage>();
-
-		/* initialize contextListMap */
-		Map<String, ContextList> contextListMap = new HashMap<String, ContextList>();
-
-		List<SearchEntity> searchBeList = tableUtils.getSearchBeList();
-		for (SearchEntity searchBe : searchBeList) {
-
-			String code = searchBe.getCode().split("SBE_")[1];
-
-			QDataBaseEntityMessage FRM_MSG = VertxUtils.getObject(userToken.getRealm(), "", "FRM_TABLE_" + code + "" + "_MSG", QDataBaseEntityMessage.class, userToken.getToken());
-
-			String payload = JsonUtils.toJson(FRM_MSG);
-			JSONObject js = new JSONObject(payload);
-			String payload2 = js.toString();
-			VertxUtils.writeMsg("webcmds", payload2);
-			
-			JsonObject tokenObj = VertxUtils.readCachedJson(userToken.getRealm(),"ASK_FRM_TABLE_" + code,userToken.getToken());
-		
-			QDataAskMessage[] askSet = JsonUtils.fromJson(tokenObj.getString("value"), QDataAskMessage[].class);
-			
-			System.out.println("Sending Asks");
-			for(QDataAskMessage ask : askSet) {
-				
-				ask.setToken(userToken.getToken());
-				ask.setReplace(false);	
-				String askJson = JsonUtils.toJson(ask);
-				VertxUtils.writeMsg("webcmds",askJson );
-			}
-		}
-
-	}
-
-
+	
 
 	public Frame3 getTableViewFrame(String name, String target, String questionCode) {
 
