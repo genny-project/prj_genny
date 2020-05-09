@@ -35,7 +35,7 @@ rule "THM_SCROLL_VERTICAL"
 
     then
 
-     	System.out.println("   Generate THM_SCROLL_VERTICAL Rule ");
+     	System.out.println("Generate THM_SCROLL_VERTICAL Rule ");
 
 			Theme theme = Theme.builder("THM_SCROLL_VERTICAL")
 										.addAttribute()

@@ -43,6 +43,11 @@ rule "FRM_DETAIL_VIEW_PICTURE"
 							/*.addTheme(THM_DETAIL_VIEW_INPUT_FIELD).vcl(VisualControlType.INPUT_FIELD).dataType(dtt_image).end()*/
 							.addTheme("THM_FORM_IMAGE_RESTRICTIONS",serviceToken).vcl(VisualControlType.VCL_INPUT).end()
 							.addTheme("THM_DETAIL_VIEW_IMAGE_SIZE",serviceToken).vcl(VisualControlType.INPUT_SELECTED).end()
+							/* NEW THEMES */
+							.addTheme("THM_BORDER_RADIUS_50", serviceToken).vcl(VisualControlType.INPUT_FIELD).weight(1.0).end()
+							.addTheme("THM_HEADER_PROFILE_PICTURE", serviceToken).vcl(VisualControlType.INPUT_SELECTED).weight(1.0).end()
+							.addTheme("THM_PROFILE_IMAGE", serviceToken).vcl(VisualControlType.INPUT_SELECTED).weight(1.0).end()
+							.addTheme("THM_IMAGE_PLACEHOLDER_PERSON", serviceToken).vcl(VisualControlType.INPUT_PLACEHOLDER).weight(1.0).end()
 						.end()
 						
 						.build();

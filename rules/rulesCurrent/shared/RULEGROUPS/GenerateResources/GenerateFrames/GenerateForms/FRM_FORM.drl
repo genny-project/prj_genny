@@ -95,7 +95,7 @@ rule "FRM_FORM"
 					Frame3 frame2 = Frame3.builder("FRM_CONTENT_" +  questionCode)
 								.addTheme("THM_FORM_ATTRIBUTES_GENNY", serviceToken).end()
 								.question(questionCode)
-									.addTheme("THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHT", serviceToken).dataType(buttonDataType).end()
+									/* .addTheme("THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHT", serviceToken).dataType(buttonDataType).end() */
 									.addTheme("THM_FORM_BUTTONS", serviceToken).dataType(buttonDataType).vcl(VisualControlType.INPUT_WRAPPER).end()
 									.addTheme("THM_FORM_BUTTONS_BEHAVIOUR", serviceToken).dataType(buttonDataType).end()
 									.addTheme("THM_FORM_EVENT_BUTTONS_BEHAVIOUR", serviceToken).dataType(eventDataType).end()
@@ -114,7 +114,7 @@ rule "FRM_FORM"
 									.addTheme("THM_PROFILE_IMAGE_FORM", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_SELECTED).end()
 									.addTheme("THM_PROFILE_IMAGE_PLACEHOLDER_FORM", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_PLACEHOLDER).end()
 									.addTheme("THM_PROFILE_IMAGE_FIELD_FORM", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_FIELD).end()
-									.addTheme("THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHT", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_FIELD).end()
+									/* .addTheme("THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHT", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_FIELD).end() */
 									.addTheme("THM_FORM_BUTTONS", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_FIELD).end()
 									.addTheme("THM_FORM_BUTTONS_BORDER", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_FIELD).end()
 								.end()

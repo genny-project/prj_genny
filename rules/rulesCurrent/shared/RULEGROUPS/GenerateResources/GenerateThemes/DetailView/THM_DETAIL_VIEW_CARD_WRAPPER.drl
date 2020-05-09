@@ -36,15 +36,20 @@ rule "THM_DETAIL_VIEW_CARD_WRAPPER"
 
 		Theme theme = Theme.builder("THM_DETAIL_VIEW_CARD_WRAPPER")
 						.addAttribute()
-							.backgroundColor("#faf9fa")
+							/* .backgroundColor("#faf9fa") */
 							.justifyContent("flex-start")
-							.flexShrink(0)
-							.flexBasis("auto")
-							.flexGrow(0)
+							/* .flexShrink(0) */
+							/* .flexBasis("auto") */
+							/* .flexGrow(0) */
 							.height("initial")
 							.marginBottom(20)
 							.padding(10)
 							.maxWidth(700)
+							.borderRadius(8)
+							.backgroundColor("white")
+							.flexGrow(0)
+							.flexShrink(0)
+							.flexBasis("auto")
 						.end()
 						.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false)
 						.end()
