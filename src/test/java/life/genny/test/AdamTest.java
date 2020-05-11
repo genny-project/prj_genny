@@ -121,7 +121,9 @@ import life.genny.utils.ImportUtils;
 import life.genny.utils.JunitCache;
 import life.genny.utils.OutputParam;
 import life.genny.utils.RulesUtils;
+import life.genny.utils.SearchCallable;
 import life.genny.utils.SessionFacts;
+import life.genny.utils.TableFrameCallable;
 import life.genny.utils.TableUtils;
 import life.genny.utils.VertxUtils;
 
@@ -251,8 +253,8 @@ public class AdamTest {
 		  = new ExecutorCompletionService<>(WORKER_THREAD_POOL);
 		 
 		List<Callable<QBulkMessage>> callables = Arrays.asList(
-		  new TableFrameCallable(beUtils,"fast thread", 200),
-		  new SearchCallable(tableUtils, searchBE.getCode(),beUtils,"slow thread", 3000));
+		  new TableFrameCallable(beUtils),
+		  new SearchCallable(tableUtils, searchBE.getCode(),beUtils));
 
 		QBulkMessage aggregatedMessages = new QBulkMessage();
 		
@@ -291,6 +293,8 @@ public class AdamTest {
 		totalProcessingTime = System.currentTimeMillis() - startProcessingTime;
 		log.info("All threads finished after: " + totalProcessingTime
 				  + " milliseconds");
+		aggregatedMessages.setToken(userToken.getToken());
+		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(aggregatedMessages));
 		/* show tab-view first */
 	//	ShowFrame.display(beUtils.getGennyToken(), "FRM_QUE_TAB_VIEW", "FRM_CONTENT", "Test");
 
