@@ -1,8 +1,9 @@
 package life.genny.test;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
@@ -10,30 +11,32 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import javax.persistence.EntityManagerFactory;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.logging.log4j.Logger;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.WordUtils;
+import org.apache.logging.log4j.Logger;
 import org.jbpm.services.api.DefinitionService;
 import org.jbpm.services.api.ProcessService;
 import org.jbpm.services.api.RuntimeDataService;
@@ -49,13 +52,10 @@ import org.jbpm.test.services.TestUserGroupCallbackImpl;
 import org.joda.time.LocalDateTime;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.keycloak.representations.idm.UserRepresentation;
-import org.keycloak.util.JsonSerialization;
 import org.kie.api.KieBase;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.KieSessionConfiguration;
-import org.kie.api.runtime.process.ProcessInstance;
 import org.kie.api.runtime.rule.FactHandle;
 import org.kie.api.task.model.Task;
 import org.kie.api.task.model.TaskSummary;
@@ -96,6 +96,7 @@ import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwanda.exception.BadDataException;
 import life.genny.qwanda.message.MessageData;
+import life.genny.qwanda.message.QBulkMessage;
 import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
@@ -103,7 +104,6 @@ import life.genny.qwanda.message.QEventBtnClickMessage;
 import life.genny.qwanda.message.QEventMessage;
 import life.genny.qwanda.validation.Validation;
 import life.genny.qwanda.validation.ValidationList;
-import life.genny.qwandautils.DateTimeUtils;
 import life.genny.qwandautils.GennyCacheInterface;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
@@ -113,6 +113,7 @@ import life.genny.rules.QRules;
 import life.genny.rules.RulesLoader;
 import life.genny.services.BaseEntityService2;
 import life.genny.utils.BaseEntityUtils;
+import life.genny.utils.DelayedCallable;
 import life.genny.utils.FrameUtils2;
 import life.genny.utils.GennyJbpmBaseTest;
 import life.genny.utils.GennyKieSession;
@@ -158,9 +159,25 @@ public class AdamTest {
 	protected static GennyToken newUserToken;
 	protected static GennyToken serviceToken;
 
+	public void awaitTerminationAfterShutdown(ExecutorService threadPool) {
+	    threadPool.shutdown();
+	    try {
+	        if (!threadPool.awaitTermination(90, TimeUnit.SECONDS)) {
+	            threadPool.shutdownNow();
+	        }
+	    } catch (InterruptedException ex) {
+	        threadPool.shutdownNow();
+	        Thread.currentThread().interrupt();
+	    }
+	}
+	
+
+	
+
+	
 	@Test
 	public void testTableTest() {
-		System.out.println("Fix Missing Supervisors test");
+		System.out.println("Test Table test");
 		GennyToken userToken = null;
 		GennyToken serviceToken = null;
 		QRules qRules = null;
@@ -228,15 +245,60 @@ public class AdamTest {
 				beUtils.getGennyToken().getToken());
 
 		long s3time = System.currentTimeMillis();
+		
+		ExecutorService WORKER_THREAD_POOL = Executors.newFixedThreadPool(10);
+		CompletionService<QBulkMessage> service
+		  = new ExecutorCompletionService<>(WORKER_THREAD_POOL);
+		 
+		List<Callable<QBulkMessage>> callables = Arrays.asList(
+		  new TableFrameCallable(beUtils,"fast thread", 200),
+		  new SearchCallable(tableUtils, searchBE.getCode(),beUtils,"slow thread", 3000));
 
+		QBulkMessage aggregatedMessages = new QBulkMessage();
+		
+		for (Callable<QBulkMessage> callable : callables) {
+		    service.submit(callable);
+		}
+		long startProcessingTime = System.currentTimeMillis();
+		long totalProcessingTime;
+		try {
+			Future<QBulkMessage> future = service.take();
+			QBulkMessage firstThreadResponse = future.get();
+			aggregatedMessages.add(firstThreadResponse.getMessages());
+			totalProcessingTime = System.currentTimeMillis() - startProcessingTime;
+			 
+//			assertTrue("First response should be from the fast thread", 
+//			  "fast thread".equals(firstThreadResponse.getData_type()));
+//			assertTrue(totalProcessingTime >= 100
+//			  && totalProcessingTime < 1000);
+			log.info("Thread finished after: " + totalProcessingTime
+			  + " milliseconds");
+			 
+			future = service.take();
+			QBulkMessage secondThreadResponse = future.get();
+			aggregatedMessages.add(secondThreadResponse.getMessages());
+			log.info("2nd Thread finished after: " + totalProcessingTime
+					  + " milliseconds");
+		} catch (InterruptedException | ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		totalProcessingTime
+		  = System.currentTimeMillis() - startProcessingTime;
+		
+		awaitTerminationAfterShutdown(WORKER_THREAD_POOL);
+		 
+		totalProcessingTime = System.currentTimeMillis() - startProcessingTime;
+		log.info("All threads finished after: " + totalProcessingTime
+				  + " milliseconds");
 		/* show tab-view first */
-		ShowFrame.display(beUtils.getGennyToken(), "FRM_QUE_TAB_VIEW", "FRM_CONTENT", "Test");
+	//	ShowFrame.display(beUtils.getGennyToken(), "FRM_QUE_TAB_VIEW", "FRM_CONTENT", "Test");
 
 		/* show table-view inside tab-content */
-		ShowFrame.display(beUtils.getGennyToken(), "FRM_TABLE_VIEW", "FRM_TAB_CONTENT", "Test");
-		long s4time = System.currentTimeMillis();
-		tableUtils.performSearch(userToken, serviceToken, searchBeCode, null);
-		long s5time = System.currentTimeMillis();
+	//	ShowFrame.display(beUtils.getGennyToken(), "FRM_TABLE_VIEW", "FRM_TAB_CONTENT", "Test");
+		//long s4time = System.currentTimeMillis();
+		//tableUtils.performSearch(userToken, serviceToken, searchBeCode, null);
+		//long s5time = System.currentTimeMillis();
 		/* Send to front end */
 		/* output.setTypeOfResult("NONE"); */
 		/* output.setResultCode("NONE"); */ /* dont display anything new */
@@ -247,12 +309,36 @@ public class AdamTest {
 		System.out.println("init setup took " + (s1time - starttime) + " ms");
 		System.out.println("search session setup took " + (s2time - s1time) + " ms");
 		System.out.println("update searchBE BE setup took " + (s3time - s2time) + " ms");
-		System.out.println("send frame table and tab display setup took " + (s4time - s3time) + " ms");
-		System.out.println("searching took " + (s5time - s4time) + " ms");
-		System.out.println("finish took " + (endtime - s5time) + " ms");
+	//	System.out.println("send frame table and tab display setup took " + (s4time - s3time) + " ms");
+	//	System.out.println("searching took " + (s5time - s4time) + " ms");
+	//	System.out.println("finish took " + (endtime - s5time) + " ms");
 		System.out.println("total took " + (endtime - starttime) + " ms");
 	}
 
+	
+//	/* show tab-view first */
+//		 ShowFrame.display(beUtils.getGennyToken(), "FRM_QUE_TAB_VIEW", "FRM_CONTENT", "Test");
+//
+//	/* show table-view inside tab-content */
+//	ShowFrame.display(beUtils.getGennyToken(), "FRM_TABLE_VIEW", "FRM_TAB_CONTENT", "Test");
+//long s4time = System.currentTimeMillis();
+//	tableUtils.performSearch(userToken, serviceToken,searchBeCode, null);
+//long s5time = System.currentTimeMillis();
+//	/* Send to front end */
+//	/*output.setTypeOfResult("NONE");*/
+//	/*output.setResultCode("NONE");*/  /* dont display anything new */
+//
+//	retract($message);
+//	/* update(output);*/
+//long endtime = System.currentTimeMillis();
+//System.out.println("init setup took "+(s1time-starttime)+" ms");
+//System.out.println("search session setup took "+(s2time-s1time)+" ms");
+//System.out.println("update searchBE BE setup took "+(s3time-s2time)+" ms");
+//	System.out.println("send frame table and tab display setup took "+(s4time-s3time)+" ms");
+//	System.out.println("searching took "+(s5time-s4time)+" ms");
+//System.out.println("finish took "+(endtime-s5time)+" ms");
+//System.out.println("total took "+(endtime-starttime)+" ms");
+//	
 	// @Test
 	public void FixMissingSupervisorsTest() {
 		System.out.println("Fix Missing Supervisors test");
@@ -1965,7 +2051,7 @@ public class AdamTest {
 
 		// NOW SET UP Some baseentitys
 		BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
-				StringUtils.capitaliseAllWords(serviceToken.getRealm()));
+				WordUtils.capitalizeFully(serviceToken.getRealm()));
 		project.setRealm(serviceToken.getRealm());
 		VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
 				JsonUtils.toJson(project), serviceToken.getToken());
@@ -2301,7 +2387,7 @@ public class AdamTest {
 
 		// NOW SET UP Some baseentitys
 		BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
-				StringUtils.capitaliseAllWords(serviceToken.getRealm()));
+				WordUtils.capitalizeFully(serviceToken.getRealm()));
 		project.setRealm(serviceToken.getRealm());
 		VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
 				JsonUtils.toJson(project), serviceToken.getToken());
@@ -2698,7 +2784,7 @@ public class AdamTest {
 
 		// NOW SET UP Some baseentitys
 		BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
-				StringUtils.capitaliseAllWords(serviceToken.getRealm()));
+				WordUtils.capitalizeFully(serviceToken.getRealm()));
 		project.setRealm(serviceToken.getRealm());
 		VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
 				JsonUtils.toJson(project), serviceToken.getToken());
@@ -3032,7 +3118,7 @@ public class AdamTest {
 
 		// NOW SET UP Some baseentitys
 		BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
-				StringUtils.capitaliseAllWords(serviceToken.getRealm()));
+				WordUtils.capitalizeFully(serviceToken.getRealm()));
 		project.setRealm(serviceToken.getRealm());
 		VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
 				JsonUtils.toJson(project), serviceToken.getToken());
@@ -3132,7 +3218,7 @@ public class AdamTest {
 
 		// NOW SET UP Some baseentitys
 		BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
-				StringUtils.capitaliseAllWords(serviceToken.getRealm()));
+				WordUtils.capitalizeFully(serviceToken.getRealm()));
 		project.setRealm(serviceToken.getRealm());
 		VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
 				JsonUtils.toJson(project), serviceToken.getToken());
@@ -3291,7 +3377,7 @@ public class AdamTest {
 
 		// NOW SET UP Some baseentitys
 		BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
-				StringUtils.capitaliseAllWords(serviceToken.getRealm()));
+				WordUtils.capitalizeFully(serviceToken.getRealm()));
 		project.setRealm(serviceToken.getRealm());
 		VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
 				JsonUtils.toJson(project), serviceToken.getToken());
