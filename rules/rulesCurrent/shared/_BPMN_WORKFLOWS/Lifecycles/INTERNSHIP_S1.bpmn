@@ -116,7 +116,7 @@
           </drools:metaData>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
-        <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
+        <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
         <bpmn2:script>System.out.println(&quot;INTERNSHIP: Starting&quot;);
 SessionFacts sessionFacts2 = (SessionFacts)sessionFacts;
 serviceToken = (GennyToken)sessionFacts2.getServiceToken();
@@ -331,97 +331,13 @@ System.out.println(&quot;##################################### PRI_INTERNSHIP_EN
 </bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_6" drools:priority="1" sourceRef="IntermediateThrowEvent_2" targetRef="ScriptTask_3"/>
-      <bpmn2:task id="Task_2" drools:taskName="AskQuestionTask" drools:displayName="Ask Question Task" drools:icon="icons/icon-info.gif" name="QUE_INTERNSHIP_S1_GRP">
-        <bpmn2:extensionElements>
-          <drools:metaData name="elementname">
-            <drools:metaValue><![CDATA[QUE_INTERNSHIP_S1_GRP]]></drools:metaValue>
-          </drools:metaData>
-          <drools:onEntry-script scriptFormat="http://www.java.com/java"/>
-          <drools:onExit-script scriptFormat="http://www.java.com/java">
-            <drools:script>System.out.println(&quot;Exiting the INTERNSHIP_S1: QUE_INTERNSHIP_S1_GRP&quot;);
-eventMsg = new QEventBtnClickMessage(&quot;QUE_TREE_ITEM_INTERNSHIPS_ACTIVE&quot;);
-eventMsg.getData().setParentCode(&quot;QUE_TREE_ITEM_INTERNSHIPS_GRP&quot;);
-eventMsg.setToken(userToken.getToken());
-kcontext.setVariable(&quot;eventMsg&quot;, eventMsg);
-
-System.out.println(&quot;RESULTS! -> msg: &quot;+eventMsg);
-System.out.println(&quot;RESULTS! -> userToken: &quot;+userToken);
-System.out.println(&quot;RESULTS! -> serviceToken: &quot;+serviceToken);
-
-if (results==null) {
-System.out.println(&quot;Exiting the INTERNSHIP_S1: QUE_INTERNSHIP_S1_GRP - results is null&quot;);
-
-String serviceTokenStr = VertxUtils.getObject(userToken.getRealm(), &quot;CACHE&quot;, &quot;SERVICE_TOKEN&quot;, String.class);
-serviceToken = new GennyToken(&quot;PER_SERVICE&quot;,serviceTokenStr);
-	kcontext.setVariable(&quot;serviceToken&quot;, serviceToken); 
-  
-} else {
-	System.out.println(&quot;Latest userToken = &quot;+userToken);
-	kcontext.setVariable(&quot;userToken&quot;, userToken);
-	serviceToken = (GennyToken)results.get(&quot;serviceToken&quot;);
-	kcontext.setVariable(&quot;serviceToken&quot;, serviceToken);
-
-}</drools:script>
-          </drools:onExit-script>
-        </bpmn2:extensionElements>
-        <bpmn2:incoming>SequenceFlow_10</bpmn2:incoming>
-        <bpmn2:outgoing>SequenceFlow_11</bpmn2:outgoing>
-        <bpmn2:ioSpecification id="InputOutputSpecification_2">
-          <bpmn2:dataInput id="DataInput_8" itemSubjectRef="ItemDefinition_556" name="userToken"/>
-          <bpmn2:dataInput id="DataInput_9" name="questionCode"/>
-          <bpmn2:dataInput id="DataInput_10" name="callingWorkflow"/>
-          <bpmn2:dataInput id="DataInput_1" itemSubjectRef="ItemDefinition_1076" name="baseEntityTarget"/>
-          <bpmn2:dataOutput id="DataOutput_2" itemSubjectRef="ItemDefinition_2578" name="Result"/>
-          <bpmn2:dataOutput id="DataOutput_3" itemSubjectRef="ItemDefinition_2578" name="results"/>
-          <bpmn2:inputSet id="_InputSet_44">
-            <bpmn2:dataInputRefs>DataInput_8</bpmn2:dataInputRefs>
-            <bpmn2:dataInputRefs>DataInput_9</bpmn2:dataInputRefs>
-            <bpmn2:dataInputRefs>DataInput_10</bpmn2:dataInputRefs>
-            <bpmn2:dataInputRefs>DataInput_1</bpmn2:dataInputRefs>
-          </bpmn2:inputSet>
-          <bpmn2:outputSet id="_OutputSet_4">
-            <bpmn2:dataOutputRefs>DataOutput_2</bpmn2:dataOutputRefs>
-            <bpmn2:dataOutputRefs>DataOutput_3</bpmn2:dataOutputRefs>
-          </bpmn2:outputSet>
-        </bpmn2:ioSpecification>
-        <bpmn2:dataInputAssociation id="_DataInputAssociation_189">
-          <bpmn2:sourceRef>userToken</bpmn2:sourceRef>
-          <bpmn2:targetRef>DataInput_8</bpmn2:targetRef>
-        </bpmn2:dataInputAssociation>
-        <bpmn2:dataInputAssociation id="_DataInputAssociation_190">
-          <bpmn2:targetRef>DataInput_9</bpmn2:targetRef>
-          <bpmn2:assignment id="Assignment_6">
-            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_18">QUE_INTERNSHIP_S1_GRP</bpmn2:from>
-            <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_16">DataInput_9</bpmn2:to>
-          </bpmn2:assignment>
-        </bpmn2:dataInputAssociation>
-        <bpmn2:dataInputAssociation id="_DataInputAssociation_191">
-          <bpmn2:targetRef>DataInput_10</bpmn2:targetRef>
-          <bpmn2:assignment id="Assignment_5">
-            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_15">INTERNSHIP</bpmn2:from>
-            <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_13">DataInput_10</bpmn2:to>
-          </bpmn2:assignment>
-        </bpmn2:dataInputAssociation>
-        <bpmn2:dataInputAssociation id="DataInputAssociation_1">
-          <bpmn2:sourceRef>newBe</bpmn2:sourceRef>
-          <bpmn2:targetRef>DataInput_1</bpmn2:targetRef>
-        </bpmn2:dataInputAssociation>
-        <bpmn2:dataOutputAssociation id="_DataOutputAssociation_4">
-          <bpmn2:sourceRef>DataOutput_2</bpmn2:sourceRef>
-          <bpmn2:targetRef>results</bpmn2:targetRef>
-        </bpmn2:dataOutputAssociation>
-        <bpmn2:dataOutputAssociation id="DataOutputAssociation_2">
-          <bpmn2:sourceRef>DataOutput_3</bpmn2:sourceRef>
-          <bpmn2:targetRef>results</bpmn2:targetRef>
-        </bpmn2:dataOutputAssociation>
-      </bpmn2:task>
       <bpmn2:scriptTask id="ScriptTask_2" name="Set HC Link" scriptFormat="http://www.java.com/java">
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[Set HC Link]]></drools:metaValue>
           </drools:metaData>
         </bpmn2:extensionElements>
-        <bpmn2:incoming>SequenceFlow_11</bpmn2:incoming>
+        <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
         <bpmn2:script>BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
 
@@ -444,8 +360,8 @@ kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCod
             <drools:metaValue><![CDATA[RunRuleFlowGroup]]></drools:metaValue>
           </drools:metaData>
         </bpmn2:extensionElements>
-        <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
-        <bpmn2:outgoing>SequenceFlow_10</bpmn2:outgoing>
+        <bpmn2:incoming>SequenceFlow_12</bpmn2:incoming>
+        <bpmn2:outgoing>SequenceFlow_13</bpmn2:outgoing>
         <bpmn2:ioSpecification id="InputOutputSpecification_1">
           <bpmn2:dataInput id="DataInput_2" itemSubjectRef="ItemDefinition_556" name="serviceToken"/>
           <bpmn2:dataInput id="DataInput_3" itemSubjectRef="ItemDefinition_556" name="userToken"/>
@@ -501,9 +417,6 @@ kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCod
           <bpmn2:targetRef>outputMsg</bpmn2:targetRef>
         </bpmn2:dataOutputAssociation>
       </bpmn2:task>
-      <bpmn2:sequenceFlow id="SequenceFlow_5" drools:priority="1" sourceRef="ScriptTask_1" targetRef="Task_1"/>
-      <bpmn2:sequenceFlow id="SequenceFlow_10" drools:priority="1" sourceRef="Task_1" targetRef="Task_2"/>
-      <bpmn2:sequenceFlow id="SequenceFlow_11" drools:priority="1" sourceRef="Task_2" targetRef="ScriptTask_2"/>
       <bpmn2:task id="Task_3" drools:taskName="SendSignal" drools:displayName="SendSignal" drools:icon="icons/icon-info.gif" name="ShowActiveInternships">
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
@@ -559,6 +472,93 @@ kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCod
       </bpmn2:task>
       <bpmn2:sequenceFlow id="SequenceFlow_3" drools:priority="1" sourceRef="ScriptTask_3" targetRef="Task_3"/>
       <bpmn2:sequenceFlow id="SequenceFlow_7" drools:priority="1" sourceRef="Task_3" targetRef="EndEvent_1"/>
+      <bpmn2:task id="Task_2" drools:taskName="AskQuestionTask" drools:displayName="Ask Question Task" drools:icon="icons/icon-info.gif" name="QUE_INTERNSHIP_S1_GRP">
+        <bpmn2:extensionElements>
+          <drools:metaData name="elementname">
+            <drools:metaValue><![CDATA[QUE_INTERNSHIP_S1_GRP]]></drools:metaValue>
+          </drools:metaData>
+          <drools:onEntry-script scriptFormat="http://www.java.com/java"/>
+          <drools:onExit-script scriptFormat="http://www.java.com/java">
+            <drools:script>System.out.println(&quot;Exiting the INTERNSHIP_S1: QUE_INTERNSHIP_S1_GRP&quot;);
+eventMsg = new QEventBtnClickMessage(&quot;QUE_TREE_ITEM_INTERNSHIPS_ACTIVE&quot;);
+eventMsg.getData().setParentCode(&quot;QUE_TREE_ITEM_INTERNSHIPS_GRP&quot;);
+eventMsg.setToken(userToken.getToken());
+kcontext.setVariable(&quot;eventMsg&quot;, eventMsg);
+
+System.out.println(&quot;RESULTS! -> msg: &quot;+eventMsg);
+System.out.println(&quot;RESULTS! -> userToken: &quot;+userToken);
+System.out.println(&quot;RESULTS! -> serviceToken: &quot;+serviceToken);
+
+if (results==null) {
+System.out.println(&quot;Exiting the INTERNSHIP_S1: QUE_INTERNSHIP_S1_GRP - results is null&quot;);
+
+String serviceTokenStr = VertxUtils.getObject(userToken.getRealm(), &quot;CACHE&quot;, &quot;SERVICE_TOKEN&quot;, String.class);
+serviceToken = new GennyToken(&quot;PER_SERVICE&quot;,serviceTokenStr);
+	kcontext.setVariable(&quot;serviceToken&quot;, serviceToken); 
+  
+} else {
+	System.out.println(&quot;Latest userToken = &quot;+userToken);
+	kcontext.setVariable(&quot;userToken&quot;, userToken);
+	serviceToken = (GennyToken)results.get(&quot;serviceToken&quot;);
+	kcontext.setVariable(&quot;serviceToken&quot;, serviceToken);
+
+}</drools:script>
+          </drools:onExit-script>
+        </bpmn2:extensionElements>
+        <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
+        <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
+        <bpmn2:ioSpecification id="InputOutputSpecification_2">
+          <bpmn2:dataInput id="DataInput_8" itemSubjectRef="ItemDefinition_556" name="userToken"/>
+          <bpmn2:dataInput id="DataInput_9" name="questionCode"/>
+          <bpmn2:dataInput id="DataInput_10" name="callingWorkflow"/>
+          <bpmn2:dataInput id="DataInput_1" itemSubjectRef="ItemDefinition_1076" name="baseEntityTarget"/>
+          <bpmn2:dataOutput id="DataOutput_2" itemSubjectRef="ItemDefinition_2578" name="Result"/>
+          <bpmn2:dataOutput id="DataOutput_3" itemSubjectRef="ItemDefinition_2578" name="results"/>
+          <bpmn2:inputSet id="_InputSet_44">
+            <bpmn2:dataInputRefs>DataInput_8</bpmn2:dataInputRefs>
+            <bpmn2:dataInputRefs>DataInput_9</bpmn2:dataInputRefs>
+            <bpmn2:dataInputRefs>DataInput_10</bpmn2:dataInputRefs>
+            <bpmn2:dataInputRefs>DataInput_1</bpmn2:dataInputRefs>
+          </bpmn2:inputSet>
+          <bpmn2:outputSet id="_OutputSet_4">
+            <bpmn2:dataOutputRefs>DataOutput_2</bpmn2:dataOutputRefs>
+            <bpmn2:dataOutputRefs>DataOutput_3</bpmn2:dataOutputRefs>
+          </bpmn2:outputSet>
+        </bpmn2:ioSpecification>
+        <bpmn2:dataInputAssociation id="_DataInputAssociation_189">
+          <bpmn2:sourceRef>userToken</bpmn2:sourceRef>
+          <bpmn2:targetRef>DataInput_8</bpmn2:targetRef>
+        </bpmn2:dataInputAssociation>
+        <bpmn2:dataInputAssociation id="_DataInputAssociation_190">
+          <bpmn2:targetRef>DataInput_9</bpmn2:targetRef>
+          <bpmn2:assignment id="Assignment_6">
+            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_18">QUE_INTERNSHIP_S1_GRP</bpmn2:from>
+            <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_16">DataInput_9</bpmn2:to>
+          </bpmn2:assignment>
+        </bpmn2:dataInputAssociation>
+        <bpmn2:dataInputAssociation id="_DataInputAssociation_191">
+          <bpmn2:targetRef>DataInput_10</bpmn2:targetRef>
+          <bpmn2:assignment id="Assignment_5">
+            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_15">INTERNSHIP</bpmn2:from>
+            <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_13">DataInput_10</bpmn2:to>
+          </bpmn2:assignment>
+        </bpmn2:dataInputAssociation>
+        <bpmn2:dataInputAssociation id="DataInputAssociation_1">
+          <bpmn2:sourceRef>newBe</bpmn2:sourceRef>
+          <bpmn2:targetRef>DataInput_1</bpmn2:targetRef>
+        </bpmn2:dataInputAssociation>
+        <bpmn2:dataOutputAssociation id="_DataOutputAssociation_4">
+          <bpmn2:sourceRef>DataOutput_2</bpmn2:sourceRef>
+          <bpmn2:targetRef>results</bpmn2:targetRef>
+        </bpmn2:dataOutputAssociation>
+        <bpmn2:dataOutputAssociation id="DataOutputAssociation_2">
+          <bpmn2:sourceRef>DataOutput_3</bpmn2:sourceRef>
+          <bpmn2:targetRef>results</bpmn2:targetRef>
+        </bpmn2:dataOutputAssociation>
+      </bpmn2:task>
+      <bpmn2:sequenceFlow id="SequenceFlow_8" drools:priority="1" sourceRef="ScriptTask_1" targetRef="Task_2"/>
+      <bpmn2:sequenceFlow id="SequenceFlow_12" drools:priority="1" sourceRef="Task_2" targetRef="Task_1"/>
+      <bpmn2:sequenceFlow id="SequenceFlow_13" drools:priority="1" sourceRef="Task_1" targetRef="ScriptTask_2"/>
     </bpmn2:subProcess>
     <bpmn2:endEvent id="EndEvent_2" name="End Internship Builder">
       <bpmn2:extensionElements>
@@ -633,9 +633,9 @@ kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCod
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_2" bpmnElement="Task_2" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="580.0" y="294.0"/>
+        <dc:Bounds height="50.0" width="110.0" x="430.0" y="294.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_8">
-          <dc:Bounds height="22.0" width="100.0" x="585.0" y="308.0"/>
+          <dc:Bounds height="22.0" width="100.0" x="435.0" y="308.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_3" bpmnElement="ScriptTask_3" isExpanded="true">
@@ -645,9 +645,9 @@ kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCod
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_1" bpmnElement="Task_1" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="420.0" y="294.0"/>
+        <dc:Bounds height="50.0" width="110.0" x="590.0" y="294.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_11">
-          <dc:Bounds height="11.0" width="80.0" x="435.0" y="313.0"/>
+          <dc:Bounds height="11.0" width="80.0" x="605.0" y="313.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_2" bpmnElement="ScriptTask_2" isExpanded="true">
@@ -692,24 +692,6 @@ kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCod
         <di:waypoint xsi:type="dc:Point" x="930.0" y="319.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_16"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_5" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_Task_1">
-        <di:waypoint xsi:type="dc:Point" x="375.0" y="319.0"/>
-        <di:waypoint xsi:type="dc:Point" x="397.0" y="319.0"/>
-        <di:waypoint xsi:type="dc:Point" x="420.0" y="319.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_12"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_10" bpmnElement="SequenceFlow_10" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_Task_2">
-        <di:waypoint xsi:type="dc:Point" x="530.0" y="319.0"/>
-        <di:waypoint xsi:type="dc:Point" x="555.0" y="319.0"/>
-        <di:waypoint xsi:type="dc:Point" x="580.0" y="319.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_13"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_11" bpmnElement="SequenceFlow_11" sourceElement="BPMNShape_Task_2" targetElement="BPMNShape_ScriptTask_2">
-        <di:waypoint xsi:type="dc:Point" x="690.0" y="319.0"/>
-        <di:waypoint xsi:type="dc:Point" x="715.0" y="319.0"/>
-        <di:waypoint xsi:type="dc:Point" x="740.0" y="319.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_15"/>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_ScriptTask_3" targetElement="BPMNShape_Task_3">
         <di:waypoint xsi:type="dc:Point" x="1111.0" y="319.0"/>
         <di:waypoint xsi:type="dc:Point" x="1125.0" y="319.0"/>
@@ -721,6 +703,24 @@ kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCod
         <di:waypoint xsi:type="dc:Point" x="1255.0" y="319.0"/>
         <di:waypoint xsi:type="dc:Point" x="1270.0" y="319.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_17"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_8" bpmnElement="SequenceFlow_8" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_Task_2">
+        <di:waypoint xsi:type="dc:Point" x="375.0" y="319.0"/>
+        <di:waypoint xsi:type="dc:Point" x="402.0" y="319.0"/>
+        <di:waypoint xsi:type="dc:Point" x="430.0" y="319.0"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_12" bpmnElement="SequenceFlow_12" sourceElement="BPMNShape_Task_2" targetElement="BPMNShape_Task_1">
+        <di:waypoint xsi:type="dc:Point" x="540.0" y="319.0"/>
+        <di:waypoint xsi:type="dc:Point" x="565.0" y="319.0"/>
+        <di:waypoint xsi:type="dc:Point" x="590.0" y="319.0"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_13" bpmnElement="SequenceFlow_13" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_ScriptTask_2">
+        <di:waypoint xsi:type="dc:Point" x="700.0" y="319.0"/>
+        <di:waypoint xsi:type="dc:Point" x="720.0" y="319.0"/>
+        <di:waypoint xsi:type="dc:Point" x="740.0" y="319.0"/>
+        <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
