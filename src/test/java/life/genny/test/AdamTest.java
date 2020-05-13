@@ -279,6 +279,7 @@ public class AdamTest {
 				Thread.currentThread().interrupt();
 			}
 		} else {
+			
 			tfc.call();
 			sc.call();
 			
