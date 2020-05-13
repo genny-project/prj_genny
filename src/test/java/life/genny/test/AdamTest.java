@@ -1,7 +1,5 @@
 package life.genny.test;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -24,7 +22,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
@@ -113,7 +110,6 @@ import life.genny.rules.QRules;
 import life.genny.rules.RulesLoader;
 import life.genny.services.BaseEntityService2;
 import life.genny.utils.BaseEntityUtils;
-import life.genny.utils.DelayedCallable;
 import life.genny.utils.FrameUtils2;
 import life.genny.utils.GennyJbpmBaseTest;
 import life.genny.utils.GennyKieSession;
@@ -161,22 +157,8 @@ public class AdamTest {
 	protected static GennyToken newUserToken;
 	protected static GennyToken serviceToken;
 
-	public void awaitTerminationAfterShutdown(ExecutorService threadPool) {
-	    threadPool.shutdown();
-	    try {
-	        if (!threadPool.awaitTermination(90, TimeUnit.SECONDS)) {
-	            threadPool.shutdownNow();
-	        }
-	    } catch (InterruptedException ex) {
-	        threadPool.shutdownNow();
-	        Thread.currentThread().interrupt();
-	    }
-	}
-	
 
-	
 
-	
 	@Test
 	public void testTableTest() {
 		System.out.println("Test Table test");
@@ -194,7 +176,7 @@ public class AdamTest {
 			GennyKieSession.loadAttributesJsonFromResources(userToken);
 
 		} else {
-			//VertxUtils.cachedEnabled = false;
+			// VertxUtils.cachedEnabled = false;
 			VertxUtils.cachedEnabled = false;
 			qRules = GennyJbpmBaseTest.setupLocalService();
 			userToken = new GennyToken("userToken", qRules.getToken());
@@ -212,7 +194,7 @@ public class AdamTest {
 		long starttime = System.currentTimeMillis();
 		long looptime = 0;
 		long searchtime = 0;
-
+		Boolean cache = true;
 		String code = message.getData().getCode();
 		System.out.println("QUESTION CODE   ::   " + code);
 
@@ -247,62 +229,84 @@ public class AdamTest {
 				beUtils.getGennyToken().getToken());
 
 		long s3time = System.currentTimeMillis();
-		
+
 		ExecutorService WORKER_THREAD_POOL = Executors.newFixedThreadPool(10);
-		CompletionService<QBulkMessage> service
-		  = new ExecutorCompletionService<>(WORKER_THREAD_POOL);
-		 
-		List<Callable<QBulkMessage>> callables = Arrays.asList(
-		  new TableFrameCallable(beUtils),
-		  new SearchCallable(tableUtils, searchBE.getCode(),beUtils));
+		CompletionService<QBulkMessage> service = new ExecutorCompletionService<>(WORKER_THREAD_POOL);
+
+		TableFrameCallable tfc = new TableFrameCallable(beUtils, cache);
+		SearchCallable sc = new SearchCallable(tableUtils, searchBE.getCode(), beUtils, cache);
+
+		List<Callable<QBulkMessage>> callables = Arrays.asList(tfc, sc);
 
 		QBulkMessage aggregatedMessages = new QBulkMessage();
-		
-		for (Callable<QBulkMessage> callable : callables) {
-		    service.submit(callable);
-		}
+
 		long startProcessingTime = System.currentTimeMillis();
 		long totalProcessingTime;
-		try {
-			Future<QBulkMessage> future = service.take();
-			QBulkMessage firstThreadResponse = future.get();
-			aggregatedMessages.add(firstThreadResponse.getMessages());
-			totalProcessingTime = System.currentTimeMillis() - startProcessingTime;
-			 
+
+		if (cache) {
+			for (Callable<QBulkMessage> callable : callables) {
+				service.submit(callable);
+			}
+			try {
+				Future<QBulkMessage> future = service.take();
+				QBulkMessage firstThreadResponse = future.get();
+				aggregatedMessages.add(firstThreadResponse);
+				totalProcessingTime = System.currentTimeMillis() - startProcessingTime;
+
 //			assertTrue("First response should be from the fast thread", 
 //			  "fast thread".equals(firstThreadResponse.getData_type()));
 //			assertTrue(totalProcessingTime >= 100
 //			  && totalProcessingTime < 1000);
-			log.info("Thread finished after: " + totalProcessingTime
-			  + " milliseconds");
-			 
-			future = service.take();
-			QBulkMessage secondThreadResponse = future.get();
-			aggregatedMessages.add(secondThreadResponse.getMessages());
-			log.info("2nd Thread finished after: " + totalProcessingTime
-					  + " milliseconds");
-		} catch (InterruptedException | ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+				log.info("Thread finished after: " + totalProcessingTime + " milliseconds");
+
+				future = service.take();
+				QBulkMessage secondThreadResponse = future.get();
+				aggregatedMessages.add(secondThreadResponse);
+				log.info("2nd Thread finished after: " + totalProcessingTime + " milliseconds");
+			} catch (InterruptedException | ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			totalProcessingTime = System.currentTimeMillis() - startProcessingTime;
+
+			WORKER_THREAD_POOL.shutdown();
+			try {
+				if (!WORKER_THREAD_POOL.awaitTermination(90, TimeUnit.SECONDS)) {
+					WORKER_THREAD_POOL.shutdownNow();
+				}
+			} catch (InterruptedException ex) {
+				WORKER_THREAD_POOL.shutdownNow();
+				Thread.currentThread().interrupt();
+			}
+		} else {
+			tfc.call();
+			sc.call();
+			
 		}
-		totalProcessingTime
-		  = System.currentTimeMillis() - startProcessingTime;
-		
-		awaitTerminationAfterShutdown(WORKER_THREAD_POOL);
-		 
 		totalProcessingTime = System.currentTimeMillis() - startProcessingTime;
-		log.info("All threads finished after: " + totalProcessingTime
-				  + " milliseconds");
+		log.info("All threads finished after: " + totalProcessingTime + " milliseconds");
 		aggregatedMessages.setToken(userToken.getToken());
-		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(aggregatedMessages));
+		QDataAskMessage[] asks = aggregatedMessages.getAsks();
+		aggregatedMessages.setAsks(null);
+		
+		if (cache) {
+			String json = JsonUtils.toJson(aggregatedMessages);
+			VertxUtils.writeMsg("webcmds",json );
+			for (QDataAskMessage askMsg : asks) {
+				askMsg.setToken(userToken.getToken());
+				VertxUtils.writeMsg("webcmds", JsonUtils.toJson(askMsg));
+			}
+		}
 		/* show tab-view first */
-	//	ShowFrame.display(beUtils.getGennyToken(), "FRM_QUE_TAB_VIEW", "FRM_CONTENT", "Test");
+		// ShowFrame.display(beUtils.getGennyToken(), "FRM_QUE_TAB_VIEW", "FRM_CONTENT",
+		// "Test");
 
 		/* show table-view inside tab-content */
-	//	ShowFrame.display(beUtils.getGennyToken(), "FRM_TABLE_VIEW", "FRM_TAB_CONTENT", "Test");
-		//long s4time = System.currentTimeMillis();
-		//tableUtils.performSearch(userToken, serviceToken, searchBeCode, null);
-		//long s5time = System.currentTimeMillis();
+		// ShowFrame.display(beUtils.getGennyToken(), "FRM_TABLE_VIEW",
+		// "FRM_TAB_CONTENT", "Test");
+		// long s4time = System.currentTimeMillis();
+		// tableUtils.performSearch(userToken, serviceToken, searchBeCode, null);
+		// long s5time = System.currentTimeMillis();
 		/* Send to front end */
 		/* output.setTypeOfResult("NONE"); */
 		/* output.setResultCode("NONE"); */ /* dont display anything new */
@@ -313,13 +317,13 @@ public class AdamTest {
 		System.out.println("init setup took " + (s1time - starttime) + " ms");
 		System.out.println("search session setup took " + (s2time - s1time) + " ms");
 		System.out.println("update searchBE BE setup took " + (s3time - s2time) + " ms");
-	//	System.out.println("send frame table and tab display setup took " + (s4time - s3time) + " ms");
-	//	System.out.println("searching took " + (s5time - s4time) + " ms");
-	//	System.out.println("finish took " + (endtime - s5time) + " ms");
+		// System.out.println("send frame table and tab display setup took " + (s4time -
+		// s3time) + " ms");
+		// System.out.println("searching took " + (s5time - s4time) + " ms");
+		// System.out.println("finish took " + (endtime - s5time) + " ms");
 		System.out.println("total took " + (endtime - starttime) + " ms");
 	}
 
-	
 //	/* show tab-view first */
 //		 ShowFrame.display(beUtils.getGennyToken(), "FRM_QUE_TAB_VIEW", "FRM_CONTENT", "Test");
 //
