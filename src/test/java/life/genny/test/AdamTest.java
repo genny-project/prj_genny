@@ -161,7 +161,7 @@ public class AdamTest {
 
 	@Test
 	public void testTableTest() {
-		System.out.println("Test Table test");
+		System.out.println("Test Table tests");
 		GennyToken userToken = null;
 		GennyToken serviceToken = null;
 		QRules qRules = null;
