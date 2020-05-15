@@ -33,7 +33,7 @@ rule "RETURN_JOURNALS_INTERN"
 	  serviceToken : GennyToken ( code == "PER_SERVICE" )
 	  beUtils : BaseEntityUtils()
 	  allowed : Allowed(code == "READ_JOURNALS" && mode == CapabilityMode.VIEW)
-	  allowed2 : Allowed(code == "INTERN")
+	  allowed2 : Allowed(code == "INTERN2")
 	  
     then
    		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + $userToken.getUserCode());
