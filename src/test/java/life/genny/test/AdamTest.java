@@ -9,8 +9,11 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -46,7 +49,7 @@ import org.jbpm.services.task.utils.TaskFluent;
 import org.jbpm.services.task.wih.NonManagedLocalHTWorkItemHandler;
 import org.jbpm.test.services.TestIdentityProvider;
 import org.jbpm.test.services.TestUserGroupCallbackImpl;
-import org.joda.time.LocalDateTime;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.kie.api.KieBase;
@@ -158,8 +161,80 @@ public class AdamTest {
 	protected static GennyToken serviceToken;
 
 
-
 	@Test
+	public void journalTest()
+	{
+		System.out.println("Journal test");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+		} else {
+			// VertxUtils.cachedEnabled = false;
+			VertxUtils.cachedEnabled = false;
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+			eventBusMock = new EventBusMock();
+			vertxCache = new JunitCache(); // MockCache
+			VertxUtils.init(eventBusMock, vertxCache);
+		}
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		beUtils.setServiceToken(serviceToken);
+
+ 		String roleAttribute = "LNK_INTERN_SUPERVISOR";
+		String userCode  = "PER_DAMIEN_AT_DESIGNCONSULTING_DOT_COM_DOT_AU";
+
+  		BaseEntity deviceBe = beUtils.getBaseEntityByCode("DEV_"+"565D971D-5F9F-4161-88E0-E34765B57F75");
+   		LocalDateTime veryearly = LocalDateTime.of(1970,01,01,0,0,0);
+   		LocalDateTime lastUpdated = null;
+   		if (deviceBe!=null) {
+   			lastUpdated = deviceBe.getValue("PRI_LAST_UPDATED",veryearly);
+   		} else {
+   			lastUpdated = veryearly;
+   		}
+   		
+   		long starttime = System.currentTimeMillis();
+   		long looptime = 0;
+   		long searchtime = 0;
+
+ 		final DateTimeFormatter formatterMysql = DateTimeFormatter.ISO_DATE_TIME;
+ 		String dtStr = formatterMysql.format(lastUpdated).replace("T", " ");
+ 		String hql = "select ea from EntityAttribute ea, EntityAttribute eb where ea.baseEntityCode=eb.baseEntityCode ";
+ 		hql += " and eb.attributeCode = '"+roleAttribute+"' and eb.valueString = '[\""+ userCode +"\"]'";
+ 		hql += " and ea.baseEntityCode like 'JNL_%'  ";
+ 		hql += " and ((ea.updated >= '"+dtStr+"') or (ea.updated is null and ea.created >= '"+dtStr+"'))";
+		hql = Base64.getUrlEncoder().encodeToString(hql.getBytes());
+		String resultJson;
+		QDataBaseEntityMessage resultMsg = null;
+		try {
+			resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search22/"+hql, serviceToken.getToken(),120);
+			searchtime = System.currentTimeMillis();
+			resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
+			
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}		
+		
+		long endtime = System.currentTimeMillis();
+		System.out.println("search took "+(searchtime-starttime)+" ms "+resultMsg);
+		System.out.println("loop took "+(looptime-searchtime)+" ms");
+		System.out.println("finish took "+(endtime-looptime)+" ms");
+		System.out.println("total took "+(endtime-starttime)+" ms");
+	}
+	
+
+	//@Test
 	public void testTableTest() {
 		System.out.println("Test Table test");
 		GennyToken userToken = null;
@@ -918,7 +993,7 @@ public class AdamTest {
 
 	private void sendVerifyMail(String token, String username, String domain, String firstname, String lastname) {
 		LocalDateTime now = LocalDateTime.now();
-		String mydatetime = new SimpleDateFormat("yyyyMMddHHmmss").format(now.toDate());
+		String mydatetime = new SimpleDateFormat("yyyyMMddHHmmss").format(now);
 		// System.out.println(username+" serviceToken=" + token);
 		String emailusername = username + "+" + mydatetime + "@" + domain;
 
@@ -1732,7 +1807,7 @@ public class AdamTest {
 			e1.printStackTrace();
 		}
 		LocalDateTime now = LocalDateTime.now();
-		String mydatetime = new SimpleDateFormat("yyyyMMddHHmmss").format(now.toDate());
+		String mydatetime = new SimpleDateFormat("yyyyMMddHHmmss").format(now);
 
 ///		String username = "rahul.samaranayake+"+mydatetime+"@outcomelife.com.au";		
 //		String firstname = "Rahul";

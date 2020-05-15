@@ -35,10 +35,10 @@ rule "RETURN_SUPERVISOR_INTERNSHIP_DETAILS"
 	  serviceToken : GennyToken ( code == "PER_SERVICE" )
 	  beUtils : BaseEntityUtils()
 	  allowed : Allowed(code == "READ_INTERNSHIPS" && mode == CapabilityMode.VIEW)
-	  allowed2 : Allowed(code == "SUPERVISOR")
+	  allowed2 : Allowed(code == "SUPERVISOR")   /* DISABLED BY ADDING A 2 */
 	  
     then
-   		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + $userToken.getUserCode());
+   		System.out.println("Rule -> "+drools.getRule().getName()+"!!! :  user=" + $userToken.getUserCode());
    		
   		 System.out.println("User code is "+$user.getCode());
 		SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Intern Apps")
