@@ -8,7 +8,7 @@ rule "Trigger Send Card"
 	 then
 	 	rules.header();
 		rules.setState("LOOP_TRIGGER_SEND_CARD");
-
+		/* Pipeline Test */
 		/* create frames */
         BaseEntity frameContent = new BaseEntity("FRM_CONTENT", "frame-content");
         BaseEntity frameCard = new BaseEntity("FRM_CARD", "frame-card");
