@@ -24,7 +24,7 @@ import life.genny.qwandautils.GennySettings;
 import java.util.Map;
 import java.util.HashMap;
 
-rule "RETURN_SUPERVISOR_INTERNSHIP_DETAILS"
+rule "RETURN_SUPERVISOR2_INTERNSHIP_DETAILS"
     ruleflow-group 'Stateless'
      salience 5000
      no-loop true
@@ -35,7 +35,7 @@ rule "RETURN_SUPERVISOR_INTERNSHIP_DETAILS"
 	  serviceToken : GennyToken ( code == "PER_SERVICE" )
 	  beUtils : BaseEntityUtils()
 	  allowed : Allowed(code == "READ_INTERNSHIPS" && mode == CapabilityMode.VIEW)
-	  allowed2 : Allowed(code == "SUPERVISOR2")   /* DISABLED BY ADDING A 2 */
+	  allowed2 : Allowed(code == "SUPERVISOR")
 	  
     then
    		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + $userToken.getUserCode());

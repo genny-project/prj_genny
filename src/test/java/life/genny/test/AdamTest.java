@@ -194,7 +194,7 @@ public class AdamTest {
 		long starttime = System.currentTimeMillis();
 		long looptime = 0;
 		long searchtime = 0;
-		Boolean cache = false;
+		Boolean cache = true;
 		String code = message.getData().getCode();
 		System.out.println("QUESTION CODE   ::   " + code);
 
