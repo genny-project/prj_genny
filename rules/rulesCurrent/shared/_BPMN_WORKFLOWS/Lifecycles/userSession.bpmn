@@ -1298,9 +1298,29 @@ BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
           </bpmn2:extensionElements>
           <bpmn2:incoming>SequenceFlow_34</bpmn2:incoming>
           <bpmn2:outgoing>SequenceFlow_35</bpmn2:outgoing>
-          <bpmn2:script>System.out.println(&quot;userSession: Show Page Handler - Update DOM&quot;);
+          <bpmn2:script>Boolean usingReduxRestore = false;
 SessionFacts sessionFacts2 = (SessionFacts)sessionFacts;
 output = (OutputParam)(sessionFacts2.getMessage());
+if (message.getData().getCode().equals(&quot;AUTH_INIT&quot;)) {
+	if (message.getData().getValue() != null) {
+		
+		JsonObject frontend = null;
+		if (!&quot;NEW_SESSION&quot;.equals(message.getData().getValue())) {
+                   	frontend = new JsonObject(message.getData().getValue());
+			JsonObject persist = frontend.getJsonObject(&quot;persist&quot;);
+			if (persist != null) {
+				usingReduxRestore = true;
+				message.getData().setCode(&quot;AUTH_INIT_REDUX&quot;);
+				output.setTypeOfResult(&quot;NONE&quot;);
+				System.out.println(&quot;userSession: DETECTED Alyson Persist &quot;+persist.toString());
+			}
+		}
+	}
+}
+
+if (!usingReduxRestore ) {
+System.out.println(&quot;userSession: Show Page Handler - Update DOM&quot;);
+
 if (dom == null) {	
 	dom = new OutputParamTreeSet(&quot;FRM_APP&quot;);
 	kcontext.setVariable(&quot;dom&quot;,dom);
@@ -1329,6 +1349,7 @@ if (currentUser == null) {
 
 /* This also means that no default page has been set , so send the DOM*/
 
+}
 }
 </bpmn2:script>
         </bpmn2:scriptTask>
