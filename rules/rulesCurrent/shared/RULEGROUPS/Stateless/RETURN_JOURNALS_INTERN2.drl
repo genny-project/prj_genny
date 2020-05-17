@@ -43,7 +43,10 @@ rule "RETURN_JOURNALS_INTERN2"
      	System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + $userToken.getUserCode());
    		System.out.println("Rule -> "+drools.getRule().getName()+" :  device=" + device.getValue());
    		
-   		BaseEntity deviceBe = beUtils.getBaseEntityByCode("DEV_"+device.getValue());
+   		String uniqueDeviceCode = "DEV_"+device.getValue().toUpperCase()+$userToken.getString("sub").hashCode();
+   		System.out.println("Unique DevCode="+uniqueDeviceCode);
+   		
+   		BaseEntity deviceBe = beUtils.getBaseEntityByCode(uniqueDeviceCode);
    		   		
   		String roleAttribute = "LNK_INTERN";
 		String userCode  = $userToken.getUserCode();
@@ -62,6 +65,8 @@ rule "RETURN_JOURNALS_INTERN2"
 
  		final DateTimeFormatter formatterMysql = DateTimeFormatter.ISO_DATE_TIME;
  		String dtStr = formatterMysql.format(lastUpdated).replace("T", " ");
+ 		
+ 		System.out.println("Journal DateTime Query is "+dtStr);
  		
  		String hql = "select ea from EntityAttribute ea, EntityAttribute eb where ea.baseEntityCode=eb.baseEntityCode ";
  		hql += " and eb.attributeCode = '"+roleAttribute+"' and eb.valueString = '[\""+ userCode +"\"]'";

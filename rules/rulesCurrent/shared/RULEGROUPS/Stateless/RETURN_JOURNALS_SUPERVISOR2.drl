@@ -42,7 +42,9 @@ rule "RETURN_JOURNALS_SUPERVISOR2"
    		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + $userToken.getUserCode());
    		System.out.println("Rule -> "+drools.getRule().getName()+" :  device=" + device.getValue());
    		
-   		BaseEntity deviceBe = beUtils.getBaseEntityByCode("DEV_"+device.getValue());
+   		String uniqueDeviceCode = "DEV_"+device.getValue().toUpperCase()+$userToken.getString("sub").hashCode();
+   		System.out.println("Unique DevCode="+uniqueDeviceCode);
+   		BaseEntity deviceBe = beUtils.getBaseEntityByCode(uniqueDeviceCode);
    		   		
   		String roleAttribute = "LNK_INTERN_SUPERVISOR";
 		String userCode  = $userToken.getUserCode();
