@@ -34,13 +34,14 @@ rule "THM_FORM_VCL_INPUT_GENNY"
       
     then
     
-     	System.out.println("   Generate THM_FORM_VCL_INPUT_GENNY Rule ");
+     	System.out.println("   Generates THM_FORM_VCL_INPUT_GENNY Rule ");
  
 		Theme theme = Theme.builder("THM_FORM_VCL_INPUT_GENNY")
 										.addAttribute()
-											.borderBottomWidth(1)
+											/* .borderBottomWidth(1)
 											.borderColor("#ddd")
-											.borderStyle("solid").placeholderColor("#888")
+											.borderStyle("solid") */
+											.placeholderColor("#888")
 										.end()
 										.addAttribute(ThemeAttributeType.PRI_CONTENT_HOVER).borderColor("#aaa").end()
 										.addAttribute(ThemeAttributeType.PRI_CONTENT_ACTIVE).borderColor("green").end()
