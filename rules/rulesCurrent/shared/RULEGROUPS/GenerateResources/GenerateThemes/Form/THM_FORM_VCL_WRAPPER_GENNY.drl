@@ -39,13 +39,13 @@ rule "THM_FORM_VCL_WRAPPER_GENNY"
 		Theme theme = Theme.builder("THM_FORM_VCL_WRAPPER_GENNY")
 										.addAttribute()
 											.margin(10)
-											.borderRadius(4)
-											.borderWidth(1)
-											.borderColor("#888")
-											.borderStyle("solid")
-											.paddingLeft(16)
-											.paddingRight(12)
-											.paddingY(8)
+											/* .borderRadius(4) */
+											/* .borderWidth(1) */
+											/* .borderColor("#888") */
+											/* .borderStyle("solid") */
+											/* .paddingLeft(16) */
+											/* .paddingRight(12) */
+											/* .paddingY(8) */
 										.end()
 									.build();
                         
