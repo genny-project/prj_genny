@@ -1,5 +1,6 @@
 package life.genny.test;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -7,8 +8,11 @@ import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -22,6 +26,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
@@ -34,9 +39,36 @@ import java.util.concurrent.TimeUnit;
 
 import javax.persistence.EntityManagerFactory;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.logging.log4j.Logger;
+import org.drools.compiler.compiler.DrlParser;
+import org.drools.compiler.compiler.DroolsError;
+import org.drools.compiler.compiler.DroolsParserException;
+import org.drools.compiler.lang.descr.AttributeDescr;
+import org.drools.compiler.lang.descr.PackageDescr;
+import org.drools.compiler.lang.descr.RuleDescr;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.InvalidRemoteException;
+import org.eclipse.jgit.api.errors.TransportException;
+import org.eclipse.jgit.errors.AmbiguousObjectException;
+import org.eclipse.jgit.errors.IncorrectObjectTypeException;
+import org.eclipse.jgit.errors.RevisionSyntaxException;
+import org.eclipse.jgit.lib.FileMode;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectLoader;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevTree;
+import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.transport.RefSpec;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+import org.eclipse.jgit.treewalk.TreeWalk;
+import org.eclipse.jgit.treewalk.filter.AndTreeFilter;
+import org.eclipse.jgit.treewalk.filter.PathFilter;
+import org.eclipse.jgit.treewalk.filter.PathSuffixFilter;
 import org.jbpm.services.api.DefinitionService;
 import org.jbpm.services.api.ProcessService;
 import org.jbpm.services.api.RuntimeDataService;
@@ -60,6 +92,7 @@ import org.kie.api.runtime.rule.FactHandle;
 import org.kie.api.task.model.Task;
 import org.kie.api.task.model.TaskSummary;
 import org.kie.api.task.model.User;
+import org.kie.internal.builder.conf.LanguageLevelOption;
 import org.kie.internal.runtime.StatefulKnowledgeSession;
 import org.kie.internal.task.api.TaskModelProvider;
 import org.kie.internal.task.api.model.InternalComment;
@@ -91,6 +124,8 @@ import life.genny.qwanda.Ask;
 import life.genny.qwanda.Context;
 import life.genny.qwanda.ContextType;
 import life.genny.qwanda.VisualControlType;
+import life.genny.qwanda.attribute.Attribute;
+import life.genny.qwanda.attribute.AttributeText;
 import life.genny.qwanda.datatype.DataType;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.SearchEntity;
@@ -160,10 +195,192 @@ public class AdamTest {
 	protected static GennyToken newUserToken;
 	protected static GennyToken serviceToken;
 
+	public static List<BaseEntity> getRulesBaseEntitys(String gitUrl, String branch, String realm, String string,
+			boolean b) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	@Test
-	public void journalTest()
-	{
+	public void gitRuleTest() {
+		Boolean recursive = true;
+		Map<String,BaseEntity> ruleBes = new HashMap<String,BaseEntity>();
+		String gitProjectUrlsStr = GennySettings.gitProjectUrls;
+		String[] gitProjectUrls = gitProjectUrlsStr.split(";");
+		String gitUserName = GennySettings.gitUsername;
+		String gitPassword = GennySettings.gitPassword;
+		String realm = "internmatch";
+		try {
+			for (String gitProjectUrl : gitProjectUrls) {
+				ruleBes.putAll(getRules(gitProjectUrl, "v3.1.0", realm, gitUserName, gitPassword, recursive));
+			}
+		} catch (RevisionSyntaxException | BadDataException | GitAPIException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public static Map<String,BaseEntity> getRules(final String remoteUrl, final String branch, final String realm,  final String gitUsername, final String gitPassword,
+			boolean recursive)
+			throws BadDataException, InvalidRemoteException, TransportException, GitAPIException,
+			RevisionSyntaxException, AmbiguousObjectException, IncorrectObjectTypeException, IOException {
+
+		Map<String,BaseEntity> ruleBes = new HashMap<String,BaseEntity>();
+
+		log.info("remoteUrl=" + remoteUrl);
+		log.info("branch=" + branch);
+		log.info("realm=" + realm);
+
+		String tmpDir = "/tmp/git";
+		try {
+			File directory = new File(tmpDir);
+
+			// Deletes a directory recursively. When deletion process is fail an
+			// IOException is thrown and that's why we catch the exception.
+			FileUtils.deleteDirectory(directory);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		Git git = Git.cloneRepository()
+
+				.setURI(remoteUrl).setDirectory(new File(tmpDir)).setBranch(branch).setCredentialsProvider(new UsernamePasswordCredentialsProvider(gitUsername, gitPassword)).call();
+
+		log.info("Set up Git");
+
+		git.fetch().setRemote(remoteUrl).setRefSpecs(new RefSpec("+refs/heads/*:refs/heads/*")).setCredentialsProvider(new UsernamePasswordCredentialsProvider(gitUsername, gitPassword)).call();
+
+		Repository repo = git.getRepository();
+
+		/*
+		 * DfsRepositoryDescription repoDesc = new DfsRepositoryDescription();
+		 * InMemoryRepository repo = new InMemoryRepository(repoDesc); Git git = new
+		 * Git(repo); git.fetch() .setRemote(remoteUrl) .setRefSpecs(new
+		 * RefSpec("+refs/heads/*:refs/heads/*")) .call(); repo.getObjectDatabase();
+		 */
+		// Ref head = repo.getRef("HEAD");
+		ObjectId lastCommitId = repo.resolve("refs/heads/" + branch);
+
+		// a RevWalk allows to walk over commits based on some filtering that is defined
+		RevWalk walk = new RevWalk(repo);
+
+		RevCommit commit = walk.parseCommit(lastCommitId);
+		RevTree tree = commit.getTree();
+		log.info("Having tree: " + tree);
+
+		// now use a TreeWalk to iterate over all files in the Tree recursively
+		// you can set Filters to narrow down the results if needed
+		TreeWalk treeWalk = new TreeWalk(repo);
+		treeWalk.addTree(tree);
+		treeWalk.setRecursive(true);
+		// treeWalk.setFilter(AndTreeFilter.create(TreeFilter.ANY_DIFF,
+		// PathFilter.ANY_DIFF));
+
+//		treeWalk.setFilter(AndTreeFilter.create(PathSuffixFilter.create(".bpmn"),PathSuffixFilter.create(".drl")));
+//		treeWalk.setFilter(AndTreeFilter.create(PathFilter.create(realmFilter), PathSuffixFilter.create(".drl")));
+		while (treeWalk.next()) {
+
+			final ObjectId objectId = treeWalk.getObjectId(0);
+			final ObjectLoader loader = repo.open(objectId);
+			FileMode fileMode = treeWalk.getFileMode(0);
+			// and then one can the loader to read the file
+
+			String ruleCode = "";
+			String fullpath = "";
+
+			fullpath = treeWalk.getPathString(); // .substring(realmFilter.length()+1); // get rid of
+													// realm+"-new/sublayouts/"
+			Path p = Paths.get(fullpath);
+			if (((fullpath.endsWith(".drl") || (fullpath.endsWith(".drl"))) && (!p.toString().contains("XXX")))) {
+
+				if (fullpath.equals("rules/rulesCurrent/shared/RULEGROUPS/EventProcessing/LOGOUT_EVENT.drl")) {
+					log.info("logout rule detected!");
+					// continue;
+				}
+
+				String filename = p.getFileName().toString();
+				String content = new String(loader.getBytes());
+				Boolean goodRule = false;
+				List<DroolsError> droolsErrors = null;
+				DrlParser parser = new DrlParser(LanguageLevelOption.DRL6);
+				PackageDescr descr = null;
+				try {
+					descr = parser.parse(true, content);
+
+					if (!parser.hasErrors()) {
+						goodRule = true;
+					} else {
+						droolsErrors = parser.getErrors();
+					}
+				} catch (DroolsParserException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				if (goodRule) {
+					System.out.println(realm+":"+p.toString());
+					if (descr.getRules().size() == 1) {
+						RuleDescr rule = descr.getRules().get(0);
+						String beName = rule.getName();
+						
+						BaseEntity ruleBe = new BaseEntity("RUL_" + beName.toUpperCase(), beName);
+						Integer hashcode = content.hashCode();
+
+						long secs = commit.getCommitTime();
+						LocalDateTime commitDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(secs * 1000),
+								TimeZone.getDefault().toZoneId());
+						String lastCommitDateTimeString = commitDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+						ruleBe.addAnswer(new Answer(ruleBe, ruleBe,
+								new AttributeText("PRI_COMMIT_DATETIME", "Commited"), lastCommitDateTimeString)); // if
+																													// new
+						ruleBe.setRealm(realm);
+						ruleBe.setUpdated(commitDateTime);
+
+						ruleBe.setValue(RulesUtils.getAttribute("PRI_HASHCODE", realm), hashcode);
+						ruleBe.setValue(RulesUtils.getAttribute("PRI_FILENAME", realm), filename);
+
+						String ext = filename.substring(filename.lastIndexOf(".") + 1);
+						String kieType = ext.toUpperCase();
+						ruleBe.setValue(RulesUtils.getAttribute("PRI_KIE_TYPE", realm), kieType);
+
+						ruleBe.setValue(RulesUtils.getAttribute("PRI_KIE_TEXT", realm), content);
+						ruleBe.setValue(RulesUtils.getAttribute("PRI_KIE_NAME", realm), beName);
+
+						if (rule.getAttributes().containsKey("ruleflow-group")) {
+							AttributeDescr attD = rule.getAttributes().get("ruleflow-group");
+							String ruleflowgroup = attD.getValue();
+							ruleBe.setValue(RulesUtils.getAttribute("PRI_KIE_RULE_GROUP", realm), ruleflowgroup);
+						}
+						if (rule.getAttributes().containsKey("no-loop")) {
+							AttributeDescr attD = rule.getAttributes().get("no-loop");
+							String noloop = attD.getValue();
+							ruleBe.setValue(RulesUtils.getAttribute("PRI_KIE_RULE_NOLOOP", realm), noloop);
+						}
+						if (rule.getAttributes().containsKey("salience")) {
+							AttributeDescr attD = rule.getAttributes().get("salience");
+							String salience = attD.getValue();
+							ruleBe.setValue(RulesUtils.getAttribute("PRI_KIE_RULE_SALIENCE", realm), salience);
+						}
+
+						ruleBes.put("RUL_" + beName.toUpperCase(),ruleBe);
+					} else {
+						System.out.println("!!!!!!!!!!!!!!!!!!! ERROR: MUST HAVE ONLY 1 RULE PER FILE " + p.toString());
+					}
+				} else {
+					System.out.println("!!!!!!!!!!!!!!!!!!! ERROOR: BAD RULE: " + p.toString());
+					System.out.println(droolsErrors);
+				}
+
+			}
+
+		}
+
+		return ruleBes;
+
+	}
+
+	// @Test
+	public void journalTest() {
 		System.out.println("Journal test");
 		GennyToken userToken = null;
 		GennyToken serviceToken = null;
@@ -192,49 +409,49 @@ public class AdamTest {
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		beUtils.setServiceToken(serviceToken);
 
- 		String roleAttribute = "LNK_INTERN_SUPERVISOR";
-		String userCode  = "PER_DAMIEN_AT_DESIGNCONSULTING_DOT_COM_DOT_AU";
+		String roleAttribute = "LNK_INTERN_SUPERVISOR";
+		String userCode = "PER_DAMIEN_AT_DESIGNCONSULTING_DOT_COM_DOT_AU";
 
-  		BaseEntity deviceBe = beUtils.getBaseEntityByCode("DEV_"+"565D971D-5F9F-4161-88E0-E34765B57F75");
-   		LocalDateTime veryearly = LocalDateTime.of(1970,01,01,0,0,0);
-   		LocalDateTime lastUpdated = null;
-   		if (deviceBe!=null) {
-   			lastUpdated = deviceBe.getValue("PRI_LAST_UPDATED",veryearly);
-   		} else {
-   			lastUpdated = veryearly;
-   		}
-   		
-   		long starttime = System.currentTimeMillis();
-   		long looptime = 0;
-   		long searchtime = 0;
+		BaseEntity deviceBe = beUtils.getBaseEntityByCode("DEV_" + "565D971D-5F9F-4161-88E0-E34765B57F75");
+		LocalDateTime veryearly = LocalDateTime.of(1970, 01, 01, 0, 0, 0);
+		LocalDateTime lastUpdated = null;
+		if (deviceBe != null) {
+			lastUpdated = deviceBe.getValue("PRI_LAST_UPDATED", veryearly);
+		} else {
+			lastUpdated = veryearly;
+		}
 
- 		final DateTimeFormatter formatterMysql = DateTimeFormatter.ISO_DATE_TIME;
- 		String dtStr = formatterMysql.format(lastUpdated).replace("T", " ");
- 		String hql = "select ea from EntityAttribute ea, EntityAttribute eb where ea.baseEntityCode=eb.baseEntityCode ";
- 		hql += " and eb.attributeCode = '"+roleAttribute+"' and eb.valueString = '[\""+ userCode +"\"]'";
- 		hql += " and ea.baseEntityCode like 'JNL_%'  ";
- 		hql += " and ((ea.updated >= '"+dtStr+"') or (ea.updated is null and ea.created >= '"+dtStr+"'))";
+		long starttime = System.currentTimeMillis();
+		long looptime = 0;
+		long searchtime = 0;
+
+		final DateTimeFormatter formatterMysql = DateTimeFormatter.ISO_DATE_TIME;
+		String dtStr = formatterMysql.format(lastUpdated).replace("T", " ");
+		String hql = "select ea from EntityAttribute ea, EntityAttribute eb where ea.baseEntityCode=eb.baseEntityCode ";
+		hql += " and eb.attributeCode = '" + roleAttribute + "' and eb.valueString = '[\"" + userCode + "\"]'";
+		hql += " and ea.baseEntityCode like 'JNL_%'  ";
+		hql += " and ((ea.updated >= '" + dtStr + "') or (ea.updated is null and ea.created >= '" + dtStr + "'))";
 		hql = Base64.getUrlEncoder().encodeToString(hql.getBytes());
 		String resultJson;
 		QDataBaseEntityMessage resultMsg = null;
 		try {
-			resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search22/"+hql, serviceToken.getToken(),120);
+			resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search22/" + hql,
+					serviceToken.getToken(), 120);
 			searchtime = System.currentTimeMillis();
 			resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
-			
+
 		} catch (Exception e1) {
 			e1.printStackTrace();
-		}		
-		
-		long endtime = System.currentTimeMillis();
-		System.out.println("search took "+(searchtime-starttime)+" ms "+resultMsg);
-		System.out.println("loop took "+(looptime-searchtime)+" ms");
-		System.out.println("finish took "+(endtime-looptime)+" ms");
-		System.out.println("total took "+(endtime-starttime)+" ms");
-	}
-	
+		}
 
-	//@Test
+		long endtime = System.currentTimeMillis();
+		System.out.println("search took " + (searchtime - starttime) + " ms " + resultMsg);
+		System.out.println("loop took " + (looptime - searchtime) + " ms");
+		System.out.println("finish took " + (endtime - looptime) + " ms");
+		System.out.println("total took " + (endtime - starttime) + " ms");
+	}
+
+	// @Test
 	public void testTableTest() {
 		System.out.println("Test Table test");
 		GennyToken userToken = null;
@@ -354,20 +571,20 @@ public class AdamTest {
 				Thread.currentThread().interrupt();
 			}
 		} else {
-			
+
 			tfc.call();
 			sc.call();
-			
+
 		}
 		totalProcessingTime = System.currentTimeMillis() - startProcessingTime;
 		log.info("All threads finished after: " + totalProcessingTime + " milliseconds");
 		aggregatedMessages.setToken(userToken.getToken());
 		QDataAskMessage[] asks = aggregatedMessages.getAsks();
 		aggregatedMessages.setAsks(null);
-		
+
 		if (cache) {
 			String json = JsonUtils.toJson(aggregatedMessages);
-			VertxUtils.writeMsg("webcmds",json );
+			VertxUtils.writeMsg("webcmds", json);
 			for (QDataAskMessage askMsg : asks) {
 				askMsg.setToken(userToken.getToken());
 				VertxUtils.writeMsg("webcmds", JsonUtils.toJson(askMsg));
