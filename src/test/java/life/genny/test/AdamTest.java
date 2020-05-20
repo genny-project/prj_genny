@@ -291,7 +291,7 @@ public class AdamTest {
 			fullpath = treeWalk.getPathString(); // .substring(realmFilter.length()+1); // get rid of
 													// realm+"-new/sublayouts/"
 			Path p = Paths.get(fullpath);
-			if (((fullpath.endsWith(".drl") || (fullpath.endsWith(".drl"))) && (!p.toString().contains("XXX")))) {
+			if (((fullpath.endsWith(".bpmn") || (fullpath.endsWith(".drl"))) && (!p.toString().contains("XXX")))) {
 
 				if (fullpath.equals("rules/rulesCurrent/shared/RULEGROUPS/EventProcessing/LOGOUT_EVENT.drl")) {
 					log.info("logout rule detected!");
