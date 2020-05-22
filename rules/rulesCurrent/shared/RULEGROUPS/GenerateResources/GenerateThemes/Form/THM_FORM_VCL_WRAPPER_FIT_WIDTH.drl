@@ -24,29 +24,22 @@ import life.genny.models.Theme;
 
 
 
-rule "THM_FORM_VCL_INPUT_GENNY"
+rule "THM_FORM_VCL_WRAPPER_FIT_WIDTH"
    ruleflow-group 'GenerateThemes'
     no-loop true
     
     when
-      not  Theme (code == "THM_FORM_VCL_INPUT_GENNY")
+      not  Theme (code == "THM_FORM_VCL_WRAPPER_FIT_WIDTH")
       serviceToken : GennyToken( code == "PER_SERVICE")
       
     then
     
-     	System.out.println("   Generates THM_FORM_VCL_INPUT_GENNY Rule ");
+     	System.out.println("   Generates THM_FORM_VCL_WRAPPER_FIT_WIDTH Rule ");
  
-		Theme theme = Theme.builder("THM_FORM_VCL_INPUT_GENNY")
+		Theme theme = Theme.builder("THM_FORM_VCL_WRAPPER_FIT_WIDTH")
 										.addAttribute()
-											/* .borderBottomWidth(1)
-											.borderColor("#ddd")
-											.borderStyle("solid") */
-											.placeholderColor("#888")
+											.alignSelf("flex-start")
 										.end()
-										.addAttribute(ThemeAttributeType.PRI_CONTENT_HOVER).borderColor("#aaa").end()
-										/* .addAttribute(ThemeAttributeType.PRI_CONTENT_ACTIVE).borderColor("green").end() */
-										.addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).borderColor("red").end()
-										.addAttribute().end()
 									.build();
                         
 		theme.setRealm(serviceToken.getRealm());

@@ -34,11 +34,18 @@ rule "THM_FORM_VCL_WRAPPER_GENNY"
       
     then
     
-     	System.out.println("   Generate THM_FORM_VCL_WRAPPER_GENNY Rule ");
+     	System.out.println("   Generates THM_FORM_VCL_WRAPPER_GENNY Rule ");
  
 		Theme theme = Theme.builder("THM_FORM_VCL_WRAPPER_GENNY")
 										.addAttribute()
 											.margin(10)
+											/* .borderRadius(4) */
+											/* .borderWidth(1) */
+											/* .borderColor("#888") */
+											/* .borderStyle("solid") */
+											/* .paddingLeft(16) */
+											/* .paddingRight(12) */
+											/* .paddingY(8) */
 										.end()
 									.build();
                         
