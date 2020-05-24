@@ -288,14 +288,14 @@ public class AdamTest {
 		log.info("All threads finished after: " + totalProcessingTime + " milliseconds");
 		aggregatedMessages.setToken(userToken.getToken());
 		QDataAskMessage[] asks = aggregatedMessages.getAsks();
-		aggregatedMessages.setAsks(null);
+		//aggregatedMessages.setAsks(null);
 		
 		if (cache) {
-			String json = JsonUtils.toJson(aggregatedMessages);
-			VertxUtils.writeMsg("webcmds",json );
+			//String json = JsonUtils.toJson(aggregatedMessages);
+			VertxUtils.writeMsg("webcmds",aggregatedMessages );
 			for (QDataAskMessage askMsg : asks) {
 				askMsg.setToken(userToken.getToken());
-				VertxUtils.writeMsg("webcmds", JsonUtils.toJson(askMsg));
+				VertxUtils.writeMsg("webcmds", askMsg);
 			}
 		}
 		/* show tab-view first */
