@@ -43,6 +43,7 @@ import life.genny.qwanda.message.QBaseMSGAttachment;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QBaseMSGAttachment.AttachmentType;
+import life.genny.qwanda.message.QCmdMessage;
 import life.genny.qwanda.validation.Validation;
 import life.genny.qwanda.validation.ValidationList;
 import life.genny.qwandautils.GennySettings;
@@ -104,6 +105,12 @@ public class JournalTest extends GennyJbpmBaseTest {
 		String pdfUrl = PDFHelper.getDownloadablePdfLinkForHtml(journalTemplate, contextMap);
 
 		System.out.println("Journal Pdf URL :: " + pdfUrl);
+		
+		QCmdMessage cmdMsg = new QCmdMessage("DOWNLOAD_FILE",pdfUrl);
+		cmdMsg.setToken(beUtils.getGennyToken().getToken());
+		String json = JsonUtils.toJson(cmdMsg);
+		VertxUtils.writeMsg("webcmds", JsonUtils.toJson((json)));
+
 
 	}
 
