@@ -52,7 +52,8 @@ rule "FRM_DETAIL_VIEW"
 										.build();
 
 			frame.setRealm(serviceToken.getRealm());
+			FrameUtils2.toMessage(frame, serviceToken);
 			insert (frame);
 			/* Process and save to cache */
-			/*FrameUtils2.toMessage(frame, serviceToken);*/
+		
 	end
