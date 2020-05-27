@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import io.vavr.Tuple;
@@ -113,9 +114,13 @@ public class Frame2 extends BaseEntity {
 		
 		public Builder addTheme(final String themeCode, ThemeAttributeType attributeCode, String property, Object value) {
 			JSONObject keyValue = new JSONObject();
-			
-			keyValue.put(property, value);
-			
+
+			try {
+				keyValue.put(property, value);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+
 			Tuple4<String, ThemeAttributeType, JSONObject, Double> theme = Tuple.of(themeCode, attributeCode, keyValue,
 					themeWeight);
 			themeObjects.add(theme);
@@ -125,8 +130,13 @@ public class Frame2 extends BaseEntity {
 
 		public Builder addTheme(final String themeCode) {
 			ThemeAttributeType codeOnly = ThemeAttributeType.codeOnly;
-			Tuple4<String, ThemeAttributeType, JSONObject, Double> theme = Tuple.of(themeCode, codeOnly, new JSONObject("{\"codeOnly\":true}"),
-					themeWeight);
+			Tuple4<String, ThemeAttributeType, JSONObject, Double> theme = null;
+			try {
+				theme = Tuple.of(themeCode, codeOnly, new JSONObject("{\"codeOnly\":true}"),
+						themeWeight);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 			themeObjects.add(theme);
 			themeWeight = themeWeight - 1.0;
 			return this;
