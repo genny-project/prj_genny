@@ -174,7 +174,7 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 		KieBase kieBase = RulesLoader.getKieBaseCache().get(realm);
 		kieSession = (StatefulKnowledgeSession) kieBase.newKieSession(ksconf, env);
 
-		int sessionId = kieSession.getId();
+		long sessionId = kieSession.getIdentifier();
 		System.out.println("Session id = " + sessionId);
 
 		if (debug) {
