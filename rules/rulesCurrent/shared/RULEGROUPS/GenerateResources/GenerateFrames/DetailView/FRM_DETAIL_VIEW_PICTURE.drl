@@ -40,7 +40,6 @@ rule "FRM_DETAIL_VIEW_PICTURE"
 						.addTheme("THM_PADDING_RIGHT_10", ThemePosition.WRAPPER, serviceToken).end()
 						.question("QUE_DETAIL_VIEW_IMAGE_GRP")
 						.targetAlias("PER_USER1")
-							/*.addTheme(THM_DETAIL_VIEW_INPUT_FIELD).vcl(VisualControlType.INPUT_FIELD).dataType(dtt_image).end()*/
 							.addTheme("THM_FORM_IMAGE_RESTRICTIONS",serviceToken).vcl(VisualControlType.VCL_INPUT).end()
 							.addTheme("THM_DETAIL_VIEW_IMAGE_SIZE",serviceToken).vcl(VisualControlType.INPUT_SELECTED).end()
 							/* NEW THEMES */
@@ -53,7 +52,8 @@ rule "FRM_DETAIL_VIEW_PICTURE"
 						.build();
 
 			frame.setRealm(serviceToken.getRealm());
+			FrameUtils2.toMessage(frame, serviceToken);
 			insert (frame);
 			/* Process and save to cache */
-			/*FrameUtils2.toMessage(frame, serviceToken);*/
+			/**/
 	end
