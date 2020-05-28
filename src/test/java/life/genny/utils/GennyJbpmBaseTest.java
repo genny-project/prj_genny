@@ -162,7 +162,7 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 		}
 		String testRulesDir = baseRulesDir + rulesDir;
 
-		List<Tuple3<String, String, String>> rules = RulesLoader.processFileRealms("genny", testRulesDir, realms);
+		List<Tuple3<String, String, String>> rules = RulesLoader.processFileRealmsFromFiles("genny", testRulesDir, realms);
 		Integer rulesCount = RulesLoader.setupKieRules(realm, rules);
 		System.out.println("Rules Count for " + realm + ":" + testRulesDir + " = " + rulesCount);
 
@@ -174,7 +174,7 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 		KieBase kieBase = RulesLoader.getKieBaseCache().get(realm);
 		kieSession = (StatefulKnowledgeSession) kieBase.newKieSession(ksconf, env);
 
-		int sessionId = kieSession.getId();
+		long sessionId = kieSession.getIdentifier();
 		System.out.println("Session id = " + sessionId);
 
 		if (debug) {

@@ -1,29 +1,17 @@
 package life.genny.utils;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.enterprise.context.ApplicationScoped;
 import java.lang.invoke.MethodHandles;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.logging.log4j.Logger;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
-
 import java.io.IOException;
-
-import javax.inject.Inject;
-
-import life.genny.channel.DistMap;
 
 import life.genny.eventbus.WildflyCacheInterface;
 import life.genny.models.GennyToken;
-import life.genny.qwanda.service.Hazel;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
 import io.vertx.core.json.JsonObject;
@@ -98,16 +86,12 @@ public class JunitCache implements WildflyCacheInterface {
 				e.printStackTrace();
 			}
 			Object ret = JsonUtils.fromJson(askMsgs2Str, Object.class);
-
-			return ret;
 		}
-
 	}
 
 	@Override
 	public void clear(String realm) {
-		inDb.getMapBaseEntitys(realm).clear();
-
+//		inDb.getMapBaseEntitys(realm).clear();
 	}
 
 }
