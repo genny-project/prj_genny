@@ -62,12 +62,12 @@ rule "HELPER_LNK_INDUSTRY"
 		
 		beUtils.saveAnswer(occupationAnswer);
 
-		/*BaseEntity baseEntity = beUtils.updateBaseEntity(targetCode,occupationAnswer);
+		BaseEntity baseEntity = beUtils.updateBaseEntity(targetCode,occupationAnswer);
 		beUtils.updateBaseEntity(targetCode,occupationAnswer);
 		System.out.println("baseEntity1  :: " + baseEntity);
 		
 		insert(occupationAnswer);
-		System.out.println("occupationAnswer2  :: " + occupationAnswer);*/
+		System.out.println("occupationAnswer2  :: " + occupationAnswer);
 		
 		/* Update the baseenetity in frontend */
 		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
