@@ -65,10 +65,10 @@ rule "HELPER_LNK_HOST_COMPANY"
 		answersToSave.add(supervisorAnswer);
 
 		BaseEntity baseEntity = beUtils.updateBaseEntity(targetCode,repAnswer);
-		beUtils.updateBaseEntity(targetCode,repAnswer);
+		/*beUtils.updateBaseEntity(targetCode,repAnswer);*/
 
 		baseEntity = beUtils.updateBaseEntity(targetCode,supervisorAnswer);
-		beUtils.updateBaseEntity(targetCode,supervisorAnswer);
+		/*beUtils.updateBaseEntity(targetCode,supervisorAnswer);*/
 
 		insert(repAnswer);
 		insert(supervisorAnswer);
