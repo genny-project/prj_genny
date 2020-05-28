@@ -550,12 +550,6 @@
 			<version>${version.keycloak}</version>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.keycloak</groupId>
-			<artifactId>keycloak-admin-client</artifactId>
-			<version>${version.keycloak}</version>
-			<scope>provided</scope>
-		</dependency>
 		<!-- <dependency> <groupId>org.apache.activemq.tooling</groupId> <artifactId>activemq-junit</artifactId> 
 			<version>${activemq-junit-version}</version> <scope>test</scope> </dependency> 
 			<dependency> <groupId>org.apache.activemq</groupId> <artifactId>activemq-broker</artifactId> 

@@ -27,6 +27,7 @@ import org.jbpm.services.task.utils.TaskFluent;
 import org.jbpm.services.task.wih.NonManagedLocalHTWorkItemHandler;
 import org.jbpm.workflow.instance.WorkflowProcessInstance;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -284,9 +285,13 @@ public class JasperTest {
       	
         
         JSONObject json = new JSONObject();
-        json.put("targetEntity", "APP_TEST_APPLICATION1");
-        json.put("targetStatus", "OFFERED");
-      
+        try {
+            json.put("targetEntity", "APP_TEST_APPLICATION1");
+            json.put("targetStatus", "OFFERED");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
 
 		OutputParam output = new OutputParam("SIGNAL", "START_MOVE_FORWARD", json.toString());
       
