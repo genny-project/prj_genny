@@ -59,13 +59,15 @@ rule "HELPER_LNK_INDUSTRY"
 		
 		Answer occupationAnswer = new Answer(sourceCode, targetCode, "LNK_OCCUPATION", " ",false,true);
 		System.out.println("occupationAnswer1  :: " + occupationAnswer);
+		
+		beUtils.saveAnswer(occupationAnswer);
 
-		BaseEntity baseEntity = beUtils.updateBaseEntity(targetCode,occupationAnswer);
-		/*beUtils.updateBaseEntity(targetCode,occupationAnswer);*/
+		/*BaseEntity baseEntity = beUtils.updateBaseEntity(targetCode,occupationAnswer);
+		beUtils.updateBaseEntity(targetCode,occupationAnswer);
 		System.out.println("baseEntity1  :: " + baseEntity);
 		
 		insert(occupationAnswer);
-		System.out.println("occupationAnswer2  :: " + occupationAnswer);
+		System.out.println("occupationAnswer2  :: " + occupationAnswer);*/
 		
 		/* Update the baseenetity in frontend */
 		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
