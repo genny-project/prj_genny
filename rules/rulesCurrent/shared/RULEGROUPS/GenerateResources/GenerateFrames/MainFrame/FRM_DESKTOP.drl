@@ -32,11 +32,7 @@ rule "FRM_DESKTOP"
     when
       not  Frame3(code == "FRM_DESKTOP")
       serviceToken : GennyToken( code == "PER_SERVICE")
-      /*FRM_HEADER : Frame3 ( code == "FRM_HEADER" )
-      FRM_SIDEBAR : Frame3 ( code == "FRM_SIDEBAR" )
-      FRM_TABS : Frame3 ( code == "FRM_TABS" )
-      FRM_FOOTER : Frame3 ( code == "FRM_FOOTER" )*/
-      FRM_APP : Frame3 ( code == "FRM_APP" )
+       FRM_APP : Frame3 ( code == "FRM_APP" )
 
 
     then
