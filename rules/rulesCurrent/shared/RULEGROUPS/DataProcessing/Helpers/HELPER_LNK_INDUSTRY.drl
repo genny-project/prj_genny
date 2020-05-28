@@ -40,38 +40,32 @@ rule "HELPER_LNK_INDUSTRY"
 
 	then
 		System.out.println("HELPER_LNK_INDUSTRY fired");
-		System.out.println("Did you actually update??");
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing Helper INDUSTRY SELECTION Answer/Data : " + answer );
 		
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		System.out.println("sourceCode :: " + sourceCode);
-		System.out.println("Did you actually update??");
 		
 		String targetCode = answer.getTargetCode();
 		System.out.println("targetCode :: " + targetCode);
-		System.out.println("Did you actually update??");
 		
 		String industryCode = answer.getValue();
 		System.out.println("industryCode :: " + industryCode);
-		System.out.println("Did you actually update??");
 		
 		String code = industryCode.replace("\"", "").replace("[", "").replace("]", "");
 		System.out.println("code  :: " + code);
-		System.out.println("Did you actually update??");
 
 		answersToSave.add(answer);
 		
 		
 		Answer occupationAnswer = new Answer(sourceCode, targetCode, "LNK_OCCUPATION", " ",false,true);
-		System.out.println("occupationAnswer  :: " + occupationAnswer);
-		System.out.println("Did you actually update??");
+		System.out.println("occupationAnswer1  :: " + occupationAnswer);
 
 		BaseEntity baseEntity = beUtils.updateBaseEntity(targetCode,occupationAnswer);
-		beUtils.updateBaseEntity(targetCode,occupationAnswer);
-		System.out.println("baseEntity  :: " + baseEntity);
+		/*beUtils.updateBaseEntity(targetCode,occupationAnswer);*/
+		System.out.println("baseEntity1  :: " + baseEntity);
 		
 		insert(occupationAnswer);
-		System.out.println("occupationAnswer  :: " + occupationAnswer);
+		System.out.println("occupationAnswer2  :: " + occupationAnswer);
 		
 		/* Update the baseenetity in frontend */
 		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
