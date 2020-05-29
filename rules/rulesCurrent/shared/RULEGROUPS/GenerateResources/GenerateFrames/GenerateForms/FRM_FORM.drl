@@ -38,10 +38,10 @@ rule "FRM_FORM"
       not  Frame3(code == "FRM_FORM")
 
       serviceToken : GennyToken( code == "PER_SERVICE")
-
+ 
     then
 
-        System.out.println("   Generate FRM_FORM  RULE TEST (PRJ_GENNY)" + serviceToken.getUserCode());
+        System.out.println("   Generate FRM_FORM  RULE TEST (PRJ_INTERNMATCH)" + serviceToken.getUserCode());
 
 				Validation validation = new Validation("VLD_ANYTHING", "Anything", ".*");
 				Validation validationImage = new Validation("VLD_IMAGE_URL", "Text", ".*");
@@ -108,18 +108,18 @@ rule "FRM_FORM"
 				DataType eventDataType = new DataType("DTT_EVENT",eventValidationList,"Button", "");
 				
 				/* new dataTypes */
-				DataType textDataType = new DataType("DTT_TEXT",textValidationList,"Datatype", "");
-				DataType emailDataType = new DataType("DTT_EMAIL",emailValidationList,"Datatype", "");
-				DataType mobileDataType = new DataType("DTT_MOBILE",mobileValidationList,"Datatype", "");
-				DataType addressDataType = new DataType("DTT_ADDRESS",addressValidationList,"Datatype", "");
-				DataType textareaDataType = new DataType("DTT_TEXTAREA",textareaValidationList,"Datatype", "");
-				DataType abnNumberDataType = new DataType("DTT_ABN_NUMBER",abnNumberValidationList,"Datatype", "");
-				DataType landlineDataType = new DataType("DTT_LANDLINE",landlineValidationList,"Datatype", "");
-				DataType integerDataType = new DataType("DTT_INTEGER",integerValidationList,"Datatype", "");
-				DataType dropdownDataType = new DataType("DTT_INDUSTRY",dropdownValidationList,"Datatype", "");
-				DataType dropdownMultipleDataType = new DataType("DTT_OCCUPATION",dropdownMultipleValidationList,"Datatype", "");
-				DataType tagDataType = new DataType("DTT_TAG",tagValidationList,"Datatype", "");
-				DataType dateTimeDataType = new DataType("DTT_DATETIME",dateTimeValidationList,"Datatype", "");
+				DataType textDataType = new DataType("DTT_TEXT",textValidationList,"text", "");
+				DataType emailDataType = new DataType("DTT_EMAIL",emailValidationList,"email", "");
+				DataType mobileDataType = new DataType("DTT_MOBILE",mobileValidationList,"mobile", "");
+				DataType addressDataType = new DataType("DTT_ADDRESS",addressValidationList,"address", "");
+				DataType textareaDataType = new DataType("DTT_TEXTAREA",textareaValidationList,"textarea", "");
+				DataType abnNumberDataType = new DataType("DTT_ABN_NUMBER",abnNumberValidationList,"abn number", "");
+				DataType landlineDataType = new DataType("DTT_LANDLINE",landlineValidationList,"landline", "");
+				DataType integerDataType = new DataType("DTT_INTEGER",integerValidationList,"java.lang.integer", "");
+				DataType dropdownDataType = new DataType("DTT_INDUSTRY",dropdownValidationList,"dropdown", "");
+				DataType dropdownMultipleDataType = new DataType("DTT_OCCUPATION",dropdownMultipleValidationList,"dropdownmultiple", "");
+				DataType tagDataType = new DataType("DTT_TAG",tagValidationList,"tag", "");
+				DataType dateTimeDataType = new DataType("DTT_DATETIME",dateTimeValidationList,"java.time.localdate", "");
 				
 				String apiUrl = GennySettings.qwandaServiceUrl + "/service/forms";
 				System.out.println("QwandaServiceUrl is "+apiUrl);
@@ -142,7 +142,9 @@ rule "FRM_FORM"
 				System.out.println("Form Codes=" + questionCodes);
 
 				for (String questionCode : questionCodes){
-
+					if (questionCode.contains("JOURNAL_W")) {
+						continue;
+					}
 					Frame3 frame2 = Frame3.builder("FRM_CONTENT_" +  questionCode)
 								.addTheme("THM_FORM_ATTRIBUTES_GENNY", serviceToken).end()
 								.question(questionCode)
@@ -159,7 +161,7 @@ rule "FRM_FORM"
 									.addTheme("THM_FORM_BEHAVIOUR_GENNY", serviceToken).weight(3.0).end()
 									.addTheme("THM_FORM_GROUP_LABEL_GENNY", serviceToken).vcl(VisualControlType.GROUP_LABEL).weight(3.0).end()
 									.addTheme("THM_BACKGROUND_NONE", serviceToken).weight(3.0).end()
-									.addTheme("THM_FORM_GROUP_WRAPPER_GENNY", serviceToken).vcl(VisualControlType.GROUP_WRAPPER).weight(3.0).end()
+									.addTheme("THM_FORM_GROUP_WRAPPER_GENNY", serviceToken).vcl(VisualControlType.GROUP_WRAPPER).weight(2.0).end()
 									.addTheme("THM_PROJECT_COLOR_SURFACE", serviceToken).vcl(VisualControlType.INPUT_ITEM_WRAPPER).end()
 									.addTheme("THM_PROFILE_IMAGE_FORM", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_SELECTED).end()
 									.addTheme("THM_PROFILE_IMAGE_PLACEHOLDER_FORM", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_PLACEHOLDER).end()
