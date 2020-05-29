@@ -36,8 +36,6 @@ rule "FRM_TAB_CONTENT"
     when
       not  Frame3(code == "FRM_TAB_CONTENT")
       serviceToken : GennyToken( code == "PER_SERVICE")
-      /* FRM_BUCKET : Frame3 ( code == "FRM_BUCKET" ) */
-  /*    FRM_DETAIL_VIEW : Frame3 ( code == "FRM_DETAIL_VIEW" )
       FRM_TABLE_VIEW : Frame3 ( code == "FRM_TABLE_VIEW" )*/
 
 
@@ -49,8 +47,6 @@ rule "FRM_TAB_CONTENT"
 										.addTheme("THM_JUSTIFY_CONTENT_FLEX_START", serviceToken).end()
 										.addTheme("THM_SCROLL_VERTICAL", serviceToken).end()
 										/* comment out to see the detail or table view */
-									  /* .addFrame(FRM_DETAIL_VIEW)  */
-									  /* .addFrame(FRM_TABLE_VIEW)  */
 										.build();
 
 			frame.setRealm(serviceToken.getRealm());
