@@ -34,7 +34,7 @@ rule "FRM_TABLE_APP"
       serviceToken : GennyToken( code == "PER_SERVICE")
       FRM_HEADER : Frame3 ( code == "FRM_HEADER" )
       FRM_SIDEBAR : Frame3 ( code == "FRM_SIDEBAR" )
-      FRM_TABLE : Frame3 ( code == "FRM_TABLE" )
+      FRM_TABLE_VIEW : Frame3 ( code == "FRM_TABLE" )
       FRM_FOOTER : Frame3 ( code == "FRM_FOOTER" )
       
     then
@@ -44,7 +44,7 @@ rule "FRM_TABLE_APP"
                                 .addTheme("THM_PROJECT", ThemePosition.FRAME, serviceToken).end()
                                 .addFrame(FRM_HEADER, FramePosition.NORTH).end()
                                 .addFrame(FRM_SIDEBAR, FramePosition.WEST).end()
-                               .addFrame(FRM_TABLE, FramePosition.CENTRE).end()
+                               .addFrame(FRM_TABLE_VIEW, FramePosition.CENTRE).end()
                                 .addFrame(FRM_FOOTER, FramePosition.SOUTH).end() 
                                 .build();
     
