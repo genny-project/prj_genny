@@ -46,8 +46,9 @@ rule "FRM_QUE_TAB_VIEW"
 										.addFrame(FRM_TAB_CONTENT, FramePosition.CENTRE).end().build();
 
 			frame.setRealm(serviceToken.getRealm());
+				/* Process and save to cache */
+			FrameUtils2.toMessage(frame, serviceToken);
 			insert (frame);
 
-			/* Process and save to cache */
-			FrameUtils2.toMessage(frame, serviceToken);
+		
 end
