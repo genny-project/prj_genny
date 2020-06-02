@@ -46,6 +46,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_43" isCollection="false" structureRef="life.genny.qwandautils.JsonUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_35" isCollection="false" structureRef="life.genny.utils.RulesUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_61" isCollection="false" structureRef="life.genny.utils.FrameUtils2"/>
+  <bpmn2:itemDefinition id="ItemDefinition_42" isCollection="false" structureRef="life.genny.qwanda.Answer"/>
   <bpmn2:signal id="Signal_1" name="initProject"/>
   <bpmn2:process id="init_project" drools:packageName="life.genny.jbpm" name="Initialise Project" isExecutable="true">
     <bpmn2:extensionElements>
@@ -86,6 +87,7 @@
       <drools:import name="life.genny.qwandautils.JsonUtils"/>
       <drools:import name="life.genny.utils.RulesUtils"/>
       <drools:import name="life.genny.utils.FrameUtils2"/>
+      <drools:import name="life.genny.qwanda.Answer"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_1" name="message"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_8" name="serviceToken"/>
@@ -623,7 +625,7 @@ VertxUtils.answerBuffer = new ArrayList&lt;Answer>();</bpmn2:script>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_3" bpmnElement="ScriptTask_3" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="774.0" y="219.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_14">
           <dc:Bounds height="22.0" width="110.0" x="774.0" y="233.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -708,13 +710,13 @@ VertxUtils.answerBuffer = new ArrayList&lt;Answer>();</bpmn2:script>
         <di:waypoint xsi:type="dc:Point" x="730.0" y="245.0"/>
         <di:waypoint xsi:type="dc:Point" x="752.0" y="244.0"/>
         <di:waypoint xsi:type="dc:Point" x="774.0" y="244.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_19"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_7" bpmnElement="SequenceFlow_7" sourceElement="BPMNShape_ScriptTask_3" targetElement="BPMNShape_Task_4">
         <di:waypoint xsi:type="dc:Point" x="884.0" y="244.0"/>
         <di:waypoint xsi:type="dc:Point" x="902.0" y="245.0"/>
         <di:waypoint xsi:type="dc:Point" x="920.0" y="245.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_25"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
