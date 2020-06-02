@@ -39,14 +39,15 @@ rule "FRM_DETAIL_VIEW_CARD"
 		/* Sending Ask with questioncode  QUE_DETAIL_VIEW_TOP_SUMMARY_GRP to display */
 		
  	  	Frame3 frame = Frame3.builder("FRM_DETAIL_VIEW_CARD")
-						.question("QUE_DETAIL_VIEW_SUMMARY_GRP")
+ 						.question("QUE_DETAIL_VIEW_SUMMARY_GRP")
 						.targetAlias("PER_USER1")
 							.addTheme("THM_LABEL",serviceToken).vcl(VisualControlType.VCL_LABEL).end()
 							.addTheme("THM_DETAIL_VIEW_CARD_CONTENT",serviceToken).vcl(VisualControlType.GROUP_WRAPPER).end()
 							.addTheme("THM_DETAIL_VIEW_VCL_WRAPPER",serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
 							/* new themes */
 							.addTheme("THM_DETAIL_VIEW_BEHAVIOUR",serviceToken).vcl(VisualControlType.GROUP).end()
-							.addTheme("THM_PROJECT_COLOR_SURFACE",serviceToken).vcl(VisualControlType.INPUT_ITEM_WRAPPER).end()
+							/* .addTheme("THM_PROJECT_COLOR_SURFACE",serviceToken).vcl(VisualControlType.INPUT_ITEM_WRAPPER).end() */ /* uncomment this(required) */
+							.addTheme("THM_PROJECT_COLOR_PRIMARY",serviceToken).vcl(VisualControlType.INPUT_ITEM_WRAPPER).end() /* comment this (test) */
 						.end()
 						.build();
 
