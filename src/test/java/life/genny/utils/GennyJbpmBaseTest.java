@@ -503,7 +503,7 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 
 			// check if user token already exists
 			String userCode = "PER_"+QwandaUtils.getNormalisedUsername(username);
-			JsonObject cacheJson = VertxUtils.readCachedJson(realm, "TOKEN:"+userCode,token);
+ 			JsonObject cacheJson = VertxUtils.readCachedJson(realm, "TOKEN:"+userCode,token);
 			String status = cacheJson.getString("status");
 				
 			if ("ok".equals(status)) {

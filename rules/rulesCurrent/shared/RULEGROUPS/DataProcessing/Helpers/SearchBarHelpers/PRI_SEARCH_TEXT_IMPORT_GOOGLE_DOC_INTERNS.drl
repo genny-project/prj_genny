@@ -159,7 +159,7 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_INTERNS"
 			answers.add(ifirstname);
 			Answer iemail = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_EMAIL",kv.get("PRI_INTERN_EMAIL"));
 			answers.add(iemail);
-			Answer isid = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_STUDENT_ID",kv.get("PRI_INTERN_STUDENT_ID"));
+			Answer isid = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_STUDENT_ID",kv.get("PRI_STUDENT_ID"));
 			answers.add(isid);
 			Answer iname = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_INTERN_NAME",(ifirstname.getValue()+" "+ilastname.getValue()).trim());
 			answers.add(iname);

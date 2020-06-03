@@ -160,7 +160,7 @@ public class ImportTest {
 	protected static GennyToken newUserToken;
 	protected static GennyToken serviceToken;
 
-	@Test
+//	@Test
 	public void priStatusTest()
 	{
 		System.out.println("PriStatus test");
@@ -263,7 +263,7 @@ public class ImportTest {
 	
 
 
-	//@Test
+	@Test
 	public void importTest()
 	{
 		System.out.println("Import test");
@@ -295,22 +295,159 @@ public class ImportTest {
 		beUtils.setServiceToken(serviceToken);
 
 		
-		String searchBarValue = "import:" + "https://internmatch-interns.gada.io";
+		String searchBarValue = "googleid:internships:1tEBSp-l-nKSlgkgWY7pI73HJhN63LoiyHHWY8wXsJ3U:1 Apr 20 - ihBC B1";
 		Answer answer = new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_SEARCH_BAR", searchBarValue);
 
 		/* Now import a google doc xls file and generate a List of BaseEntityImports */
-		String gennyUrl = null;
-		Integer start = 0;
-		Integer finish = 10000;
+		String googleDocId = null;
+		String sheetId = "Sheet1"; /* default */
+		Integer start=0;
+		Integer finish=10000;
 		String[] split = answer.getValue().split(":");
-
-		if (split.length == 2) {
-			gennyUrl = split[1];
-		} 
-
-		gennyUrl = gennyUrl.trim();
 		
-		System.out.println("gennyUrl = "+gennyUrl);
+		if (split.length == 3) {
+			googleDocId = split[2];
+		} else if (split.length == 4) {
+			googleDocId = split[2];
+			sheetId = split[3].trim();
+		}
+		if  (split.length == 6) {
+			googleDocId = split[2];
+			sheetId = split[3].trim();
+			start = Integer.parseInt(split[4]);
+			finish = Integer.parseInt(split[5]);
+		}
+
+	googleDocId = googleDocId.trim();
+
+Map<String,String> fieldMapping = new HashMap<String,String>();
+fieldMapping.put("Education Provider", "PRI_ASSOC_EP");
+fieldMapping.put("Student ID", "PRI_STUDENT_ID");
+fieldMapping.put("Student First Name", "PRI_IMPORT_FIRSTNAME");
+fieldMapping.put("Last Name", "PRI_IMPORT_LASTNAME");
+fieldMapping.put("Student Email", "PRI_EMAIL");
+fieldMapping.put("Mobile", "PRI_MOBILE");
+fieldMapping.put("PRI_BATCH_CODE", "PRI_BATCH_CODE");
+fieldMapping.put("Gender", "PRI_GENDER");
+fieldMapping.put("Address", "PRI_IMPORT_FULL_ADDRESS");
+fieldMapping.put("Industry", "PRI_INDUSTRY");
+fieldMapping.put("Current Course", "PRI_CURRENT_COURSE");
+fieldMapping.put("Specialisation", "PRI_SPECIALISATION");
+fieldMapping.put("Company Trading Name", "PRI_ASSOC_HOST_COMPANY");
+fieldMapping.put("ABN", "PRI_ASSOC_HOST_COMPANY");
+fieldMapping.put("Host Company Supervisor", "PRI_ASSOC_SUPERVISOR");
+fieldMapping.put("Host Company Rep", "PRI_ASSOC_HCR");
+fieldMapping.put("Host Company Rep Email", "PRI_ASSOC_HOST_COMPANY_EMAIL");
+
+fieldMapping.put("UNIQUE_KEY_FIELD", "Student Email".toLowerCase());
+fieldMapping.put("NAME_KEY_FIELD", "Student Email".toLowerCase());
+fieldMapping.put("PREFIX", "PER_");
+				
+ List<BaseEntityImport> beImports = ImportUtils.importGoogleDoc(googleDocId, sheetId,fieldMapping);
+ System.out.println("Importing Rule : "+beImports.size()+" items");
+ /* now generate the baseentity and send through all the answers */
+ for (BaseEntityImport beImport : beImports) {
+ 	/* check if already there */
+
+ 	BaseEntity be = beUtils.getBaseEntityByCode(beImport.getCode());
+ 	if (be == null) {
+	 	be = beUtils.create(beImport.getCode(), beImport.getName());
+	 } 
+	 List<Answer> answers = new ArrayList<Answer>();
+     Integer count=0;
+	 
+	System.out.println("Import Intern:"+beImport.getCode()+":"+beImport.getName());
+
+	Map<String,String> kv = new HashMap<String,String>();
+	 
+	 for (Tuple2<String,String> attributeCodeValue : beImport.getAttributeValuePairList()) {
+	 	String value = StringUtils.isBlank(attributeCodeValue._2)?"":attributeCodeValue._2; 
+	 	value = value.trim();
+	 	if (be.getCode().equals("PRI_GENDER")) {
+	 		if ("X".equals(value) || (StringUtils.isBlank(value))) {
+	 			/* let the gender lookup do it */
+	 		} else {
+	 			value = value.toUpperCase();
+	 			kv.put(attributeCodeValue._1,value);
+				Answer answer2 = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),attributeCodeValue._1,value);
+				answers.add(answer2);
+				ImportUtils.processAttribute(beUtils,be.getCode(),attributeCodeValue,"PRI_ASSOC_EP","PRI_NAME","CPY_","LNK_EDU_PROVIDER",answers);
+	 			
+	 		}
+	 	} else {
+	 		kv.put(attributeCodeValue._1,value);
+			Answer answer2 = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),attributeCodeValue._1,value);
+			answers.add(answer2);
+			ImportUtils.processAttribute(beUtils,be.getCode(),attributeCodeValue,"PRI_ASSOC_EP","PRI_NAME","CPY_","LNK_EDU_PROVIDER",answers);
+		}
+
+	 }
+	Answer isPhone = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IS_PHONE",kv.get("PRI_MOBILE"));
+	answers.add(isPhone);
+	String gender = kv.get("PRI_GENDER");
+	gender = gender.toUpperCase();
+	gender = "[\""+gender+"\"]";
+	Answer isGenderSelect = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"LNK_GENDER_SELECT",gender);
+	answers.add(isGenderSelect);
+
+	Answer isIntern = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IS_INTERN","true");
+	answers.add(isIntern);
+	Answer isImported = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IMPORTED","true");
+	answers.add(isImported);
+	Answer hasLoggedIn = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_HAS_LOGGED_IN","false");
+	answers.add(hasLoggedIn);
+	Answer status = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_STATUS","AVAILABLE");
+	answers.add(status);
+	Answer disabled = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_DISABLED","FALSE");
+	answers.add(disabled);
+	
+	Answer statusColor = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_STATUS_COLOR","#5cb85c");
+	answers.add(statusColor);
+	Answer ilastname = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_LASTNAME",kv.get("PRI_IMPORT_LASTNAME"));
+	answers.add(ilastname);
+	Answer ifirstname = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_FIRSTNAME",kv.get("PRI_IMPORT_FIRSTNAME"));
+	answers.add(ifirstname);
+	Answer iemail = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_EMAIL",kv.get("PRI_INTERN_EMAIL"));
+	answers.add(iemail);
+	Answer isid = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_STUDENT_ID",kv.get("PRI_STUDENT_ID"));
+	answers.add(isid);
+	Answer iname = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_INTERN_NAME",(ifirstname.getValue()+" "+ilastname.getValue()).trim());
+	answers.add(iname);
+	Answer accepted = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_INTERN_ACCEPTED","true");
+	answers.add(accepted);
+	
+
+	QDataAnswerMessage msg = new QDataAnswerMessage(answers);
+	System.out.println("created QDataAnswerMessage  for "+beImport.getCode());
+	msg.setToken(beUtils.getGennyToken().getToken());
+	msg.setAliasCode("IMPORT");
+	/* creating new user in keycloak */
+	/* ASSUME FIRSTNAME, LASTNAME, EMAIL ARE GOOD!!! TODO */
+	try {
+		String email = kv.get("PRI_EMAIL").trim();
+		String firstname = kv.get("PRI_IMPORT_FIRSTNAME").trim();
+		String lastname = kv.get("PRI_IMPORT_LASTNAME").trim();
+		String userPassword = UUID.randomUUID().toString().substring(0,10);
+		/* System.out.println(" keycloak token is "+serviceToken.getToken()); */
+		String userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(),email , firstname, lastname,  email, userPassword,"user", "user");
+		Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_UUID",userId);
+		answers.add(keycloakId);						
+	} catch (IOException e) {
+		/* keycloak exception spits the answer */
+	}
+	
+		System.out.println("inserting new intern message containing all their new attributes");
+		if ((count >=start) && (count <= finish))	
+		{			
+			insert(msg);
+		} else {
+			if (count > finish)	{
+				break;
+			}
+	}
+		count++;
+ }
+ System.out.println("Aggregated  all Answers ");
 	}
 	
 
