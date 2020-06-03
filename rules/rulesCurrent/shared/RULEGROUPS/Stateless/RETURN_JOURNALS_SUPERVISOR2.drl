@@ -53,6 +53,7 @@ rule "RETURN_JOURNALS_SUPERVISOR2"
    		LocalDateTime lastUpdated = null;
    		if (deviceBe!=null) {
    			lastUpdated = deviceBe.getValue("PRI_LAST_UPDATED",veryearly);
+   			lastUpdated = lastUpdated.minusSeconds(20); /* make sure we get them all */
    		} else {
    			lastUpdated = veryearly;
    		}
