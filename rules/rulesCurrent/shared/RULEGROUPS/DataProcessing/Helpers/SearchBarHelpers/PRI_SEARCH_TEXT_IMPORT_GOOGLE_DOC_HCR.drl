@@ -96,6 +96,7 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_HCR"
 						 continue;
 					 }
 					List<Answer> answers = new ArrayList<Answer>();
+					List<Answer> answersImmediate = new ArrayList<Answer>();
 				    Integer count=0;
 					 
 					 System.out.println("Import Host Company Rep :"+beImport.getCode()+":"+beImport.getName());
@@ -135,18 +136,18 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_HCR"
 					 }
 
 					Answer isEntity = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IS_HOST_CPY_REP","TRUE");
-					answers.add(isEntity);
+					answersImmediate.add(isEntity);
 					Answer isSupervisor = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IS_SUPERVISOR","TRUE");
-					answers.add(isSupervisor);
+					answersImmediate.add(isSupervisor);
 					Answer isImported = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_IMPORTED","TRUE");
-					answers.add(isImported);
+					answersImmediate.add(isImported);
 					Answer disabled = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_DISABLED","FALSE");
-					answers.add(disabled);
+					answersImmediate.add(disabled);
 					
 					String firstname = kv.get("PRI_FIRSTNAME");
 					String lastname = kv.get("PRI_LASTNAME");
 					Answer fullname = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_NAME",firstname.trim()+" "+lastname.trim());
-					answers.add(fullname);
+					answersImmediate.add(fullname);
 					/* creating new user in keycloak */
 					/* ASSUME FIRSTNAME, LASTNAME, EMAIL ARE GOOD!!! TODO */
 					try {
@@ -155,16 +156,16 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_HCR"
 						/*System.out.println(" keycloak token is "+serviceToken.getToken());*/
 						String userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(),email , firstname, lastname,  email, userPassword,"user", "user");
 						Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_UUID",userId);
-						answers.add(keycloakId);
+						answersImmediate.add(keycloakId);
 						String supervisorCode = "PER_"+QwandaUtils.getNormalisedUsername(email);
-						Answer uuidId = new Answer(beUtils.getGennyToken().getUserCode(),supervisorCode,"PRI_UUID",userId);
-						answers.add(uuidId);
 						Answer emailId = new Answer(beUtils.getGennyToken().getUserCode(),supervisorCode,"PRI_EMAIL",email);
-						answers.add(emailId);						
+						answersImmediate.add(emailId);						
 
 					} catch (IOException e) {
 						/* keycloak exception spits the answer */
 					}
+					beUtils.saveAnswers(answersImmediate);
+					
 					QDataAnswerMessage msg = new QDataAnswerMessage(answers);
 					System.out.println("created QDataAnswerMessage  for "+beImport.getCode()+":"+be.getName());
 					msg.setToken(beUtils.getGennyToken().getToken());
