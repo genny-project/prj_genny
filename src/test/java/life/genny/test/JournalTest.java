@@ -57,6 +57,7 @@ import life.genny.utils.FrameUtils2;
 import life.genny.utils.GennyJbpmBaseTest;
 import life.genny.utils.OutputParam;
 import life.genny.utils.RulesUtils;
+import life.genny.utils.SearchUtils;
 import life.genny.utils.SearchUtilsTest;
 import life.genny.utils.TableUtils;
 
@@ -104,9 +105,58 @@ public class JournalTest extends GennyJbpmBaseTest {
 		String pdfUrl = PDFHelper.getDownloadablePdfLinkForHtml(journalTemplate, contextMap);
 
 		System.out.println("Journal Pdf URL :: " + pdfUrl);
+		
+		System.out.println(" About to start searchBE     ::   ");
+		
+		char ch = '"';
+		
+		String linkIntern = "[" + ch + "PER_STEPHANIE_DOT_POLINAR_AT_CQUMAIL_DOT_COM" + ch + "]";
+		System.out.println("linkIntern :: " + linkIntern);
+		
+		SearchEntity searchBE = new SearchEntity("Journals", "Journals")
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
+				.addFilter("LNK_INTERN", SearchEntity.StringFilter.EQUAL, linkIntern)
+				.addColumn("PRI_JOURNAL_DATE", "Date")
+				.addColumn("PRI_JOURNAL_HOURS", "Hours")
+				.addColumn("PRI_JOURNAL_TASKS", "Tasks")
+				.addColumn("PRI_JOURNAL_LEARNING_OUTCOMES", "Outcomes")
+				.setPageStart(0).setPageSize(10000);
+				
+		System.out.println("searchBE     ::   " + searchBE);
+		
+		SearchUtils searchUtils = new SearchUtils(beUtils);
+		QDataBaseEntityMessage msg = searchUtils.fetchSearchResults(searchBE, serviceToken);
+		long totalResults = msg.getItems().length;
+		List<BaseEntity> journalList = Arrays.asList(msg.getItems());
 
 	}
 
+	//@Test
+	public void generatePdfs() {
+		System.out.println("Starting the test");
+		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		GennyToken userToken = new GennyToken("userToken", rules.getToken());
+		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+		// URL for the template
+		String journalTemplate2 = "https://raw.githubusercontent.com/genny-project/layouts/2020-05-25-journal-report-update/internmatch-new/document_templates/journal-report.html";
+		String journalTemplate = "https://raw.githubusercontent.com/genny-project/layouts/2020-05-25-journal-report-update/internmatch-new/document_templates/journal-row.html";
+		// GET dummy Journal BE or get a real JNL if in db
+		BaseEntity journal = getDummyJournal(beUtils);
+		List<BaseEntity> journals = getDummyJournals(beUtils);
+		// list of hash map
+		List<HashMap<String, Object>> contextMapList = new ArrayList<HashMap<String, Object>>();
+		// loop through jnls
+		for(BaseEntity jnl: journals) {
+			HashMap<String, Object> contextMap = new HashMap<String, Object>();
+			contextMap.put("JOURNAL", jnl);
+			contextMapList.add(contextMap);
+		}
+		String pdfUrl = PDFHelper.getDownloadablePdfLinkForHtml(journalTemplate, contextMapList);
+		System.out.println("Journal Pdf URL :: " + pdfUrl);
+	}	
+	
+	
 	public BaseEntity getDummyJournal(BaseEntityUtils beUtils) {
 		BaseEntity be = beUtils.create("JNL_ONE", "Wed 15-04-2020 Kanika");
 
@@ -122,6 +172,7 @@ public class JournalTest extends GennyJbpmBaseTest {
 
 		BaseEntity JNL_ONE = beUtils.getBaseEntityByCode("JNL_ONE");
 		return JNL_ONE;
+		
 
 	}
 
@@ -153,6 +204,7 @@ public class JournalTest extends GennyJbpmBaseTest {
 		List<BaseEntity> journals = new ArrayList<BaseEntity>();
 		journals.add(JNL_ONE);
 		journals.add(JNL_TWO);
+	
 
 		return journals;
 
