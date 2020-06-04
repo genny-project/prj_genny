@@ -28,11 +28,10 @@ rule "MULTI_EVENT"
 
 		output.setTypeOfResult("NONE");
 
-
+// Test
 		retract( $message);
 end
 
 
 
 
-	
