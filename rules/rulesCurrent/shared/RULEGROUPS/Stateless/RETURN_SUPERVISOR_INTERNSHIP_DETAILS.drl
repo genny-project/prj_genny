@@ -47,7 +47,6 @@ rule "RETURN_SUPERVISOR_INTERNSHIP_DETAILS"
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%") 
 			/*	.addFilter("PRI_SYNC", SearchEntity.StringFilter.LIKE, "FALSE") */ 				
 				.addColumn("PRI_NAME", "Name")
-				.addColumn("LNK_INTERNSHIP","Internship")
 				.addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
 				.addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep")
 				.addColumn("LNK_HOST_COMPANY", "Host Company")
@@ -60,7 +59,7 @@ rule "RETURN_SUPERVISOR_INTERNSHIP_DETAILS"
 				.addColumn("PRI_FIRSTNAME", "First Name")
 				.addColumn("PRI_STATUS", "Status")
 				.addColumn("PRI_SYNC", "Synced")
-				.addColumn("PRI_PRI_ASSOC_EP", "Education Provider")
+				.addColumn("PRI_ASSOC_EP", "Education Provider")
 				.addColumn("PRI_ASSOC_HC", "Host Company")
 				.addColumn("PRI_INTERN_ACCEPTED", "Accepted")
 				.addColumn("PRI_INTERN_NAME", "Intern Name")
@@ -107,6 +106,7 @@ rule "RETURN_SUPERVISOR_INTERNSHIP_DETAILS"
 						String internCode = null;
 						
 						QDataBaseEntityMessage msg2 = new QDataBaseEntityMessage(result);
+						msg2.setAliasCode("INTERNSHIP");
 						payload.add(msg2); 
 					
 		
@@ -132,6 +132,7 @@ rule "RETURN_SUPERVISOR_INTERNSHIP_DETAILS"
 									msg.setAliasCode("INTERN");	
 									payload.add(msg); 
 									existingBes.add(itemCode);
+									System.out.println(drools.getRule().getName()+" Intern matches the code "+itemCode+"  for "+result.getCode());
 								} else {
 									System.out.println(drools.getRule().getName()+" No Intern matches the code "+itemCode+"  for "+result.getCode());
 								}
