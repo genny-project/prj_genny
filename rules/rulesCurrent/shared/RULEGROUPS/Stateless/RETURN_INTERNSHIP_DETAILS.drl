@@ -58,7 +58,7 @@ rule "RETURN_INTERNSHIP_DETAILS"
 				.addColumn("PRI_FIRSTNAME", "First Name")
 				.addColumn("PRI_STATUS", "Status")
 				.addColumn("PRI_SYNC", "Synced")
-				.addColumn("PRI_PRI_ASSOC_EP", "Education Provider")
+				.addColumn("PRI_ASSOC_EP", "Education Provider")
 				.addColumn("PRI_ASSOC_HC", "Host Company")
 				.addColumn("PRI_INTERN_ACCEPTED", "Accepted")
 				.addColumn("PRI_INTERN_NAME", "Intern Name")

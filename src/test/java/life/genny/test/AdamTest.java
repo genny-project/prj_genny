@@ -160,10 +160,143 @@ public class AdamTest {
 	protected static GennyToken newUserToken;
 	protected static GennyToken serviceToken;
 
-
 	@Test
-	public void journalTest()
-	{
+	public void slackTest() {
+		System.out.println("Journal Slack test");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+		} else {
+			// VertxUtils.cachedEnabled = false;
+			VertxUtils.cachedEnabled = false;
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+			eventBusMock = new EventBusMock();
+			vertxCache = new JunitCache(); // MockCache
+			VertxUtils.init(eventBusMock, vertxCache);
+		}
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		beUtils.setServiceToken(serviceToken);
+
+		QEventMessage message = new QEventMessage("JOURNAL_ADD", "Journal Event");
+		message.getData().setParentCode("PER_DOMINIKAASYDNEY_AT_GMAIL_DOT_COM");
+		message.getData().setTargetCode(
+				"JNL_751E30C4-BD8B-4817-8E91-6CB662B74CA020200527,JNL_751E30C4-BD8B-4817-8E91-6CB662B74CA020200526");
+
+		String userWhoUpdatedJournals = message.getData().getParentCode();
+		String listOfChangedJournals = message.getData().getTargetCode();
+		String webhookURL = null;
+		String studentName = "Unknown";
+		String hostCompany = "Unknown";
+		String educationProvider = "Unknown";
+		LocalDateTime updateTime = null;
+
+		List<String> changedJournals = new ArrayList<String>(); /*
+																 * Stream.of(listOfChangedJournals.split(",",
+																 * -1)).collect(Collectors.toList());
+																 */
+		String[] journalArray = listOfChangedJournals.split(",", -1);
+		for (String journalCode : journalArray) {
+			changedJournals.add(journalCode);
+		}
+
+		List<BaseEntity> journals = new ArrayList<BaseEntity>();
+		for (String journalCode : changedJournals) {
+			BaseEntity journal = beUtils.getBaseEntityByCode(journalCode);
+			journals.add(journal);
+
+		}
+
+		/* studentName = user.getValue("PRI_LASTNAME",true); */
+		/* updateTime = journal.getValue("PRI_INTERN_LAST_UPDATE",true); */
+
+		Map<String, BaseEntity> internMap = new HashMap<String, BaseEntity>();
+		Map<String, BaseEntity> supervisorMap = new HashMap<String, BaseEntity>();
+
+		for (BaseEntity journal : journals) {
+			
+			String journalName = journal.getName();
+			String status = journal.getValue("PRI_STATUS", "NO STATUS");
+			
+			Optional<String> optHostCompanySupervisorCode = journal.getValue("LNK_INTERN_SUPERVISOR");
+			if (optHostCompanySupervisorCode.isPresent()) {
+				String supervisorCode = optHostCompanySupervisorCode.get();
+				supervisorCode = supervisorCode.substring(2);
+				supervisorCode = supervisorCode.substring(0, (supervisorCode.length() - 2));
+				BaseEntity supervisor = beUtils.getBaseEntityByCode(supervisorCode);
+			}
+
+			Optional<String> optInternCode = journal.getValue("LNK_INTERN");
+			if (optInternCode.isPresent()) {
+				String internCode = optInternCode.get();
+				internCode = internCode.substring(2);
+				internCode = internCode.substring(0, (internCode.length() - 2));
+				BaseEntity intern = beUtils.getBaseEntityByCode(internCode);
+				studentName = intern.getName();
+				Optional<String> optEduCode = intern.getValue("LNK_EDU_PROVIDER");
+				if (optEduCode.isPresent()) {
+					String eduCode = optEduCode.get();
+					eduCode = eduCode.substring(2);
+					eduCode = eduCode.substring(0, (eduCode.length() - 2));
+					BaseEntity edu = beUtils.getBaseEntityByCode(eduCode);
+					educationProvider = edu.getName();
+				}
+				hostCompany = intern.getValue("PRI_ASSOC_HOST_COMPANY", "NOT SET");
+			}
+			
+
+
+			BaseEntity agent = beUtils.getBaseEntityByCode("CPY_OUTCOME_LIFE");
+			webhookURL = agent.getValueAsString("PRI_SLACK");
+
+			/* Sending Slack Notification */
+
+			updateTime = LocalDateTime.now();
+
+			JsonObject msgpayload = new JsonObject("{\n" + "   \"blocks\":[\n" + "      {\n"
+					+ "         \"type\":\"section\",\n" + "         \"text\":{\n"
+					+ "            \"type\":\"mrkdwn\",\n" + "            \"text\":\"New Journal ("+status+") -> "+journalName+" :memo:\"\n"
+					+ "         }\n" + "      },\n" + "      {\n" + "         \"type\":\"divider\"\n" + "      },\n"
+					+ "      {\n" + "         \"type\":\"section\",\n" + "         \"fields\":[\n" + "            {\n"
+					+ "               \"type\":\"mrkdwn\",\n" + "               \"text\":\"*Student:*\\n" + studentName
+					+ "\"\n" + "            },\n" + "            {\n" + "               \"type\":\"mrkdwn\",\n"
+					+ "               \"text\":\"*Time:*\\n" + updateTime + "\"\n" + "            },\n"
+					+ "            {\n" + "               \"type\":\"mrkdwn\",\n"
+					+ "               \"text\":\"*Host Company:*\\n" + hostCompany + "\"\n" + "            },\n"
+					+ "            {\n" + "               \"type\":\"mrkdwn\",\n"
+					+ "               \"text\":\"*Education Provider:*\\n" + educationProvider + "\"\n"
+					+ "            }\n" + "         ]\n" + "      },\n" + "      {\n"
+					+ "         \"type\":\"divider\"\n" + "      },\n" + "      {\n"
+					+ "         \"type\":\"context\",\n" + "         \"elements\":[\n" + "            {\n"
+					+ "               \"type\":\"mrkdwn\",\n"
+					+ "               \"text\":\"*Last updated:* 9:15 AM May 22, 2020\"\n" + "            }\n"
+					+ "         ]\n" + "      }\n" + "   ]\n" + "}");
+
+			System.out.println("Payload is" + msgpayload.toString());
+
+			try {
+				QwandaUtils.apiPostEntity(webhookURL, msgpayload.toString(), serviceToken.getToken());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+	// @Test
+	public void journalTest() {
 		System.out.println("Journal test");
 		GennyToken userToken = null;
 		GennyToken serviceToken = null;
@@ -192,49 +325,49 @@ public class AdamTest {
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		beUtils.setServiceToken(serviceToken);
 
- 		String roleAttribute = "LNK_INTERN_SUPERVISOR";
-		String userCode  = "PER_DAMIEN_AT_DESIGNCONSULTING_DOT_COM_DOT_AU";
+		String roleAttribute = "LNK_INTERN_SUPERVISOR";
+		String userCode = "PER_DAMIEN_AT_DESIGNCONSULTING_DOT_COM_DOT_AU";
 
-  		BaseEntity deviceBe = beUtils.getBaseEntityByCode("DEV_"+"565D971D-5F9F-4161-88E0-E34765B57F75");
-   		LocalDateTime veryearly = LocalDateTime.of(1970,01,01,0,0,0);
-   		LocalDateTime lastUpdated = null;
-   		if (deviceBe!=null) {
-   			lastUpdated = deviceBe.getValue("PRI_LAST_UPDATED",veryearly);
-   		} else {
-   			lastUpdated = veryearly;
-   		}
-   		
-   		long starttime = System.currentTimeMillis();
-   		long looptime = 0;
-   		long searchtime = 0;
+		BaseEntity deviceBe = beUtils.getBaseEntityByCode("DEV_" + "565D971D-5F9F-4161-88E0-E34765B57F75");
+		LocalDateTime veryearly = LocalDateTime.of(1970, 01, 01, 0, 0, 0);
+		LocalDateTime lastUpdated = null;
+		if (deviceBe != null) {
+			lastUpdated = deviceBe.getValue("PRI_LAST_UPDATED", veryearly);
+		} else {
+			lastUpdated = veryearly;
+		}
 
- 		final DateTimeFormatter formatterMysql = DateTimeFormatter.ISO_DATE_TIME;
- 		String dtStr = formatterMysql.format(lastUpdated).replace("T", " ");
- 		String hql = "select ea from EntityAttribute ea, EntityAttribute eb where ea.baseEntityCode=eb.baseEntityCode ";
- 		hql += " and eb.attributeCode = '"+roleAttribute+"' and eb.valueString = '[\""+ userCode +"\"]'";
- 		hql += " and ea.baseEntityCode like 'JNL_%'  ";
- 		hql += " and ((ea.updated >= '"+dtStr+"') or (ea.updated is null and ea.created >= '"+dtStr+"'))";
+		long starttime = System.currentTimeMillis();
+		long looptime = 0;
+		long searchtime = 0;
+
+		final DateTimeFormatter formatterMysql = DateTimeFormatter.ISO_DATE_TIME;
+		String dtStr = formatterMysql.format(lastUpdated).replace("T", " ");
+		String hql = "select ea from EntityAttribute ea, EntityAttribute eb where ea.baseEntityCode=eb.baseEntityCode ";
+		hql += " and eb.attributeCode = '" + roleAttribute + "' and eb.valueString = '[\"" + userCode + "\"]'";
+		hql += " and ea.baseEntityCode like 'JNL_%'  ";
+		hql += " and ((ea.updated >= '" + dtStr + "') or (ea.updated is null and ea.created >= '" + dtStr + "'))";
 		hql = Base64.getUrlEncoder().encodeToString(hql.getBytes());
 		String resultJson;
 		QDataBaseEntityMessage resultMsg = null;
 		try {
-			resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search22/"+hql, serviceToken.getToken(),120);
+			resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search22/" + hql,
+					serviceToken.getToken(), 120);
 			searchtime = System.currentTimeMillis();
 			resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
-			
+
 		} catch (Exception e1) {
 			e1.printStackTrace();
-		}		
-		
-		long endtime = System.currentTimeMillis();
-		System.out.println("search took "+(searchtime-starttime)+" ms "+resultMsg);
-		System.out.println("loop took "+(looptime-searchtime)+" ms");
-		System.out.println("finish took "+(endtime-looptime)+" ms");
-		System.out.println("total took "+(endtime-starttime)+" ms");
-	}
-	
+		}
 
-	//@Test
+		long endtime = System.currentTimeMillis();
+		System.out.println("search took " + (searchtime - starttime) + " ms " + resultMsg);
+		System.out.println("loop took " + (looptime - searchtime) + " ms");
+		System.out.println("finish took " + (endtime - looptime) + " ms");
+		System.out.println("total took " + (endtime - starttime) + " ms");
+	}
+
+	// @Test
 	public void testTableTest() {
 		System.out.println("Test Table test");
 		GennyToken userToken = null;
@@ -354,20 +487,20 @@ public class AdamTest {
 				Thread.currentThread().interrupt();
 			}
 		} else {
-			
+
 			tfc.call();
 			sc.call();
-			
+
 		}
 		totalProcessingTime = System.currentTimeMillis() - startProcessingTime;
 		log.info("All threads finished after: " + totalProcessingTime + " milliseconds");
 		aggregatedMessages.setToken(userToken.getToken());
 		QDataAskMessage[] asks = aggregatedMessages.getAsks();
 		aggregatedMessages.setAsks(null);
-		
+
 		if (cache) {
 			String json = JsonUtils.toJson(aggregatedMessages);
-			VertxUtils.writeMsg("webcmds",json );
+			VertxUtils.writeMsg("webcmds", json);
 			for (QDataAskMessage askMsg : asks) {
 				askMsg.setToken(userToken.getToken());
 				VertxUtils.writeMsg("webcmds", JsonUtils.toJson(askMsg));
