@@ -20,33 +20,33 @@ rule "STATELESS_SETUP_DATA"
      salience 10000
      no-loop true
     when
-	  userToken : GennyToken ( code != "PER_SERVICE" ) 
-	  serviceToken : GennyToken ( code == "PER_SERVICE" ) 
+	  userToken : GennyToken ( code != "PER_SERVICE" )
+	  serviceToken : GennyToken ( code == "PER_SERVICE" )
 	  dataMsg : QDataAnswerMessage( (items != null) && (items.length > 0) && (aliasCode == "STATELESS"))
 
     then
    		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + userToken.getUserCode());
-   		
-		BaseEntityUtils beUtils = new BaseEntityUtils(userToken); 
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		beUtils.setServiceToken(serviceToken);
-		insert(beUtils); 
-				
+		insert(beUtils);
+
 		/* Now set up capability for the user and make it available to all the rules */
 		CapabilityUtils capabilityUtils = new CapabilityUtils(beUtils);
-		insert(capabilityUtils); 
-		
-		System.out.println(drools.getRule().getName()+" Capabilitys are "+capabilityUtils.getCapabilityManifest()); 
-		
-		BaseEntity user = beUtils.getBaseEntityByCode(userToken.getUserCode()); 
+		insert(capabilityUtils);
+
+		System.out.println(drools.getRule().getName()+" Capabilitys are "+capabilityUtils.getCapabilityManifest());
+
+		BaseEntity user = beUtils.getBaseEntityByCode(userToken.getUserCode());
 		System.out.println(drools.getRule().getName()+" User is "+user);
-		insert(user);				
-				
+		insert(user);
+
 		String projectCode = "PRJ_"+userToken.getRealm().toUpperCase();
-		BaseEntity project = beUtils.getBaseEntityByCode(projectCode); 
-		insert(project);		
-		
-		
-		
+		BaseEntity project = beUtils.getBaseEntityByCode(projectCode);
+		insert(project);
+
+		// Test
+
 		retract(dataMsg); /* stop this rule from firing again */
 
 end
