@@ -25,7 +25,6 @@ import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
 import java.util.Map;
 import life.genny.models.FrameTuple3;
-import life.genny.utils.TableUtils;
 import life.genny.utils.BucketUtils;
 import life.genny.qwanda.Context;
 import life.genny.qwanda.ContextList;
@@ -40,7 +39,7 @@ rule "FRM_BUCKET_VIEW"
       FRM_BUCKETS : Frame3 ( code == "FRM_BUCKETS" )
       FRM_BUCKET_HEADER : Frame3 ( code == "FRM_BUCKET_HEADER" )
       FRM_BUCKET_CONTENT : Frame3 ( code == "FRM_BUCKET_CONTENT" )
-      FRM_BUCKET_FOOTER : Frame3 ( code == "FRM_BUCKET_FOOTER" )
+      FRM_BUCKET_VIEW_CONTENT : Frame3 ( code == "FRM_BUCKET_VIEW_CONTENT" )
       serviceToken : GennyToken( code == "PER_SERVICE")
 
       
@@ -49,9 +48,6 @@ rule "FRM_BUCKET_VIEW"
 
 			/* initialize  beUtils */
 			BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
-			
-			/* initialize  tableUtils */
-			TableUtils tableUtils = new TableUtils(beUtils);
 			
 			/* initialize  bucketUtils */
 			BucketUtils bucketUtils = new BucketUtils(beUtils);
@@ -81,35 +77,24 @@ rule "FRM_BUCKET_VIEW"
 			/* print the searchBE List size */
 			System.out.println("size   ::    " + searchBeList.size());
 
-			/* prepare themes */
-			Theme THM_DISPLAY_VERTICAL = Theme.builder("THM_DISPLAY_VERTICAL")
-			 						.addAttribute().flexDirection("column").end()
-									.build();
-
-			Theme THM_BH_GROUP_WRAPPER = Theme.builder("THM_BH_GROUP_WRAPPER")
-                    .addAttribute()
-                      .width("100%")
-                      .padding(10)
-                    .end()
-                    .build();
-
-			Theme THM_QUESTION_GRP_LABEL = Theme.builder("THM_QUESTION_GRP_LABEL")
-                  .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_LABEL, true).end()
-                  .build();  
-
-			Theme THM_WIDTH_100_PERCENT_NO_INHERIT = Theme.builder("THM_WIDTH_100_PERCENT_NO_INHERIT")
-                  .addAttribute()
-                    .width("100%")                
-                  .end()
-                  .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
-                  .build(); 
-			
-			/* get sort icon */
-			BaseEntity ICN_SORT = beUtils.getBaseEntityByCode("ICN_SORT");
+			Theme THM_DISPLAY_VERTICAL = VertxUtils.getObject(serviceToken.getRealm(), "",
+						"THM_DISPLAY_VERTICAL", Theme.class, serviceToken.getToken());
+			Theme THM_QUESTION_GRP_LABEL = VertxUtils.getObject(serviceToken.getRealm(), "",
+						"THM_QUESTION_GRP_LABEL", Theme.class, serviceToken.getToken());
+			Theme THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
+						"THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER", Theme.class, serviceToken.getToken());
+			Theme THM_WIDTH_100_PERCENT_NO_INHERIT = VertxUtils.getObject(serviceToken.getRealm(), "",
+						"THM_WIDTH_100_PERCENT_NO_INHERIT", Theme.class, serviceToken.getToken());
+			Theme THM_BUCKET_HEADER_GROUP_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
+						"THM_BUCKET_HEADER_GROUP_WRAPPER", Theme.class, serviceToken.getToken());
+			Theme THM_BUCKET_HEADER_GROUP_HEADER_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
+						"THM_BUCKET_HEADER_GROUP_HEADER_WRAPPER", Theme.class, serviceToken.getToken());
+			Theme THM_BUCKET_HEADER_GROUP_LABEL = VertxUtils.getObject(serviceToken.getRealm(), "",
+						"THM_BUCKET_HEADER_GROUP_LABEL", Theme.class, serviceToken.getToken());
                 
 			/* bucket-header label context  */
 			Context bucketHeaderLabelContext = new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_QUESTION_GRP_LABEL), VisualControlType.GROUP, 1.0);
-			bucketHeaderLabelContext.setDataType("Form Submit");
+			bucketHeaderLabelContext.setDttCode("DTT_SUBMIT_BUTTON");
       
 			/* bucket-header  context  */
 			List<Context> bucketHeaderContext = new ArrayList<>();
@@ -125,7 +110,6 @@ rule "FRM_BUCKET_VIEW"
 			/* get all the bucket related asks group */
 			Ask FRM_BUCKET_HEADER_ASK = bucketUtils.getBucketHeaderAsk(contextListMap, serviceToken);
 			Ask FRM_BUCKET_CONTENT_ASK = bucketUtils.getBucketContentAsk(contextListMap, serviceToken);
-			Ask FRM_BUCKET_FOOTER_ASK = bucketUtils.getBucketFooterAsk(contextListMap, serviceToken);
 			
 			/* loop through the searchList */
 			for (SearchEntity searchBe : searchBeList) {
@@ -145,15 +129,10 @@ rule "FRM_BUCKET_VIEW"
 				bucketContent.setCode("FRM_BUCKET_CONTENT_" + code);
 				bucketContent.setQuestionCode("QUE_BUCKET_CONTENT_" + code + "_GRP");
 
-				Frame3 bucketFooter = Frame3.clone(FRM_BUCKET_FOOTER);
-				bucketFooter.setCode("FRM_BUCKET_FOOTER_" + code);
-				bucketFooter.setQuestionCode("QUE_BUCKET_FOOTER_" + code + "_GRP");
-
 				Frame3 bucket = Frame3.clone(FRM_BUCKETS);
 				bucket.setCode("FRM_BUCKET_"+code);
 				bucket.getFrames().add(new FrameTuple3(bucketHeader, FramePosition.NORTH, 1.0));
 				bucket.getFrames().add(new FrameTuple3(bucketContent, FramePosition.CENTRE, 1.0));
-				bucket.getFrames().add(new FrameTuple3(bucketFooter, FramePosition.SOUTH, 1.0));
 
 				/* add the cloned bucket to wrapper */
 				FRM_BUCKET_WRAPPER.getFrames().add(new FrameTuple3(bucket, FramePosition.WEST, 1.0));
@@ -168,24 +147,13 @@ rule "FRM_BUCKET_VIEW"
 				bucketContentAsk.setQuestionCode("QUE_BUCKET_CONTENT_" + code + "_GRP");
 				bucketContentAsk.setName(searchBe.getName());
 
-				/* bucketFooter asks */
-				Ask bucketFooterAsk = Ask.clone(FRM_BUCKET_FOOTER_ASK);
-				bucketFooterAsk.setQuestionCode("QUE_BUCKET_FOOTER_" + code + "_GRP");
-				bucketFooterAsk.setName(searchBe.getName());
-
 				System.out.println("bucketHeaderAsk Code   ::    " + bucketHeaderAsk.getQuestionCode());
 				System.out.println("bucketContentAsk Code   ::    " + bucketContentAsk.getQuestionCode());
-				System.out.println("bucketFooterAsk Code   ::    " + bucketFooterAsk.getQuestionCode());
 
 				/* add the ask to virtualAskMap */
 				virtualAskMap.put(bucketHeaderAsk.getQuestionCode(), new QDataAskMessage(bucketHeaderAsk));
 				virtualAskMap.put(bucketContentAsk.getQuestionCode(), new QDataAskMessage(bucketContentAsk));
-				virtualAskMap.put(bucketFooterAsk.getQuestionCode(), new QDataAskMessage(bucketFooterAsk));
 			}
-
-			Frame3 FRM_BUCKET_VIEW_CONTENT = Frame3.builder("FRM_BUCKET_VIEW_CONTENT")
-                    .addFrame(FRM_BUCKET_WRAPPER, FramePosition.CENTRE).end()
-										.build();
 
 			Frame3 frame = Frame3.builder("FRM_BUCKET_VIEW")
                     .addFrame(FRM_BUCKET_VIEW_CONTENT, FramePosition.CENTRE).end()
