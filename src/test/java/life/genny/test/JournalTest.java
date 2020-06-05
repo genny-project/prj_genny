@@ -1,5 +1,6 @@
 package life.genny.test;
 
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ import life.genny.qwanda.validation.Validation;
 import life.genny.qwanda.validation.ValidationList;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
+import life.genny.qwandautils.MergeUtil;
 import life.genny.qwandautils.PDFHelper;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.rules.QRules;
@@ -162,7 +164,7 @@ public class JournalTest extends GennyJbpmBaseTest {
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
 		// URL for the template
-		String journalTemplate = "https://raw.githubusercontent.com/genny-project/layouts/2020-05-25-journal-report-update/internmatch-new/document_templates/journal-row-template.html";
+		//String journalRowTemplate = "https://raw.githubusercontent.com/genny-project/layouts/2020-05-25-journal-report-update/internmatch-new/document_templates/journal-row-template.html";
 //		String journalTemplate = "https://raw.githubusercontent.com/genny-project/layouts/2020-05-25-journal-report-update/internmatch-new/document_templates/journal-header-template.html";
 		// GET dummy Journal BE or get a real JNL if in dob
 		//BaseEntity journal = getDummyJournal(beUtils);
@@ -201,7 +203,18 @@ public class JournalTest extends GennyJbpmBaseTest {
 			}
 			index++;
 		}
-		String pdfUrl = PDFHelper.getDownloadablePdfLinkForHtml(journalTemplate, contextMapList);
+		// Get internBe
+		BaseEntity internBe = beUtils.getBaseEntityByCode("PER_STEPHANIE_DOT_POLINAR_AT_CQUMAIL_DOT_COM");
+
+		// Merge the headerContent with intern context map 
+		HashMap<String, Object> contextMap = new HashMap<String, Object>();
+		contextMap.put("INTERN", internBe);
+		
+		// header template
+		String journalRowTemplate = "https://raw.githubusercontent.com/genny-project/layouts/2020-05-25-journal-report-update/internmatch-new/document_templates/journal-row-template.html";
+		String journalHeaderTemplate = "https://raw.githubusercontent.com/genny-project/layouts/2020-05-25-journal-report-update/internmatch-new/document_templates/journal-header-template.html";
+		
+		String pdfUrl = PDFHelper.getDownloadablePdfLinkForHtml(journalHeaderTemplate,journalRowTemplate,contextMap, contextMapList);
 		System.out.println("Journal Pdf URL :: " + pdfUrl);
 	}	
 	public List<BaseEntity> getDummyJournals(BaseEntityUtils beUtils) {
@@ -237,4 +250,8 @@ public class JournalTest extends GennyJbpmBaseTest {
 		return journals;
 
 	}
+	
+	
+	
+
 }
