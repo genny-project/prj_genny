@@ -89,6 +89,7 @@ rule "RETURN_SUPERVISOR_INTERNSHIP_DETAILS"
 			
 				List<String> existingBes = new ArrayList<String>();
 			
+				String[] internshipFilterStrArray = { "LNK_INTERN_SUPERVISOR","LNK_HOST_COMPANY","LNK_HOST_COMPANY_REP" };	
 			
 				QDataBaseEntityMessage resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
 			/*	System.out.println(drools.getRule().getName()+" Got to here in RETURN INTERNSHIP DETAILS "+resultJson); */
@@ -98,32 +99,34 @@ rule "RETURN_SUPERVISOR_INTERNSHIP_DETAILS"
 					System.out.println("Number of bes returned is "+bes.length);
 					/* No filter needed for internship as it is already filtered by the search */	
 					for (BaseEntity result : bes) {	
-					
+						System.out.println($user.getCode()+" gets returned "+result.getCode()+" with intern "+result.getValue("LNK_INTERN","NONE"));
 						String hostCompanyCode = null;
 						String hostCompanyRepCode = null;
 						String hostCompanySupervisorCode = null;
 						String internshipCode = null;
 						String internCode = null;
+
+						Optional<String> optHostCompanyCode = result.getValue("LNK_HOST_COMPANY");		
+						Optional<String> optHostCompanyRepCode = result.getValue("LNK_HOST_COMPANY_REP");		
+						Optional<String> optHostCompanySupervisorCode = result.getValue("LNK_INTERN_SUPERVISOR");		
+						Optional<String> optInternCode = result.getValue("LNK_INTERN");
 						
+						result = VertxUtils.privacyFilter(result, internshipFilterStrArray);	
 						QDataBaseEntityMessage msg2 = new QDataBaseEntityMessage(result);
 						msg2.setAliasCode("INTERNSHIP");
 						payload.add(msg2); 
 					
 		
-						Optional<String> optHostCompanyCode = result.getValue("LNK_HOST_COMPANY");		
-						Optional<String> optHostCompanyRepCode = result.getValue("LNK_HOST_COMPANY_REP");		
-						Optional<String> optHostCompanySupervisorCode = result.getValue("LNK_INTERN_SUPERVISOR");		
-						Optional<String> optInternCode = result.getValue("LNK_INTERN");
 
 						if (optInternCode.isPresent()) {
 							String itemCode = optInternCode.get();
 							itemCode = itemCode.substring(2);
 							itemCode = itemCode.substring(0,(itemCode.length()-2));
-							
+							System.out.println("INTERN FOUND IS "+itemCode);
 							if (!existingBes.contains(itemCode)) {
-								String[] filterStrArray = { "ENV_REALM", "PRI_NAME", "PRI_LANDLINE","PRI_PHONE","PRI_MOBILE","PRI_EMAIL",
-									"PRI_ADDRESS_ADDRESS1", "PRI_CODE", "PRI_ADDRESS_CITY", "PRI_ADDRESS_POSTCODE","PRI_IS_INTERN", 
-									"PRI_ADDRESS_STATE","PRI_ADDRESS_COUNTRY","PRI_IMAGE_URL","PRI_CODE", "PRI_USERNAME", "PRI_FIRSTNAME","PRI_LASTNAME" };	
+								String[] filterStrArray = {  "PRI_NAME","PRI_EMAIL",
+									 "PRI_IS_INTERN", 
+									 "PRI_FIRSTNAME","PRI_LASTNAME" };	
 		
 								BaseEntity be = beUtils.getBaseEntityByCode(itemCode);	
 								if (be != null) {		
@@ -136,6 +139,8 @@ rule "RETURN_SUPERVISOR_INTERNSHIP_DETAILS"
 								} else {
 									System.out.println(drools.getRule().getName()+" No Intern matches the code "+itemCode+"  for "+result.getCode());
 								}
+							} else {
+								System.out.println("INTERN FOUND IS ALREADY HANDLED "+itemCode);
 							}
 						} else {
 							System.out.println("ERROR IN RETURN_INTERNSHIP_DETAILS: No Intern Found for "+result.getCode());

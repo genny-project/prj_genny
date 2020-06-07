@@ -26,7 +26,7 @@ rule "STATELESS_SETUP_DATA"
 
     then
    		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + userToken.getUserCode());
-   		
+    		
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken); 
 		beUtils.setServiceToken(serviceToken);
 		insert(beUtils); 
@@ -46,7 +46,7 @@ rule "STATELESS_SETUP_DATA"
 		insert(project);		
 		
 		
-		
 		retract(dataMsg); /* stop this rule from firing again */
+		
 
 end
