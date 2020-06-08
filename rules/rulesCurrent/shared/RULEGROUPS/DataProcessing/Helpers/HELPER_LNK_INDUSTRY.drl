@@ -68,7 +68,7 @@ rule "HELPER_LNK_INDUSTRY"
 		
 		answersToSave.add(answer);
 		/* answersToSave.add(occupationAnswer); */
-		insert(occupationAnswer)
+		insert(occupationAnswer);
 
 		/* Update the baseenetity in frontend */
 		/* QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
