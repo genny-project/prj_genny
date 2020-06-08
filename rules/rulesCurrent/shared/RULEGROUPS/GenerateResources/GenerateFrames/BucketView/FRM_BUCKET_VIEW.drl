@@ -164,15 +164,7 @@ rule "FRM_BUCKET_VIEW"
 			insert (frame);
 	
 			/* generating frame msg and saving to cache */
-			QDataBaseEntityMessage frameMsg = FrameUtils2.toMessage(frame, serviceToken, askSet, contextListMap, virtualAskMap);
+			FrameUtils2.toMessage(frame, serviceToken, askSet, contextListMap, virtualAskMap);
 
-			/* cache the frame */
-			VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode(), frame, serviceToken.getToken());
-
-			/* cache the QDataBaseEntityMessage */
-			VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode() + "_MSG", frameMsg, serviceToken.getToken());
-			
-			/* cache the ask */
-			VertxUtils.writeCachedJson(serviceToken.getRealm(),"ASK_" + frame.getCode(), JsonUtils.toJson(askSet.toArray()),serviceToken.getToken());
 
 end

@@ -50,11 +50,12 @@ rule "FRM_DESKTOP"
 			System.out.println("   Generated FRM_DESKTOP Rule  "+serviceToken.getUserCode());
 
 			frame.setRealm(serviceToken.getRealm());
-			insert (frame);
-			System.out.println("   Generate FRM_DESKTOP Rule INSERTED  "+serviceToken.getUserCode());
-
 			/* Process and save to cache */
 			FrameUtils2.toMessage(frame, serviceToken);
 			System.out.println("   Generated FRM_DESKTOP Rule MSG "+serviceToken.getUserCode());
+			
+			insert (frame);
+			System.out.println("   Generate FRM_DESKTOP Rule INSERTED  "+serviceToken.getUserCode());
+
 			
 end

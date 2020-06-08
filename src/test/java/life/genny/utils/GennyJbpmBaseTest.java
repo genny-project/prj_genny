@@ -162,7 +162,7 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 		}
 		String testRulesDir = baseRulesDir + rulesDir;
 
-		List<Tuple3<String, String, String>> rules = RulesLoader.processFileRealmsFromFiles("genny", testRulesDir, realms);
+		List<Tuple3<String, String, String>> rules = RulesLoader.processFileRealmsFromApi(realms);
 		Integer rulesCount = RulesLoader.setupKieRules(realm, rules);
 		System.out.println("Rules Count for " + realm + ":" + testRulesDir + " = " + rulesCount);
 
