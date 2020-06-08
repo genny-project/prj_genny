@@ -54,25 +54,29 @@ rule "HELPER_LNK_INDUSTRY"
 		String code = industryCode.replace("\"", "").replace("[", "").replace("]", "");
 		System.out.println("code  :: " + code);
 
-		answersToSave.add(answer);
 		
-		
+		/*  Initialize occupation answer */
+		System.out.println("Initializing the occupation answer .... " + baseEntity);
 		Answer occupationAnswer = new Answer(sourceCode, targetCode, "LNK_OCCUPATION", " ",false,true);
-		System.out.println("occupationAnswer1  :: " + occupationAnswer);
+		System.out.println("occupationAnswer  :: " + occupationAnswer);
 		
-		beUtils.saveAnswer(occupationAnswer);
+		/* beUtils.saveAnswer(occupationAnswer); */
 
-		BaseEntity baseEntity = beUtils.updateBaseEntity(targetCode,occupationAnswer);
-		beUtils.updateBaseEntity(targetCode,occupationAnswer);
-		System.out.println("baseEntity1  :: " + baseEntity);
+		/* Update the  baseEntity with industry attribute */
+		BaseEntity baseEntity = beUtils.updateBaseEntity(targetCode,answer);
+
+		/* Update the  baseEntity with occupation attribute */
+		baseEntity = beUtils.updateBaseEntity(targetCode,occupationAnswer);
 		
-		insert(occupationAnswer);
-		System.out.println("occupationAnswer2  :: " + occupationAnswer);
-		
+		answersToSave.add(answer);
+		answersToSave.add(occupationAnswer);
+
 		/* Update the baseenetity in frontend */
 		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
 		msg.setToken(beUtils.getGennyToken().getToken());
 		msg.setReplace(true);
+
+		/* send the BE messsage */
 		VertxUtils.writeMsg("webcmds",JsonUtils.toJson(msg));
 		System.out.println("msg  :: " + msg);
 
@@ -90,6 +94,8 @@ rule "HELPER_LNK_INDUSTRY"
 		System.out.println("dropdown  :: " + dropdown);
 		
 		retract(answer);
+		update(answersToSave);
+
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
 end
