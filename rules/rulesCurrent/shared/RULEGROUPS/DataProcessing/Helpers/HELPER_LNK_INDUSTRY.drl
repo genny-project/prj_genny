@@ -56,7 +56,7 @@ rule "HELPER_LNK_INDUSTRY"
 
 		
 		/*  Initialize occupation answer */
-		System.out.println("Initializing the occupation answer .... " + baseEntity);
+		System.out.println("Initializing the occupation answer .... ");
 		Answer occupationAnswer = new Answer(sourceCode, targetCode, "LNK_OCCUPATION", " ",false,true);
 		System.out.println("occupationAnswer  :: " + occupationAnswer);
 		
