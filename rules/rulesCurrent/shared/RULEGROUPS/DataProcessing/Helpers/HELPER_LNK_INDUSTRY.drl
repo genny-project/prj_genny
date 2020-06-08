@@ -54,46 +54,21 @@ rule "HELPER_LNK_INDUSTRY"
 		String code = industryCode.replace("\"", "").replace("[", "").replace("]", "");
 		System.out.println("code  :: " + code);
 
-		
-		/*  Initialize occupation answer */
-		System.out.println("Initializing the occupation answer .... ");
-		Answer occupationAnswer = new Answer(sourceCode, targetCode, "LNK_OCCUPATION", " ");
-		System.out.println("occupationAnswer  :: " + occupationAnswer);
-		
-		/* beUtils.saveAnswer(occupationAnswer); */
-
-		/* Update the  baseEntity with industry attribute */
-		/* BaseEntity baseEntity = beUtils.updateBaseEntity(targetCode,answer);
-		baseEntity = beUtils.updateBaseEntity(targetCode,occupationAnswer); */
-		
-		answersToSave.add(answer);
-		/* answersToSave.add(occupationAnswer); */
-		insert(occupationAnswer);
-
-		/* Update the baseenetity in frontend */
-		/* QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
-		msg.setToken(beUtils.getGennyToken().getToken());
-		msg.setReplace(true); */
-
-		/* send the BE messsage */
-		/* VertxUtils.writeMsg("webcmds",JsonUtils.toJson(msg));
-		System.out.println("msg  :: " + msg); */
-
 		/* dropdown search here */
 		DropdownUtils dropdown = new DropdownUtils(serviceToken);
-		System.out.println("dropdown  :: " + dropdown);
+
 		dropdown.setNewSearch("Dropdown", "Fetch Dropdown Items")
 											.addColumn("PRI_NAME","Name")
 											.setSourceCode(code)
 											.setPageStart(0)
 											.setPageSize(1000);
-		System.out.println("dropdown  :: " + dropdown);
 
 		dropdown.sendSearchResults("GRP_OCCUPATION_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
-		System.out.println("dropdown  :: " + dropdown);
 		
+		answersToSave.add(answer);
 		retract(answer);
 		update(answersToSave);
+		update(output);
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */

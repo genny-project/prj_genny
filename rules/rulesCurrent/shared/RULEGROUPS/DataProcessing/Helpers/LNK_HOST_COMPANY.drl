@@ -42,7 +42,6 @@ rule "HELPER_LNK_HOST_COMPANY"
 		System.out.println("HELPER_LNK_HOST_COMPANY fired");
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+"Processing Helper HOST COMPANY SELECTION Answer/Data : " + answer );
 
-
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		System.out.println("sourceCode :: " + sourceCode);
 		
@@ -54,31 +53,6 @@ rule "HELPER_LNK_HOST_COMPANY"
 		
 		String code = hostCompanyCode.replace("\"", "").replace("[", "").replace("]", "");
 		System.out.println("code  :: " + code);
-	
-
-		/* clear the associated attribute's answer here */
-
-		Answer repAnswer = new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", " ",false,true);
-		Answer supervisorAnswer = new Answer(sourceCode, targetCode, "LNK_INTERN_SUPERVISOR", " ",false,true);
-		answersToSave.add(answer);
-		answersToSave.add(repAnswer);
-		answersToSave.add(supervisorAnswer);
-
-		BaseEntity baseEntity = beUtils.updateBaseEntity(targetCode,repAnswer);
-		/*beUtils.updateBaseEntity(targetCode,repAnswer);*/
-
-		baseEntity = beUtils.updateBaseEntity(targetCode,supervisorAnswer);
-		/*beUtils.updateBaseEntity(targetCode,supervisorAnswer);*/
-
-		insert(repAnswer);
-		insert(supervisorAnswer);
-
-		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
-		msg.setToken(beUtils.getGennyToken().getToken());
-		msg.setReplace(true);
-		VertxUtils.writeMsg("webcmds",JsonUtils.toJson(msg));
-
-		update(answersToSave);
 
 		/* do the search here */
 		DropdownUtils dropdown = new DropdownUtils(serviceToken);
@@ -90,7 +64,11 @@ rule "HELPER_LNK_HOST_COMPANY"
 											.setPageSize(1000);
 
 		dropdown.sendSearchResults("GRP_HOST_COMPANY_REP_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
+		
+		answersToSave.add(answer);
 		retract(answer);
+		update(answersToSave);
+		update(output);
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
