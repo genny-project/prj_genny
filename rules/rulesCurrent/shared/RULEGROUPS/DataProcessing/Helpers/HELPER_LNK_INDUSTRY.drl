@@ -59,8 +59,8 @@ rule "HELPER_LNK_INDUSTRY"
 
 		System.out.println("Saving industry and occupation answers !");
 		List<Answer>List<Answer> answers = new ArrayList<Answer>();
-		answers.add(occupationAnswer)
-		answers.add(answer)
+		answers.add(occupationAnswer);
+		answers.add(answer);
 		beUtils.saveAnswers(answers);
 
 		/* BaseEntity baseEntity = beUtils.saveAnswer(occupationAnswer);
