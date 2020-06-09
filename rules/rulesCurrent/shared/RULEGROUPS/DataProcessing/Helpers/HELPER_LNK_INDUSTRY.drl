@@ -69,16 +69,19 @@ rule "HELPER_LNK_INDUSTRY"
 		System.out.println("occupationAnswer1  :: " + occupationAnswer);
 		
 		BaseEntity baseEntity = beUtils.saveAnswer(occupationAnswer);
+		baseEntity = beUtils.saveAnswer(answer);
+		
 		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
 		msg.setToken(beUtils.getGennyToken().getToken());
 		msg.setReplace(true);
 		VertxUtils.writeMsg("webcmds",JsonUtils.toJson(msg));
 		
-		answersToSave.add(answer);
-		retract(answer);
-		update(answersToSave);
-		update(output);
+		/* answersToSave.add(answer); */
+		/* update(answersToSave); */
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
+		
+		retract(answer);
+		update(output);
 end
