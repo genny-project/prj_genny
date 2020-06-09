@@ -64,6 +64,15 @@ rule "HELPER_LNK_INDUSTRY"
 											.setPageSize(1000);
 
 		dropdown.sendSearchResults("GRP_OCCUPATION_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
+
+		Answer occupationAnswer = new Answer(sourceCode, targetCode, "LNK_OCCUPATION", " ",false,true);
+		System.out.println("occupationAnswer1  :: " + occupationAnswer);
+		
+		BaseEntity baseEntity = beUtils.saveAnswer(occupationAnswer);
+		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
+		msg.setToken(beUtils.getGennyToken().getToken());
+		msg.setReplace(true);
+		VertxUtils.writeMsg("webcmds",JsonUtils.toJson(msg));
 		
 		answersToSave.add(answer);
 		retract(answer);
