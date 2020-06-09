@@ -58,19 +58,15 @@ rule "HELPER_LNK_INDUSTRY"
 		System.out.println("occupationAnswer  :: " + occupationAnswer);
 
 		System.out.println("Saving industry and occupation answers !");
-		List<Answer> answers = new ArrayList<Answer>();
-		answers.add(occupationAnswer);
-		answers.add(answer);
-		beUtils.saveAnswers(answers);
 
-		/* BaseEntity baseEntity = beUtils.saveAnswer(occupationAnswer);
-		baseEntity = beUtils.saveAnswer(answer); */
+		BaseEntity baseEntity = beUtils.saveAnswer(occupationAnswer);
+		baseEntity = beUtils.saveAnswer(answer);
 		
 		/* Send the updated baseenttity to the frontend */
-		/* QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
+		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
 		msg.setToken(beUtils.getGennyToken().getToken());
 		msg.setReplace(true);
-		VertxUtils.writeMsg("webcmds",JsonUtils.toJson(msg)); */
+		VertxUtils.writeMsg("webcmds",JsonUtils.toJson(msg));
 
 		/* dropdown search here */
 		DropdownUtils dropdown = new DropdownUtils(serviceToken);
@@ -82,7 +78,6 @@ rule "HELPER_LNK_INDUSTRY"
 
 		/* Send the dropdown options */
 		dropdown.sendSearchResults("GRP_OCCUPATION_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
-
 
 		/* Retract the answer message so the rule doesn't fire again */
 		retract(answer);
