@@ -54,22 +54,34 @@ rule "HELPER_LNK_HOST_COMPANY"
 		String code = hostCompanyCode.replace("\"", "").replace("[", "").replace("]", "");
 		System.out.println("code  :: " + code);
 
-		/* do the search here */
-		DropdownUtils dropdown = new DropdownUtils(serviceToken);
 
+		Answer repAnswer = new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", " ",false,true);
+		Answer supervisorAnswer = new Answer(sourceCode, targetCode, "LNK_INTERN_SUPERVISOR", " ",false,true);
+
+		BaseEntity baseEntity = beUtils.saveAnswer(repAnswer);
+		baseEntity = beUtils.saveAnswer(supervisorAnswer);
+		baseEntity = beUtils.saveAnswer(answer);
+		
+		/* Send the updated baseenttity to the frontend */
+		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
+		msg.setToken(beUtils.getGennyToken().getToken());
+		msg.setReplace(true);
+		VertxUtils.writeMsg("webcmds",JsonUtils.toJson(msg));
+
+		/* dropdown search here */
+		DropdownUtils dropdown = new DropdownUtils(serviceToken);
 		dropdown.setNewSearch("Dropdown", "Fetch Dropdown Items")
 											.addFilter("PRI_IS_HOST_CPY_REP", true)
 											.setSourceCode(code)
 											.setPageStart(0)
 											.setPageSize(1000);
-
+		
+		/* Send the dropdown options */
 		dropdown.sendSearchResults("GRP_HOST_COMPANY_REP_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
 		
-		answersToSave.add(answer);
 		retract(answer);
-		update(answersToSave);
-		update(output);
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
+		update(output);
 end
