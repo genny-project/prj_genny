@@ -54,34 +54,34 @@ rule "HELPER_LNK_INDUSTRY"
 		String code = industryCode.replace("\"", "").replace("[", "").replace("]", "");
 		System.out.println("code  :: " + code);
 
+		Answer occupationAnswer = new Answer(sourceCode, targetCode, "LNK_OCCUPATION", " ",false,true);
+		System.out.println("occupationAnswer  :: " + occupationAnswer);
+
+		BaseEntity baseEntity = beUtils.saveAnswer(occupationAnswer);
+		baseEntity = beUtils.saveAnswer(answer);
+		
+		/* Send the updated baseenttity to the frontend */
+		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
+		msg.setToken(beUtils.getGennyToken().getToken());
+		msg.setReplace(true);
+		VertxUtils.writeMsg("webcmds",JsonUtils.toJson(msg));
+
 		/* dropdown search here */
 		DropdownUtils dropdown = new DropdownUtils(serviceToken);
-
 		dropdown.setNewSearch("Dropdown", "Fetch Dropdown Items")
 											.addColumn("PRI_NAME","Name")
 											.setSourceCode(code)
 											.setPageStart(0)
 											.setPageSize(1000);
 
+		/* Send the dropdown options */
 		dropdown.sendSearchResults("GRP_OCCUPATION_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
 
-		Answer occupationAnswer = new Answer(sourceCode, targetCode, "LNK_OCCUPATION", " ",false,true);
-		System.out.println("occupationAnswer1  :: " + occupationAnswer);
-		
-		BaseEntity baseEntity = beUtils.saveAnswer(occupationAnswer);
-		baseEntity = beUtils.saveAnswer(answer);
-		
-		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
-		msg.setToken(beUtils.getGennyToken().getToken());
-		msg.setReplace(true);
-		VertxUtils.writeMsg("webcmds",JsonUtils.toJson(msg));
-		
-		/* answersToSave.add(answer); */
-		/* update(answersToSave); */
+
+		/* Retract the answer message so the rule doesn't fire again */
+		retract(answer);
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
-		
-		retract(answer);
 		update(output);
 end
