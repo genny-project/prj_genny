@@ -62,6 +62,29 @@ rule "HELPER_LNK_INDUSTRY"
 		BaseEntity baseEntity = beUtils.saveAnswer(occupationAnswer);
 		baseEntity = beUtils.saveAnswer(answer);
 		
+		
+		
+		String lnk_industry = targetCode.getValue("LNK_INDUSTRY", null);
+		lnk_industry = lnk_industry.replace("\"", "").replace("[", "").replace("]", "");
+		BaseEntity industry_Be = beUtils.getBaseEntityByCode(lnk_industry);
+		String industry = industry_Be.getValue("PRI_NAME", null);
+		
+		String lnk_occupation = targetCode.getValue("LNK_OCCUPATION", null);
+		lnk_occupation = lnk_occupation.replace("\"", "").replace("[", "").replace("]", "");
+		BaseEntity occupation_Be = beUtils.getBaseEntityByCode(lnk_occupation);
+		String occupation = occupation_Be.getValue("PRI_NAME", null);
+		
+		System.out.println("##################################### DUDE: industry = " +industry);
+ 		System.out.println("##################################### DUDE: occupation = " +occupation);
+		
+ 		Answer priIndustryAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_INDUSTRY", industry);
+ 		Answer priOccupationAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_OCCUPATION", occupation);
+ 		
+ 		beUtils.saveAnswers(priIndustryAnswer);
+ 		beUtils.saveAnswers(priOccupationAnswer);	
+		
+		
+		
 		/* Send the updated baseenttity to the frontend */
 		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
 		msg.setToken(beUtils.getGennyToken().getToken());
