@@ -42,10 +42,24 @@ rule "QUE_TABLE_NEXT_BTN"
 		
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" NEXT for "+searchBE.getCode()); 
 		
-		Integer pageIndex = searchBE.getValue("SCH_PAGE_START",0);
-		Integer pageSize = searchBE.getValue("SCH_PAGE_SIZE", GennySettings.defaultPageSize);
-		Integer numRecords = searchBE.getValue("PRI_TOTAL_RESULTS", 1000);  /* default 1000 */		
-
+		Integer pageIndex  = 0;
+		Integer pageSize = GennySettings.defaultPageSize;
+		Integer numRecords = 1000;
+		try {
+		System.out.println("pageIndexStr "+searchBE.getValueAsString("SCH_PAGE_START"));
+		pageIndex = searchBE.getValue("SCH_PAGE_START",0);
+		System.out.println("Got past pageIndex");
+		System.out.println("pageSizeStr "+searchBE.getValueAsString("SCH_PAGE_SIZE"));
+		pageSize = searchBE.getValue("SCH_PAGE_SIZE", GennySettings.defaultPageSize);
+		System.out.println("Got past pageSize");
+		System.out.println("numRecordsStr "+searchBE.getValueAsString("PRI_TOTAL_RESULTS"));
+		numRecords = searchBE.getValue("PRI_TOTAL_RESULTS", 1000);  /* default 1000 */	
+		System.out.println("Got past numRecords");	
+		} catch (ClassCastException e)
+		{
+			System.out.println(e.getLocalizedMessage());
+			numRecords = 1000;
+		}
 		pageIndex = pageIndex + pageSize;
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" NEXT for "+searchBE.getCode()+" pageIndex="+pageIndex+", pageSize="+pageSize+", numRecords="+numRecords); 
 		if ((pageIndex <= numRecords)||(numRecords < 0)) { /* handle hack for numRecords=-1 */
@@ -64,7 +78,7 @@ rule "QUE_TABLE_NEXT_BTN"
 				userToken.getToken());
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" NEXT for "+searchBE.getCode()+" About to go into search! "); 
 		
-			long totalTime = CacheSearchUtils.searchTable(beUtils,searchBE, cache);
+			long totalTime = TableUtils.searchTable(beUtils,searchBE, cache);
 
 			System.out.println("total took " + (totalTime) + " ms"); 
 			}
