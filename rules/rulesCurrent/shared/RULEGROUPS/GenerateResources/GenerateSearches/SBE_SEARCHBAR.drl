@@ -38,10 +38,11 @@ rule "SBE_SEARCHBAR"
 		if (project != null) {
          SearchEntity searchBE = new SearchEntity(drools.getRule().getName(),project.getValue("PRI_NAME",projectCode)+" Search")
   	     .addSort("PRI_NAME","Name",SearchEntity.Sort.ASC)
+  	     .addFilter("PRI_CODE",SearchEntity.StringFilter.LIKE,"PER_%")
   	     .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%")
 					.addColumn("PRI_EVENT_VIEW", "View")
 					.addColumn("PRI_NAME", "Name")
-					.addColumn("PRI_LANDLINE", "Phone")
+					.addColumn("PRI_PHONE", "Phone")
 					.addColumn("PRI_EMAIL", "Email")
 					.addColumn("PRI_ADDRESS_FULL","Address")
   	     .setPageStart(0)

@@ -31,11 +31,13 @@ rule "QUE_TABLE_NEXT_BTN"
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Parent code :  " + $message.getData().getParentCode());
 			
 			BaseEntityUtils beUtils = new BaseEntityUtils(userToken); 
+			Boolean cache = true;
 			
 		/* get current search */
 		TableUtils tableUtils = new TableUtils(beUtils);
 		
-		SearchEntity searchBE = tableUtils.getSessionSearch("SBE_SEARCHBAR");
+ 		SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "LAST-SEARCH",
+				userToken.getSessionCode(), SearchEntity.class);
 		
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" NEXT for "+searchBE.getCode()); 
 		
@@ -44,10 +46,11 @@ rule "QUE_TABLE_NEXT_BTN"
 		Integer numRecords = searchBE.getValue("PRI_TOTAL_RESULTS", 1000);  /* default 1000 */		
 
 		pageIndex = pageIndex + pageSize;
-		if (pageIndex <= numRecords) {
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" NEXT for "+searchBE.getCode()+" pageIndex="+pageIndex+", pageSize="+pageSize+", numRecords="+numRecords); 
+		if ((pageIndex <= numRecords)||(numRecords < 0)) { /* handle hack for numRecords=-1 */
 			Integer pageNumber = (pageIndex / pageSize) +1;
 		
-
+			System.out.println(ruleDetails+" "+drools.getRule().getName()+" NEXT for "+searchBE.getCode()+" NEW PageNumber is "+pageNumber); 
 			Answer pageAnswer = new Answer(userToken.getUserCode(),searchBE.getCode(), "SCH_PAGE_START", pageIndex+"");
 			Answer pageNumberAnswer = new Answer(userToken.getUserCode(),searchBE.getCode(), "PRI_INDEX", pageNumber+"");
 
@@ -56,10 +59,13 @@ rule "QUE_TABLE_NEXT_BTN"
 		
 			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
 				beUtils.getGennyToken().getToken());
+			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "LAST-SEARCH", userToken.getSessionCode(), searchBE,
+				userToken.getToken());
+			System.out.println(ruleDetails+" "+drools.getRule().getName()+" NEXT for "+searchBE.getCode()+" About to go into search! "); 
 		
+			long totalTime = TableUtils.searchTable(beUtils,searchBE, cache);
 
-        	ShowFrame.display(userToken, "FRM_TABLE_VIEW", "FRM_CONTENT", "Test");
- 			tableUtils.performSearch(serviceToken,"SBE_SEARCHBAR", null, null, null);
+			System.out.println("total took " + (totalTime) + " ms"); 
 			}
   	       output.setTypeOfResult("NONE");
   	       output.setResultCode("NONE");  /* dont display anything new */

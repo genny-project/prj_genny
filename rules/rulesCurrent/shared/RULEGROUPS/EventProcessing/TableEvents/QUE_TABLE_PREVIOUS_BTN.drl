@@ -30,11 +30,13 @@ rule "QUE_TABLE_PREVIOUS_BTN"
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Parent code :  " + $message.getData().getParentCode());
 		
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken); 
+		Boolean cache = true;
 		
 		/* get current search */
 		TableUtils tableUtils = new TableUtils(beUtils);
 		
-		SearchEntity searchBE = tableUtils.getSessionSearch("SBE_SEARCHBAR");
+ 		SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "LAST-SEARCH",
+				userToken.getSessionCode(), SearchEntity.class);
 			
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" PREV for "+searchBE.getCode()); 
 		
@@ -49,17 +51,18 @@ rule "QUE_TABLE_PREVIOUS_BTN"
 		Integer pageNumber = (pageIndex / pageSize) + 1;
 		
 		
-			Answer pageAnswer = new Answer(beUtils.getGennyToken().getUserCode(),searchBE.getCode(), "SCH_PAGE_START", pageIndex+"");
-			Answer pageNumberAnswer = new Answer(beUtils.getGennyToken().getUserCode(),searchBE.getCode(), "PRI_INDEX", pageNumber+"");
+		Answer pageAnswer = new Answer(beUtils.getGennyToken().getUserCode(),searchBE.getCode(), "SCH_PAGE_START", pageIndex+"");
+		Answer pageNumberAnswer = new Answer(beUtils.getGennyToken().getUserCode(),searchBE.getCode(), "PRI_INDEX", pageNumber+"");
 
 		searchBE = beUtils.updateBaseEntity(searchBE, pageAnswer,SearchEntity.class);
 		searchBE = beUtils.updateBaseEntity(searchBE, pageNumberAnswer,SearchEntity.class);
 			
-			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
+		VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
 				beUtils.getGennyToken().getToken());
-			
-	        ShowFrame.display(userToken, "FRM_TABLE_VIEW", "FRM_CONTENT", "Test");
-		    tableUtils.performSearch( serviceToken,"SBE_SEARCHBAR",null, null, null);
+		VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "LAST-SEARCH", userToken.getSessionCode(), searchBE,
+				userToken.getToken());
+		
+		long totalTime = TableUtils.searchTable(beUtils,searchBE, cache);
 
 			
   	    output.setTypeOfResult("NONE");
