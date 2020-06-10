@@ -75,6 +75,9 @@ rule "HELPER_LNK_HOST_COMPANY"
 											.setSourceCode(code)
 											.setPageStart(0)
 											.setPageSize(1000);
+
+		/* Send the dropdown options */
+		dropdown.sendSearchResults("GRP_HOST_COMPANY_REP_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
 		
 		retract(answer);
 
