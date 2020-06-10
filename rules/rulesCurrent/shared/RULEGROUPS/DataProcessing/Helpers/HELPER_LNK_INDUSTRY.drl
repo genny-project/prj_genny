@@ -54,42 +54,35 @@ rule "HELPER_LNK_INDUSTRY"
 		String code = industryCode.replace("\"", "").replace("[", "").replace("]", "");
 		System.out.println("code  :: " + code);
 
-		answersToSave.add(answer);
-		
-		
 		Answer occupationAnswer = new Answer(sourceCode, targetCode, "LNK_OCCUPATION", " ",false,true);
-		System.out.println("occupationAnswer1  :: " + occupationAnswer);
-		
-		beUtils.saveAnswer(occupationAnswer);
+		System.out.println("occupationAnswer  :: " + occupationAnswer);
 
-		BaseEntity baseEntity = beUtils.updateBaseEntity(targetCode,occupationAnswer);
-		beUtils.updateBaseEntity(targetCode,occupationAnswer);
-		System.out.println("baseEntity1  :: " + baseEntity);
+		System.out.println("Saving industry and occupation answers !");
+
+		BaseEntity baseEntity = beUtils.saveAnswer(occupationAnswer);
+		baseEntity = beUtils.saveAnswer(answer);
 		
-		insert(occupationAnswer);
-		System.out.println("occupationAnswer2  :: " + occupationAnswer);
-		
-		/* Update the baseenetity in frontend */
+		/* Send the updated baseenttity to the frontend */
 		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
 		msg.setToken(beUtils.getGennyToken().getToken());
 		msg.setReplace(true);
 		VertxUtils.writeMsg("webcmds",JsonUtils.toJson(msg));
-		System.out.println("msg  :: " + msg);
 
 		/* dropdown search here */
 		DropdownUtils dropdown = new DropdownUtils(serviceToken);
-		System.out.println("dropdown  :: " + dropdown);
 		dropdown.setNewSearch("Dropdown", "Fetch Dropdown Items")
 											.addColumn("PRI_NAME","Name")
 											.setSourceCode(code)
 											.setPageStart(0)
 											.setPageSize(1000);
-		System.out.println("dropdown  :: " + dropdown);
 
+		/* Send the dropdown options */
 		dropdown.sendSearchResults("GRP_OCCUPATION_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
-		System.out.println("dropdown  :: " + dropdown);
-		
+
+		/* Retract the answer message so the rule doesn't fire again */
 		retract(answer);
+
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
+		update(output);
 end

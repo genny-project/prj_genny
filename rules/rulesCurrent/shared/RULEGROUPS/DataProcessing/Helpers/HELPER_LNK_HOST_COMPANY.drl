@@ -42,7 +42,6 @@ rule "HELPER_LNK_HOST_COMPANY"
 		System.out.println("HELPER_LNK_HOST_COMPANY fired");
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+"Processing Helper HOST COMPANY SELECTION Answer/Data : " + answer );
 
-
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		System.out.println("sourceCode :: " + sourceCode);
 		
@@ -54,44 +53,48 @@ rule "HELPER_LNK_HOST_COMPANY"
 		
 		String code = hostCompanyCode.replace("\"", "").replace("[", "").replace("]", "");
 		System.out.println("code  :: " + code);
-	
 
-		/* clear the associated attribute's answer here */
 
 		Answer repAnswer = new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", " ",false,true);
 		Answer supervisorAnswer = new Answer(sourceCode, targetCode, "LNK_INTERN_SUPERVISOR", " ",false,true);
-		answersToSave.add(answer);
-		answersToSave.add(repAnswer);
-		answersToSave.add(supervisorAnswer);
+		Answer internshipAnswer = new Answer(sourceCode, targetCode, "LNK_INTERNSHIP", " ",false,true);
 
-		BaseEntity baseEntity = beUtils.updateBaseEntity(targetCode,repAnswer);
-		/*beUtils.updateBaseEntity(targetCode,repAnswer);*/
-
-		baseEntity = beUtils.updateBaseEntity(targetCode,supervisorAnswer);
-		/*beUtils.updateBaseEntity(targetCode,supervisorAnswer);*/
-
-		insert(repAnswer);
-		insert(supervisorAnswer);
-
+		BaseEntity baseEntity = beUtils.saveAnswer(repAnswer);
+		baseEntity = beUtils.saveAnswer(supervisorAnswer);
+		baseEntity = beUtils.saveAnswer(answer);
+		baseEntity = beUtils.saveAnswer(internshipAnswer);
+		
+		/* Send the updated baseenttity to the frontend */
 		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
 		msg.setToken(beUtils.getGennyToken().getToken());
 		msg.setReplace(true);
 		VertxUtils.writeMsg("webcmds",JsonUtils.toJson(msg));
 
-		update(answersToSave);
-
-		/* do the search here */
+		/* dropdown search here For companyRep */
 		DropdownUtils dropdown = new DropdownUtils(serviceToken);
-
-		dropdown.setNewSearch("Dropdown", "Fetch Dropdown Items")
+		dropdown.setNewSearch("HCR Dropdown", "Fetch HCR Dropdown Items")
 											.addFilter("PRI_IS_HOST_CPY_REP", true)
 											.setSourceCode(code)
 											.setPageStart(0)
 											.setPageSize(1000);
-
+		
+		/* Send the dropdown options */
 		dropdown.sendSearchResults("GRP_HOST_COMPANY_REP_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
+
+		/* dropdown search here For internship */
+		DropdownUtils dropdownInternship = new DropdownUtils(serviceToken);
+		dropdownInternship.setNewSearch("Internship Dropdown", "Fetch Internship Dropdown Items")
+											.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%")
+											.addFilter("LNK_HOST_COMPANY", SearchEntity.StringFilter.EQUAL, hostCompanyCode)
+											.setPageStart(0)
+											.setPageSize(1000);
+		
+		/* Send the dropdown options */
+		dropdownInternship.sendSearchResults("GRP_INTERNSHIP_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
+		
 		retract(answer);
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
+		update(output);
 end
