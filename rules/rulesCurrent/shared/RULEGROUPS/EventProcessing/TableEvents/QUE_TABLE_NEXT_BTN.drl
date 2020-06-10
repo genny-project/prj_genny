@@ -11,6 +11,7 @@ import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwanda.Answer;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.TableUtils;
+import life.genny.utils.CacheSearchUtils;
 import life.genny.qwandautils.GennySettings;
 import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 import life.genny.qwanda.rule.RuleDetails;
@@ -63,7 +64,7 @@ rule "QUE_TABLE_NEXT_BTN"
 				userToken.getToken());
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" NEXT for "+searchBE.getCode()+" About to go into search! "); 
 		
-			long totalTime = TableUtils.searchTable(beUtils,searchBE, cache);
+			long totalTime = CacheSearchUtils.searchTable(beUtils,searchBE, cache);
 
 			System.out.println("total took " + (totalTime) + " ms"); 
 			}
