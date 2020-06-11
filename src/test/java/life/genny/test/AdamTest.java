@@ -31,6 +31,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManagerFactory;
 
@@ -68,6 +69,7 @@ import com.google.gson.reflect.TypeToken;
 
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 //import life.genny.bootxport.bootx.GoogleImportService;
 //import life.genny.bootxport.bootx.XlsxImport;
@@ -91,6 +93,7 @@ import life.genny.qwanda.Ask;
 import life.genny.qwanda.Context;
 import life.genny.qwanda.ContextType;
 import life.genny.qwanda.VisualControlType;
+import life.genny.qwanda.attribute.EntityAttribute;
 import life.genny.qwanda.datatype.DataType;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.SearchEntity;
@@ -102,6 +105,7 @@ import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventBtnClickMessage;
 import life.genny.qwanda.message.QEventMessage;
+import life.genny.qwanda.message.QSearchBeResult;
 import life.genny.qwanda.validation.Validation;
 import life.genny.qwanda.validation.ValidationList;
 import life.genny.qwandautils.GennyCacheInterface;
@@ -161,6 +165,135 @@ public class AdamTest {
 	protected static GennyToken serviceToken;
 
 	@Test
+	public void searchCacheTest()
+	{
+		System.out.println("Search cache test");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+		} else {
+			// VertxUtils.cachedEnabled = false;
+			VertxUtils.cachedEnabled = false;
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+			eventBusMock = new EventBusMock();
+			vertxCache = new JunitCache(); // MockCache
+			VertxUtils.init(eventBusMock, vertxCache);
+		}
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		beUtils.setServiceToken(serviceToken);
+		
+		TableUtils tableUtils = new TableUtils(beUtils);
+
+		QDataBaseEntityMessage msg = null;
+		SearchEntity searchBE = VertxUtils.getObject(realm, "", "SBE_EDU_PROVIDERS_ACTIVE", SearchEntity.class, serviceToken.getToken());
+		long starttime = System.currentTimeMillis();
+
+		String beFilter1 = null;
+		String beFilter2 = null;
+		String attributeFilterValue1="";
+		String attributeFilterCode1 = null;
+		String attributeFilterValue2="";
+		String attributeFilterCode2 = null;
+		Integer pageStart = searchBE.getValue("SCH_PAGE_START",0);
+		Integer pageSize = searchBE.getValue("SCH_PAGE_SIZE",GennySettings.defaultPageSize);
+		
+			List<String> attributeFilter = new ArrayList<String>();
+			for (EntityAttribute ea : searchBE.getBaseEntityAttributes()) {
+				
+				if (ea.getAttributeCode().startsWith("PRI_CODE")) {
+					if (beFilter1==null) {
+						beFilter1 = ea.getAsString();
+					} else if (beFilter2==null) {
+						beFilter2 = ea.getAsString();
+					}
+					
+				} else if ((ea.getAttributeCode().startsWith("COL_")) || (ea.getAttributeCode().startsWith("CAL_"))){
+					attributeFilter.add(ea.getAttributeCode().substring("COL_".length()));
+					
+				} else if (ea.getAttributeCode().startsWith("PRI_")&&(!ea.getAttributeCode().equals("PRI_CODE"))) {
+					if (attributeFilterCode1==null) {
+						if (ea.getValueString()!=null) {
+							attributeFilterValue1 = " eb.valueString "+ea.getAttributeName()+" '"+ea.getValueString()+"'";
+						} else if (ea.getValueBoolean()!=null) {
+							attributeFilterValue1 = " eb.valueBoolean = "+(ea.getValueBoolean()?"true":"false");
+						} 
+						attributeFilterCode1 = ea.getAttributeCode();
+						
+					} else {
+						if (attributeFilterCode2==null) {
+							if (ea.getValueString()!=null) {
+								attributeFilterValue2 = " ec.valueString "+ea.getAttributeName()+" '"+ea.getValueString()+"'";
+							} else if (ea.getValueBoolean()!=null) {
+								attributeFilterValue2 = " ec.valueBoolean = "+(ea.getValueBoolean()?"true":"false");
+							} 
+							attributeFilterCode2 = ea.getAttributeCode();
+						}
+					}
+				}
+			}
+			String hql = "select distinct ea.baseEntityCode from EntityAttribute ea ";
+				hql +=	 ", EntityAttribute eb ";
+		 		if (attributeFilterCode2!=null) {
+		 			hql +=	 ", EntityAttribute ec ";
+		 		}
+			hql +=   " where ea.baseEntityCode=eb.baseEntityCode ";
+	 		hql += " and ea.baseEntityCode like '"+beFilter1+"'  ";
+	 	//	hql += " or ea.baseEntityCode like '"+beFilter2+"')  ";
+	 		hql += " and eb.attributeCode = '"+attributeFilterCode1+"' and "+attributeFilterValue1;
+	 		if (attributeFilterCode2!=null) {
+	 			hql += " and ec.attributeCode = '"+attributeFilterCode2+"' and "+attributeFilterValue2;
+	 		}
+
+	 		
+	 		String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
+			JsonObject resultJson;
+			QDataBaseEntityMessage resultMsg = new QDataBaseEntityMessage();
+			String realm = serviceToken.getRealm();
+			resultMsg.setToken(beUtils.getGennyToken().getToken());
+			try {
+				String resultJsonStr = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search24/"+hql2+"/"+pageStart+"/"+pageSize, serviceToken.getToken(),120);
+				
+				resultJson = new JsonObject(resultJsonStr);
+				
+				Type listType = new TypeToken<List<String>>() {
+				}.getType();
+				Long total = resultJson.getLong("total");
+				JsonArray result = resultJson.getJsonArray("codes");
+				List<String> resultCodes = new ArrayList<String>();
+				for(int i = 0; i < result.size(); i++){
+				    String code = result.getString(i);
+				   resultCodes.add(code);
+				}
+				String[] filterArray = attributeFilter.toArray(new String[0]);
+				List<BaseEntity> beList = resultCodes.stream().map(e -> {
+					BaseEntity be = beUtils.getBaseEntityByCode(e); 
+					be = VertxUtils.privacyFilter(be, filterArray);
+					return be;
+					}).collect(Collectors.toList());
+				resultMsg.setItems(beList.toArray(new BaseEntity[0]));
+				resultMsg.setTotal(total);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}		
+			long endtime = System.currentTimeMillis();
+			System.out.println("Total time taken = "+(endtime-starttime)+" ms");
+	}
+	
+	
+	//@Test
 	public void slackTest() {
 		System.out.println("Journal Slack test");
 		GennyToken userToken = null;
@@ -442,7 +575,7 @@ public class AdamTest {
 		CompletionService<QBulkMessage> service = new ExecutorCompletionService<>(WORKER_THREAD_POOL);
 
 		TableFrameCallable tfc = new TableFrameCallable(beUtils, cache);
-		SearchCallable sc = new SearchCallable(tableUtils, searchBE.getCode(), beUtils, cache);
+		SearchCallable sc = new SearchCallable(tableUtils, searchBE, beUtils, cache);
 
 		List<Callable<QBulkMessage>> callables = Arrays.asList(tfc, sc);
 
