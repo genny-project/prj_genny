@@ -55,11 +55,10 @@ rule "PRI_SEARCH_TEXT"
 
  	    ShowFrame.display(beUtils.getGennyToken(), "FRM_QUE_TAB_VIEW", "FRM_CONTENT", "Test");
  	    ShowFrame.display(beUtils.getGennyToken(), "FRM_TABLE_VIEW", "FRM_TAB_CONTENT", "Test");
- 		tableUtils.performSearch(serviceToken,"SBE_SEARCHBAR", answer, null, null);
+ 		tableUtils.performSearch(serviceToken,"SBE_SEARCHBAR", answer, null, null); 
 
   
-		retract(message);
-		System.out.println("total took " + (totalTime) + " ms"); 
+		retract(answer);
 		output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */
 
