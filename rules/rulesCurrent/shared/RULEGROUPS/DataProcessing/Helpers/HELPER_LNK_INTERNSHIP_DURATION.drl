@@ -51,7 +51,7 @@ rule "HELPER_LNK_INTERNSHIP_DURATION"
 		String value = answer.getValue();
 		System.out.println("hcCode :: " + value);
 		
-		String code = industryCode.replace("\"", "").replace("[", "").replace("]", "");
+		String code = value.replace("\"", "").replace("[", "").replace("]", "");
 		System.out.println("code  :: " + code);
 
 		
@@ -59,8 +59,8 @@ rule "HELPER_LNK_INTERNSHIP_DURATION"
 		BaseEntity getTheBe = beUtils.getBaseEntityByCode(code);
 		String name = getTheBe.getValue("PRI_NAME", null);		
 		System.out.println("##################################### DUDE: name = " +name);		
- 		Answer answer = new Answer(sourceCode, targetCode, "PRI_ASSOC_DURATION", name);
- 		beUtils.saveAnswer(answer);	
+ 		Answer newAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_DURATION", name);
+ 		beUtils.saveAnswer(newAnswer);	
 
 
 		/* Retract the answer message so the rule doesn't fire again */
