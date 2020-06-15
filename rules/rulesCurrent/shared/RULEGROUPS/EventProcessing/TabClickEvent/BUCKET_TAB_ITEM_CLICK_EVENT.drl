@@ -76,6 +76,7 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 				bucketUtils.sendBucketContexts(serviceToken);
 				bucketUtils.sendCards(FRM_BUCKET_CONTENT, userToken, serviceToken);
 				break; */
+				Boolean cache = true;
 				String code = "AVAILABLE_INTERNS";
 				System.out.println("SBE_CODE   ::   " +code); 
 				
