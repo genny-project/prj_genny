@@ -34,7 +34,7 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 
 			case "QUE_TAB_BUCKET_VIEW" : 
 
-				BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+			/* 	BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 				BucketUtils bucketUtils = new BucketUtils(beUtils);
 				insert(beUtils);		
 		
@@ -72,6 +72,15 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 
 				bucketUtils.sendBucketContexts(serviceToken);
 				bucketUtils.sendCards(FRM_BUCKET_CONTENT, userToken, serviceToken);
+				break; */
+				String code = "SBE_AVAILABLE_INTERNS";
+				System.out.println("SBE_CODE   ::   " +code); 
+				
+				long totalTime = TableUtils.searchTable(beUtils,code, cache);
+				System.out.println("total took " + (totalTime) + " ms"); 
+				
+				output.setTypeOfResult("NONE");
+  	    output.setResultCode("NONE");  /* dont display anything new */
 				break;
 
 			case "QUE_TAB_DETAIL_VIEW" : 
