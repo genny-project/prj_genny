@@ -11,6 +11,7 @@ import life.genny.utils.OutputParam;
 import life.genny.utils.BucketUtils;
 import life.genny.models.ThemePosition;
 import life.genny.models.ThemeAttributeType;
+import life.genny.utils.TableUtils;
 
 rule "BUCKET_TAB_ITEM_CLICK_EVENT"
     ruleflow-group 'EventProcessing'
