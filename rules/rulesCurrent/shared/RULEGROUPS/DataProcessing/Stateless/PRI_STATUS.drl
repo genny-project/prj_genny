@@ -27,7 +27,7 @@ rule "PRI_STATUS"
     when
       beUtils : BaseEntityUtils()
 	  serviceToken : GennyToken( code == "PER_SERVICE") 
-	  answer : Answer( attributeCode == "PRI_STATUS" )
+	  answer : Answer( attributeCode == "PRI_STATUS" && targetCode.startsWith("JNL"))
 	  answersToSave : Answers()
 	  output : OutputParam( )
      then
