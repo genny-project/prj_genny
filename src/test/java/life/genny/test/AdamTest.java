@@ -230,8 +230,7 @@ public class AdamTest {
 
 			resultJson = new JsonObject(resultJsonStr);
 			Long total = resultJson.getLong("total");
-			// check the cache
-
+			// check the cac
 			JsonArray result = resultJson.getJsonArray("codes");
 			List<String> resultCodes = new ArrayList<String>();
 			for (int i = 0; i < result.size(); i++) {
