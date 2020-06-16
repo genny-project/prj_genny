@@ -78,10 +78,16 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 				break; */
 				Boolean cache = true;
 				String code = "AVAILABLE_INTERNS";
+				String code2 = "APPLIED_APPLICATIONS";
+				
 				System.out.println("SBE_CODE   ::   " +code); 
+				System.out.println("SBE_CODE   ::   " +code2); 
 				
 				long totalTime = TableUtils.searchTable(beUtils,code, cache);
 				System.out.println("total took " + (totalTime) + " ms"); 
+
+				long totalTime2 = TableUtils.searchTable(beUtils,code2, cache);
+				System.out.println("total took " + (totalTime2) + " ms"); 
 
 				output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */
