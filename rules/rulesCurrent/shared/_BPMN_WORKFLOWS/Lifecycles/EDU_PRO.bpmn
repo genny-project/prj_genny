@@ -299,7 +299,7 @@ contextMap.put(&quot;STARTDATE&quot;, &quot;2019Nov01&quot;); /*BaseEntity Code*
 
 kcontext.setVariable(&quot;templateMap&quot;, contextMap);
 
-kcontext.setVariable(&quot;notificationSignal&quot;, QBaseMSGMessageType.SMS);
+kcontext.setVariable(&quot;notificationSignal&quot;, QBaseMSGMessageType.EMAIL);
 
 kcontext.setVariable(&quot;notificationTemplate&quot;, &quot;MSG_GENNY_INVITE&quot;);
 
