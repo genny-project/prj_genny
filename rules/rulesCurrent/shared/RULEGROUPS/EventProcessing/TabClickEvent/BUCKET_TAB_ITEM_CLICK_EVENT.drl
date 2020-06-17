@@ -41,7 +41,7 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 				String[] codes = { 
 					"AVAILABLE_INTERNS", 
 					"APPLIED_APPLICATIONS",
-					"SHORTLISTED_APPLICATIONS"
+					"SHORTLISTED_APPLICATIONS",
 					"INTERVIEWED_APPLICATIONS",
 					"OFFERED_APPLICATIONS",
 					"PLACED_APPLICATIONS",
@@ -52,7 +52,7 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 					
 					System.out.println("SBE_CODE   ::   " +code); 
 					long totalTime = TableUtils.searchTable(beUtils,code, cache);
-					System.out.println("total took " + (totalTime2) + " ms"); 
+					System.out.println("total took " + (totalTime) + " ms"); 
 
 				}
 
