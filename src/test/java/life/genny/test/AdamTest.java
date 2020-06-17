@@ -198,7 +198,10 @@ public class AdamTest {
 		TableUtils tableUtils = new TableUtils(beUtils);
 
 		QDataBaseEntityMessage msg = null;
-		SearchEntity searchBE = VertxUtils.getObject(realm, "", "SBE_EDU_PROVIDERS_ACTIVE", SearchEntity.class, serviceToken.getToken());
+	//	String searchCode = "SBE_EDU_PROVIDERS_ACTIVE";
+		String searchCode = "SBE_INTERNS";		
+		SearchEntity searchBE = VertxUtils.getObject(realm, "", searchCode, SearchEntity.class, serviceToken.getToken());
+
 		long starttime = System.currentTimeMillis();
 		long endtime = 0;
 
@@ -221,6 +224,7 @@ public class AdamTest {
 //hql =  select distinct ea.baseEntityCode from EntityAttribute ea , EntityAttribute eb , EntityAttribute ec  where ea.baseEntityCode=eb.baseEntityCode  and (ea.baseEntityCode like 'CPY_%'   or ea.baseEntityCode like 'null')   and eb.attributeCode = 'PRI_STATUS' and  eb.valueString = 'ACTIVE' and ea.baseEntityCode=ec.baseEntityCode  and ec.attributeCode = 'PRI_IS_EDU_PROVIDER' and  ec.valueBoolean = true
 		String hql = results._1;
 //hql = "select distinct ea.baseEntityCode from EntityAttribute ea , EntityAttribute eb , EntityAttribute ed  where ea.baseEntityCode=eb.baseEntityCode  and (ea.baseEntityCode like 'CPY_%'  )   and eb.attributeCode = 'PRI_IS_EDU_PROVIDER' and  eb.valueBoolean = true and ea.baseEntityCode=ed.baseEntityCode and ed.attributeCode='PRI_NAME'  order by ed.valueString ASC";
+//hql = "select distinct ea.baseEntityCode from EntityAttribute ea , EntityAttribute eb ,  EntityAttribute ed  where ea.baseEntityCode=eb.baseEntityCode  and (ea.baseEntityCode like 'PER_%'  )   and eb.attributeCode = 'PRI_IS_INTERN' and  eb.valueBoolean = true   and ea.baseEntityCode=ed.baseEntityCode and ed.attributeCode='PRI_NAME'  order by ed.valueString ASC";
 		String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
 		JsonObject resultJson;
 		try {
