@@ -1,0 +1,15 @@
+pipeline {
+  agent any
+  stages {
+    stage('Stage 1') {
+      sh label: 'runProjects', script: '''#!/bin/bash
+            echo "The Pull Request Branch is:: ";
+            '''
+    }
+    stage('Stage 2') {
+      sh label: 'runProjects', script: '''#!/bin/bash
+            echo "The Pull Request Branch is:: ";
+            '''
+    }
+    }
+}
