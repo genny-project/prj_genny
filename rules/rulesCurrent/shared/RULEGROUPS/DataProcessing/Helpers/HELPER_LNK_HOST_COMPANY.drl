@@ -54,31 +54,13 @@ rule "HELPER_LNK_HOST_COMPANY"
 		String code = hostCompanyCode.replace("\"", "").replace("[", "").replace("]", "");
 		System.out.println("code  :: " + code);
 
-
-		Answer repAnswer = new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", " ",false,true);
-		Answer supervisorAnswer = new Answer(sourceCode, targetCode, "LNK_INTERN_SUPERVISOR", " ",false,true);
-
-		BaseEntity baseEntity = beUtils.saveAnswer(repAnswer);
-		baseEntity = beUtils.saveAnswer(supervisorAnswer);
-		baseEntity = beUtils.saveAnswer(answer);
+		BaseEntity companyBe = beUtils.getBaseEntityByCode(code);
+		String name = companyBe.getValue("PRI_NAME", null);		
 		
-		/* Send the updated baseenttity to the frontend */
-		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
-		msg.setToken(beUtils.getGennyToken().getToken());
-		msg.setReplace(true);
-		VertxUtils.writeMsg("webcmds",JsonUtils.toJson(msg));
+		System.out.println("##################################### DUDE: name = " +name);		
+ 		Answer assocHcAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HC", name);
+ 		beUtils.saveAnswer(assocHcAnswer);		
 
-		/* dropdown search here For companyRep */
-		DropdownUtils dropdown = new DropdownUtils(serviceToken);
-		dropdown.setNewSearch("HCR Dropdown", "Fetch HCR Dropdown Items")
-											.addFilter("PRI_IS_HOST_CPY_REP", true)
-											.setSourceCode(code)
-											.setPageStart(0)
-											.setPageSize(1000);
-
-		/* Send the dropdown options */
-		dropdown.sendSearchResults("GRP_HOST_COMPANY_REP_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
-		
 		retract(answer);
 
 		output.setTypeOfResult("NONE");
