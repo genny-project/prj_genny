@@ -225,6 +225,7 @@ public class AdamTest {
 		String hql = results._1;
 //hql = "select distinct ea.baseEntityCode from EntityAttribute ea , EntityAttribute eb , EntityAttribute ed  where ea.baseEntityCode=eb.baseEntityCode  and (ea.baseEntityCode like 'CPY_%'  )   and eb.attributeCode = 'PRI_IS_EDU_PROVIDER' and  eb.valueBoolean = true and ea.baseEntityCode=ed.baseEntityCode and ed.attributeCode='PRI_NAME'  order by ed.valueString ASC";
 //hql = "select distinct ea.baseEntityCode from EntityAttribute ea , EntityAttribute eb ,  EntityAttribute ed  where ea.baseEntityCode=eb.baseEntityCode  and (ea.baseEntityCode like 'PER_%'  )   and eb.attributeCode = 'PRI_IS_INTERN' and  eb.valueBoolean = true   and ea.baseEntityCode=ed.baseEntityCode and ed.attributeCode='PRI_NAME'  order by ed.valueString ASC";
+hql = "select distinct ea.baseEntityCode from life.genny.qwanda.attribute.EntityAttribute ea , life.genny.qwanda.attribute.EntityAttribute eb , life.genny.qwanda.attribute.EntityAttribute ec , life.genny.qwanda.attribute.EntityAttribute ed  where  ea.baseEntityCode=eb.baseEntityCode  and (ea.baseEntityCode like 'CPY_%'  )   and eb.attributeCode = 'PRI_STATUS' and  eb.valueString = 'ACTIVE' and ea.baseEntityCode=ec.baseEntityCode  and ec.attributeCode = 'PRI_IS_EDU_PROVIDER' and  ec.valueBoolean = true and ea.baseEntityCode=ed.baseEntityCode and ed.attributeCode='PRI_NAME'  order by ed.valueString ASC";
 		String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
 		JsonObject resultJson;
 		try {
