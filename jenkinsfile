@@ -1,0 +1,167 @@
+`node('master') {
+    try {
+        deleteDir()
+        // notifyStarted()
+        stage ('Secure Shell Into Remote Server') {
+            sh label: 'cloneProjects', script: '''#!/bin/bash
+            ver=v3.1.0
+            pullRequestBranch=$(echo $payload | jq --raw-output '(.pull_request.head.ref)')
+            pullRequestRepo=$(echo $payload | jq --raw-output '(.pull_request.head.repo.clone_url)')
+            ssh ubuntu@192.168.17.122 "(cd jenkins_projects;
+                                        cd genny_projects;
+                                        mkdir ${pullRequestBranch};
+                                        cd ${pullRequestBranch};
+                                        mkdir projects;cd projects;
+                                        mkdir genny;
+                                        cd genny)"
+            '''
+        }
+        stage ('Cloning') {
+            sh label: 'cloneProjects', script: '''#!/bin/bash
+            ver=v3.1.0
+            pullRequestBranch=$(echo $payload | jq --raw-output '(.pull_request.head.ref)')
+            pullRequestRepo=$(echo $payload | jq --raw-output '(.pull_request.head.repo.clone_url)')
+            echo "The Pull Request Branch is:: " $pullRequestBranch
+            echo "The Pull Request repository is:: " $pullRequestRepo
+            ssh ubuntu@192.168.17.122 "(cd jenkins_projects;
+                                        cd genny_projects;
+                                        cd ${pullRequestBranch};
+                                        cd projects;
+                                        cd genny;
+                                        cp ../../../../scripts/jenkinsClone.sh ../genny;
+                                        ./jenkinsClone.sh ${ver} ${pullRequestRepo} ${pullRequestBranch})"
+            '''
+        }
+        stage('Building') {
+            sh label: 'buildProjects', script: '''#!/bin/bash
+            ver=v3.1.0
+            pullRequestBranch=$(echo $payload | jq --raw-output '(.pull_request.head.ref)')
+            pullRequestRepo=$(echo $payload | jq --raw-output '(.pull_request.head.repo.clone_url)')
+            echo "The Pull Request Branch is:: " $pullRequestBranch
+            echo "The Pull Request repository is:: " $pullRequestRepo
+            ssh ubuntu@192.168.17.122 "(cd jenkins_projects;
+                                        cd genny_projects;
+                                        cd ${pullRequestBranch};
+                                        cd projects;
+                                        cd genny;
+                                        cp ../../../../scripts/jenkinsBuild.sh ../genny;
+                                        ./jenkinsBuild.sh ${ver} ${pullRequestRepo} ${pullRequestBranch})"
+            '''
+        }
+        stage('Running System') {
+            sh label: 'runProjects', script: '''#!/bin/bash
+            ver=v3.1.0
+            pullRequestBranch=$(echo $payload | jq --raw-output '(.pull_request.head.ref)')
+            pullRequestRepo=$(echo $payload | jq --raw-output '(.pull_request.head.repo.clone_url)')
+            echo "The Pull Request Branch is:: " $pullRequestBranch
+            echo "The Pull Request repository is:: " $pullRequestRepo
+            ssh ubuntu@192.168.17.122 "(cd jenkins_projects;
+                                        cd genny_projects;
+                                        cd ${pullRequestBranch};
+                                        cd projects;
+                                        cd genny;
+                                        cd genny-main;
+                                        ./run.sh dev1 up)"
+            ssh ubuntu@192.168.17.122 "(cd jenkins_projects;
+                                        cd genny_projects;
+                                        cd ${pullRequestBranch};
+                                        cd projects;
+                                        cd genny;
+                                        cp ../../../../scripts/checkIfSystemIsUp.sh ../genny;
+                                        ./checkIfSystemIsUp.sh)"
+            '''
+        }
+        stage('Running Gennyteer Tests') {
+            sh label: 'runTests', script: '''#!/bin/bash
+            ver=v3.1.0
+            pullRequestBranch=$(echo $payload | jq --raw-output '(.pull_request.head.ref)')
+            pullRequestRepo=$(echo $payload | jq --raw-output '(.pull_request.head.repo.clone_url)')
+            echo "The Pull Request Branch is:: " $pullRequestBranch
+            echo "The Pull Request repository is:: " $pullRequestRepo
+            ssh ubuntu@192.168.17.122 "(cd jenkins_projects;
+                                        cd genny_projects;
+                                        cd ${pullRequestBranch};
+                                        cd projects;
+                                        cd genny;
+                                        cd prj_internmatch/tests/interaction;
+                                        cp ../../../../../../../scripts/checkIfTestsHavePassed.sh ../interaction;
+                                        ./run.sh tests/00_tempJenkinsTest https://gennyteer.gada.io/
+                                        ./checkIfTestsHavePassed.sh $?)"
+            '''
+        }
+        stage('Clear Hubserver') {
+            sleep(time: 3, unit:"MINUTES")
+            sh label: 'clearHubserver', script: '''#!/bin/bash
+            ver=v3.1.0
+            pullRequestBranch=$(echo $payload | jq --raw-output '(.pull_request.head.ref)')
+            pullRequestRepo=$(echo $payload | jq --raw-output '(.pull_request.head.repo.clone_url)')
+            echo "The Pull Request Branch is:: " $pullRequestBranch;
+            echo "The Pull Request repository is:: " $pullRequestRepo;
+            ssh ubuntu@192.168.17.122 "(cd jenkins_projects;
+                                        cd genny_projects;
+                                        cd ${pullRequestBranch};
+                                        cd projects;
+                                        cd genny;
+                                        cd genny-main;
+                                        ./stop.sh;
+                                        docker system prune -f; docker volume prune -f;
+                                        cd ~/jenkins_projects/genny_projects;
+                                        rm -rf ${pullRequestBranch})"
+            echo "## ${pullRequestBranch} Cleared ##";
+            '''
+        }
+        notifySuccessful()
+    } catch (e) {
+        /* currentBuild.result = "FAILED" */
+        notifyFailed()
+        sh label: 'runProjects', script: '''#!/bin/bash
+        ver=v3.1.0
+        pullRequestBranch=$(echo $payload | jq --raw-output '(.pull_request.head.ref)')
+        pullRequestRepo=$(echo $payload | jq --raw-output '(.pull_request.head.repo.clone_url)')
+        echo "The Pull Request Branch is:: " $pullRequestBranch;
+        echo "The Pull Request repository is:: " $pullRequestRepo;
+        ssh ubuntu@192.168.17.122 "(cd jenkins_projects;
+                                    cd genny_projects;
+                                    cd ${pullRequestBranch};
+                                    cd projects;
+                                    cd genny;
+                                    cd genny-main;
+                                    ./stop.sh;
+                                    docker system prune -f; docker volume prune -f;
+                                    cd ~/jenkins_projects/genny_projects;
+                                    rm -rf ${pullRequestBranch})"
+        echo "## ${pullRequestBranch} Cleared After Fail ##";
+        '''
+        throw e
+  }
+}
+def notifyStarted() {
+  slackSend (color: '#FFFF00', message: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' BuildURL (${env.BUILD_URL})")
+//   emailext (
+//       to: 'rahul@gada.io',
+//       subject: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+//       body: """<p>STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+//         <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>""",
+//       recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+//     )
+}
+def notifySuccessful() {
+  slackSend (color: '#00FF00', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+//   emailext (
+//       to: 'rahul@gada.io',
+//       subject: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+//       body: """<p>SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+//         <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>""",
+//       recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+//     )
+}
+def notifyFailed() {
+  slackSend (color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+  emailext (
+      to: 'rahul@gada.io',
+      subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+      body: """<p>FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+        <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>""",
+      recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+    )
+}
