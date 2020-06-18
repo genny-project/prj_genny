@@ -79,7 +79,7 @@ rule "RETURN_JOURNALS_INTERN"
 				QDataBaseEntityMessage resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
 				/* System.out.println(drools.getRule().getName()+" Got to here in RETURN JOURNALS "+resultJson);*/
 				BaseEntity[] bes = resultMsg.getItems();
-				/* Now only send the ones that are not synced */
+				/* Now only send the ones that are not synced Test */
 				List<BaseEntity> unsyncedItemList = new ArrayList<BaseEntity>();
 				for (BaseEntity be : bes) {
 					/*Optional<String> unsynced = be.getValue("PRI_SYNC");
