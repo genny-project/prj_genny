@@ -26,12 +26,12 @@ import life.genny.utils.DropdownUtils;
 import java.util.List;
 import java.util.ArrayList;
 
-rule "HELPER_LNK_HOST_COMPANY"
+rule "HELPER_LNK_HOST_COMPANY_APP"
 	ruleflow-group 'DataProcessing'
 			salience 5000
 	when
 		beUtils : BaseEntityUtils()
-		answer : Answer( attributeCode == "LNK_HOST_COMPANY" && !targetCode.startsWith("JNL_") )
+		answer : Answer( attributeCode == "LNK_HOST_COMPANY" && targetCode matches "APP_.*")
 		answersToSave : Answers()
 		ruleDetails : RuleDetails()
 		output : OutputParam( )
@@ -39,8 +39,8 @@ rule "HELPER_LNK_HOST_COMPANY"
 		userToken : GennyToken( code != "PER_SERVICE")
 
 	then
-		System.out.println("HELPER_LNK_HOST_COMPANY fired");
-		System.out.println(ruleDetails+" "+drools.getRule().getName()+"Processing Helper HOST COMPANY SELECTION Answer/Data : " + answer );
+		System.out.println("HELPER_LNK_HOST_COMPANY_APP fired");
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Filtering Internships linked to specific hostCompany : " + answer );
 
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		System.out.println("sourceCode :: " + sourceCode);
@@ -54,13 +54,29 @@ rule "HELPER_LNK_HOST_COMPANY"
 		String code = hostCompanyCode.replace("\"", "").replace("[", "").replace("]", "");
 		System.out.println("code  :: " + code);
 
-		BaseEntity companyBe = beUtils.getBaseEntityByCode(code);
-		String name = companyBe.getValue("PRI_NAME", null);		
-		
-		System.out.println("##################################### DUDE: name = " +name);		
- 		Answer assocHcAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HC", name);
- 		beUtils.saveAnswer(assocHcAnswer);		
 
+		Answer internshipAnswer = new Answer(sourceCode, targetCode, "LNK_INTERNSHIP", " ",false,true);
+
+		BaseEntity baseEntity = beUtils.saveAnswer(internshipAnswer);
+		baseEntity = beUtils.saveAnswer(answer);
+		
+		/* Send the updated baseenttity to the frontend */
+		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
+		msg.setToken(beUtils.getGennyToken().getToken());
+		msg.setReplace(true);
+		VertxUtils.writeMsg("webcmds",JsonUtils.toJson(msg));
+
+		/* dropdown search here For internship */
+		DropdownUtils dropdownInternship = new DropdownUtils(serviceToken);
+		dropdownInternship.setNewSearch("Internship Dropdown", "Fetch Internship Dropdown Items")
+											.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%")
+											.addFilter("LNK_HOST_COMPANY", SearchEntity.StringFilter.EQUAL, hostCompanyCode)
+											.setPageStart(0)
+											.setPageSize(1000);
+		
+		/* Send the dropdown options */
+		dropdownInternship.sendSearchResults("GRP_INTERNSHIP_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
+		
 		retract(answer);
 
 		output.setTypeOfResult("NONE");
