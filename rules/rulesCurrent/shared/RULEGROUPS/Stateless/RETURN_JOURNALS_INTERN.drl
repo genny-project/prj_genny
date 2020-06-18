@@ -27,23 +27,23 @@ rule "RETURN_JOURNALS_INTERN"
      salience 1000
      no-loop true
     when
- 	  $userToken : GennyToken ( code != "PER_SERVICE" ) 
+ 	  $userToken : GennyToken ( code != "PER_SERVICE" )
  	  $user : BaseEntity (  code == $userToken.getUserCode() )
  	  $project : BaseEntity ( code matches "PRJ_\\S+" )
 	  serviceToken : GennyToken ( code == "PER_SERVICE" )
 	  beUtils : BaseEntityUtils()
 	  allowed : Allowed(code == "READ_JOURNALS" && mode == CapabilityMode.VIEW)
 	  allowed2 : Allowed(code == "INTERN2")
-	  
+
     then
    		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + $userToken.getUserCode());
-   		
+
    		 System.out.println("User code is "+$user.getCode());
 		SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Intern Journals")
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%") 
-				/* .addFilter("PRI_SYNC", SearchEntity.StringFilter.LIKE, "FALSE") */
-				.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%"+$user.getCode()+"%") 
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
+				/* .addFilter("PRI_SYNC", SearchEntity.StringFilter.LIKE, "FALSE") Test*/
+				.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%"+$user.getCode()+"%")
 				.addColumn("PRI_NAME", "Name")
 				.addColumn("LNK_INTERNSHIP","Internship")
 				.addColumn("LNK_INTERN", "Intern")
@@ -52,10 +52,10 @@ rule "RETURN_JOURNALS_INTERN"
 				.addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
 				.addColumn("PRI_JOURNAL_DATE","Date")
 				.addColumn("PRI_JOURNAL_HOURS","Hours")
-				.addColumn("PRI_JOURNAL_TASKS","Tasks")				
+				.addColumn("PRI_JOURNAL_TASKS","Tasks")
 				.addColumn("PRI_JOURNAL_LEARNING_OUTCOMES","Learning Outcomes")
 				.addColumn("PRI_FEEDBACK","Feedback")
-				.addColumn("PRI_STATUS","Status")				
+				.addColumn("PRI_STATUS","Status")
 				.addColumn("PRI_SYNC","Synced")
 				.addColumn("PRI_LAST_UPDATED","Last Updated")
 				.addColumn("PRI_INTERN_LAST_UPDATE","Intern last update")
@@ -64,15 +64,15 @@ rule "RETURN_JOURNALS_INTERN"
 
 				.setPageStart(0)
 				.setPageSize(2000);
-		
 
-		
+
+
 		searchBE.setRealm(serviceToken.getRealm());
-		
+
  		String jsonSearchBE = JsonUtils.toJson(searchBE);
  		/* System.out.println(jsonSearchBE); */
 		String resultJson;
-		BaseEntity result = null; 
+		BaseEntity result = null;
 		try {
 			resultJson = QwandaUtils.apiPostEntity(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search",
 					jsonSearchBE, serviceToken.getToken());
@@ -92,14 +92,14 @@ rule "RETURN_JOURNALS_INTERN"
 					be = beUtils.getBaseEntityByCode(be.getCode());
 					unsyncedItemList.add(be);
 				}
-				
+
 				resultMsg.setItems(unsyncedItemList.toArray(new BaseEntity[0]));
 				payload.add(resultMsg);
 				System.out.println("payload in return journals intern = "+payload);
 		} catch (Exception e1) {
 			e1.printStackTrace();
-		}		
-		
-		drools.getKnowledgeRuntime().setGlobal("payload", payload); 
+		}
+
+		drools.getKnowledgeRuntime().setGlobal("payload", payload);
 		retract(allowed); /* no longer needed */
 end
