@@ -1267,7 +1267,7 @@ kcontext.setVariable(&quot;newApplication&quot;, beUtils.getBaseEntityByCode(new
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_1" bpmnElement="StartEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="653.0" y="228.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_2" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
+        <bpmndi:BPMNLabel id="BPMNLabel_2" labelStyle="BPMNLabelStyle_1">
           <dc:Bounds height="22.0" width="65.0" x="639.0" y="264.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -1279,7 +1279,7 @@ kcontext.setVariable(&quot;newApplication&quot;, beUtils.getBaseEntityByCode(new
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_1" bpmnElement="EndEvent_2">
         <dc:Bounds height="36.0" width="36.0" x="2397.0" y="363.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_5" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
+        <bpmndi:BPMNLabel id="BPMNLabel_5" labelStyle="BPMNLabelStyle_1">
           <dc:Bounds height="11.0" width="47.0" x="2392.0" y="399.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -1345,7 +1345,7 @@ kcontext.setVariable(&quot;newApplication&quot;, beUtils.getBaseEntityByCode(new
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_4" bpmnElement="EndEvent_5">
         <dc:Bounds height="36.0" width="36.0" x="1960.0" y="307.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_23" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
+        <bpmndi:BPMNLabel id="BPMNLabel_23" labelStyle="BPMNLabelStyle_1">
           <dc:Bounds height="22.0" width="79.0" x="1939.0" y="343.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -1381,7 +1381,7 @@ kcontext.setVariable(&quot;newApplication&quot;, beUtils.getBaseEntityByCode(new
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_2" bpmnElement="StartEvent_3">
         <dc:Bounds height="36.0" width="36.0" x="714.0" y="494.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_32" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
+        <bpmndi:BPMNLabel id="BPMNLabel_32" labelStyle="BPMNLabelStyle_1">
           <dc:Bounds height="11.0" width="76.0" x="694.0" y="530.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -1393,25 +1393,25 @@ kcontext.setVariable(&quot;newApplication&quot;, beUtils.getBaseEntityByCode(new
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_2" bpmnElement="EndEvent_3">
         <dc:Bounds height="36.0" width="36.0" x="940.0" y="494.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_34" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
+        <bpmndi:BPMNLabel id="BPMNLabel_34" labelStyle="BPMNLabelStyle_1">
           <dc:Bounds height="11.0" width="76.0" x="920.0" y="530.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_3" bpmnElement="EndEvent_4">
         <dc:Bounds height="36.0" width="36.0" x="1879.0" y="227.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_36" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
+        <bpmndi:BPMNLabel id="BPMNLabel_36" labelStyle="BPMNLabelStyle_1">
           <dc:Bounds height="22.0" width="59.0" x="1868.0" y="263.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_8" bpmnElement="EndEvent_9">
         <dc:Bounds height="36.0" width="36.0" x="1326.0" y="495.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_38" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
+        <bpmndi:BPMNLabel id="BPMNLabel_38" labelStyle="BPMNLabelStyle_1">
           <dc:Bounds height="11.0" width="64.0" x="1312.0" y="531.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_5" bpmnElement="StartEvent_6">
         <dc:Bounds height="36.0" width="36.0" x="1106.0" y="495.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_39" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
+        <bpmndi:BPMNLabel id="BPMNLabel_39" labelStyle="BPMNLabelStyle_1">
           <dc:Bounds height="11.0" width="60.0" x="1094.0" y="531.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -1453,7 +1453,7 @@ kcontext.setVariable(&quot;newApplication&quot;, beUtils.getBaseEntityByCode(new
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_1" bpmnElement="StartEvent_2">
         <dc:Bounds height="36.0" width="36.0" x="93.0" y="183.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_6" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
+        <bpmndi:BPMNLabel id="BPMNLabel_6" labelStyle="BPMNLabelStyle_1">
           <dc:Bounds height="11.0" width="53.0" x="85.0" y="219.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -1477,7 +1477,7 @@ kcontext.setVariable(&quot;newApplication&quot;, beUtils.getBaseEntityByCode(new
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_5" bpmnElement="EndEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="1957.0" y="384.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_43" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
+        <bpmndi:BPMNLabel id="BPMNLabel_43" labelStyle="BPMNLabelStyle_1">
           <dc:Bounds height="22.0" width="66.0" x="1942.0" y="420.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -1752,7 +1752,7 @@ kcontext.setVariable(&quot;newApplication&quot;, beUtils.getBaseEntityByCode(new
         <bpmndi:BPMNLabel id="BPMNLabel_76"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
-    <bpmndi:BPMNLabelStyle>
+    <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
       <dc:Font name="arial" size="9.0"/>
     </bpmndi:BPMNLabelStyle>
   </bpmndi:BPMNDiagram>
