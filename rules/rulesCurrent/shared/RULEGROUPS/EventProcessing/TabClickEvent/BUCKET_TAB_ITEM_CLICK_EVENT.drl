@@ -36,52 +36,37 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 		switch($message.getData().getCode()){
 
 			case "QUE_TAB_BUCKET_VIEW" : 
-
-			/* 	BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
-				BucketUtils bucketUtils = new BucketUtils(beUtils);
-				insert(beUtils);		
 		
-				JsonObject tokenObj = VertxUtils.readCachedJson(userToken.getRealm(),"ASK_FRM_BUCKET_VIEW",userToken.getToken());
-		
-				QDataAskMessage[] askSet = JsonUtils.fromJson(tokenObj.getString("value"), QDataAskMessage[].class);
-				
-				System.out.println("Sending Asks");
-				for(QDataAskMessage ask : askSet) {
-					
-					ask.setToken(userToken.getToken());
-					ask.setReplace(false);	
-					String askJson = JsonUtils.toJson(ask);
-					VertxUtils.writeMsg("webcmds",askJson );
-				}
-				ShowFrame.display(beUtils.getGennyToken(), "FRM_BUCKET_VIEW", "FRM_TAB_CONTENT", "Test");
-				output.setFormCode("FRM_BUCKET_VIEW","FRM_TAB_CONTENT"); 
-
-				Theme THM_JUSTIFY_CONTENT_FLEX_START = Theme.builder("THM_JUSTIFY_CONTENT_FLEX_START")
-														.addAttribute().justifyContent("flex-start").end()
-														.build();
-				
-				Theme THM_PADDING_15 = Theme.builder("THM_PADDING_15")
-									.addAttribute()
-										.padding(15)
-									.end()
-									.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end()
-									.build();  
-
-				Frame3 FRM_BUCKET_CONTENT = Frame3.builder("FRM_BUCKET_CONTENT")
-										.question("QUE_BUCKET_CONTENT_GRP").end()
-										.addTheme(THM_JUSTIFY_CONTENT_FLEX_START, ThemePosition.CENTRE).end()
-										.addTheme(THM_PADDING_15, ThemePosition.WRAPPER).end()
-										.build();
-
-				bucketUtils.sendBucketContexts(serviceToken);
-				bucketUtils.sendCards(FRM_BUCKET_CONTENT, userToken, serviceToken);
-				break; */
 				Boolean cache = true;
-				String code = "AVAILABLE_INTERNS";
+				String[] codes = { 
+					"AVAILABLE_INTERNS", 
+					"APPLIED_APPLICATIONS",
+					"SHORTLISTED_APPLICATIONS",
+					"INTERVIEWED_APPLICATIONS",
+					"OFFERED_APPLICATIONS",
+					"PLACED_APPLICATIONS",
+					"INPROGRESS_APPLICATIONS"
+				};
+
+				for (String code : codes){
+					
+					System.out.println("SBE_CODE   ::   " +code); 
+					long totalTime = TableUtils.searchTable(beUtils,code, cache);
+					System.out.println("total took " + (totalTime) + " ms"); 
+
+				}
+
+			/* 	String code = "AVAILABLE_INTERNS";
+				String code2 = "APPLIED_APPLICATIONS";
+				
 				System.out.println("SBE_CODE   ::   " +code); 
+				System.out.println("SBE_CODE   ::   " +code2); 
 				
 				long totalTime = TableUtils.searchTable(beUtils,code, cache);
 				System.out.println("total took " + (totalTime) + " ms"); 
+
+				long totalTime2 = TableUtils.searchTable(beUtils,code2, cache);
+				System.out.println("total took " + (totalTime2) + " ms");  */
 
 				output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */
