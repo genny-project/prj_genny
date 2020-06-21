@@ -83,11 +83,7 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_INTERNS"
 	 fieldMapping.put("Industry", "PRI_INDUSTRY");
 	 fieldMapping.put("Current Course", "PRI_CURRENT_COURSE");
 	 fieldMapping.put("Specialisation", "PRI_SPECIALISATION");
-	 fieldMapping.put("Company Trading Name", "PRI_ASSOC_HOST_COMPANY");
-	 fieldMapping.put("ABN", "PRI_ASSOC_HOST_COMPANY");
-	 fieldMapping.put("Host Company Supervisor", "PRI_ASSOC_SUPERVISOR");
-	 fieldMapping.put("Host Company Rep", "PRI_ASSOC_HCR");
-	 fieldMapping.put("Host Company Rep Email", "PRI_ASSOC_HOST_COMPANY_EMAIL");
+	 
 	 
 	 fieldMapping.put("UNIQUE_KEY_FIELD", "Student Email".toLowerCase());
 	 fieldMapping.put("NAME_KEY_FIELD", "Student Email".toLowerCase());
