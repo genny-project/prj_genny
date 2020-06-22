@@ -54,14 +54,18 @@ rule "HELPER_LNK_INTERNSHIP_DURATION"
 		String code = value.replace("\"", "").replace("[", "").replace("]", "");
 		System.out.println("code  :: " + code);
 
-		
+		/* Save the actual LNK_INTERNSHIP_DURATION answer */
+		beUtils.saveAnswer(answer);
 
-		BaseEntity getTheBe = beUtils.getBaseEntityByCode(code);
-		String name = getTheBe.getValue("PRI_NAME", null);		
-		System.out.println("##################################### DUDE: name = " +name);		
- 		Answer newAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_DURATION", name);
- 		beUtils.saveAnswer(newAnswer);	
+		/* get the duration baseentity */
+		BaseEntity be = beUtils.getBaseEntityByCode(code);
 
+		/* get the name attribute of the duration */
+		String name = be.getValue("PRI_NAME", null);		
+
+		/* save the hcr's name as PRI_ASSOC_HCR attribute for the current target baseentity in the form */
+		Answer assocDurationAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_DURATION", name);
+ 		beUtils.saveAnswer(assocDurationAnswer);		
 
 		/* Retract the answer message so the rule doesn't fire again */
 		retract(answer);

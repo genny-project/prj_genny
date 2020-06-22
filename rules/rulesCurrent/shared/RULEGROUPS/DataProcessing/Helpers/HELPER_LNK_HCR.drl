@@ -54,7 +54,7 @@ rule "HELPER_LNK_HCR"
 		String code = value.replace("\"", "").replace("[", "").replace("]", "");
 		System.out.println("code  :: " + code);
 
-		/* Save the actual LNK_HOST_COMPANY answer */
+		/* Save the actual LNK_HOST_COMPANY_REP answer */
 		beUtils.saveAnswer(answer);
 
 		/* get the hcr baseentity */
