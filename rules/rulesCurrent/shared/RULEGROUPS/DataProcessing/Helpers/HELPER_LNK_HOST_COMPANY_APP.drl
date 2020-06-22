@@ -28,7 +28,7 @@ import java.util.ArrayList;
 
 rule "HELPER_LNK_HOST_COMPANY_APP"
 	ruleflow-group 'DataProcessing'
-			salience 5000
+			salience 6000
 	when
 		beUtils : BaseEntityUtils()
 		answer : Answer( attributeCode == "LNK_HOST_COMPANY" && targetCode matches "APP_.*")
@@ -54,10 +54,21 @@ rule "HELPER_LNK_HOST_COMPANY_APP"
 		String code = hostCompanyCode.replace("\"", "").replace("[", "").replace("]", "");
 		System.out.println("code  :: " + code);
 
+		/* get the company baseentity */
+		BaseEntity companyBe = beUtils.getBaseEntityByCode(code);
 
+		/* get the name attribute of the company */
+		String name = companyBe.getValue("PRI_NAME", null);		
+
+		/* save the company's name as PRI_ASSOC_HC attribute for application baseentity */
+		Answer assocHcAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HC", name);
+ 		beUtils.saveAnswer(assocHcAnswer);		
+
+		/* set the LNK_INTERNSHIP attribute to empty string since LNK_HOST_COMPANY attribute is changed */
 		Answer internshipAnswer = new Answer(sourceCode, targetCode, "LNK_INTERNSHIP", " ",false,true);
-
 		BaseEntity baseEntity = beUtils.saveAnswer(internshipAnswer);
+		
+		/* save LNK_HOST_COMPANY attribute */
 		baseEntity = beUtils.saveAnswer(answer);
 		
 		/* Send the updated baseenttity to the frontend */

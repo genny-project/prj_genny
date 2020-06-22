@@ -54,14 +54,18 @@ rule "HELPER_LNK_OCCUPATION"
 		String code = industryCode.replace("\"", "").replace("[", "").replace("]", "");
 		System.out.println("code  :: " + code);
 
-		
+		/* Save the actual LNK_OCCUPATION answer */
+		beUtils.saveAnswer(answer);
 
-		BaseEntity occupation_Be = beUtils.getBaseEntityByCode(code);
-		String occupation = occupation_Be.getValue("PRI_NAME", null);		
-		System.out.println("##################################### DUDE: occupation = " +occupation);		
- 		Answer priOccupationAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_OCCUPATION", occupation);
- 		beUtils.saveAnswer(priOccupationAnswer);	
+		/* get the occupation baseentity */
+		BaseEntity be = beUtils.getBaseEntityByCode(code);
 
+		/* get the name attribute of the occupation */
+		String name = be.getValue("PRI_NAME", null);		
+
+		/* save the occupation's name as PRI_ASSOC_OCCUPATION attribute for the current target baseentity in the form */
+		Answer assocOccupationAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_OCCUPATION", name);
+ 		beUtils.saveAnswer(assocOccupationAnswer);			
 
 		/* Retract the answer message so the rule doesn't fire again */
 		retract(answer);
