@@ -57,15 +57,26 @@ rule "HELPER_LNK_OCCUPATION"
 		/* Save the actual LNK_OCCUPATION answer */
 		beUtils.saveAnswer(answer);
 
-		/* get the occupation baseentity */
-		BaseEntity be = beUtils.getBaseEntityByCode(code);
+		/* list to store occupationCodes and occupationNames */
+		List<String> occupationNames = new ArrayList<>();
 
-		/* get the name attribute of the occupation */
-		String name = be.getValue("PRI_NAME", null);		
+		for (String occupationCode : code.split(",")) {
+			
+			System.out.println("occupationCode :: " + occupationCode);
+
+			/* get the occupation baseentity */
+			BaseEntity be = beUtils.getBaseEntityByCode(occupationCode);
+
+			/* get the name attribute of the occupation */
+			String name = be.getValue("PRI_NAME", null);		
+			occupationNames.add(name);
+
+		}
 
 		/* save the occupation's name as PRI_ASSOC_OCCUPATION attribute for the current target baseentity in the form */
-		Answer assocOccupationAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_OCCUPATION", name);
- 		beUtils.saveAnswer(assocOccupationAnswer);			
+		Answer assocOccupationAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_OCCUPATION", occupationNames.toString());
+		beUtils.saveAnswer(assocOccupationAnswer);			
+
 
 		/* Retract the answer message so the rule doesn't fire again */
 		retract(answer);
