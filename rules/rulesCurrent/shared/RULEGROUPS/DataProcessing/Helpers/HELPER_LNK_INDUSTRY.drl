@@ -61,15 +61,16 @@ rule "HELPER_LNK_INDUSTRY"
 
 		BaseEntity baseEntity = beUtils.saveAnswer(occupationAnswer);
 		baseEntity = beUtils.saveAnswer(answer);
-		
 
-		BaseEntity industry_Be = beUtils.getBaseEntityByCode(code);
-		String industry = industry_Be.getValue("PRI_NAME", null);		
-		System.out.println("##################################### DUDE: industry = " +industry);		
- 		Answer priIndustryAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_INDUSTRY", industry);
- 		beUtils.saveAnswer(priIndustryAnswer);	
-		
-		
+		/* get the industry baseentity */
+		BaseEntity be = beUtils.getBaseEntityByCode(code);
+
+		/* get the name attribute of the industry */
+		String name = be.getValue("PRI_NAME", null);		
+
+		/* save the industry's name as PRI_ASSOC_INDUSTRY attribute for the current target baseentity in the form */
+		Answer assocIndustryAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_INDUSTRY", name);
+ 		beUtils.saveAnswer(assocIndustryAnswer);	
 		
 		/* Send the updated baseenttity to the frontend */
 		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
