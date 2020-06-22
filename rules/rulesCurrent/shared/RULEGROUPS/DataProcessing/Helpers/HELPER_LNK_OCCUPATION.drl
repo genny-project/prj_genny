@@ -73,8 +73,10 @@ rule "HELPER_LNK_OCCUPATION"
 
 		}
 
+		String occupations = occupationNames.toString().replaceAll("[\\[\\](){}]","");
+
 		/* save the occupation's name as PRI_ASSOC_OCCUPATION attribute for the current target baseentity in the form */
-		Answer assocOccupationAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_OCCUPATION", occupationNames.toString());
+		Answer assocOccupationAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_OCCUPATION", occupations);
 		beUtils.saveAnswer(assocOccupationAnswer);			
 
 
