@@ -84,8 +84,8 @@ public class ChrisTest {
 	protected static GennyCacheInterface vertxCache;
 
 	private static final String DRL_SEND_USER_DATA_DIR = "SendUserData";
-	
-	   protected EntityManagerFactory emf;    
+
+	   protected EntityManagerFactory emf;
 	    protected DefinitionService bpmn2Service;
 	    protected RuntimeDataService runtimeDataService;
 	    protected ProcessService processService;
@@ -97,9 +97,9 @@ public class ChrisTest {
 	    protected TestUserGroupCallbackImpl userGroupCallback;
 
 	    protected KieServiceConfigurator serviceConfigurator;
-	    
-	    protected DeploymentUnit deploymentUnit;  
-	    
+
+	    protected DeploymentUnit deploymentUnit;
+
 	   protected static  GennyToken userToken;
 	   protected static  GennyToken newUserToken;
 	   protected static  GennyToken serviceToken;
@@ -107,7 +107,7 @@ public class ChrisTest {
 	public ChrisTest() {
 
 	}
-	
+
 	//@Test
 	public void many_LC_Test()
 	{
@@ -143,16 +143,16 @@ public class ChrisTest {
 		System.out.println("userToken   =" + userToken.getToken());
 		//System.out.println("userToken2   =" + userToken2.getToken());
 		System.out.println("serviceToken=" + serviceToken.getToken());
-		
+
         BaseEntity intern = new BaseEntity("PRI_INTERN");
-        BaseEntity internship = new BaseEntity("BE_INTERNSHIP");        
+        BaseEntity internship = new BaseEntity("BE_INTERNSHIP");
         BaseEntity hostCompany = new BaseEntity("CPY_HOSTCOMPANY");
 
         /*HashMap<String, BaseEntity> hashBeg = new HashMap<String, BaseEntity>();*/
         HashMap<String, String> hashBeg = new HashMap<String, String>();
-        
+
         hashBeg.put("begstatus", "DUDE");
-        
+
         /*hashBeg.put("intern", intern);
         hashBeg.put("internship", internship);
         hashBeg.put("hostCompany", hostCompany);*/
@@ -178,13 +178,13 @@ public class ChrisTest {
 					.builder(serviceToken,true)
 
 
-// ADD THE JBPM WORKFLOWS HERE					
+// ADD THE JBPM WORKFLOWS HERE
 					.addJbpm("notificationHub2.bpmn")
 					.addJbpm("baseEntityValidation.bpmn")
 					.addJbpm("applicationWorkflow.bpmn")
 					.addJbpm("placementWorkflow.bpmn")
 					.addJbpm("internshipWorkflow.bpmn")
-					
+
 // ADD THE DROOLS RULES HERE
 					.addDrl("MoveBucket")
 					.addDrl("CommonEnter")
@@ -195,21 +195,21 @@ public class ChrisTest {
 
 					.addToken(userToken)
 					.build();
-			
+
 			gks.start();
 
 			gks.startProcess("applicationWorkflow");
-			
+
 //            gks.advanceSeconds(5, false);
-//            gks.injectSignal("dynamicControl", "FORWARD"); 			
-            gks.advanceSeconds(5, false);  
-            gks.advanceSeconds(5, false); 
+//            gks.injectSignal("dynamicControl", "FORWARD");
             gks.advanceSeconds(5, false);
             gks.advanceSeconds(5, false);
-			
+            gks.advanceSeconds(5, false);
+            gks.advanceSeconds(5, false);
+
 		} catch (Exception e) {
 			e.printStackTrace();
-			
+
 		}
 		finally {
 			if (gks!=null) {
@@ -217,7 +217,7 @@ public class ChrisTest {
 			}
 		}
 	}
-	
+
 	@Test
 	public void userTaskTest()
 	{
@@ -245,16 +245,16 @@ public class ChrisTest {
 		System.out.println("userToken   =" + userToken.getToken());
 		//System.out.println("userToken2   =" + userToken2.getToken());
 		System.out.println("serviceToken=" + serviceToken.getToken());
-		
+
         BaseEntity intern = new BaseEntity("PRI_INTERN");
-        BaseEntity internship = new BaseEntity("BE_INTERNSHIP");        
+        BaseEntity internship = new BaseEntity("BE_INTERNSHIP");
         BaseEntity hostCompany = new BaseEntity("CPY_HOSTCOMPANY");
 
         /*HashMap<String, BaseEntity> hashBeg = new HashMap<String, BaseEntity>();*/
         HashMap<String, String> hashBeg = new HashMap<String, String>();
-        
+
         hashBeg.put("begstatus", "DUDE");
-        
+
         /*hashBeg.put("intern", intern);
         hashBeg.put("internship", internship);
         hashBeg.put("hostCompany", hostCompany);*/
@@ -276,38 +276,38 @@ public class ChrisTest {
 		GennyKieSession gks = null;
 
 		try {
-			
-			
+
+
 			gks = GennyKieSession
 					.builder(serviceToken,true)
 
-// ADD THE JBPM WORKFLOWS HERE					
+// ADD THE JBPM WORKFLOWS HERE
 
 					.addJbpm("pidTest.bpmn")
-					
+
 // ADD THE DROOLS RULES HERE
 
 
 					.addToken(userToken)
 					.build();
-			
+
 			gks.start();
-			
-			GennyToken newUser2A = gks.createToken("PER_USER2"); 
-			GennyToken newUser2B = gks.createToken("PER_USER2"); 
+
+			GennyToken newUser2A = gks.createToken("PER_USER2");
+			GennyToken newUser2B = gks.createToken("PER_USER2");
 			/* Start Process */
-			
+
 			gks.startProcess("pidTest");
-			
+
 			/* Query Process */
-			
+
 			/* Send a signal to it */
-			
-			
-            
+
+
+
 		} catch (Exception e) {
 			e.printStackTrace();
-			
+
 		}
 		finally {
 			if (gks!=null) {
@@ -315,7 +315,7 @@ public class ChrisTest {
 			}
 		}
 	}
-	
+
 	//@Test
     public void LifecycleTest() {
         GennyToken userToken = null;
@@ -334,14 +334,14 @@ public class ChrisTest {
             userToken = new GennyToken("userToken", qRules.getToken());
             serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
         }
-        
+
         BaseEntity intern = new BaseEntity("PRI_INTERN");
-        BaseEntity internship = new BaseEntity("BE_INTERNSHIP");        
+        BaseEntity internship = new BaseEntity("BE_INTERNSHIP");
         BaseEntity hostCompany = new BaseEntity("CPY_HOSTCOMPANY");
 //        BaseEntity xyz = new BaseEntity("BE_XYZ");
 
         HashMap<String, BaseEntity> hashBeg = new HashMap<String, BaseEntity>();
-        
+
         hashBeg.put("intern", intern);
         hashBeg.put("internship", internship);
         hashBeg.put("hostCompany", hostCompany);
@@ -363,7 +363,7 @@ public class ChrisTest {
         project.setRealm(serviceToken.getRealm());
         VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
                 JsonUtils.toJson(project), serviceToken.getToken());
-        
+
         // Log out to begin
         VertxUtils.writeCachedJson(userToken.getRealm(),userToken.getSessionCode(),null,userToken.getToken());
 
@@ -372,40 +372,40 @@ public class ChrisTest {
         try {
             gks = GennyKieSession
             		.builder(serviceToken, true)
-            		
-// ADD THE JBPM WORKFLOWS HERE	
+
+// ADD THE JBPM WORKFLOWS HERE
                     .addJbpm("progressJournals.bpmn")
-                    
+
 // ADD THE DROOLS RULES HERE
-        			.addDrl("CardStatus") 
-        			
+        			.addDrl("CardStatus")
+
                     .addToken(userToken)
                     .build();
-            
+
             gks.start();
 
             gks.startProcess("progressJournals");
             gks.advanceSeconds(5, false);
-            
+
             int totalNumJournals = Integer.parseInt("12");
-            
-            for(int i=0;i<totalNumJournals;i++){  
-                gks.advanceSeconds(5, false);           
-                gks.injectSignal("whichJournal", "NORMAL");   
+
+            for(int i=0;i<totalNumJournals;i++){
+                gks.advanceSeconds(5, false);
+                gks.injectSignal("whichJournal", "NORMAL");
             }
 
-            gks.advanceSeconds(5, false);           
+            gks.advanceSeconds(5, false);
             gks.injectSignal("lockedDoor", "Key");
-            
+
             gks.advanceSeconds(5, false);
 
-            
+
         } catch (Exception e) {
             System.out.println(e.getLocalizedMessage());
         } finally {
             gks.close();
         }
-        
+
     }
 
 //@Test
@@ -439,24 +439,24 @@ public class ChrisTest {
 
 		QEventMessage authInitMsg1 = new QEventMessage("EVT_MSG", "AUTH_INIT");
 		authInitMsg1.setToken(userToken.getToken());
-		
+
 		QEventMessage createEduPro = new QEventMessage("EVT_MSG", "CREATE_EDU_PRO");
-	
+
 		QEventMessage createHostCpy = new QEventMessage("EVT_MSG", "CREATE_HOST_CPY");
-		
+
 		QEventMessage createAgency = new QEventMessage("EVT_MSG", "CREATE_AGENCY");
-		
+
 		QEventMessage createInternship = new QEventMessage("EVT_MSG", "CREATE_INTERNSHIP");
-		
+
 		QEventMessage createIntern = new QEventMessage("EVT_MSG", "CREATE_INTERN");
-		
+
 		QEventMessage createAgent = new QEventMessage("EVT_MSG", "CREATE_AGENT");
-		
+
 		QEventMessage createHCRep = new QEventMessage("EVT_MSG", "CREATE_HC_REP");
-		
+
 		QEventMessage createEPRep = new QEventMessage("EVT_MSG", "CREATE_EP_REP");
-		
-		
+
+
 //		QEventMessage authInitMsg2 = new QEventMessage("EVT_MSG", "AUTH_INIT");
 //		authInitMsg2.setToken(userToken2.getToken());
 //		QEventMessage msg1 = new QEventMessage("EVT_MSG", "INIT_1");
@@ -487,8 +487,8 @@ public class ChrisTest {
 		try {
 			gks = GennyKieSession
 					.builder(serviceToken, true)
-					
-// ADD THE JBPM WORKFLOWS HERE				
+
+// ADD THE JBPM WORKFLOWS HERE
 					.addJbpm("InitialiseProject")
 					.addJbpm("Lifecycles")
 					.addJbpm("AuthInit")
@@ -500,17 +500,17 @@ public class ChrisTest {
 					.addJbpm("newHostCompanyLC.bpmn")
 					.addJbpm("newAgencyLC.bpmn")
 					.addJbpm("newInternshipLC.bpmn")
-					
-							
+
+
 //ADD THE DROOLS RULES HERE
 					.addDrl("SignalProcessing")
 					.addDrl("DataProcessing")
 					.addDrl("EventProcessing")
 					.addDrl("InitialiseProject")
 					.addDrl("AuthInit")
-					
+
 					.addToken(userToken).build();
-			
+
 			gks.start();
 //			gks.injectEvent(initMsg);
 
@@ -518,32 +518,32 @@ public class ChrisTest {
 			gks.injectEvent(authInitMsg1);
 			gks.advanceSeconds(5, false);
 
-// SIMULATE FRONT END EVENTS 			
+// SIMULATE FRONT END EVENTS
 //			gks.injectEvent(createEduPro);
 //			gks.advanceSeconds(5, false);
-//			
+//
 //			gks.injectEvent(createHostCpy);
 //			gks.advanceSeconds(5, false);
-//			
+//
 //			gks.injectEvent(createAgency);
 //			gks.advanceSeconds(5, false);
-//			
+//
 //			gks.injectEvent(createInternship);
 //			gks.advanceSeconds(5, false);
-//			
+//
 //			gks.injectEvent(createIntern);
 //			gks.advanceSeconds(5, false);
-//			
+//
 //			gks.injectEvent(createAgent);
 //			gks.advanceSeconds(5, false);
-//			
+//
 //			gks.injectEvent(createHCRep);
 //			gks.advanceSeconds(5, false);
-//			
+//
 //			gks.injectEvent(createEPRep);
 //			gks.advanceSeconds(5, false);
-
-// END SESSION			
+// Test
+// END SESSION
 			gks.injectEvent(msgLogout1);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -555,10 +555,10 @@ public class ChrisTest {
 		}
 	}
 
-	
 
- 
-	
+
+
+
 	@BeforeClass
 	public static void init() throws FileNotFoundException, SQLException {
 
@@ -577,7 +577,7 @@ public class ChrisTest {
 		eventBusMock = new EventBusMock();
 		vertxCache = new MockCache();
 		VertxUtils.init(eventBusMock, vertxCache);
-		
+
 		QRules qRules = null;
 
 		if (USE_STANDALONE) {
@@ -593,7 +593,7 @@ public class ChrisTest {
 
 		System.out.println("serviceToken=" + serviceToken.getToken());
 
-		
+
 	}
 
 }
