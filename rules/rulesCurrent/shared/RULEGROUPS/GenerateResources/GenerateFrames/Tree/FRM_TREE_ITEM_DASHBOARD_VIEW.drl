@@ -37,11 +37,7 @@ rule "FRM_TREE_ITEM_DASHBOARD_VIEW"
 
 		  /* frame-root */
       Frame3 frame = Frame3.builder("FRM_TREE_ITEM_DASHBOARD_VIEW")
-                    .addTheme("THM_TREE_ITEM", ThemePosition.WRAPPER,serviceToken).end()
                     .question("QUE_DASHBOARD_VIEW")
-                       .addTheme("THM_TREE_GROUP_WRAPPER", serviceToken)
-                          .vcl(VisualControlType.VCL_WRAPPER)
-                        .end()
                     .end()
                     .build();
 
