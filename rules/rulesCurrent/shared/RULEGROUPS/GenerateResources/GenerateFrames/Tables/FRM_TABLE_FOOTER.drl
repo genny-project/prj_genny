@@ -45,9 +45,6 @@ rule "FRM_TABLE_FOOTER"
                       .addFrame(FRM_TABLE_PAGE_INDEX, FramePosition.WEST).end()
                       .addFrame(FRM_TABLE_FOOTER_PAGINATION, FramePosition.EAST).end()
                       .build();
-
-
-
         frame.setRealm(serviceToken.getRealm());
         insert (frame);
         FrameUtils2.toMessage(frame, serviceToken);
