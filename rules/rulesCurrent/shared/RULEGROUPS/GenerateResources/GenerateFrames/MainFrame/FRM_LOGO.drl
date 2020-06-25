@@ -37,9 +37,6 @@ rule "FRM_LOGO"
     	System.out.println("   Generate FRM_LOGO Rule  "+serviceToken.getUserCode());
 
 			Frame3 frame = Frame3.builder("FRM_LOGO")
-										.addTheme("THM_TREE_ITEM", ThemePosition.WRAPPER, serviceToken).end()
-										.addTheme("THM_MARGIN_BOTTOM_20", ThemePosition.WRAPPER, serviceToken).end()
-										/*.addTheme("THM_LOGO_CENTRE", ThemePosition.CENTRE, serviceToken).end() */
 										.question("QUE_PROJECT_SIDEBAR_GRP")
 											.targetAlias("PRJ_"+serviceToken.getRealm().toUpperCase())
 											.addTheme("THM_LOGO", serviceToken)
