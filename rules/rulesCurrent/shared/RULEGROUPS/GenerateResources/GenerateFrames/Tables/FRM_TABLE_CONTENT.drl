@@ -49,7 +49,6 @@ rule "FRM_TABLE_CONTENT"
         DataType tableRowDataType = new DataType("DTT_TABLE_ROW_GRP", tableRowValidationList, "Table Row Group", "");
 
         Frame3 frame =  Frame3.builder("FRM_TABLE_CONTENT")
-			.addTheme("THM_TABLE_CONTENT_CENTRE", ThemePosition.CENTRE, serviceToken).end()
                         .question("QUE_TABLE_RESULTS_GRP")
                         .end()
                         .build();
