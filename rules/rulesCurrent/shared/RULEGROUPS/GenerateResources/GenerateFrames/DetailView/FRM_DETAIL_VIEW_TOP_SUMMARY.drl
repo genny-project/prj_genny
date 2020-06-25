@@ -40,10 +40,7 @@ rule "FRM_DETAIL_VIEW_TOP_SUMMARY"
 		/* Sending Ask with questioncode  QUE_DETAIL_VIEW_TOP_SUMMARY_GRP to display */
 		
  	  	Frame3 frame = Frame3.builder("FRM_DETAIL_VIEW_TOP_SUMMARY")
- 	  					.addTheme("THM_JUSTIFY_CONTENT_FLEX_START", serviceToken).end()
 						.question("QUE_DETAIL_VIEW_TOP_SUMMARY_GRP")						
-							.addTheme("THM_WIDTH_DYNAMIC", serviceToken).vcl(VisualControlType.VCL_INPUT).end()
-							.addTheme("THM_TITLE", serviceToken).vcl(VisualControlType.INPUT_FIELD).end()
 						.end()
 						.build();
 
