@@ -38,8 +38,6 @@ rule "FRM_DETAIL_VIEW_CONTROLS"
 
  	  	Frame3 frame = Frame3.builder("FRM_DETAIL_VIEW_CONTROLS")
 			 		 	.question("QUE_DETAIL_VIEW_CONTROL_GRP")
-							.addTheme("THM_DETAIL_VIEW_CONTROLS",serviceToken).vcl(VisualControlType.INPUT_WRAPPER).end()
-							.addTheme("THM_DETAIL_VIEW_CONTROLS_COLOR",serviceToken).vcl(VisualControlType.INPUT_FIELD).end()
 						.end()
 						.build();
 

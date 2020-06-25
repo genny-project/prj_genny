@@ -44,9 +44,6 @@ rule "FRM_SIDEBAR"
       System.out.println("   Generate FRM_SIDEBAR Rule  "+serviceToken.getUserCode());
 
       Frame3 frame = Frame3.builder("FRM_SIDEBAR")
-                      .addTheme("THM_SIDEBAR", serviceToken).end()
-                      .addTheme("THM_SIDEBAR_WIDTH", serviceToken).end()
-                      .addTheme("THM_SCROLL_VERTICAL", ThemePosition.WRAPPER, serviceToken).end()
                       .addFrame(FRM_LOGO, FramePosition.NORTH).end()
                       .addFrame(FRM_TREE_ITEM_DASHBOARD_VIEW, FramePosition.NORTH).end()
                       .addFrame(FRM_TREE_ITEM_TAB_VIEW, FramePosition.NORTH).end()

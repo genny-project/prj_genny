@@ -52,9 +52,6 @@ rule "FRM_COMPANY_DETAIL_VIEW"
 		FRM_DETAIL_VIEW_CARD.getQuestionGroup().setCode("QUE_COMPANY_DETAIL_GRP");
 		
  	  	Frame3 FRM_COMPANY_DETAIL_VIEW = Frame3.builder("FRM_COMPANY_DETAIL_VIEW_CONTENT")
-						.addTheme("THM_SCROLL_VERTICAL", ThemePosition.WRAPPER,serviceToken).end()
-						.addTheme("THM_DETAIL_VIEW_BODY", ThemePosition.WRAPPER,serviceToken).end()
-						.addTheme("THM_JUSTIFY_CONTENT_FLEX_START", ThemePosition.CENTRE,serviceToken).end()
 						.addFrame(FRM_DETAIL_VIEW_TOP_CARD,FramePosition.CENTRE).end()
 						.addFrame(FRM_DETAIL_VIEW_CARD, FramePosition.CENTRE).end()
 						.build();
