@@ -36,91 +36,10 @@ rule "FRM_FORM"
 
     when
       not  Frame3(code == "FRM_FORM")
-
       serviceToken : GennyToken( code == "PER_SERVICE")
  
     then
-
-        System.out.println("   Generate FRM_FORM  RULE TEST (PRJ_INTERNMATCH)" + serviceToken.getUserCode());
-
-				Validation validation = new Validation("VLD_ANYTHING", "Anything", ".*");
-				Validation validationImage = new Validation("VLD_IMAGE_URL", "Text", ".*");
-				Validation validationEvent = new Validation("VLD_ANYTHING", "Anything", ".*");
-
-				/* create list of validations */
-				List<Validation> validations = new ArrayList<>();
-				validations.add(validation);
-
-				List<Validation> imageValidations = new ArrayList<>();
-				imageValidations.add(validationImage);
-
-				List<Validation> validationsEvent = new ArrayList<>();
-				validations.add(validationEvent);
-				
-				/* iniitalize ValidationList objects for different datatypes */
-				ValidationList buttonValidationList = new ValidationList();
-				buttonValidationList.setValidationList(validations);
-
-				ValidationList imageValidationsList = new ValidationList();
-				imageValidationsList.setValidationList(imageValidations);
-
-				ValidationList eventValidationList = new ValidationList();
-				eventValidationList.setValidationList(validationsEvent);
-
-				ValidationList textValidationList = new ValidationList();
-				textValidationList.setValidationList(validations);
-
-				ValidationList emailValidationList = new ValidationList();
-				emailValidationList.setValidationList(validations);
-				
-				ValidationList mobileValidationList = new ValidationList();
-				mobileValidationList.setValidationList(validations);
-
-				ValidationList addressValidationList = new ValidationList();
-				addressValidationList.setValidationList(validations);
-
-				ValidationList textareaValidationList = new ValidationList();
-				textareaValidationList.setValidationList(validations);
-
-				ValidationList abnNumberValidationList = new ValidationList();
-				abnNumberValidationList.setValidationList(validations);
-				
-				ValidationList landlineValidationList = new ValidationList();
-				landlineValidationList.setValidationList(validations);
-
-				ValidationList integerValidationList = new ValidationList();
-				integerValidationList.setValidationList(validations);
-
-				ValidationList dropdownValidationList = new ValidationList();
-				dropdownValidationList.setValidationList(validations);
-
-				ValidationList dropdownMultipleValidationList = new ValidationList();
-				dropdownMultipleValidationList.setValidationList(validations);
-				
-				ValidationList tagValidationList = new ValidationList();
-				tagValidationList.setValidationList(validations);
-
-				ValidationList dateTimeValidationList = new ValidationList();
-				dateTimeValidationList.setValidationList(validations);
-
-				DataType buttonDataType = new DataType("DTT_BUTTON_EVENT", buttonValidationList, "buttonEvent", "");
-				DataType imageDataType = new DataType("DTT_IMAGE",imageValidationsList,"Image", "");
-				DataType eventDataType = new DataType("DTT_EVENT",eventValidationList,"Button", "");
-				
-				/* new dataTypes */
-				DataType textDataType = new DataType("DTT_TEXT",textValidationList,"text", "");
-				DataType emailDataType = new DataType("DTT_EMAIL",emailValidationList,"email", "");
-				DataType mobileDataType = new DataType("DTT_MOBILE",mobileValidationList,"mobile", "");
-				DataType addressDataType = new DataType("DTT_ADDRESS",addressValidationList,"address", "");
-				DataType textareaDataType = new DataType("DTT_TEXTAREA",textareaValidationList,"textarea", "");
-				DataType abnNumberDataType = new DataType("DTT_ABN_NUMBER",abnNumberValidationList,"abn number", "");
-				DataType landlineDataType = new DataType("DTT_LANDLINE",landlineValidationList,"landline", "");
-				DataType integerDataType = new DataType("DTT_INTEGER",integerValidationList,"java.lang.integer", "");
-				DataType dropdownDataType = new DataType("DTT_INDUSTRY",dropdownValidationList,"dropdown", "");
-				DataType dropdownMultipleDataType = new DataType("DTT_OCCUPATION",dropdownMultipleValidationList,"dropdownmultiple", "");
-				DataType tagDataType = new DataType("DTT_TAG",tagValidationList,"tag", "");
-				DataType dateTimeDataType = new DataType("DTT_DATETIME",dateTimeValidationList,"java.time.localdate", "");
-				
+        System.out.println("   Generate FRM_FORM  RULE TEST (PRJ_GENNY)" + serviceToken.getUserCode());
 				String apiUrl = GennySettings.qwandaServiceUrl + "/service/forms";
 				System.out.println("QwandaServiceUrl is "+apiUrl);
 				String jsonFormCodes = null;
@@ -146,52 +65,8 @@ rule "FRM_FORM"
 						continue;
 					}
 					Frame3 frame2 = Frame3.builder("FRM_CONTENT_" +  questionCode)
-								.addTheme("THM_FORM_ATTRIBUTES_GENNY", serviceToken).end()
-								.question(questionCode)
-									.addTheme("THM_FORM_BUTTONS", serviceToken).dataType(buttonDataType).vcl(VisualControlType.INPUT_WRAPPER).end()
-									.addTheme("THM_FORM_BUTTONS_BEHAVIOUR", serviceToken).dataType(buttonDataType).end()
-									.addTheme("THM_FORM_EVENT_BUTTONS_BEHAVIOUR", serviceToken).dataType(eventDataType).end()
-									.addTheme("THM_FORM_BUTTONS_BORDER", serviceToken).dataType(buttonDataType).vcl(VisualControlType.INPUT_FIELD).end()
-									.addTheme("THM_FORM_IMAGE_RESTRICTIONS", serviceToken).dataType(imageDataType).vcl(VisualControlType.VCL_INPUT).end()
-									.addTheme("THM_FORM_IMAGE_RESTRICTIONS_DIMENSION", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_SELECTED).end()
-									.addTheme("THM_FORM_VCL_INPUT_GENNY", serviceToken).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
-									.addTheme("THM_FORM_VCL_LABEL_GENNY", serviceToken).vcl(VisualControlType.VCL_LABEL).end()
-									.addTheme("THM_FORM_VCL_WRAPPER_GENNY", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
-									.addTheme("THM_FORM_VCL_ERROR_GENNY", serviceToken).vcl(VisualControlType.VCL_ERROR).end()
-									.addTheme("THM_FORM_BEHAVIOUR_GENNY", serviceToken).weight(3.0).end()
-									.addTheme("THM_FORM_GROUP_LABEL_GENNY", serviceToken).vcl(VisualControlType.GROUP_LABEL).weight(3.0).end()
-									.addTheme("THM_BACKGROUND_NONE", serviceToken).weight(3.0).end()
-									.addTheme("THM_FORM_GROUP_WRAPPER_GENNY", serviceToken).vcl(VisualControlType.GROUP_WRAPPER).weight(2.0).end()
-									.addTheme("THM_PROJECT_COLOR_SURFACE", serviceToken).vcl(VisualControlType.INPUT_ITEM_WRAPPER).end()
-									.addTheme("THM_PROFILE_IMAGE_FORM", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_SELECTED).end()
-									.addTheme("THM_PROFILE_IMAGE_PLACEHOLDER_FORM", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_PLACEHOLDER).end()
-									.addTheme("THM_PROFILE_IMAGE_FIELD_FORM", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_FIELD).end()
-									.addTheme("THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHT", serviceToken).dataType(buttonDataType).vcl(VisualControlType.INPUT_WRAPPER).end()
-									.addTheme("THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHT", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_FIELD).end()
-									.addTheme("THM_FORM_BUTTONS", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_FIELD).end()
-									.addTheme("THM_FORM_BUTTONS_BORDER", serviceToken).dataType(imageDataType).vcl(VisualControlType.INPUT_FIELD).end()
-									/* new themes */
-									.addTheme("THM_FORM_VCL_WRAPPER_BORDER", serviceToken).dataType(textDataType).vcl(VisualControlType.VCL_WRAPPER).end()
-									.addTheme("THM_FORM_VCL_WRAPPER_BORDER", serviceToken).dataType(emailDataType).vcl(VisualControlType.VCL_WRAPPER).end()
-									.addTheme("THM_FORM_VCL_WRAPPER_BORDER", serviceToken).dataType(mobileDataType).vcl(VisualControlType.VCL_WRAPPER).end()
-									.addTheme("THM_FORM_VCL_WRAPPER_BORDER", serviceToken).dataType(addressDataType).vcl(VisualControlType.VCL_WRAPPER).end()
-									.addTheme("THM_FORM_VCL_WRAPPER_BORDER", serviceToken).dataType(textareaDataType).vcl(VisualControlType.VCL_WRAPPER).end()
-									.addTheme("THM_FORM_VCL_WRAPPER_BORDER", serviceToken).dataType(abnNumberDataType).vcl(VisualControlType.VCL_WRAPPER).end()
-									.addTheme("THM_FORM_VCL_WRAPPER_BORDER", serviceToken).dataType(landlineDataType).vcl(VisualControlType.VCL_WRAPPER).end()
-									.addTheme("THM_FORM_VCL_WRAPPER_BORDER", serviceToken).dataType(integerDataType).vcl(VisualControlType.VCL_WRAPPER).end()
-									.addTheme("THM_FORM_VCL_WRAPPER_BORDER", serviceToken).dataType(dropdownDataType).vcl(VisualControlType.VCL_WRAPPER).end()
-									.addTheme("THM_FORM_VCL_WRAPPER_BORDER", serviceToken).dataType(dropdownMultipleDataType).vcl(VisualControlType.VCL_WRAPPER).end()
-									.addTheme("THM_FORM_VCL_WRAPPER_BORDER", serviceToken).dataType(tagDataType).vcl(VisualControlType.VCL_WRAPPER).end()
-									.addTheme("THM_FORM_VCL_WRAPPER_BORDER", serviceToken).dataType(dateTimeDataType).vcl(VisualControlType.VCL_WRAPPER).end()
-									
-									/* fit width */
-									.addTheme("THM_FORM_VCL_WRAPPER_FIT_WIDTH", serviceToken).dataType(dropdownDataType).vcl(VisualControlType.VCL_WRAPPER).end()
-									.addTheme("THM_FORM_VCL_WRAPPER_FIT_WIDTH", serviceToken).dataType(dropdownMultipleDataType).vcl(VisualControlType.VCL_WRAPPER).end()
-									.addTheme("THM_FORM_VCL_WRAPPER_FIT_WIDTH", serviceToken).dataType(tagDataType).vcl(VisualControlType.VCL_WRAPPER).end()
-									.addTheme("THM_FORM_VCL_WRAPPER_FIT_WIDTH", serviceToken).dataType(dateTimeDataType).vcl(VisualControlType.VCL_WRAPPER).end()
-
-								.end()
-							.build();
+                        .question(questionCode).end()
+                        .build();
 
 					frame2.setRealm(serviceToken.getRealm());
 
