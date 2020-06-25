@@ -39,8 +39,6 @@ rule "FRM_BUCKET_WRAPPER"
 			System.out.println(" Generate FRM_BUCKET_WRAPPER Rule  "+serviceToken.getUserCode());
 
 			Frame3 frame = Frame3.builder("FRM_BUCKET_WRAPPER")
-										.addTheme("THM_BUCKET", serviceToken).end()
-										/* .addTheme("THM_BUCKET_WRAPPER", ThemePosition.WEST, serviceToken).end() */
 										.build();
 							
 	frame.setRealm(serviceToken.getRealm());

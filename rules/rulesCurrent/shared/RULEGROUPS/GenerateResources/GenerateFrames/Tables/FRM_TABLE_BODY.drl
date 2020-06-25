@@ -37,7 +37,6 @@ rule "FRM_TABLE_BODY"
         System.out.println("   Generate FRM_TABLE_BODY Rule  "+serviceToken.getUserCode());
 
         Frame3 frame = Frame3.builder("FRM_TABLE_BODY")
-                      .addTheme("THM_SCROLL_VERTICAL",ThemePosition.CENTRE,serviceToken).end()
                       .addFrame(FRM_TABLE_CONTENT, FramePosition.CENTRE).end()
                       .build();
 

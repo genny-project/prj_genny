@@ -42,7 +42,6 @@ rule "FRM_TAB_CONTENT_NOTES"
 			System.out.println("   Generate FRM_TAB_CONTENT_NOTES Rule  "+serviceToken.getUserCode());
 
 			Frame3 frame = Frame3.builder("FRM_TAB_CONTENT_NOTES")
-										.addTheme("THM_TAB_CONTENT", serviceToken).end()
 										.build();
 
 			frame.setRealm(serviceToken.getRealm());

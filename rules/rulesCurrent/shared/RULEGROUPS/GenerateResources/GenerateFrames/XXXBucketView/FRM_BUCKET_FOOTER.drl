@@ -37,9 +37,6 @@ rule "FRM_BUCKET_FOOTER"
 
 			Frame3 frame = Frame3.builder("FRM_BUCKET_FOOTER")
 										.question("QUE_BUCKET_FOOTER_GRP")
-											.addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end()
-											.addTheme("THM_WIDTH_100_PERCENT", serviceToken).vcl(VisualControlType.GROUP_WRAPPER).end()
-											.addTheme("THM_JUSTIFY_CONTENT_SPACE_BETWEEN", serviceToken).vcl(VisualControlType.GROUP_CONTENT_WRAPPER).end()
 										.end()
 										.build();
 							

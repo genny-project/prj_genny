@@ -41,7 +41,6 @@ rule "FRM_TABLE_APP"
         System.out.println("   Generate FRM_TABLE_APP Rule  "+serviceToken.getUserCode());
 
         Frame3 frame = Frame3.builder("FRM_TABLE_APP")
-                                .addTheme("THM_PROJECT", ThemePosition.FRAME, serviceToken).end()
                                 .addFrame(FRM_HEADER, FramePosition.NORTH).end()
                                 .addFrame(FRM_SIDEBAR, FramePosition.WEST).end()
                                .addFrame(FRM_TABLE_VIEW, FramePosition.CENTRE).end()

@@ -38,11 +38,7 @@ rule "FRM_TABLE_WRAPPER"
     System.out.println(" Generate FRM_TABLE_WRAPPER Rule  "+serviceToken.getUserCode());
 
     Frame3 frame = Frame3.builder("FRM_TABLE_WRAPPER")
-                  .addTheme("THM_SCROLL_HORIZONTAL",ThemePosition.CENTRE,serviceToken).end()
-                  .addTheme("THM_BOX_SHADOW_XS",ThemePosition.WRAPPER,serviceToken).end()
-                  .addTheme("THM_PROJECT_COLOR_SURFACE", serviceToken).end()
                   .addFrame(FRM_TABLE_BODY, FramePosition.CENTRE).end()
-                  /* .addFrame(FRM_TABLE_FOOTER, FramePosition.SOUTH).end() */
                   .build();
 
     frame.setRealm(serviceToken.getRealm());
