@@ -295,69 +295,6 @@ if (intEP != null) {
 	
 	} else {
 		System.out.println(&quot;inEP is null &quot;);
-	}
-
-intIndustry = newBe.getValue(&quot;LNK_INDUSTRY&quot;, null);
-if (intIndustry != null) {
-	kcontext.setVariable(&quot;intIndustry&quot;, intIndustry);
-	System.out.println(&quot;@@@@@@@@@@@@@ intIndustry : &quot; + intIndustry);
-
-	hold_str = intIndustry.replace(&quot;\&quot;&quot;, &quot;&quot;).replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;);
-	kcontext.setVariable(&quot;hold_str&quot;, hold_str);
-	System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ hold_str: &quot; + hold_str);
-
-	intIndustryBe = beUtils.getBaseEntityByCode(hold_str);
-	kcontext.setVariable(&quot;intIndustryBe&quot;, intIndustryBe);
-	System.out.println(kcontext.getVariable(&quot;intIndustryBe&quot;));
-	System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ intIndustryBe: &quot; + intIndustryBe);
-
-	String industry = intIndustryBe.getValue(&quot;PRI_NAME&quot;, null);
-	kcontext.setVariable(&quot;industry&quot;, industry);
-	System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ industry: &quot; + industry);
-
-	Answer answer2 = new Answer(userToken.getUserCode(), newBe.getCode(),&quot;PRI_ASSOC_INDUSTRY&quot;, industry);
-	answer2.setChangeEvent(false); /* do not permit a changeEvent to be sent from api */
-	kcontext.setVariable(&quot;answer2&quot;, answer2);
-	System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ answer2: &quot; + answer2);
-
-	beUtils.saveAnswer(answer2);
-
-	System.out.println(&quot;##################################### WORKFLOW: ANSWER2 = &quot; +answer2);
-	
-	} else {
-		System.out.println(&quot;intIndustry is null &quot;);
-	}
-
-
-intOccupation = newBe.getValue(&quot;LNK_OCCUPATION&quot;, null);
-if (intOccupation != null) {
-	kcontext.setVariable(&quot;intOccupation&quot;, intOccupation);
-	System.out.println(&quot;@@@@@@@@@@@@@ intOccupation : &quot; + intOccupation);
-
-	hold_str = intOccupation.replace(&quot;\&quot;&quot;, &quot;&quot;).replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;);
-	kcontext.setVariable(&quot;hold_str&quot;, hold_str);
-	System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ hold_str: &quot; + hold_str);
-
-	intOccupationBe = beUtils.getBaseEntityByCode(hold_str);
-	kcontext.setVariable(&quot;intOccupationBe&quot;, intOccupationBe);
-	System.out.println(kcontext.getVariable(&quot;intOccupationBe&quot;));
-	System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ intOccupationBe: &quot; + intOccupationBe);
-
-	String occupation = intOccupationBe.getValue(&quot;PRI_NAME&quot;, null);
-	kcontext.setVariable(&quot;occupation&quot;, occupation);
-	System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ occupation: &quot; + occupation);
-
-	Answer answer3 = new Answer(userToken.getUserCode(), newBe.getCode(),&quot;PRI_ASSOC_OCCUPATION&quot;, occupation);
-	answer3.setChangeEvent(false); /* do not permit a changeEvent to be sent from api */
-	kcontext.setVariable(&quot;answer3&quot;, answer3);
-	System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ answer3: &quot; + answer3);
-
-	beUtils.saveAnswer(answer3);
-
-	System.out.println(&quot;##################################### WORKFLOW: ANSWER3 = &quot; +answer3);
-	
-	} else {
-		System.out.println(&quot;intOccupation is null &quot;);
 	}</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:task id="Task_4" drools:taskName="RuleFlowGroup" drools:displayName="RunRuleFlowGroup" drools:icon="icons/icon-info.gif" name="is_Intern">
@@ -609,7 +546,7 @@ System.out.println(&quot;INTERN_S1: Exiting Set EDU PRO Link&quot;);</bpmn2:scri
         <di:waypoint xsi:type="dc:Point" x="1070.0" y="353.0"/>
         <di:waypoint xsi:type="dc:Point" x="1220.0" y="353.0"/>
         <di:waypoint xsi:type="dc:Point" x="1370.0" y="353.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_15"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
