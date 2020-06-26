@@ -1,4 +1,4 @@
-/* package life.genny.rules;
+package life.genny.rules;
 
 
 global org.apache.logging.log4j.Logger log;
@@ -25,23 +25,29 @@ import life.genny.models.Frame3;
 import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
 import life.genny.models.FramePosition;
-import life.genny.qwanda.validation.Validation;
-import life.genny.qwanda.validation.ValidationList;
-import life.genny.qwanda.datatype.DataType;
-import life.genny.utils.TableUtils;
-import life.genny.utils.TableUtilsTest;
+import life.genny.models.ThemePosition;
 
-rule "FRM_PROCESS_VIEW"
+rule "FRM_TABLE_VIEW"
     ruleflow-group 'GenerateFrames'
 
     when
-      not  Frame3(code == "FRM_PROCESS_VIEW")
+      not  Frame3(code == "FRM_TABLE_VIEW")
       serviceToken : GennyToken( code == "PER_SERVICE")
-      /* rules : QRules() */
-    /* then
-        System.out.println("Generating Process View");
-        
-        BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
-        TableUtilsTest tableUtils = new TableUtilsTest(beUtils); */
-       		
-   /*end */
+      /* FRM_TABLE_TITLE : Frame3 ( code == "FRM_TABLE_TITLE" )
+      FRM_TABLE_WRAPPER : Frame3 ( code == "FRM_TABLE_WRAPPER" ) */
+      
+    then
+        System.out.println("   Generates FRM_TABLE_VIEW Rule  "+serviceToken.getUserCode());
+
+        Frame3 frame = Frame3.builder("FRM_TABLE_VIEW")
+                      /* .addFrame(FRM_TABLE_TITLE, FramePosition.NORTH).end()
+                      .addFrame(FRM_TABLE_WRAPPER, FramePosition.CENTRE).end() */
+                      .build();
+    
+        frame.setRealm(serviceToken.getRealm());
+
+        /* cache the frame */
+			  VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode(), frame, serviceToken.getToken());
+			
+        insert (frame);
+end
