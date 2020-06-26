@@ -119,7 +119,9 @@
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_11</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
-        <bpmn2:script>userToken = (GennyToken)sessionFacts.getUserToken();
+        <bpmn2:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%%% Starting AVATARMENU Workflow %%%%%%%%%%%%%%%%%%%%&quot;);
+
+userToken = (GennyToken)sessionFacts.getUserToken();
 serviceToken = (GennyToken)sessionFacts.getServiceToken();
 kcontext.setVariable(&quot;userToken&quot;, userToken);
 kcontext.setVariable(&quot;serviceToken&quot;, serviceToken);
@@ -169,6 +171,12 @@ System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ userBe: &quot; + userBe);
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[QUE_AVATAR_PROFILE_GRP]]></drools:metaValue>
           </drools:metaData>
+          <drools:onEntry-script scriptFormat="http://www.java.com/java">
+            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%%% Entering AVATARMENU Question Group %%%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
+          </drools:onEntry-script>
+          <drools:onExit-script scriptFormat="http://www.java.com/java">
+            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%%% Exiting AVATARMENU Question Group %%%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
+          </drools:onExit-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
@@ -277,7 +285,7 @@ System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ userBe: &quot; + userBe);
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_1" bpmnElement="Task_1" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="900.0" y="307.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_4">
           <dc:Bounds height="22.0" width="106.0" x="902.0" y="321.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -303,13 +311,13 @@ System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ userBe: &quot; + userBe);
         <di:waypoint xsi:type="dc:Point" x="820.0" y="332.0"/>
         <di:waypoint xsi:type="dc:Point" x="860.0" y="332.0"/>
         <di:waypoint xsi:type="dc:Point" x="900.0" y="332.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_7"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_EndEvent_6">
         <di:waypoint xsi:type="dc:Point" x="1010.0" y="332.0"/>
         <di:waypoint xsi:type="dc:Point" x="1090.0" y="332.0"/>
         <di:waypoint xsi:type="dc:Point" x="1170.0" y="332.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_12"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">

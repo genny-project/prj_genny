@@ -26,6 +26,7 @@ rule "AVATAR_CLICK_EVENT"
 
 		output.setTypeOfResult("SIGNAL");
 		output.setResultCode("START_"+workflowSignalCode);
+		
 
 		retract( $message);
 	end
