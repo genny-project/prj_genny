@@ -33,15 +33,15 @@ rule "FRM_TABLE_VIEW"
     when
       not  Frame3(code == "FRM_TABLE_VIEW")
       serviceToken : GennyToken( code == "PER_SERVICE")
-      FRM_TABLE_TITLE : Frame3 ( code == "FRM_TABLE_TITLE" )
-      FRM_TABLE_WRAPPER : Frame3 ( code == "FRM_TABLE_WRAPPER" )
+      /* FRM_TABLE_TITLE : Frame3 ( code == "FRM_TABLE_TITLE" )
+      FRM_TABLE_WRAPPER : Frame3 ( code == "FRM_TABLE_WRAPPER" ) */
       
     then
         System.out.println("   Generates FRM_TABLE_VIEW Rule  "+serviceToken.getUserCode());
 
         Frame3 frame = Frame3.builder("FRM_TABLE_VIEW")
-                      .addFrame(FRM_TABLE_TITLE, FramePosition.NORTH).end()
-                      .addFrame(FRM_TABLE_WRAPPER, FramePosition.CENTRE).end()
+                      /* .addFrame(FRM_TABLE_TITLE, FramePosition.NORTH).end()
+                      .addFrame(FRM_TABLE_WRAPPER, FramePosition.CENTRE).end() */
                       .build();
     
         frame.setRealm(serviceToken.getRealm());
