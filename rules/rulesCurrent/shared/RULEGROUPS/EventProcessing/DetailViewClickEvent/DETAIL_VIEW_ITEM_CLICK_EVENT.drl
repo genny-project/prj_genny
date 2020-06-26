@@ -13,55 +13,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 rule "DETAIL_VIEW_ITEM_CLICK_EVENT"
-    ruleflow-group 'EventProcessing'
-		salience 2
-    no-loop
-    when
-		$message : QEventMessage(data.code matches "QUE_.*" && (data.parentCode == "QUE_DETAIL_VIEW_GRP"))
+	ruleflow-group 'EventProcessing'
+	salience 2
+	no-loop
+	when
+		$message : QEventMessage(
+			(data.code matches "QUE_PRI_EVENT_VIEW_.*" && (data.rootCode == "QUE_TABLE_RESULTS_GRP")) ||
+			data.code matches "QUE_VIEW_PROFILE" ||
+			data.code matches "QUE_VIEW_APP"
+		)
 		userToken : GennyToken (code != "PER_SERVICE" )
 		output : OutputParam( )
-    then
-	
-		System.out.println("Processing USER EVENT : " + $message );
+	then
+		System.out.println("DETAIL_VIEW_ITEM_CLICK_EVENT");
 		
-		System.out.println("Parent code :  " + $message.getData().getParentCode());
+		String targetCode = $message.getData().getTargetCode();
+		System.out.println("TARGET code ::  " + targetCode);
+
+		BaseEntity baseEntity = new BaseEntityUtils(userToken).getBaseEntityByCode(targetCode);
 		
-		String code = ($message.getData().getCode()).replace("QUE_", "FRM_");
-	
-		BaseEntity person = new BaseEntityUtils(userToken).getBaseEntityByCode("PER_USER1");
-		BaseEntity internship = new BaseEntityUtils(userToken).getBaseEntityByCode("BEG_INTERNSHIP_ONE");
-		BaseEntity application = new BaseEntityUtils(userToken).getBaseEntityByCode("APP_APPLICATION_THREE");
-		
-		JsonObject tokenObj = VertxUtils.readCachedJson(userToken.getRealm(),"ASK_"+code,userToken.getToken());
-		
-		QDataAskMessage[] askSet = JsonUtils.fromJson(tokenObj.getString("value"), QDataAskMessage[].class);
-		
-		System.out.println("Sending Asks");
-		for(QDataAskMessage ask : askSet) {
+		if(baseEntity!= null){
+			QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
+			msg.setToken(userToken.getToken());
+			msg.setReplace(true);
 			
-			ask.setToken(userToken.getToken());
-			ask.setReplace(false);	
-			String askJson = JsonUtils.toJson(ask);
-			VertxUtils.writeMsg("webcmds",askJson );
+			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 		}
-		
-		System.out.println("Ask Send");
-		
-		QDataBaseEntityMessage msgg = new QDataBaseEntityMessage(person);
-		msgg.setToken(userToken.getToken());
-		msgg.setReplace(true);
-		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msgg));	
-		
-		msgg = new QDataBaseEntityMessage(internship);
-		msgg.setToken(userToken.getToken());
-		msgg.setReplace(true);
-		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msgg));	
-		
-		msgg = new QDataBaseEntityMessage(application);
-		msgg.setToken(userToken.getToken());
-		msgg.setReplace(true);
-		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msgg));	
-		
-		output.setFormCode( code ,"FRM_DETAIL_VIEW_CONTENT");
+
+		output.setTypeOfResult("NONE");
+		output.setResultCode("NONE");  /* dont display anything new */
 		retract( $message);
 	end
