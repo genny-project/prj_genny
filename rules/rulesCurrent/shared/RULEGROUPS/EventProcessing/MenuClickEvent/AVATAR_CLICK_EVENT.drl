@@ -21,7 +21,7 @@ rule "AVATAR_CLICK_EVENT"
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
 		
 		String code = $message.getData().getCode(); /* get click event code e.g. QUE_ADD_EDU_PROVIDER_GRP  */
-		String workflowSignalCode = StringUtils.removeEnd(code, "_MENU");
+		String workflowSignalCode = StringUtils.removeEnd(code, "_PROFILE_GRP");
 		workflowSignalCode = StringUtils.removeStart(workflowSignalCode,"QUE_");
 
 		output.setTypeOfResult("SIGNAL");
