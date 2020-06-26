@@ -282,18 +282,9 @@ public class JasperTest {
         
         System.out.println("userToken: " + userToken.getToken());
         System.out.println("serviceToken: " + serviceToken.getToken());
-      	
-        
-        JSONObject json = new JSONObject();
-        try {
-            json.put("targetEntity", "APP_TEST_APPLICATION1");
-            json.put("targetStatus", "OFFERED");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
 
-		OutputParam output = new OutputParam("SIGNAL", "START_MOVE_FORWARD", json.toString());
+		OutputParam output = new OutputParam("SIGNAL", "START_SHORTLIST", "APP_TEST_APPLICATION1");
       
 		SessionFacts sessionFacts = new SessionFacts(serviceToken, userToken, output);
 		
@@ -303,13 +294,12 @@ public class JasperTest {
       		gks = GennyKieSession
 					.builder(serviceToken,true)				
 					.addToken(userToken)
-					.addJbpm("codeTest.bpmn")
-					.addDrl("JASPER_TEST.drl")
+					.addJbpm("")
 					.build();
 			
 			gks.start();
-			gks.startProcess("codeTest");
-//          	gks.injectSignal("START_SET_STATUS", sessionFacts); 
+//			gks.startProcess("codeTest");
+          	gks.injectSignal("START_SHORTLIST", sessionFacts); 
           	
           	System.out.println("DEBUG");
           
@@ -369,6 +359,12 @@ public class JasperTest {
 
         beUtils.create("BEG_TEST_INTERNSHIP", "Test Internship");
         
+        /* INCREMENT INTERN COUNT */
+        Integer internshipCountAll = (Integer) beUtils.getBaseEntityValue("GRP_DASHBOARD_COUNTS", "PRI_COUNT_ALL_INTERNSHIPS");
+        beUtils.saveAnswer(new Answer(userToken.getUserCode(), "GRP_DASHBOARD_COUNTS", "PRI_COUNT_ALL_INTERNSHIPS", (internshipCountAll+1)));
+        
+        
+        
         beUtils.create("APP_TEST_APPLICATION1", "Test Application 1");
         beUtils.create("APP_TEST_APPLICATION2", "Test Application 2");
         beUtils.create("APP_TEST_APPLICATION3", "Test Application 3");
@@ -423,6 +419,11 @@ public class JasperTest {
         answer = new Answer(userToken.getUserCode(), intern1.getCode(), "PRI_DISABLED", "false");
         beUtils.saveAnswer(answer);
         
+        /* INCREMENT ALL INTERNS COUNT AND AVAILABLE INTERNS COUNT */
+        Integer internCountAll = (Integer) beUtils.getBaseEntityValue("GRP_DASHBOARD_COUNTS", "PRI_COUNT_ALL_INTERNS");
+        beUtils.saveAnswer(new Answer(userToken.getUserCode(), "GRP_DASHBOARD_COUNTS", "PRI_COUNT_ALL_INTERNS", (internCountAll+1)));
+        
+        
         answer = new Answer(userToken.getUserCode(), intern2.getCode(), "PRI_FIRSTNAME", "John");
         beUtils.saveAnswer(answer);
         answer = new Answer(userToken.getUserCode(), intern2.getCode(), "PRI_LASTNAME", "Smith");
@@ -440,6 +441,11 @@ public class JasperTest {
         answer = new Answer(userToken.getUserCode(), intern2.getCode(), "PRI_DISABLED", "false");
         beUtils.saveAnswer(answer);
         
+        /* INCREMENT ALL INTERNS COUNT AND AVAILABLE INTERNS COUNT */
+        internCountAll = (Integer) beUtils.getBaseEntityValue("GRP_DASHBOARD_COUNTS", "PRI_COUNT_ALL_INTERNS");
+        beUtils.saveAnswer(new Answer(userToken.getUserCode(), "GRP_DASHBOARD_COUNTS", "PRI_COUNT_ALL_INTERNS", (internCountAll+1)));
+        
+        
         answer = new Answer(userToken.getUserCode(), intern3.getCode(), "PRI_FIRSTNAME", "Chris");
         beUtils.saveAnswer(answer);
         answer = new Answer(userToken.getUserCode(), intern3.getCode(), "PRI_LASTNAME", "Pyke");
@@ -456,7 +462,12 @@ public class JasperTest {
         beUtils.saveAnswer(answer);
         answer = new Answer(userToken.getUserCode(), intern3.getCode(), "PRI_DISABLED", "false");
         beUtils.saveAnswer(answer);
+        
+        /* INCREMENT ALL INTERNS COUNT AND AVAILABLE INTERNS COUNT */
+        internCountAll = (Integer) beUtils.getBaseEntityValue("GRP_DASHBOARD_COUNTS", "PRI_COUNT_ALL_INTERNS");
+        beUtils.saveAnswer(new Answer(userToken.getUserCode(), "GRP_DASHBOARD_COUNTS", "PRI_COUNT_ALL_INTERNS", (internCountAll+1)));
 
+        
         answer = new Answer(userToken.getUserCode(), intern4.getCode(), "PRI_FIRSTNAME", "Jasper");
         beUtils.saveAnswer(answer);
         answer = new Answer(userToken.getUserCode(), intern4.getCode(), "PRI_LASTNAME", "Robison");
@@ -474,6 +485,11 @@ public class JasperTest {
         answer = new Answer(userToken.getUserCode(), intern4.getCode(), "PRI_DISABLED", "false");
         beUtils.saveAnswer(answer);
         
+        /* INCREMENT ALL INTERNS COUNT AND AVAILABLE INTERNS COUNT */
+        internCountAll = (Integer) beUtils.getBaseEntityValue("GRP_DASHBOARD_COUNTS", "PRI_COUNT_ALL_INTERNS");
+        beUtils.saveAnswer(new Answer(userToken.getUserCode(), "GRP_DASHBOARD_COUNTS", "PRI_COUNT_ALL_INTERNS", (internCountAll+1)));
+        
+        
         answer = new Answer(userToken.getUserCode(), intern5.getCode(), "PRI_FIRSTNAME", "Super");
         beUtils.saveAnswer(answer);
         answer = new Answer(userToken.getUserCode(), intern5.getCode(), "PRI_LASTNAME", "Man");
@@ -490,6 +506,11 @@ public class JasperTest {
         beUtils.saveAnswer(answer);
         answer = new Answer(userToken.getUserCode(), intern5.getCode(), "PRI_DISABLED", "false");
         beUtils.saveAnswer(answer);
+        
+        /* INCREMENT ALL INTERNS COUNT AND AVAILABLE INTERNS COUNT */
+        internCountAll = (Integer) beUtils.getBaseEntityValue("GRP_DASHBOARD_COUNTS", "PRI_COUNT_ALL_INTERNS");
+        beUtils.saveAnswer(new Answer(userToken.getUserCode(), "GRP_DASHBOARD_COUNTS", "PRI_COUNT_ALL_INTERNS", (internCountAll+1)));
+
        
        
         /* HOST CPY */
@@ -583,10 +604,13 @@ public class JasperTest {
 
         for (String key : codes.keySet()) {
         	System.out.println("Key: " + key);
-        	answer = new Answer(userToken.getUserCode(), codes.get(key), "PRI_STATUS","APPLIED");
+        	answer = new Answer(userToken.getUserCode(), codes.get(key), "PRI_STATUS", "APPLIED");
      		beUtils.saveAnswer(answer);
      		answer = new Answer(userToken.getUserCode(), codes.get(key), "PRI_DISABLED","false");
      		beUtils.saveAnswer(answer);
+     		
+     		Integer internCountApplied = (Integer) beUtils.getBaseEntityValue("GRP_DASHBOARD_COUNTS", "PRI_COUNT_APPLIED_INTERNS");
+            beUtils.saveAnswer(new Answer(userToken.getUserCode(), "GRP_DASHBOARD_COUNTS", "PRI_COUNT_APPLIED_INTERNS", (internCountApplied+1)));
      		
      		String firstName = beUtils.getBaseEntityValue(key, "PRI_FIRSTNAME").toString();
      		String lastName = beUtils.getBaseEntityValue(key, "PRI_LASTNAME").toString();
