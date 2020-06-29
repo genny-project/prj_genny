@@ -36,7 +36,7 @@ rule "FRM_HEADER_OPTIONS"
       System.out.println("   Generate FRM_HEADER_OPTIONS Rule  "+serviceToken.getUserCode());
 
       Frame3 frame = Frame3.builder("FRM_HEADER_OPTIONS")
-                    .question("QUE_OPTIONS_GRP")
+                    .question("QUE_AVATAR_GRP")
                     .end()
                     .build();
 						
