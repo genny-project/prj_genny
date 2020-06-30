@@ -36,11 +36,8 @@ rule "FRM_PROJECT_NAME"
         System.out.println("   Generate FRM_PROJECT_NAME Rule  "+serviceToken.getUserCode());
 
         Frame3 frame = Frame3.builder("FRM_PROJECT_NAME")
-                      .addTheme("THM_SIDEBAR_WIDTH", ThemePosition.WRAPPER, serviceToken).end() 
-                      .addTheme("THM_PROJECT_NAME", ThemePosition.WRAPPER, serviceToken).end()                        
                       .question("QUE_PROJECT_NAME_GRP")
                         .targetAlias("PRJ_"+serviceToken.getRealm().toUpperCase())
-                        .addTheme("THM_TITLE_LABEL", serviceToken).vcl(VisualControlType.VCL_INPUT).end()
                       .end()
                       .build();
     

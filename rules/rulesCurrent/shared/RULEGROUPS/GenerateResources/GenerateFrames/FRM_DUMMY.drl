@@ -35,8 +35,6 @@ rule "FRM_DUMMY"
      System.out.println(" Generate FRM_DUMMY Rule .svswxyz0  "+serviceToken.getUserCode());
 
  	Frame3 frame = Frame3.builder("FRM_DUMMY")
-						.addTheme("THM_DUMMY",serviceToken)
-							.end()
 						.build();
 						
 	frame.setRealm(serviceToken.getRealm());

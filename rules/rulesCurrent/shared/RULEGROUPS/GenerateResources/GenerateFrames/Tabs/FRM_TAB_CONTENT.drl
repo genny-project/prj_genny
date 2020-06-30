@@ -34,10 +34,6 @@ rule "FRM_TAB_CONTENT"
 			System.out.println("   Generate FRM_TAB_CONTENT Rule  "+serviceToken.getUserCode());
 
 			Frame3 frame = Frame3.builder("FRM_TAB_CONTENT")
-										.addTheme("THM_TAB_CONTENT", serviceToken).end()
-										.addTheme("THM_JUSTIFY_CONTENT_FLEX_START", serviceToken).end()
-										.addTheme("THM_SCROLL_VERTICAL", serviceToken).end()
-										/* comment out to see the detail or table view */
 										.build();
 
 			frame.setRealm(serviceToken.getRealm());
