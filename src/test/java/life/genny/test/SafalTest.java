@@ -195,7 +195,7 @@ public class SafalTest extends GennyJbpmBaseTest {
     	 /* frame-root */
         try {
 			Frame3 frame = Frame3.builder("FRM_QUE_TREE_FORM_VIEW")
-			              .addTheme("THM_TREE_ITEM", ThemePosition.WRAPPER, serviceToken).end()
+			              
 			              .question("QUE_TREE_FORM_VIEW_GRP")
 			                  .addTheme("THM_TREE_GROUP_BEHAVIOUR", serviceToken).end()
 			                  .addTheme("THM_TREE_GROUP_CLICKABLE_WRAPPER", serviceToken)

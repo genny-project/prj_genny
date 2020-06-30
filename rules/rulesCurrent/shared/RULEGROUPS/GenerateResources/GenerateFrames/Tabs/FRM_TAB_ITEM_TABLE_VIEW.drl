@@ -41,9 +41,6 @@ rule "FRM_TAB_ITEM_TABLE_VIEW"
 			System.out.println("   Generate FRM_TAB_ITEM_TABLE_VIEW Rule  "+serviceToken.getUserCode());
 
 			Frame3 frame = Frame3.builder("FRM_TAB_ITEM_TABLE_VIEW")
-										.addTheme("THM_TAB", serviceToken).end()
-										.addTheme("THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHT", serviceToken).end()
-										.addTheme("THM_TAB_WIDTH", ThemePosition.WRAPPER, serviceToken).end()
 										.question("QUE_TAB_TABLE_VIEW")
 										.end()
 										.build();
