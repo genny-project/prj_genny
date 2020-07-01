@@ -190,23 +190,15 @@ Integer internshipCountAvailable = (Integer) beUtilsTwo.getBaseEntityValue(&quot
 beUtilsTwo.saveAnswer(new Answer(userToken.getUserCode(), &quot;GRP_DASHBOARD_COUNTS&quot;, &quot;PRI_COUNT_AVAILABLE_INTERNSHIPS&quot;, (internshipCountAvailable +1)));
 
 
-muddleDuration = newBe.getValue(&quot;LNK_INTERNSHIP_DURATION&quot;, null);
 muddleWhichDays = newBe.getValue(&quot;LNK_WHICH_DAYS&quot;, null);
 addressFull = newBe.getValue(&quot;PRI_ADDRESS_FULL&quot;, &quot;ADDRESS_NOT_THERE&quot;);
 
-kcontext.setVariable(&quot;muddleDuration&quot;, muddleDuration);
 kcontext.setVariable(&quot;muddleWhichDays&quot;, muddleWhichDays);
 kcontext.setVariable(&quot;addressFull&quot;, addressFull);
 
-System.out.println(&quot;@@@@@@@@@@@@@ muddleDuration : &quot; + muddleDuration);
 System.out.println(&quot;@@@@@@@@@@@@@ muddleWhichDays : &quot; + muddleWhichDays);
 System.out.println(&quot;@@@@@@@@@@@@@ addressFull : &quot; + addressFull);
 
-/*muddleDuration = muddleDuration.replace('\&quot;', '').replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;);*/
-
-JSONArray jsonArrayDuration = new JSONArray(beUtilsTwo.getBaseEntityValue(newBe.getCode(), &quot;LNK_INTERNSHIP_DURATION&quot;).toString());
-BaseEntity durationEntity = beUtilsTwo.getBaseEntityByCode(jsonArrayDuration.get(0).toString());
-duration = durationEntity.getName();
 
 JSONArray jsonArrayWhichDays = new JSONArray(beUtilsTwo.getBaseEntityValue(newBe.getCode(), &quot;LNK_WHICH_DAYS&quot;).toString());
 jsonArrayWhichDaysLength = jsonArrayWhichDays.length();
@@ -228,113 +220,16 @@ for(int i=0; i&lt;jsonArrayWhichDaysLength; i++)
 	System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ whichDays: &quot; + whichDays);
 }
 
-/*BaseEntity whichDaysEntity = beUtilsTwo.getBaseEntityByCode(jsonArrayWhichDays.get(0).toString());
-whichDays = whichDaysEntity.getName();*/
-
-/*whichDays = whichDays.replace('\&quot;', '').replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;).replace(&quot;SEL_WHICH_DAYS_&quot;, &quot;&quot;).replace(&quot;,&quot;, &quot;, &quot;).toString();
-
-duration = muddleDuration.split(&quot;_&quot;)[2];*/
-
-kcontext.setVariable(&quot;duration&quot;, duration);
 kcontext.setVariable(&quot;whichDays&quot;, whichDays);
-
-System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Just before answer - duration: &quot; + duration);
 System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Just before answer - whichDays: &quot; + whichDays);
 
-Answer answer = new Answer(userToken.getUserCode(), newBe.getCode(),&quot;PRI_INTERNSHIP_DURATION_STRIPPED&quot;, duration);
-Answer answer2 = new Answer(userToken.getUserCode(), newBe.getCode(),&quot;PRI_WHICH_DAYS_STRIPPED&quot;, whichDays);
+Answer answer = new Answer(userToken.getUserCode(), newBe.getCode(),&quot;PRI_WHICH_DAYS_STRIPPED&quot;, whichDays);
 
 kcontext.setVariable(&quot;answer&quot;, answer);
-kcontext.setVariable(&quot;answer2&quot;, answer2);
-
 System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ answer: &quot; + answer);
-System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ answer2: &quot; + answer2);
 
 beUtilsTwo.saveAnswer(answer);
-beUtilsTwo.saveAnswer(answer2);
-
-System.out.println(&quot;##################################### PRI_INTERNSHIP_DURATION_STRIPPED: ANSWER = &quot; +answer);
 System.out.println(&quot;##################################### PRI_WHICH_DAYS_STRIPPED: ANSWER = &quot; +answer2);
-
-
-
-System.out.println(&quot;@@@@@@@@@@@@@ INTERNSHIP: CALCULATING DATES AND TIMES&quot;);
-
-String str_newBeCode = newBe.getCode().toString();
-System.out.println(&quot;##################################### str_newBeCode&quot; +str_newBeCode);
-/*startDate = newBe.getValue(&quot;PRI_START_DATE&quot;, null);*/
-
-startDateTime = beUtilsTwo.getBaseEntityValueAsLocalDate(str_newBeCode, &quot;PRI_START_DATE&quot;);
-System.out.println(&quot;##################################### startDateTime = &quot; +startDateTime);
-
-startDate = startDateTime.toString();
-
-daysPerWeekString = newBe.getValue(&quot;PRI_DAYS_PER_WEEK&quot;, null);
-
-daysPerWeek = Double.parseDouble(daysPerWeekString);
-longDuration = Long.parseLong(duration);
-
-kcontext.setVariable(&quot;startDate&quot;, startDate);
-kcontext.setVariable(&quot;daysPerWeek&quot;, daysPerWeek);
-
-System.out.println(&quot;@@@@@@@@@@@@@ startDate : &quot; + startDate);
-System.out.println(&quot;@@@@@@@@@@@@@ daysPerWeek : &quot; + daysPerWeek);
-
-hoursPerWeek = 7.5 * daysPerWeek;
-strHoursPerWeek = hoursPerWeek+&quot;&quot;;
-kcontext.setVariable(&quot;hoursPerWeek&quot;, hoursPerWeek);
-System.out.println(&quot;@@@@@@@@@@@@@ hoursPerWeek : &quot; + hoursPerWeek);
-
-String str_year = &quot;&quot;;
-String str_month = &quot;&quot;;
-String str_day = &quot;&quot;;
-System.out.println(str_year + &quot; &quot; + str_month + &quot; &quot; + str_day);
-
-int int_year = 0;
-int int_month = 0;
-int int_day = 0;
-System.out.println(int_year + &quot; &quot; + int_month + &quot; &quot; + int_day);
-
-str_year = startDate.split(&quot;-&quot;)[0];
-str_month = startDate.split(&quot;-&quot;)[1];
-str_day = startDate.split(&quot;-&quot;)[2];
-System.out.println(str_year + &quot; &quot; + str_month + &quot; &quot; + str_day);
-
-int_year = Integer.parseInt(str_year);
-int_month = Integer.parseInt(str_month);
-int_day = Integer.parseInt(str_day);
-System.out.println(int_year + &quot; &quot; + int_month + &quot; &quot; + int_day);
-
-kcontext.setVariable(&quot;int_year&quot;, int_year);
-kcontext.setVariable(&quot;int_month&quot;, int_month);
-kcontext.setVariable(&quot;int_day&quot;, int_day);
-
-System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ int_year: &quot; + int_year);
-System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ int_month: &quot; + int_month);
-System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ int_day: &quot; + int_day);
-
-
-dumbStartDate = localDate.of(int_year, int_month, int_day);
-dumbEndDate = dumbStartDate.plusWeeks(longDuration);
-
-kcontext.setVariable(&quot;dumbEndDate&quot;, dumbEndDate);
-System.out.println(&quot;@@@@@@@@@@@@@ dumbEndDate : &quot; + dumbEndDate);
-
-
-Answer answer3 = new Answer(userToken.getUserCode(), newBe.getCode(),&quot;PRI_HOURS_PER_WEEK&quot;, strHoursPerWeek);
-Answer answer4 = new Answer(userToken.getUserCode(), newBe.getCode(),&quot;PRI_END_DATE&quot;, dumbEndDate.toString());
-
-kcontext.setVariable(&quot;answer3&quot;, answer3);
-kcontext.setVariable(&quot;answer4&quot;, answer4);
-
-System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ answer3: &quot; + answer3);
-System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ answer4: &quot; + answer4);
-
-beUtilsTwo.saveAnswer(answer3);
-beUtilsTwo.saveAnswer(answer4);
-
-System.out.println(&quot;##################################### PRI_HOURS_PER_WEEK: ANSWER = &quot; +answer3);
-System.out.println(&quot;##################################### PRI_INTERNSHIP_END_DATE: ANSWER = &quot; +answer4);
 
 </bpmn2:script>
       </bpmn2:scriptTask>
