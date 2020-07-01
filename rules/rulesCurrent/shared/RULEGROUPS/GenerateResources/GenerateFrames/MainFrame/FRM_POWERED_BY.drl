@@ -33,19 +33,12 @@ rule "FRM_POWERED_BY"
     when
       not  Frame3(code == "FRM_POWERED_BY")
       serviceToken : GennyToken( code == "PER_SERVICE")
-      FRM_DUMMY : Frame3 ( code == "FRM_DUMMY" )
     then
      System.out.println("   Generate FRM_POWERED_BY Rule  "+serviceToken.getUserCode());
 
  	Frame3 frame = Frame3.builder("FRM_POWERED_BY")
 								.question("QUE_POWERED_BY_GRP")
 									.targetAlias("PRJ_"+serviceToken.getRealm().toUpperCase())
-									.addTheme("THM_LABEL_BOLD", serviceToken)
-										.vcl(VisualControlType.VCL_LABEL)
-									.end()
-									.addTheme("THM_DISPLAY_HORIZONTAL", serviceToken)
-										.vcl(VisualControlType.VCL_WRAPPER)
-									.end()
 								.end()
 								.build();
 						

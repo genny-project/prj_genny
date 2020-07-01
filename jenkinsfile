@@ -4,7 +4,7 @@
         // notifyStarted()
         stage ('Secure Shell Into Remote Server') {
             sh label: 'cloneProjects', script: '''#!/bin/bash
-            ver=v3.1.0
+            ver=v7.0.0
             pullRequestBranch=$(echo $payload | jq --raw-output '(.pull_request.head.ref)')
             pullRequestRepo=$(echo $payload | jq --raw-output '(.pull_request.head.repo.clone_url)')
             ssh ubuntu@192.168.17.122 "(cd jenkins_projects;
@@ -18,7 +18,7 @@
         }
         stage ('Cloning') {
             sh label: 'cloneProjects', script: '''#!/bin/bash
-            ver=v3.1.0
+            ver=v7.0.0
             pullRequestBranch=$(echo $payload | jq --raw-output '(.pull_request.head.ref)')
             pullRequestRepo=$(echo $payload | jq --raw-output '(.pull_request.head.repo.clone_url)')
             echo "The Pull Request Branch is:: " $pullRequestBranch
@@ -34,7 +34,7 @@
         }
         stage('Building') {
             sh label: 'buildProjects', script: '''#!/bin/bash
-            ver=v3.1.0
+            ver=v7.0.0
             pullRequestBranch=$(echo $payload | jq --raw-output '(.pull_request.head.ref)')
             pullRequestRepo=$(echo $payload | jq --raw-output '(.pull_request.head.repo.clone_url)')
             echo "The Pull Request Branch is:: " $pullRequestBranch
@@ -50,7 +50,7 @@
         }
         stage('Running System') {
             sh label: 'runProjects', script: '''#!/bin/bash
-            ver=v3.1.0
+            ver=v7.0.0
             pullRequestBranch=$(echo $payload | jq --raw-output '(.pull_request.head.ref)')
             pullRequestRepo=$(echo $payload | jq --raw-output '(.pull_request.head.repo.clone_url)')
             echo "The Pull Request Branch is:: " $pullRequestBranch
@@ -73,7 +73,7 @@
         }
         stage('Running Gennyteer Tests') {
             sh label: 'runTests', script: '''#!/bin/bash
-            ver=v3.1.0
+            ver=v7.0.0
             pullRequestBranch=$(echo $payload | jq --raw-output '(.pull_request.head.ref)')
             pullRequestRepo=$(echo $payload | jq --raw-output '(.pull_request.head.repo.clone_url)')
             echo "The Pull Request Branch is:: " $pullRequestBranch
@@ -92,7 +92,7 @@
         stage('Clear Hubserver') {
             sleep(time: 3, unit:"MINUTES")
             sh label: 'clearHubserver', script: '''#!/bin/bash
-            ver=v3.1.0
+            ver=v7.0.0
             pullRequestBranch=$(echo $payload | jq --raw-output '(.pull_request.head.ref)')
             pullRequestRepo=$(echo $payload | jq --raw-output '(.pull_request.head.repo.clone_url)')
             echo "The Pull Request Branch is:: " $pullRequestBranch;
@@ -115,7 +115,7 @@
         /* currentBuild.result = "FAILED" */
         notifyFailed()
         sh label: 'runProjects', script: '''#!/bin/bash
-        ver=v3.1.0
+        ver=v7.0.0
         pullRequestBranch=$(echo $payload | jq --raw-output '(.pull_request.head.ref)')
         pullRequestRepo=$(echo $payload | jq --raw-output '(.pull_request.head.repo.clone_url)')
         echo "The Pull Request Branch is:: " $pullRequestBranch;
