@@ -36,11 +36,7 @@ rule "FRM_SEARCH_BAR"
     System.out.println(" Generate FRM_SEARCH_BAR Rule  "+serviceToken.getUserCode());
 
     Frame3 frame = Frame3.builder("FRM_SEARCH_BAR")
-                  .addTheme("THM_SEARCH_BAR_CENTRE", ThemePosition.CENTRE, serviceToken).end()
-                  .question("QUE_SEARCH")
-                    .addTheme("THM_SEARCH_BAR", serviceToken).vcl(VisualControlType.VCL).end()
-                    .addTheme("THM_SEARCH_BAR_WRAPPER", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
-                  .end()
+                  .question("QUE_SEARCH").end()
                   .build();
     frame.setRealm(serviceToken.getRealm());
     insert (frame);
