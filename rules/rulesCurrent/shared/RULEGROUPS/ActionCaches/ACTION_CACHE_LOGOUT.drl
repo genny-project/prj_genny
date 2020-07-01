@@ -21,21 +21,21 @@ rule "ACTION_CACHE_LOGOUT"
      no-loop true
     when
       beUtils : BaseEntityUtils()
-	  userToken : GennyToken ( code != "PER_SERVICE" ) 
+	  userToken : GennyToken ( code != "PER_SERVICE" )
 	  serviceToken : GennyToken ( code == "PER_SERVICE" )
 	  not QCmdMessage( code == "LOGOUT")
     then
    		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + userToken.getUserCode());
-   		
+
  		QCmdMessage msg = new QCmdMessage("LOGOUT", "LOGOUT");
  		msg.setExec(false);
  		msg.setSend(true);
  		msg.setCache("QUE_OPTIONS_GRP:QUE_OPTIONS_GRP:QUE_LOGOUT"); /* trigger codes */
 		msg.setToken(userToken.getToken());
-  		
+
   		VertxUtils.writeMsg("webcmds",msg);
-		/* payload.add(msg); */
-				
+		/* payload.add(msg); Test */
+
 	/*	drools.getKnowledgeRuntime().setGlobal("payload", payload); */
 		insert(msg); /* to stop refire */
 end
