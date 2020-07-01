@@ -229,7 +229,8 @@ kcontext.setVariable(&quot;answer&quot;, answer);
 System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ answer: &quot; + answer);
 
 beUtilsTwo.saveAnswer(answer);
-System.out.println(&quot;##################################### PRI_WHICH_DAYS_STRIPPED: ANSWER = &quot; +answer2);
+System.out.println(&quot;##################################### PRI_WHICH_DAYS_STRIPPED: ANSWER = &quot; +answer);
+
 
 </bpmn2:script>
       </bpmn2:scriptTask>
