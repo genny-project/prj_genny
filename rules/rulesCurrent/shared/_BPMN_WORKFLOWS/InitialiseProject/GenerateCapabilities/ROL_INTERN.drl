@@ -40,6 +40,7 @@ rule "ROL_INTERN"
    	     
    	     capabilityUtils.inheritRole(role,userRole);
  
+ 		 capabilityUtils.addCapabilityToRole(role,"DASHBOARD_JOURNEY",CapabilityMode.VIEW);
   	     capabilityUtils.addCapabilityToRole(role,"READ_HOST_COMPANY",CapabilityMode.VIEW);
   	     capabilityUtils.addCapabilityToRole(role,"READ_JOURNALS",CapabilityMode.VIEW);
   	     capabilityUtils.addCapabilityToRole(role,"CREATE_JOURNALS",CapabilityMode.SELF);

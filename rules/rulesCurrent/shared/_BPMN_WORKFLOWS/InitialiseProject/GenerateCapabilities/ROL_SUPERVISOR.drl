@@ -41,6 +41,7 @@ rule "ROL_SUPERVISOR"
    	     
    	     capabilityUtils.inheritRole(role,userRole);
    	     
+   	     capabilityUtils.addCapabilityToRole(role,"DASHBOARD_COUNTS",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"READ_HOST_COMPANY",CapabilityMode.VIEW);
  	     capabilityUtils.addCapabilityToRole(role,"READ_JOURNALS",CapabilityMode.EDIT);
   	     capabilityUtils.addCapabilityToRole(role,"APPROVE_JOURNALS",CapabilityMode.EDIT);
