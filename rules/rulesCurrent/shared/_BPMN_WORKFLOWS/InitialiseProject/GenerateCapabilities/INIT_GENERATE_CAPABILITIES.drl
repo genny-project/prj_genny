@@ -60,6 +60,8 @@ rule "INIT_GENERATE_CAPABILITIES"
   	 	capabilityUtils.addCapability( "PROCESS6", "Process 6");
   	 	capabilityUtils.addCapability( "PROCESS7", "Process 7");
   	 	capabilityUtils.addCapability( "DASHBOARD", "Dashboard");
+  	 	capabilityUtils.addCapability( "DASHBOARD_COUNTS", "Dashboard Counts");
+  	 	capabilityUtils.addCapability( "DASHBOARD_JOURNEY", "Dashboard Journey");
   	 	
   	 	capabilityUtils.addCapability( "SHOW_DEV_INFO","Show Dev Info");
   	 	capabilityUtils.addCapability( "RULE_TIMINGS","Show Rules Timings");
