@@ -25,8 +25,7 @@ rule "SEND_AVAILABLE_INTERNS"
 		beUtils : BaseEntityUtils()
 		allowed : Allowed(code == "AGENT") 
 	then
-		System.out.println("Processing Answer/Data : " + $message );
-		System.out.println("Parent code :  " + $message.getData().getParentCode());
+		System.out.println("SEND_AVAILABLE_INTERNS triggered");
 
 		Boolean cache = true;
 		String code ="AVAILABLE_INTERNS";
@@ -37,6 +36,4 @@ rule "SEND_AVAILABLE_INTERNS"
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
-		
-		retract( $message);
 end
