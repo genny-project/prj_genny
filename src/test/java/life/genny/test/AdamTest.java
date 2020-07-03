@@ -165,6 +165,87 @@ public class AdamTest {
 	protected static GennyToken serviceToken;
 
 	@Test
+	public void searchWildcardTest()
+	{
+		System.out.println("Search cache test");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+		} else {
+			// VertxUtils.cachedEnabled = false;
+			VertxUtils.cachedEnabled = false;
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+			eventBusMock = new EventBusMock();
+			vertxCache = new JunitCache(); // MockCache
+			VertxUtils.init(eventBusMock, vertxCache);
+		}
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		beUtils.setServiceToken(serviceToken);
+		
+		TableUtils tableUtils = new TableUtils(beUtils);
+
+		QDataBaseEntityMessage msg = null;
+		String searchCode = "SBE_EDU_PROVIDERS_ACTIVE";
+	//	String searchCode = "SBE_INTERNS";		
+		SearchEntity searchBE = VertxUtils.getObject(realm, "", searchCode, SearchEntity.class, serviceToken.getToken());
+
+		long starttime = System.currentTimeMillis();
+		long endtime = 0;
+
+		searchBE.setPageStart(20);
+		searchBE.setWildcard("univ");
+
+		Integer pageStart = searchBE.getValue("SCH_PAGE_START", 0);
+		Integer pageSize = searchBE.getValue("SCH_PAGE_SIZE", GennySettings.defaultPageSize);
+
+		List<String> attributeFilter = new ArrayList<String>();
+		Tuple2<String,List<String>> results =  TableUtils.getHql(userToken,searchBE );	//	hql += " order by " + sortCode + " " + sortValue;
+		String hql = results._1;
+		String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
+		JsonObject resultJson;
+		try {
+			String resultJsonStr = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl
+					+ "/qwanda/baseentitys/search24/" + hql2 + "/" + pageStart + "/" + pageSize,
+					serviceToken.getToken(), 120);
+
+			resultJson = new JsonObject(resultJsonStr);
+			Long total = resultJson.getLong("total");
+			// check the cac
+			JsonArray result = resultJson.getJsonArray("codes");
+			List<String> resultCodes = new ArrayList<String>();
+			for (int i = 0; i < result.size(); i++) {
+				String code = result.getString(i);
+				resultCodes.add(code);
+			}
+ 			String[] filterArray = attributeFilter.toArray(new String[0]);
+			List<BaseEntity> beList = resultCodes.stream().map(e -> {
+				BaseEntity be = beUtils.getBaseEntityByCode(e);
+				be = VertxUtils.privacyFilter(be, filterArray);
+				return be;
+			}).collect(Collectors.toList());
+			msg = new QDataBaseEntityMessage(beList.toArray(new BaseEntity[0]));
+			msg.setTotal(total);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+			endtime = System.currentTimeMillis();
+			System.out.println("Total time taken = "+(endtime-starttime)+" ms");
+	}
+	
+	//@Test
 	public void searchCacheTest()
 	{
 		System.out.println("Search cache test");
@@ -2910,7 +2991,7 @@ public class AdamTest {
 //            System.out.println();
 //		}
 
-//	@Test
+	@Test
 	public void headerTest() {
 		System.out.println("Header test");
 		GennyToken userToken = null;
