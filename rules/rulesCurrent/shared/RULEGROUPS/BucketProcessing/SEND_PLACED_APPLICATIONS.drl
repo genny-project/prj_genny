@@ -14,21 +14,20 @@ import life.genny.models.ThemeAttributeType;
 import life.genny.utils.TableUtils;
 import org.drools.core.spi.KnowledgeHelper;
 
-rule "SEND_AVAILABLE_INTERNS"
+rule "SEND_PLACED_APPLICATIONS"
 	ruleflow-group 'BucketProcessing'
-	salience 7
+	salience 2
 	no-loop true
 	when
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
 		beUtils : BaseEntityUtils()
-		allowed : Allowed(code == "AGENT") 
 	then
-		System.out.println("SEND_AVAILABLE_INTERNS triggered");
+		System.out.println("SEND_PLACED_APPLICATIONS triggered");
 
 		Boolean cache = true;
-		String code ="AVAILABLE_INTERNS";
+		String code ="PLACED_APPLICATIONS";
 		System.out.println("SBE_CODE   ::   " +code); 
 
 		long totalTime = TableUtils.searchTable(beUtils,code, cache);
