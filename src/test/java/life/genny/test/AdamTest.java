@@ -164,7 +164,7 @@ public class AdamTest {
 	protected static GennyToken newUserToken;
 	protected static GennyToken serviceToken;
 
-	@Test
+	//@Test
 	public void searchWildcardTest()
 	{
 		System.out.println("Search cache test");

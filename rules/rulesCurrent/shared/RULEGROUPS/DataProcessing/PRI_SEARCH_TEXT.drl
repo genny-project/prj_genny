@@ -43,7 +43,7 @@ rule "PRI_SEARCH_TEXT"
 		SearchEntity searchBE = tableUtils.getSessionSearch("SBE_SEARCHBAR");
 
  	    /* Reset page to start */
- 	    Answer pageAnswer = new Answer(beUtils.getGennyToken().getUserCode(),searchBE.getCode(), "SCH_PAGE_START", "0");
+ /*	    Answer pageAnswer = new Answer(beUtils.getGennyToken().getUserCode(),searchBE.getCode(), "SCH_PAGE_START", "0");
 		Answer pageNumberAnswer = new Answer(beUtils.getGennyToken().getUserCode(),searchBE.getCode(), "PRI_INDEX", "1");
 
 		searchBE = beUtils.updateBaseEntity(searchBE, pageAnswer,SearchEntity.class);
@@ -60,6 +60,14 @@ rule "PRI_SEARCH_TEXT"
   
 		retract(answer);
 		output.setTypeOfResult("NONE");
-  	    output.setResultCode("NONE");  /* dont display anything new */
+  	    output.setResultCode("NONE"); */ /* dont display anything new */
+  	    
+  	    	long totalTime = TableUtils.searchTable(beUtils,searchBE.getCode(), true);
+
+			retract(answer);
+			System.out.println("total took " + (totalTime) + " ms"); 
+			output.setTypeOfResult("NONE");
+			output.setResultCode("NONE");  /* dont display anything new */
+  	    
 
 end
