@@ -31,16 +31,26 @@ rule "IS_INTERN"
  		Answer answer3 = new Answer(userToken.getUserCode(), newBe.getCode(),"PRI_DISABLED", "false");
  		Answer answerCardColour = new Answer(userToken.getUserCode(),newBe.getCode(),"PRI_STATUS_COLOR","#5cb85c");
  		
+
+ 		
  		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
  		beUtils.saveAnswer(answer);
  		beUtils.saveAnswer(answer2);
  		beUtils.saveAnswer(answer3);
  		beUtils.saveAnswer(answerCardColour);
-
-		System.out.println("IS_INTERN: Answer = " + answer);
+ 		
+ 		System.out.println("IS_INTERN: Answer = " + answer);
 		System.out.println("IS_INTERN: Answer = " + answer2); 
 		System.out.println("IS_INTERN: Answer = " + answer3); 
 		System.out.println("IS_INTERN: Answer = " + answerCardColour); 
+ 		
+ 		/* SET DASHBOURD ATTRIBUTES */
+ 		System.out.println("IS_INTERN: Setting Dashboard Journey Attributes"); 
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_JOURNEY_ITEM_1", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_JOURNEY_ITEM_2", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_JOURNEY_ITEM_3", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_JOURNEY_ITEM_4", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_JOURNEY_ITEM_5", "false"));
 		
 		output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */
