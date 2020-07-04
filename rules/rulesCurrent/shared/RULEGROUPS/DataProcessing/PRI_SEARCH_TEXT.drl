@@ -42,6 +42,9 @@ rule "PRI_SEARCH_TEXT"
 
 		SearchEntity searchBE = tableUtils.getSessionSearch("SBE_SEARCHBAR");
 		searchBE.setWildcard(answer.getValue());
+ 			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
+				beUtils.getGennyToken().getToken());
+ 
  	    /* Reset page to start */
   	    
   	    	long totalTime = TableUtils.searchTable(beUtils,searchBE.getCode().substring("SBE_".length()), true);
