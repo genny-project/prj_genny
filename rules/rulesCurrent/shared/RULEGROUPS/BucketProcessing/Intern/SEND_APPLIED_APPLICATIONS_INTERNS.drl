@@ -34,20 +34,8 @@ rule "SEND_APPLIED_APPLICATIONS_INTERNS"
 		String code ="APPLIED_APPLICATIONS";
 		System.out.println("SBE_CODE   ::   " +code);
 
-		BaseEntity userBe = beUtils.getBaseEntityByCode(userToken.getCode());
-		if(userBe != null){
-			String companyCode = userBe.getValue("LNK_HOST_COMPANY", null);		
-			if(companyCode != null){
-				long totalTime = TableUtils.searchTable(beUtils,code, cache, "LNK_HOST_COMPANY", companyCode);
-				System.out.println("total took " + (totalTime) + " ms"); 
-			}else{
-				System.out.println("companyCode is null");
-			}
-		}
-		else{
-			System.out.println("userBe is null");
-		}
-
+		long totalTime = TableUtils.searchTable(beUtils,code, cache, "PRI_INTERN_CODE", userToken.getCode());
+		System.out.println("total took " + (totalTime) + " ms"); 
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
