@@ -16,21 +16,22 @@ import org.drools.core.spi.KnowledgeHelper;
 import life.genny.qwanda.datatype.Allowed;
 
 
-rule "SEND_INPROGRESS_APPLICATIONS_INTERNS"
+rule "SEND_APPLIED_APPLICATIONS"
 	ruleflow-group 'BucketProcessing'
-	salience 1
+	salience 6
 	no-loop true
 	when
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
 		beUtils : BaseEntityUtils()
+
 	then
-		System.out.println("SEND_INPROGRESS_APPLICATIONS_INTERNS triggered");
+		System.out.println("SEND_APPLIED_APPLICATIONS triggered");
 
 		Boolean cache = true;
-		String code ="INPROGRESS_APPLICATIONS";
-		System.out.println("SBE_CODE   ::   " +code); 
+		String code ="APPLIED_APPLICATIONS";
+		System.out.println("SBE_CODE   ::   " +code);
 
 		long totalTime = TableUtils.searchTable(beUtils,code, cache);
 		System.out.println("total took " + (totalTime) + " ms"); 
