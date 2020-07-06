@@ -33,7 +33,7 @@ rule "SEND_OFFERED_APPLICATIONS_INTERNS"
 		String code ="OFFERED_APPLICATIONS";
 		System.out.println("SBE_CODE   ::   " +code); 
 
-		long totalTime = TableUtils.searchTable(beUtils,code, cache);
+		long totalTime = TableUtils.searchTable(beUtils,code, cache, "PRI_INTERN_CODE", userToken.getCode());
 		System.out.println("total took " + (totalTime) + " ms"); 
 
 		output.setTypeOfResult("NONE");
