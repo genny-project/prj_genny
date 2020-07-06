@@ -15,21 +15,21 @@ import life.genny.utils.TableUtils;
 import org.drools.core.spi.KnowledgeHelper;
 import life.genny.qwanda.datatype.Allowed;
 
-
-rule "SEND_SHORTLISTED_APPLICATIONS_INTERNS"
+rule "SEND_AVAILABLE_INTERNS_EDU_PRO_REP"
 	ruleflow-group 'BucketProcessing'
-	salience 5
+	salience 7
 	no-loop true
 	when
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
 		beUtils : BaseEntityUtils()
+		allowed : Allowed(code == "EDU_PRO_REP") 
 	then
-		System.out.println("SEND_SHORTLISTED_APPLICATIONS_INTERNS triggered");
+		System.out.println("SEND_AVAILABLE_INTERNS_EDU_PRO_REP triggered");
 
 		Boolean cache = true;
-		String code ="SHORTLISTED_APPLICATIONS";
+		String code ="AVAILABLE_INTERNS";
 		System.out.println("SBE_CODE   ::   " +code); 
 
 		long totalTime = TableUtils.searchTable(beUtils,code, cache);

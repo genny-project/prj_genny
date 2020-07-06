@@ -25,6 +25,7 @@ rule "SEND_INTERVIEWED_APPLICATIONS_INTERNS"
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
 		beUtils : BaseEntityUtils()
+		allowed : Allowed(code == "INTERN")
 	then
 		System.out.println("SEND_INTERVIEWED_APPLICATIONS_INTERNS triggered");
 
