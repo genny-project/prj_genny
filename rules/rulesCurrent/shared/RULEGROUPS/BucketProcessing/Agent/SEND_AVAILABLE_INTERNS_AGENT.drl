@@ -24,7 +24,7 @@ rule "SEND_AVAILABLE_INTERNS_AGENT"
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
 		beUtils : BaseEntityUtils()
-		/* allowed : Allowed(code == "AGENT")  */
+		allowed : Allowed(code == "AGENT") 
 	then
 		System.out.println("SEND_AVAILABLE_INTERNS_AGENT triggered");
 
