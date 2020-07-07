@@ -35,7 +35,7 @@ rule "IS_EDU_PRO_REP"
 
 		System.out.println("IS_EDU_PRO_REP: Answer = " + answer); 
 		
-				/* Set up in Keycloak */
+		/* Set up in Keycloak */
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
 		String firstname = user.getValue("PER_FIRSTNAME",null);
 		if (firstname != null) {
