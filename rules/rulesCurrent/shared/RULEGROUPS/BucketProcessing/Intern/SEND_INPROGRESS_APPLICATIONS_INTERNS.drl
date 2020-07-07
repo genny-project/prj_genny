@@ -31,9 +31,22 @@ rule "SEND_INPROGRESS_APPLICATIONS_INTERNS"
 
 		Boolean cache = true;
 		String code ="INPROGRESS_APPLICATIONS";
-		System.out.println("SBE_CODE   ::   " +code); 
+		long totalTime;
+		
+		String searchCode ="SBE_"+code;
+		System.out.println("SBE_CODE   ::   " +code);
+		
+		SearchEntity searchBe = VertxUtils.getObject(serviceToken.getRealm(), "", searchCode, SearchEntity.class, serviceToken.getToken());
 
-		long totalTime = TableUtils.searchTable(beUtils,code, cache, "PRI_INTERN_CODE", userToken.getCode());
+		if(searchBe != null){
+			searchBe.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.EQUAL, internCode);
+			totalTime = TableUtils.searchTable(beUtils,searchBe, cache);
+
+		}else{
+			System.out.println("searchBe not found in cache"); 
+			totalTime = TableUtils.searchTable(beUtils,code, cache, "PRI_INTERN_CODE", userToken.getUserCode());
+		}
+
 		System.out.println("total took " + (totalTime) + " ms"); 
 
 		output.setTypeOfResult("NONE");
