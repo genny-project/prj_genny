@@ -36,7 +36,7 @@ rule "SEND_APPLIED_APPLICATIONS_INTERNS"
 		
 		System.out.println("SBE_CODE   ::   " +code);
 		
-		String internCode = userToken.getCode();
+		String internCode = userToken.getUserCode();
 		System.out.println("internCode   ::   " +internCode);
 		long totalTime;
 
