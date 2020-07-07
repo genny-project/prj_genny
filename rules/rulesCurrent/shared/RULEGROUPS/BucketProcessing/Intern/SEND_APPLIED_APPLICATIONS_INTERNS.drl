@@ -46,7 +46,7 @@ rule "SEND_APPLIED_APPLICATIONS_INTERNS"
 
 		}else{
 			System.out.println("searchBe not found in cache"); 
-			long totalTime = TableUtils.searchTable(beUtils,code, cache, "PRI_INTERN_CODE", internCode);
+			totalTime = TableUtils.searchTable(beUtils,code, cache, "PRI_INTERN_CODE", internCode);
 		}
 
 		System.out.println("total took " + (totalTime) + " ms"); 
