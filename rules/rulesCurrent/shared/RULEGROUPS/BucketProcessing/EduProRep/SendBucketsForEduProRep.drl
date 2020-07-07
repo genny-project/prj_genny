@@ -15,7 +15,7 @@ import life.genny.utils.TableUtils;
 import org.drools.core.spi.KnowledgeHelper;
 import life.genny.qwanda.datatype.Allowed;
 
-rule "Send Buckets For HC Rep"
+rule "Send Buckets For Edu Pro Rep"
 	ruleflow-group 'BucketProcessing'
 	salience 6
 	no-loop true
@@ -27,7 +27,7 @@ rule "Send Buckets For HC Rep"
 		allowed : Allowed(code == "HOST_CPY_REP")
 
 	then
-		System.out.println("Send Buckets For HC Rep triggered");
+		System.out.println("Send Buckets For Edu Pro Rep triggered");
 		Boolean cache = true;
 
 		BaseEntity userBe = beUtils.getBaseEntityByCode(userToken.getUserCode());
@@ -36,11 +36,15 @@ rule "Send Buckets For HC Rep"
 			return;
 		}
 
-		String companyCode = userBe.getValue("LNK_HOST_COMPANY", null);		
-		if(companyCode == null){
-			System.out.println("companyCode is null");
+		String eduProviderCode = userBe.getValue("LNK_EDU_PROVIDER", null);		
+		if(eduProviderCode == null){
+			System.out.println("eduProviderCode is null");
 			return;
 		}
+
+		System.out.println("eduProviderCode before   ::   " + eduProviderCode);
+		eduProviderCode = eduProviderCode.replace("\"", "").replace("[", "").replace("]", "");
+		System.out.println("eduProviderCode after   ::   " + eduProviderCode);
 		
     String[] codes = { 
       "APPLIED_APPLICATIONS",
@@ -54,7 +58,7 @@ rule "Send Buckets For HC Rep"
     for (String code : codes){
       
       System.out.println("SBE_CODE   ::   " +code); 
-			long totalTime = TableUtils.searchTable(beUtils,code, cache, "LNK_HOST_COMPANY", companyCode);
+			long totalTime = TableUtils.searchTable(beUtils,code, cache, "PRI_EDU_PROVIDER_CODE", eduProviderCode);
 			System.out.println("total took " + (totalTime) + " ms"); 
 
     } 
