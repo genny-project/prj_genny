@@ -65,12 +65,6 @@ rule "IS_INTERN"
 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_UPDATE_LINKEDIN", "false"));
 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASK_FOR_RECOMMENDATION", "false"));
 		
-		/* INCREMENT ALL INTERNS COUNT AND AVAILABLE INTERNS COUNT */
-		Integer internCountAll = (Integer) beUtils.getBaseEntityValue("GRP_DASHBOARD_COUNTS", "PRI_COUNT_ALL_INTERNS");
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), "GRP_DASHBOARD_COUNTS", "PRI_COUNT_ALL_INTERNS", (internCountAll+1)));
-		
-		Integer internCountAvailable = (Integer) beUtils.getBaseEntityValue("GRP_DASHBOARD_COUNTS", "PRI_COUNT_AVAILABLE_INTERNS");
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), "GRP_DASHBOARD_COUNTS", "PRI_COUNT_AVAILABLE_INTERNS", (internCountAvailable+1)));
 		
 		output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */
