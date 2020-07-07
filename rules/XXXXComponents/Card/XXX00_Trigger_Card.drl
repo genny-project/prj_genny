@@ -9,7 +9,7 @@ rule "Trigger Send Card"
 	 	rules.header();
 		rules.setState("LOOP_TRIGGER_SEND_CARD");
 
-		/* create frames */
+		/* create frames Test */
         BaseEntity frameContent = new BaseEntity("FRM_CONTENT", "frame-content");
         BaseEntity frameCard = new BaseEntity("FRM_CARD", "frame-card");
         BaseEntity frameLeftCard = new BaseEntity("FRM_CARD_LEFT", "frame-card-left");
