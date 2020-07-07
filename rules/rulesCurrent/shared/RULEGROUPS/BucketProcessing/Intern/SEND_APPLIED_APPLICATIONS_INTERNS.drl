@@ -32,6 +32,8 @@ rule "SEND_APPLIED_APPLICATIONS_INTERNS"
 
 		Boolean cache = true;
 		String code ="APPLIED_APPLICATIONS";
+		String searchCode ="SBE_APPLIED_APPLICATIONS";
+		
 		System.out.println("SBE_CODE   ::   " +code);
 		
 		String internCode = userToken.getCode();
