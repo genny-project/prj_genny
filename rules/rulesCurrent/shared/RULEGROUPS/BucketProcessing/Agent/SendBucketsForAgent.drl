@@ -15,39 +15,38 @@ import life.genny.utils.TableUtils;
 import org.drools.core.spi.KnowledgeHelper;
 import life.genny.qwanda.datatype.Allowed;
 
-
-rule "SEND_INPROGRESS_APPLICATIONS_INTERNS"
+rule "Send Buckets For Agent"
 	ruleflow-group 'BucketProcessing'
-	salience 1
+	salience 6
 	no-loop true
 	when
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
 		beUtils : BaseEntityUtils()
-		allowed : Allowed(code == "INTERN")
+		allowed : Allowed(code == "AGENT")
+
 	then
-		System.out.println("SEND_INPROGRESS_APPLICATIONS_INTERNS triggered");
-
+		System.out.println("Send Buckets For Agent triggered");
 		Boolean cache = true;
-		String code ="INPROGRESS_APPLICATIONS";
-		long totalTime;
-		
-		String searchCode ="SBE_"+code;
-		System.out.println("SBE_CODE   ::   " +code);
-		
-		SearchEntity searchBe = VertxUtils.getObject(serviceToken.getRealm(), "", searchCode, SearchEntity.class, serviceToken.getToken());
 
-		if(searchBe != null){
-			searchBe.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.EQUAL, userToken.getUserCode());
-			totalTime = TableUtils.searchTable(beUtils,searchBe, cache);
+    String[] codes = { 
+			"AVAILABLE_INTERNS", 
+      "APPLIED_APPLICATIONS",
+      "SHORTLISTED_APPLICATIONS",
+      "INTERVIEWED_APPLICATIONS",
+      "OFFERED_APPLICATIONS",
+      "PLACED_APPLICATIONS",
+      "INPROGRESS_APPLICATIONS"
+    };
 
-		}else{
-			System.out.println("searchBe not found in cache"); 
-			totalTime = TableUtils.searchTable(beUtils,code, cache, "PRI_INTERN_CODE", userToken.getUserCode());
-		}
+    for (String code : codes){
+      
+      System.out.println("SBE_CODE   ::   " +code); 
+      long totalTime = TableUtils.searchTable(beUtils,code, cache);
+      System.out.println("total took " + (totalTime) + " ms"); 
 
-		System.out.println("total took " + (totalTime) + " ms"); 
+    } 
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
