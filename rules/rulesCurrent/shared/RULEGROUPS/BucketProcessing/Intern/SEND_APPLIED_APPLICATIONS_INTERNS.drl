@@ -41,7 +41,7 @@ rule "SEND_APPLIED_APPLICATIONS_INTERNS"
 		SearchEntity searchBe = VertxUtils.getObject(serviceToken.getRealm(), "", searchCode, SearchEntity.class, serviceToken.getToken());
 
 		if(searchBe != null){
-			searchBE.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.EQUAL, internCode);
+			searchBe.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.EQUAL, internCode);
 			totalTime = TableUtils.searchTable(beUtils,searchBe, cache);
 
 		}else{
