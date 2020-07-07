@@ -30,7 +30,7 @@ rule "Send Buckets For HC Rep"
 		System.out.println("Send Buckets For HC Rep triggered");
 		Boolean cache = true;
 
-		BaseEntity userBe = beUtils.getBaseEntityByCode(userToken.getCode());
+		BaseEntity userBe = beUtils.getBaseEntityByCode(userToken.getUserCode());
 		if(userBe == null){
 			System.out.println("userBe is null");
 			return;
