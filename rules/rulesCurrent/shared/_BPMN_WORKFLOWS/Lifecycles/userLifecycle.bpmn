@@ -476,11 +476,23 @@ if (selection.equals(&quot;SEL_ROLE_INTERN&quot;)) {
 	baseEntityType = &quot;Intern&quot;;
 	
 	/* SET JOURNEY ATTRIBUTES */
-	beUtils.saveAnswer(new Answer(userBE.getCode(), userBE.getCode(), &quot;PRI_JOURNEY_ITEM_1&quot;, &quot;false&quot;));
-	beUtils.saveAnswer(new Answer(userBE.getCode(), userBE.getCode(), &quot;PRI_JOURNEY_ITEM_2&quot;, &quot;false&quot;));
-	beUtils.saveAnswer(new Answer(userBE.getCode(), userBE.getCode(), &quot;PRI_JOURNEY_ITEM_3&quot;, &quot;false&quot;));
-	beUtils.saveAnswer(new Answer(userBE.getCode(), userBE.getCode(), &quot;PRI_JOURNEY_ITEM_4&quot;, &quot;false&quot;));
-	beUtils.saveAnswer(new Answer(userBE.getCode(), userBE.getCode(), &quot;PRI_JOURNEY_ITEM_5&quot;, &quot;false&quot;));
+	beUtils.saveAnswer(new Answer(userToken.getUserCode(), userToken.getUserCode(), &quot;PRI_REGISTERED_IN_INTERNMATCH&quot;, &quot;true&quot;));
+	beUtils.saveAnswer(new Answer(userToken.getUserCode(), userToken.getUserCode(), &quot;PRI_PROFILE_COMPLETE&quot;, &quot;false&quot;));
+	beUtils.saveAnswer(new Answer(userToken.getUserCode(), userToken.getUserCode(), &quot;PRI_VIDEO_RECORDED&quot;, &quot;false&quot;));
+	beUtils.saveAnswer(new Answer(userToken.getUserCode(), userToken.getUserCode(), &quot;PRI_INTERNSHIPS_SEARCHED&quot;, &quot;false&quot;));
+	beUtils.saveAnswer(new Answer(userToken.getUserCode(), userToken.getUserCode(), &quot;PRI_OPPORTUNITIES_SAVED&quot;, &quot;false&quot;));
+	beUtils.saveAnswer(new Answer(userToken.getUserCode(), userToken.getUserCode(), &quot;PRI_ACCREDITTION_COMPLETE&quot;, &quot;false&quot;));
+	beUtils.saveAnswer(new Answer(userToken.getUserCode(), userToken.getUserCode(), &quot;PRI_APPLIED_FOR_INTERNSHIPS&quot;, &quot;false&quot;));
+	beUtils.saveAnswer(new Answer(userToken.getUserCode(), userToken.getUserCode(), &quot;PRI_STARTED_SKILL_DEVELOPMENT&quot;, &quot;false&quot;));
+	beUtils.saveAnswer(new Answer(userToken.getUserCode(), userToken.getUserCode(), &quot;PRI_APPLICATION_SENT&quot;, &quot;false&quot;));
+	beUtils.saveAnswer(new Answer(userToken.getUserCode(), userToken.getUserCode(), &quot;PRI_INTERVIEWS_STARTED&quot;, &quot;false&quot;));
+	beUtils.saveAnswer(new Answer(userToken.getUserCode(), userToken.getUserCode(), &quot;PRI_OFFER_ACCEPTED&quot;, &quot;false&quot;));
+	beUtils.saveAnswer(new Answer(userToken.getUserCode(), userToken.getUserCode(), &quot;PRI_INDUCTION_COMPLETE&quot;, &quot;false&quot;));
+	beUtils.saveAnswer(new Answer(userToken.getUserCode(), userToken.getUserCode(), &quot;PRI_PROGRESS_REPORTING&quot;, &quot;false&quot;));
+	beUtils.saveAnswer(new Answer(userToken.getUserCode(), userToken.getUserCode(), &quot;PRI_DAILY_LOGBOOK_COMPLETE&quot;, &quot;false&quot;));
+	beUtils.saveAnswer(new Answer(userToken.getUserCode(), userToken.getUserCode(), &quot;PRI_RECEIVE_CERTIFICATE&quot;, &quot;false&quot;));
+	beUtils.saveAnswer(new Answer(userToken.getUserCode(), userToken.getUserCode(), &quot;PRI_UPDATE_LINKEDIN&quot;, &quot;false&quot;));
+	beUtils.saveAnswer(new Answer(userToken.getUserCode(), userToken.getUserCode(), &quot;PRI_ASK_FOR_RECOMMENDATION&quot;, &quot;false&quot;));
 
 	/* INCREMENT ALL INTERNS COUNT AND AVAILABLE INTERNS COUNT */
 	Integer internCountAll = (Integer) beUtils.getBaseEntityValue(&quot;GRP_DASHBOARD_COUNTS&quot;, &quot;PRI_COUNT_ALL_INTERNS&quot;);

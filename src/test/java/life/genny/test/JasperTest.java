@@ -5,12 +5,14 @@ import java.lang.invoke.MethodHandles;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
@@ -41,9 +43,12 @@ import org.kie.internal.task.api.model.InternalComment;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 
+import io.vavr.Tuple2;
+import io.vertx.core.json.JsonObject;
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
+import life.genny.jbpm.customworkitemhandlers.RuleFlowGroupWorkItemHandler;
 import life.genny.models.GennyToken;
 import life.genny.qwanda.Answer;
 import life.genny.qwanda.Ask;
@@ -52,12 +57,14 @@ import life.genny.qwanda.Link;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwanda.exception.BadDataException;
+import life.genny.qwanda.message.QBulkMessage;
 import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventMessage;
 import life.genny.qwandautils.GennyCacheInterface;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
+import life.genny.qwandautils.QwandaUtils;
 import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.BucketUtils;
@@ -67,6 +74,7 @@ import life.genny.utils.OutputParam;
 import life.genny.utils.RulesUtils;
 import life.genny.utils.SearchUtils;
 import life.genny.utils.SessionFacts;
+import life.genny.utils.TableUtils;
 import life.genny.utils.VertxUtils;
 
 public class JasperTest {
@@ -315,9 +323,214 @@ public class JasperTest {
         
 	}
 	
+    
+    //@Test
+    public void RuleTest() {
+        GennyToken userToken = null;
+        GennyToken serviceToken = null;
+        QRules qRules = null;
+
+        if (false) {
+            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+            qRules = new QRules(eventBusMock, userToken.getToken());
+            qRules.set("realm", userToken.getRealm());
+            qRules.setServiceToken(serviceToken.getToken());
+            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+        } else {
+        	VertxUtils.cachedEnabled = false;
+            qRules = GennyJbpmBaseTest.setupLocalService();
+            userToken = new GennyToken("userToken", qRules.getToken());
+            serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+        }
+        
+        System.out.println("session     =" + userToken.getSessionCode());
+        System.out.println("userToken   =" + userToken.getToken());
+        System.out.println("serviceToken=" + serviceToken.getToken());
+        
+        /* Get an instance of BaseEntityUtils */
+        BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+        
+        Map<String, Object> facts = new ConcurrentHashMap<String, Object>();
+		facts.put("serviceToken", serviceToken);
+		facts.put("userToken", userToken);
+		RuleFlowGroupWorkItemHandler ruleFlowGroupHandler = new RuleFlowGroupWorkItemHandler();
+		Map<String,Object> results = null;
+
+
+		log.info("Fetch Stateless Data ");
+		// Now fetch any synced data
+		results = ruleFlowGroupHandler.executeRules(serviceToken, userToken, facts, "Stateless",
+				"DataWithReply:Stateless");
+		
+		JsonObject ret = new JsonObject();
+		if ((results == null) || results.get("payload") == null) {
+			ret.put("status", "ERROR");
+		} else {
+			ret.put("status", "OK");
+			Object obj = results.get("payload");
+			String retPayload = null;
+			if (obj instanceof QBulkMessage) {
+				QBulkMessage msg = (QBulkMessage) results.get("payload");
+				System.out.println("MSG: " + msg);
+			}
+		}
+        
+    }
+    
+    //@Test
+    public void SaveAnswersTest() {
+        GennyToken userToken = null;
+        GennyToken serviceToken = null;
+        QRules qRules = null;
+
+        if (false) {
+            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+            qRules = new QRules(eventBusMock, userToken.getToken());
+            qRules.set("realm", userToken.getRealm());
+            qRules.setServiceToken(serviceToken.getToken());
+            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+        } else {
+        	VertxUtils.cachedEnabled = false;
+            qRules = GennyJbpmBaseTest.setupLocalService();
+            userToken = new GennyToken("userToken", qRules.getToken());
+            serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+        }
+        
+        System.out.println("session     =" + userToken.getSessionCode());
+        System.out.println("userToken   =" + userToken.getToken());
+        System.out.println("serviceToken=" + serviceToken.getToken());
+        
+        /* Get an instance of BaseEntityUtils */
+        BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+        
+        beUtils.saveAnswer(new Answer(userToken.getUserCode(), "PER_USER1", "PRI_IS_INTERN", "true"));
+    }
+    
+    //@Test
+    public void CountTest() {
+        GennyToken userToken = null;
+        GennyToken serviceToken = null;
+        QRules qRules = null;
+
+        if (false) {
+            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+            qRules = new QRules(eventBusMock, userToken.getToken());
+            qRules.set("realm", userToken.getRealm());
+            qRules.setServiceToken(serviceToken.getToken());
+            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+        } else {
+        	VertxUtils.cachedEnabled = false;
+            qRules = GennyJbpmBaseTest.setupLocalService();
+            userToken = new GennyToken("userToken", qRules.getToken());
+            serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+        }
+        
+        System.out.println("session     =" + userToken.getSessionCode());
+        System.out.println("userToken   =" + userToken.getToken());
+        System.out.println("serviceToken=" + serviceToken.getToken());
+        
+        /* Get an instance of BaseEntityUtils */
+        BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+        
+        /* initialize  attribute searchBe map */
+		Map<String, SearchEntity> searchMap = new HashMap<String, SearchEntity>();
+		
+		
+		SearchEntity SBE_COUNT_INTERN_ALL = VertxUtils.getObject(serviceToken.getRealm(), "",
+						"SBE_COUNT_INTERN_ALL", SearchEntity.class, serviceToken.getToken());
+		SearchEntity SBE_COUNT_INTERN_AVAILABLE = VertxUtils.getObject(serviceToken.getRealm(), "",
+						"SBE_COUNT_INTERN_AVAILABLE", SearchEntity.class, serviceToken.getToken());
+		SearchEntity SBE_COUNT_INTERN_APPLIED = VertxUtils.getObject(serviceToken.getRealm(), "",
+						"SBE_COUNT_INTERN_APPLIED", SearchEntity.class, serviceToken.getToken());
+		SearchEntity SBE_COUNT_INTERN_SHORTLISTED = VertxUtils.getObject(serviceToken.getRealm(), "",
+						"SBE_COUNT_INTERN_SHORTLISTED", SearchEntity.class, serviceToken.getToken());
+		SearchEntity SBE_COUNT_INTERN_INTERVIEWED = VertxUtils.getObject(serviceToken.getRealm(), "",
+						"SBE_COUNT_INTERN_INTERVIEWED", SearchEntity.class, serviceToken.getToken());
+		SearchEntity SBE_COUNT_INTERN_OFFERED = VertxUtils.getObject(serviceToken.getRealm(), "",
+						"SBE_COUNT_INTERN_OFFERED", SearchEntity.class, serviceToken.getToken());
+		SearchEntity SBE_COUNT_INTERN_PLACED = VertxUtils.getObject(serviceToken.getRealm(), "",
+						"SBE_COUNT_INTERN_PLACED", SearchEntity.class, serviceToken.getToken());
+		SearchEntity SBE_COUNT_INTERN_IN_PROGRESS = VertxUtils.getObject(serviceToken.getRealm(), "",
+						"SBE_COUNT_INTERN_IN_PROGRESS", SearchEntity.class, serviceToken.getToken());
+		SearchEntity SBE_COUNT_INTERN_COMPLETED = VertxUtils.getObject(serviceToken.getRealm(), "",
+						"SBE_COUNT_INTERN_COMPLETED", SearchEntity.class, serviceToken.getToken());
+						
+						
+		SearchEntity SBE_COUNT_INTERNSHIP_ALL = VertxUtils.getObject(serviceToken.getRealm(), "",
+						"SBE_COUNT_INTERNSHIP_ALL", SearchEntity.class, serviceToken.getToken());
+		SearchEntity SBE_COUNT_INTERNSHIP_AVAILABLE = VertxUtils.getObject(serviceToken.getRealm(), "",
+						"SBE_COUNT_INTERNSHIP_AVAILABLE", SearchEntity.class, serviceToken.getToken());
+		SearchEntity SBE_COUNT_INTERNSHIP_APPLIED = VertxUtils.getObject(serviceToken.getRealm(), "",
+						"SBE_COUNT_INTERNSHIP_APPLIED", SearchEntity.class, serviceToken.getToken());
+		SearchEntity SBE_COUNT_INTERNSHIP_SHORTLISTED = VertxUtils.getObject(serviceToken.getRealm(), "",
+						"SBE_COUNT_INTERNSHIP_SHORTLISTED", SearchEntity.class, serviceToken.getToken());
+		SearchEntity SBE_COUNT_INTERNSHIP_INTERVIEWED = VertxUtils.getObject(serviceToken.getRealm(), "",
+						"SBE_COUNT_INTERNSHIP_INTERVIEWED", SearchEntity.class, serviceToken.getToken());
+		SearchEntity SBE_COUNT_INTERNSHIP_OFFERED = VertxUtils.getObject(serviceToken.getRealm(), "",
+						"SBE_COUNT_INTERNSHIP_OFFERED", SearchEntity.class, serviceToken.getToken());
+		SearchEntity SBE_COUNT_INTERNSHIP_PLACED = VertxUtils.getObject(serviceToken.getRealm(), "",
+						"SBE_COUNT_INTERNSHIP_PLACED", SearchEntity.class, serviceToken.getToken());
+		SearchEntity SBE_COUNT_INTERNSHIP_IN_PROGRESS = VertxUtils.getObject(serviceToken.getRealm(), "",
+						"SBE_COUNT_INTERNSHIP_IN_PROGRESS", SearchEntity.class, serviceToken.getToken());
+		SearchEntity SBE_COUNT_INTERNSHIP_COMPLETED = VertxUtils.getObject(serviceToken.getRealm(), "",
+						"SBE_COUNT_INTERNSHIP_COMPLETED", SearchEntity.class, serviceToken.getToken());
+						
+						
+		searchMap.put("PRI_COUNT_ALL_INTERNS", SBE_COUNT_INTERN_ALL);
+		searchMap.put("PRI_COUNT_AVAILABLE_INTERNS", SBE_COUNT_INTERN_AVAILABLE);
+		searchMap.put("PRI_COUNT_APPLIED_INTERNS", SBE_COUNT_INTERN_APPLIED);
+		searchMap.put("PRI_COUNT_SHORTLISTED_INTERNS", SBE_COUNT_INTERN_SHORTLISTED);
+		searchMap.put("PRI_COUNT_INTERVIEWED_INTERNS", SBE_COUNT_INTERN_INTERVIEWED);
+		searchMap.put("PRI_COUNT_OFFERED_INTERNS", SBE_COUNT_INTERN_OFFERED);
+		searchMap.put("PRI_COUNT_PLACED_INTERNS", SBE_COUNT_INTERN_PLACED);
+		searchMap.put("PRI_COUNT_IN_PROGRESS_INTERNS", SBE_COUNT_INTERN_IN_PROGRESS);
+		searchMap.put("PRI_COUNT_COMPLETED_INTERNS", SBE_COUNT_INTERN_COMPLETED);
+		
+		
+		searchMap.put("PRI_COUNT_ALL_INTERNSHIPS", SBE_COUNT_INTERNSHIP_ALL);
+		searchMap.put("PRI_COUNT_AVAILABLE_INTERNSHIPS", SBE_COUNT_INTERNSHIP_AVAILABLE);
+		searchMap.put("PRI_COUNT_APPLIED_INTERNSHIPS", SBE_COUNT_INTERNSHIP_APPLIED);
+		searchMap.put("PRI_COUNT_SHORTLISTED_INTERNSHIPS", SBE_COUNT_INTERNSHIP_SHORTLISTED);
+		searchMap.put("PRI_COUNT_INTERVIEWED_INTERNSHIPS", SBE_COUNT_INTERNSHIP_INTERVIEWED);
+		searchMap.put("PRI_COUNT_OFFERED_INTERNSHIPS", SBE_COUNT_INTERNSHIP_OFFERED);
+		searchMap.put("PRI_COUNT_PLACED_INTERNSHIPS", SBE_COUNT_INTERNSHIP_PLACED);
+		searchMap.put("PRI_COUNT_IN_PROGRESS_INTERNSHIPS", SBE_COUNT_INTERNSHIP_IN_PROGRESS);
+		searchMap.put("PRI_COUNT_COMPLETED_INTERNSHIPS", SBE_COUNT_INTERNSHIP_COMPLETED);
+		
+		
+		for (Map.Entry<String,SearchEntity> entry : searchMap.entrySet()) {
+			
+			SearchEntity searchBE = entry.getValue();
+			
+			Tuple2<String, List<String>> data = TableUtils.getHql(beUtils.getGennyToken(), searchBE);
+	        String hql = data._1;
+	        		hql = Base64.getUrlEncoder().encodeToString(hql.getBytes());
+	        		try {
+	        			String resultJsonStr = QwandaUtils.apiGet(
+	        					GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search24/" + hql + "/"
+	        							+ searchBE.getPageStart(0) + "/" + searchBE.getPageSize(GennySettings.defaultPageSize),
+	        					serviceToken.getToken(), 120);
+	        			
+	        			JSONObject json = new JSONObject(resultJsonStr);
+	        			
+	        			/* Save the count using map key as attribute */
+						//beUtils.saveAnswer(new Answer(serviceToken.getCode(), "GRP_DASHBOARD_COUNTS", entry.getKey().toString(), json.getInt("total")));
+						
+	        			System.out.println("DASHBOARD_GET_COUNTS " + entry.getKey().toString() + " Count :  " + json.getInt("total"));
+	        			
+	        } catch (Exception e) {
+	        	System.out.println("EXCEPTION: " + e.toString());
+	        }
+			
+		}
+        
+    }
 	
 	
-	@Test
+	//@Test
     public void OfferedLimitTest() {
         GennyToken userToken = null;
         GennyToken serviceToken = null;
