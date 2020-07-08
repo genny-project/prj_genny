@@ -474,21 +474,6 @@ String selection = jsonArray.get(0).toString();
 baseEntityType = &quot;EMPTY&quot;;
 if (selection.equals(&quot;SEL_ROLE_INTERN&quot;)) {
 	baseEntityType = &quot;Intern&quot;;
-	
-	/* SET JOURNEY ATTRIBUTES */
-	beUtils.saveAnswer(new Answer(userBE.getCode(), userBE.getCode(), &quot;PRI_JOURNEY_ITEM_1&quot;, &quot;false&quot;));
-	beUtils.saveAnswer(new Answer(userBE.getCode(), userBE.getCode(), &quot;PRI_JOURNEY_ITEM_2&quot;, &quot;false&quot;));
-	beUtils.saveAnswer(new Answer(userBE.getCode(), userBE.getCode(), &quot;PRI_JOURNEY_ITEM_3&quot;, &quot;false&quot;));
-	beUtils.saveAnswer(new Answer(userBE.getCode(), userBE.getCode(), &quot;PRI_JOURNEY_ITEM_4&quot;, &quot;false&quot;));
-	beUtils.saveAnswer(new Answer(userBE.getCode(), userBE.getCode(), &quot;PRI_JOURNEY_ITEM_5&quot;, &quot;false&quot;));
-
-	/* INCREMENT ALL INTERNS COUNT AND AVAILABLE INTERNS COUNT */
-	Integer internCountAll = (Integer) beUtils.getBaseEntityValue(&quot;GRP_DASHBOARD_COUNTS&quot;, &quot;PRI_COUNT_ALL_INTERNS&quot;);
-	beUtils.saveAnswer(new Answer(userToken.getUserCode(), &quot;GRP_DASHBOARD_COUNTS&quot;, &quot;PRI_COUNT_ALL_INTERNS&quot;, (internCountAll+1)));
-
-	Integer internCountAvailable = (Integer) beUtils.getBaseEntityValue(&quot;GRP_DASHBOARD_COUNTS&quot;, &quot;PRI_COUNT_AVAILABLE_INTERNS&quot;);
-	beUtils.saveAnswer(new Answer(userToken.getUserCode(), &quot;GRP_DASHBOARD_COUNTS&quot;, &quot;PRI_COUNT_AVAILABLE_INTERNS&quot;, (internCountAvailable+1)));
-
 } else if (selection.equals(&quot;SEL_ROLE_HOST_CPY_REP&quot;)) {
 	baseEntityType = &quot;HostCompanyRep&quot;;
 } else if (selection.equals(&quot;SEL_ROLE_EDU_PRO_REP&quot;)) {
