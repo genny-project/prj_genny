@@ -23,12 +23,13 @@ rule "Send Buckets For Intern"
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
-		beUtils : BaseEntityUtils()
+		/* beUtils : BaseEntityUtils() */
 		allowed : Allowed(code == "INTERN")
 
 	then
 		System.out.println("Send Buckets For Intern triggered");
 		Boolean cache = true;
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 
     String[] codes = { 
       "APPLIED_APPLICATIONS",
