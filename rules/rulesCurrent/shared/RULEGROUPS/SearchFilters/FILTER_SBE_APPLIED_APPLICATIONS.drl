@@ -41,7 +41,7 @@ rule "FILTER_SBE_APPLIED_APPLICATIONS"
 		System.out.println("User code is "+searchBE.getCode());
 
 		/* Add the new filter to the search */
-		searchBE.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.EQUAL, $user.getCode())
+		searchBE.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.EQUAL, $user.getCode());
 
 		/* Create  QDataBaseEntityMessage for SearchEntity */
 		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(searchBE);
