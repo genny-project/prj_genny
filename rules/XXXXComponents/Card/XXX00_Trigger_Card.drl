@@ -16,7 +16,7 @@ rule "Trigger Send Card"
         BaseEntity frameCentreCard = new BaseEntity("FRM_CARD_CENTRE", "frame-card-centre");
         BaseEntity frameRightCard = new BaseEntity("FRM_CARD_RIGHT", "frame-card-right");
 
-		/* themes */
+		/* themes Test */
 		BaseEntity horizontalThemeBe = rules.baseEntity.getBaseEntityByCode("THM_DISPLAY_HORIZONTAL");
 		BaseEntity verticalThemeBe = rules.baseEntity.getBaseEntityByCode("THM_DISPLAY_VERTICAL");
 		BaseEntity imageFitThemeBe = rules.baseEntity.getBaseEntityByCode("THM_IMAGE_FIT");
