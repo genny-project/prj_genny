@@ -32,27 +32,31 @@ rule "FILTER_SBE_APPLIED_APPLICATIONS"
 		serviceToken : GennyToken ( code == "PER_SERVICE" )
 		beUtils : BaseEntityUtils()
 		allowed : Allowed(code == "INTERN")
-		searchBE: SearchEntity( (searchBE.code == "SBE_APPLIED_APPLICATIONS" )||
+	/* 	searchBE: SearchEntity( (searchBE.code == "SBE_APPLIED_APPLICATIONS" )||
 													  (searchBE.code == "SBE_SHORTLISTED_APPLICATIONS" )||
 													  (searchBE.code == "SBE_INTERVIEWED_APPLICATIONS" )||
 													  (searchBE.code == "SBE_OFFERED_APPLICATIONS" )||
 													  (searchBE.code == "SBE_PLACED_APPLICATIONS" )||
 													  (searchBE.code == "SBE_INPROGRESS_APPLICATIONS" )||
-													)
+													) */
 	
 	then
 		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + $userToken.getUserCode());
 		
 		System.out.println("Lets filter this thing out !!!!!");
 		System.out.println("User code is   ::   "+$user.getCode());
-		System.out.println("Search code is ::   "+searchBE.getCode());
+		/* System.out.println("Search code is ::   "+searchBE.getCode()); */
 
 		/* Add the new filter to the search */
-		SearchEntity searchBe = new SearchEntity("SBE_DUMMY", "SBE_DUMMY")
+/* 		SearchEntity searchBe = new SearchEntity("SBE_DUMMY", "SBE_DUMMY")
+													.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.EQUAL, $user.getCode()); */
+
+		SearchEntity search = new SearchEntity("SBE_DUMMY", "SBE_DUMMY")
 													.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.EQUAL, $user.getCode());
+													.setPageStart(0).setPageSize(200);
 
 		/* Create  QDataBaseEntityMessage for SearchEntity */
-		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(searchBe);
+		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(search);
 		msg.setAliasCode("SBE_APPLIED_APPLICATIONS");	
 		payload.add(msg); 
 
