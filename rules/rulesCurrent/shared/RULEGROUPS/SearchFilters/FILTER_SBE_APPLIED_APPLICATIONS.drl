@@ -36,9 +36,8 @@ rule "FILTER_SBE_APPLIED_APPLICATIONS"
 		
 		System.out.println("userCode     :: " + userToken.getUserCode());
 		System.out.println("searchCode   :: " + searchBE.getCode());
-		BaseEntity be = new BaseEntity("test", "test");
 
-		searchBE.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.EQUAL, userToken.getUserCode());
+		searchBE.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.LIKE, userToken.getUserCode());
 
 		/* Create  QDataBaseEntityMessage for SearchEntity */
 		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(searchBE);
