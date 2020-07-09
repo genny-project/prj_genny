@@ -24,37 +24,15 @@ import life.genny.qwandautils.GennySettings;
 
 rule "FILTER_SBE_APPLIED_APPLICATIONS"
 	ruleflow-group 'SearchFilters'
-		salience 10000
-		no-loop true
+	salience 10000
+	no-loop true
 	when
-		$userToken : GennyToken ( code != "PER_SERVICE" ) 
-		/* $user : BaseEntity (  code == $userToken.getUserCode() ) */
-		/* serviceToken : GennyToken ( code == "PER_SERVICE" ) */
-		/* beUtils : BaseEntityUtils() */
-		/* allowed : Allowed(code == "INTERN") */
-	/* 	searchBE: SearchEntity( (searchBE.code == "SBE_APPLIED_APPLICATIONS" )||
-													  (searchBE.code == "SBE_SHORTLISTED_APPLICATIONS" )||
-													  (searchBE.code == "SBE_INTERVIEWED_APPLICATIONS" )||
-													  (searchBE.code == "SBE_OFFERED_APPLICATIONS" )||
-													  (searchBE.code == "SBE_PLACED_APPLICATIONS" )||
-													  (searchBE.code == "SBE_INPROGRESS_APPLICATIONS" )||
-													) */
+		userToken : GennyToken ( code != "PER_SERVICE" ) 
 	
 	then
-		System.out.println("Rule -> "+drools.getRule().getName()+");
+		System.out.println("FILTER_SBE_APPLIED_APPLICATIONS triggered");
 		
-		System.out.println("Lets filter this thing out !!!!!");
-		System.out.println("User code is   ::   "+userToken.getUserCode());
-		/* System.out.println("Search code is ::   "+searchBE.getCode()); */
-
-		/* Add the new filter to the search */
-/* 		SearchEntity searchBe = new SearchEntity("SBE_DUMMY", "SBE_DUMMY")
-													.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.EQUAL, $user.getCode()); */
-
-		/* SearchEntity search = new SearchEntity("SBE_DUMMY", "SBE_DUMMY")
-													.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.EQUAL, $user.getCode());
-													.setPageStart(0).setPageSize(200); */
-
+		System.out.println("userCode   :: " + userToken.getUserCode());
 		BaseEntity be = new BaseEntity("test", "test");
 
 		/* Create  QDataBaseEntityMessage for SearchEntity */
@@ -63,5 +41,5 @@ rule "FILTER_SBE_APPLIED_APPLICATIONS"
 		payload.add(msg); 
 
 		drools.getKnowledgeRuntime().setGlobal("payload", payload); 
-		/* retract(allowed); /* no longer needed */ 
+		/* retract(allowed);  */
 end
