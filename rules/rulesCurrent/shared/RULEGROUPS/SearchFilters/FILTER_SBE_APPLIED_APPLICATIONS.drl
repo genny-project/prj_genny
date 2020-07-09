@@ -28,6 +28,7 @@ rule "FILTER_SBE_APPLIED_APPLICATIONS"
 	no-loop true
 	when
 		userToken : GennyToken ( code != "PER_SERVICE" ) 
+		allowed : Allowed(code == "INTERN")
 	
 	then
 		System.out.println("FILTER_SBE_APPLIED_APPLICATIONS triggered");
@@ -41,5 +42,5 @@ rule "FILTER_SBE_APPLIED_APPLICATIONS"
 		payload.add(msg); 
 
 		drools.getKnowledgeRuntime().setGlobal("payload", payload); 
-		/* retract(allowed);  */
+		retract(allowed); 
 end
