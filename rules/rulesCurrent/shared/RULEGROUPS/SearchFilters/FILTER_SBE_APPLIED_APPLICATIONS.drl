@@ -51,12 +51,14 @@ rule "FILTER_SBE_APPLIED_APPLICATIONS"
 /* 		SearchEntity searchBe = new SearchEntity("SBE_DUMMY", "SBE_DUMMY")
 													.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.EQUAL, $user.getCode()); */
 
-		SearchEntity search = new SearchEntity("SBE_DUMMY", "SBE_DUMMY")
+		/* SearchEntity search = new SearchEntity("SBE_DUMMY", "SBE_DUMMY")
 													.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.EQUAL, $user.getCode());
-													.setPageStart(0).setPageSize(200);
+													.setPageStart(0).setPageSize(200); */
+
+		BaseEntity be = new BaseEntity("test", "test");
 
 		/* Create  QDataBaseEntityMessage for SearchEntity */
-		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(search);
+		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(be);
 		msg.setAliasCode("SBE_APPLIED_APPLICATIONS");	
 		payload.add(msg); 
 
