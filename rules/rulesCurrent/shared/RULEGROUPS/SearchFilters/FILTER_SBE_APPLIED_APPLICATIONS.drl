@@ -24,13 +24,13 @@ import life.genny.qwandautils.GennySettings;
 
 rule "FILTER_SBE_APPLIED_APPLICATIONS"
 	ruleflow-group 'SearchFilters'
-		salience 5000
+		salience 10000
 		no-loop true
 	when
 		$userToken : GennyToken ( code != "PER_SERVICE" ) 
-		$user : BaseEntity (  code == $userToken.getUserCode() )
+		/* $user : BaseEntity (  code == $userToken.getUserCode() ) */
 		/* serviceToken : GennyToken ( code == "PER_SERVICE" ) */
-		beUtils : BaseEntityUtils()
+		/* beUtils : BaseEntityUtils() */
 		/* allowed : Allowed(code == "INTERN") */
 	/* 	searchBE: SearchEntity( (searchBE.code == "SBE_APPLIED_APPLICATIONS" )||
 													  (searchBE.code == "SBE_SHORTLISTED_APPLICATIONS" )||
@@ -41,10 +41,10 @@ rule "FILTER_SBE_APPLIED_APPLICATIONS"
 													) */
 	
 	then
-		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + $userToken.getUserCode());
+		System.out.println("Rule -> "+drools.getRule().getName()+");
 		
 		System.out.println("Lets filter this thing out !!!!!");
-		System.out.println("User code is   ::   "+$user.getCode());
+		System.out.println("User code is   ::   "+$userToken.getUserCode());
 		/* System.out.println("Search code is ::   "+searchBE.getCode()); */
 
 		/* Add the new filter to the search */
