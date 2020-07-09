@@ -29,11 +29,13 @@ rule "FILTER_SBE_APPLIED_APPLICATIONS"
 	when
 		userToken : GennyToken ( code != "PER_SERVICE" ) 
 		allowed : Allowed(code == "INTERN")
+		searchBE: SearchEntity()
 	
 	then
 		System.out.println("FILTER_SBE_APPLIED_APPLICATIONS triggered");
 		
-		System.out.println("userCode   :: " + userToken.getUserCode());
+		System.out.println("userCode     :: " + userToken.getUserCode());
+		System.out.println("searchCode   :: " + searchBE.getCode());
 		BaseEntity be = new BaseEntity("test", "test");
 
 		/* Create  QDataBaseEntityMessage for SearchEntity */
