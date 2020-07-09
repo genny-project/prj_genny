@@ -32,12 +32,12 @@ rule "FILTER_SBE_APPLIED_APPLICATIONS"
 		serviceToken : GennyToken ( code == "PER_SERVICE" )
 		beUtils : BaseEntityUtils()
 		allowed : Allowed(code == "INTERN")
-		searchBE: SearchEntity( searchBE.code == "SBE_APPLIED_APPLICATIONS" ||
-													  searchBE.code == "SBE_SHORTLISTED_APPLICATIONS" ||
-													  searchBE.code == "SBE_INTERVIEWED_APPLICATIONS" ||
-													  searchBE.code == "SBE_OFFERED_APPLICATIONS" ||
-													  searchBE.code == "SBE_PLACED_APPLICATIONS" ||
-													  searchBE.code == "SBE_INPROGRESS_APPLICATIONS" ||
+		searchBE: SearchEntity( (searchBE.code == "SBE_APPLIED_APPLICATIONS" )||
+													  (searchBE.code == "SBE_SHORTLISTED_APPLICATIONS" )||
+													  (searchBE.code == "SBE_INTERVIEWED_APPLICATIONS" )||
+													  (searchBE.code == "SBE_OFFERED_APPLICATIONS" )||
+													  (searchBE.code == "SBE_PLACED_APPLICATIONS" )||
+													  (searchBE.code == "SBE_INPROGRESS_APPLICATIONS" )||
 													)
 	
 	then
