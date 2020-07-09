@@ -164,7 +164,7 @@ public class AdamTest {
 	protected static GennyToken newUserToken;
 	protected static GennyToken serviceToken;
 
-	//@Test
+	@Test
 	public void searchWildcardTest()
 	{
 		System.out.println("Search cache test");
@@ -198,15 +198,15 @@ public class AdamTest {
 		TableUtils tableUtils = new TableUtils(beUtils);
 
 		QDataBaseEntityMessage msg = null;
-		String searchCode = "SBE_EDU_PROVIDERS_ACTIVE";
-	//	String searchCode = "SBE_INTERNS";		
+	//	String searchCode = "SBE_INTERNSHIPS_SORT_INDUSTRY";
+		String searchCode = "SBE_INTERNSHIPS_ACTIVE";		
 		SearchEntity searchBE = VertxUtils.getObject(realm, "", searchCode, SearchEntity.class, serviceToken.getToken());
 
 		long starttime = System.currentTimeMillis();
 		long endtime = 0;
 
 		searchBE.setPageStart(20);
-		searchBE.setWildcard("univ");
+		//searchBE.setWildcard("univ");
 
 		Integer pageStart = searchBE.getValue("SCH_PAGE_START", 0);
 		Integer pageSize = searchBE.getValue("SCH_PAGE_SIZE", GennySettings.defaultPageSize);
@@ -214,6 +214,7 @@ public class AdamTest {
 		List<String> attributeFilter = new ArrayList<String>();
 		Tuple2<String,List<String>> results =  TableUtils.getHql(userToken,searchBE );	//	hql += " order by " + sortCode + " " + sortValue;
 		String hql = results._1;
+	//	hql = "select distinct ea.baseEntityCode  from EntityAttribute ea , EntityAttribute eb , EntityAttribute ez  where  ea.baseEntityCode=eb.baseEntityCode  and (ea.baseEntityCode like 'BEG_%'  )   and eb.attributeCode = 'PRI_STATUS' and  eb.valueString = 'Active' and ea.baseEntityCode=ez.baseEntityCode and ez.attributeCode='PRI_ASSOC_INDUSTRY'  order by ez.valueString ASC";
 		String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
 		JsonObject resultJson;
 		try {
