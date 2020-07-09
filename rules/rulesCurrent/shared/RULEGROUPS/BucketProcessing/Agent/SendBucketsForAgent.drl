@@ -29,6 +29,8 @@ rule "Send Buckets For Agent"
 	then
 		System.out.println("Send Buckets For Agent triggered");
 		Boolean cache = true;
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+
 
     String[] codes = { 
 			"AVAILABLE_INTERNS", 
