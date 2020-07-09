@@ -48,8 +48,8 @@ rule "FILTER_SBE_APPLIED_APPLICATIONS"
 		System.out.println("Search code is ::   "+searchBE.getCode());
 
 		/* Add the new filter to the search */
-		SearchEntity searchBe = new SearchEntity("SBE_DUMMY", "SBE_DUMMY");
-		searchBe.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.EQUAL, $user.getCode());
+		SearchEntity searchBe = new SearchEntity("SBE_DUMMY", "SBE_DUMMY")
+													.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.EQUAL, $user.getCode());
 
 		/* Create  QDataBaseEntityMessage for SearchEntity */
 		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(searchBe);
