@@ -44,7 +44,7 @@ rule "FILTER_SBE_APPLIED_APPLICATIONS"
 		System.out.println("Rule -> "+drools.getRule().getName()+");
 		
 		System.out.println("Lets filter this thing out !!!!!");
-		System.out.println("User code is   ::   "+$userToken.getUserCode());
+		System.out.println("User code is   ::   "+userToken.getUserCode());
 		/* System.out.println("Search code is ::   "+searchBE.getCode()); */
 
 		/* Add the new filter to the search */
