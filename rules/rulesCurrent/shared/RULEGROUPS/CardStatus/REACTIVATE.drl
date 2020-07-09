@@ -13,7 +13,7 @@ import java.util.ArrayList;
 rule "REACTIVATE"
     ruleflow-group 'CardStatus'
     no-loop true
-    salience 1 
+    salience 1
     when
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
@@ -21,20 +21,20 @@ rule "REACTIVATE"
 		output : OutputParam()
 		statusCode : String(statusCode.equals("Reactivate"))
 
-	  
+
      then
- 		System.out.println("REACTIVATE: Rule fired" ); 
- 		
- 	/*  Construct answer with Source, Target, Attribute Code, Value */
+ 		System.out.println("REACTIVATE: Rule fired" );
+
+ 	/*  Construct answer with Source, Target, Attribute Code, Value Test */
  		Answer answer = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_CARD_STATUS","ACTIVE");
  		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
  		beUtils.saveAnswer(answer);
- 		
-		
-		System.out.println("REACTIVATE: Answer = " + answer);	
+
+
+		System.out.println("REACTIVATE: Answer = " + answer);
 		System.out.println("REACTIVATE: newApplication = " + newApplication);
-		
-		
+
+
 	/*  Set the attribute code and value to output */
 		output.setResultCode(answer.getAttributeCode());
 		output.setTargetCode(answer.getValue());
@@ -42,5 +42,5 @@ rule "REACTIVATE"
 
 		retract(newApplication)
 		retract(statusCode)
-		
+
 end
