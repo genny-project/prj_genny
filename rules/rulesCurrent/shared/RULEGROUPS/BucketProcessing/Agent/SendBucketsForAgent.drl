@@ -23,7 +23,7 @@ rule "Send Buckets For Agent"
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
-		beUtils : BaseEntityUtils()
+		/* beUtils : BaseEntityUtils() */
 		allowed : Allowed(code == "AGENT")
 
 	then
