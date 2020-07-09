@@ -43,7 +43,8 @@ rule "Send Buckets For Intern"
     for (String code : codes){
       
       System.out.println("SBE_CODE   ::   " +code); 
-      long totalTime = TableUtils.searchTable(beUtils,code, cache, "PRI_INTERN_CODE", userToken.getUserCode());
+      /* long totalTime = TableUtils.searchTable(beUtils,code, cache, "PRI_INTERN_CODE", userToken.getUserCode()); */
+      long totalTime = TableUtils.searchTable(beUtils,code, cache);
       System.out.println("total took " + (totalTime) + " ms"); 
 
     } 
