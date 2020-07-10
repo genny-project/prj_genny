@@ -29,7 +29,13 @@ rule "FILTER_SBE_APPLIED_APPLICATIONS"
 	when
 		userToken : GennyToken ( code != "PER_SERVICE" ) 
 		allowed : Allowed(code == "INTERN")
-		searchBE: SearchEntity(code matches "SBE_APPLIED_APPLICATIONS.*" )
+		searchBE: SearchEntity( code matches "SBE_APPLIED_APPLICATIONS.*" || 
+														code matches "SBE_SHORTLISTED_APPLICATIONS.*" ||
+														code matches "SBE_INTERVIEWED_APPLICATIONS.*" ||
+														code matches "SBE_OFFERED_APPLICATIONS.*" ||
+														code matches "SBE_PLACED_APPLICATIONS.*" ||
+														code matches "SBE_INPROGRESS_APPLICATIONS.*" )
+														
 	
 	then
 		System.out.println("FILTER_SBE_APPLIED_APPLICATIONS triggered");
