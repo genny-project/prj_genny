@@ -13,6 +13,8 @@ import life.genny.models.ThemePosition;
 import life.genny.models.ThemeAttributeType;
 import life.genny.utils.TableUtils;
 import org.drools.core.spi.KnowledgeHelper;
+import life.genny.qwanda.datatype.Allowed;
+import life.genny.qwanda.datatype.CapabilityMode;
 
 rule "BUCKET_TAB_ITEM_CLICK_EVENT"
     ruleflow-group 'EventProcessing'
@@ -27,6 +29,7 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
+		allowed:Allowed()
 
     then
 	
@@ -41,15 +44,18 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 
 				BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 				Boolean cache = true;
-				String[] codes = { 
-					"AVAILABLE_INTERNS", 
-					"APPLIED_APPLICATIONS",
-					"SHORTLISTED_APPLICATIONS",
-					"INTERVIEWED_APPLICATIONS",
-					"OFFERED_APPLICATIONS",
-					"PLACED_APPLICATIONS",
-					"INPROGRESS_APPLICATIONS"
-				};
+				List<String> codes = new ArrayList<String>();
+
+				if(allowed.code == "VIEW_AVAILABLE_INTERNS" && allowed.mode == CapabilityMode.VIEW){
+					codes.add("AVAILABLE_INTERNS");
+					System.out.println("User has VIEW_AVAILABLE_INTERNS capability "); 
+				}
+				codes.add("APPLIED_APPLICATIONS");
+				codes.add("SHORTLISTED_APPLICATIONS");
+				codes.add("INTERVIEWED_APPLICATIONS");
+				codes.add("OFFERED_APPLICATIONS");
+				codes.add("PLACED_APPLICATIONS");
+				codes.add("INPROGRESS_APPLICATION");
 
 				for (String code : codes){
 					
