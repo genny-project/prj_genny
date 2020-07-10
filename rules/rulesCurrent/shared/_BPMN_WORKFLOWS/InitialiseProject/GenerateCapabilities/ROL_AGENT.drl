@@ -41,6 +41,7 @@ rule "ROL_AGENT"
     	 capabilityUtils.inheritRole(role,user);
   	     
    	     capabilityUtils.addCapabilityToRole(role,"VERIFY_EMAIL",CapabilityMode.DELETE);
+   	     capabilityUtils.addCapabilityToRole(role,"SBE_AVAILABLE_INTERNS",CapabilityMode.VIEW);
  
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
  		 insert(role);
