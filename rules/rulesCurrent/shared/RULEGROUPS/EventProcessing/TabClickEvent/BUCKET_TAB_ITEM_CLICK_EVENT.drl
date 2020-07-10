@@ -34,49 +34,34 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
     then
 	
 		System.out.println("Processing Answer/Data : " + $message );
-		System.out.println("Parent code :  " + $message.getData().getParentCode());
-		
-		switch($message.getData().getCode()){
 
-			case "QUE_TAB_BUCKET_VIEW" : 
+		/* 	drools.setFocus("BucketProcessing"); */
 
-/* 				drools.setFocus("BucketProcessing"); */
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+		Boolean cache = true;
+		List<String> codes = new ArrayList<String>();
 
-				BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
-				Boolean cache = true;
-				List<String> codes = new ArrayList<String>();
-
-				if(allowed.code.equals("VIEW_AVAILABLE_INTERNS") && allowed.mode == CapabilityMode.VIEW){
-					codes.add("AVAILABLE_INTERNS");
-					System.out.println("User has VIEW_AVAILABLE_INTERNS capability "); 
-				}
-				codes.add("APPLIED_APPLICATIONS");
-				codes.add("SHORTLISTED_APPLICATIONS");
-				codes.add("INTERVIEWED_APPLICATIONS");
-				codes.add("OFFERED_APPLICATIONS");
-				codes.add("PLACED_APPLICATIONS");
-				codes.add("INPROGRESS_APPLICATION");
-
-				for (String code : codes){
-					
-					System.out.println("SBE_CODE   ::   " +code); 
-					long totalTime = TableUtils.searchTable(beUtils,code, cache);
-					System.out.println("total took " + (totalTime) + " ms"); 
-
-				}
-
-				output.setTypeOfResult("NONE");
-  	    output.setResultCode("NONE");  /* dont display anything new */
-				break;
-
-			case "QUE_TAB_DETAIL_VIEW" : 
-				output.setFormCode("FRM_DETAIL_VIEW_CONTENT","FRM_TAB_CONTENT"); 
-				break;
-
-			case "QUE_TAB_TABLE_VIEW" : output.setFormCode("FRM_TABLE_VIEW","FRM_TAB_CONTENT"); break;
-
-			default : output.setFormCode("FRM_QUE_DASHBOARD_VIEW","FRM_CONTENT");	break;
+		if(allowed.code.equals("VIEW_AVAILABLE_INTERNS") && allowed.mode == CapabilityMode.VIEW){
+			codes.add("AVAILABLE_INTERNS");
+			System.out.println("User has VIEW_AVAILABLE_INTERNS capability "); 
 		}
+		codes.add("APPLIED_APPLICATIONS");
+		codes.add("SHORTLISTED_APPLICATIONS");
+		codes.add("INTERVIEWED_APPLICATIONS");
+		codes.add("OFFERED_APPLICATIONS");
+		codes.add("PLACED_APPLICATIONS");
+		codes.add("INPROGRESS_APPLICATION");
+
+		for (String code : codes){
+			
+			System.out.println("SBE_CODE   ::   " +code); 
+			long totalTime = TableUtils.searchTable(beUtils,code, cache);
+			System.out.println("total took " + (totalTime) + " ms"); 
+
+		}
+
+		output.setTypeOfResult("NONE");
+		output.setResultCode("NONE");  /* dont display anything new */
 		
 		
 		retract( $message);
