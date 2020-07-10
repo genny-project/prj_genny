@@ -31,7 +31,7 @@ rule "EDIT_FORM_CLICK_EVENT"
 		String workflowSignalCode = "EDIT_FORMS";
 		
 		String typeOf = StringUtils.removeEnd(code, "_GRP");
-		typeOf = StringUtils.removeStart(typeOf,"QUE_EDIT");
+		typeOf = StringUtils.removeStart(typeOf,"QUE_EDIT_");
 
 		output.setTypeOfResult("SIGNAL");
 		output.setResultCode("START_"+workflowSignalCode);

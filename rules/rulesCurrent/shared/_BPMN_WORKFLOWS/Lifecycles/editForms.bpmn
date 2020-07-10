@@ -156,7 +156,8 @@ String codes = data.getTargetCode();
 kcontext.setVariable(&quot;codes&quot;, codes);
 System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ codes: &quot; + codes);
 
-typeOf = data.getSuitCase();
+OutputParam dataa = (OutputParam)sessionFacts.getMessage();
+typeOf = dataa.getSuitCase();
 System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ typeOf: &quot; + typeOf);
 typeOf = &quot;QUE_&quot; +typeOf + &quot;_GRP&quot;;
 kcontext.setVariable(&quot;typeOf&quot;, typeOf);
