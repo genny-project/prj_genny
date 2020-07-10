@@ -17,7 +17,7 @@ rule "EDIT_FORM_CLICK_EVENT"
 		salience 2
     no-loop
     when
-		$message : QEventMessage(data.code matches "QUE_EDIT_.*"")
+		$message : QEventMessage(data.code matches "QUE_EDIT_.*")
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam( )
