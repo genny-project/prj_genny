@@ -35,13 +35,16 @@ rule "FILTER_APPLICATIONS_HOST_CPY_REP"
 														code matches "SBE_OFFERED_APPLICATIONS.*" ||
 														code matches "SBE_PLACED_APPLICATIONS.*" ||
 														code matches "SBE_INPROGRESS_APPLICATIONS.*" )
-														
+		
+		beUtils : BaseEntityUtils()
 	
 	then
 		System.out.println("FILTER_APPLICATIONS_HOST_CPY_REP triggered");
 		
 		System.out.println("userCode     :: " + userToken.getUserCode());
 		System.out.println("searchCode   :: " + searchBE.getCode());
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 
 		BaseEntity userBe = beUtils.getBaseEntityByCode(userToken.getUserCode());
 		if(userBe == null){
