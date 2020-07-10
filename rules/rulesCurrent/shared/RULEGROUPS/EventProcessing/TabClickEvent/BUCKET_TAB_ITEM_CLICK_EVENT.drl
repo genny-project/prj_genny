@@ -46,7 +46,7 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 				Boolean cache = true;
 				List<String> codes = new ArrayList<String>();
 
-				if(allowed.code == "VIEW_AVAILABLE_INTERNS" && allowed.mode == CapabilityMode.VIEW){
+				if(allowed.code.equals("VIEW_AVAILABLE_INTERNS") && allowed.mode == CapabilityMode.VIEW){
 					codes.add("AVAILABLE_INTERNS");
 					System.out.println("User has VIEW_AVAILABLE_INTERNS capability "); 
 				}
