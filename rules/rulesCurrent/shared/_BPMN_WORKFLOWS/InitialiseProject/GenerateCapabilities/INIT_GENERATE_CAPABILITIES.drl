@@ -79,6 +79,7 @@ rule "INIT_GENERATE_CAPABILITIES"
  		capabilityUtils.addCapability( "CREATE_JOURNALS", "Create Journals");
  		capabilityUtils.addCapability( "APPROVE_JOURNALS", "Approve Journals");
  		capabilityUtils.addCapability( "READ_JOURNALS", "Read Journals");
+ 		capabilityUtils.addCapability( "VIEW_AVAILABLE_INTERNS", "View Available Interns");
    
    		capabilityUtils.addCapability( "SEARCHBAR_CMDS", "Run Commands From SearchBar");
 		capabilityUtils.process();
