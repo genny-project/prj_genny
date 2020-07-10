@@ -27,7 +27,6 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
-		beUtils : BaseEntityUtils()
 
     then
 	
