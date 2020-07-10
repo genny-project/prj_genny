@@ -37,9 +37,10 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 
 			case "QUE_TAB_BUCKET_VIEW" : 
 
-				drools.setFocus("BucketProcessing");
-		
-				/* Boolean cache = true;
+/* 				drools.setFocus("BucketProcessing"); */
+
+				BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+				Boolean cache = true;
 				String[] codes = { 
 					"AVAILABLE_INTERNS", 
 					"APPLIED_APPLICATIONS",
@@ -56,7 +57,7 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 					long totalTime = TableUtils.searchTable(beUtils,code, cache);
 					System.out.println("total took " + (totalTime) + " ms"); 
 
-				} */
+				}
 
 				output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */
