@@ -15,22 +15,21 @@ import life.genny.utils.TableUtils;
 import org.drools.core.spi.KnowledgeHelper;
 import life.genny.qwanda.datatype.Allowed;
 
-rule "SEND_SBE_AVAILABLE_INTERNS"
+rule "SEND_SBE_INPROGRESS_APPLICATIONS"
 	ruleflow-group 'BucketProcessing'
-	salience 7
+	salience 1
 	no-loop true
 	when
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
-		allowed: Allowed(code == "VIEW_AVAILABLE_INTERNS" && mode == CapabilityMode.VIEW)
 
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
 		Boolean cache = true;
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
   
-		long totalTime = TableUtils.searchTable(beUtils,"AVAILABLE_INTERNS", cache);
+		long totalTime = TableUtils.searchTable(beUtils,"INPROGRESS_APPLICATIONS", cache);
 		System.out.println("total took " + (totalTime) + " ms"); 
 
 		output.setTypeOfResult("NONE");
