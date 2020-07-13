@@ -50,7 +50,7 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 		codes.add("INTERVIEWED_APPLICATIONS");
 		codes.add("OFFERED_APPLICATIONS");
 		codes.add("PLACED_APPLICATIONS");
-		codes.add("INPROGRESS_APPLICATION");
+		codes.add("INPROGRESS_APPLICATIONS");
 
 		for (String code : codes){
 			
