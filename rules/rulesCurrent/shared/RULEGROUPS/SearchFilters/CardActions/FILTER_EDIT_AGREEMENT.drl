@@ -23,14 +23,14 @@ import life.genny.qwandautils.QwandaUtils;
 import life.genny.qwandautils.GennySettings;
 import org.drools.core.spi.KnowledgeHelper;
 
-rule "FILTER_INTERVIEW_APPLICATION"
+rule "FILTER_EDIT_AGREEMENT"
 	ruleflow-group 'SearchFilters'
 	salience 10000
 	no-loop true
 	when
 		userToken : GennyToken ( code != "PER_SERVICE" ) 
-		searchBE: SearchEntity( code matches "SBE_SHORTLISTED_APPLICATIONS.*" )
-		allowed: Allowed(code == "INTERVIEW_APPLICATION" && mode == CapabilityMode.VIEW)
+		searchBE: SearchEntity( code matches "SBE_OFFERED_APPLICATIONS.*" )
+		allowed: Allowed(code == "EDIT_AGREEMENT" && mode == CapabilityMode.VIEW)
 	
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
@@ -38,7 +38,7 @@ rule "FILTER_INTERVIEW_APPLICATION"
 		System.out.println("userCode     :: " + userToken.getUserCode());
 		System.out.println("searchCode   :: " + searchBE.getCode());
 
-		searchBE.addColumn("PRI_EVENT_INTERVIEW_APPLICATION", "Interview");
+		searchBE.addColumn("PRI_EVENT_EDIT_AGREEMENT", "Edit Agreement");
 
 		/* Create  QDataBaseEntityMessage for SearchEntity */
 		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(searchBE);
