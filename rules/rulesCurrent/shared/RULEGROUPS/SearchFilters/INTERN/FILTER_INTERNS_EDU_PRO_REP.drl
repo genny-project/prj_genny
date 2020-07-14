@@ -30,7 +30,8 @@ rule "FILTER_INTERNS_EDU_PRO_REP"
 	when
 		userToken : GennyToken ( code != "PER_SERVICE" ) 
 		searchBE: SearchEntity( code matches "SBE_INTERNS.*" || 
-														code matches "SBE_AVAILABLE_INTERNS.*" )
+														code matches "SBE_AVAILABLE_INTERNS.*" ||
+														code matches "SBE_INTERNS_AVAILABLE.*" )
 		allowed: Allowed(code == "VIEW_INTERNS" && mode == CapabilityMode.VIEW)
 		beUtils : BaseEntityUtils( )
 
