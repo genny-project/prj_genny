@@ -43,6 +43,7 @@ rule "ROL_AGENT"
    	     capabilityUtils.addCapabilityToRole(role,"VERIFY_EMAIL",CapabilityMode.DELETE);
    	     capabilityUtils.addCapabilityToRole(role,"VIEW_AVAILABLE_INTERNS",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"SHORTLIST_APPLICATION",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"INTERVIEW_APPLICATION",CapabilityMode.VIEW);
  
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
  		 insert(role);
