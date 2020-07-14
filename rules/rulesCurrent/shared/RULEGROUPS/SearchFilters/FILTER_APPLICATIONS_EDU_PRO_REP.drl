@@ -23,13 +23,13 @@ import life.genny.qwandautils.QwandaUtils;
 import life.genny.qwandautils.GennySettings;
 import org.drools.core.spi.KnowledgeHelper;
 
-rule "FILTER_APPLICATIONS_HOST_CPY_REP"
+rule "FILTER_APPLICATIONS_EDU_PRO_REP"
 	ruleflow-group 'SearchFilters'
 	salience 10000
 	no-loop true
 	when
 		userToken : GennyToken ( code != "PER_SERVICE" ) 
-		allowed : Allowed(code == "HOST_CPY_REP")
+		allowed : Allowed(code == "EDU_PRO_REP")
 		searchBE: SearchEntity( code matches "SBE_APPLIED_APPLICATION.*" || 
 														code matches "SBE_SHORTLISTED_APPLICATION.*" ||
 														code matches "SBE_INTERVIEWED_APPLICATION.*" ||
@@ -51,13 +51,17 @@ rule "FILTER_APPLICATIONS_HOST_CPY_REP"
 			return;
 		}
 
-		String companyCode = userBe.getValue("LNK_HOST_COMPANY", null);		
-		if(companyCode == null){
-			System.out.println("companyCode is null");
+		String eduProviderCode = userBe.getValue("LNK_EDU_PROVIDER", null);		
+		if(eduProviderCode == null){
+			System.out.println("eduProviderCode is null");
 			return;
 		}
 
-		searchBE.addFilter("LNK_HOST_COMPANY", SearchEntity.StringFilter.LIKE, companyCode);
+		System.out.println("eduProviderCode before   ::   " + eduProviderCode);
+		eduProviderCode = eduProviderCode.replace("\"", "").replace("[", "").replace("]", "");
+		System.out.println("eduProviderCode after   ::   " + eduProviderCode);
+
+		searchBE.addFilter("PRI_EDU_PROVIDER_CODE", SearchEntity.StringFilter.LIKE, eduProviderCode);
 
 		/* Create  QDataBaseEntityMessage for SearchEntity */
 		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(searchBE);
