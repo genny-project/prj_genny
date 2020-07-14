@@ -1307,13 +1307,14 @@ if (message.getData().getCode().equals(&quot;AUTH_INIT&quot;)) {
 		JsonObject frontend = null;
 		if (!&quot;NEW_SESSION&quot;.equals(message.getData().getValue())) {
                    	frontend = new JsonObject(message.getData().getValue());
-			JsonObject persist = frontend.getJsonObject(&quot;persist&quot;);
+			/*JsonObject persist = frontend.getJsonObject(&quot;persist&quot;);
 			if (persist != null) {
 				usingReduxRestore = true;
 				message.getData().setCode(&quot;AUTH_INIT_REDUX&quot;);
 				output.setTypeOfResult(&quot;NONE&quot;);
 				System.out.println(&quot;userSession: DETECTED Alyson Persist &quot;+persist.toString());
 			}
+			*/
 		}
 	}
 }
