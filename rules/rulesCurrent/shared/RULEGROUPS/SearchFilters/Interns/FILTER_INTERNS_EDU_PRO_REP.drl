@@ -32,6 +32,8 @@ rule "FILTER_INTERNS_EDU_PRO_REP"
 		searchBE: SearchEntity( code matches "SBE_INTERNS.*" || 
 														code matches "SBE_AVAILABLE_INTERNS.*" )
 		allowed: Allowed(code == "VIEW_INTERNS" && mode == CapabilityMode.SELF)
+		beUtils : BaseEntityUtils()
+
 	
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
