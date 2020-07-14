@@ -79,12 +79,22 @@ rule "INIT_GENERATE_CAPABILITIES"
  		capabilityUtils.addCapability( "CREATE_JOURNALS", "Create Journals");
  		capabilityUtils.addCapability( "APPROVE_JOURNALS", "Approve Journals");
  		capabilityUtils.addCapability( "READ_JOURNALS", "Read Journals");
- 		capabilityUtils.addCapability( "VIEW_AVAILABLE_INTERNS", "View Available Interns");
+		capabilityUtils.addCapability( "SEARCHBAR_CMDS", "Run Commands From SearchBar");
+ 		
+		capabilityUtils.addCapability( "VIEW_AVAILABLE_INTERNS", "View Available Interns");
  		capabilityUtils.addCapability( "VIEW_INTERNS", "View Interns");
  		
 		capabilityUtils.addCapability( "SHORTLIST_APPLICATION", "Shortlist Application");
+		capabilityUtils.addCapability( "INTERVIEW_APPLICATION", "Interview Application");
+		capabilityUtils.addCapability( "PLACE_APPLICATION", "Place Application");
+		capabilityUtils.addCapability( "ON_HOLD_APPLICATION", "On Hold Application");
+		capabilityUtils.addCapability( "REJECT_APPLICATION", "Reject Application");
+		capabilityUtils.addCapability( "WITHDRAW_APPLICATION", "Withdraw Application");
+		capabilityUtils.addCapability( "FINISH_APPLICATION", "Finish Application");
+		
+		capabilityUtils.addCapability( "EDIT_AGREEMENT", "Edit Agreement");
+		capabilityUtils.addCapability( "VIEW_AGREEMENT", "View Agreement");
    
-   		capabilityUtils.addCapability( "SEARCHBAR_CMDS", "Run Commands From SearchBar");
 		capabilityUtils.process();
 		
 		System.out.println("   Completed initial setup of Capabilities - "+capabilityUtils);
