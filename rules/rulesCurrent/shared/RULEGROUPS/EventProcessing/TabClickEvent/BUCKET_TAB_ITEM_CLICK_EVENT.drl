@@ -33,30 +33,30 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 
     then
 	
-		System.out.println("Processing Answer/Data : " + $message );
+			System.out.println(drools.getRule().getName() + " triggered");
 
-		drools.setFocus("BucketProcessing");
+			drools.setFocus("BucketProcessing");
 
-/* 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
-		Boolean cache = true;
-		List<String> codes = new ArrayList<String>();
+		/* 	BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+				Boolean cache = true;
+				List<String> codes = new ArrayList<String>();
 
-	
-		codes.add("APPLIED_APPLICATIONS");
-		codes.add("SHORTLISTED_APPLICATIONS");
-		codes.add("INTERVIEWED_APPLICATIONS");
-		codes.add("OFFERED_APPLICATIONS");
-		codes.add("PLACED_APPLICATIONS");
-		codes.add("INPROGRESS_APPLICATIONS");
-
-		for (String code : codes){
 			
-			System.out.println("SBE_CODE   ::   " +code); 
-			long totalTime = TableUtils.searchTable(beUtils,code, cache);
-			System.out.println("total took " + (totalTime) + " ms"); 
+				codes.add("APPLIED_APPLICATIONS");
+				codes.add("SHORTLISTED_APPLICATIONS");
+				codes.add("INTERVIEWED_APPLICATIONS");
+				codes.add("OFFERED_APPLICATIONS");
+				codes.add("PLACED_APPLICATIONS");
+				codes.add("INPROGRESS_APPLICATIONS");
 
-		}
- */
+				for (String code : codes){
+					
+					System.out.println("SBE_CODE   ::   " +code); 
+					long totalTime = TableUtils.searchTable(beUtils,code, cache);
+					System.out.println("total took " + (totalTime) + " ms"); 
+
+				}
+		*/
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
 		

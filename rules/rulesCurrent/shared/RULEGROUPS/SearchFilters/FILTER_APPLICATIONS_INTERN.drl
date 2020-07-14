@@ -21,6 +21,7 @@ import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.qwandautils.GennySettings;
+import org.drools.core.spi.KnowledgeHelper;
 
 rule "FILTER_APPLICATIONS_INTERN"
 	ruleflow-group 'SearchFilters'
@@ -38,7 +39,7 @@ rule "FILTER_APPLICATIONS_INTERN"
 														
 	
 	then
-		System.out.println("FILTER_APPLICATIONS_INTERN triggered");
+		System.out.println(drools.getRule().getName() + " triggered");
 		
 		System.out.println("userCode     :: " + userToken.getUserCode());
 		System.out.println("searchCode   :: " + searchBE.getCode());
