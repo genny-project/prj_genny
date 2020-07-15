@@ -72,7 +72,7 @@ rule "IS_INTERN"
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
 		String userStr = newBe.getCode();
 		String[] userSplit = userStr.split("_");
-		String = userCode = userSplit[1];
+		String userCode = userSplit[1];
 		System.out.println("User "+user+" with userCode = "+userCode);
 		
 		String firstname = user.getValue("PRI_FIRSTNAME",null);
