@@ -265,13 +265,6 @@ serviceToken = new GennyToken(&quot;PER_SERVICE&quot;,serviceTokenStr);
 
 BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 
-/* INCREMENT ALL INTERNS COUNT AND AVAILABLE INTERNS COUNT */
-Integer internCountAll = (Integer) beUtils.getBaseEntityValue(&quot;GRP_DASHBOARD_COUNTS&quot;, &quot;PRI_COUNT_ALL_INTERNS&quot;);
-beUtils.saveAnswer(new Answer(userToken.getUserCode(), &quot;GRP_DASHBOARD_COUNTS&quot;, &quot;PRI_COUNT_ALL_INTERNS&quot;, (internCountAll+1)));
-
-Integer internCountAvailable = (Integer) beUtils.getBaseEntityValue(&quot;GRP_DASHBOARD_COUNTS&quot;, &quot;PRI_COUNT_AVAILABLE_INTERNS&quot;);
-beUtils.saveAnswer(new Answer(userToken.getUserCode(), &quot;GRP_DASHBOARD_COUNTS&quot;, &quot;PRI_COUNT_AVAILABLE_INTERNS&quot;, (internCountAvailable+1)));
-
 System.out.println(&quot;INTERN: Starting to get the real drop down data&quot;);
 
 intEP = newBe.getValue(&quot;LNK_EDU_PROVIDER&quot;, null);
