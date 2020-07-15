@@ -38,7 +38,7 @@ rule "FILTER_INTERVIEW_APPLICATION"
 		System.out.println("userCode     :: " + userToken.getUserCode());
 		System.out.println("searchCode   :: " + searchBE.getCode());
 
-		searchBE.addColumn("PRI_EVENT_INTERVIEW_APPLICATION", "Interview");
+		searchBE.addColumn("PRI_EVENT_INTERVIEW_APPLICATION", "Schedule an Interview");
 
 		/* Create  QDataBaseEntityMessage for SearchEntity */
 		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(searchBE);
