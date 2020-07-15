@@ -70,8 +70,8 @@ rule "IS_INTERN"
 		
 		/* Set up in Keycloak */
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
-		String userStr = user.toString();
-		String[] userSplit = user.split("_");
+		String userStr = newBe.getCode();
+		String[] userSplit = userStr.split("_");
 		String = userCode = userSplit[1];
 		System.out.println("User "+user+" with userCode = "+userCode);
 		
