@@ -26,38 +26,27 @@ import life.genny.qwanda.datatype.CapabilityMode;
 
 import org.apache.commons.lang3.text.WordUtils;
 
-rule "ROL_HOST_CPY_REP"
+rule "ROL_EDU_PRO_REP"
     ruleflow-group 'GenerateCapabilities'
      no-loop true
     when
-       not  BaseEntity (code == "ROL_HOST_CPY_REP")
+       not  BaseEntity (code == "ROL_EDU_PRO_REP")
        capabilityUtils : CapabilityUtils()
-             
+       userRole : BaseEntity (code == "ROL_USER")
      then
      	System.out.println("   Generate "+drools.getRule().getName() );
  		 
    	     BaseEntity role = capabilityUtils.getBeUtils().create(drools.getRule().getName(),WordUtils.capitalize(drools.getRule().getName().substring(4)));
    	     
-   	     capabilityUtils.addCapabilityToRole(role,"LOGIN",CapabilityMode.EDIT);
-   	     capabilityUtils.addCapabilityToRole(role,"LOGOUT",CapabilityMode.VIEW);
- 	 
-  	     capabilityUtils.addCapabilityToRole(role,"READ_USER",CapabilityMode.SELF);
-  	     capabilityUtils.addCapabilityToRole(role,"READ_PROJECT",CapabilityMode.VIEW);
+   	     capabilityUtils.inheritRole(role,userRole);
+ 
+  	     capabilityUtils.addCapabilityToRole(role,"READ_HOST_COMPANY",CapabilityMode.VIEW);
   	     capabilityUtils.addCapabilityToRole(role,"READ_JOURNALS",CapabilityMode.VIEW);
-  	     capabilityUtils.addCapabilityToRole(role,"APPROVE_JOURNALS",CapabilityMode.EDIT);
+  	     capabilityUtils.addCapabilityToRole(role,"CREATE_JOURNALS",CapabilityMode.SELF);
   	     capabilityUtils.addCapabilityToRole(role,"READ_INTERNSHIPS",CapabilityMode.VIEW);
-
-				 capabilityUtils.addCapabilityToRole(role,"SHORTLIST_APPLICATION",CapabilityMode.VIEW);
-   	     capabilityUtils.addCapabilityToRole(role,"INTERVIEW_APPLICATION",CapabilityMode.VIEW);
-   	     capabilityUtils.addCapabilityToRole(role,"OFFER",CapabilityMode.VIEW);
-   	     capabilityUtils.addCapabilityToRole(role,"PLACE_APPLICATION",CapabilityMode.VIEW);
-   	     capabilityUtils.addCapabilityToRole(role,"EDIT_AGREEMENT",CapabilityMode.VIEW);
-   	     capabilityUtils.addCapabilityToRole(role,"FINISH_APPLICATION",CapabilityMode.VIEW);
-   	     capabilityUtils.addCapabilityToRole(role,"ON_HOLD_APPLICATION",CapabilityMode.VIEW);
-   	     capabilityUtils.addCapabilityToRole(role,"REJECT_APPLICATION",CapabilityMode.VIEW);
-   	     capabilityUtils.addCapabilityToRole(role,"WITHDRAW_APPLICATION",CapabilityMode.VIEW);
-  	     
-  	     
+  	     capabilityUtils.addCapabilityToRole(role,"VIEW_AVAILABLE_INTERNS",CapabilityMode.VIEW);
+  	     capabilityUtils.addCapabilityToRole(role,"VIEW_INTERNS",CapabilityMode.VIEW);
+				 
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
  		 insert(role);
  		 

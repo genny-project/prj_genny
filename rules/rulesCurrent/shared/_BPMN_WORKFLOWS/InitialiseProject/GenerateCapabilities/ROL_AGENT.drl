@@ -41,6 +41,17 @@ rule "ROL_AGENT"
     	 capabilityUtils.inheritRole(role,user);
   	     
    	     capabilityUtils.addCapabilityToRole(role,"VERIFY_EMAIL",CapabilityMode.DELETE);
+   	     capabilityUtils.addCapabilityToRole(role,"VIEW_AVAILABLE_INTERNS",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"APPLY",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"SHORTLIST_APPLICATION",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"INTERVIEW_APPLICATION",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"OFFER",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"PLACE_APPLICATION",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"EDIT_AGREEMENT",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"FINISH_APPLICATION",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"ON_HOLD_APPLICATION",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"REJECT_APPLICATION",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"WITHDRAW_APPLICATION",CapabilityMode.VIEW);
  
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
  		 insert(role);
