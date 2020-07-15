@@ -6,6 +6,8 @@ import life.genny.utils.BaseEntityUtils;
 import life.genny.qwanda.Answer;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.utils.OutputParam;
+import life.genny.qwandautils.KeycloakUtils;
+import java.util.UUID;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -31,16 +33,58 @@ rule "IS_INTERN"
  		Answer answer3 = new Answer(userToken.getUserCode(), newBe.getCode(),"PRI_DISABLED", "false");
  		Answer answerCardColour = new Answer(userToken.getUserCode(),newBe.getCode(),"PRI_STATUS_COLOR","#5cb85c");
  		
+
+ 		
  		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
  		beUtils.saveAnswer(answer);
  		beUtils.saveAnswer(answer2);
  		beUtils.saveAnswer(answer3);
  		beUtils.saveAnswer(answerCardColour);
-
-		System.out.println("IS_INTERN: Answer = " + answer);
+ 		
+ 		System.out.println("IS_INTERN: Answer = " + answer);
 		System.out.println("IS_INTERN: Answer = " + answer2); 
 		System.out.println("IS_INTERN: Answer = " + answer3); 
 		System.out.println("IS_INTERN: Answer = " + answerCardColour); 
+ 		
+ 		/* SET DASHBOURD ATTRIBUTES */
+ 		System.out.println("IS_INTERN: Setting Dashboard Journey Attributes"); 
+		
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_REGISTERED_IN_INTERNMATCH", "true"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_PROFILE_COMPLETE", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_VIDEO_RECORDED", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_INTERNSHIPS_SEARCHED", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_OPPORTUNITIES_SAVED", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ACCREDITTION_COMPLETE", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_APPLIED_FOR_INTERNSHIPS", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_STARTED_SKILL_DEVELOPMENT", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_APPLICATION_SENT", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_INTERVIEWS_STARTED", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_OFFER_ACCEPTED", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_INDUCTION_COMPLETE", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_PROGRESS_REPORTING", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_DAILY_LOGBOOK_COMPLETE", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_RECEIVE_CERTIFICATE", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_UPDATE_LINKEDIN", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASK_FOR_RECOMMENDATION", "false"));
+		
+		
+		/* Set up in Keycloak */
+		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
+		String firstname = user.getValue("PRI_FIRSTNAME",null);
+		if (firstname != null) {
+			String lastname = user.getValue("PRI_LASTNAME",null);
+			if (lastname != null) {
+				String email = user.getValue("PRI_EMAIL",null);
+				if (email != null) {
+					String userPassword = UUID.randomUUID().toString().substring(0,10);
+					String userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(),email , firstname, lastname,  email, userPassword,"user", "user");
+					Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),newBe.getCode(),"PRI_UUID",userId);
+					beUtils.saveAnswer(keycloakId);
+					System.out.println("Created User "+email+" in Keycloak with id = "+userId);
+				}
+			}
+		}
+		
 		
 		output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */

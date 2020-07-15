@@ -38,8 +38,8 @@ rule "SBE_SEARCHBAR"
 		if (project != null) {
          SearchEntity searchBE = new SearchEntity(drools.getRule().getName(),project.getValue("PRI_NAME",projectCode)+" Search")
   	     .addSort("PRI_NAME","Name",SearchEntity.Sort.ASC)
-  	     .addFilter("PRI_CODE",SearchEntity.StringFilter.LIKE,"PER_%")
-  	     .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%")
+  	    /* .addFilter("PRI_CODE",SearchEntity.StringFilter.LIKE,"PER_%") */
+  	     .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%") 
 					.addColumn("PRI_EVENT_VIEW", "View")
 					.addColumn("PRI_NAME", "Name")
 					.addColumn("PRI_PHONE", "Phone")
@@ -52,8 +52,8 @@ rule "SBE_SEARCHBAR"
   	     searchBE.setRealm(serviceToken.getRealm());
 
  		 insert(searchBE);
-
-  		 VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken.getToken());
+		 beUtils.saveSearchEntity(searchBE);
+  		/* VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken.getToken()); */
 
    		 } else {
    		 	System.out.println("PROJECT is not in cache "+projectCode);

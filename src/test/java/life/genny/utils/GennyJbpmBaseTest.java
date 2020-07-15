@@ -487,7 +487,7 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 		if (isUsingRemote.isPresent()) {
 			return isUsingRemote.get();
 		}
-		String apiUrl = GennySettings.projectUrl+"/api/events/init?url=http://"+realm+".genny.life";
+		String apiUrl = GennySettings.projectUrl+"/api/events/init?url="+GennySettings.projectUrl;
 		System.out.println("Fetching setup info from "+apiUrl);
 		try {
 			String keycloakJson = QwandaUtils.apiGet(apiUrl, "DUMMY");

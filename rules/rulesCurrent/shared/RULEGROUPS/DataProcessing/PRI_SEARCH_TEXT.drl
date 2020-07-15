@@ -41,25 +41,18 @@ rule "PRI_SEARCH_TEXT"
  	    TableUtils tableUtils = new TableUtils(beUtils);
 
 		SearchEntity searchBE = tableUtils.getSessionSearch("SBE_SEARCHBAR");
-
+		searchBE.setWildcard(answer.getValue());
+ 			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
+				beUtils.getGennyToken().getToken());
+ 
  	    /* Reset page to start */
- 	    Answer pageAnswer = new Answer(beUtils.getGennyToken().getUserCode(),searchBE.getCode(), "SCH_PAGE_START", "0");
-		Answer pageNumberAnswer = new Answer(beUtils.getGennyToken().getUserCode(),searchBE.getCode(), "PRI_INDEX", "1");
+  	    
+  	    	long totalTime = TableUtils.searchTable(beUtils,searchBE.getCode().substring("SBE_".length()), true);
 
-		searchBE = beUtils.updateBaseEntity(searchBE, pageAnswer,SearchEntity.class);
-		searchBE = beUtils.updateBaseEntity(searchBE, pageNumberAnswer,SearchEntity.class);
-
-		VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
-			beUtils.getGennyToken().getToken());
-
-
- 	    ShowFrame.display(beUtils.getGennyToken(), "FRM_QUE_TAB_VIEW", "FRM_CONTENT", "Test");
- 	    ShowFrame.display(beUtils.getGennyToken(), "FRM_TABLE_VIEW", "FRM_TAB_CONTENT", "Test");
- 		tableUtils.performSearch(serviceToken,"SBE_SEARCHBAR", answer, null, null); 
-
-  
-		retract(answer);
-		output.setTypeOfResult("NONE");
-  	    output.setResultCode("NONE");  /* dont display anything new */
+			retract(answer);
+			System.out.println("total took " + (totalTime) + " ms"); 
+			output.setTypeOfResult("NONE");
+			output.setResultCode("NONE");  /* dont display anything new */
+  	    
 
 end
