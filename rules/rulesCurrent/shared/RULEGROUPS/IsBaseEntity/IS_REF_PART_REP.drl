@@ -36,11 +36,11 @@ rule "IS_REF_PART_REP"
 		System.out.println("IS_REF_PART_REP: Answer = " + answer); 
 		/* Set up in Keycloak */
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
-		String firstname = user.getValue("PER_FIRSTNAME",null);
+		String firstname = user.getValue("PRI_FIRSTNAME",null);
 		if (firstname != null) {
-			String lastname = user.getValue("PER_LASTNAME",null);
+			String lastname = user.getValue("PRI_LASTNAME",null);
 			if (lastname != null) {
-				String email = user.getValue("PER_EMAIL",null);
+				String email = user.getValue("PRI_EMAIL",null);
 				if (email != null) {
 					String userPassword = UUID.randomUUID().toString().substring(0,10);
 					String userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(),email , firstname, lastname,  email, userPassword,"user", "user");
