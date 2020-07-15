@@ -12,6 +12,9 @@ import life.genny.utils.BucketUtils;
 import life.genny.models.ThemePosition;
 import life.genny.models.ThemeAttributeType;
 import life.genny.utils.TableUtils;
+import org.drools.core.spi.KnowledgeHelper;
+import life.genny.qwanda.datatype.Allowed;
+import life.genny.qwanda.datatype.CapabilityMode;
 
 rule "BUCKET_TAB_ITEM_CLICK_EVENT"
     ruleflow-group 'EventProcessing'
@@ -26,27 +29,25 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
-		beUtils : BaseEntityUtils()
+		allowed:Allowed()
 
     then
 	
-		System.out.println("Processing Answer/Data : " + $message );
-		System.out.println("Parent code :  " + $message.getData().getParentCode());
-		
-		switch($message.getData().getCode()){
+			System.out.println(drools.getRule().getName() + " triggered");
 
-			case "QUE_TAB_BUCKET_VIEW" : 
-		
+			drools.setFocus("BucketProcessing");
+
+		/* 	BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 				Boolean cache = true;
-				String[] codes = { 
-					"AVAILABLE_INTERNS", 
-					"APPLIED_APPLICATIONS",
-					"SHORTLISTED_APPLICATIONS",
-					"INTERVIEWED_APPLICATIONS",
-					"OFFERED_APPLICATIONS",
-					"PLACED_APPLICATIONS",
-					"INPROGRESS_APPLICATIONS"
-				};
+				List<String> codes = new ArrayList<String>();
+
+			
+				codes.add("APPLIED_APPLICATIONS");
+				codes.add("SHORTLISTED_APPLICATIONS");
+				codes.add("INTERVIEWED_APPLICATIONS");
+				codes.add("OFFERED_APPLICATIONS");
+				codes.add("PLACED_APPLICATIONS");
+				codes.add("INPROGRESS_APPLICATIONS");
 
 				for (String code : codes){
 					
@@ -55,31 +56,9 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 					System.out.println("total took " + (totalTime) + " ms"); 
 
 				}
-
-			/* 	String code = "AVAILABLE_INTERNS";
-				String code2 = "APPLIED_APPLICATIONS";
-				
-				System.out.println("SBE_CODE   ::   " +code); 
-				System.out.println("SBE_CODE   ::   " +code2); 
-				
-				long totalTime = TableUtils.searchTable(beUtils,code, cache);
-				System.out.println("total took " + (totalTime) + " ms"); 
-
-				long totalTime2 = TableUtils.searchTable(beUtils,code2, cache);
-				System.out.println("total took " + (totalTime2) + " ms");  */
-
-				output.setTypeOfResult("NONE");
-  	    output.setResultCode("NONE");  /* dont display anything new */
-				break;
-
-			case "QUE_TAB_DETAIL_VIEW" : 
-				output.setFormCode("FRM_DETAIL_VIEW_CONTENT","FRM_TAB_CONTENT"); 
-				break;
-
-			case "QUE_TAB_TABLE_VIEW" : output.setFormCode("FRM_TABLE_VIEW","FRM_TAB_CONTENT"); break;
-
-			default : output.setFormCode("FRM_QUE_DASHBOARD_VIEW","FRM_CONTENT");	break;
-		}
+		*/
+		output.setTypeOfResult("NONE");
+		output.setResultCode("NONE");  /* dont display anything new */
 		
 		
 		retract( $message);
