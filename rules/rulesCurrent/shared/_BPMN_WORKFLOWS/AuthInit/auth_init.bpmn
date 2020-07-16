@@ -215,7 +215,7 @@ if ((!optHasLoggedIn.isPresent()) || (!optHasLoggedIn.get())) {
 	kcontext.setVariable(&quot;currentUser&quot;,currentUser);
  }
 */
-BaseEntity currentUser = QwandaUtils.getBaseEntityByCodeWithAttributes(userToken.getUserCode(), userToken.getToken()); 
+/* BaseEntity currentUser = QwandaUtils.getBaseEntityByCodeWithAttributes(userToken.getUserCode(), userToken.getToken()); */
 
 VertxUtils.publish(currentUser,&quot;webcmds&quot;,currentUser, &quot;USER&quot;, userToken.getToken());
 
