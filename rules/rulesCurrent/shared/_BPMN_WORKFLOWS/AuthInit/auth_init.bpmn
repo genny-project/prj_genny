@@ -215,7 +215,7 @@ if ((!optHasLoggedIn.isPresent()) || (!optHasLoggedIn.get())) {
 	kcontext.setVariable(&quot;currentUser&quot;,currentUser);
  }
 */
-/* BaseEntity currentUser = QwandaUtils.getBaseEntityByCodeWithAttributes(userToken.getUserCode(), userToken.getToken()); */
+BaseEntity currentUser = QwandaUtils.getBaseEntityByCodeWithAttributes(userToken.getUserCode(), userToken.getToken()); 
 
 VertxUtils.publish(currentUser,&quot;webcmds&quot;,currentUser, &quot;USER&quot;, userToken.getToken());
 
@@ -327,7 +327,7 @@ if (qp != null) {
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_1" bpmnElement="Task_1" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="720.0" y="97.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_5">
           <dc:Bounds height="11.0" width="77.0" x="736.0" y="116.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -359,13 +359,13 @@ if (qp != null) {
         <di:waypoint xsi:type="dc:Point" x="600.0" y="122.0"/>
         <di:waypoint xsi:type="dc:Point" x="660.0" y="122.0"/>
         <di:waypoint xsi:type="dc:Point" x="720.0" y="122.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_6"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_5" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_EndEvent_1">
         <di:waypoint xsi:type="dc:Point" x="830.0" y="122.0"/>
         <di:waypoint xsi:type="dc:Point" x="905.0" y="122.0"/>
         <di:waypoint xsi:type="dc:Point" x="980.0" y="122.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_10"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
