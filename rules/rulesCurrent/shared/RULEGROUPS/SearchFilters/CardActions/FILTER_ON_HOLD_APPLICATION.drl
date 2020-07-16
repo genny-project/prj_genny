@@ -43,7 +43,7 @@ rule "FILTER_ON_HOLD_APPLICATION"
 		System.out.println("userCode     :: " + userToken.getUserCode());
 		System.out.println("searchCode   :: " + searchBE.getCode());
 
-		searchBE.addColumn("PRI_EVENT_ON_HOLD_APPLICATION", "Interview");
+		searchBE.addColumn("PRI_EVENT_ON_HOLD_APPLICATION", "On Hold");
 
 		/* Create  QDataBaseEntityMessage for SearchEntity */
 		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(searchBE);
