@@ -83,6 +83,7 @@ rule "IS_INTERN"
 				if (email != null) {
 					String userPassword = UUID.randomUUID().toString().substring(0,10);
 					String userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(), userCode, firstname, lastname,  email, userPassword,"user", "user");
+					userId = userId.toUpperCase();
 					Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),newBe.getCode(),"PRI_UUID",userId);
 					beUtils.saveAnswer(keycloakId);
 					System.out.println("Created User "+email+" in Keycloak with id = "+userId + " and password:" +userPassword);
