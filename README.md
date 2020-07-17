@@ -1,2 +1,3 @@
 # prj_genny
+TEST
 MAIN GENNY PROJECT
