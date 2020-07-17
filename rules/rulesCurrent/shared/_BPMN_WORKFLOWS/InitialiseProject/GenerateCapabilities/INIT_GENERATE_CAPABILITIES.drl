@@ -98,6 +98,7 @@ rule "INIT_GENERATE_CAPABILITIES"
 		capabilityUtils.addCapability( "VIEW_AGREEMENT", "View Agreement");
 		capabilityUtils.addCapability( "OFFER", "Offer");
 		capabilityUtils.addCapability( "APPLY", "Apply");
+		capabilityUtils.addCapability( "VIEW_JOURNAL", "View Journal");
    
 		capabilityUtils.process();
 		
