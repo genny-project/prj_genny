@@ -87,6 +87,10 @@
 beUtils = new BaseEntityUtils(userToken);
 kcontext.setVariable(&quot;beUtils&quot;,beUtils);
 Optional&lt;BaseEntity> optCurrentUser = beUtils.getOptionalBaseEntityByCode(userToken.getUserCode());
+
+if (!optCurrentUser.isPresent()) {
+ optCurrentUser = beUtils.getOptionalBaseEntityByCode(userToken.getEmailUserCode());
+}
 kcontext.setVariable(&quot;currentUser&quot;,optCurrentUser.orElse(null));
 currentUser = optCurrentUser.orElse(null);
 kcontext.setVariable(&quot;processId&quot;,kcontext.getProcessInstance().getId());

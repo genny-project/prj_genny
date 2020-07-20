@@ -23,21 +23,15 @@ import life.genny.qwandautils.QwandaUtils;
 import life.genny.qwandautils.GennySettings;
 import org.drools.core.spi.KnowledgeHelper;
 
-rule "FILTER_APPLICATIONS_EDU_PRO_REP"
+rule "FILTER_VIEW_JOURNAL"
 	ruleflow-group 'SearchFilters'
 	salience 10000
 	no-loop true
 	when
 		userToken : GennyToken ( code != "PER_SERVICE" ) 
-		allowed : Allowed(code == "EDU_PRO_REP")
-		searchBE: SearchEntity( code matches "SBE_APPLIED_APPLICATION.*" || 
-														code matches "SBE_SHORTLISTED_APPLICATION.*" ||
-														code matches "SBE_INTERVIEWED_APPLICATION.*" ||
-														code matches "SBE_OFFERED_APPLICATION.*" ||
-														code matches "SBE_PLACED_APPLICATION.*" ||
-														code matches "SBE_INPROGRESS_APPLICATION.*" )
-		
-		beUtils : BaseEntityUtils()
+		searchBE: SearchEntity( code matches "SBE_INTERNS.*" || 
+														code matches "SBE_INTERNS_AVAILABLE.*" )
+		allowed: Allowed(code == "VIEW_JOURNAL" && mode == CapabilityMode.VIEW)
 	
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
@@ -45,23 +39,7 @@ rule "FILTER_APPLICATIONS_EDU_PRO_REP"
 		System.out.println("userCode     :: " + userToken.getUserCode());
 		System.out.println("searchCode   :: " + searchBE.getCode());
 
-		BaseEntity userBe = beUtils.getBaseEntityByCode(userToken.getUserCode());
-		if(userBe == null){
-			System.out.println("userBe is null");
-			return;
-		}
-
-		String eduProviderCode = userBe.getValue("LNK_EDU_PROVIDER", null);		
-		if(eduProviderCode == null){
-			System.out.println("eduProviderCode is null");
-			return;
-		}
-
-		System.out.println("eduProviderCode   ::   " + eduProviderCode);
-		/* eduProviderCode = eduProviderCode.replace("\"", "").replace("[", "").replace("]", "");
-		System.out.println("eduProviderCode after   ::   " + eduProviderCode); */
-
-		searchBE.addFilter("PRI_EDU_PROVIDER_CODE", SearchEntity.StringFilter.LIKE, eduProviderCode);
+		searchBE.addColumn("PRI_EVENT_JOURNAL_VIEW", "View Journal");
 
 		/* Create  QDataBaseEntityMessage for SearchEntity */
 		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(searchBE);
