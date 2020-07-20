@@ -382,30 +382,37 @@ BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
 if (newBe == null) {
     System.out.println(&quot;INTERN_S1: Set EDU PRO LINK - newBe is null!&quot;);
 } else {
-if (newBe.getCode() == null) {
-    System.out.println(&quot;INTERN_S1: Set EDU PRO LINK - newBe.getCode() is null!&quot;);
-} else {
-newBe = beUtils.getBaseEntityByCode(newBe.getCode());
-if (newBe == null) {
-System.out.println(&quot;INTERN_S1: Set EDU PRO LINK - newBe fetched is null!&quot;);
-} else {
-kcontext.setVariable(&quot;newBe&quot;, newBe);
-Object eduProCodeListObj = beUtils.getBaseEntityValue(newBe.getCode(), &quot;LNK_EDU_PROVIDER&quot;);
-if (eduProCodeListObj == null ) {
-System.out.println(&quot;INTERN_S1: Set EDU PRO LINK - beUtils.getBaseEntityValue(newBe.getCode(), LNK_EDU_PROVIDER) is null!&quot;);
-} else {
-String eduProCodeList = beUtils.getBaseEntityValue(newBe.getCode(), &quot;LNK_EDU_PROVIDER&quot;).toString();
-System.out.println(&quot;INTERN_S1  ********* &quot; + eduProCodeList);
-System.out.println(&quot;In Set EDU PRO Link Latest userToken = &quot;+userToken);
-JSONArray jsonArray = new JSONArray(eduProCodeList);
-beUtils.createLink(jsonArray.get(0).toString(), newBe.getCode(), &quot;LNK_CPY&quot;, &quot;STUDENT&quot;, 1.0);
-kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCode()));
+	if (newBe.getCode() == null) {
+    	System.out.println(&quot;INTERN_S1: Set EDU PRO LINK - newBe.getCode() is null!&quot;);
+	} else {
+		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
+		if (newBe == null) {
+			System.out.println(&quot;INTERN_S1: Set EDU PRO LINK - newBe fetched is null!&quot;);
+		} else {
+			kcontext.setVariable(&quot;newBe&quot;, newBe);
+			Object eduProCodeListObj = beUtils.getBaseEntityValue(newBe.getCode(), &quot;LNK_EDU_PROVIDER&quot;);
+			if (eduProCodeListObj == null ) {
+				System.out.println(&quot;INTERN_S1: Set EDU PRO LINK - beUtils.getBaseEntityValue(newBe.getCode(), LNK_EDU_PROVIDER) is null!&quot;);
+			} else {
+				String eduProCodeList = beUtils.getBaseEntityValue(newBe.getCode(), &quot;LNK_EDU_PROVIDER&quot;).toString();
+				System.out.println(&quot;INTERN_S1  ********* &quot; + eduProCodeList);
+				System.out.println(&quot;In Set EDU PRO Link Latest userToken = &quot;+userToken);
+				JSONArray jsonArray = new JSONArray(eduProCodeList);
+				beUtils.createLink(jsonArray.get(0).toString(), newBe.getCode(), &quot;LNK_CPY&quot;, &quot;STUDENT&quot;, 1.0);
+				kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCode()));
+			}
+		}
+	}
 }
-}
-}
-}
+
+BaseEntity eduPro = beUtils.getParent(newBe.getCode(), &quot;LNK_CPY&quot;);
+String eduProName = eduPro.getValueAsString(&quot;PRI_NAME&quot;);
+beUtils.saveAnswer(new Answer(newBe.getCode(), newBe.getCode(), &quot;PRI_ASSOC_ENTITY_NAME&quot;, eduProName));
+
 VertxUtils.writeMsg(&quot;webdata&quot;, JsonUtils.toJson(eventMsg));
-System.out.println(&quot;INTERN_S1: Exiting Set EDU PRO Link&quot;);</bpmn2:script>
+System.out.println(&quot;INTERN_S1: Exiting Set EDU PRO Link&quot;);
+
+</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_9" drools:priority="1" sourceRef="Task_4" targetRef="ScriptTask_2"/>
       <bpmn2:sequenceFlow id="SequenceFlow_7" drools:priority="1" sourceRef="ScriptTask_2" targetRef="ScriptTask_3"/>

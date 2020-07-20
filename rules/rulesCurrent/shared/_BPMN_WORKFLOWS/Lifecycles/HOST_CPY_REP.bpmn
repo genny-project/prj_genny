@@ -374,7 +374,11 @@ String hostCpyCodeList = beUtils.getBaseEntityValue(newBe.getCode(), &quot;LNK_H
 
 JSONArray jsonArray = new JSONArray(hostCpyCodeList);
 beUtils.createLink(jsonArray.get(0).toString(), newBe.getCode(), &quot;LNK_CPY&quot;, &quot;STAFF&quot;, 1.0);
-kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCode()));</bpmn2:script>
+kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCode()));
+
+BaseEntity hostCpy = beUtils.getParent(newBe.getCode(), &quot;LNK_CPY&quot;);
+String hostCpyName = hostCpy.getValueAsString(&quot;PRI_NAME&quot;);
+beUtils.saveAnswer(new Answer(newBe.getCode(), newBe.getCode(), &quot;PRI_ASSOC_ENTITY_NAME&quot;, hostCpyName));</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_3" drools:priority="1" sourceRef="Task_1" targetRef="ScriptTask_2"/>
       <bpmn2:sequenceFlow id="SequenceFlow_9" drools:priority="1" sourceRef="ScriptTask_2" targetRef="IntermediateThrowEvent_2"/>
@@ -528,7 +532,7 @@ kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCod
         <di:waypoint xsi:type="dc:Point" x="1060.0" y="330.0"/>
         <di:waypoint xsi:type="dc:Point" x="1240.0" y="330.0"/>
         <di:waypoint xsi:type="dc:Point" x="1420.0" y="330.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_14"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
