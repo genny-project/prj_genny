@@ -30,6 +30,7 @@ rule "SBE_SEARCHBAR"
      then
      	System.out.println("   Generate "+drools.getRule().getName() );
      	BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+     	beUtils.setServiceToken(serviceToken);
 
      	String projectCode = "PRJ_"+serviceToken.getRealm().toUpperCase();
 
