@@ -57,9 +57,9 @@ rule "FILTER_APPLICATIONS_EDU_PRO_REP"
 			return;
 		}
 
-		System.out.println("eduProviderCode before   ::   " + eduProviderCode);
-		eduProviderCode = eduProviderCode.replace("\"", "").replace("[", "").replace("]", "");
-		System.out.println("eduProviderCode after   ::   " + eduProviderCode);
+		System.out.println("eduProviderCode   ::   " + eduProviderCode);
+		/* eduProviderCode = eduProviderCode.replace("\"", "").replace("[", "").replace("]", "");
+		System.out.println("eduProviderCode after   ::   " + eduProviderCode); */
 
 		searchBE.addFilter("PRI_EDU_PROVIDER_CODE", SearchEntity.StringFilter.LIKE, eduProviderCode);
 
