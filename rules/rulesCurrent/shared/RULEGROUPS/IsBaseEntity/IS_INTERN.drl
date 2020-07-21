@@ -68,7 +68,30 @@ rule "IS_INTERN"
 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASK_FOR_RECOMMENDATION", "false"));
 		
 		
+
+		String intEP = newBe.getValue("LNK_EDU_PROVIDER", null);
+		if (intEP != null) {
+			System.out.println("@@@@@@@@@@@@@ intEP : " + intEP);
+
+			String hold_str = intEP.replace("\"", "").replace("[", "").replace("]", "");
+			System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ hold_str: " + hold_str);
+
+			BaseEntity intEPBe = beUtils.getBaseEntityByCode(hold_str);
+			System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ intEPBe: " + intEPBe);
+
+			String ep_name = intEPBe.getValue("PRI_NAME", null);
+			System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ep_name: " + ep_name);
+
+			beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASSOC_EP", ep_name));
+	
+		} else {
+			System.out.println("intEP is null");
+		}
+		
+		
+		
 		/* Set up in Keycloak */
+		/*
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
 		String userStr = newBe.getCode();
 		String[] userSplit = userStr.split("_");
@@ -90,6 +113,7 @@ rule "IS_INTERN"
 				}
 			}
 		}
+		*/
 		
 		
 		output.setTypeOfResult("NONE");
