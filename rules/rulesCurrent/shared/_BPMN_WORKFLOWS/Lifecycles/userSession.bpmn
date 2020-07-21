@@ -504,7 +504,7 @@ if (output.getTypeOfResult().equals(&quot;LOGOUT&quot;)) {
               <tns:metaValue><![CDATA[End Signal Event]]></tns:metaValue>
             </tns:metaData>
           </bpmn2:extensionElements>
-          <bpmn2:incoming>SequenceFlow_37</bpmn2:incoming>
+          <bpmn2:incoming>SequenceFlow_41</bpmn2:incoming>
         </bpmn2:endEvent>
         <bpmn2:intermediateThrowEvent id="IntermediateThrowEvent_1" name="Inject Signal">
           <bpmn2:extensionElements>
@@ -513,7 +513,7 @@ if (output.getTypeOfResult().equals(&quot;LOGOUT&quot;)) {
             </tns:metaData>
           </bpmn2:extensionElements>
           <bpmn2:incoming>SequenceFlow_33</bpmn2:incoming>
-          <bpmn2:outgoing>SequenceFlow_37</bpmn2:outgoing>
+          <bpmn2:outgoing>SequenceFlow_40</bpmn2:outgoing>
           <bpmn2:dataInput id="DataInput_64" name="Signal_1_Input"/>
           <bpmn2:dataInputAssociation id="DataInputAssociation_25">
             <bpmn2:sourceRef>sessionFacts</bpmn2:sourceRef>
@@ -527,7 +527,21 @@ if (output.getTypeOfResult().equals(&quot;LOGOUT&quot;)) {
         <bpmn2:sequenceFlow id="SequenceFlow_33" tns:priority="1" name="Inject Signal" sourceRef="ExclusiveGateway_1" targetRef="IntermediateThrowEvent_1">
           <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_62" language="http://www.java.com/java">return ((output.getTypeOfResult().equals(&quot;SIGNAL&quot;)));</bpmn2:conditionExpression>
         </bpmn2:sequenceFlow>
-        <bpmn2:sequenceFlow id="SequenceFlow_37" tns:priority="1" sourceRef="IntermediateThrowEvent_1" targetRef="EndEvent_10"/>
+        <bpmn2:scriptTask id="ScriptTask_4" name="SendEnd" scriptFormat="http://www.java.com/java">
+          <bpmn2:extensionElements>
+            <tns:metaData name="elementname">
+              <tns:metaValue><![CDATA[SendEnd]]></tns:metaValue>
+            </tns:metaData>
+          </bpmn2:extensionElements>
+          <bpmn2:incoming>SequenceFlow_40</bpmn2:incoming>
+          <bpmn2:outgoing>SequenceFlow_41</bpmn2:outgoing>
+          <bpmn2:script>QCmdMessage msg = new QCmdMessage(&quot;END_PROCESS&quot;, &quot;END_PROCESS&quot;);
+		msg.setToken(userToken.getToken());
+ 		msg.setSend(true);  		
+		VertxUtils.writeMsg(&quot;webcmds&quot;,msg);</bpmn2:script>
+        </bpmn2:scriptTask>
+        <bpmn2:sequenceFlow id="SequenceFlow_40" tns:priority="1" sourceRef="IntermediateThrowEvent_1" targetRef="ScriptTask_4"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_41" tns:priority="1" sourceRef="ScriptTask_4" targetRef="EndEvent_10"/>
       </bpmn2:subProcess>
       <bpmn2:subProcess id="SubProcess_5" name="Process Internal Signal Handler" triggeredByEvent="true">
         <bpmn2:extensionElements>
@@ -2072,6 +2086,12 @@ System.out.println(&quot;userSession: **************************End Session ****
           <dc:Bounds height="11.0" width="50.0" x="610.0" y="208.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_4" bpmnElement="ScriptTask_4" isExpanded="true">
+        <dc:Bounds height="33.0" width="41.0" x="672.0" y="172.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="11.0" width="38.0" x="673.0" y="183.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_13" bpmnElement="SequenceFlow_13" sourceElement="BPMNShape_StartEvent_3" targetElement="BPMNShape_ScriptTask_3">
         <di:waypoint xsi:type="dc:Point" x="217.0" y="133.0"/>
         <di:waypoint xsi:type="dc:Point" x="239.0" y="133.0"/>
@@ -2435,11 +2455,19 @@ System.out.println(&quot;userSession: **************************End Session ****
           <dc:Bounds height="11.0" width="50.0" x="542.0" y="191.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_37" bpmnElement="SequenceFlow_37" sourceElement="BPMNShape_IntermediateThrowEvent_1" targetElement="BPMNShape_EndEvent_10">
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_40" bpmnElement="SequenceFlow_40" sourceElement="BPMNShape_IntermediateThrowEvent_1" targetElement="BPMNShape_ScriptTask_4">
         <di:waypoint xsi:type="dc:Point" x="653.0" y="190.0"/>
-        <di:waypoint xsi:type="dc:Point" x="730.0" y="190.0"/>
+        <di:waypoint xsi:type="dc:Point" x="663.0" y="190.0"/>
+        <di:waypoint xsi:type="dc:Point" x="663.0" y="188.0"/>
+        <di:waypoint xsi:type="dc:Point" x="672.0" y="188.0"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_41" bpmnElement="SequenceFlow_41" sourceElement="BPMNShape_ScriptTask_4" targetElement="BPMNShape_EndEvent_10">
+        <di:waypoint xsi:type="dc:Point" x="713.0" y="188.0"/>
+        <di:waypoint xsi:type="dc:Point" x="760.0" y="188.0"/>
+        <di:waypoint xsi:type="dc:Point" x="760.0" y="190.0"/>
         <di:waypoint xsi:type="dc:Point" x="807.0" y="190.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_105"/>
+        <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
