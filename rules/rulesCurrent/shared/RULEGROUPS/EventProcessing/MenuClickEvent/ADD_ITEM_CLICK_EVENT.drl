@@ -27,11 +27,11 @@ rule "ADD_ITEM_CLICK_EVENT"
 		String workflowSignalCode = StringUtils.removeEnd(code, "_MENU");
 		workflowSignalCode = StringUtils.removeStart(workflowSignalCode,"QUE_");
 
-		QCmdMessage msg = new QCmdMessage("START_PROCESS", "START_PROCESS");
+		/*QCmdMessage msg = new QCmdMessage("START_PROCESS", "START_PROCESS");
 		msg.setToken(userToken.getToken());
  		msg.setSend(true);
   		
-		VertxUtils.writeMsg("webcmds",msg);
+		VertxUtils.writeMsg("webcmds",msg);*/
 		output.setTypeOfResult("SIGNAL");
 		output.setResultCode("START_"+workflowSignalCode);
 

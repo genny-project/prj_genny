@@ -2,9 +2,13 @@ package life.genny.test;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
@@ -17,11 +21,13 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
@@ -37,6 +43,15 @@ import javax.persistence.EntityManagerFactory;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.logging.log4j.Logger;
 import org.jbpm.services.api.DefinitionService;
 import org.jbpm.services.api.ProcessService;
@@ -50,9 +65,12 @@ import org.jbpm.services.task.utils.TaskFluent;
 import org.jbpm.services.task.wih.NonManagedLocalHTWorkItemHandler;
 import org.jbpm.test.services.TestIdentityProvider;
 import org.jbpm.test.services.TestUserGroupCallbackImpl;
-
+import org.json.JSONObject;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.keycloak.OAuth2Constants;
+import org.keycloak.representations.idm.UserRepresentation;
+import org.keycloak.util.JsonSerialization;
 import org.kie.api.KieBase;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieSession;
@@ -130,6 +148,7 @@ import life.genny.utils.TableFrameCallable;
 import life.genny.utils.TableUtils;
 import life.genny.utils.VertxUtils;
 
+
 public class AdamTest {
 
 	protected static final Logger log = org.apache.logging.log4j.LogManager
@@ -165,7 +184,7 @@ public class AdamTest {
 	protected static GennyToken serviceToken;
 
 	@Test
-	public void searchWildcardTest()
+	public void keycloakUserFix()
 	{
 		System.out.println("Search cache test");
 		GennyToken userToken = null;
@@ -194,58 +213,141 @@ public class AdamTest {
 
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		beUtils.setServiceToken(serviceToken);
-		
-		TableUtils tableUtils = new TableUtils(beUtils);
-
-		QDataBaseEntityMessage msg = null;
-	//	String searchCode = "SBE_INTERNSHIPS_SORT_INDUSTRY";
-		String searchCode = "SBE_INTERNSHIPS_ACTIVE";		
-		SearchEntity searchBE = VertxUtils.getObject(realm, "", searchCode, SearchEntity.class, serviceToken.getToken());
-
-		long starttime = System.currentTimeMillis();
-		long endtime = 0;
-
-		searchBE.setPageStart(20);
-		//searchBE.setWildcard("univ");
-
-		Integer pageStart = searchBE.getValue("SCH_PAGE_START", 0);
-		Integer pageSize = searchBE.getValue("SCH_PAGE_SIZE", GennySettings.defaultPageSize);
-
-		List<String> attributeFilter = new ArrayList<String>();
-		Tuple2<String,List<String>> results =  TableUtils.getHql(userToken,searchBE );	//	hql += " order by " + sortCode + " " + sortValue;
-		String hql = results._1;
-	//	hql = "select distinct ea.baseEntityCode  from EntityAttribute ea , EntityAttribute eb , EntityAttribute ez  where  ea.baseEntityCode=eb.baseEntityCode  and (ea.baseEntityCode like 'BEG_%'  )   and eb.attributeCode = 'PRI_STATUS' and  eb.valueString = 'Active' and ea.baseEntityCode=ez.baseEntityCode and ez.attributeCode='PRI_ASSOC_INDUSTRY'  order by ez.valueString ASC";
-		String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
-		JsonObject resultJson;
+		String accessToken = null;
 		try {
-			String resultJsonStr = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl
-					+ "/qwanda/baseentitys/search24/" + hql2 + "/" + pageStart + "/" + pageSize,
-					serviceToken.getToken(), 120);
-
-			resultJson = new JsonObject(resultJsonStr);
-			Long total = resultJson.getLong("total");
-			// check the cac
-			JsonArray result = resultJson.getJsonArray("codes");
-			List<String> resultCodes = new ArrayList<String>();
-			for (int i = 0; i < result.size(); i++) {
-				String code = result.getString(i);
-				resultCodes.add(code);
-			}
- 			String[] filterArray = attributeFilter.toArray(new String[0]);
-			List<BaseEntity> beList = resultCodes.stream().map(e -> {
-				BaseEntity be = beUtils.getBaseEntityByCode(e);
-				be = VertxUtils.privacyFilter(be, filterArray);
-				return be;
-			}).collect(Collectors.toList());
-			msg = new QDataBaseEntityMessage(beList.toArray(new BaseEntity[0]));
-			msg.setTotal(total);
-		} catch (Exception e1) {
+			accessToken = KeycloakUtils.getAccessToken(userToken.getKeycloakUrl(), "master", "admin-cli", null, System.getenv("KEYCLOAK_ADMIN"), System.getenv("KEYCLOAK_PASSWORD"));
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-			endtime = System.currentTimeMillis();
-			System.out.println("Total time taken = "+(endtime-starttime)+" ms");
+		
+		// fetch all keycloak users
+		
+		String keycloakUrl = userToken.getKeycloakUrl();
+		List<LinkedHashMap> results = new ArrayList<LinkedHashMap>();
+	    final HttpClient client = new DefaultHttpClient();
+
+	    
+	    try {
+	      final HttpGet get =
+	          new HttpGet(keycloakUrl + "/auth/admin/realms/" + realm + "/users?first=0&max=20000");
+	      get.addHeader("Authorization", "Bearer " + accessToken);
+	      try {
+	        final HttpResponse response = client.execute(get);
+	        if (response.getStatusLine().getStatusCode() != 200) {
+	          throw new IOException();
+	        }
+	        final HttpEntity entity = response.getEntity();
+	        final InputStream is = entity.getContent();
+	        try {
+	          results = JsonSerialization.readValue(is, (new ArrayList<UserRepresentation>()).getClass());
+	        } finally {
+	          is.close();
+	        }
+	      } catch (final IOException e) {
+	        throw new RuntimeException(e);
+	      }
+	    } finally {
+	      client.getConnectionManager().shutdown();
+	    }
+	    
+	    
+	    System.out.println("Number of keycloak users = "+results.size());
+	    
+		SearchEntity searchBE = new SearchEntity("SBE_TEST", "Users")
+				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
+				.addColumn("PRI_CODE", "Name");
+
+		searchBE.setRealm(realm);
+		searchBE.setPageStart(0);
+		searchBE.setPageSize(100000);
+
+		String jsonSearchBE = JsonUtils.toJson(searchBE);
+		/* System.out.println(jsonSearchBE); */
+		String resultJson;
+		BaseEntity result = null;
+		QDataBaseEntityMessage resultMsg = null;
+		try {
+			resultJson = QwandaUtils.apiPostEntity(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search",
+					jsonSearchBE, serviceToken.getToken());
+			resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
+			/*
+			 * System.out.println(drools.getRule().getName()
+			 * +" Got to here in RETURN JOURNALS "+resultJson);
+			 */
+			BaseEntity[] bes = resultMsg.getItems();
+			System.out.println("Returned " + bes.length + " items");
+			System.out.println("The count return " + resultMsg.getTotal());
+			/* Now only send the ones that are not synced */
+
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}	    
+	    
+		System.out.println("Number of PERSON = "+resultMsg.getItems().length);
+		Map<String, BaseEntity> persons = new HashMap<String,BaseEntity>();
+		for (BaseEntity be : resultMsg.getItems()) {
+			persons.put(be.getCode(), be);
+		}
+		
+		
+//		String username = "kanika.gulati+intern1@gada.io";
+//		String email = "kanika.gulati+intern1@gada.io";
+//		String code = QwandaUtils.getNormalisedUsername("PER_"+username);
+//		BaseEntity user = persons.get(code);
+//		String id = "3fdf680c-c2b9-4edb-93be-142fe85be7d4";
+//		String newCode = "PER_"+id.toUpperCase();
+		
+//	    // So for every keycloak user
+//	    // (1) fetch their baseentity
+	    int count=0;
+	    for (LinkedHashMap userMap : results)
+	    {
+	    	//userMap.get("username");
+	    	// usernap.get("email");
+	    	String username = (String) userMap.get("username");
+	    	String email = (String) userMap.get("email");
+	    	String code = QwandaUtils.getNormalisedUsername("PER_"+username);
+	    	BaseEntity user = persons.get(code);
+	    	if (user != null) {
+	    		String id = (String)userMap.get("id");
+	    		String newCode = "PER_"+id.toUpperCase();
+	    		System.out.println("Fix "+user.getCode()+" to "+newCode);
+	    		
+	    		// fix
+	    		// (1) Change all baseEntityCode in baseeentity_attribute
+	    		try {
+	    			String encodedsql = encodeValue("update baseentity_attribute set baseentityCode='"+newCode+"' where baseentityCode='"+user.getCode()+"'");
+	    			String deecoded = URLDecoder.decode(encodedsql);
+	    			resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/"+encodedsql,
+	    					serviceToken.getToken());
+	    			encodedsql = encodeValue("update baseentity_attribute set valueString='[\""+newCode+"]\"' where valueString='\"["+user.getCode()+"\"]'");
+	    			resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/"+encodedsql,
+	    					serviceToken.getToken());
+	    			encodedsql = encodeValue("update baseentity_attribute set valueString='[\""+newCode+"]\"' where valueString='"+user.getCode()+"'");
+	    			resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/"+encodedsql,
+	    					serviceToken.getToken());
+
+	    			encodedsql = encodeValue("update baseentity set code='"+newCode+"' where code='"+user.getCode()+"'");
+	    			resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/"+encodedsql,
+	    					serviceToken.getToken());
+
+	    		} catch (Exception e) {
+	    			
+	    		}
+	    		
+	    	}
+	    	count++;
+	    //	if (count > 4) {
+	    //		break;
+	    //	}
+	    }
+	    
+	    
 	}
 	
+
 	//@Test
 	public void searchCacheTest()
 	{

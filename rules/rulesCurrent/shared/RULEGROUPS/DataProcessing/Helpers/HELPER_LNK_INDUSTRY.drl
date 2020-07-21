@@ -94,5 +94,5 @@ rule "HELPER_LNK_INDUSTRY"
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
-		update(output);
+		/*update(output);*/
 end
