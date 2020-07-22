@@ -91,7 +91,6 @@ rule "IS_INTERN"
 		
 		
 		/* Set up in Keycloak */
-		/*
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
 		String userStr = newBe.getCode();
 		String[] userSplit = userStr.split("_");
@@ -113,7 +112,7 @@ rule "IS_INTERN"
 				}
 			}
 		}
-		*/
+
 		
 		
 		output.setTypeOfResult("NONE");
