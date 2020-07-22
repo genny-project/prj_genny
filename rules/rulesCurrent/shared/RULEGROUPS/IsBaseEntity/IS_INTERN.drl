@@ -103,7 +103,8 @@ rule "IS_INTERN"
 			if (lastname != null) {
 				String email = user.getValue("PRI_EMAIL",null);
 				if (email != null) {
-					String userPassword = UUID.randomUUID().toString().substring(0,10);
+					/*String userPassword = UUID.randomUUID().toString().substring(0,10);*/
+					String userPassword = "password1";
 					String userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(), userCode, firstname, lastname,  email, userPassword,"user", "user");
 					userId = userId.toUpperCase();
 					Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),newBe.getCode(),"PRI_UUID",userId);
