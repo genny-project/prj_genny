@@ -151,8 +151,7 @@ kcontext.setVariable(&quot;userToken&quot;, userToken);
 						System.out.println(&quot;NULL TOKEN IN SENDING ATTRIBUTES&quot;);
 				}
 			VertxUtils.writeMsg(&quot;webcmds&quot;,JsonUtils.toJson(msg));
-			/*System.out.println(&quot;authInit: All the attributes sent &quot; + msg.getItems().length + &quot; of them&quot;);*/
-
+			
 		} catch (Exception e) {
 			System.out.println(&quot;authInit: No web browser to talk to!&quot;);
 		}
