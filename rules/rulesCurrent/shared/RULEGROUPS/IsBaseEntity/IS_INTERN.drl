@@ -7,6 +7,7 @@ import life.genny.qwanda.Answer;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.utils.OutputParam;
 import life.genny.qwandautils.KeycloakUtils;
+import life.genny.qwandautils.QwandaUtils;
 import java.util.UUID;
 
 import java.util.List;
@@ -114,6 +115,13 @@ rule "IS_INTERN"
 			}
 		}
 
+		String endPoint = GennySettings.qwandaServiceUrl + "/v7/notes";
+		System.out.println("Note endPoint: " +endPoint);
+		String tag = "ni";
+		
+		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), tag, newBe.getCode(), "Hi, You just created an intern!!", serviceToken.getToken(), null);
+
+		System.out.println("I just posted the note");
 		
 		
 		output.setTypeOfResult("NONE");
