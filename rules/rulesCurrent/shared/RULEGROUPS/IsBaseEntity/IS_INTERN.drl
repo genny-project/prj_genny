@@ -117,8 +117,8 @@ rule "IS_INTERN"
 
 
 		/*String endPoint = GennySettings.bridgeUrl + "/v7/notes";*/
-		String endPoint = "https:/internmatch-chris1.gada.io/v7/notes";
-		String endPoint2 = "https:/internmatch-cyrus.gada.io/v7/notes";
+		String endPoint =  "https://internmatch-chris1.gada.io/v7/notes";
+		String endPoint2 = "https://internmatch-cyrus.gada.io/v7/notes";
 		
 		System.out.println("Note endPoint: " +endPoint);
 		String tag = "ni";
