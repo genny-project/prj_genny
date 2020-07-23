@@ -23,7 +23,7 @@ import life.genny.qwandautils.QwandaUtils;
 import life.genny.qwandautils.GennySettings;
 import org.drools.core.spi.KnowledgeHelper;
 
-rule "FILTER_INTERNS_EDU_PRO_REP"
+rule "FILTER_INTERNS_HOST_CPY_REP"
 	ruleflow-group 'SearchFilters'
 	salience 10000
 	no-loop true
