@@ -37,6 +37,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_31" isCollection="false" structureRef="life.genny.qwanda.Answer"/>
   <bpmn2:itemDefinition id="ItemDefinition_35" isCollection="false" structureRef="java.util.concurrent.CopyOnWriteArrayList"/>
   <bpmn2:itemDefinition id="ItemDefinition_29" isCollection="false" structureRef="life.genny.qwanda.message.QBulkMessage"/>
+  <bpmn2:itemDefinition id="ItemDefinition_33" isCollection="false" structureRef="life.genny.qwanda.message.QCmdMessage"/>
   <bpmn2:process id="auth_init" drools:packageName="life.genny.jbpm" name="Auth Init" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.qwanda.message.QEventMessage"/>
@@ -75,6 +76,7 @@
       <drools:import name="life.genny.qwanda.Answer"/>
       <drools:import name="java.util.concurrent.CopyOnWriteArrayList"/>
       <drools:import name="life.genny.qwanda.message.QBulkMessage"/>
+      <drools:import name="life.genny.qwanda.message.QCmdMessage"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_1" name="message"/>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_17" name="userToken"/>
@@ -188,7 +190,7 @@ VertxUtils.publish(currentUser,&quot;webcmds&quot;,project, &quot;PROJECT&quot;,
           <drools:metaValue><![CDATA[End Auth Init]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
     </bpmn2:endEvent>
     <bpmn2:scriptTask id="ScriptTask_2" name="SendUser" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>
@@ -240,7 +242,7 @@ if (qp != null) {
         </drools:onExit-script>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
       <bpmn2:ioSpecification id="InputOutputSpecification_1">
         <bpmn2:dataInput id="DataInput_1" itemSubjectRef="ItemDefinition_17" name="serviceToken"/>
         <bpmn2:dataInput id="DataInput_2" itemSubjectRef="ItemDefinition_17" name="userToken"/>
@@ -285,7 +287,21 @@ if (qp != null) {
       </bpmn2:dataOutputAssociation>
     </bpmn2:task>
     <bpmn2:sequenceFlow id="SequenceFlow_1" drools:priority="1" sourceRef="ScriptTask_2" targetRef="Task_1"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_5" drools:priority="1" sourceRef="Task_1" targetRef="EndEvent_2"/>
+    <bpmn2:scriptTask id="ScriptTask_3" name="SendAuthInitEnd" scriptFormat="http://www.java.com/java">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[SendAuthInitEnd]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
+      <bpmn2:script>QCmdMessage msg = new QCmdMessage(&quot;END_PROCESS&quot;, &quot;END_PROCESS&quot;);
+		msg.setToken(userToken.getToken());
+ 		msg.setSend(true);  		
+		VertxUtils.writeMsg(&quot;webcmds&quot;,msg);</bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_3" drools:priority="1" sourceRef="Task_1" targetRef="ScriptTask_3"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_6" drools:priority="1" sourceRef="ScriptTask_3" targetRef="EndEvent_2"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Process Diagram">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="auth_init">
@@ -326,9 +342,15 @@ if (qp != null) {
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_1" bpmnElement="Task_1" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="720.0" y="97.0"/>
+        <dc:Bounds height="50.0" width="110.0" x="660.0" y="97.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_5">
-          <dc:Bounds height="11.0" width="77.0" x="736.0" y="116.0"/>
+          <dc:Bounds height="11.0" width="77.0" x="676.0" y="116.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_3" bpmnElement="ScriptTask_3" isExpanded="true">
+        <dc:Bounds height="54.0" width="81.0" x="830.0" y="95.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="11.0" width="68.0" x="836.0" y="116.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_15" bpmnElement="SequenceFlow_15" sourceElement="BPMNShape_1" targetElement="BPMNShape_ScriptTask_13">
@@ -357,15 +379,21 @@ if (qp != null) {
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="BPMNShape_ScriptTask_2" targetElement="BPMNShape_Task_1">
         <di:waypoint xsi:type="dc:Point" x="600.0" y="122.0"/>
+        <di:waypoint xsi:type="dc:Point" x="630.0" y="122.0"/>
         <di:waypoint xsi:type="dc:Point" x="660.0" y="122.0"/>
-        <di:waypoint xsi:type="dc:Point" x="720.0" y="122.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_6"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_5" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_EndEvent_1">
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_ScriptTask_3">
+        <di:waypoint xsi:type="dc:Point" x="770.0" y="122.0"/>
+        <di:waypoint xsi:type="dc:Point" x="800.0" y="122.0"/>
         <di:waypoint xsi:type="dc:Point" x="830.0" y="122.0"/>
-        <di:waypoint xsi:type="dc:Point" x="905.0" y="122.0"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="BPMNShape_ScriptTask_3" targetElement="BPMNShape_EndEvent_1">
+        <di:waypoint xsi:type="dc:Point" x="911.0" y="122.0"/>
+        <di:waypoint xsi:type="dc:Point" x="945.0" y="122.0"/>
         <di:waypoint xsi:type="dc:Point" x="980.0" y="122.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_10"/>
+        <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
