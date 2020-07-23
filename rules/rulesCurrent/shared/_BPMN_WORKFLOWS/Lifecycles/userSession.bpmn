@@ -1557,7 +1557,10 @@ System.out.println(&quot;userSession: Exiting userSession for &quot;+currentUser
             <tns:metaValue><![CDATA[CheckTasks]]></tns:metaValue>
           </tns:metaData>
           <tns:onExit-script scriptFormat="http://www.java.com/java">
-            <tns:script>if (output != null) {
+            <tns:script>/* 
+THIS IS TEMPORARILY DISABLED!!! TODO TODO TO DO
+
+if (output != null) {
     System.out.println(&quot;userSession: CheckTasks -> output is not NULL! &quot;);
     System.out.println(&quot;userSession: CheckTasks -> output = &quot;+output);
 	kcontext.setVariable(&quot;output&quot;,output);	
@@ -1566,7 +1569,7 @@ System.out.println(&quot;userSession: Exiting userSession for &quot;+currentUser
 
 } else {
   System.out.println(&quot;userSession: checkTasks - output is null&quot;);
-}</tns:script>
+} */</tns:script>
           </tns:onExit-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_24</bpmn2:incoming>
@@ -2088,7 +2091,7 @@ System.out.println(&quot;userSession: **************************End Session ****
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_4" bpmnElement="ScriptTask_4" isExpanded="true">
         <dc:Bounds height="33.0" width="41.0" x="672.0" y="172.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_63">
           <dc:Bounds height="11.0" width="38.0" x="673.0" y="183.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -2460,14 +2463,14 @@ System.out.println(&quot;userSession: **************************End Session ****
         <di:waypoint xsi:type="dc:Point" x="663.0" y="190.0"/>
         <di:waypoint xsi:type="dc:Point" x="663.0" y="188.0"/>
         <di:waypoint xsi:type="dc:Point" x="672.0" y="188.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_105"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_41" bpmnElement="SequenceFlow_41" sourceElement="BPMNShape_ScriptTask_4" targetElement="BPMNShape_EndEvent_10">
         <di:waypoint xsi:type="dc:Point" x="713.0" y="188.0"/>
         <di:waypoint xsi:type="dc:Point" x="760.0" y="188.0"/>
         <di:waypoint xsi:type="dc:Point" x="760.0" y="190.0"/>
         <di:waypoint xsi:type="dc:Point" x="807.0" y="190.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_106"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
