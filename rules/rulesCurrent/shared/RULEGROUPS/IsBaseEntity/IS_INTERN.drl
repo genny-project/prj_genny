@@ -71,8 +71,7 @@ rule "IS_INTERN"
 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_RECEIVE_CERTIFICATE", "false"));
 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_UPDATE_LINKEDIN", "false"));
 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASK_FOR_RECOMMENDATION", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASSOC_EP", ep_name));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_CURRENT_COURSE", cc_name));
+		
 		
 
 		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
@@ -103,6 +102,9 @@ rule "IS_INTERN"
 
 		String cc_name = intCCBe.getValue("PRI_NAME", null);
 		System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ cc_name: " + cc_name);
+		
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASSOC_EP", ep_name));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_CURRENT_COURSE", cc_name));
 		
 		
 		
@@ -139,8 +141,7 @@ rule "IS_INTERN"
 		String tag = "ni";
 		
 		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), tag, newBe.getCode(), firstname + " has been created as an intern with Base Entity Code: " + newBe.getCode(), serviceToken.getToken());
-		QwandaUtils.apiPostNote(endPoint2, userToken.getUserCode(), tag, newBe.getCode(), "Hi, You just created an intern!!", serviceToken.getToken());
-
+		
 		System.out.println("I just posted the note");
 		
 		
