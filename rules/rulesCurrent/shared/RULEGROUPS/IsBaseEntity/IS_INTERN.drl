@@ -50,7 +50,32 @@ rule "IS_INTERN"
  		/* SET DASHBOURD ATTRIBUTES */
  		System.out.println("IS_INTERN: Setting Dashboard Journey Attributes"); 
  		
- 		
+ 
+
+
+		
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_REGISTERED_IN_INTERNMATCH", "true"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_PROFILE_COMPLETE", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_VIDEO_RECORDED", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_INTERNSHIPS_SEARCHED", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_OPPORTUNITIES_SAVED", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ACCREDITTION_COMPLETE", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_APPLIED_FOR_INTERNSHIPS", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_STARTED_SKILL_DEVELOPMENT", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_APPLICATION_SENT", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_INTERVIEWS_STARTED", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_OFFER_ACCEPTED", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_INDUCTION_COMPLETE", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_PROGRESS_REPORTING", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_DAILY_LOGBOOK_COMPLETE", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_RECEIVE_CERTIFICATE", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_UPDATE_LINKEDIN", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASK_FOR_RECOMMENDATION", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASSOC_EP", ep_name));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_CURRENT_COURSE", cc_name));
+		
+
+		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
  		
  		String intEP = newBe.getValue("LNK_EDU_PROVIDER", null);
 		System.out.println("@@@@@@@@@@@@@ intEP : " + intEP);
@@ -78,31 +103,6 @@ rule "IS_INTERN"
 
 		String cc_name = intCCBe.getValue("PRI_NAME", null);
 		System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ cc_name: " + cc_name);
-
-
-		
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_REGISTERED_IN_INTERNMATCH", "true"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_PROFILE_COMPLETE", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_VIDEO_RECORDED", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_INTERNSHIPS_SEARCHED", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_OPPORTUNITIES_SAVED", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ACCREDITTION_COMPLETE", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_APPLIED_FOR_INTERNSHIPS", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_STARTED_SKILL_DEVELOPMENT", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_APPLICATION_SENT", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_INTERVIEWS_STARTED", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_OFFER_ACCEPTED", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_INDUCTION_COMPLETE", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_PROGRESS_REPORTING", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_DAILY_LOGBOOK_COMPLETE", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_RECEIVE_CERTIFICATE", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_UPDATE_LINKEDIN", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASK_FOR_RECOMMENDATION", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASSOC_EP", ep_name));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_CURRENT_COURSE", cc_name));
-		
-
-		
 		
 		
 		
