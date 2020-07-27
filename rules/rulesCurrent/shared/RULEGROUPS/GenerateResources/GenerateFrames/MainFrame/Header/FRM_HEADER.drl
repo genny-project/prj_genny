@@ -33,11 +33,10 @@ rule "FRM_HEADER"
     when
       not  Frame3(code == "FRM_HEADER")
       serviceToken : GennyToken( code == "PER_SERVICE")
-       FRM_PROJECT_NAME : Frame3 ( code == "FRM_PROJECT_NAME" ) 
+      FRM_PROJECT_NAME : Frame3 ( code == "FRM_PROJECT_NAME" ) 
       FRM_SEARCH_BAR : Frame3 ( code == "FRM_SEARCH_BAR" ) 
       FRM_HEADER_OPTIONS : Frame3 ( code == "FRM_HEADER_OPTIONS" )
       FRM_HEADER_ADD_ITEMS : Frame3 ( code == "FRM_HEADER_ADD_ITEMS" ) 
-      FRM_HEADER_DRAFTS : Frame3 ( code == "FRM_HEADER_DRAFTS" ) 
       FRM_HEADER_USERNAME : Frame3 ( code == "FRM_HEADER_USERNAME" ) 
       FRM_HEADER_PROFILE_PICTURE : Frame3 ( code == "FRM_HEADER_PROFILE_PICTURE" ) 
     then
@@ -50,7 +49,6 @@ rule "FRM_HEADER"
                         .addFrame(FRM_HEADER_USERNAME, FramePosition.EAST).end()
                         .addFrame(FRM_HEADER_PROFILE_PICTURE, FramePosition.EAST).end()
                         .addFrame(FRM_HEADER_ADD_ITEMS, FramePosition.EAST).end()
-                        .addFrame(FRM_HEADER_DRAFTS, FramePosition.EAST).end()
                         .build();
       
       frame.setRealm(serviceToken.getRealm());

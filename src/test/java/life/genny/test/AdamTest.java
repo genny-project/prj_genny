@@ -183,7 +183,7 @@ public class AdamTest {
 	protected static GennyToken newUserToken;
 	protected static GennyToken serviceToken;
 
-	@Test
+	//@Test
 	public void keycloakUserFix()
 	{
 		System.out.println("Search cache test");
@@ -347,6 +347,61 @@ public class AdamTest {
 	    
 	}
 	
+	@Test
+	public void searchCountTest()
+	{
+		System.out.println("Search count test");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+		} else {
+			// VertxUtils.cachedEnabled = false;
+			VertxUtils.cachedEnabled = false;
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+			eventBusMock = new EventBusMock();
+			vertxCache = new JunitCache(); // MockCache
+			VertxUtils.init(eventBusMock, vertxCache);
+		}
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		beUtils.setServiceToken(serviceToken);
+		
+		String searchCode = "SBE_INTERNS";		
+		SearchEntity searchBE = VertxUtils.getObject(realm, "", searchCode, SearchEntity.class, serviceToken.getToken());
+
+		long starttime = System.currentTimeMillis();
+		long endtime = 0;
+
+		Tuple2<String,List<String>> results =  TableUtils.getHql(userToken,searchBE );	//	hql += " order by " + sortCode + " " + sortValue;
+		String hql = results._1;
+		String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
+		try {
+			String resultJsonStr = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl
+					+ "/qwanda/baseentitys/count24/" + hql2,
+					serviceToken.getToken(), 120);
+
+			System.out.println("Count = "+resultJsonStr);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		
+		
+			endtime = System.currentTimeMillis();
+			System.out.println("Total time taken = "+(endtime-starttime)+" ms");
+	}
+
 
 	//@Test
 	public void searchCacheTest()
@@ -437,6 +492,8 @@ public class AdamTest {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
+		
+		
 			endtime = System.currentTimeMillis();
 			System.out.println("Total time taken = "+(endtime-starttime)+" ms");
 	}

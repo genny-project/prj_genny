@@ -7,6 +7,7 @@ import life.genny.qwanda.Answer;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.utils.OutputParam;
 import life.genny.qwandautils.KeycloakUtils;
+import life.genny.qwandautils.QwandaUtils;
 import java.util.UUID;
 
 import java.util.List;
@@ -48,6 +49,10 @@ rule "IS_INTERN"
  		
  		/* SET DASHBOURD ATTRIBUTES */
  		System.out.println("IS_INTERN: Setting Dashboard Journey Attributes"); 
+ 		
+ 
+
+
 		
 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_REGISTERED_IN_INTERNMATCH", "true"));
 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_PROFILE_COMPLETE", "false"));
@@ -66,27 +71,38 @@ rule "IS_INTERN"
 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_RECEIVE_CERTIFICATE", "false"));
 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_UPDATE_LINKEDIN", "false"));
 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASK_FOR_RECOMMENDATION", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASSOC_EP", ep_name));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_CURRENT_COURSE", cc_name));
+		
+
+		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
+ 		
+ 		String intEP = newBe.getValue("LNK_EDU_PROVIDER", null);
+		System.out.println("@@@@@@@@@@@@@ intEP : " + intEP);
+			
+		String hold_str = intEP.replace("\"", "").replace("[", "").replace("]", "");
+		System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ hold_str: " + hold_str);
+			
+		BaseEntity intEPBe = beUtils.getBaseEntityByCode(hold_str);
+		System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ intEPBe: " + intEPBe);
+
+		String ep_name = intEPBe.getValue("PRI_NAME", null);
+		System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ep_name: " + ep_name);
 		
 		
+		
+		
+		String intCC = newBe.getValue("LNK_CURRENT_COURSE", null);
+		System.out.println("@@@@@@@@@@@@@ intCC : " + intCC);
+			
+		hold_str = intCC.replace("\"", "").replace("[", "").replace("]", "");
+		System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ hold_str: " + hold_str);
+			
+		BaseEntity intCCBe = beUtils.getBaseEntityByCode(hold_str);
+		System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ intEPBe: " + intEPBe);
 
-		String intEP = newBe.getValue("LNK_EDU_PROVIDER", null);
-		if (intEP != null) {
-			System.out.println("@@@@@@@@@@@@@ intEP : " + intEP);
-
-			String hold_str = intEP.replace("\"", "").replace("[", "").replace("]", "");
-			System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ hold_str: " + hold_str);
-
-			BaseEntity intEPBe = beUtils.getBaseEntityByCode(hold_str);
-			System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ intEPBe: " + intEPBe);
-
-			String ep_name = intEPBe.getValue("PRI_NAME", null);
-			System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ep_name: " + ep_name);
-
-			beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASSOC_EP", ep_name));
-	
-		} else {
-			System.out.println("intEP is null");
-		}
+		String cc_name = intCCBe.getValue("PRI_NAME", null);
+		System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ cc_name: " + cc_name);
 		
 		
 		
@@ -114,6 +130,18 @@ rule "IS_INTERN"
 			}
 		}
 
+
+		/*String endPoint = GennySettings.bridgeUrl + "/v7/notes";*/
+		String endPoint =  "https://internmatch-chris1.gada.io/v7/notes";
+		String endPoint2 = "https://internmatch-cyrus.gada.io/v7/notes";
+		
+		System.out.println("Note endPoint: " +endPoint);
+		String tag = "ni";
+		
+		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), tag, newBe.getCode(), firstname + " has been created as an intern with Base Entity Code: " + newBe.getCode(), serviceToken.getToken());
+		QwandaUtils.apiPostNote(endPoint2, userToken.getUserCode(), tag, newBe.getCode(), "Hi, You just created an intern!!", serviceToken.getToken());
+
+		System.out.println("I just posted the note");
 		
 		
 		output.setTypeOfResult("NONE");
