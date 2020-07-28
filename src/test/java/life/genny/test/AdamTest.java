@@ -347,7 +347,7 @@ public class AdamTest {
 	    
 	}
 	
-	@Test
+	//@Test
 	public void searchCountTest()
 	{
 		System.out.println("Search count test");
@@ -403,7 +403,7 @@ public class AdamTest {
 	}
 
 
-	//@Test
+	@Test
 	public void searchCacheTest()
 	{
 		System.out.println("Search cache test");
@@ -475,20 +475,20 @@ public class AdamTest {
 			resultJson = new JsonObject(resultJsonStr);
 			Long total = resultJson.getLong("total");
 			// check the cac
-			JsonArray result = resultJson.getJsonArray("codes");
-			List<String> resultCodes = new ArrayList<String>();
-			for (int i = 0; i < result.size(); i++) {
-				String code = result.getString(i);
-				resultCodes.add(code);
-			}
- 			String[] filterArray = attributeFilter.toArray(new String[0]);
-			List<BaseEntity> beList = resultCodes.stream().map(e -> {
-				BaseEntity be = beUtils.getBaseEntityByCode(e);
-				be = VertxUtils.privacyFilter(be, filterArray);
-				return be;
-			}).collect(Collectors.toList());
-			msg = new QDataBaseEntityMessage(beList.toArray(new BaseEntity[0]));
-			msg.setTotal(total);
+//			JsonArray result = resultJson.getJsonArray("codes");
+//			List<String> resultCodes = new ArrayList<String>();
+//			for (int i = 0; i < result.size(); i++) {
+//				String code = result.getString(i);
+//				resultCodes.add(code);
+//			}
+// 			String[] filterArray = attributeFilter.toArray(new String[0]);
+//			List<BaseEntity> beList = resultCodes.stream().map(e -> {
+//				BaseEntity be = beUtils.getBaseEntityByCode(e);
+//				be = VertxUtils.privacyFilter(be, filterArray);
+//				return be;
+//			}).collect(Collectors.toList());
+//			msg = new QDataBaseEntityMessage(beList.toArray(new BaseEntity[0]));
+//			msg.setTotal(total);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
