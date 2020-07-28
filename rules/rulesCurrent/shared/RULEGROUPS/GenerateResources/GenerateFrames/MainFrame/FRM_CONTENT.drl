@@ -37,8 +37,9 @@ rule "FRM_CONTENT"
 
 
         Frame3 frame = Frame3.builder("FRM_CONTENT")
-        					.question("QUE_NAME_TWO")
-                        	.end().build();
+        					/*.question("QUE_NAME_TWO")
+                        	.end()*/
+                        	.build();
                         
         frame.setRealm(serviceToken.getRealm());
         FrameUtils2.toMessage(frame, serviceToken);
