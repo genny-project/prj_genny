@@ -34,9 +34,7 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
     then
 	
 			System.out.println(drools.getRule().getName() + " triggered");
-
-			drools.setFocus("BucketProcessing");
-
+			
 			/* Send bucket arrayCodes */
 			BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 			String sessionCode= beUtils.getGennyToken().getSessionCode().toUpperCase();
@@ -58,6 +56,9 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 			msg.setToken(beUtils.getGennyToken().getToken());
 			msg.setSend(true);  		
 			VertxUtils.writeMsg("webcmds",msg);
+
+			drools.setFocus("BucketProcessing");
+
 
 		/* 	BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 				Boolean cache = true;
