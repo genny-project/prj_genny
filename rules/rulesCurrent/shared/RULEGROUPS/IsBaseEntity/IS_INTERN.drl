@@ -98,7 +98,7 @@ rule "IS_INTERN"
 		System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ hold_str: " + hold_str);
 			
 		BaseEntity intCCBe = beUtils.getBaseEntityByCode(hold_str);
-		System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ intEPBe: " + intEPBe);
+		System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ intCCBe: " + intCCBe);
 
 		String cc_name = intCCBe.getValue("PRI_NAME", null);
 		System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ cc_name: " + cc_name);

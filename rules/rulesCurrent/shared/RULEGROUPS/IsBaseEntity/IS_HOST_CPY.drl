@@ -34,6 +34,19 @@ rule "IS_HOST_CPY"
  		beUtils.saveAnswer(answer2);
 
 		System.out.println("IS_HOST_CPY: Answer = " + answer); 
+		
+		
+		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
+		String name = user.getValue("PRI_NAME",null);
+	
+		/*String endPoint = GennySettings.bridgeUrl + "/v7/notes";*/
+		String endPoint =  "https://internmatch-chris1.gada.io/v7/notes";
+		
+		System.out.println("Note endPoint: " +endPoint);
+		String tag = "ni";
+		
+		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), tag, newBe.getCode(), name + " has been created as a Host Company with Base Entity Code: " + newBe.getCode(), serviceToken.getToken());
+		System.out.println("I just posted the note");
 	
 		output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */
