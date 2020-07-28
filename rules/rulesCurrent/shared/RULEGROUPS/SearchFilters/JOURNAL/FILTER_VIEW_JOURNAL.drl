@@ -29,7 +29,7 @@ rule "FILTER_VIEW_JOURNAL"
 	no-loop true
 	when
 		userToken : GennyToken ( code != "PER_SERVICE" ) 
-		searchBE: SearchEntity( code matches "SBE_INTERNS.*" || 
+		searchBE: SearchEntity( code matches "SBE_INTERNS_.*" || 
 														code matches "SBE_INTERNS_AVAILABLE.*" )
 		allowed: Allowed(code == "VIEW_JOURNAL" && mode == CapabilityMode.VIEW)
 	
