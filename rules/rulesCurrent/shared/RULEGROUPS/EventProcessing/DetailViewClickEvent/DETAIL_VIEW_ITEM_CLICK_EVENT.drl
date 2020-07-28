@@ -11,6 +11,7 @@ import life.genny.utils.QuestionUtils;
 import life.genny.qwandautils.JsonUtils;
 import java.util.ArrayList;
 import java.util.List;
+import org.drools.core.spi.KnowledgeHelper;
 
 rule "DETAIL_VIEW_ITEM_CLICK_EVENT"
 	ruleflow-group 'EventProcessing'
@@ -23,9 +24,10 @@ rule "DETAIL_VIEW_ITEM_CLICK_EVENT"
 			data.code matches "QUE_VIEW_APP"
 		)
 		userToken : GennyToken (code != "PER_SERVICE" )
+		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
 	then
-		System.out.println("DETAIL_VIEW_ITEM_CLICK_EVENT");
+		System.out.println(drools.getRule().getName() + " triggered");
 		
 		String targetCode = $message.getData().getTargetCode();
 		System.out.println("TARGET code ::  " + targetCode);
@@ -39,6 +41,14 @@ rule "DETAIL_VIEW_ITEM_CLICK_EVENT"
 			
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 		}
+
+		/* Send end process message */
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+
+		QCmdMessage msg = new QCmdMessage("END_PROCESS", "END_PROCESS");
+		msg.setToken(beUtils.getGennyToken().getToken());
+ 		msg.setSend(true);  		
+		VertxUtils.writeMsg("webcmds",msg);
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
