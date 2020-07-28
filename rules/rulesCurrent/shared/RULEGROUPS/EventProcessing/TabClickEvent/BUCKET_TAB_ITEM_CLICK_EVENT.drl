@@ -39,6 +39,7 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 			BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 			String sessionCode= beUtils.getGennyToken().getSessionCode().toUpperCase();
 			System.out.println("sessionCode   ::   " + sessionCode);
+			System.out.println("allowed   ::   " + allowed);
 
 			List<String> codes = new ArrayList<String>();
 			if(sessionCode != null){
