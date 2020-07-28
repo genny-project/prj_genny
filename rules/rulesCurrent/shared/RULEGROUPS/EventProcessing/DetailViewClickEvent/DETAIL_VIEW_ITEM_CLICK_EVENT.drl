@@ -19,7 +19,7 @@ rule "DETAIL_VIEW_ITEM_CLICK_EVENT"
 	no-loop
 	when
 		$message : QEventMessage(
-			(data.code matches "QUE_PRI_EVENT_VIEW_.*" && (data.rootCode == "QUE_TABLE_RESULTS_GRP")) ||
+			data.code matches "QUE_PRI_EVENT_VIEW_.*" ||
 			data.code matches "QUE_VIEW_PROFILE" ||
 			data.code matches "QUE_VIEW_APP"
 		)
