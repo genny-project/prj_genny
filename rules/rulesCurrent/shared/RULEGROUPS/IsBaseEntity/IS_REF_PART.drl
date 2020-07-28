@@ -43,7 +43,7 @@ rule "IS_REF_PART"
 		System.out.println("Note endPoint: " +endPoint);
 		String tag = "ni";
 		
-		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), tag, newBe.getCode(), name + " has been created as a Referral Partner with Base Entity Code: " + newBe.getCode(), serviceToken.getToken());
+		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), tag, newBe.getCode(), "Added a Referral Partner : " + name + ". [" + newBe.getCode() + "]", serviceToken.getToken());
 		System.out.println("I just posted the note");
 		
 		output.setTypeOfResult("NONE");
