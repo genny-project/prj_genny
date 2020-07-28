@@ -35,6 +35,18 @@ rule "IS_EDU_PROVIDER"
 
 		System.out.println("IS_EDU_PROVIDER: Answer = " + answer); 
 		
+		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
+		String name = user.getValue("PRI_NAME",null);
+	
+		/*String endPoint = GennySettings.bridgeUrl + "/v7/notes";*/
+		String endPoint =  "https://internmatch-chris1.gada.io/v7/notes";
+		
+		System.out.println("Note endPoint: " +endPoint);
+		String tag = "ni";
+		
+		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), tag, newBe.getCode(), "Created an Education Provider: " + name + ". [" + newBe.getCode() + "]", serviceToken.getToken());
+		System.out.println("I just posted the note");
+		
 		output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */
 		
