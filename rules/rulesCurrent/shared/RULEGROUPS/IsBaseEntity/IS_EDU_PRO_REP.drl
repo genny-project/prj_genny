@@ -58,7 +58,7 @@ rule "IS_EDU_PRO_REP"
 		System.out.println("Note endPoint: " +endPoint);
 		String tag = "ni";
 		
-		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), tag, newBe.getCode(), firstname + " has been created as an Education Provider Rep with Base Entity Code: " + newBe.getCode(), serviceToken.getToken());
+		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), tag, newBe.getCode(), "Added an Education Provider Rep: " + firstname + ". [" + newBe.getCode() + "]", serviceToken.getToken());
 		System.out.println("I just posted the note");
 		
 		output.setTypeOfResult("NONE");
