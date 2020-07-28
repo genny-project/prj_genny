@@ -34,8 +34,31 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
     then
 	
 			System.out.println(drools.getRule().getName() + " triggered");
+			
+			/* Send bucket arrayCodes */
+			BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+			String sessionCode= beUtils.getGennyToken().getSessionCode().toUpperCase();
+			System.out.println("sessionCode   ::   " + sessionCode);
+
+			List<String> codes = new ArrayList<String>();
+			if(sessionCode != null){
+				codes.add("SBE_APPLIED_APPLICATIONS_"+sessionCode);
+				codes.add("SBE_SHORTLISTED_APPLICATIONS_"+sessionCode);
+				codes.add("SBE_INTERVIEWED_APPLICATIONS_"+sessionCode);
+				codes.add("SBE_OFFERED_APPLICATIONS_"+sessionCode);
+				codes.add("SBE_PLACED_APPLICATIONS_"+sessionCode);
+				codes.add("SBE_INPROGRESS_APPLICATIONS_"+sessionCode);
+			}
+
+
+			QCmdMessage msg = new QCmdMessage("BUCKET_CODES", "BUCKET_CODES");
+			msg.setTargetCodes(codes);
+			msg.setToken(beUtils.getGennyToken().getToken());
+			msg.setSend(true);  		
+			VertxUtils.writeMsg("webcmds",msg);
 
 			drools.setFocus("BucketProcessing");
+
 
 		/* 	BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 				Boolean cache = true;
