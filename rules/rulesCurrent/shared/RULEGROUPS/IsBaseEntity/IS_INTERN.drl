@@ -115,6 +115,7 @@ rule "IS_INTERN"
 		String userCode = userSplit[1];
 		System.out.println("User "+user+" with userCode = "+userCode);
 		
+		
 		String firstname = user.getValue("PRI_FIRSTNAME",null);
 		if (firstname != null) {
 			String lastname = user.getValue("PRI_LASTNAME",null);
