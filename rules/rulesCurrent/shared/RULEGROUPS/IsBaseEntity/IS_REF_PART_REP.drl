@@ -34,19 +34,29 @@ rule "IS_REF_PART_REP"
  		beUtils.saveAnswer(answer);
 
 		System.out.println("IS_REF_PART_REP: Answer = " + answer); 
+		
+		
 		/* Set up in Keycloak */
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
+		String userStr = newBe.getCode();
+		String[] userSplit = userStr.split("_");
+		String userCode = userSplit[1];
+		System.out.println("User "+user+" with userCode = "+userCode);
+		
+		
 		String firstname = user.getValue("PRI_FIRSTNAME",null);
 		if (firstname != null) {
 			String lastname = user.getValue("PRI_LASTNAME",null);
 			if (lastname != null) {
 				String email = user.getValue("PRI_EMAIL",null);
 				if (email != null) {
-					String userPassword = UUID.randomUUID().toString().substring(0,10);
-					String userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(),email , firstname, lastname,  email, userPassword,"user", "user");
+					/*String userPassword = UUID.randomUUID().toString().substring(0,10);*/
+					String userPassword = "password1";
+					String userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(), userCode, firstname, lastname,  email, userPassword,"user", "user");
+					userId = userId.toUpperCase();
 					Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),newBe.getCode(),"PRI_UUID",userId);
 					beUtils.saveAnswer(keycloakId);
-					System.out.println("Created User "+email+" in Keycloak with id = "+userId);
+					System.out.println("Created User "+email+" in Keycloak with id = "+userId + " and password:" +userPassword);
 				}
 			}
 		}
