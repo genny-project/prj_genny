@@ -62,11 +62,11 @@ import life.genny.utils.VertxUtils;
 import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 
 
-public class BucketView extends GennyJbpmBaseTest {
+public class TreeTest extends GennyJbpmBaseTest {
 
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getCanonicalName());
 
-	public BucketView() {
+	public TreeTest() {
 		super(false);
 	}
 	
