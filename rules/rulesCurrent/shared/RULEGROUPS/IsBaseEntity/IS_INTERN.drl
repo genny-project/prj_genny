@@ -76,7 +76,7 @@ rule "IS_INTERN"
 
 		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
  		
- 		String intEP = newBe.getValue("LNK_EDU_PROVIDER", null);
+ 		String intEP = newBe.getValue("LNK_EDU_PROVIDER", "\"[Placeholder]\"");
 		System.out.println("@@@@@@@@@@@@@ intEP : " + intEP);
 			
 		String hold_str = intEP.replace("\"", "").replace("[", "").replace("]", "");
@@ -91,7 +91,7 @@ rule "IS_INTERN"
 		
 		
 		
-		String intCC = newBe.getValue("LNK_CURRENT_COURSE", null);
+		String intCC = newBe.getValue("LNK_CURRENT_COURSE", "\"[Placeholder]\"");
 		System.out.println("@@@@@@@@@@@@@ intCC : " + intCC);
 			
 		hold_str = intCC.replace("\"", "").replace("[", "").replace("]", "");
