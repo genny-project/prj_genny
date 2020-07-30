@@ -23,7 +23,7 @@ rule "SEND_SBE_AVAILABLE_INTERNS"
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
-		allowed: Allowed(code == "VIEW_AVAILABLE_INTERNS" && mode == CapabilityMode.VIEW)
+		/*allowed: Allowed(code == "VIEW_AVAILABLE_INTERNS" && mode == CapabilityMode.VIEW)*/
 
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
