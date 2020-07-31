@@ -76,6 +76,7 @@ rule "IS_INTERN"
 
 		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
  		
+ 		/*
  		String intEP = newBe.getValue("LNK_EDU_PROVIDER", "\"[Placeholder]\"");
 		System.out.println("@@@@@@@@@@@@@ intEP : " + intEP);
 			
@@ -105,6 +106,7 @@ rule "IS_INTERN"
 		
 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASSOC_EP", ep_name));
 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_CURRENT_COURSE", cc_name));
+		*/
 		
 		
 		
