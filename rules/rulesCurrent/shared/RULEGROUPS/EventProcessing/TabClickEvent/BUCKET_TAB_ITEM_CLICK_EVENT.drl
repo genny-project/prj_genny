@@ -43,9 +43,9 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 
 			List<String> codes = new ArrayList<String>();
 			if(sessionCode != null){
-				if(allowed.code.equals("AGENT")){
-					codes.add("SBE_AVAILABLE_INTERNS_"+sessionCode);
-				}
+				/* if(allowed.code.equals("AGENT")){ */
+				codes.add("SBE_AVAILABLE_INTERNS_"+sessionCode);
+				/* } */
 				codes.add("SBE_APPLIED_APPLICATIONS_"+sessionCode);
 				codes.add("SBE_SHORTLISTED_APPLICATIONS_"+sessionCode);
 				codes.add("SBE_INTERVIEWED_APPLICATIONS_"+sessionCode);
