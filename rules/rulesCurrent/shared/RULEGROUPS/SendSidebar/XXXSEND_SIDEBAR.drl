@@ -24,7 +24,7 @@ import life.genny.qwandautils.GennySettings;
 import org.drools.core.spi.KnowledgeHelper;
 
 rule "SEND_SIDEBAR"
-	ruleflow-group 'SendSidebar'
+	/* ruleflow-group 'SendSidebar' */
 	salience 10
 	no-loop true
 	when
