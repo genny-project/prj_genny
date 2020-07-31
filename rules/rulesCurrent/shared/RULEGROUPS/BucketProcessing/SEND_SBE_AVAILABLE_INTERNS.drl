@@ -26,6 +26,7 @@ rule "SEND_SBE_AVAILABLE_INTERNS"
 		/*allowed: Allowed(code == "VIEW_AVAILABLE_INTERNS" && mode == CapabilityMode.VIEW)*/
 
 	then
+	
 		System.out.println(drools.getRule().getName() + " triggered");
 		Boolean cache = true;
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
