@@ -201,7 +201,7 @@ beUtils.saveAnswer(new Answer(userToken.getUserCode(), &quot;GRP_DASHBOARD_COUNT
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
-        <bpmn2:script>BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+        <bpmn2:script>beUtils = new BaseEntityUtils(serviceToken);
 
 kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCode()));
 System.out.println(&quot;@@@@@@@@@@@@@@@@@newBe : &quot; + newBe.getCode());
