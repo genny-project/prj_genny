@@ -183,6 +183,9 @@ public class AdamTest {
 	protected static GennyToken newUserToken;
 	protected static GennyToken serviceToken;
 
+	
+	
+	
 	//@Test
 	public void keycloakUserFix()
 	{
