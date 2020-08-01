@@ -85,7 +85,7 @@
     <bpmn2:property id="addressFull" itemSubjectRef="ItemDefinition_9" name="addressFull"/>
     <bpmn2:property id="muddleWhichDays" itemSubjectRef="ItemDefinition_9" name="muddleWhichDays"/>
     <bpmn2:property id="jsonArrayWhichDaysLength" itemSubjectRef="ItemDefinition_1209" name="jsonArrayWhichDaysLength"/>
-    <bpmn2:property id="beUtils" itemSubjectRef="ItemDefinition_1076" name="beUtils"/>
+    <bpmn2:property id="beUtils" itemSubjectRef="ItemDefinition_1926" name="beUtils"/>
     <bpmn2:subProcess id="SubProcess_1" name="Internship Builder">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
