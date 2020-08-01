@@ -112,7 +112,7 @@ rule "IS_INTERN"
 		
 		/* Set up in Keycloak */
 		
-		/*
+		
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
 		String userStr = newBe.getCode();
 		String[] userSplit = userStr.split("_");
@@ -127,16 +127,21 @@ rule "IS_INTERN"
 				String email = user.getValue("PRI_EMAIL",null);
 				if (email != null) {
 					/*String userPassword = UUID.randomUUID().toString().substring(0,10);*/
-					String userPassword = "password1";
-					String userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(), userCode, firstname, lastname,  email, userPassword,"user", "user");
-					userId = userId.toUpperCase();
-					Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),newBe.getCode(),"PRI_UUID",userId);
-					beUtils.saveAnswer(keycloakId);
-					System.out.println("Created User "+email+" in Keycloak with id = "+userId + " and password:" +userPassword);
+					/* TODO HACK */
+					if (false) {
+						String userPassword = "password1";
+						String userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(), userCode, firstname, lastname,  email, userPassword,"user", "user");
+						userId = userId.toUpperCase();
+						Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),newBe.getCode(),"PRI_UUID",userId);
+						beUtils.saveAnswer(keycloakId);
+						System.out.println("Created User "+email+" in Keycloak with id = "+userId + " and password:" +userPassword);
+					} else {
+					     System.out.println("KEYCLOAK USER CREATION DISABLED IN RULE IS_INTERN");
+					}
 				}
 			}
 		}
-		*/
+		
 
 
 		/*String endPoint = GennySettings.bridgeUrl + "/v7/notes";*/
