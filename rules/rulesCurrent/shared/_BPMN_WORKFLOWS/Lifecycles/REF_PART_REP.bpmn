@@ -12,6 +12,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_3679" isCollection="false" structureRef="java.util.UUID"/>
   <bpmn2:itemDefinition id="ItemDefinition_123" isCollection="false" structureRef="life.genny.utils.OutputParam"/>
   <bpmn2:itemDefinition id="ItemDefinition_1680" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_107" isCollection="false" structureRef="life.genny.qwandautils.KeycloakUtils"/>
   <bpmn2:signal id="Signal_1" name="createBE"/>
   <bpmn2:signal id="Signal_2" name="makeBe"/>
   <bpmn2:signal id="Signal_3" name="START_REF_PART_REP"/>
@@ -25,6 +26,7 @@
       <drools:import name="life.genny.utils.SessionFacts"/>
       <drools:import name="java.util.UUID"/>
       <drools:import name="life.genny.utils.OutputParam"/>
+      <drools:import name="life.genny.qwandautils.KeycloakUtils"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_556" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_556" name="serviceToken"/>
@@ -34,7 +36,7 @@
     <bpmn2:property id="sessionFacts" itemSubjectRef="ItemDefinition_2957" name="sessionFacts"/>
     <bpmn2:property id="processId" itemSubjectRef="ItemDefinition_591" name="processId"/>
     <bpmn2:property id="UUID" itemSubjectRef="ItemDefinition_3679" name="UUID"/>
-    <bpmn2:property id="uuid" itemSubjectRef="ItemDefinition_3679" name="uuid"/>
+    <bpmn2:property id="uuid" itemSubjectRef="ItemDefinition_9" name="uuid"/>
     <bpmn2:property id="outputMsg" itemSubjectRef="ItemDefinition_123" name="outputMsg"/>
     <bpmn2:property id="baseEntityType" itemSubjectRef="ItemDefinition_9" name="baseEntityType"/>
     <bpmn2:subProcess id="SubProcess_1" name="Referral Partner Rep Builder">
@@ -82,7 +84,9 @@ processId = kcontext.getProcessInstance().getId();
 kcontext.setVariable(&quot;processId&quot;,kcontext.getProcessInstance().getId());
 System.out.println(&quot;REF_PART_REP: processId = &quot; + processId);
 
-uuid = UUID.randomUUID();
+/* uuid = UUID.randomUUID(); */
+uuid = KeycloakUtils.createDummyUser(serviceToken.getToken(), serviceToken.getRealm());
+
 kcontext.setVariable(&quot;uuid&quot;, uuid);
 System.out.println(&quot;REF_PART_REP: uuid = &quot; + uuid);
 
@@ -388,13 +392,13 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
         <di:waypoint xsi:type="dc:Point" x="800.0" y="323.0"/>
         <di:waypoint xsi:type="dc:Point" x="820.0" y="323.0"/>
         <di:waypoint xsi:type="dc:Point" x="840.0" y="323.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_10"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_7" bpmnElement="SequenceFlow_7" sourceElement="BPMNShape_IntermediateThrowEvent_2" targetElement="BPMNShape_ScriptTask_3">
         <di:waypoint xsi:type="dc:Point" x="1026.0" y="323.0"/>
         <di:waypoint xsi:type="dc:Point" x="1048.0" y="323.0"/>
         <di:waypoint xsi:type="dc:Point" x="1070.0" y="323.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_13"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

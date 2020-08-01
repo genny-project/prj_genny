@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.4.3.Final-v20180418-1358-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.1.Final-v20190425-2005-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
   <bpmn2:itemDefinition id="ItemDefinition_9" isCollection="false" structureRef="java.lang.String"/>
   <bpmn2:itemDefinition id="ItemDefinition_556" isCollection="false" structureRef="life.genny.models.GennyToken"/>
   <bpmn2:itemDefinition id="ItemDefinition_576" isCollection="false" structureRef="life.genny.utils.CallingProcessToken"/>
@@ -16,6 +16,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_462" isCollection="false" structureRef="life.genny.utils.OutputParam"/>
   <bpmn2:itemDefinition id="ItemDefinition_1814" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_6" isCollection="false" structureRef="org.json.JSONArray"/>
+  <bpmn2:itemDefinition id="ItemDefinition_111" isCollection="false" structureRef="life.genny.qwandautils.KeycloakUtils"/>
   <bpmn2:signal id="Signal_1" name="createBE"/>
   <bpmn2:signal id="Signal_2" name="makeBe"/>
   <bpmn2:signal id="Signal_3" name="START_EDU_PRO_REP"/>
@@ -30,6 +31,7 @@
       <drools:import name="java.util.UUID"/>
       <drools:import name="life.genny.utils.OutputParam"/>
       <drools:import name="org.json.JSONArray"/>
+      <drools:import name="life.genny.qwandautils.KeycloakUtils"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_556" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_556" name="serviceToken"/>
@@ -39,7 +41,7 @@
     <bpmn2:property id="sessionFacts" itemSubjectRef="ItemDefinition_2957" name="sessionFacts"/>
     <bpmn2:property id="processId" itemSubjectRef="ItemDefinition_591" name="processId"/>
     <bpmn2:property id="UUID" itemSubjectRef="ItemDefinition_3679" name="UUID"/>
-    <bpmn2:property id="uuid" itemSubjectRef="ItemDefinition_3679" name="uuid"/>
+    <bpmn2:property id="uuid" itemSubjectRef="ItemDefinition_9" name="uuid"/>
     <bpmn2:property id="outputMsg" itemSubjectRef="ItemDefinition_462" name="outputMsg"/>
     <bpmn2:property id="baseEntityType" itemSubjectRef="ItemDefinition_9" name="baseEntityType"/>
     <bpmn2:subProcess id="SubProcess_1" name="EP Rep Builder">
@@ -87,7 +89,9 @@ processId = kcontext.getProcessInstance().getId();
 kcontext.setVariable(&quot;processId&quot;,kcontext.getProcessInstance().getId());
 System.out.println(&quot;EDU_PRO_REP: processId = &quot; + processId);
 
-uuid = UUID.randomUUID();
+/* uuid = UUID.randomUUID();*/
+uuid = KeycloakUtils.createDummyUser(serviceToken.getToken(), serviceToken.getRealm());
+
 kcontext.setVariable(&quot;uuid&quot;, uuid);
 System.out.println(&quot;EDU_PRO_REP: uuid = &quot; + uuid);
 
