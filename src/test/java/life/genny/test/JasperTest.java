@@ -157,7 +157,7 @@ public class JasperTest {
                 .addColumn("PRI_NAME", "Name")
                 .addColumn("PRI_CURRENT_COURSE", "Current Course")
                 .addColumn("PRI_PROGRESS", "Progress")
-                .setPageStart(0).setPageSize(1000);
+                .setPageStart(0).setPageSize(GennySettings.defaultPageSize);
         
         /* fetch the search results */
 		QDataBaseEntityMessage msg = searchUtils.fetchSearchResults(searchBe, serviceToken);
@@ -226,7 +226,7 @@ public class JasperTest {
               	.addColumn("PRI_INTERN_MOBILE", "Mobile")
               	.addColumn("PRI_INTERN_STUDENT_ID", "Student ID")
               /*.addColumn("PRI_PROGRESS", "Progress")*/
-                .setPageStart(0).setPageSize(1000);
+                .setPageStart(0).setPageSize(GennySettings.defaultPageSize);
         
         System.out.println("inside search loop  ::");
 		String code = searchBe.getCode().split("SBE_")[1];

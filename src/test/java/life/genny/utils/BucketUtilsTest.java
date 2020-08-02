@@ -1048,7 +1048,7 @@ public class BucketUtilsTest {
 					.addColumn("PRI_OCCUPATION", "Occupation").addColumn("PRI_COMPASS", "Address")
 					.addColumn("PRI_STAR_RATING", "Rating").addColumn("PRI_TRANSPORT", "Transport")
 					.addColumn("PRI_MOBILE", "Mobile").addColumn("PRI_EMAIL", "Email")
-					.addColumn("PRI_INTERN_EMAIL", "Dummy").setPageStart(0).setPageSize(1000);
+					.addColumn("PRI_INTERN_EMAIL", "Dummy").setPageStart(0).setPageSize(GennySettings.defaultPageSize);
 
 			SearchEntity SBE_APPLIED_APPLICATIONS = new SearchEntity("SBE_APPLIED_APPLICATIONS", "Applied")
 					.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
@@ -1071,7 +1071,7 @@ public class BucketUtilsTest {
 					.addColumn("PRI_STAR_RATING", "Rating").addColumn("PRI_TRANSPORT", "Transport")
 					.addColumn("PRI_INTERN_MOBILE", "Mobile").addColumn("PRI_INTERN_EMAIL", "Email")
 
-					.setPageStart(0).setPageSize(1000);
+					.setPageStart(0).setPageSize(GennySettings.defaultPageSize);
 
 			SearchEntity SBE_SHORTLISTED_APPLICATIONS = new SearchEntity("SBE_SHORTLISTED_APPLICATIONS", "Shortlisted")
 					.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
@@ -1094,7 +1094,7 @@ public class BucketUtilsTest {
 					.addColumn("PRI_STAR_RATING", "Rating").addColumn("PRI_TRANSPORT", "Transport")
 					.addColumn("PRI_INTERN_MOBILE", "Mobile").addColumn("PRI_INTERN_EMAIL", "Email")
 
-					.setPageStart(0).setPageSize(1000);
+					.setPageStart(0).setPageSize(GennySettings.defaultPageSize);
 
 			SearchEntity SBE_INTERVIEWED_APPLICATIONS = new SearchEntity("SBE_INTERVIEWED_APPLICATIONS", "Interviewed")
 					.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
@@ -1117,7 +1117,7 @@ public class BucketUtilsTest {
 					.addColumn("PRI_STAR_RATING", "Rating").addColumn("PRI_TRANSPORT", "Transport")
 					.addColumn("PRI_INTERN_MOBILE", "Mobile").addColumn("PRI_INTERN_EMAIL", "Email")
 
-					.setPageStart(0).setPageSize(1000);
+					.setPageStart(0).setPageSize(GennySettings.defaultPageSize);
 
 			SearchEntity SBE_OFFERED_APPLICATIONS = new SearchEntity("SBE_OFFERED_APPLICATIONS", "Offered")
 					.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
@@ -1140,7 +1140,7 @@ public class BucketUtilsTest {
 					.addColumn("PRI_STAR_RATING", "Rating").addColumn("PRI_TRANSPORT", "Transport")
 					.addColumn("PRI_INTERN_MOBILE", "Mobile").addColumn("PRI_INTERN_EMAIL", "Email")
 
-					.setPageStart(0).setPageSize(1000);
+					.setPageStart(0).setPageSize(GennySettings.defaultPageSize);
 
 			SearchEntity SBE_PLACED_APPLICATIONS = new SearchEntity("SBE_PLACED_APPLICATIONS", "Placed")
 					.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
@@ -1162,7 +1162,7 @@ public class BucketUtilsTest {
 					.addColumn("PRI_STAR_RATING", "Rating").addColumn("PRI_TRANSPORT", "Transport")
 					.addColumn("PRI_INTERN_MOBILE", "Mobile").addColumn("PRI_INTERN_EMAIL", "Email")
 
-					.setPageStart(0).setPageSize(1000);
+					.setPageStart(0).setPageSize(GennySettings.defaultPageSize);
 
 			SearchEntity SBE_INPROGRESS_APPLICATIONS = new SearchEntity("SBE_INPROGRESS_APPLICATIONS", "In Progress")
 					.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
@@ -1184,7 +1184,7 @@ public class BucketUtilsTest {
 					.addColumn("PRI_STAR_RATING", "Rating").addColumn("PRI_TRANSPORT", "Transport")
 					.addColumn("PRI_INTERN_MOBILE", "Mobile").addColumn("PRI_INTERN_EMAIL", "Email")
 
-					.setPageStart(0).setPageSize(1000);
+					.setPageStart(0).setPageSize(GennySettings.defaultPageSize);
 
 			bucketSearchBeList.add(SBE_AVAILABLE_INTERNS);
 			bucketSearchBeList.add(SBE_APPLIED_APPLICATIONS);
@@ -1504,7 +1504,7 @@ public class BucketUtilsTest {
                               .addColumn("PRI_STAR_RATING", "Rating").addColumn("PRI_TRANSPORT", "Transport")
                               .addColumn("PRI_INTERN_MOBILE", "Mobile").addColumn("PRI_INTERN_EMAIL", "Email")
 
-															.setPageStart(0).setPageSize(1000);
+															.setPageStart(0).setPageSize(GennySettings.defaultPageSize);
 															
 
 			List<SearchEntity> searchBeList = new ArrayList<SearchEntity>();
