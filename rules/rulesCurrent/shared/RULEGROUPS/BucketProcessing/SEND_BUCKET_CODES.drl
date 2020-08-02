@@ -1,4 +1,4 @@
-/* package life.genny.rules;
+package life.genny.rules;
 import java.util.ArrayList;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.utils.OutputParam;
@@ -23,6 +23,7 @@ rule "SEND_BUCKET_CODES"
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
+		allowed:Allowed()
 
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
@@ -31,12 +32,13 @@ rule "SEND_BUCKET_CODES"
   
 		String sessionCode= beUtils.getGennyToken().getSessionCode().toUpperCase();
 		System.out.println("sessionCode   ::   " + sessionCode);
+		System.out.println("allowed   ::   " + allowed);
 
 		List<String> codes = new ArrayList<String>();
 		if(sessionCode != null){
-			if(allowed.code.equals("VIEW_AVAILABLE_INTERNS")){
-				codes.add("SBE_AVAILABLE_INTERNS_"+sessionCode);
-			}
+			/* if(allowed.code.equals("AGENT")){ */
+			codes.add("SBE_AVAILABLE_INTERNS_"+sessionCode);
+			/* } */
 			codes.add("SBE_APPLIED_APPLICATIONS_"+sessionCode);
 			codes.add("SBE_SHORTLISTED_APPLICATIONS_"+sessionCode);
 			codes.add("SBE_INTERVIEWED_APPLICATIONS_"+sessionCode);
@@ -45,7 +47,7 @@ rule "SEND_BUCKET_CODES"
 			codes.add("SBE_INPROGRESS_APPLICATIONS_"+sessionCode);
 		}
 
-
+		/* Send bucket arrayCodes */
 		QCmdMessage msg = new QCmdMessage("BUCKET_CODES", "BUCKET_CODES");
 		msg.setTargetCodes(codes);
 		msg.setToken(beUtils.getGennyToken().getToken());
@@ -54,4 +56,4 @@ rule "SEND_BUCKET_CODES"
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
-/* end */
+end
