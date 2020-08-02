@@ -18,6 +18,7 @@ import life.genny.utils.VertxUtils;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.models.GennyToken;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
+import life.genny.qwandautils.GennySettings;
 
 rule "SBE_NEW_ITEMS2"
     ruleflow-group 'GenerateSearches'
@@ -34,7 +35,7 @@ rule "SBE_NEW_ITEMS2"
   	     .setSourceCode("GRP_NEW_ITEMS")
   	     .addFilter("PRI_CODE",SearchEntity.StringFilter.LIKE,"BEG_%")
   	     .setPageStart(0)
-  	     .setPageSize(10000);
+  	     .setPageSize(GennySettings.defaultPageSize);
   	     
    	     
   	     searchBE.setRealm(serviceToken.getRealm());
