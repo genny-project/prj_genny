@@ -388,7 +388,7 @@ public class NotesView extends GennyJbpmBaseTest {
                               .addColumn("PRI_STAR_RATING", "Rating").addColumn("PRI_TRANSPORT", "Transport")
                               .addColumn("PRI_INTERN_MOBILE", "Mobile").addColumn("PRI_INTERN_EMAIL", "Email")
 
-															.setPageStart(0).setPageSize(1000);
+															.setPageStart(0).setPageSize(GennySettings.defaultPageSize);
 															
 
 			List<SearchEntity> searchBeList = new ArrayList<SearchEntity>();
