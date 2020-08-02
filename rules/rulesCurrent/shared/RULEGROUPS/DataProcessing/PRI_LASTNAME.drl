@@ -44,7 +44,7 @@ rule "PRI_LASTNAME"
 			
 		String name = firstname + " "+lastname;
 		name = name.trim();	
-		name = StringUtils.capitalize(name);
+		name = WordUtils.capitalize(name);
 		System.out.println("Rule -> PRI_LASTNAME 2 Name="+name);
 		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_NAME", name,false,true));
 			
