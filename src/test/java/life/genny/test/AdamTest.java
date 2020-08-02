@@ -312,11 +312,13 @@ public class AdamTest {
 	    	String username = (String) userMap.get("username");
 	    	String email = (String) userMap.get("email");
 	    	String code = QwandaUtils.getNormalisedUsername("PER_"+username);
+	    	String appCode = QwandaUtils.getNormalisedUsername("APP_"+username);
 	    	BaseEntity user = persons.get(code);
 	    	if (user != null) {
 	    		String id = (String)userMap.get("id");
 	    		String newCode = "PER_"+id.toUpperCase();
 	    		System.out.println("Fix "+user.getCode()+" to "+newCode);
+	    		String newAppCode = "APP_"+id.toUpperCase();
 	    		
 	    		// fix
 	    		// (1) Change all baseEntityCode in baseeentity_attribute
@@ -333,6 +335,10 @@ public class AdamTest {
 	    					serviceToken.getToken());
 
 	    			encodedsql = encodeValue("update baseentity set code='"+newCode+"' where code='"+user.getCode()+"'");
+	    			resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/"+encodedsql,
+	    					serviceToken.getToken());
+
+	    			encodedsql = encodeValue("update baseentity set code='"+newAppCode+"' where code='"+appCode+"'");
 	    			resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/"+encodedsql,
 	    					serviceToken.getToken());
 
