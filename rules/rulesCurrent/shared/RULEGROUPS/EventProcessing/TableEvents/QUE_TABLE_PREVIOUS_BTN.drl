@@ -26,11 +26,12 @@ rule "QUE_TABLE_PREVIOUS_BTN"
 		serviceToken : GennyToken( code == "PER_SERVICE") 
 		output : OutputParam( )
 		ruleDetails : RuleDetails()
+		beUtils : BaseEntityUtils()
 	then
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing Answer/Data : " + $message );
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Parent code :  " + $message.getData().getParentCode());
 		
-		BaseEntityUtils beUtils = new BaseEntityUtils(userToken); 
+		/* BaseEntityUtils beUtils = new BaseEntityUtils(userToken); */
 		Boolean cache = true;
 		
 		/* get current search */
