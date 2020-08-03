@@ -12,9 +12,9 @@ import life.genny.qwandautils.JsonUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-rule "EDIT_FORM_CLICK_EVENT"
+rule "EDIT_FORM_CLICK_EVENT_DROPDOWN"
     ruleflow-group 'EventProcessing'
-		salience 2
+		salience 1
     no-loop true
     when
 		$message : QEventMessage(data.code matches "QUE_EDIT_.*")
@@ -23,7 +23,6 @@ rule "EDIT_FORM_CLICK_EVENT"
 		output : OutputParam( )
 		ruleDetails : RuleDetails()
     then
-		System.out.println("Processing EDIT FORM CLICK EVENT : " + $message );
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 
@@ -41,6 +40,9 @@ rule "EDIT_FORM_CLICK_EVENT"
 				
 				String industryCode = be.getValue("LNK_INDUSTRY", null);
 				industryCode = industryCode.replace("\"", "").replace("[", "").replace("]", "");
+
+				String hostCompanyCode = be.getValue("LNK_HOST_COMPANY", null);
+				hostCompanyCode = hostCompanyCode.replace("\"", "").replace("[", "").replace("]", "");
 				
 				/* if be has LNK_INDUSTRY attr, we send  LNK_OCCUPATION */
 				if(industryCode != null){
@@ -58,28 +60,42 @@ rule "EDIT_FORM_CLICK_EVENT"
 
 					/* Send the dropdown options */
 					dropdown.sendSearchResults("GRP_OCCUPATION_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
+
+				}
+
+					/* if be has LNK_INDUSTRY attr, we send  LNK_OCCUPATION */
+				if(hostCompanyCode != null){
+
+					System.out.println("hostCompanyCode   ::   " + hostCompanyCode);
+				
+					/* dropdown search here For internship */
+					DropdownUtils dropdownInternship = new DropdownUtils(serviceToken);
+					
+					dropdownInternship.setNewSearch("Internship Dropdown", "Fetch Internship Dropdown Items")
+														.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%")
+														.addFilter("LNK_HOST_COMPANY", SearchEntity.StringFilter.EQUAL, hostCompanyCode)
+														.setPageStart(0)
+														.setPageSize(1000);
+					
+					/* Send the dropdown options */
+					dropdownInternship.sendSearchResults("GRP_INTERNSHIP_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
+
+					/* dropdown search here For companyRep */
+					DropdownUtils dropdownHcReps = new DropdownUtils(serviceToken);
+					
+					dropdownHcReps.setNewSearch("HCR Dropdown", "Fetch HCR Dropdown Items")
+														.addFilter("PRI_IS_HOST_CPY_REP", true)
+														.setSourceCode(hostCompanyCode)
+														.setPageStart(0)
+														.setPageSize(1000);
+
+					/* Send the dropdown options */
+					dropdownHcReps.sendSearchResults("GRP_HOST_COMPANY_REP_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
+
 				}
 			}
 		}
-		
-		String code = $message.getData().getCode(); /* get click event code e.g. QUE_EDIT_EDU_PROVIDER_GRP  */
-		String workflowSignalCode = "EDIT_FORMS";
-		
-		String typeOf = StringUtils.removeEnd(code, "_GRP");
-		typeOf = StringUtils.removeStart(typeOf,"QUE_EDIT_");
-
-		output.setTypeOfResult("SIGNAL");
-		output.setResultCode("START_"+workflowSignalCode);
-		output.setTargetCode($message.getData().getTargetCode());
-		output.setSuitCase(typeOf);
-		
-		
-		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$ targetCode: " + output.getTargetCode());
-		
-		SessionFacts facts = new SessionFacts(serviceToken, userToken, output.getTargetCode());
-		
-		System.out.println("START SIGNAL: " +workflowSignalCode);
-		System.out.println("STARTING EDIT FORMS PROCEDURE WITH: " +output);
-	
-		/* retract( $message); */
+		output.setTypeOfResult("NONE");
+		output.setResultCode("NONE"); 
+		retract( $message);
 	end
