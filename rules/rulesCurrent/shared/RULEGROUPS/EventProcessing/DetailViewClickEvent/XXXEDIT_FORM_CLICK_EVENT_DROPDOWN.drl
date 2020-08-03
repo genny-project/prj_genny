@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 rule "EDIT_FORM_CLICK_EVENT_DROPDOWN"
-    ruleflow-group 'EventProcessing'
+    /* r */uleflow-group 'EventProcessing'
 		salience 1
     no-loop true
     when

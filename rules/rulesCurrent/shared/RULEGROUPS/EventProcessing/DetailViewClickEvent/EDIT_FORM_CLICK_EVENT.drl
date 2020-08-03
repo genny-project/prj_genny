@@ -26,6 +26,25 @@ rule "EDIT_FORM_CLICK_EVENT"
 		System.out.println("Processing EDIT FORM CLICK EVENT : " + $message );
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+		
+		String code = $message.getData().getCode(); /* get click event code e.g. QUE_EDIT_EDU_PROVIDER_GRP  */
+		String workflowSignalCode = "EDIT_FORMS";
+		
+		String typeOf = StringUtils.removeEnd(code, "_GRP");
+		typeOf = StringUtils.removeStart(typeOf,"QUE_EDIT_");
+
+		output.setTypeOfResult("SIGNAL");
+		output.setResultCode("START_"+workflowSignalCode);
+		output.setTargetCode($message.getData().getTargetCode());
+		output.setSuitCase(typeOf);
+		
+		
+		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$ targetCode: " + output.getTargetCode());
+		
+		SessionFacts facts = new SessionFacts(serviceToken, userToken, output.getTargetCode());
+		
+		System.out.println("START SIGNAL: " +workflowSignalCode);
+		System.out.println("STARTING EDIT FORMS PROCEDURE WITH: " +output);
 
 		String targetCode = $message.getData().getTargetCode();
 
@@ -61,25 +80,6 @@ rule "EDIT_FORM_CLICK_EVENT"
 				}
 			}
 		}
-		
-		String code = $message.getData().getCode(); /* get click event code e.g. QUE_EDIT_EDU_PROVIDER_GRP  */
-		String workflowSignalCode = "EDIT_FORMS";
-		
-		String typeOf = StringUtils.removeEnd(code, "_GRP");
-		typeOf = StringUtils.removeStart(typeOf,"QUE_EDIT_");
-
-		output.setTypeOfResult("SIGNAL");
-		output.setResultCode("START_"+workflowSignalCode);
-		output.setTargetCode($message.getData().getTargetCode());
-		output.setSuitCase(typeOf);
-		
-		
-		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$ targetCode: " + output.getTargetCode());
-		
-		SessionFacts facts = new SessionFacts(serviceToken, userToken, output.getTargetCode());
-		
-		System.out.println("START SIGNAL: " +workflowSignalCode);
-		System.out.println("STARTING EDIT FORMS PROCEDURE WITH: " +output);
 	
-		/* retract( $message); */
+		retract( $message);
 	end
