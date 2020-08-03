@@ -78,6 +78,27 @@ rule "EDIT_FORM_CLICK_EVENT"
 					/* Send the dropdown options */
 					dropdown.sendSearchResults("GRP_OCCUPATION_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
 				}
+
+				String hostCompanyCode = be.getValue("LNK_HOST_COMPANY", null);
+
+				if(hostCompanyCode != null){
+
+					hostCompanyCode = hostCompanyCode.replace("\"", "").replace("[", "").replace("]", "");
+					System.out.println("hostCompanyCode   ::   " + hostCompanyCode);
+
+					/* dropdown search here For companyRep */
+					DropdownUtils dropdownHcReps = new DropdownUtils(serviceToken);
+					
+					dropdownHcReps.setNewSearch("HCR Dropdown", "Fetch HCR Dropdown Items")
+														.addFilter("PRI_IS_HOST_CPY_REP", true)
+														.setSourceCode(hostCompanyCode)
+														.setPageStart(0)
+														.setPageSize(1000);
+
+					/* Send the dropdown options */
+					dropdownHcReps.sendSearchResults("GRP_HOST_COMPANY_REP_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
+
+				}
 			}
 		}
 	
