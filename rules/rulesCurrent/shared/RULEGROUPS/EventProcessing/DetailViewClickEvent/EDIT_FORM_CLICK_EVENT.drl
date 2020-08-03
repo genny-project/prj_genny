@@ -33,7 +33,7 @@ rule "EDIT_FORM_CLICK_EVENT"
 			if yes send the occupation selection with  LNK_INDUSTRY as sourceCode
 		*/
 
-		String targetCode = data.getTargetCode();
+		String targetCode = $message.getData().getCode();
 
 		if(targetCode != null ){
 
