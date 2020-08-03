@@ -46,6 +46,7 @@ rule "EDIT_FORM_CLICK_EVENT"
 				System.out.println("be   ::   " + be.getCode());
 				
 				String industryCode = be.getValue("LNK_INDUSTRY", null);
+				industryCode = industryCode.replace("\"", "").replace("[", "").replace("]", "");
 				
 				if(industryCode != null){
 
