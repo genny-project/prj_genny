@@ -23,7 +23,7 @@ rule "SEND_BUCKET_CODES"
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
-		allowed:Allowed()
+		/* allowed:Allowed() */
 
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
@@ -32,7 +32,7 @@ rule "SEND_BUCKET_CODES"
   
 		String sessionCode= beUtils.getGennyToken().getSessionCode().toUpperCase();
 		System.out.println("sessionCode   ::   " + sessionCode);
-		System.out.println("allowed   ::   " + allowed);
+		/* System.out.println("allowed   ::   " + allowed); */
 
 		List<String> codes = new ArrayList<String>();
 		if(sessionCode != null){
