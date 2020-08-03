@@ -24,8 +24,46 @@ rule "EDIT_FORM_CLICK_EVENT"
 		ruleDetails : RuleDetails()
     then
 		System.out.println("Processing EDIT FORM CLICK EVENT : " + $message );
-		
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
+
+		/* get the targetcode */
+		/* check if the targetCode has LNK_INDUSTRY  
+			if yes send the occupation selection with  LNK_INDUSTRY as sourceCode
+		*/
+
+		String targetCode = data.getTargetCode();
+
+		if(targetCode != null ){
+
+			System.out.println("targetCode   ::   " + targetCode);
+
+			BaseEntity be = beUtils.getBaseEntityByCode(targetCode);
+			
+			if(be != null){
+
+				System.out.println("be   ::   " + be.getCode());
+				
+				String industryCode = be.getValue("LNK_INDUSTRY", null);
+				
+				if(industryCode != null){
+
+					System.out.println("industryCode   ::   " + industryCode);
+				
+					/* dropdown search here */
+					DropdownUtils dropdown = new DropdownUtils(serviceToken);
+					
+					dropdown.setNewSearch("Dropdown", "Fetch Dropdown Items")
+									.addColumn("PRI_NAME","Name")
+									.setSourceCode(industryCode)
+									.setPageStart(0)
+									.setPageSize(1000);
+
+					/* Send the dropdown options */
+					dropdown.sendSearchResults("GRP_OCCUPATION_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
+
+				}
+			}
+		}
 		
 		String code = $message.getData().getCode(); /* get click event code e.g. QUE_EDIT_EDU_PROVIDER_GRP  */
 		String workflowSignalCode = "EDIT_FORMS";
