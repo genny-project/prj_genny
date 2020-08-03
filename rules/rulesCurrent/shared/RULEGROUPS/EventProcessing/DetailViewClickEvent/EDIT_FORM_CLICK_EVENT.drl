@@ -58,15 +58,14 @@ rule "EDIT_FORM_CLICK_EVENT"
 
 				System.out.println("be   ::   " + be.getCode());
 				
-				String industryCode = be.getValue("LNK_INDUSTRY", null);
-				
 				/* if be has LNK_INDUSTRY attr, we send  LNK_OCCUPATION */
+				String industryCode = be.getValue("LNK_INDUSTRY", null);
 				if(industryCode != null){
 
 					industryCode = industryCode.replace("\"", "").replace("[", "").replace("]", "");
 					System.out.println("industryCode   ::   " + industryCode);
 				
-					/* dropdown search here */
+					/* dropdown search for occupations */
 					DropdownUtils dropdown = new DropdownUtils(serviceToken);
 					
 					dropdown.setNewSearch("Dropdown", "Fetch Dropdown Items")
@@ -79,14 +78,14 @@ rule "EDIT_FORM_CLICK_EVENT"
 					dropdown.sendSearchResults("GRP_OCCUPATION_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
 				}
 
+				/* if be has LNK_HOST_COMPANY attr, we send  LNK_HOST_COMPANY_REP */
 				String hostCompanyCode = be.getValue("LNK_HOST_COMPANY", null);
-
 				if(hostCompanyCode != null){
 
 					hostCompanyCode = hostCompanyCode.replace("\"", "").replace("[", "").replace("]", "");
 					System.out.println("hostCompanyCode   ::   " + hostCompanyCode);
 
-					/* dropdown search here For companyRep */
+					/* dropdown search for companyRep */
 					DropdownUtils dropdownHcReps = new DropdownUtils(serviceToken);
 					
 					dropdownHcReps.setNewSearch("HCR Dropdown", "Fetch HCR Dropdown Items")
