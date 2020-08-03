@@ -15,7 +15,7 @@ import java.util.List;
 rule "EDIT_FORM_CLICK_EVENT"
     ruleflow-group 'EventProcessing'
 		salience 2
-    no-loop
+    no-loop true
     when
 		$message : QEventMessage(data.code matches "QUE_EDIT_.*")
 		userToken : GennyToken (code != "PER_SERVICE" )
@@ -24,8 +24,8 @@ rule "EDIT_FORM_CLICK_EVENT"
 		ruleDetails : RuleDetails()
     then
 		System.out.println("Processing EDIT FORM CLICK EVENT : " + $message );
-		
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 		
 		String code = $message.getData().getCode(); /* get click event code e.g. QUE_EDIT_EDU_PROVIDER_GRP  */
 		String workflowSignalCode = "EDIT_FORMS";
@@ -45,6 +45,61 @@ rule "EDIT_FORM_CLICK_EVENT"
 		
 		System.out.println("START SIGNAL: " +workflowSignalCode);
 		System.out.println("STARTING EDIT FORMS PROCEDURE WITH: " +output);
+
+		String targetCode = $message.getData().getTargetCode();
+
+		if(targetCode != null ){
+
+			System.out.println("targetCode   ::   " + targetCode);
+
+			BaseEntity be = beUtils.getBaseEntityByCode(targetCode);
+			
+			if(be != null){
+
+				System.out.println("be   ::   " + be.getCode());
+				
+				/* if be has LNK_INDUSTRY attr, we send  LNK_OCCUPATION */
+				String industryCode = be.getValue("LNK_INDUSTRY", null);
+				if(industryCode != null){
+
+					industryCode = industryCode.replace("\"", "").replace("[", "").replace("]", "");
+					System.out.println("industryCode   ::   " + industryCode);
+				
+					/* dropdown search for occupations */
+					DropdownUtils dropdown = new DropdownUtils(serviceToken);
+					
+					dropdown.setNewSearch("Dropdown", "Fetch Dropdown Items")
+									.addColumn("PRI_NAME","Name")
+									.setSourceCode(industryCode)
+									.setPageStart(0)
+									.setPageSize(1000);
+
+					/* Send the dropdown options */
+					dropdown.sendSearchResults("GRP_OCCUPATION_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
+				}
+
+				/* if be has LNK_HOST_COMPANY attr, we send  LNK_HOST_COMPANY_REP */
+				String hostCompanyCode = be.getValue("LNK_HOST_COMPANY", null);
+				if(hostCompanyCode != null){
+
+					hostCompanyCode = hostCompanyCode.replace("\"", "").replace("[", "").replace("]", "");
+					System.out.println("hostCompanyCode   ::   " + hostCompanyCode);
+
+					/* dropdown search for companyRep */
+					DropdownUtils dropdownHcReps = new DropdownUtils(serviceToken);
+					
+					dropdownHcReps.setNewSearch("HCR Dropdown", "Fetch HCR Dropdown Items")
+														.addFilter("PRI_IS_HOST_CPY_REP", true)
+														.setSourceCode(hostCompanyCode)
+														.setPageStart(0)
+														.setPageSize(1000);
+
+					/* Send the dropdown options */
+					dropdownHcReps.sendSearchResults("GRP_HOST_COMPANY_REP_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
+
+				}
+			}
+		}
 	
 		retract( $message);
 	end
