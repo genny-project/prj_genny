@@ -25,6 +25,8 @@ rule "EDIT_FORM_CLICK_EVENT"
     then
 		System.out.println("Processing EDIT FORM CLICK EVENT : " + $message );
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+
 
 		/* get the targetcode */
 		/* check if the targetCode has LNK_INDUSTRY  
