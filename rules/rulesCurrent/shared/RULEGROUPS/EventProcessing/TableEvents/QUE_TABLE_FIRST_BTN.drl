@@ -67,12 +67,12 @@ rule "QUE_TABLE_FIRST_BTN"
 			System.out.println(e.getLocalizedMessage());
 			numRecords = 1000;
 		}
-		pageIndex = pageIndex + pageSize;
-		System.out.println(ruleDetails+" "+drools.getRule().getName()+" NEXT for "+searchBE.getCode()+" pageIndex="+pageIndex+", pageSize="+pageSize+", numRecords="+numRecords); 
+
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" FIRST for "+searchBE.getCode()+" pageIndex="+pageIndex+", pageSize="+pageSize+", numRecords="+numRecords); 
 		if ((pageIndex <= numRecords)||(numRecords < 0)) { /* handle hack for numRecords=-1 */
 			Integer pageNumber = (pageIndex / pageSize) +1;
 		
-			System.out.println(ruleDetails+" "+drools.getRule().getName()+" NEXT for "+searchBE.getCode()+" NEW PageNumber is "+pageNumber); 
+			System.out.println(ruleDetails+" "+drools.getRule().getName()+" FIRST for "+searchBE.getCode()+" NEW PageNumber is "+pageNumber); 
 			Answer pageAnswer = new Answer(userToken.getUserCode(),searchBE.getCode(), "SCH_PAGE_START", pageIndex+"");
 			Answer pageNumberAnswer = new Answer(userToken.getUserCode(),searchBE.getCode(), "PRI_INDEX", pageNumber+"");
 
@@ -83,7 +83,7 @@ rule "QUE_TABLE_FIRST_BTN"
 				beUtils.getGennyToken().getToken());
 			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "LAST-SEARCH", userToken.getSessionCode(), searchBE,
 				userToken.getToken());
-			System.out.println(ruleDetails+" "+drools.getRule().getName()+" NEXT for "+searchBE.getCode()+" About to go into search! "); 
+			System.out.println(ruleDetails+" "+drools.getRule().getName()+" FIRST for "+searchBE.getCode()+" About to go into search! "); 
 		
 			long totalTime = TableUtils.searchTable(beUtils,searchBE, cache);
 

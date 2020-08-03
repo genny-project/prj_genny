@@ -72,8 +72,7 @@ rule "QUE_TABLE_LAST_BTN"
 			System.out.println(e.getLocalizedMessage());
 			numRecords = 1000;
 		}
-		pageIndex = pageIndex + pageSize;
-		System.out.println(ruleDetails+" "+drools.getRule().getName()+" NEXT for "+searchBE.getCode()+" pageIndex="+pageIndex+", pageSize="+pageSize+", numRecords="+numRecords); 
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" LAST for "+searchBE.getCode()+" pageIndex="+pageIndex+", pageSize="+pageSize+", numRecords="+numRecords); 
 		if ((pageIndex <= numRecords)||(numRecords < 0)) { /* handle hack for numRecords=-1 */
 			Integer pageNumber = (pageIndex / pageSize) +1;
 		
@@ -88,7 +87,7 @@ rule "QUE_TABLE_LAST_BTN"
 				beUtils.getGennyToken().getToken());
 			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "LAST-SEARCH", userToken.getSessionCode(), searchBE,
 				userToken.getToken());
-			System.out.println(ruleDetails+" "+drools.getRule().getName()+" NEXT for "+searchBE.getCode()+" About to go into search! "); 
+			System.out.println(ruleDetails+" "+drools.getRule().getName()+" LAST  for "+searchBE.getCode()+" About to go into search! "); 
 		
 			long totalTime = TableUtils.searchTable(beUtils,searchBE, cache);
 
