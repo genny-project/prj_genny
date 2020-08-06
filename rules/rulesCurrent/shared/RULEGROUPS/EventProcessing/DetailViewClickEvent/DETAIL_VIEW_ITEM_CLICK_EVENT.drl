@@ -26,14 +26,15 @@ rule "DETAIL_VIEW_ITEM_CLICK_EVENT"
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
+		beUtils : BaseEntityUtils()
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
 		
 		String targetCode = $message.getData().getTargetCode();
 		System.out.println("TARGET code ::  " + targetCode);
 
-		BaseEntity baseEntity = new BaseEntityUtils(userToken).getBaseEntityByCode(targetCode);
-		
+		BaseEntity baseEntity = beUtils.getFilteredBaseEntityByCode(targetCode,$message.getData().getCode());
+		System.out.println("Got BE");
 		if(baseEntity!= null){
 			QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
 			msg.setToken(userToken.getToken());
@@ -43,7 +44,6 @@ rule "DETAIL_VIEW_ITEM_CLICK_EVENT"
 		}
 
 		/* Send end process message */
-		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 
 		QCmdMessage msg = new QCmdMessage("END_PROCESS", "END_PROCESS");
 		msg.setToken(beUtils.getGennyToken().getToken());
