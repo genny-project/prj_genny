@@ -56,4 +56,6 @@ rule "SEND_BUCKET_CODES"
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
+		retract(allowed); 
+
 end
