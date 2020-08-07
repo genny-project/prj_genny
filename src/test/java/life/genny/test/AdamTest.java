@@ -13,6 +13,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -82,6 +83,7 @@ import org.kie.api.task.model.User;
 import org.kie.internal.runtime.StatefulKnowledgeSession;
 import org.kie.internal.task.api.TaskModelProvider;
 import org.kie.internal.task.api.model.InternalComment;
+import org.mindrot.jbcrypt.BCrypt;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -184,7 +186,49 @@ public class AdamTest {
 	protected static GennyToken serviceToken;
 
 	
-	
+	@Test
+	public void myInterviewTest()
+	{
+		String code = "P 2e69c4fd-cfa8-42be-a654-0e0891de157a";
+		
+		System.out.println("Search cache test");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+		} else {
+			// VertxUtils.cachedEnabled = false;
+			VertxUtils.cachedEnabled = false;
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+			eventBusMock = new EventBusMock();
+			vertxCache = new JunitCache(); // MockCache
+			VertxUtils.init(eventBusMock, vertxCache);
+		}
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		beUtils.setServiceToken(serviceToken);
+		
+		BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+userToken.getRealm().toUpperCase());
+		String apiKey = project.getValueAsString("ENV_API_KEY_MY_INTERVIEW");
+		String secretToken = project.getValueAsString("ENV_SECRET_MY_INTERVIEW");
+		long unixTimestamp = Instant.now().getEpochSecond();
+		String apiSecret = apiKey + secretToken + unixTimestamp;
+		String hashed = BCrypt.hashpw(apiSecret, BCrypt.gensalt(10));
+		String url = "https://api.myinterview.com/2.21.2/getVideo?apiKey="+apiKey+"&hashTimestamp="+unixTimestamp+"&hash="+hashed;
+		System.out.println(url);
+		
+	}
 	
 	//@Test
 	public void keycloakUserFix()
