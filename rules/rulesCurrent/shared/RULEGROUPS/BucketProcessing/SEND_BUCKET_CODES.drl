@@ -23,7 +23,11 @@ rule "SEND_BUCKET_CODES"
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
-		allowed:Allowed()
+		allowed: Allowed(	code == "AGENT" ||
+											code == "INTERN" ||
+											code == "EDU_PRO_REP" ||
+											code == "HOST_CPY_REP" )
+
 
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
