@@ -225,8 +225,10 @@ public class AdamTest {
 		long unixTimestamp = Instant.now().getEpochSecond();
 		String apiSecret = apiKey + secretToken + unixTimestamp;
 		String hashed = BCrypt.hashpw(apiSecret, BCrypt.gensalt(10));
-		String url = "https://api.myinterview.com/2.21.2/getVideo?apiKey="+apiKey+"&hashTimestamp="+unixTimestamp+"&hash="+hashed;
+		String url = "https://api.myinterview.com/2.21.2/getVideo?apiKey="+apiKey+"&hashTimestamp="+unixTimestamp+"&hash="+hashed+"&video=2e69c4fd-cfa8-42be-a654-0e0891de157a";
+		String url2 = "https://embed.myinterview.com/player.v3.html?apiKey="+apiKey+"&hashTimestamp="+unixTimestamp+"&hash="+hashed+"&video=2e69c4fd-cfa8-42be-a654-0e0891de157a&autoplay=1&fs=0";
 		System.out.println(url);
+		System.out.println(url2);
 		
 	}
 	
