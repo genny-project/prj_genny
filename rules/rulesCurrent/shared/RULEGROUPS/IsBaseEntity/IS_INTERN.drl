@@ -144,15 +144,18 @@ rule "IS_INTERN"
 
 
 		/*String endPoint = GennySettings.bridgeUrl + "/v7/notes";*/
-		String endPoint =  "https://internmatch-chris1.gada.io/v7/notes";
-		String endPoint2 = "https://internmatch-cyrus.gada.io/v7/notes";
+		String endPoint = "https://internmatch-cyrus.gada.io/v7/notes/PER_USER1";
 		
-		System.out.println("Note endPoint: " +endPoint);
 		String tag = "ni";
+		String hardCodedUser = "PER_USER1";
 		
-		QwandaUtils.apiPostNote(endPoint2, userToken.getUserCode(), tag, newBe.getCode(), "Added an Intern: " + firstname + ". [" + newBe.getCode() + "]", serviceToken.getToken());
+		QwandaUtils.apiPostNote(endPoint, hardCodedUser, tag, hardCodedUser, "Added an Intern: " + firstname + ". [" + newBe.getCode() + "]", serviceToken.getToken());
 		
 		System.out.println("I just posted the note");
+		System.out.println("Note endPoint: " +endPoint);
+		System.out.println("Note hardCodedUser: " +hardCodedUser);
+		System.out.println("Note newBe.getCode(): " +newBe.getCode());
+
 		
 		
 		output.setTypeOfResult("NONE");
