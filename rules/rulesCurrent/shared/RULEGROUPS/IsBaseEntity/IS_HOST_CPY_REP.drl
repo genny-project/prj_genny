@@ -63,7 +63,7 @@ rule "IS_HOST_CPY_REP"
 		
 	
 		/*String endPoint = GennySettings.bridgeUrl + "/v7/notes";*/
-		String endPoint = "https://internmatch-cyrus.gada.io/v7/notes/" +userToken.getUserCode();
+		String endPoint = "https://internmatch-cyrus.gada.io/v7/notes";
 		
 		String tag = "ni";
 
