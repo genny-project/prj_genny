@@ -27,7 +27,7 @@ import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 
 rule "PRI_SEARCH_TEXT"
     ruleflow-group 'DataProcessing'
-        salience 500
+        salience 450
     when
       beUtils : BaseEntityUtils()
 	  serviceToken : GennyToken( code == "PER_SERVICE")
