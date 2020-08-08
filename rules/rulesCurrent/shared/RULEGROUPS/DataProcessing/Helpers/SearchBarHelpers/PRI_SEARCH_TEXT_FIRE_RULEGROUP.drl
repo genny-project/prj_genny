@@ -56,12 +56,16 @@ rule "PRI_SEARCH_TEXT_FIRE_RULEGROUP"
 					
 	
 					System.out.println("Running RuleGroup to "+rulegroup);
+					output.setTypeOfResult("SIGNAL");
+					output.setSuitCase(rulegroup);
+					output.setTargetCode(rulegroup);
+					output.setResultCode("runRules");
 					
 					
 					
-				} 
-		output.setTypeOfResult("NO_PROCESSING");
-  	    output.setResultCode("NONE");  /* dont display anything new */
-		
+				} else {
+					output.setTypeOfResult("NO_PROCESSING");
+  	    			output.setResultCode("NONE");  /* dont display anything new */
+		}
 		
 end
