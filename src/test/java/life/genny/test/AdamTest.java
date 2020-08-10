@@ -185,8 +185,102 @@ public class AdamTest {
 	protected static GennyToken newUserToken;
 	protected static GennyToken serviceToken;
 
-	
 	@Test
+	public void internImagesFix()
+	{
+		System.out.println("Intern Images test");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+		} else {
+			// VertxUtils.cachedEnabled = false;
+			VertxUtils.cachedEnabled = false;
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+			eventBusMock = new EventBusMock();
+			vertxCache = new JunitCache(); // MockCache
+			VertxUtils.init(eventBusMock, vertxCache);
+		}
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		beUtils.setServiceToken(serviceToken);
+
+		SearchEntity searchBE = new SearchEntity("SBE_TEST", "interns")
+				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
+				.addFilter("PRI_IS_INTERN", true)
+				.addColumn("PRI_CODE", "Name");
+
+		searchBE.setRealm(realm);
+		searchBE.setPageStart(0);
+		searchBE.setPageSize(100000);
+
+		List<BaseEntity> interns = beUtils.getBaseEntitys(searchBE);
+
+		
+		Map<String,BaseEntity> internMap = new HashMap<String,BaseEntity>();
+		
+		for (BaseEntity intern : interns) {
+			internMap.put(intern.getCode(), intern);
+		}
+		
+		searchBE = new SearchEntity("SBE_TEST", "apps")
+				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+				.addColumn("PRI_CODE", "Name");
+
+		searchBE.setRealm(realm);
+		searchBE.setPageStart(0);
+		searchBE.setPageSize(100000);
+
+		List<BaseEntity> apps = beUtils.getBaseEntitys(searchBE);
+	    
+		for (BaseEntity app : apps) {
+			// Find their app
+			String internCode = app.getValue("PRI_INTERN_CODE", null);
+			if (internCode == null) {
+				System.out.println("NO INTERN CODE");
+				continue;
+			} 
+			
+			BaseEntity intern = internMap.get(internCode);
+			if (intern == null) {
+				System.out.println("NO INTERN EXISTS FOR "+internCode);
+				continue;
+			}
+			
+			String imageUrl = intern.getValue("PRI_USER_PROFILE_PICTURE", null);
+			if (imageUrl == null) {
+				continue;
+			}
+			try {
+				app.setValue("PRI_USER_PROFILE_PICTURE", imageUrl);
+				beUtils.saveAnswer(new Answer(userToken.getUserCode(), app.getCode(), "PRI_USER_PROFILE_PICTURE", imageUrl,false,true));
+				System.out.println("Updated App Image for "+intern.getName());
+			} catch (BadDataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+	    
+	}
+	
+	
+	
+	//@Test
 	public void myInterviewTest()
 	{
 		String code = "P 2e69c4fd-cfa8-42be-a654-0e0891de157a";
@@ -439,7 +533,7 @@ public class AdamTest {
 		long starttime = System.currentTimeMillis();
 		long endtime = 0;
 
-		Tuple2<String,List<String>> results =  TableUtils.getHql(userToken,searchBE );	//	hql += " order by " + sortCode + " " + sortValue;
+		Tuple2<String,List<String>> results =  beUtils.getHql(searchBE );	//	hql += " order by " + sortCode + " " + sortValue;
 		String hql = results._1;
 		String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
 		try {
@@ -513,7 +607,7 @@ public class AdamTest {
 		Integer pageSize = searchBE.getValue("SCH_PAGE_SIZE", GennySettings.defaultPageSize);
 
 		List<String> attributeFilter = new ArrayList<String>();
-		Tuple2<String,List<String>> results =  TableUtils.getHql(userToken,searchBE );	//	hql += " order by " + sortCode + " " + sortValue;
+		Tuple2<String,List<String>> results =  beUtils.getHql(searchBE );	//	hql += " order by " + sortCode + " " + sortValue;
 //hql = "select distinct ea.baseEntityCode from EntityAttribute ea , EntityAttribute eb , EntityAttribute ec  where ea.baseEntityCode=eb.baseEntityCode  and (ea.baseEntityCode like 'CPY_%'   or ea.baseEntityCode like 'null')   and eb.attributeCode = 'PRI_STATUS' and  eb.valueString = 'ACTIVE' and ea.baseEntityCode=ec.baseEntityCode  and ec.attributeCode = 'PRI_IS_EDU_PROVIDER' and  ec.valueBoolean = true order by PRI_NAME ASC";
 //hql =  select distinct ea.baseEntityCode from EntityAttribute ea , EntityAttribute eb , EntityAttribute ec  where ea.baseEntityCode=eb.baseEntityCode  and (ea.baseEntityCode like 'CPY_%'   or ea.baseEntityCode like 'null')   and eb.attributeCode = 'PRI_STATUS' and  eb.valueString = 'ACTIVE' and ea.baseEntityCode=ec.baseEntityCode  and ec.attributeCode = 'PRI_IS_EDU_PROVIDER' and  ec.valueBoolean = true
 		String hql = results._1;
