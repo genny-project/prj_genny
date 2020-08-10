@@ -262,6 +262,11 @@ public class AdamTest {
 				continue;
 			}
 			
+			
+			String eduProvCode= intern.getValue("LNK_EDU_PROVIDER", null);
+			//TODO FIX - LNK should have [] not PRI
+			beUtils.saveAnswer(new Answer(userToken.getUserCode(), app.getCode(), "PRI_EDU_PROVIDER_CODE", eduProvCode,false,true));
+			
 			String imageUrl = intern.getValue("PRI_USER_PROFILE_PICTURE", null);
 			if (imageUrl == null) {
 				continue;
