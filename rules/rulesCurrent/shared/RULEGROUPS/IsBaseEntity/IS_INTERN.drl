@@ -158,7 +158,8 @@ rule "IS_INTERN"
 		System.out.println("Note newBe.getCode(): " +newBe.getCode());
 
 	
-		String user_email = user.getValue("PRI_EMAIL",null);
+		/*String user_email = user.getValue("PRI_EMAIL",null);*/
+		String user_email = "support@internmatch.io";
 		String subject = "You have been registered on InternMatch";
 		String template_id = "d-94f647d38d7745a1b925300df2208279";
 		String hardcodedTemplateData1 = "intern";
