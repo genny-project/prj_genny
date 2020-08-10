@@ -247,6 +247,9 @@ public class AdamTest {
 		List<BaseEntity> apps = beUtils.getBaseEntitys(searchBE);
 	    
 		for (BaseEntity app : apps) {
+			if ("APP_L_DOT_WANNIARACHCHIGE_AT_CQUMAIL_DOT_COM".equals(app.getCode())) {
+				System.out.println("Detected APP_L_DOT_WANNIARACHCHIGE_AT_CQUMAIL_DOT_COM");
+			}
 			// Find their app
 			String internCode = app.getValue("PRI_INTERN_CODE", null);
 			if (internCode == null) {
@@ -284,7 +287,7 @@ public class AdamTest {
 			
 		}
 		
-	    
+	    System.out.println("Finished");
 	}
 	
 	

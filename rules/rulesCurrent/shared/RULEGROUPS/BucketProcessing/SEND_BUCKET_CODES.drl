@@ -23,7 +23,11 @@ rule "SEND_BUCKET_CODES"
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
-		/* allowed:Allowed() */
+		allowed: Allowed(	code == "AGENT" ||
+											code == "INTERN" ||
+											code == "EDU_PRO_REP" ||
+											code == "HOST_CPY_REP" )
+
 
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
@@ -32,13 +36,13 @@ rule "SEND_BUCKET_CODES"
   
 		String sessionCode= beUtils.getGennyToken().getSessionCode().toUpperCase();
 		System.out.println("sessionCode   ::   " + sessionCode);
-		/* System.out.println("allowed   ::   " + allowed); */
+		System.out.println("allowed   ::   " + allowed);
 
 		List<String> codes = new ArrayList<String>();
 		if(sessionCode != null){
-			/* if(allowed.code.equals("AGENT")){ */
-			codes.add("SBE_AVAILABLE_INTERNS_"+sessionCode);
-			/* } */
+			if(allowed.code.equals("AGENT") || allowed.code.equals("EDU_PRO_REP")){
+				codes.add("SBE_AVAILABLE_INTERNS_"+sessionCode);
+			}
 			codes.add("SBE_APPLIED_APPLICATIONS_"+sessionCode);
 			codes.add("SBE_SHORTLISTED_APPLICATIONS_"+sessionCode);
 			codes.add("SBE_INTERVIEWED_APPLICATIONS_"+sessionCode);
@@ -56,4 +60,6 @@ rule "SEND_BUCKET_CODES"
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
+		retract(allowed); 
+
 end
