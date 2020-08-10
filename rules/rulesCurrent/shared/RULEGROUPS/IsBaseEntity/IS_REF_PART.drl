@@ -37,14 +37,20 @@ rule "IS_REF_PART"
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
 		String name = user.getValue("PRI_NAME",null);
 	
-		/*String endPoint = GennySettings.bridgeUrl + "/v7/notes";*/
-		String endPoint =  "https://internmatch-chris1.gada.io/v7/notes";
+	
+		String endPoint = GennySettings.bridgeUrl + "/v7/notes";
+		/*String endPoint = "https://internmatch-cyrus.gada.io/v7/notes";*/
 		
-		System.out.println("Note endPoint: " +endPoint);
 		String tag = "ni";
 		
-		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), tag, newBe.getCode(), "Added a Referral Partner : " + name + ". [" + newBe.getCode() + "]", serviceToken.getToken());
+		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), tag, userToken.getUserCode(), "Added a Referral Partner : " + name + ". [" + newBe.getCode() + "]", serviceToken.getToken());
+		
 		System.out.println("I just posted the note");
+		System.out.println("Note endPoint: " +endPoint);
+		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
+		System.out.println("Note newBe.getCode(): " +newBe.getCode());
+	
+	
 		
 		output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */
