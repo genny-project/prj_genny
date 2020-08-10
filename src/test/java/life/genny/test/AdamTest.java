@@ -252,7 +252,7 @@ public class AdamTest {
 			if (internCode == null) {
 				System.out.println("NO INTERN CODE ATTRIBUTE");
 				internCode = "PER_"+app.getCode().substring("APP_".length());
-				
+				beUtils.saveAnswer(new Answer(userToken.getUserCode(), app.getCode(), "PRI_INTERN_CODE", internCode,false,true));
 				//continue;
 			} 
 			
