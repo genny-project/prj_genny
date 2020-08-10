@@ -6,6 +6,7 @@ import life.genny.utils.BaseEntityUtils;
 import life.genny.qwanda.Answer;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.utils.OutputParam;
+import life.genny.qwandautils.GennySettings;
 
 import java.util.List;
 import java.util.ArrayList;
