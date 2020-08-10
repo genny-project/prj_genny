@@ -45,7 +45,7 @@ rule "IS_EDU_PROVIDER"
 		
 		String tag = "ni";
 		
-		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), tag, userToken.getUserCode(), "Created an Education Provider: " + name + ". [" + newBe.getCode() + "]", serviceToken.getToken());
+		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), tag, userToken.getUserCode(), "Added an Education Provider: " + name, serviceToken.getToken());
 		
 		System.out.println("I just posted the note");
 		System.out.println("Note endPoint: " +endPoint);
