@@ -250,8 +250,10 @@ public class AdamTest {
 			// Find their app
 			String internCode = app.getValue("PRI_INTERN_CODE", null);
 			if (internCode == null) {
-				System.out.println("NO INTERN CODE");
-				continue;
+				System.out.println("NO INTERN CODE ATTRIBUTE");
+				internCode = "PER_"+app.getCode().substring("APP_".length());
+				beUtils.saveAnswer(new Answer(userToken.getUserCode(), app.getCode(), "PRI_INTERN_CODE", internCode,false,true));
+				//continue;
 			} 
 			
 			BaseEntity intern = internMap.get(internCode);
@@ -260,6 +262,11 @@ public class AdamTest {
 				continue;
 			}
 			
+			
+			String eduProvCode= intern.getValue("LNK_EDU_PROVIDER", null);
+			//TODO FIX - LNK should have [] not PRI
+			beUtils.saveAnswer(new Answer(userToken.getUserCode(), app.getCode(), "PRI_EDU_PROVIDER_CODE", eduProvCode,false,true));
+			
 			String imageUrl = intern.getValue("PRI_USER_PROFILE_PICTURE", null);
 			if (imageUrl == null) {
 				continue;
@@ -267,6 +274,8 @@ public class AdamTest {
 			try {
 				app.setValue("PRI_USER_PROFILE_PICTURE", imageUrl);
 				beUtils.saveAnswer(new Answer(userToken.getUserCode(), app.getCode(), "PRI_USER_PROFILE_PICTURE", imageUrl,false,true));
+				beUtils.saveAnswer(new Answer(userToken.getUserCode(), app.getCode(), "PRI_IMAGE_URL", imageUrl,false,true));
+				beUtils.saveAnswer(new Answer(userToken.getUserCode(), intern.getCode(), "PRI_IMAGE_URL", imageUrl,false,true));
 				System.out.println("Updated App Image for "+intern.getName());
 			} catch (BadDataException e) {
 				// TODO Auto-generated catch block
