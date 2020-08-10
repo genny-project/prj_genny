@@ -50,7 +50,7 @@ rule "IS_INTERNSHIP"
 		
 		
 
-		String endPoint = GennySettings.bridgeUrl + "/v7/notes";
+		String endPoint = GennySettings.projectUrl + "/v7/notes";
 		/*String endPoint = "https://internmatch-cyrus.gada.io/v7/notes";*/
 		
 		String tag = "ni";

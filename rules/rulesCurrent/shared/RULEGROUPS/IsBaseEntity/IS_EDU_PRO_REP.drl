@@ -61,7 +61,7 @@ rule "IS_EDU_PRO_REP"
 			}
 		}
 		
-		String endPoint = GennySettings.bridgeUrl + "/v7/notes";
+		String endPoint = GennySettings.projectUrl + "/v7/notes";
 		/*String endPoint = "https://internmatch-cyrus.gada.io/v7/notes";*/
 		
 		String tag = "ni";
