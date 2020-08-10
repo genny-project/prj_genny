@@ -47,6 +47,8 @@ rule "ROL_EDU_PRO_REP"
   	     capabilityUtils.addCapabilityToRole(role,"VIEW_AVAILABLE_INTERNS",CapabilityMode.VIEW);
   	     capabilityUtils.addCapabilityToRole(role,"VIEW_INTERNS",CapabilityMode.VIEW);
   	     capabilityUtils.addCapabilityToRole(role,"VIEW_JOURNAL",CapabilityMode.VIEW);
+
+		capabilityUtils.addCapabilityToRole(role,"DASHBOARD_COUNTS",CapabilityMode.VIEW);
 				 
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
  		 insert(role);
