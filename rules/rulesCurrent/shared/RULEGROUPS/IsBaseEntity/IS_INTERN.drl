@@ -8,6 +8,7 @@ import life.genny.qwanda.entity.BaseEntity;
 import life.genny.utils.OutputParam;
 import life.genny.qwandautils.KeycloakUtils;
 import life.genny.qwandautils.QwandaUtils;
+import life.genny.qwandautils.GennySettings;
 import java.util.UUID;
 
 import java.util.List;
@@ -143,17 +144,16 @@ rule "IS_INTERN"
 		
 
 
-		/*String endPoint = GennySettings.bridgeUrl + "/v7/notes";*/
-		String endPoint = "https://internmatch-cyrus.gada.io/v7/notes";
+		String endPoint = GennySettings.projectUrl + "/v7/notes";
+		/*String endPoint = "https://internmatch-cyrus.gada.io/v7/notes";*/
 		
 		String tag = "ni";
-		String hardCodedUser = "PER_USER1";
 		
-		QwandaUtils.apiPostNote(endPoint, hardCodedUser, tag, hardCodedUser, "Added an Intern: " + firstname + ". [" + newBe.getCode() + "]", serviceToken.getToken());
+		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), tag, userToken.getUserCode(), "Added an Intern: " + firstname + ". [" + newBe.getCode() + "]", serviceToken.getToken());
 		
 		System.out.println("I just posted the note");
 		System.out.println("Note endPoint: " +endPoint);
-		System.out.println("Note hardCodedUser: " +hardCodedUser);
+		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
 		System.out.println("Note newBe.getCode(): " +newBe.getCode());
 
 		
