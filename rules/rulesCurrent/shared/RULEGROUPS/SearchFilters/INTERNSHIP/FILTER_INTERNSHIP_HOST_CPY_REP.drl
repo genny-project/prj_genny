@@ -29,7 +29,7 @@ rule "FILTER_INTERNSHIP_HOST_CPY_REP"
 	no-loop true
 	when
 		userToken : GennyToken ( code != "PER_SERVICE" ) 
-		searchBE: SearchEntity( code matches "SBE_INTERNSHIPS.*" )
+		searchBE: SearchEntity( code matches "SBE_INTERNSHIPS.*" || code matches "SBE_COUNT_INTERNSHIP.*" )
 		allowed: Allowed(code == "HOST_CPY_REP" )
 		beUtils : BaseEntityUtils( )
 
