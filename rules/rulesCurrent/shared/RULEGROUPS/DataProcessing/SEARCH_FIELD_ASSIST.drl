@@ -70,7 +70,8 @@ rule "SEARCH_FIELD_ASSIST"
 				case "QLD": filterValue = "Queensland"; break;
 			}
 		}
-		
+
+
 			
 		/* TODO -> Check against existing and public attributeCodes for the target */	
 			
