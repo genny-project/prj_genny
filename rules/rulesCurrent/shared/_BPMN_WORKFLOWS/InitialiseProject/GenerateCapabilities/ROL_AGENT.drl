@@ -39,7 +39,7 @@ rule "ROL_AGENT"
  		 
    	     BaseEntity role = capabilityUtils.getBeUtils().create(drools.getRule().getName(),WordUtils.capitalize(drools.getRule().getName().substring(4)));
   
-    	 beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), role.getCode(), "PRI_COLOR", "#00FF00",false,true));
+    	 beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), role.getCode(), "PRI_COLOR", "#1183C8",false,true));
  
     	 capabilityUtils.inheritRole(role,user);
   	     
