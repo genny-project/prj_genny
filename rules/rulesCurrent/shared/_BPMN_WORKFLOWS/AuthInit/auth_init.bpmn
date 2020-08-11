@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmn20="http://www.omg.org/bpmn20" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="_rgjd0GkSEeGLXa7Rf4_OXA" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.1.Final-v20190425-2005-B1" name="auth_init" targetNamespace="http://www.omg.org/bpmn20">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmn20="http://www.omg.org/bpmn20" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="_rgjd0GkSEeGLXa7Rf4_OXA" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.2.SNAPSHOT-v20200602-1600-B1" name="auth_init" targetNamespace="http://www.omg.org/bpmn20">
   <bpmn2:itemDefinition id="ItemDefinition_1" isCollection="false" structureRef="life.genny.qwanda.message.QEventMessage"/>
   <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false" structureRef="life.genny.rules.QRules"/>
   <bpmn2:itemDefinition id="ItemDefinition_3" isCollection="false" structureRef="java.lang.String"/>
@@ -219,6 +219,33 @@ if ((!optHasLoggedIn.isPresent()) || (!optHasLoggedIn.get())) {
 
 VertxUtils.publish(currentUser,&quot;webcmds&quot;,currentUser, &quot;USER&quot;, userToken.getToken());
 
+/* Send the Roles */
+List&lt;BaseEntity> roles = beUtils.getRoles();
+
+String[] filterArray = {&quot;PRI_COLOR&quot;,&quot;PRI_WEIGHT&quot;};
+if (!roles.isEmpty()) {
+BaseEntity mainRole = null;
+Double highestWeight = -1000.0;
+for (BaseEntity role : roles) {
+	
+         if (role.getValue(&quot;PRI_WEIGHT&quot;,0.0) > highestWeight) {
+		highestWeight = role.getValue(&quot;PRI_WEIGHT&quot;,0.0);
+		role  = VertxUtils.privacyFilter(role, filterArray);	
+		mainRole = role;
+	}	
+	
+}
+		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(mainRole);
+		msg.setToken(beUtils.getGennyToken().getToken());
+		msg.setReplace(true);
+		msg.setAliasCode(&quot;ROLE&quot;);	
+		VertxUtils.writeMsg(&quot;webcmds&quot;,JsonUtils.toJson(msg));
+
+}
+
+
+
+
 
 
 
@@ -378,7 +405,7 @@ if (qp != null) {
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_2" bpmnElement="Task_2" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="810.0" y="97.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_6">
           <dc:Bounds height="11.0" width="55.0" x="837.0" y="116.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -416,13 +443,13 @@ if (qp != null) {
         <di:waypoint xsi:type="dc:Point" x="770.0" y="122.0"/>
         <di:waypoint xsi:type="dc:Point" x="790.0" y="122.0"/>
         <di:waypoint xsi:type="dc:Point" x="810.0" y="122.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_10"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="BPMNShape_Task_2" targetElement="BPMNShape_EndEvent_1">
         <di:waypoint xsi:type="dc:Point" x="920.0" y="122.0"/>
         <di:waypoint xsi:type="dc:Point" x="950.0" y="122.0"/>
         <di:waypoint xsi:type="dc:Point" x="980.0" y="122.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_11"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
