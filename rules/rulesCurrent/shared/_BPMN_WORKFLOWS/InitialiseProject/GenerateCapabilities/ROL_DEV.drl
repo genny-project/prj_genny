@@ -33,17 +33,20 @@ rule "ROL_DEV"
        not  BaseEntity (code == "ROL_DEV")
         capabilityUtils : CapabilityUtils()
         superuser : BaseEntity (code == "ROL_SUPERUSER")
-             
+        beUtils : BaseEntityUtils()        
      then
      	System.out.println("   Generate "+drools.getRule().getName() );
  		 
    	     BaseEntity role = capabilityUtils.getBeUtils().create(drools.getRule().getName(),WordUtils.capitalize(drools.getRule().getName().substring(4)));
-   	     
    	     capabilityUtils.inheritRole(role,superuser);
    	     
    	     capabilityUtils.addCapabilityToRole(role,"SHOW_DEV_INFO",CapabilityMode.DELETE);
   		 capabilityUtils.addCapabilityToRole(role,"RULE_TIMINGS",CapabilityMode.DELETE);
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
+  	     
+  	     beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_WEIGHT", 1000.0,false,true));
+ 
+  	     
  		 insert(role);
  		 		 
  		 VertxUtils.writeCachedJson(capabilityUtils.getBeUtils().getServiceToken().getRealm(), role.getCode(), JsonUtils.toJson(role), capabilityUtils.getBeUtils().getServiceToken().getToken());

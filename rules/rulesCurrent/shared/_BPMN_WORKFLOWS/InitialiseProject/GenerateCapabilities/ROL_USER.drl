@@ -32,7 +32,7 @@ rule "ROL_USER"
     when
        not  BaseEntity (code == "ROL_USER")
        capabilityUtils : CapabilityUtils()
-             
+       beUtils : BaseEntityUtils()      
      then
      	System.out.println("   Generate "+drools.getRule().getName() );
  		 
@@ -47,6 +47,8 @@ rule "ROL_USER"
      	     capabilityUtils.addCapabilityToRole(role,"EDIT_ACCOUNT",CapabilityMode.SELF);
  	 
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
+  	     beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_WEIGHT", 100.0,false,true));
+ 
  		 insert(role);
  		 
   		 VertxUtils.writeCachedJson(capabilityUtils.getBeUtils().getServiceToken().getRealm(), role.getCode(), JsonUtils.toJson(role), capabilityUtils.getBeUtils().getServiceToken().getToken());

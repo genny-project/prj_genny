@@ -245,10 +245,16 @@ public class AdamTest {
 		searchBE.setPageSize(100000);
 
 		List<BaseEntity> apps = beUtils.getBaseEntitys(searchBE);
+	    Map<String,BaseEntity> edus = new HashMap<String,BaseEntity>();
 	    
 		for (BaseEntity app : apps) {
 			if ("APP_L_DOT_WANNIARACHCHIGE_AT_CQUMAIL_DOT_COM".equals(app.getCode())) {
 				System.out.println("Detected APP_L_DOT_WANNIARACHCHIGE_AT_CQUMAIL_DOT_COM");
+			}
+			if ("APP_28282CA7-245D-4F89-8BAE-9DF07C1F3D89".equals(app.getCode())) {
+				System.out.println("DetectedAPP_28282CA7-245D-4F89-8BAE-9DF07C1F3D89");
+			} else {
+				//continue;
 			}
 			// Find their app
 			String internCode = app.getValue("PRI_INTERN_CODE", null);
@@ -269,6 +275,17 @@ public class AdamTest {
 			String eduProvCode= intern.getValue("LNK_EDU_PROVIDER", null);
 			//TODO FIX - LNK should have [] not PRI
 			beUtils.saveAnswer(new Answer(userToken.getUserCode(), app.getCode(), "PRI_EDU_PROVIDER_CODE", eduProvCode,false,true));
+			String eduName = app.getValue("PRI_EDU_PROVIDER_NAME", null);
+			if (eduName == null) {
+				String educ = eduProvCode.substring(2, eduProvCode.length()-2);
+				BaseEntity edu = edus.get(educ);
+				if (edu == null) {
+					edu = beUtils.getBaseEntityByCode(educ);
+					edus.put(educ, edu);
+				}	
+				
+				beUtils.saveAnswer(new Answer(userToken.getUserCode(), app.getCode(), "PRI_EDU_PROVIDER_NAME", edu.getName(),false,true));
+			}
 			
 			String imageUrl = intern.getValue("PRI_USER_PROFILE_PICTURE", null);
 			if (imageUrl == null) {
@@ -279,7 +296,7 @@ public class AdamTest {
 				beUtils.saveAnswer(new Answer(userToken.getUserCode(), app.getCode(), "PRI_USER_PROFILE_PICTURE", imageUrl,false,true));
 				beUtils.saveAnswer(new Answer(userToken.getUserCode(), app.getCode(), "PRI_IMAGE_URL", imageUrl,false,true));
 				beUtils.saveAnswer(new Answer(userToken.getUserCode(), intern.getCode(), "PRI_IMAGE_URL", imageUrl,false,true));
-				System.out.println("Updated App Image for "+intern.getName());
+			//	System.out.println("Updated App Image for "+intern.getName());
 			} catch (BadDataException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
