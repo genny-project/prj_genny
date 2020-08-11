@@ -33,6 +33,7 @@ rule "ROL_EDU_PRO_REP"
        not  BaseEntity (code == "ROL_EDU_PRO_REP")
        capabilityUtils : CapabilityUtils()
        userRole : BaseEntity (code == "ROL_USER")
+       beUtils : BaseEntityUtils()
      then
      	System.out.println("   Generate "+drools.getRule().getName() );
  		 
@@ -51,6 +52,8 @@ rule "ROL_EDU_PRO_REP"
 		capabilityUtils.addCapabilityToRole(role,"DASHBOARD_COUNTS",CapabilityMode.VIEW);
 				 
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
+  	     beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_WEIGHT", 600.0,false,true));
+ 
  		 insert(role);
  		 
   		 VertxUtils.writeCachedJson(capabilityUtils.getBeUtils().getServiceToken().getRealm(), role.getCode(), JsonUtils.toJson(role), capabilityUtils.getBeUtils().getServiceToken().getToken());
