@@ -47,6 +47,7 @@ import org.apache.commons.lang3.text.WordUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -215,6 +216,62 @@ public class AdamTest {
 
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		beUtils.setServiceToken(serviceToken);
+		
+		// Get Keycloak User
+		String accessToken = null;
+		try {
+			String keycloakUrl = "https://keycloak.gada.io";
+			accessToken = KeycloakUtils.getAccessToken(keycloakUrl, "master", "admin-cli", null, "admin", System.getenv("KEYCLOAK_PASSWORD"));
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		// fetch all keycloak users
+		
+		String keycloakUrl = "https://keycloak.gada.io";
+		List<LinkedHashMap> results = new ArrayList<LinkedHashMap>();
+	    final HttpClient client = new DefaultHttpClient();
+
+	    
+	    try {
+	      final HttpGet get =
+	          new HttpGet("https://keycloak.gada.io/auth/admin/realms/" + realm + "/users?first=0&max=20000");
+	      get.addHeader("Authorization", "Bearer " + accessToken);
+	      try {
+	        final HttpResponse response = client.execute(get);
+	        if (response.getStatusLine().getStatusCode() != 200) {
+	          throw new IOException();
+	        }
+	        final HttpEntity entity = response.getEntity();
+	        final InputStream is = entity.getContent();
+	        try {
+	          results = JsonSerialization.readValue(is, (new ArrayList<UserRepresentation>()).getClass());
+	        } finally {
+	          is.close();
+	        }
+	      } catch (final IOException e) {
+	        throw new RuntimeException(e);
+	      }
+	    } finally {
+	      client.getConnectionManager().shutdown();
+	    }
+	    
+	    Map<String,String> keycloakEmailUuidMap = new HashMap<String,String>();
+	    
+	    System.out.println("Number of keycloak users = "+results.size());
+	    int count=0;
+	    for (LinkedHashMap userMap : results)
+	    {
+    	String username = (String) userMap.get("username");
+    	String email = (String) userMap.get("email");
+    	String code = QwandaUtils.getNormalisedUsername("PER_"+username);
+    	String appCode = QwandaUtils.getNormalisedUsername("APP_"+username);
+    	String id = (String)userMap.get("id");
+    	keycloakEmailUuidMap.put(email, id);
+    	
+    	
+    	}
 
 		SearchEntity searchBE = new SearchEntity("SBE_TEST", "interns")
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
@@ -230,6 +287,8 @@ public class AdamTest {
 
 		
 		Map<String,BaseEntity> internMap = new HashMap<String,BaseEntity>();
+		Map<String,String> appcodeMap = new HashMap<String,String>();
+		Map<String,BaseEntity> appMap = new HashMap<String,BaseEntity>();
 		
 		for (BaseEntity intern : interns) {
 			internMap.put(intern.getCode(), intern);
@@ -244,63 +303,150 @@ public class AdamTest {
 		searchBE.setPageStart(0);
 		searchBE.setPageSize(100000);
 
-		List<BaseEntity> apps = beUtils.getBaseEntitys(searchBE);
-	    Map<String,BaseEntity> edus = new HashMap<String,BaseEntity>();
+		List<BaseEntity> apps = new ArrayList<BaseEntity>();
+		
+		
+		Tuple2<String, List<String>> data = beUtils.getHql(searchBE);
+		String hql = data._1;
+
+		hql = Base64.getUrlEncoder().encodeToString(hql.getBytes());
+		try {
+			String resultJsonStr = QwandaUtils.apiGet(
+					GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search24/" + hql + "/"
+							+ searchBE.getPageStart(0) + "/" + searchBE.getPageSize(GennySettings.defaultPageSize),
+					serviceToken.getToken(), 120);
+
+			JsonObject resultJson = null;
+
+			try {
+				resultJson = new JsonObject(resultJsonStr);
+				io.vertx.core.json.JsonArray result = resultJson.getJsonArray("codes");
+				for (int i = 0; i < result.size(); i++) {
+					BaseEntity be = null;
+					String code = result.getString(i);
+					BaseEntity intern = null;
+					// Need to find the email of the person , find their be, then find their id
+					if (code.contains("_AT_")) {
+						String oldCode = code.substring(4);
+						// convert to email
+						oldCode = oldCode.replaceAll("_DOT_", ".");
+						oldCode = oldCode.replaceAll("_AT_", "@");
+						oldCode = oldCode.replaceAll("_DASH_", "-");
+						String email = oldCode.toLowerCase();
+						searchBE = new SearchEntity("SBE_TEST", "apps")
+								.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+								.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
+								.addFilter("PRI_EMAIL", SearchEntity.StringFilter.LIKE, email)
+								.addColumn("PRI_CODE", "Name");
+
+						searchBE.setRealm(realm);
+						searchBE.setPageStart(0);
+						searchBE.setPageSize(100000);
+						Tuple2<String, List<String>> emailhqlTuple = beUtils.getHql(searchBE);
+						String emailhql = emailhqlTuple._1;
+
+						emailhql = Base64.getUrlEncoder().encodeToString(emailhql.getBytes());
+						try {
+							resultJsonStr = QwandaUtils.apiGet(
+									GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search24/" + emailhql + "/"
+											+ searchBE.getPageStart(0) + "/" + searchBE.getPageSize(GennySettings.defaultPageSize),
+									serviceToken.getToken(), 120);
+
+							resultJson = null;
+							resultJson = new JsonObject(resultJsonStr);
+							io.vertx.core.json.JsonArray result2 = resultJson.getJsonArray("codes");
+							String internCode = result2.getString(0);
+							if (internCode.contains("_AT_")) {
+								intern  = beUtils.getBaseEntityByCode(internCode);
+							}
+							String uuid = keycloakEmailUuidMap.get(email);
+								if (uuid != null) {
+									String newcode = "APP_"+uuid.toUpperCase();
+									appcodeMap.put(code,newcode);
+									be = beUtils.getBaseEntityByCode(newcode);
+									appMap.put(code,be);
+							}
+							
+						} catch (Exception e) {
+							
+						}
+						
+						
+						if (be == null) {	
+							be = beUtils.getBaseEntityByCode(code);
+						}
+					
+					be.setIndex(i);
+					apps.add(be);				
+					}
+				}
+			} catch (Exception e1) {
+				log.error("Bad Json -> [" + resultJsonStr);
+			}
+
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}	    Map<String,BaseEntity> edus = new HashMap<String,BaseEntity>();
 	    
-		for (BaseEntity app : apps) {
-			if ("APP_L_DOT_WANNIARACHCHIGE_AT_CQUMAIL_DOT_COM".equals(app.getCode())) {
+		for (String appCode : appMap.keySet()) {
+			
+			if ("APP_L_DOT_WANNIARACHCHIGE_AT_CQUMAIL_DOT_COM".equals(appCode)) {
 				System.out.println("Detected APP_L_DOT_WANNIARACHCHIGE_AT_CQUMAIL_DOT_COM");
 			}
-			if ("APP_28282CA7-245D-4F89-8BAE-9DF07C1F3D89".equals(app.getCode())) {
+			if ("APP_28282CA7-245D-4F89-8BAE-9DF07C1F3D89".equals(appCode)) {
 				System.out.println("DetectedAPP_28282CA7-245D-4F89-8BAE-9DF07C1F3D89");
 			} else {
 				//continue;
 			}
 			// Find their app
-			String internCode = app.getValue("PRI_INTERN_CODE", null);
-			if (internCode == null) {
-				System.out.println("NO INTERN CODE ATTRIBUTE");
-				internCode = "PER_"+app.getCode().substring("APP_".length());
-				beUtils.saveAnswer(new Answer(userToken.getUserCode(), app.getCode(), "PRI_INTERN_CODE", internCode,false,true));
-				//continue;
-			} 
 			
-			BaseEntity intern = internMap.get(internCode);
-			if (intern == null) {
-				System.out.println("NO INTERN EXISTS FOR "+internCode);
-				continue;
-			}
+			BaseEntity app = appMap.get(appCode);
 			
-			
-			String eduProvCode= intern.getValue("LNK_EDU_PROVIDER", null);
-			//TODO FIX - LNK should have [] not PRI
-			beUtils.saveAnswer(new Answer(userToken.getUserCode(), app.getCode(), "PRI_EDU_PROVIDER_CODE", eduProvCode,false,true));
-			String eduName = app.getValue("PRI_EDU_PROVIDER_NAME", null);
-			if (eduName == null) {
-				String educ = eduProvCode.substring(2, eduProvCode.length()-2);
-				BaseEntity edu = edus.get(educ);
-				if (edu == null) {
-					edu = beUtils.getBaseEntityByCode(educ);
-					edus.put(educ, edu);
-				}	
+			if (app.getCode().contains("_AT_")) {
+				// This is old
+				String internCode = "PER_"+app.getCode().substring("APP_".length());
+				BaseEntity intern = beUtils.getBaseEntityByCode(internCode);
 				
-				beUtils.saveAnswer(new Answer(userToken.getUserCode(), app.getCode(), "PRI_EDU_PROVIDER_NAME", edu.getName(),false,true));
+				internCode = app.getValue("PRI_INTERN_CODE", null);
+				if (internCode == null) {
+					
+				}
+				else if (internCode.contains("@")) {
+					System.out.println("INTERN CODE = "+internCode);
+				}else {
+					System.out.println("INTERN CODE = "+internCode);
+				}
+				System.out.println("APP CODE="+appCode);
+			} else {
+				System.out.println("APP CODE="+appCode);
 			}
 			
-			String imageUrl = intern.getValue("PRI_USER_PROFILE_PICTURE", null);
-			if (imageUrl == null) {
-				continue;
-			}
+			System.out.println();
+			
+			// Now change the app code in db
+			
 			try {
-				app.setValue("PRI_USER_PROFILE_PICTURE", imageUrl);
-				beUtils.saveAnswer(new Answer(userToken.getUserCode(), app.getCode(), "PRI_USER_PROFILE_PICTURE", imageUrl,false,true));
-				beUtils.saveAnswer(new Answer(userToken.getUserCode(), app.getCode(), "PRI_IMAGE_URL", imageUrl,false,true));
-				beUtils.saveAnswer(new Answer(userToken.getUserCode(), intern.getCode(), "PRI_IMAGE_URL", imageUrl,false,true));
-			//	System.out.println("Updated App Image for "+intern.getName());
-			} catch (BadDataException e) {
+				String encodedsql = encodeValue("update baseentity_attribute set valueString='"+appcodeMap.get(appCode)+"' where valueString='"+appCode+"'");
+				String resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/"+encodedsql,
+						serviceToken.getToken());
+
+				encodedsql = encodeValue("update baseentity_attribute set baseEntityCode='"+appcodeMap.get(appCode)+"' where baseEntityCode='"+appCode+"'");
+				resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/"+encodedsql,
+						serviceToken.getToken());
+				
+				//
+				encodedsql = encodeValue("update baseentity set code='"+appcodeMap.get(appCode)+"' where code='"+appCode+"'");
+				resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/"+encodedsql,
+						serviceToken.getToken());
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+
+	
 			
 		}
 		
@@ -355,7 +501,7 @@ public class AdamTest {
 		
 	}
 	
-	//@Test
+	@Test
 	public void keycloakUserFix()
 	{
 		System.out.println("Search cache test");
@@ -387,7 +533,8 @@ public class AdamTest {
 		beUtils.setServiceToken(serviceToken);
 		String accessToken = null;
 		try {
-			accessToken = KeycloakUtils.getAccessToken(userToken.getKeycloakUrl(), "master", "admin-cli", null, System.getenv("KEYCLOAK_ADMIN"), System.getenv("KEYCLOAK_PASSWORD"));
+			String keycloakUrl = "https://keycloak.gada.io";
+			accessToken = KeycloakUtils.getAccessToken(keycloakUrl, "master", "admin-cli", null, "admin", System.getenv("KEYCLOAK_PASSWORD"));
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -395,14 +542,14 @@ public class AdamTest {
 		
 		// fetch all keycloak users
 		
-		String keycloakUrl = userToken.getKeycloakUrl();
+		String keycloakUrl = "https://keycloak.gada.io";
 		List<LinkedHashMap> results = new ArrayList<LinkedHashMap>();
 	    final HttpClient client = new DefaultHttpClient();
 
 	    
 	    try {
 	      final HttpGet get =
-	          new HttpGet(keycloakUrl + "/auth/admin/realms/" + realm + "/users?first=0&max=20000");
+	          new HttpGet("https://keycloak.gada.io/auth/admin/realms/" + realm + "/users?first=0&max=20000");
 	      get.addHeader("Authorization", "Bearer " + accessToken);
 	      try {
 	        final HttpResponse response = client.execute(get);
@@ -493,13 +640,12 @@ public class AdamTest {
 	    		// (1) Change all baseEntityCode in baseeentity_attribute
 	    		try {
 	    			String encodedsql = encodeValue("update baseentity_attribute set baseentityCode='"+newCode+"' where baseentityCode='"+user.getCode()+"'");
-	    			String deecoded = URLDecoder.decode(encodedsql);
 	    			resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/"+encodedsql,
 	    					serviceToken.getToken());
 	    			encodedsql = encodeValue("update baseentity_attribute set valueString='[\""+newCode+"]\"' where valueString='\"["+user.getCode()+"\"]'");
 	    			resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/"+encodedsql,
 	    					serviceToken.getToken());
-	    			encodedsql = encodeValue("update baseentity_attribute set valueString='[\""+newCode+"]\"' where valueString='"+user.getCode()+"'");
+	    			encodedsql = encodeValue("update baseentity_attribute set valueString='"+newCode+"' where valueString='"+user.getCode()+"'");
 	    			resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/"+encodedsql,
 	    					serviceToken.getToken());
 
@@ -522,6 +668,7 @@ public class AdamTest {
 	    //	}
 	    }
 	    
+
 	    
 	}
 	
