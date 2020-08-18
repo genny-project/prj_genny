@@ -35,8 +35,6 @@ rule "FRM_SIDEBAR"
       not  Frame3(code == "FRM_SIDEBAR")
       serviceToken : GennyToken( code == "PER_SERVICE")
       FRM_LOGO : Frame3 ( code == "FRM_LOGO" )
-      FRM_TREE_ITEM_DASHBOARD_VIEW  : Frame3 ( code == "FRM_TREE_ITEM_DASHBOARD_VIEW" )
-      FRM_TREE_ITEM_TAB_VIEW : Frame3 ( code == "FRM_TREE_ITEM_TAB_VIEW" )
       
     then
     
@@ -44,8 +42,6 @@ rule "FRM_SIDEBAR"
 
       Frame3 frame = Frame3.builder("FRM_SIDEBAR")
                       .addFrame(FRM_LOGO, FramePosition.NORTH).end()
-                      .addFrame(FRM_TREE_ITEM_DASHBOARD_VIEW, FramePosition.NORTH).end()
-                      .addFrame(FRM_TREE_ITEM_TAB_VIEW, FramePosition.NORTH).end()
                       .build();
 
       frame.setRealm(serviceToken.getRealm());
