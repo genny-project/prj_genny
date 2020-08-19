@@ -65,7 +65,7 @@ rule "PRI_SEARCH_TEXT_TABLE_ASSIST"
  			searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "LAST-SEARCH",
 				beUtils.getGennyToken().getSessionCode(), SearchEntity.class);
 		}
-		System.out.println(drools.getRule().getName()+" ASSIST for "+searchBE.getCode()); 
+		System.out.println(drools.getRule().getName()+" ASSIST for "+searchBE.getCode()+ " with wildcard value ["+value+"]"); 
 
 			searchBE.setWildcard(value);
 			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
