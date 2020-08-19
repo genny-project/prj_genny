@@ -58,7 +58,7 @@ rule "PRI_SEARCH_TEXT_TABLE_ASSIST"
 		
  		SearchEntity searchBE = null;
  		
- 		if (answer.getTargetCode().startsWith("SBE_") {
+ 		if (answer.getTargetCode().startsWith("SBE_")) {
  			searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "",
 				answer.getTargetCode(), SearchEntity.class);
  		} else {
