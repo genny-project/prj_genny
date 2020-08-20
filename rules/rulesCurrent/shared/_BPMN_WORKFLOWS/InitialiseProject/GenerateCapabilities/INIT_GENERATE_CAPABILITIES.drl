@@ -100,6 +100,8 @@ rule "INIT_GENERATE_CAPABILITIES"
 		capabilityUtils.addCapability( "APPLY", "Apply");
 		capabilityUtils.addCapability( "VIEW_JOURNAL", "View Journal");
    
+   		capabilityUtils.addCapability( "WEB_ONLY", "Public Web Use");
+   		
 		capabilityUtils.process();
 		
 		System.out.println("   Completed initial setup of Capabilities - "+capabilityUtils);
