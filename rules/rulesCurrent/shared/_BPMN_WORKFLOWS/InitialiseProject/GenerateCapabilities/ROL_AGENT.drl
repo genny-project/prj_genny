@@ -56,6 +56,8 @@ rule "ROL_AGENT"
    	     capabilityUtils.addCapabilityToRole(role,"REJECT_APPLICATION",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"WITHDRAW_APPLICATION",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"VIEW_JOURNAL",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"RATE_INTERN",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"EDIT_INTERN",CapabilityMode.VIEW);
  
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
   	     
