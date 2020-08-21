@@ -42,7 +42,7 @@ rule "SEARCH_FIELD_ASSIST"
     when
  	  beUtils : BaseEntityUtils()
  	  allowed : Allowed(code == "USER") 
-	  answer : Answer( targetCode matches "SBE_.*" )   
+	  answer : Answer( targetCode matches "SBE_.*"  && (!value.startsWith("!")))   
 	  userToken : GennyToken (code != "PER_SERVICE" )
 	  serviceToken : GennyToken( code == "PER_SERVICE")
 	  output : OutputParam( )
