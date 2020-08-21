@@ -102,6 +102,8 @@ rule "INIT_GENERATE_CAPABILITIES"
 		capabilityUtils.addCapability( "EDIT_INTERN", "Edit Intern");
 		capabilityUtils.addCapability( "RATE_INTERN", "Rate Intern");
    
+   		capabilityUtils.addCapability( "WEB_ONLY", "Public Web Use");
+   		
 		capabilityUtils.process();
 		
 		System.out.println("   Completed initial setup of Capabilities - "+capabilityUtils);
