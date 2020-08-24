@@ -59,10 +59,17 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 
 		/* get the name attribute of the company */
 		String name = companyBe.getValue("PRI_NAME", null);		
+		String address = companyBe.getValue("PRI_ADDRESS_FULL", null);	
+		System.out.println("company address :: " + address);
+
 
 		/* save the company's name as PRI_ASSOC_HC attribute for application baseentity */
 		Answer assocHcAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HC", name);
+		
+		/* save the company's address as BEG's address */
+		Answer addressAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", address);
  		beUtils.saveAnswer(assocHcAnswer);		
+ 		beUtils.saveAnswer(addressAnswer);		
 
 		Answer repAnswer = new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", " ",false,true);
 		Answer supervisorAnswer = new Answer(sourceCode, targetCode, "LNK_INTERN_SUPERVISOR", " ",false,true);
