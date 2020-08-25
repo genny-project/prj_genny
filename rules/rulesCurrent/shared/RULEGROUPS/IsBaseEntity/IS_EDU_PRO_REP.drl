@@ -36,14 +36,21 @@ rule "IS_EDU_PRO_REP"
 
 		System.out.println("IS_EDU_PRO_REP: Answer = " + answer); 
 		
+		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
 		
 		String linkedEP = newBe.getValue("LNK_EDU_PROVIDER", null);
 		System.out.println("linkedEP = " +linkedEP);
 		if (linkedEP != null) {
-				String assocEP = linkedEP.replace("\"", "").replace("[", "").replace("]", "");
-				System.out.println("assocEP = " +assocEP);
-				Answer answerAssocEP = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_ASSOC_EP", assocEP);
- 				beUtils.saveAnswer(answerAssocEP);
+				String assocEPBe = linkedEP.replace("\"", "").replace("[", "").replace("]", "");
+				System.out.println("assocEPBe = " +assocEPBe);
+				
+				String assocEP = assocEPBe.getValue("PRI_NAME", null);
+				System.out.println("assocEP: " + assocEP);
+				
+				if (assocEP != null) {
+						Answer answerAssocEP = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_ASSOC_EP", assocEP);
+ 						beUtils.saveAnswer(answerAssocEP);
+ 				}
 		}
 		
 		/* Set up in Keycloak */
