@@ -30,7 +30,8 @@ rule "IS_HOST_CPY"
  	/*  Construct answer with Source, Target, Attribute Code, Value */
  		Answer answer = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_HOST_CPY", "true");
  		Answer answer2 = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE");
- 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+
  		beUtils.saveAnswer(answer);
  		beUtils.saveAnswer(answer2);
 
@@ -53,11 +54,12 @@ rule "IS_HOST_CPY"
 		System.out.println("Note endPoint: " +endPoint);
 		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
 
-		
-
+		/* Send detail view */
+		long totalTime = TableUtils.searchTable(beUtils,"COMPANY", true, "PRI_CODE", newBe.getCode());
+		System.out.println("total took " + (totalTime) + " ms"); 		
 	
 		output.setTypeOfResult("NONE");
-  	    output.setResultCode("NONE");  /* dont display anything new */
+		output.setResultCode("NONE");  /* dont display anything new */
 		
 		retract(newBe)
 	

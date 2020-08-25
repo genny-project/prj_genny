@@ -27,7 +27,8 @@ rule "IS_INTERNSHIP"
  		System.out.println("IS_INTERNSHIP: Rule fired" );
  		System.out.println("IS_INTERNSHIP: newBe = " + newBe.getCode()); 
  		
- 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+
  		
  		/* Construct answer with Source, Target, Attribute Code, Value */
  		Answer answer = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_INTERNSHIP", "true");
@@ -60,10 +61,13 @@ rule "IS_INTERNSHIP"
 		System.out.println("I just posted the note");
 		System.out.println("Note endPoint: " +endPoint);
 		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
-		
+
+		/* Send detail view */
+		long totalTime = TableUtils.searchTable(beUtils,"INTERNSHIP", true, "PRI_CODE", newBe.getCode());
+		System.out.println("total took " + (totalTime) + " ms"); 		
 		
 		output.setTypeOfResult("NONE");
-  	    output.setResultCode("NONE");  /* dont display anything new */
+		output.setResultCode("NONE");  /* dont display anything new */
 		
 		retract(newBe)
 	

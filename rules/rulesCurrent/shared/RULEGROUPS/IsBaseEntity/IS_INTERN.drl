@@ -38,7 +38,8 @@ rule "IS_INTERN"
  		
 
  		
- 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+
  		beUtils.saveAnswer(answer);
  		beUtils.saveAnswer(answer2);
  		beUtils.saveAnswer(answer3);
@@ -170,7 +171,10 @@ rule "IS_INTERN"
 	
 		
 		output.setTypeOfResult("NONE");
-  	    output.setResultCode("NONE");  /* dont display anything new */
+		output.setResultCode("NONE");  /* dont display anything new */
+
+		long totalTime = TableUtils.searchTable(beUtils,"INTERN", true, "PRI_CODE", newBe.getCode());
+		System.out.println("total took " + (totalTime) + " ms"); 
 		
 		retract(newBe)
 	
