@@ -64,7 +64,6 @@ rule "INIT_EVENT"
 		displayCodes.put("ACT_PRI_EVENT_VIEW", "DETAIL");
 		displayCodes.put("ACT_PRI_EVENT_VIEW_PROFILE", "DETAIL");
 		displayCodes.put("ACT_PRI_EVENT_VIEW_APP", "DETAIL");
-
 		
 		QCmdMessage msg = new QCmdMessage("DISPLAY", "NONE");
 		msg.setToken(beUtils.getGennyToken().getToken());
@@ -79,6 +78,7 @@ rule "INIT_EVENT"
 				
 				if(displayType != null && !displayType.isEmpty()){
 					
+					System.out.println("DISPLAY_TYPE   ::   " + displayType);
 					msg.setCode(displayType);
 
 				}
