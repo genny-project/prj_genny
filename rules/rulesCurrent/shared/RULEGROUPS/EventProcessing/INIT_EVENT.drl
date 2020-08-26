@@ -55,6 +55,7 @@ rule "INIT_EVENT"
 		displayCodes.put("QUE_INTERN_S1_MENU", "FORM");
 		displayCodes.put("QUE_REF_PART_MENU", "FORM");
 		displayCodes.put("QUE_REF_PART_REP_MENU", "FORM");
+		displayCodes.put("QUE_AVATAR_PROFILE_GRP", "FORM");
 		displayCodes.put("ACT_PRI_EVENT_VIEW_AGREEMENT", "FORM");
 		
 		/* dialog */
