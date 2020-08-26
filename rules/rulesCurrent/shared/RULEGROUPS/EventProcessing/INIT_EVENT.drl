@@ -31,8 +31,20 @@ rule "INIT_EVENT"
 		displayCodes.put("QUE_TAB_BUCKET_VIEW", "PROCESS");
 		
 		/* table */
-		displayCodes.put("QUE_TREE_ITEM", "TABLE");
 		displayCodes.put("ACT_PRI_EVENT_JOURNAL_VIEW", "TABLE");
+		displayCodes.put("QUE_TREE_ITEM_INTERNS", "TABLE");
+		displayCodes.put("QUE_TREE_ITEM_INTERNS", "TABLE");
+		displayCodes.put("QUE_TREE_ITEM_HCRS", "TABLE");
+		displayCodes.put("QUE_TREE_ITEM_EPRS", "TABLE");
+		displayCodes.put("QUE_TREE_ITEM_AGENTS", "TABLE");
+		displayCodes.put("QUE_TREE_ITEM_REFERRERS", "TABLE");
+		displayCodes.put("QUE_TREE_ITEM_HOST_COMPANIES_ACTIVE", "TABLE");
+		displayCodes.put("QUE_TREE_ITEM_HOST_COMPANIES_ON_HOLD", "TABLE");
+		displayCodes.put("QUE_TREE_ITEM_HOST_COMPANIES_WITHDRAWN", "TABLE");
+		displayCodes.put("QUE_TREE_ITEM_EDU_PROVIDERS_ACTIVE", "TABLE");
+		displayCodes.put("QUE_TREE_ITEM_EDU_PROVIDERS_ON_HOLD", "TABLE");
+		displayCodes.put("QUE_TREE_ITEM_EDU_PROVIDERS_WITHDRAWN", "TABLE");
+		displayCodes.put("QUE_TREE_ITEM_INTERNSHIPS_ACTIVE", "TABLE");
 		
 		/* forms */
 		displayCodes.put("QUE_HOST_CPY_MENU", "FORM");
@@ -72,6 +84,8 @@ rule "INIT_EVENT"
 				}
 			}
 		}
+		
+		VertxUtils.putObject(serviceToken.getRealm(), "", "DISPLAY_CODES", displayCodes, serviceToken.getToken());
 		
 		/* Send cmd message */
 		VertxUtils.writeMsg("webcmds",msg);
