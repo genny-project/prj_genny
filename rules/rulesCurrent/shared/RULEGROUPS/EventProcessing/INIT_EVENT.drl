@@ -5,6 +5,8 @@ import life.genny.utils.VertxUtils;
 import io.vertx.core.json.JsonObject;
 import life.genny.utils.OutputParam;
 import life.genny.qwanda.rule.RuleDetails;
+import java.util.HashMap;
+import java.util.Map;
 
 rule "INIT_EVENT"
 	ruleflow-group 'EventProcessing'
@@ -20,9 +22,57 @@ rule "INIT_EVENT"
 		System.out.println(drools.getRule().getName() + " triggered");
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 		
-		/* Send cmd message */
-		QCmdMessage msg = new QCmdMessage("DISPLAY", "PROCESS_VIEW");
+    Map<String, String> displayCodes = new HashMap<>();
+		
+		/* dashboard */
+		displayCodes.put("QUE_DASHBOARD_VIEW", "DASHBOARD");
+		
+		/* process */
+		displayCodes.put("QUE_TAB_BUCKET_VIEW", "PROCESS");
+		
+		/* table */
+		displayCodes.put("QUE_TREE_ITEM", "TABLE");
+		displayCodes.put("ACT_PRI_EVENT_JOURNAL_VIEW", "TABLE");
+		
+		/* forms */
+		displayCodes.put("QUE_HOST_CPY_MENU", "FORM");
+		displayCodes.put("QUE_HOST_CPY_REP_MENU", "FORM");
+		displayCodes.put("QUE_EDU_PRO_MENU", "FORM");
+		displayCodes.put("QUE_EDU_PRO_REP_MENU", "FORM");
+		displayCodes.put("QUE_INTERNSHIP_S1_MENU", "FORM");
+		displayCodes.put("QUE_INTERN_S1_MENU", "FORM");
+		displayCodes.put("QUE_REF_PART_MENU", "FORM");
+		displayCodes.put("QUE_REF_PART_REP_MENU", "FORM");
+		displayCodes.put("ACT_PRI_EVENT_VIEW_AGREEMENT", "FORM");
+		
+		/* dialog */
+		displayCodes.put("ACT_PRI_EVENT_APPLY", "DIALOG_FORM");
+		
+		/* detail */
+		displayCodes.put("ACT_PRI_EVENT_VIEW", "DETAIL");
+		displayCodes.put("ACT_PRI_EVENT_VIEW_PROFILE", "DETAIL");
+		displayCodes.put("ACT_PRI_EVENT_VIEW_APP", "DETAIL");
+
+		
+		QCmdMessage msg = new QCmdMessage("DISPLAY", "NONE");
 		msg.setToken(beUtils.getGennyToken().getToken());
 		msg.setSend(true);  		
+
+		String code = $message.getData().getCode();
+		if(code != null && !code.isEmpty()){
+		
+			if(displayCodes.containsKey(code)){
+		
+				String displayType = displayCodes.get(code);
+				
+				if(displayType != null && !displayType.isEmpty()){
+					
+					msg.setCode(displayType);
+
+				}
+			}
+		}
+		
+		/* Send cmd message */
 		VertxUtils.writeMsg("webcmds",msg);
 end
