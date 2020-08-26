@@ -13,8 +13,8 @@ rule "INIT_EVENT"
 	when
 		$message : QEventMessage()
 		userToken : GennyToken (code != "PER_SERVICE" )
+		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
-		ruleDetails : RuleDetails()
 	
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
