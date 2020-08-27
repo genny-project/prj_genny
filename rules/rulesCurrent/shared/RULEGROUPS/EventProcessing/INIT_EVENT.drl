@@ -32,8 +32,6 @@ rule "INIT_EVENT"
 		if(code != null && !code.isEmpty()){
 			
 			Map<String, String> displayCodes = VertxUtils.getMap(serviceToken.getRealm(), "", "DISPLAY_CODES");
-			Type type = new TypeToken<Map<String, String>>() {}.getType();
-			/* HashMap displayCodes = VertxUtils.getObject(serviceToken.getRealm(), "", "DISPLAY_CODES", type, serviceToken.getToken()); */
 
 			if(displayCodes != null && !displayCodes.isEmpty()){
 
