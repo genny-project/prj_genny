@@ -51,6 +51,7 @@ rule "ROL_AGENT"
    	     capabilityUtils.addCapabilityToRole(role,"OFFER",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"PLACE_APPLICATION",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"EDIT_AGREEMENT",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"VIEW_AGREEMENT",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"FINISH_APPLICATION",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"ON_HOLD_APPLICATION",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"REJECT_APPLICATION",CapabilityMode.VIEW);
@@ -58,6 +59,7 @@ rule "ROL_AGENT"
    	     capabilityUtils.addCapabilityToRole(role,"VIEW_JOURNAL",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"RATE_INTERN",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"EDIT_INTERN",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"START_INTERNSHIP",CapabilityMode.VIEW);
  
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
   	     
