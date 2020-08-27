@@ -7,6 +7,8 @@ import life.genny.utils.OutputParam;
 import life.genny.qwanda.rule.RuleDetails;
 import java.util.HashMap;
 import java.util.Map;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 
 rule "INIT_EVENT"
 	ruleflow-group 'EventProcessing'
@@ -28,8 +30,10 @@ rule "INIT_EVENT"
 
 		String code = $message.getData().getCode();
 		if(code != null && !code.isEmpty()){
-
-			HashMap displayCodes = VertxUtils.getObject(serviceToken.getRealm(), "", "DISPLAY_CODES", HashMap.class, serviceToken.getToken());
+			
+			/* Map<String, String> displayCodes = VertxUtils.getMap(serviceToken.getRealm(), "", "DISPLAY_CODES"); */
+			Type type = new TypeToken<Map<String, String>>() {}.getType();
+			HashMap displayCodes = VertxUtils.getObject(serviceToken.getRealm(), "", "DISPLAY_CODES", type, serviceToken.getToken());
 
 			if(displayCodes != null && !displayCodes.isEmpty()){
 
