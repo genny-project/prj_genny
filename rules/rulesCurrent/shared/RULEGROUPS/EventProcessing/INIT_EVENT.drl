@@ -17,7 +17,6 @@ rule "INIT_EVENT"
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
-		displayCodes : HashMap(displayCodes["DISPLAY"] matches "DISPLAY" )
 	
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
@@ -30,22 +29,23 @@ rule "INIT_EVENT"
 		String code = $message.getData().getCode();
 		if(code != null && !code.isEmpty()){
 
-			System.out.println("value: " + displayCodes.get(code));
-		
-		/* 	if(displayCodes.containsKey(code)){
-		
-				String displayType = displayCodes.get(code);
-				
-				if(displayType != null && !displayType.isEmpty()){
-					
-					System.out.println("DISPLAY_TYPE   ::   " + displayType);
-					msg.setCode(displayType);
+			HashMap displayCodes = VertxUtils.getObject(serviceToken.getRealm(), "", "DISPLAY_CODES", HashMap.class, serviceToken.getToken());
 
+			if(displayCodes != null && !displayCodes.isEmpty()){
+
+				if(displayCodes.containsKey(code)){
+			
+					String displayType = displayCodes.get(code);
+					
+					if(displayType != null && !displayType.isEmpty()){
+						
+						System.out.println("DISPLAY_TYPE   ::   " + displayType);
+						msg.setCode(displayType);
+
+					}
 				}
-			} */
+			}
 		}
-		
-		VertxUtils.putObject(serviceToken.getRealm(), "", "DISPLAY_CODES", displayCodes, serviceToken.getToken());
 		
 		/* Send cmd message */
 		VertxUtils.writeMsg("webcmds",msg);
