@@ -29,8 +29,10 @@ rule "INIT_EVENT"
 
 		String code = $message.getData().getCode();
 		if(code != null && !code.isEmpty()){
+
+			System.out.println("value: " + displayCodes.get(code));
 		
-			if(displayCodes.containsKey(code)){
+		/* 	if(displayCodes.containsKey(code)){
 		
 				String displayType = displayCodes.get(code);
 				
@@ -40,7 +42,7 @@ rule "INIT_EVENT"
 					msg.setCode(displayType);
 
 				}
-			}
+			} */
 		}
 		
 		VertxUtils.putObject(serviceToken.getRealm(), "", "DISPLAY_CODES", displayCodes, serviceToken.getToken());
