@@ -49,7 +49,7 @@ rule "ROL_HOST_CPY_REP"
   	     capabilityUtils.addCapabilityToRole(role,"APPROVE_JOURNALS",CapabilityMode.EDIT);
   	     capabilityUtils.addCapabilityToRole(role,"READ_INTERNSHIPS",CapabilityMode.VIEW);
 
-		 capabilityUtils.addCapabilityToRole(role,"SHORTLIST_APPLICATION",CapabilityMode.VIEW);
+		 			capabilityUtils.addCapabilityToRole(role,"SHORTLIST_APPLICATION",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"INTERVIEW_APPLICATION",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"OFFER",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"PLACE_APPLICATION",CapabilityMode.VIEW);
@@ -59,6 +59,7 @@ rule "ROL_HOST_CPY_REP"
    	     capabilityUtils.addCapabilityToRole(role,"REJECT_APPLICATION",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"WITHDRAW_APPLICATION",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"VIEW_JOURNAL",CapabilityMode.VIEW);
+				 capabilityUtils.addCapabilityToRole(role,"VIEW_AGREEMENT",CapabilityMode.VIEW);
 
 		capabilityUtils.addCapabilityToRole(role,"DASHBOARD_COUNTS",CapabilityMode.VIEW);
   	     
