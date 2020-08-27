@@ -17,54 +17,13 @@ rule "INIT_EVENT"
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
+		displayCodes : Map()
 	
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
-		
-    Map<String, String> displayCodes = new HashMap<>();
-		
-		/* dashboard */
-		displayCodes.put("QUE_DASHBOARD_VIEW", "DASHBOARD");
-		
-		/* process */
-		displayCodes.put("QUE_TAB_BUCKET_VIEW", "PROCESS");
-		
-		/* table */
-		displayCodes.put("ACT_PRI_EVENT_JOURNAL_VIEW", "TABLE");
-		displayCodes.put("QUE_TREE_ITEM_INTERNS", "TABLE");
-		displayCodes.put("QUE_TREE_ITEM_INTERNS", "TABLE");
-		displayCodes.put("QUE_TREE_ITEM_HCRS", "TABLE");
-		displayCodes.put("QUE_TREE_ITEM_EPRS", "TABLE");
-		displayCodes.put("QUE_TREE_ITEM_AGENTS", "TABLE");
-		displayCodes.put("QUE_TREE_ITEM_REFERRERS", "TABLE");
-		displayCodes.put("QUE_TREE_ITEM_HOST_COMPANIES_ACTIVE", "TABLE");
-		displayCodes.put("QUE_TREE_ITEM_HOST_COMPANIES_ON_HOLD", "TABLE");
-		displayCodes.put("QUE_TREE_ITEM_HOST_COMPANIES_WITHDRAWN", "TABLE");
-		displayCodes.put("QUE_TREE_ITEM_EDU_PROVIDERS_ACTIVE", "TABLE");
-		displayCodes.put("QUE_TREE_ITEM_EDU_PROVIDERS_ON_HOLD", "TABLE");
-		displayCodes.put("QUE_TREE_ITEM_EDU_PROVIDERS_WITHDRAWN", "TABLE");
-		displayCodes.put("QUE_TREE_ITEM_INTERNSHIPS_ACTIVE", "TABLE");
-		
-		/* forms */
-		displayCodes.put("QUE_HOST_CPY_MENU", "FORM");
-		displayCodes.put("QUE_HOST_CPY_REP_MENU", "FORM");
-		displayCodes.put("QUE_EDU_PRO_MENU", "FORM");
-		displayCodes.put("QUE_EDU_PRO_REP_MENU", "FORM");
-		displayCodes.put("QUE_INTERNSHIP_S1_MENU", "FORM");
-		displayCodes.put("QUE_INTERN_S1_MENU", "FORM");
-		displayCodes.put("QUE_REF_PART_MENU", "FORM");
-		displayCodes.put("QUE_REF_PART_REP_MENU", "FORM");
-		displayCodes.put("QUE_AVATAR_PROFILE_GRP", "FORM");
-		displayCodes.put("ACT_PRI_EVENT_VIEW_AGREEMENT", "FORM");
-		
-		/* dialog */
-		displayCodes.put("ACT_PRI_EVENT_APPLY", "DIALOG_FORM");
-		
-		/* detail */
-		displayCodes.put("ACT_PRI_EVENT_VIEW", "DETAIL");
-		displayCodes.put("ACT_PRI_EVENT_VIEW_PROFILE", "DETAIL");
-		displayCodes.put("ACT_PRI_EVENT_VIEW_APP", "DETAIL");
+
+		System.out.println("displayCodes :: " + displayCodes.size() );
 		
 		QCmdMessage msg = new QCmdMessage("DISPLAY", "NONE");
 		msg.setToken(beUtils.getGennyToken().getToken());
