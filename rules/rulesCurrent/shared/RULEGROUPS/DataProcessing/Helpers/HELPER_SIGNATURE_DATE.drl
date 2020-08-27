@@ -22,6 +22,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.io.UnsupportedEncodingException;
 import life.genny.utils.DropdownUtils;
+import java.time.format.DateTimeFormatter;
 
 
 import java.util.List;
@@ -32,7 +33,7 @@ rule "HELPER_SIGNATURE_DATE"
 			salience 5000
 	when
 		beUtils : BaseEntityUtils()
-		answer : Answer( attributeCode == "PRI_INTERN_AGREEMENT_SIGNATURE" || attributeCode == "PRI_HOST_CPY_REP_AGREEMENT_SIGNATURE" || attributeCode == "PRI_EDU_REP_AGREEMENT_SIGNATURE" )
+		answer : Answer( attributeCode == "PRI_INTERN_AGREEMENT_SIGNATURE" || attributeCode == "PRI_HOST_CPY_REP_AGREEMENT_SIGNATURE" || attributeCode == "PRI_OUTCOME_AGREEMENT_SIGNATURE" )
 		answersToSave : Answers()
 		ruleDetails : RuleDetails()
 		output : OutputParam( )
@@ -63,30 +64,39 @@ rule "HELPER_SIGNATURE_DATE"
 		
 		
 			Attribute actualAttribute = RulesUtils.getAttribute("PRI_INTERN_AGREEMENT_SIGNATURE", userToken.getToken());
-			String created = actualAttribute.getCreated().toString();
+			String createdUgly = actualAttribute.getCreated().toString();
+			
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+			String created = dtf.format(createdUgly);
 			
 			/* save the signing date */
-			Answer answerCreated = new Answer(sourceCode, targetCode, "QUE_SIGNING_DATE_INTERN", created);
+			Answer answerCreated = new Answer(sourceCode, targetCode, "PRI_SIGNING_DATE_INTERN", created);
  			beUtils.saveAnswer(answerCreated);
  		}		
  		
  		if (attributeCode.startsWith("PRI_HOST_CPY_REP_")){
 		
 			Attribute actualAttribute = RulesUtils.getAttribute("PRI_HOST_CPY_REP_AGREEMENT_SIGNATURE", userToken.getToken());
-			String created = actualAttribute.getCreated().toString();
+			String createdUgly = actualAttribute.getCreated().toString();
+			
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+			String created = dtf.format(createdUgly);
 				
 			/* save the signing date */
-			Answer answerCreated = new Answer(sourceCode, targetCode, "QUE_SIGNING_DATE_HOST_COMPANY_REP", created);
+			Answer answerCreated = new Answer(sourceCode, targetCode, "PRI_SIGNING_DATE_HOST_COMPANY_REP", created);
  			beUtils.saveAnswer(answerCreated);
  		}	
  		
- 		if (attributeCode.startsWith("PRI_EDU_REP_")){
+ 		if (attributeCode.startsWith("PRI_OUTCOME_")){
 			
-			Attribute actualAttribute = RulesUtils.getAttribute("PRI_EDU_REP_AGREEMENT_SIGNATURE", userToken.getToken());
-			String created = actualAttribute.getCreated().toString();
+			Attribute actualAttribute = RulesUtils.getAttribute("PRI_OUTCOME_AGREEMENT_SIGNATURE", userToken.getToken());
+			String createdUgly = actualAttribute.getCreated().toString();
+			
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+			String created = dtf.format(createdUgly);
 				
 			/* save the signing date */
-			Answer answerCreated = new Answer(sourceCode, targetCode, "QUE_SIGNING_DATE_EDU_PROVIDER_REP", created);
+			Answer answerCreated = new Answer(sourceCode, targetCode, "PRI_SIGNING_DATE_OUTCOME_REP", created);
  			beUtils.saveAnswer(answerCreated);
  		}	
  		
