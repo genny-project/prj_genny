@@ -22,8 +22,6 @@ rule "INIT_EVENT"
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
-
-		System.out.println("displayCodes :: " + displayCodes.size() );
 		
 		QCmdMessage msg = new QCmdMessage("DISPLAY", "NONE");
 		msg.setToken(beUtils.getGennyToken().getToken());
