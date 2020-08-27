@@ -64,10 +64,10 @@ rule "HELPER_SIGNATURE_DATE"
 		
 		
 			Attribute actualAttribute = RulesUtils.getAttribute("PRI_INTERN_AGREEMENT_SIGNATURE", userToken.getToken());
-			String createdUgly = actualAttribute.getCreated().toString();
+			LocalDateTime createdUgly = actualAttribute.getCreated();
 			
 			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-			String created = dtf.format(createdUgly);
+			String created = dtf.format(createdUgly).toString();
 			
 			/* save the signing date */
 			Answer answerCreated = new Answer(sourceCode, targetCode, "PRI_SIGNING_DATE_INTERN", created);
@@ -77,10 +77,10 @@ rule "HELPER_SIGNATURE_DATE"
  		if (attributeCode.startsWith("PRI_HOST_CPY_REP_")){
 		
 			Attribute actualAttribute = RulesUtils.getAttribute("PRI_HOST_CPY_REP_AGREEMENT_SIGNATURE", userToken.getToken());
-			String createdUgly = actualAttribute.getCreated().toString();
+			LocalDateTime createdUgly = actualAttribute.getCreated();
 			
 			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-			String created = dtf.format(createdUgly);
+			String created = dtf.format(createdUgly).toString();
 				
 			/* save the signing date */
 			Answer answerCreated = new Answer(sourceCode, targetCode, "PRI_SIGNING_DATE_HOST_COMPANY_REP", created);
@@ -90,10 +90,10 @@ rule "HELPER_SIGNATURE_DATE"
  		if (attributeCode.startsWith("PRI_OUTCOME_")){
 			
 			Attribute actualAttribute = RulesUtils.getAttribute("PRI_OUTCOME_AGREEMENT_SIGNATURE", userToken.getToken());
-			String createdUgly = actualAttribute.getCreated().toString();
+			LocalDateTime createdUgly = actualAttribute.getCreated();
 			
 			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-			String created = dtf.format(createdUgly);
+			String created = dtf.format(createdUgly).toString();
 				
 			/* save the signing date */
 			Answer answerCreated = new Answer(sourceCode, targetCode, "PRI_SIGNING_DATE_OUTCOME_REP", created);
