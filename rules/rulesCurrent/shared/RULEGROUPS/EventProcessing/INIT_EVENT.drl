@@ -17,7 +17,7 @@ rule "INIT_EVENT"
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
-		displayCodes : Map()
+		displayCodes : HashMap(displayCodes["DISPLAY"] matches "DISPLAY" )
 	
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
