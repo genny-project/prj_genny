@@ -29,12 +29,23 @@ rule "INIT_EVENT"
 		msg.setSend(true);  		
 
 		String code = $message.getData().getCode();
+		System.out.println("code  ::  " + code);
+
 		if(code != null && !code.isEmpty()){
+
+			if(code.equals("QUE_SUBMIT")){
+				String parentCode = $message.getData().getParentCode();
+				System.out.println("parentCode  ::  " + parentCode);
+
+				if(parentCode != null && !parentCode.isEmpty()){
+					code = parentCode;
+				}
+			}
 			
 			Map<String, String> displayCodes = VertxUtils.getMap(serviceToken.getRealm(), "", "DISPLAY_CODES");
 
 			if(displayCodes != null && !displayCodes.isEmpty()){
-
+				
 				if(displayCodes.containsKey(code)){
 			
 					String displayType = displayCodes.get(code);
