@@ -235,17 +235,9 @@ serviceToken = new GennyToken(&quot;PER_SERVICE&quot;,serviceTokenStr);
         </bpmn2:dataInputAssociation>
         <bpmn2:dataInputAssociation id="DataInputAssociation_3">
           <bpmn2:targetRef>DataInput_3</bpmn2:targetRef>
-          <bpmn2:assignment id="Assignment_4">
-            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_10">FRM_TAB_CONTENT</bpmn2:from>
-            <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_8">DataInput_3</bpmn2:to>
-          </bpmn2:assignment>
         </bpmn2:dataInputAssociation>
         <bpmn2:dataInputAssociation id="DataInputAssociation_5">
           <bpmn2:targetRef>DataInput_15</bpmn2:targetRef>
-          <bpmn2:assignment id="Assignment_3">
-            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_7">FRM_TABLE_VIEW</bpmn2:from>
-            <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_2">DataInput_15</bpmn2:to>
-          </bpmn2:assignment>
         </bpmn2:dataInputAssociation>
         <bpmn2:dataOutputAssociation id="DataOutputAssociation_2">
           <bpmn2:sourceRef>DataOutput_3</bpmn2:sourceRef>
