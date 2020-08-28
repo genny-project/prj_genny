@@ -34,6 +34,8 @@ rule "INIT_EVENT"
 
 			if(code.equals("QUE_SUBMIT")){
 				String parentCode = $message.getData().getParentCode();
+				System.out.println("parentCode  ::  " + parentCode);
+				
 				if(parentCode != null && !parentCode.isEmpty()){
 					code = parentCode;
 				}
