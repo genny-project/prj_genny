@@ -15,7 +15,7 @@ rule "INIT_DATA"
 	no-loop
 	salience 10000
 	when
-		$message : QEventMessage(code == "QUE_SUBMIT")
+		$message : QEventMessage(data.code == "QUE_SUBMIT")
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
