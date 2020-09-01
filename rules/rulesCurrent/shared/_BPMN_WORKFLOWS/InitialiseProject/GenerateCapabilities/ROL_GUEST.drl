@@ -26,36 +26,23 @@ import life.genny.qwanda.datatype.CapabilityMode;
 
 import org.apache.commons.lang3.text.WordUtils;
 
-rule "ROL_INTERN"
+rule "ROL_GUEST"
     ruleflow-group 'GenerateCapabilities'
      no-loop true
     when
-       not  BaseEntity (code == "ROL_INTERN")
+       not  BaseEntity (code == "ROL_GUEST")
        capabilityUtils : CapabilityUtils()
-       userRole : BaseEntity (code == "ROL_USER")
-       beUtils : BaseEntityUtils()
+       beUtils : BaseEntityUtils()      
      then
      	System.out.println("   Generate "+drools.getRule().getName() );
  		 
    	     BaseEntity role = capabilityUtils.getBeUtils().create(drools.getRule().getName(),WordUtils.capitalize(drools.getRule().getName().substring(4)));
    	     
-   	     beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), role.getCode(), "PRI_COLOR", "#096F09",false,true));
-   	     
-   	     capabilityUtils.inheritRole(role,userRole);
- 
- 		 capabilityUtils.addCapabilityToRole(role,"DASHBOARD_TIMELINE",CapabilityMode.VIEW);
-  	     capabilityUtils.addCapabilityToRole(role,"READ_HOST_COMPANY",CapabilityMode.VIEW);
-  	     capabilityUtils.addCapabilityToRole(role,"READ_JOURNALS",CapabilityMode.VIEW);
-  	     capabilityUtils.addCapabilityToRole(role,"CREATE_JOURNALS",CapabilityMode.SELF);
-  	     capabilityUtils.addCapabilityToRole(role,"READ_INTERNSHIPS",CapabilityMode.VIEW);
-  	     
-				 capabilityUtils.addCapabilityToRole(role,"WITHDRAW_APPLICATION",CapabilityMode.VIEW);
-				 capabilityUtils.addCapabilityToRole(role,"VIEW_JOURNAL",CapabilityMode.VIEW);
-				 capabilityUtils.addCapabilityToRole(role,"APPLY",CapabilityMode.VIEW);
-				 capabilityUtils.addCapabilityToRole(role,"VIEW_AGREEMENT",CapabilityMode.VIEW);
-  	     
+     	 capabilityUtils.addCapabilityToRole(role,"WEB_ONLY",CapabilityMode.VIEW);
+    	 capabilityUtils.addCapabilityToRole(role,"READ_PROJECT",CapabilityMode.VIEW);
+ 	 
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
-  	     beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_WEIGHT", 200.0,false,true));
+  	     beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_WEIGHT", 100.0,false,true));
  
  		 insert(role);
  		 

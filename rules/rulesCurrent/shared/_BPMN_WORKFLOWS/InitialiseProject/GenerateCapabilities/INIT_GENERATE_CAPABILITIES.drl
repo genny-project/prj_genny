@@ -93,13 +93,18 @@ rule "INIT_GENERATE_CAPABILITIES"
 		capabilityUtils.addCapability( "REJECT_APPLICATION", "Reject Application");
 		capabilityUtils.addCapability( "WITHDRAW_APPLICATION", "Withdraw Application");
 		capabilityUtils.addCapability( "FINISH_APPLICATION", "Finish Application");
+		capabilityUtils.addCapability( "START_INTERNSHIP", "Start Internship");
 		
 		capabilityUtils.addCapability( "EDIT_AGREEMENT", "Edit Agreement");
 		capabilityUtils.addCapability( "VIEW_AGREEMENT", "View Agreement");
 		capabilityUtils.addCapability( "OFFER", "Offer");
 		capabilityUtils.addCapability( "APPLY", "Apply");
 		capabilityUtils.addCapability( "VIEW_JOURNAL", "View Journal");
+		capabilityUtils.addCapability( "EDIT_INTERN", "Edit Intern");
+		capabilityUtils.addCapability( "RATE_INTERN", "Rate Intern");
    
+   		capabilityUtils.addCapability( "WEB_ONLY", "Public Web Use");
+   		
 		capabilityUtils.process();
 		
 		System.out.println("   Completed initial setup of Capabilities - "+capabilityUtils);

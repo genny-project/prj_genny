@@ -15,42 +15,29 @@ import org.drools.core.spi.KnowledgeHelper;
 
 rule "DETAIL_VIEW_ITEM_CLICK_EVENT"
 	ruleflow-group 'EventProcessing'
-	salience 2
+	salience 100
 	no-loop
 	when
 		$message : QEventMessage(
-			data.code matches "QUE_PRI_EVENT_VIEW.*" ||
-			data.code matches "QUE_VIEW_PROFILE" ||
-			data.code matches "QUE_VIEW_APP"
+			data.code matches "ACT_PRI_EVENT_VIEW" ||
+			data.code matches "ACT_PRI_EVENT_VIEW_PROFILE" ||
+			data.code matches "ACT_PRI_EVENT_VIEW_APPLICATION"
 		)
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
-		output : OutputParam( )
-		beUtils : BaseEntityUtils()
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
 		
 		String targetCode = $message.getData().getTargetCode();
 		System.out.println("TARGET code ::  " + targetCode);
 
-		BaseEntity baseEntity = beUtils.getFilteredBaseEntityByCode(targetCode,$message.getData().getCode());
-		System.out.println("Got BE");
-		if(baseEntity!= null){
-			QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
-			msg.setToken(userToken.getToken());
-			msg.setReplace(true);
-			
-			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+		if(targetCode != null){
+			String prefixCode = targetCode.substring(0,3);
+			System.out.println("PREFIX code ::  " + prefixCode);
+
+			long totalTime = TableUtils.searchTable(beUtils, prefixCode, true, "PRI_CODE", targetCode);
+			System.out.println("total took " + (totalTime) + " ms"); 
+		
 		}
-
-		/* Send end process message */
-
-		QCmdMessage msg = new QCmdMessage("END_PROCESS", "END_PROCESS");
-		msg.setToken(beUtils.getGennyToken().getToken());
- 		msg.setSend(true);  		
-		VertxUtils.writeMsg("webcmds",msg);
-
-		output.setTypeOfResult("NONE");
-		output.setResultCode("NONE");  /* dont display anything new */
 		retract( $message);
 	end

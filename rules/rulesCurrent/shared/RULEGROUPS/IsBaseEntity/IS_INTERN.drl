@@ -36,9 +36,9 @@ rule "IS_INTERN"
  		Answer answer3 = new Answer(userToken.getUserCode(), newBe.getCode(),"PRI_DISABLED", "false");
  		Answer answerCardColour = new Answer(userToken.getUserCode(),newBe.getCode(),"PRI_STATUS_COLOR","#5cb85c");
  		Answer answerNumJournals = new Answer(userToken.getUserCode(), newBe.getCode(),"PRI_NUM_JOURNALS","0");
- 		
  	
  		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+
  		beUtils.saveAnswer(answer);
  		beUtils.saveAnswer(answer2);
  		beUtils.saveAnswer(answer3);
@@ -168,11 +168,13 @@ rule "IS_INTERN"
 		String hardcodedTemplateData2 = firstname;
 		
 		EmailHelper.sendGrid(user_email, subject, template_id, hardcodedTemplateData1, hardcodedTemplateData2);
-	
-	
+
+		/* send the detail sbe */
+		long totalTime = TableUtils.searchTable(beUtils,"INTERN", true, "PRI_CODE", newBe.getCode());
+		System.out.println("total took " + (totalTime) + " ms"); 
 		
 		output.setTypeOfResult("NONE");
-  	    output.setResultCode("NONE");  /* dont display anything new */
+		output.setResultCode("NONE");  /* dont display anything new */
 		
 		retract(newBe)
 	
