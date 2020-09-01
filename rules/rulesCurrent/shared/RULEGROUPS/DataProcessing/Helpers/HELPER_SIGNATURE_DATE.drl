@@ -62,41 +62,82 @@ rule "HELPER_SIGNATURE_DATE"
 		
 		if (attributeCode.startsWith("PRI_INTERN_")){
 		
-		
+			System.out.println("attributeCode.startsWith(PRI_INTERN_)" + attributeCode);
+			
+			DateTimeFormatter dtf1 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+  			LocalDateTime now = LocalDateTime.now();
+   			String date = dtf1.format(now);
+   			System.out.println(date);
+			
+			
 			Attribute actualAttribute = RulesUtils.getAttribute("PRI_INTERN_AGREEMENT_SIGNATURE", userToken.getToken());
 			LocalDateTime createdUgly = actualAttribute.getCreated();
+			
+			System.out.println(actualAttribute);
+			System.out.println(createdUgly);
 			
 			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 			String created = dtf.format(createdUgly).toString();
 			
+			System.out.println(dtf);
+			System.out.println(created);
+			
 			/* save the signing date */
-			Answer answerCreated = new Answer(sourceCode, targetCode, "PRI_SIGNING_DATE_INTERN", created);
+			Answer answerCreated = new Answer(sourceCode, targetCode, "PRI_SIGNING_DATE_INTERN", date);
  			beUtils.saveAnswer(answerCreated);
  		}		
  		
  		if (attributeCode.startsWith("PRI_HOST_CPY_REP_")){
 		
+			System.out.println("attributeCode.startsWith(PRI_HOST_CPY_REP_)" + attributeCode);	
+		
+			DateTimeFormatter dtf1 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+  			LocalDateTime now = LocalDateTime.now();
+   			String date = dtf1.format(now);
+   			System.out.println(date);
+			
+			
 			Attribute actualAttribute = RulesUtils.getAttribute("PRI_HOST_CPY_REP_AGREEMENT_SIGNATURE", userToken.getToken());
 			LocalDateTime createdUgly = actualAttribute.getCreated();
 			
+			System.out.println(actualAttribute);
+			System.out.println(createdUgly);
+			
 			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 			String created = dtf.format(createdUgly).toString();
+			
+			System.out.println(dtf);
+			System.out.println(created);
 				
 			/* save the signing date */
-			Answer answerCreated = new Answer(sourceCode, targetCode, "PRI_SIGNING_DATE_HOST_COMPANY_REP", created);
+			Answer answerCreated = new Answer(sourceCode, targetCode, "PRI_SIGNING_DATE_HOST_COMPANY_REP", date);
  			beUtils.saveAnswer(answerCreated);
  		}	
  		
  		if (attributeCode.startsWith("PRI_OUTCOME_")){
+ 		
+ 			System.out.println("attributeCode.startsWith(PRI_OUTCOME_)" + attributeCode);
+ 			
+ 			DateTimeFormatter dtf1 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+  			LocalDateTime now = LocalDateTime.now();
+   			String date = dtf1.format(now);
+   			System.out.println(date);
+			
 			
 			Attribute actualAttribute = RulesUtils.getAttribute("PRI_OUTCOME_AGREEMENT_SIGNATURE", userToken.getToken());
 			LocalDateTime createdUgly = actualAttribute.getCreated();
 			
+			System.out.println(actualAttribute);
+			System.out.println(createdUgly);
+			
 			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 			String created = dtf.format(createdUgly).toString();
+			
+			System.out.println(dtf);
+			System.out.println(created);
 				
 			/* save the signing date */
-			Answer answerCreated = new Answer(sourceCode, targetCode, "PRI_SIGNING_DATE_OUTCOME_REP", created);
+			Answer answerCreated = new Answer(sourceCode, targetCode, "PRI_SIGNING_DATE_OUTCOME_REP", date);
  			beUtils.saveAnswer(answerCreated);
  		}	
  		
