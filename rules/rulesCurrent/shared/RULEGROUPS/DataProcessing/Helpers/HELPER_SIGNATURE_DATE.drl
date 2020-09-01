@@ -41,7 +41,7 @@ rule "HELPER_SIGNATURE_DATE"
 		userToken : GennyToken( code != "PER_SERVICE")
 
 	then
-		System.out.println("HELPER_LNK_INTERN_SUPERVISOR fired");
+		System.out.println("HELPER_SIGNATURE_DATE fired");
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing Helper SIGNATURE DATE Answer/Data : " + answer );
 		
 		/* Save the actual AGREEMENT_SIGNATURE answer */
@@ -69,19 +69,6 @@ rule "HELPER_SIGNATURE_DATE"
    			String date = dtf1.format(now);
    			System.out.println(date);
 			
-			
-			Attribute actualAttribute = RulesUtils.getAttribute("PRI_INTERN_AGREEMENT_SIGNATURE", userToken.getToken());
-			LocalDateTime createdUgly = actualAttribute.getCreated();
-			
-			System.out.println(actualAttribute);
-			System.out.println(createdUgly);
-			
-			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-			String created = dtf.format(createdUgly).toString();
-			
-			System.out.println(dtf);
-			System.out.println(created);
-			
 			/* save the signing date */
 			Answer answerCreated = new Answer(sourceCode, targetCode, "PRI_SIGNING_DATE_INTERN", date);
  			beUtils.saveAnswer(answerCreated);
@@ -96,7 +83,7 @@ rule "HELPER_SIGNATURE_DATE"
    			String date = dtf1.format(now);
    			System.out.println(date);
 			
-			
+			/*
 			Attribute actualAttribute = RulesUtils.getAttribute("PRI_HOST_CPY_REP_AGREEMENT_SIGNATURE", userToken.getToken());
 			LocalDateTime createdUgly = actualAttribute.getCreated();
 			
@@ -108,8 +95,8 @@ rule "HELPER_SIGNATURE_DATE"
 			
 			System.out.println(dtf);
 			System.out.println(created);
-				
-			/* save the signing date */
+			
+			*/
 			Answer answerCreated = new Answer(sourceCode, targetCode, "PRI_SIGNING_DATE_HOST_COMPANY_REP", date);
  			beUtils.saveAnswer(answerCreated);
  		}	
@@ -122,19 +109,6 @@ rule "HELPER_SIGNATURE_DATE"
   			LocalDateTime now = LocalDateTime.now();
    			String date = dtf1.format(now);
    			System.out.println(date);
-			
-			
-			Attribute actualAttribute = RulesUtils.getAttribute("PRI_OUTCOME_AGREEMENT_SIGNATURE", userToken.getToken());
-			LocalDateTime createdUgly = actualAttribute.getCreated();
-			
-			System.out.println(actualAttribute);
-			System.out.println(createdUgly);
-			
-			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-			String created = dtf.format(createdUgly).toString();
-			
-			System.out.println(dtf);
-			System.out.println(created);
 				
 			/* save the signing date */
 			Answer answerCreated = new Answer(sourceCode, targetCode, "PRI_SIGNING_DATE_OUTCOME_REP", date);
