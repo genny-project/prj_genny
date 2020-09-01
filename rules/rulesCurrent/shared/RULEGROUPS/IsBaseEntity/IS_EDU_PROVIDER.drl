@@ -30,7 +30,7 @@ rule "IS_EDU_PROVIDER"
  	/*  Construct answer with Source, Target, Attribute Code, Value */
  		Answer answer = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_EDU_PROVIDER", "true");
  		Answer answer2 = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE");
- 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
  		beUtils.saveAnswer(answer);
  		beUtils.saveAnswer(answer2);
 
@@ -51,10 +51,13 @@ rule "IS_EDU_PROVIDER"
 		System.out.println("Note endPoint: " +endPoint);
 		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
 		System.out.println("Note newBe.getCode(): " +newBe.getCode());
-	
+
+		/* send the detail sbe */
+		long totalTime = TableUtils.searchTable(beUtils,"COMPANY", true, "PRI_CODE", newBe.getCode());
+		System.out.println("total took " + (totalTime) + " ms"); 	
 		
 		output.setTypeOfResult("NONE");
-  	    output.setResultCode("NONE");  /* dont display anything new */
+		output.setResultCode("NONE");  /* dont display anything new */
 		
 		retract(newBe)
 	

@@ -29,7 +29,7 @@ rule "IS_REF_PART"
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
  		Answer answer = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_REF_PART", "true");
- 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
  		beUtils.saveAnswer(answer);
 
 		System.out.println("IS_REF_PART: Answer = " + answer); 
@@ -50,10 +50,12 @@ rule "IS_REF_PART"
 		System.out.println("Note endPoint: " +endPoint);
 		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
 	
-	
+		/* send the detail sbe */
+		long totalTime = TableUtils.searchTable(beUtils,"COMPANY", true, "PRI_CODE", newBe.getCode());
+		System.out.println("total took " + (totalTime) + " ms"); 
 		
 		output.setTypeOfResult("NONE");
-  	    output.setResultCode("NONE");  /* dont display anything new */
+		output.setResultCode("NONE");  /* dont display anything new */
 		
 		retract(newBe)
 	

@@ -39,8 +39,19 @@ rule "QUE_TABLE_NEXT_BTN"
 		/* get current search */
 		TableUtils tableUtils = new TableUtils(beUtils);
 		
- 		SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "LAST-SEARCH",
+ 		SearchEntity searchBE = null;
+				
+		if (($message.getData().getTargetCode()!=null) && $message.getData().getTargetCode().startsWith("SBE_"))
+ 		{
+ 			System.out.println("Rule -> "+drools.getRule().getName()+" TargetCode starts with SBE_");
+ 			searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "",
+			$message.getData().getTargetCode(), SearchEntity.class);
+ 		} else {
+ 			System.out.println("Rule -> "+drools.getRule().getName()+" LAST-SEARCH");
+ 			searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "LAST-SEARCH",
 				userToken.getSessionCode(), SearchEntity.class);
+		}
+				
 		
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" NEXT for "+searchBE.getCode()); 
 		
