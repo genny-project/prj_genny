@@ -34,14 +34,14 @@ import java.util.UUID;
 
 
 
-rule "PRI_SEARCH_TEXT_CREATE_KEYCLOAK_USER"
+rule "PRI_SEARCH_TEXT_IS_KEYCLOAK_USER"
     ruleflow-group 'DataProcessing'
         salience 500
         no-loop true
     when
  	  beUtils : BaseEntityUtils()
  	  allowed : Allowed(code == "SEARCHBAR_CMDS" || code == "TEST") 
-	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" && (value.startsWith("createkeycloakuser:")) )   /* this is a pure search */
+	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" && (value.startsWith("iskeycloakuser:")) )   /* this is a pure search */
 	  serviceToken : GennyToken (code == "PER_SERVICE")
 	  output : OutputParam( )
     then
@@ -50,29 +50,16 @@ rule "PRI_SEARCH_TEXT_CREATE_KEYCLOAK_USER"
    		
 		/* Now import a google doc xls file and generate a List of BaseEntityImports */
 		String email = null;
-		String userPassword = ""; /* MUST SUPPLY PASSWORD */
-		String[] split = answer.getValue().split(":");
 		
-		if (split.length == 3) {
+		if (split.length == 2) {
 			email = split[1].trim();
-			userPassword = split[2].trim();
 		}
 		try {
 			
-			BaseEntity user = beUtils.getPersonFromEmail(email);
-			String firstname = user.getValue("PER_FIRSTNAME",null);
-			if (firstname != null) {
-				String lastname = user.getValue("PER_LASTNAME",null);
-				if (lastname != null) {
-					if (!(StringUtils.isBlank(userPassword))) {
-						/* System.out.println(" keycloak token is "+serviceToken.getToken()); */
-						String userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(),email , firstname, lastname,  email, userPassword,"user", "user");
-						Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),user.getCode(),"PRI_UUID",userId);
-						beUtils.saveAnswer(keycloakId);
-						System.out.println("Created User "+email+" in Keycloak with id = "+userId);
-					}
-				}
-			}						
+						String userId = KeycloakUtils.getKeycloakUserId(serviceToken.getToken(), serviceToken.getRealm(),email);
+						System.out.println("User "+email+" in Keycloak with id = "+userId);
+
+					
 		} catch (IOException e) {
 					/* keycloak exception spits the answer */
 		}
