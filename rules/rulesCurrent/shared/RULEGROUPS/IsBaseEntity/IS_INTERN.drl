@@ -37,7 +37,7 @@ rule "IS_INTERN"
  		Answer answerCardColour = new Answer(userToken.getUserCode(),newBe.getCode(),"PRI_STATUS_COLOR","#5cb85c");
  		Answer answerNumJournals = new Answer(userToken.getUserCode(), newBe.getCode(),"PRI_NUM_JOURNALS","0");
  	
- 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+ 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 
  		beUtils.saveAnswer(answer);
  		beUtils.saveAnswer(answer2);
