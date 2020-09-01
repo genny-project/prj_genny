@@ -58,8 +58,8 @@ rule "PRI_SEARCH_TEXT_CREATE_KEYCLOAK_USER"
 			userPassword = split[2].trim();
 		}
 		try {
-			String usercode ="PER_"+ QwandaUtils.getNormalisedUsername(email);
-			BaseEntity user = beUtils.getBaseEntityByCode(usercode);
+			
+			BaseEntity user = beUtils.getPersonFromEmail(email);
 			String firstname = user.getValue("PER_FIRSTNAME",null);
 			if (firstname != null) {
 				String lastname = user.getValue("PER_LASTNAME",null);
