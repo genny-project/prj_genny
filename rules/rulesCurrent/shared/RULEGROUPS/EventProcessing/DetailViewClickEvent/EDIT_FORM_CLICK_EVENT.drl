@@ -17,7 +17,7 @@ rule "EDIT_FORM_CLICK_EVENT"
 		salience 2
     no-loop true
     when
-		$message : QEventMessage(data.code matches "QUE_EDIT_.*")
+		$message : QEventMessage(data.code matches "ACT_PRI_EVENT_EDIT")
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam( )
@@ -27,11 +27,41 @@ rule "EDIT_FORM_CLICK_EVENT"
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 		
-		String code = $message.getData().getCode(); /* get click event code e.g. QUE_EDIT_EDU_PROVIDER_GRP  */
-		String workflowSignalCode = "EDIT_FORMS";
 		
-		String typeOf = StringUtils.removeEnd(code, "_GRP");
-		typeOf = StringUtils.removeStart(typeOf,"QUE_EDIT_");
+		String workflowSignalCode = "EDIT_FORMS";
+		String parentCode = $message.getParentCode(); 	/* get parentcode SBE e.g. SBE_INTERN_XXXXX  */
+		
+		String[] parentSplit = parentCode.split("_");
+        String typeOf = parentSplit[1];
+        System.out.println("typeOf: " +typeOf);
+        
+        if (typeOf.equals("INTERN")){
+        	typeOf = "INTERN_S1";
+        }
+        
+        if (typeOf.equals("INTERNSHIP")){
+        	typeOf = "INTERNSHIP_S1";
+        }
+        
+        if (typeOf.equals("EDU_PROVIDER")){
+        	typeOf = "EDU_PRO";
+        }
+        
+        if (typeOf.equals("EPR")){
+        	typeOf = "EDU_PRO_REP";
+        }
+        
+        if (typeOf.equals("HOST_COMPANY")){
+        	typeOf = "HOST_CPY";
+        }
+        
+        if (typeOf.equals("HCR")){
+        	typeOf = "HOST_CPY_REP";
+        }
+        
+        
+        System.out.println("typeOf: " +typeOf);
+        
 
 		output.setTypeOfResult("SIGNAL");
 		output.setResultCode("START_"+workflowSignalCode);
@@ -45,6 +75,8 @@ rule "EDIT_FORM_CLICK_EVENT"
 		
 		System.out.println("START SIGNAL: " +workflowSignalCode);
 		System.out.println("STARTING EDIT FORMS PROCEDURE WITH: " +output);
+
+
 
 		String targetCode = $message.getData().getTargetCode();
 
