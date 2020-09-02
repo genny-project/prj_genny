@@ -70,8 +70,9 @@ rule "HELPER_SIGNATURE_DATE"
    			System.out.println(date);
 			
 			/* save the signing date */
-			Answer answerCreated = new Answer(sourceCode, targetCode, "PRI_SIGNING_DATE_INTERN", date);
+			Answer answerCreated = new Answer(sourceCode, targetCode, "PRI_INTERN_SIGNING_DATE", date);
  			beUtils.saveAnswer(answerCreated);
+ 			System.out.println("answerCreated" + answerCreated);
  		}		
  		
  		if (attributeCode.startsWith("PRI_HOST_CPY_REP_")){
@@ -97,8 +98,9 @@ rule "HELPER_SIGNATURE_DATE"
 			System.out.println(created);
 			
 			*/
-			Answer answerCreated = new Answer(sourceCode, targetCode, "PRI_SIGNING_DATE_HOST_COMPANY_REP", date);
+			Answer answerCreated = new Answer(sourceCode, targetCode, "PRI_HOST_COMPANY_REP_SIGNING_DATE", date);
  			beUtils.saveAnswer(answerCreated);
+ 			System.out.println("answerCreated" + answerCreated);
  		}	
  		
  		if (attributeCode.startsWith("PRI_OUTCOME_")){
@@ -111,8 +113,10 @@ rule "HELPER_SIGNATURE_DATE"
    			System.out.println(date);
 				
 			/* save the signing date */
-			Answer answerCreated = new Answer(sourceCode, targetCode, "PRI_SIGNING_DATE_OUTCOME_REP", date);
+			Answer answerCreated = new Answer(sourceCode, targetCode, "PRI_OUTCOME_REP_SIGNING_DATE", date);
  			beUtils.saveAnswer(answerCreated);
+ 			System.out.println("answerCreated" + answerCreated);
+ 			
  		}	
  		
 

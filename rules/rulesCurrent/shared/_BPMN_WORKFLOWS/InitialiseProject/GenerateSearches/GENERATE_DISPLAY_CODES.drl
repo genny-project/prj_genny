@@ -53,6 +53,7 @@ rule "GENERATE_DISPLAY_CODES"
 		displayCodes.put("QUE_TREE_ITEM", "TABLE");
 		
 		/* forms goes here */
+		displayCodes.put("ACT_PRI_EVENT_EDIT", "FORM")
 
 		insert(displayCodes);
 		VertxUtils.putObject(serviceToken.getRealm(), "", "DISPLAY_CODES", displayCodes, serviceToken.getToken());
