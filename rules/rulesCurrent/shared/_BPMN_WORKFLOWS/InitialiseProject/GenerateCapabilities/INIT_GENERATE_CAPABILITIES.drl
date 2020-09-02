@@ -100,10 +100,20 @@ rule "INIT_GENERATE_CAPABILITIES"
 		capabilityUtils.addCapability( "OFFER", "Offer");
 		capabilityUtils.addCapability( "APPLY", "Apply");
 		capabilityUtils.addCapability( "VIEW_JOURNAL", "View Journal");
-		capabilityUtils.addCapability( "EDIT_INTERN", "Edit Intern");
 		capabilityUtils.addCapability( "RATE_INTERN", "Rate Intern");
+		
+		capabilityUtils.addCapability( "EDIT_INTERNSHIP", "Edit Internship");
+		capabilityUtils.addCapability( "EDIT_INTERN", "Edit Intern");
+		capabilityUtils.addCapability( "EDIT_AGENT", "Edit Agent");
+		capabilityUtils.addCapability( "EDIT_HCR", "Edit Host Company Rep");
+		capabilityUtils.addCapability( "EDIT_EPR", "Edit Education Provider Rep");
+		capabilityUtils.addCapability( "EDIT_REF_PART_REP", "Edit Referal Partner Rep");
+		capabilityUtils.addCapability( "EDIT_REF_PART", "Edit Referal Partner");
+		capabilityUtils.addCapability( "EDIT_HOST_COMPANY", "Edit Host Company");
+		capabilityUtils.addCapability( "EDIT_EDU_PROVIDER", "Edit Education Provider");
+		capabilityUtils.addCapability( "EDIT_AGENCY", "Edit Agency");
    
-   		capabilityUtils.addCapability( "WEB_ONLY", "Public Web Use");
+		capabilityUtils.addCapability( "WEB_ONLY", "Public Web Use");
    		
 		capabilityUtils.process();
 		
