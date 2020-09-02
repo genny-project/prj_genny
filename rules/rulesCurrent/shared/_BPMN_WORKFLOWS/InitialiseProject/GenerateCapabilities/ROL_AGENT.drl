@@ -69,6 +69,7 @@ rule "ROL_AGENT"
    	     capabilityUtils.addCapabilityToRole(role,"EDIT_HOST_COMPANY",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"EDIT_EDU_PROVIDER",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"EDIT_AGENCY",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"EDIT_APPLICATION",CapabilityMode.VIEW);
  
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
   	     
