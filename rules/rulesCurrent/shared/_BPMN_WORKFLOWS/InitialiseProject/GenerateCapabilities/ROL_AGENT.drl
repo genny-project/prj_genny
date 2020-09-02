@@ -53,6 +53,7 @@ rule "ROL_AGENT"
    	     capabilityUtils.addCapabilityToRole(role,"EDIT_AGREEMENT",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"VIEW_AGREEMENT",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"FINISH_APPLICATION",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"ARCHIVE_INTERN",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"ON_HOLD_APPLICATION",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"REJECT_APPLICATION",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"WITHDRAW_APPLICATION",CapabilityMode.VIEW);
