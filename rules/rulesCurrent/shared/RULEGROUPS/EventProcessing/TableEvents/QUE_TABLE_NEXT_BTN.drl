@@ -91,7 +91,7 @@ rule "QUE_TABLE_NEXT_BTN"
 				userToken.getToken());
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" NEXT for "+searchBE.getCode()+" About to go into search! "); 
 		
-			long totalTime = TableUtils.searchTable(beUtils,searchBE, cache);
+			long totalTime = TableUtils.searchTable(beUtils,searchBE, cache, false);
 
 			System.out.println("total took " + (totalTime) + " ms"); 
 			}
