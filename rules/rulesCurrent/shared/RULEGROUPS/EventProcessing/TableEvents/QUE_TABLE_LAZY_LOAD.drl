@@ -17,12 +17,12 @@ import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 import life.genny.qwanda.rule.RuleDetails;
 
 
-rule "QUE_TABLE_NEXT_BTN"
+rule "QUE_TABLE_LAZY_LOAD"
     ruleflow-group 'EventProcessing'
 	salience 2
     no-loop
     when
-			$message : QEventMessage(data.code matches "QUE_TABLE_NEXT_BTN" )	
+			$message : QEventMessage(data.code matches "QUE_TABLE_LAZY_LOAD" )	
 			userToken : GennyToken ( code != "PER_SERVICE" ) 
 			serviceToken : GennyToken( code == "PER_SERVICE") 
 			output : OutputParam( )
@@ -91,7 +91,7 @@ rule "QUE_TABLE_NEXT_BTN"
 				userToken.getToken());
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" NEXT for "+searchBE.getCode()+" About to go into search! "); 
 		
-			long totalTime = TableUtils.searchTable(beUtils,searchBE, cache);
+			long totalTime = TableUtils.searchTable(beUtils,searchBE, cache, false);
 
 			System.out.println("total took " + (totalTime) + " ms"); 
 			}
