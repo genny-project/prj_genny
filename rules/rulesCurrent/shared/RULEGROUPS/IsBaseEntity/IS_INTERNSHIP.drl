@@ -51,7 +51,7 @@ rule "IS_INTERNSHIP"
 		
 		System.out.println("@@@@@@@@@@@@@ IS_INTERNSHIP RULE: CALCULATING END DATE AND TIMES @@@@@@@@@@@@@");
 
-		String startDateTime = beUtils.getBaseEntityValueAsLocalDate(newBe.getCode(), "PRI_START_DATE");
+		String startDateTime = beUtils.getBaseEntityValueAsLocalDate(newBe.getCode(), "PRI_START_DATE").toString();
 		System.out.println("startDateTime = " +startDateTime);
 
 		if (startDateTime != null) {
