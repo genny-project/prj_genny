@@ -49,6 +49,7 @@ rule "ROL_SUPERVISOR"
   	     
   	     
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
+				 beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_NAME", "Supervisor",false,true));
   	     beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_WEIGHT", 300.0,false,true));
  
  		 insert(role);

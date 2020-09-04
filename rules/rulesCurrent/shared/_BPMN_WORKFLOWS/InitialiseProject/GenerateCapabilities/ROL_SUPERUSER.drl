@@ -55,6 +55,7 @@ rule "ROL_SUPERUSER"
  
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
  
+ 				 beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_NAME", "Superuser",false,true));
   	     beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_WEIGHT", 900.0,false,true));
  
  		 insert(role);

@@ -49,6 +49,7 @@ rule "ROL_ADMIN"
  
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
  		
+		 beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_NAME", "Admin",false,true));
  		 beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_WEIGHT", 800.0,false,true));
  
  		 insert(role);

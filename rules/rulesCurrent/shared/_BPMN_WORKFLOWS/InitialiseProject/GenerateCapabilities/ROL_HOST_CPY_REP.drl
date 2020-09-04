@@ -65,6 +65,7 @@ rule "ROL_HOST_CPY_REP"
   	     
   	     
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
+				 beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_NAME", "Rep",false,true));
   	     beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_WEIGHT", 500.0,false,true));
  
  		 insert(role);

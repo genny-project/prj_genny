@@ -42,6 +42,8 @@ rule "ROL_GUEST"
     	 capabilityUtils.addCapabilityToRole(role,"READ_PROJECT",CapabilityMode.VIEW);
  	 
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
+
+				 beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_NAME", "Guest",false,true));
   	     beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_WEIGHT", 100.0,false,true));
  
  		 insert(role);

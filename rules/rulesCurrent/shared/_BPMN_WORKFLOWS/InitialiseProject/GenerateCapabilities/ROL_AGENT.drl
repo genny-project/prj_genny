@@ -73,7 +73,8 @@ rule "ROL_AGENT"
    	     capabilityUtils.addCapabilityToRole(role,"EDIT_APPLICATION",CapabilityMode.VIEW);
  
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
-  	     
+
+				beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_NAME", "Agent",false,true)); 
   	    beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_WEIGHT", 700.0,false,true));
  
  		 insert(role);

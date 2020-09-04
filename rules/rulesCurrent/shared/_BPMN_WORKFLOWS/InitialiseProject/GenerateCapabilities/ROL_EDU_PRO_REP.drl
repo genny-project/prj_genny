@@ -53,6 +53,8 @@ rule "ROL_EDU_PRO_REP"
 			capabilityUtils.addCapabilityToRole(role,"VIEW_AGREEMENT",CapabilityMode.VIEW);
 			
 			role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
+
+			beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_NAME", "Rep",false,true));
 			beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_WEIGHT", 600.0,false,true));
 
  		 insert(role);
