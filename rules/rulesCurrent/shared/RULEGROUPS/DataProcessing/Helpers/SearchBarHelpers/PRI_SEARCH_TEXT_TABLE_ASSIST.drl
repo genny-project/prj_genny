@@ -36,50 +36,60 @@ import life.genny.utils.TableUtils;
 
 
 rule "PRI_SEARCH_TEXT_TABLE_ASSIST"
-    ruleflow-group 'DataProcessing'
-        salience 500
-        no-loop true
-    when
+	ruleflow-group 'DataProcessing'
+	salience 500
+	no-loop true
+	when
  	  beUtils : BaseEntityUtils()
  	  allowed : Allowed(code == "USER") 
 	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" && (value.startsWith("!")) )   /* this is a pure assist search */
 	  serviceToken : GennyToken (code == "PER_SERVICE")
 	  output : OutputParam( )
-    then
-  		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer);
-   		retract(answer);
-   		
-   		String value = answer.getValue().substring(1);
+	then
+		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer);
+		retract(answer);
 
-			Boolean cache = true;
-			
+		String value = answer.getValue().substring(1);
+
+		Boolean cache = true;
+
 		/* get current search */
 		TableUtils tableUtils = new TableUtils(beUtils);
-		
- 		SearchEntity searchBE = null;
- 		
- 		if (answer.getTargetCode().startsWith("SBE_"))
- 		{
- 				System.out.println("Rule -> "+drools.getRule().getName()+" TargetCode starts with SBE_");
- 				searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "",
-				answer.getTargetCode(), SearchEntity.class);
- 		} else {
- 			System.out.println("Rule -> "+drools.getRule().getName()+" LAST-SEARCH");
- 			searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "LAST-SEARCH",
-				beUtils.getGennyToken().getSessionCode(), SearchEntity.class);
+
+		SearchEntity searchBE = null;
+
+		if (answer.getTargetCode().startsWith("SBE_"))
+		{
+			System.out.println("Rule -> "+drools.getRule().getName()+" TargetCode starts with SBE_");
+			searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "",
+			answer.getTargetCode(), SearchEntity.class);
+		} else {
+			System.out.println("Rule -> "+drools.getRule().getName()+" LAST-SEARCH");
+			searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "LAST-SEARCH",
+			beUtils.getGennyToken().getSessionCode(), SearchEntity.class);
 		}
+		
 		System.out.println(drools.getRule().getName()+" ASSIST for "+searchBE.getCode()); 
 
-			searchBE.setWildcard(value);
-			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
-				beUtils.getGennyToken().getToken());
-		
-			long totalTime = TableUtils.searchTable(beUtils,searchBE, true);
+		/* Reset the pageNumber to 1 */
+		/* Answer pageAnswer = new Answer(userToken.getUserCode(),searchBE.getCode(), "SCH_PAGE_START", "0"); */
+		Answer pageNumberAnswer = new Answer(beUtils.getGennyToken().getUserCode(), searchBE.getCode(), "PRI_INDEX", "1");
 
-			System.out.println("total took " + (totalTime) + " ms"); 
+		/* update the searchBe object */
+		/* searchBE = beUtils.updateBaseEntity(searchBE, pageAnswer,SearchEntity.class); */
+		searchBE = beUtils.updateBaseEntity(searchBE, pageNumberAnswer,SearchEntity.class);
+		
+		searchBE.setWildcard(value);
+		searchBE.setPageStart(0);
+		
+		/* cache the updated searchBe  */
+		VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
+		beUtils.getGennyToken().getToken());
+
+		long totalTime = TableUtils.searchTable(beUtils,searchBE, true);
+
+		System.out.println("total took " + (totalTime) + " ms"); 
 
 		output.setTypeOfResult("NONE");
-  	    output.setResultCode("NONE");  /* dont display anything new */
-		
-		
+		output.setResultCode("NONE");  /* dont display anything new */
 end
