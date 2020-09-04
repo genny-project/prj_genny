@@ -186,6 +186,81 @@ public class AdamTest {
 	protected static GennyToken serviceToken;
 
 	@Test
+	public void fixJournalCountsTest() {
+		System.out.println("Journal Counts test");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+		} else {
+			// VertxUtils.cachedEnabled = false;
+			VertxUtils.cachedEnabled = false;
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+			eventBusMock = new EventBusMock();
+			vertxCache = new JunitCache(); // MockCache
+			VertxUtils.init(eventBusMock, vertxCache);
+		}
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		beUtils.setServiceToken(serviceToken);
+
+		SearchEntity searchBE = new SearchEntity("SBE_TEST", "interns")
+				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%").addFilter("PRI_IS_INTERN", true)
+				.addColumn("PRI_CODE", "Name");
+
+		searchBE.setRealm(realm);
+		searchBE.setPageStart(0);
+		searchBE.setPageSize(100000);
+
+		List<BaseEntity> interns = beUtils.getBaseEntitys(searchBE);
+
+		for (BaseEntity intern : interns) {
+
+			searchBE = new SearchEntity("SBE_TEST", "internjournals")
+					.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%").addFilter("LNK_INTERN",SearchEntity.StringFilter.LIKE, "%"+intern.getCode()+"%")
+					.addColumn("PRI_CODE", "Name");
+
+			Tuple2<String, List<String>> results = beUtils.getHql(searchBE); // hql += " order by " + sortCode + " " +
+																				// sortValue;
+			String hql = results._1;
+			String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
+			try {
+				String resultJsonStr = QwandaUtils.apiGet(
+						GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2, serviceToken.getToken(),
+						120);
+
+				
+				Integer count = Integer.decode(resultJsonStr);
+				System.out.println("Count = " + count);
+				
+				Answer journalCount = new Answer(beUtils.getGennyToken().getUserCode(), intern.getCode(), "PRI_NUM_JOURNALS",
+						count);
+				beUtils.saveAnswer(journalCount);
+				
+				
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+
+		}
+
+		System.out.println("Finished");
+	}
+
+	@Test
 	public void internImagesFix() {
 		System.out.println("Intern Images test");
 		GennyToken userToken = null;
