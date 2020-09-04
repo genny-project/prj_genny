@@ -50,7 +50,7 @@ rule "IS_INTERNSHIP"
 		
 		System.out.println("@@@@@@@@@@@@@ IS_INTERNSHIP RULE: CALCULATING END DATE AND TIMES @@@@@@@@@@@@@");
 
-		startDateTime = beUtils.getBaseEntityValueAsLocalDate(newBe.getCode(), "PRI_START_DATE");
+		String startDateTime = beUtils.getBaseEntityValueAsLocalDate(newBe.getCode(), "PRI_START_DATE");
 		System.out.println("startDateTime = " +startDateTime);
 
 		if (startDateTime != null) {
@@ -63,21 +63,21 @@ rule "IS_INTERNSHIP"
 				String str_month = startDate.split("-")[1];
 				String str_day = startDate.split("-")[2];
 
-				Int int_year = Integer.parseInt(str_year);
-				Int int_month = Integer.parseInt(str_month);
-				Int int_day = Integer.parseInt(str_day);
+				int int_year = Integer.parseInt(str_year);
+				int int_month = Integer.parseInt(str_month);
+				int int_day = Integer.parseInt(str_day);
 				System.out.println("int_year: " +int_year + ", int_month: " + int_month + ", int_day: " + int_day);
 				
-				LocalDate dumbStartDate = localDate.of(int_year, int_month, int_day);
+				LocalDate dumbStartDate = LocalDate.of(int_year, int_month, int_day);
 				
-				muddleDuration = newBe.getValue("LNK_INTERNSHIP_DURATION", null);
+				String muddleDuration = newBe.getValue("LNK_INTERNSHIP_DURATION", null);
 				System.out.println("muddleDuration : " + muddleDuration);
 				
 				if (muddleDuration != null) {
-						durationStr = muddleDuration.replace("\"", "").replace("[", "").replace("]", "");
+						String durationStr = muddleDuration.replace("\"", "").replace("[", "").replace("]", "");
 						BaseEntity durationBe = beUtils.getBaseEntityByCode(durationStr);
 						System.out.println("durationBe: " + durationBe);
-						String realDuration = user.getValue("PRI_NAME", null);
+						String realDuration = durationBe.getValue("PRI_NAME", null);
 						
 						if (realDuration != null) {
 								Long longDuration = Long.parseLong(realDuration);
@@ -89,11 +89,10 @@ rule "IS_INTERNSHIP"
 								Answer answerEndDate = new Answer(userToken.getUserCode(), newBe.getCode(),"PRI_END_DATE", dumbEndDate.toString());
 								beUtils.saveAnswer(answerEndDate);
 								
-								String 
 								
 						} else {
 							System.out.println("ERROR: No realDuration"); 
-						}|
+						}
 				} else {
 					System.out.println("ERROR: No muddleDuration");
 				}
@@ -113,7 +112,7 @@ rule "IS_INTERNSHIP"
 				
 				if (dpw != null) {
 						int idpw = Integer.parseInt(dpw);
-						int intHPW = 8 * inum;
+						int intHPW = 8 * idpw;
 						System.out.println(intHPW);
 						
 						String hoursPerWeek = intHPW +"";
