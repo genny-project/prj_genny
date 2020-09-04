@@ -7,6 +7,7 @@ import life.genny.qwanda.Answer;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.utils.OutputParam;
 import life.genny.qwandautils.GennySettings;
+import java.time.LocalDate;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -44,6 +45,87 @@ rule "IS_INTERNSHIP"
 
 		System.out.println("IS_INTERNSHIP: Answer = " + answer); 
 		
+		
+		
+		
+		System.out.println("@@@@@@@@@@@@@ IS_INTERNSHIP RULE: CALCULATING END DATE AND TIMES @@@@@@@@@@@@@");
+
+		startDateTime = beUtils.getBaseEntityValueAsLocalDate(newBe.getCode(), "PRI_START_DATE");
+		System.out.println("startDateTime = " +startDateTime);
+
+		if (startDateTime != null) {
+				String startDate = startDateTime.toString();
+				System.out.println("startDate : " + startDate); 
+		
+				String[] startDateArray = startDate.split("-");
+		
+				String str_year = startDate.split("-")[0];
+				String str_month = startDate.split("-")[1];
+				String str_day = startDate.split("-")[2];
+
+				Int int_year = Integer.parseInt(str_year);
+				Int int_month = Integer.parseInt(str_month);
+				Int int_day = Integer.parseInt(str_day);
+				System.out.println("int_year: " +int_year + ", int_month: " + int_month + ", int_day: " + int_day);
+				
+				LocalDate dumbStartDate = localDate.of(int_year, int_month, int_day);
+				
+				muddleDuration = newBe.getValue("LNK_INTERNSHIP_DURATION", null);
+				System.out.println("muddleDuration : " + muddleDuration);
+				
+				if (muddleDuration != null) {
+						durationStr = muddleDuration.replace("\"", "").replace("[", "").replace("]", "");
+						BaseEntity durationBe = beUtils.getBaseEntityByCode(durationStr);
+						System.out.println("durationBe: " + durationBe);
+						String realDuration = user.getValue("PRI_NAME", null);
+						
+						if (realDuration != null) {
+								Long longDuration = Long.parseLong(realDuration);
+								
+								
+								LocalDate dumbEndDate = dumbStartDate.plusWeeks(longDuration);
+								System.out.println("dumbEndDate : " + dumbEndDate);
+								
+								Answer answerEndDate = new Answer(userToken.getUserCode(), newBe.getCode(),"PRI_END_DATE", dumbEndDate.toString());
+								beUtils.saveAnswer(answerEndDate);
+								
+								String 
+								
+						} else {
+							System.out.println("ERROR: No realDuration"); 
+						}|
+				} else {
+					System.out.println("ERROR: No muddleDuration");
+				}
+		} else {
+			System.out.println("ERROR: No startDate"); 
+		}
+		
+		
+		String linkedDPW = newBe.getValue("LNK_DAYS_PER_WEEK", null);
+		System.out.println("linkedDPW : " + linkedDPW);
+		
+		if (linkedDPW != null) {
+				linkedDPW = linkedDPW.replace("\"", "").replace("[", "").replace("]", "");
+				BaseEntity linkedDPWBe = beUtils.getBaseEntityByCode(linkedDPW);
+				
+				String dpw = linkedDPWBe.getValue("PRI_NAME", null);
+				
+				if (dpw != null) {
+						int idpw = Integer.parseInt(dpw);
+						int intHPW = 8 * inum;
+						System.out.println(intHPW);
+						
+						String hoursPerWeek = intHPW +"";
+						System.out.println(hoursPerWeek);
+						
+						Answer answerHoursPW = new Answer(userToken.getUserCode(), newBe.getCode(),"PRI_HOURS_PER_WEEK", hoursPerWeek);
+						beUtils.saveAnswer(answerHoursPW);
+				}
+		}
+		
+		
+	
 		
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
 		String title = user.getValue("PRI_NAME",null);
