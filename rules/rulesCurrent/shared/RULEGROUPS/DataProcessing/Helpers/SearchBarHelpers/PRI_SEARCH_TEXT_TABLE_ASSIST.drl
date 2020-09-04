@@ -73,7 +73,13 @@ rule "PRI_SEARCH_TEXT_TABLE_ASSIST"
 
 		/* Reset the pageNumber to 1 */
 		Answer pageNumberAnswer = new Answer(beUtils.getGennyToken().getUserCode(), searchBE.getCode(), "PRI_INDEX", "1");
-		beUtils.saveAnswer(pageNumberAnswer);	
+
+		/* update the searchBe object */
+		searchBE = beUtils.updateBaseEntity(searchBE, pageNumberAnswer,SearchEntity.class);
+		
+		/* cache the updated searchBe  */
+		VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
+				beUtils.getGennyToken().getToken());
 
 		searchBE.setWildcard(value);
 		VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
