@@ -8,6 +8,7 @@ import life.genny.qwanda.entity.BaseEntity;
 import life.genny.utils.OutputParam;
 import life.genny.qwandautils.GennySettings;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -81,12 +82,14 @@ rule "IS_INTERNSHIP"
 						
 						if (realDuration != null) {
 								Long longDuration = Long.parseLong(realDuration);
-								
-								
+																
 								LocalDate dumbEndDate = dumbStartDate.plusWeeks(longDuration);
-								System.out.println("dumbEndDate : " + dumbEndDate);
+								DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/mm/dd");
 								
-								Answer answerEndDate = new Answer(userToken.getUserCode(), newBe.getCode(),"PRI_END_DATE", dumbEndDate.toString());
+								String stringDED = dumbEndDate.format(formatter);
+								System.out.println("stringDED : " + stringDED);
+
+								Answer answerEndDate = new Answer(userToken.getUserCode(), newBe.getCode(),"PRI_END_DATE", stringDED);
 								beUtils.saveAnswer(answerEndDate);
 								
 								
@@ -120,7 +123,11 @@ rule "IS_INTERNSHIP"
 						
 						Answer answerHoursPW = new Answer(userToken.getUserCode(), newBe.getCode(),"PRI_HOURS_PER_WEEK", hoursPerWeek);
 						beUtils.saveAnswer(answerHoursPW);
+				} else {
+					System.out.println("ERROR: No dpw"); 
 				}
+		} else {
+			System.out.println("ERROR: No linkedDPW"); 
 		}
 		
 		
