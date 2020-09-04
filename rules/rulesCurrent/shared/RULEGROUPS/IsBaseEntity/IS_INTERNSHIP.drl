@@ -84,9 +84,10 @@ rule "IS_INTERNSHIP"
 								
 								
 								LocalDate dumbEndDate = dumbStartDate.plusWeeks(longDuration);
-								System.out.println("dumbEndDate : " + dumbEndDate);
+								String strDED = dumbEndDate.toString();
+								System.out.println("strDED : " + strDED);
 								
-								Answer answerEndDate = new Answer(userToken.getUserCode(), newBe.getCode(),"PRI_END_DATE", dumbEndDate.toString());
+								Answer answerEndDate = new Answer(userToken.getUserCode(), newBe.getCode(),"PRI_END_DATE", strDED);
 								beUtils.saveAnswer(answerEndDate);
 								
 								
