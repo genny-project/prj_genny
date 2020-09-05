@@ -1358,7 +1358,7 @@ kcontext.setVariable(&quot;dom&quot;,dom);
 
 /* System.out.println(&quot;userSession: Show Page Handler - Update DOM - got to here&quot;);*/
 if (currentUser == null) {
-  String userCode = QwandaUtils.getNormalisedUsername(userToken.getUserCode());
+  String userCode = userToken.getUserCode();
   currentUser = VertxUtils.getObject(userToken.getRealm(), &quot;&quot;,userCode, BaseEntity.class, serviceToken.getToken());
   kcontext.setVariable(&quot;currentUser&quot;,currentUser);
 
