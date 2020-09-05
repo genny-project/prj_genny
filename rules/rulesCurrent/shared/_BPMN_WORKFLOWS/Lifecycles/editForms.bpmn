@@ -166,7 +166,7 @@ System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ typeOf: &quot; + typeOf);
 
 if (typeOf == &quot;HOST&quot;) {
 
-	typeOf = HOST_CPY;
+	typeOf = &quot;HOST_CPY&quot;;
 }
 
 newApplication = beUtils. getBaseEntityByCode(codes);

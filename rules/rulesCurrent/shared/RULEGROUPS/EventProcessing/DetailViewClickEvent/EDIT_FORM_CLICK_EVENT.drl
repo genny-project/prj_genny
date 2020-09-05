@@ -55,6 +55,11 @@ rule "EDIT_FORM_CLICK_EVENT"
         	typeOf = "HOST_CPY";
         }
         
+        if (typeOf.equals("HOST")){
+        	typeOf = "HOST_CPY";
+        }
+        
+        
         if (typeOf.equals("HCR")){
         	typeOf = "HOST_CPY_REP";
         }
