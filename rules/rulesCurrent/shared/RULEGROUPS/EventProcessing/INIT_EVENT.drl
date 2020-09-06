@@ -18,18 +18,18 @@ rule "INIT_EVENT"
 		$message : QEventMessage()
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
+		beUtils : BaseEntityUtils()
 		output : OutputParam( )
 	
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
-		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 		
 		QCmdMessage msg = new QCmdMessage("DISPLAY", "NONE");
 		msg.setToken(beUtils.getGennyToken().getToken());
 		msg.setSend(true);  		
 
 		String code = $message.getData().getCode();
-		System.out.println("code  ::  " + code);
+		
 
 		if(code != null && !code.isEmpty()){
 
@@ -58,6 +58,9 @@ rule "INIT_EVENT"
 					}
 				}
 			}
+		} else {
+		
+			System.out.println("WARNING ====> code in INIT_EVENT is NULL ::  " + code);
 		}
 		
 		/* Send cmd message */
