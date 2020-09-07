@@ -32,8 +32,8 @@
   <bpmn2:itemDefinition id="ItemDefinition_2821" isCollection="false" structureRef="java.time.LocalDate"/>
   <bpmn2:signal id="Signal_1" name="createBE"/>
   <bpmn2:signal id="Signal_2" name="makeBe"/>
-  <bpmn2:signal id="Signal_3" name="START_INTERNSHIP_S1"/>
-  <bpmn2:process id="INTERNSHIP_S1" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="Default Process" isExecutable="true">
+  <bpmn2:signal id="Signal_3" name="START_INTERNSHIP"/>
+  <bpmn2:process id="INTERNSHIP" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="Default Process" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.models.GennyToken"/>
       <drools:import name="life.genny.utils.CallingProcessToken"/>
@@ -238,14 +238,14 @@ kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCod
           <bpmn2:targetRef>outputMsg</bpmn2:targetRef>
         </bpmn2:dataOutputAssociation>
       </bpmn2:task>
-      <bpmn2:task id="Task_2" drools:taskName="AskQuestionTask" drools:displayName="Ask Question Task" drools:icon="icons/icon-info.gif" name="QUE_INTERNSHIP_S1_GRP">
+      <bpmn2:task id="Task_2" drools:taskName="AskQuestionTask" drools:displayName="Ask Question Task" drools:icon="icons/icon-info.gif" name="QUE_INTERNSHIP_GRP">
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
-            <drools:metaValue><![CDATA[QUE_INTERNSHIP_S1_GRP]]></drools:metaValue>
+            <drools:metaValue><![CDATA[QUE_INTERNSHIP_GRP]]></drools:metaValue>
           </drools:metaData>
           <drools:onEntry-script scriptFormat="http://www.java.com/java"/>
           <drools:onExit-script scriptFormat="http://www.java.com/java">
-            <drools:script>System.out.println(&quot;Exiting the INTERNSHIP_S1: QUE_INTERNSHIP_S1_GRP&quot;);
+            <drools:script>System.out.println(&quot;Exiting the INTERNSHIP: QUE_INTERNSHIP_GRP&quot;);
 eventMsg = new QEventBtnClickMessage(&quot;QUE_TREE_ITEM_INTERNSHIPS_ACTIVE&quot;);
 eventMsg.getData().setParentCode(&quot;QUE_TREE_ITEM_INTERNSHIPS_GRP&quot;);
 eventMsg.setToken(userToken.getToken());
@@ -256,7 +256,7 @@ System.out.println(&quot;RESULTS! -> userToken: &quot;+userToken);
 System.out.println(&quot;RESULTS! -> serviceToken: &quot;+serviceToken);
 
 if (results==null) {
-System.out.println(&quot;Exiting the INTERNSHIP_S1: QUE_INTERNSHIP_S1_GRP - results is null&quot;);
+System.out.println(&quot;Exiting the INTERNSHIP: QUE_INTERNSHIP_GRP - results is null&quot;);
 
 String serviceTokenStr = VertxUtils.getObject(userToken.getRealm(), &quot;CACHE&quot;, &quot;SERVICE_TOKEN&quot;, String.class);
 serviceToken = new GennyToken(&quot;PER_SERVICE&quot;,serviceTokenStr);
@@ -298,7 +298,7 @@ serviceToken = new GennyToken(&quot;PER_SERVICE&quot;,serviceTokenStr);
         <bpmn2:dataInputAssociation id="_DataInputAssociation_190">
           <bpmn2:targetRef>DataInput_9</bpmn2:targetRef>
           <bpmn2:assignment id="Assignment_6">
-            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_18">QUE_INTERNSHIP_S1_GRP</bpmn2:from>
+            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_18">QUE_INTERNSHIP_GRP</bpmn2:from>
             <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_16">DataInput_9</bpmn2:to>
           </bpmn2:assignment>
         </bpmn2:dataInputAssociation>
@@ -356,7 +356,7 @@ serviceToken = new GennyToken(&quot;PER_SERVICE&quot;,serviceTokenStr);
     <bpmn2:sequenceFlow id="SequenceFlow_1" drools:priority="1" sourceRef="StartEvent_3" targetRef="SubProcess_1"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Process Diagram">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="INTERNSHIP_S1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="INTERNSHIP">
       <bpmndi:BPMNShape id="BPMNShape_SubProcess_1" bpmnElement="SubProcess_1" isExpanded="true">
         <dc:Bounds height="150.0" width="1206.0" x="120.0" y="239.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1">
