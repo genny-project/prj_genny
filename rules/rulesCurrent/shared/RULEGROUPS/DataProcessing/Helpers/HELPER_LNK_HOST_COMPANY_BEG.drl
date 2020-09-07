@@ -69,7 +69,9 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		/* save the company's address as BEG's address */
 		Answer addressAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", address);
  		beUtils.saveAnswer(assocHcAnswer);		
- 		beUtils.saveAnswer(addressAnswer);		
+ 		beUtils.saveAnswer(addressAnswer);	
+ 		
+ 		insert(addressAnswer);
 
 		Answer repAnswer = new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", " ",false,true);
 		Answer supervisorAnswer = new Answer(sourceCode, targetCode, "LNK_INTERN_SUPERVISOR", " ",false,true);
