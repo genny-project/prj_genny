@@ -163,7 +163,7 @@ OutputParam dataa = (OutputParam)sessionFacts.getMessage();
 typeOf = dataa.getSuitCase();
 System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ typeOf: &quot; + typeOf);
 
-String typeOfSBE = typeOf;
+typeOfSBE = typeOf;
 kcontext.setVariable(&quot;typeOfSBE&quot;, typeOfSBE);
 System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ typeOfSBE: &quot; + typeOfSBE);
 
