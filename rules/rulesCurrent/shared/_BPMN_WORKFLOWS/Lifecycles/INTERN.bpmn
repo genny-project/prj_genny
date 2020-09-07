@@ -39,8 +39,8 @@
   <bpmn2:itemDefinition id="ItemDefinition_8" isCollection="false" structureRef="life.genny.qwandautils.KeycloakUtils"/>
   <bpmn2:signal id="Signal_1" name="createBE"/>
   <bpmn2:signal id="Signal_2" name="makeBe"/>
-  <bpmn2:signal id="Signal_3" name="START_INTERN_S1"/>
-  <bpmn2:process id="INTERN_S1" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="Default Process" isExecutable="true">
+  <bpmn2:signal id="Signal_3" name="START_INTERN"/>
+  <bpmn2:process id="INTERN" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="Default Process" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.models.GennyToken"/>
       <drools:import name="life.genny.utils.CallingProcessToken"/>
@@ -151,15 +151,15 @@ System.out.println(&quot;INTERN: newBe = &quot; + newBe);
 System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_2" drools:priority="1" sourceRef="StartEvent_1" targetRef="ScriptTask_1"/>
-      <bpmn2:task id="Task_2" drools:taskName="AskQuestionTask" drools:displayName="Ask Question Task" drools:icon="icons/icon-info.gif" name="QUE_INTERN_S1_GRP">
+      <bpmn2:task id="Task_2" drools:taskName="AskQuestionTask" drools:displayName="Ask Question Task" drools:icon="icons/icon-info.gif" name="QUE_INTERN_GRP">
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
-            <drools:metaValue><![CDATA[QUE_INTERN_S1_GRP]]></drools:metaValue>
+            <drools:metaValue><![CDATA[QUE_INTERN_GRP]]></drools:metaValue>
           </drools:metaData>
           <drools:onEntry-script scriptFormat="http://www.java.com/java"/>
           <drools:onExit-script scriptFormat="http://www.java.com/java">
             <drools:script>/* get the latest userToken */
-System.out.println(&quot;Exiting the INTERN_S1: QUE_INTERN_S1_GRP&quot;);
+System.out.println(&quot;Exiting the INTERN: QUE_INTERN_GRP&quot;);
 eventMsg = new QEventBtnClickMessage(&quot;QUE_TREE_ITEM_INTERNS_GRP&quot;);
 eventMsg.getData().setParentCode(&quot;QUE_TAB_VIEW&quot;);
 eventMsg.setToken(userToken.getToken());
@@ -170,7 +170,7 @@ System.out.println(&quot;RESULTS! -> userToken: &quot;+userToken);
 System.out.println(&quot;RESULTS! -> serviceToken: &quot;+serviceToken);
 
 if (results==null) {
-System.out.println(&quot;Exiting the INTERN_S1: QUE_INTERN_S1_GRP - results is null&quot;);
+System.out.println(&quot;Exiting the INTERN: QUE_INTERN_GRP - results is null&quot;);
 /*kcontext.setVariable(&quot;userToken&quot;, userToken);
 	serviceToken = (GennyToken)results.get(&quot;serviceToken&quot;); */
 String serviceTokenStr = VertxUtils.getObject(userToken.getRealm(), &quot;CACHE&quot;, &quot;SERVICE_TOKEN&quot;, String.class);
@@ -218,7 +218,7 @@ serviceToken = new GennyToken(&quot;PER_SERVICE&quot;,serviceTokenStr);
         <bpmn2:dataInputAssociation id="_DataInputAssociation_190">
           <bpmn2:targetRef>DataInput_9</bpmn2:targetRef>
           <bpmn2:assignment id="Assignment_6">
-            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_18">QUE_INTERN_S1_GRP</bpmn2:from>
+            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_18">QUE_INTERN_GRP</bpmn2:from>
             <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_16">DataInput_9</bpmn2:to>
           </bpmn2:assignment>
         </bpmn2:dataInputAssociation>
@@ -264,10 +264,10 @@ serviceToken = new GennyToken(&quot;PER_SERVICE&quot;,serviceTokenStr);
             <drools:metaValue><![CDATA[is_Intern]]></drools:metaValue>
           </drools:metaData>
           <drools:onEntry-script scriptFormat="http://www.java.com/java">
-            <drools:script>System.out.println(&quot;INTERN_S1: Entering Is_Intern&quot;);</drools:script>
+            <drools:script>System.out.println(&quot;INTERN: Entering Is_Intern&quot;);</drools:script>
           </drools:onEntry-script>
           <drools:onExit-script scriptFormat="http://www.java.com/java">
-            <drools:script>System.out.println(&quot;INTERN_S1: Exiting Is_Intern&quot;);</drools:script>
+            <drools:script>System.out.println(&quot;INTERN: Exiting Is_Intern&quot;);</drools:script>
           </drools:onExit-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
@@ -337,25 +337,25 @@ serviceToken = new GennyToken(&quot;PER_SERVICE&quot;,serviceTokenStr);
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
-        <bpmn2:script>System.out.println(&quot;INTERN_S1: Entering Set EDU PRO Link&quot;);
+        <bpmn2:script>System.out.println(&quot;INTERN: Entering Set EDU PRO Link&quot;);
 BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
 if (newBe == null) {
-    System.out.println(&quot;INTERN_S1: Set EDU PRO LINK - newBe is null!&quot;);
+    System.out.println(&quot;INTERN: Set EDU PRO LINK - newBe is null!&quot;);
 } else {
 if (newBe.getCode() == null) {
-    System.out.println(&quot;INTERN_S1: Set EDU PRO LINK - newBe.getCode() is null!&quot;);
+    System.out.println(&quot;INTERN: Set EDU PRO LINK - newBe.getCode() is null!&quot;);
 } else {
 newBe = beUtils.getBaseEntityByCode(newBe.getCode());
 if (newBe == null) {
-System.out.println(&quot;INTERN_S1: Set EDU PRO LINK - newBe fetched is null!&quot;);
+System.out.println(&quot;INTERN: Set EDU PRO LINK - newBe fetched is null!&quot;);
 } else {
 kcontext.setVariable(&quot;newBe&quot;, newBe);
 Object eduProCodeListObj = beUtils.getBaseEntityValue(newBe.getCode(), &quot;LNK_EDU_PROVIDER&quot;);
 if (eduProCodeListObj == null ) {
-System.out.println(&quot;INTERN_S1: Set EDU PRO LINK - beUtils.getBaseEntityValue(newBe.getCode(), LNK_EDU_PROVIDER) is null!&quot;);
+System.out.println(&quot;INTERN: Set EDU PRO LINK - beUtils.getBaseEntityValue(newBe.getCode(), LNK_EDU_PROVIDER) is null!&quot;);
 } else {
 String eduProCodeList = beUtils.getBaseEntityValue(newBe.getCode(), &quot;LNK_EDU_PROVIDER&quot;).toString();
-System.out.println(&quot;INTERN_S1  ********* &quot; + eduProCodeList);
+System.out.println(&quot;INTERN  ********* &quot; + eduProCodeList);
 System.out.println(&quot;In Set EDU PRO Link Latest userToken = &quot;+userToken);
 JSONArray jsonArray = new JSONArray(eduProCodeList);
 beUtils.createLink(jsonArray.get(0).toString(), newBe.getCode(), &quot;LNK_CPY&quot;, &quot;STUDENT&quot;, 1.0);
@@ -365,7 +365,7 @@ kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCod
 }
 }
 VertxUtils.writeMsg(&quot;webdata&quot;, JsonUtils.toJson(eventMsg));
-System.out.println(&quot;INTERN_S1: Exiting Set EDU PRO Link&quot;);</bpmn2:script>
+System.out.println(&quot;INTERN: Exiting Set EDU PRO Link&quot;);</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_9" drools:priority="1" sourceRef="Task_4" targetRef="ScriptTask_2"/>
       <bpmn2:sequenceFlow id="SequenceFlow_7" drools:priority="1" sourceRef="ScriptTask_2" targetRef="ScriptTask_3"/>
@@ -400,7 +400,7 @@ System.out.println(&quot;INTERN_S1: Exiting Set EDU PRO Link&quot;);</bpmn2:scri
     <bpmn2:sequenceFlow id="SequenceFlow_1" drools:priority="1" sourceRef="StartEvent_3" targetRef="SubProcess_1"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Process Diagram">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="INTERN_S1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="INTERN">
       <bpmndi:BPMNShape id="BPMNShape_SubProcess_1" bpmnElement="SubProcess_1" isExpanded="true">
         <dc:Bounds height="143.0" width="1151.0" x="280.0" y="280.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1">
