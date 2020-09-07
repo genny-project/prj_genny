@@ -500,9 +500,9 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 			String password = System.getenv("PASSWORD");
 
 			String token = KeycloakUtils.getAccessToken(authServer, realm, realm, secret, username, password);
-
+			GennyToken uToken = new GennyToken(token);
 			// check if user token already exists
-			String userCode = "PER_"+QwandaUtils.getNormalisedUsername(username);
+			String userCode = uToken.getUserCode();//"PER_"+QwandaUtils.getNormalisedUsername(username);
  			JsonObject cacheJson = VertxUtils.readCachedJson(realm, "TOKEN:"+userCode,token);
 			String status = cacheJson.getString("status");
 				
