@@ -12,6 +12,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_536" isCollection="false" structureRef="life.genny.utils.CallingProcessToken"/>
   <bpmn2:itemDefinition id="ItemDefinition_95" isCollection="false" structureRef="java.lang.Boolean"/>
   <bpmn2:itemDefinition id="ItemDefinition_3" isCollection="false" structureRef="java.util.Optional"/>
+  <bpmn2:itemDefinition id="ItemDefinition_97" isCollection="false" structureRef="life.genny.utils.SessionFacts"/>
   <bpmn2:signal id="Signal_1" name="#{userToken.getUserCode()}"/>
   <bpmn2:signal id="Signal_2" name="userToken"/>
   <bpmn2:signal id="Signal_3" name="#{userCode}"/>
@@ -28,6 +29,7 @@
       <drools:import name="life.genny.utils.VertxUtils.ESubscriptionType"/>
       <drools:import name="life.genny.utils.CallingProcessToken"/>
       <drools:import name="java.util.Optional"/>
+      <drools:import name="life.genny.utils.SessionFacts"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_2" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_2" name="serviceToken"/>
@@ -36,6 +38,7 @@
     <bpmn2:property id="beUtils" itemSubjectRef="ItemDefinition_323" name="beUtils"/>
     <bpmn2:property id="processId" itemSubjectRef="ItemDefinition_531" name="processId"/>
     <bpmn2:property id="callingProcessToken" itemSubjectRef="ItemDefinition_536" name="callingProcessToken"/>
+    <bpmn2:property id="sessionFacts" itemSubjectRef="ItemDefinition_97" name="sessionFacts"/>
     <bpmn2:subProcess id="SubProcess_2" name="userValidation Box">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -104,6 +107,10 @@ if (currentUser==null) {
 } else {
     System.out.println(&quot;userValidation:  Checking If The User Is present - YES  pid=&quot;+processId+&quot; &quot;+existingUserStr);
 }
+
+
+sessionFacts = new SessionFacts(serviceToken, userToken, callingProcessToken);
+kcontext.setVariable(&quot;sessionFacts&quot;, sessionFacts);
 </bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_5" drools:priority="1" sourceRef="ScriptTask_2" targetRef="ExclusiveGateway_2"/>
@@ -170,7 +177,7 @@ System.out.println(&quot;userValidation: callingProcessToken = &quot;+ callingPr
           <bpmn2:outgoing>SequenceFlow_22</bpmn2:outgoing>
           <bpmn2:dataInput id="DataInput_3" name="event"/>
           <bpmn2:dataInputAssociation id="DataInputAssociation_1">
-            <bpmn2:sourceRef>callingProcessToken</bpmn2:sourceRef>
+            <bpmn2:sourceRef>sessionFacts</bpmn2:sourceRef>
             <bpmn2:targetRef>DataInput_3</bpmn2:targetRef>
           </bpmn2:dataInputAssociation>
           <bpmn2:inputSet id="InputSet_3" name="Input Set 3">
