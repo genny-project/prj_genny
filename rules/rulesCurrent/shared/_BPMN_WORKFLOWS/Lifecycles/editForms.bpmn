@@ -21,6 +21,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_2143" isCollection="false" structureRef="life.genny.utils.BaseEntityUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_3" isCollection="false" structureRef="org.json.JSONArray"/>
   <bpmn2:itemDefinition id="ItemDefinition_4" isCollection="false" structureRef="life.genny.qwanda.Answer"/>
+  <bpmn2:itemDefinition id="ItemDefinition_5" isCollection="false" structureRef="javafx.scene.control.TableUtil"/>
   <bpmn2:signal id="Signal_1" name="notification"/>
   <bpmn2:signal id="Signal_2" name="dynamicControl"/>
   <bpmn2:signal id="Signal_3" name="controlSignal"/>
@@ -45,6 +46,7 @@
       <drools:import name="life.genny.utils.BaseEntityUtils"/>
       <drools:import name="org.json.JSONArray"/>
       <drools:import name="life.genny.qwanda.Answer"/>
+      <drools:import name="javafx.scene.control.TableUtil"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_2" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_2" name="serviceToken"/>
@@ -163,12 +165,6 @@ typeOf = &quot;QUE_&quot; +typeOf + &quot;_GRP&quot;;
 kcontext.setVariable(&quot;typeOf&quot;, typeOf);
 System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ typeOf: &quot; + typeOf);
 
-
-if (typeOf == &quot;HOST&quot;) {
-
-	typeOf = &quot;HOST_CPY&quot;;
-}
-
 newApplication = beUtils. getBaseEntityByCode(codes);
 kcontext.setVariable(&quot;newApplication&quot;, newApplication);
 System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ newApplication: &quot; + newApplication);
@@ -203,7 +199,13 @@ System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ newApplication: &quot; + 
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
-        <bpmn2:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% END EDIT_FORMS WORKFLOW %%%%%%%%%%%%%%%%%%%&quot;);</bpmn2:script>
+        <bpmn2:script>BaseEntityUtils beUtilsTwo = new BaseEntityUtils(userToken);
+
+System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ typeOf: &quot; + typeOf);
+TableUtils.searchTable(beUtilsTwo, typeOf, true, &quot;PRI_CODE&quot;, newApplication.getCode());
+
+
+System.out.println(&quot;%%%%%%%%%%%%%%%%%%% END EDIT_FORMS WORKFLOW %%%%%%%%%%%%%%%%%%%&quot;);</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_3" drools:priority="1" sourceRef="ScriptTask_1" targetRef="EndEvent_6"/>
       <bpmn2:task id="Task_1" drools:taskName="AskQuestionTask" drools:displayName="Ask Question Task" drools:icon="icons/icon-info.gif" name="QUE_EDIT_ITEMS_GRP">
