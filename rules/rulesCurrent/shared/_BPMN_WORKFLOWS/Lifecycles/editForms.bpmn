@@ -82,6 +82,7 @@
     <bpmn2:property id="associatedIntern" itemSubjectRef="ItemDefinition_2733" name="associatedIntern"/>
     <bpmn2:property id="newBe" itemSubjectRef="ItemDefinition_2016" name="newBe"/>
     <bpmn2:property id="typeOf" itemSubjectRef="ItemDefinition_2733" name="typeOf"/>
+    <bpmn2:property id="typeOfSBE" itemSubjectRef="ItemDefinition_2733" name="typeOfSBE"/>
     <bpmn2:endEvent id="EndEvent_2" name="END EDIT FORMS">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
