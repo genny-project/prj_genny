@@ -27,6 +27,7 @@ rule "BASE_ENTITY_ATTRIBUTES"
 		String targetCode = $message.getData().getTargetCode();
 		System.out.println("TARGET code ::  " + targetCode);
 
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 		BaseEntity baseEntity = beUtils.getBaseEntityByCode(targetCode);
 		
 		if(baseEntity!= null){
