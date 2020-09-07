@@ -1,0 +1,47 @@
+package life.genny.rules;
+import io.vertx.core.json.JsonObject;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.qwanda.message.QEventBtnClickMessage;
+import life.genny.models.GennyToken;
+import life.genny.utils.VertxUtils;
+import life.genny.utils.OutputParam;
+import life.genny.qwanda.message.QDataAskMessage;
+import life.genny.utils.BaseEntityUtils;
+import life.genny.utils.QuestionUtils;
+import life.genny.qwandautils.JsonUtils;
+import java.util.ArrayList;
+import java.util.List;
+import org.drools.core.spi.KnowledgeHelper;
+
+rule "BASE_ENTITY_ATTRIBUTES"
+	ruleflow-group 'EventProcessing'
+	salience 100
+	no-loop
+	when
+		$message : QEventMessage(data.code matches "BASE_ENTITY_ATTRIBUTES" )
+		userToken : GennyToken (code != "PER_SERVICE" )
+		serviceToken : GennyToken( code == "PER_SERVICE")
+	thens
+		System.out.println(drools.getRule().getName() + " triggered");
+		
+		String targetCode = $message.getData().getTargetCode();
+		System.out.println("TARGET code ::  " + targetCode);
+
+		BaseEntity baseEntity = beUtils.getBaseEntityByCode(targetCode);
+		
+		if(baseEntity!= null){
+			QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
+			msg.setToken(userToken.getToken());
+			msg.setReplace(true);
+			
+			/* publish baseentity */
+			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+
+			/* Send end process message */
+			QCmdMessage msg = new QCmdMessage("END_PROCESS", "END_PROCESS");
+			msg.setToken(beUtils.getGennyToken().getToken());
+			msg.setSend(true);  		
+			VertxUtils.writeMsg("webcmds",msg);
+		}
+
+	end
