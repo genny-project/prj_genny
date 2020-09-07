@@ -121,8 +121,9 @@
     <bpmn2:property id="defaultPageSessionFacts" itemSubjectRef="ItemDefinition_576" name="defaultPageSessionFacts"/>
     <bpmn2:property id="inputSessionCode" itemSubjectRef="ItemDefinition_10" name="inputSessionCode"/>
     <bpmn2:property id="results" itemSubjectRef="ItemDefinition_65" name="results"/>
-    <bpmn2:property id="serviceToken" name="serviceToken"/>
+    <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_201" name="serviceToken"/>
     <bpmn2:property id="baseEntityType" itemSubjectRef="ItemDefinition_10" name="baseEntityType"/>
+    <bpmn2:property id="sessionFacts" itemSubjectRef="ItemDefinition_576" name="sessionFacts"/>
     <bpmn2:startEvent id="StartEvent_1" name="Start userLifecycle">
       <bpmn2:extensionElements>
         <tns:metaData name="elementname">
@@ -133,7 +134,7 @@
       <bpmn2:dataOutput id="DataOutput_2" name="event"/>
       <bpmn2:dataOutputAssociation id="DataOutputAssociation_1">
         <bpmn2:sourceRef>DataOutput_2</bpmn2:sourceRef>
-        <bpmn2:targetRef>callingProcessToken</bpmn2:targetRef>
+        <bpmn2:targetRef>sessionFacts</bpmn2:targetRef>
       </bpmn2:dataOutputAssociation>
       <bpmn2:outputSet id="OutputSet_1" name="Output Set 1">
         <bpmn2:dataOutputRefs>DataOutput_2</bpmn2:dataOutputRefs>
@@ -164,12 +165,18 @@
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_28</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_37</bpmn2:outgoing>
-        <bpmn2:script>kcontext.setVariable(&quot;callingProcessToken&quot;, (CallingProcessToken)callingProcessToken);
+        <bpmn2:script>serviceToken = (GennyToken)sessionFacts.getServiceToken();
+userToken = (GennyToken)sessionFacts.getUserToken();
+
+callingProcessToken = (CallingProcessToken) sessionFacts.getMessage();
+
+kcontext.setVariable(&quot;callingProcessToken&quot;, callingProcessToken);
+kcontext.setVariable(&quot;userToken&quot;, userToken);
+kcontext.setVariable(&quot;serviceToken&quot;, serviceToken);
+
 CallingProcessToken cpt = (CallingProcessToken)callingProcessToken;
-userToken = cpt.getGennyToken();
 callingProcessId = cpt.getProcessId();
 kcontext.setVariable(&quot;callingProcessId&quot;,callingProcessId);
-kcontext.setVariable(&quot;userToken&quot;,userToken);
 kcontext.setVariable(&quot;sessionCode&quot;, userToken.getSessionCode());
 QEventMessage defaultPage = new QEventMessage(&quot;EVT_MSG&quot;, &quot;DEFAULTPAGE&quot;);
 defaultPageSessionFacts = new SessionFacts(userToken, userToken, defaultPage);
@@ -258,7 +265,7 @@ System.out.println(&quot;userLifeCycle: entered: pid &quot;+kcontext.getProcessI
         <bpmn2:incoming>SequenceFlow_37</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_38</bpmn2:outgoing>
         <bpmn2:script>userToken = (GennyToken)userToken;
-BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+BaseEntityUtils beUtils = new BaseEntityUtils(userToken, serviceToken);
 newUser = beUtils.create(((GennyToken)userToken).getUserCode(), ((GennyToken)userToken).getUserCode());
 /* copy from userToken */
 List&lt;Answer> answers = new CopyOnWriteArrayList&lt;Answer>();
@@ -417,7 +424,7 @@ System.out.println(&quot;userlifeCycle: New User Created: pid: &quot;+callingPro
         <di:waypoint xsi:type="dc:Point" x="650.0" y="230.0"/>
         <di:waypoint xsi:type="dc:Point" x="955.0" y="229.0"/>
         <di:waypoint xsi:type="dc:Point" x="1260.0" y="229.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_5"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
