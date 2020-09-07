@@ -19,9 +19,9 @@
   <bpmn2:itemDefinition id="ItemDefinition_123" isCollection="false" structureRef="java.lang.Byte"/>
   <bpmn2:itemDefinition id="ItemDefinition_2141" isCollection="false" structureRef="java.util.UUID"/>
   <bpmn2:itemDefinition id="ItemDefinition_2143" isCollection="false" structureRef="life.genny.utils.BaseEntityUtils"/>
-  <bpmn2:itemDefinition id="ItemDefinition_2144" isCollection="false" structureRef="life.genny.utils.TableUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_3" isCollection="false" structureRef="org.json.JSONArray"/>
   <bpmn2:itemDefinition id="ItemDefinition_4" isCollection="false" structureRef="life.genny.qwanda.Answer"/>
+  <bpmn2:itemDefinition id="ItemDefinition_5" isCollection="false" structureRef="life.genny.utils.TableUtils"/>
   <bpmn2:signal id="Signal_1" name="notification"/>
   <bpmn2:signal id="Signal_2" name="dynamicControl"/>
   <bpmn2:signal id="Signal_3" name="controlSignal"/>
@@ -161,9 +161,14 @@ System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ codes: &quot; + codes);
 OutputParam dataa = (OutputParam)sessionFacts.getMessage();
 typeOf = dataa.getSuitCase();
 System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ typeOf: &quot; + typeOf);
+String typeOfSBE = typeOf;
+kcontext.setVariable(&quot;typeOfSBE&quot;, typeOfSBE);
+System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ typeOfSBE: &quot; + typeOfSBE);
+
 typeOf = &quot;QUE_&quot; +typeOf + &quot;_GRP&quot;;
 kcontext.setVariable(&quot;typeOf&quot;, typeOf);
 System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ typeOf: &quot; + typeOf);
+
 
 newApplication = beUtils. getBaseEntityByCode(codes);
 kcontext.setVariable(&quot;newApplication&quot;, newApplication);
@@ -202,7 +207,7 @@ System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ newApplication: &quot; + 
         <bpmn2:script>BaseEntityUtils beUtilsTwo = new BaseEntityUtils(userToken);
 
 System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ typeOf: &quot; + typeOf);
-TableUtils.searchTable(beUtilsTwo, typeOf, true, &quot;PRI_CODE&quot;, newApplication.getCode());
+TableUtils.searchTable(beUtilsTwo, typeOfSBE, true, &quot;PRI_CODE&quot;, newApplication.getCode());
 
 
 System.out.println(&quot;%%%%%%%%%%%%%%%%%%% END EDIT_FORMS WORKFLOW %%%%%%%%%%%%%%%%%%%&quot;);</bpmn2:script>
