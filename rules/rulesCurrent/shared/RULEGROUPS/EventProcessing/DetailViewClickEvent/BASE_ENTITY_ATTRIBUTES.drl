@@ -21,7 +21,7 @@ rule "BASE_ENTITY_ATTRIBUTES"
 		$message : QEventMessage(data.code matches "BASE_ENTITY_ATTRIBUTES" )
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
-	thens
+	then
 		System.out.println(drools.getRule().getName() + " triggered");
 		
 		String targetCode = $message.getData().getTargetCode();
