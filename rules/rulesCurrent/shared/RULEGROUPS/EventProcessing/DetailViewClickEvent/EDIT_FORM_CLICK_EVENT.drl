@@ -35,38 +35,6 @@ rule "EDIT_FORM_CLICK_EVENT"
         String typeOf = parentSplit[1];
         System.out.println("typeOf: " +typeOf);
         
-        if (typeOf.equals("INTERN")){
-        	typeOf = "INTERN_S1";
-        }
-        
-        if (typeOf.equals("INTERNSHIP")){
-        	typeOf = "INTERNSHIP_S1";
-        }
-        
-        if (typeOf.equals("EDU_PROVIDER")){
-        	typeOf = "EDU_PRO";
-        }
-        
-        if (typeOf.equals("EPR")){
-        	typeOf = "EDU_PRO_REP";
-        }
-        
-        if (typeOf.equals("HOST_COMPANY")){
-        	typeOf = "HOST_CPY";
-        }
-        
-        if (typeOf.equals("HOST")){
-        	typeOf = "HOST_CPY";
-        }
-        
-        
-        if (typeOf.equals("HCR")){
-        	typeOf = "HOST_CPY_REP";
-        }
-        
-        
-        System.out.println("typeOf: " +typeOf);
-        
 
 		output.setTypeOfResult("SIGNAL");
 		output.setResultCode("START_"+workflowSignalCode);
