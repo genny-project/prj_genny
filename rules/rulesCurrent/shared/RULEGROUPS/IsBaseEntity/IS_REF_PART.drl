@@ -51,7 +51,7 @@ rule "IS_REF_PART"
 		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
 	
 		/* send the detail sbe */
-		long totalTime = TableUtils.searchTable(beUtils,"COMPANY", true, "PRI_CODE", newBe.getCode());
+		long totalTime = TableUtils.searchTable(beUtils,"REF_PART", true, "PRI_CODE", newBe.getCode());
 		System.out.println("total took " + (totalTime) + " ms"); 
 		
 		output.setTypeOfResult("NONE");
