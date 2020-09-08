@@ -53,7 +53,7 @@ rule "IS_EDU_PROVIDER"
 		System.out.println("Note newBe.getCode(): " +newBe.getCode());
 
 		/* send the detail sbe */
-		long totalTime = TableUtils.searchTable(beUtils,"COMPANY", true, "PRI_CODE", newBe.getCode());
+		long totalTime = TableUtils.searchTable(beUtils,"EDU_PRO", true, "PRI_CODE", newBe.getCode());
 		System.out.println("total took " + (totalTime) + " ms"); 	
 		
 		output.setTypeOfResult("NONE");
