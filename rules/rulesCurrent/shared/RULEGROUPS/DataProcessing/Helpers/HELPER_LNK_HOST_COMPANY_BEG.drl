@@ -63,6 +63,43 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		System.out.println("company address :: " + address);
 
 
+		if (companyBe != null) {
+				String state = companyBe.getValue("PRI_ADDRESS_STATE", null);
+				if (state != null) {
+						Answer answerState = new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", state);
+ 						beUtils.saveAnswer(answerState);
+				} else { System.out.println("ERROR: Null " +state);}	
+				
+				String country = companyBe.getValue("PRI_ADDRESS_COUNTRY", null);
+				if (country != null) {
+						Answer answerCountry = new Answer(sourceCode, targetCode, "PRI_ADDRESS_COUNTRY", country);
+ 						beUtils.saveAnswer(answerCountry);
+				} else { System.out.println("ERROR: Null " +country);}
+				
+				String postcode = companyBe.getValue("PRI_ADDRESS_POSTCODE", null);
+				if (postcode != null) {
+						Answer answerPostcode = new Answer(sourceCode, targetCode, "PRI_ADDRESS_POSTCODE", postcode);
+ 						beUtils.saveAnswer(answerPostcode);
+				} else { System.out.println("ERROR: Null " +postcode);}		
+				
+				String suburb = companyBe.getValue("PRI_ADDRESS_SUBURB", null);
+				if (suburb != null) {
+						Answer answerSuburb = new Answer(sourceCode, targetCode, "PRI_ADDRESS_SUBURB", suburb);
+ 						beUtils.saveAnswer(answerSuburb);
+ 						
+ 						Answer answerCity = new Answer(sourceCode, targetCode, "PRI_ADDRESS_CITY", suburb);
+ 						beUtils.saveAnswer(answerCity);
+				} else { System.out.println("ERROR: Null " +suburb);}	
+				
+				String street_address = companyBe.getValue("PRI_ADDRESS_ADDRESS1", null);
+				if (street_address != null) {
+						Answer answerStreetAddress = new Answer(sourceCode, targetCode, "PRI_ADDRESS_ADDRESS1", street_address);
+ 						beUtils.saveAnswer(answerStreetAddress);
+				} else { System.out.println("ERROR: Null " +street_address);}		
+					
+		}
+		
+
 		/* save the company's name as PRI_ASSOC_HC attribute for application baseentity */
 		Answer assocHcAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HC", name);
 		
