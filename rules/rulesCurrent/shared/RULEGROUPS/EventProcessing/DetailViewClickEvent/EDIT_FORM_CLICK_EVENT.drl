@@ -29,7 +29,7 @@ rule "EDIT_FORM_CLICK_EVENT"
 		
 		
 		String workflowSignalCode = "EDIT_FORMS";
-		String parentCode = $message.getData().getParentCode(); 	/* get parentcode SBE e.g. SBE_INTERN_XXXXX  */ SBE_EDU_PRO_REP_XXXXX , HOST_CPY_REP, REF_PART_REP
+		String parentCode = $message.getData().getParentCode(); 	/* get parentcode SBE e.g. SBE_INTERN_XXXXX or SBE_EDU_PRO_REP_XXXXX or SBE_HOST_CPY_XXXXX*/ 
 		
 		String[] parentSplit = parentCode.split("_");
         
