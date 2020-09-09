@@ -35,19 +35,21 @@ rule "EDIT_FORM_CLICK_EVENT"
         
         int size = parentSplit.length;
         System.out.println("size: " +size);
+        
+        String typeOf = "";
     
         if (size == 3) {
-                String typeOf = parentSplit[1];
+                typeOf = parentSplit[1];
                 System.out.println("typeOf: " +typeOf);
         }
         
         if (size == 4) {
-                String typeOf = parentSplit[1] + "_" + parentSplit[2];
+                typeOf = parentSplit[1] + "_" + parentSplit[2];
                 System.out.println("typeOf: " +typeOf);
         }
         
         if (size == 5) {
-                String typeOf = parentSplit[1] + "_" + parentSplit[2] + "_" + parentSplit[3];
+                typeOf = parentSplit[1] + "_" + parentSplit[2] + "_" + parentSplit[3];
                 System.out.println("typeOf: " +typeOf);
         }
         
