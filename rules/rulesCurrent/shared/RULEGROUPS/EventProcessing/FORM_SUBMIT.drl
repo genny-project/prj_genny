@@ -14,7 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 rule "FORM_SUBMIT"
 	ruleflow-group 'EventProcessing'
 	no-loop
-	salience 10000
+	salience 9500
 	when
 		$message : QEventMessage((data.code == "QUE_SUBMIT"))
 		userToken : GennyToken (code != "PER_SERVICE" )
