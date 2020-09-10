@@ -19,7 +19,6 @@ rule "FORM_SUBMIT"
 		$message : QEventMessage((data.code == "QUE_SUBMIT"))
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
-		beUtils : BaseEntityUtils()
 		output : OutputParam( )
 	
 	then
