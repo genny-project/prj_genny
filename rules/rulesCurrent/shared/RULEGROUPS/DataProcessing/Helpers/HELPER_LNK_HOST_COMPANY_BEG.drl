@@ -127,7 +127,8 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		DropdownUtils dropdown = new DropdownUtils(serviceToken);
 		dropdown.setNewSearch("HCR Dropdown", "Fetch HCR Dropdown Items")
 											.addFilter("PRI_IS_HOST_CPY_REP", true)
-											.setSourceCode(code)
+											.addFilter("LNK_HOST_COMPANY", SearchEntity.StringFilter.EQUAL, hostCompanyCode)
+											/* .setSourceCode(code) */
 											.setPageStart(0)
 											.setPageSize(1000);
 
