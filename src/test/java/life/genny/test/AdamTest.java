@@ -218,7 +218,7 @@ public class AdamTest {
 		BaseEntity be = beUtils.getBaseEntityByCode("PER_AFCACF0F-2618-4C5C-A292-2026A974D602");
 		
 		if (be != null) {
-			String name = "Aaron Freezing Chathanattu";
+			String name = "Aaron Windy Chathanattu";
 			Answer answer = new Answer(userToken.getUserCode(),be.getCode(),"PRI_NAME",name);
 			answer.setChangeEvent(true);
 			beUtils.saveAnswer(answer);
