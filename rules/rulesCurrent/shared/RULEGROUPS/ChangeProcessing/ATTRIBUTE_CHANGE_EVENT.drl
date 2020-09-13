@@ -18,22 +18,15 @@ import life.genny.qwanda.rule.RuleDetails;
 
 
 rule "ATTRIBUTE_CHANGE_EVENT"
-    ruleflow-group 'EventProcessing'
+    ruleflow-group 'ChangeProcessing'
 	salience 2
     no-loop
     when
-			$message : QEventMessage(data.code matches "EVT_ATTRIBUTE_VALUE_CHANGE" )	
-			userToken : GennyToken ( code != "PER_SERVICE" ) 
-			serviceToken : GennyToken( code == "PER_SERVICE") 
-			output : OutputParam( )
+			message : QEventMessage(event_type matches "EVT_ATTRIBUTE_VALUE_CHANGE" )	
 			ruleDetails : RuleDetails()
-			beUtils : BaseEntityUtils()
     then
-			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing Event : " + $message );
-			
-  	       output.setTypeOfResult("NONE");
-  	       output.setResultCode("NONE");  /* dont display anything new */
-  	     
-  	       retract( $message);
-  	     /*  update(output); */
+			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing Change Event : " + message );
+			 	     
+  	       retract( message);
+  	    
 end
