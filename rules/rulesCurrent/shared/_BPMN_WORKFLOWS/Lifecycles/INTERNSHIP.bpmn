@@ -135,7 +135,8 @@ uuid = UUID.randomUUID();
 kcontext.setVariable(&quot;uuid&quot;, uuid);
 System.out.println(&quot;INTERNSHIP: uuid = &quot; + uuid);
 
-baseEntityType = &quot;Internship&quot;;
+baseEntityType = &quot;INTERNSHIP&quot;;
+
 kcontext.setVariable(&quot;baseEntityType&quot;, baseEntityType);
 System.out.println(&quot;INTERNSHIP: baseEntityType = &quot; + baseEntityType);
 
@@ -396,7 +397,7 @@ serviceToken = new GennyToken(&quot;PER_SERVICE&quot;,serviceTokenStr);
       <bpmndi:BPMNShape id="BPMNShape_Task_2" bpmnElement="Task_2" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="430.0" y="294.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_8">
-          <dc:Bounds height="22.0" width="100.0" x="435.0" y="308.0"/>
+          <dc:Bounds height="11.0" width="104.0" x="433.0" y="313.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_1" bpmnElement="Task_1" isExpanded="true">
@@ -451,7 +452,7 @@ serviceToken = new GennyToken(&quot;PER_SERVICE&quot;,serviceTokenStr);
         <di:waypoint xsi:type="dc:Point" x="850.0" y="319.0"/>
         <di:waypoint xsi:type="dc:Point" x="1060.0" y="319.0"/>
         <di:waypoint xsi:type="dc:Point" x="1270.0" y="319.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_12"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">

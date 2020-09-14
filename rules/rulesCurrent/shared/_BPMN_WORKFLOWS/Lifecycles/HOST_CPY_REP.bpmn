@@ -109,7 +109,8 @@ uuid = KeycloakUtils.createDummyUser(serviceToken.getToken(), serviceToken.getRe
 kcontext.setVariable(&quot;uuid&quot;, uuid);
 System.out.println(&quot;HOST_CPY_REP: uuid = &quot; + uuid);
 
-baseEntityType = &quot;HostCompanyRep&quot;;
+baseEntityType = &quot;HOST_CPY_REP&quot;;
+
 kcontext.setVariable(&quot;baseEntityType&quot;, baseEntityType);
 System.out.println(&quot;HOST_CPY_REP: baseEntityType = &quot; + baseEntityType);
 
