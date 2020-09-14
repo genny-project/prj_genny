@@ -95,7 +95,8 @@ uuid = KeycloakUtils.createDummyUser(serviceToken.getToken(), serviceToken.getRe
 kcontext.setVariable(&quot;uuid&quot;, uuid);
 System.out.println(&quot;EDU_PRO_REP: uuid = &quot; + uuid);
 
-baseEntityType = &quot;EduProviderRep&quot;;
+baseEntityType = &quot;EDU_PRO_REP&quot;;
+
 kcontext.setVariable(&quot;baseEntityType&quot;, baseEntityType);
 System.out.println(&quot;EDU_PRO_REP: baseEntityType = &quot; + baseEntityType);
 

@@ -135,7 +135,8 @@ uuid = KeycloakUtils.createDummyUser(serviceToken.getToken(), serviceToken.getRe
 kcontext.setVariable(&quot;uuid&quot;, uuid);
 System.out.println(&quot;AGENT: uuid = &quot; + uuid);
 
-baseEntityType = &quot;Agent&quot;;
+baseEntityType = &quot;AGENT&quot;;
+
 kcontext.setVariable(&quot;baseEntityType&quot;, baseEntityType);
 System.out.println(&quot;AGENT: baseEntityType = &quot; + baseEntityType);
 

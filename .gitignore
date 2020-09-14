@@ -26,3 +26,4 @@ eclipse/
 #ignore eclipse settings
 .settings/
 .classpath
+*.iml
