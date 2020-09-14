@@ -53,7 +53,11 @@ rule "PRI_STATUS"
 				
 				if (internCode != null) {
 					if (internCode.contains(userCode)) {
-						beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_STATUS", answer.getValue(),false,true));	
+						Answer answer2 = new Answer(sourceCode, targetCode, "PRI_STATUS", answer.getValue(),false,true);
+					/*	if ("APPROVED".equals(answer.getValue())) { */
+							answer2.setChangeEvent(true); /* notify people of count changes */
+					/*	} */
+						beUtils.saveAnswer(answer2);	
 					}
 				
 				}
