@@ -94,7 +94,8 @@ uuid = UUID.randomUUID();
 kcontext.setVariable(&quot;uuid&quot;, uuid);
 System.out.println(&quot;EDU_PRO: uuid = &quot; + uuid);
 
-baseEntityType = &quot;EduProvider&quot;;
+baseEntityType = &quot;EDU_PRO&quot;;
+
 kcontext.setVariable(&quot;baseEntityType&quot;, baseEntityType);
 System.out.println(&quot;EDU_PRO: baseEntityType = &quot; + baseEntityType);
 
@@ -412,7 +413,7 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
         <di:waypoint xsi:type="dc:Point" x="350.0" y="310.0"/>
         <di:waypoint xsi:type="dc:Point" x="550.0" y="310.0"/>
         <di:waypoint xsi:type="dc:Point" x="750.0" y="310.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_10"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
