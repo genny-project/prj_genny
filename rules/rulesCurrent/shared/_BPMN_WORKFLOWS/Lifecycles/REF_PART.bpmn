@@ -86,7 +86,7 @@ uuid = UUID.randomUUID();
 kcontext.setVariable(&quot;uuid&quot;, uuid);
 System.out.println(&quot;REF_PART: uuid = &quot; + uuid);
 
-baseEntityType = &quot;RefPartner&quot;;
+baseEntityType = &quot;REF_PART&quot;;
 kcontext.setVariable(&quot;baseEntityType&quot;, baseEntityType);
 System.out.println(&quot;REF_PART: baseEntityType = &quot; + baseEntityType);
 
@@ -382,19 +382,19 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
         <di:waypoint xsi:type="dc:Point" x="590.0" y="313.0"/>
         <di:waypoint xsi:type="dc:Point" x="610.0" y="313.0"/>
         <di:waypoint xsi:type="dc:Point" x="630.0" y="313.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_10"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_7" bpmnElement="SequenceFlow_7" sourceElement="BPMNShape_Task_2" targetElement="BPMNShape_Task_1">
         <di:waypoint xsi:type="dc:Point" x="740.0" y="313.0"/>
         <di:waypoint xsi:type="dc:Point" x="765.0" y="313.0"/>
         <di:waypoint xsi:type="dc:Point" x="790.0" y="313.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_12"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_8" bpmnElement="SequenceFlow_8" sourceElement="BPMNShape_IntermediateThrowEvent_2" targetElement="BPMNShape_ScriptTask_3">
         <di:waypoint xsi:type="dc:Point" x="976.0" y="313.0"/>
         <di:waypoint xsi:type="dc:Point" x="1003.0" y="313.0"/>
         <di:waypoint xsi:type="dc:Point" x="1030.0" y="313.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_13"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
