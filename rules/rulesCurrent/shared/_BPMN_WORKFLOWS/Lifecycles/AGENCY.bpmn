@@ -135,7 +135,8 @@ uuid = KeycloakUtils.createDummyUser(serviceToken.getToken(), serviceToken.getRe
 kcontext.setVariable(&quot;uuid&quot;, uuid);
 System.out.println(&quot;AGENCY: uuid = &quot; + uuid);
 
-baseEntityType = &quot;Agency&quot;;
+baseEntityType = &quot;AGENCY&quot;;
+
 kcontext.setVariable(&quot;baseEntityType&quot;, baseEntityType);
 System.out.println(&quot;AGENCY: baseEntityType = &quot; + baseEntityType);
 
@@ -268,10 +269,10 @@ serviceToken = new GennyToken(&quot;PER_SERVICE&quot;,serviceTokenStr);
             <drools:metaValue><![CDATA[is_Agency]]></drools:metaValue>
           </drools:metaData>
           <drools:onEntry-script scriptFormat="http://www.java.com/java">
-            <drools:script>System.out.println(&quot;INTERN: Entering Is_Intern&quot;);</drools:script>
+            <drools:script>System.out.println(&quot;AGENCY: Entering IS_AGENCY&quot;);</drools:script>
           </drools:onEntry-script>
           <drools:onExit-script scriptFormat="http://www.java.com/java">
-            <drools:script>System.out.println(&quot;INTERN: Exiting Is_Intern&quot;);</drools:script>
+            <drools:script>System.out.println(&quot;AGENCY: Exiting IS_ AGENCY&quot;);</drools:script>
           </drools:onExit-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
