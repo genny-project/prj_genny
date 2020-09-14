@@ -133,7 +133,8 @@ uuid = KeycloakUtils.createDummyUser(serviceToken.getToken(), serviceToken.getRe
 kcontext.setVariable(&quot;uuid&quot;, uuid);
 System.out.println(&quot;internWF: uuid = &quot; + uuid);
 
-baseEntityType = &quot;Intern&quot;;
+baseEntityType = &quot;INTERN&quot;;
+
 kcontext.setVariable(&quot;baseEntityType&quot;, baseEntityType);
 System.out.println(&quot;INTERN: baseEntityType = &quot; + baseEntityType);
 
@@ -440,7 +441,7 @@ System.out.println(&quot;INTERN: Exiting Set EDU PRO Link&quot;);</bpmn2:script>
       <bpmndi:BPMNShape id="BPMNShape_Task_2" bpmnElement="Task_2" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="530.0" y="328.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_8">
-          <dc:Bounds height="11.0" width="99.0" x="535.0" y="347.0"/>
+          <dc:Bounds height="11.0" width="83.0" x="543.0" y="347.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_3" bpmnElement="ScriptTask_3" isExpanded="true">

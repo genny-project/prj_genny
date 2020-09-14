@@ -90,7 +90,7 @@ uuid = KeycloakUtils.createDummyUser(serviceToken.getToken(), serviceToken.getRe
 kcontext.setVariable(&quot;uuid&quot;, uuid);
 System.out.println(&quot;REF_PART_REP: uuid = &quot; + uuid);
 
-baseEntityType = &quot;RefPartnerRep&quot;;
+baseEntityType = &quot;REF_PART_REP&quot;;
 kcontext.setVariable(&quot;baseEntityType&quot;, baseEntityType);
 System.out.println(&quot;REF_PART_REP: baseEntityType = &quot; + baseEntityType);
 
