@@ -185,6 +185,106 @@ public class AdamTest {
 	protected static GennyToken newUserToken;
 	protected static GennyToken serviceToken;
 
+	@Test
+	public void attributeChangeTest() {
+		System.out.println("attributeChange test");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+		} else {
+			// VertxUtils.cachedEnabled = false;
+			VertxUtils.cachedEnabled = false;
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+			eventBusMock = new EventBusMock();
+			vertxCache = new JunitCache(); // MockCache
+			VertxUtils.init(eventBusMock, vertxCache);
+		}
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		beUtils.setServiceToken(serviceToken);
+
+		BaseEntity be = beUtils.getBaseEntityByCode("PER_AFCACF0F-2618-4C5C-A292-2026A974D602");
+		
+		if (be != null) {
+			String name = "Aaron Windy Chathanattu";
+			Answer answer = new Answer(userToken.getUserCode(),be.getCode(),"PRI_NAME",name);
+			answer.setChangeEvent(true);
+			beUtils.saveAnswer(answer);
+			
+	
+			
+		}
+		
+	}
+	
+
+	@Test
+	public void pushTest() {
+		System.out.println("push test");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+		} else {
+			// VertxUtils.cachedEnabled = false;
+			VertxUtils.cachedEnabled = false;
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+			eventBusMock = new EventBusMock();
+			vertxCache = new JunitCache(); // MockCache
+			VertxUtils.init(eventBusMock, vertxCache);
+		}
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		beUtils.setServiceToken(serviceToken);
+
+		BaseEntity be = beUtils.getBaseEntityByCode("PER_AFCACF0F-2618-4C5C-A292-2026A974D602");
+		
+		if (be != null) {
+			String name = "Aaron Rainy Chathanattu";
+			
+			try {
+				be.setName(name);
+				be.setValue("PRI_NAME", name);
+				QDataBaseEntityMessage msg = new QDataBaseEntityMessage(be);
+				msg.setToken(userToken.getToken());
+				msg.setReplace(true);
+				String[] rxList = new String[1];
+				rxList[0] = "project";
+				msg.setRecipientCodeArray(rxList);
+				VertxUtils.writeMsg("project", JsonUtils.toJson(msg));
+
+			} catch (BadDataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+		}
+		
+	}
 	
 	@Test
 	public void fixInternshipAddressTest() {
