@@ -64,6 +64,9 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 
 		Answer assocHcAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HC", name);
 		Answer addressAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", address);
+
+		/* this will trigger PRI_ADDRESS_FULL helper rule */
+		insert(addressAnswer);
 		
 		/* TODO: Answer should support null  */
 		Answer repAnswer = new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", " ",false,true);
