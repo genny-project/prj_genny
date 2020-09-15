@@ -122,6 +122,10 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		BaseEntity baseEntity = beUtils.saveAnswer(repAnswer);
 		baseEntity = beUtils.saveAnswer(supervisorAnswer);
 		baseEntity = beUtils.saveAnswer(answer);
+
+ 		insert(repAnswer);
+ 		insert(supervisorAnswer);
+ 		insert(answer); 
 		
 		/* Send the updated baseenttity to the frontend */
 		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
