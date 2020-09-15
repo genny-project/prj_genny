@@ -23,7 +23,7 @@ rule "DEFAULT_ANSWER"
 		answersToSave.add(answer);
 				
 		output.setTypeOfResult("NONE");
-  	    output.setResultCode("NONE");  /* dont display anything new */
+		output.setResultCode("NONE");  /* dont display anything new */
   	    
 		retract(answer);
 		update(output);
