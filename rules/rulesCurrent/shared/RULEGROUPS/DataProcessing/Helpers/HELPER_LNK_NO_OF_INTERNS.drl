@@ -55,17 +55,23 @@ rule "HELPER_LNK_NO_OF_INTERNS"
 		System.out.println("code  :: " + code);
 
 		/* Save the actual LNK_NO_OF_INTERNS answer */
-		beUtils.saveAnswer(answer);
+		answersToSave.add(answer);
 
 		/* get the numberOfInterns baseentity */
 		BaseEntity be = beUtils.getBaseEntityByCode(code);
+		
+		if(be !=null){
+			
+			/* get the name attribute of the numberOfInterns */
+			String name = be.getValue("PRI_NAME", null);		
 
-		/* get the name attribute of the numberOfInterns */
-		String name = be.getValue("PRI_NAME", null);		
+			/* save the numberOfInterns' name as PRI_ASSOC_HCR attribute for the current target baseentity in the form */
+			Answer assocNumberOfInternsAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_NUM_INTERNS", name);
+			answersToSave.add(assocNumberOfInternsAnswer);
 
-		/* save the numberOfInterns' name as PRI_ASSOC_HCR attribute for the current target baseentity in the form */
-		Answer assocNumberOfInternsAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_NUM_INTERNS", name);
- 		beUtils.saveAnswer(assocNumberOfInternsAnswer);		
+		}
+		
+		update(answersToSave);
 
 		/* Retract the answer message so the rule doesn't fire again */
 		retract(answer);
