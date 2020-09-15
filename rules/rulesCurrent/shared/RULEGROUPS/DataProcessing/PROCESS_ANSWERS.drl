@@ -30,7 +30,7 @@ rule "PROCESS_ANSWERS"
 		/* Now set up capability for the user and make it available to all the rules - NEEDS Alloweds to be created */
 
 		
-		System.out.println("Capabilitys are "+capabilityUtils.getCapabilityManifest()); 
+		/* System.out.println("Capabilitys are "+capabilityUtils.getCapabilityManifest());  */
 		
 
 		if (dataMsg.getItems()!=null) {
