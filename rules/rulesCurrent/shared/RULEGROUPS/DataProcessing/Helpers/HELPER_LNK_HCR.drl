@@ -67,6 +67,9 @@ rule "HELPER_LNK_HCR"
 		Answer assocHcrAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HCR", name);
  		beUtils.saveAnswer(assocHcrAnswer);		
 
+		insert(answer);
+		insert(assocHcrAnswer);		
+
 		/* Retract the answer message so the rule doesn't fire again */
 		retract(answer);
 

@@ -77,8 +77,10 @@ rule "HELPER_LNK_OCCUPATION"
 
 		/* save the occupation's name as PRI_ASSOC_OCCUPATION attribute for the current target baseentity in the form */
 		Answer assocOccupationAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_OCCUPATION", occupations);
-		beUtils.saveAnswer(assocOccupationAnswer);			
+		beUtils.saveAnswer(assocOccupationAnswer);	
 
+		insert(answer);
+		insert(assocOccupationAnswer);		
 
 		/* Retract the answer message so the rule doesn't fire again */
 		retract(answer);
