@@ -63,7 +63,7 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		System.out.println("company address :: " + address);
 
 
-		if (companyBe != null) {
+/* 		if (companyBe != null) {
 				String state = companyBe.getValue("PRI_ADDRESS_STATE", null);
 				if (state != null) {
 						Answer answerState = new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", state);
@@ -103,7 +103,7 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
  						System.out.println("street_address " +street_address);
 				} else { System.out.println("ERROR: Null " +street_address);}		
 					
-		}
+		} */
 		
 
 		/* save the company's name as PRI_ASSOC_HC attribute for application baseentity */
