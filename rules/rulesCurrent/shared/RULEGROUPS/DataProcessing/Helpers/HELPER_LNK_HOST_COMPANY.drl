@@ -55,18 +55,22 @@ rule "HELPER_LNK_HOST_COMPANY"
 		System.out.println("code  :: " + code);
 
 		/* Save the actual LNK_HOST_COMPANY answer */
-		beUtils.saveAnswer(answer);
+		answersToSave.add(answer);
 
 		/* get the company baseentity */
 		BaseEntity companyBe = beUtils.getBaseEntityByCode(code);
+		if(companyBe != null){
 
-		/* get the name attribute of the company */
-		String name = companyBe.getValue("PRI_NAME", null);		
+			/* get the name attribute of the company */
+			String name = companyBe.getValue("PRI_NAME", null);		
 
-		/* save the company's name as PRI_ASSOC_HC attribute for application baseentity */
-		Answer assocHcAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HC", name);
- 		beUtils.saveAnswer(assocHcAnswer);		
+			/* save the company's name as PRI_ASSOC_HC attribute for application baseentity */
+			Answer assocHcAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HC", name);
+			answersToSave.add(assocHcAnswer);
 
+		}
+
+		update(answersToSave);
 		retract(answer);
 
 		output.setTypeOfResult("NONE");
