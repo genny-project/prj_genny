@@ -55,7 +55,7 @@ rule "HELPER_LNK_EDU_PROVIDER"
 		System.out.println("code  :: " + code);
 
 		/* Save the actual LNK_EDU_PROVIDER answer */
-		beUtils.saveAnswer(answer);
+		answersToSave.add(answer);
 
 		/* get the company baseentity */
 		BaseEntity companyBe = beUtils.getBaseEntityByCode(code);
