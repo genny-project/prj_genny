@@ -186,6 +186,60 @@ public class AdamTest {
 	protected static GennyToken serviceToken;
 
 	@Test
+	public void fixLNK_InternSupervisorTest() {
+		System.out.println("Intern Supervisor fix Fix test");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+		} else {
+			// VertxUtils.cachedEnabled = false;
+			VertxUtils.cachedEnabled = false;
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+			eventBusMock = new EventBusMock();
+			vertxCache = new JunitCache(); // MockCache
+			VertxUtils.init(eventBusMock, vertxCache);
+		}
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		beUtils.setServiceToken(serviceToken);
+
+		SearchEntity searchBE = new SearchEntity("SBE_TEST", "internships")
+				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+				.addFilter("LNK_INTERN_SUPERVISOR", SearchEntity.StringFilter.LIKE, "PER_%")
+				.addColumn("PRI_CODE", "Name")
+				.addColumn("LNK_INTERN_SUPERVISOR", "Supervisor");
+
+		searchBE.setRealm(realm);
+		searchBE.setPageStart(0);
+		searchBE.setPageSize(100000);
+
+		List<BaseEntity> apps = beUtils.getBaseEntitys(searchBE);
+
+		System.out.println("Number of Internships = "+apps.size());
+		
+		for (BaseEntity app : apps) {
+			String per = app.getValueAsString("LNK_INTERN_SUPERVISOR");
+			System.out.println("Supervisor = "+per);
+			beUtils.saveAnswer(new Answer(userToken.getUserCode(),app.getCode(),"LNK_INTERN_SUPERVISOR","[\""+per+"\"]"));
+		}
+
+		System.out.println("Finished");
+	}	
+	
+	
+	@Test
 	public void journalChangeTest() {
 		System.out.println("journalChange test");
 		GennyToken userToken = null;
