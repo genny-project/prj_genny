@@ -57,26 +57,24 @@ rule "HELPER_LNK_HOST_COMPANY_APP"
 		/* get the company baseentity */
 		BaseEntity companyBe = beUtils.getBaseEntityByCode(code);
 
-		/* get the name attribute of the company */
-		String name = companyBe.getValue("PRI_NAME", null);		
+		if(companyBe != null){
 
-		/* save the company's name as PRI_ASSOC_HC attribute for application baseentity */
-		Answer assocHcAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HC", name);
- 		beUtils.saveAnswer(assocHcAnswer);		
+			/* get the name attribute of the company */
+			String name = companyBe.getValue("PRI_NAME", null);		
+
+			/* save the company's name as PRI_ASSOC_HC attribute for application baseentity */
+			Answer assocHcAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HC", name);
+			answersToSave.add(assocHcAnswer);
+
+		}
 
 		/* set the LNK_INTERNSHIP attribute to empty string since LNK_HOST_COMPANY attribute is changed */
 		Answer internshipAnswer = new Answer(sourceCode, targetCode, "LNK_INTERNSHIP", " ",false,true);
-		BaseEntity baseEntity = beUtils.saveAnswer(internshipAnswer);
-		
-		/* save LNK_HOST_COMPANY attribute */
-		baseEntity = beUtils.saveAnswer(answer);
-		
-		/* Send the updated baseenttity to the frontend */
-		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
-		msg.setToken(beUtils.getGennyToken().getToken());
-		msg.setReplace(true);
-		VertxUtils.writeMsg("webcmds",JsonUtils.toJson(msg));
+		answersToSave.add(internshipAnswer);
+		answersToSave.add(answer);
 
+		update(answersToSave);
+		
 		/* dropdown search here For internship */
 		DropdownUtils dropdownInternship = new DropdownUtils(serviceToken);
 		dropdownInternship.setNewSearch("Internship Dropdown", "Fetch Internship Dropdown Items")

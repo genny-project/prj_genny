@@ -59,24 +59,23 @@ rule "HELPER_LNK_INDUSTRY"
 
 		System.out.println("Saving industry and occupation answers !");
 
-		BaseEntity baseEntity = beUtils.saveAnswer(occupationAnswer);
-		baseEntity = beUtils.saveAnswer(answer);
+		answersToSave.add(answer);
+		answersToSave.add(occupationAnswer);
 
 		/* get the industry baseentity */
 		BaseEntity be = beUtils.getBaseEntityByCode(code);
-
-		/* get the name attribute of the industry */
-		String name = be.getValue("PRI_NAME", null);		
-
-		/* save the industry's name as PRI_ASSOC_INDUSTRY attribute for the current target baseentity in the form */
-		Answer assocIndustryAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_INDUSTRY", name);
- 		beUtils.saveAnswer(assocIndustryAnswer);	
+		if(be != null){
 		
-		/* Send the updated baseenttity to the frontend */
-		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
-		msg.setToken(beUtils.getGennyToken().getToken());
-		msg.setReplace(true);
-		VertxUtils.writeMsg("webcmds",JsonUtils.toJson(msg));
+			/* get the name attribute of the industry */
+			String name = be.getValue("PRI_NAME", null);		
+
+			/* save the industry's name as PRI_ASSOC_INDUSTRY attribute for the current target baseentity in the form */
+			Answer assocIndustryAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_INDUSTRY", name);
+			answersToSave.add(assocIndustryAnswer);
+
+		}
+		
+		update(answersToSave);
 
 		/* dropdown search here */
 		DropdownUtils dropdown = new DropdownUtils(serviceToken);
@@ -94,5 +93,4 @@ rule "HELPER_LNK_INDUSTRY"
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
-		/*update(output);*/
 end

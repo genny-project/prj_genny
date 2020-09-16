@@ -55,17 +55,22 @@ rule "HELPER_LNK_INTERN_SUPERVISOR"
 		System.out.println("code  :: " + code);
 
 		/* Save the actual LNK_INTERN_SUPERVISOR answer */
-		beUtils.saveAnswer(answer);
+		answersToSave.add(answer);
 
 		/* get the supervisor baseentity */
 		BaseEntity be = beUtils.getBaseEntityByCode(code);
+		if(be != null){
 
-		/* get the name attribute of the supervisor */
-		String name = be.getValue("PRI_NAME", null);		
+			/* get the name attribute of the supervisor */
+			String name = be.getValue("PRI_NAME", null);		
 
-		/* save the supervisor's name as PRI_ASSOC_SUPERVISOR attribute for the current target baseentity in the form */
-		Answer assocSupervisorAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_SUPERVISOR", name);
- 		beUtils.saveAnswer(assocSupervisorAnswer);		
+			/* save the supervisor's name as PRI_ASSOC_SUPERVISOR attribute for the current target baseentity in the form */
+			Answer assocSupervisorAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_SUPERVISOR", name);
+			answersToSave.add(assocSupervisorAnswer);
+
+		}
+
+		update(answersToSave);
 
 		/* Retract the answer message so the rule doesn't fire again */
 		retract(answer);

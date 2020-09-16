@@ -62,79 +62,29 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		String address = companyBe.getValue("PRI_ADDRESS_FULL", null);	
 		System.out.println("company address :: " + address);
 
-
-		if (companyBe != null) {
-				String state = companyBe.getValue("PRI_ADDRESS_STATE", null);
-				if (state != null) {
-						Answer answerState = new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", state);
- 						beUtils.saveAnswer(answerState);
- 						System.out.println("state " +state);
-				} else { System.out.println("ERROR: Null " +state);}	
-				
-				String country = companyBe.getValue("PRI_ADDRESS_COUNTRY", null);
-				if (country != null) {
-						Answer answerCountry = new Answer(sourceCode, targetCode, "PRI_ADDRESS_COUNTRY", country);
- 						beUtils.saveAnswer(answerCountry);
- 						System.out.println("country " +country);
-				} else { System.out.println("ERROR: Null " +country);}
-				
-				String postcode = companyBe.getValue("PRI_ADDRESS_POSTCODE", null);
-				if (postcode != null) {
-						Answer answerPostcode = new Answer(sourceCode, targetCode, "PRI_ADDRESS_POSTCODE", postcode);
- 						beUtils.saveAnswer(answerPostcode);
- 						System.out.println("postcode " +postcode);
-				} else { System.out.println("ERROR: Null " +postcode);}		
-				
-				String suburb = companyBe.getValue("PRI_ADDRESS_SUBURB", null);
-				if (suburb != null) {
-						Answer answerSuburb = new Answer(sourceCode, targetCode, "PRI_ADDRESS_SUBURB", suburb);
- 						beUtils.saveAnswer(answerSuburb);
- 						System.out.println("suburb " +country);
- 						
- 						Answer answerCity = new Answer(sourceCode, targetCode, "PRI_ADDRESS_CITY", suburb);
- 						beUtils.saveAnswer(answerCity);
- 						System.out.println("city " +suburb);
-				} else { System.out.println("ERROR: Null " +suburb);}	
-				
-				String street_address = companyBe.getValue("PRI_ADDRESS_ADDRESS1", null);
-				if (street_address != null) {
-						Answer answerStreetAddress = new Answer(sourceCode, targetCode, "PRI_ADDRESS_ADDRESS1", street_address);
- 						beUtils.saveAnswer(answerStreetAddress);
- 						System.out.println("street_address " +street_address);
-				} else { System.out.println("ERROR: Null " +street_address);}		
-					
-		}
-		
-
-		/* save the company's name as PRI_ASSOC_HC attribute for application baseentity */
 		Answer assocHcAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HC", name);
-		
-		/* save the company's address as BEG's address */
 		Answer addressAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", address);
- 		beUtils.saveAnswer(assocHcAnswer);		
- 		beUtils.saveAnswer(addressAnswer);	
- 		
- 		insert(addressAnswer);
 
+		/* this will trigger PRI_ADDRESS_FULL helper rule */
+		insert(addressAnswer);
+		
+		/* TODO: Answer should support null  */
 		Answer repAnswer = new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", " ",false,true);
 		Answer supervisorAnswer = new Answer(sourceCode, targetCode, "LNK_INTERN_SUPERVISOR", " ",false,true);
 
-		BaseEntity baseEntity = beUtils.saveAnswer(repAnswer);
-		baseEntity = beUtils.saveAnswer(supervisorAnswer);
-		baseEntity = beUtils.saveAnswer(answer);
-		
-		/* Send the updated baseenttity to the frontend */
-		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
-		msg.setToken(beUtils.getGennyToken().getToken());
-		msg.setReplace(true);
-		VertxUtils.writeMsg("webcmds",JsonUtils.toJson(msg));
+		answersToSave.add(answer);
+		answersToSave.add(assocHcAnswer);
+		answersToSave.add(addressAnswer);
+		answersToSave.add(repAnswer);
+		answersToSave.add(supervisorAnswer);
+
+		update(answersToSave);
 
 		/* dropdown search here For companyRep */
 		DropdownUtils dropdown = new DropdownUtils(serviceToken);
 		dropdown.setNewSearch("HCR Dropdown", "Fetch HCR Dropdown Items")
 											.addFilter("PRI_IS_HOST_CPY_REP", true)
 											.addFilter("LNK_HOST_COMPANY", SearchEntity.StringFilter.EQUAL, hostCompanyCode)
-											/* .setSourceCode(code) */
 											.setPageStart(0)
 											.setPageSize(1000);
 
