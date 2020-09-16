@@ -28,7 +28,8 @@ import java.util.ArrayList;
 
 rule "HELPER_LNK_HCR"
 	ruleflow-group 'DataProcessing'
-			salience 5000
+	salience 5000
+	
 	when
 		beUtils : BaseEntityUtils()
 		answer : Answer( attributeCode == "LNK_HOST_COMPANY_REP")
@@ -55,17 +56,20 @@ rule "HELPER_LNK_HCR"
 		System.out.println("code  :: " + code);
 
 		/* Save the actual LNK_HOST_COMPANY_REP answer */
-		beUtils.saveAnswer(answer);
+		answersToSave.add(answer);
 
 		/* get the hcr baseentity */
 		BaseEntity be = beUtils.getBaseEntityByCode(code);
+		
+		if(be !=null){
+			
+			/* get the name attribute of the hcr */
+			String name = be.getValue("PRI_NAME", null);		
+			Answer assocHcrAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HCR", name);
+			answersToSave.add(assocHcrAnswer);
 
-		/* get the name attribute of the hcr */
-		String name = be.getValue("PRI_NAME", null);		
-
-		/* save the hcr's name as PRI_ASSOC_HCR attribute for the current target baseentity in the form */
-		Answer assocHcrAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HCR", name);
- 		beUtils.saveAnswer(assocHcrAnswer);		
+		}
+		update(answersToSave);
 
 		/* Retract the answer message so the rule doesn't fire again */
 		retract(answer);

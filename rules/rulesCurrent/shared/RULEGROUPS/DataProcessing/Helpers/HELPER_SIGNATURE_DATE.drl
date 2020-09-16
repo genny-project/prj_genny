@@ -45,7 +45,7 @@ rule "HELPER_SIGNATURE_DATE"
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing Helper SIGNATURE DATE Answer/Data : " + answer );
 		
 		/* Save the actual AGREEMENT_SIGNATURE answer */
-		beUtils.saveAnswer(answer);
+		answersToSave.add(answer);
 		
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		System.out.println("sourceCode :: " + sourceCode);
@@ -65,42 +65,27 @@ rule "HELPER_SIGNATURE_DATE"
 			System.out.println("attributeCode.startsWith(PRI_INTERN_)" + attributeCode);
 			
 			DateTimeFormatter dtf1 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-  			LocalDateTime now = LocalDateTime.now();
-   			String date = dtf1.format(now);
-   			System.out.println(date);
+			LocalDateTime now = LocalDateTime.now();
+			String date = dtf1.format(now);
+			System.out.println(date);
 			
 			/* save the signing date */
 			Answer answerCreated = new Answer(sourceCode, targetCode, "PRI_INTERN_SIGNING_DATE", date);
- 			beUtils.saveAnswer(answerCreated);
- 			System.out.println("answerCreated" + answerCreated);
- 		}		
+			answersToSave.add(answerCreated);
+ 		
+		}		
  		
  		if (attributeCode.startsWith("PRI_HOST_CPY_REP_")){
 		
 			System.out.println("attributeCode.startsWith(PRI_HOST_CPY_REP_)" + attributeCode);	
 		
 			DateTimeFormatter dtf1 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-  			LocalDateTime now = LocalDateTime.now();
-   			String date = dtf1.format(now);
-   			System.out.println(date);
-			
-			/*
-			Attribute actualAttribute = RulesUtils.getAttribute("PRI_HOST_CPY_REP_AGREEMENT_SIGNATURE", userToken.getToken());
-			LocalDateTime createdUgly = actualAttribute.getCreated();
-			
-			System.out.println(actualAttribute);
-			System.out.println(createdUgly);
-			
-			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-			String created = dtf.format(createdUgly).toString();
-			
-			System.out.println(dtf);
-			System.out.println(created);
-			
-			*/
+			LocalDateTime now = LocalDateTime.now();
+			String date = dtf1.format(now);
+			System.out.println(date);
+		
 			Answer answerCreated = new Answer(sourceCode, targetCode, "PRI_HOST_COMPANY_REP_SIGNING_DATE", date);
- 			beUtils.saveAnswer(answerCreated);
- 			System.out.println("answerCreated" + answerCreated);
+			answersToSave.add(answerCreated);
  		}	
  		
  		if (attributeCode.startsWith("PRI_OUTCOME_")){
@@ -108,17 +93,17 @@ rule "HELPER_SIGNATURE_DATE"
  			System.out.println("attributeCode.startsWith(PRI_OUTCOME_)" + attributeCode);
  			
  			DateTimeFormatter dtf1 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-  			LocalDateTime now = LocalDateTime.now();
-   			String date = dtf1.format(now);
-   			System.out.println(date);
+			LocalDateTime now = LocalDateTime.now();
+			String date = dtf1.format(now);
+			System.out.println(date);
 				
 			/* save the signing date */
 			Answer answerCreated = new Answer(sourceCode, targetCode, "PRI_OUTCOME_REP_SIGNING_DATE", date);
- 			beUtils.saveAnswer(answerCreated);
- 			System.out.println("answerCreated" + answerCreated);
+			answersToSave.add(answerCreated);
  			
  		}	
- 		
+
+		update(answersToSave);
 
 		/* Retract the answer message so the rule doesn't fire again */
 		retract(answer);
