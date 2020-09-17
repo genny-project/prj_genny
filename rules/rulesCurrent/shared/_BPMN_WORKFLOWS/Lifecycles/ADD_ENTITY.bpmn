@@ -141,7 +141,7 @@
 /* Create CPY Entity */
 	if (key.equals(&quot;HOST_CPY&quot;) || key.equals(&quot;EDU_PRO&quot;)  || key.equals(&quot;REF_PART&quot;)  || key.equals(&quot;AGENCY&quot;)) {
 			System.out.println(&quot;ADD_ENTITY: Adding a COMPANY&quot;);
-			newCode = &quot;PER_&quot;+uuid;
+			newCode = &quot;CPY_&quot;+uuid;
 			newCode = newCode.toUpperCase();
 	}
 
@@ -149,7 +149,7 @@
 /* Create BEG Entity */
 	if (key.equals(&quot;INTERNSHIP&quot;)) {
 			System.out.println(&quot;ADD_ENTITY: Adding an Internship&quot;);
-			newCode = &quot;PER_&quot;+uuid;
+			newCode = &quot;BEG_&quot;+uuid;
 			newCode = newCode.toUpperCase();
 	}
 
