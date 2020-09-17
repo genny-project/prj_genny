@@ -64,7 +64,7 @@ rule "PROFILE_FORM_CLICK_EVENT"
 		
 		SessionFacts facts = new SessionFacts(serviceToken, userToken, output.getTargetCode());
 		
-		System.out.println("STARTING EDIT FORMS PROCEDURE WITH: " +output);
+		System.out.println("STARTING PROFILE EDIT FORMS PROCEDURE WITH: " +output);
 	
 		retract( $message);
 	end
