@@ -14,12 +14,12 @@ import java.util.ArrayList;
 rule "IS_AGENT"
     ruleflow-group 'IsBaseEntity'
     no-loop true
-    salience 1 
+    salience 1000 
     when
 	 	userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam()
-		key : String(key.equals("AGENT"))
+		key : String( key == "AGENT" )
 		newBe : BaseEntity()
 
 	  
