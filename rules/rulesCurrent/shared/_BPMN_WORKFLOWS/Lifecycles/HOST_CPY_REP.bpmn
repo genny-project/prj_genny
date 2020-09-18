@@ -219,6 +219,12 @@ System.out.println(&quot;##################################### WORKFLOW: ANSWER 
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[is_Host_Cpy_Rep]]></drools:metaValue>
           </drools:metaData>
+          <drools:onEntry-script scriptFormat="http://www.java.com/java">
+            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% ENTER IS BASE ENTITY baseEntityType: &quot; + baseEntityType + &quot; %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
+          </drools:onEntry-script>
+          <drools:onExit-script scriptFormat="http://www.java.com/java">
+            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% EXIT IS BASE ENTITY baseEntityType: &quot; + baseEntityType + &quot; %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
+          </drools:onExit-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
@@ -284,31 +290,11 @@ System.out.println(&quot;##################################### WORKFLOW: ANSWER 
             <drools:metaValue><![CDATA[QUE_HOST_CPY_REP_GRP]]></drools:metaValue>
           </drools:metaData>
           <drools:onExit-script scriptFormat="http://www.java.com/java">
-            <drools:script>System.out.println(&quot;Exiting the HOST_CPY: QUE_HOST_CPY_REP_GRP&quot;);
-eventMsg = new QEventBtnClickMessage(&quot;QUE_TREE_ITEM_HCR_GRP&quot;);
-eventMsg.getData().setParentCode(&quot;QUE_TAB_VIEW&quot;);
-eventMsg.setToken(userToken.getToken());
-kcontext.setVariable(&quot;eventMsg&quot;, eventMsg);
-
-System.out.println(&quot;RESULTS! -> msg: &quot;+eventMsg);
-System.out.println(&quot;RESULTS! -> userToken: &quot;+userToken);
-System.out.println(&quot;RESULTS! -> serviceToken: &quot;+serviceToken);
-
-if (results==null) {
-System.out.println(&quot;Exiting the HOST_CPY: QUE_HOST_CPY_REP_GRP - results is null&quot;);
-
-String serviceTokenStr = VertxUtils.getObject(userToken.getRealm(), &quot;CACHE&quot;, &quot;SERVICE_TOKEN&quot;, String.class);
-serviceToken = new GennyToken(&quot;PER_SERVICE&quot;,serviceTokenStr);
-	kcontext.setVariable(&quot;serviceToken&quot;, serviceToken); 
-  
-} else {
-	System.out.println(&quot;Latest userToken = &quot;+userToken);
-	kcontext.setVariable(&quot;userToken&quot;, userToken);
-	serviceToken = (GennyToken)results.get(&quot;serviceToken&quot;);
-	kcontext.setVariable(&quot;serviceToken&quot;, serviceToken);
-
-}</drools:script>
+            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% EXIT Ask Question Task %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
           </drools:onExit-script>
+          <drools:onEntry-script scriptFormat="http://www.java.com/java">
+            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% ENTER Ask Question Task %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
+          </drools:onEntry-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>

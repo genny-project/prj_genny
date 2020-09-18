@@ -144,6 +144,12 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[IS_HOST_CPY]]></drools:metaValue>
           </drools:metaData>
+          <drools:onEntry-script scriptFormat="http://www.java.com/java">
+            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% ENTER IS BASE ENTITY baseEntityType: &quot; + baseEntityType + &quot; %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
+          </drools:onEntry-script>
+          <drools:onExit-script scriptFormat="http://www.java.com/java">
+            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% EXIT IS BASE ENTITY baseEntityType: &quot; + baseEntityType + &quot; %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
+          </drools:onExit-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
@@ -207,32 +213,11 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[QUE_HOST_CPY_GRP]]></drools:metaValue>
           </drools:metaData>
-          <drools:onEntry-script scriptFormat="http://www.java.com/java"/>
+          <drools:onEntry-script scriptFormat="http://www.java.com/java">
+            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% ENTER Ask Question Task %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
+          </drools:onEntry-script>
           <drools:onExit-script scriptFormat="http://www.java.com/java">
-            <drools:script>System.out.println(&quot;Exiting the HOST_CPY: QUE_HOST_CPY_GRP&quot;);
-eventMsg = new QEventBtnClickMessage(&quot;QUE_TREE_ITEM_HOST_COMPANIES_ACTIVE&quot;);
-eventMsg.getData().setParentCode(&quot;QUE_TAB_VIEW&quot;);
-eventMsg.setToken(userToken.getToken());
-kcontext.setVariable(&quot;eventMsg&quot;, eventMsg);
-
-System.out.println(&quot;RESULTS! -> msg: &quot;+eventMsg);
-System.out.println(&quot;RESULTS! -> userToken: &quot;+userToken);
-System.out.println(&quot;RESULTS! -> serviceToken: &quot;+serviceToken);
-
-if (results==null) {
-System.out.println(&quot;Exiting the HOST_CPY: QUE_HOST_CPY_GRP - results is null&quot;);
-
-String serviceTokenStr = VertxUtils.getObject(userToken.getRealm(), &quot;CACHE&quot;, &quot;SERVICE_TOKEN&quot;, String.class);
-serviceToken = new GennyToken(&quot;PER_SERVICE&quot;,serviceTokenStr);
-	kcontext.setVariable(&quot;serviceToken&quot;, serviceToken); 
-  
-} else {
-	System.out.println(&quot;Latest userToken = &quot;+userToken);
-	kcontext.setVariable(&quot;userToken&quot;, userToken);
-	serviceToken = (GennyToken)results.get(&quot;serviceToken&quot;);
-	kcontext.setVariable(&quot;serviceToken&quot;, serviceToken);
-
-}</drools:script>
+            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% EXIT Ask Question Task %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
           </drools:onExit-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
@@ -334,13 +319,13 @@ serviceToken = new GennyToken(&quot;PER_SERVICE&quot;,serviceTokenStr);
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_1" bpmnElement="StartEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="170.0" y="305.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_2">
+        <bpmndi:BPMNLabel id="BPMNLabel_2" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
           <dc:Bounds height="22.0" width="64.0" x="156.0" y="341.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_2" bpmnElement="EndEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="1160.0" y="305.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_3">
+        <bpmndi:BPMNLabel id="BPMNLabel_3" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
           <dc:Bounds height="22.0" width="64.0" x="1146.0" y="341.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -352,13 +337,13 @@ serviceToken = new GennyToken(&quot;PER_SERVICE&quot;,serviceTokenStr);
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_1" bpmnElement="EndEvent_2">
         <dc:Bounds height="36.0" width="36.0" x="1250.0" y="300.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_5">
+        <bpmndi:BPMNLabel id="BPMNLabel_5" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
           <dc:Bounds height="22.0" width="72.0" x="1232.0" y="336.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_2" bpmnElement="StartEvent_3">
         <dc:Bounds height="36.0" width="36.0" x="40.0" y="300.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_6">
+        <bpmndi:BPMNLabel id="BPMNLabel_6" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
           <dc:Bounds height="22.0" width="72.0" x="22.0" y="336.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -420,8 +405,11 @@ serviceToken = new GennyToken(&quot;PER_SERVICE&quot;,serviceTokenStr);
         <di:waypoint xsi:type="dc:Point" x="680.0" y="323.0"/>
         <di:waypoint xsi:type="dc:Point" x="745.0" y="323.0"/>
         <di:waypoint xsi:type="dc:Point" x="810.0" y="323.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_10"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
+    <bpmndi:BPMNLabelStyle>
+      <dc:Font name="arial" size="9.0"/>
+    </bpmndi:BPMNLabelStyle>
   </bpmndi:BPMNDiagram>
 </bpmn2:definitions>
