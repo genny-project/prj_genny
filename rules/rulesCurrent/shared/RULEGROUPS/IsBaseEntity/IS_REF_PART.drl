@@ -19,7 +19,7 @@ rule "IS_REF_PART"
 	 	userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam()
-		key : String(key.equals("REF_PART"))
+		baseEntityType : String(baseEntityType.equals("REF_PART"))
 		newBe : BaseEntity()
 
 	  

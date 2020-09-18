@@ -21,7 +21,7 @@ rule "IS_INTERNSHIP"
 	 	userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam()
-		key : String(key.equals("INTERNSHIP"))
+		baseEntityType : String(baseEntityType.equals("INTERNSHIP"))
 		newBe : BaseEntity()
 
 	  
