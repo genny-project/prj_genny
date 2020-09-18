@@ -38,6 +38,7 @@ rule "PROFILE_FORM_CLICK_EVENT"
        	
        	if(sourceBe != null) {
        			Boolean isIntern = sourceBe.is("PRI_IS_INTERN");
+       			Boolean isStudent = sourceBe.is("PRI_IS_STUDENT");
 				Boolean isEPR = sourceBe.is("PRI_IS_EDU_PRO_REP");
 				Boolean isHCR = sourceBe.is("PRI_IS_HOST_CPY_REP");
 				Boolean isRPR = sourceBe.is("PRI_IS_REF_PART_REP");
@@ -46,6 +47,7 @@ rule "PROFILE_FORM_CLICK_EVENT"
 				Boolean isDev = sourceBe.is("PRI_IS_DEV");
 	
 				if(isIntern) {role = "INTERN"; }
+				if(isStudent) {role = "STUDENT"; }
 				if(isEPR) 	 {role = "EDU_PRO_REP"; }
        			if(isHCR)    {role = "HOST_CPY_REP"; }
        			if(isRPR)    {role = "REF_PART_REP"; }
