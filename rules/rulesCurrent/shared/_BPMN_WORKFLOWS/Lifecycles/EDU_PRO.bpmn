@@ -147,6 +147,12 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[is_Edu_Pro]]></drools:metaValue>
           </drools:metaData>
+          <drools:onEntry-script scriptFormat="http://www.java.com/java">
+            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% ENTER IS BASE ENTITY baseEntityType: &quot; + baseEntityType + &quot; %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
+          </drools:onEntry-script>
+          <drools:onExit-script scriptFormat="http://www.java.com/java">
+            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% EXIT IS BASE ENTITY baseEntityType: &quot; + baseEntityType + &quot; %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
+          </drools:onExit-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
@@ -211,6 +217,12 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[QUE_EDU_PRO_GRP]]></drools:metaValue>
           </drools:metaData>
+          <drools:onEntry-script scriptFormat="http://www.java.com/java">
+            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% ENTER Ask Question Task %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
+          </drools:onEntry-script>
+          <drools:onExit-script scriptFormat="http://www.java.com/java">
+            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% EXIT Ask Question Task %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
+          </drools:onExit-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>

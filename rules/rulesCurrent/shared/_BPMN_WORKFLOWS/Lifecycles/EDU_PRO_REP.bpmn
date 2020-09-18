@@ -137,6 +137,12 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[QUE_EDU_PRO_GRP]]></drools:metaValue>
           </drools:metaData>
+          <drools:onEntry-script scriptFormat="http://www.java.com/java">
+            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% ENTER Ask Question Task %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
+          </drools:onEntry-script>
+          <drools:onExit-script scriptFormat="http://www.java.com/java">
+            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% EXIT Ask Question Task %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
+          </drools:onExit-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
@@ -210,6 +216,12 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[isEduPro]]></drools:metaValue>
           </drools:metaData>
+          <drools:onEntry-script scriptFormat="http://www.java.com/java">
+            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% ENTER IS BASE ENTITY baseEntityType: &quot; + baseEntityType + &quot; %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
+          </drools:onEntry-script>
+          <drools:onExit-script scriptFormat="http://www.java.com/java">
+            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% EXIT IS BASE ENTITY baseEntityType: &quot; + baseEntityType + &quot; %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
+          </drools:onExit-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
@@ -330,13 +342,13 @@ kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCod
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_1" bpmnElement="StartEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="433.0" y="308.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_2">
+        <bpmndi:BPMNLabel id="BPMNLabel_2" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
           <dc:Bounds height="11.0" width="75.0" x="414.0" y="344.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_2" bpmnElement="EndEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="1392.0" y="308.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_3">
+        <bpmndi:BPMNLabel id="BPMNLabel_3" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
           <dc:Bounds height="11.0" width="72.0" x="1374.0" y="344.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -348,13 +360,13 @@ kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCod
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_1" bpmnElement="EndEvent_2">
         <dc:Bounds height="36.0" width="36.0" x="1500.0" y="303.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_5">
+        <bpmndi:BPMNLabel id="BPMNLabel_5" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
           <dc:Bounds height="11.0" width="80.0" x="1478.0" y="339.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_2" bpmnElement="StartEvent_3">
         <dc:Bounds height="36.0" width="36.0" x="310.0" y="303.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_6">
+        <bpmndi:BPMNLabel id="BPMNLabel_6" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
           <dc:Bounds height="22.0" width="63.0" x="297.0" y="339.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -443,5 +455,8 @@ kcontext.setVariable(&quot;newBe&quot;, beUtils.getBaseEntityByCode(newBe.getCod
         <bpmndi:BPMNLabel id="BPMNLabel_16"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
+    <bpmndi:BPMNLabelStyle>
+      <dc:Font name="arial" size="9.0"/>
+    </bpmndi:BPMNLabelStyle>
   </bpmndi:BPMNDiagram>
 </bpmn2:definitions>
