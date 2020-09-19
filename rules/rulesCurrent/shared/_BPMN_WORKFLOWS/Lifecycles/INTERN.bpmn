@@ -157,35 +157,11 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[QUE_INTERN_GRP]]></drools:metaValue>
           </drools:metaData>
-          <drools:onEntry-script scriptFormat="http://www.java.com/java"/>
+          <drools:onEntry-script scriptFormat="http://www.java.com/java">
+            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% ENTER Ask Question Task %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
+          </drools:onEntry-script>
           <drools:onExit-script scriptFormat="http://www.java.com/java">
-            <drools:script>/* get the latest userToken */
-System.out.println(&quot;Exiting the INTERN: QUE_INTERN_GRP&quot;);
-eventMsg = new QEventBtnClickMessage(&quot;QUE_TREE_ITEM_INTERNS_GRP&quot;);
-eventMsg.getData().setParentCode(&quot;QUE_TAB_VIEW&quot;);
-eventMsg.setToken(userToken.getToken());
-kcontext.setVariable(&quot;eventMsg&quot;, eventMsg);
-
-System.out.println(&quot;RESULTS! -> msg: &quot;+eventMsg);
-System.out.println(&quot;RESULTS! -> userToken: &quot;+userToken);
-System.out.println(&quot;RESULTS! -> serviceToken: &quot;+serviceToken);
-
-if (results==null) {
-System.out.println(&quot;Exiting the INTERN: QUE_INTERN_GRP - results is null&quot;);
-/*kcontext.setVariable(&quot;userToken&quot;, userToken);
-	serviceToken = (GennyToken)results.get(&quot;serviceToken&quot;); */
-String serviceTokenStr = VertxUtils.getObject(userToken.getRealm(), &quot;CACHE&quot;, &quot;SERVICE_TOKEN&quot;, String.class);
-serviceToken = new GennyToken(&quot;PER_SERVICE&quot;,serviceTokenStr);
-	kcontext.setVariable(&quot;serviceToken&quot;, serviceToken); 
-  
-} else {
-	/* userToken = (GennyToken)results.get(&quot;userToken&quot;); */
-	System.out.println(&quot;Latest userToken = &quot;+userToken);
-	kcontext.setVariable(&quot;userToken&quot;, userToken);
-	serviceToken = (GennyToken)results.get(&quot;serviceToken&quot;);
-	kcontext.setVariable(&quot;serviceToken&quot;, serviceToken);
-
-}</drools:script>
+            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% EXIT Ask Question Task %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
           </drools:onExit-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
@@ -265,10 +241,10 @@ serviceToken = new GennyToken(&quot;PER_SERVICE&quot;,serviceTokenStr);
             <drools:metaValue><![CDATA[is_Intern]]></drools:metaValue>
           </drools:metaData>
           <drools:onEntry-script scriptFormat="http://www.java.com/java">
-            <drools:script>System.out.println(&quot;INTERN: Entering Is_Intern&quot;);</drools:script>
+            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% ENTER IS BASE ENTITY baseEntityType: &quot; + baseEntityType + &quot; %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
           </drools:onEntry-script>
           <drools:onExit-script scriptFormat="http://www.java.com/java">
-            <drools:script>System.out.println(&quot;INTERN: Exiting Is_Intern&quot;);</drools:script>
+            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% ENTER IS BASE ENTITY baseEntityType: &quot; + baseEntityType + &quot; %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
           </drools:onExit-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
