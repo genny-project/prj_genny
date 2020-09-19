@@ -186,6 +186,55 @@ public class AdamTest {
 	protected static GennyToken serviceToken;
 
 	@Test
+	public void submitButtonTest() {
+		System.out.println("Submit Button test");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+		} else {
+			// VertxUtils.cachedEnabled = false;
+			VertxUtils.cachedEnabled = false;
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+			eventBusMock = new EventBusMock();
+			vertxCache = new JunitCache(); // MockCache
+			VertxUtils.init(eventBusMock, vertxCache);
+		}
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		beUtils.setServiceToken(serviceToken);
+
+		// find Ask 
+		// Need the source and target and question code and parent form code
+		
+		Ask ask = new Ask();
+		ask.setAttributeCode("PRI_SUBMIT");
+		ask.setDisabled(true);
+		ask.set
+		
+		QDataAskMessage msg = new QDataAskMessage(ask);
+		msg.setToken(userToken.getToken());
+		msg.setReplace(true);
+		
+		VertxUtils.writeMsg("webdata", JsonUtils.toJson(msg));
+		
+		
+		
+	}
+	
+	
+	@Test
 	public void fixLNK_InternSupervisorTest() {
 		System.out.println("Intern Supervisor fix Fix test");
 		GennyToken userToken = null;
