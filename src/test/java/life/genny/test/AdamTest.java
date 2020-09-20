@@ -408,7 +408,32 @@ public class AdamTest {
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		beUtils.setServiceToken(serviceToken);
 
-		BaseEntity be = beUtils.getBaseEntityByCode("PER_AFCACF0F-2618-4C5C-A292-2026A974D602");
+		
+		BaseEntity be = beUtils.getBaseEntityByCode("CPY_ITA");
+		
+		if (be != null) {
+			String name = "Institute of Technology 2 Australia";
+			
+			try {
+				be.setName(name);
+				be.setValue("PRI_NAME", name);
+				QDataBaseEntityMessage msg = new QDataBaseEntityMessage(be);
+				msg.setToken(userToken.getToken());
+				msg.setReplace(true);
+				String[] rxList = new String[1];
+				rxList[0] = "SUPERVISOR";
+				msg.setRecipientCodeArray(rxList);
+				VertxUtils.writeMsg("project", JsonUtils.toJson(msg));
+
+			} catch (BadDataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+		}
+		
+		be = beUtils.getBaseEntityByCode("PER_AFCACF0F-2618-4C5C-A292-2026A974D602");
 		
 		if (be != null) {
 			String name = "Aaron Rainy Chathanattu";
