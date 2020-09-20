@@ -31,7 +31,7 @@ rule "HELPER_LNK_HOST_COMPANY"
 			salience 5000
 	when
 		beUtils : BaseEntityUtils()
-		answer : Answer( attributeCode == "LNK_HOST_COMPANY" && !targetCode.startsWith("JNL_") )
+		answer : Answer( attributeCode == "LNK_HOST_COMPANY" && !targetCode.startsWith("JNL_") && !targetCode.startsWith("BEG_"))
 		answersToSave : Answers()
 		ruleDetails : RuleDetails()
 		output : OutputParam( )
