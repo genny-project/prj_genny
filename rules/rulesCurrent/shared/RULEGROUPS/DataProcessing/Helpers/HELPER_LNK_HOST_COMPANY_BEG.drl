@@ -60,16 +60,21 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		/* get the name attribute of the company */
 		String name = companyBe.getValue("PRI_NAME", null);		
 		String address = companyBe.getValue("PRI_ADDRESS_FULL", null);	
+		String country = companyBe.getValue("PRI_ADDRESS_COUNTRY", null);	
+		String postcode = companyBe.getValue("PRI_ADDRESS_POSTCODE", null);	
+		String suburb = companyBe.getValue("PRI_ADDRESS_SUBURB", null);	
+		String city = companyBe.getValue("PRI_ADDRESS_CITY", null);	
 		String state = companyBe.getValue("PRI_ADDRESS_STATE", null);	
 		System.out.println("company address :: " + address);
 
 		Answer assocHcAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HC", name);
 		Answer addressAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", address);
-		Answer addressAnswerState = new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", state);
+		Answer countryAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_COUNTRY", country);
+		Answer postcodeAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_POSTCODE", postcode);
+		Answer suburbAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_SUBURB", suburb);
+		Answer cityAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_CITY", city);
+		Answer stateAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", state);
 
-		/* this will trigger PRI_ADDRESS_FULL helper rule */
-	/*	insert(addressAnswer); */
-		
 		/* TODO: Answer should support null  */
 		Answer repAnswer = new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", " ",false,true);
 		Answer supervisorAnswer = new Answer(sourceCode, targetCode, "LNK_INTERN_SUPERVISOR", " ",false,true);
@@ -77,7 +82,11 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		answersToSave.add(answer);
 		answersToSave.add(assocHcAnswer);
 		answersToSave.add(addressAnswer);
-		answersToSave.add(addressAnswerState);
+		answersToSave.add(countryAnswer);
+		answersToSave.add(postcodeAnswer);
+		answersToSave.add(suburbAnswer);
+		answersToSave.add(cityAnswer);
+		answersToSave.add(stateAnswer);
 		answersToSave.add(repAnswer);
 		answersToSave.add(supervisorAnswer);
 
