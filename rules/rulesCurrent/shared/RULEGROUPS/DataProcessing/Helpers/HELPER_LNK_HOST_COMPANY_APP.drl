@@ -29,6 +29,7 @@ import java.util.ArrayList;
 rule "HELPER_LNK_HOST_COMPANY_APP"
 	ruleflow-group 'DataProcessing'
 			salience 6000
+			no-loop
 	when
 		beUtils : BaseEntityUtils()
 		answer : Answer( attributeCode == "LNK_HOST_COMPANY" && targetCode matches "APP_.*")
@@ -73,7 +74,7 @@ rule "HELPER_LNK_HOST_COMPANY_APP"
 		answersToSave.add(internshipAnswer);
 		answersToSave.add(answer);
 
-		update(answersToSave);
+		/*update(answersToSave);*/
 		
 		/* dropdown search here For internship */
 		DropdownUtils dropdownInternship = new DropdownUtils(serviceToken);
@@ -86,9 +87,9 @@ rule "HELPER_LNK_HOST_COMPANY_APP"
 		/* Send the dropdown options */
 		dropdownInternship.sendSearchResults("GRP_INTERNSHIP_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
 		
-		retract(answer);
+		/*retract(answer);*/
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
-		update(output);
+		/*update(output);*/
 end

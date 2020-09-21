@@ -29,6 +29,7 @@ import java.util.ArrayList;
 rule "HELPER_LNK_OCCUPATION"
 	ruleflow-group 'DataProcessing'
 			salience 5000
+			no-loop
 	when
 		beUtils : BaseEntityUtils()
 		answer : Answer( attributeCode == "LNK_OCCUPATION")
@@ -76,15 +77,15 @@ rule "HELPER_LNK_OCCUPATION"
 		String occupations = occupationNames.toString().replaceAll("[\\[\\](){}]","");
 
 		/* save the occupation's name as PRI_ASSOC_OCCUPATION attribute for the current target baseentity in the form */
-		Answer assocOccupationAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_OCCUPATION", occupations);
+		Answer assocOccupationAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_OCCUPATION", occupations,false,true);
 		answersToSave.add(assocOccupationAnswer);
 
-		update(answersToSave);
+	/*	update(answersToSave);*/
 
 		/* Retract the answer message so the rule doesn't fire again */
-		retract(answer);
+	/*	retract(answer); */
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
-		update(output);
+	/*	update(output); */
 end
