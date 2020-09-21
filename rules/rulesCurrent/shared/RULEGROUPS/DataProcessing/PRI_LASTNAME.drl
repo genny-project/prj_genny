@@ -40,7 +40,7 @@ rule "PRI_LASTNAME"
 		BaseEntity person = beUtils.getBaseEntityByCode(targetCode);
 		String firstname = person.getValue("PRI_FIRSTNAME","");
 		System.out.println("Rule -> PRI_LASTNAME 1 lastname="+lastname);	
-		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_LASTNAME", lastname,false,true));	
+		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_LASTNAME", lastname,false,false));	
 			
 		String name = firstname + " "+lastname;
 		name = name.trim();	
@@ -55,6 +55,7 @@ rule "PRI_LASTNAME"
  		beUtils.saveAnswer(answerName);
 		Answer answerInitials = new Answer(sourceCode,targetCode,"PRI_INITIALS",initials);
  		beUtils.saveAnswer(answerInitials);
+
 		
 			
 		output.setTypeOfResult("NONE");
