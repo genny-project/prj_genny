@@ -40,7 +40,7 @@ rule "PRI_FIRSTNAME"
 		firstname = firstname.toLowerCase().trim();
 		firstname = WordUtils.capitalize(firstname);
 					
-		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_FIRSTNAME", firstname,false,true));	
+		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_FIRSTNAME", firstname,false,false));	
 			
 		BaseEntity person = beUtils.getBaseEntityByCode(targetCode);
 		String lastname = person.getValue("PRI_LASTNAME","");
@@ -50,7 +50,7 @@ rule "PRI_FIRSTNAME"
 			
 		String initials = 	WordUtils.initials(name).toUpperCase();
 		
-		
+	
 		Answer answerName = new Answer(sourceCode,targetCode,"PRI_NAME",name);
  		beUtils.saveAnswer(answerName);
 		Answer answerInitials = new Answer(sourceCode,targetCode,"PRI_INITIALS",initials);
