@@ -69,10 +69,10 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 
 		Answer assocHcAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HC", name);
 		Answer addressAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", address);
-		Answer countryAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_COUNTRY", state);
-		Answer postcodeAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_POSTCODE", state);
-		Answer suburbAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_SUBURB", state);
-		Answer cityAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_CITY", state);
+		Answer countryAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_COUNTRY", country);
+		Answer postcodeAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_POSTCODE", postcode);
+		Answer suburbAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_SUBURB", suburb);
+		Answer cityAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_CITY", city);
 		Answer stateAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", state);
 
 		/* TODO: Answer should support null  */
