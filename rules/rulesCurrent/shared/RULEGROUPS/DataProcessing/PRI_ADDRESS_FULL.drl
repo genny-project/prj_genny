@@ -41,6 +41,7 @@ rule "PRI_ADDRESS_FULL"
 				if (postcode == null) {
 					postcode = addressDataJson.getString("postcode");
 				}
+				
 				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_JSON", answer.getValue(),false,true));	
 				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_COUNTRY", addressDataJson.getString("country"),false,true));
 				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_POSTCODE",postcode,false,true));
@@ -48,14 +49,30 @@ rule "PRI_ADDRESS_FULL"
 				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_CITY", addressDataJson.getString("suburb"),false,true));
 				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", addressDataJson.getString("state"),false,true));
 				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_ADDRESS1", addressDataJson.getString("street_address"),false,true));
-				Answer addressFull = new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", addressDataJson.getString("full_address"),false,true);
+				Answer addressFull = new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", addressDataJson.getString("full_address"),false,false);
 				answersToSave.add(addressFull);
+				
+				
+				/*beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_ADDRESS_JSON", answer.getValue(),false,true));	
+				beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_ADDRESS_COUNTRY", addressDataJson.getString("country"),false,true));
+				beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_ADDRESS_POSTCODE",postcode,false,true));
+				beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_ADDRESS_SUBURB", addressDataJson.getString("suburb"),false,true));
+				beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_ADDRESS_CITY", addressDataJson.getString("suburb"),false,true));
+				beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", addressDataJson.getString("state"),false,true));
+				beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_ADDRESS_ADDRESS1", addressDataJson.getString("street_address"),false,true));
+				beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", addressDataJson.getString("full_address"),false,true));
+					*/		
 		
 				Double latitude = addressDataJson.getDouble("latitude");
 				Double longitude = addressDataJson.getDouble("longitude");
 			
+				
 				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_LATITUDE", latitude+"",false,true));
 				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_LONGITUDE", longitude+"",false,true));
+				
+				
+				/*beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_ADDRESS_LATITUDE", latitude+"",false,true));
+				beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_ADDRESS_LONGITUDE", longitude+"",false,true));*/
 				
 			} catch (Exception e) {
 				System.out.println("BAD JSON => "+answer.getValue());
