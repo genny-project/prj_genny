@@ -40,17 +40,20 @@ rule "PRI_LASTNAME"
 		BaseEntity person = beUtils.getBaseEntityByCode(targetCode);
 		String firstname = person.getValue("PRI_FIRSTNAME","");
 		System.out.println("Rule -> PRI_LASTNAME 1 lastname="+lastname);	
-		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_LASTNAME", lastname,false,true));	
+		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_LASTNAME", lastname,false,false));	
 			
 		String name = firstname + " "+lastname;
 		name = name.trim();	
 		name = WordUtils.capitalize(name);
 		System.out.println("Rule -> PRI_LASTNAME 2 Name="+name);
-		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_NAME", name,false,true));
+	
 			
 		String initials = 	WordUtils.initials(name).toUpperCase();
 		System.out.println("Rule -> PRI_LASTNAME 3 initials="+initials);
+		
+		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_NAME", name,false,true));
 		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_INITIALS", initials,false,true));
+
 		
 			
 		output.setTypeOfResult("NONE");
