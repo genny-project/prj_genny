@@ -51,9 +51,9 @@ rule "PRI_LASTNAME"
 		String initials = 	WordUtils.initials(name).toUpperCase();
 		System.out.println("Rule -> PRI_LASTNAME 3 initials="+initials);
 		
-		Answer answerName = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_NAME",name);
+		Answer answerName = new Answer(sourceCode,targetCode,"PRI_NAME",name);
  		beUtils.saveAnswer(answerName);
-		Answer answerInitials = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_INITIALS",initials);
+		Answer answerInitials = new Answer(sourceCode,targetCode,"PRI_INITIALS",initials);
  		beUtils.saveAnswer(answerInitials);
 		
 			
