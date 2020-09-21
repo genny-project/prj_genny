@@ -77,8 +77,8 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		Answer stateAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", state);
 
 		/* TODO: Answer should support null  */
-		Answer repAnswer = new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", " ",false,true);
-		Answer supervisorAnswer = new Answer(sourceCode, targetCode, "LNK_INTERN_SUPERVISOR", " ",false,true);
+		Answer repAnswer = new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", "",false,true);
+		Answer supervisorAnswer = new Answer(sourceCode, targetCode, "LNK_INTERN_SUPERVISOR", "",false,true);
 
 		answersToSave.add(answer);
 		answersToSave.add(assocHcAnswer);
@@ -107,6 +107,6 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		/*retract(answer);*/
 
 		output.setTypeOfResult("NONE");
-		output.setResultCode("NONE"); */ /* dont display anything new */
+		output.setResultCode("NONE");  /* dont display anything new */
 	/*	update(output); */
 end
