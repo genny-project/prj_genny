@@ -50,9 +50,11 @@ rule "PRI_FIRSTNAME"
 			
 		String initials = 	WordUtils.initials(name).toUpperCase();
 		
-		
-		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_NAME", name,false,true));
-		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_INITIALS", initials,false,true));
+	
+		Answer answerName = new Answer(sourceCode,targetCode,"PRI_NAME",name);
+ 		beUtils.saveAnswer(answerName);
+		Answer answerInitials = new Answer(sourceCode,targetCode,"PRI_INITIALS",initials);
+ 		beUtils.saveAnswer(answerInitials);
 		
 			
 		output.setTypeOfResult("NONE");
