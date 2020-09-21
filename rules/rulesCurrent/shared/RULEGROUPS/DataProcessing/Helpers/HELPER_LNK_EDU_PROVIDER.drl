@@ -29,6 +29,7 @@ import java.util.ArrayList;
 rule "HELPER_LNK_EDU_PROVIDER"
 	ruleflow-group 'DataProcessing'
 			salience 5000
+			no-loop
 	when
 		beUtils : BaseEntityUtils()
 		answer : Answer( attributeCode == "LNK_EDU_PROVIDER" )
@@ -64,14 +65,14 @@ rule "HELPER_LNK_EDU_PROVIDER"
 		String name = companyBe.getValue("PRI_NAME", null);		
 
 		/* save the company's name as PRI_ASSOC_EP attribute for application baseentity */
-		Answer assocEPAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_EP", name);
+		Answer assocEPAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_EP", name,false,true);
  		
  		answersToSave.add(assocEPAnswer);
  		
- 		update(answersToSave);	
-		retract(answer);
+ 	/*	update(answersToSave);	
+		retract(answer); */
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
-		update(output);
+		/* update(output); */
 end

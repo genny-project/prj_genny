@@ -29,6 +29,7 @@ import java.util.ArrayList;
 rule "HELPER_LNK_INTERN_SUPERVISOR"
 	ruleflow-group 'DataProcessing'
 			salience 5000
+			no-loop
 	when
 		beUtils : BaseEntityUtils()
 		answer : Answer( attributeCode == "LNK_INTERN_SUPERVISOR")
@@ -65,7 +66,7 @@ rule "HELPER_LNK_INTERN_SUPERVISOR"
 			String name = be.getValue("PRI_NAME", null);		
 
 			/* save the supervisor's name as PRI_ASSOC_SUPERVISOR attribute for the current target baseentity in the form */
-			Answer assocSupervisorAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_SUPERVISOR", name);
+			Answer assocSupervisorAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_SUPERVISOR", name,false,true);
 			answersToSave.add(assocSupervisorAnswer);
 
 		}
@@ -73,9 +74,9 @@ rule "HELPER_LNK_INTERN_SUPERVISOR"
 		update(answersToSave);
 
 		/* Retract the answer message so the rule doesn't fire again */
-		retract(answer);
+		/* retract(answer); */
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
-		update(output);
+		/* update(output); */
 end

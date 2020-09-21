@@ -29,7 +29,7 @@ import java.util.ArrayList;
 rule "HELPER_LNK_HCR"
 	ruleflow-group 'DataProcessing'
 	salience 5000
-	
+	no-loop
 	when
 		beUtils : BaseEntityUtils()
 		answer : Answer( attributeCode == "LNK_HOST_COMPANY_REP")
@@ -69,12 +69,12 @@ rule "HELPER_LNK_HCR"
 			answersToSave.add(assocHcrAnswer);
 
 		}
-		update(answersToSave);
+	/*	update(answersToSave); */
 
 		/* Retract the answer message so the rule doesn't fire again */
-		retract(answer);
+	/*	retract(answer); */
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
-		update(output);
+	/*	update(output); */
 end
