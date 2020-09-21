@@ -48,12 +48,13 @@ rule "PRI_FIRSTNAME"
 		String name = firstname  + " "+lastname;
 		name = name.trim();	
 			
-		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_NAME", name,false,true));
-			
 		String initials = 	WordUtils.initials(name).toUpperCase();
 		
-			
-		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_INITIALS", initials,false,true));
+		
+		Answer answerName = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_NAME",name);
+ 		beUtils.saveAnswer(answerName);
+		Answer answerInitials = new Answer(userToken.getUserCode(),newApplication.getCode(),"PRI_INITIALS",initials);
+ 		beUtils.saveAnswer(answerInitials);
 		
 			
 		output.setTypeOfResult("NONE");
