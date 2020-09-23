@@ -22,12 +22,14 @@ import life.genny.qwanda.Ask;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.utils.OutputParam;
 import life.genny.jbpm.customworkitemhandlers.ShowFrame;
+import life.genny.qwanda.message.QCmdMessage;
 
 
 
 rule "PRI_SEARCH_TEXT"
-    ruleflow-group 'DataProcessing'
-        salience 450
+	ruleflow-group 'DataProcessing'
+	salience 450
+	no-loop true
     when
       beUtils : BaseEntityUtils()
 	  serviceToken : GennyToken( code == "PER_SERVICE")
@@ -36,6 +38,12 @@ rule "PRI_SEARCH_TEXT"
 
      then
   		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer);
+
+			/* send the table display message out  */
+			QCmdMessage msg = new QCmdMessage("DISPLAY", "TABLE");
+			msg.setToken(beUtils.getGennyToken().getToken());
+			msg.setSend(true);  	
+			VertxUtils.writeMsg("webcmds",msg);
 
  	    /* get current search */
  	    TableUtils tableUtils = new TableUtils(beUtils);
