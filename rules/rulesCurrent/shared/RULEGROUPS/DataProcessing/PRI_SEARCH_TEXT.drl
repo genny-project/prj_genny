@@ -44,11 +44,19 @@ rule "PRI_SEARCH_TEXT"
 
 		/* get current search */
 		TableUtils tableUtils = new TableUtils(beUtils);
-
 		SearchEntity searchBE = tableUtils.getSessionSearch("SBE_SEARCHBAR");
-		searchBE.setWildcard(answer.getValue());
 		
-		VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE, beUtils.getGennyToken().getToken());
+		/* set the search keyword */
+		searchBE.setWildcard(answer.getValue());
+
+		/* Reset the pageNumber to 1 and update the searchBe object*/
+		Answer pageNumberAnswer = new Answer(beUtils.getGennyToken().getUserCode(), searchBE.getCode(), "PRI_INDEX", "1");
+		searchBE = beUtils.updateBaseEntity(searchBE, pageNumberAnswer,SearchEntity.class);
+		searchBE.setPageStart(0);
+
+		/* cache the updated searchBe  */
+		VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
+		beUtils.getGennyToken().getToken());
 				
 		long totalTime = TableUtils.searchTable(beUtils,searchBE.getCode().substring("SBE_".length()), true);
 
