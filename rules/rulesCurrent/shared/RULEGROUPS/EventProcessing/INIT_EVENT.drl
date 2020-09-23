@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
+import life.genny.qwanda.message.QCmdMessage;
 
 rule "INIT_EVENT"
 	ruleflow-group 'EventProcessing'
