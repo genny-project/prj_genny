@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
+import life.genny.qwanda.message.QCmdMessage;
 
 rule "INIT_EVENT"
 	ruleflow-group 'EventProcessing'
@@ -33,7 +34,7 @@ rule "INIT_EVENT"
 
 		if(code != null && !code.isEmpty()){
 
-			if(code.equals("QUE_SUBMIT")){
+			if(code.equals("QUE_SUBMIT") || code.startsWith("QUE_TASK")){
 				String parentCode = $message.getData().getParentCode();
 				System.out.println("parentCode  ::  " + parentCode);
 
