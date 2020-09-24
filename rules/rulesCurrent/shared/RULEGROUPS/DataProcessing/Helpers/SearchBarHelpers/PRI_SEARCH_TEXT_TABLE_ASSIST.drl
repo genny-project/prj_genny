@@ -101,12 +101,11 @@ rule "PRI_SEARCH_TEXT_TABLE_ASSIST"
 			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", sbe.getCode(), sbe,
 			beUtils.getGennyToken().getToken());
 
-			long totalTime = TableUtils.searchTable(beUtils,sbe, true);
+			TableUtils.searchTable(beUtils,sbe, true);
 
-			System.out.println("total took " + (totalTime) + " ms"); 
 		}
 
-		System.out.println(drools.getRule().getName()+" ASSIST for "+searchBE.getCode()); 
+/* 		System.out.println(drools.getRule().getName()+" ASSIST for "+searchBE.getCode()); 
 		Answer pageNumberAnswer = new Answer(beUtils.getGennyToken().getUserCode(), searchBE.getCode(), "PRI_INDEX", "1");
 		searchBE = beUtils.updateBaseEntity(searchBE, pageNumberAnswer,SearchEntity.class);
 		searchBE.setWildcard(value);
@@ -114,9 +113,8 @@ rule "PRI_SEARCH_TEXT_TABLE_ASSIST"
 		VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
 		beUtils.getGennyToken().getToken());
 		long totalTime = TableUtils.searchTable(beUtils,searchBE, true);
-
 		System.out.println("total took " + (totalTime) + " ms"); 
-
+ */
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
 end
