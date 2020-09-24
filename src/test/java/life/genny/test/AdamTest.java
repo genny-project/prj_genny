@@ -186,7 +186,7 @@ public class AdamTest {
 	protected static GennyToken serviceToken;
 
 	@Test
-	public void submitButtonTest() {
+	public void internshipImageFix() {
 		System.out.println("Submit Button test");
 		GennyToken userToken = null;
 		GennyToken serviceToken = null;
@@ -215,22 +215,53 @@ public class AdamTest {
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		beUtils.setServiceToken(serviceToken);
 
-		// find Ask 
-		// Need the source and target and question code and parent form code
-		
-		Ask ask = new Ask();
-		ask.setAttributeCode("PRI_SUBMIT");
-		ask.setDisabled(true);
-		ask.set
-		
-		QDataAskMessage msg = new QDataAskMessage(ask);
-		msg.setToken(userToken.getToken());
-		msg.setReplace(true);
-		
-		VertxUtils.writeMsg("webdata", JsonUtils.toJson(msg));
 		
 		
+			SearchEntity searchBE = new SearchEntity("SBE_INTERNSHIP_IMAGE_FIX", "Update")
+				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%") 
+				.addColumn("PRI_CODE", "Name")
+				.addColumn("LNK_HOST_COMPANY", "Host Company")
+				.setPageStart(0)
+				.setPageSize(100000);
 		
+			searchBE.setRealm(serviceToken.getRealm());
+		
+ 			System.out.println("About to search for internships");
+			List<BaseEntity> internships = beUtils.getBaseEntitys(searchBE);
+
+
+		System.out.println("Number of Internships = "+internships.size());
+		
+		for (BaseEntity internship : internships) {
+
+			BaseEntity is = beUtils.getBaseEntityByCode(internship.getCode());
+			// fetch host company from internship
+			try {
+				String LNK_HOST_COMPANY = is.getValueAsString("LNK_HOST_COMPANY");
+				if (LNK_HOST_COMPANY != null) {
+					LNK_HOST_COMPANY = LNK_HOST_COMPANY.substring(2,LNK_HOST_COMPANY.length()-2);
+					System.out.println("Host Company :"+LNK_HOST_COMPANY);
+					BaseEntity hostCompany = beUtils.getBaseEntityByCode(LNK_HOST_COMPANY);
+					String imageUrl = hostCompany.getValue("PRI_IMAGE_URL", null);
+					if (StringUtils.isBlank(imageUrl)) {
+						beUtils.saveAnswer(new Answer(is.getCode(),is.getCode(),"PRI_IMAGE_URL",imageUrl));
+					} else {
+						imageUrl = hostCompany.getValue("PRI_USER_PROFILE_PICTURE", null);
+						if (imageUrl != null) {
+							beUtils.saveAnswer(new Answer(is.getCode(),is.getCode(),"PRI_IMAGE_URL",imageUrl));
+							beUtils.saveAnswer(new Answer(hostCompany.getCode(),hostCompany.getCode(),"PRI_IMAGE_URL",imageUrl));
+						}
+					}
+				} else {
+					System.out.println(internship.getCode()+" has NO LNK_HOST_COMPANY");
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
 	}
 	
 	
