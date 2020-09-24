@@ -64,7 +64,7 @@ rule "PRI_SEARCH_TEXT_TABLE_ASSIST"
 			searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", answer.getTargetCode(), SearchEntity.class);
 			searchBeList.add(searchBE);
 		
-		}else if(answer.getTargetCode().startsWith("["){
+		}else if(answer.getTargetCode().startsWith("[")){
 			
 			System.out.println("Rule -> "+drools.getRule().getName()+" TargetCode is an array of SBEs");
 
