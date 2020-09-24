@@ -59,8 +59,7 @@ rule "PRI_SEARCH_TEXT_TABLE_ASSIST"
 		SearchEntity searchBE = null;
 		List<SearchEntity> searchBeList = new ArrayList<SearchEntity>();
 
-		if (answer.getTargetCode().startsWith("SBE_"))
-		{
+		if (answer.getTargetCode().startsWith("SBE_")){
 			System.out.println("Rule -> "+drools.getRule().getName()+" TargetCode starts with SBE_");
 			searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", answer.getTargetCode(), SearchEntity.class);
 			searchBeList.add(searchBE);
@@ -77,8 +76,7 @@ rule "PRI_SEARCH_TEXT_TABLE_ASSIST"
 				searchBeList.add(searchBE);
 			}
 
-		} 
-		else {
+		}else {
 			System.out.println("Rule -> "+drools.getRule().getName()+" LAST-SEARCH");
 			searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "LAST-SEARCH",
 			beUtils.getGennyToken().getSessionCode(), SearchEntity.class);
