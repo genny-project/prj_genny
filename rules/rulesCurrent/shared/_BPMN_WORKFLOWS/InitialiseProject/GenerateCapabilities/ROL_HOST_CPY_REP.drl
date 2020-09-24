@@ -62,9 +62,7 @@ rule "ROL_HOST_CPY_REP"
 				 capabilityUtils.addCapabilityToRole(role,"VIEW_AGREEMENT",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"ARCHIVE_INTERNSHIP",CapabilityMode.VIEW);
 
-				 
-
-		capabilityUtils.addCapabilityToRole(role,"DASHBOARD_COUNTS",CapabilityMode.VIEW);
+				 capabilityUtils.addCapabilityToRole(role,"DASHBOARD_COUNTS",CapabilityMode.VIEW);
   	     
   	     
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
