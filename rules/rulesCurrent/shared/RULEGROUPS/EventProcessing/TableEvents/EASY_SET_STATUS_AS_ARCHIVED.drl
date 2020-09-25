@@ -45,7 +45,7 @@ rule "EASY_SET_STATUS_AS_ARCHIVE"
 		String key = splitCode[4];
 		System.out.println("key = " + key);
 		
-		String targetCode = $message.getTargetCode();
+		String targetCode = $message.getData().getTargetCode();
 		System.out.println("targetCode = " + targetCode);
 		
 		if(key.equals("HOST_CPY_REP") || key.equals("EDU_PRO_REP") || key.equals("INTERN") || key.equals("INTERNSHIP") || key.equals("AGENT") || key.equals("REF_PART_REP")) {
