@@ -71,11 +71,7 @@ rule "PRI_SEARCH_TEXT_TABLE_ASSIST"
 			String sbeCodes = answer.getTargetCode().replace("\"", "").replace("[", "").replace("]", "");
 			System.out.println("sbeCodes  :: " + sbeCodes);
 
-			String[] sbeCodesArr = sbeCodes.split(",");
-			System.out.println("sbeCodesArr  :: " + sbeCodesArr);
-
-			for (String sbeCode : sbeCodesArr) {
-				System.out.println("inside for loop");
+			for (String sbeCode : sbeCodes.split(",")) {
 				System.out.println("sbeCode  :: " + sbeCode);
 				searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", sbeCode, SearchEntity.class);
 				searchBeList.add(searchBE);
@@ -89,12 +85,12 @@ rule "PRI_SEARCH_TEXT_TABLE_ASSIST"
 		}
 		
 		for (SearchEntity sbe : searchBeList) {
-			System.out.println(drools.getRule().getName()+" ASSIST for "+searchBE.getCode()); 
+			System.out.println(drools.getRule().getName()+" ASSIST for "+sbe.getCode()); 
 
 			/* Reset the pageNumber to 1 */
-			Answer pageNumberAnswer = new Answer(beUtils.getGennyToken().getUserCode(), searchBE.getCode(), "PRI_INDEX", "1");
+			Answer pageNumberAnswer = new Answer(beUtils.getGennyToken().getUserCode(), sbe.getCode(), "PRI_INDEX", "1");
 
-			/* update the searchBe object */
+			/* update the sbe object */
 			sbe = beUtils.updateBaseEntity(sbe, pageNumberAnswer,SearchEntity.class);
 			
 			sbe.setWildcard(value);
