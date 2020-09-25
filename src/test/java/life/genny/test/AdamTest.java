@@ -185,8 +185,9 @@ public class AdamTest {
 	protected static GennyToken newUserToken;
 	protected static GennyToken serviceToken;
 
+	
 	@Test
-	public void submitButtonTest() {
+	public void internAppImageFix() {
 		System.out.println("Submit Button test");
 		GennyToken userToken = null;
 		GennyToken serviceToken = null;
@@ -215,22 +216,134 @@ public class AdamTest {
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		beUtils.setServiceToken(serviceToken);
 
-		// find Ask 
-		// Need the source and target and question code and parent form code
-		
-		Ask ask = new Ask();
-		ask.setAttributeCode("PRI_SUBMIT");
-		ask.setDisabled(true);
-		ask.set
-		
-		QDataAskMessage msg = new QDataAskMessage(ask);
-		msg.setToken(userToken.getToken());
-		msg.setReplace(true);
-		
-		VertxUtils.writeMsg("webdata", JsonUtils.toJson(msg));
 		
 		
+			SearchEntity searchBE = new SearchEntity("SBE_INTERNSHIP_IMAGE_FIX", "Update")
+				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%") 
+				.addColumn("PRI_CODE", "Name")
+				.addColumn("PRI_INTERN_CODE", "Intern")
+				.setPageStart(0)
+				.setPageSize(100000);
 		
+			searchBE.setRealm(serviceToken.getRealm());
+		
+ 			System.out.println("About to search for apps");
+			List<BaseEntity> apps = beUtils.getBaseEntitys(searchBE);
+
+
+		System.out.println("Number of apps = "+apps.size());
+		
+		for (BaseEntity app : apps) {
+
+			BaseEntity is = beUtils.getBaseEntityByCode(app.getCode());
+			// fetch host company from internship
+			try {
+				String LNK_INTERN = is.getValueAsString("PRI_INTERN_CODE");
+				if (LNK_INTERN != null) {
+					//LNK_INTERN = LNK_INTERN.substring(2,LNK_INTERN.length()-2);
+					System.out.println("Intern :"+LNK_INTERN);
+					BaseEntity intern = beUtils.getBaseEntityByCode(LNK_INTERN);
+					String imageUrl = intern.getValue("PRI_IMAGE_URL", null);
+					if (!StringUtils.isBlank(imageUrl)) {
+						beUtils.saveAnswer(new Answer(is.getCode(),is.getCode(),"PRI_IMAGE_URL",imageUrl));
+					} else {
+						imageUrl = intern.getValue("PRI_USER_PROFILE_PICTURE", null);
+						if (!StringUtils.isBlank(imageUrl)) {
+							beUtils.saveAnswer(new Answer(is.getCode(),is.getCode(),"PRI_IMAGE_URL",imageUrl));
+							beUtils.saveAnswer(new Answer(intern.getCode(),intern.getCode(),"PRI_IMAGE_URL",imageUrl));
+						}
+					}
+				} else {
+					System.out.println(app.getCode()+" has NO LNK_INTERN");
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+	}
+	
+	
+	
+	@Test
+	public void internshipImageFix() {
+		System.out.println("Submit Button test");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+		} else {
+			// VertxUtils.cachedEnabled = false;
+			VertxUtils.cachedEnabled = false;
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+			eventBusMock = new EventBusMock();
+			vertxCache = new JunitCache(); // MockCache
+			VertxUtils.init(eventBusMock, vertxCache);
+		}
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		beUtils.setServiceToken(serviceToken);
+
+		
+		
+			SearchEntity searchBE = new SearchEntity("SBE_INTERNSHIP_IMAGE_FIX", "Update")
+				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%") 
+				.addColumn("PRI_CODE", "Name")
+				.addColumn("LNK_HOST_COMPANY", "Host Company")
+				.setPageStart(0)
+				.setPageSize(100000);
+		
+			searchBE.setRealm(serviceToken.getRealm());
+		
+ 			System.out.println("About to search for internships");
+			List<BaseEntity> internships = beUtils.getBaseEntitys(searchBE);
+
+
+		System.out.println("Number of Internships = "+internships.size());
+		
+		for (BaseEntity internship : internships) {
+
+			BaseEntity is = beUtils.getBaseEntityByCode(internship.getCode());
+			// fetch host company from internship
+			try {
+				String LNK_HOST_COMPANY = is.getValueAsString("LNK_HOST_COMPANY");
+				if (LNK_HOST_COMPANY != null) {
+					LNK_HOST_COMPANY = LNK_HOST_COMPANY.substring(2,LNK_HOST_COMPANY.length()-2);
+					System.out.println("Host Company :"+LNK_HOST_COMPANY);
+					BaseEntity hostCompany = beUtils.getBaseEntityByCode(LNK_HOST_COMPANY);
+					String imageUrl = hostCompany.getValue("PRI_IMAGE_URL", null);
+					if (StringUtils.isBlank(imageUrl)) {
+						beUtils.saveAnswer(new Answer(is.getCode(),is.getCode(),"PRI_IMAGE_URL",imageUrl));
+					} else {
+						imageUrl = hostCompany.getValue("PRI_USER_PROFILE_PICTURE", null);
+						if (imageUrl != null) {
+							beUtils.saveAnswer(new Answer(is.getCode(),is.getCode(),"PRI_IMAGE_URL",imageUrl));
+							beUtils.saveAnswer(new Answer(hostCompany.getCode(),hostCompany.getCode(),"PRI_IMAGE_URL",imageUrl));
+						}
+					}
+				} else {
+					System.out.println(internship.getCode()+" has NO LNK_HOST_COMPANY");
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
 	}
 	
 	
