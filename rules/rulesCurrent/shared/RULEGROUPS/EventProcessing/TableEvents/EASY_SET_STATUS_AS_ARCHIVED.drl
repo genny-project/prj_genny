@@ -24,7 +24,7 @@ rule "EASY_SET_STATUS_AS_ARCHIVE"
     no-loop
     when
 		$message : QEventMessage(data.code matches "ACT_PRI_EVENT_ARCHIVE_INTERNSHIP" || data.code matches "ACT_PRI_EVENT_ARCHIVE_HOST_CPY_REP" 
-									|| data.code matches "ACT_PRI_EVENT_ARCHIVE_EDU_PRO_REP" || data.code matches "ACT_PRI_EVENT_ARCHIVE_REF_PART_REP" || )
+									|| data.code matches "ACT_PRI_EVENT_ARCHIVE_EDU_PRO_REP" || data.code matches "ACT_PRI_EVENT_ARCHIVE_REF_PART_REP")
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam( )
