@@ -55,6 +55,8 @@ rule "EASY_SET_STATUS_AS_ARCHIVE"
 				Answer answer = new Answer(userToken.getUserCode(), targetCode, "PRI_STATUS", "ARCHIVED");
  				BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
  				beUtils.saveAnswer(answer);
+ 				
+ 				TableUtils.moveEntity(targetCode, "SBE_INTERNSHIP_ACTIVE", beUtils);
  		
  		
  				if(key.equals("INTERN")) {
