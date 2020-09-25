@@ -23,7 +23,7 @@ rule "EASY_SET_STATUS_AS_ARCHIVE"
 		salience 2
     no-loop
     when
-		$message : QEventMessage(data.code matches "ACT_PRI_EVENT_ARCHIVE_.*")
+		$message : QEventMessage(data.code matches "ACT_PRI_EVENT_ARCHIVE_INTERNSHIP")
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam( )
