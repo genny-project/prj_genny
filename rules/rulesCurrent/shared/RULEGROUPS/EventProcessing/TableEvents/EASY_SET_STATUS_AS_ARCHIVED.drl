@@ -23,7 +23,8 @@ rule "EASY_SET_STATUS_AS_ARCHIVE"
 		salience 2
     no-loop
     when
-		$message : QEventMessage(data.code matches "ACT_PRI_EVENT_ARCHIVE_INTERNSHIP")
+		$message : QEventMessage(data.code matches "ACT_PRI_EVENT_ARCHIVE_INTERNSHIP" || data.code matches "ACT_PRI_EVENT_ARCHIVE_HOST_CPY_REP" 
+									|| data.code matches "ACT_PRI_EVENT_ARCHIVE_EDU_PRO_REP" || data.code matches "ACT_PRI_EVENT_ARCHIVE_REF_PART_REP" || )
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam( )
@@ -48,6 +49,9 @@ rule "EASY_SET_STATUS_AS_ARCHIVE"
 		String targetCode = $message.getData().getTargetCode();
 		System.out.println("targetCode = " + targetCode);
 		
+		String parentCode = $message.getData().getParentCode();
+		System.out.println("parentCode = " + parentCode);
+		
 		if(key.equals("HOST_CPY_REP") || key.equals("EDU_PRO_REP") || key.equals("INTERN") || key.equals("INTERNSHIP") || key.equals("AGENT") || key.equals("REF_PART_REP")) {
 				
 				System.out.println("Got through strainer with key = " + key);
@@ -56,7 +60,10 @@ rule "EASY_SET_STATUS_AS_ARCHIVE"
  				BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
  				beUtils.saveAnswer(answer);
  				
- 				TableUtils.moveEntity(targetCode, "SBE_INTERNSHIP_ACTIVE", beUtils);
+ 				TableUtils.moveEntity(targetCode, "SBE_INTERNSHIPS_ACTIVE", beUtils);
+ 				
+
+ 				
  		
  		
  				if(key.equals("INTERN")) {
