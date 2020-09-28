@@ -27,6 +27,8 @@ rule "DETAIL_VIEW_ITEM_CLICK_EVENT"
 		serviceToken : GennyToken( code == "PER_SERVICE")
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		beUtils.setServiceToken(serviceToken);
 		
 		String targetCode = $message.getData().getTargetCode();
 		System.out.println("TARGET code ::  " + targetCode);
