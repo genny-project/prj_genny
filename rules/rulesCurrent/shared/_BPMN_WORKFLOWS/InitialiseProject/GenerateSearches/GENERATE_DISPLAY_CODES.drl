@@ -54,7 +54,7 @@ rule "GENERATE_DISPLAY_CODES"
 		displayCodes.put("QUE_SEARCH", "TABLE");
 		
 		/* forms goes here */
-		displayCodes.put("ACT_PRI_EVENT_EDIT", "FORM")
+		displayCodes.put("ACT_PRI_EVENT_EDIT", "FORM");
 
 		insert(displayCodes);
 		VertxUtils.putObject(serviceToken.getRealm(), "", "DISPLAY_CODES", displayCodes, serviceToken.getToken());
