@@ -80,18 +80,20 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		Answer repAnswer = new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", "",false,true);
 		Answer supervisorAnswer = new Answer(sourceCode, targetCode, "LNK_INTERN_SUPERVISOR", "",false,true);
 
-		answersToSave.add(answer);
-		answersToSave.add(assocHcAnswer);
-		answersToSave.add(addressAnswer);
-		answersToSave.add(countryAnswer);
-		answersToSave.add(postcodeAnswer);
-		answersToSave.add(suburbAnswer);
-		answersToSave.add(cityAnswer);
-		answersToSave.add(stateAnswer);
-		answersToSave.add(repAnswer);
-		answersToSave.add(supervisorAnswer);
+		List<Answer> addressData = new ArrayList<Answer>();
+		addressData.add(answer);
+		addressData.add(assocHcAnswer);
+		addressData.add(addressAnswer);
+		addressData.add(countryAnswer);
+		addressData.add(postcodeAnswer);
+		addressData.add(suburbAnswer);
+		addressData.add(cityAnswer);
+		addressData.add(stateAnswer);
+		addressData.add(repAnswer);
+		addressData.add(supervisorAnswer);
 
-	/*	update(answersToSave);*/
+		beUtils.saveAnswers(addressData);
+		/*update(answersToSave);*/
 
 		/* dropdown search here For companyRep */
 		DropdownUtils dropdown = new DropdownUtils(serviceToken);
