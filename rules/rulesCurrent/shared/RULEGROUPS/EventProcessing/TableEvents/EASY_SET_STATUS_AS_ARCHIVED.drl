@@ -60,7 +60,7 @@ rule "EASY_SET_STATUS_AS_ARCHIVE"
  				BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
  				beUtils.saveAnswer(answer);
  				
- 				TableUtils.moveEntity(targetCode, "SBE_INTERNSHIPS_ACTIVE", beUtils);
+ 				TableUtils.moveEntity(targetCode, "SBE_INTERNSHIPS_ACTIVE", null, beUtils);
  				
 
  				
@@ -70,7 +70,7 @@ rule "EASY_SET_STATUS_AS_ARCHIVE"
  						Answer answerDisable = new Answer(userToken.getUserCode(), targetCode, "PRI_DISABLED", true);
  						beUtils.saveAnswer(answerDisable);
  				
-						TableUtils.moveEntity(targetCode, "SBE_AVAILABLE_INTERNS", beUtils);
+						TableUtils.moveEntity(targetCode, "SBE_AVAILABLE_INTERNS", null, beUtils);
  				}
 		
 		} else {
