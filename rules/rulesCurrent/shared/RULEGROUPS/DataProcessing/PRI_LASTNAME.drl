@@ -53,6 +53,8 @@ rule "PRI_LASTNAME"
 		
 		Answer answerName = new Answer(sourceCode,targetCode,"PRI_NAME",name);
  		beUtils.saveAnswer(answerName);
+		answersToSave.add(answerName);
+
 		Answer answerInitials = new Answer(sourceCode,targetCode,"PRI_INITIALS",initials);
  		beUtils.saveAnswer(answerInitials);
 
