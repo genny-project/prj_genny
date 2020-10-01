@@ -55,8 +55,10 @@ rule "PRI_EMAIL"
 	System.out.println("Search EMAIL result is "+resultJsonStr);
 			if (resultJsonStr.equals("0")) {
 				System.out.println("This email "+answer.getValue()+" is unique");
-			}				else {
-					VertxUtils.sendFeedbackError(beUtils.getGennyToken(),answer,"Email Address is already taken");
+			}	else {
+					String message = "Email Address "+answer.getValue()+" is already taken";
+					answer.setValue("");
+					VertxUtils.sendFeedbackError(beUtils.getGennyToken(),answer,message);
 					retract(answer);
 			
 			}
