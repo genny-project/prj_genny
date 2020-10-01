@@ -29,15 +29,11 @@ import java.util.ArrayList;
 rule "HELPER_SUPER_EDIT_AG_DOC"
 	ruleflow-group 'DataProcessing'
 			salience 6000
-	when
+	when 
 		$message : QEventMessage(data.code matches "ACT_PRI_EVENT_EDIT_AGREEMENT")
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam()
-		ruleDetails : RuleDetails()
-		beUtils : BaseEntityUtils()
-
-
 
 	then
 		/*
@@ -48,6 +44,8 @@ rule "HELPER_SUPER_EDIT_AG_DOC"
 
 		
 		System.out.println("HELPER_SUPER_EDIT_AG_DOC fired");
+		
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		System.out.println("sourceCode :: " + sourceCode);
@@ -75,6 +73,7 @@ rule "HELPER_SUPER_EDIT_AG_DOC"
 		} else {
 			System.out.println("ERROR: Null appBe");
 		}
+		
 		
 
 		/* dropdown search here For companyRep */
