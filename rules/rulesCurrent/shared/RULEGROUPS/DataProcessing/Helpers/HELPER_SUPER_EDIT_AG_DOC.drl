@@ -44,6 +44,8 @@ rule "HELPER_SUPER_EDIT_AG_DOC"
 
 		
 		System.out.println("HELPER_SUPER_EDIT_AG_DOC fired");
+		
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		System.out.println("sourceCode :: " + sourceCode);
