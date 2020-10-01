@@ -35,7 +35,6 @@ rule "HELPER_SUPER_EDIT_AG_DOC"
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam()
 
-
 	then
 		/*
 		code: "ACT_PRI_EVENT_EDIT_AGREEMENT"
