@@ -28,13 +28,11 @@ rule "IS_EDU_PROVIDER"
  		System.out.println("IS_EDU_PROVIDER: newBe = " + newBe.getCode()); 
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
- 		Answer answer = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_EDU_PROVIDER", "true");
- 		Answer answer2 = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE");
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
- 		beUtils.saveAnswer(answer);
- 		beUtils.saveAnswer(answer2);
+ 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_EDU_PROVIDER", "true"));
+ 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
 
-		System.out.println("IS_EDU_PROVIDER: Answer = " + answer); 
+		beUtils.createLink("GRP_EDU_PROVIDER_SELECTION", newBe.getCode(), "LNK_CORE", "OPTION", 1.0);
 		
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
 		String name = user.getValue("PRI_NAME",null);
