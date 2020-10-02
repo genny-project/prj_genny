@@ -185,6 +185,82 @@ public class AdamTest {
 	protected static GennyToken newUserToken;
 	protected static GennyToken serviceToken;
 
+	
+	@Test
+	public void testBucket()
+	{
+	BaseEntity person = beUtils.getBaseEntityByCode(answer.getTargetCode());
+		
+	System.out.println("Submit Button test");
+	GennyToken userToken = null;
+	GennyToken serviceToken = null;
+	QRules qRules = null;
+
+	if (false) {
+		userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+		serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+		qRules = new QRules(eventBusMock, userToken.getToken());
+		qRules.set("realm", userToken.getRealm());
+		qRules.setServiceToken(serviceToken.getToken());
+		VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+		GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+	} else {
+		// VertxUtils.cachedEnabled = false;
+		VertxUtils.cachedEnabled = false;
+		qRules = GennyJbpmBaseTest.setupLocalService();
+		userToken = new GennyToken("userToken", qRules.getToken());
+		serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+		eventBusMock = new EventBusMock();
+		vertxCache = new JunitCache(); // MockCache
+		VertxUtils.init(eventBusMock, vertxCache);
+	}
+
+	BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+	beUtils.setServiceToken(serviceToken);
+
+	Answer answer = new Answer(userToken.getUserCode(), "PER_1C39E067-C9D4-44E5-9053-6B98159502F7", "PRI_IMAGE_URL",
+			"http://127.0.0.1:9898/public/487fbf91-7030-4903-91e8-b1e0b39ab3c7");
+
+		Boolean isIntern = person.is("PRI_IS_INTERN");
+		if (isIntern) {
+			/* copy across the new details to an app */
+		
+			SearchEntity searchBE = new SearchEntity("FIND APPS", "Update")
+				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%") 
+				.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.LIKE, "%"+answer.getTargetCode()+"%") 
+				.setPageStart(0)
+				.setPageSize(100);
+		
+			searchBE.setRealm(serviceToken.getRealm());
+		
+ 			System.out.println("About to search for intern");
+			List<BaseEntity> bes = beUtils.getBaseEntitys(searchBE);
+			beUtils.saveAnswer(new Answer(userToken.getUserCode(), person.getCode(), "PRI_IMAGE_URL", answer.getValue(),false,true));	
+			for (BaseEntity app : bes) {
+			Answer ans = new Answer(userToken.getUserCode(), app.getCode(), "PRI_IMAGE_URL", answer.getValue(),false,true);
+				System.out.println("Updating image on app "+app.getCode());
+	
+				BaseEntity be = new BaseEntity(app.getCode(),app.getName());
+				be.addAnswer(ans);
+				QDataBaseEntityMessage msg = new QDataBaseEntityMessage(be);
+				msg.setReplace(true);
+				List<String> pushCodes = Arrays.asList(app.getPushCodes());
+				pushCodes.add(userToken.getUserCode());
+				pushCodes.add("SUPERUSER");
+				pushCodes.add("DEV");
+				msg.setRecipientCodeArray(pushCodes.toArray(new String[0])); 	
+				msg.setToken(userToken.getToken());
+				VertxUtils.writeMsg("project",msg);	
+			
+			}
+	
+			/*update(answersToSave);*/
+		}
+	}
+	
+	
 	@Test
 	public void testEmailSearch() {
 		System.out.println("Submit Button test");
