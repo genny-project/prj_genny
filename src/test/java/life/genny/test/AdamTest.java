@@ -189,7 +189,6 @@ public class AdamTest {
 	@Test
 	public void testBucket()
 	{
-	BaseEntity person = beUtils.getBaseEntityByCode(answer.getTargetCode());
 		
 	System.out.println("Submit Button test");
 	GennyToken userToken = null;
@@ -220,8 +219,12 @@ public class AdamTest {
 	beUtils.setServiceToken(serviceToken);
 
 	Answer answer = new Answer(userToken.getUserCode(), "PER_1C39E067-C9D4-44E5-9053-6B98159502F7", "PRI_IMAGE_URL",
-			"http://127.0.0.1:9898/public/487fbf91-7030-4903-91e8-b1e0b39ab3c7");
-
+			"http://127.0.0.1:9898/public/d33ef76a-76cb-432b-aa57-dcb4af86e760");
+	
+	//http://127.0.0.1:9898/public/d33ef76a-76cb-432b-aa57-dcb4af86e760
+//http://127.0.0.1:9898/public/487fbf91-7030-4903-91e8-b1e0b39ab3c7
+	BaseEntity person = beUtils.getBaseEntityByCode(answer.getTargetCode());
+	
 		Boolean isIntern = person.is("PRI_IS_INTERN");
 		if (isIntern) {
 			/* copy across the new details to an app */
@@ -242,19 +245,32 @@ public class AdamTest {
 			Answer ans = new Answer(userToken.getUserCode(), app.getCode(), "PRI_IMAGE_URL", answer.getValue(),false,true);
 				System.out.println("Updating image on app "+app.getCode());
 	
-				BaseEntity be = new BaseEntity(app.getCode(),app.getName());
-				be.addAnswer(ans);
-				QDataBaseEntityMessage msg = new QDataBaseEntityMessage(be);
-				msg.setReplace(true);
-				List<String> pushCodes = Arrays.asList(app.getPushCodes());
-				pushCodes.add(userToken.getUserCode());
-				pushCodes.add("SUPERUSER");
-				pushCodes.add("DEV");
-				msg.setRecipientCodeArray(pushCodes.toArray(new String[0])); 	
-				msg.setToken(userToken.getToken());
-				VertxUtils.writeMsg("project",msg);	
+				try {
+					BaseEntity be = new BaseEntity(app.getCode(),app.getName());
+					be.addAttribute(RulesUtils.getAttribute("PRI_IMAGE_URL",userToken.getToken()));
+					be.setValue("PRI_IMAGE_URL", answer.getValue());
+					QDataBaseEntityMessage msg = new QDataBaseEntityMessage(be);
+					msg.setReplace(true);
+					String[] recips = app.getPushCodes();
+					
+					Set<String> pushCodes = new HashSet<>(Arrays.asList(recips));
+					String userCode = userToken.getUserCode();
+					pushCodes.add(userCode);
+					pushCodes.add("SUPERUSER");
+					pushCodes.add("ADMIN");
+					pushCodes.add("AGENT");
+					msg.setRecipientCodeArray(pushCodes.toArray(new String[0])); 	
+					msg.setToken(userToken.getToken());
+					VertxUtils.writeMsg("project",msg);
+					VertxUtils.writeMsgEnd(userToken, pushCodes);
+					
+				} catch (BadDataException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}	
 			
 			}
+			VertxUtils.writeMsgEnd(userToken);
 	
 			/*update(answersToSave);*/
 		}
