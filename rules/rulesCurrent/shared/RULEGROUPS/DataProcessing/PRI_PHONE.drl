@@ -31,7 +31,7 @@ rule "PRI_PHONE"
 		/* Parse json answer and save the individual answers */
 					
 			String phonenumber = answer.getValue();
-			/* convert to E64 */
+			/* convert to E164 */
 			
 			if (phonenumber != null) {
 				/* remove all non digits */
@@ -41,24 +41,40 @@ rule "PRI_PHONE"
 						phonenumber = "61"+phonenumber.substring(1); /* remove the 0  and assume Australian*/
 					}
 				}
-			}
-			System.out.println(ruleDetails+" "+drools.getRule().getName()+" RAw Phone number is "+answer.getValue()+" , fixed number is "+phonenumber);
-			answer.setValue(phonenumber);
-			answer.setChangeEvent(false); /* no attribute change */
-			answersToSave.add(answer);
+				phonenumber = StringUtils.deleteWhitespace(answer.getValue());
+				System.out.println(ruleDetails+" "+drools.getRule().getName()+" Raw Phone number is "+answer.getValue()+" , fixed number is "+phonenumber);
+				
+				
+				if (phonenumber.length()==11) {
+				
+							/* Now check if it is an Australian mobile */
+				if ((phonenumber.startsWith("614"))|| (phonenumber.startsWith("615"))) {
+					Answer mobile = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_MOBILE",phonenumber);
+					mobile.setChangeEvent(false); /* no attribute change */
+					answersToSave.add(mobile);
+				} else {
+					Answer landline = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_LANDLINE",phonenumber);
+					landline.setChangeEvent(false); /* no attribute change */
+					answersToSave.add(landline);
 			
-			/* Now check if it is an Australian mobile */
-			if ((phonenumber.startsWith("614"))|| (phonenumber.startsWith("615"))) {
-				Answer mobile = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_MOBILE",phonenumber);
-				mobile.setChangeEvent(false); /* no attribute change */
-				answersToSave.add(mobile);
+				}
+				} else {
+					String message = "Phone number is invalid ! (check number of digits)";
+					System.out.println(message);
+					Answer feedbackAnswer = new Answer(answer.getSourceCode(),answer.getTargetCode(),answer.getAttributeCode(),"");
+					VertxUtils.sendFeedbackError(beUtils.getGennyToken(),feedbackAnswer,message);
+					System.out.println("Sent error message back to frontend");		
+				
+				
+				}
 			} else {
-				Answer landline = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_LANDLINE",phonenumber);
-				landline.setChangeEvent(false); /* no attribute change */
-				answersToSave.add(landline);
-			
+					String message = "Phone number is empty!";
+					System.out.println(message);
+					Answer feedbackAnswer = new Answer(answer.getSourceCode(),answer.getTargetCode(),answer.getAttributeCode(),"");
+					VertxUtils.sendFeedbackError(beUtils.getGennyToken(),feedbackAnswer,message);
+					System.out.println("Sent error message back to frontend");		
 			}
-			
+		
 			
 
 /* Watch out TODO , this may override other answers */

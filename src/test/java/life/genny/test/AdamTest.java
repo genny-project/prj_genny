@@ -187,6 +187,160 @@ public class AdamTest {
 
 	
 	@Test
+	public void testBucket()
+	{
+		
+	System.out.println("Submit Button test");
+	GennyToken userToken = null;
+	GennyToken serviceToken = null;
+	QRules qRules = null;
+
+	if (false) {
+		userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+		serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+		qRules = new QRules(eventBusMock, userToken.getToken());
+		qRules.set("realm", userToken.getRealm());
+		qRules.setServiceToken(serviceToken.getToken());
+		VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+		GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+	} else {
+		// VertxUtils.cachedEnabled = false;
+		VertxUtils.cachedEnabled = false;
+		qRules = GennyJbpmBaseTest.setupLocalService();
+		userToken = new GennyToken("userToken", qRules.getToken());
+		serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+		eventBusMock = new EventBusMock();
+		vertxCache = new JunitCache(); // MockCache
+		VertxUtils.init(eventBusMock, vertxCache);
+	}
+
+	BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+	beUtils.setServiceToken(serviceToken);
+
+	Answer answer = new Answer(userToken.getUserCode(), "PER_1C39E067-C9D4-44E5-9053-6B98159502F7", "PRI_IMAGE_URL",
+			"http://127.0.0.1:9898/public/d33ef76a-76cb-432b-aa57-dcb4af86e760");
+	
+	//http://127.0.0.1:9898/public/d33ef76a-76cb-432b-aa57-dcb4af86e760
+//http://127.0.0.1:9898/public/487fbf91-7030-4903-91e8-b1e0b39ab3c7
+	BaseEntity person = beUtils.getBaseEntityByCode(answer.getTargetCode());
+	
+		Boolean isIntern = person.is("PRI_IS_INTERN");
+		if (isIntern) {
+			/* copy across the new details to an app */
+		
+			SearchEntity searchBE = new SearchEntity("FIND APPS", "Update")
+				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%") 
+				.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.LIKE, "%"+answer.getTargetCode()+"%") 
+				.setPageStart(0)
+				.setPageSize(100);
+		
+			searchBE.setRealm(serviceToken.getRealm());
+		
+ 			System.out.println("About to search for intern");
+			List<BaseEntity> bes = beUtils.getBaseEntitys(searchBE);
+			beUtils.saveAnswer(new Answer(userToken.getUserCode(), person.getCode(), "PRI_IMAGE_URL", answer.getValue(),false,true));	
+			for (BaseEntity app : bes) {
+			Answer ans = new Answer(userToken.getUserCode(), app.getCode(), "PRI_IMAGE_URL", answer.getValue(),false,true);
+				System.out.println("Updating image on app "+app.getCode());
+	
+				try {
+					BaseEntity be = new BaseEntity(app.getCode(),app.getName());
+					be.addAttribute(RulesUtils.getAttribute("PRI_IMAGE_URL",userToken.getToken()));
+					be.setValue("PRI_IMAGE_URL", answer.getValue());
+					QDataBaseEntityMessage msg = new QDataBaseEntityMessage(be);
+					msg.setReplace(true);
+					String[] recips = app.getPushCodes();
+					
+					Set<String> pushCodes = new HashSet<>(Arrays.asList(recips));
+					String userCode = userToken.getUserCode();
+					pushCodes.add(userCode);
+					pushCodes.add("SUPERUSER");
+					pushCodes.add("ADMIN");
+					pushCodes.add("AGENT");
+					msg.setRecipientCodeArray(pushCodes.toArray(new String[0])); 	
+					msg.setToken(userToken.getToken());
+					VertxUtils.writeMsg("project",msg);
+					VertxUtils.writeMsgEnd(userToken, pushCodes);
+					
+				} catch (BadDataException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}	
+			
+			}
+			VertxUtils.writeMsgEnd(userToken);
+	
+			/*update(answersToSave);*/
+		}
+	}
+	
+	
+	@Test
+	public void testEmailSearch() {
+		System.out.println("Submit Button test");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+		} else {
+			// VertxUtils.cachedEnabled = false;
+			VertxUtils.cachedEnabled = false;
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+			eventBusMock = new EventBusMock();
+			vertxCache = new JunitCache(); // MockCache
+			VertxUtils.init(eventBusMock, vertxCache);
+		}
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		beUtils.setServiceToken(serviceToken);
+
+		Answer answer = new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_EMAIL",
+				"domenic@outcome.life");
+
+		SearchEntity searchBE = new SearchEntity("TEst", "Email People")
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
+				.addFilter("PRI_EMAIL", SearchEntity.StringFilter.EQUAL, answer.getValue())
+				.addColumn("PRI_NAME", "Name").setPageStart(0).setPageSize(100);
+
+		searchBE.setRealm(beUtils.getServiceToken().getRealm());
+
+
+		Tuple2<String, List<String>> data = beUtils.getHql(searchBE);
+		String hql = data._1;
+
+		hql = Base64.getUrlEncoder().encodeToString(hql.getBytes());
+		try {
+			String resultJsonStr = QwandaUtils.apiGet(
+					GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql ,
+					beUtils.getServiceToken().getToken(), 120);
+
+			System.out.println("Search EMAIL result is " + resultJsonStr);
+			if (resultJsonStr.equals("0")) {
+				System.out.println("This email " + answer.getValue() + " is unique");
+			} else {
+				VertxUtils.sendFeedbackError(beUtils.getGennyToken(), answer, "Email Address is already taken");
+				retract(answer);
+
+			}
+		} catch (Exception e) {
+
+		}
+	}
+
+	@Test
 	public void internAppImageFix() {
 		System.out.println("Submit Button test");
 		GennyToken userToken = null;
@@ -216,24 +370,18 @@ public class AdamTest {
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		beUtils.setServiceToken(serviceToken);
 
-		
-		
-			SearchEntity searchBE = new SearchEntity("SBE_INTERNSHIP_IMAGE_FIX", "Update")
+		SearchEntity searchBE = new SearchEntity("SBE_INTERNSHIP_IMAGE_FIX", "Update")
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%") 
-				.addColumn("PRI_CODE", "Name")
-				.addColumn("PRI_INTERN_CODE", "Intern")
-				.setPageStart(0)
-				.setPageSize(100000);
-		
-			searchBE.setRealm(serviceToken.getRealm());
-		
- 			System.out.println("About to search for apps");
-			List<BaseEntity> apps = beUtils.getBaseEntitys(searchBE);
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%").addColumn("PRI_CODE", "Name")
+				.addColumn("PRI_INTERN_CODE", "Intern").setPageStart(0).setPageSize(100000);
 
+		searchBE.setRealm(serviceToken.getRealm());
 
-		System.out.println("Number of apps = "+apps.size());
-		
+		System.out.println("About to search for apps");
+		List<BaseEntity> apps = beUtils.getBaseEntitys(searchBE);
+
+		System.out.println("Number of apps = " + apps.size());
+
 		for (BaseEntity app : apps) {
 
 			BaseEntity is = beUtils.getBaseEntityByCode(app.getCode());
@@ -241,21 +389,22 @@ public class AdamTest {
 			try {
 				String LNK_INTERN = is.getValueAsString("PRI_INTERN_CODE");
 				if (LNK_INTERN != null) {
-					//LNK_INTERN = LNK_INTERN.substring(2,LNK_INTERN.length()-2);
-					System.out.println("Intern :"+LNK_INTERN);
+					// LNK_INTERN = LNK_INTERN.substring(2,LNK_INTERN.length()-2);
+					System.out.println("Intern :" + LNK_INTERN);
 					BaseEntity intern = beUtils.getBaseEntityByCode(LNK_INTERN);
 					String imageUrl = intern.getValue("PRI_IMAGE_URL", null);
 					if (!StringUtils.isBlank(imageUrl)) {
-						beUtils.saveAnswer(new Answer(is.getCode(),is.getCode(),"PRI_IMAGE_URL",imageUrl));
+						beUtils.saveAnswer(new Answer(is.getCode(), is.getCode(), "PRI_IMAGE_URL", imageUrl));
 					} else {
 						imageUrl = intern.getValue("PRI_USER_PROFILE_PICTURE", null);
 						if (!StringUtils.isBlank(imageUrl)) {
-							beUtils.saveAnswer(new Answer(is.getCode(),is.getCode(),"PRI_IMAGE_URL",imageUrl));
-							beUtils.saveAnswer(new Answer(intern.getCode(),intern.getCode(),"PRI_IMAGE_URL",imageUrl));
+							beUtils.saveAnswer(new Answer(is.getCode(), is.getCode(), "PRI_IMAGE_URL", imageUrl));
+							beUtils.saveAnswer(
+									new Answer(intern.getCode(), intern.getCode(), "PRI_IMAGE_URL", imageUrl));
 						}
 					}
 				} else {
-					System.out.println(app.getCode()+" has NO LNK_INTERN");
+					System.out.println(app.getCode() + " has NO LNK_INTERN");
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -264,9 +413,7 @@ public class AdamTest {
 		}
 
 	}
-	
-	
-	
+
 	@Test
 	public void internshipImageFix() {
 		System.out.println("Submit Button test");
@@ -297,24 +444,18 @@ public class AdamTest {
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		beUtils.setServiceToken(serviceToken);
 
-		
-		
-			SearchEntity searchBE = new SearchEntity("SBE_INTERNSHIP_IMAGE_FIX", "Update")
+		SearchEntity searchBE = new SearchEntity("SBE_INTERNSHIP_IMAGE_FIX", "Update")
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%") 
-				.addColumn("PRI_CODE", "Name")
-				.addColumn("LNK_HOST_COMPANY", "Host Company")
-				.setPageStart(0)
-				.setPageSize(100000);
-		
-			searchBE.setRealm(serviceToken.getRealm());
-		
- 			System.out.println("About to search for internships");
-			List<BaseEntity> internships = beUtils.getBaseEntitys(searchBE);
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%").addColumn("PRI_CODE", "Name")
+				.addColumn("LNK_HOST_COMPANY", "Host Company").setPageStart(0).setPageSize(100000);
 
+		searchBE.setRealm(serviceToken.getRealm());
 
-		System.out.println("Number of Internships = "+internships.size());
-		
+		System.out.println("About to search for internships");
+		List<BaseEntity> internships = beUtils.getBaseEntitys(searchBE);
+
+		System.out.println("Number of Internships = " + internships.size());
+
 		for (BaseEntity internship : internships) {
 
 			BaseEntity is = beUtils.getBaseEntityByCode(internship.getCode());
@@ -322,21 +463,22 @@ public class AdamTest {
 			try {
 				String LNK_HOST_COMPANY = is.getValueAsString("LNK_HOST_COMPANY");
 				if (LNK_HOST_COMPANY != null) {
-					LNK_HOST_COMPANY = LNK_HOST_COMPANY.substring(2,LNK_HOST_COMPANY.length()-2);
-					System.out.println("Host Company :"+LNK_HOST_COMPANY);
+					LNK_HOST_COMPANY = LNK_HOST_COMPANY.substring(2, LNK_HOST_COMPANY.length() - 2);
+					System.out.println("Host Company :" + LNK_HOST_COMPANY);
 					BaseEntity hostCompany = beUtils.getBaseEntityByCode(LNK_HOST_COMPANY);
 					String imageUrl = hostCompany.getValue("PRI_IMAGE_URL", null);
 					if (StringUtils.isBlank(imageUrl)) {
-						beUtils.saveAnswer(new Answer(is.getCode(),is.getCode(),"PRI_IMAGE_URL",imageUrl));
+						beUtils.saveAnswer(new Answer(is.getCode(), is.getCode(), "PRI_IMAGE_URL", imageUrl));
 					} else {
 						imageUrl = hostCompany.getValue("PRI_USER_PROFILE_PICTURE", null);
 						if (imageUrl != null) {
-							beUtils.saveAnswer(new Answer(is.getCode(),is.getCode(),"PRI_IMAGE_URL",imageUrl));
-							beUtils.saveAnswer(new Answer(hostCompany.getCode(),hostCompany.getCode(),"PRI_IMAGE_URL",imageUrl));
+							beUtils.saveAnswer(new Answer(is.getCode(), is.getCode(), "PRI_IMAGE_URL", imageUrl));
+							beUtils.saveAnswer(new Answer(hostCompany.getCode(), hostCompany.getCode(), "PRI_IMAGE_URL",
+									imageUrl));
 						}
 					}
 				} else {
-					System.out.println(internship.getCode()+" has NO LNK_HOST_COMPANY");
+					System.out.println(internship.getCode() + " has NO LNK_HOST_COMPANY");
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -345,8 +487,7 @@ public class AdamTest {
 		}
 
 	}
-	
-	
+
 	@Test
 	public void fixLNK_InternSupervisorTest() {
 		System.out.println("Intern Supervisor fix Fix test");
@@ -380,8 +521,7 @@ public class AdamTest {
 		SearchEntity searchBE = new SearchEntity("SBE_TEST", "internships")
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
 				.addFilter("LNK_INTERN_SUPERVISOR", SearchEntity.StringFilter.LIKE, "PER_%")
-				.addColumn("PRI_CODE", "Name")
-				.addColumn("LNK_INTERN_SUPERVISOR", "Supervisor");
+				.addColumn("PRI_CODE", "Name").addColumn("LNK_INTERN_SUPERVISOR", "Supervisor");
 
 		searchBE.setRealm(realm);
 		searchBE.setPageStart(0);
@@ -389,18 +529,18 @@ public class AdamTest {
 
 		List<BaseEntity> apps = beUtils.getBaseEntitys(searchBE);
 
-		System.out.println("Number of Internships = "+apps.size());
-		
+		System.out.println("Number of Internships = " + apps.size());
+
 		for (BaseEntity app : apps) {
 			String per = app.getValueAsString("LNK_INTERN_SUPERVISOR");
-			System.out.println("Supervisor = "+per);
-			beUtils.saveAnswer(new Answer(userToken.getUserCode(),app.getCode(),"LNK_INTERN_SUPERVISOR","[\""+per+"\"]"));
+			System.out.println("Supervisor = " + per);
+			beUtils.saveAnswer(
+					new Answer(userToken.getUserCode(), app.getCode(), "LNK_INTERN_SUPERVISOR", "[\"" + per + "\"]"));
 		}
 
 		System.out.println("Finished");
-	}	
-	
-	
+	}
+
 	@Test
 	public void journalChangeTest() {
 		System.out.println("journalChange test");
@@ -432,20 +572,17 @@ public class AdamTest {
 		beUtils.setServiceToken(serviceToken);
 
 		BaseEntity be = beUtils.getBaseEntityByCode("JNL_488F4EC2-8731-4E30-9198-1821EF0914EB20200914");
-		
+
 		if (be != null) {
 			String name = "APPROVED";
-			Answer answer = new Answer(userToken.getUserCode(),be.getCode(),"PRI_STATUS",name);
+			Answer answer = new Answer(userToken.getUserCode(), be.getCode(), "PRI_STATUS", name);
 			answer.setChangeEvent(true);
 			beUtils.saveAnswer(answer);
-			
-	
-			
+
 		}
-		
+
 	}
-	
-	
+
 	@Test
 	public void attributeChangeTest() {
 		System.out.println("attributeChange test");
@@ -477,19 +614,16 @@ public class AdamTest {
 		beUtils.setServiceToken(serviceToken);
 
 		BaseEntity be = beUtils.getBaseEntityByCode("PER_AFCACF0F-2618-4C5C-A292-2026A974D602");
-		
+
 		if (be != null) {
 			String name = "Aaron Windy Chathanattu";
-			Answer answer = new Answer(userToken.getUserCode(),be.getCode(),"PRI_NAME",name);
+			Answer answer = new Answer(userToken.getUserCode(), be.getCode(), "PRI_NAME", name);
 			answer.setChangeEvent(true);
 			beUtils.saveAnswer(answer);
-			
-	
-			
+
 		}
-		
+
 	}
-	
 
 	@Test
 	public void pushTest() {
@@ -521,12 +655,11 @@ public class AdamTest {
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		beUtils.setServiceToken(serviceToken);
 
-		
 		BaseEntity be = beUtils.getBaseEntityByCode("CPY_ITA");
-		
+
 		if (be != null) {
 			String name = "Institute of Technology 2 Australia";
-			
+
 			try {
 				be.setName(name);
 				be.setValue("PRI_NAME", name);
@@ -542,15 +675,14 @@ public class AdamTest {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			
+
 		}
-		
+
 		be = beUtils.getBaseEntityByCode("PER_AFCACF0F-2618-4C5C-A292-2026A974D602");
-		
+
 		if (be != null) {
 			String name = "Aaron Rainy Chathanattu";
-			
+
 			try {
 				be.setName(name);
 				be.setValue("PRI_NAME", name);
@@ -566,12 +698,11 @@ public class AdamTest {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			
+
 		}
-		
+
 	}
-	
+
 	@Test
 	public void fixInternshipAddressTest() {
 		System.out.println("Internship Address Fix test");
@@ -605,8 +736,7 @@ public class AdamTest {
 		SearchEntity searchBE = new SearchEntity("SBE_TEST", "internships")
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%").addFilter("PRI_IS_INTERNSHIP", true)
-				.addColumn("PRI_CODE", "Name")
-				.addColumn("LNK_HOST_COMPANY", "Host Company");
+				.addColumn("PRI_CODE", "Name").addColumn("LNK_HOST_COMPANY", "Host Company");
 
 		searchBE.setRealm(realm);
 		searchBE.setPageStart(0);
@@ -614,8 +744,8 @@ public class AdamTest {
 
 		List<BaseEntity> internships = beUtils.getBaseEntitys(searchBE);
 
-		System.out.println("Number of Internships = "+internships.size());
-		
+		System.out.println("Number of Internships = " + internships.size());
+
 		for (BaseEntity internship : internships) {
 
 			BaseEntity is = beUtils.getBaseEntityByCode(internship.getCode());
@@ -626,13 +756,13 @@ public class AdamTest {
 			try {
 				String LNK_HOST_COMPANY = is.getValueAsString("LNK_HOST_COMPANY");
 				if (LNK_HOST_COMPANY != null) {
-					LNK_HOST_COMPANY = LNK_HOST_COMPANY.substring(2,LNK_HOST_COMPANY.length()-2);
-					System.out.println("Host Company :"+LNK_HOST_COMPANY);
+					LNK_HOST_COMPANY = LNK_HOST_COMPANY.substring(2, LNK_HOST_COMPANY.length() - 2);
+					System.out.println("Host Company :" + LNK_HOST_COMPANY);
 					BaseEntity hostCompany = beUtils.getBaseEntityByCode(LNK_HOST_COMPANY);
-					saveAddressItems(beUtils,is,userToken,hostCompany);
-					
+					saveAddressItems(beUtils, is, userToken, hostCompany);
+
 				} else {
-					System.out.println(internship.getCode()+" has NO LNK_HOST_COMPANY");
+					System.out.println(internship.getCode() + " has NO LNK_HOST_COMPANY");
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -641,49 +771,48 @@ public class AdamTest {
 		}
 
 		System.out.println("Finished");
-	}	
-	
-	
-	private void saveAddressItems(BaseEntityUtils beUtils,final BaseEntity target, GennyToken userToken, BaseEntity hostCompany)
-	{
-		saveAddressItem(beUtils,target,"PRI_ADDRESS_STATE",userToken,hostCompany);
-		saveAddressItem(beUtils,target,"PRI_ADDRESS_ADDRESS1",userToken,hostCompany);
-		saveAddressItem(beUtils,target,"PRI_ADDRESS_CITY",userToken,hostCompany);
-		saveAddressItem(beUtils,target,"PRI_ADDRESS_COUNTRY",userToken,hostCompany);
-		saveAddressItem2(beUtils,target,"PRI_ADDRESS_LATITUDE",userToken,hostCompany);
-		saveAddressItem2(beUtils,target,"PRI_ADDRESS_LONGITUDE",userToken,hostCompany);
-		saveAddressItem(beUtils,target,"PRI_ADDRESS_POSTCODE",userToken,hostCompany);
-		saveAddressItem(beUtils,target,"PRI_ADDRESS_SUBURB",userToken,hostCompany);
 	}
-	
-	private void saveAddressItem(BaseEntityUtils beUtils,final BaseEntity target,final String attributeCode, GennyToken userToken, BaseEntity hostCompany)
-	{
+
+	private void saveAddressItems(BaseEntityUtils beUtils, final BaseEntity target, GennyToken userToken,
+			BaseEntity hostCompany) {
+		saveAddressItem(beUtils, target, "PRI_ADDRESS_STATE", userToken, hostCompany);
+		saveAddressItem(beUtils, target, "PRI_ADDRESS_ADDRESS1", userToken, hostCompany);
+		saveAddressItem(beUtils, target, "PRI_ADDRESS_CITY", userToken, hostCompany);
+		saveAddressItem(beUtils, target, "PRI_ADDRESS_COUNTRY", userToken, hostCompany);
+		saveAddressItem2(beUtils, target, "PRI_ADDRESS_LATITUDE", userToken, hostCompany);
+		saveAddressItem2(beUtils, target, "PRI_ADDRESS_LONGITUDE", userToken, hostCompany);
+		saveAddressItem(beUtils, target, "PRI_ADDRESS_POSTCODE", userToken, hostCompany);
+		saveAddressItem(beUtils, target, "PRI_ADDRESS_SUBURB", userToken, hostCompany);
+	}
+
+	private void saveAddressItem(BaseEntityUtils beUtils, final BaseEntity target, final String attributeCode,
+			GennyToken userToken, BaseEntity hostCompany) {
 		Optional<String> optTargetValue = target.getValue(attributeCode);
 		if (optTargetValue.isPresent()) {
 			return;
 		}
 		Optional<String> optValue = hostCompany.getValue(attributeCode);
 		if (optValue.isPresent()) {
-			
-			beUtils.saveAnswer(new Answer(userToken.getUserCode(),target.getCode(),attributeCode,optValue.get()));
+
+			beUtils.saveAnswer(new Answer(userToken.getUserCode(), target.getCode(), attributeCode, optValue.get()));
 		}
 
 	}
-	
-	private void saveAddressItem2(BaseEntityUtils beUtils,final BaseEntity target,final String attributeCode, GennyToken userToken, BaseEntity hostCompany)
-	{
+
+	private void saveAddressItem2(BaseEntityUtils beUtils, final BaseEntity target, final String attributeCode,
+			GennyToken userToken, BaseEntity hostCompany) {
 		Optional<Double> optTargetValue = target.getValue(attributeCode);
 		if (optTargetValue.isPresent()) {
 			return;
 		}
 		Optional<Double> optValue = hostCompany.getValue(attributeCode);
 		if (optValue.isPresent()) {
-			
-			beUtils.saveAnswer(new Answer(userToken.getUserCode(),target.getCode(),attributeCode,optValue.get()));
+
+			beUtils.saveAnswer(new Answer(userToken.getUserCode(), target.getCode(), attributeCode, optValue.get()));
 		}
 
 	}
-	
+
 	@Test
 	public void fixJournalCountsTest() {
 		System.out.println("Journal Counts test");
@@ -729,7 +858,8 @@ public class AdamTest {
 
 			searchBE = new SearchEntity("SBE_TEST", "internjournals")
 					.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%").addFilter("LNK_INTERN",SearchEntity.StringFilter.LIKE, "%"+intern.getCode()+"%")
+					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
+					.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%" + intern.getCode() + "%")
 					.addColumn("PRI_CODE", "Name");
 
 			Tuple2<String, List<String>> results = beUtils.getHql(searchBE); // hql += " order by " + sortCode + " " +
@@ -741,15 +871,13 @@ public class AdamTest {
 						GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2, serviceToken.getToken(),
 						120);
 
-				
 				Integer count = Integer.decode(resultJsonStr);
 				System.out.println("Count = " + count);
-				
-				Answer journalCount = new Answer(beUtils.getGennyToken().getUserCode(), intern.getCode(), "PRI_NUM_JOURNALS",
-						count);
+
+				Answer journalCount = new Answer(beUtils.getGennyToken().getUserCode(), intern.getCode(),
+						"PRI_NUM_JOURNALS", count);
 				beUtils.saveAnswer(journalCount);
-				
-				
+
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
