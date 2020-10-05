@@ -75,7 +75,7 @@ rule "HELPER_LNK_INDUSTRY"
 
 		}
 		
-		update(answersToSave);
+		/* update(answersToSave); */
 
 		/* dropdown search here */
 		DropdownUtils dropdown = new DropdownUtils(serviceToken);
