@@ -71,7 +71,7 @@ rule "HELPER_LNK_INTERN_SUPERVISOR"
 
 		}
 
-		update(answersToSave);
+		/* update(answersToSave); */
 
 		/* Retract the answer message so the rule doesn't fire again */
 		/* retract(answer); */
