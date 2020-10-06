@@ -12,26 +12,20 @@ import life.genny.qwandautils.JsonUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-rule "EDIT_FORM_CLICK_EVENT"
+rule "ADD_ENTITY_CLICK_EVENT"
     ruleflow-group 'EventProcessing'
 		salience 2
     no-loop true
     when
-		$message : QEventMessage(data.code matches "ACT_PRI_EVENT_EDIT")
+		$message : QEventMessage(data.code matches "QUE_.*" && data.parentCode == "QUE_ADD_ITEMS_GRP" )
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam( )
 		ruleDetails : RuleDetails()
     then
-		System.out.println("Processing EDIT FORM CLICK EVENT : " + $message );
+		System.out.println("Processing ADD ENTITY CLICK EVENT : " + $message );
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
-		
-		/*
-		code: "ACT_PRI_EVENT_EDIT"
-		parentCode: "SBE_INTERN_4BD9D683-E0AF-4043-8C5C-F4058EC74E04"
-		targetCode: "PER_AFCACF0F-2618-4C5C-A292-2026A974D602"
-		/*
 		
 		/*
 		code: "QUE_INTERN_MENU"
@@ -39,28 +33,28 @@ rule "EDIT_FORM_CLICK_EVENT"
 		targetCode: "PER_5A666E64-021F-48CE-8111-BE3D66901F9C"
 		*/
 		
-		String workflowSignalCode = "EDIT_FORMS";
-		String parentCode = $message.getData().getParentCode(); 	/* get parentcode SBE e.g. SBE_INTERN_XXXXX or SBE_EDU_PRO_REP_XXXXX or SBE_HOST_CPY_XXXXX*/ 
+		String workflowSignalCode = "ADD_ENTITY";
+		String code = $message.getData().getCode(); 	 
 		
-		String[] parentSplit = parentCode.split("_");
+		String[] codeSplit = code.split("_");
         
-        int size = parentSplit.length;
+        int size = codeSplit.length;
         System.out.println("size: " +size);
         
         String typeOf = "";
     
         if (size == 3) {
-                typeOf = parentSplit[1];
+                typeOf = codeSplit[1];
                 System.out.println("typeOf: " +typeOf);
         }
         
         if (size == 4) {
-                typeOf = parentSplit[1] + "_" + parentSplit[2];
+                typeOf = codeSplit[1] + "_" + codeSplit[2];
                 System.out.println("typeOf: " +typeOf);
         }
         
         if (size == 5) {
-                typeOf = parentSplit[1] + "_" + parentSplit[2] + "_" + parentSplit[3];
+                typeOf = codeSplit[1] + "_" + codeSplit[2] + "_" + codeSplit[3];
                 System.out.println("typeOf: " +typeOf);
         }
         
@@ -76,7 +70,7 @@ rule "EDIT_FORM_CLICK_EVENT"
 		SessionFacts facts = new SessionFacts(serviceToken, userToken, output.getTargetCode());
 		
 		System.out.println("START SIGNAL: " +workflowSignalCode);
-		System.out.println("STARTING EDIT FORMS PROCEDURE WITH: " +output);
+		System.out.println("STARTING ADD ENTITY PROCEDURE WITH: " +output);
 
 
 
