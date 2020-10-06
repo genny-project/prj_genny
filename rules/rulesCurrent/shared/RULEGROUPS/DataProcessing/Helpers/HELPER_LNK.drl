@@ -1,0 +1,75 @@
+package life.genny.rules;
+
+import life.genny.qwandautils.QwandaUtils;
+
+import life.genny.qwanda.message.QDataAnswerMessage;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.models.GennyToken;
+import life.genny.rules.QRules;
+import life.genny.utils.BaseEntityUtils;
+import life.genny.qwanda.Answer;
+import life.genny.qwanda.Answers;
+import io.vertx.core.json.JsonObject;
+import java.util.Map;
+import java.util.HashMap;
+import life.genny.utils.VertxUtils;
+import life.genny.qwanda.attribute.EntityAttribute;
+import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwandautils.JsonUtils;
+import org.apache.commons.lang3.StringUtils;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.io.UnsupportedEncodingException;
+import life.genny.utils.DropdownUtils;
+
+
+import java.util.List;
+import java.util.ArrayList;
+
+rule "HELPER_LNK"
+	ruleflow-group 'DataProcessing'
+	salience 1000
+	no-loop
+	when
+		beUtils : BaseEntityUtils()
+		answer : Answer(attributeCode matches "LNK_.*" )
+		answersToSave : Answers()
+		ruleDetails : RuleDetails()
+		output : OutputParam( )
+		serviceToken : GennyToken( code == "PER_SERVICE")
+		userToken : GennyToken( code != "PER_SERVICE")
+
+	then
+		System.out.println("HELPER_LNK_EDU_PROVIDER fired");
+		System.out.println(drools.getRule().getName());
+
+		String sourceCode = beUtils.getGennyToken().getUserCode();
+		System.out.println("sourceCode :: " + sourceCode);
+		
+		String targetCode = answer.getTargetCode();
+		System.out.println("targetCode :: " + targetCode);
+		
+		String tempCode = answer.getValue();
+		System.out.println("tempCode :: " + tempCode);
+		
+		String code = tempCode.replace("\"", "").replace("[", "").replace("]", "");
+		System.out.println("code  :: " + code);
+
+		/* Save the actual answer */
+		answersToSave.add(answer);
+
+		/* get the associated baseentity */
+		BaseEntity associatedBe = beUtils.getBaseEntityByCode(code);
+		if(associatedBe != null){
+		
+			/* get the name attribute of the associatedBe */
+			String name = associatedBe.getValue("PRI_NAME", null);		
+
+			/* save the company's name as PRI_ASSOC_EP attribute for application baseentity */
+			String attrCode = "PRI_" + StringUtils.removeStart(answer.getAttributeCode(),"LNK_");
+			Answer newAnswer = new Answer(sourceCode, targetCode, attrCode, name,false,true);
+			
+			answersToSave.add(newAnswer);
+			VertxUtils.sendToFrontEnd(userToken, newAnswer);
+		}
+end
