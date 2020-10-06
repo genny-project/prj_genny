@@ -136,9 +136,12 @@ kcontext.setVariable(&quot;uuid&quot;, uuid);
 System.out.println(&quot;AGENT: uuid = &quot; + uuid);
 
 baseEntityType = &quot;AGENT&quot;;
-
 kcontext.setVariable(&quot;baseEntityType&quot;, baseEntityType);
 System.out.println(&quot;AGENT: baseEntityType = &quot; + baseEntityType);
+
+String pending = &quot;PENDING_&quot; + baseEntityType;
+kcontext.setVariable(&quot;pending&quot;, pending);
+System.out.println(&quot;AGENT: pending = &quot; + pending);
 
 callingProcessToken = new CallingProcessToken(userToken, processId, userToken.getUserCode());
 kcontext.setVariable(&quot;callingProcessToken&quot;, callingProcessToken);
@@ -153,7 +156,10 @@ newBe = beUtils.create(newCode, newCode);
 kcontext.setVariable(&quot;newBe&quot;, newBe);
 
 System.out.println(&quot;AGENT: newBe = &quot; + newBe);
-System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);</bpmn2:script>
+System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);
+
+Answer answer = new Answer(userToken.getUserCode(),  newBe.getCode() , &quot;PRI_STATUS&quot;, pending);
+beUtils.saveAnswer(answer);</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_2" drools:priority="1" sourceRef="StartEvent_1" targetRef="ScriptTask_1"/>
       <bpmn2:task id="Task_2" drools:taskName="AskQuestionTask" drools:displayName="Ask Question Task" drools:icon="icons/icon-info.gif" name="QUE_AGENT_GRP">

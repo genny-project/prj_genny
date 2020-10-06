@@ -110,9 +110,12 @@ kcontext.setVariable(&quot;uuid&quot;, uuid);
 System.out.println(&quot;HOST_CPY_REP: uuid = &quot; + uuid);
 
 baseEntityType = &quot;HOST_CPY_REP&quot;;
-
 kcontext.setVariable(&quot;baseEntityType&quot;, baseEntityType);
 System.out.println(&quot;HOST_CPY_REP: baseEntityType = &quot; + baseEntityType);
+
+String pending = &quot;PENDING_&quot; + baseEntityType;
+kcontext.setVariable(&quot;pending&quot;, pending);
+System.out.println(&quot;HOST_CPY_REP: pending = &quot; + pending);
 
 callingProcessToken = new CallingProcessToken(userToken, processId, userToken.getUserCode());
 kcontext.setVariable(&quot;callingProcessToken&quot;, callingProcessToken);
@@ -125,7 +128,10 @@ newCode = newCode.toUpperCase();
 newBe = beUtils.create(newCode, newCode);
 kcontext.setVariable(&quot;newBe&quot;, newBe);
 System.out.println(&quot;HOST_CPY_REP: newBe = &quot; + newBe);
-System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);</bpmn2:script>
+System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);
+
+Answer answer = new Answer(userToken.getUserCode(),  newBe.getCode() , &quot;PRI_STATUS&quot;, pending);
+beUtils.saveAnswer(answer);</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_2" drools:priority="1" sourceRef="StartEvent_1" targetRef="ScriptTask_1"/>
       <bpmn2:scriptTask id="ScriptTask_3" name="End HC Rep" scriptFormat="http://www.java.com/java">
@@ -457,7 +463,7 @@ System.out.println(&quot;##################################### WORKFLOW: ANSWER 
         <di:waypoint xsi:type="dc:Point" x="686.0" y="330.0"/>
         <di:waypoint xsi:type="dc:Point" x="818.0" y="330.0"/>
         <di:waypoint xsi:type="dc:Point" x="950.0" y="330.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_10"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">

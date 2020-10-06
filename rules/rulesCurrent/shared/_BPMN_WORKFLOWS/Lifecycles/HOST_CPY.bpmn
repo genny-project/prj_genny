@@ -26,6 +26,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_17" isCollection="false" structureRef="life.genny.qwanda.message.QEventBtnClickMessage"/>
   <bpmn2:itemDefinition id="ItemDefinition_6" isCollection="false" structureRef="life.genny.utils.VertxUtils.ESubscriptionType"/>
   <bpmn2:itemDefinition id="ItemDefinition_8" isCollection="false" structureRef="life.genny.utils.VertxUtils"/>
+  <bpmn2:itemDefinition id="ItemDefinition_4" isCollection="false" structureRef="life.genny.qwanda.Answer"/>
   <bpmn2:signal id="Signal_1" name="createBE"/>
   <bpmn2:signal id="Signal_2" name="makeBe"/>
   <bpmn2:signal id="Signal_3" name="START_HOST_CPY"/>
@@ -47,6 +48,7 @@
       <drools:import name="life.genny.qwanda.message.QEventBtnClickMessage"/>
       <drools:import name="life.genny.utils.VertxUtils"/>
       <drools:import name="life.genny.utils.VertxUtils.ESubscriptionType"/>
+      <drools:import name="life.genny.qwanda.Answer"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_556" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_556" name="serviceToken"/>
@@ -111,9 +113,12 @@ kcontext.setVariable(&quot;uuid&quot;, uuid);
 System.out.println(&quot;HOST_CPY: uuid = &quot; + uuid);
 
 baseEntityType = &quot;HOST_CPY&quot;;
-
 kcontext.setVariable(&quot;baseEntityType&quot;, baseEntityType);
 System.out.println(&quot;HOST_CPY: baseEntityType = &quot; + baseEntityType);
+
+String pending = &quot;PENDING_&quot; + baseEntityType;
+kcontext.setVariable(&quot;pending&quot;, pending);
+System.out.println(&quot;HOST_CPY: pending = &quot; + pending);
 
 callingProcessToken = new CallingProcessToken(userToken, processId, userToken.getUserCode());
 kcontext.setVariable(&quot;callingProcessToken&quot;, callingProcessToken);
@@ -126,7 +131,10 @@ newCode = newCode.toUpperCase();
 newBe = beUtils.create(newCode, newCode);
 kcontext.setVariable(&quot;newBe&quot;, newBe);
 System.out.println(&quot;HOST_CPY: newBe = &quot; + newBe);
-System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);</bpmn2:script>
+System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);
+
+Answer answer = new Answer(userToken.getUserCode(),  newBe.getCode() , &quot;PRI_STATUS&quot;, pending);
+beUtils.saveAnswer(answer);</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_2" drools:priority="1" sourceRef="StartEvent_1" targetRef="ScriptTask_1"/>
       <bpmn2:scriptTask id="ScriptTask_3" name="End Host Company" scriptFormat="http://www.java.com/java">
@@ -319,13 +327,13 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_1" bpmnElement="StartEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="170.0" y="305.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_2" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
+        <bpmndi:BPMNLabel id="BPMNLabel_2" labelStyle="BPMNLabelStyle_1">
           <dc:Bounds height="22.0" width="64.0" x="156.0" y="341.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_2" bpmnElement="EndEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="1160.0" y="305.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_3" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
+        <bpmndi:BPMNLabel id="BPMNLabel_3" labelStyle="BPMNLabelStyle_1">
           <dc:Bounds height="22.0" width="64.0" x="1146.0" y="341.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -337,13 +345,13 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_1" bpmnElement="EndEvent_2">
         <dc:Bounds height="36.0" width="36.0" x="1250.0" y="300.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_5" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
+        <bpmndi:BPMNLabel id="BPMNLabel_5" labelStyle="BPMNLabelStyle_1">
           <dc:Bounds height="22.0" width="72.0" x="1232.0" y="336.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_2" bpmnElement="StartEvent_3">
         <dc:Bounds height="36.0" width="36.0" x="40.0" y="300.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_6" labelStyle="#//@definitions/@diagrams.0/@labelStyle.0">
+        <bpmndi:BPMNLabel id="BPMNLabel_6" labelStyle="BPMNLabelStyle_1">
           <dc:Bounds height="22.0" width="72.0" x="22.0" y="336.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -408,7 +416,7 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
         <bpmndi:BPMNLabel id="BPMNLabel_10"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
-    <bpmndi:BPMNLabelStyle>
+    <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
       <dc:Font name="arial" size="9.0"/>
     </bpmndi:BPMNLabelStyle>
   </bpmndi:BPMNDiagram>

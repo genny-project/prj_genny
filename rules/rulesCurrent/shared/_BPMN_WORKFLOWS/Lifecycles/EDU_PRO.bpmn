@@ -15,6 +15,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_4" isCollection="false" structureRef="life.genny.utils.OutputParam"/>
   <bpmn2:itemDefinition id="ItemDefinition_1667" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_438" isCollection="false" structureRef="life.genny.qwanda.message.QBaseMSGMessageType"/>
+  <bpmn2:itemDefinition id="ItemDefinition_5" isCollection="false" structureRef="life.genny.qwanda.Answer"/>
   <bpmn2:signal id="Signal_1" name="createBE"/>
   <bpmn2:signal id="Signal_2" name="makeBe"/>
   <bpmn2:signal id="Signal_3" name="START_EDU_PRO"/>
@@ -29,6 +30,7 @@
       <drools:import name="java.util.UUID"/>
       <drools:import name="life.genny.utils.OutputParam"/>
       <drools:import name="life.genny.qwanda.message.QBaseMSGMessageType"/>
+      <drools:import name="life.genny.qwanda.Answer"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_556" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_556" name="serviceToken"/>
@@ -95,9 +97,12 @@ kcontext.setVariable(&quot;uuid&quot;, uuid);
 System.out.println(&quot;EDU_PRO: uuid = &quot; + uuid);
 
 baseEntityType = &quot;EDU_PRO&quot;;
-
 kcontext.setVariable(&quot;baseEntityType&quot;, baseEntityType);
 System.out.println(&quot;EDU_PRO: baseEntityType = &quot; + baseEntityType);
+
+String pending = &quot;PENDING_&quot; + baseEntityType;
+kcontext.setVariable(&quot;pending&quot;, pending);
+System.out.println(&quot;EDU_PRO: pending = &quot; + pending);
 
 callingProcessToken = new CallingProcessToken(userToken, processId, userToken.getUserCode());
 kcontext.setVariable(&quot;callingProcessToken&quot;, callingProcessToken);
@@ -110,7 +115,10 @@ newCode = newCode.toUpperCase();
 newBe = beUtils.create(newCode, newCode);
 kcontext.setVariable(&quot;newBe&quot;, newBe);
 System.out.println(&quot;EDU_PRO: newBe = &quot; + newBe);
-System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);</bpmn2:script>
+System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);
+
+Answer answer = new Answer(userToken.getUserCode(),  newBe.getCode() , &quot;PRI_STATUS&quot;, pending);
+beUtils.saveAnswer(answer);</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_2" drools:priority="1" sourceRef="StartEvent_1" targetRef="ScriptTask_1"/>
       <bpmn2:scriptTask id="ScriptTask_3" name="End Edu Pro" scriptFormat="http://www.java.com/java">
@@ -394,7 +402,7 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
         <di:waypoint xsi:type="dc:Point" x="1020.0" y="310.0"/>
         <di:waypoint xsi:type="dc:Point" x="1075.0" y="310.0"/>
         <di:waypoint xsi:type="dc:Point" x="1130.0" y="310.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_13"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
