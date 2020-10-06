@@ -95,6 +95,8 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		beUtils.saveAnswers(addressData);
 		/*update(answersToSave);*/
 
+		VertxUtils.sendToFrontEnd(userToken, addressAnswer);
+		
 		/* dropdown search here For companyRep */
 		DropdownUtils dropdown = new DropdownUtils(serviceToken);
 		dropdown.setNewSearch("HCR Dropdown", "Fetch HCR Dropdown Items")
