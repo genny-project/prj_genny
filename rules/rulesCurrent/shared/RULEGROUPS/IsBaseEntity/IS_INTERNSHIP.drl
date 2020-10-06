@@ -47,8 +47,38 @@ rule "IS_INTERNSHIP"
 
 		System.out.println("IS_INTERNSHIP: Answer = " + answer); 
 		
-	
 		
+		/* Refresh the BaseEntity because reasons... */
+ 		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
+ 		
+ 		String appHC = newBe.getValue("LNK_HOST_COMPANY", null);
+		System.out.println("appHC = " + appHC);
+		
+		if(appHC != null) {
+				appHC = appHC.replace("\"", "").replace("[", "").replace("]", "");
+				System.out.println("appHC = " +appHC);
+				BaseEntity appHCBe = beUtils.getBaseEntityByCode(appHC);
+				System.out.println("appHCBe = " + appHCBe);
+ 				
+ 				if(appHCBe != null) {	
+ 						String imageHC = appHCBe.getValue("PRI_IMAGE_URL", null);
+ 						System.out.println("imageHC = " + imageHC);
+ 						
+ 						if(imageHC != null) {
+ 								answer = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IMAGE_URL", imageHC);
+ 								beUtils.saveAnswer(answer);
+ 						} else {
+							System.out.println("ERROR: Null imageHC"); 
+						}
+ 				} else {
+					System.out.println("ERROR: Null appHCBe"); 
+				}
+		} else {
+			System.out.println("ERROR: Null appHC"); 
+		}
+		
+ 		
+ 		
 		
 	
 		
