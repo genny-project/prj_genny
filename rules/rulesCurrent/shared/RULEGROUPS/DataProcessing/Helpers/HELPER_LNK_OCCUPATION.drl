@@ -79,6 +79,8 @@ rule "HELPER_LNK_OCCUPATION"
 		/* save the occupation's name as PRI_ASSOC_OCCUPATION attribute for the current target baseentity in the form */
 		Answer assocOccupationAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_OCCUPATION", occupations,false,true);
 		answersToSave.add(assocOccupationAnswer);
+		VertxUtils.sendToFrontEnd(userToken, assocOccupationAnswer);
+
 
 	/*	update(answersToSave);*/
 

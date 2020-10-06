@@ -26,13 +26,13 @@ import life.genny.utils.DropdownUtils;
 import java.util.List;
 import java.util.ArrayList;
 
-rule "HELPER_LNK_EDU_PROVIDER"
+rule "HELPER_LNK_CURRENT_COURSE"
 	ruleflow-group 'DataProcessing'
 			salience 5000
 			no-loop
 	when
 		beUtils : BaseEntityUtils()
-		answer : Answer( attributeCode == "LNK_EDU_PROVIDER" )
+		answer : Answer( attributeCode == "LNK_CURRENT_COURSE" )
 		answersToSave : Answers()
 		ruleDetails : RuleDetails()
 		output : OutputParam( )
@@ -41,7 +41,7 @@ rule "HELPER_LNK_EDU_PROVIDER"
 
 	then
 		System.out.println("HELPER_LNK_EDU_PROVIDER fired");
-		System.out.println(ruleDetails+" "+drools.getRule().getName()+"Processing Helper LNK EDU PROVIDER Answer/Data : " + answer );
+		System.out.println(drools.getRule().getName());
 
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		System.out.println("sourceCode :: " + sourceCode);
@@ -49,26 +49,30 @@ rule "HELPER_LNK_EDU_PROVIDER"
 		String targetCode = answer.getTargetCode();
 		System.out.println("targetCode :: " + targetCode);
 		
-		String eduProviderCode = answer.getValue();
-		System.out.println("eduProviderCode :: " + eduProviderCode);
+		String courseCode = answer.getValue();
+		System.out.println("courseCode :: " + courseCode);
 		
-		String code = eduProviderCode.replace("\"", "").replace("[", "").replace("]", "");
+		String code = courseCode.replace("\"", "").replace("[", "").replace("]", "");
 		System.out.println("code  :: " + code);
 
-		/* Save the actual LNK_EDU_PROVIDER answer */
+		/* Save the actual answer */
 		answersToSave.add(answer);
 
-		/* get the company baseentity */
-		BaseEntity companyBe = beUtils.getBaseEntityByCode(code);
+		/* get the associated baseentity */
+		BaseEntity associatedBe = beUtils.getBaseEntityByCode(code);
+		if(associatedBe != null){
+		
+			/* get the name attribute of the associatedBe */
+			String name = associatedBe.getValue("PRI_NAME", null);		
 
-		/* get the name attribute of the company */
-		String name = companyBe.getValue("PRI_NAME", null);		
+			/* save the company's name as PRI_ASSOC_EP attribute for application baseentity */
+			Answer newAnswer = new Answer(sourceCode, targetCode, "PRI_CURRENT_COURSE", name,false,true);
+			
+			answersToSave.add(newAnswer);
+			VertxUtils.sendToFrontEnd(userToken, newAnswer);
 
-		/* save the company's name as PRI_ASSOC_EP attribute for application baseentity */
-		Answer assocEPAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_EP", name,false,true);
- 		
- 		answersToSave.add(assocEPAnswer);
-		VertxUtils.sendToFrontEnd(userToken, assocEPAnswer);
+		}
+
  		
  	/*	update(answersToSave);	
 		retract(answer); */
