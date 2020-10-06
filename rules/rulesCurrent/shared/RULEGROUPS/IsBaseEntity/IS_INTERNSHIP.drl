@@ -65,7 +65,7 @@ rule "IS_INTERNSHIP"
  						System.out.println("imageHC = " + imageHC);
  						
  						if(imageHC != null) {
- 								Answer answer = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IMAGE_URL", imageHC);
+ 								answer = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IMAGE_URL", imageHC);
  								beUtils.saveAnswer(answer);
  						} else {
 							System.out.println("ERROR: Null imageHC"); 
