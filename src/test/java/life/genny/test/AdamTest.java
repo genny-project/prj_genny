@@ -188,6 +188,52 @@ public class AdamTest {
 	protected static GennyToken serviceToken;
 
 	@Test
+	public void testPhoneNumber() {
+		processPhoneNumber("0434321232");
+		processPhoneNumber("61434321232");
+		processPhoneNumber("0398857158");
+		processPhoneNumber("131333");
+		processPhoneNumber("1300776554");
+		processPhoneNumber("13007765543");
+		processPhoneNumber("1800654321");
+		processPhoneNumber("61377776666");
+	}
+
+	public void processPhoneNumber(String phonenumber) {
+
+		if (phonenumber != null) {
+			/* remove all non digits */
+			phonenumber = phonenumber.replaceAll("[^\\d]", "");
+			if (!phonenumber.startsWith("+")) {
+				if (phonenumber.startsWith("0")) {
+					phonenumber = "61" + phonenumber.substring(1); /* remove the 0 and assume Australian */
+				}
+			}
+			phonenumber = StringUtils.deleteWhitespace(phonenumber);
+
+			if (checkPhone(phonenumber)) {
+				/* Now check if it is an Australian mobile */
+				if ((phonenumber.startsWith("614")) || (phonenumber.startsWith("615"))) {
+					System.out.println("Mobile detected = " + phonenumber);
+				} else {
+					System.out.println("Landline detected = " + phonenumber);
+
+				}
+			} else {
+				String message = "Phone number is invalid ! (check number of digits) " + phonenumber;
+				System.out.println(message);
+
+			}
+
+		} else
+		{
+			String message = "Phone number is empty!";
+			System.out.println(message);
+		}
+
+	}
+
+	@Test
 	public void fixPhoneNumbers() {
 
 		System.out.println("Fix Phone Numbers test");
@@ -234,6 +280,7 @@ public class AdamTest {
 			Optional<String> landline = be.getValue("PRI_LANDLINE");
 
 			if (phoneNumber.isPresent()) {
+
 				if (!StringUtils.isBlank(phoneNumber.get())) {
 					if (!checkPhone(phoneNumber.get())) {
 						System.out.println("BAD phone number " + phoneNumber.get() + " for be " + be.getCode());
@@ -252,7 +299,7 @@ public class AdamTest {
 
 			if (mobile.isPresent()) {
 				if (!StringUtils.isBlank(mobile.get())) {
-					if (checkPhone(mobile.get())) {
+					if (!checkPhone(mobile.get())) {
 						System.out.println("BAD mobile number " + mobile.get() + " for be " + be.getCode());
 						String fixedNum = normalisePhone(mobile.get());
 						if (!checkPhone(fixedNum)) {
@@ -273,7 +320,7 @@ public class AdamTest {
 			if (landline.isPresent()) {
 				if (!StringUtils.isBlank(landline.get())) {
 
-					if (checkPhone(landline.get())) {
+					if (!checkPhone(landline.get())) {
 						System.out.println("BAD landline number " + landline.get() + " for be " + be.getCode());
 						String fixedNum = normalisePhone(landline.get());
 						if (!checkPhone(fixedNum)) {
@@ -295,26 +342,24 @@ public class AdamTest {
 
 	}
 
-	private Boolean checkPhone(String phonenum)
-	{
-		return checkregex(phonenum,"^\\({0,1}((0|\\+61)(2|4|3|7|8)){0,1}\\){0,1}(\\ |-){0,1}[0-9]{2}(\\ |-){0,1}[0-9]{2}(\\ |-){0,1}[0-9]{1}(\\ |-){0,1}[0-9]{3}$");
+	private Boolean checkPhone(String phonenum) {
+		return checkregex(phonenum,
+				"^(\\d{2}){0,1}((0{0,1}[2|3|7|8]{1}[ \\-]*(\\d{4}\\d{4}))|(\\d{2}){0,1}(1[ \\-]{0,1}(300|800|900|902)[ \\-]{0,1}((\\d{6})|(\\d{3}\\d{3})))|(13[ \\-]{0,1}([\\d \\-]{4})|((\\d{0,2})0{0,1}4{1}[\\d \\-]{8,10})))$");
 	}
-	
-	private Boolean checkregex(String input, String regex)
-	{
-		  
 
-	      // Create a Pattern object
-	      Pattern r = Pattern.compile(regex);
+	private Boolean checkregex(String input, String regex) {
 
-	      // Now create matcher object.
-	      Matcher m = r.matcher(input);
-	      if (m.find( )) {
-	    	  return true;
-	      }
-	      return false;
+		// Create a Pattern object
+		Pattern r = Pattern.compile(regex);
+
+		// Now create matcher object.
+		Matcher m = r.matcher(input);
+		if (m.find()) {
+			return true;
+		}
+		return false;
 	}
-	
+
 	private String normalisePhone(String phonenumber) {
 		if (phonenumber != null) {
 			phonenumber = StringUtils.deleteWhitespace(phonenumber);

@@ -45,27 +45,22 @@ rule "PRI_PHONE"
 				System.out.println(ruleDetails+" "+drools.getRule().getName()+" Raw Phone number is "+answer.getValue()+" , fixed number is "+phonenumber);
 				
 				
-				if (phonenumber.length()==11) {
-				
+				if (QwandaUtils.checkPhone(phonenumber)) {
 							/* Now check if it is an Australian mobile */
-				if ((phonenumber.startsWith("614"))|| (phonenumber.startsWith("615"))) {
-					Answer mobile = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_MOBILE",phonenumber);
-					mobile.setChangeEvent(false); /* no attribute change */
-					answersToSave.add(mobile);
-				} else {
-					Answer landline = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_LANDLINE",phonenumber);
-					landline.setChangeEvent(false); /* no attribute change */
-					answersToSave.add(landline);
-			
-				}
+					if ((phonenumber.startsWith("614"))|| (phonenumber.startsWith("615"))) {
+						Answer mobile = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_MOBILE",phonenumber,false,true);
+						answersToSave.add(mobile);
+					} else {
+						Answer landline = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_LANDLINE",phonenumber,false,true);
+						landline.setChangeEvent(false); /* no attribute change */
+						answersToSave.add(landline);			
+					}
 				} else {
 					String message = "Phone number is invalid ! (check number of digits)";
 					System.out.println(message);
 					Answer feedbackAnswer = new Answer(answer.getSourceCode(),answer.getTargetCode(),answer.getAttributeCode(),"");
 					VertxUtils.sendFeedbackError(beUtils.getGennyToken(),feedbackAnswer,message);
 					System.out.println("Sent error message back to frontend");		
-				
-				
 				}
 			} else {
 					String message = "Phone number is empty!";
