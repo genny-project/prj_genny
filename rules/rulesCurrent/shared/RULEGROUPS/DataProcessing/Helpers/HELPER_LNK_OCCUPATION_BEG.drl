@@ -97,8 +97,8 @@ rule "HELPER_LNK_OCCUPATION_BEG"
 		Answer assocOccupationAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_OCCUPATION", occupations,false,true);
 		
 		Answer rolesAnswer = new Answer(sourceCode, targetCode, "PRI_ROLES_AND_RESPONSIBILITIES", roles,false,true);
-		Answer baseOutcomesAnswer = new Answer(sourceCode, targetCode, "PRI_BASE_LEARNING_OUTCOMES", baseLearningOutcomes,false,true);
-		Answer specificOutcomesAnswer = new Answer(sourceCode, targetCode, "PRI_SPECIFIC_LEARNING_OUTCOMES", specificLearningOutcomes,false,true);
+		Answer baseOutcomesAnswer = new Answer(sourceCode, targetCode, "PRI_BASE_LEARNING_OUTCOMES", baseOutcomes,false,true);
+		Answer specificOutcomesAnswer = new Answer(sourceCode, targetCode, "PRI_SPECIFIC_LEARNING_OUTCOMES", specificOutcomes,false,true);
 		
 		answersToSave.add(assocOccupationAnswer);
 		answersToSave.add(rolesAnswer);
