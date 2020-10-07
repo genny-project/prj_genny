@@ -139,18 +139,18 @@ System.out.println(&quot;serviceToken: &quot; +serviceToken.getCode());
 
 BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 
+OutputParam sauce = (OutputParam)sessionFacts.getMessage();
+source = sauce.getAskSourceCode();
+kcontext.setVariable(&quot;source&quot;, source);
+System.out.println(&quot;source: &quot; + source);
 
-OutputParam data = (OutputParam)sessionFacts.getMessage();
-String codes = data.getTargetCode();
-kcontext.setVariable(&quot;codes&quot;, codes);
-System.out.println(&quot;codes: &quot; + codes);
-
-newBe = beUtils. getBaseEntityByCode(codes);
+newBe = beUtils. getBaseEntityByCode(source);
 kcontext.setVariable(&quot;newBe&quot;, newBe);
 System.out.println(&quot;newBe: &quot; + newBe);
 
-OutputParam dataa = (OutputParam)sessionFacts.getMessage();
-String type = dataa.getSuitCase();
+
+OutputParam data = (OutputParam)sessionFacts.getMessage();
+String type = data.getSuitCase();
 System.out.println(&quot;type: &quot; + type);
 
 if (type != null) {
@@ -174,6 +174,8 @@ if (type != null) {
 typeOf = &quot;QUE_&quot; +typeOf + &quot;_GRP&quot;;
 kcontext.setVariable(&quot;typeOf&quot;, typeOf);
 System.out.println(&quot;typeOf: &quot; + typeOf);
+
+
 </bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:startEvent id="StartEvent_4" name="Start">
