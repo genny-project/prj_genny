@@ -28,8 +28,8 @@ import java.util.ArrayList;
 
 rule "HELPER_LNK_OCCUPATION_BEG"
 	ruleflow-group 'DataProcessing'
-			salience 5000
-			no-loop
+	salience 5000
+	no-loop
 	when
 		beUtils : BaseEntityUtils()
 		answer : Answer( attributeCode == "LNK_OCCUPATION" && targetCode matches "BEG_.*")
@@ -65,12 +65,12 @@ rule "HELPER_LNK_OCCUPATION_BEG"
 		List<String> baseOutcomesList = new ArrayList<>();
 		List<String> specificOutcomesList = new ArrayList<>();
 
-		for (String occupationCode : code.split(",")) {
+		for (String occupCode : code.split(",")) {
 			
-			System.out.println("occupationCode :: " + occupationCode);
+			System.out.println("occupCode :: " + occupCode);
 
 			/* get the occupation baseentity */
-			BaseEntity be = beUtils.getBaseEntityByCode(occupationCode);
+			BaseEntity be = beUtils.getBaseEntityByCode(occupCode);
 
 			/* get the name attribute of the occupation */
 			String name = be.getValue("PRI_NAME", null);		
@@ -89,9 +89,9 @@ rule "HELPER_LNK_OCCUPATION_BEG"
 
 		String occupations = occupationNames.toString().replaceAll("[\\[\\](){}]","");
 		
-		roles = rolesList.toString().replaceAll("[\\[\\](){}]","");
-		baseOutcomes = baseOutcomesList.toString().replaceAll("[\\[\\](){}]","");
-		specificOutcomes = specificOutcomesList.toString().replaceAll("[\\[\\](){}]","");
+		String roles = rolesList.toString().replaceAll("[\\[\\](){}]","");
+		String baseOutcomes = baseOutcomesList.toString().replaceAll("[\\[\\](){}]","");
+		String specificOutcomes = specificOutcomesList.toString().replaceAll("[\\[\\](){}]","");
 
 		/* save the occupation's name as PRI_ASSOC_OCCUPATION attribute for the current target baseentity in the form */
 		Answer assocOccupationAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_OCCUPATION", occupations,false,true);
