@@ -140,7 +140,7 @@ System.out.println(&quot;serviceToken: &quot; +serviceToken.getCode());
 BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 
 OutputParam sauce = (OutputParam)sessionFacts.getMessage();
-source = sauce.getAskSourceCode();
+String source = sauce.getAskSourceCode();
 kcontext.setVariable(&quot;source&quot;, source);
 System.out.println(&quot;source: &quot; + source);
 
