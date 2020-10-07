@@ -61,6 +61,7 @@ rule "HELPER_LNK_OCCUPATION_BEG"
 		/* list to store occupationCodes and occupationNames */
 		List<String> occupationNames = new ArrayList<>();
 		
+		/* list to store other attributes */
 		List<String> rolesList = new ArrayList<>();
 		List<String> baseOutcomesList = new ArrayList<>();
 		List<String> specificOutcomesList = new ArrayList<>();
@@ -105,14 +106,7 @@ rule "HELPER_LNK_OCCUPATION_BEG"
 		answersToSave.add(baseOutcomesAnswer);
 		answersToSave.add(specificOutcomesAnswer);
 
+		/* send any number of answers to FE for real update */
 		VertxUtils.sendToFrontEnd(userToken, assocOccupationAnswer, rolesAnswer, baseOutcomesAnswer, specificOutcomesAnswer);
 
-	/*	update(answersToSave);*/
-
-		/* Retract the answer message so the rule doesn't fire again */
-	/*	retract(answer); */
-
-		output.setTypeOfResult("NONE");
-		output.setResultCode("NONE");  /* dont display anything new */
-	/*	update(output); */
 end
