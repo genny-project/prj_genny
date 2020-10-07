@@ -9,7 +9,8 @@ import org.drools.core.process.core.datatype.impl.type.LongDataType;
        "payloadObject"  : new ObjectDataType(),
        "signalCode"  :  new StringDataType(),
        "processId"   : new ObjectDataType(),
-       "callingWorkflow"  :  new StringDataType()
+       "callingWorkflow"  :  new StringDataType(),
+       "liveQuestions" " new ObjectDataType()
      ],
     "displayName" : "ThrowSignalProcess",
     "icon" : "icons/icon-info.gif"
