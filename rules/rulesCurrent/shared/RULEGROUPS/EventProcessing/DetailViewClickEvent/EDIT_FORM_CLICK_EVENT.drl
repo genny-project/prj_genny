@@ -67,13 +67,8 @@ rule "EDIT_FORM_CLICK_EVENT"
 
 		output.setTypeOfResult("SIGNAL");
 		output.setResultCode("START_"+workflowSignalCode);
-		output.setTargetCode($message.getData().getTargetCode());
 		output.setSuitCase(typeOf);
 		
-		
-		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$ targetCode: " + output.getTargetCode());
-		
-		SessionFacts facts = new SessionFacts(serviceToken, userToken, output.getTargetCode());
 		
 		System.out.println("START SIGNAL: " +workflowSignalCode);
 		System.out.println("STARTING EDIT FORMS PROCEDURE WITH: " +output);
