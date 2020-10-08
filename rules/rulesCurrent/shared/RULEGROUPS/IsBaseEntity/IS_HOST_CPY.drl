@@ -35,6 +35,7 @@ rule "IS_HOST_CPY"
  		beUtils.saveAnswer(answer2);
 
 		System.out.println("IS_HOST_CPY: Answer = " + answer); 
+		System.out.println("IS_HOST_CPY: Answer = " + answer2); 
 		
 		
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
