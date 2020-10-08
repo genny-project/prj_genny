@@ -51,9 +51,21 @@ rule "PRI_PHONE"
 						Answer mobile = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_MOBILE",phonenumber,false,true);
 						answersToSave.add(mobile);
 					} else {
-						Answer landline = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_LANDLINE",phonenumber,false,true);
-						landline.setChangeEvent(false); /* no attribute change */
-						answersToSave.add(landline);			
+					
+					
+						/* Check if person is the target, in which case you want a mobile! */
+						if (targetCode.startsWith("PER_")) {
+							String message = "People require a mobile number! ! please replace with a mobile";
+							System.out.println(message);
+							Answer feedbackAnswer = new Answer(answer.getSourceCode(),answer.getTargetCode(),answer.getAttributeCode(),"");
+							VertxUtils.sendFeedbackError(beUtils.getGennyToken(),feedbackAnswer,message);
+							System.out.println("Sent error message back to frontend");		
+						
+						} else {
+							Answer landline = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_LANDLINE",phonenumber,false,true);
+							landline.setChangeEvent(false); /* no attribute change */
+							answersToSave.add(landline);	
+						}		
 					}
 				} else {
 					String message = "Phone number is invalid ! (check number of digits)";
