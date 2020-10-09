@@ -23,6 +23,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_4" isCollection="false" structureRef="life.genny.qwanda.Answer"/>
   <bpmn2:itemDefinition id="ItemDefinition_5" isCollection="false" structureRef="life.genny.utils.TableUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_615" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_210" isCollection="false" structureRef="life.genny.qwandautils.KeycloakUtils"/>
   <bpmn2:signal id="Signal_1" name="notification"/>
   <bpmn2:signal id="Signal_2" name="dynamicControl"/>
   <bpmn2:signal id="Signal_3" name="controlSignal"/>
@@ -48,6 +49,7 @@
       <drools:import name="org.json.JSONArray"/>
       <drools:import name="life.genny.qwanda.Answer"/>
       <drools:import name="life.genny.utils.TableUtils"/>
+      <drools:import name="life.genny.qwandautils.KeycloakUtils"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_2" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_2" name="serviceToken"/>
