@@ -145,22 +145,6 @@ System.out.println(&quot;serviceToken: &quot; +serviceToken.getCode());
 
 BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 
-/* uuid = UUID.randomUUID(); */
-uuid = KeycloakUtils.createDummyUser(serviceToken.getToken(), serviceToken.getRealm());
-kcontext.setVariable(&quot;uuid&quot;, uuid);
-System.out.println(&quot;internWF: uuid = &quot; + uuid);
-
-
-userToken = (GennyToken)userToken;
-BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
-String newCode = &quot;PER_&quot;+uuid;
-newCode = newCode.toUpperCase();
-newBe = beUtils.create(newCode, newCode);
-kcontext.setVariable(&quot;newBe&quot;, newBe);
-System.out.println(&quot;ADD_ENTITY: newBe = &quot; + newBe);
-System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);
-
-
 OutputParam dataa = (OutputParam)sessionFacts.getMessage();
 typeOf = dataa.getSuitCase();
 System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ typeOf: &quot; + typeOf);
