@@ -12,7 +12,7 @@ import life.genny.qwandautils.JsonUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-rule "ADD_ENTITY_CLICK_EVENT"
+rule "ADD_ENTITY_CLICK_EVENT_TEST"
     ruleflow-group 'EventProcessing'
 		salience 2
     no-loop true
