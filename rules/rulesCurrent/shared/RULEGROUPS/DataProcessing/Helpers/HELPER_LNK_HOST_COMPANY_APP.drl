@@ -83,6 +83,8 @@ rule "HELPER_LNK_HOST_COMPANY_APP"
 											.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%")
 											.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "ACTIVE")
 											.addFilter("LNK_HOST_COMPANY", SearchEntity.StringFilter.EQUAL, hostCompanyCode)
+											.addFilter("PRI_ADDRESS_STATE", SearchEntity.StringFilter.LIKE, "%")
+											.addFilter("PRI_ASSOC_INDUSTRY", SearchEntity.StringFilter.LIKE, "%")
 											/* .addColumn("PRI_NAME", "Name") */
 											.setPageStart(0)
 											.setPageSize(1000);
