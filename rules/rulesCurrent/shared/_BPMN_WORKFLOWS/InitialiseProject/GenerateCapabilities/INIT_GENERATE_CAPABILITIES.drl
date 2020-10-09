@@ -88,6 +88,8 @@ rule "INIT_GENERATE_CAPABILITIES"
  		
 		capabilityUtils.addCapability( "UNARCHIVE_INTERN", "Unarchive Intern");
  		capabilityUtils.addCapability( "ARCHIVE_INTERN", "Archive Intern");
+		capabilityUtils.addCapability( "ARCHIVE_HCR", "Archive Host Company Rep");
+		capabilityUtils.addCapability( "ARCHIVE_EPR", "Archive Education Provider Rep");
  		capabilityUtils.addCapability( "ARCHIVE_INTERNSHIP", "Archive Internship");
 		capabilityUtils.addCapability( "SHORTLIST_APPLICATION", "Shortlist Application");
 		capabilityUtils.addCapability( "INTERVIEW_APPLICATION", "Interview Application");
