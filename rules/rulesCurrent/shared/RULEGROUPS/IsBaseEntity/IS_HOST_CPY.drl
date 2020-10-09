@@ -29,7 +29,7 @@ rule "IS_HOST_CPY"
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
  		Answer answer = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_HOST_CPY", "true");
- 		Answer answer2 = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "UNVERIFIED");
+ 		Answer answer2 = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE");
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
  		beUtils.saveAnswer(answer);
  		beUtils.saveAnswer(answer2);
