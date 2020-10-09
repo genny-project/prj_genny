@@ -22,7 +22,8 @@ rule "ADD_ITEM_CLICK_EVENT"
     then
 
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
-		
+		 
+		 
 		String code = $message.getData().getCode(); /* get click event code e.g. QUE_ADD_EDU_PROVIDER_GRP  */
 		String workflowSignalCode = StringUtils.removeEnd(code, "_MENU");
 		workflowSignalCode = StringUtils.removeStart(workflowSignalCode,"QUE_");
