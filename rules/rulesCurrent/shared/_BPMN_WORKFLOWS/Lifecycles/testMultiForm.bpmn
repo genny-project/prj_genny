@@ -23,6 +23,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_4" isCollection="false" structureRef="life.genny.qwanda.Answer"/>
   <bpmn2:itemDefinition id="ItemDefinition_5" isCollection="false" structureRef="life.genny.utils.TableUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_615" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_210" isCollection="false" structureRef="life.genny.qwandautils.KeycloakUtils"/>
   <bpmn2:signal id="Signal_1" name="notification"/>
   <bpmn2:signal id="Signal_2" name="dynamicControl"/>
   <bpmn2:signal id="Signal_3" name="controlSignal"/>
@@ -48,6 +49,7 @@
       <drools:import name="org.json.JSONArray"/>
       <drools:import name="life.genny.qwanda.Answer"/>
       <drools:import name="life.genny.utils.TableUtils"/>
+      <drools:import name="life.genny.qwandautils.KeycloakUtils"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_2" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_2" name="serviceToken"/>
@@ -77,7 +79,7 @@
     <bpmn2:property id="newHCRBe" itemSubjectRef="ItemDefinition_2016" name="newHCRBe"/>
     <bpmn2:property id="newEPRBe" itemSubjectRef="ItemDefinition_2016" name="newEPRBe"/>
     <bpmn2:property id="newINTBe" itemSubjectRef="ItemDefinition_2016" name="newINTBe"/>
-    <bpmn2:property id="uuid" itemSubjectRef="ItemDefinition_2141" name="uuid"/>
+    <bpmn2:property id="uuid" itemSubjectRef="ItemDefinition_2733" name="uuid"/>
     <bpmn2:property id="results" itemSubjectRef="ItemDefinition_1240" name="results"/>
     <bpmn2:property id="associatedInternBe" itemSubjectRef="ItemDefinition_2016" name="associatedInternBe"/>
     <bpmn2:property id="associatedIntern" itemSubjectRef="ItemDefinition_2733" name="associatedIntern"/>
@@ -150,6 +152,10 @@ kcontext.setVariable(&quot;sourceBe&quot;, sourceBe);
 System.out.println(&quot;sourceBe: &quot; + sourceBe);
 */
 
+
+uuid = KeycloakUtils.createDummyUser(serviceToken.getToken(), serviceToken.getRealm());
+kcontext.setVariable(&quot;uuid&quot;, uuid);
+System.out.println(&quot;internWF: uuid = &quot; + uuid);
 
 String newCode = &quot;DOC_&quot;+uuid;
 newCode = newCode.toUpperCase();
@@ -391,25 +397,25 @@ if(typeOf.equals(&quot;QUE_HOST_CPY_VAL_REP_GRP&quot;)) {
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_1" bpmnElement="ExclusiveGateway_1" isMarkerVisible="true">
         <dc:Bounds height="50.0" width="50.0" x="580.0" y="271.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_7">
           <dc:Bounds height="11.0" width="3.0" x="603.0" y="321.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_2" bpmnElement="ExclusiveGateway_2" isMarkerVisible="true">
         <dc:Bounds height="50.0" width="50.0" x="997.0" y="271.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_9">
           <dc:Bounds height="11.0" width="40.0" x="1002.0" y="321.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_2" bpmnElement="ScriptTask_2" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="840.0" y="271.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_10">
           <dc:Bounds height="11.0" width="22.0" x="884.0" y="290.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_4" bpmnElement="ScriptTask_4" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="1110.0" y="271.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_11">
           <dc:Bounds height="11.0" width="36.0" x="1147.0" y="290.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -435,7 +441,7 @@ if(typeOf.equals(&quot;QUE_HOST_CPY_VAL_REP_GRP&quot;)) {
         <di:waypoint xsi:type="dc:Point" x="1047.0" y="296.0"/>
         <di:waypoint xsi:type="dc:Point" x="1078.0" y="296.0"/>
         <di:waypoint xsi:type="dc:Point" x="1110.0" y="296.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_12">
           <dc:Bounds height="11.0" width="35.0" x="1062.0" y="297.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
@@ -443,32 +449,32 @@ if(typeOf.equals(&quot;QUE_HOST_CPY_VAL_REP_GRP&quot;)) {
         <di:waypoint xsi:type="dc:Point" x="544.0" y="296.0"/>
         <di:waypoint xsi:type="dc:Point" x="562.0" y="296.0"/>
         <di:waypoint xsi:type="dc:Point" x="580.0" y="296.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_13"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_7" bpmnElement="SequenceFlow_7" sourceElement="BPMNShape_ExclusiveGateway_1" targetElement="BPMNShape_Task_1">
         <di:waypoint xsi:type="dc:Point" x="630.0" y="296.0"/>
         <di:waypoint xsi:type="dc:Point" x="655.0" y="296.0"/>
         <di:waypoint xsi:type="dc:Point" x="680.0" y="296.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_14"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_9" bpmnElement="SequenceFlow_9" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_ScriptTask_2">
         <di:waypoint xsi:type="dc:Point" x="790.0" y="296.0"/>
         <di:waypoint xsi:type="dc:Point" x="815.0" y="296.0"/>
         <di:waypoint xsi:type="dc:Point" x="840.0" y="296.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_15"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_10" bpmnElement="SequenceFlow_10" sourceElement="BPMNShape_ScriptTask_2" targetElement="BPMNShape_ExclusiveGateway_2">
         <di:waypoint xsi:type="dc:Point" x="950.0" y="296.0"/>
         <di:waypoint xsi:type="dc:Point" x="973.0" y="296.0"/>
         <di:waypoint xsi:type="dc:Point" x="997.0" y="296.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_16"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_12" bpmnElement="SequenceFlow_12" sourceElement="BPMNShape_ExclusiveGateway_2" targetElement="BPMNShape_ExclusiveGateway_1">
         <di:waypoint xsi:type="dc:Point" x="1022.0" y="321.0"/>
         <di:waypoint xsi:type="dc:Point" x="1022.0" y="347.0"/>
         <di:waypoint xsi:type="dc:Point" x="605.0" y="347.0"/>
         <di:waypoint xsi:type="dc:Point" x="605.0" y="321.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_17">
           <dc:Bounds height="22.0" width="67.0" x="781.0" y="348.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
@@ -476,7 +482,7 @@ if(typeOf.equals(&quot;QUE_HOST_CPY_VAL_REP_GRP&quot;)) {
         <di:waypoint xsi:type="dc:Point" x="1220.0" y="296.0"/>
         <di:waypoint xsi:type="dc:Point" x="1245.0" y="296.0"/>
         <di:waypoint xsi:type="dc:Point" x="1270.0" y="296.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_18"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
