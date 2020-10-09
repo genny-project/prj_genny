@@ -126,7 +126,7 @@
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_11</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
-        <bpmn2:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% START ADD_ENTITY WORKFLOW %%%%%%%%%%%%%%%%%%%&quot;);
+        <bpmn2:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% &amp;&amp;&amp; START ADD_ENTITY WORKFLOW &amp;&amp;&amp; %%%%%%%%%%%%%%%%%%%&quot;);
 
 userToken = (GennyToken)sessionFacts.getUserToken();
 kcontext.setVariable(&quot;userToken&quot;, userToken);
@@ -143,11 +143,21 @@ System.out.println(&quot;serviceToken: &quot; +serviceToken.getCode());
 
 BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 
+/* uuid = UUID.randomUUID(); */
+uuid = KeycloakUtils.createDummyUser(serviceToken.getToken(), serviceToken.getRealm());
+kcontext.setVariable(&quot;uuid&quot;, uuid);
+System.out.println(&quot;internWF: uuid = &quot; + uuid);
 
-OutputParam data = (OutputParam)sessionFacts.getMessage();
-String codes = data.getTargetCode();
-kcontext.setVariable(&quot;codes&quot;, codes);
-System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ codes: &quot; + codes);
+
+userToken = (GennyToken)userToken;
+BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+String newCode = &quot;PER_&quot;+uuid;
+newCode = newCode.toUpperCase();
+newBe = beUtils.create(newCode, newCode);
+kcontext.setVariable(&quot;newBe&quot;, newBe);
+System.out.println(&quot;ADD_ENTITY: newBe = &quot; + newBe);
+System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);
+
 
 OutputParam dataa = (OutputParam)sessionFacts.getMessage();
 typeOf = dataa.getSuitCase();
@@ -161,12 +171,8 @@ typeOf = &quot;QUE_&quot; +typeOf + &quot;_GRP&quot;;
 kcontext.setVariable(&quot;typeOf&quot;, typeOf);
 System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ typeOf: &quot; + typeOf);
 
-newBe = beUtils. getBaseEntityByCode(codes);
-kcontext.setVariable(&quot;newApplication&quot;, newApplication);
-System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ newBe: &quot; + newBe);
 
-
-baseEntityType = &quot;typeOfSBE&quot;;
+baseEntityType = typeOfSBE;
 kcontext.setVariable(&quot;baseEntityType&quot;, baseEntityType);
 System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ baseEntityType = &quot; + baseEntityType);
 
@@ -176,6 +182,9 @@ System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ pending = &quot; + pendin
 
 Answer answer = new Answer(userToken.getUserCode(), newBe.getCode() , &quot;PRI_STATUS&quot;, pending);
 beUtils.saveAnswer(answer);
+
+
+
 </bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:startEvent id="StartEvent_4" name="Start">
@@ -390,7 +399,7 @@ System.out.println(&quot;%%%%%%%%%%%%%%%%%%% END EDIT_FORMS WORKFLOW %%%%%%%%%%%
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_2" bpmnElement="Task_2" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="880.0" y="287.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_9">
           <dc:Bounds height="11.0" width="75.0" x="897.0" y="306.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -428,13 +437,13 @@ System.out.println(&quot;%%%%%%%%%%%%%%%%%%% END EDIT_FORMS WORKFLOW %%%%%%%%%%%
         <di:waypoint xsi:type="dc:Point" x="814.0" y="312.0"/>
         <di:waypoint xsi:type="dc:Point" x="847.0" y="312.0"/>
         <di:waypoint xsi:type="dc:Point" x="880.0" y="312.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_13"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_5" sourceElement="BPMNShape_Task_2" targetElement="BPMNShape_ScriptTask_1">
         <di:waypoint xsi:type="dc:Point" x="990.0" y="312.0"/>
         <di:waypoint xsi:type="dc:Point" x="1015.0" y="312.0"/>
         <di:waypoint xsi:type="dc:Point" x="1040.0" y="312.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_15"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">

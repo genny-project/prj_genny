@@ -303,17 +303,9 @@ System.out.println(&quot;typeOf: &quot; + typeOf);
         <bpmn2:script>System.out.println(&quot;The current typeOf: &quot; +typeOf);
 
 
-if(typeOf.equals(&quot;QUE_HOST_CPY_VAL_HOST_CPY_GRP&quot;)) {
+if(typeOf.equals(&quot;QUE_HOST_CPY_VAL_REP_GRP&quot;)) {
 		
-		typeOf = &quot;QUE_HOST_CPY_VAL_PYP_GRP&quot;;
-		kcontext.setVariable(&quot;typeOf&quot;, typeOf);
-		System.out.println(&quot;Updating typeOf: &quot; + typeOf);
-}
-
-
-if(typeOf.equals(&quot;QUE_HOST_CPY_VAL_PYP_GRP&quot;)) {
-		
-		typeOf = &quot;QUE_HOST_CPY_VAL_ENVIRON_GRP&quot;;
+		typeOf = &quot;FINISHED_LIST&quot;;
 		kcontext.setVariable(&quot;typeOf&quot;, typeOf);
 		System.out.println(&quot;Updating typeOf: &quot; + typeOf);
 }
@@ -325,9 +317,16 @@ if(typeOf.equals(&quot;QUE_HOST_CPY_VAL_ENVIRON_GRP&quot;)) {
 		System.out.println(&quot;Updating typeOf: &quot; + typeOf);
 }
 
-if(typeOf.equals(&quot;QUE_HOST_CPY_VAL_REP_GRP&quot;)) {
+if(typeOf.equals(&quot;QUE_HOST_CPY_VAL_PYP_GRP&quot;)) {
 		
-		typeOf = &quot;FINISHED_LIST&quot;;
+		typeOf = &quot;QUE_HOST_CPY_VAL_ENVIRON_GRP&quot;;
+		kcontext.setVariable(&quot;typeOf&quot;, typeOf);
+		System.out.println(&quot;Updating typeOf: &quot; + typeOf);
+}
+
+if(typeOf.equals(&quot;QUE_HOST_CPY_VAL_HOST_CPY_GRP&quot;)) {
+		
+		typeOf = &quot;QUE_HOST_CPY_VAL_PYP_GRP&quot;;
 		kcontext.setVariable(&quot;typeOf&quot;, typeOf);
 		System.out.println(&quot;Updating typeOf: &quot; + typeOf);
 }
