@@ -86,6 +86,7 @@ rule "INIT_GENERATE_CAPABILITIES"
 		capabilityUtils.addCapability( "VIEW_AVAILABLE_INTERNS", "View Available Interns");
  		capabilityUtils.addCapability( "VIEW_INTERNS", "View Interns");
  		
+		capabilityUtils.addCapability( "UNARCHIVE_INTERN", "Unarchive Intern");
  		capabilityUtils.addCapability( "ARCHIVE_INTERN", "Archive Intern");
  		capabilityUtils.addCapability( "ARCHIVE_INTERNSHIP", "Archive Internship");
 		capabilityUtils.addCapability( "SHORTLIST_APPLICATION", "Shortlist Application");
