@@ -81,6 +81,7 @@ rule "HELPER_LNK_HOST_COMPANY_APP"
 		dropdownInternship.setNewSearch("Internship Dropdown", "Fetch Internship Dropdown Items")
 											.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%")
 											.addFilter("PRI_IS_INTERNSHIP", true)
+											.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "ACTIVE")
 											.addFilter("LNK_HOST_COMPANY", SearchEntity.StringFilter.EQUAL, hostCompanyCode)
 											.setPageStart(0)
 											.setPageSize(1000);
