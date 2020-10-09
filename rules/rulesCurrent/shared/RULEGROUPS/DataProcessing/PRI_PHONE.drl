@@ -48,7 +48,8 @@ rule "PRI_PHONE"
 				if (QwandaUtils.checkPhone(phonenumber)) {
 							/* Now check if it is an Australian mobile */
 					if ((phonenumber.startsWith("614"))|| (phonenumber.startsWith("615"))) {
-						Answer mobile = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_MOBILE",phonenumber,false,true);
+						Boolean inferred = !"PRI_MOBILE".equals(answer.getAttributeCode());
+						Answer mobile = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_MOBILE",phonenumber,false,inferred);
 						answersToSave.add(mobile);
 					} else {
 					
@@ -62,7 +63,8 @@ rule "PRI_PHONE"
 							System.out.println("Sent error message back to frontend");		
 						
 						} else {
-							Answer landline = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_LANDLINE",phonenumber,false,true);
+							Boolean inferred = !"PRI_LANDLINE".equals(answer.getAttributeCode());
+							Answer landline = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_LANDLINE",phonenumber,false,inferred);
 							landline.setChangeEvent(false); /* no attribute change */
 							answersToSave.add(landline);	
 						}		
@@ -82,6 +84,22 @@ rule "PRI_PHONE"
 					System.out.println("Sent error message back to frontend");		
 			}
 		
+			if ("PRI_PHONE".equals(answer.getAttributeCode())) {
+				Answer phone = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_PHONE",phonenumber,false,false);
+				phone.setChangeEvent(false); /* no attribute change */
+				answersToSave.add(phone);				
+			} else {
+				BaseEntity be = beUtils.getBaseEntityByCode(answer.getTargetCode());
+				if (be != null) {
+					String pn = be.getValue("PRI_PHONE","");
+					if (StringUtils.isBlank(pn)) {
+						Answer phone = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_PHONE",phonenumber,false,true);
+						phone.setChangeEvent(false); /* no attribute change */
+						answersToSave.add(phone);									
+					}
+				}
+			}
+			
 			
 
 /* Watch out TODO , this may override other answers */
