@@ -188,6 +188,68 @@ public class AdamTest {
 	protected static GennyToken serviceToken;
 
 	@Test
+	public void testSearchHql()
+	{
+		System.out.println("Fix Phone Numbers test");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+		} else {
+			// VertxUtils.cachedEnabled = false;
+			VertxUtils.cachedEnabled = false;
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+			eventBusMock = new EventBusMock();
+			vertxCache = new JunitCache(); // MockCache
+			VertxUtils.init(eventBusMock, vertxCache);
+		}
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		beUtils.setServiceToken(serviceToken);
+
+		SearchEntity searchBE = new SearchEntity("TEST", "Interns")
+				.addSort("PRI_NAME","Name",SearchEntity.Sort.ASC)
+				.addSort("PRI_STATUS","Status",SearchEntity.Sort.ASC)
+				.addSort("PRI_NUM_JOURNALS","Journals",SearchEntity.Sort.DESC)
+				.addSort("PRI_START_DATE","Name",SearchEntity.Sort.ASC)
+				.addSort("PRI_ASSOC_EP","EP",SearchEntity.Sort.ASC)
+				.addSort("PRI_ADDRESS_STATE", "State",SearchEntity.Sort.ASC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
+				.addFilter("PRI_IS_INTERN", true)
+				.addColumn("PRI_NAME", "Name")
+				.addColumn("PRI_STATUS", "Status")
+				.addColumn("PRI_NUM_JOURNALS", "Journals")
+				.addColumn("PRI_START_DATE", "Start Date")
+				.addColumn("PRI_ASSOC_EP", "Education Provider")
+				.addColumn("PRI_PHONE", "Phone")
+				.addColumn("PRI_EMAIL", "Email")
+				.addColumn("PRI_ADDRESS_SUBURB", "Suburb")
+				.addColumn("PRI_ADDRESS_STATE", "State")
+				.addColumn("PRI_IMAGE_URL", "Logo")
+				
+				/* Table actions */
+				.addAction("PRI_EVENT_VIEW", "View")
+				.addAction("PRI_EVENT_JOURNAL_VIEW", "Journal")
+				.addAction("PRI_EVENT_APPLY", "Apply to an Internship")
+				.setPageStart(0).setPageSize(GennySettings.defaultPageSize);
+		
+			
+		Tuple2<String, List<String>> hql = beUtils.getHql(searchBE);
+		System.out.println("HQL="+hql._1);
+	}
+	
+	@Test
 	public void testPhoneNumber() {
 		processPhoneNumber("0434321232");
 		processPhoneNumber("61434321232");
