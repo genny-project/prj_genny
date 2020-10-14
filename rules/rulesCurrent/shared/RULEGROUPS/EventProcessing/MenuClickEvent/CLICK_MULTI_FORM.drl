@@ -44,6 +44,9 @@ rule "CLICK_MULTI_FORM"
 						String hcCode = HCRBe.getValue("LNK_HOST_COMPANY",null);
 						System.out.println("hcCode: " + hcCode);
 						
+						hcCode = hcCode.replace("\"", "").replace("[", "").replace("]", "");
+						System.out.println("hcCode = " +hcCode);	
+							
 						if(hcCode != null) { 
 								output.setTargetCode(hcCode);
 								SessionFacts facts = new SessionFacts(serviceToken, userToken, output.getTargetCode());	
