@@ -161,7 +161,7 @@ rule "IS_INTERN"
 
 	
 		/*String user_email = user.getValue("PRI_EMAIL",null);*/
-		String user_email = "c.pyke85@gmail.com";
+		String user_email = "notifications@internmatch.io";
 		String subject = "You have been registered on InternMatch";
 		String template_id = "d-94f647d38d7745a1b925300df2208279";
 		String hardcodedTemplateData1 = "intern";
