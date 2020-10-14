@@ -6233,7 +6233,8 @@ public class AdamTest {
 		// log.info("Insert fact "+obj+" in rules engine");
 	}
 
-	public void appImageSecFix() {
+	@Test
+	public void testAppImageSecFix() {
 		System.out.println("App image secondary test");
 		GennyToken userToken = null;
 		GennyToken serviceToken = null;
@@ -6283,14 +6284,16 @@ public class AdamTest {
 			// fetch host company from internship
 			try {
 				String cpyCode = is.getValueAsString("LNK_HOST_COMPANY");
-				cpyCode = cpyCode.replace("\"", "").replace("[", "").replace("]", "");
-	
+
 				if (cpyCode != null) {
+					cpyCode = cpyCode.replace("\"", "").replace("[", "").replace("]", "");
 					// cpyCode = cpyCode.substring(2,cpyCode.length()-2);
 					System.out.println("Company code :" + cpyCode);
 					
 					/* get cpy be */
 					BaseEntity cpy = beUtils.getBaseEntityByCode(cpyCode);
+					if (cpy == null)
+						continue;;
 					/* get cpy's image */
 					String imageUrl = cpy.getValue("PRI_IMAGE_URL", null);
 	
