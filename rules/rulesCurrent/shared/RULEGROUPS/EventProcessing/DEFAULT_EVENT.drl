@@ -10,14 +10,13 @@ rule "DEFAULT_EVENT"
     ruleflow-group 'EventProcessing'
     no-loop
     salience -10000
-    when
+    when 
 		$message : QEventMessage( (data.code != "QUE_LOGOUT") && (data.code != "LOGOUT"))
 		userToken : GennyToken (code != "PER_SERVICE" )
 		output : OutputParam( )
-		ruleDetails : RuleDetails()
+		ruleDetails : RuleDetails()   
     then
-	
 		System.out.println( ruleDetails + " " + drools.getRule().getName() + " Processing DEFAULT : " + $message );
-		retract($message);
-
+		retract($message); 
+              
 end
