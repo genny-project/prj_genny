@@ -40,6 +40,12 @@
   <bpmn2:itemDefinition id="ItemDefinition_40" isCollection="false" structureRef="life.genny.utils.TableUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_73" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_74" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_110" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_119" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_129" isCollection="false" structureRef="java.lang.Boolean"/>
+  <bpmn2:itemDefinition id="ItemDefinition_536" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_603" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_604" isCollection="false" structureRef="Object"/>
   <bpmn2:signal id="Signal_1" name="createBE"/>
   <bpmn2:signal id="Signal_2" name="makeBe"/>
   <bpmn2:signal id="Signal_3" name="START_INTERN"/>
@@ -88,6 +94,7 @@
     <bpmn2:property id="intOccupation" itemSubjectRef="ItemDefinition_9" name="intOccupation"/>
     <bpmn2:property id="intOccupationBe" itemSubjectRef="ItemDefinition_1076" name="intOccupationBe"/>
     <bpmn2:property id="processVar1" name="processVar1"/>
+    <bpmn2:property id="isLive" itemSubjectRef="ItemDefinition_129" name="isLive"/>
     <bpmn2:subProcess id="SubProcess_1" name="Intern Builder">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -162,6 +169,8 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
 Answer answer = new Answer(userToken.getUserCode(),  newBe.getCode() , &quot;PRI_STATUS&quot;, pending);
 beUtils.saveAnswer(answer);
 
+kcontext.setVariable(&quot;isLive&quot;, TRUE);
+
 String templateCode = baseEntityType + &quot;_TEMPLATE&quot;;
 TableUtils.searchTable(beUtils, templateCode, true);
 </bpmn2:script>
@@ -188,7 +197,7 @@ TableUtils.searchTable(beUtils, templateCode, true);
           <bpmn2:dataInput id="DataInput_1" itemSubjectRef="ItemDefinition_1076" name="baseEntityTarget"/>
           <bpmn2:dataInput id="DataInput_3" itemSubjectRef="ItemDefinition_1076" name="targetCode"/>
           <bpmn2:dataInput id="DataInput_15" itemSubjectRef="ItemDefinition_11" name="formCode"/>
-          <bpmn2:dataInput id="DataInput_2" itemSubjectRef="ItemDefinition_73" name="liveQuestions"/>
+          <bpmn2:dataInput id="DataInput_2" itemSubjectRef="ItemDefinition_129" name="liveQuestions"/>
           <bpmn2:dataOutput id="DataOutput_3" itemSubjectRef="ItemDefinition_2578" name="results"/>
           <bpmn2:dataOutput id="DataOutput_2" itemSubjectRef="ItemDefinition_2578" name="Result"/>
           <bpmn2:inputSet id="_InputSet_44">
@@ -234,11 +243,8 @@ TableUtils.searchTable(beUtils, templateCode, true);
           <bpmn2:targetRef>DataInput_15</bpmn2:targetRef>
         </bpmn2:dataInputAssociation>
         <bpmn2:dataInputAssociation id="DataInputAssociation_4">
+          <bpmn2:sourceRef>isLive</bpmn2:sourceRef>
           <bpmn2:targetRef>DataInput_2</bpmn2:targetRef>
-          <bpmn2:assignment id="Assignment_3">
-            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_9">TRUE</bpmn2:from>
-            <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_7">DataInput_2</bpmn2:to>
-          </bpmn2:assignment>
         </bpmn2:dataInputAssociation>
         <bpmn2:dataOutputAssociation id="DataOutputAssociation_2">
           <bpmn2:sourceRef>DataOutput_3</bpmn2:sourceRef>
