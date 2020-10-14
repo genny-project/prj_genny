@@ -6232,4 +6232,91 @@ public class AdamTest {
 	private void insert(Object obj) {
 		// log.info("Insert fact "+obj+" in rules engine");
 	}
+
+	public void appImageSecFix() {
+		System.out.println("App image secondary test");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+	
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+	
+		} else {
+			// VertxUtils.cachedEnabled = false;
+			VertxUtils.cachedEnabled = false;
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+			eventBusMock = new EventBusMock();
+			vertxCache = new JunitCache(); // MockCache
+			VertxUtils.init(eventBusMock, vertxCache);
+		}
+	
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		beUtils.setServiceToken(serviceToken);
+	
+		/* get all the apps with LNK_HOST_COMPANY attribute */
+		SearchEntity searchBE = new SearchEntity("SBE_INTERNSHIP_IMAGE_FIX", "Update")
+				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+				.addColumn("PRI_CODE", "Name")
+				.addColumn("LNK_HOST_COMPANY", "Host Company")
+				.setPageStart(0).setPageSize(100000);
+	
+		searchBE.setRealm(serviceToken.getRealm());
+	
+		System.out.println("About to search for apps");
+		List<BaseEntity> apps = beUtils.getBaseEntitys(searchBE);
+	
+		System.out.println("Number of apps = " + apps.size());
+	
+		for (BaseEntity app : apps) {
+	
+			BaseEntity is = beUtils.getBaseEntityByCode(app.getCode());
+			// fetch host company from internship
+			try {
+				String cpyCode = is.getValueAsString("LNK_HOST_COMPANY");
+				cpyCode = cpyCode.replace("\"", "").replace("[", "").replace("]", "");
+	
+				if (cpyCode != null) {
+					// cpyCode = cpyCode.substring(2,cpyCode.length()-2);
+					System.out.println("Company code :" + cpyCode);
+					
+					/* get cpy be */
+					BaseEntity cpy = beUtils.getBaseEntityByCode(cpyCode);
+					/* get cpy's image */
+					String imageUrl = cpy.getValue("PRI_IMAGE_URL", null);
+	
+					if (!StringUtils.isBlank(imageUrl)) {
+						beUtils.saveAnswer(new Answer(is.getCode(), is.getCode(), "PRI_IMAGE_SECONDARY", imageUrl));
+					}else {
+						beUtils.saveAnswer(new Answer(is.getCode(), is.getCode(), "PRI_IMAGE_SECONDARY", ""));
+					}
+					// else {
+					// 	imageUrl = cpy.getValue("PRI_USER_PROFILE_PICTURE", null);
+					// 	if (!StringUtils.isBlank(imageUrl)) {
+					// 		beUtils.saveAnswer(new Answer(is.getCode(), is.getCode(), "PRI_IMAGE_URL", imageUrl));
+					// 		beUtils.saveAnswer(
+					// 				new Answer(cpy.getCode(), cpy.getCode(), "PRI_IMAGE_URL", imageUrl));
+					// 	}
+					// }
+				} else {
+					System.out.println(app.getCode() + " has NO LNK_HOST_COMPANY");
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	
+	}
+	
+	
 }
