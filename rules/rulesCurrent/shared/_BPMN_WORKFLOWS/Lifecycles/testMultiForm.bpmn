@@ -141,33 +141,21 @@ System.out.println(&quot;serviceToken: &quot; +serviceToken.getCode());
 
 BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 
-/*
-OutputParam sauce = (OutputParam)sessionFacts.getMessage();
-String source = sauce.getAskSourceCode();
-kcontext.setVariable(&quot;source&quot;, source);
-System.out.println(&quot;source: &quot; + source);
-
-sourceBe = beUtils. getBaseEntityByCode(source);
-kcontext.setVariable(&quot;sourceBe&quot;, sourceBe);
-System.out.println(&quot;sourceBe: &quot; + sourceBe);
-*/
-
-
-uuid = KeycloakUtils.createDummyUser(serviceToken.getToken(), serviceToken.getRealm());
-kcontext.setVariable(&quot;uuid&quot;, uuid);
-System.out.println(&quot;internWF: uuid = &quot; + uuid);
-
-String newCode = &quot;DOC_&quot;+uuid;
-newCode = newCode.toUpperCase();
-newBe = beUtils.create(newCode, newCode);
-kcontext.setVariable(&quot;newBe&quot;, newBe);
-System.out.println(&quot;newBe = &quot; + newBe);
-System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);
-
 
 OutputParam data = (OutputParam)sessionFacts.getMessage();
-String type = data.getSuitCase();
+String codes = data.getTargetCode();
+kcontext.setVariable(&quot;codes&quot;, codes);
+System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ codes: &quot; + codes);
+
+newBe = beUtils. getBaseEntityByCode(codes);
+kcontext.setVariable(&quot;newBe&quot;, newBe);
+System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ newBe: &quot; + newBe);
+
+
+OutputParam dataa = (OutputParam)sessionFacts.getMessage();
+String type = dataa.getSuitCase();
 System.out.println(&quot;type: &quot; + type);
+
 
 if (type != null) {
 		if (type.equals(&quot;HC_VALIDATION&quot;)) {
@@ -176,6 +164,8 @@ if (type != null) {
 				typeOf = &quot;HOST_CPY_VAL_HOST_CPY&quot;;
 				kcontext.setVariable(&quot;typeOf&quot;, typeOf);
 				System.out.println(&quot;typeOf: &quot; + typeOf);
+
+					
 
 		}
 
