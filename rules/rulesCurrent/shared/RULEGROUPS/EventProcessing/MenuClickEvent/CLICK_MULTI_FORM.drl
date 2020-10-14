@@ -17,7 +17,8 @@ rule "CLICK_MULTI_FORM"
 		salience 1000
     no-loop
     when
-		$message : QEventMessage(data.code == "ACT_PRI_EVENT_HC_VALIDATION" || data.code == "ACT_PRI_EVENT_OHS")
+		/*$message : QEventMessage(data.code == "ACT_PRI_EVENT_HC_VALIDATION" || data.code == "ACT_PRI_EVENT_OHS")*/
+		$message : QEventMessage(data.code == "ACT_PRI_EVENT_HC_VALIDATION")
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam()
@@ -29,20 +30,48 @@ rule "CLICK_MULTI_FORM"
 		
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
 		
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+		
 		String user = userToken.getUserCode();
 		System.out.println("user: " + user);
 		output.setAskSourceCode(user);
 		
-		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+		if(user != null) {
+				BaseEntity HCRBe = beUtils.getBaseEntityByCode(user);
+				System.out.println("HCRBe = " + HCRBe);
+				
+				if(HCRBe != null) {
+						String hcCode = HCRBe.getValue("LNK_HOST_COMPANY",null);
+						System.out.println("hcCode: " + hcCode);
+						
+						if(hcCode != null) { 
+								output.setTargetCode(hcCode);
+								SessionFacts facts = new SessionFacts(serviceToken, userToken, output.getTargetCode());	
+						} else {
+							System.out.println("ERROR: Null HCRBe");
+						}
+				} else {
+					System.out.println("ERROR: Null HCRBe");
+				}
+		} else {
+			System.out.println("ERROR: Null userToken.getUserCode()");
+		}
 		
-		String code = $message.getData().getCode();
-		code = code.replace("ACT_PRI_EVENT_","");
 		
+		
+		String key = $message.getData().getCode();		
+		System.out.println("key: " +key);
+		
+		key = key.replace("ACT_PRI_EVENT_","");		
+		System.out.println("key: " +key);
+		
+		
+	
 		String workflowSignalCode = "MULTI_FORM";
 
 		output.setTypeOfResult("SIGNAL");
 		output.setResultCode("START_"+workflowSignalCode);
-		output.setSuitCase(code);
+		output.setSuitCase(key);
 
 	
 		System.out.println("START SIGNAL: " +workflowSignalCode);
