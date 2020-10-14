@@ -1,23 +1,72 @@
 package life.genny.rules;
 
-import life.genny.qwanda.message.QEventBtnClickMessage;
+import org.apache.commons.lang3.StringUtils;
+
+import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.models.GennyToken;
-import life.genny.utils.VertxUtils;
+import life.genny.rules.QRules;
+import life.genny.utils.BaseEntityUtils;
+import life.genny.qwanda.Answer;
 import io.vertx.core.json.JsonObject;
+import java.util.Map;
+import java.util.HashMap;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import com.google.gson.reflect.TypeToken;
+import life.genny.qwandautils.JsonUtils;
+import life.genny.utils.VertxUtils;
+import life.genny.utils.TableUtils;
+import life.genny.models.TableData;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.entity.SearchEntity;
+import life.genny.qwanda.Ask;
+import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.utils.OutputParam;
+import life.genny.jbpm.customworkitemhandlers.ShowFrame;
+
+import java.util.List;
+import java.util.ArrayList;
+
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import life.genny.utils.SearchCallable;
+import life.genny.utils.TableFrameCallable;
+import life.genny.utils.CacheSearchUtils;
 
 rule "TREE_ITEM_CLICK_EVENT"
     ruleflow-group 'EventProcessing'
 		salience 2
     no-loop
     when
-		$message : QEventMessage(data.code matches "QUE_.*" && (data.parentCode == "QUE_DASHBOARD_VIEW" || data.parentCode == "QUE_TAB_VIEW"))
-		output : OutputParam( )
-		ruleDetails : RuleDetails()
+			message : QEventMessage(data.code matches "QUE_TREE_ITEM_.*" )
+			userToken : GennyToken (code != "PER_SERVICE" )
+			serviceToken : GennyToken( code == "PER_SERVICE")
+			output : OutputParam( )
+			ruleDetails : RuleDetails()
+			beUtils : BaseEntityUtils()
     then
-		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
-		System.out.println("Parent code :  " + $message.getData().getParentCode());
-		output.setFormCode("FRM_"+ $message.getData().getCode(),"FRM_CONTENT");
-		retract( $message);
-		
-	end
+			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processings : " + message );
+
+			Boolean cache = true;
+
+			String code = message.getData().getCode();
+			code = StringUtils.removeStart(code, "QUE_TREE_ITEM_");
+			code = StringUtils.removeEnd(code, "_GRP");
+			System.out.println("CODE   ::   " + code);
+
+			long totalTime = TableUtils.searchTable(beUtils,code, cache);
+			System.out.println("total took " + (totalTime) + " ms"); 
+
+			retract(message);
+			output.setTypeOfResult("NONE");
+			output.setResultCode("NONE");  /* dont display anything new */
+		end
