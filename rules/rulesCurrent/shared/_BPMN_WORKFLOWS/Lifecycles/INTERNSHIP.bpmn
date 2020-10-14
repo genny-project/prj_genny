@@ -53,6 +53,9 @@
   <bpmn2:itemDefinition id="ItemDefinition_266" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_267" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_268" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_294" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_295" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_296" isCollection="false" structureRef="Object"/>
   <bpmn2:signal id="Signal_1" name="createBE"/>
   <bpmn2:signal id="Signal_2" name="makeBe"/>
   <bpmn2:signal id="Signal_3" name="START_INTERNSHIP"/>
@@ -312,8 +315,11 @@ kcontext.setVariable(&quot;isLive&quot;, true);</bpmn2:script>
           <bpmn2:targetRef>DataInput_1</bpmn2:targetRef>
         </bpmn2:dataInputAssociation>
         <bpmn2:dataInputAssociation id="DataInputAssociation_2">
-          <bpmn2:sourceRef>isLive</bpmn2:sourceRef>
           <bpmn2:targetRef>DataInput_11</bpmn2:targetRef>
+          <bpmn2:assignment id="Assignment_8">
+            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_20">Boolean.TRUE</bpmn2:from>
+            <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_17">DataInput_11</bpmn2:to>
+          </bpmn2:assignment>
         </bpmn2:dataInputAssociation>
         <bpmn2:dataOutputAssociation id="_DataOutputAssociation_4">
           <bpmn2:sourceRef>DataOutput_2</bpmn2:sourceRef>
