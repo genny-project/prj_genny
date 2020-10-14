@@ -169,7 +169,7 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
 Answer answer = new Answer(userToken.getUserCode(),  newBe.getCode() , &quot;PRI_STATUS&quot;, pending);
 beUtils.saveAnswer(answer);
 
-kcontext.setVariable(&quot;isLive&quot;, TRUE);
+kcontext.setVariable(&quot;isLive&quot;, true);
 
 String templateCode = baseEntityType + &quot;_TEMPLATE&quot;;
 TableUtils.searchTable(beUtils, templateCode, true);

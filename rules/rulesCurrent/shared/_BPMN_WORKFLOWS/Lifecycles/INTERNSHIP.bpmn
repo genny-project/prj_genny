@@ -174,7 +174,7 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
 Answer answer = new Answer(userToken.getUserCode(),  newBe.getCode() , &quot;PRI_STATUS&quot;, pending);
 beUtils.saveAnswer(answer);
 
-kcontext.setVariable(&quot;isLive&quot;, TRUE);</bpmn2:script>
+kcontext.setVariable(&quot;isLive&quot;, true);</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_2" drools:priority="1" sourceRef="StartEvent_1" targetRef="ScriptTask_1"/>
       <bpmn2:task id="Task_1" drools:taskName="RuleFlowGroup" drools:displayName="RunRuleFlowGroup" drools:icon="icons/icon-info.gif" name="RunRuleFlowGroup">
