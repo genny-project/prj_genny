@@ -59,6 +59,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_302" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_303" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_304" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_351" isCollection="false" structureRef="life.genny.utils.TableUtils"/>
   <bpmn2:signal id="Signal_1" name="createBE"/>
   <bpmn2:signal id="Signal_2" name="makeBe"/>
   <bpmn2:signal id="Signal_3" name="START_INTERNSHIP"/>
@@ -84,6 +85,7 @@
       <drools:import name="java.time.LocalDateTime"/>
       <drools:import name="life.genny.qwanda.Answer"/>
       <drools:import name="java.time.LocalDate"/>
+      <drools:import name="life.genny.utils.TableUtils"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_556" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_556" name="serviceToken"/>
@@ -116,6 +118,7 @@
     <bpmn2:property id="jsonArrayWhichDaysLength" itemSubjectRef="ItemDefinition_1209" name="jsonArrayWhichDaysLength"/>
     <bpmn2:property id="beUtils" itemSubjectRef="ItemDefinition_1926" name="beUtils"/>
     <bpmn2:property id="isLive" itemSubjectRef="ItemDefinition_78" name="isLive"/>
+    <bpmn2:property id="processVar1" name="processVar1"/>
     <bpmn2:subProcess id="SubProcess_1" name="Internship Builder">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -189,7 +192,11 @@ System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;
 Answer answer = new Answer(userToken.getUserCode(),  newBe.getCode() , &quot;PRI_STATUS&quot;, pending);
 beUtils.saveAnswer(answer);
 
-kcontext.setVariable(&quot;isLive&quot;, true);</bpmn2:script>
+kcontext.setVariable(&quot;isLive&quot;, true);
+
+String templateCode = &quot;TEMPLATE_&quot; + baseEntityType;
+TableUtils.searchTable(beUtils, templateCode, true);
+</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_2" drools:priority="1" sourceRef="StartEvent_1" targetRef="ScriptTask_1"/>
       <bpmn2:task id="Task_1" drools:taskName="RuleFlowGroup" drools:displayName="RunRuleFlowGroup" drools:icon="icons/icon-info.gif" name="RunRuleFlowGroup">
