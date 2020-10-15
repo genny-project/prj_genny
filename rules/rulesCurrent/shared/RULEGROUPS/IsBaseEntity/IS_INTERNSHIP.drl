@@ -32,22 +32,13 @@ rule "IS_INTERNSHIP"
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
  		
  		/* Construct answer with Source, Target, Attribute Code, Value */
- 		Answer answer = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_INTERNSHIP", "true");
- 		beUtils.saveAnswer(answer);
  		
- 		answer = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE");
- 		beUtils.saveAnswer(answer);
- 		
- 		
- 		answer = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_FULL", "false");
- 		beUtils.saveAnswer(answer);
- 		
- 		answer = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_CURRENT_INTERNS", "0");
- 		beUtils.saveAnswer(answer);
-
-		System.out.println("IS_INTERNSHIP: Answer = " + answer); 
+ 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_INTERNSHIP", "true"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_FULL", "false"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_CURRENT_INTERNS", "0"));
 		
-		
+ 				
 		/* Refresh the BaseEntity because reasons... */
  		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
  		
@@ -65,8 +56,8 @@ rule "IS_INTERNSHIP"
  						System.out.println("imageHC = " + imageHC);
  						
  						if(imageHC != null) {
- 								answer = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IMAGE_URL", imageHC);
- 								beUtils.saveAnswer(answer);
+ 								beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IMAGE_URL", imageHC));
+ 								
  						} else {
 							System.out.println("ERROR: Null imageHC"); 
 						}

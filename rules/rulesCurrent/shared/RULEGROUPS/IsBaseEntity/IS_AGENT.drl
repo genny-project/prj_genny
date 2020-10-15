@@ -28,17 +28,10 @@ rule "IS_AGENT"
  		System.out.println("IS_AGENT: newBe = " + newBe.getCode()); 
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
- 		Answer answer = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_AGENT", "true");
- 		Answer answer2 = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE");
-		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
- 		beUtils.saveAnswer(answer);
- 		beUtils.saveAnswer(answer2);
-
-		System.out.println("IS_AGENT: Answer = " + answer); 
-		
-		
-		
-		
+ 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+ 		
+ 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_AGENT", "true"));
+ 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
 		
 		/* Set up in Keycloak */
 		

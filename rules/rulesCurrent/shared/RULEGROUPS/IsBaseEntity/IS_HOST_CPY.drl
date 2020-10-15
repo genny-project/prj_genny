@@ -28,15 +28,12 @@ rule "IS_HOST_CPY"
  		System.out.println("IS_HOST_CPY: newBe = " + newBe.getCode()); 
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
- 		Answer answer = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_HOST_CPY", "true");
- 		Answer answer2 = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE");
-		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
- 		beUtils.saveAnswer(answer);
- 		beUtils.saveAnswer(answer2);
-
-		System.out.println("IS_HOST_CPY: Answer = " + answer); 
-		System.out.println("IS_HOST_CPY: Answer = " + answer2); 
-		
+ 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+ 		
+ 	 	beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_HOST_CPY", "true"));	
+ 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
+ 		
+ 		
 		
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
 		String name = user.getValue("PRI_NAME",null);
