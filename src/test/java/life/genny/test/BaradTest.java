@@ -259,6 +259,14 @@ public class AdamTest {
 	}
 	
 	@Test
+	public void approveAllJournals() {
+		String encodedsql = encodeValue("update baseentity_attribute set valueString='APPROVED' where attributeCode='PRI_STATUS' and baseentitycode like 'JNL_%' and valueString = 'UNAPPROVED'");
+        String resultJson = QwandaUtils.apiGet(
+        GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql,
+		serviceToken.getToken());
+	}
+
+	@Test
 	public void testPhoneNumber() {
 		processPhoneNumber("0434321232");
 		processPhoneNumber("61434321232");
