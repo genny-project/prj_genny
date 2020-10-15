@@ -80,6 +80,8 @@ rule "HELPER_LNK_OCCUPATION"
 		Answer assocOccupationAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_OCCUPATION", occupations,false,true);
 		answersToSave.add(assocOccupationAnswer);
 
+		VertxUtils.sendToFrontEnd(userToken, assocOccupationAnswer);
+
 	/*	update(answersToSave);*/
 
 		/* Retract the answer message so the rule doesn't fire again */

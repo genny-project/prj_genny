@@ -26,12 +26,13 @@ import life.genny.utils.DropdownUtils;
 import java.util.List;
 import java.util.ArrayList;
 
-rule "HELPER_LNK_NO_OF_INTERNS"
+rule "HELPER_LNK_TRANSPORT"
 	ruleflow-group 'DataProcessing'
 			salience 5000
+			no-loop
 	when
 		beUtils : BaseEntityUtils()
-		answer : Answer( attributeCode == "LNK_NO_OF_INTERNS")
+		answer : Answer( attributeCode == "LNK_TRANSPORT" )
 		answersToSave : Answers()
 		ruleDetails : RuleDetails()
 		output : OutputParam( )
@@ -39,45 +40,46 @@ rule "HELPER_LNK_NO_OF_INTERNS"
 		userToken : GennyToken( code != "PER_SERVICE")
 
 	then
-		System.out.println("HELPER_LNK_NO_OF_INTERNS fired");
-		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing Helper NO OF INTERNS SELECTION Answer/Data : " + answer );
-		
+		System.out.println(drools.getRule().getName() + " fired");
+
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		System.out.println("sourceCode :: " + sourceCode);
 		
 		String targetCode = answer.getTargetCode();
 		System.out.println("targetCode :: " + targetCode);
 		
-		String value = answer.getValue();
-		System.out.println("hcCode :: " + value);
+		String transportCode = answer.getValue();
+		System.out.println("transportCode :: " + transportCode);
 		
-		String code = value.replace("\"", "").replace("[", "").replace("]", "");
-		System.out.println("code  :: " + code);
+		if(transportCode != null){
 
-		/* Save the actual LNK_NO_OF_INTERNS answer */
-		answersToSave.add(answer);
+			String code = transportCode.replace("\"", "").replace("[", "").replace("]", "");
+			System.out.println("code  :: " + code);
 
-		/* get the numberOfInterns baseentity */
-		BaseEntity be = beUtils.getBaseEntityByCode(code);
-		
-		if(be !=null){
-			
-			/* get the name attribute of the numberOfInterns */
-			String name = be.getValue("PRI_NAME", null);		
+			/* Save the actual LNK_TRANSPORT answer */
+			answersToSave.add(answer);
 
-			/* save the numberOfInterns' name as PRI_ASSOC_HCR attribute for the current target baseentity in the form */
-			Answer assocNumberOfInternsAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_NUM_INTERNS", name);
-			answersToSave.add(assocNumberOfInternsAnswer);
-			VertxUtils.sendToFrontEnd(userToken, assocNumberOfInternsAnswer);
+			/* get the company baseentity */
+			BaseEntity associatedBe = beUtils.getBaseEntityByCode(code);
 
+			if(associatedBe != null ){
+				/* get the name attribute of the company */
+				String name = associatedBe.getValue("PRI_NAME", null);		
+
+				if(name != null){
+					/* save the company's name as PRI_ASSOC_EP attribute for application baseentity */
+					Answer assocAnswer = new Answer(sourceCode, targetCode, "PRI_TRANSPORT", name,false,true);
+					answersToSave.add(assocAnswer);
+					
+					VertxUtils.sendToFrontEnd(userToken, assocAnswer);
+				}
+			}
 		}
-		
-		update(answersToSave);
-
-		/* Retract the answer message so the rule doesn't fire again */
-		retract(answer);
+ 		
+ 	/*	update(answersToSave);	
+		retract(answer); */
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
-		update(output);
+		/* update(output); */
 end

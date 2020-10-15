@@ -188,6 +188,8 @@ public class AdamTest {
 	protected static GennyToken serviceToken;
 
 	@Test
+
+	@Test
 	public void testPhoneNumber() {
 		processPhoneNumber("0434321232");
 		processPhoneNumber("61434321232");
@@ -638,6 +640,7 @@ public class AdamTest {
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%").addColumn("PRI_CODE", "Name")
 				.addColumn("LNK_HOST_COMPANY", "Host Company").setPageStart(0).setPageSize(100000);
+
 
 		searchBE.setRealm(serviceToken.getRealm());
 
