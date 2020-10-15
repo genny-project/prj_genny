@@ -66,6 +66,7 @@ rule "HELPER_LNK_EDU_PROVIDER"
 
 		/* save the company's name as PRI_ASSOC_EP attribute for application baseentity */
 		Answer assocEPAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_EP", name,false,true);
+		VertxUtils.sendToFrontEnd(userToken, assocEPAnswer);
  		
  		answersToSave.add(assocEPAnswer);
  		
