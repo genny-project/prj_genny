@@ -56,12 +56,10 @@ rule "PRI_LASTNAME"
 		Answer answerInitials = new Answer(sourceCode,targetCode,"PRI_INITIALS",initials);
  		beUtils.saveAnswer(answerInitials);
 
-		
+		VertxUtils.sendToFrontEnd(userToken, answerName);
 			
 		output.setTypeOfResult("NONE");
-  	    output.setResultCode("NONE");  /* dont display anything new */
-		
-		
+		output.setResultCode("NONE");  /* dont display anything new */
 
 		retract(answer);
 		update(answersToSave);
