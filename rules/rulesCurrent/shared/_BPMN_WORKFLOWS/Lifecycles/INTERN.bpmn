@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.1.Final-v20190425-2005-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.4.3.Final-v20180418-1358-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
   <bpmn2:itemDefinition id="ItemDefinition_9" isCollection="false" structureRef="java.lang.String"/>
   <bpmn2:itemDefinition id="ItemDefinition_556" isCollection="false" structureRef="life.genny.models.GennyToken"/>
   <bpmn2:itemDefinition id="ItemDefinition_576" isCollection="false" structureRef="life.genny.utils.CallingProcessToken"/>
@@ -37,6 +37,19 @@
   <bpmn2:itemDefinition id="ItemDefinition_7" isCollection="false" structureRef="life.genny.qwanda.Answer"/>
   <bpmn2:itemDefinition id="ItemDefinition_11" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_8" isCollection="false" structureRef="life.genny.qwandautils.KeycloakUtils"/>
+  <bpmn2:itemDefinition id="ItemDefinition_40" isCollection="false" structureRef="life.genny.utils.TableUtils"/>
+  <bpmn2:itemDefinition id="ItemDefinition_73" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_74" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_110" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_119" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_129" isCollection="false" structureRef="java.lang.Boolean"/>
+  <bpmn2:itemDefinition id="ItemDefinition_536" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_603" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_604" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_612" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_613" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_621" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_622" isCollection="false" structureRef="Object"/>
   <bpmn2:signal id="Signal_1" name="createBE"/>
   <bpmn2:signal id="Signal_2" name="makeBe"/>
   <bpmn2:signal id="Signal_3" name="START_INTERN"/>
@@ -62,6 +75,7 @@
       <drools:import name="life.genny.qwandautils.JsonUtils"/>
       <drools:import name="life.genny.qwanda.Answer"/>
       <drools:import name="life.genny.qwandautils.KeycloakUtils"/>
+      <drools:import name="life.genny.utils.TableUtils"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_556" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_556" name="serviceToken"/>
@@ -83,6 +97,8 @@
     <bpmn2:property id="intIndustryBe" itemSubjectRef="ItemDefinition_1076" name="intIndustryBe"/>
     <bpmn2:property id="intOccupation" itemSubjectRef="ItemDefinition_9" name="intOccupation"/>
     <bpmn2:property id="intOccupationBe" itemSubjectRef="ItemDefinition_1076" name="intOccupationBe"/>
+    <bpmn2:property id="processVar1" name="processVar1"/>
+    <bpmn2:property id="isLive" itemSubjectRef="ItemDefinition_129" name="isLive"/>
     <bpmn2:subProcess id="SubProcess_1" name="Intern Builder">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -155,7 +171,13 @@ System.out.println(&quot;INTERN: newBe = &quot; + newBe);
 System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);
 
 Answer answer = new Answer(userToken.getUserCode(),  newBe.getCode() , &quot;PRI_STATUS&quot;, pending);
-beUtils.saveAnswer(answer);</bpmn2:script>
+beUtils.saveAnswer(answer);
+
+kcontext.setVariable(&quot;isLive&quot;, true);
+
+String templateCode = &quot;TEMPLATE_&quot; + baseEntityType;
+TableUtils.searchTable(beUtils, templateCode, true);
+</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_2" drools:priority="1" sourceRef="StartEvent_1" targetRef="ScriptTask_1"/>
       <bpmn2:task id="Task_2" drools:taskName="AskQuestionTask" drools:displayName="Ask Question Task" drools:icon="icons/icon-info.gif" name="QUE_INTERN_GRP">
@@ -179,6 +201,7 @@ beUtils.saveAnswer(answer);</bpmn2:script>
           <bpmn2:dataInput id="DataInput_1" itemSubjectRef="ItemDefinition_1076" name="baseEntityTarget"/>
           <bpmn2:dataInput id="DataInput_3" itemSubjectRef="ItemDefinition_1076" name="targetCode"/>
           <bpmn2:dataInput id="DataInput_15" itemSubjectRef="ItemDefinition_11" name="formCode"/>
+          <bpmn2:dataInput id="DataInput_2" itemSubjectRef="ItemDefinition_129" name="liveQuestions"/>
           <bpmn2:dataOutput id="DataOutput_3" itemSubjectRef="ItemDefinition_2578" name="results"/>
           <bpmn2:dataOutput id="DataOutput_2" itemSubjectRef="ItemDefinition_2578" name="Result"/>
           <bpmn2:inputSet id="_InputSet_44">
@@ -188,6 +211,7 @@ beUtils.saveAnswer(answer);</bpmn2:script>
             <bpmn2:dataInputRefs>DataInput_1</bpmn2:dataInputRefs>
             <bpmn2:dataInputRefs>DataInput_3</bpmn2:dataInputRefs>
             <bpmn2:dataInputRefs>DataInput_15</bpmn2:dataInputRefs>
+            <bpmn2:dataInputRefs>DataInput_2</bpmn2:dataInputRefs>
           </bpmn2:inputSet>
           <bpmn2:outputSet id="_OutputSet_4">
             <bpmn2:dataOutputRefs>DataOutput_3</bpmn2:dataOutputRefs>
@@ -221,6 +245,10 @@ beUtils.saveAnswer(answer);</bpmn2:script>
         </bpmn2:dataInputAssociation>
         <bpmn2:dataInputAssociation id="DataInputAssociation_5">
           <bpmn2:targetRef>DataInput_15</bpmn2:targetRef>
+        </bpmn2:dataInputAssociation>
+        <bpmn2:dataInputAssociation id="DataInputAssociation_4">
+          <bpmn2:sourceRef>isLive</bpmn2:sourceRef>
+          <bpmn2:targetRef>DataInput_2</bpmn2:targetRef>
         </bpmn2:dataInputAssociation>
         <bpmn2:dataOutputAssociation id="DataOutputAssociation_2">
           <bpmn2:sourceRef>DataOutput_3</bpmn2:sourceRef>

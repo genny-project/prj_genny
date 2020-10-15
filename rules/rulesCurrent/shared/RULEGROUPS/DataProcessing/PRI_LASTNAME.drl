@@ -18,17 +18,17 @@ import java.util.List;
 import java.util.ArrayList;
 import org.apache.commons.lang3.StringUtils;
 
-
-
 rule "PRI_LASTNAME"
-    ruleflow-group 'DataProcessing'
-        salience 50 
-    when
-      beUtils : BaseEntityUtils()
+	ruleflow-group 'DataProcessing'
+	salience 50 
+	when
+		beUtils : BaseEntityUtils()
 	  answer : Answer( attributeCode == "PRI_LASTNAME" )
 	  answersToSave : Answers()
 	  output : OutputParam( )
-     then
+		userToken : GennyToken( code != "PER_SERVICE")
+
+	then
  		System.out.println("Rule -> PRI_LASTNAME :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		String targetCode = answer.getTargetCode();
@@ -56,12 +56,10 @@ rule "PRI_LASTNAME"
 		Answer answerInitials = new Answer(sourceCode,targetCode,"PRI_INITIALS",initials);
  		beUtils.saveAnswer(answerInitials);
 
-		
+		VertxUtils.sendToFrontEnd(userToken, answerName);
 			
 		output.setTypeOfResult("NONE");
-  	    output.setResultCode("NONE");  /* dont display anything new */
-		
-		
+		output.setResultCode("NONE");  /* dont display anything new */
 
 		retract(answer);
 		update(answersToSave);
