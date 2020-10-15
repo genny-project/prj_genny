@@ -31,7 +31,7 @@ rule "PRI_PHONE"
 		/* Parse json answer and save the individual answers */
 					
 			String phonenumber = answer.getValue();
-			/* convert to E64 */
+			/* convert to E164 */
 			
 			if (phonenumber != null) {
 				/* remove all non digits */
@@ -41,22 +41,63 @@ rule "PRI_PHONE"
 						phonenumber = "61"+phonenumber.substring(1); /* remove the 0  and assume Australian*/
 					}
 				}
-			}
-			System.out.println(ruleDetails+" "+drools.getRule().getName()+" RAw Phone number is "+answer.getValue()+" , fixed number is "+phonenumber);
-			answer.setValue(phonenumber);
-			answer.setChangeEvent(false); /* no attribute change */
-			answersToSave.add(answer);
-			
-			/* Now check if it is an Australian mobile */
-			if ((phonenumber.startsWith("614"))|| (phonenumber.startsWith("615"))) {
-				Answer mobile = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_MOBILE",phonenumber);
-				mobile.setChangeEvent(false); /* no attribute change */
-				answersToSave.add(mobile);
+				phonenumber = StringUtils.deleteWhitespace(phonenumber);
+				System.out.println(ruleDetails+" "+drools.getRule().getName()+" Raw Phone number is "+answer.getValue()+" , fixed number is "+phonenumber);
+				
+				
+				if (QwandaUtils.checkPhone(phonenumber)) {
+							/* Now check if it is an Australian mobile */
+					if ((phonenumber.startsWith("614"))|| (phonenumber.startsWith("615"))) {
+						Boolean inferred = !"PRI_MOBILE".equals(answer.getAttributeCode());
+						Answer mobile = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_MOBILE",phonenumber,false,inferred);
+						answersToSave.add(mobile);
+					} else {
+					
+					
+						/* Check if person is the target, in which case you want a mobile! */
+						if (targetCode.startsWith("PER_")) {
+							String message = "People require a mobile number! ! please replace with a mobile";
+							System.out.println(message);
+							Answer feedbackAnswer = new Answer(answer.getSourceCode(),answer.getTargetCode(),answer.getAttributeCode(),"");
+							VertxUtils.sendFeedbackError(beUtils.getGennyToken(),feedbackAnswer,message);
+							System.out.println("Sent error message back to frontend");		
+						
+						} else {
+							Boolean inferred = !"PRI_LANDLINE".equals(answer.getAttributeCode());
+							Answer landline = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_LANDLINE",phonenumber,false,inferred);
+							landline.setChangeEvent(false); /* no attribute change */
+							answersToSave.add(landline);	
+						}		
+					}
+				} else {
+					String message = "Phone number is invalid ! (check number of digits)";
+					System.out.println(message);
+					Answer feedbackAnswer = new Answer(answer.getSourceCode(),answer.getTargetCode(),answer.getAttributeCode(),"");
+					VertxUtils.sendFeedbackError(beUtils.getGennyToken(),feedbackAnswer,message);
+					System.out.println("Sent error message back to frontend");		
+				}
 			} else {
-				Answer landline = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_LANDLINE",phonenumber);
-				landline.setChangeEvent(false); /* no attribute change */
-				answersToSave.add(landline);
-			
+					String message = "Phone number is empty!";
+					System.out.println(message);
+					Answer feedbackAnswer = new Answer(answer.getSourceCode(),answer.getTargetCode(),answer.getAttributeCode(),"");
+					VertxUtils.sendFeedbackError(beUtils.getGennyToken(),feedbackAnswer,message);
+					System.out.println("Sent error message back to frontend");		
+			}
+		
+			if ("PRI_PHONE".equals(answer.getAttributeCode())) {
+				Answer phone = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_PHONE",phonenumber,false,false);
+				phone.setChangeEvent(false); /* no attribute change */
+				answersToSave.add(phone);				
+			} else {
+				BaseEntity be = beUtils.getBaseEntityByCode(answer.getTargetCode());
+				if (be != null) {
+					String pn = be.getValue("PRI_PHONE","");
+					if (StringUtils.isBlank(pn)) {
+						Answer phone = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_PHONE",phonenumber,false,true);
+						phone.setChangeEvent(false); /* no attribute change */
+						answersToSave.add(phone);									
+					}
+				}
 			}
 			
 			
