@@ -28,11 +28,11 @@ rule "IS_REF_PART"
  		System.out.println("IS_REF_PART: newBe = " + newBe.getCode()); 
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
- 		Answer answer = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_REF_PART", "true");
-		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
- 		beUtils.saveAnswer(answer);
-
-		System.out.println("IS_REF_PART: Answer = " + answer); 
+ 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+ 		
+ 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_REF_PART", "true"));
+ 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
+		
 		
 		
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
