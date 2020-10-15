@@ -175,7 +175,7 @@ beUtils.saveAnswer(answer);
 
 kcontext.setVariable(&quot;isLive&quot;, true);
 
-String templateCode = baseEntityType + &quot;_TEMPLATE&quot;;
+String templateCode = &quot;TEMPLATE_&quot; + baseEntityType;
 TableUtils.searchTable(beUtils, templateCode, true);
 </bpmn2:script>
       </bpmn2:scriptTask>
