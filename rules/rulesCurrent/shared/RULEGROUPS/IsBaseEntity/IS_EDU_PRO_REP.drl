@@ -30,11 +30,11 @@ rule "IS_EDU_PRO_REP"
  		System.out.println("IS_EDU_PRO_REP: newBe = " + newBe.getCode()); 
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
- 		Answer answer = new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_EDU_PRO_REP", "true");
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
- 		beUtils.saveAnswer(answer);
+		
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_EDU_PRO_REP", "true"));
+ 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
 
-		System.out.println("IS_EDU_PRO_REP: Answer = " + answer); 
 		
 		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
 		
