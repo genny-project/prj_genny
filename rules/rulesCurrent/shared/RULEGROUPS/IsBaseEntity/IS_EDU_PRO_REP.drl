@@ -31,7 +31,9 @@ rule "IS_EDU_PRO_REP"
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
- 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_EDU_PRO_REP", "true"));
+    
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_EDU_PRO_REP", "true"));
+ 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
 		
 		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
 		
