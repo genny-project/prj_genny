@@ -36,6 +36,7 @@ rule "IS_REF_PART_REP"
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
 		
 		
+		
 		/* Set up in Keycloak */
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
 		String userStr = newBe.getCode();

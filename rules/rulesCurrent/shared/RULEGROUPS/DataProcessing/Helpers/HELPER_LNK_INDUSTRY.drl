@@ -73,6 +73,8 @@ rule "HELPER_LNK_INDUSTRY"
 			Answer assocIndustryAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_INDUSTRY", name,false,true);
 			answersToSave.add(assocIndustryAnswer);
 
+			VertxUtils.sendToFrontEnd(userToken, assocIndustryAnswer);
+
 		}
 		
 		update(answersToSave);

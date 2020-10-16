@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 
 import java.util.List;
 import java.util.ArrayList;
+import org.json.JSONArray;
 
 rule "IS_INTERNSHIP"
     ruleflow-group 'IsBaseEntity'
@@ -68,8 +69,29 @@ rule "IS_INTERNSHIP"
 			System.out.println("ERROR: Null appHC"); 
 		}
 		
- 		
- 		
+
+		JSONArray jsonArrayWhichDays = new JSONArray(beUtils.getBaseEntityValue(newBe.getCode(), "LNK_WHICH_DAYS").toString());
+		
+		int jsonArrayWhichDaysLength = jsonArrayWhichDays.length();
+		System.out.println("jsonArrayWhichDaysLength: " + jsonArrayWhichDaysLength);
+
+		String whichDays = "";
+
+		for(int i=0; i<jsonArrayWhichDaysLength; i++) {
+		BaseEntity whichDaysEntity = beUtils.getBaseEntityByCode(jsonArrayWhichDays.get(i).toString());
+		System.out.println("whichDaysEntity: " + whichDaysEntity);
+						
+		if(i==0) {
+				whichDays = whichDaysEntity.getName();
+		} else {
+				whichDays = whichDays + ", " + whichDaysEntity.getName();
+		}
+		
+		System.out.println("whichDays: " + whichDays);
+		}
+		
+		Answer answerWhichDays = new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_WHICH_DAYS_STRIPPED", whichDays);
+		beUtils.saveAnswer(answerWhichDays);
 		
 	
 		
