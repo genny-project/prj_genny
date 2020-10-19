@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.4.3.Final-v20180418-1358-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.1.Final-v20190425-2005-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
   <bpmn2:itemDefinition id="ItemDefinition_9" isCollection="false" structureRef="java.lang.String"/>
   <bpmn2:itemDefinition id="ItemDefinition_556" isCollection="false" structureRef="life.genny.models.GennyToken"/>
   <bpmn2:itemDefinition id="ItemDefinition_576" isCollection="false" structureRef="life.genny.utils.CallingProcessToken"/>
@@ -50,6 +50,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_613" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_621" isCollection="false"/>
   <bpmn2:itemDefinition id="ItemDefinition_622" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_5" isCollection="false" structureRef="Object"/>
   <bpmn2:signal id="Signal_1" name="createBE"/>
   <bpmn2:signal id="Signal_2" name="makeBe"/>
   <bpmn2:signal id="Signal_3" name="START_INTERN"/>
@@ -202,6 +203,7 @@ TableUtils.searchTable(beUtils, templateCode, true);
           <bpmn2:dataInput id="DataInput_3" itemSubjectRef="ItemDefinition_1076" name="targetCode"/>
           <bpmn2:dataInput id="DataInput_15" itemSubjectRef="ItemDefinition_11" name="formCode"/>
           <bpmn2:dataInput id="DataInput_2" itemSubjectRef="ItemDefinition_129" name="liveQuestions"/>
+          <bpmn2:dataInput id="DataInput_4" itemSubjectRef="ItemDefinition_5" name="showInDrafts"/>
           <bpmn2:dataOutput id="DataOutput_3" itemSubjectRef="ItemDefinition_2578" name="results"/>
           <bpmn2:dataOutput id="DataOutput_2" itemSubjectRef="ItemDefinition_2578" name="Result"/>
           <bpmn2:inputSet id="_InputSet_44">
@@ -212,6 +214,7 @@ TableUtils.searchTable(beUtils, templateCode, true);
             <bpmn2:dataInputRefs>DataInput_3</bpmn2:dataInputRefs>
             <bpmn2:dataInputRefs>DataInput_15</bpmn2:dataInputRefs>
             <bpmn2:dataInputRefs>DataInput_2</bpmn2:dataInputRefs>
+            <bpmn2:dataInputRefs>DataInput_4</bpmn2:dataInputRefs>
           </bpmn2:inputSet>
           <bpmn2:outputSet id="_OutputSet_4">
             <bpmn2:dataOutputRefs>DataOutput_3</bpmn2:dataOutputRefs>
@@ -247,8 +250,18 @@ TableUtils.searchTable(beUtils, templateCode, true);
           <bpmn2:targetRef>DataInput_15</bpmn2:targetRef>
         </bpmn2:dataInputAssociation>
         <bpmn2:dataInputAssociation id="DataInputAssociation_4">
-          <bpmn2:sourceRef>isLive</bpmn2:sourceRef>
           <bpmn2:targetRef>DataInput_2</bpmn2:targetRef>
+          <bpmn2:assignment id="Assignment_2">
+            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_6">true</bpmn2:from>
+            <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_4">DataInput_2</bpmn2:to>
+          </bpmn2:assignment>
+        </bpmn2:dataInputAssociation>
+        <bpmn2:dataInputAssociation id="DataInputAssociation_2">
+          <bpmn2:targetRef>DataInput_4</bpmn2:targetRef>
+          <bpmn2:assignment id="Assignment_1">
+            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_3">true</bpmn2:from>
+            <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_1">DataInput_4</bpmn2:to>
+          </bpmn2:assignment>
         </bpmn2:dataInputAssociation>
         <bpmn2:dataOutputAssociation id="DataOutputAssociation_2">
           <bpmn2:sourceRef>DataOutput_3</bpmn2:sourceRef>

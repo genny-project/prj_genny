@@ -37,6 +37,8 @@
   <bpmn2:itemDefinition id="ItemDefinition_7" isCollection="false" structureRef="life.genny.qwanda.Answer"/>
   <bpmn2:itemDefinition id="ItemDefinition_11" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_8" isCollection="false" structureRef="life.genny.qwandautils.KeycloakUtils"/>
+  <bpmn2:itemDefinition id="ItemDefinition_5" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_10" isCollection="false" structureRef="Object"/>
   <bpmn2:signal id="Signal_1" name="createBE"/>
   <bpmn2:signal id="Signal_2" name="makeBe"/>
   <bpmn2:signal id="Signal_3" name="START_AGENCY"/>
@@ -181,6 +183,8 @@ r(answer);</bpmn2:script>
           <bpmn2:dataInput id="DataInput_1" itemSubjectRef="ItemDefinition_1076" name="baseEntityTarget"/>
           <bpmn2:dataInput id="DataInput_3" itemSubjectRef="ItemDefinition_1076" name="targetCode"/>
           <bpmn2:dataInput id="DataInput_15" itemSubjectRef="ItemDefinition_11" name="formCode"/>
+          <bpmn2:dataInput id="DataInput_2" itemSubjectRef="ItemDefinition_5" name="liveQuestions"/>
+          <bpmn2:dataInput id="DataInput_4" itemSubjectRef="ItemDefinition_10" name="showInDrafts"/>
           <bpmn2:dataOutput id="DataOutput_3" itemSubjectRef="ItemDefinition_2578" name="results"/>
           <bpmn2:dataOutput id="DataOutput_2" itemSubjectRef="ItemDefinition_2578" name="Result"/>
           <bpmn2:inputSet id="_InputSet_44">
@@ -190,6 +194,8 @@ r(answer);</bpmn2:script>
             <bpmn2:dataInputRefs>DataInput_1</bpmn2:dataInputRefs>
             <bpmn2:dataInputRefs>DataInput_3</bpmn2:dataInputRefs>
             <bpmn2:dataInputRefs>DataInput_15</bpmn2:dataInputRefs>
+            <bpmn2:dataInputRefs>DataInput_2</bpmn2:dataInputRefs>
+            <bpmn2:dataInputRefs>DataInput_4</bpmn2:dataInputRefs>
           </bpmn2:inputSet>
           <bpmn2:outputSet id="_OutputSet_4">
             <bpmn2:dataOutputRefs>DataOutput_3</bpmn2:dataOutputRefs>
@@ -223,6 +229,20 @@ r(answer);</bpmn2:script>
         </bpmn2:dataInputAssociation>
         <bpmn2:dataInputAssociation id="DataInputAssociation_5">
           <bpmn2:targetRef>DataInput_15</bpmn2:targetRef>
+        </bpmn2:dataInputAssociation>
+        <bpmn2:dataInputAssociation id="DataInputAssociation_2">
+          <bpmn2:targetRef>DataInput_2</bpmn2:targetRef>
+          <bpmn2:assignment id="Assignment_1">
+            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_3">true</bpmn2:from>
+            <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_1">DataInput_2</bpmn2:to>
+          </bpmn2:assignment>
+        </bpmn2:dataInputAssociation>
+        <bpmn2:dataInputAssociation id="DataInputAssociation_4">
+          <bpmn2:targetRef>DataInput_4</bpmn2:targetRef>
+          <bpmn2:assignment id="Assignment_2">
+            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_6">true</bpmn2:from>
+            <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_4">DataInput_4</bpmn2:to>
+          </bpmn2:assignment>
         </bpmn2:dataInputAssociation>
         <bpmn2:dataOutputAssociation id="DataOutputAssociation_2">
           <bpmn2:sourceRef>DataOutput_3</bpmn2:sourceRef>
