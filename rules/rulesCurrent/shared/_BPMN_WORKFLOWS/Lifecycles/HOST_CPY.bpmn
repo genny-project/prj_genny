@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.1.Final-v20190425-2005-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.4.3.Final-v20180418-1358-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
   <bpmn2:itemDefinition id="ItemDefinition_9" isCollection="false" structureRef="java.lang.String"/>
   <bpmn2:itemDefinition id="ItemDefinition_556" isCollection="false" structureRef="life.genny.models.GennyToken"/>
   <bpmn2:itemDefinition id="ItemDefinition_576" isCollection="false" structureRef="life.genny.utils.CallingProcessToken"/>
@@ -33,6 +33,7 @@
   <bpmn2:signal id="Signal_1" name="createBE"/>
   <bpmn2:signal id="Signal_2" name="makeBe"/>
   <bpmn2:signal id="Signal_3" name="START_HOST_CPY"/>
+  <bpmn2:signal id="Signal_4" name="START_HOST_CPY_REP"/>
   <bpmn2:process id="HOST_CPY" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="Default Process" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.models.GennyToken"/>
@@ -67,6 +68,7 @@
     <bpmn2:property id="baseEntityType" itemSubjectRef="ItemDefinition_9" name="baseEntityType"/>
     <bpmn2:property id="dropDownGroup" itemSubjectRef="ItemDefinition_9" name="dropDownGroup"/>
     <bpmn2:property id="eventMsg" itemSubjectRef="ItemDefinition_17" name="eventMsg"/>
+    <bpmn2:property id="processVar1" name="processVar1"/>
     <bpmn2:subProcess id="SubProcess_1" name="Host Company Builder">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -74,7 +76,7 @@
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
       <bpmn2:endEvent id="EndEvent_1" name="End Host Company Build">
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
@@ -315,15 +317,6 @@ TableUtils.searchTable(beUtils, templateCode, true);
       <bpmn2:sequenceFlow id="SequenceFlow_10" drools:priority="1" sourceRef="ScriptTask_3" targetRef="EndEvent_1"/>
       <bpmn2:sequenceFlow id="SequenceFlow_3" drools:priority="1" sourceRef="Task_1" targetRef="ScriptTask_3"/>
     </bpmn2:subProcess>
-    <bpmn2:endEvent id="EndEvent_2" name="End Host Company Builder">
-      <bpmn2:extensionElements>
-        <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[End Host Company Builder]]></drools:metaValue>
-        </drools:metaData>
-      </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
-    </bpmn2:endEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_4" drools:priority="1" sourceRef="SubProcess_1" targetRef="EndEvent_2"/>
     <bpmn2:startEvent id="StartEvent_3" name="Start Host Company Builder">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -342,11 +335,29 @@ TableUtils.searchTable(beUtils, templateCode, true);
       <bpmn2:signalEventDefinition id="SignalEventDefinition_1" signalRef="Signal_3"/>
     </bpmn2:startEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_1" drools:priority="1" sourceRef="StartEvent_3" targetRef="SubProcess_1"/>
+    <bpmn2:endEvent id="EndEvent_3" name="Call Add Host Company Rep">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Call Add Host Company Rep]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
+      <bpmn2:dataInput id="DataInput_7" name="event"/>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_12">
+        <bpmn2:sourceRef>sessionFacts</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_7</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:inputSet id="InputSet_2" name="Input Set 2">
+        <bpmn2:dataInputRefs>DataInput_7</bpmn2:dataInputRefs>
+      </bpmn2:inputSet>
+      <bpmn2:signalEventDefinition id="SignalEventDefinition_3" signalRef="Signal_4"/>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="SequenceFlow_5" drools:priority="1" sourceRef="SubProcess_1" targetRef="EndEvent_3"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Process Diagram">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="HOST_CPY">
       <bpmndi:BPMNShape id="BPMNShape_SubProcess_1" bpmnElement="SubProcess_1" isExpanded="true">
-        <dc:Bounds height="150.0" width="1096.0" x="120.0" y="243.0"/>
+        <dc:Bounds height="148.0" width="821.0" x="120.0" y="243.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1">
           <dc:Bounds height="11.0" width="91.0" x="126.0" y="246.0"/>
         </bpmndi:BPMNLabel>
@@ -358,21 +369,15 @@ TableUtils.searchTable(beUtils, templateCode, true);
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_2" bpmnElement="EndEvent_1">
-        <dc:Bounds height="36.0" width="36.0" x="1160.0" y="305.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="870.0" y="305.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_3" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="22.0" width="64.0" x="1146.0" y="341.0"/>
+          <dc:Bounds height="22.0" width="64.0" x="856.0" y="341.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_1" bpmnElement="ScriptTask_1" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="260.0" y="298.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_4">
           <dc:Bounds height="11.0" width="90.0" x="270.0" y="317.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_EndEvent_1" bpmnElement="EndEvent_2">
-        <dc:Bounds height="36.0" width="36.0" x="1250.0" y="300.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_5" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="22.0" width="72.0" x="1232.0" y="336.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_2" bpmnElement="StartEvent_3">
@@ -388,9 +393,9 @@ TableUtils.searchTable(beUtils, templateCode, true);
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_3" bpmnElement="ScriptTask_3" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="810.0" y="298.0"/>
+        <dc:Bounds height="50.0" width="110.0" x="716.0" y="298.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_9">
-          <dc:Bounds height="11.0" width="79.0" x="825.0" y="317.0"/>
+          <dc:Bounds height="11.0" width="79.0" x="731.0" y="317.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_1" bpmnElement="Task_1" isExpanded="true">
@@ -399,22 +404,22 @@ TableUtils.searchTable(beUtils, templateCode, true);
           <dc:Bounds height="11.0" width="63.0" x="593.0" y="317.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_EndEvent_2" bpmnElement="EndEvent_3">
+        <dc:Bounds height="36.0" width="36.0" x="980.0" y="299.0"/>
+        <bpmndi:BPMNLabel labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="22.0" width="65.0" x="966.0" y="335.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_1" targetElement="BPMNShape_ScriptTask_1">
         <di:waypoint xsi:type="dc:Point" x="206.0" y="323.0"/>
         <di:waypoint xsi:type="dc:Point" x="233.0" y="323.0"/>
         <di:waypoint xsi:type="dc:Point" x="260.0" y="323.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_7"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="SequenceFlow_4" sourceElement="BPMNShape_SubProcess_1" targetElement="BPMNShape_EndEvent_1">
-        <di:waypoint xsi:type="dc:Point" x="1216.0" y="318.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1233.0" y="318.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1250.0" y="318.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_9"/>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="BPMNShape_StartEvent_2" targetElement="BPMNShape_SubProcess_1">
         <di:waypoint xsi:type="dc:Point" x="76.0" y="318.0"/>
         <di:waypoint xsi:type="dc:Point" x="98.0" y="318.0"/>
-        <di:waypoint xsi:type="dc:Point" x="120.0" y="318.0"/>
+        <di:waypoint xsi:type="dc:Point" x="120.0" y="317.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_11"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_7" bpmnElement="SequenceFlow_7" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_Task_2">
@@ -430,16 +435,22 @@ TableUtils.searchTable(beUtils, templateCode, true);
         <bpmndi:BPMNLabel id="BPMNLabel_13"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_10" bpmnElement="SequenceFlow_10" sourceElement="BPMNShape_ScriptTask_3" targetElement="BPMNShape_2">
-        <di:waypoint xsi:type="dc:Point" x="920.0" y="323.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1040.0" y="323.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1160.0" y="323.0"/>
+        <di:waypoint xsi:type="dc:Point" x="826.0" y="323.0"/>
+        <di:waypoint xsi:type="dc:Point" x="848.0" y="323.0"/>
+        <di:waypoint xsi:type="dc:Point" x="870.0" y="323.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_14"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_ScriptTask_3">
         <di:waypoint xsi:type="dc:Point" x="680.0" y="323.0"/>
-        <di:waypoint xsi:type="dc:Point" x="745.0" y="323.0"/>
-        <di:waypoint xsi:type="dc:Point" x="810.0" y="323.0"/>
+        <di:waypoint xsi:type="dc:Point" x="698.0" y="323.0"/>
+        <di:waypoint xsi:type="dc:Point" x="716.0" y="323.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_10"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_5" sourceElement="BPMNShape_SubProcess_1" targetElement="BPMNShape_EndEvent_2">
+        <di:waypoint xsi:type="dc:Point" x="941.0" y="317.0"/>
+        <di:waypoint xsi:type="dc:Point" x="960.0" y="317.0"/>
+        <di:waypoint xsi:type="dc:Point" x="980.0" y="317.0"/>
+        <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
