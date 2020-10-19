@@ -22,7 +22,7 @@ import life.genny.qwandautils.GennySettings;
 
 rule "SBE_NEW_ITEMS2"
     ruleflow-group 'GenerateSearches'
-     no-loop true
+     no-loop true 
     when
 	/*$process : WorkflowProcessInstance( ) */
        not  SearchEntity (code == "SBE_NEW_ITEMS2")
