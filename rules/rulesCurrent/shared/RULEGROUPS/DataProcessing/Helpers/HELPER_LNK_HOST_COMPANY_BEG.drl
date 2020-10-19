@@ -102,6 +102,7 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		dropdown.setNewSearch("HCR Dropdown", "Fetch HCR Dropdown Items")
 											.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
 											.addFilter("PRI_IS_HOST_CPY_REP", true)
+											.addFilter("PRI_STATUS", "ACTIVE")
 											.addFilter("LNK_HOST_COMPANY", SearchEntity.StringFilter.EQUAL, hostCompanyCode)
 											.setPageStart(0)
 											.setPageSize(1000);
