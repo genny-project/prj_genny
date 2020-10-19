@@ -12,7 +12,7 @@ import life.genny.qwandautils.JsonUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-rule "CLICK_MULTI_FORM"
+rule "CLICK_HC_VALIDATION"
     ruleflow-group 'EventProcessing'
 		salience 1000
     no-loop
@@ -25,7 +25,7 @@ rule "CLICK_MULTI_FORM"
 		ruleDetails : RuleDetails()
 
     then
-		System.out.println("Processing CLICK MULTI FORM : " + $message );
+		System.out.println("Processing CLICK HC VALIDATION : " + $message );
 
 		
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
@@ -60,21 +60,13 @@ rule "CLICK_MULTI_FORM"
 			System.out.println("ERROR: Null userToken.getUserCode()");
 		}
 		
-		
-		
-		String key = $message.getData().getCode();		
-		System.out.println("key: " +key);
-		
-		key = key.replace("ACT_PRI_EVENT_","");		
-		System.out.println("key: " +key);
-		
+
 		
 	
-		String workflowSignalCode = "MULTI_FORM";
+		String workflowSignalCode = "HC_VAL";
 
 		output.setTypeOfResult("SIGNAL");
 		output.setResultCode("START_"+workflowSignalCode);
-		output.setSuitCase(key);
 
 	
 		System.out.println("START SIGNAL: " +workflowSignalCode);
