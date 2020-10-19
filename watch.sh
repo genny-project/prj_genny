@@ -6,7 +6,8 @@ fswatch --batch-marker=EOF -xn  ./rules | while read file event; do
    if [ $file = "EOF" ]; then 
       echo $PWD
 #      docker run -v  "$PWD/rules:/rules"   gennyproject/checkrules -d  "${foo}" 
-      docker run -v  "$PWD/rules:/rules"   gennyproject/checkrules  -a -r /rules 
-   fi
+      result=$(docker run -v  "$PWD/rules:/rules"   gennyproject/checkrules  -a -r /rules) | grep 'Compilation error'
+ 	say $result 
+ fi
 done
 
