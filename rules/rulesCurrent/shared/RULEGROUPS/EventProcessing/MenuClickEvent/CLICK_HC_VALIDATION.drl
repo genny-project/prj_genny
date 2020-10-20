@@ -11,6 +11,7 @@ import life.genny.utils.QuestionUtils;
 import life.genny.qwandautils.JsonUtils;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 rule "CLICK_HC_VALIDATION"
     ruleflow-group 'EventProcessing'
@@ -32,6 +33,21 @@ rule "CLICK_HC_VALIDATION"
 		
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
 		
+		
+		String uuid = UUID.randomUUID().toString();
+		String newCode = "DOC_"+uuid;
+		newCode = newCode.toUpperCase();
+		System.out.println("HC Val: newCode = " + newCode);
+		
+		BaseEntity newBe = beUtils.create(newCode, newCode);
+
+		System.out.println("HC Val: newBe = " + newBe);
+		System.out.println(">>>>>>>>>>>> " + newBe.getName() + " <<<<<<<<<<<<");
+		
+		output.setTargetCode(newCode);
+		SessionFacts facts = new SessionFacts(serviceToken, userToken, output.getTargetCode());
+		
+		
 		String user = userToken.getUserCode();
 		System.out.println("user: " + user);
 		output.setAskSourceCode(user);
@@ -48,8 +64,16 @@ rule "CLICK_HC_VALIDATION"
 						System.out.println("hcCode = " +hcCode);	
 							
 						if(hcCode != null) { 
-								output.setTargetCode(hcCode);
-								SessionFacts facts = new SessionFacts(serviceToken, userToken, output.getTargetCode());	
+								BaseEntity HCBe = beUtils.getBaseEntityByCode(hcCode);
+								System.out.println("HCBe = " + HCBe);
+								
+								if(HCBe != null) { 
+										Answer answer = new Answer(userToken.getUserCode(), HCBe.getCode(), "DOC_HC_VAL_CODE", newCode);
+ 										beUtils.saveAnswer(answer);	
+ 								
+								} else {
+									System.out.println("ERROR: Null HCRBe");
+								}			
 						} else {
 							System.out.println("ERROR: Null HCRBe");
 						}
@@ -60,7 +84,6 @@ rule "CLICK_HC_VALIDATION"
 			System.out.println("ERROR: Null userToken.getUserCode()");
 		}
 		
-
 		
 	
 		String workflowSignalCode = "HC_VAL";
