@@ -547,10 +547,10 @@ VertxUtils.writeMsg(&quot;webcmds&quot;,msg);
         <bpmn2:outgoing>SequenceFlow_32</bpmn2:outgoing>
         <bpmn2:script>System.out.println(&quot;I am here&quot; + results);
 
-if(results != null &amp;&amp; !results.isEmpty()){
-	for (Map.Entry result : results.entrySet()) {
-          System.out.println(&quot;Key: &quot;+result.getKey() + &quot; &amp; Value: &quot; + result.getValue());
-        }
+for(String key: results.keySet()){
+	System.out.println(&quot;Key: &quot; + key);
+	System.out.println(&quot;Value: &quot; + results.get(key));
+	System.out.println(&quot;-----&quot;);
 }</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_32" drools:priority="1" sourceRef="ScriptTask_6" targetRef="EndEvent_3"/>
