@@ -30,6 +30,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_5" isCollection="false" structureRef="life.genny.utils.TableUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_11" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_10" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_12" isCollection="false" structureRef="life.genny.qwanda.message.QCmdMessage"/>
   <bpmn2:signal id="Signal_1" name="createBE"/>
   <bpmn2:signal id="Signal_2" name="makeBe"/>
   <bpmn2:signal id="Signal_3" name="START_HOST_CPY"/>
@@ -54,6 +55,7 @@
       <drools:import name="life.genny.utils.VertxUtils.ESubscriptionType"/>
       <drools:import name="life.genny.qwanda.Answer"/>
       <drools:import name="life.genny.utils.TableUtils"/>
+      <drools:import name="life.genny.qwanda.message.QCmdMessage"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_556" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_556" name="serviceToken"/>
