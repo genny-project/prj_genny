@@ -11,6 +11,7 @@ import life.genny.utils.QuestionUtils;
 import life.genny.qwandautils.JsonUtils;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 rule "CLICK_OHS"
     ruleflow-group 'EventProcessing'
@@ -31,11 +32,25 @@ rule "CLICK_OHS"
 		
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
 		
+		String uuid = UUID.randomUUID().toString();
+		String newCode = "DOC_"+uuid;
+		newCode = newCode.toUpperCase();
+		System.out.println("HC Val: newCode = " + newCode);
+		
+		BaseEntity newBe = beUtils.create(newCode, newCode);
+
+		System.out.println("HC Val: newBe = " + newBe);
+		System.out.println(">>>>>>>>>>>> " + newBe.getName() + " <<<<<<<<<<<<");
+		
+		output.setTargetCode(newCode);
+		SessionFacts facts = new SessionFacts(serviceToken, userToken, output.getTargetCode());
+		
+		
 		String user = userToken.getUserCode();
 		System.out.println("user: " + user);
 		output.setAskSourceCode(user);
 		
-		if(user != null) {
+				if(user != null) {
 				BaseEntity HCRBe = beUtils.getBaseEntityByCode(user);
 				System.out.println("HCRBe = " + HCRBe);
 				
@@ -45,10 +60,87 @@ rule "CLICK_OHS"
 						
 						hcCode = hcCode.replace("\"", "").replace("[", "").replace("]", "");
 						System.out.println("hcCode = " +hcCode);	
+						
+						
+						String firstName = HCRBe.getValue("PRI_FIRSTNAME",null);
+						String lastName = HCRBe.getValue("PRI_LASTNAME",null);
+						String jobTitle = HCRBe.getValue("PRI_JOB_TITLE",null);
+						
+						System.out.println("firstName: " + firstName);
+						System.out.println("lastName: " + lastName);
+						System.out.println("jobTitle: " + jobTitle);
+						
+						if(firstName != null && lastName != null && jobTitle != null) {
+								Answer answerFN = new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_FIRSTNAME", firstName);	
+ 								Answer answerLN= new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_LASTNAME", lastName);						
+ 								Answer answerJT = new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_JOB_TITLE", jobTitle);
+ 						
+								beUtils.saveAnswer(answerFN);
+								beUtils.saveAnswer(answerLN);
+								beUtils.saveAnswer(answerJT);
+						} else {
+							System.out.println("ERROR: Null firstName, lastName or jobTitle");
+						}
+	
 							
 						if(hcCode != null) { 
-								output.setTargetCode(hcCode);
-								SessionFacts facts = new SessionFacts(serviceToken, userToken, output.getTargetCode());	
+								BaseEntity HCBe = beUtils.getBaseEntityByCode(hcCode);
+								System.out.println("HCBe = " + HCBe);
+								
+								if(HCBe != null) { 
+										Answer answer = new Answer(userToken.getUserCode(), HCBe.getCode(), "DOC_HC_OHS_CODE", newCode);
+ 										beUtils.saveAnswer(answer);	
+ 										
+ 										
+ 										String legalName = HCBe.getValue("PRI_LEGAL_NAME",null);
+										System.out.println("legalName: " + legalName);
+			
+										String abn = HCBe.getValue("PRI_ABN",null);
+										System.out.println("abn: " + abn);
+										
+										String addressFull = HCBe.getValue("PRI_ADDRESS_FULL",null);
+										System.out.println("addressFull: " + addressFull);
+										
+										String mobile = HCBe.getValue("PRI_MOBILE",null);
+										System.out.println("mobile: " + mobile);
+										
+										String email = HCBe.getValue("PRI_EMAIL",null);
+										System.out.println("email: " + email);
+										
+										String website = HCBe.getValue("PRI_COMPANY_WEBSITE_URL",null);
+										System.out.println("website: " + website);
+										
+										String numStaff = HCBe.getValue("LNK_NUMBER_STAFF",null);
+										System.out.println("numStaff: " + numStaff);
+										
+										String cpyINC = HCBe.getValue("LNK_COMPANY_INC",null);
+										System.out.println("cpyINC: " + cpyINC);
+										
+									
+										if(firstName != null && lastName != null && jobTitle != null) {
+												Answer answerL = new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_LEGAL_NAME", legalName);
+												Answer answerABN = new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ABN", abn);
+												Answer answerAF = new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ADDRESS_FULL", addressFull);
+												Answer answerM = new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MOBILE", mobile);
+												Answer answerE = new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_EMAIL", email);
+												Answer answerW = new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_COMPANY_WEBSITE_URL", website);
+												Answer answerNS = new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_NUMBER_STAFF", numStaff);
+												Answer answerCI = new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_COMPANY_INC", cpyINC);
+ 						
+												beUtils.saveAnswer(answerL);
+												beUtils.saveAnswer(answerABN);
+												beUtils.saveAnswer(answerAF);
+												beUtils.saveAnswer(answerM);
+												beUtils.saveAnswer(answerE);
+												beUtils.saveAnswer(answerW);
+												beUtils.saveAnswer(answerNS);
+												beUtils.saveAnswer(answerCI);
+										} else {
+											System.out.println("ERROR: Null legalName, abn, addressFull, mobile, email, website, numStaff or cpyINC");
+										}							
+								} else {
+									System.out.println("ERROR: Null HCRBe");
+								}			
 						} else {
 							System.out.println("ERROR: Null HCRBe");
 						}
