@@ -69,6 +69,8 @@ rule "IS_INTERN"
 		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
 		
 		/* ANZCO */
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ANZCO", "NA"));
+		
 		String lnkIndustry = newBe.getValue("LNK_INDUSTRY", null);
 		System.out.println("lnkIndustry : " + lnkIndustry);
 		
@@ -78,6 +80,7 @@ rule "IS_INTERN"
 		
 		String lnkCI = newBe.getValue("LNK_COMP_INTERNSHIP", null);
 		System.out.println("lnkCI : " + lnkCI);
+		
 		
 		if(lnkIndustry != null && lnkOcc != null && lnkCI != null) {
 				
@@ -89,7 +92,7 @@ rule "IS_INTERN"
 				System.out.println("CI: " + CI);
 				
 				if(Industry.equals("SEL_INDUSTRY_INFORMATION_COMMUNICATION_TECHNOLOGY") && CI.equals("SEL_PROFESSIONAL_YEAR")) {
-						BaseEntity occBe = beUtils.getBaseEntityByCode(lnkOcc);
+						BaseEntity occBe = beUtils.getBaseEntityByCode(Occ);
 						System.out.println("occBe: " + occBe);
 						
 						if(occBe != null) {
@@ -109,7 +112,6 @@ rule "IS_INTERN"
 				}
 		} else {
 			System.out.println("ERROR: Null LNK_INDUSTRY or LNK_OCCUPATION or LNK_COMP_INTERNSHIP");
-			beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ANZCO", "NA"));
 		}
 		
 		
