@@ -28,6 +28,8 @@
   <bpmn2:itemDefinition id="ItemDefinition_4" isCollection="false" structureRef="life.genny.qwanda.message.QCmdMessage"/>
   <bpmn2:itemDefinition id="ItemDefinition_418" isCollection="false" structureRef="java.util.Map.Entry"/>
   <bpmn2:itemDefinition id="ItemDefinition_419" isCollection="false" structureRef="java.util.Map"/>
+  <bpmn2:itemDefinition id="ItemDefinition_420" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_421" isCollection="false" structureRef="Object"/>
   <bpmn2:signal id="Signal_1" name="createBE"/>
   <bpmn2:signal id="Signal_2" name="makeBe"/>
   <bpmn2:signal id="Signal_3" name="START_HOST_CPY_REP"/>
@@ -455,7 +457,7 @@ VertxUtils.writeMsg(&quot;webcmds&quot;,msg);
 </bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_23" drools:priority="1" sourceRef="StartEvent_4" targetRef="ScriptTask_5"/>
-      <bpmn2:task id="Task_4" drools:taskName="AskQuestionTask" drools:displayName="Ask Question Task" drools:icon="icons/icon-info.gif" name="QUE_NEXT_STEP_ADD_INTERNSHIP">
+      <bpmn2:task id="Task_4" drools:taskName="AskQuestionTask" drools:displayName="Ask Question Task" drools:icon="icons/icon-info.gif" name="QUE_NEXT_STEP_ADD_INTERNSHIP_GRP">
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[QUE_HOST_CPY_REP_GRP]]></drools:metaValue>
@@ -498,7 +500,7 @@ VertxUtils.writeMsg(&quot;webcmds&quot;,msg);
         <bpmn2:dataInputAssociation id="DataInputAssociation_12">
           <bpmn2:targetRef>DataInput_28</bpmn2:targetRef>
           <bpmn2:assignment id="Assignment_8">
-            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_11">QUE_NEXT_STEP_ADD_INTERNSHIP</bpmn2:from>
+            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_11">QUE_NEXT_STEP_ADD_INTERNSHIP_GRP</bpmn2:from>
             <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_14">DataInput_9</bpmn2:to>
           </bpmn2:assignment>
         </bpmn2:dataInputAssociation>
