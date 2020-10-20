@@ -47,7 +47,7 @@
 		<dropwizard.version>3.5.1</dropwizard.version>
 		<vertx-concurrent.version>1.0.0</vertx-concurrent.version>
 
-		<junit-version>4.12</junit-version>
+		<junit-version>4.13.1</junit-version>
 
 		<jar.finalName>${project.name}</jar.finalName>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
