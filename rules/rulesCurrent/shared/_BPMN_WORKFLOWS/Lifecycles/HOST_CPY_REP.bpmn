@@ -26,6 +26,8 @@
   <bpmn2:itemDefinition id="ItemDefinition_7" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_8" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_4" isCollection="false" structureRef="life.genny.qwanda.message.QCmdMessage"/>
+  <bpmn2:itemDefinition id="ItemDefinition_418" isCollection="false" structureRef="java.util.Map.Entry"/>
+  <bpmn2:itemDefinition id="ItemDefinition_419" isCollection="false" structureRef="java.util.Map"/>
   <bpmn2:signal id="Signal_1" name="createBE"/>
   <bpmn2:signal id="Signal_2" name="makeBe"/>
   <bpmn2:signal id="Signal_3" name="START_HOST_CPY_REP"/>
@@ -48,6 +50,8 @@
       <drools:import name="life.genny.qwandautils.KeycloakUtils"/>
       <drools:import name="life.genny.utils.TableUtils"/>
       <drools:import name="life.genny.qwanda.message.QCmdMessage"/>
+      <drools:import name="java.util.Map"/>
+      <drools:import name="java.util.Map.Entry"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_556" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_556" name="serviceToken"/>
