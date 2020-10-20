@@ -54,7 +54,7 @@
     <bpmn2:property id="callingProcessToken" itemSubjectRef="ItemDefinition_576" name="callingProcessToken"/>
     <bpmn2:property id="newBe" itemSubjectRef="ItemDefinition_1076" name="newBe"/>
     <bpmn2:property id="results" itemSubjectRef="ItemDefinition_2578" name="results"/>
-    <bpmn2:property id="sessionFacts" name="sessionFacts"/>
+    <bpmn2:property id="sessionFacts" itemSubjectRef="ItemDefinition_2957" name="sessionFacts"/>
     <bpmn2:property id="processId" itemSubjectRef="ItemDefinition_591" name="processId"/>
     <bpmn2:property id="UUID" itemSubjectRef="ItemDefinition_3679" name="UUID"/>
     <bpmn2:property id="uuid" itemSubjectRef="ItemDefinition_9" name="uuid"/>
