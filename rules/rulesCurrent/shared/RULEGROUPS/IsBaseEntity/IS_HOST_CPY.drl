@@ -55,6 +55,15 @@ rule "IS_HOST_CPY"
 /* 		long totalTime = TableUtils.searchTable(beUtils,"HOST_CPY", true, "PRI_CODE", newBe.getCode());
 		System.out.println("total took " + (totalTime) + " ms");  */
 
+		BaseEntity cpyBe = beUtils.getBaseEntityByCode(newBe.getCode());
+		
+		if(cpyBe != null){
+			
+			QDataBaseEntityMessage cpyBeMsg = new QDataBaseEntityMessage(cpyBe);
+			cpyBeMsg.setToken(userToken.getToken());
+			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(cpyBeMsg));
+		}
+
 	
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
