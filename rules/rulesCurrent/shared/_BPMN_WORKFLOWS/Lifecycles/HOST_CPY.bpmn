@@ -34,6 +34,8 @@
   <bpmn2:itemDefinition id="ItemDefinition_13" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_14" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_58" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_67" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_76" isCollection="false"/>
   <bpmn2:signal id="Signal_1" name="createBE"/>
   <bpmn2:signal id="Signal_2" name="makeBe"/>
   <bpmn2:signal id="Signal_3" name="START_HOST_CPY"/>
@@ -388,7 +390,7 @@ VertxUtils.writeMsg(&quot;webcmds&quot;,msg);
 </bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_17" drools:priority="1" sourceRef="StartEvent_4" targetRef="ScriptTask_6"/>
-      <bpmn2:task id="Task_4" drools:taskName="AskQuestionTask" drools:displayName="Ask Question Task" drools:icon="icons/icon-info.gif" name="QUE_NEXT_STEP_ADD_HC_REP_GRP">
+      <bpmn2:task id="Task_4" drools:taskName="AskQuestionTask" drools:displayName="Ask Question Task" drools:icon="icons/icon-info.gif" name="QUE_NEXT_STEP_HOST_CPY_REP_GRP">
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[QUE_HOST_CPY_GRP]]></drools:metaValue>
@@ -574,7 +576,7 @@ VertxUtils.writeMsg(&quot;webcmds&quot;,msg);
       <bpmndi:BPMNShape id="BPMNShape_Task_4" bpmnElement="Task_4" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="420.0" y="495.0"/>
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="22.0" width="106.0" x="422.0" y="509.0"/>
+          <dc:Bounds height="22.0" width="104.0" x="423.0" y="509.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_7" bpmnElement="ScriptTask_7" isExpanded="true">
