@@ -52,8 +52,8 @@ rule "IS_HOST_CPY"
 		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
 
 		/* send the detail sbe */
-		long totalTime = TableUtils.searchTable(beUtils,"HOST_CPY", true, "PRI_CODE", newBe.getCode());
-		System.out.println("total took " + (totalTime) + " ms"); 
+/* 		long totalTime = TableUtils.searchTable(beUtils,"HOST_CPY", true, "PRI_CODE", newBe.getCode());
+		System.out.println("total took " + (totalTime) + " ms");  */
 
 	
 		output.setTypeOfResult("NONE");
