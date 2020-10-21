@@ -6362,7 +6362,8 @@ public class AdamTest {
 	
 	}
 
-	public void fixLnkAtttribute() {
+	@Test
+	public void testFixLnkAtttribute() {
 		System.out.println("Fix LNK Attribute");
 		GennyToken userToken = null;
 		GennyToken serviceToken = null;
@@ -6392,9 +6393,12 @@ public class AdamTest {
 		beUtils.setServiceToken(serviceToken);
 
 		String sourceCode = "CPY_%";
-		String columnCode = "LNK_COMPANY_INDUSTRY";
-		String attributeCode = "PRI_ASSOC_INDUSTRY";
-	
+//		String columnCode = "LNK_COMPANY_INDUSTRY";
+//		String attributeCode = "PRI_ASSOC_INDUSTRY";
+
+		String columnCode = "LNK_NUMBER_STAFF";
+		String attributeCode = "PRI_NUMBER_STAFF";
+
 		/* get all the apps with LNK_HOST_COMPANY attribute */
 		SearchEntity searchBE = new SearchEntity("SBE_UPDATE", "Update")
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
@@ -6408,8 +6412,13 @@ public class AdamTest {
 		List<BaseEntity> bes = beUtils.getBaseEntitys(searchBE);
 	
 		System.out.println("Number of bes = " + bes.size());
+		int total  = bes.size();
+		int index = 0;
+		int updated = 0;
 	
 		for (BaseEntity be : bes) {
+			index++;
+			System.out.printf("processing %d/%d%n", index, total);
 	
 			BaseEntity updatedBe = beUtils.getBaseEntityByCode(be.getCode());
 			
@@ -6431,6 +6440,7 @@ public class AdamTest {
 	
 					if (!StringUtils.isBlank(name)) {
 						beUtils.saveAnswer(new Answer(updatedBe.getCode(), updatedBe.getCode(), attributeCode, name));
+						updated ++;
 					}else {
 						beUtils.saveAnswer(new Answer(updatedBe.getCode(), updatedBe.getCode(), attributeCode, ""));
 					}
@@ -6442,6 +6452,7 @@ public class AdamTest {
 				e.printStackTrace();
 			}
 		}
+		System.out.println("updated " + updated);
 	
 	}
 	
