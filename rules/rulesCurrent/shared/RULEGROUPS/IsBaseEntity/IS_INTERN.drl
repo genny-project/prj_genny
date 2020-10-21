@@ -100,7 +100,8 @@ rule "IS_INTERN"
 								System.out.println("anzcoCode: " + anzcoCode);
 								
 								if(anzcoCode != null) {
-									beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ANZCO", anzcoCode));
+										beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ANZCO", anzcoCode));
+										System.out.println("Reached the holy land - anzcoCode: " + anzcoCode);
 								} else {
 									System.out.println("ERROR: Null anzcoCode");
 								}
