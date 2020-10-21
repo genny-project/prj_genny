@@ -6361,6 +6361,89 @@ public class AdamTest {
 		}
 	
 	}
+
+	public void fixLnkAtttribute() {
+		System.out.println("Fix LNK Attribute");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+	
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+	
+		} else {
+			// VertxUtils.cachedEnabled = false;
+			VertxUtils.cachedEnabled = false;
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+			eventBusMock = new EventBusMock();
+			vertxCache = new JunitCache(); // MockCache
+			VertxUtils.init(eventBusMock, vertxCache);
+		}
+	
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		beUtils.setServiceToken(serviceToken);
+
+		String sourceCode = "CPY_%";
+		String columnCode = "LNK_COMPANY_INDUSTRY";
+		String attributeCode = "PRI_ASSOC_INDUSTRY";
+	
+		/* get all the apps with LNK_HOST_COMPANY attribute */
+		SearchEntity searchBE = new SearchEntity("SBE_UPDATE", "Update")
+				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, sourceCode)
+				.addColumn(columnCode, "Column")
+				.setPageStart(0).setPageSize(100000);
+	
+		searchBE.setRealm(serviceToken.getRealm());
+	
+		System.out.println("About to search for entities");
+		List<BaseEntity> bes = beUtils.getBaseEntitys(searchBE);
+	
+		System.out.println("Number of bes = " + bes.size());
+	
+		for (BaseEntity be : bes) {
+	
+			BaseEntity updatedBe = beUtils.getBaseEntityByCode(be.getCode());
+			
+			try {
+				String assocBeCode = updatedBe.getValueAsString(columnCode);
+
+				if (assocBeCode != null) {
+					assocBeCode = assocBeCode.replace("\"", "").replace("[", "").replace("]", "");
+					// assocBeCode = assocBeCode.substring(2,assocBeCode.length()-2);
+					System.out.println("Assciated BaseEntity code :" + assocBeCode);
+					
+					/* get assocBe */
+					BaseEntity assocBe = beUtils.getBaseEntityByCode(assocBeCode);
+					if (assocBe == null)
+						continue;
+					
+						/* get assocBe's name */
+					String name = assocBe.getValue("PRI_NAME", null);
+	
+					if (!StringUtils.isBlank(name)) {
+						beUtils.saveAnswer(new Answer(updatedBe.getCode(), updatedBe.getCode(), attributeCode, name));
+					}else {
+						beUtils.saveAnswer(new Answer(updatedBe.getCode(), updatedBe.getCode(), attributeCode, ""));
+					}
+				} else {
+					System.out.println(be.getCode() + " has NO " + columnCode);
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	
+	}
 	
 	
 }
