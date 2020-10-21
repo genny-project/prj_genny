@@ -451,7 +451,7 @@ userToken = (GennyToken)sessionFacts2.getUserToken();
 
 BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 
-QCmdMessage msg = new QCmdMessage(&quot;DISPLAY&quot;, &quot;FORM:DETAIL&quot;);
+QCmdMessage msg = new QCmdMessage(&quot;DISPLAY&quot;, &quot;DRAWER:FORM&quot;);
 msg.setToken(beUtils.getGennyToken().getToken());
 msg.setSend(true);  
 
