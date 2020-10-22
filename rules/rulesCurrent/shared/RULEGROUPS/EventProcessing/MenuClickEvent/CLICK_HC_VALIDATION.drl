@@ -18,7 +18,6 @@ rule "CLICK_HC_VALIDATION"
 		salience 1000
     no-loop
     when
-		/*$message : QEventMessage(data.code == "ACT_PRI_EVENT_HC_VALIDATION" || data.code == "ACT_PRI_EVENT_OHS")*/
 		$message : QEventMessage(data.code == "ACT_PRI_EVENT_HC_VALIDATION")
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
@@ -33,6 +32,12 @@ rule "CLICK_HC_VALIDATION"
 		
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
 		
+		/*
+		code: "ACT_PRI_EVENT_HC_VALIDATION"
+		parentCode: "SBE_HOST_COMPANIES_ACTIVE_20213EBD-ACB4-41BE-ACF4-22749371431B"
+		targetCode: "CPY_4776378C-0CA4-44F9-800D-60F010D167EE"
+		*/
+	
 		
 		String uuid = UUID.randomUUID().toString();
 		String newCode = "DOC_"+uuid;
@@ -48,10 +53,77 @@ rule "CLICK_HC_VALIDATION"
 		SessionFacts facts = new SessionFacts(serviceToken, userToken, output.getTargetCode());
 		
 		
+		
+		
+		
+		String targetHCCode = $message.getData().getTargetCode();
+		System.out.println("targetHCCode = " + targetHCCode);
+		
+		
+		if(targetHCCode != null) { 
+				BaseEntity HCBe = beUtils.getBaseEntityByCode(targetHCCode);
+				System.out.println("HCBe = " + HCBe);
+								
+				if(HCBe != null) { 
+						Answer answer = new Answer(userToken.getUserCode(), HCBe.getCode(), "DOC_HC_VAL_CODE", newCode);
+ 						beUtils.saveAnswer(answer);	
+
+						String legalName = HCBe.getValue("PRI_LEGAL_NAME",null);
+						System.out.println("legalName: " + legalName);
+						if(legalName != null) {
+								beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_LEGAL_NAME", legalName));
+						} 										
+ 										
+ 						String abn = HCBe.getValue("PRI_ABN",null);
+						System.out.println("abn: " + abn);
+						if(abn != null) {
+								beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ABN", abn));
+						}
+										
+						String addressFull = HCBe.getValue("PRI_ADDRESS_FULL",null);
+						System.out.println("addressFull: " + addressFull);
+						if(addressFull != null) {
+								beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ADDRESS_FULL", addressFull));
+						}
+								
+						String mobile = HCBe.getValue("PRI_MOBILE",null);
+						System.out.println("mobile: " + mobile);
+						if(mobile != null) {
+								beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MOBILE", mobile));
+						}
+						
+						String website = HCBe.getValue("PRI_COMPANY_WEBSITE_URL",null);
+						System.out.println("website: " + website);
+						if(website != null) {
+								beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_COMPANY_WEBSITE_URL", website));
+						}
+								
+						String numStaff = HCBe.getValue("LNK_NUMBER_STAFF",null);
+						System.out.println("numStaff: " + numStaff);
+						if(numStaff != null) {
+								beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_NUMBER_STAFF", numStaff));
+						}
+						
+						String cpyINC = HCBe.getValue("LNK_COMPANY_INC",null);
+						System.out.println("cpyINC: " + cpyINC);
+						if(cpyINC != null) {
+								beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_COMPANY_INC", cpyINC));
+						}
+				} else {
+					System.out.println("ERROR: Null HCRBe");
+				}			
+		} else {
+			System.out.println("ERROR: Null targetHCCode");
+		}
+			
+			
+				
 		String user = userToken.getUserCode();
 		System.out.println("user: " + user);
 		output.setAskSourceCode(user);
 		
+		
+		/*
 		if(user != null) {
 				BaseEntity HCRBe = beUtils.getBaseEntityByCode(user);
 				System.out.println("HCRBe = " + HCRBe);
@@ -150,6 +222,8 @@ rule "CLICK_HC_VALIDATION"
 		} else {
 			System.out.println("ERROR: Null userToken.getUserCode()");
 		}
+		
+		*/
 		
 		
 	
