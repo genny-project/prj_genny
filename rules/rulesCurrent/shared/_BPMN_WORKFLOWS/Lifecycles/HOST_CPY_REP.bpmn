@@ -419,21 +419,21 @@ System.out.println(&quot;##################################### WORKFLOW: ANSWER 
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_25</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_29</bpmn2:outgoing>
-      <bpmn2:startEvent id="StartEvent_4" name="Start Event 4">
+      <bpmn2:startEvent id="StartEvent_4" name="Start Suggested Step">
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
-            <drools:metaValue><![CDATA[Start Event 4]]></drools:metaValue>
+            <drools:metaValue><![CDATA[Start Suggested Step]]></drools:metaValue>
           </drools:metaData>
         </bpmn2:extensionElements>
         <bpmn2:outgoing>SequenceFlow_23</bpmn2:outgoing>
       </bpmn2:startEvent>
-      <bpmn2:endEvent id="EndEvent_3" name="End Event 3">
+      <bpmn2:endEvent id="EndEvent_3" name="End Suggested Step">
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
-            <drools:metaValue><![CDATA[End Event 3]]></drools:metaValue>
+            <drools:metaValue><![CDATA[End Suggested Step]]></drools:metaValue>
           </drools:metaData>
         </bpmn2:extensionElements>
-        <bpmn2:incoming>SequenceFlow_32</bpmn2:incoming>
+        <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
       </bpmn2:endEvent>
       <bpmn2:scriptTask id="ScriptTask_5" name="Send Drawer:Form Redirect" scriptFormat="http://www.java.com/java">
         <bpmn2:extensionElements>
@@ -472,7 +472,7 @@ VertxUtils.writeMsg(&quot;webcmds&quot;,msg);
           </drools:onEntry-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_30</bpmn2:incoming>
-        <bpmn2:outgoing>SequenceFlow_33</bpmn2:outgoing>
+        <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
         <bpmn2:ioSpecification id="InputOutputSpecification_4">
           <bpmn2:dataInput id="DataInput_27" itemSubjectRef="ItemDefinition_556" name="userToken"/>
           <bpmn2:dataInput id="DataInput_28" name="questionCode"/>
@@ -541,20 +541,7 @@ VertxUtils.writeMsg(&quot;webcmds&quot;,msg);
         </bpmn2:dataOutputAssociation>
       </bpmn2:task>
       <bpmn2:sequenceFlow id="SequenceFlow_30" drools:priority="1" sourceRef="ScriptTask_5" targetRef="Task_4"/>
-      <bpmn2:scriptTask id="ScriptTask_6" name="After Suggested Step question" scriptFormat="http://www.java.com/java">
-        <bpmn2:extensionElements>
-          <drools:metaData name="elementname">
-            <drools:metaValue><![CDATA[After Suggested Step question]]></drools:metaValue>
-          </drools:metaData>
-        </bpmn2:extensionElements>
-        <bpmn2:incoming>SequenceFlow_33</bpmn2:incoming>
-        <bpmn2:outgoing>SequenceFlow_32</bpmn2:outgoing>
-        <bpmn2:script>System.out.println(&quot;I am here&quot; + results);
-
-</bpmn2:script>
-      </bpmn2:scriptTask>
-      <bpmn2:sequenceFlow id="SequenceFlow_32" drools:priority="1" sourceRef="ScriptTask_6" targetRef="EndEvent_3"/>
-      <bpmn2:sequenceFlow id="SequenceFlow_33" drools:priority="1" sourceRef="Task_4" targetRef="ScriptTask_6"/>
+      <bpmn2:sequenceFlow id="SequenceFlow_3" drools:priority="1" sourceRef="Task_4" targetRef="EndEvent_3"/>
     </bpmn2:subProcess>
     <bpmn2:sequenceFlow id="SequenceFlow_25" drools:priority="1" sourceRef="SubProcess_1" targetRef="SubProcess_3"/>
     <bpmn2:sequenceFlow id="SequenceFlow_29" drools:priority="1" sourceRef="SubProcess_3" targetRef="EndEvent_2"/>
@@ -568,7 +555,7 @@ VertxUtils.writeMsg(&quot;webcmds&quot;,msg);
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_SubProcess_3" bpmnElement="SubProcess_3" isExpanded="true">
-        <dc:Bounds height="148.0" width="791.0" x="140.0" y="443.0"/>
+        <dc:Bounds height="148.0" width="811.0" x="140.0" y="443.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_2">
           <dc:Bounds height="11.0" width="59.0" x="146.0" y="446.0"/>
         </bpmndi:BPMNLabel>
@@ -592,9 +579,9 @@ VertxUtils.writeMsg(&quot;webcmds&quot;,msg);
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_1" bpmnElement="EndEvent_2">
-        <dc:Bounds height="36.0" width="36.0" x="1050.0" y="501.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="1015.0" y="499.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_5" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="76.0" x="1030.0" y="537.0"/>
+          <dc:Bounds height="11.0" width="76.0" x="995.0" y="535.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_2" bpmnElement="StartEvent_3">
@@ -630,25 +617,19 @@ VertxUtils.writeMsg(&quot;webcmds&quot;,msg);
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_3" bpmnElement="StartEvent_4">
         <dc:Bounds height="36.0" width="36.0" x="170.0" y="490.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_10">
-          <dc:Bounds height="11.0" width="53.0" x="162.0" y="526.0"/>
+          <dc:Bounds height="22.0" width="73.0" x="152.0" y="526.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_2" bpmnElement="EndEvent_3">
-        <dc:Bounds height="36.0" width="36.0" x="860.0" y="483.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="780.0" y="490.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_12">
-          <dc:Bounds height="11.0" width="50.0" x="853.0" y="519.0"/>
+          <dc:Bounds height="22.0" width="70.0" x="763.0" y="526.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_4" bpmnElement="Task_4" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="400.0" y="483.0"/>
+        <dc:Bounds height="68.0" width="221.0" x="499.0" y="474.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_13">
-          <dc:Bounds height="22.0" width="82.0" x="414.0" y="497.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_6" bpmnElement="ScriptTask_6" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="705.0" y="488.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_14">
-          <dc:Bounds height="22.0" width="94.0" x="713.0" y="502.0"/>
+          <dc:Bounds height="11.0" width="162.0" x="528.0" y="502.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_1" targetElement="BPMNShape_ScriptTask_1">
@@ -696,36 +677,26 @@ VertxUtils.writeMsg(&quot;webcmds&quot;,msg);
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_25" bpmnElement="SequenceFlow_25" sourceElement="BPMNShape_SubProcess_1" targetElement="BPMNShape_SubProcess_3">
         <di:waypoint xsi:type="dc:Point" x="545.0" y="401.0"/>
         <di:waypoint xsi:type="dc:Point" x="545.0" y="422.0"/>
-        <di:waypoint xsi:type="dc:Point" x="535.0" y="422.0"/>
-        <di:waypoint xsi:type="dc:Point" x="535.0" y="443.0"/>
+        <di:waypoint xsi:type="dc:Point" x="545.0" y="443.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_16"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_29" bpmnElement="SequenceFlow_29" sourceElement="BPMNShape_SubProcess_3" targetElement="BPMNShape_EndEvent_1">
-        <di:waypoint xsi:type="dc:Point" x="931.0" y="517.0"/>
-        <di:waypoint xsi:type="dc:Point" x="990.0" y="517.0"/>
-        <di:waypoint xsi:type="dc:Point" x="990.0" y="519.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1050.0" y="519.0"/>
+        <di:waypoint xsi:type="dc:Point" x="951.0" y="517.0"/>
+        <di:waypoint xsi:type="dc:Point" x="983.0" y="517.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1015.0" y="517.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_17"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_30" bpmnElement="SequenceFlow_30" sourceElement="BPMNShape_ScriptTask_5" targetElement="BPMNShape_Task_4">
         <di:waypoint xsi:type="dc:Point" x="374.0" y="508.0"/>
-        <di:waypoint xsi:type="dc:Point" x="387.0" y="508.0"/>
-        <di:waypoint xsi:type="dc:Point" x="400.0" y="508.0"/>
+        <di:waypoint xsi:type="dc:Point" x="436.0" y="508.0"/>
+        <di:waypoint xsi:type="dc:Point" x="499.0" y="508.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_18"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_32" bpmnElement="SequenceFlow_32" sourceElement="BPMNShape_ScriptTask_6" targetElement="BPMNShape_EndEvent_2">
-        <di:waypoint xsi:type="dc:Point" x="815.0" y="513.0"/>
-        <di:waypoint xsi:type="dc:Point" x="837.0" y="513.0"/>
-        <di:waypoint xsi:type="dc:Point" x="837.0" y="501.0"/>
-        <di:waypoint xsi:type="dc:Point" x="860.0" y="501.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_19"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_33" bpmnElement="SequenceFlow_33" sourceElement="BPMNShape_Task_4" targetElement="BPMNShape_ScriptTask_6">
-        <di:waypoint xsi:type="dc:Point" x="510.0" y="508.0"/>
-        <di:waypoint xsi:type="dc:Point" x="607.0" y="508.0"/>
-        <di:waypoint xsi:type="dc:Point" x="607.0" y="513.0"/>
-        <di:waypoint xsi:type="dc:Point" x="705.0" y="513.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_20"/>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_Task_4" targetElement="BPMNShape_EndEvent_2">
+        <di:waypoint xsi:type="dc:Point" x="720.0" y="508.0"/>
+        <di:waypoint xsi:type="dc:Point" x="750.0" y="508.0"/>
+        <di:waypoint xsi:type="dc:Point" x="780.0" y="508.0"/>
+        <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
