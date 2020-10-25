@@ -51,7 +51,7 @@ rule "IS_EDU_PRO_REP"
 				
 				if (assocEP != null) {
  						beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_ASSOC_EP", assocEP));
-						beUtils.createLink(assocEP.getCode(), newBe.getCode(), "LNK_CPY", "EDU_PRO_REP", 1.0);
+						beUtils.createLink(assocEPBe.getCode(), newBe.getCode(), "LNK_CPY", "EDU_PRO_REP", 1.0);
  				}
 		}
 		
