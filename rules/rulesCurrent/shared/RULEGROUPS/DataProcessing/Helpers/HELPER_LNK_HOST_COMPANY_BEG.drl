@@ -59,26 +59,49 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		BaseEntity companyBe = beUtils.getBaseEntityByCode(code);
 
 		/* get the name attribute of the company */
-		String name = companyBe.getValue("PRI_NAME", null);		
-		String address = companyBe.getValue("PRI_ADDRESS_FULL", null);	
-		String country = companyBe.getValue("PRI_ADDRESS_COUNTRY", null);	
+		String name = companyBe.getValue("PRI_NAME", null);
+		System.out.println("name  :: " + name);	
+		
+		String address = companyBe.getValue("PRI_ADDRESS_FULL", null);
+		System.out.println("address  :: " + address);
+			
+		String country = companyBe.getValue("PRI_ADDRESS_COUNTRY", null);
+		System.out.println("country  :: " + country);
+			
 		String postcode = companyBe.getValue("PRI_ADDRESS_POSTCODE", null);	
-		String suburb = companyBe.getValue("PRI_ADDRESS_SUBURB", null);	
+		System.out.println("postcode  :: " + postcode);
+		
+		String suburb = companyBe.getValue("PRI_ADDRESS_SUBURB", null);
+		System.out.println("suburb  :: " + suburb);
+			
 		String city = companyBe.getValue("PRI_ADDRESS_CITY", null);	
-		String state = companyBe.getValue("PRI_ADDRESS_STATE", null);	
+		System.out.println("city  :: " + city);	
+		
+		String state = companyBe.getValue("PRI_ADDRESS_STATE", null);
+		System.out.println("state  :: " + state);
+			
 		System.out.println("company address :: " + address);
 
-		Answer assocHcAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HC", name);
-		Answer addressAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", address);
-		Answer countryAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_COUNTRY", country);
-		Answer postcodeAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_POSTCODE", postcode);
-		Answer suburbAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_SUBURB", suburb);
-		Answer cityAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_CITY", city);
-		Answer stateAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", state);
+		Answer assocHcAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HC", name, false, true);
+		System.out.println("assocHcAnswer");
+		Answer addressAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", address, false, true);
+		System.out.println("addressAnswer");
+		Answer countryAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_COUNTRY", country, false, true);
+		System.out.println("countryAnswer");
+		Answer postcodeAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_POSTCODE", postcode, false, true);
+		System.out.println("postcodeAnswer");
+		Answer suburbAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_SUBURB", suburb, false, true);
+		System.out.println("suburbAnswer");
+		Answer cityAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_CITY", city, false, true);
+		System.out.println("cityAnswer");
+		Answer stateAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", state, false, true);
+		System.out.println("stateAnswer");
 
 		/* TODO: Answer should support null  */
 		Answer repAnswer = new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", "",false,true);
+		System.out.println("repAnswer");
 		Answer supervisorAnswer = new Answer(sourceCode, targetCode, "LNK_INTERN_SUPERVISOR", "",false,true);
+		System.out.println("supervisorAnswer");
 
 		List<Answer> addressData = new ArrayList<Answer>();
 		addressData.add(answer);
@@ -91,11 +114,15 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		addressData.add(stateAnswer);
 		addressData.add(repAnswer);
 		addressData.add(supervisorAnswer);
+		
+		System.out.println("addressData");
 
 		beUtils.saveAnswers(addressData);
 		/*update(answersToSave);*/
 
 		VertxUtils.sendToFrontEnd(userToken, addressAnswer);
+		
+		System.out.println("Before dropwdown");
 		
 		/* dropdown search here For companyRep */
 		DropdownUtils dropdown = new DropdownUtils(serviceToken);
