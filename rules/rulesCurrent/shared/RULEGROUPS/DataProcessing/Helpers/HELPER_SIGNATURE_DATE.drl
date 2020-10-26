@@ -33,7 +33,7 @@ rule "HELPER_SIGNATURE_DATE"
 			salience 5000
 	when
 		beUtils : BaseEntityUtils()
-		answer : Answer( attributeCode == "PRI_INTERN_AGREEMENT_SIGNATURE" || attributeCode == "PRI_HOST_CPY_REP_AGREEMENT_SIGNATURE" || attributeCode == "PRI_OUTCOME_AGREEMENT_SIGNATURE" )
+		answer : Answer( attributeCode == "PRI_INTERN_AGREEMENT_SIGNATURE" || attributeCode == "PRI_HOST_CPY_REP_AGREEMENT_SIGNATURE" || attributeCode == "PRI_OUTCOME_AGREEMENT_SIGNATURE" || attributeCode == "PRI_HC_SERVICES_AGREEMENT_SIGNATURE")
 		answersToSave : Answers()
 		ruleDetails : RuleDetails()
 		output : OutputParam( )
@@ -101,7 +101,23 @@ rule "HELPER_SIGNATURE_DATE"
 			Answer answerCreated = new Answer(sourceCode, targetCode, "PRI_OUTCOME_REP_SIGNING_DATE", date);
 			answersToSave.add(answerCreated);
  			
- 		}	
+ 		}
+ 		
+ 		if (attributeCode.startsWith("PRI_HC_SERVICES_")){
+		
+			System.out.println("attributeCode.startsWith(PRI_HC_SERVICES_)" + attributeCode);
+			
+			DateTimeFormatter dtf1 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+			LocalDateTime now = LocalDateTime.now();
+			String date = dtf1.format(now);
+			System.out.println(date);
+			
+			/* save the signing date */
+			Answer answerCreated = new Answer(sourceCode, targetCode, "PRI_HOST_CPY_REP_SIGNING_DATE", date);
+			answersToSave.add(answerCreated);
+ 		
+		}		
+ 			
 
 		update(answersToSave);
 
