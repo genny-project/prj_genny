@@ -53,7 +53,7 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		System.out.println("hostCompanyCode :: " + hostCompanyCode);
 		
 		String code = hostCompanyCode.replace("\"", "").replace("[", "").replace("]", "");
-		System.out.println("code  :: " + code)
+		System.out.println("code  :: " + code);
 
 		/* get the company baseentity */
 		BaseEntity companyBe = beUtils.getBaseEntityByCode(code);
