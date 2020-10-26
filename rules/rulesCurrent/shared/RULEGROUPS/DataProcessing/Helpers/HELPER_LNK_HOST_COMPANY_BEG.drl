@@ -81,6 +81,7 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		System.out.println("state  :: " + state);
 			
 		System.out.println("company address :: " + address);
+		
 
 		Answer assocHcAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HC", name, false, true);
 		System.out.println("assocHcAnswer");
