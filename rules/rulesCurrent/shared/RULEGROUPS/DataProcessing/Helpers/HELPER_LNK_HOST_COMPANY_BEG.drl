@@ -53,10 +53,24 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		System.out.println("hostCompanyCode :: " + hostCompanyCode);
 		
 		String code = hostCompanyCode.replace("\"", "").replace("[", "").replace("]", "");
-		System.out.println("code  :: " + code);
+		System.out.println("code  :: " + code)
 
 		/* get the company baseentity */
 		BaseEntity companyBe = beUtils.getBaseEntityByCode(code);
+		
+		System.out.println("Before dropwdown");
+		
+		/* dropdown search here For companyRep */
+		DropdownUtils dropdown = new DropdownUtils(serviceToken);
+		dropdown.setNewSearch("HCR Dropdown", "Fetch HCR Dropdown Items")
+											.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
+											.addFilter("PRI_IS_HOST_CPY_REP", true)
+											.addFilter("LNK_HOST_COMPANY", SearchEntity.StringFilter.EQUAL, hostCompanyCode)
+											.setPageStart(0)
+											.setPageSize(1000);
+
+		/* Send the dropdown options */
+		dropdown.sendSearchResults("GRP_HOST_COMPANY_REP_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
 
 		/* get the name attribute of the company */
 		String name = companyBe.getValue("PRI_NAME", null);
@@ -81,6 +95,7 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		System.out.println("state  :: " + state);
 			
 		System.out.println("company address :: " + address);
+		
 
 		Answer assocHcAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HC", name, false, true);
 		System.out.println("assocHcAnswer");
@@ -120,23 +135,8 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		beUtils.saveAnswers(addressData);
 		/*update(answersToSave);*/
 
-		VertxUtils.sendToFrontEnd(userToken, addressAnswer);
-		
-		System.out.println("Before dropwdown");
-		
-		/* dropdown search here For companyRep */
-		DropdownUtils dropdown = new DropdownUtils(serviceToken);
-		dropdown.setNewSearch("HCR Dropdown", "Fetch HCR Dropdown Items")
-											.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
-											.addFilter("PRI_IS_HOST_CPY_REP", true)
-											.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "ACTIVE")
-											.addFilter("LNK_HOST_COMPANY", SearchEntity.StringFilter.EQUAL, hostCompanyCode)
-											.setPageStart(0)
-											.setPageSize(1000);
-
-		/* Send the dropdown options */
-		dropdown.sendSearchResults("GRP_HOST_COMPANY_REP_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
-		
+		/*VertxUtils.sendToFrontEnd(userToken, addressAnswer);*/
+			
 		/*retract(answer);*/
 
 		output.setTypeOfResult("NONE");
