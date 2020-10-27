@@ -73,7 +73,6 @@
     <bpmn2:property id="baseEntityType" itemSubjectRef="ItemDefinition_9" name="baseEntityType"/>
     <bpmn2:property id="dropDownGroup" itemSubjectRef="ItemDefinition_9" name="dropDownGroup"/>
     <bpmn2:property id="eventMsg" itemSubjectRef="ItemDefinition_17" name="eventMsg"/>
-    <bpmn2:property id="processVar1" name="processVar1"/>
     <bpmn2:property id="beUtils" itemSubjectRef="ItemDefinition_1926" name="beUtils"/>
     <bpmn2:subProcess id="SubProcess_1" name="Host Company Builder">
       <bpmn2:extensionElements>
@@ -377,12 +376,6 @@ TableUtils.searchTable(beUtils, templateCode, true);
         <bpmn2:incoming>SequenceFlow_17</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
         <bpmn2:script>System.out.println(&quot;Sending redirect for add internship&quot;);
-SessionFacts sessionFacts2 = (SessionFacts)sessionFacts;
-
-serviceToken = (GennyToken)sessionFacts2.getServiceToken();
-userToken = (GennyToken)sessionFacts2.getUserToken();
-
-BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 
 QCmdMessage msg = new QCmdMessage(&quot;DISPLAY&quot;, &quot;FORM:DETAIL&quot;);
 msg.setToken(beUtils.getGennyToken().getToken());
