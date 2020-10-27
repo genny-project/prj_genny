@@ -123,11 +123,13 @@ import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwanda.exception.BadDataException;
 import life.genny.qwanda.message.MessageData;
 import life.genny.qwanda.message.QBulkMessage;
+import life.genny.qwanda.message.QCmdViewTableMessage;
 import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventBtnClickMessage;
 import life.genny.qwanda.message.QEventMessage;
+import life.genny.qwanda.message.QScheduleMessage;
 import life.genny.qwanda.message.QSearchBeResult;
 import life.genny.qwanda.validation.Validation;
 import life.genny.qwanda.validation.ValidationList;
@@ -187,6 +189,82 @@ public class AdamTest {
 	protected static GennyToken newUserToken;
 	protected static GennyToken serviceToken;
 
+	
+	@Test
+	public void testSchedule()
+	{
+		System.out.println("Schedule test");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+		} else {
+			VertxUtils.cachedEnabled = false;
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+
+		}
+
+		System.out.println("session     =" + userToken.getSessionCode());
+		System.out.println("userToken   =" + userToken.getToken());
+		System.out.println("serviceToken=" + serviceToken.getToken());
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		beUtils.setServiceToken(serviceToken);
+
+		System.out.println("Current Time is "+LocalDateTime.now());
+		
+		LocalDateTime triggertime = LocalDateTime.now().plusSeconds(10);
+		System.out.println("Setting trigger Time to "+triggertime);
+		
+		BaseEntity be = beUtils.getBaseEntityByCode("CPY_ITA");
+
+		QDataBaseEntityMessage msg = null;
+		
+		if (be != null) {
+			String name = "Badass Institute of Technology Australia";
+
+			try {
+				be.setName(name);
+				be.setValue("PRI_NAME", name);
+				be.setValue("PRI_STATUS", "ACTIVE");
+				msg = new QDataBaseEntityMessage(be);
+				msg.setToken(userToken.getToken());
+				msg.setReplace(true);
+				String[] rxList = new String[2];
+				rxList[0] = "SUPERVISOR";
+				rxList[1] = userToken.getUserCode();
+				msg.setRecipientCodeArray(rxList);
+
+			} catch (BadDataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+		
+		QScheduleMessage scheduleMessage = new QScheduleMessage(JsonUtils.toJson(msg), userToken.getUserCode(), "webcmds",triggertime, userToken.getRealm());
+		
+		// POst the scheduleMessage
+		try {
+			QwandaUtils.apiPostEntity("http://localhost:8095/api/schedule", JsonUtils.toJson(scheduleMessage), userToken.getToken());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
 	@Test
 	public void testSearchSort()
 	{
