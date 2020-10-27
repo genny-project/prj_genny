@@ -137,7 +137,10 @@ kcontext.setVariable(&quot;callingProcessToken&quot;, callingProcessToken);
 System.out.println(&quot;HOST_CPY: callingProcessToken = &quot; + callingProcessToken);
 
 userToken = (GennyToken)userToken;
+
 BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+kcontext.setVariable(&quot;beUtils&quot;, beUtils);
+
 String newCode = &quot;CPY_&quot;+uuid;
 newCode = newCode.toUpperCase();
 newBe = beUtils.create(newCode, newCode);
