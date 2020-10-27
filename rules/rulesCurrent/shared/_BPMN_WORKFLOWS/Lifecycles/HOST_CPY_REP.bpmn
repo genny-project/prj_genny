@@ -408,7 +408,7 @@ System.out.println(&quot;##################################### WORKFLOW: ANSWER 
             <drools:metaValue><![CDATA[Start Next Steps]]></drools:metaValue>
           </drools:metaData>
         </bpmn2:extensionElements>
-        <bpmn2:outgoing>SequenceFlow_23</bpmn2:outgoing>
+        <bpmn2:outgoing>SequenceFlow_11</bpmn2:outgoing>
       </bpmn2:startEvent>
       <bpmn2:endEvent id="EndEvent_3" name="End Next Steps">
         <bpmn2:extensionElements>
@@ -418,30 +418,6 @@ System.out.println(&quot;##################################### WORKFLOW: ANSWER 
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
       </bpmn2:endEvent>
-      <bpmn2:scriptTask id="ScriptTask_5" name="Send Detail:Form Redirect" scriptFormat="http://www.java.com/java">
-        <bpmn2:extensionElements>
-          <drools:metaData name="elementname">
-            <drools:metaValue><![CDATA[Send Detail:Form Redirect]]></drools:metaValue>
-          </drools:metaData>
-        </bpmn2:extensionElements>
-        <bpmn2:incoming>SequenceFlow_23</bpmn2:incoming>
-        <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
-        <bpmn2:script>System.out.println(&quot;Sending redirect for add internship&quot;);
-SessionFacts sessionFacts2 = (SessionFacts)sessionFacts;
-
-serviceToken = (GennyToken)sessionFacts2.getServiceToken();
-userToken = (GennyToken)sessionFacts2.getUserToken();
-
-BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
-
-QCmdMessage msg = new QCmdMessage(&quot;DISPLAY&quot;, &quot;FORM:DETAIL&quot;);
-msg.setToken(beUtils.getGennyToken().getToken());
-msg.setSend(true);  
-
-VertxUtils.writeMsg(&quot;webcmds&quot;,msg);
-</bpmn2:script>
-      </bpmn2:scriptTask>
-      <bpmn2:sequenceFlow id="SequenceFlow_23" drools:priority="1" sourceRef="StartEvent_4" targetRef="ScriptTask_5"/>
       <bpmn2:task id="Task_4" drools:taskName="AskQuestionTask" drools:displayName="Ask Question Task" drools:icon="icons/icon-info.gif" name="QUE_NEXT_STEP_INTERNSHIP_GRP">
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
@@ -530,7 +506,7 @@ VertxUtils.writeMsg(&quot;webcmds&quot;,msg);
             <drools:metaValue><![CDATA[Send Detail View]]></drools:metaValue>
           </drools:metaData>
         </bpmn2:extensionElements>
-        <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
+        <bpmn2:incoming>SequenceFlow_11</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
         <bpmn2:script>System.out.println(&quot;Sending host company detail view&quot;);
 SessionFacts sessionFacts2 = (SessionFacts)sessionFacts;
@@ -544,8 +520,8 @@ System.out.println(&quot;baseEntityType  ::   &quot; + baseEntityType);
 TableUtils.searchTable(beUtils, baseEntityType, true, &quot;PRI_CODE&quot;, newBe.getCode());
 </bpmn2:script>
       </bpmn2:scriptTask>
-      <bpmn2:sequenceFlow id="SequenceFlow_6" drools:priority="1" sourceRef="ScriptTask_5" targetRef="ScriptTask_2"/>
       <bpmn2:sequenceFlow id="SequenceFlow_9" drools:priority="1" sourceRef="ScriptTask_2" targetRef="Task_4"/>
+      <bpmn2:sequenceFlow id="SequenceFlow_11" drools:priority="1" sourceRef="StartEvent_4" targetRef="ScriptTask_2"/>
     </bpmn2:subProcess>
     <bpmn2:sequenceFlow id="SequenceFlow_25" drools:priority="1" sourceRef="SubProcess_1" targetRef="SubProcess_3"/>
     <bpmn2:endEvent id="EndEvent_4" name="End">
@@ -614,12 +590,6 @@ TableUtils.searchTable(beUtils, baseEntityType, true, &quot;PRI_CODE&quot;, newB
           <dc:Bounds height="11.0" width="73.0" x="594.0" y="324.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_5" bpmnElement="ScriptTask_5" isExpanded="true">
-        <dc:Bounds height="54.0" width="147.0" x="230.0" y="481.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_7">
-          <dc:Bounds height="11.0" width="107.0" x="250.0" y="502.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_3" bpmnElement="StartEvent_4">
         <dc:Bounds height="36.0" width="36.0" x="170.0" y="490.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_10">
@@ -686,12 +656,6 @@ TableUtils.searchTable(beUtils, baseEntityType, true, &quot;PRI_CODE&quot;, newB
         <di:waypoint xsi:type="dc:Point" x="700.0" y="330.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_10"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_23" bpmnElement="SequenceFlow_23" sourceElement="BPMNShape_StartEvent_3" targetElement="BPMNShape_ScriptTask_5">
-        <di:waypoint xsi:type="dc:Point" x="206.0" y="508.0"/>
-        <di:waypoint xsi:type="dc:Point" x="218.0" y="508.0"/>
-        <di:waypoint xsi:type="dc:Point" x="230.0" y="508.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_15"/>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_25" bpmnElement="SequenceFlow_25" sourceElement="BPMNShape_SubProcess_1" targetElement="BPMNShape_SubProcess_3">
         <di:waypoint xsi:type="dc:Point" x="545.0" y="401.0"/>
         <di:waypoint xsi:type="dc:Point" x="545.0" y="422.0"/>
@@ -710,16 +674,16 @@ TableUtils.searchTable(beUtils, baseEntityType, true, &quot;PRI_CODE&quot;, newB
         <di:waypoint xsi:type="dc:Point" x="1020.0" y="517.0"/>
         <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="BPMNShape_ScriptTask_5" targetElement="BPMNShape_ScriptTask_2">
-        <di:waypoint xsi:type="dc:Point" x="377.0" y="508.0"/>
-        <di:waypoint xsi:type="dc:Point" x="406.0" y="508.0"/>
-        <di:waypoint xsi:type="dc:Point" x="435.0" y="508.0"/>
-        <bpmndi:BPMNLabel/>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_9" bpmnElement="SequenceFlow_9" sourceElement="BPMNShape_ScriptTask_2" targetElement="BPMNShape_Task_4">
         <di:waypoint xsi:type="dc:Point" x="545.0" y="508.0"/>
         <di:waypoint xsi:type="dc:Point" x="572.0" y="508.0"/>
         <di:waypoint xsi:type="dc:Point" x="600.0" y="508.0"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_11" bpmnElement="SequenceFlow_11" sourceElement="BPMNShape_StartEvent_3" targetElement="BPMNShape_ScriptTask_2">
+        <di:waypoint xsi:type="dc:Point" x="206.0" y="508.0"/>
+        <di:waypoint xsi:type="dc:Point" x="320.0" y="508.0"/>
+        <di:waypoint xsi:type="dc:Point" x="435.0" y="508.0"/>
         <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
