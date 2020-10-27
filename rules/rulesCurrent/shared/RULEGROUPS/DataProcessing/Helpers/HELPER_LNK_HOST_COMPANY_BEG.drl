@@ -94,6 +94,11 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		
 		String state = companyBe.getValue("PRI_ADDRESS_STATE", null);
 		System.out.println("state  :: " + state);
+
+		String cpyImage = companyBe.getValue("PRI_IMAGE_URL",null);
+		System.out.println("cpyImage  :: " + cpyImage);
+
+
 			
 		System.out.println("company address :: " + address);
 		
@@ -112,6 +117,8 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		System.out.println("cityAnswer");
 		Answer stateAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", state, false, true);
 		System.out.println("stateAnswer");
+		Answer imageAnswer = new Answer(sourceCode, targetCode, "PRI_IMAGE_URL", cpyImage, false, true);
+		System.out.println("imageAnswer");
 
 		/* TODO: Answer should support null  */
 		Answer repAnswer = new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", "",false,true);
@@ -136,7 +143,7 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		beUtils.saveAnswers(addressData);
 		/*update(answersToSave);*/
 
-		/*VertxUtils.sendToFrontEnd(userToken, addressAnswer);*/
+		VertxUtils.sendToFrontEnd(userToken, addressAnswer);
 			
 		/*retract(answer);*/
 
