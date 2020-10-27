@@ -136,7 +136,7 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		beUtils.saveAnswers(addressData);
 		/*update(answersToSave);*/
 
-		/*VertxUtils.sendToFrontEnd(userToken, addressAnswer);*/
+		VertxUtils.sendToFrontEnd(userToken, addressAnswer);
 			
 		/*retract(answer);*/
 
