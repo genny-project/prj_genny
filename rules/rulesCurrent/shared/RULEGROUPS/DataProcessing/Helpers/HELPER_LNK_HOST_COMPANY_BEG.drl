@@ -146,6 +146,11 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		addressData.add(suburbAnswer);
 		addressData.add(cityAnswer);
 		addressData.add(stateAnswer);
+		
+		addressData.add(imageAnswer);
+		addressData.add(latitudeAnswer);
+		addressData.add(longitudeAnswer);
+
 		addressData.add(repAnswer);
 		addressData.add(supervisorAnswer);
 		
@@ -154,7 +159,7 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		beUtils.saveAnswers(addressData);
 		/*update(answersToSave);*/
 
-		VertxUtils.sendToFrontEnd(userToken, addressAnswer);
+		VertxUtils.sendToFrontEnd(userToken, addressAnswer, latitudeAnswer, longitudeAnswer);
 			
 		/*retract(answer);*/
 
