@@ -74,6 +74,7 @@
     <bpmn2:property id="dropDownGroup" itemSubjectRef="ItemDefinition_9" name="dropDownGroup"/>
     <bpmn2:property id="eventMsg" itemSubjectRef="ItemDefinition_17" name="eventMsg"/>
     <bpmn2:property id="processVar1" name="processVar1"/>
+    <bpmn2:property id="beUtils" itemSubjectRef="ItemDefinition_1926" name="beUtils"/>
     <bpmn2:subProcess id="SubProcess_1" name="Host Company Builder">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
