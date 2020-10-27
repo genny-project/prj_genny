@@ -375,8 +375,6 @@ TableUtils.searchTable(beUtils, templateCode, true);
         <bpmn2:incoming>SequenceFlow_17</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
         <bpmn2:script>System.out.println(&quot;Sending redirect for add internship&quot;);
-
-System.out.println(&quot;Sending redirect for add internship&quot;);
 SessionFacts sessionFacts2 = (SessionFacts)sessionFacts;
 
 serviceToken = (GennyToken)sessionFacts2.getServiceToken();
@@ -388,8 +386,7 @@ QCmdMessage msg = new QCmdMessage(&quot;DISPLAY&quot;, &quot;FORM:DETAIL&quot;);
 msg.setToken(beUtils.getGennyToken().getToken());
 msg.setSend(true);  
 
-VertxUtils.writeMsg(&quot;webcmds&quot;,msg);
-</bpmn2:script>
+VertxUtils.writeMsg(&quot;webcmds&quot;,msg);</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_17" drools:priority="1" sourceRef="StartEvent_4" targetRef="ScriptTask_6"/>
       <bpmn2:task id="Task_4" drools:taskName="AskQuestionTask" drools:displayName="Ask Question Task" drools:icon="icons/icon-info.gif" name="QUE_NEXT_STEP_HOST_CPY_REP_GRP">
@@ -483,7 +480,7 @@ VertxUtils.writeMsg(&quot;webcmds&quot;,msg);
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
-        <bpmn2:script>System.out.println(&quot;Sending redirect for add internship&quot;);
+        <bpmn2:script>System.out.println(&quot;Sending host company detail view&quot;);
 SessionFacts sessionFacts2 = (SessionFacts)sessionFacts;
 
 serviceToken = (GennyToken)sessionFacts2.getServiceToken();
@@ -491,7 +488,7 @@ userToken = (GennyToken)sessionFacts2.getUserToken();
 
 BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 
-System.out.println(&quot;baseEntityType.  ::   &quot; + baseEntityType);
+System.out.println(&quot;baseEntityType  ::   &quot; + baseEntityType);
 TableUtils.searchTable(beUtils, baseEntityType, true, &quot;PRI_CODE&quot;, newBe.getCode());
 </bpmn2:script>
       </bpmn2:scriptTask>
