@@ -224,7 +224,7 @@ public class AdamTest {
 
 		System.out.println("Current Time is "+LocalDateTime.now());
 		
-		LocalDateTime triggertime = LocalDateTime.now().plusSeconds(10);
+		LocalDateTime triggertime = LocalDateTime.now().plusSeconds(30);
 		System.out.println("Setting trigger Time to "+triggertime);
 		
 		BaseEntity be = beUtils.getBaseEntityByCode("CPY_ITA");
@@ -232,17 +232,17 @@ public class AdamTest {
 		QDataBaseEntityMessage msg = null;
 		
 		if (be != null) {
-			String name = "Badass Institute of Technology Australia";
+			String name = "old Institute of Technology Australia";
 
 			try {
 				be.setName(name);
 				be.setValue("PRI_NAME", name);
-				be.setValue("PRI_STATUS", "ACTIVE");
+				be.setValue("PRI_STATUS", "PENDING");
 				msg = new QDataBaseEntityMessage(be);
 				msg.setToken(userToken.getToken());
 				msg.setReplace(true);
 				String[] rxList = new String[2];
-				rxList[0] = "SUPERVISOR";
+				rxList[0] = "SUPERUSER";
 				rxList[1] = userToken.getUserCode();
 				msg.setRecipientCodeArray(rxList);
 
