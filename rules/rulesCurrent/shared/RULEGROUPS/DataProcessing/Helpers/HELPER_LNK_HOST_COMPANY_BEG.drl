@@ -98,10 +98,10 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		String cpyImage = companyBe.getValue("PRI_IMAGE_URL",null);
 		System.out.println("cpyImage  :: " + cpyImage);
 
-		String latitude = companyBe.getValue("PRI_ADDRESS_LATITUDE",null);
+		Double latitude = companyBe.getValue("PRI_ADDRESS_LATITUDE",null);
 		System.out.println("latitude  :: " + latitude);
 		
-		String longitude = companyBe.getValue("PRI_ADDRESS_LONGITUDE",null);
+		Double longitude = companyBe.getValue("PRI_ADDRESS_LONGITUDE",null);
 		System.out.println("longitude  :: " + longitude);
 
 
