@@ -276,7 +276,8 @@ public class AdamTest {
 		try {
 			
 			if (useLocalDocker) { // using local docker
-				uniqueCode = QwandaUtils.apiPostEntity("http://internmatch.genny.life:8299/api/schedule", JsonUtils.toJson(scheduleMessage), userToken.getToken());
+			//	uniqueCode = QwandaUtils.apiPostEntity("http://internmatch.genny.life:8299/api/schedule", JsonUtils.toJson(scheduleMessage), userToken.getToken());
+				uniqueCode = QwandaUtils.apiPostEntity("https://internmatch-adam2.gada.io/api/schedule", JsonUtils.toJson(scheduleMessage), userToken.getToken());
 			} else { // using local dev
 				uniqueCode = QwandaUtils.apiPostEntity("http://localhost:8095/api/schedule", JsonUtils.toJson(scheduleMessage), userToken.getToken());
 			}
