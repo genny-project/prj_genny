@@ -98,6 +98,12 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		String cpyImage = companyBe.getValue("PRI_IMAGE_URL",null);
 		System.out.println("cpyImage  :: " + cpyImage);
 
+		Double latitude = companyBe.getValue("PRI_ADDRESS_LATITUDE",null);
+		System.out.println("latitude  :: " + latitude);
+		
+		Double longitude = companyBe.getValue("PRI_ADDRESS_LONGITUDE",null);
+		System.out.println("longitude  :: " + longitude);
+
 
 			
 		System.out.println("company address :: " + address);
@@ -119,6 +125,11 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		System.out.println("stateAnswer");
 		Answer imageAnswer = new Answer(sourceCode, targetCode, "PRI_IMAGE_URL", cpyImage, false, true);
 		System.out.println("imageAnswer");
+		
+		Answer latitudeAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_LATITUDE", latitude, false, true);
+		System.out.println("latitudeAnswer");
+		Answer longitudeAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_LONGITUDE", longitude, false, true);
+		System.out.println("longitudeAnswer");
 
 		/* TODO: Answer should support null  */
 		Answer repAnswer = new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", "",false,true);
@@ -135,6 +146,11 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		addressData.add(suburbAnswer);
 		addressData.add(cityAnswer);
 		addressData.add(stateAnswer);
+		
+		addressData.add(imageAnswer);
+		addressData.add(latitudeAnswer);
+		addressData.add(longitudeAnswer);
+
 		addressData.add(repAnswer);
 		addressData.add(supervisorAnswer);
 		
@@ -143,7 +159,7 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		beUtils.saveAnswers(addressData);
 		/*update(answersToSave);*/
 
-		VertxUtils.sendToFrontEnd(userToken, addressAnswer);
+		VertxUtils.sendToFrontEnd(userToken, addressAnswer, assocHcAnswer, imageAnswer, latitudeAnswer, longitudeAnswer);
 			
 		/*retract(answer);*/
 
