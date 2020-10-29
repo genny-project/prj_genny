@@ -49,10 +49,6 @@ rule "IS_REF_PART"
 		System.out.println("I just posted the note");
 		System.out.println("Note endPoint: " +endPoint);
 		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
-	
-		/* send the detail sbe */
-		long totalTime = TableUtils.searchTable(beUtils,"REF_PART", true, "PRI_CODE", newBe.getCode());
-		System.out.println("total took " + (totalTime) + " ms"); 
 		
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
