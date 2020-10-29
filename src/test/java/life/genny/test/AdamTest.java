@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -224,15 +225,18 @@ public class AdamTest {
 
 		System.out.println("Current Time is "+LocalDateTime.now());
 		
-		LocalDateTime triggertime = LocalDateTime.now().plusSeconds(10);
-		System.out.println("Setting trigger Time to "+triggertime);
+		LocalDateTime triggertime = null;
+		
 		
 		BaseEntity be = beUtils.getBaseEntityByCode("CPY_ITA");
 
+		Boolean useLocalDocker = true;
+		
+		
 		QDataBaseEntityMessage msg = null;
 		
 		if (be != null) {
-			String name = "Badass Institute of Technology Australia";
+			String name = "new Institute of Technology Australia";
 
 			try {
 				be.setName(name);
@@ -242,7 +246,7 @@ public class AdamTest {
 				msg.setToken(userToken.getToken());
 				msg.setReplace(true);
 				String[] rxList = new String[2];
-				rxList[0] = "SUPERVISOR";
+				rxList[0] = "SUPERUSER";
 				rxList[1] = userToken.getUserCode();
 				msg.setRecipientCodeArray(rxList);
 
@@ -253,15 +257,36 @@ public class AdamTest {
 
 		}
 		
+		if (useLocalDocker) {
+			// use UTC
+			triggertime = LocalDateTime.now(ZoneId.of("UTC")).plusSeconds(30);
+			System.out.println("Setting trigger Time to "+triggertime);
+
+		} else {
+			// use local time
+			triggertime = LocalDateTime.now().plusSeconds(30);
+			System.out.println("Setting trigger Time to "+triggertime);
+
+		}
+		
 		QScheduleMessage scheduleMessage = new QScheduleMessage(JsonUtils.toJson(msg), userToken.getUserCode(), "webcmds",triggertime, userToken.getRealm());
 		
 		// POst the scheduleMessage
+		String uniqueCode = "";
 		try {
-			QwandaUtils.apiPostEntity("http://localhost:8095/api/schedule", JsonUtils.toJson(scheduleMessage), userToken.getToken());
+			
+			if (useLocalDocker) { // using local docker
+			//	uniqueCode = QwandaUtils.apiPostEntity("http://internmatch.genny.life:8299/api/schedule", JsonUtils.toJson(scheduleMessage), userToken.getToken());
+				uniqueCode = QwandaUtils.apiPostEntity("https://internmatch-adam2.gada.io/api/schedule", JsonUtils.toJson(scheduleMessage), userToken.getToken());
+			} else { // using local dev
+				uniqueCode = QwandaUtils.apiPostEntity("http://localhost:8095/api/schedule", JsonUtils.toJson(scheduleMessage), userToken.getToken());
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		System.out.println("Unique scheduleCode = "+uniqueCode);
 	}
 	
 	
