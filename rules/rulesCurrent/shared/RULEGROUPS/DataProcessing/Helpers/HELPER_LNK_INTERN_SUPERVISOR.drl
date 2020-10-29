@@ -69,6 +69,7 @@ rule "HELPER_LNK_INTERN_SUPERVISOR"
 			Answer assocSupervisorAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_SUPERVISOR", name,false,true);
 			answersToSave.add(assocSupervisorAnswer);
 
+			VertxUtils.sendToFrontEnd(userToken, assocSupervisorAnswer);
 		}
 
 		update(answersToSave);
