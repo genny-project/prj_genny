@@ -61,7 +61,7 @@ rule "USER_SUBSCRIPTION"
  			stringSet.add(EncryptionUtils.getEncryptedString(companyCode,securityKey,userToken));
  		}
  		
- 		Optional<String> hcompany = user.getValue("PRI_HOST_COMPANY");
+ 		Optional<String> hcompany = user.getValue("LNK_HOST_COMPANY");
  		if (hcompany.isPresent()) {
  			String companyCode = hcompany.get().substring(2,hcompany.get().length()-2);
  			stringSet.add(EncryptionUtils.getEncryptedString(companyCode,securityKey,userToken));
