@@ -53,7 +53,7 @@ rule "PRI_SEARCH_SORT"
 				for (EntityAttribute sortEA : sortEAs) {
 					Double weight = sortEA.getWeight();
 					sortEA.setWeight(weight + 1.0);
-					if (sortEA.getAttributeCode().equals("SRT_"+answer.getAttributeCode())) {
+					if (sortEA.getAttributeCode().equals(answer.getAttributeCode())) {
 						sortEA.setWeight(0.0);
 						sortEA.setValue(answer.getValue());
 					}
