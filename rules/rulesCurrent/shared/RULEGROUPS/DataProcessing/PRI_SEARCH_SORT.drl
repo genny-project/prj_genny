@@ -62,8 +62,8 @@ rule "PRI_SEARCH_SORT"
 			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
 				beUtils.getGennyToken().getToken());
 		
-			long totalTime = TableUtils.searchTable(beUtils,searchBE, true);
-
+			long totalTime = TableUtils.searchTable(beUtils,searchBE,true, null,null,true);
+			VertxUtils.writeMsgEnd(beUtils.getGennyToken());
 	
 			retract(answer);
 			System.out.println("total took " + (totalTime) + " ms"); 

@@ -92,7 +92,7 @@ rule "SEARCH_FIELD_ASSIST"
 				beUtils.getGennyToken().getToken());
 		
 		System.out.println("About to search");
-		long totalTime = TableUtils.searchTable(beUtils,searchBE, true);
+		long totalTime = TableUtils.searchTable(beUtils,searchBE, true,null,null,false);
 
 		System.out.println("total took " + (totalTime) + " ms"); 
 
