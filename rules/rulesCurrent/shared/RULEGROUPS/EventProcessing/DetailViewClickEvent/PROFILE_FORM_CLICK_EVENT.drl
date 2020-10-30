@@ -62,7 +62,7 @@ rule "PROFILE_FORM_CLICK_EVENT"
 		output.setSuitCase(role);
 		
 		
-		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$ sourceCode: " + output.getSourceCode());
+		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$ Output TargetCode: " + output.getTargetCode());
 		
 		SessionFacts facts = new SessionFacts(serviceToken, userToken, output.getTargetCode());
 		
