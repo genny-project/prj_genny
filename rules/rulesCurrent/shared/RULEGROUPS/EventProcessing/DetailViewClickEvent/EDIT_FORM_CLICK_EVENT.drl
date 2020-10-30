@@ -39,9 +39,7 @@ rule "EDIT_FORM_CLICK_EVENT"
 		targetCode: "PER_5A666E64-021F-48CE-8111-BE3D66901F9C"
 		*/
 		
-		String workflowSignalCode = "EDIT_FORMS";
 		String parentCode = $message.getData().getParentCode(); 	/* get parentcode SBE e.g. SBE_INTERN_XXXXX or SBE_EDU_PRO_REP_XXXXX or SBE_HOST_CPY_XXXXX*/ 
-		
 		String[] parentSplit = parentCode.split("_");
         
         int size = parentSplit.length;
@@ -66,7 +64,7 @@ rule "EDIT_FORM_CLICK_EVENT"
         
 
 		output.setTypeOfResult("SIGNAL");
-		output.setResultCode("START_"+workflowSignalCode);
+		output.setResultCode("START_EDIT_ENTITY");
 		output.setTargetCode($message.getData().getTargetCode());
 		output.setSuitCase(typeOf);
 		
@@ -75,7 +73,7 @@ rule "EDIT_FORM_CLICK_EVENT"
 		SessionFacts facts = new SessionFacts(serviceToken, userToken, output.getTargetCode());	
 		
 		
-		System.out.println("START SIGNAL: " +workflowSignalCode);
+		System.out.println("START SIGNAL: START_EDIT_ENTITY");
 		System.out.println("STARTING EDIT FORMS PROCEDURE WITH: " +output);
 
 

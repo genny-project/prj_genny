@@ -74,11 +74,6 @@ rule "IS_HOST_CPY_REP"
 		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
 		System.out.println("Note newBe.getCode(): " +newBe.getCode());
 
-
-		/* send the detail sbe */
-		/* long totalTime = TableUtils.searchTable(beUtils,"HOST_CPY_REP", true, "PRI_CODE", newBe.getCode());
-		System.out.println("total took " + (totalTime) + " ms");  */
-
 		BaseEntity cpyRepBe = beUtils.getBaseEntityByCode(newBe.getCode());
 		
 		if(cpyRepBe != null){

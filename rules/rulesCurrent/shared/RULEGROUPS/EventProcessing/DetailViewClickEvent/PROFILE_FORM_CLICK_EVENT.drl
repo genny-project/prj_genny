@@ -57,12 +57,12 @@ rule "PROFILE_FORM_CLICK_EVENT"
        	}
 
 		output.setTypeOfResult("SIGNAL");
-		output.setResultCode("START_EDIT_FORMS");
-		output.setTargetCode($message.getData().getTargetCode());
+		output.setResultCode("START_EDIT_ENTITY");
+		output.setTargetCode($message.getData().getParentCode());
 		output.setSuitCase(role);
 		
 		
-		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$ targetCode: " + output.getTargetCode());
+		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$ Output TargetCode: " + output.getTargetCode());
 		
 		SessionFacts facts = new SessionFacts(serviceToken, userToken, output.getTargetCode());
 		
