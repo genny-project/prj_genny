@@ -58,7 +58,7 @@ rule "PROFILE_FORM_CLICK_EVENT"
 
 		output.setTypeOfResult("SIGNAL");
 		output.setResultCode("START_EDIT_ENTITY");
-		output.setTargetCode($message.getData().getSourceCode());
+		output.setTargetCode($message.getData().getParentCode());
 		output.setSuitCase(role);
 		
 		
