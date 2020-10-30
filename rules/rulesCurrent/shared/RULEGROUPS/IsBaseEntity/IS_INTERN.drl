@@ -38,33 +38,7 @@ rule "IS_INTERN"
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_DISABLED", "false"));
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS_COLOR", "#5cb85c"));
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_NUM_JOURNALS", "0")); 
- 		
- 		/* SET DASHBOURD ATTRIBUTES */
- 		System.out.println("IS_INTERN: Setting Dashboard Journey Attributes"); 
- 		
- 
-
-
 		
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_REGISTERED_IN_INTERNMATCH", "true"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_PROFILE_COMPLETE", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_VIDEO_RECORDED", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_INTERNSHIPS_SEARCHED", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_OPPORTUNITIES_SAVED", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ACCREDITTION_COMPLETE", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_APPLIED_FOR_INTERNSHIPS", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_STARTED_SKILL_DEVELOPMENT", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_APPLICATION_SENT", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_INTERVIEWS_STARTED", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_OFFER_ACCEPTED", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_INDUCTION_COMPLETE", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_PROGRESS_REPORTING", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_DAILY_LOGBOOK_COMPLETE", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_RECEIVE_CERTIFICATE", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_UPDATE_LINKEDIN", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASK_FOR_RECOMMENDATION", "false"));
-		
-
 
 		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
 		
@@ -207,10 +181,6 @@ rule "IS_INTERN"
 
 		
 		EmailHelper.sendGrid(user_email, subject, template_id, hardcodedTemplateData1, hardcodedTemplateData2);
-
-		/* send the detail sbe */
-		long totalTime = TableUtils.searchTable(beUtils,"INTERN", true, "PRI_CODE", newBe.getCode());
-		System.out.println("total took " + (totalTime) + " ms"); 
 		
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
