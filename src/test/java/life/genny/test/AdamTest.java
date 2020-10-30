@@ -190,10 +190,80 @@ public class AdamTest {
 	protected static GennyToken newUserToken;
 	protected static GennyToken serviceToken;
 
-	
 	@Test
-	public void testSchedule()
-	{
+	public void fixHCRstatus() {
+		System.out.println("fix HCR status test");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+		} else {
+			// VertxUtils.cachedEnabled = false;
+			VertxUtils.cachedEnabled = false;
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+			eventBusMock = new EventBusMock();
+			vertxCache = new JunitCache(); // MockCache
+			VertxUtils.init(eventBusMock, vertxCache);
+		}
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		beUtils.setServiceToken(serviceToken);
+
+		SearchEntity searchBE = new SearchEntity("SBE_TEST", "hcrs")
+				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%").addFilter("PRI_IS_HOST_CPY_REP", true)
+				.addColumn("PRI_CODE", "Name");
+
+		searchBE.setRealm(realm);
+		searchBE.setPageStart(0);
+		searchBE.setPageSize(100000);
+
+		List<BaseEntity> items = beUtils.getBaseEntitys(searchBE);
+
+		for (BaseEntity item : items) {
+
+			try {
+				// check if there
+				Optional<EntityAttribute> ea = item.findEntityAttribute("PRI_STATUS");
+				if (ea.isPresent()) {
+
+					String status = item.getValue("PRI_STATUS", null);
+					if (StringUtils.isBlank(status)) {
+						Answer activeStatus = new Answer(beUtils.getGennyToken().getUserCode(), item.getCode(),
+								"PRI_STATUS", "ACTIVE");
+						beUtils.saveAnswer(activeStatus);
+
+					}
+
+				} else {
+					Answer activeStatus = new Answer(beUtils.getGennyToken().getUserCode(), item.getCode(),
+							"PRI_STATUS", "ACTIVE");
+					beUtils.saveAnswer(activeStatus);
+
+				}
+
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+
+		}
+
+		System.out.println("Finished");
+	}
+
+	@Test
+	public void testSchedule() {
 		System.out.println("Schedule test");
 		GennyToken userToken = null;
 		GennyToken serviceToken = null;
@@ -223,18 +293,16 @@ public class AdamTest {
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		beUtils.setServiceToken(serviceToken);
 
-		System.out.println("Current Time is "+LocalDateTime.now());
-		
+		System.out.println("Current Time is " + LocalDateTime.now());
+
 		LocalDateTime triggertime = null;
-		
-		
+
 		BaseEntity be = beUtils.getBaseEntityByCode("CPY_ITA");
 
 		Boolean useLocalDocker = true;
-		
-		
+
 		QDataBaseEntityMessage msg = null;
-		
+
 		if (be != null) {
 			String name = "new Institute of Technology Australia";
 
@@ -256,43 +324,46 @@ public class AdamTest {
 			}
 
 		}
-		
+
 		if (useLocalDocker) {
 			// use UTC
 			triggertime = LocalDateTime.now(ZoneId.of("UTC")).plusSeconds(30);
-			System.out.println("Setting trigger Time to "+triggertime);
+			System.out.println("Setting trigger Time to " + triggertime);
 
 		} else {
 			// use local time
 			triggertime = LocalDateTime.now().plusSeconds(30);
-			System.out.println("Setting trigger Time to "+triggertime);
+			System.out.println("Setting trigger Time to " + triggertime);
 
 		}
-		
-		QScheduleMessage scheduleMessage = new QScheduleMessage(JsonUtils.toJson(msg), userToken.getUserCode(), "webcmds",triggertime, userToken.getRealm());
-		
+
+		QScheduleMessage scheduleMessage = new QScheduleMessage(JsonUtils.toJson(msg), userToken.getUserCode(),
+				"webcmds", triggertime, userToken.getRealm());
+
 		// POst the scheduleMessage
 		String uniqueCode = "";
 		try {
-			
+
 			if (useLocalDocker) { // using local docker
-			//	uniqueCode = QwandaUtils.apiPostEntity("http://internmatch.genny.life:8299/api/schedule", JsonUtils.toJson(scheduleMessage), userToken.getToken());
-				uniqueCode = QwandaUtils.apiPostEntity("https://internmatch-adam2.gada.io/api/schedule", JsonUtils.toJson(scheduleMessage), userToken.getToken());
+				// uniqueCode =
+				// QwandaUtils.apiPostEntity("http://internmatch.genny.life:8299/api/schedule",
+				// JsonUtils.toJson(scheduleMessage), userToken.getToken());
+				uniqueCode = QwandaUtils.apiPostEntity("https://internmatch-adam2.gada.io/api/schedule",
+						JsonUtils.toJson(scheduleMessage), userToken.getToken());
 			} else { // using local dev
-				uniqueCode = QwandaUtils.apiPostEntity("http://localhost:8095/api/schedule", JsonUtils.toJson(scheduleMessage), userToken.getToken());
+				uniqueCode = QwandaUtils.apiPostEntity("http://localhost:8095/api/schedule",
+						JsonUtils.toJson(scheduleMessage), userToken.getToken());
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		System.out.println("Unique scheduleCode = "+uniqueCode);
+
+		System.out.println("Unique scheduleCode = " + uniqueCode);
 	}
-	
-	
+
 	@Test
-	public void testSearchSort()
-	{
+	public void testSearchSort() {
 		System.out.println("Search test");
 		GennyToken userToken = null;
 		GennyToken serviceToken = null;
@@ -322,37 +393,28 @@ public class AdamTest {
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		beUtils.setServiceToken(serviceToken);
 
-	
-
 		SearchEntity searchBE = new SearchEntity("INterns", "Interns")
-				.addSort("PRI_NAME","Name",SearchEntity.Sort.ASC)
-				.addSort("PRI_STATUS","Status",SearchEntity.Sort.ASC)
-				.addSort("PRI_NUM_JOURNALS","Journals",SearchEntity.Sort.DESC)
-				.addSort("PRI_START_DATE","Name",SearchEntity.Sort.ASC)
-				.addSort("PRI_ASSOC_EP","EP",SearchEntity.Sort.ASC)
-				.addSort("PRI_ADDRESS_STATE", "State",SearchEntity.Sort.ASC)
-				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
-				.addFilter("PRI_IS_INTERN", true)
-				.addColumn("PRI_NAME", "Name")
-				.addColumn("PRI_STATUS", "Status")
-				.addColumn("PRI_NUM_JOURNALS", "Journals")
-				.addColumn("PRI_START_DATE", "Start Date")
-				.addColumn("PRI_ASSOC_EP", "Education Provider")
-				.addColumn("PRI_PHONE", "Phone")
-				.addColumn("PRI_EMAIL", "Email")
-				.addColumn("PRI_ADDRESS_SUBURB", "Suburb")
-				.addColumn("PRI_ADDRESS_STATE", "State")
-				.addColumn("PRI_IMAGE_URL", "Logo")
-				
+				.addSort("PRI_NAME", "Name", SearchEntity.Sort.ASC)
+				.addSort("PRI_STATUS", "Status", SearchEntity.Sort.ASC)
+				.addSort("PRI_NUM_JOURNALS", "Journals", SearchEntity.Sort.DESC)
+				.addSort("PRI_START_DATE", "Name", SearchEntity.Sort.ASC)
+				.addSort("PRI_ASSOC_EP", "EP", SearchEntity.Sort.ASC)
+				.addSort("PRI_ADDRESS_STATE", "State", SearchEntity.Sort.ASC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%").addFilter("PRI_IS_INTERN", true)
+				.addColumn("PRI_NAME", "Name").addColumn("PRI_STATUS", "Status")
+				.addColumn("PRI_NUM_JOURNALS", "Journals").addColumn("PRI_START_DATE", "Start Date")
+				.addColumn("PRI_ASSOC_EP", "Education Provider").addColumn("PRI_PHONE", "Phone")
+				.addColumn("PRI_EMAIL", "Email").addColumn("PRI_ADDRESS_SUBURB", "Suburb")
+				.addColumn("PRI_ADDRESS_STATE", "State").addColumn("PRI_IMAGE_URL", "Logo")
+
 				/* Table actions */
-				.addAction("PRI_EVENT_VIEW", "View")
-				.addAction("PRI_EVENT_JOURNAL_VIEW", "Journal")
-				.addAction("PRI_EVENT_APPLY", "Apply to an Internship")
-				.setPageStart(0).setPageSize(GennySettings.defaultPageSize);
-		
+				.addAction("PRI_EVENT_VIEW", "View").addAction("PRI_EVENT_JOURNAL_VIEW", "Journal")
+				.addAction("PRI_EVENT_APPLY", "Apply to an Internship").setPageStart(0)
+				.setPageSize(GennySettings.defaultPageSize);
+
 		Tuple2<String, List<String>> data = beUtils.getHql(searchBE);
 		System.out.println(data._1());
-		
+
 		/* Update the sorts */
 		String sort = "PRI_NUM_JOURNALS";
 		String ascdesc = "DESC";
@@ -361,18 +423,16 @@ public class AdamTest {
 			for (EntityAttribute sortEA : sortEAs) {
 				Double weight = sortEA.getWeight();
 				sortEA.setWeight(weight + 1.0);
-				if (sortEA.getAttributeCode().equals("SRT_"+sort)) {
+				if (sortEA.getAttributeCode().equals("SRT_" + sort)) {
 					sortEA.setWeight(0.0);
 					sortEA.setValue(ascdesc);
 				}
 			}
 		}
-		
-		
-		
+
 		data = beUtils.getHql(searchBE);
 		System.out.println(data._1());
-		
+
 		sort = "PRI_STATUS";
 		ascdesc = "DESC";
 		sortEAs = searchBE.findPrefixEntityAttributes("SRT_");
@@ -380,16 +440,16 @@ public class AdamTest {
 			for (EntityAttribute sortEA : sortEAs) {
 				Double weight = sortEA.getWeight();
 				sortEA.setWeight(weight + 1.0);
-				if (sortEA.getAttributeCode().equals("SRT_"+sort)) {
+				if (sortEA.getAttributeCode().equals("SRT_" + sort)) {
 					sortEA.setWeight(0.0);
 					sortEA.setValue(ascdesc);
 				}
 			}
 		}
-		
+
 		data = beUtils.getHql(searchBE);
 		System.out.println(data._1());
-		
+
 	}
 
 	@Test
@@ -430,8 +490,7 @@ public class AdamTest {
 
 			}
 
-		} else
-		{
+		} else {
 			String message = "Phone number is empty!";
 			System.out.println(message);
 		}
@@ -843,7 +902,6 @@ public class AdamTest {
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%").addColumn("PRI_CODE", "Name")
 				.addColumn("LNK_HOST_COMPANY", "Host Company").setPageStart(0).setPageSize(100000);
-
 
 		searchBE.setRealm(serviceToken.getRealm());
 
@@ -6383,7 +6441,7 @@ public class AdamTest {
 		GennyToken userToken = null;
 		GennyToken serviceToken = null;
 		QRules qRules = null;
-	
+
 		if (false) {
 			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
@@ -6392,7 +6450,7 @@ public class AdamTest {
 			qRules.setServiceToken(serviceToken.getToken());
 			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
 			GennyKieSession.loadAttributesJsonFromResources(userToken);
-	
+
 		} else {
 			// VertxUtils.cachedEnabled = false;
 			VertxUtils.cachedEnabled = false;
@@ -6403,27 +6461,25 @@ public class AdamTest {
 			vertxCache = new JunitCache(); // MockCache
 			VertxUtils.init(eventBusMock, vertxCache);
 		}
-	
+
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		beUtils.setServiceToken(serviceToken);
-	
+
 		/* get all the apps with LNK_HOST_COMPANY attribute */
 		SearchEntity searchBE = new SearchEntity("SBE_INTERNSHIP_IMAGE_FIX", "Update")
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
-				.addColumn("PRI_CODE", "Name")
-				.addColumn("LNK_HOST_COMPANY", "Host Company")
-				.setPageStart(0).setPageSize(100000);
-	
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%").addColumn("PRI_CODE", "Name")
+				.addColumn("LNK_HOST_COMPANY", "Host Company").setPageStart(0).setPageSize(100000);
+
 		searchBE.setRealm(serviceToken.getRealm());
-	
+
 		System.out.println("About to search for apps");
 		List<BaseEntity> apps = beUtils.getBaseEntitys(searchBE);
-	
+
 		System.out.println("Number of apps = " + apps.size());
-	
+
 		for (BaseEntity app : apps) {
-	
+
 			BaseEntity is = beUtils.getBaseEntityByCode(app.getCode());
 			// fetch host company from internship
 			try {
@@ -6433,26 +6489,28 @@ public class AdamTest {
 					cpyCode = cpyCode.replace("\"", "").replace("[", "").replace("]", "");
 					// cpyCode = cpyCode.substring(2,cpyCode.length()-2);
 					System.out.println("Company code :" + cpyCode);
-					
+
 					/* get cpy be */
 					BaseEntity cpy = beUtils.getBaseEntityByCode(cpyCode);
 					if (cpy == null)
-						continue;;
+						continue;
+					;
 					/* get cpy's image */
 					String imageUrl = cpy.getValue("PRI_IMAGE_URL", null);
-	
+
 					if (!StringUtils.isBlank(imageUrl)) {
 						beUtils.saveAnswer(new Answer(is.getCode(), is.getCode(), "PRI_IMAGE_SECONDARY", imageUrl));
-					}else {
+					} else {
 						beUtils.saveAnswer(new Answer(is.getCode(), is.getCode(), "PRI_IMAGE_SECONDARY", ""));
 					}
 					// else {
-					// 	imageUrl = cpy.getValue("PRI_USER_PROFILE_PICTURE", null);
-					// 	if (!StringUtils.isBlank(imageUrl)) {
-					// 		beUtils.saveAnswer(new Answer(is.getCode(), is.getCode(), "PRI_IMAGE_URL", imageUrl));
-					// 		beUtils.saveAnswer(
-					// 				new Answer(cpy.getCode(), cpy.getCode(), "PRI_IMAGE_URL", imageUrl));
-					// 	}
+					// imageUrl = cpy.getValue("PRI_USER_PROFILE_PICTURE", null);
+					// if (!StringUtils.isBlank(imageUrl)) {
+					// beUtils.saveAnswer(new Answer(is.getCode(), is.getCode(), "PRI_IMAGE_URL",
+					// imageUrl));
+					// beUtils.saveAnswer(
+					// new Answer(cpy.getCode(), cpy.getCode(), "PRI_IMAGE_URL", imageUrl));
+					// }
 					// }
 				} else {
 					System.out.println(app.getCode() + " has NO LNK_HOST_COMPANY");
@@ -6462,7 +6520,7 @@ public class AdamTest {
 				e.printStackTrace();
 			}
 		}
-	
+
 	}
 
 	@Test
@@ -6471,7 +6529,7 @@ public class AdamTest {
 		GennyToken userToken = null;
 		GennyToken serviceToken = null;
 		QRules qRules = null;
-	
+
 		if (false) {
 			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
@@ -6480,7 +6538,7 @@ public class AdamTest {
 			qRules.setServiceToken(serviceToken.getToken());
 			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
 			GennyKieSession.loadAttributesJsonFromResources(userToken);
-	
+
 		} else {
 			// VertxUtils.cachedEnabled = false;
 			VertxUtils.cachedEnabled = false;
@@ -6491,7 +6549,7 @@ public class AdamTest {
 			vertxCache = new JunitCache(); // MockCache
 			VertxUtils.init(eventBusMock, vertxCache);
 		}
-	
+
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		beUtils.setServiceToken(serviceToken);
 
@@ -6505,26 +6563,25 @@ public class AdamTest {
 		/* get all the apps with LNK_HOST_COMPANY attribute */
 		SearchEntity searchBE = new SearchEntity("SBE_UPDATE", "Update")
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, sourceCode)
-				.addColumn(columnCode, "Column")
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, sourceCode).addColumn(columnCode, "Column")
 				.setPageStart(0).setPageSize(100000);
-	
+
 		searchBE.setRealm(serviceToken.getRealm());
-	
+
 		System.out.println("About to search for entities");
 		List<BaseEntity> bes = beUtils.getBaseEntitys(searchBE);
-	
+
 		System.out.println("Number of bes = " + bes.size());
-		int total  = bes.size();
+		int total = bes.size();
 		int index = 0;
 		int updated = 0;
-	
+
 		for (BaseEntity be : bes) {
 			index++;
 			System.out.printf("processing %d/%d%n", index, total);
-	
+
 			BaseEntity updatedBe = beUtils.getBaseEntityByCode(be.getCode());
-			
+
 			try {
 				String assocBeCode = updatedBe.getValueAsString(columnCode);
 
@@ -6532,19 +6589,19 @@ public class AdamTest {
 					assocBeCode = assocBeCode.replace("\"", "").replace("[", "").replace("]", "");
 					// assocBeCode = assocBeCode.substring(2,assocBeCode.length()-2);
 					System.out.println("Assciated BaseEntity code :" + assocBeCode);
-					
+
 					/* get assocBe */
 					BaseEntity assocBe = beUtils.getBaseEntityByCode(assocBeCode);
 					if (assocBe == null)
 						continue;
-					
-						/* get assocBe's name */
+
+					/* get assocBe's name */
 					String name = assocBe.getValue("PRI_NAME", null);
-	
+
 					if (!StringUtils.isBlank(name)) {
 						beUtils.saveAnswer(new Answer(updatedBe.getCode(), updatedBe.getCode(), attributeCode, name));
-						updated ++;
-					}else {
+						updated++;
+					} else {
 						beUtils.saveAnswer(new Answer(updatedBe.getCode(), updatedBe.getCode(), attributeCode, ""));
 					}
 				} else {
@@ -6556,8 +6613,7 @@ public class AdamTest {
 			}
 		}
 		System.out.println("updated " + updated);
-	
+
 	}
-	
-	
+
 }
