@@ -20,6 +20,7 @@ import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QBulkMessage;
 import life.genny.utils.TableUtils;
 import life.genny.qwanda.entity.SearchEntity;
+import life.genny.qwanda.entity.EntityEntity;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.qwandautils.GennySettings;
@@ -66,7 +67,19 @@ rule "USER_SUBSCRIPTION"
  			String companyCode = hcompany.get().substring(2,hcompany.get().length()-2);
  			stringSet.add(EncryptionUtils.getEncryptedString(companyCode,securityKey,userToken));
  		}	
- 
+
+		System.out.println("FINDING LINKS **************");
+		List<EntityEntity> userLinks = beUtils.getLinks(user);
+		for (EntityEntity ee : userLinks) {
+			System.out.println("LINK : " + ee);
+			String linkedCode = null;
+			if (ee.getLink().getSourceCode() == user.getCode()) {
+				linkedCode = ee.getLink().getTargetCode();
+			} else {
+				linkedCode = ee.getLink().getSourceCode();
+			}
+			stringSet.add(EncryptionUtils.getEncryptedString(linkedCode,securityKey,userToken));
+		}
  		
  		System.out.println(stringSet);
 		
