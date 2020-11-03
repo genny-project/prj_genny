@@ -68,17 +68,17 @@ rule "USER_SUBSCRIPTION"
  			stringSet.add(EncryptionUtils.getEncryptedString(companyCode,securityKey,userToken));
  		}	
 
-		System.out.println("FINDING LINKS **************");
-		List<EntityEntity> userLinks = beUtils.getLinks(user);
-		for (EntityEntity ee : userLinks) {
-			System.out.println("LINK : " + ee);
-			String linkedCode = null;
-			if (ee.getLink().getSourceCode() == user.getCode()) {
-				linkedCode = ee.getLink().getTargetCode();
-			} else {
-				linkedCode = ee.getLink().getSourceCode();
+		List<BaseEntity> childBEs = beUtils.getLinkedBaseEntities(user.getCode());
+		for (BaseEntity entity : childBEs) {
+			if (!entity.getCode().startsWith("PER_")) {
+				stringSet.add(EncryptionUtils.getEncryptedString(entity.getCode(),securityKey,userToken));
 			}
-			stringSet.add(EncryptionUtils.getEncryptedString(linkedCode,securityKey,userToken));
+		}
+		List<BaseEntity> parentBEs = beUtils.getParents(user.getCode());
+		for (BaseEntity entity : parentBEs) {
+			if (!entity.getCode().startsWith("PER_")) {
+				stringSet.add(EncryptionUtils.getEncryptedString(entity.getCode(),securityKey,userToken));
+			}
 		}
  		
  		System.out.println(stringSet);
