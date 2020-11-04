@@ -74,6 +74,15 @@ rule "IS_HOST_CPY_REP"
 		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
 		System.out.println("Note newBe.getCode(): " +newBe.getCode());
 
+		BaseEntity cpyRepBe = beUtils.getBaseEntityByCode(newBe.getCode());
+		
+		if(cpyRepBe != null){
+			
+			QDataBaseEntityMessage cpyRepBeMsg = new QDataBaseEntityMessage(cpyRepBe);
+			cpyRepBeMsg.setToken(userToken.getToken());
+			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(cpyRepBeMsg));
+		}
+
 
 		/* send the detail sbe */
 		/* long totalTime = TableUtils.searchTable(beUtils,"HOST_CPY_REP", true, "PRI_CODE", newBe.getCode());
@@ -87,6 +96,7 @@ rule "IS_HOST_CPY_REP"
 			cpyRepBeMsg.setToken(userToken.getToken());
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(cpyRepBeMsg));
 		}
+
 
 		
 		output.setTypeOfResult("NONE");
