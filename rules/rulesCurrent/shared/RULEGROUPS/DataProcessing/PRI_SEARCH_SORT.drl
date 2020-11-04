@@ -53,7 +53,7 @@ rule "PRI_SEARCH_SORT"
 				for (EntityAttribute sortEA : sortEAs) {
 					Double weight = sortEA.getWeight();
 					sortEA.setWeight(weight + 1.0);
-					if (sortEA.getAttributeCode().equals("SRT_"+answer.getAttributeCode())) {
+					if (sortEA.getAttributeCode().equals(answer.getAttributeCode())) {
 						sortEA.setWeight(0.0);
 						sortEA.setValue(answer.getValue());
 					}
@@ -62,8 +62,8 @@ rule "PRI_SEARCH_SORT"
 			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
 				beUtils.getGennyToken().getToken());
 		
-			long totalTime = TableUtils.searchTable(beUtils,searchBE, true);
-
+			long totalTime = TableUtils.searchTable(beUtils,searchBE,true, null,null,true);
+			VertxUtils.writeMsgEnd(beUtils.getGennyToken());
 	
 			retract(answer);
 			System.out.println("total took " + (totalTime) + " ms"); 

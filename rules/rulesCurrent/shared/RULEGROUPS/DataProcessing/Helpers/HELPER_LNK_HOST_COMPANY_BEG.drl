@@ -65,6 +65,7 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		dropdown.setNewSearch("HCR Dropdown", "Fetch HCR Dropdown Items")
 											.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
 											.addFilter("PRI_IS_HOST_CPY_REP", true)
+											.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "ACTIVE")
 											.addFilter("LNK_HOST_COMPANY", SearchEntity.StringFilter.EQUAL, hostCompanyCode)
 											.setPageStart(0)
 											.setPageSize(1000);
@@ -93,6 +94,17 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		
 		String state = companyBe.getValue("PRI_ADDRESS_STATE", null);
 		System.out.println("state  :: " + state);
+
+		String cpyImage = companyBe.getValue("PRI_IMAGE_URL",null);
+		System.out.println("cpyImage  :: " + cpyImage);
+
+		Double latitude = companyBe.getValue("PRI_ADDRESS_LATITUDE",null);
+		System.out.println("latitude  :: " + latitude);
+		
+		Double longitude = companyBe.getValue("PRI_ADDRESS_LONGITUDE",null);
+		System.out.println("longitude  :: " + longitude);
+
+
 			
 		System.out.println("company address :: " + address);
 		
@@ -111,6 +123,13 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		System.out.println("cityAnswer");
 		Answer stateAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", state, false, true);
 		System.out.println("stateAnswer");
+		Answer imageAnswer = new Answer(sourceCode, targetCode, "PRI_IMAGE_URL", cpyImage, false, true);
+		System.out.println("imageAnswer");
+		
+		Answer latitudeAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_LATITUDE", latitude, false, true);
+		System.out.println("latitudeAnswer");
+		Answer longitudeAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_LONGITUDE", longitude, false, true);
+		System.out.println("longitudeAnswer");
 
 		/* TODO: Answer should support null  */
 		Answer repAnswer = new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", "",false,true);
@@ -127,6 +146,11 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		addressData.add(suburbAnswer);
 		addressData.add(cityAnswer);
 		addressData.add(stateAnswer);
+		
+		addressData.add(imageAnswer);
+		addressData.add(latitudeAnswer);
+		addressData.add(longitudeAnswer);
+
 		addressData.add(repAnswer);
 		addressData.add(supervisorAnswer);
 		
@@ -135,7 +159,7 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		beUtils.saveAnswers(addressData);
 		/*update(answersToSave);*/
 
-		/*VertxUtils.sendToFrontEnd(userToken, addressAnswer);*/
+		VertxUtils.sendToFrontEnd(userToken, addressAnswer, assocHcAnswer, imageAnswer, latitudeAnswer, longitudeAnswer);
 			
 		/*retract(answer);*/
 

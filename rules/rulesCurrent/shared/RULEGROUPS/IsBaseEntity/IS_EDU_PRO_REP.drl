@@ -51,6 +51,7 @@ rule "IS_EDU_PRO_REP"
 				
 				if (assocEP != null) {
  						beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_ASSOC_EP", assocEP));
+						beUtils.createLink(assocEPBe.getCode(), newBe.getCode(), "LNK_CPY", "EDU_PRO_REP", 1.0);
  				}
 		}
 		
@@ -90,10 +91,6 @@ rule "IS_EDU_PRO_REP"
 		System.out.println("Note endPoint: " +endPoint);
 		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
 
-
-		/* send the detail sbe */
-		long totalTime = TableUtils.searchTable(beUtils,"EDU_PRO_REP", true, "PRI_CODE", newBe.getCode());
-		System.out.println("total took " + (totalTime) + " ms"); 
 		
 		output.setTypeOfResult("NONE");
   	output.setResultCode("NONE");  /* dont display anything new */
