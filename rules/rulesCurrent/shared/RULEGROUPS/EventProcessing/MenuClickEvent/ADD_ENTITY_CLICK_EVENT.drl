@@ -30,7 +30,7 @@ rule "ADD_ENTITY_CLICK_EVENT"
 
 
 		output.setTypeOfResult("SIGNAL");
-		output.setResultCode("START_ADD_ENTITY");
+		output.setResultCode("START_"+workflowSignalCode);
 		output.setTargetCode($message.getData().getTargetCode());
 		output.setSuitCase(workflowSignalCode);
 		
