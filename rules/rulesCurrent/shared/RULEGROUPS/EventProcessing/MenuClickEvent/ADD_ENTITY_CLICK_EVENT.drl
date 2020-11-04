@@ -22,22 +22,17 @@ rule "ADD_ENTITY_CLICK_EVENT"
     then
 
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
-		
-		/* 		
-		code: "QUE_INTERNSHIP_MENU"
-		parentCode: "QUE_ADD_ITEMS_GRP"
-		targetCode: "PER_D20090A3-321B-47E3-8C95-61FEAE84EEB4"
-		*/
-		
-		String code = $message.getData().getCode(); 								/* QUE_INTERNSHIP_MENU */
-		String workflowSignalCode = StringUtils.removeEnd(code, "_MENU");			/* QUE_INTERNSHIP */
-		workflowSignalCode = StringUtils.removeStart(workflowSignalCode,"QUE_"); 	/* INTERNSHIP */
 
 
-		output.setTypeOfResult("SIGNAL");											/* SIGNAL */
-		output.setResultCode("START_ADD_ENTITY");									/* START_ADD_ENTITY */
-		output.setTargetCode($message.getData().getTargetCode());					/* PER_D20090A3-321B-47E3-8C95-61FEAE84EEB4 */
-		output.setSuitCase(workflowSignalCode);										/* INTERNSHIP */
+		String code = $message.getData().getCode();
+		String workflowSignalCode = StringUtils.removeEnd(code, "_MENU");
+		workflowSignalCode = StringUtils.removeStart(workflowSignalCode,"QUE_");
+
+
+		output.setTypeOfResult("SIGNAL");
+		output.setResultCode("START_ADD_ENTITY");
+		output.setTargetCode($message.getData().getTargetCode());
+		output.setSuitCase(workflowSignalCode);
 		
 		
 		System.out.println("START SIGNAL: " +workflowSignalCode);
