@@ -89,7 +89,6 @@ rule "IS_HOST_CPY_REP"
 		System.out.println("total took " + (totalTime) + " ms");  */
 
 		
-		
 		if(cpyRepBe != null){
 			
 			QDataBaseEntityMessage cpyRepBeMsg = new QDataBaseEntityMessage(cpyRepBe);

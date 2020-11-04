@@ -53,7 +53,7 @@ rule "HELPER_ABN_LEGAL_NAME"
 		String abn_legal = answer.getValue();
 		System.out.println("abn_legal :: " + abn_legal);
 		
-		// "{"ABN": "1234", "legal_name": "ABC"}"
+		/* "{"ABN": "1234", "legal_name": "ABC"}" */
 		
 		
 		System.out.println(abn_legal);
