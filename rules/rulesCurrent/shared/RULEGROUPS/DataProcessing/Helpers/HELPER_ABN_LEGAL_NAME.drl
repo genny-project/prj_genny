@@ -48,7 +48,7 @@ rule "HELPER_ABN_LEGAL_NAME"
 		String targetCode = answer.getTargetCode();
 		System.out.println("targetCode :: " + targetCode);
 		    	
-		
+	
 		
 		String abn_legal = answer.getValue();
 		System.out.println("abn_legal :: " + abn_legal);
