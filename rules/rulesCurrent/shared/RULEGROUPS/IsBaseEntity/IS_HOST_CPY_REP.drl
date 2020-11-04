@@ -88,7 +88,6 @@ rule "IS_HOST_CPY_REP"
 		/* long totalTime = TableUtils.searchTable(beUtils,"HOST_CPY_REP", true, "PRI_CODE", newBe.getCode());
 		System.out.println("total took " + (totalTime) + " ms");  */
 
-		cpyRepBe = beUtils.getBaseEntityByCode(newBe.getCode());
 		
 		if(cpyRepBe != null){
 			
