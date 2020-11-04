@@ -99,7 +99,7 @@ rule "QUE_TABLE_LAST_BTN"
 				userToken.getToken());
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" LAST  for "+searchBE.getCode()+" About to go into search! "); 
 		
-			long totalTime = TableUtils.searchTable(beUtils,searchBE, cache);
+			long totalTime = TableUtils.searchTable(beUtils,searchBE, cache,null,null,false);
 
 			System.out.println("total took " + (totalTime) + " ms"); 
 			}

@@ -49,10 +49,6 @@ rule "IS_EDU_PROVIDER"
 		System.out.println("Note endPoint: " +endPoint);
 		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
 		System.out.println("Note newBe.getCode(): " +newBe.getCode());
-
-		/* send the detail sbe */
-		long totalTime = TableUtils.searchTable(beUtils,"EDU_PRO", true, "PRI_CODE", newBe.getCode());
-		System.out.println("total took " + (totalTime) + " ms"); 	
 		
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */

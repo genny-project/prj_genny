@@ -63,7 +63,7 @@ rule "TREE_ITEM_CLICK_EVENT"
 			code = StringUtils.removeEnd(code, "_GRP");
 			System.out.println("CODE   ::   " + code);
 
-			long totalTime = TableUtils.searchTable(beUtils,code, cache);
+			long totalTime = TableUtils.searchTable(beUtils,code, cache,null,null,true);
 			System.out.println("total took " + (totalTime) + " ms"); 
 
 			retract(message);

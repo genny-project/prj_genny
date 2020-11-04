@@ -57,8 +57,6 @@ rule "IS_ADMIN"
 			}
 		}
 
-		TableUtils.searchTable(beUtils,"ADMIN", true, "PRI_CODE", newBe.getCode());
-
 		output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */
 
