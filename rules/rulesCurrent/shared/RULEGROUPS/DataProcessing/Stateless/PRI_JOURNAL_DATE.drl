@@ -168,12 +168,14 @@ rule "PRI_JOURNAL_DATE"
 							Answer journalCount = new Answer(beUtils.getGennyToken().getUserCode(), sourceCode,
 								"PRI_NUM_JOURNALS", count);
 							beUtils.saveAnswer(journalCount);
+							System.out.println("Saved Journal count);
 
 						} catch (Exception e1) {
 							count = 0;
 							System.out.println("No journals yet for "+sourceCode);
 						}
 					
+						System.out.println("Save Percentages now");
 						Double numOfJournals = count.doubleValue();
 						Double percentageJournals = (100.0*numOfJournals)/totalInternshipDays;
 					
