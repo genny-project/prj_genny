@@ -25,6 +25,8 @@ import life.genny.qwandautils.QwandaUtils;
 import life.genny.qwandautils.GennySettings;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
+import java.util.Base64;
+import io.vavr.Tuple2;
 
 
 rule "PRI_JOURNAL_DATE"
@@ -37,7 +39,7 @@ rule "PRI_JOURNAL_DATE"
 	  answer : Answer( attributeCode == "PRI_JOURNAL_DATE" )
 	  answersToSave : Answers()
 	  
-	  output : OutputParam( )
+	  output : OutputParam()
      then
  		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
 		String sourceCode = beUtils.getGennyToken().getUserCode();
@@ -81,9 +83,7 @@ rule "PRI_JOURNAL_DATE"
 		
  			BaseEntity result = null; 
 			try {
-	
-	
-				List<BaseEntity> bes = beUtils.getBaseEntitys(searchBE);				
+				List<BaseEntity> bes = beUtils.getBaseEntitys(searchBE);
 				System.out.println("The number of items is "+(bes ==null?"NULL":bes.size()));
 				if ((bes!=null) && (bes.size() > 0)) {
 					result = bes.get(0); 
@@ -153,7 +153,7 @@ rule "PRI_JOURNAL_DATE"
 							.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%" + sourceCode + "%")
 							.addColumn("PRI_CODE", "Name");
 
-						Tuple2<String, List<String>> results = beUtils.getHql(searchBE); 
+						Tuple2<String, List<String>> results = beUtils.getHql(searchBE);
 												System.out.println("Rule PRI_JOURNAL_DATE5: percentage data available7");								
 						String hql = results._1;
 						String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
@@ -168,7 +168,7 @@ rule "PRI_JOURNAL_DATE"
 							Answer journalCount = new Answer(beUtils.getGennyToken().getUserCode(), sourceCode,
 								"PRI_NUM_JOURNALS", count);
 							beUtils.saveAnswer(journalCount);
-							System.out.println("Saved Journal count);
+							System.out.println("Saved Journal count");
 
 						} catch (Exception e1) {
 							count = 0;
