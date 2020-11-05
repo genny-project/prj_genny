@@ -64,41 +64,42 @@ rule "PRI_JOURNAL_DATE"
 			beUtils.saveAnswer(new Answer(sourceCode, targetCode, "LNK_INTERN", "[\""+sourceCode+"\"]",false,true));
 			beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_SYNC", "TRUE",false,true)); /* set to have synced */
 			
-			SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Internship Details")
+			SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Internship App Details")
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%") 
-				.addFilter("PRI_IS_INTERNSHIP", true) 
-				.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%"+sourceCode+"%") 
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%") 
+				.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.EQUAL, sourceCode) 
+				.addFilter("PRI_STATUS",SearchEntity.StringFilter.EQUAL, "PROGRESS") 
 				.addColumn("PRI_NAME", "Name")
 				.addColumn("PRI_CODE", "Code")
-				.addColumn("LNK_INTERNSHIP","Internship")
-				.addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
-				.addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep")
-				.addColumn("LNK_HOST_COMPANY", "Host Company")
+				.addColumn("PRI_START_DATE","Start Date")
+				.addColumn("PRI_DAYS_PER_WEEK","DPW") 
+				.addColumn("PRI_ASSOC_DURATION", "DurationWeeks") 
 				.setPageStart(0)
-				.setPageSize(100);
+				.setPageSize(1000);
 		
 			searchBE.setRealm(serviceToken.getRealm());
 		
- 			String jsonSearchBE = JsonUtils.toJson(searchBE);
- 			/* System.out.println(jsonSearchBE); */
-			String resultJson;
-			BaseEntity result = null; 
+ 			BaseEntity result = null; 
 			try {
-				resultJson = QwandaUtils.apiPostEntity(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search",
-					jsonSearchBE, serviceToken.getToken());
-									System.out.println("Got to here in "+drools.getRule().getName()+" "+resultJson);
-				QDataBaseEntityMessage resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
-									
-				BaseEntity[] bes = resultMsg.getItems();
-				System.out.println("The number of items is "+(bes ==null?"NULL":bes.length));
-				if ((bes!=null) && (bes.length > 0)) {
-					result = bes[0]; 
-					System.out.println("Number of bes returned is "+bes.length+":"+result);
+	
+	
+				List<BaseEntity> bes = beUtils.getBaseEntitys(searchBE);				
+				System.out.println("The number of items is "+(bes ==null?"NULL":bes.size()));
+				if ((bes!=null) && (bes.size() > 0)) {
+					result = bes.get(0); 
+					System.out.println("Number of bes returned is "+bes.size()+":"+result);
 					String hostCompanyCode = null;
 					String hostCompanyRepCode = null;
 					String hostCompanySupervisorCode = null;
 					String internshipCode = null;
+					String daysPerWeek = null;
+					String internshipDuration = null;
+					
+
+					Optional<String> optDaysPerWeek = result.getValue("PRI_DAYS_PER_WEEK");		
+					Optional<String> optInternshipDuration = result.getValue("PRI_ASSOC_DURATION");	
+					Optional<LocalDate> optInternshipStartDate = result.getValue("PRI_START_DATE");	
+					Optional<LocalDate> optInternshipEndDate = result.getValue("PRI_END_DATE");
 		
 					Optional<String> optHostCompanyCode = result.getValue("LNK_HOST_COMPANY");		
 					Optional<String> optHostCompanyRepCode = result.getValue("LNK_HOST_COMPANY_REP");		
@@ -107,16 +108,85 @@ rule "PRI_JOURNAL_DATE"
 					
 					if (optHostCompanyCode.isPresent()) {
 						beUtils.saveAnswer(new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY", optHostCompanyCode.get(),false,true));
+							System.out.println("Rule PRI_JOURNAL_DATE1: Host Company Code :"+optHostCompanyCode.get());
 					}
 					if (optHostCompanyRepCode.isPresent()) {
 						beUtils.saveAnswer(new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", optHostCompanyRepCode.get(),false,true));
+							System.out.println("Rule PRI_JOURNAL_DATE2: Host Company Rep Code :"+optHostCompanyRepCode.get());
 					}
 					if (optHostCompanySupervisorCode.isPresent()) {
 						beUtils.saveAnswer(new Answer(sourceCode, targetCode, "LNK_INTERN_SUPERVISOR", optHostCompanySupervisorCode.get(),false,true));
+							System.out.println("Rule PRI_JOURNAL_DATE3: Supervisor Code :"+optHostCompanySupervisorCode.get());
 					}
 					if (optInternshipCode.isPresent()) {
 						beUtils.saveAnswer(new Answer(sourceCode, targetCode, "LNK_INTERNSHIP", optInternshipCode.get(),false,true));
+						System.out.println("Rule PRI_JOURNAL_DATE4: Internship Code :"+optInternshipCode.get());
 					}
+					
+					
+					
+					if ((optDaysPerWeek.isPresent())&&(optInternshipDuration.isPresent()) && (optInternshipStartDate.isPresent()) && (optInternshipEndDate.isPresent())) {
+						System.out.println("Rule PRI_JOURNAL_DATE5: percentage data available "+optDaysPerWeek.get()+":"+optInternshipDuration.get());
+						Double dpw = Double.valueOf(optDaysPerWeek.get());
+						Double id =  Double.valueOf(optInternshipDuration.get());
+						System.out.println("Rule PRI_JOURNAL_DATE5: percentage data available2");
+						Double totalInternshipDays = dpw * id;
+						System.out.println("Rule PRI_JOURNAL_DATE5: percentage data available3");
+						LocalDate startDate = optInternshipStartDate.get();
+						LocalDate endDate = optInternshipEndDate.get();
+						LocalDate dateNow = LocalDate.now();
+						System.out.println("Rule PRI_JOURNAL_DATE4.5: percentage data available4 "+startDate+":"+endDate+":"+dateNow);
+						Long noOfDaysSoFarLong = java.time.temporal.ChronoUnit.DAYS.between(startDate, dateNow);
+						Long noOfDaysTotalLong = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate);
+						System.out.println("Rule PRI_JOURNAL_DATE5: percentage data available4 "+noOfDaysSoFarLong+" and total "+noOfDaysTotalLong);
+						
+						Double noOfDaysSoFar = noOfDaysSoFarLong.doubleValue();
+						Double noOfDaysTotal = noOfDaysTotalLong.doubleValue();
+						System.out.println("Rule PRI_JOURNAL_DATE5: percentage data available5");
+						Double percentageCalendar = (100.0*noOfDaysSoFar)/noOfDaysTotal;
+						System.out.println("Rule PRI_JOURNAL_DATE5: percentage data available6");
+						Integer count = 0;
+						/* get total number of journals */
+						searchBE = new SearchEntity("SBE_TEST", "internjournals")
+							.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+							.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
+							.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%" + sourceCode + "%")
+							.addColumn("PRI_CODE", "Name");
+
+						Tuple2<String, List<String>> results = beUtils.getHql(searchBE); 
+												System.out.println("Rule PRI_JOURNAL_DATE5: percentage data available7");								
+						String hql = results._1;
+						String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
+						try {
+							String resultJsonStr = QwandaUtils.apiGet(
+								GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2, serviceToken.getToken(),
+								120);
+
+							count = Integer.decode(resultJsonStr);
+							System.out.println("Count = " + count);
+
+							Answer journalCount = new Answer(beUtils.getGennyToken().getUserCode(), sourceCode,
+								"PRI_NUM_JOURNALS", count);
+							beUtils.saveAnswer(journalCount);
+
+						} catch (Exception e1) {
+							count = 0;
+							System.out.println("No journals yet for "+sourceCode);
+						}
+					
+						Double numOfJournals = count.doubleValue();
+						Double percentageJournals = (100.0*numOfJournals)/totalInternshipDays;
+					
+						beUtils.saveAnswer(new Answer(sourceCode, sourceCode, "PRI_PERCENTAGE", percentageCalendar,false,true));
+						beUtils.saveAnswer(new Answer(sourceCode, result.getCode(), "PRI_PERCENTAGE", percentageCalendar,false,true));
+						beUtils.saveAnswer(new Answer(sourceCode, result.getCode(), "PRI_PERCENTAGE_CALENDAR", percentageCalendar,false,true));
+						beUtils.saveAnswer(new Answer(sourceCode, result.getCode(), "PRI_PERCENTAGE_JOURNALS", percentageJournals,false,true));
+						
+						System.out.println("Rule PRI_JOURNAL_DATE:PercentageCalendar :"+percentageCalendar+" "+noOfDaysSoFarLong+" of "+noOfDaysTotalLong+" days");
+						System.out.println("Rule PRI_JOURNAL_DATE:PercentageJournals :"+percentageJournals+" "+numOfJournals+" of "+totalInternshipDays+" journals");
+						System.out.println("Rule PRI_JOURNAL_DATE: Internship Code :"+optInternshipCode.get());
+					}
+					
 					
 					
 				}	
