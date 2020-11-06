@@ -81,9 +81,11 @@ rule "QUE_TABLE_LAZY_LOAD"
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" NEXT for "+searchBE.getCode()+" NEW PageNumber is "+pageNumber); 
 			Answer pageAnswer = new Answer(userToken.getUserCode(),searchBE.getCode(), "SCH_PAGE_START", pageIndex+"");
 			Answer pageNumberAnswer = new Answer(userToken.getUserCode(),searchBE.getCode(), "PRI_INDEX", pageNumber+"");
+			Answer pageNumberAnswer2 = new Answer(userToken.getUserCode(),searchBE.getCode(), "SCH_INDEX", pageNumber+"");
 
 			searchBE = beUtils.updateBaseEntity(searchBE, pageAnswer,SearchEntity.class);
 			searchBE = beUtils.updateBaseEntity(searchBE, pageNumberAnswer,SearchEntity.class);
+			searchBE = beUtils.updateBaseEntity(searchBE, pageNumberAnswer2,SearchEntity.class);
 		
 			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
 				beUtils.getGennyToken().getToken());

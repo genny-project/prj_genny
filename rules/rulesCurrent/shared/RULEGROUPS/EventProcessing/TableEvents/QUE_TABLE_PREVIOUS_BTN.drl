@@ -79,11 +79,13 @@ rule "QUE_TABLE_PREVIOUS_BTN"
 		Integer pageNumber = (pageIndex / pageSize) + 1;
 		
 		
-		Answer pageAnswer = new Answer(beUtils.getGennyToken().getUserCode(),searchBE.getCode(), "SCH_PAGE_START", pageIndex+"");
-		Answer pageNumberAnswer = new Answer(beUtils.getGennyToken().getUserCode(),searchBE.getCode(), "PRI_INDEX", pageNumber+"");
+			Answer pageAnswer = new Answer(userToken.getUserCode(),searchBE.getCode(), "SCH_PAGE_START", pageIndex+"");
+			Answer pageNumberAnswer = new Answer(userToken.getUserCode(),searchBE.getCode(), "PRI_INDEX", pageNumber+"");
+			Answer pageNumberAnswer2 = new Answer(userToken.getUserCode(),searchBE.getCode(), "SCH_INDEX", pageNumber+"");
 
-		searchBE = beUtils.updateBaseEntity(searchBE, pageAnswer,SearchEntity.class);
-		searchBE = beUtils.updateBaseEntity(searchBE, pageNumberAnswer,SearchEntity.class);
+			searchBE = beUtils.updateBaseEntity(searchBE, pageAnswer,SearchEntity.class);
+			searchBE = beUtils.updateBaseEntity(searchBE, pageNumberAnswer,SearchEntity.class);
+			searchBE = beUtils.updateBaseEntity(searchBE, pageNumberAnswer2,SearchEntity.class);
 			
 		VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
 				beUtils.getGennyToken().getToken());

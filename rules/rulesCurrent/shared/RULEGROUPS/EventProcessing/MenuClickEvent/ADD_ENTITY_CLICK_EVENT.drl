@@ -30,7 +30,11 @@ rule "ADD_ENTITY_CLICK_EVENT"
 
 
 		output.setTypeOfResult("SIGNAL");
-		output.setResultCode("START_ADD_ENTITY");
+		if (workflowSignalCode.equals("HOST_CPY") || workflowSignalCode.equals("HOST_CPY_REP")) {
+			output.setResultCode("START_"+workflowSignalCode);
+		} else {
+			output.setResultCode("START_ADD_ENTITY");
+		}
 		output.setTargetCode($message.getData().getTargetCode());
 		output.setSuitCase(workflowSignalCode);
 		

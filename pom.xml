@@ -15,7 +15,7 @@
 
 	<groupId>life.genny.jbpm</groupId>
 	<artifactId>prj_genny</artifactId>
-	<version>7.3.0</version>
+	<version>7.4.0</version>
 	<packaging>pom</packaging>
 	<name>jBPM Genny </name>
 	<description>jBPM Genny Maven project</description>
@@ -549,9 +549,9 @@
 			<version>${version.keycloak}</version>
 			<scope>provided</scope>
 		</dependency>
-		<!-- <dependency> <groupId>org.apache.activemq.tooling</groupId> <artifactId>activemq-junit</artifactId> 
-			<version>${activemq-junit-version}</version> <scope>test</scope> </dependency> 
-			<dependency> <groupId>org.apache.activemq</groupId> <artifactId>activemq-broker</artifactId> 
+		<!-- <dependency> <groupId>org.apache.activemq.tooling</groupId> <artifactId>activemq-junit</artifactId>
+			<version>${activemq-junit-version}</version> <scope>test</scope> </dependency>
+			<dependency> <groupId>org.apache.activemq</groupId> <artifactId>activemq-broker</artifactId>
 			<version>${activemq-version}</version> <scope>test</scope> </dependency> -->
 		<dependency>
 			<groupId>org.apache.activemq</groupId>
