@@ -1,0 +1,88 @@
+package life.genny.rules;
+
+import life.genny.qwandautils.QwandaUtils;
+
+import life.genny.qwanda.message.QDataAnswerMessage;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.models.GennyToken;
+import life.genny.rules.QRules;
+import life.genny.utils.BaseEntityUtils;
+import life.genny.qwanda.Answer;
+import life.genny.qwanda.Answers;
+import io.vertx.core.json.JsonObject;
+import java.util.Map;
+import java.util.HashMap;
+import life.genny.utils.VertxUtils;
+import life.genny.qwanda.attribute.EntityAttribute;
+import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwandautils.JsonUtils;
+import org.apache.commons.lang3.StringUtils;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.io.UnsupportedEncodingException;
+import life.genny.utils.DropdownUtils;
+
+
+import java.util.List;
+import java.util.ArrayList;
+
+rule "HELPER_LNK_WHICH_DAYS"
+	ruleflow-group 'DataProcessing'
+	salience 5000
+	no-loop
+	when
+		beUtils : BaseEntityUtils()
+		answer : Answer( attributeCode == "LNK_WHICH_DAYS" )
+		answersToSave : Answers()
+		ruleDetails : RuleDetails()
+		output : OutputParam( )
+		serviceToken : GennyToken( code == "PER_SERVICE")
+		userToken : GennyToken( code != "PER_SERVICE")
+
+	then
+		System.out.println(drools.getRule().getName() + " fired");
+
+		String sourceCode = beUtils.getGennyToken().getUserCode();
+		System.out.println("sourceCode :: " + sourceCode);
+		
+		String targetCode = answer.getTargetCode();
+		System.out.println("targetCode :: " + targetCode);
+		
+		String assocBeCode = answer.getValue();
+		System.out.println("assocBeCode :: " + assocBeCode);
+
+		/* Save the actual answer */
+		answersToSave.add(answer);
+
+		/* list to store daysList */
+		List<String> daysList = new ArrayList<>();
+		
+		if(assocBeCode != null){
+
+			String code = assocBeCode.replace("\"", "").replace("[", "").replace("]", "");
+			System.out.println("code  :: " + code);
+
+			for (String dayCode : code.split(",")) {
+			
+				System.out.println("dayCode :: " + dayCode);
+
+				/* get the associatedBe */
+				BaseEntity associatedBe = beUtils.getBaseEntityByCode(dayCode);
+
+				/* get the name attribute of the associatedBe */
+				String name = associatedBe.getValue("PRI_NAME", null);		
+				daysList.add(name);
+
+			}
+
+			String days = daysList.toString().replaceAll("[\\[\\](){}]","");
+			
+			Answer daysAnswer = new Answer(sourceCode, targetCode, "PRI_WHICH_DAYS_STRIPPED", days,false,true);
+			answersToSave.add(daysAnswer);
+
+			VertxUtils.sendToFrontEnd(userToken, daysAnswer);
+		}
+ 		
+		output.setTypeOfResult("NONE");
+		output.setResultCode("NONE");  /* dont display anything new */
+end
