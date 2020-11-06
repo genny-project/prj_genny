@@ -15,7 +15,7 @@ rule "ADD_ENTITY_CLICK_EVENT"
 		salience 2
     no-loop
     when
-		$message : QEventMessage(data.code matches "QUE_.*" && data.parentCode == "QUE_ADD_ITEMS_GRP" )
+		$message : QEventMessage(data.code matches "QUE_.*" && (data.parentCode == "QUE_ADD_ITEMS_GRP" || data.parentCode == "QUE_QUICK_ADD_ITEMS_GRP") )
 		userToken : GennyToken (code != "PER_SERVICE" )
 		output : OutputParam( )
  		ruleDetails : RuleDetails()
