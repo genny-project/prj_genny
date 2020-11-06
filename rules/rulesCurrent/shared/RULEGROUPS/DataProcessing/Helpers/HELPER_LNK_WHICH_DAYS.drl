@@ -50,36 +50,37 @@ rule "HELPER_LNK_WHICH_DAYS"
 		
 		String assocBeCode = answer.getValue();
 		System.out.println("assocBeCode :: " + assocBeCode);
+
+		/* Save the actual answer */
+		answersToSave.add(answer);
+
+		/* list to store daysList */
+		List<String> daysList = new ArrayList<>();
 		
 		if(assocBeCode != null){
 
 			String code = assocBeCode.replace("\"", "").replace("[", "").replace("]", "");
 			System.out.println("code  :: " + code);
 
-			/* Save the actual LNK_WHICH_DAYS answer */
-			answersToSave.add(answer);
+			for (String dayCode : code.split(",")) {
+			
+				System.out.println("dayCode :: " + dayCode);
 
-			/* get the company baseentity */
-			BaseEntity associatedBe = beUtils.getBaseEntityByCode(code);
+				/* get the associatedBe */
+				BaseEntity associatedBe = beUtils.getBaseEntityByCode(dayCode);
 
-			if(associatedBe != null ){
-				/* get the name attribute of the company */
+				/* get the name attribute of the associatedBe */
 				String name = associatedBe.getValue("PRI_NAME", null);		
+				daysList.add(name);
 
-				if(name != null){
-					/* save the company's name as PRI_WHICH_DAYS_STRIPPED attribute for application baseentity */
-					Answer assocAnswer = new Answer(sourceCode, targetCode, "PRI_WHICH_DAYS_STRIPPED", name,false,true);
-					answersToSave.add(assocAnswer);
-					
-					VertxUtils.sendToFrontEnd(userToken, assocAnswer);
-				}
 			}
+
+			String days = daysList.toString().replaceAll("[\\[\\](){}]","");
+			answersToSave.add(days);
+
+			VertxUtils.sendToFrontEnd(userToken, days);
 		}
  		
- 	/*	update(answersToSave);	
-		retract(answer); */
-
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
-		/* update(output); */
 end

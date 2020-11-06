@@ -59,15 +59,15 @@ rule "HELPER_LNK_DRESS_CODE"
 			/* Save the actual LNK_DRESS_CODE answer */
 			answersToSave.add(answer);
 
-			/* get the company baseentity */
+			/* get the associated baseentity */
 			BaseEntity associatedBe = beUtils.getBaseEntityByCode(code);
 
 			if(associatedBe != null ){
-				/* get the name attribute of the company */
+				/* get the name attribute of the associated baseentity */
 				String name = associatedBe.getValue("PRI_NAME", null);		
 
 				if(name != null){
-					/* save the company's name as PRI_DRESS_CODE attribute for application baseentity */
+					/* save the associated be's name as PRI_DRESS_CODE attribute for current baseentity */
 					Answer assocAnswer = new Answer(sourceCode, targetCode, "PRI_DRESS_CODE", name,false,true);
 					answersToSave.add(assocAnswer);
 					
