@@ -76,9 +76,11 @@ rule "HELPER_LNK_WHICH_DAYS"
 			}
 
 			String days = daysList.toString().replaceAll("[\\[\\](){}]","");
-			answersToSave.add(days);
+			
+			Answer daysAnswer = new Answer(sourceCode, targetCode, "PRI_WHICH_DAYS_STRIPPED", days,false,true);
+			answersToSave.add(daysAnswer);
 
-			VertxUtils.sendToFrontEnd(userToken, days);
+			VertxUtils.sendToFrontEnd(userToken, daysAnswer);
 		}
  		
 		output.setTypeOfResult("NONE");
