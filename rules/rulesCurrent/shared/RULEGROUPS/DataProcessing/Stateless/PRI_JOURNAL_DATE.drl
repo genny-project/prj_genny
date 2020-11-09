@@ -188,7 +188,7 @@ rule "PRI_JOURNAL_DATE"
 						beUtils.saveAnswer(new Answer(sourceCode, result.getCode(), "PRI_PERCENTAGE_CALENDAR", percentageCalendar,false,true));
 						beUtils.saveAnswer(new Answer(sourceCode, result.getCode(), "PRI_PERCENTAGE_JOURNALS", percentageJournals,false,true));
 						beUtils.saveAnswer(new Answer(sourceCode, result.getCode(), "PRI_JOURNAL_STATUS", journalStatus,false,true));
-						beUtils.saveAnswer(new Answer(sourceCode, sourceCode.getCode(), "PRI_JOURNAL_STATUS", journalStatus,false,true));
+						beUtils.saveAnswer(new Answer(sourceCode, sourceCode, "PRI_JOURNAL_STATUS", journalStatus,false,true));
 						
 						System.out.println("Rule PRI_JOURNAL_DATE:PercentageCalendar :"+percentageCalendar+" "+noOfDaysSoFarLong+" of "+noOfDaysTotalLong+" days");
 						System.out.println("Rule PRI_JOURNAL_DATE:PercentageJournals :"+percentageJournals+" "+numOfJournals+" of "+totalInternshipDays+" journals");
