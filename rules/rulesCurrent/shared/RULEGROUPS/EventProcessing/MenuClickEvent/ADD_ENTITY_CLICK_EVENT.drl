@@ -39,6 +39,7 @@ rule "ADD_ENTITY_CLICK_EVENT"
 		output.setSuitCase(workflowSignalCode);
 		
 		
+		
 		System.out.println("START SIGNAL: " +workflowSignalCode);
 		System.out.println("STARTING ADD_ENTITY WORKFLOW WITH: " +output);
 
