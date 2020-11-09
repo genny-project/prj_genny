@@ -34,6 +34,7 @@ rule "FRM_HEADER_ADD_ITEMS"
     then
       System.out.println("   Generate FRM_HEADER_ADD_ITEMS Rule   "+serviceToken.getUserCode());
  
+ 
       Frame3 frame = Frame3.builder("FRM_HEADER_ADD_ITEMS")
                     .question("QUE_ADD_ITEMS_GRP")
                     .end()
