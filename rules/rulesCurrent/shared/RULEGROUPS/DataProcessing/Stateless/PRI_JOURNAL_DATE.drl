@@ -127,11 +127,14 @@ rule "PRI_JOURNAL_DATE"
 					
 					if ((optDaysPerWeek.isPresent())&&(optInternshipDuration.isPresent()) && (optInternshipStartDate.isPresent()) && (optInternshipEndDate.isPresent())) {
 						System.out.println("Rule PRI_JOURNAL_DATE5: percentage data available "+optDaysPerWeek.get()+":"+optInternshipDuration.get());
+						
 						Double dpw = Double.valueOf(optDaysPerWeek.get());
 						Double id =  Double.valueOf(optInternshipDuration.get());
+
 						System.out.println("Rule PRI_JOURNAL_DATE5: percentage data available2");
 						Double totalInternshipDays = dpw * id;
 						System.out.println("Rule PRI_JOURNAL_DATE5: percentage data available3");
+						
 						LocalDate startDate = optInternshipStartDate.get();
 						LocalDate endDate = optInternshipEndDate.get();
 						LocalDate dateNow = LocalDate.now();
@@ -178,11 +181,13 @@ rule "PRI_JOURNAL_DATE"
 						System.out.println("Save Percentages now");
 						Double numOfJournals = count.doubleValue();
 						Double percentageJournals = (100.0*numOfJournals)/totalInternshipDays;
+						String journalStatus = count.toString()+"/"+totalInternshipDays.toString();
 					
 						beUtils.saveAnswer(new Answer(sourceCode, sourceCode, "PRI_PERCENTAGE", percentageCalendar,false,true));
 						beUtils.saveAnswer(new Answer(sourceCode, result.getCode(), "PRI_PERCENTAGE", percentageCalendar,false,true));
 						beUtils.saveAnswer(new Answer(sourceCode, result.getCode(), "PRI_PERCENTAGE_CALENDAR", percentageCalendar,false,true));
 						beUtils.saveAnswer(new Answer(sourceCode, result.getCode(), "PRI_PERCENTAGE_JOURNALS", percentageJournals,false,true));
+						beUtils.saveAnswer(new Answer(sourceCode, result.getCode(), "PRI_JOURNAL_STATUS", percentageJournals,false,true));
 						
 						System.out.println("Rule PRI_JOURNAL_DATE:PercentageCalendar :"+percentageCalendar+" "+noOfDaysSoFarLong+" of "+noOfDaysTotalLong+" days");
 						System.out.println("Rule PRI_JOURNAL_DATE:PercentageJournals :"+percentageJournals+" "+numOfJournals+" of "+totalInternshipDays+" journals");
