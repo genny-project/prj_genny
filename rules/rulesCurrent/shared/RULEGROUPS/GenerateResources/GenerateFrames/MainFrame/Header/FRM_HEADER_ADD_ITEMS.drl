@@ -36,6 +36,7 @@ rule "FRM_HEADER_ADD_ITEMS"
  
       Frame3 frame = Frame3.builder("FRM_HEADER_ADD_ITEMS")
                     .question("QUE_ADD_ITEMS_GRP")
+                    .question("QUE_QUICK_ADD_ITEMS_GRP")
                     .end()
                     .build();
 						
