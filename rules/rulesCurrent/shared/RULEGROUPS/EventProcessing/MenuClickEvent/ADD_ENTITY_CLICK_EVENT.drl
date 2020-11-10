@@ -23,16 +23,19 @@ rule "ADD_ENTITY_CLICK_EVENT"
 
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
 
-
+		
 		String code = $message.getData().getCode();
 		String workflowSignalCode = StringUtils.removeEnd(code, "_MENU");
 		workflowSignalCode = StringUtils.removeStart(workflowSignalCode,"QUE_");
 
-
 		output.setTypeOfResult("SIGNAL");
-		if (workflowSignalCode.equals("HOST_CPY") || workflowSignalCode.equals("HOST_CPY_REP")  || workflowSignalCode.equals("QA_INTERN")){
+		if (workflowSignalCode.equals("HOST_CPY") || workflowSignalCode.equals("HOST_CPY_REP")  || workflowSignalCode.equals("QA_INTERN")) {
 			output.setResultCode("START_"+workflowSignalCode);
 		} else {
+		
+			workflowSignalCode = workflowSignalCode + "_NO";
+			System.out.println("workflowSignalCode: " +workflowSignalCode);
+			
 			output.setResultCode("START_ADD_ENTITY");
 		}
 		output.setTargetCode($message.getData().getTargetCode());

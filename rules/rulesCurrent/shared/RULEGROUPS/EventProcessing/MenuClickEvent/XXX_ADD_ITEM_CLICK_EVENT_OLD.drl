@@ -10,7 +10,7 @@ import life.genny.qwanda.message.QCmdMessage;
 import life.genny.utils.VertxUtils;
 
 
-rule "ADD_ITEM_CLICK_EVENT"
+rule "XXX_ADD_ITEM_CLICK_EVENT_OLD"
     ruleflow-group 'EventProcessing'
 		salience 2
     no-loop
