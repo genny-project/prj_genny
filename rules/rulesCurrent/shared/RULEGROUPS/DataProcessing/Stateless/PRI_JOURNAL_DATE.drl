@@ -183,12 +183,9 @@ rule "PRI_JOURNAL_DATE"
 						Double percentageJournals = (100.0*numOfJournals)/totalInternshipDays;
 						String journalStatus = count.toString()+"/"+totalInternshipDays.toString();
 
-						JsonObject progressObject = new JsonObject();
-						progressObject.put("completedPercentage",count);
-						progressObject.put("steps", totalInternshipDays);
-
 						JsonObject journalProgress = new JsonObject();
-						journalProgress.put("valueString",progressObject);
+						journalProgress.put("completedPercentage",count);
+						journalProgress.put("steps", totalInternshipDays);
 
 						System.out.println("Journal Progress " + journalProgress.toString());
 					
