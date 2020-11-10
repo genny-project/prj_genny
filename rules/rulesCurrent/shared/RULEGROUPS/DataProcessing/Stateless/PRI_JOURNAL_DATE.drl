@@ -182,6 +182,15 @@ rule "PRI_JOURNAL_DATE"
 						Double numOfJournals = count.doubleValue();
 						Double percentageJournals = (100.0*numOfJournals)/totalInternshipDays;
 						String journalStatus = count.toString()+"/"+totalInternshipDays.toString();
+
+						JsonObject progressObject = new JsonObject();
+						progressObject.put("completedPercentage",count);
+						progressObject.put("steps", totalInternshipDays);
+
+						JsonObject journalProgress = new JsonObject();
+						journalProgress.put("valueString",progressObject);
+
+						System.out.println("Journal Progress " + journalProgress.toString());
 					
 						beUtils.saveAnswer(new Answer(sourceCode, sourceCode, "PRI_PERCENTAGE", percentageCalendar,false,true));
 						beUtils.saveAnswer(new Answer(sourceCode, result.getCode(), "PRI_PERCENTAGE", percentageCalendar,false,true));
@@ -189,6 +198,10 @@ rule "PRI_JOURNAL_DATE"
 						beUtils.saveAnswer(new Answer(sourceCode, result.getCode(), "PRI_PERCENTAGE_JOURNALS", percentageJournals,false,true));
 						beUtils.saveAnswer(new Answer(sourceCode, result.getCode(), "PRI_JOURNAL_STATUS", journalStatus,false,true));
 						beUtils.saveAnswer(new Answer(sourceCode, sourceCode, "PRI_JOURNAL_STATUS", journalStatus,false,true));
+						
+						
+						beUtils.saveAnswer(new Answer(sourceCode, sourceCode, "PRI_JOURNAL_PROGRESS", journalProgress.toString(),false,true));
+						beUtils.saveAnswer(new Answer(sourceCode, result.getCode(), "PRI_JOURNAL_PROGRESS", journalProgress.toString(),false,true));
 						
 						System.out.println("Rule PRI_JOURNAL_DATE:PercentageCalendar :"+percentageCalendar+" "+noOfDaysSoFarLong+" of "+noOfDaysTotalLong+" days");
 						System.out.println("Rule PRI_JOURNAL_DATE:PercentageJournals :"+percentageJournals+" "+numOfJournals+" of "+totalInternshipDays+" journals");
