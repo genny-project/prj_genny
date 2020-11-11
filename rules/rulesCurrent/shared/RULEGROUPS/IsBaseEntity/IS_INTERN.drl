@@ -47,7 +47,7 @@ rule "IS_INTERN"
 		String lnkDuration = newBe.getValue("LNK_INTERNSHIP_DURATION", null);
 		System.out.println("lnkDuration = " +lnkDuration);
 		if (lnkDuration != null) {
-				assoc_duration = lnkDuration.replace("\"", "").replace("[", "").replace("]", "");
+				String assoc_duration = lnkDuration.replace("\"", "").replace("[", "").replace("]", "");
 				System.out.println("assoc_duration = " +assoc_duration);
 				
 				BaseEntity assoc_durationBe = beUtils.getBaseEntityByCode(assoc_duration);
@@ -57,8 +57,8 @@ rule "IS_INTERN"
 						assoc_duration = assoc_durationBe.getValue("PRI_NAME", null);
 						System.out.println("assoc_duration = " +assoc_duration);
 						
-						answer = new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASSOC_DURATION", assoc_duration);
- 						beUtils.saveAnswer(answer);
+						beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASSOC_DURATION", assoc_duration));
+					
 				} else {
 					System.out.println("ERROR: Null assoc_durationBe"); 
 				}
