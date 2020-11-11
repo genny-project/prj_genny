@@ -27,12 +27,9 @@ rule "ADD_ENTITY_CLICK_EVENT"
 		String code = $message.getData().getCode();
 		String workflowSignalCode = StringUtils.removeEnd(code, "_MENU");
 		workflowSignalCode = StringUtils.removeStart(workflowSignalCode,"QUE_");
+		System.out.println("workflowSignalCode: " +workflowSignalCode);
 
 		output.setTypeOfResult("SIGNAL");
-		
-		if (workflowSignalCode.equals("HOST_CPY") || workflowSignalCode.equals("HOST_CPY_REP")) {
-			output.setResultCode("START_"+workflowSignalCode);
-		} 
 		
 		if (workflowSignalCode.equals("QA_INTERN") || workflowSignalCode.equals("QA_HOST_CPY_REP") || workflowSignalCode.equals("QA_EDU_PRO_REP") || workflowSignalCode.equals("QA_AGENT")) {
 			output.setResultCode("START_QUICK_ADD");
@@ -42,13 +39,19 @@ rule "ADD_ENTITY_CLICK_EVENT"
 			System.out.println(">>>>> These have not been created yet!! <<<<<");
 		} 
 		
-		else {
+		
+		
+		
+		if (workflowSignalCode.equals("HOST_CPY") || workflowSignalCode.equals("HOST_CPY_REP")) {
+			output.setResultCode("START_"+workflowSignalCode);
+		} else {
 		
 			workflowSignalCode = workflowSignalCode + "_NO";
 			System.out.println("workflowSignalCode: " +workflowSignalCode);
 			
 			output.setResultCode("START_ADD_ENTITY");
 		}
+		
 		output.setTargetCode($message.getData().getTargetCode());
 		output.setSuitCase(workflowSignalCode);
 		
