@@ -10,19 +10,20 @@ import life.genny.qwanda.message.QCmdMessage;
 import life.genny.utils.VertxUtils;
 
 
-rule "ADD_ENTITY_CLICK_EVENT"
+rule "QUICK_ADD_ENTITY_CLICK_EVENT"
     ruleflow-group 'EventProcessing'
 		salience 2
     no-loop
     when
-		$message : QEventMessage(data.code matches "QUE_.*" && data.parentCode == "QUE_ADD_ITEMS_GRP")
+		$message : QEventMessage(data.code matches "QUE_.*" && data.parentCode == "QUE_QUICK_ADD_ITEMS_GRP") 
 		userToken : GennyToken (code != "PER_SERVICE" )
 		output : OutputParam( )
  		ruleDetails : RuleDetails()
     then
 
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
-
+		System.out.println("QUICK_ADD_ENTITY_CLICK_EVENT: Rule fired" );
+		
 		
 		String code = $message.getData().getCode();
 		String workflowSignalCode = StringUtils.removeEnd(code, "_MENU");
@@ -30,17 +31,7 @@ rule "ADD_ENTITY_CLICK_EVENT"
 		System.out.println("workflowSignalCode: " +workflowSignalCode);
 
 		output.setTypeOfResult("SIGNAL");
-				
-		
-		if (workflowSignalCode.equals("HOST_CPY") || workflowSignalCode.equals("HOST_CPY_REP")) {
-			output.setResultCode("START_"+workflowSignalCode);
-		} else {
-		
-			workflowSignalCode = workflowSignalCode + "_NO";
-			System.out.println("workflowSignalCode: " +workflowSignalCode);
-			
-			output.setResultCode("START_ADD_ENTITY");
-		}
+		output.setResultCode("START_QUICK_ADD");
 		
 		output.setTargetCode($message.getData().getTargetCode());
 		output.setSuitCase(workflowSignalCode);
