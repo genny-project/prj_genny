@@ -184,7 +184,7 @@ rule "PRI_JOURNAL_DATE"
 						String journalStatus = count.toString()+"/"+totalInternshipDays.toString();
 
 						JsonObject journalProgress = new JsonObject();
-						journalProgress.put("completedPercentage",count);
+						journalProgress.put("completedPercentage",percentageJournals);
 						journalProgress.put("steps", totalInternshipDays);
 
 						System.out.println("Journal Progress " + journalProgress.toString());
