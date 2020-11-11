@@ -38,6 +38,10 @@ rule "ADD_ENTITY_CLICK_EVENT"
 			output.setResultCode("START_QUICK_ADD");
 		} 
 		
+		if (workflowSignalCode.equals("QA_HOST_CPY") || workflowSignalCode.equals("QA_EDU_PRO") || workflowSignalCode.equals("QA_INTERNSHIP") || workflowSignalCode.equals("QA_REF_PART")) {
+			System.out.println(">>>>> These have not been created yet!! <<<<<");
+		} 
+		
 		else {
 		
 			workflowSignalCode = workflowSignalCode + "_NO";
