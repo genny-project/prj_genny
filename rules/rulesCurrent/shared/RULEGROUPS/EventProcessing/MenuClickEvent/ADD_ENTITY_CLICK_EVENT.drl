@@ -29,9 +29,16 @@ rule "ADD_ENTITY_CLICK_EVENT"
 		workflowSignalCode = StringUtils.removeStart(workflowSignalCode,"QUE_");
 
 		output.setTypeOfResult("SIGNAL");
-		if (workflowSignalCode.equals("HOST_CPY") || workflowSignalCode.equals("HOST_CPY_REP")  || workflowSignalCode.equals("QA_INTERN")) {
+		
+		if (workflowSignalCode.equals("HOST_CPY") || workflowSignalCode.equals("HOST_CPY_REP")) {
 			output.setResultCode("START_"+workflowSignalCode);
-		} else {
+		} 
+		
+		if (workflowSignalCode.equals("QA_INTERN") || workflowSignalCode.equals("QA_HOST_CPY_REP") || workflowSignalCode.equals("QA_EDU_PRO_REP") || workflowSignalCode.equals("QA_AGENT")) {
+			output.setResultCode("START_QUICK_ADD");
+		} 
+		
+		else {
 		
 			workflowSignalCode = workflowSignalCode + "_NO";
 			System.out.println("workflowSignalCode: " +workflowSignalCode);
