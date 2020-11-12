@@ -7828,7 +7828,7 @@ public class AdamTest {
 
 
                         }else{
-                            log.info("startDate and endDate not present !");
+                            log.info("PRI_DAYS_PER_WEEK and PRI_ASSOC_DURATION not present !");
                             if(!optDaysPerWeek.isPresent()){
                                 noDaysPerWeek.add(app.getCode()+" "+app.getValueAsString("PRI_INTERN_NAME"));
                             }
