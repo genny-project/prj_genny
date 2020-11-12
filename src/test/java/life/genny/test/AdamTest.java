@@ -7222,11 +7222,13 @@ public void updateApplicatinProgress(){
                 // get the start date and end date of the internship
                 Optional<LocalDate> optStartDate = app.getValue("PRI_START_DATE");
                 Optional<LocalDate> optEndDate = app.getValue("PRI_END_DATE");
+				Optional<String> optInternshipWeek = app.getValue("PRI_ASSOC_DURATION");
 
-                if (optStartDate.isPresent() && optEndDate.isPresent()) {
+                if (optStartDate.isPresent() && optEndDate.isPresent() && optInternshipWeek.isPresent()) {
 
                     LocalDate startDate = optStartDate.get();
                     LocalDate endDate = optEndDate.get();
+                    String internshipWeek = optInternshipWeek.get();
 
                     // calculate internship days
                     Long internshipDays = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate);
@@ -7270,7 +7272,7 @@ public void updateApplicatinProgress(){
 
                     JsonObject appProgress = new JsonObject();
                     appProgress.put("completedPercentage", completedPercentage);
-                    appProgress.put("steps", internshipDays);
+                    appProgress.put("steps", internshipWeek);
 
                     beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), internCode, "PRI_PROGRESS",
                             appProgress.toString(), false, true));
@@ -7285,6 +7287,9 @@ public void updateApplicatinProgress(){
                     if(!optEndDate.isPresent()){
                         noEndDate.add(app.getCode()+" "+app.getValueAsString("PRI_INTERN_NAME"));
                     }
+					if(!optEndDate.isPresent()){
+						noEndDate.add(app.getCode()+" "+app.getValueAsString("PRI_INTERN_NAME"));
+					}
                 }
             }
         }
