@@ -28,9 +28,7 @@ rule "FINISH_ENTITY_CLICK_EVENT"
 		String code = $message.getData().getCode();
 		System.out.println("code: " +code);
 		
-		String workflowSignalCode = "";
-		
-		workflowSignalCode = StringUtils.removeStart(workflowSignalCode,"QUE_FINISH_");
+		workflowSignalCode = StringUtils.removeStart(code,"QUE_FINISH_");
 		System.out.println("workflowSignalCode: " +workflowSignalCode);
 		
 		workflowSignalCode = workflowSignalCode + "_YES";
