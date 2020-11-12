@@ -67,6 +67,7 @@
     <bpmn2:property id="beUtils" itemSubjectRef="ItemDefinition_2143" name="beUtils"/>
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_217" name="message"/>
     <bpmn2:property id="beExists" itemSubjectRef="ItemDefinition_2733" name="beExists"/>
+    <bpmn2:property id="clean" itemSubjectRef="ItemDefinition_2733" name="clean"/>
     <bpmn2:endEvent id="EndEvent_2" name="END ADD_ENTITY">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -130,17 +131,17 @@
 	String prefix = &quot;NULL_&quot;;	
 
 	if (clean.equals(&quot;INTERN&quot;) || clean.equals(&quot;HOST_CPY_REP&quot;) || clean.equals(&quot;EDU_PRO_REP&quot;) || clean.equals(&quot;AGENT&quot;)) {
-			String prefix = &quot;PER_&quot;;
+			prefix = &quot;PER_&quot;;
 			System.out.println(&quot;ADD_ENTITY: Adding a &quot; + prefix);
 	}
 
 	if (clean.equals(&quot;HOST_CPY&quot;) || clean.equals(&quot;EDU_PRO&quot;) || clean.equals(&quot;AGENCY&quot;)) {
-			String prefix = &quot;CPY_&quot;;
+			prefix = &quot;CPY_&quot;;
 			System.out.println(&quot;ADD_ENTITY: Adding a &quot; + prefix);
 	}
 
 	if (clean.equals(&quot;INTERNSHIP&quot;)) {
-			String prefix = &quot;BEG_&quot;;
+			prefix = &quot;BEG_&quot;;
 			System.out.println(&quot;ADD_ENTITY: Adding a &quot; + prefix);
 	}
 
@@ -414,7 +415,7 @@ kcontext.setVariable(&quot;message&quot;,(QEventMessage)message); </bpmn2:script
 	kcontext.setVariable(&quot;beExists&quot;, beExists);
 	System.out.println(&quot;ADD_ENTITY: beExists = &quot; + beExists);
    
-   	String clean = key.replace(&quot;_YES&quot;, &quot;&quot;).replace(&quot;_NO&quot;, &quot;&quot;);
+   	clean = key.replace(&quot;_YES&quot;, &quot;&quot;).replace(&quot;_NO&quot;, &quot;&quot;);
     System.out.println(clean);
 
 	kcontext.setVariable(&quot;clean&quot;, clean);
