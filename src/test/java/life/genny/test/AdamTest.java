@@ -7808,7 +7808,9 @@ public class AdamTest {
                                 completedPercentage = (100.0 * completedJournals) / totalInternshipDays;
                             }
 
-                                journalStatus = completedJournals.toString() + "/" + totalInternshipDays.toString();
+                                // construct journalStatus attribute and save
+                                Integer totalJournals = totalInternshipDays.intValue();
+                                journalStatus = completedJournals.toString() + "/" + totalJournals.toString();
 
                                 Answer journalStatusAnswer = new Answer(beUtils.getGennyToken().getUserCode(), internCode,
                                         "PRI_JOURNAL_STATUS", journalStatus);
@@ -7841,13 +7843,14 @@ public class AdamTest {
             e.printStackTrace();
         }
 
-
-
-
-
-
-
-
+        log.info("============= Missing PRI_START_DATE=============");
+        for (String sd : noDaysPerWeek) {
+            log.info(sd);
+        }
+        log.info("============= Missing PRI_END_DATE=============");
+        for (String sd : noInternshipDuration) {
+            log.info(sd);
+        }
 
     }
 
