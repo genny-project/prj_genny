@@ -14,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -6615,5 +6616,886 @@ public class AdamTest {
 		System.out.println("updated " + updated);
 
 	}
+
+	@Test
+public void journalProgressCalculation() {
+    System.out.println("journalCalculation");
+    GennyToken userToken = null;
+    GennyToken serviceToken = null;
+    QRules qRules = null;
+
+    if (false) {
+        userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+        serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+        qRules = new QRules(eventBusMock, userToken.getToken());
+        qRules.set("realm", userToken.getRealm());
+        qRules.setServiceToken(serviceToken.getToken());
+        VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+        GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+    } else {
+        VertxUtils.cachedEnabled = false;
+        qRules = GennyJbpmBaseTest.setupLocalService();
+        userToken = new GennyToken("userToken", qRules.getToken());
+        serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+
+    }
+
+    System.out.println("session     =" + userToken.getSessionCode());
+    System.out.println("userToken   =" + userToken.getToken());
+    System.out.println("serviceToken=" + serviceToken.getToken());
+
+    BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+    beUtils.setServiceToken(serviceToken);
+
+    SearchEntity appSearch = new SearchEntity("SBE_APP", "SBE_APP")
+            .addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+            .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+            .addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "PROGRESS").addColumn("PRI_NAME", "Name")
+            .addColumn("PRI_CODE", "Code").addColumn("PRI_START_DATE", "Start Date")
+            .addColumn("PRI_END_DATE", "Start Date").addColumn("PRI_DAYS_PER_WEEK", "DPW")
+            .addColumn("PRI_ASSOC_DURATION", "DurationWeeks").addColumn("LNK_DAYS_PER_WEEK", "LNK Days Per Week")
+            .addColumn("LNK_INTERNSHIP_DURATION", "LNK Internship Duration").setPageStart(0).setPageSize(1000);
+
+    appSearch.setRealm(serviceToken.getRealm());
+
+    BaseEntity result = null;
+
+    try {
+        List<BaseEntity> bes = beUtils.getBaseEntitys(appSearch);
+        System.out.println("The number of items is " + (bes == null ? "NULL" : bes.size()));
+        if ((bes != null) && (bes.size() > 0)) {
+            System.out.println("Number of bes returned is " + bes.size() + ":" + result);
+
+            for (BaseEntity be : bes) {
+
+                Optional<String> optDaysPerWeek = be.getValue("PRI_DAYS_PER_WEEK");
+
+                if (!optDaysPerWeek.isPresent()) {
+                    Optional<String> lnkDaysPerWeek = be.getValue("LNK_DAYS_PER_WEEK");
+                    if (lnkDaysPerWeek.isPresent()) {
+                        BaseEntity days = beUtils.getBaseEntityByCode(
+                                lnkDaysPerWeek.get().substring(2, lnkDaysPerWeek.get().length() - 2));
+                        if (days != null) {
+                            optDaysPerWeek = days.getValue("PRI_NAME");
+
+                            beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(),
+                                    "PRI_DAYS_PER_WEEK", optDaysPerWeek.get()));
+                        }
+                    }
+                }
+
+                Optional<String> optInternshipDuration = be.getValue("PRI_ASSOC_DURATION");
+
+                if (!optInternshipDuration.isPresent()) {
+                    Optional<String> lnkInternshipDuration = be.getValue("LNK_INTERNSHIP_DURATION");
+                    if (lnkInternshipDuration.isPresent()) {
+                        BaseEntity duration = beUtils.getBaseEntityByCode(
+                                lnkInternshipDuration.get().substring(2, lnkInternshipDuration.get().length() - 2));
+                        if (duration != null) {
+                            optInternshipDuration = duration.getValue("PRI_NAME");
+
+                            beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(),
+                                    "PRI_ASSOC_DURATION", optInternshipDuration.get()));
+                        }
+                    }
+                }
+
+                Integer completedJournals = 0;
+
+                String internCode = be.getValue("PRI_INTERN_CODE", null);
+                if (internCode != null) {
+
+                    BaseEntity intern = beUtils.getBaseEntityByCode(internCode);
+
+                    if (intern != null) {
+                        completedJournals = intern.getValue("PRI_NUM_JOURNALS", null);
+                        if (completedJournals == null) {
+
+                            // find the completed journals
+
+                            SearchEntity completedJnlSbe = new SearchEntity("SBE_JOURNAL_COUNT",
+                                    "SBE_JOURNAL_COUNT").addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+                                            .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
+                                            .addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE,
+                                                    "%" + internCode + "%")
+                                            .addColumn("PRI_CODE", "Name");
+
+                            Tuple2<String, List<String>> results = beUtils.getHql(completedJnlSbe);
+                            String hql = results._1;
+                            String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
+                            Integer count = 0;
+
+                            try {
+                                String resultJsonStr = QwandaUtils.apiGet(
+                                        GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2,
+                                        serviceToken.getToken(), 120);
+
+                                completedJournals = Integer.decode(resultJsonStr);
+
+                                Answer journalCount = new Answer(beUtils.getGennyToken().getUserCode(), internCode,
+                                        "PRI_NUM_JOURNALS", completedJournals);
+                                beUtils.saveAnswer(journalCount);
+                                System.out.println("Saved Journal count to intern" + internCode);
+
+                            } catch (Exception e1) {
+                                completedJournals = 0;
+                                System.out.println("No journals yet for " + internCode);
+                            }
+                        }
+                    }
+
+                }
+
+                if ((optDaysPerWeek.isPresent()) && (optInternshipDuration.isPresent())) {
+
+                    Integer totalJournals = Integer.decode(optDaysPerWeek.get())
+                            * Integer.decode(optInternshipDuration.get());
+                    log.info(totalJournals);
+
+                    String journalStatus = completedJournals.toString() + "/" + totalJournals.toString();
+
+                    Answer journalStatusAnswer = new Answer(beUtils.getGennyToken().getUserCode(), internCode,
+                            "PRI_JOURNAL_STATUS", journalStatus);
+                    beUtils.saveAnswer(journalStatusAnswer);
+                    System.out.println("Saved Journal status");
+
+                    Double dpw = Double.valueOf(optDaysPerWeek.get());
+                    Double id = Double.valueOf(optInternshipDuration.get());
+                    Double totalInternshipDays = dpw * id;
+
+                    Double numOfJournals = completedJournals.doubleValue();
+                    Double percentageJournals = (100.0 * numOfJournals) / totalInternshipDays;
+
+                    JsonObject journalProgress = new JsonObject();
+                    journalProgress.put("completedPercentage", percentageJournals);
+                    journalProgress.put("steps", totalInternshipDays.intValue());
+
+                    log.info(journalProgress.toString());
+
+                    beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), internCode,
+                            "PRI_JOURNAL_PROGRESS", journalProgress.toString()));
+
+                    beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(),
+                            "PRI_JOURNAL_PROGRESS", journalProgress.toString()));
+                    System.out.println("Saved Journal Progress");
+
+                }
+
+            }
+
+        }
+    } catch (Exception e) {
+
+    }
+
+}
+
+@Test
+public void applicationProgressCalculation() {
+    System.out.println("applicationProgressCalculation");
+    GennyToken userToken = null;
+    GennyToken serviceToken = null;
+    QRules qRules = null;
+
+    if (false) {
+        userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+        serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+        qRules = new QRules(eventBusMock, userToken.getToken());
+        qRules.set("realm", userToken.getRealm());
+        qRules.setServiceToken(serviceToken.getToken());
+        VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+        GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+    } else {
+        VertxUtils.cachedEnabled = false;
+        qRules = GennyJbpmBaseTest.setupLocalService();
+        userToken = new GennyToken("userToken", qRules.getToken());
+        serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+
+    }
+
+    System.out.println("session     =" + userToken.getSessionCode());
+    System.out.println("userToken   =" + userToken.getToken());
+    System.out.println("serviceToken=" + serviceToken.getToken());
+
+    BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+    beUtils.setServiceToken(serviceToken);
+
+    /* get all the apps from PROGRESS bucket */
+
+    SearchEntity appSearch = new SearchEntity("SBE_APP", "SBE_APP")
+            .addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+            .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+            .addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "PROGRESS")
+            .addColumn("PRI_NAME", "Name")
+            .addColumn("PRI_CODE", "Code")
+            .addColumn("PRI_START_DATE", "Start Date")
+            .addColumn("PRI_END_DATE", "Start Date")
+            .addColumn("PRI_DAYS_PER_WEEK", "DPW")
+            .addColumn("PRI_ASSOC_DURATION", "DurationWeeks")
+            .addColumn("LNK_DAYS_PER_WEEK", "LNK Days Per Week")
+            .addColumn("LNK_INTERNSHIP_DURATION", "LNK Internship Duration").setPageStart(0).setPageSize(1000);
+
+    appSearch.setRealm(serviceToken.getRealm());
+
+    BaseEntity result = null;
+
+    List<String> noDaysPerWeek = new ArrayList<String>();
+    List<String> noInternshipDuration = new ArrayList<String>();
+
+    List<String> noStartDate = new ArrayList<String>();
+    List<String> noEndDate = new ArrayList<String>();
+    List<String> noInternCode = new ArrayList<String>();
+    List<String> percentageToFix = new ArrayList<String>();
+
+    try {
+        List<BaseEntity> bes = beUtils.getBaseEntitys(appSearch);
+        System.out.println("The number of items is " + (bes == null ? "NULL" : bes.size()));
+        if ((bes != null) && (bes.size() > 0)) {
+            System.out.println("Number of bes returned is " + bes.size() + ":" + result);
+
+            for (BaseEntity be : bes) {
+
+                String internCode = be.getValue("PRI_INTERN_CODE", null);
+                if(internCode == null){
+                    noInternCode.add(be.getCode());
+                }
+                String appCode = be.getCode();
+
+                Optional<String> optDaysPerWeek = be.getValue("PRI_DAYS_PER_WEEK");
+
+                if (!optDaysPerWeek.isPresent()) {
+                    Optional<String> lnkDaysPerWeek = be.getValue("LNK_DAYS_PER_WEEK");
+                    if (lnkDaysPerWeek.isPresent()) {
+                        BaseEntity days = beUtils.getBaseEntityByCode(
+                                lnkDaysPerWeek.get().substring(2, lnkDaysPerWeek.get().length() - 2));
+                        if (days != null) {
+                            optDaysPerWeek = days.getValue("PRI_NAME");
+
+                            beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(),
+                                    "PRI_DAYS_PER_WEEK", optDaysPerWeek.get()));
+                        }
+                    } else {
+                        noDaysPerWeek.add(be.getCode());
+                    }
+                }
+
+                Optional<String> optInternshipDuration = be.getValue("PRI_ASSOC_DURATION");
+
+                if (!optInternshipDuration.isPresent()) {
+                    Optional<String> lnkInternshipDuration = be.getValue("LNK_INTERNSHIP_DURATION");
+                    if (lnkInternshipDuration.isPresent()) {
+                        BaseEntity duration = beUtils.getBaseEntityByCode(
+                                lnkInternshipDuration.get().substring(2, lnkInternshipDuration.get().length() - 2));
+                        if (duration != null) {
+                            optInternshipDuration = duration.getValue("PRI_NAME");
+
+                            beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(),
+                                    "PRI_ASSOC_DURATION", optInternshipDuration.get()));
+                        }
+                    } else {
+                        noInternshipDuration.add(be.getCode());
+
+                    }
+                }
+
+                Optional<LocalDate> optInternshipStartDate = be.getValue("PRI_START_DATE");
+                Optional<LocalDate> optInternshipEndDate = be.getValue("PRI_END_DATE");
+
+                LocalDate dateNow = LocalDate.now();
+                Double noOfDaysSoFar = null;
+                Double noOfDaysTotal = null;
+
+                if (optInternshipStartDate.isPresent()) {
+                    LocalDate startDate = optInternshipStartDate.get();
+                    Long noOfDaysSoFarLong = java.time.temporal.ChronoUnit.DAYS.between(startDate, dateNow);
+                    noOfDaysSoFar = noOfDaysSoFarLong.doubleValue();
+                    Double percentageCalendar = 0.0;
+
+                    // don't calculate if the internship start date has not arrived
+                    if(noOfDaysSoFar >0 ){
+
+                        if (optInternshipEndDate.isPresent()) {
+                            LocalDate endDate = optInternshipEndDate.get();
+                            Long noOfDaysTotalLong = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate);
+                            noOfDaysTotal = noOfDaysTotalLong.doubleValue();
+                        } else {
+                            // calculate internship end date
+                            noEndDate.add(be.getCode());
+                            continue;
+                        }
+
+                         percentageCalendar = (100.0 * noOfDaysSoFar) / noOfDaysTotal;
+                        //Double percentageCalendar = 0.0;
+                        if(percentageCalendar > 100){
+                            percentageToFix.add(be.getCode());
+                            percentageCalendar=0.0;
+                        }
+                    }
+
+                    // save the PRI_PERCENTAGE to user and app
+                    beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), internCode,
+                            "PRI_PERCENTAGE", percentageCalendar, false, true));
+                    beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), appCode, "PRI_PERCENTAGE",
+                            percentageCalendar, false, true));
+
+                    // save PRI_PROGRESS to user and app
+                    JsonObject appProgress = new JsonObject();
+                    appProgress.put("completedPercentage", percentageCalendar);
+                    appProgress.put("steps", noOfDaysTotal.intValue());
+
+                    beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), internCode, "PRI_PROGRESS",
+                            appProgress.toString(), false, true));
+                    beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), appCode, "PRI_PROGRESS",
+                            appProgress.toString(), false, true));
+
+                } else {
+                    noStartDate.add(be.getCode());
+                }
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    log.info("============= Missing LNK_DAYS_PER_WEEK =============");
+    for (String sd : noDaysPerWeek) { 
+        log.info(sd);
+    }
+    log.info("============= Missing LNK_INTERNSHIP_DURATION=============");
+    for (String sd : noInternshipDuration) {
+        log.info(sd);
+    }
+    log.info("============= Missing PRI_START_DATE=============");
+    for (String sd : noStartDate) {
+        log.info(sd);
+    }
+    log.info("============= Missing PRI_END_DATE=============");
+    for (String sd : noEndDate) {
+        log.info(sd);
+    }
+
+    log.info("============= Missing PRI_INTERN_CODE=============");
+    for (String sd : noInternCode) {
+        log.info(sd);
+    }
+
+    log.info("============= Percentage to fix=============");
+    for (String sd : percentageToFix) {
+        log.info(sd);
+    }
+
+}
+
+@Test
+public void dateTest(){
+
+    String startDateString = "2020-11-12";
+    String endDateString = "2020-11-14";
+    String tempDateString = "2020-11-11";
+
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    LocalDate startDate = LocalDate.parse(startDateString, formatter);
+    LocalDate endDate = LocalDate.parse(endDateString, formatter);
+    LocalDate tempDate = LocalDate.parse(tempDateString, formatter);
+
+    Double completedPercentage = 0.0;
+
+    // calculate internship days
+    Long internshipDays = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate);
+    // make days inclusive
+    internshipDays++;
+
+    // check if start and end date exist for internship
+    if(startDate != null && endDate != null ){
+
+        // get the current date
+        LocalDate dateNow = LocalDate.now();
+
+        // check if currentDate has passed endDate
+        Long hasCompletedInternship = java.time.temporal.ChronoUnit.DAYS.between(tempDate, endDate);
+
+        // check if internship is yet to be started
+        Long hasNotStartedInternship = java.time.temporal.ChronoUnit.DAYS.between(startDate, tempDate);
+
+        // if  it's negative, intern has completed the internship
+        if(hasCompletedInternship < 0){
+
+            //set internship completed
+            completedPercentage = 100.0;
+
+        }else if(hasNotStartedInternship < 0 ){
+
+            //set internship has not started yet
+            completedPercentage = 0.0;
+        }
+
+
+        else{
+
+            // calculate how many days in internship
+            Long daysInInternship = java.time.temporal.ChronoUnit.DAYS.between(startDate, tempDate);
+
+            // make days inclusive ??
+            daysInInternship++;
+
+            // calculate completedPercentage
+            completedPercentage = (100.0 * daysInInternship) / internshipDays;
+
+        }
+
+        JsonObject appProgress = new JsonObject();
+        appProgress.put("completedPercentage", completedPercentage);
+        appProgress.put("steps", internshipDays);
+    }else{
+        log.info("startDate and endDate not present !");
+    }
+}
+
+@Test
+public void fixLnks() {
+    System.out.println("fixLnks");
+    GennyToken userToken = null;
+    GennyToken serviceToken = null;
+    QRules qRules = null;
+
+    if (false) {
+        userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+        serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+        qRules = new QRules(eventBusMock, userToken.getToken());
+        qRules.set("realm", userToken.getRealm());
+        qRules.setServiceToken(serviceToken.getToken());
+        VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+        GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+    } else {
+        VertxUtils.cachedEnabled = false;
+        qRules = GennyJbpmBaseTest.setupLocalService();
+        userToken = new GennyToken("userToken", qRules.getToken());
+        serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+
+    }
+
+    System.out.println("session     =" + userToken.getSessionCode());
+    System.out.println("userToken   =" + userToken.getToken());
+    System.out.println("serviceToken=" + serviceToken.getToken());
+
+    List<String> noLnkDaysPerWeek = new ArrayList<String>();
+    List<String> noLnkInternshipDuration = new ArrayList<String>();
+
+    BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+    beUtils.setServiceToken(serviceToken);
+
+    SearchEntity appSearch = new SearchEntity("SBE_APP", "SBE_APP")
+            .addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+            .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+            .addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "PROGRESS").addColumn("PRI_NAME", "Name")
+            .addColumn("PRI_CODE", "Code").addColumn("LNK_DAYS_PER_WEEK", "LNK Days Per Week")
+            .addColumn("LNK_INTERNSHIP_DURATION", "LNK Internship Duration").setPageStart(0).setPageSize(1000);
+
+    appSearch.setRealm(serviceToken.getRealm());
+
+    try {
+        List<BaseEntity> bes = beUtils.getBaseEntitys(appSearch);
+        System.out.println("The number of items is " + (bes == null ? "NULL" : bes.size()));
+        if ((bes != null) && (bes.size() > 0)) {
+            System.out.println("Number of bes returned is " + bes.size());
+
+            for (BaseEntity be : bes) {
+
+                Optional<String> lnkDaysPerWeek = be.getValue("LNK_DAYS_PER_WEEK");
+                if (lnkDaysPerWeek.isPresent()) {
+                    BaseEntity days = beUtils.getBaseEntityByCode(
+                            lnkDaysPerWeek.get().substring(2, lnkDaysPerWeek.get().length() - 2));
+                    if (days != null) {
+                        Optional<String> optDaysPerWeek = days.getValue("PRI_NAME");
+
+                        beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(),
+                                "PRI_DAYS_PER_WEEK", optDaysPerWeek.get()));
+                    }
+                }else{
+                    noLnkDaysPerWeek.add(be.getCode()+" "+be.getValueAsString("PRI_INTERN_NAME"));
+
+                }
+
+                Optional<String> lnkInternshipDuration = be.getValue("LNK_INTERNSHIP_DURATION");
+                if (lnkInternshipDuration.isPresent()) {
+                    BaseEntity duration = beUtils.getBaseEntityByCode(
+                            lnkInternshipDuration.get().substring(2, lnkInternshipDuration.get().length() - 2));
+                    if (duration != null) {
+                        Optional<String> optInternshipDuration = duration.getValue("PRI_NAME");
+
+                        beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(),
+                                "PRI_ASSOC_DURATION", optInternshipDuration.get()));
+                    }
+                }else{
+                    noLnkInternshipDuration.add(be.getCode()+" "+be.getValueAsString("PRI_INTERN_NAME"));
+
+                }
+
+            }
+
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    log.info("============= Missing LNK_DAYS_PER_WEEK =============");
+    for (String sd : noLnkDaysPerWeek) {
+        log.info(sd);
+    }
+    log.info("============= Missing LNK_INTERNSHIP_DURATION=============");
+    for (String sd : noLnkInternshipDuration) {
+        log.info(sd);
+    }
+
+}
+
+@Test
+public void updateApplicatinProgress(){
+
+    System.out.println("applicationProgressCalculation");
+    GennyToken userToken = null;
+    GennyToken serviceToken = null;
+    QRules qRules = null;
+
+    if (false) {
+        userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+        serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+        qRules = new QRules(eventBusMock, userToken.getToken());
+        qRules.set("realm", userToken.getRealm());
+        qRules.setServiceToken(serviceToken.getToken());
+        VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+        GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+    } else {
+        VertxUtils.cachedEnabled = false;
+        qRules = GennyJbpmBaseTest.setupLocalService();
+        userToken = new GennyToken("userToken", qRules.getToken());
+        serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+
+    }
+
+    System.out.println("session     =" + userToken.getSessionCode());
+    System.out.println("userToken   =" + userToken.getToken());
+    System.out.println("serviceToken=" + serviceToken.getToken());
+
+    BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+    beUtils.setServiceToken(serviceToken);
+
+    /* get all the apps from PROGRESS bucket */
+
+    SearchEntity appSearch = new SearchEntity("SBE_APP", "SBE_APP")
+            .addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+            .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+            .addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "PROGRESS")
+            .addColumn("PRI_NAME", "Name")
+            .addColumn("PRI_CODE", "Code")
+            .addColumn("PRI_START_DATE", "Start Date")
+            .addColumn("PRI_END_DATE", "Start Date")
+            .addColumn("PRI_DAYS_PER_WEEK", "DPW")
+            .addColumn("PRI_ASSOC_DURATION", "DurationWeeks")
+            .addColumn("LNK_DAYS_PER_WEEK", "LNK Days Per Week")
+            .addColumn("LNK_INTERNSHIP_DURATION", "LNK Internship Duration").setPageStart(0).setPageSize(1000);
+
+    appSearch.setRealm(serviceToken.getRealm());
+
+    List<String> noStartDate = new ArrayList<String>();
+    List<String> noEndDate = new ArrayList<String>();
+    List<String> noInternCode = new ArrayList<String>();
+
+    Double completedPercentage = 0.0;
+
+    try{
+        List<BaseEntity> apps = beUtils.getBaseEntitys(appSearch);
+        System.out.println("The number of apps is " + (apps == null ? "NULL" : apps.size()));
+        if ((apps != null) && (apps.size() > 0)) {
+
+            for (BaseEntity app : apps) {
+
+                String internCode = app.getValue("PRI_INTERN_CODE", null);
+                if(internCode == null){
+                    noInternCode.add(app.getCode()+" "+app.getValueAsString("PRI_INTERN_NAME"));
+                }
+                String appCode = app.getCode();
+
+                // get the start date and end date of the internship
+                Optional<LocalDate> optStartDate = app.getValue("PRI_START_DATE");
+                Optional<LocalDate> optEndDate = app.getValue("PRI_END_DATE");
+
+                if (optStartDate.isPresent() && optEndDate.isPresent()) {
+
+                    LocalDate startDate = optStartDate.get();
+                    LocalDate endDate = optEndDate.get();
+
+                    // calculate internship days
+                    Long internshipDays = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate);
+
+                    // make internshipDays inclusive
+                    internshipDays++;
+
+                    // get the current date
+                    LocalDate currentDate = LocalDate.now();
+
+                    // check if currentDate has passed endDate
+                    Long hasCompletedInternship = java.time.temporal.ChronoUnit.DAYS.between(currentDate, endDate);
+
+                    // check if internship is yet to be started
+                    Long hasNotStartedInternship = java.time.temporal.ChronoUnit.DAYS.between(startDate, currentDate);
+
+                    // if  it's negative, intern has completed the internship
+                    if(hasCompletedInternship < 0){
+
+                        //set internship completed
+                        completedPercentage = 100.0;
+
+                        // if  it's negative, internship has not started
+                    }else if(hasNotStartedInternship < 0){
+
+                        //set internship not started at all
+                        completedPercentage = 0.0;
+
+                    }else{
+
+                        // calculate how many days intern has done internship
+                        Long daysInInternship = java.time.temporal.ChronoUnit.DAYS.between(startDate, currentDate);
+
+                        // make days inclusive ??
+                        daysInInternship++;
+
+                        // calculate completedPercentage
+                        completedPercentage = (100.0 * daysInInternship) / internshipDays;
+
+                    }
+
+                    JsonObject appProgress = new JsonObject();
+                    appProgress.put("completedPercentage", completedPercentage);
+                    appProgress.put("steps", internshipDays);
+
+                    beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), internCode, "PRI_PROGRESS",
+                            appProgress.toString(), false, true));
+                    beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), appCode, "PRI_PROGRESS",
+                            appProgress.toString(), false, true));
+
+                }else{
+                    log.info("startDate and endDate not present !");
+                    if(!optStartDate.isPresent()){
+                        noStartDate.add(app.getCode()+" "+app.getValueAsString("PRI_INTERN_NAME"));
+                    }
+                    if(!optEndDate.isPresent()){
+                        noEndDate.add(app.getCode()+" "+app.getValueAsString("PRI_INTERN_NAME"));
+                    }
+                }
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    log.info("============= Missing PRI_START_DATE=============");
+    for (String sd : noStartDate) {
+        log.info(sd);
+    }
+    log.info("============= Missing PRI_END_DATE=============");
+    for (String sd : noEndDate) {
+        log.info(sd);
+    }
+
+    log.info("============= Missing PRI_INTERN_CODE=============");
+    for (String sd : noInternCode) {
+        log.info(sd);
+    }
+
+}
+
+@Test
+public void updateJournalProgress(){
+
+    System.out.println("applicationProgressCalculation");
+    GennyToken userToken = null;
+    GennyToken serviceToken = null;
+    QRules qRules = null;
+
+    if (false) {
+        userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+        serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+        qRules = new QRules(eventBusMock, userToken.getToken());
+        qRules.set("realm", userToken.getRealm());
+        qRules.setServiceToken(serviceToken.getToken());
+        VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+        GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+    } else {
+        VertxUtils.cachedEnabled = false;
+        qRules = GennyJbpmBaseTest.setupLocalService();
+        userToken = new GennyToken("userToken", qRules.getToken());
+        serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+
+    }
+
+    System.out.println("session     =" + userToken.getSessionCode());
+    System.out.println("userToken   =" + userToken.getToken());
+    System.out.println("serviceToken=" + serviceToken.getToken());
+
+    BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+    beUtils.setServiceToken(serviceToken);
+
+    /* get all the apps from PROGRESS bucket */
+
+    SearchEntity appSearch = new SearchEntity("SBE_APP", "SBE_APP")
+            .addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+            .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+            .addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "PROGRESS")
+            .addColumn("PRI_NAME", "Name")
+            .addColumn("PRI_CODE", "Code")
+
+            .addColumn("PRI_DAYS_PER_WEEK", "DPW")
+            .addColumn("PRI_ASSOC_DURATION", "DurationWeeks")
+
+            .addColumn("LNK_DAYS_PER_WEEK", "LNK Days Per Week")
+            .addColumn("LNK_INTERNSHIP_DURATION", "LNK Internship Duration")
+            .setPageStart(0).setPageSize(1000);
+
+    appSearch.setRealm(serviceToken.getRealm());
+
+    List<String> noDaysPerWeek = new ArrayList<String>();
+    List<String> noInternshipDuration = new ArrayList<String>();
+    List<String> noInternCode = new ArrayList<String>();
+
+    Integer completedJournals = 0;
+    Double completedPercentage = 0.0;
+    String journalStatus="";
+
+    try {
+        List<BaseEntity> apps = beUtils.getBaseEntitys(appSearch);
+        System.out.println("The number of apps is " + (apps == null ? "NULL" : apps.size()));
+        if ((apps != null) && (apps.size() > 0)) {
+
+            System.out.println("Number of apps returned is " + apps.size());
+
+            // loop through apps
+            for (BaseEntity app : apps) {
+
+                // get the internCode
+                String internCode = app.getValue("PRI_INTERN_CODE", null);
+
+                if(internCode == null){
+                    noInternCode.add(app.getCode());
+                    continue;
+                }
+
+                // get the intern be
+                BaseEntity intern = beUtils.getBaseEntityByCode(internCode);
+                if(intern != null){
+
+                    // get completedJournals count
+                    completedJournals = intern.getValue("PRI_NUM_JOURNALS", null);
+
+                    if(completedJournals == null ){
+
+                        // find the completedJournals count from sbe
+                        SearchEntity completedJnlSbe = new SearchEntity("SBE_JOURNAL_COUNT",
+                                "SBE_JOURNAL_COUNT")
+                                .addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+                                .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
+                                .addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%" + internCode + "%")
+                                .addColumn("PRI_CODE", "Name");
+
+                        Tuple2<String, List<String>> results = beUtils.getHql(completedJnlSbe);
+                        String hql = results._1;
+                        String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
+                        Integer count = 0;
+
+                        try {
+                            String resultJsonStr = QwandaUtils.apiGet(
+                                    GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2,
+                                    serviceToken.getToken(), 120);
+
+                            completedJournals = Integer.decode(resultJsonStr);
+
+                            // save PRI_NUM_JOURNALS to app and intern
+                            beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), internCode,
+                                    "PRI_NUM_JOURNALS", completedJournals));
+                            beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), app.getCode(),
+                                    "PRI_NUM_JOURNALS", completedJournals));
+                            System.out.println("Saved Journal count to intern" + internCode);
+
+                        } catch (Exception e1) {
+                            completedJournals = 0;
+                            System.out.println("No journals yet for " + internCode);
+                        }
+                    }
+
+
+                    // get days per weeks (dpw)
+                    Optional<String> optDaysPerWeek = app.getValue("PRI_DAYS_PER_WEEK");
+
+                    // get internship duration (id)
+                    Optional<String> optInternshipDuration = app.getValue("PRI_ASSOC_DURATION");
+
+                    if ((optDaysPerWeek.isPresent()) && (optInternshipDuration.isPresent())) {
+
+                        Double dpw = Double.valueOf(optDaysPerWeek.get());
+                        Double id = Double.valueOf(optInternshipDuration.get());
+
+                        // get total number of internship days ( id * dpw)
+                        Double totalInternshipDays = dpw * id;
+
+                        // if student has added more journals than the totalInternshipDays
+                        if(totalInternshipDays < completedJournals){
+
+                            // set the completedPercentage to 100
+                            completedPercentage = 100.0;
+                        }else{
+
+                            // calculate journals completed percentage
+                            completedPercentage = (100.0 * completedJournals) / totalInternshipDays;
+                        }
+
+                            // construct journalStatus attribute and save
+                            Integer totalJournals = totalInternshipDays.intValue();
+                            journalStatus = completedJournals.toString() + "/" + totalJournals.toString();
+
+                            Answer journalStatusAnswer = new Answer(beUtils.getGennyToken().getUserCode(), internCode,
+                                    "PRI_JOURNAL_STATUS", journalStatus);
+                            beUtils.saveAnswer(journalStatusAnswer);
+
+                            JsonObject journalProgress = new JsonObject();
+                            journalProgress.put("completedPercentage", completedPercentage);
+                            journalProgress.put("steps", totalInternshipDays.intValue());
+
+                            beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), internCode,
+                                    "PRI_JOURNAL_PROGRESS", journalProgress.toString()));
+
+                            beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), app.getCode(),
+                                    "PRI_JOURNAL_PROGRESS", journalProgress.toString()));
+
+
+                    }else{
+                        log.info("PRI_DAYS_PER_WEEK and PRI_ASSOC_DURATION not present !");
+                        if(!optDaysPerWeek.isPresent()){
+                            noDaysPerWeek.add(app.getCode()+" "+app.getValueAsString("PRI_INTERN_NAME"));
+                        }
+                        if(!optInternshipDuration.isPresent()){
+                            noInternshipDuration.add(app.getCode()+" "+app.getValueAsString("PRI_INTERN_NAME"));
+                        }
+                    }
+                }
+            }
+        }
+    }catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    log.info("============= Missing PRI_DAYS_PER_WEEK=============");
+    for (String sd : noDaysPerWeek) {
+        log.info(sd);
+    }
+    log.info("============= Missing PRI_ASSOC_DURATION=============");
+    for (String sd : noInternshipDuration) {
+        log.info(sd);
+    }
+
+}
 
 }
