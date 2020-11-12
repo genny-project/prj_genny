@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 rule "IS_QA_HOST_CPY_REP"
-    ruleflow-group 'IsBaseEntity'
+    ruleflow-group 'IsQuickAdd'
     no-loop true
     salience 1000
     when

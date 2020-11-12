@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 rule "IS_QA_EDU_PRO_REP"
-    ruleflow-group 'IsBaseEntity'
+    ruleflow-group 'IsQuickAdd'
     no-loop true
     salience 1 
     when
