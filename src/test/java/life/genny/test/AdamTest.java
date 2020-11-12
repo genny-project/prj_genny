@@ -6927,6 +6927,7 @@ public class AdamTest {
 
         Integer completedJournals = 0;
         Double completedPercentage = 0.0;
+        String journalStatus="";
 
         try {
             List<BaseEntity> apps = beUtils.getBaseEntitys(appSearch);
@@ -7014,6 +7015,14 @@ public class AdamTest {
                                 completedPercentage = (100.0 * completedJournals) / totalInternshipDays;
                             }
 
+                                // construct journalStatus attribute and save
+                                Integer totalJournals = totalInternshipDays.intValue();
+                                journalStatus = completedJournals.toString() + "/" + totalJournals.toString();
+
+                                Answer journalStatusAnswer = new Answer(beUtils.getGennyToken().getUserCode(), internCode,
+                                        "PRI_JOURNAL_STATUS", journalStatus);
+                                beUtils.saveAnswer(journalStatusAnswer);
+
                                 JsonObject journalProgress = new JsonObject();
                                 journalProgress.put("completedPercentage", completedPercentage);
                                 journalProgress.put("steps", totalInternshipDays.intValue());
@@ -7041,13 +7050,14 @@ public class AdamTest {
             e.printStackTrace();
         }
 
-
-
-
-
-
-
-
+        log.info("============= Missing PRI_START_DATE=============");
+        for (String sd : noDaysPerWeek) {
+            log.info(sd);
+        }
+        log.info("============= Missing PRI_END_DATE=============");
+        for (String sd : noInternshipDuration) {
+            log.info(sd);
+        }
 
     }
 
