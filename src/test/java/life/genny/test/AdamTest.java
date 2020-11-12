@@ -220,8 +220,7 @@ public class AdamTest {
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		beUtils.setServiceToken(serviceToken);
 
-		SearchEntity searchBE = new SearchEntity("SBE_TEST", "hcrs")
-				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+		SearchEntity searchBE = new SearchEntity("SBE_TEST", "hcrs").addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%").addFilter("PRI_IS_HOST_CPY_REP", true)
 				.addColumn("PRI_CODE", "Name");
 
@@ -240,15 +239,15 @@ public class AdamTest {
 
 					String status = item.getValue("PRI_STATUS", null);
 					if (StringUtils.isBlank(status)) {
-						Answer activeStatus = new Answer(beUtils.getGennyToken().getUserCode(), item.getCode(),
-								"PRI_STATUS", "ACTIVE");
+						Answer activeStatus = new Answer(beUtils.getGennyToken().getUserCode(), item.getCode(), "PRI_STATUS",
+								"ACTIVE");
 						beUtils.saveAnswer(activeStatus);
 
 					}
 
 				} else {
-					Answer activeStatus = new Answer(beUtils.getGennyToken().getUserCode(), item.getCode(),
-							"PRI_STATUS", "ACTIVE");
+					Answer activeStatus = new Answer(beUtils.getGennyToken().getUserCode(), item.getCode(), "PRI_STATUS",
+							"ACTIVE");
 					beUtils.saveAnswer(activeStatus);
 
 				}
@@ -337,8 +336,8 @@ public class AdamTest {
 
 		}
 
-		QScheduleMessage scheduleMessage = new QScheduleMessage(JsonUtils.toJson(msg), userToken.getUserCode(),
-				"webcmds", triggertime, userToken.getRealm());
+		QScheduleMessage scheduleMessage = new QScheduleMessage(JsonUtils.toJson(msg), userToken.getUserCode(), "webcmds",
+				triggertime, userToken.getRealm());
 
 		// POst the scheduleMessage
 		String uniqueCode = "";
@@ -351,8 +350,8 @@ public class AdamTest {
 				uniqueCode = QwandaUtils.apiPostEntity("https://internmatch-adam2.gada.io/api/schedule",
 						JsonUtils.toJson(scheduleMessage), userToken.getToken());
 			} else { // using local dev
-				uniqueCode = QwandaUtils.apiPostEntity("http://localhost:8095/api/schedule",
-						JsonUtils.toJson(scheduleMessage), userToken.getToken());
+				uniqueCode = QwandaUtils.apiPostEntity("http://localhost:8095/api/schedule", JsonUtils.toJson(scheduleMessage),
+						userToken.getToken());
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -393,18 +392,15 @@ public class AdamTest {
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		beUtils.setServiceToken(serviceToken);
 
-		SearchEntity searchBE = new SearchEntity("INterns", "Interns")
-				.addSort("PRI_NAME", "Name", SearchEntity.Sort.ASC)
+		SearchEntity searchBE = new SearchEntity("INterns", "Interns").addSort("PRI_NAME", "Name", SearchEntity.Sort.ASC)
 				.addSort("PRI_STATUS", "Status", SearchEntity.Sort.ASC)
 				.addSort("PRI_NUM_JOURNALS", "Journals", SearchEntity.Sort.DESC)
-				.addSort("PRI_START_DATE", "Name", SearchEntity.Sort.ASC)
-				.addSort("PRI_ASSOC_EP", "EP", SearchEntity.Sort.ASC)
+				.addSort("PRI_START_DATE", "Name", SearchEntity.Sort.ASC).addSort("PRI_ASSOC_EP", "EP", SearchEntity.Sort.ASC)
 				.addSort("PRI_ADDRESS_STATE", "State", SearchEntity.Sort.ASC)
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%").addFilter("PRI_IS_INTERN", true)
-				.addColumn("PRI_NAME", "Name").addColumn("PRI_STATUS", "Status")
-				.addColumn("PRI_NUM_JOURNALS", "Journals").addColumn("PRI_START_DATE", "Start Date")
-				.addColumn("PRI_ASSOC_EP", "Education Provider").addColumn("PRI_PHONE", "Phone")
-				.addColumn("PRI_EMAIL", "Email").addColumn("PRI_ADDRESS_SUBURB", "Suburb")
+				.addColumn("PRI_NAME", "Name").addColumn("PRI_STATUS", "Status").addColumn("PRI_NUM_JOURNALS", "Journals")
+				.addColumn("PRI_START_DATE", "Start Date").addColumn("PRI_ASSOC_EP", "Education Provider")
+				.addColumn("PRI_PHONE", "Phone").addColumn("PRI_EMAIL", "Email").addColumn("PRI_ADDRESS_SUBURB", "Suburb")
 				.addColumn("PRI_ADDRESS_STATE", "State").addColumn("PRI_IMAGE_URL", "Logo")
 
 				/* Table actions */
@@ -530,8 +526,8 @@ public class AdamTest {
 
 		SearchEntity searchBE = new SearchEntity("FIND PHONE NUMBERS", "Update")
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%").addColumn("PRI_PHONE", "Phone")
-				.setPageStart(0).setPageSize(10000000);
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%").addColumn("PRI_PHONE", "Phone").setPageStart(0)
+				.setPageSize(10000000);
 
 		searchBE.setRealm(serviceToken.getRealm());
 
@@ -677,7 +673,7 @@ public class AdamTest {
 				"http://127.0.0.1:9898/public/d33ef76a-76cb-432b-aa57-dcb4af86e760");
 
 		// http://127.0.0.1:9898/public/d33ef76a-76cb-432b-aa57-dcb4af86e760
-//http://127.0.0.1:9898/public/487fbf91-7030-4903-91e8-b1e0b39ab3c7
+		// http://127.0.0.1:9898/public/487fbf91-7030-4903-91e8-b1e0b39ab3c7
 		BaseEntity person = beUtils.getBaseEntityByCode(answer.getTargetCode());
 
 		Boolean isIntern = person.is("PRI_IS_INTERN");
@@ -694,11 +690,11 @@ public class AdamTest {
 
 			System.out.println("About to search for intern");
 			List<BaseEntity> bes = beUtils.getBaseEntitys(searchBE);
-			beUtils.saveAnswer(new Answer(userToken.getUserCode(), person.getCode(), "PRI_IMAGE_URL", answer.getValue(),
-					false, true));
+			beUtils.saveAnswer(
+					new Answer(userToken.getUserCode(), person.getCode(), "PRI_IMAGE_URL", answer.getValue(), false, true));
 			for (BaseEntity app : bes) {
-				Answer ans = new Answer(userToken.getUserCode(), app.getCode(), "PRI_IMAGE_URL", answer.getValue(),
-						false, true);
+				Answer ans = new Answer(userToken.getUserCode(), app.getCode(), "PRI_IMAGE_URL", answer.getValue(), false,
+						true);
 				System.out.println("Updating image on app " + app.getCode());
 
 				try {
@@ -762,13 +758,12 @@ public class AdamTest {
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		beUtils.setServiceToken(serviceToken);
 
-		Answer answer = new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_EMAIL",
-				"domenic@outcome.life");
+		Answer answer = new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_EMAIL", "domenic@outcome.life");
 
 		SearchEntity searchBE = new SearchEntity("TEst", "Email People")
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
-				.addFilter("PRI_EMAIL", SearchEntity.StringFilter.EQUAL, answer.getValue())
-				.addColumn("PRI_NAME", "Name").setPageStart(0).setPageSize(100);
+				.addFilter("PRI_EMAIL", SearchEntity.StringFilter.EQUAL, answer.getValue()).addColumn("PRI_NAME", "Name")
+				.setPageStart(0).setPageSize(100);
 
 		searchBE.setRealm(beUtils.getServiceToken().getRealm());
 
@@ -777,8 +772,7 @@ public class AdamTest {
 
 		hql = Base64.getUrlEncoder().encodeToString(hql.getBytes());
 		try {
-			String resultJsonStr = QwandaUtils.apiGet(
-					GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql,
+			String resultJsonStr = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql,
 					beUtils.getServiceToken().getToken(), 120);
 
 			System.out.println("Search EMAIL result is " + resultJsonStr);
@@ -853,8 +847,7 @@ public class AdamTest {
 						imageUrl = intern.getValue("PRI_USER_PROFILE_PICTURE", null);
 						if (!StringUtils.isBlank(imageUrl)) {
 							beUtils.saveAnswer(new Answer(is.getCode(), is.getCode(), "PRI_IMAGE_URL", imageUrl));
-							beUtils.saveAnswer(
-									new Answer(intern.getCode(), intern.getCode(), "PRI_IMAGE_URL", imageUrl));
+							beUtils.saveAnswer(new Answer(intern.getCode(), intern.getCode(), "PRI_IMAGE_URL", imageUrl));
 						}
 					}
 				} else {
@@ -927,8 +920,7 @@ public class AdamTest {
 						imageUrl = hostCompany.getValue("PRI_USER_PROFILE_PICTURE", null);
 						if (imageUrl != null) {
 							beUtils.saveAnswer(new Answer(is.getCode(), is.getCode(), "PRI_IMAGE_URL", imageUrl));
-							beUtils.saveAnswer(new Answer(hostCompany.getCode(), hostCompany.getCode(), "PRI_IMAGE_URL",
-									imageUrl));
+							beUtils.saveAnswer(new Answer(hostCompany.getCode(), hostCompany.getCode(), "PRI_IMAGE_URL", imageUrl));
 						}
 					}
 				} else {
@@ -974,8 +966,8 @@ public class AdamTest {
 
 		SearchEntity searchBE = new SearchEntity("SBE_TEST", "internships")
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-				.addFilter("LNK_INTERN_SUPERVISOR", SearchEntity.StringFilter.LIKE, "PER_%")
-				.addColumn("PRI_CODE", "Name").addColumn("LNK_INTERN_SUPERVISOR", "Supervisor");
+				.addFilter("LNK_INTERN_SUPERVISOR", SearchEntity.StringFilter.LIKE, "PER_%").addColumn("PRI_CODE", "Name")
+				.addColumn("LNK_INTERN_SUPERVISOR", "Supervisor");
 
 		searchBE.setRealm(realm);
 		searchBE.setPageStart(0);
@@ -988,8 +980,8 @@ public class AdamTest {
 		for (BaseEntity app : apps) {
 			String per = app.getValueAsString("LNK_INTERN_SUPERVISOR");
 			System.out.println("Supervisor = " + per);
-			beUtils.saveAnswer(
-					new Answer(userToken.getUserCode(), app.getCode(), "LNK_INTERN_SUPERVISOR", "[\"" + per + "\"]"));
+			beUtils
+					.saveAnswer(new Answer(userToken.getUserCode(), app.getCode(), "LNK_INTERN_SUPERVISOR", "[\"" + per + "\"]"));
 		}
 
 		System.out.println("Finished");
@@ -1310,26 +1302,24 @@ public class AdamTest {
 
 		for (BaseEntity intern : interns) {
 
-			searchBE = new SearchEntity("SBE_TEST", "internjournals")
-					.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+			searchBE = new SearchEntity("SBE_TEST", "internjournals").addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
 					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
 					.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%" + intern.getCode() + "%")
 					.addColumn("PRI_CODE", "Name");
 
 			Tuple2<String, List<String>> results = beUtils.getHql(searchBE); // hql += " order by " + sortCode + " " +
-																				// sortValue;
+			// sortValue;
 			String hql = results._1;
 			String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
 			try {
 				String resultJsonStr = QwandaUtils.apiGet(
-						GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2, serviceToken.getToken(),
-						120);
+						GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2, serviceToken.getToken(), 120);
 
 				Integer count = Integer.decode(resultJsonStr);
 				System.out.println("Count = " + count);
 
-				Answer journalCount = new Answer(beUtils.getGennyToken().getUserCode(), intern.getCode(),
-						"PRI_NUM_JOURNALS", count);
+				Answer journalCount = new Answer(beUtils.getGennyToken().getUserCode(), intern.getCode(), "PRI_NUM_JOURNALS",
+						count);
 				beUtils.saveAnswer(journalCount);
 
 			} catch (Exception e1) {
@@ -1447,8 +1437,7 @@ public class AdamTest {
 		}
 
 		searchBE = new SearchEntity("SBE_TEST", "apps").addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP\\_%\\_AT\\_%")
-				.addColumn("PRI_CODE", "Name");
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP\\_%\\_AT\\_%").addColumn("PRI_CODE", "Name");
 
 		searchBE.setRealm(realm);
 		searchBE.setPageStart(0);
@@ -1461,9 +1450,8 @@ public class AdamTest {
 
 		hql = Base64.getUrlEncoder().encodeToString(hql.getBytes());
 		try {
-			String resultJsonStr = QwandaUtils.apiGet(
-					GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search24/" + hql + "/"
-							+ searchBE.getPageStart(0) + "/" + searchBE.getPageSize(GennySettings.defaultPageSize),
+			String resultJsonStr = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search24/" + hql
+					+ "/" + searchBE.getPageStart(0) + "/" + searchBE.getPageSize(GennySettings.defaultPageSize),
 					serviceToken.getToken(), 120);
 
 			JsonObject resultJson = null;
@@ -1533,38 +1521,32 @@ public class AdamTest {
 				System.out.println("Changing " + appCode + " TO " + appcodeMap.get(appCode));
 
 				try {
-					String encodedsql = encodeValue("update baseentity_attribute set valueString='"
-							+ appcodeMap.get(appCode) + "' where valueString='" + appCode + "'");
-					String resultJson = QwandaUtils.apiGet(
-							GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql,
+					String encodedsql = encodeValue("update baseentity_attribute set valueString='" + appcodeMap.get(appCode)
+							+ "' where valueString='" + appCode + "'");
+					String resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql,
 							serviceToken.getToken());
 
-					encodedsql = encodeValue("update baseentity_attribute set baseEntityCode='"
-							+ appcodeMap.get(appCode) + "' where baseEntityCode='" + appCode + "'");
-					resultJson = QwandaUtils.apiGet(
-							GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql,
+					encodedsql = encodeValue("update baseentity_attribute set baseEntityCode='" + appcodeMap.get(appCode)
+							+ "' where baseEntityCode='" + appCode + "'");
+					resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql,
 							serviceToken.getToken());
 
 					//
-					encodedsql = encodeValue("update baseentity set code='" + appcodeMap.get(appCode) + "' where code='"
-							+ appCode + "'");
-					resultJson = QwandaUtils.apiGet(
-							GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql,
+					encodedsql = encodeValue(
+							"update baseentity set code='" + appcodeMap.get(appCode) + "' where code='" + appCode + "'");
+					resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql,
 							serviceToken.getToken());
 
-// change persons
+					// change persons
 					String perCode = "PER_" + appCode.substring(4);
 					String newPerCode = "PER_" + appcodeMap.get(appCode).substring(4);
-					encodedsql = encodeValue("update baseentity_attribute set valueString='" + newPerCode
-							+ "' where valueString='" + perCode + "'");
-					resultJson = QwandaUtils.apiGet(
-							GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql,
+					encodedsql = encodeValue(
+							"update baseentity_attribute set valueString='" + newPerCode + "' where valueString='" + perCode + "'");
+					resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql,
 							serviceToken.getToken());
 
-					encodedsql = encodeValue(
-							"update baseentity set code='" + newPerCode + "' where code='" + perCode + "'");
-					resultJson = QwandaUtils.apiGet(
-							GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql,
+					encodedsql = encodeValue("update baseentity set code='" + newPerCode + "' where code='" + perCode + "'");
+					resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql,
 							serviceToken.getToken());
 
 				} catch (ClientProtocolException e) {
@@ -1580,8 +1562,7 @@ public class AdamTest {
 		}
 
 		searchBE = new SearchEntity("SBE_TEST", "people").addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER\\_%\\_AT\\_%")
-				.addColumn("PRI_CODE", "Name");
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER\\_%\\_AT\\_%").addColumn("PRI_CODE", "Name");
 
 		searchBE.setRealm(realm);
 		searchBE.setPageStart(0);
@@ -1613,11 +1594,10 @@ public class AdamTest {
 					String firstname = person.getValueAsString("PRI_FIRSTNAME");
 					String lastname = person.getValueAsString("PRI_LASTNAME");
 					newPerCode = "PER_" + uuid.toUpperCase();
-					String userId = KeycloakUtils.updateUser(uuid, serviceToken.getToken(), serviceToken.getRealm(),
-							email, firstname, lastname, email, userPassword, "user", "users");
+					String userId = KeycloakUtils.updateUser(uuid, serviceToken.getToken(), serviceToken.getRealm(), email,
+							firstname, lastname, email, userPassword, "user", "users");
 					userId = userId.toUpperCase();
-					Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(), person.getCode(), "PRI_UUID",
-							userId);
+					Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(), person.getCode(), "PRI_UUID", userId);
 					beUtils.saveAnswer(keycloakId);
 				} catch (IOException e) {
 				}
@@ -1626,10 +1606,10 @@ public class AdamTest {
 			}
 
 			try {
-				String encodedsql = encodeValue("update baseentity_attribute set valueString='" + newPerCode
-						+ "' where valueString='" + perCode + "'");
-				String resultJson = QwandaUtils.apiGet(
-						GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql, serviceToken.getToken());
+				String encodedsql = encodeValue(
+						"update baseentity_attribute set valueString='" + newPerCode + "' where valueString='" + perCode + "'");
+				String resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql,
+						serviceToken.getToken());
 
 				encodedsql = encodeValue("update baseentity_attribute set valueString='[\"" + newPerCode
 						+ "\"]' where valueString='[\"" + perCode + "\"]'");
@@ -1642,8 +1622,7 @@ public class AdamTest {
 						serviceToken.getToken());
 
 				//
-				encodedsql = encodeValue(
-						"update baseentity set code='" + newPerCode + "' where code='" + perCode + "'");
+				encodedsql = encodeValue("update baseentity set code='" + newPerCode + "' where code='" + perCode + "'");
 				resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql,
 						serviceToken.getToken());
 
@@ -1684,40 +1663,40 @@ public class AdamTest {
 						if (email.startsWith("gerard")) {
 							String firstname = "Gerard";
 							String lastname = "Holland";
-							uuid = KeycloakUtils.updateUser(uuid, serviceToken.getToken(), serviceToken.getRealm(),
-									email, firstname, lastname, email, userPassword, "user", "users");
+							uuid = KeycloakUtils.updateUser(uuid, serviceToken.getToken(), serviceToken.getRealm(), email, firstname,
+									lastname, email, userPassword, "user", "users");
 							String userId = uuid.toUpperCase();
 							person = beUtils.create("PER_" + userId, "Gerard Holland");
-							Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(), person.getCode(),
-									"PRI_UUID", userId);
+							Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(), person.getCode(), "PRI_UUID",
+									userId);
 							person = beUtils.saveAnswer(keycloakId);
-							person = beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(),
-									person.getCode(), "PRI_EMAIL", email));
-							person = beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(),
-									person.getCode(), "PRI_FIRSTNAME", firstname));
-							person = beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(),
-									person.getCode(), "PRI_LANENAME", lastname));
-							person = beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(),
-									person.getCode(), "PRI_IS_SUPERVISOR", true));
+							person = beUtils
+									.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), person.getCode(), "PRI_EMAIL", email));
+							person = beUtils.saveAnswer(
+									new Answer(beUtils.getGennyToken().getUserCode(), person.getCode(), "PRI_FIRSTNAME", firstname));
+							person = beUtils.saveAnswer(
+									new Answer(beUtils.getGennyToken().getUserCode(), person.getCode(), "PRI_LANENAME", lastname));
+							person = beUtils.saveAnswer(
+									new Answer(beUtils.getGennyToken().getUserCode(), person.getCode(), "PRI_IS_SUPERVISOR", true));
 						}
 						if (email.startsWith("spc")) {
 							String firstname = "Stephenie";
 							String lastname = "Pulis-Cassar";
-							uuid = KeycloakUtils.updateUser(uuid, serviceToken.getToken(), serviceToken.getRealm(),
-									email, firstname, lastname, email, userPassword, "user", "users");
+							uuid = KeycloakUtils.updateUser(uuid, serviceToken.getToken(), serviceToken.getRealm(), email, firstname,
+									lastname, email, userPassword, "user", "users");
 							String userId = uuid.toUpperCase();
 							person = beUtils.create("PER_" + userId, "aStephenie Pulis-Cassar");
-							Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(), person.getCode(),
-									"PRI_UUID", userId);
+							Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(), person.getCode(), "PRI_UUID",
+									userId);
 							person = beUtils.saveAnswer(keycloakId);
-							person = beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(),
-									person.getCode(), "PRI_EMAIL", email));
-							person = beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(),
-									person.getCode(), "PRI_FIRSTNAME", firstname));
-							person = beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(),
-									person.getCode(), "PRI_LANENAME", lastname));
-							person = beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(),
-									person.getCode(), "PRI_IS_SUPERVISOR", true));
+							person = beUtils
+									.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), person.getCode(), "PRI_EMAIL", email));
+							person = beUtils.saveAnswer(
+									new Answer(beUtils.getGennyToken().getUserCode(), person.getCode(), "PRI_FIRSTNAME", firstname));
+							person = beUtils.saveAnswer(
+									new Answer(beUtils.getGennyToken().getUserCode(), person.getCode(), "PRI_LANENAME", lastname));
+							person = beUtils.saveAnswer(
+									new Answer(beUtils.getGennyToken().getUserCode(), person.getCode(), "PRI_IS_SUPERVISOR", true));
 						}
 
 					} catch (IOException e) {
@@ -1735,8 +1714,7 @@ public class AdamTest {
 					try {
 						String encodedsql = encodeValue("update baseentity_attribute set valueString='" + newPerCode
 								+ "' where valueString='[\"" + supervisor + "\"]'");
-						String resultJson = QwandaUtils.apiGet(
-								GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql,
+						String resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql,
 								serviceToken.getToken());
 					} catch (Exception e) {
 					}
@@ -1779,11 +1757,10 @@ public class AdamTest {
 					String firstname = person.getValueAsString("PRI_FIRSTNAME");
 					String lastname = person.getValueAsString("PRI_LASTNAME");
 					newPerCode = "PER_" + uuid.toUpperCase();
-					String userId = KeycloakUtils.updateUser(uuid, serviceToken.getToken(), serviceToken.getRealm(),
-							email, firstname, lastname, email, userPassword, "user", "users");
+					String userId = KeycloakUtils.updateUser(uuid, serviceToken.getToken(), serviceToken.getRealm(), email,
+							firstname, lastname, email, userPassword, "user", "users");
 					userId = userId.toUpperCase();
-					Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(), person.getCode(), "PRI_UUID",
-							userId);
+					Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(), person.getCode(), "PRI_UUID", userId);
 					beUtils.saveAnswer(keycloakId);
 				} catch (IOException e) {
 				}
@@ -1792,10 +1769,10 @@ public class AdamTest {
 			}
 
 			try {
-				String encodedsql = encodeValue("update baseentity_attribute set valueString='" + newPerCode
-						+ "' where valueString='" + perCode + "'");
-				String resultJson = QwandaUtils.apiGet(
-						GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql, serviceToken.getToken());
+				String encodedsql = encodeValue(
+						"update baseentity_attribute set valueString='" + newPerCode + "' where valueString='" + perCode + "'");
+				String resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql,
+						serviceToken.getToken());
 
 				encodedsql = encodeValue("update baseentity_attribute set valueString='[\"" + newPerCode
 						+ "\"]' where valueString='[\"" + perCode + "\"]'");
@@ -1808,8 +1785,7 @@ public class AdamTest {
 						serviceToken.getToken());
 
 				//
-				encodedsql = encodeValue(
-						"update baseentity set code='" + newPerCode + "' where code='" + perCode + "'");
+				encodedsql = encodeValue("update baseentity set code='" + newPerCode + "' where code='" + perCode + "'");
 				resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql,
 						serviceToken.getToken());
 
@@ -1824,8 +1800,7 @@ public class AdamTest {
 
 		searchBE = new SearchEntity("SBE_TEST", "people").addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
 				.addFilter("PRI_INTERN_NAME", SearchEntity.StringFilter.LIKE, "Answer%").addColumn("PRI_CODE", "Code")
-				.addColumn("PRI_EMAIL", "email").addColumn("PRI_NAME", "name")
-				.addColumn("PRI_INTERN_NAME", "internname");
+				.addColumn("PRI_EMAIL", "email").addColumn("PRI_NAME", "name").addColumn("PRI_INTERN_NAME", "internname");
 
 		searchBE.setRealm(realm);
 		searchBE.setPageStart(0);
@@ -1835,8 +1810,7 @@ public class AdamTest {
 
 		for (BaseEntity person : people) {
 			String name = person.getValue("PRI_NAME", "Unknown");
-			beUtils.saveAnswer(
-					new Answer(beUtils.getGennyToken().getUserCode(), person.getCode(), "PRI_INTERN_NAME", name));
+			beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), person.getCode(), "PRI_INTERN_NAME", name));
 		}
 
 		searchBE = new SearchEntity("SBE_TEST", "people").addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
@@ -1863,8 +1837,8 @@ public class AdamTest {
 						}
 					}
 					if (person != null) {
-						beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), device.getCode(),
-								"LNK_USER", person.getCode()));
+						beUtils.saveAnswer(
+								new Answer(beUtils.getGennyToken().getUserCode(), device.getCode(), "LNK_USER", person.getCode()));
 					}
 				}
 			}
@@ -1895,8 +1869,7 @@ public class AdamTest {
 	private BaseEntity getPersonFromEmail(BaseEntityUtils beUtils, String email) {
 		BaseEntity person = null;
 
-		SearchEntity searchBE = new SearchEntity("SBE_TEST", "email")
-				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+		SearchEntity searchBE = new SearchEntity("SBE_TEST", "email").addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
 				.addFilter("PRI_EMAIL", SearchEntity.StringFilter.LIKE, email).addColumn("PRI_CODE", "Name")
 				.addColumn("PRI_EMAIL", "Email");
@@ -1909,10 +1882,11 @@ public class AdamTest {
 
 		emailhql = Base64.getUrlEncoder().encodeToString(emailhql.getBytes());
 		try {
-			String resultJsonStr = QwandaUtils.apiGet(
-					GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search24/" + emailhql + "/"
-							+ searchBE.getPageStart(0) + "/" + searchBE.getPageSize(GennySettings.defaultPageSize),
-					serviceToken.getToken(), 120);
+			String resultJsonStr = QwandaUtils
+					.apiGet(
+							GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search24/" + emailhql + "/"
+									+ searchBE.getPageStart(0) + "/" + searchBE.getPageSize(GennySettings.defaultPageSize),
+							serviceToken.getToken(), 120);
 
 			JsonObject resultJson = null;
 			resultJson = new JsonObject(resultJsonStr);
@@ -1945,10 +1919,11 @@ public class AdamTest {
 
 			emailhql = Base64.getUrlEncoder().encodeToString(emailhql.getBytes());
 			try {
-				String resultJsonStr = QwandaUtils.apiGet(
-						GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search24/" + emailhql + "/"
-								+ searchBE.getPageStart(0) + "/" + searchBE.getPageSize(GennySettings.defaultPageSize),
-						serviceToken.getToken(), 120);
+				String resultJsonStr = QwandaUtils
+						.apiGet(
+								GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search24/" + emailhql + "/"
+										+ searchBE.getPageStart(0) + "/" + searchBE.getPageSize(GennySettings.defaultPageSize),
+								serviceToken.getToken(), 120);
 
 				JsonObject resultJson = null;
 				resultJson = new JsonObject(resultJsonStr);
@@ -2008,8 +1983,8 @@ public class AdamTest {
 		String hashed = BCrypt.hashpw(apiSecret, BCrypt.gensalt(10));
 		String url = "https://api.myinterview.com/2.21.2/getVideo?apiKey=" + apiKey + "&hashTimestamp=" + unixTimestamp
 				+ "&hash=" + hashed + "&video=2e69c4fd-cfa8-42be-a654-0e0891de157a";
-		String url2 = "https://embed.myinterview.com/player.v3.html?apiKey=" + apiKey + "&hashTimestamp="
-				+ unixTimestamp + "&hash=" + hashed + "&video=2e69c4fd-cfa8-42be-a654-0e0891de157a&autoplay=1&fs=0";
+		String url2 = "https://embed.myinterview.com/player.v3.html?apiKey=" + apiKey + "&hashTimestamp=" + unixTimestamp
+				+ "&hash=" + hashed + "&video=2e69c4fd-cfa8-42be-a654-0e0891de157a&autoplay=1&fs=0";
 		System.out.println(url);
 		System.out.println(url2);
 
@@ -2085,8 +2060,7 @@ public class AdamTest {
 
 		System.out.println("Number of keycloak users = " + results.size());
 
-		SearchEntity searchBE = new SearchEntity("SBE_TEST", "Users")
-				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+		SearchEntity searchBE = new SearchEntity("SBE_TEST", "Users").addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%").addColumn("PRI_CODE", "Name");
 
 		searchBE.setRealm(realm);
@@ -2121,15 +2095,15 @@ public class AdamTest {
 			persons.put(be.getCode(), be);
 		}
 
-//		String username = "kanika.gulati+intern1@gada.io";
-//		String email = "kanika.gulati+intern1@gada.io";
-//		String code = QwandaUtils.getNormalisedUsername("PER_"+username);
-//		BaseEntity user = persons.get(code);
-//		String id = "3fdf680c-c2b9-4edb-93be-142fe85be7d4";
-//		String newCode = "PER_"+id.toUpperCase();
+		// String username = "kanika.gulati+intern1@gada.io";
+		// String email = "kanika.gulati+intern1@gada.io";
+		// String code = QwandaUtils.getNormalisedUsername("PER_"+username);
+		// BaseEntity user = persons.get(code);
+		// String id = "3fdf680c-c2b9-4edb-93be-142fe85be7d4";
+		// String newCode = "PER_"+id.toUpperCase();
 
-//	    // So for every keycloak user
-//	    // (1) fetch their baseentity
+		// // So for every keycloak user
+		// // (1) fetch their baseentity
 		int count = 0;
 		for (LinkedHashMap userMap : results) {
 			// userMap.get("username");
@@ -2150,30 +2124,23 @@ public class AdamTest {
 				try {
 					String encodedsql = encodeValue("update baseentity_attribute set baseentityCode='" + newCode
 							+ "' where baseentityCode='" + user.getCode() + "'");
-					resultJson = QwandaUtils.apiGet(
-							GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql,
+					resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql,
 							serviceToken.getToken());
 					encodedsql = encodeValue("update baseentity_attribute set valueString='[\"" + newCode
 							+ "]\"' where valueString='\"[" + user.getCode() + "\"]'");
-					resultJson = QwandaUtils.apiGet(
-							GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql,
+					resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql,
 							serviceToken.getToken());
-					encodedsql = encodeValue("update baseentity_attribute set valueString='" + newCode
-							+ "' where valueString='" + user.getCode() + "'");
-					resultJson = QwandaUtils.apiGet(
-							GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql,
+					encodedsql = encodeValue("update baseentity_attribute set valueString='" + newCode + "' where valueString='"
+							+ user.getCode() + "'");
+					resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql,
 							serviceToken.getToken());
 
-					encodedsql = encodeValue(
-							"update baseentity set code='" + newCode + "' where code='" + user.getCode() + "'");
-					resultJson = QwandaUtils.apiGet(
-							GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql,
+					encodedsql = encodeValue("update baseentity set code='" + newCode + "' where code='" + user.getCode() + "'");
+					resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql,
 							serviceToken.getToken());
 
-					encodedsql = encodeValue(
-							"update baseentity set code='" + newAppCode + "' where code='" + appCode + "'");
-					resultJson = QwandaUtils.apiGet(
-							GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql,
+					encodedsql = encodeValue("update baseentity set code='" + newAppCode + "' where code='" + appCode + "'");
+					resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql,
 							serviceToken.getToken());
 
 				} catch (Exception e) {
@@ -2220,20 +2187,18 @@ public class AdamTest {
 		beUtils.setServiceToken(serviceToken);
 
 		String searchCode = "SBE_INTERNS";
-		SearchEntity searchBE = VertxUtils.getObject(realm, "", searchCode, SearchEntity.class,
-				serviceToken.getToken());
+		SearchEntity searchBE = VertxUtils.getObject(realm, "", searchCode, SearchEntity.class, serviceToken.getToken());
 
 		long starttime = System.currentTimeMillis();
 		long endtime = 0;
 
 		Tuple2<String, List<String>> results = beUtils.getHql(searchBE); // hql += " order by " + sortCode + " " +
-																			// sortValue;
+		// sortValue;
 		String hql = results._1;
 		String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
 		try {
-			String resultJsonStr = QwandaUtils.apiGet(
-					GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2, serviceToken.getToken(),
-					120);
+			String resultJsonStr = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2,
+					serviceToken.getToken(), 120);
 
 			System.out.println("Count = " + resultJsonStr);
 		} catch (Exception e1) {
@@ -2279,8 +2244,7 @@ public class AdamTest {
 		QDataBaseEntityMessage msg = null;
 		// String searchCode = "SBE_EDU_PROVIDERS_ACTIVE";
 		String searchCode = "SBE_INTERNS";
-		SearchEntity searchBE = VertxUtils.getObject(realm, "", searchCode, SearchEntity.class,
-				serviceToken.getToken());
+		SearchEntity searchBE = VertxUtils.getObject(realm, "", searchCode, SearchEntity.class, serviceToken.getToken());
 
 		long starttime = System.currentTimeMillis();
 		long endtime = 0;
@@ -2300,36 +2264,68 @@ public class AdamTest {
 
 		List<String> attributeFilter = new ArrayList<String>();
 		Tuple2<String, List<String>> results = beUtils.getHql(searchBE); // hql += " order by " + sortCode + " " +
-																			// sortValue;
-//hql = "select distinct ea.baseEntityCode from EntityAttribute ea , EntityAttribute eb , EntityAttribute ec  where ea.baseEntityCode=eb.baseEntityCode  and (ea.baseEntityCode like 'CPY_%'   or ea.baseEntityCode like 'null')   and eb.attributeCode = 'PRI_STATUS' and  eb.valueString = 'ACTIVE' and ea.baseEntityCode=ec.baseEntityCode  and ec.attributeCode = 'PRI_IS_EDU_PROVIDER' and  ec.valueBoolean = true order by PRI_NAME ASC";
-//hql =  select distinct ea.baseEntityCode from EntityAttribute ea , EntityAttribute eb , EntityAttribute ec  where ea.baseEntityCode=eb.baseEntityCode  and (ea.baseEntityCode like 'CPY_%'   or ea.baseEntityCode like 'null')   and eb.attributeCode = 'PRI_STATUS' and  eb.valueString = 'ACTIVE' and ea.baseEntityCode=ec.baseEntityCode  and ec.attributeCode = 'PRI_IS_EDU_PROVIDER' and  ec.valueBoolean = true
+		// sortValue;
+		// hql = "select distinct ea.baseEntityCode from EntityAttribute ea ,
+		// EntityAttribute eb , EntityAttribute ec where
+		// ea.baseEntityCode=eb.baseEntityCode and (ea.baseEntityCode like 'CPY_%' or
+		// ea.baseEntityCode like 'null') and eb.attributeCode = 'PRI_STATUS' and
+		// eb.valueString = 'ACTIVE' and ea.baseEntityCode=ec.baseEntityCode and
+		// ec.attributeCode = 'PRI_IS_EDU_PROVIDER' and ec.valueBoolean = true order by
+		// PRI_NAME ASC";
+		// hql = select distinct ea.baseEntityCode from EntityAttribute ea ,
+		// EntityAttribute eb , EntityAttribute ec where
+		// ea.baseEntityCode=eb.baseEntityCode and (ea.baseEntityCode like 'CPY_%' or
+		// ea.baseEntityCode like 'null') and eb.attributeCode = 'PRI_STATUS' and
+		// eb.valueString = 'ACTIVE' and ea.baseEntityCode=ec.baseEntityCode and
+		// ec.attributeCode = 'PRI_IS_EDU_PROVIDER' and ec.valueBoolean = true
 		String hql = results._1;
-//hql = "select distinct ea.baseEntityCode from EntityAttribute ea , EntityAttribute eb , EntityAttribute ed  where ea.baseEntityCode=eb.baseEntityCode  and (ea.baseEntityCode like 'CPY_%'  )   and eb.attributeCode = 'PRI_IS_EDU_PROVIDER' and  eb.valueBoolean = true and ea.baseEntityCode=ed.baseEntityCode and ed.attributeCode='PRI_NAME'  order by ed.valueString ASC";
-//hql = "select distinct ea.baseEntityCode from EntityAttribute ea , EntityAttribute eb ,  EntityAttribute ed  where ea.baseEntityCode=eb.baseEntityCode  and (ea.baseEntityCode like 'PER_%'  )   and eb.attributeCode = 'PRI_IS_INTERN' and  eb.valueBoolean = true   and ea.baseEntityCode=ed.baseEntityCode and ed.attributeCode='PRI_NAME'  order by ed.valueString ASC";
-//hql = "select distinct ea.baseEntityCode from life.genny.qwanda.attribute.EntityAttribute ea , life.genny.qwanda.attribute.EntityAttribute eb , life.genny.qwanda.attribute.EntityAttribute ec , life.genny.qwanda.attribute.EntityAttribute ed  where  ea.baseEntityCode=eb.baseEntityCode  and (ea.baseEntityCode like 'CPY_%'  )   and eb.attributeCode = 'PRI_STATUS' and  eb.valueString = 'ACTIVE' and ea.baseEntityCode=ec.baseEntityCode  and ec.attributeCode = 'PRI_IS_EDU_PROVIDER' and  ec.valueBoolean = true and ea.baseEntityCode=ed.baseEntityCode and ed.attributeCode='PRI_NAME'  order by ed.valueString ASC";
+		// hql = "select distinct ea.baseEntityCode from EntityAttribute ea ,
+		// EntityAttribute eb , EntityAttribute ed where
+		// ea.baseEntityCode=eb.baseEntityCode and (ea.baseEntityCode like 'CPY_%' ) and
+		// eb.attributeCode = 'PRI_IS_EDU_PROVIDER' and eb.valueBoolean = true and
+		// ea.baseEntityCode=ed.baseEntityCode and ed.attributeCode='PRI_NAME' order by
+		// ed.valueString ASC";
+		// hql = "select distinct ea.baseEntityCode from EntityAttribute ea ,
+		// EntityAttribute eb , EntityAttribute ed where
+		// ea.baseEntityCode=eb.baseEntityCode and (ea.baseEntityCode like 'PER_%' ) and
+		// eb.attributeCode = 'PRI_IS_INTERN' and eb.valueBoolean = true and
+		// ea.baseEntityCode=ed.baseEntityCode and ed.attributeCode='PRI_NAME' order by
+		// ed.valueString ASC";
+		// hql = "select distinct ea.baseEntityCode from
+		// life.genny.qwanda.attribute.EntityAttribute ea ,
+		// life.genny.qwanda.attribute.EntityAttribute eb ,
+		// life.genny.qwanda.attribute.EntityAttribute ec ,
+		// life.genny.qwanda.attribute.EntityAttribute ed where
+		// ea.baseEntityCode=eb.baseEntityCode and (ea.baseEntityCode like 'CPY_%' ) and
+		// eb.attributeCode = 'PRI_STATUS' and eb.valueString = 'ACTIVE' and
+		// ea.baseEntityCode=ec.baseEntityCode and ec.attributeCode =
+		// 'PRI_IS_EDU_PROVIDER' and ec.valueBoolean = true and
+		// ea.baseEntityCode=ed.baseEntityCode and ed.attributeCode='PRI_NAME' order by
+		// ed.valueString ASC";
 		String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
 		JsonObject resultJson;
 		try {
-			String resultJsonStr = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search24/"
-					+ hql2 + "/" + pageStart + "/" + pageSize, serviceToken.getToken(), 120);
+			String resultJsonStr = QwandaUtils.apiGet(
+					GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search24/" + hql2 + "/" + pageStart + "/" + pageSize,
+					serviceToken.getToken(), 120);
 
 			resultJson = new JsonObject(resultJsonStr);
 			Long total = resultJson.getLong("total");
 			// check the cac
-//			JsonArray result = resultJson.getJsonArray("codes");
-//			List<String> resultCodes = new ArrayList<String>();
-//			for (int i = 0; i < result.size(); i++) {
-//				String code = result.getString(i);
-//				resultCodes.add(code);
-//			}
-// 			String[] filterArray = attributeFilter.toArray(new String[0]);
-//			List<BaseEntity> beList = resultCodes.stream().map(e -> {
-//				BaseEntity be = beUtils.getBaseEntityByCode(e);
-//				be = VertxUtils.privacyFilter(be, filterArray);
-//				return be;
-//			}).collect(Collectors.toList());
-//			msg = new QDataBaseEntityMessage(beList.toArray(new BaseEntity[0]));
-//			msg.setTotal(total);
+			// JsonArray result = resultJson.getJsonArray("codes");
+			// List<String> resultCodes = new ArrayList<String>();
+			// for (int i = 0; i < result.size(); i++) {
+			// String code = result.getString(i);
+			// resultCodes.add(code);
+			// }
+			// String[] filterArray = attributeFilter.toArray(new String[0]);
+			// List<BaseEntity> beList = resultCodes.stream().map(e -> {
+			// BaseEntity be = beUtils.getBaseEntityByCode(e);
+			// be = VertxUtils.privacyFilter(be, filterArray);
+			// return be;
+			// }).collect(Collectors.toList());
+			// msg = new QDataBaseEntityMessage(beList.toArray(new BaseEntity[0]));
+			// msg.setTotal(total);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
@@ -2382,9 +2378,9 @@ public class AdamTest {
 		LocalDateTime updateTime = null;
 
 		List<String> changedJournals = new ArrayList<String>(); /*
-																 * Stream.of(listOfChangedJournals.split(",",
-																 * -1)).collect(Collectors.toList());
-																 */
+																														 * Stream.of(listOfChangedJournals.split(",",
+																														 * -1)).collect(Collectors.toList());
+																														 */
 		String[] journalArray = listOfChangedJournals.split(",", -1);
 		for (String journalCode : journalArray) {
 			changedJournals.add(journalCode);
@@ -2442,24 +2438,21 @@ public class AdamTest {
 			updateTime = LocalDateTime.now();
 
 			JsonObject msgpayload = new JsonObject("{\n" + "   \"blocks\":[\n" + "      {\n"
-					+ "         \"type\":\"section\",\n" + "         \"text\":{\n"
-					+ "            \"type\":\"mrkdwn\",\n" + "            \"text\":\"New Journal (" + status + ") -> "
-					+ journalName + " :memo:\"\n" + "         }\n" + "      },\n" + "      {\n"
-					+ "         \"type\":\"divider\"\n" + "      },\n" + "      {\n"
+					+ "         \"type\":\"section\",\n" + "         \"text\":{\n" + "            \"type\":\"mrkdwn\",\n"
+					+ "            \"text\":\"New Journal (" + status + ") -> " + journalName + " :memo:\"\n" + "         }\n"
+					+ "      },\n" + "      {\n" + "         \"type\":\"divider\"\n" + "      },\n" + "      {\n"
 					+ "         \"type\":\"section\",\n" + "         \"fields\":[\n" + "            {\n"
-					+ "               \"type\":\"mrkdwn\",\n" + "               \"text\":\"*Student:*\\n" + studentName
+					+ "               \"type\":\"mrkdwn\",\n" + "               \"text\":\"*Student:*\\n" + studentName + "\"\n"
+					+ "            },\n" + "            {\n" + "               \"type\":\"mrkdwn\",\n"
+					+ "               \"text\":\"*Time:*\\n" + updateTime + "\"\n" + "            },\n" + "            {\n"
+					+ "               \"type\":\"mrkdwn\",\n" + "               \"text\":\"*Host Company:*\\n" + hostCompany
 					+ "\"\n" + "            },\n" + "            {\n" + "               \"type\":\"mrkdwn\",\n"
-					+ "               \"text\":\"*Time:*\\n" + updateTime + "\"\n" + "            },\n"
-					+ "            {\n" + "               \"type\":\"mrkdwn\",\n"
-					+ "               \"text\":\"*Host Company:*\\n" + hostCompany + "\"\n" + "            },\n"
-					+ "            {\n" + "               \"type\":\"mrkdwn\",\n"
-					+ "               \"text\":\"*Education Provider:*\\n" + educationProvider + "\"\n"
-					+ "            }\n" + "         ]\n" + "      },\n" + "      {\n"
-					+ "         \"type\":\"divider\"\n" + "      },\n" + "      {\n"
+					+ "               \"text\":\"*Education Provider:*\\n" + educationProvider + "\"\n" + "            }\n"
+					+ "         ]\n" + "      },\n" + "      {\n" + "         \"type\":\"divider\"\n" + "      },\n" + "      {\n"
 					+ "         \"type\":\"context\",\n" + "         \"elements\":[\n" + "            {\n"
 					+ "               \"type\":\"mrkdwn\",\n"
-					+ "               \"text\":\"*Last updated:* 9:15 AM May 22, 2020\"\n" + "            }\n"
-					+ "         ]\n" + "      }\n" + "   ]\n" + "}");
+					+ "               \"text\":\"*Last updated:* 9:15 AM May 22, 2020\"\n" + "            }\n" + "         ]\n"
+					+ "      }\n" + "   ]\n" + "}");
 
 			System.out.println("Payload is" + msgpayload.toString());
 
@@ -2602,10 +2595,8 @@ public class AdamTest {
 		SearchEntity searchBE = tableUtils.getSessionSearch(searchBeCode);
 
 		long s2time = System.currentTimeMillis();
-		Answer pageAnswer = new Answer(beUtils.getGennyToken().getUserCode(), searchBE.getCode(), "SCH_PAGE_START",
-				"0");
-		Answer pageNumberAnswer = new Answer(beUtils.getGennyToken().getUserCode(), searchBE.getCode(), "PRI_INDEX",
-				"1");
+		Answer pageAnswer = new Answer(beUtils.getGennyToken().getUserCode(), searchBE.getCode(), "SCH_PAGE_START", "0");
+		Answer pageNumberAnswer = new Answer(beUtils.getGennyToken().getUserCode(), searchBE.getCode(), "PRI_INDEX", "1");
 
 		searchBE = beUtils.updateBaseEntity(searchBE, pageAnswer, SearchEntity.class);
 		searchBE = beUtils.updateBaseEntity(searchBE, pageNumberAnswer, SearchEntity.class);
@@ -2638,10 +2629,10 @@ public class AdamTest {
 				aggregatedMessages.add(firstThreadResponse);
 				totalProcessingTime = System.currentTimeMillis() - startProcessingTime;
 
-//			assertTrue("First response should be from the fast thread", 
-//			  "fast thread".equals(firstThreadResponse.getData_type()));
-//			assertTrue(totalProcessingTime >= 100
-//			  && totalProcessingTime < 1000);
+				// assertTrue("First response should be from the fast thread",
+				// "fast thread".equals(firstThreadResponse.getData_type()));
+				// assertTrue(totalProcessingTime >= 100
+				// && totalProcessingTime < 1000);
 				log.info("Thread finished after: " + totalProcessingTime + " milliseconds");
 
 				future = service.take();
@@ -2710,29 +2701,32 @@ public class AdamTest {
 		System.out.println("total took " + (endtime - starttime) + " ms");
 	}
 
-//	/* show tab-view first */
-//		 ShowFrame.display(beUtils.getGennyToken(), "FRM_QUE_TAB_VIEW", "FRM_CONTENT", "Test");
-//
-//	/* show table-view inside tab-content */
-//	ShowFrame.display(beUtils.getGennyToken(), "FRM_TABLE_VIEW", "FRM_TAB_CONTENT", "Test");
-//long s4time = System.currentTimeMillis();
-//	tableUtils.performSearch(userToken, serviceToken,searchBeCode, null);
-//long s5time = System.currentTimeMillis();
-//	/* Send to front end */
-//	/*output.setTypeOfResult("NONE");*/
-//	/*output.setResultCode("NONE");*/  /* dont display anything new */
-//
-//	retract($message);
-//	/* update(output);*/
-//long endtime = System.currentTimeMillis();
-//System.out.println("init setup took "+(s1time-starttime)+" ms");
-//System.out.println("search session setup took "+(s2time-s1time)+" ms");
-//System.out.println("update searchBE BE setup took "+(s3time-s2time)+" ms");
-//	System.out.println("send frame table and tab display setup took "+(s4time-s3time)+" ms");
-//	System.out.println("searching took "+(s5time-s4time)+" ms");
-//System.out.println("finish took "+(endtime-s5time)+" ms");
-//System.out.println("total took "+(endtime-starttime)+" ms");
-//	
+	// /* show tab-view first */
+	// ShowFrame.display(beUtils.getGennyToken(), "FRM_QUE_TAB_VIEW", "FRM_CONTENT",
+	// "Test");
+	//
+	// /* show table-view inside tab-content */
+	// ShowFrame.display(beUtils.getGennyToken(), "FRM_TABLE_VIEW",
+	// "FRM_TAB_CONTENT", "Test");
+	// long s4time = System.currentTimeMillis();
+	// tableUtils.performSearch(userToken, serviceToken,searchBeCode, null);
+	// long s5time = System.currentTimeMillis();
+	// /* Send to front end */
+	// /*output.setTypeOfResult("NONE");*/
+	// /*output.setResultCode("NONE");*/ /* dont display anything new */
+	//
+	// retract($message);
+	// /* update(output);*/
+	// long endtime = System.currentTimeMillis();
+	// System.out.println("init setup took "+(s1time-starttime)+" ms");
+	// System.out.println("search session setup took "+(s2time-s1time)+" ms");
+	// System.out.println("update searchBE BE setup took "+(s3time-s2time)+" ms");
+	// System.out.println("send frame table and tab display setup took
+	// "+(s4time-s3time)+" ms");
+	// System.out.println("searching took "+(s5time-s4time)+" ms");
+	// System.out.println("finish took "+(endtime-s5time)+" ms");
+	// System.out.println("total took "+(endtime-starttime)+" ms");
+	//
 	// @Test
 	public void FixMissingSupervisorsTest() {
 		System.out.println("Fix Missing Supervisors test");
@@ -2768,13 +2762,13 @@ public class AdamTest {
 				/* .addFilter("PRI_SYNC", SearchEntity.StringFilter.LIKE, "FALSE") */
 				.addFilter("LNK_INTERN_SUPERVISOR", SearchEntity.StringFilter.LIKE,
 						"%PER_HOLGER_AT_SPACETRUNKSTUDIO_DOT_COM_DOT_AU%")
-				.addColumn("PRI_NAME", "Name").addColumn("LNK_INTERNSHIP", "Internship")
-				.addColumn("LNK_INTERN", "Intern").addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep")
-				.addColumn("LNK_HOST_COMPANY", "Host Company").addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
-				.addColumn("PRI_JOURNAL_DATE", "Date").addColumn("PRI_JOURNAL_HOURS", "Hours")
-				.addColumn("PRI_JOURNAL_TASKS", "Tasks").addColumn("PRI_JOURNAL_LEARNING_OUTCOMES", "Learning Outcomes")
-				.addColumn("PRI_FEEDBACK", "Feedback").addColumn("PRI_STATUS", "Status").addColumn("PRI_SYNC", "Synced")
-				.addColumn("PRI_LAST_UPDATED", "Last Updated").addColumn("PRI_INTERN_LAST_UPDATE", "Intern last update")
+				.addColumn("PRI_NAME", "Name").addColumn("LNK_INTERNSHIP", "Internship").addColumn("LNK_INTERN", "Intern")
+				.addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep").addColumn("LNK_HOST_COMPANY", "Host Company")
+				.addColumn("LNK_INTERN_SUPERVISOR", "Supervisor").addColumn("PRI_JOURNAL_DATE", "Date")
+				.addColumn("PRI_JOURNAL_HOURS", "Hours").addColumn("PRI_JOURNAL_TASKS", "Tasks")
+				.addColumn("PRI_JOURNAL_LEARNING_OUTCOMES", "Learning Outcomes").addColumn("PRI_FEEDBACK", "Feedback")
+				.addColumn("PRI_STATUS", "Status").addColumn("PRI_SYNC", "Synced").addColumn("PRI_LAST_UPDATED", "Last Updated")
+				.addColumn("PRI_INTERN_LAST_UPDATE", "Intern last update")
 				.addColumn("PRI_SUPERVISOR_LAST_UPDATE", "Last Supervisor Update")
 				.addColumn("PRI_LAST_CHANGED_BY", "Last Changed By").setPageStart(0).setPageSize(2000);
 
@@ -2824,177 +2818,193 @@ public class AdamTest {
 		System.out.println("loop took " + (looptime - searchtime) + " ms");
 		System.out.println("finish took " + (endtime - looptime) + " ms");
 		System.out.println("total took " + (endtime - starttime) + " ms");
-//		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
-//		beUtils.setServiceToken(serviceToken);
-//		SearchEntity searchBE = new SearchEntity("SBE_SEARCH", "Fix Missing Supervisors")
-//				.addSort("PRI_CODE", "Created", SearchEntity.Sort.ASC)
-//				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%") 
-//				.addColumn("PRI_ASSOC_HOST_COMPANY_EMAIL", "Host Company Rep Email")
-//				.addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
-//				.addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep")
-//				.setPageStart(0)
-//				.setPageSize(20000);
-//		
-//		searchBE.setRealm(serviceToken.getRealm());
-//		
-// 		String jsonSearchBE = JsonUtils.toJson(searchBE);
-// 		/* System.out.println(jsonSearchBE); */
-//		String resultJson;
-//		BaseEntity result = null; 
-//		try {
-//			resultJson = QwandaUtils.apiPostEntity(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search",
-//					jsonSearchBE, serviceToken.getToken());
-//				QDataBaseEntityMessage resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
-//				BaseEntity[] bes = resultMsg.getItems();
-//				System.out.println("Processing "+resultMsg.getItems().length+" Internships");
-//				Map<String,BaseEntity> supervisors = new HashMap<String,BaseEntity>();
-//				for (BaseEntity be : bes) {
-//
-//					BaseEntity hcr = null;
-//					BaseEntity supervisor = null;
-//					String lnkHCR = null;
-//					
-//					System.out.println("Processing Internship "+be.getCode());
-//					Optional<String> optEmail = be.getValue("PRI_ASSOC_HOST_COMPANY_EMAIL");
-//					Optional<String> optHCR = be.getValue("LNK_HOST_COMPANY_REP");
-//					Optional<String> optSupervisor = be.getValue("LNK_INTERN_SUPERVISOR");
-//					if (optHCR.isPresent()) {
-//						String hcrCode = optHCR.get();
-//						System.out.println("HCR found is"+hcrCode);
-//						if ((hcrCode != null)&&(hcrCode.length() > 2)) {
-//							hcrCode = hcrCode.substring(2,hcrCode.length()-2);
-//							System.out.println("HCR = "+hcrCode);
-//							hcr = beUtils.getBaseEntityByCode(hcrCode); 
-//						} else {
-//							System.out.println("BAD HCRCODE !!!");
-//						}
-//						
-//					}
-//					if (optEmail.isPresent()) {
-//						
-//						String email = optEmail.get();
-//						System.out.println("Setting Host Company Rep"+email);
-//						System.out.println("Email = "+email);
-//						String code = "PER_"+QwandaUtils.getNormalisedUsername(email);
-//						if (!optHCR.isPresent()) {
-//							 lnkHCR = "[\""+code+"\"]";
-//							beUtils.saveAnswer(new Answer(be.getCode(),be.getCode(),"LNK_HOST_COMPANY_REP",lnkHCR));
-//						}
-//					}
-//					
-//					if (!optSupervisor.isPresent()) {
-//							System.out.println("Setting Supervisor "+lnkHCR);
-//							if (lnkHCR != null) {
-//								beUtils.saveAnswer(new Answer(be.getCode(),be.getCode(),"LNK_INTERN_SUPERVISOR",lnkHCR));
-//							} else 
-//							if (hcr != null) {
-//								lnkHCR = "[\""+hcr.getCode()+"\"]";
-//								beUtils.saveAnswer(new Answer(be.getCode(),be.getCode(),"LNK_INTERN_SUPERVISOR",lnkHCR));
-//								
-//								beUtils.saveAnswer(new Answer(hcr.getCode(),hcr.getCode(),"PRI_IS_SUPERVISOR",true));
-//								beUtils.saveAnswer(new Answer(hcr.getCode(),hcr.getCode(),"PRI_DISABLED",false));
-//							}
-//					} else {
-//						
-//						// Fix supeervisor
-//						String supervisorCode = optSupervisor.get();
-//						System.out.println("Supervisor found is"+supervisorCode);
-//						if ((supervisorCode != null)&&(supervisorCode.length() > 2)) {
-//							supervisorCode = supervisorCode.substring(2,supervisorCode.length()-2);
-//							System.out.println("SUPERVISOR = "+supervisorCode);
-//							supervisor = beUtils.getBaseEntityByCode(supervisorCode); 
-//							if (supervisor != null) {
-//							beUtils.saveAnswer(new Answer(supervisor.getCode(),supervisor.getCode(),"PRI_IS_SUPERVISOR",true));
-//							beUtils.saveAnswer(new Answer(supervisor.getCode(),supervisor.getCode(),"PRI_DISABLED",false));
-//							} else {
-//								System.out.println("NO SUPERVISOR EXISTS !!!");
-//							}
-//						} else {
-//							System.out.println("BAD SUPERVISOR CODE !!!");
-//						}
-//
-//					}
-//
-//				}
-//				System.out.println("Finished Fixing Journals");
-//		} catch (Exception e1) {
-//			e1.printStackTrace();
-//		}
+		// BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		// beUtils.setServiceToken(serviceToken);
+		// SearchEntity searchBE = new SearchEntity("SBE_SEARCH", "Fix Missing
+		// Supervisors")
+		// .addSort("PRI_CODE", "Created", SearchEntity.Sort.ASC)
+		// .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%")
+		// .addColumn("PRI_ASSOC_HOST_COMPANY_EMAIL", "Host Company Rep Email")
+		// .addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
+		// .addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep")
+		// .setPageStart(0)
+		// .setPageSize(20000);
+		//
+		// searchBE.setRealm(serviceToken.getRealm());
+		//
+		// String jsonSearchBE = JsonUtils.toJson(searchBE);
+		// /* System.out.println(jsonSearchBE); */
+		// String resultJson;
+		// BaseEntity result = null;
+		// try {
+		// resultJson = QwandaUtils.apiPostEntity(GennySettings.qwandaServiceUrl +
+		// "/qwanda/baseentitys/search",
+		// jsonSearchBE, serviceToken.getToken());
+		// QDataBaseEntityMessage resultMsg = JsonUtils.fromJson(resultJson,
+		// QDataBaseEntityMessage.class);
+		// BaseEntity[] bes = resultMsg.getItems();
+		// System.out.println("Processing "+resultMsg.getItems().length+" Internships");
+		// Map<String,BaseEntity> supervisors = new HashMap<String,BaseEntity>();
+		// for (BaseEntity be : bes) {
+		//
+		// BaseEntity hcr = null;
+		// BaseEntity supervisor = null;
+		// String lnkHCR = null;
+		//
+		// System.out.println("Processing Internship "+be.getCode());
+		// Optional<String> optEmail = be.getValue("PRI_ASSOC_HOST_COMPANY_EMAIL");
+		// Optional<String> optHCR = be.getValue("LNK_HOST_COMPANY_REP");
+		// Optional<String> optSupervisor = be.getValue("LNK_INTERN_SUPERVISOR");
+		// if (optHCR.isPresent()) {
+		// String hcrCode = optHCR.get();
+		// System.out.println("HCR found is"+hcrCode);
+		// if ((hcrCode != null)&&(hcrCode.length() > 2)) {
+		// hcrCode = hcrCode.substring(2,hcrCode.length()-2);
+		// System.out.println("HCR = "+hcrCode);
+		// hcr = beUtils.getBaseEntityByCode(hcrCode);
+		// } else {
+		// System.out.println("BAD HCRCODE !!!");
+		// }
+		//
+		// }
+		// if (optEmail.isPresent()) {
+		//
+		// String email = optEmail.get();
+		// System.out.println("Setting Host Company Rep"+email);
+		// System.out.println("Email = "+email);
+		// String code = "PER_"+QwandaUtils.getNormalisedUsername(email);
+		// if (!optHCR.isPresent()) {
+		// lnkHCR = "[\""+code+"\"]";
+		// beUtils.saveAnswer(new
+		// Answer(be.getCode(),be.getCode(),"LNK_HOST_COMPANY_REP",lnkHCR));
+		// }
+		// }
+		//
+		// if (!optSupervisor.isPresent()) {
+		// System.out.println("Setting Supervisor "+lnkHCR);
+		// if (lnkHCR != null) {
+		// beUtils.saveAnswer(new
+		// Answer(be.getCode(),be.getCode(),"LNK_INTERN_SUPERVISOR",lnkHCR));
+		// } else
+		// if (hcr != null) {
+		// lnkHCR = "[\""+hcr.getCode()+"\"]";
+		// beUtils.saveAnswer(new
+		// Answer(be.getCode(),be.getCode(),"LNK_INTERN_SUPERVISOR",lnkHCR));
+		//
+		// beUtils.saveAnswer(new
+		// Answer(hcr.getCode(),hcr.getCode(),"PRI_IS_SUPERVISOR",true));
+		// beUtils.saveAnswer(new
+		// Answer(hcr.getCode(),hcr.getCode(),"PRI_DISABLED",false));
+		// }
+		// } else {
+		//
+		// // Fix supeervisor
+		// String supervisorCode = optSupervisor.get();
+		// System.out.println("Supervisor found is"+supervisorCode);
+		// if ((supervisorCode != null)&&(supervisorCode.length() > 2)) {
+		// supervisorCode = supervisorCode.substring(2,supervisorCode.length()-2);
+		// System.out.println("SUPERVISOR = "+supervisorCode);
+		// supervisor = beUtils.getBaseEntityByCode(supervisorCode);
+		// if (supervisor != null) {
+		// beUtils.saveAnswer(new
+		// Answer(supervisor.getCode(),supervisor.getCode(),"PRI_IS_SUPERVISOR",true));
+		// beUtils.saveAnswer(new
+		// Answer(supervisor.getCode(),supervisor.getCode(),"PRI_DISABLED",false));
+		// } else {
+		// System.out.println("NO SUPERVISOR EXISTS !!!");
+		// }
+		// } else {
+		// System.out.println("BAD SUPERVISOR CODE !!!");
+		// }
+		//
+		// }
+		//
+		// }
+		// System.out.println("Finished Fixing Journals");
+		// } catch (Exception e1) {
+		// e1.printStackTrace();
+		// }
 
-//		SearchEntity searchBE = new SearchEntity("SBE_SEARCH", "Fix Missing Supervisors")
-//				.addSort("PRI_CODE", "Created", SearchEntity.Sort.ASC)
-//				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%") 
-//				.addColumn("PRI_ASSOC_HOST_COMPANY_EMAIL", "Host Company Rep Email")
-//				.addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
-//				.addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep")
-//				.setPageStart(0)
-//				.setPageSize(20000);
-//		
-//		searchBE.setRealm(serviceToken.getRealm());
-//		
-// 		String jsonSearchBE = JsonUtils.toJson(searchBE);
-// 		/* System.out.println(jsonSearchBE); */
-//		String resultJson;
-//		BaseEntity result = null; 
-//		try {
-//			resultJson = QwandaUtils.apiPostEntity(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search",
-//					jsonSearchBE, serviceToken.getToken());
-//				QDataBaseEntityMessage resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
-//				BaseEntity[] bes = resultMsg.getItems();
-//				System.out.println("Processing "+resultMsg.getItems().length+" Internships");
-//				Map<String,BaseEntity> supervisors = new HashMap<String,BaseEntity>();
-//				for (BaseEntity be : bes) {
-//if (be.getCode().equals("BEG_32650251AD874EEA9252740795D6F9D6")) {
-//					BaseEntity hcr = null;
-//					BaseEntity supervisor = null;
-//					String lnkHCR = null;
-//					
-//					System.out.println("Processing Internship "+be.getCode());
-//					Optional<String> optEmail = be.getValue("PRI_ASSOC_HOST_COMPANY_EMAIL");
-//					Optional<String> optHCR = be.getValue("LNK_HOST_COMPANY_REP");
-//					Optional<String> optSupervisor = be.getValue("LNK_INTERN_SUPERVISOR");
-//					if (optHCR.isPresent()) {
-//						String hcrCode = optHCR.get();
-//						hcrCode = hcrCode.substring(2,hcrCode.length()-2);
-//						System.out.println("HCR = "+hcrCode);
-//						hcr = beUtils.getBaseEntityByCode(hcrCode); 
-//						
-//						
-//					}
-//					if (optEmail.isPresent()) {
-//						String email = optEmail.get();
-//						System.out.println("Email = "+email);
-//						String code = "PER_"+QwandaUtils.getNormalisedUsername(email);
-//						if (!optHCR.isPresent()) {
-//							 lnkHCR = "[\""+code+"\"]";
-//							beUtils.saveAnswer(new Answer(be.getCode(),be.getCode(),"LNK_HOST_COMPANY_REP",lnkHCR));
-//						}
-//					}
-//					
-//					if (!optSupervisor.isPresent()) {
-//							System.out.println("Setting Supervisor "+lnkHCR);
-//							if (lnkHCR != null) {
-//								beUtils.saveAnswer(new Answer(be.getCode(),be.getCode(),"LNK_INTERN_SUPERVISOR",lnkHCR));
-//							} else 
-//							if (hcr != null) {
-//								lnkHCR = "[\""+hcr.getCode()+"\"]";
-//								beUtils.saveAnswer(new Answer(be.getCode(),be.getCode(),"LNK_INTERN_SUPERVISOR",lnkHCR));
-//							}
-//					}
-//}
-//				}
-//				System.out.println("Finished Fixing Journals");
-//		} catch (Exception e1) {
-//			e1.printStackTrace();
-//		}		
+		// SearchEntity searchBE = new SearchEntity("SBE_SEARCH", "Fix Missing
+		// Supervisors")
+		// .addSort("PRI_CODE", "Created", SearchEntity.Sort.ASC)
+		// .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%")
+		// .addColumn("PRI_ASSOC_HOST_COMPANY_EMAIL", "Host Company Rep Email")
+		// .addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
+		// .addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep")
+		// .setPageStart(0)
+		// .setPageSize(20000);
+		//
+		// searchBE.setRealm(serviceToken.getRealm());
+		//
+		// String jsonSearchBE = JsonUtils.toJson(searchBE);
+		// /* System.out.println(jsonSearchBE); */
+		// String resultJson;
+		// BaseEntity result = null;
+		// try {
+		// resultJson = QwandaUtils.apiPostEntity(GennySettings.qwandaServiceUrl +
+		// "/qwanda/baseentitys/search",
+		// jsonSearchBE, serviceToken.getToken());
+		// QDataBaseEntityMessage resultMsg = JsonUtils.fromJson(resultJson,
+		// QDataBaseEntityMessage.class);
+		// BaseEntity[] bes = resultMsg.getItems();
+		// System.out.println("Processing "+resultMsg.getItems().length+" Internships");
+		// Map<String,BaseEntity> supervisors = new HashMap<String,BaseEntity>();
+		// for (BaseEntity be : bes) {
+		// if (be.getCode().equals("BEG_32650251AD874EEA9252740795D6F9D6")) {
+		// BaseEntity hcr = null;
+		// BaseEntity supervisor = null;
+		// String lnkHCR = null;
+		//
+		// System.out.println("Processing Internship "+be.getCode());
+		// Optional<String> optEmail = be.getValue("PRI_ASSOC_HOST_COMPANY_EMAIL");
+		// Optional<String> optHCR = be.getValue("LNK_HOST_COMPANY_REP");
+		// Optional<String> optSupervisor = be.getValue("LNK_INTERN_SUPERVISOR");
+		// if (optHCR.isPresent()) {
+		// String hcrCode = optHCR.get();
+		// hcrCode = hcrCode.substring(2,hcrCode.length()-2);
+		// System.out.println("HCR = "+hcrCode);
+		// hcr = beUtils.getBaseEntityByCode(hcrCode);
+		//
+		//
+		// }
+		// if (optEmail.isPresent()) {
+		// String email = optEmail.get();
+		// System.out.println("Email = "+email);
+		// String code = "PER_"+QwandaUtils.getNormalisedUsername(email);
+		// if (!optHCR.isPresent()) {
+		// lnkHCR = "[\""+code+"\"]";
+		// beUtils.saveAnswer(new
+		// Answer(be.getCode(),be.getCode(),"LNK_HOST_COMPANY_REP",lnkHCR));
+		// }
+		// }
+		//
+		// if (!optSupervisor.isPresent()) {
+		// System.out.println("Setting Supervisor "+lnkHCR);
+		// if (lnkHCR != null) {
+		// beUtils.saveAnswer(new
+		// Answer(be.getCode(),be.getCode(),"LNK_INTERN_SUPERVISOR",lnkHCR));
+		// } else
+		// if (hcr != null) {
+		// lnkHCR = "[\""+hcr.getCode()+"\"]";
+		// beUtils.saveAnswer(new
+		// Answer(be.getCode(),be.getCode(),"LNK_INTERN_SUPERVISOR",lnkHCR));
+		// }
+		// }
+		// }
+		// }
+		// System.out.println("Finished Fixing Journals");
+		// } catch (Exception e1) {
+		// e1.printStackTrace();
+		// }
 	}
 
 	// @Test
 	public void showFramesTest() {
 		GennyToken tokenUser = GennyJbpmBaseTest.createGennyToken("ABCDEFGH", "internmatch", "adam.crow@gada.io",
 				"Adam Crow", "intern");
-		GennyToken tokenSupervisor = GennyJbpmBaseTest.createGennyToken("BCDEFGSHS", "internmatch",
-				"kanika.gulati@gada.io", "Kanika Gulati", "supervisor");
+		GennyToken tokenSupervisor = GennyJbpmBaseTest.createGennyToken("BCDEFGSHS", "internmatch", "kanika.gulati@gada.io",
+				"Kanika Gulati", "supervisor");
 		System.out.println(tokenUser.getToken());
 		System.out.println(tokenSupervisor.getToken());
 
@@ -3224,8 +3234,7 @@ public class AdamTest {
 
 				if (kv.get("PRI_ROLES").contains("ADMIN")) {
 					userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(), email,
-							kv.get("PRI_FIRSTNAME"), kv.get("PRI_LASTNAME"), email, userPassword, "admin,user",
-							"admin,user");
+							kv.get("PRI_FIRSTNAME"), kv.get("PRI_LASTNAME"), email, userPassword, "admin,user", "admin,user");
 				} else if (kv.get("PRI_ROLES").contains("AGENT")) {
 					userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(), email,
 							kv.get("PRI_FIRSTNAME"), kv.get("PRI_LASTNAME"), email, userPassword, "user", "user");
@@ -3265,18 +3274,25 @@ public class AdamTest {
 					"dc7d0960-2e1d-4a78-9eef-77678066dbd3", "service", password);
 		} catch (IOException e1) {
 		}
-//		sendVerifyMail(token, "gerard+intern31@outcome.life", "Gerard", "Holland");
-//		sendVerifyMail(token, "kanika.gulati+intern@gada.io", "Kanika Intern Test", "two");
-//		sendVerifyMail(token, "thomas.crow+intern@gada.io", "Thomas Intern Test", "three");
-//		sendVerifyMail(token, "barad.ghimire+intern@gada.io", "Barad Intern Test", "four");
-//		sendVerifyMail(token, "cto+intern@gada.io", "Adam Intern Test", "five");
-//		sendVerifyMail(token, "christopher.pyke+intern@gada.io", "Chris Testing App", "Six");
-//		sendVerifyMail(token, "gerard.holland", "outcome.life","Gerard", "Holland");
-//		sendVerifyMail(token, "domenic.saporito", "outcome.life","Domenic", "Saporito");
+		// sendVerifyMail(token, "gerard+intern31@outcome.life", "Gerard", "Holland");
+		// sendVerifyMail(token, "kanika.gulati+intern@gada.io", "Kanika Intern Test",
+		// "two");
+		// sendVerifyMail(token, "thomas.crow+intern@gada.io", "Thomas Intern Test",
+		// "three");
+		// sendVerifyMail(token, "barad.ghimire+intern@gada.io", "Barad Intern Test",
+		// "four");
+		// sendVerifyMail(token, "cto+intern@gada.io", "Adam Intern Test", "five");
+		// sendVerifyMail(token, "christopher.pyke+intern@gada.io", "Chris Testing App",
+		// "Six");
+		// sendVerifyMail(token, "gerard.holland", "outcome.life","Gerard", "Holland");
+		// sendVerifyMail(token, "domenic.saporito", "outcome.life","Domenic",
+		// "Saporito");
 		sendVerifyMail(token, "adamcrow63", "gmail.com", "Adam", "Crow");
-//		sendVerifyMail(token, "christopher.pyke", "gada.io","Christopher", "Pyke");
-//		sendVerifyMail(token, "stephenie.pulis-cassar", "outcomelife.com.au","Stephenie", "Pulis-Cassar");
-//		sendVerifyMail(token, "joshua.tinner+intern31@outcome.life", "Stephenie", "Pulis-Cassar");
+		// sendVerifyMail(token, "christopher.pyke", "gada.io","Christopher", "Pyke");
+		// sendVerifyMail(token, "stephenie.pulis-cassar",
+		// "outcomelife.com.au","Stephenie", "Pulis-Cassar");
+		// sendVerifyMail(token, "joshua.tinner+intern31@outcome.life", "Stephenie",
+		// "Pulis-Cassar");
 	}
 
 	private void sendVerifyMail(String token, String emailusername) {
@@ -3285,10 +3301,11 @@ public class AdamTest {
 	}
 
 	private void sendVerifyMail(String token, String emailusername, String firstname, String lastname) {
-//		LocalDateTime now = LocalDateTime.now();
-//		String mydatetime = new SimpleDateFormat("yyyyMMddHHmmss").format(now.toDate());
-//		// System.out.println(username+" serviceToken=" + token);
-//		String emailusername = username + "+" + mydatetime + "@" + domain;
+		// LocalDateTime now = LocalDateTime.now();
+		// String mydatetime = new
+		// SimpleDateFormat("yyyyMMddHHmmss").format(now.toDate());
+		// // System.out.println(username+" serviceToken=" + token);
+		// String emailusername = username + "+" + mydatetime + "@" + domain;
 
 		String password = UUID.randomUUID().toString().substring(0, 8);
 		String userId;
@@ -3437,13 +3454,12 @@ public class AdamTest {
 				String value = StringUtils.isBlank(attributeCodeValue._2) ? "" : attributeCodeValue._2;
 				value = value.trim();
 				kv.put(attributeCodeValue._1, value);
-				Answer answer2 = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), attributeCodeValue._1,
-						value);
+				Answer answer2 = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), attributeCodeValue._1, value);
 				answers.add(answer2);
-				ImportUtils.processAttribute(beUtils, be.getCode(), attributeCodeValue, "PRI_ASSOC_EP", "PRI_NAME",
-						"CPY_", "LNK_EDU_PROVIDER", answers);
-				BaseEntity hc = ImportUtils.processAttribute(beUtils, be.getCode(), attributeCodeValue, "PRI_ABN",
-						"PRI_ABN", "CPY_", "LNK_HOST_COMPANY", answers);
+				ImportUtils.processAttribute(beUtils, be.getCode(), attributeCodeValue, "PRI_ASSOC_EP", "PRI_NAME", "CPY_",
+						"LNK_EDU_PROVIDER", answers);
+				BaseEntity hc = ImportUtils.processAttribute(beUtils, be.getCode(), attributeCodeValue, "PRI_ABN", "PRI_ABN",
+						"CPY_", "LNK_HOST_COMPANY", answers);
 				if (hc != null) {
 					System.out.println("Found link to " + hc.getName() + " as LNK_HOST_COMPANY");
 					Answer assocHC = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_ASSOC_HC",
@@ -3451,23 +3467,23 @@ public class AdamTest {
 					hostCompany = hc.getName();
 					answers.add(assocHC);
 					if (hc.getValue("PRI_ADDRESS_FULL_JSON").isPresent()) {
-						Answer assocHCloc = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(),
-								"PRI_ADDRESS_FULL_JSON", (String) (hc.getValue("PRI_ADDRESS_FULL_JSON").get()));
+						Answer assocHCloc = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_ADDRESS_FULL_JSON",
+								(String) (hc.getValue("PRI_ADDRESS_FULL_JSON").get()));
 						answers.add(assocHCloc);
 					}
 
 				}
-				BaseEntity sup = ImportUtils.processAttribute(beUtils, be.getCode(), attributeCodeValue,
-						"PRI_ASSOC_SUPERVISOR", "PRI_NAME", "PER_", "LNK_INTERN_SUPERVISOR", answers);
+				BaseEntity sup = ImportUtils.processAttribute(beUtils, be.getCode(), attributeCodeValue, "PRI_ASSOC_SUPERVISOR",
+						"PRI_NAME", "PER_", "LNK_INTERN_SUPERVISOR", answers);
 				if (sup != null) {
 					System.out.println("Found link to " + sup.getName() + " as LNK_INTERN_SUPERVISOR");
-					Answer assocSUP = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(),
-							"PRI_ASSOC_SUPERVISOR", sup.getName());
+					Answer assocSUP = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_ASSOC_SUPERVISOR",
+							sup.getName());
 					supName = sup.getName();
 					answers.add(assocSUP);
 				}
-				BaseEntity rep = ImportUtils.processAttribute(beUtils, be.getCode(), attributeCodeValue,
-						"PRI_ASSOC_HCR", "PRI_NAME", "PER_", "LNK_HOST_COMPANY_REP", answers);
+				BaseEntity rep = ImportUtils.processAttribute(beUtils, be.getCode(), attributeCodeValue, "PRI_ASSOC_HCR",
+						"PRI_NAME", "PER_", "LNK_HOST_COMPANY_REP", answers);
 				if (rep != null) {
 					System.out.println("Found link to " + rep.getName() + " as LNK_HOST_COMPANY_REP");
 					Answer assocREP = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_ASSOC_HCR",
@@ -3493,11 +3509,10 @@ public class AdamTest {
 			Answer internCount = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "LNK_NO_OF_INTERNS",
 					"[\"SEL_NO_OF_INTERNS_ONE\"]");
 			answers.add(internCount);
-			Answer daysperweek = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_DAYS_PER_WEEK",
-					"3");
+			Answer daysperweek = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_DAYS_PER_WEEK", "3");
 			answers.add(daysperweek);
-			Answer currentInterns = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(),
-					"PRI_CURRENT_INTERNS", "1");
+			Answer currentInterns = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_CURRENT_INTERNS",
+					"1");
 			answers.add(currentInterns);
 			Answer isInternship = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_IS_INTERNSHIP",
 					"true");
@@ -3515,8 +3530,7 @@ public class AdamTest {
 			Answer ifirstname = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_FIRSTNAME",
 					kv.get("PRI_IMPORT_FIRSTNAME"));
 			answers.add(ifirstname);
-			Answer iemail = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_EMAIL",
-					kv.get("PRI_EMAIL"));
+			Answer iemail = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_EMAIL", kv.get("PRI_EMAIL"));
 			answers.add(iemail);
 
 			String internCode = "PER_" + QwandaUtils.getNormalisedUsername(kv.get("PRI_EMAIL"));
@@ -3531,8 +3545,7 @@ public class AdamTest {
 			Answer iname = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_INTERN_NAME",
 					(ifirstname.getValue() + " " + ilastname.getValue()).trim());
 			answers.add(iname);
-			Answer accepted = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_INTERN_ACCEPTED",
-					"true");
+			Answer accepted = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_INTERN_ACCEPTED", "true");
 			answers.add(accepted);
 
 			QDataAnswerMessage msg = new QDataAnswerMessage(answers);
@@ -3645,11 +3658,10 @@ public class AdamTest {
 				String value = StringUtils.isBlank(attributeCodeValue._2) ? "" : attributeCodeValue._2;
 				value = value.trim();
 				kv.put(attributeCodeValue._1, value);
-				Answer answer2 = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), attributeCodeValue._1,
-						value);
+				Answer answer2 = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), attributeCodeValue._1, value);
 				answers.add(answer2);
-				ImportUtils.processAttribute(beUtils, be.getCode(), attributeCodeValue, "PRI_ASSOC_EP", "PRI_NAME",
-						"CPY_", "LNK_EDU_PROVIDER", answers);
+				ImportUtils.processAttribute(beUtils, be.getCode(), attributeCodeValue, "PRI_ASSOC_EP", "PRI_NAME", "CPY_",
+						"LNK_EDU_PROVIDER", answers);
 
 			}
 			Answer isIntern = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_IS_INTERN", "true");
@@ -3676,8 +3688,7 @@ public class AdamTest {
 			Answer iname = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_INTERN_NAME",
 					(ifirstname + " " + ilastname).trim());
 			answers.add(iname);
-			Answer accepted = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_INTERN_ACCEPTED",
-					"true");
+			Answer accepted = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_INTERN_ACCEPTED", "true");
 			answers.add(accepted);
 
 			QDataAnswerMessage msg = new QDataAnswerMessage(answers);
@@ -3691,8 +3702,8 @@ public class AdamTest {
 				String lastname = kv.get("PRI_IMPORT_LASTNAME").trim();
 				String userPassword = UUID.randomUUID().toString().substring(0, 10);
 				/* System.out.println(" keycloak token is "+serviceToken.getToken()); */
-				String userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(), email,
-						firstname, lastname, email, userPassword, "user", "user");
+				String userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(), email, firstname,
+						lastname, email, userPassword, "user", "user");
 				Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_UUID", userId);
 				answers.add(keycloakId);
 			} catch (IOException e) {
@@ -3812,12 +3823,12 @@ public class AdamTest {
 					}
 
 					kv.put(attributeCodeValue._1, value);
-					Answer answer2 = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(),
-							attributeCodeValue._1, value);
+					Answer answer2 = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), attributeCodeValue._1,
+							value);
 					answers.add(answer2);
 					String beCode = be.getCode();
-					BaseEntity hc = ImportUtils.linkToFind(beUtils, beCode, attributeCodeValue, "PRI_ABN", "PRI_ABN",
-							"CPY_", "LNK_HOST_COMPANY_REP", answers);
+					BaseEntity hc = ImportUtils.linkToFind(beUtils, beCode, attributeCodeValue, "PRI_ABN", "PRI_ABN", "CPY_",
+							"LNK_HOST_COMPANY_REP", answers);
 
 					if (hc != null) {
 						System.out.println("Found link to " + hc.getName() + " as LNK_HOST_COMPANY_REP");
@@ -3829,8 +3840,7 @@ public class AdamTest {
 				}
 			}
 
-			Answer isEntity = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_IS_HOST_CPY_REP",
-					"true");
+			Answer isEntity = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_IS_HOST_CPY_REP", "true");
 			answers.add(isEntity);
 			Answer isImported = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_IMPORTED", "true");
 			answers.add(isImported);
@@ -3848,8 +3858,8 @@ public class AdamTest {
 				String email = kv.get("PRI_EMAIL");
 				String userPassword = UUID.randomUUID().toString().substring(0, 10);
 				/* System.out.println(" keycloak token is "+serviceToken.getToken()); */
-				String userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(), email,
-						firstname, lastname, email, userPassword, "user", "user");
+				String userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(), email, firstname,
+						lastname, email, userPassword, "user", "user");
 				Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_UUID", userId);
 				answers.add(keycloakId);
 			} catch (IOException e) {
@@ -3964,12 +3974,10 @@ public class AdamTest {
 				}
 				value = value.trim();
 				kv.put(attributeCodeValue._1, value);
-				Answer answer2 = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), attributeCodeValue._1,
-						value);
+				Answer answer2 = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), attributeCodeValue._1, value);
 				answers.add(answer2);
 			}
-			Answer isEntity = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_IS_HOST_CPY",
-					"true");
+			Answer isEntity = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_IS_HOST_CPY", "true");
 			answers.add(isEntity);
 			Answer isImported = new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_IMPORTED", "true");
 			answers.add(isImported);
@@ -4010,7 +4018,7 @@ public class AdamTest {
 		GennyToken serviceToken = null;
 		QRules qRules = null;
 
-//		}
+		// }
 		String password = System.getenv("SERVICE_PASSWORD");
 		String userPassword = System.getenv("USER_PASSWORD");
 		String token = null;
@@ -4082,29 +4090,31 @@ public class AdamTest {
 		System.out.println("Finished");
 	}
 
-//	@Test
+	// @Test
 	public void registerUser() {
 		System.out.println("Search test");
 		GennyToken userToken = null;
 		GennyToken serviceToken = null;
 		QRules qRules = null;
 
-//		if (false) {
-//			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
-//			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//			qRules = new QRules(eventBusMock, userToken.getToken());
-//			qRules.set("realm", userToken.getRealm());
-//			qRules.setServiceToken(serviceToken.getToken());
-//			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
-//			GennyKieSession.loadAttributesJsonFromResources(userToken);
-//
-//		} else {
-//			VertxUtils.cachedEnabled = false;
-//			qRules = GennyJbpmBaseTest.setupLocalService();
-//			userToken = new GennyToken("userToken", qRules.getToken());
-//			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
-//
-//		}
+		// if (false) {
+		// userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan",
+		// "user");
+		// serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service
+		// User", "service");
+		// qRules = new QRules(eventBusMock, userToken.getToken());
+		// qRules.set("realm", userToken.getRealm());
+		// qRules.setServiceToken(serviceToken.getToken());
+		// VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+		// GennyKieSession.loadAttributesJsonFromResources(userToken);
+		//
+		// } else {
+		// VertxUtils.cachedEnabled = false;
+		// qRules = GennyJbpmBaseTest.setupLocalService();
+		// userToken = new GennyToken("userToken", qRules.getToken());
+		// serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+		//
+		// }
 		String password = System.getenv("SERVICE_PASSWORD");
 		String userPassword = System.getenv("USER_PASSWORD");
 		String token = null;
@@ -4119,55 +4129,57 @@ public class AdamTest {
 		LocalDateTime now = LocalDateTime.now();
 		String mydatetime = new SimpleDateFormat("yyyyMMddHHmmss").format(now);
 
-///		String username = "rahul.samaranayake+"+mydatetime+"@outcomelife.com.au";		
-//		String firstname = "Rahul";
-//		String lastname = "Samaranayake";
-//
-//		String username = "adamcrow63+"+mydatetime+"@gmail.com";		
-//		String firstname = "Adam";
-//		String lastname = "Crow";
+		/// String username = "rahul.samaranayake+"+mydatetime+"@outcomelife.com.au";
+		// String firstname = "Rahul";
+		// String lastname = "Samaranayake";
+		//
+		// String username = "adamcrow63+"+mydatetime+"@gmail.com";
+		// String firstname = "Adam";
+		// String lastname = "Crow";
 
 		String username = "gerard.holland+" + mydatetime + "@outcome.life";
 		String firstname = "Gerard";
 		String lastname = "Holland";
 
-//		String username = "domenic.saporito+"+mydatetime+"@outcome.life";		
-//		String firstname = "Domenic";
-//		String lastname = "Saporito";
+		// String username = "domenic.saporito+"+mydatetime+"@outcome.life";
+		// String firstname = "Domenic";
+		// String lastname = "Saporito";
 
 		System.out.println(username + " serviceToken=" + token);
 
 		password = UUID.randomUUID().toString().substring(0, 8);
-//		List<LinkedHashMap> results = new ArrayList<LinkedHashMap>();
-//	    final HttpClient client = new DefaultHttpClient();
-//	    
-//	    try {
-//	    	String encodedUsername = encodeValue("adamcrow63@gmail.com");
-//	      final HttpGet get =
-//	          new HttpGet("https://keycloak.gada.io" + "/auth/admin/realms/" + realm + "/users?username=" + encodedUsername);
-//	      get.addHeader("Authorization", "Bearer " + token);
-//	      try {
-//	        final HttpResponse response = client.execute(get);
-//	        if (response.getStatusLine().getStatusCode() != 200) {
-//	          throw new IOException();
-//	        }
-//	        final HttpEntity entity = response.getEntity();
-//	        final InputStream is = entity.getContent();
-//	        try {
-//	          results =  JsonSerialization.readValue(is, (new ArrayList<UserRepresentation>()).getClass());
-//	        } finally {
-//	          is.close();
-//	        }
-//	      } catch (final IOException e) {
-//	        throw new RuntimeException(e);
-//	      }
-//	    } finally {
-//	      client.getConnectionManager().shutdown();
-//	    }
+		// List<LinkedHashMap> results = new ArrayList<LinkedHashMap>();
+		// final HttpClient client = new DefaultHttpClient();
+		//
+		// try {
+		// String encodedUsername = encodeValue("adamcrow63@gmail.com");
+		// final HttpGet get =
+		// new HttpGet("https://keycloak.gada.io" + "/auth/admin/realms/" + realm +
+		// "/users?username=" + encodedUsername);
+		// get.addHeader("Authorization", "Bearer " + token);
+		// try {
+		// final HttpResponse response = client.execute(get);
+		// if (response.getStatusLine().getStatusCode() != 200) {
+		// throw new IOException();
+		// }
+		// final HttpEntity entity = response.getEntity();
+		// final InputStream is = entity.getContent();
+		// try {
+		// results = JsonSerialization.readValue(is, (new
+		// ArrayList<UserRepresentation>()).getClass());
+		// } finally {
+		// is.close();
+		// }
+		// } catch (final IOException e) {
+		// throw new RuntimeException(e);
+		// }
+		// } finally {
+		// client.getConnectionManager().shutdown();
+		// }
 
 		try {
-			userId = KeycloakUtils.createUser(token, realm, username, firstname, lastname, username, userPassword,
-					"user", "user");
+			userId = KeycloakUtils.createUser(token, realm, username, firstname, lastname, username, userPassword, "user",
+					"user");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -4175,28 +4187,31 @@ public class AdamTest {
 
 		userId = KeycloakUtils.sendVerifyEmail(realm, username, token);
 
-//		HttpClient httpClient = new DefaultHttpClient();
-//
-//		HttpPut putRequest = new HttpPut("https://keycloak.gada.io" + "/auth/admin/realms/" + "internmatch" + "/users/" + userId + "/send-verify-email");
-//
-//		log.info("https://keycloak.gada.io" + "/auth/admin/realms/" + "internmatch" + "/users/" + userId + "/send-verify-email");
-//
-//		putRequest.addHeader("Content-Type", "application/json");
-//		putRequest.addHeader("Authorization", "Bearer " + token);
-//
-//		HttpResponse response = null;
-//		try {
-//			response = httpClient.execute(putRequest);
-//		} catch (ClientProtocolException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//
-//		int statusCode = response.getStatusLine().getStatusCode();
-//
+		// HttpClient httpClient = new DefaultHttpClient();
+		//
+		// HttpPut putRequest = new HttpPut("https://keycloak.gada.io" +
+		// "/auth/admin/realms/" + "internmatch" + "/users/" + userId +
+		// "/send-verify-email");
+		//
+		// log.info("https://keycloak.gada.io" + "/auth/admin/realms/" + "internmatch" +
+		// "/users/" + userId + "/send-verify-email");
+		//
+		// putRequest.addHeader("Content-Type", "application/json");
+		// putRequest.addHeader("Authorization", "Bearer " + token);
+		//
+		// HttpResponse response = null;
+		// try {
+		// response = httpClient.execute(putRequest);
+		// } catch (ClientProtocolException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		//
+		// int statusCode = response.getStatusLine().getStatusCode();
+		//
 		System.out.println("UserId=" + userId);
 
 	}
@@ -4240,57 +4255,60 @@ public class AdamTest {
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		beUtils.setServiceToken(serviceToken);
 
-//		SearchEntity searchBE = new SearchEntity("ADAMTEST", "Test Search")
-//				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-//				.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%PER_INTERN3%")
-//				.addColumn("PRI_NAME", "Name")
-//				.addColumn("LNK_INTERNSHIP","Internship")
-//				.addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
-//				.addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep")
-//				.addColumn("LNK_HOST_COMPANY", "Host Company")
-//				.setPageStart(0)
-//				.setPageSize(20);
+		// SearchEntity searchBE = new SearchEntity("ADAMTEST", "Test Search")
+		// .addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+		// .addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%PER_INTERN3%")
+		// .addColumn("PRI_NAME", "Name")
+		// .addColumn("LNK_INTERNSHIP","Internship")
+		// .addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
+		// .addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep")
+		// .addColumn("LNK_HOST_COMPANY", "Host Company")
+		// .setPageStart(0)
+		// .setPageSize(20);
 
-//		SearchEntity searchBE = new SearchEntity("ADAMTEST", "Intern Apps")
-//				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-//				.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%PER_KANIKA_DOT_GULATI_AT_GADA_DOT_IO").addColumn("PRI_NAME", "Name")
-//				.addColumn("LNK_INTERNSHIP", "Internship").addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
-//				.addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep").addColumn("LNK_HOST_COMPANY", "Host Company")
-//				.setPageStart(0).setPageSize(100);
+		// SearchEntity searchBE = new SearchEntity("ADAMTEST", "Intern Apps")
+		// .addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+		// .addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE,
+		// "%PER_KANIKA_DOT_GULATI_AT_GADA_DOT_IO").addColumn("PRI_NAME", "Name")
+		// .addColumn("LNK_INTERNSHIP", "Internship").addColumn("LNK_INTERN_SUPERVISOR",
+		// "Supervisor")
+		// .addColumn("LNK_HOST_COMPANY_REP", "Host Company
+		// Rep").addColumn("LNK_HOST_COMPANY", "Host Company")
+		// .setPageStart(0).setPageSize(100);
 
-//		SearchEntity searchBE = new SearchEntity("ADAMTEST", "Intern Journals")
-//				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-//				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%") 
-//				/* .addFilter("PRI_SYNC", SearchEntity.StringFilter.LIKE, "FALSE") */
-//				.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%"+"PER_KANIKA_DOT_GULATI_PLUS_INTERN_AT_GADA_DOT_IO"+"%") 
-//				.addColumn("PRI_NAME", "Name")
-//				.addColumn("LNK_INTERNSHIP","Internship")
-//				.addColumn("LNK_INTERN", "Intern")
-//				.addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep")
-//				.addColumn("LNK_HOST_COMPANY", "Host Company")
-//				.addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
-//				.addColumn("PRI_JOURNAL_DATE","Date")
-//				.addColumn("PRI_JOURNAL_HOURS","Hours")
-//				.addColumn("PRI_JOURNAL_TASKS","Tasks")				
-//				.addColumn("PRI_JOURNAL_LEARNING_OUTCOMES","Learning Outcomes")
-//				.addColumn("PRI_FEEDBACK","Feedback")
-//				.addColumn("PRI_STATUS","Status")				
-//				.addColumn("PRI_SYNC","Synced")
-//				.setPageStart(0)
-//				.setPageSize(2000);	
+		// SearchEntity searchBE = new SearchEntity("ADAMTEST", "Intern Journals")
+		// .addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+		// .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
+		// /* .addFilter("PRI_SYNC", SearchEntity.StringFilter.LIKE, "FALSE") */
+		// .addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE,
+		// "%"+"PER_KANIKA_DOT_GULATI_PLUS_INTERN_AT_GADA_DOT_IO"+"%")
+		// .addColumn("PRI_NAME", "Name")
+		// .addColumn("LNK_INTERNSHIP","Internship")
+		// .addColumn("LNK_INTERN", "Intern")
+		// .addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep")
+		// .addColumn("LNK_HOST_COMPANY", "Host Company")
+		// .addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
+		// .addColumn("PRI_JOURNAL_DATE","Date")
+		// .addColumn("PRI_JOURNAL_HOURS","Hours")
+		// .addColumn("PRI_JOURNAL_TASKS","Tasks")
+		// .addColumn("PRI_JOURNAL_LEARNING_OUTCOMES","Learning Outcomes")
+		// .addColumn("PRI_FEEDBACK","Feedback")
+		// .addColumn("PRI_STATUS","Status")
+		// .addColumn("PRI_SYNC","Synced")
+		// .setPageStart(0)
+		// .setPageSize(2000);
 
 		SearchEntity searchBE = new SearchEntity("SBE_SUPERVISOR_JOOURNALS", "Supervisor Journals")
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
 				/* .addFilter("PRI_SYNC", SearchEntity.StringFilter.LIKE, "FALSE") */
 				.addFilter("LNK_INTERN_SUPERVISOR", SearchEntity.StringFilter.LIKE, "%" + "PER_SUPERVISOR1" + "%")
-				.addColumn("PRI_NAME", "Name").addColumn("LNK_INTERNSHIP", "Internship")
-				.addColumn("LNK_INTERN", "Intern").addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep")
-				.addColumn("LNK_HOST_COMPANY", "Host Company").addColumn("LNK_INTERN_SUPERVISOR", "Supervisor")
-				.addColumn("PRI_JOURNAL_DATE", "Date").addColumn("PRI_JOURNAL_HOURS", "Hours")
-				.addColumn("PRI_JOURNAL_TASKS", "Tasks").addColumn("PRI_JOURNAL_LEARNING_OUTCOMES", "Learning Outcomes")
-				.addColumn("PRI_FEEDBACK", "Feedback").addColumn("PRI_STATUS", "Status").addColumn("PRI_SYNC", "Synced")
-				.setPageStart(0).setPageSize(2000);
+				.addColumn("PRI_NAME", "Name").addColumn("LNK_INTERNSHIP", "Internship").addColumn("LNK_INTERN", "Intern")
+				.addColumn("LNK_HOST_COMPANY_REP", "Host Company Rep").addColumn("LNK_HOST_COMPANY", "Host Company")
+				.addColumn("LNK_INTERN_SUPERVISOR", "Supervisor").addColumn("PRI_JOURNAL_DATE", "Date")
+				.addColumn("PRI_JOURNAL_HOURS", "Hours").addColumn("PRI_JOURNAL_TASKS", "Tasks")
+				.addColumn("PRI_JOURNAL_LEARNING_OUTCOMES", "Learning Outcomes").addColumn("PRI_FEEDBACK", "Feedback")
+				.addColumn("PRI_STATUS", "Status").addColumn("PRI_SYNC", "Synced").setPageStart(0).setPageSize(2000);
 
 		String jsonSearchBE = JsonUtils.toJson(searchBE);
 		String resultJson;
@@ -4323,59 +4341,61 @@ public class AdamTest {
 		try {
 			gks = GennyKieSession.builder(serviceToken, true).addDrl("IS_INTERN.drl").build();
 
-//			gks = GennyKieSession.builder(serviceToken, true).addDrl("SignalProcessing").addDrl("DataProcessing")
-//					.addDrl("EventProcessing").addJbpm("Lifecycles").addJbpm("adam_user1.bpmn")
-//					.addJbpm("adam_user2.bpmn").addJbpm("adam_user3.bpmn").addDrl("AuthInit").addJbpm("AuthInit")
-//					.addDrl("InitialiseProject").addJbpm("InitialiseProject").build();
-////
-//			gks.createTestUsersGroups();
-//
-//			GennyToken newUser2A = gks.createToken("PER_USER2", "user,test,admin");
-//			GennyToken newUser2B = gks.createToken("PER_USER2");
-//			GennyToken newUser1A = gks.createToken("PER_USER1");
-//			gks.start();
-//
-//			gks.injectSignal("initProject"); // This should initialise everything
-//			gks.injectEvent("authInitMsg", newUser2A); // log in as new user
-//			gks.advanceSeconds(5, false);
-//			gks.showStatuses("PER_USER1", "PER_USER2");
-//
-//			// Now answer a question
-//
-//			gks.injectAnswer("PRI_FIRSTNAME", newUser2A);
-//			gks.injectAnswer("PRI_LASTNAME", newUser2A);
-//			gks.injectAnswer("PRI_DOB", newUser2A);
-//			gks.injectAnswer("PRI_PREFERRED_NAME", newUser2A);
-//			gks.injectAnswer("PRI_EMAIL", newUser2A);
-//			gks.injectAnswer("PRI_MOBILE", newUser2A);
-//			gks.injectAnswer("PRI_USER_PROFILE_PICTURE", newUser2A);
-//			gks.injectAnswer("PRI_ADDRESS_FULL", newUser2A);
-//
-//			gks.injectEvent("QUE_SUBMIT", newUser2A);
-//
-//			// Now import a google doc/ xls file and generate a List of BaseEntityImports
+			// gks = GennyKieSession.builder(serviceToken,
+			// true).addDrl("SignalProcessing").addDrl("DataProcessing")
+			// .addDrl("EventProcessing").addJbpm("Lifecycles").addJbpm("adam_user1.bpmn")
+			// .addJbpm("adam_user2.bpmn").addJbpm("adam_user3.bpmn").addDrl("AuthInit").addJbpm("AuthInit")
+			// .addDrl("InitialiseProject").addJbpm("InitialiseProject").build();
+			////
+			// gks.createTestUsersGroups();
+			//
+			// GennyToken newUser2A = gks.createToken("PER_USER2", "user,test,admin");
+			// GennyToken newUser2B = gks.createToken("PER_USER2");
+			// GennyToken newUser1A = gks.createToken("PER_USER1");
+			// gks.start();
+			//
+			// gks.injectSignal("initProject"); // This should initialise everything
+			// gks.injectEvent("authInitMsg", newUser2A); // log in as new user
+			// gks.advanceSeconds(5, false);
+			// gks.showStatuses("PER_USER1", "PER_USER2");
+			//
+			// // Now answer a question
+			//
+			// gks.injectAnswer("PRI_FIRSTNAME", newUser2A);
+			// gks.injectAnswer("PRI_LASTNAME", newUser2A);
+			// gks.injectAnswer("PRI_DOB", newUser2A);
+			// gks.injectAnswer("PRI_PREFERRED_NAME", newUser2A);
+			// gks.injectAnswer("PRI_EMAIL", newUser2A);
+			// gks.injectAnswer("PRI_MOBILE", newUser2A);
+			// gks.injectAnswer("PRI_USER_PROFILE_PICTURE", newUser2A);
+			// gks.injectAnswer("PRI_ADDRESS_FULL", newUser2A);
+			//
+			// gks.injectEvent("QUE_SUBMIT", newUser2A);
+			//
+			// // Now import a google doc/ xls file and generate a List of BaseEntityImports
 
 			String googleDocId = System.getenv("GOOGLE_DOC_ID");
 			googleDocId = googleDocId.trim();
 			List<BaseEntityImport> beImports = ImportUtils.importGoogleDoc(googleDocId, "Sheet1", getFieldMappings());
 
 			// now generate the baseentity and send through all the answers
-//			BaseEntityUtils beUtils = new BaseEntityUtils(newUser2A);
-//			beUtils.setServiceToken(serviceToken);
-//			for (BaseEntityImport beImport : beImports) {
-//				BaseEntity be = beUtils.create(beImport.getCode(), beImport.getName());
-//				List<Answer> answers = new ArrayList<Answer>();
-//				for (Tuple2<String, String> attributeCodeValue : beImport.getAttributeValuePairList()) {
-//					Answer answer = new Answer(be.getCode(), be.getCode(), attributeCodeValue._1,
-//							attributeCodeValue._2);
-//					answers.add(answer);
-//				}
-//
-//				QDataAnswerMessage msg = new QDataAnswerMessage(answers);
-////				msg.setToken(newUser2A.getToken());
-//				// now inject into a rulegroup
-////				gks.injectEvent(msg, newUser2A);
-//			}
+			// BaseEntityUtils beUtils = new BaseEntityUtils(newUser2A);
+			// beUtils.setServiceToken(serviceToken);
+			// for (BaseEntityImport beImport : beImports) {
+			// BaseEntity be = beUtils.create(beImport.getCode(), beImport.getName());
+			// List<Answer> answers = new ArrayList<Answer>();
+			// for (Tuple2<String, String> attributeCodeValue :
+			// beImport.getAttributeValuePairList()) {
+			// Answer answer = new Answer(be.getCode(), be.getCode(), attributeCodeValue._1,
+			// attributeCodeValue._2);
+			// answers.add(answer);
+			// }
+			//
+			// QDataAnswerMessage msg = new QDataAnswerMessage(answers);
+			//// msg.setToken(newUser2A.getToken());
+			// // now inject into a rulegroup
+			//// gks.injectEvent(msg, newUser2A);
+			// }
 
 			// System.out.println(beImports);
 		} catch (Exception e) {
@@ -4449,8 +4469,8 @@ public class AdamTest {
 		project.setRealm(serviceToken.getRealm());
 		VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
 				JsonUtils.toJson(project), serviceToken.getToken());
-		VertxUtils.writeCachedJson(realm, ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(),
-				JsonUtils.toJson(project), serviceToken.getToken());
+		VertxUtils.writeCachedJson(realm, ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(), JsonUtils.toJson(project),
+				serviceToken.getToken());
 
 		GennyKieSession gks = null;
 
@@ -4514,7 +4534,7 @@ public class AdamTest {
 		KieBase kieBase = RulesLoader.getKieBaseCache().get(serviceToken.getRealm());
 		newKieSession = (StatefulKnowledgeSession) kieBase.newKieSession(ksconf, RulesLoader.env);
 
-//			newKieSession = (StatefulKnowledgeSession)this.runtimeEngine.getKieSession();
+		// newKieSession = (StatefulKnowledgeSession)this.runtimeEngine.getKieSession();
 
 		FactHandle outputParamTreeSetHandle = newKieSession.insert(new OutputParamTreeSet());
 
@@ -4555,46 +4575,48 @@ public class AdamTest {
 
 	}
 
-//		public Integer importGoogleDoc(final String id, Map<String,String> fieldMapping)
-//		{
-//
-//			log.info("Importing "+id);
-//			Integer count = 0;
-//			   try {
-//				   GoogleImportService gs = GoogleImportService.getInstance();
-//				    XlsxImport xlsImport = new XlsxImportOnline(gs.getService());
-//			//	    Realm realm = new Realm(xlsImport,id);
-////				    realm.getDataUnits().stream()
-////				        .forEach(data -> System.out.println(data.questions.size()));
-//				    Set<String> keys = new HashSet<String>();
-//				    for (String field : fieldMapping.keySet()) {
-//				    	keys.add(field);
-//				    }
-//				      Map<String, Map<String,String>> mapData = xlsImport.mappingRawToHeaderAndValuesFmt(id, "Sheet1", keys);
-//				      Integer rowIndex = 0;
-//				      for (Map<String,String> row : mapData.values())
-//				      {
-//				    	  String rowStr = "Row:"+rowIndex+"->";
-//				    	  for (String col : row.keySet()) {
-//				    		  String val = row.get(col.trim());
-//				    		  if (val!=null) {
-//				    			  val = val.trim();
-//				    		  }
-//				    		  String attributeCode = fieldMapping.get(col);
-//				    		  rowStr += attributeCode+"="+val + ",";
-//				    	  }
-//				    	  rowIndex++;
-//				    	  System.out.println(rowStr);
-//				      }
-//
-//				    } catch (Exception e1) {
-//				      return 0;
-//				    }
-//
-//
-//			return count;
-//		}
-//
+	// public Integer importGoogleDoc(final String id, Map<String,String>
+	// fieldMapping)
+	// {
+	//
+	// log.info("Importing "+id);
+	// Integer count = 0;
+	// try {
+	// GoogleImportService gs = GoogleImportService.getInstance();
+	// XlsxImport xlsImport = new XlsxImportOnline(gs.getService());
+	// // Realm realm = new Realm(xlsImport,id);
+	//// realm.getDataUnits().stream()
+	//// .forEach(data -> System.out.println(data.questions.size()));
+	// Set<String> keys = new HashSet<String>();
+	// for (String field : fieldMapping.keySet()) {
+	// keys.add(field);
+	// }
+	// Map<String, Map<String,String>> mapData =
+	// xlsImport.mappingRawToHeaderAndValuesFmt(id, "Sheet1", keys);
+	// Integer rowIndex = 0;
+	// for (Map<String,String> row : mapData.values())
+	// {
+	// String rowStr = "Row:"+rowIndex+"->";
+	// for (String col : row.keySet()) {
+	// String val = row.get(col.trim());
+	// if (val!=null) {
+	// val = val.trim();
+	// }
+	// String attributeCode = fieldMapping.get(col);
+	// rowStr += attributeCode+"="+val + ",";
+	// }
+	// rowIndex++;
+	// System.out.println(rowStr);
+	// }
+	//
+	// } catch (Exception e1) {
+	// return 0;
+	// }
+	//
+	//
+	// return count;
+	// }
+	//
 
 	// @Test
 	public void generateCapabilitiesTest() {
@@ -4627,9 +4649,9 @@ public class AdamTest {
 
 		try {
 			gks = GennyKieSession.builder(serviceToken, true).addDrl("SignalProcessing").addDrl("DataProcessing")
-					.addDrl("EventProcessing").addJbpm("Lifecycles").addJbpm("adam_user1.bpmn")
-					.addJbpm("adam_user2.bpmn").addJbpm("adam_user3.bpmn").addDrl("AuthInit").addJbpm("AuthInit")
-					.addDrl("InitialiseProject").addJbpm("InitialiseProject").build();
+					.addDrl("EventProcessing").addJbpm("Lifecycles").addJbpm("adam_user1.bpmn").addJbpm("adam_user2.bpmn")
+					.addJbpm("adam_user3.bpmn").addDrl("AuthInit").addJbpm("AuthInit").addDrl("InitialiseProject")
+					.addJbpm("InitialiseProject").build();
 
 			gks.createTestUsersGroups();
 
@@ -4674,7 +4696,7 @@ public class AdamTest {
 		}
 	}
 
-//	@Test
+	// @Test
 	public void askQuestionTest() {
 		System.out.println("AskQuestion Test");
 
@@ -4682,9 +4704,9 @@ public class AdamTest {
 
 		try {
 			gks = GennyKieSession.builder(serviceToken, true).addDrl("SignalProcessing").addDrl("DataProcessing")
-					.addDrl("EventProcessing").addJbpm("Lifecycles").addJbpm("adam_user1.bpmn")
-					.addJbpm("adam_user2.bpmn").addJbpm("adam_user3.bpmn").addDrl("AuthInit").addJbpm("AuthInit")
-					.addDrl("InitialiseProject").addJbpm("InitialiseProject").build();
+					.addDrl("EventProcessing").addJbpm("Lifecycles").addJbpm("adam_user1.bpmn").addJbpm("adam_user2.bpmn")
+					.addJbpm("adam_user3.bpmn").addDrl("AuthInit").addJbpm("AuthInit").addDrl("InitialiseProject")
+					.addJbpm("InitialiseProject").build();
 
 			gks.createTestUsersGroups();
 
@@ -4700,23 +4722,24 @@ public class AdamTest {
 			gks.advanceSeconds(5, false);
 			gks.showStatuses("PER_USER1", "PER_USER2");
 
-//				System.out.println("Invoking AskQuestionTask workItem");
+			// System.out.println("Invoking AskQuestionTask workItem");
 			// Send an AskQuestion that should send an internal signal to the userSession
-//				AskQuestionTaskWorkItemHandler askQ = new AskQuestionTaskWorkItemHandler(GennyKieSession.class,gks.getGennyRuntimeEngine(),gks.getKieSession());
-//				WorkItemManager workItemManager = gks.getKieSession().getWorkItemManager();
-//				WorkItemImpl workItem = new WorkItICEemImpl();
-//		        workItem.setParameter("userToken",
-//		                              userToken);
-//		        workItem.setParameter("questionCode",
-//		                              "QUE_USER_PROFILE_GRP");
-//		        workItem.setParameter("callingWorkflow", "AdamTest");
-//		        workItem.setParameter("Priority", "10");  // if l;eft out defaults to 0
-//		        workItem.setDeploymentId(userToken.getRealm());
-//		        workItem.setName("AskQuestion");
-//		        workItem.setProcessInstanceId(1234L); // made up processId
-//		        askQ.executeWorkItem(workItem, workItemManager);
+			// AskQuestionTaskWorkItemHandler askQ = new
+			// AskQuestionTaskWorkItemHandler(GennyKieSession.class,gks.getGennyRuntimeEngine(),gks.getKieSession());
+			// WorkItemManager workItemManager = gks.getKieSession().getWorkItemManager();
+			// WorkItemImpl workItem = new WorkItICEemImpl();
+			// workItem.setParameter("userToken",
+			// userToken);
+			// workItem.setParameter("questionCode",
+			// "QUE_USER_PROFILE_GRP");
+			// workItem.setParameter("callingWorkflow", "AdamTest");
+			// workItem.setParameter("Priority", "10"); // if l;eft out defaults to 0
+			// workItem.setDeploymentId(userToken.getRealm());
+			// workItem.setName("AskQuestion");
+			// workItem.setProcessInstanceId(1234L); // made up processId
+			// askQ.executeWorkItem(workItem, workItemManager);
 
-//		        showStatuses(gks);
+			// showStatuses(gks);
 
 			// Now answer a question
 
@@ -4785,8 +4808,8 @@ public class AdamTest {
 		project.setRealm(serviceToken.getRealm());
 		VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
 				JsonUtils.toJson(project), serviceToken.getToken());
-		VertxUtils.writeCachedJson(realm, ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(),
-				JsonUtils.toJson(project), serviceToken.getToken());
+		VertxUtils.writeCachedJson(realm, ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(), JsonUtils.toJson(project),
+				serviceToken.getToken());
 		VertxUtils.writeCachedJson(GennySettings.GENNY_REALM, "TOKEN" + realm.toUpperCase(), serviceToken.getToken());
 		JsonObject tokenObj = VertxUtils.readCachedJson(GennySettings.GENNY_REALM, "TOKEN" + realm.toUpperCase());
 		String token = tokenObj.getString("value");
@@ -4842,22 +4865,22 @@ public class AdamTest {
 
 			gks.advanceSeconds(5, false);
 			Map<String, Object> params = new HashMap<String, Object>();
-			Task task = new TaskFluent().setName("Amazing GADA Stuff")
-					.setAdminUser(realm + "+PER_ADAMCROW63_AT_GMAIL_COM").setAdminGroup("Administrators")
-					.addPotentialGroup(realm + "+GRP_GADA").setAdminUser(realm + "+PER_ADAMCROW63_AT_GMAIL_COM")
+			Task task = new TaskFluent().setName("Amazing GADA Stuff").setAdminUser(realm + "+PER_ADAMCROW63_AT_GMAIL_COM")
+					.setAdminGroup("Administrators").addPotentialGroup(realm + "+GRP_GADA")
+					.setAdminUser(realm + "+PER_ADAMCROW63_AT_GMAIL_COM")
 					// .addPotentialUser("acrow")
 					.setProcessId("direct").setDeploymentID(realm).getTask();
 
 			Task task2 = new TaskFluent().setName("Awesome GADA stuff")
 					// .addPotentialGroup("GADA")
 					.setAdminUser(realm + "+PER_ADAMCROW63_AT_GMAIL_COM").setAdminGroup("Administrators")
-					.addPotentialUser(realm + "+PER_DOMENIC_AT_OUTCOME_LIFE").setDeploymentID(realm)
-					.setProcessId("direct").getTask();
+					.addPotentialUser(realm + "+PER_DOMENIC_AT_OUTCOME_LIFE").setDeploymentID(realm).setProcessId("direct")
+					.getTask();
 
 			Task task3 = new TaskFluent().setName("Boring Outcome Stuff").addPotentialGroup(realm + "+GRP_OUTCOME")
 					.setAdminUser(realm + "+PER_ADAMCROW63_AT_GMAIL_COM").setAdminGroup("Administrators")
-					.addPotentialUser(realm + "+PER_GERARD_AT_OUTCOME_LIFE").setProcessId("direct")
-					.setDeploymentID(realm).getTask();
+					.addPotentialUser(realm + "+PER_GERARD_AT_OUTCOME_LIFE").setProcessId("direct").setDeploymentID(realm)
+					.getTask();
 
 			gks.getTaskService().addTask(task, params);
 			gks.getTaskService().addTask(task2, params);
@@ -4889,13 +4912,12 @@ public class AdamTest {
 			gks.getTaskService().resume(taskId, realm + "+PER_ADAMCROW63_AT_GMAIL_COM");
 			gks.showStatuses();
 
-			gks.getTaskService().forward(taskId2, realm + "+PER_DOMENIC_AT_OUTCOME_LIFE",
-					realm + "+PER_ANISH_AT_GADA_IO");
+			gks.getTaskService().forward(taskId2, realm + "+PER_DOMENIC_AT_OUTCOME_LIFE", realm + "+PER_ANISH_AT_GADA_IO");
 
 			// Claim Task
-//	              gks.getTaskService().claim(taskId, "acrow");
-//	              showStatuses(gks);
-//
+			// gks.getTaskService().claim(taskId, "acrow");
+			// showStatuses(gks);
+			//
 			Map<String, Object> results = new HashMap<String, Object>();
 			results.put("Result", "Done");
 			gks.getTaskService().complete(taskId, realm + "+PER_ADAMCROW63_AT_GMAIL_COM", results);
@@ -4903,28 +4925,29 @@ public class AdamTest {
 
 			results.put("Result", "some document data");
 
-//	              long processInstanceId =
-//	            		  processService.startProcess(deployUnit.getIdentifier(), "org.jbpm.writedocument");
-//	            		  List<Long> taskIds =
-//	            		  runtimeDataService.getTasksByProcessInstanceId(processInstanceId);
-//	            		  Long taskId4 = taskIds.get(0);
-//	            		  userTaskService.start(taskId, "john");
-//	            		  UserTaskInstanceDesc task4 = runtimeDataService.getTaskById(taskId4);
-//	            		  Map<String, Object> results = new HashMap<String, Object>();
-//	            		  results.put("Result", "some document data");
-//	            		  userTaskService.complete(taskId4, "john", results);
+			// long processInstanceId =
+			// processService.startProcess(deployUnit.getIdentifier(),
+			// "org.jbpm.writedocument");
+			// List<Long> taskIds =
+			// runtimeDataService.getTasksByProcessInstanceId(processInstanceId);
+			// Long taskId4 = taskIds.get(0);
+			// userTaskService.start(taskId, "john");
+			// UserTaskInstanceDesc task4 = runtimeDataService.getTaskById(taskId4);
+			// Map<String, Object> results = new HashMap<String, Object>();
+			// results.put("Result", "some document data");
+			// userTaskService.complete(taskId4, "john", results);
 
 			gks.injectEvent(authInitMsg); // This should create a new process
 			gks.advanceSeconds(5, false);
 
-			BaseEntity user = VertxUtils.getObject(serviceToken.getRealm(), "", userToken.getUserCode(),
-					BaseEntity.class, serviceToken.getToken());
+			BaseEntity user = VertxUtils.getObject(serviceToken.getRealm(), "", userToken.getUserCode(), BaseEntity.class,
+					serviceToken.getToken());
 
 			// Ok, let's close the PER_USER1 task and see if the workflow continues....
 			System.out.println("CLosing adam_user2 task");
 			// first claim
-			List<TaskSummary> per_user1_tasks = gks.getTaskService()
-					.getTasksAssignedAsPotentialOwner(realm + "+PER_USER1", null);
+			List<TaskSummary> per_user1_tasks = gks.getTaskService().getTasksAssignedAsPotentialOwner(realm + "+PER_USER1",
+					null);
 			TaskSummary taskSummary = per_user1_tasks.get(0);
 			gks.getTaskService().claim(taskSummary.getId(), realm + "+PER_USER1");
 			System.out.println("PER_USER1 CLAIMED "
@@ -4957,37 +4980,55 @@ public class AdamTest {
 		}
 	}
 
-//
-//
-//		private void showStatuses(GennyKieSession gks)
-//		{
-//				statuses = new ArrayList<Status>();
-//		        statuses.add(Status.Ready);
-//		        statuses.add(Status.Completed);
-//		        statuses.add(Status.Created);
-//		        statuses.add(Status.Error);
-//		        statuses.add(Status.Exited);
-//		        statuses.add(Status.InProgress);
-//		        statuses.add(Status.Obsolete);
-//		        statuses.add(Status.Reserved);
-//		        statuses.add(Status.Suspended);
-//
-//	            List<String> groups = new ArrayList<String>();
-//	            groups.add(realm+"+GRP_GADA");
-//
-//
-//	        System.out.println("POTENTIAL PER_USER1  "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwnerByStatus(realm+"+PER_USER1", statuses, null)));
-//            System.out.println("POTENTIAL acrow      "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwnerByStatus(realm+"+PER_ADAMCROW63_AT_GMAIL_COM", statuses, null)));
-//            System.out.println("POTENTIAL dom        "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_DOMENIC_AT_OUTCOME_LIFE", null)));
-//            System.out.println("POTENTIAL gerard     "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_GERARD_AT_OUTCOME_LIFE",  null)));
-//            System.out.println("POTENTIAL chris      "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_CHRIS_AT_GADA_IO", null)));
-//            System.out.println("POTENTIAL anish      "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_ANISH_AT_GADA_IO",  null)));
-//            System.out.println("POTENTIAL chris+gada "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_CHRIS_AT_GADA_IO", groups, "en-AU", 0,10)));
-//            System.out.println("POTENTIAL gada       "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(null, groups, "en-AU", 0,10)));
-//
-//            System.out.println("OWNED acrow          "+showTaskNames(gks.getTaskService().getTasksOwned(realm+"+PER_ADAMCROW63_AT_GMAIL_COM", null)));
-//            System.out.println();
-//		}
+	//
+	//
+	// private void showStatuses(GennyKieSession gks)
+	// {
+	// statuses = new ArrayList<Status>();
+	// statuses.add(Status.Ready);
+	// statuses.add(Status.Completed);
+	// statuses.add(Status.Created);
+	// statuses.add(Status.Error);
+	// statuses.add(Status.Exited);
+	// statuses.add(Status.InProgress);
+	// statuses.add(Status.Obsolete);
+	// statuses.add(Status.Reserved);
+	// statuses.add(Status.Suspended);
+	//
+	// List<String> groups = new ArrayList<String>();
+	// groups.add(realm+"+GRP_GADA");
+	//
+	//
+	// System.out.println("POTENTIAL PER_USER1
+	// "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwnerByStatus(realm+"+PER_USER1",
+	// statuses, null)));
+	// System.out.println("POTENTIAL acrow
+	// "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwnerByStatus(realm+"+PER_ADAMCROW63_AT_GMAIL_COM",
+	// statuses, null)));
+	// System.out.println("POTENTIAL dom
+	// "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_DOMENIC_AT_OUTCOME_LIFE",
+	// null)));
+	// System.out.println("POTENTIAL gerard
+	// "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_GERARD_AT_OUTCOME_LIFE",
+	// null)));
+	// System.out.println("POTENTIAL chris
+	// "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_CHRIS_AT_GADA_IO",
+	// null)));
+	// System.out.println("POTENTIAL anish
+	// "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_ANISH_AT_GADA_IO",
+	// null)));
+	// System.out.println("POTENTIAL chris+gada
+	// "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(realm+"+PER_CHRIS_AT_GADA_IO",
+	// groups, "en-AU", 0,10)));
+	// System.out.println("POTENTIAL gada
+	// "+showTaskNames(gks.getTaskService().getTasksAssignedAsPotentialOwner(null,
+	// groups, "en-AU", 0,10)));
+	//
+	// System.out.println("OWNED acrow
+	// "+showTaskNames(gks.getTaskService().getTasksOwned(realm+"+PER_ADAMCROW63_AT_GMAIL_COM",
+	// null)));
+	// System.out.println();
+	// }
 
 	@Test
 	public void headerTest() {
@@ -5019,59 +5060,68 @@ public class AdamTest {
 		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		beUtils.setServiceToken(serviceToken);
 
-//		  ShowFrame.display(userToken, "FRM_TABLE_VIEW", "FRM_CONTENT", "Test");
-//		  String searchCode = "SBE_SEARCH_TEST";
-//
-//		  Answer answer = new Answer(userToken.getUserCode(),userToken.getUserCode(),"PRI_SEARCH_TEXT","univ");
-//
-//
-//   		  SearchEntity searchBE = new SearchEntity(searchCode,"Test Search")
-//   		  	     .addSort("PRI_NAME","Created",SearchEntity.Sort.ASC)
-//   		  	     .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%"+answer.getValue()+"%")
-//   		  	     .addColumn("PRI_NAME", "Name")
-//   		      	 .addColumn("PRI_LANDLINE", "Phone")
-//   		  	     .addColumn("PRI_EMAIL", "Email")
-//   		  	     .addColumn("PRI_ADDRESS_CITY","City")
-//   		  	     .addColumn("PRI_ADDRESS_STATE","State")
-//   		  	     .setPageStart(0)
-//   		  	     .setPageSize(20);
-//
-//   		VertxUtils.putObject(userToken.getRealm(), "", searchCode, searchBE,
-//				userToken.getToken());
-//
-//   		TableUtils.performSearch(serviceToken , beUtils, searchCode, answer);
-//
+		// ShowFrame.display(userToken, "FRM_TABLE_VIEW", "FRM_CONTENT", "Test");
+		// String searchCode = "SBE_SEARCH_TEST";
+		//
+		// Answer answer = new
+		// Answer(userToken.getUserCode(),userToken.getUserCode(),"PRI_SEARCH_TEXT","univ");
+		//
+		//
+		// SearchEntity searchBE = new SearchEntity(searchCode,"Test Search")
+		// .addSort("PRI_NAME","Created",SearchEntity.Sort.ASC)
+		// .addFilter("PRI_NAME",SearchEntity.StringFilter.LIKE,"%"+answer.getValue()+"%")
+		// .addColumn("PRI_NAME", "Name")
+		// .addColumn("PRI_LANDLINE", "Phone")
+		// .addColumn("PRI_EMAIL", "Email")
+		// .addColumn("PRI_ADDRESS_CITY","City")
+		// .addColumn("PRI_ADDRESS_STATE","State")
+		// .setPageStart(0)
+		// .setPageSize(20);
+		//
+		// VertxUtils.putObject(userToken.getRealm(), "", searchCode, searchBE,
+		// userToken.getToken());
+		//
+		// TableUtils.performSearch(serviceToken , beUtils, searchCode, answer);
+		//
 
 		BaseEntityUtils beUtils2 = new BaseEntityUtils(userToken);
 
 		/* get current search */
-//		SearchEntity searchBE2 = TableUtils.getSessionSearch("SBE_SEARCHBAR",userToken);
-//
-//
-//		System.out.println("NEXT for "+searchBE2.getCode());
-//
-//		Integer pageIndex = searchBE2.getValue("SCH_PAGE_START",0);
-//		Integer pageSize = searchBE2.getValue("SCH_PAGE_SIZE", GennySettings.defaultPageSize);
-//		pageIndex = pageIndex + pageSize;
-//
-//		Integer pageNumber = 1;
-//
-//		if(pageIndex != 0){
-//			pageNumber = pageIndex / pageSize;
-//		}
-//
-//		Answer pageAnswer = new Answer(userToken.getUserCode(),searchBE2.getCode(), "SCH_PAGE_START", pageIndex+"");
-//		Answer pageNumberAnswer = new Answer(userToken.getUserCode(),searchBE2.getCode(), "PRI_INDEX", pageNumber+"");
-//
-//		searchBE2 = beUtils2.updateBaseEntity(searchBE2, pageAnswer,SearchEntity.class);
-//		searchBE2 = beUtils2.updateBaseEntity(searchBE2, pageNumberAnswer,SearchEntity.class);
-//
-//		VertxUtils.putObject(beUtils2.getGennyToken().getRealm(), "", searchBE2.getCode(), searchBE2,
-//			beUtils2.getGennyToken().getToken());
-//
-//
-//        ShowFrame.display(userToken, "FRM_TABLE_VIEW", "FRM_CONTENT", "Test");
-//		TableUtils.performSearch(userToken , beUtils2, "SBE_SEARCHBAR", null);
+		// SearchEntity searchBE2 =
+		// TableUtils.getSessionSearch("SBE_SEARCHBAR",userToken);
+		//
+		//
+		// System.out.println("NEXT for "+searchBE2.getCode());
+		//
+		// Integer pageIndex = searchBE2.getValue("SCH_PAGE_START",0);
+		// Integer pageSize = searchBE2.getValue("SCH_PAGE_SIZE",
+		// GennySettings.defaultPageSize);
+		// pageIndex = pageIndex + pageSize;
+		//
+		// Integer pageNumber = 1;
+		//
+		// if(pageIndex != 0){
+		// pageNumber = pageIndex / pageSize;
+		// }
+		//
+		// Answer pageAnswer = new Answer(userToken.getUserCode(),searchBE2.getCode(),
+		// "SCH_PAGE_START", pageIndex+"");
+		// Answer pageNumberAnswer = new
+		// Answer(userToken.getUserCode(),searchBE2.getCode(), "PRI_INDEX",
+		// pageNumber+"");
+		//
+		// searchBE2 = beUtils2.updateBaseEntity(searchBE2,
+		// pageAnswer,SearchEntity.class);
+		// searchBE2 = beUtils2.updateBaseEntity(searchBE2,
+		// pageNumberAnswer,SearchEntity.class);
+		//
+		// VertxUtils.putObject(beUtils2.getGennyToken().getRealm(), "",
+		// searchBE2.getCode(), searchBE2,
+		// beUtils2.getGennyToken().getToken());
+		//
+		//
+		// ShowFrame.display(userToken, "FRM_TABLE_VIEW", "FRM_CONTENT", "Test");
+		// TableUtils.performSearch(userToken , beUtils2, "SBE_SEARCHBAR", null);
 
 		/* get current search */
 		TableUtils tableUtils = new TableUtils(beUtils2);
@@ -5081,7 +5131,7 @@ public class AdamTest {
 
 		Integer pageIndex = searchBE.getValue("SCH_PAGE_START", 0);
 		Integer pageSize = searchBE.getValue("SCH_PAGE_SIZE", GennySettings.defaultPageSize); // TODO, don't let this be
-																								// 0
+		// 0
 		pageIndex = pageIndex - pageSize;
 
 		if (pageIndex < 0) {
@@ -5171,8 +5221,7 @@ public class AdamTest {
 		QDataAnswerMessage answerMsg = new QDataAnswerMessage(answers.toArray(new Answer[0]));
 		answerMsg.setToken(userToken.getToken());
 
-		Answer searchBarAnswer = new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_SEARCH_TEXT2",
-				"univ");
+		Answer searchBarAnswer = new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_SEARCH_TEXT2", "univ");
 		QDataAnswerMessage searchMsg = new QDataAnswerMessage(searchBarAnswer);
 		searchMsg.setToken(userToken.getToken());
 
@@ -5182,8 +5231,8 @@ public class AdamTest {
 		project.setRealm(serviceToken.getRealm());
 		VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
 				JsonUtils.toJson(project), serviceToken.getToken());
-		VertxUtils.writeCachedJson(realm, ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(),
-				JsonUtils.toJson(project), serviceToken.getToken());
+		VertxUtils.writeCachedJson(realm, ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(), JsonUtils.toJson(project),
+				serviceToken.getToken());
 		BaseEntity project2 = VertxUtils.getObject(serviceToken.getRealm(), "",
 				"PRJ_" + serviceToken.getRealm().toUpperCase(), BaseEntity.class, serviceToken.getToken());
 
@@ -5224,8 +5273,8 @@ public class AdamTest {
 			gks.injectEvent(answerMsg); // This sends an answer to the first userSessio
 			gks.advanceSeconds(5, false);
 
-			BaseEntity user = VertxUtils.getObject(serviceToken.getRealm(), "", userToken.getUserCode(),
-					BaseEntity.class, serviceToken.getToken());
+			BaseEntity user = VertxUtils.getObject(serviceToken.getRealm(), "", userToken.getUserCode(), BaseEntity.class,
+					serviceToken.getToken());
 
 			gks.injectEvent(searchMsg); // This sends a search bar request
 
@@ -5248,7 +5297,7 @@ public class AdamTest {
 		}
 	}
 
-//@Test
+	// @Test
 	public void testTableHeader() {
 		System.out.println("Table test");
 		GennyToken userToken = null;
@@ -5303,8 +5352,7 @@ public class AdamTest {
 
 			VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken.getToken());
 
-			Answer answer = new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_SEARCH_TEXT",
-					searchBarString);
+			Answer answer = new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_SEARCH_TEXT", searchBarString);
 			TableUtils tableUtils = new TableUtils(beUtils);
 			// tableUtils.performSearch(serviceToken, "SBE_SEARCHBAR", answer);
 
@@ -5360,17 +5408,14 @@ public class AdamTest {
 			ValidationList tableCellValidationList = new ValidationList();
 			tableCellValidationList.setValidationList(tableCellValidations);
 
-			DataType tableCellDataType = new DataType("DTT_TABLE_CELL_GRP", tableCellValidationList, "Table Cell Group",
-					"");
+			DataType tableCellDataType = new DataType("DTT_TABLE_CELL_GRP", tableCellValidationList, "Table Cell Group", "");
 
 			headerFrame = Frame3.builder("FRM_TABLE_HEADER").addTheme("THM_TABLE_BORDER", serviceToken).end()
-					.question("QUE_NAME_GRP").addTheme("THM_QUESTION_GRP_LABEL", serviceToken)
-					.vcl(VisualControlType.GROUP).dataType(tableCellDataType).end()
-					.addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).weight(2.0).end()
+					.question("QUE_NAME_GRP").addTheme("THM_QUESTION_GRP_LABEL", serviceToken).vcl(VisualControlType.GROUP)
+					.dataType(tableCellDataType).end().addTheme("THM_DISPLAY_HORIZONTAL", serviceToken).weight(2.0).end()
 					.addTheme("THM_TABLE_HEADER_CELL_WRAPPER", serviceToken).vcl(VisualControlType.VCL_WRAPPER).end()
-					.addTheme("THM_TABLE_HEADER_CELL_GROUP_LABEL", serviceToken).vcl(VisualControlType.GROUP_LABEL)
-					.end().addTheme("THM_DISPLAY_VERTICAL", serviceToken).dataType(tableCellDataType).weight(1.0).end()
-					.end().build();
+					.addTheme("THM_TABLE_HEADER_CELL_GROUP_LABEL", serviceToken).vcl(VisualControlType.GROUP_LABEL).end()
+					.addTheme("THM_DISPLAY_VERTICAL", serviceToken).dataType(tableCellDataType).weight(1.0).end().end().build();
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -5395,8 +5440,7 @@ public class AdamTest {
 			Frame3 FRM_APP = Frame3.builder("FRM_APP").addTheme("THM_PROJECT", ThemePosition.FRAME, serviceToken).end()
 					.addFrame(FRM_HEADER, FramePosition.NORTH).end().addFrame(FRM_SIDEBAR, FramePosition.WEST).end()
 					/* .addFrame(FRM_TABS, FramePosition.CENTRE).end() */
-					.addFrame(FRM_CONTENT, FramePosition.CENTRE).end().addFrame(FRM_FOOTER, FramePosition.SOUTH).end()
-					.build();
+					.addFrame(FRM_CONTENT, FramePosition.CENTRE).end().addFrame(FRM_FOOTER, FramePosition.SOUTH).end().build();
 			FRM_ROOT = Frame3.builder("FRM_ROOT").addFrame(FRM_APP, FramePosition.CENTRE).end().build();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -5408,9 +5452,10 @@ public class AdamTest {
 		msg.setToken(userToken.getToken());
 		// qRules.publishCmd(msg);
 		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
-//  for (QDataAskMessage askMsg : askMsgs) {
-//          rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode());
-//  }
+		// for (QDataAskMessage askMsg : askMsgs) {
+		// rules.publishCmd(askMsg, serviceToken.getUserCode(),
+		// userToken.getUserCode());
+		// }
 
 		// Test sending a page
 		QDataBaseEntityMessage msg2 = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_QUE_DASHBOARD_VIEW_MSG",
@@ -5440,7 +5485,7 @@ public class AdamTest {
 		GennyKieSession.sendData(serviceToken, userToken, "FRM_QUE_DASHBOARD_VIEW", "FRM_CONTENT", msgs, askSet);
 
 		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg)); // Send the results to the frontend to be put into the
-																// redux store
+		// redux store
 
 		List<QDataBaseEntityMessage> msgs3 = tableData.getThemeMsgList();
 		//
@@ -5516,8 +5561,8 @@ public class AdamTest {
 		project.setRealm(serviceToken.getRealm());
 		VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
 				JsonUtils.toJson(project), serviceToken.getToken());
-		VertxUtils.writeCachedJson(realm, ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(),
-				JsonUtils.toJson(project), serviceToken.getToken());
+		VertxUtils.writeCachedJson(realm, ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(), JsonUtils.toJson(project),
+				serviceToken.getToken());
 		BaseEntity project2 = VertxUtils.getObject(serviceToken.getRealm(), "",
 				"PRJ_" + serviceToken.getRealm().toUpperCase(), BaseEntity.class, serviceToken.getToken());
 
@@ -5547,7 +5592,7 @@ public class AdamTest {
 
 			gks.injectEvent(authInitMsg1); // This should create a new process
 			gks.advanceSeconds(5, false);
-//			gks.injectEvent(authInitMsg2); // This should create a new process
+			// gks.injectEvent(authInitMsg2); // This should create a new process
 			gks.advanceSeconds(5, false);
 			gks.injectEvent(authInitMsg1); // This should attach to existing process
 			gks.advanceSeconds(5, false);
@@ -5555,13 +5600,13 @@ public class AdamTest {
 			gks.injectEvent(answerMsg); // This sends an answer to the first userSessio
 			gks.advanceSeconds(5, false);
 
-			BaseEntity user = VertxUtils.getObject(serviceToken.getRealm(), "", userToken.getUserCode(),
-					BaseEntity.class, serviceToken.getToken());
+			BaseEntity user = VertxUtils.getObject(serviceToken.getRealm(), "", userToken.getUserCode(), BaseEntity.class,
+					serviceToken.getToken());
 
 			gks.injectEvent(searchMsg); // This sends a search bar request
 
 			gks.injectEvent(msgLogout1);
-//			gks.injectEvent(msgLogout2);
+			// gks.injectEvent(msgLogout2);
 		} catch (Exception e) {
 			e.printStackTrace();
 
@@ -5624,8 +5669,8 @@ public class AdamTest {
 
 		try {
 			gks = GennyKieSession.builder(serviceToken, true).addDrl("DataProcessing").addDrl("EventProcessing")
-					.addDrl("InitialiseProject").addJbpm("InitialiseProject").addJbpm("userValidation")
-					.addJbpm("Lifecycles").addDrl("AuthInit").addJbpm("AuthInit")
+					.addDrl("InitialiseProject").addJbpm("InitialiseProject").addJbpm("userValidation").addJbpm("Lifecycles")
+					.addDrl("AuthInit").addJbpm("AuthInit")
 
 					.addToken(userToken).build();
 			gks.start();
@@ -5660,14 +5705,12 @@ public class AdamTest {
 
 		List<Answer> answers = new ArrayList<Answer>();
 		answers.add(new Answer("PER_USER1", "PER_USER1", "PRI_ADDRESS_COUNTRY", addressDataJson.getString("country")));
-		answers.add(
-				new Answer("PER_USER1", "PER_USER1", "PRI_ADDRESS_POSTCODE", addressDataJson.getString("postal_code")));
+		answers.add(new Answer("PER_USER1", "PER_USER1", "PRI_ADDRESS_POSTCODE", addressDataJson.getString("postal_code")));
 		answers.add(new Answer("PER_USER1", "PER_USER1", "PRI_ADDRESS_SUBURB", addressDataJson.getString("suburb")));
 		answers.add(new Answer("PER_USER1", "PER_USER1", "PRI_ADDRESS_STATE", addressDataJson.getString("state")));
-		answers.add(new Answer("PER_USER1", "PER_USER1", "PRI_ADDRESS_ADDRESS1",
-				addressDataJson.getString("street_address")));
-		answers.add(
-				new Answer("PER_USER1", "PER_USER1", "PRI_ADDRESS_FULL", addressDataJson.getString("full_address")));
+		answers
+				.add(new Answer("PER_USER1", "PER_USER1", "PRI_ADDRESS_ADDRESS1", addressDataJson.getString("street_address")));
+		answers.add(new Answer("PER_USER1", "PER_USER1", "PRI_ADDRESS_FULL", addressDataJson.getString("full_address")));
 
 	}
 
@@ -5720,9 +5763,9 @@ public class AdamTest {
 			e.printStackTrace();
 		}
 
-//		BaseEntity[] bea = new BaseEntity[1];
-//		bea[0] = project;
-//		QDataBaseEntityMessage prjtest = new QDataBaseEntityMessage();
+		// BaseEntity[] bea = new BaseEntity[1];
+		// bea[0] = project;
+		// QDataBaseEntityMessage prjtest = new QDataBaseEntityMessage();
 		qRules.publishCmd(project, "PROJECT");
 
 		Set<QDataAskMessage> askMsgs = new HashSet<QDataAskMessage>();
@@ -5783,19 +5826,19 @@ public class AdamTest {
 
 		try {
 			gks = GennyKieSession.builder(serviceToken, true).addJbpm("userLifecycle.bpmn").addJbpm("userSession.bpmn")
-					.addJbpm("auth_init.bpmn").addJbpm("showDashboard.bpmn").addJbpm("userValidation.bpmn")
-					.addDrl("SendUserData").addToken(userToken).build();
+					.addJbpm("auth_init.bpmn").addJbpm("showDashboard.bpmn").addJbpm("userValidation.bpmn").addDrl("SendUserData")
+					.addToken(userToken).build();
 			gks.start();
 
 			gks.injectEvent(authInitMsg); // This should create a new process
 			gks.advanceSeconds(5, true);
 			gks.injectEvent(authInitMsg); // check that auth init with same session is ok and that process Id is looked
-											// up!
+			// up!
 			gks.advanceSeconds(5, true);
 			gks.injectEvent(msgLogout);
 
-			BaseEntity user = VertxUtils.getObject(serviceToken.getRealm(), "", userToken.getUserCode(),
-					BaseEntity.class, serviceToken.getToken());
+			BaseEntity user = VertxUtils.getObject(serviceToken.getRealm(), "", userToken.getUserCode(), BaseEntity.class,
+					serviceToken.getToken());
 			System.out.println("final user created " + user);
 			System.out.println("Sent");
 
@@ -5824,24 +5867,24 @@ public class AdamTest {
 		GennyKieSession gks = null;
 
 		try {
-			gks = GennyKieSession.builder(serviceToken, false).addJbpm("test_session_1.bpmn")
-					.addJbpm("test_session_2.bpmn").addJbpm("dashboard.bpmn").addToken(userToken).build();
+			gks = GennyKieSession.builder(serviceToken, false).addJbpm("test_session_1.bpmn").addJbpm("test_session_2.bpmn")
+					.addJbpm("dashboard.bpmn").addToken(userToken).build();
 			gks.start();
 
-//				gks.advanceSeconds(2, true);
-//				gks.injectSignal("userMessage", msg1);
-//				gks.advanceSeconds(2, true);
+			// gks.advanceSeconds(2, true);
+			// gks.injectSignal("userMessage", msg1);
+			// gks.advanceSeconds(2, true);
 
 			gks.injectEvent(authInitMsg);
 			gks.advanceSeconds(2, true);
-//				gks.injectSignal("userMessage", msgLogout);
+			// gks.injectSignal("userMessage", msgLogout);
 
-//			for (int i=0;i<2;i++) {
-//				gks.displayForm("FRM_DASHBOARD",userToken);
-//				gks.advanceSeconds(2, true);
-//				gks.displayForm("FRM_DASHBOARD2",userToken);
-//				gks.advanceSeconds(2, true);
-//			}
+			// for (int i=0;i<2;i++) {
+			// gks.displayForm("FRM_DASHBOARD",userToken);
+			// gks.advanceSeconds(2, true);
+			// gks.displayForm("FRM_DASHBOARD2",userToken);
+			// gks.advanceSeconds(2, true);
+			// }
 
 			// gks.sendLogout(userToken);
 
@@ -5854,7 +5897,7 @@ public class AdamTest {
 		}
 	}
 
-//@Test
+	// @Test
 	public void displayBucketPage() {
 		System.out.println("Show Bucket Page");
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -5916,7 +5959,7 @@ public class AdamTest {
 		}
 	}
 
-//@Test
+	// @Test
 	public void sendAuthInit() {
 
 		QRules rules = GennyJbpmBaseTest.setupLocalService();
@@ -5928,9 +5971,9 @@ public class AdamTest {
 		GennyKieSession gks = null;
 		try {
 			gks = GennyKieSession.builder(serviceToken).addDrl(DRL_SEND_USER_DATA_DIR) // send the initial User data
-																						// using the rules
-					.addJbpm("adhoc.bpmn").addFact("qRules", rules).addFact("msg", msg).addToken(serviceToken)
-					.addToken(userToken).build();
+					// using the rules
+					.addJbpm("adhoc.bpmn").addFact("qRules", rules).addFact("msg", msg).addToken(serviceToken).addToken(userToken)
+					.build();
 
 			gks.start();
 
@@ -6043,196 +6086,224 @@ public class AdamTest {
 		Theme THM_DUMMY = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DUMMY", Theme.class,
 				serviceToken.getToken());
 
-//		Theme THM_DISPLAY_VERTICAL = Theme.builder("THM_DISPLAY_VERTICAL")
-//				.name("Display Visual Controls Vertically") /* Optional - defaults to the code */
-//				.addAttribute(ThemeAttributeType.PRI_CONTENT).flexDirection("column").shadowOffset().height(5).width(5)
-//				.end().maxWidth(600).padding(10).end().addAttribute() /* defaults to ThemeAttributeType.PRI_CONTENT */
-//				.justifyContent("flex-start").end().build();
-		Theme THM_DISPLAY_VERTICAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_VERTICAL",
-				Theme.class, serviceToken.getToken());
+		// Theme THM_DISPLAY_VERTICAL = Theme.builder("THM_DISPLAY_VERTICAL")
+		// .name("Display Visual Controls Vertically") /* Optional - defaults to the
+		// code */
+		// .addAttribute(ThemeAttributeType.PRI_CONTENT).flexDirection("column").shadowOffset().height(5).width(5)
+		// .end().maxWidth(600).padding(10).end().addAttribute() /* defaults to
+		// ThemeAttributeType.PRI_CONTENT */
+		// .justifyContent("flex-start").end().build();
+		Theme THM_DISPLAY_VERTICAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_VERTICAL", Theme.class,
+				serviceToken.getToken());
 
-//		Theme THM_DISPLAY_HORIZONTAL = Theme.builder("THM_DISPLAY_HORIZONTAL").addAttribute().flexDirection("row").end()
-//				.build();
+		// Theme THM_DISPLAY_HORIZONTAL =
+		// Theme.builder("THM_DISPLAY_HORIZONTAL").addAttribute().flexDirection("row").end()
+		// .build();
 		Theme THM_DISPLAY_HORIZONTAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_HORIZONTAL",
 				Theme.class, serviceToken.getToken());
 
-//		Theme THM_BACKGROUND_WHITE = Theme.builder("THM_BACKGROUND_WHITE").addAttribute().backgroundColor("white").end()
-//				.build();
-		Theme THM_BACKGROUND_WHITE = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BACKGROUND_WHITE",
-				Theme.class, serviceToken.getToken());
+		// Theme THM_BACKGROUND_WHITE =
+		// Theme.builder("THM_BACKGROUND_WHITE").addAttribute().backgroundColor("white").end()
+		// .build();
+		Theme THM_BACKGROUND_WHITE = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BACKGROUND_WHITE", Theme.class,
+				serviceToken.getToken());
 
-//		Theme THM_BACKGROUND_GREEN = Theme.builder("THM_BACKGROUND_GREEN").addAttribute().backgroundColor("green").end()
-//				.build();
-		Theme THM_BACKGROUND_GREEN = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BACKGROUND_GREEN",
-				Theme.class, serviceToken.getToken());
+		// Theme THM_BACKGROUND_GREEN =
+		// Theme.builder("THM_BACKGROUND_GREEN").addAttribute().backgroundColor("green").end()
+		// .build();
+		Theme THM_BACKGROUND_GREEN = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BACKGROUND_GREEN", Theme.class,
+				serviceToken.getToken());
 
-//		Theme THM_BACKGROUND_YELLOW = Theme.builder("THM_BACKGROUND_YELLOW").addAttribute().backgroundColor("yellow")
-//				.end().build();
+		// Theme THM_BACKGROUND_YELLOW =
+		// Theme.builder("THM_BACKGROUND_YELLOW").addAttribute().backgroundColor("yellow")
+		// .end().build();
 		Theme THM_BACKGROUND_YELLOW = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BACKGROUND_YELLOW",
 				Theme.class, serviceToken.getToken());
 
-//		Theme THM_BACKGROUND_RED = Theme.builder("THM_BACKGROUND_RED").addAttribute().backgroundColor("red").end()
-//				.build();
+		// Theme THM_BACKGROUND_RED =
+		// Theme.builder("THM_BACKGROUND_RED").addAttribute().backgroundColor("red").end()
+		// .build();
 		Theme THM_BACKGROUND_RED = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BACKGROUND_RED", Theme.class,
 				serviceToken.getToken());
 
-//		Theme THM_BACKGROUND_GRAY = Theme.builder("THM_BACKGROUND_GRAY").addAttribute().backgroundColor("gray").end()
-//				.build();
-		Theme THM_BACKGROUND_GRAY = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BACKGROUND_GRAY",
-				Theme.class, serviceToken.getToken());
+		// Theme THM_BACKGROUND_GRAY =
+		// Theme.builder("THM_BACKGROUND_GRAY").addAttribute().backgroundColor("gray").end()
+		// .build();
+		Theme THM_BACKGROUND_GRAY = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BACKGROUND_GRAY", Theme.class,
+				serviceToken.getToken());
 
-		Theme THM_BACKGROUND_ORANGE = Theme.builder("THM_BACKGROUND_ORANGE").addAttribute().backgroundColor("orange")
-				.end().build();
+		Theme THM_BACKGROUND_ORANGE = Theme.builder("THM_BACKGROUND_ORANGE").addAttribute().backgroundColor("orange").end()
+				.build();
 
 		Theme THM_BACKGROUND_BLACK = Theme.builder("THM_BACKGROUND_BLACK").addAttribute().backgroundColor("black").end()
 				.build();
 
-//		Theme THM_BACKGROUND_BLUE = Theme.builder("THM_BACKGROUND_BLUE").addAttribute().backgroundColor("blue").end()
-//				.build();
-		Theme THM_BACKGROUND_BLUE = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BACKGROUND_BLUE",
-				Theme.class, serviceToken.getToken());
+		// Theme THM_BACKGROUND_BLUE =
+		// Theme.builder("THM_BACKGROUND_BLUE").addAttribute().backgroundColor("blue").end()
+		// .build();
+		Theme THM_BACKGROUND_BLUE = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BACKGROUND_BLUE", Theme.class,
+				serviceToken.getToken());
 
 		Theme THM_BACKGROUND_INTERNMATCH = Theme.builder("THM_BACKGROUND_INTERNMATCH").addAttribute()
 				.backgroundColor("#233a4e").end().build();
 
-//		Theme THM_WIDTH_300 = Theme.builder("THM_WIDTH_300").addAttribute().width(300).end().build();
+		// Theme THM_WIDTH_300 =
+		// Theme.builder("THM_WIDTH_300").addAttribute().width(300).end().build();
 		Theme THM_WIDTH_300 = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_WIDTH_300", Theme.class,
 				serviceToken.getToken());
 
-//		Theme THM_FORM_INPUT_DEFAULT = Theme.builder("THM_FORM_INPUT_DEFAULT").addAttribute().borderBottomWidth(1)
-//				.borderColor("#ddd").borderStyle("solid").placeholderColor("#888").end()
-//				.addAttribute(ThemeAttributeType.PRI_CONTENT_HOVER).borderColor("#aaa").end()
-//				.addAttribute(ThemeAttributeType.PRI_CONTENT_ACTIVE).borderColor("green").end()
-//				.addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).borderColor("red").color("red").end().build();
+		// Theme THM_FORM_INPUT_DEFAULT =
+		// Theme.builder("THM_FORM_INPUT_DEFAULT").addAttribute().borderBottomWidth(1)
+		// .borderColor("#ddd").borderStyle("solid").placeholderColor("#888").end()
+		// .addAttribute(ThemeAttributeType.PRI_CONTENT_HOVER).borderColor("#aaa").end()
+		// .addAttribute(ThemeAttributeType.PRI_CONTENT_ACTIVE).borderColor("green").end()
+		// .addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).borderColor("red").color("red").end().build();
 
 		Theme THM_FORM_INPUT_DEFAULT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_FORM_INPUT_DEFAULT",
 				Theme.class, serviceToken.getToken());
 
-//		Theme THM_FORM_LABEL_DEFAULT = Theme.builder("THM_FORM_LABEL_DEFAULT").addAttribute().bold(true).size("md")
-//				.end().build();
+		// Theme THM_FORM_LABEL_DEFAULT =
+		// Theme.builder("THM_FORM_LABEL_DEFAULT").addAttribute().bold(true).size("md")
+		// .end().build();
 		Theme THM_FORM_LABEL_DEFAULT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_FORM_LABEL_DEFAULT",
 				Theme.class, serviceToken.getToken());
 
-//		Theme THM_FORM_WRAPPER_DEFAULT = Theme.builder("THM_FORM_WRAPPER_DEFAULT").addAttribute().marginBottom(10)
-//				.padding(10).end().addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).backgroundColor("#fc8e6").end()
-//				.build();
+		// Theme THM_FORM_WRAPPER_DEFAULT =
+		// Theme.builder("THM_FORM_WRAPPER_DEFAULT").addAttribute().marginBottom(10)
+		// .padding(10).end().addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).backgroundColor("#fc8e6").end()
+		// .build();
 		Theme THM_FORM_WRAPPER_DEFAULT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_FORM_WRAPPER_DEFAULT",
 				Theme.class, serviceToken.getToken());
 
-//		Theme THM_FORM_ERROR_DEFAULT = Theme.builder("THM_FORM_ERROR_DEFAULT").addAttribute().color("red").end()
-//				.build();
+		// Theme THM_FORM_ERROR_DEFAULT =
+		// Theme.builder("THM_FORM_ERROR_DEFAULT").addAttribute().color("red").end()
+		// .build();
 		Theme THM_FORM_ERROR_DEFAULT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_FORM_ERROR_DEFAULT",
 				Theme.class, serviceToken.getToken());
 
-//		Theme THM_FORM_DEFAULT = Theme.builder("THM_FORM_DEFAULT").addAttribute().backgroundColor("none").end()
-//				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
-//				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION, true).end()
-//				.addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end()
-//				.addAttribute(ThemeAttributeType.PRI_HAS_REQUIRED, true).end()
-//				.addAttribute(ThemeAttributeType.PRI_HAS_ICON, true).end()
-//				.build();
+		// Theme THM_FORM_DEFAULT =
+		// Theme.builder("THM_FORM_DEFAULT").addAttribute().backgroundColor("none").end()
+		// .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
+		// .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION,
+		// true).end()
+		// .addAttribute(ThemeAttributeType.PRI_HAS_LABEL, true).end()
+		// .addAttribute(ThemeAttributeType.PRI_HAS_REQUIRED, true).end()
+		// .addAttribute(ThemeAttributeType.PRI_HAS_ICON, true).end()
+		// .build();
 		Theme THM_FORM_DEFAULT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_FORM_DEFAULT", Theme.class,
 				serviceToken.getToken());
 
-//		Theme THM_FORM_CONTAINER_DEFAULT = Theme.builder("THM_FORM_CONTAINER_DEFAULT").addAttribute()
-//				.backgroundColor("none").padding(10).maxWidth(700).width("100%").shadowColor("#000").shadowOpacity(0.4)
-//				.shadowRadius(0).shadowOffset().width(0).height(0).end().end()
-//				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
-//				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION, true).end()
-//				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, true).end().build();
-		Theme THM_FORM_CONTAINER_DEFAULT = VertxUtils.getObject(serviceToken.getRealm(), "",
-				"THM_FORM_CONTAINER_DEFAULT", Theme.class, serviceToken.getToken());
+		// Theme THM_FORM_CONTAINER_DEFAULT =
+		// Theme.builder("THM_FORM_CONTAINER_DEFAULT").addAttribute()
+		// .backgroundColor("none").padding(10).maxWidth(700).width("100%").shadowColor("#000").shadowOpacity(0.4)
+		// .shadowRadius(0).shadowOffset().width(0).height(0).end().end()
+		// .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
+		// .addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION,
+		// true).end()
+		// .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, true).end().build();
+		Theme THM_FORM_CONTAINER_DEFAULT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_FORM_CONTAINER_DEFAULT",
+				Theme.class, serviceToken.getToken());
 
-//		Frame3 FRM_DUMMY2 = Frame3.builder("FRM_DUMMY").addTheme(THM_DUMMY).end().build();
-//		String td2 = JsonUtils.toJson(THM_DUMMY);
-//		ThemeDouble td = new ThemeDouble(THM_DUMMY,1.0);
-//		String js2 = JsonUtils.toJson(td);
-//		String js = JsonUtils.toJson(FRM_DUMMY2);
-//		VertxUtils.putObject(serviceToken.getRealm(), "", FRM_DUMMY2.getCode(), FRM_DUMMY2, serviceToken.getToken());
+		// Frame3 FRM_DUMMY2 =
+		// Frame3.builder("FRM_DUMMY").addTheme(THM_DUMMY).end().build();
+		// String td2 = JsonUtils.toJson(THM_DUMMY);
+		// ThemeDouble td = new ThemeDouble(THM_DUMMY,1.0);
+		// String js2 = JsonUtils.toJson(td);
+		// String js = JsonUtils.toJson(FRM_DUMMY2);
+		// VertxUtils.putObject(serviceToken.getRealm(), "", FRM_DUMMY2.getCode(),
+		// FRM_DUMMY2, serviceToken.getToken());
 
 		Frame3 FRM_DUMMY = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_DUMMY", Frame3.class,
 				serviceToken.getToken());
 
-//		Frame3 centre = Frame3.builder("FRM_CENTRE").addFrame(FRM_DUMMY, FramePosition.CENTRE).end().build();
+		// Frame3 centre = Frame3.builder("FRM_CENTRE").addFrame(FRM_DUMMY,
+		// FramePosition.CENTRE).end().build();
 		Frame3 FRM_CENTRE = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_CENTRE", Frame3.class,
 				serviceToken.getToken());
 
-//		Frame3 profile = Frame3.builder("FRM_PROFILE").addTheme(THM_DISPLAY_HORIZONTAL).end()
-//				.addTheme(THM_BACKGROUND_RED).end().addFrame(FRM_DUMMY, FramePosition.CENTRE).end().build();
+		// Frame3 profile =
+		// Frame3.builder("FRM_PROFILE").addTheme(THM_DISPLAY_HORIZONTAL).end()
+		// .addTheme(THM_BACKGROUND_RED).end().addFrame(FRM_DUMMY,
+		// FramePosition.CENTRE).end().build();
 		Frame3 FRM_PROFILE = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_PROFILE", Frame3.class,
 				serviceToken.getToken());
 
-//		Frame3 header = Frame3.builder("FRM_HEADER").addFrame(FRM_PROFILE, FramePosition.EAST).end().build();
+		// Frame3 header = Frame3.builder("FRM_HEADER").addFrame(FRM_PROFILE,
+		// FramePosition.EAST).end().build();
 		Frame3 FRM_HEADER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_HEADER", Frame3.class,
 				serviceToken.getToken());
 
-//		Frame3 notes = Frame3.builder("FRM_NOTES").addTheme(THM_WIDTH_300).end()/*
-//																				 * .addTheme(THM_DISPLAY_VERTICAL).end()
-//																				 */
-//				.addTheme(THM_BACKGROUND_RED).end().question("QUE_USER_COMPANY_GRP").end().build();
+		// Frame3 notes = Frame3.builder("FRM_NOTES").addTheme(THM_WIDTH_300).end()/*
+		// * .addTheme(THM_DISPLAY_VERTICAL).end()
+		// */
+		// .addTheme(THM_BACKGROUND_RED).end().question("QUE_USER_COMPANY_GRP").end().build();
 		Frame3 FRM_NOTES = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_NOTES", Frame3.class,
 				serviceToken.getToken());
 
-//		Frame3 FRM_SIDEBAR2 = Frame3.builder("FRM_SIDEBAR2")
-//				/* .addTheme(THM_WIDTH_300).end() *//*
-//													 * .addTheme(THM_DISPLAY_VERTICAL) .end()
-//													 */.addTheme(THM_BACKGROUND_GRAY).end()
-//				.question("QUE_USER_PROFILE_GRP").addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT)
-//				.weight(2.0).end().addTheme(THM_FORM_LABEL_DEFAULT).vcl(VisualControlType.VCL_LABEL).end()
-//				.addTheme(THM_FORM_WRAPPER_DEFAULT).vcl(VisualControlType.VCL_WRAPPER).end()
-//				.addTheme(THM_FORM_ERROR_DEFAULT).vcl(VisualControlType.VCL_ERROR).end().addTheme(THM_FORM_DEFAULT)
-//				.weight(3.0).end().addTheme(THM_FORM_CONTAINER_DEFAULT).weight(2.0).end().end().build();
+		// Frame3 FRM_SIDEBAR2 = Frame3.builder("FRM_SIDEBAR2")
+		// /* .addTheme(THM_WIDTH_300).end() *//*
+		// * .addTheme(THM_DISPLAY_VERTICAL) .end()
+		// */.addTheme(THM_BACKGROUND_GRAY).end()
+		// .question("QUE_USER_PROFILE_GRP").addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT)
+		// .weight(2.0).end().addTheme(THM_FORM_LABEL_DEFAULT).vcl(VisualControlType.VCL_LABEL).end()
+		// .addTheme(THM_FORM_WRAPPER_DEFAULT).vcl(VisualControlType.VCL_WRAPPER).end()
+		// .addTheme(THM_FORM_ERROR_DEFAULT).vcl(VisualControlType.VCL_ERROR).end().addTheme(THM_FORM_DEFAULT)
+		// .weight(3.0).end().addTheme(THM_FORM_CONTAINER_DEFAULT).weight(2.0).end().end().build();
 		Frame3 FRM_SIDEBAR2 = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_SIDEBAR2", Frame3.class,
 				serviceToken.getToken());
 
-//		Frame3 sidebar3 = Frame3.builder("FRM_SIDEBAR3")
-//				/* .addTheme(THM_WIDTH_300).end() *//*
-//													 * .addTheme(THM_DISPLAY_VERTICAL) .end()
-//													 */.addTheme(THM_BACKGROUND_YELLOW).end()
-//				.question("QUE_USER_PROFILE_GRP").addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT)
-//				.weight(2.0).end().addTheme(THM_FORM_LABEL_DEFAULT).vcl(VisualControlType.VCL_LABEL).end()
-//				.addTheme(THM_FORM_WRAPPER_DEFAULT).vcl(VisualControlType.VCL_WRAPPER).end()
-//				.addTheme(THM_FORM_ERROR_DEFAULT).vcl(VisualControlType.VCL_ERROR).end().addTheme(THM_FORM_DEFAULT)
-//				.weight(3.0).end().addTheme(THM_FORM_CONTAINER_DEFAULT).weight(2.0).end().end().build();
+		// Frame3 sidebar3 = Frame3.builder("FRM_SIDEBAR3")
+		// /* .addTheme(THM_WIDTH_300).end() *//*
+		// * .addTheme(THM_DISPLAY_VERTICAL) .end()
+		// */.addTheme(THM_BACKGROUND_YELLOW).end()
+		// .question("QUE_USER_PROFILE_GRP").addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT)
+		// .weight(2.0).end().addTheme(THM_FORM_LABEL_DEFAULT).vcl(VisualControlType.VCL_LABEL).end()
+		// .addTheme(THM_FORM_WRAPPER_DEFAULT).vcl(VisualControlType.VCL_WRAPPER).end()
+		// .addTheme(THM_FORM_ERROR_DEFAULT).vcl(VisualControlType.VCL_ERROR).end().addTheme(THM_FORM_DEFAULT)
+		// .weight(3.0).end().addTheme(THM_FORM_CONTAINER_DEFAULT).weight(2.0).end().end().build();
 		Frame3 FRM_SIDEBAR3 = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_SIDEBAR3", Frame3.class,
 				serviceToken.getToken());
 
-//		Frame3 sidebar = Frame3.builder("FRM_SIDEBAR")
-//				// .addTheme(THM_WIDTH_300).end()
-//
-//				/*
-//				 * .addTheme().addAttribute().width(400).end().end().addTheme(
-//				 * THM_DISPLAY_VERTICAL).end()
-//				 */
-//				.addTheme(THM_BACKGROUND_GREEN).end().question("QUE_FIRSTNAME")
-//				// .question("QUE_USER_PROFILE_GRP")
-//
-//				.addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
-//				.addTheme(THM_FORM_LABEL_DEFAULT).vcl(VisualControlType.VCL_LABEL).end()
-//				.addTheme(THM_FORM_WRAPPER_DEFAULT).vcl(VisualControlType.VCL_WRAPPER).end()
-//				.addTheme(THM_FORM_ERROR_DEFAULT).vcl(VisualControlType.VCL_ERROR).end().addTheme(THM_FORM_DEFAULT)
-//				.weight(3.0).end().addTheme(THM_FORM_CONTAINER_DEFAULT).weight(2.0).end().end().build();
+		// Frame3 sidebar = Frame3.builder("FRM_SIDEBAR")
+		// // .addTheme(THM_WIDTH_300).end()
+		//
+		// /*
+		// * .addTheme().addAttribute().width(400).end().end().addTheme(
+		// * THM_DISPLAY_VERTICAL).end()
+		// */
+		// .addTheme(THM_BACKGROUND_GREEN).end().question("QUE_FIRSTNAME")
+		// // .question("QUE_USER_PROFILE_GRP")
+		//
+		// .addTheme(THM_FORM_INPUT_DEFAULT).vcl(VisualControlType.VCL_INPUT).weight(2.0).end()
+		// .addTheme(THM_FORM_LABEL_DEFAULT).vcl(VisualControlType.VCL_LABEL).end()
+		// .addTheme(THM_FORM_WRAPPER_DEFAULT).vcl(VisualControlType.VCL_WRAPPER).end()
+		// .addTheme(THM_FORM_ERROR_DEFAULT).vcl(VisualControlType.VCL_ERROR).end().addTheme(THM_FORM_DEFAULT)
+		// .weight(3.0).end().addTheme(THM_FORM_CONTAINER_DEFAULT).weight(2.0).end().end().build();
 
 		Frame3 FRM_SIDEBAR = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_SIDEBAR", Frame3.class,
 				serviceToken.getToken());
 
-//		Frame3 footer = Frame3.builder("FRM_FOOTER").addFrame(FRM_DUMMY, FramePosition.CENTRE).end()
-//				.addTheme(THM_BACKGROUND_BLUE).end().build();
+		// Frame3 footer = Frame3.builder("FRM_FOOTER").addFrame(FRM_DUMMY,
+		// FramePosition.CENTRE).end()
+		// .addTheme(THM_BACKGROUND_BLUE).end().build();
 		Frame3 FRM_FOOTER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_FOOTER", Frame3.class,
 				serviceToken.getToken());
 
-//		Frame3 FRM_MAINFRAME = Frame3.builder("FRM_MAIN").addTheme(THM_BACKGROUND_WHITE).end()
-//				.addFrame(FRM_SIDEBAR, FramePosition.WEST).end().addFrame(FRM_SIDEBAR2, FramePosition.WEST).end()
-//				.addFrame(FRM_SIDEBAR3, FramePosition.WEST).end()
-//				// .addFrame(notes,FramePosition.EAST).end()
-//				.addFrame(FRM_FOOTER, FramePosition.SOUTH).end().addFrame(FRM_CENTRE, FramePosition.CENTRE).end()
-//				.addFrame(FRM_HEADER, FramePosition.NORTH).end().build();
+		// Frame3 FRM_MAINFRAME =
+		// Frame3.builder("FRM_MAIN").addTheme(THM_BACKGROUND_WHITE).end()
+		// .addFrame(FRM_SIDEBAR, FramePosition.WEST).end().addFrame(FRM_SIDEBAR2,
+		// FramePosition.WEST).end()
+		// .addFrame(FRM_SIDEBAR3, FramePosition.WEST).end()
+		// // .addFrame(notes,FramePosition.EAST).end()
+		// .addFrame(FRM_FOOTER, FramePosition.SOUTH).end().addFrame(FRM_CENTRE,
+		// FramePosition.CENTRE).end()
+		// .addFrame(FRM_HEADER, FramePosition.NORTH).end().build();
 
 		Frame3 FRM_MAINFRAME = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_MAINFRAME", Frame3.class,
 				serviceToken.getToken());
 
-//		Frame3 FRM_ROOT = Frame3.builder("FRM_ROOT")
-//				.addFrame(FRM_MAINFRAME).end().build();
+		// Frame3 FRM_ROOT = Frame3.builder("FRM_ROOT")
+		// .addFrame(FRM_MAINFRAME).end().build();
 
 		Frame3 FRM_ROOT = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_ROOT", Frame3.class,
 				serviceToken.getToken());
@@ -6241,7 +6312,8 @@ public class AdamTest {
 
 		QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_ROOT, serviceToken, askMsgs);
 
-//		VertxUtils.putObject(serviceToken.getRealm(), "", "FRM_ROOT_MSG", msg, serviceToken.getToken());
+		// VertxUtils.putObject(serviceToken.getRealm(), "", "FRM_ROOT_MSG", msg,
+		// serviceToken.getToken());
 
 		QDataBaseEntityMessage msg2 = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_ROOT_MSG",
 				QDataBaseEntityMessage.class, serviceToken.getToken());
@@ -6250,8 +6322,9 @@ public class AdamTest {
 		/* send message */
 		// rules.publishCmd(msg2); // Send QDataBaseEntityMessage
 		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg2));
-//		String askMsgsStr = JsonUtils.toJson(askMsgs);
-//		VertxUtils.putObject(serviceToken.getRealm(), "", "DESKTOP_ASKS", askMsgsStr, serviceToken.getToken());
+		// String askMsgsStr = JsonUtils.toJson(askMsgs);
+		// VertxUtils.putObject(serviceToken.getRealm(), "", "DESKTOP_ASKS", askMsgsStr,
+		// serviceToken.getToken());
 
 		Type setType = new TypeToken<Set<QDataAskMessage>>() {
 		}.getType();
@@ -6264,7 +6337,7 @@ public class AdamTest {
 		System.out.println("Sending Asks");
 		for (QDataAskMessage askMsg : askMsgs) {
 			rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode()); // Send associated
-																							// QDataAskMessage
+			// QDataAskMessage
 		}
 
 		System.out.println("Sent");
@@ -6296,7 +6369,7 @@ public class AdamTest {
 		System.out.println("Sending Asks");
 		for (QDataAskMessage askMsg : askMsgs2) {
 			rules.publishCmd(askMsg, serviceToken.getUserCode(), userToken.getUserCode()); // Send associated
-																							// QDataAskMessage
+			// QDataAskMessage
 		}
 
 		System.out.println("Sent2");
@@ -6350,30 +6423,33 @@ public class AdamTest {
 		return ret;
 	}
 
-// public static Map<Operation, List<OperationCommand>> initMVELOperations() {
-//
-//     Map<String, Object> vars = new HashMap<String, Object>();
-//
-//     // Search operations-dsl.mvel, if necessary using superclass if TaskService is subclassed
-//     InputStream is = null;
-//     // for (Class<?> c = getClass(); c != null; c = c.getSuperclass()) {
-//     is = MVELLifeCycleManager.class.getResourceAsStream("/operations-dsl.mvel");
-////         if (is != null) {
-////             break;
-////         }
-//     //}
-//     if (is == null) {
-//         throw new RuntimeException("Unable To initialise TaskService, could not find Operations DSL");
-//     }
-//     Reader reader = new InputStreamReader(is);
-//     try {
-//         return (Map<Operation, List<OperationCommand>>) eval(toString(reader), vars);
-//     } catch (IOException e) {
-//         throw new RuntimeException("Unable To initialise TaskService, could not load Operations DSL");
-//     }
-//
-//
-// }
+	// public static Map<Operation, List<OperationCommand>> initMVELOperations() {
+	//
+	// Map<String, Object> vars = new HashMap<String, Object>();
+	//
+	// // Search operations-dsl.mvel, if necessary using superclass if TaskService
+	// is subclassed
+	// InputStream is = null;
+	// // for (Class<?> c = getClass(); c != null; c = c.getSuperclass()) {
+	// is = MVELLifeCycleManager.class.getResourceAsStream("/operations-dsl.mvel");
+	//// if (is != null) {
+	//// break;
+	//// }
+	// //}
+	// if (is == null) {
+	// throw new RuntimeException("Unable To initialise TaskService, could not find
+	// Operations DSL");
+	// }
+	// Reader reader = new InputStreamReader(is);
+	// try {
+	// return (Map<Operation, List<OperationCommand>>) eval(toString(reader), vars);
+	// } catch (IOException e) {
+	// throw new RuntimeException("Unable To initialise TaskService, could not load
+	// Operations DSL");
+	// }
+	//
+	//
+	// }
 
 	private static void createUser(final String userCode, String name, boolean makeExisting) {
 		// Add this user to the map
@@ -6388,8 +6464,8 @@ public class AdamTest {
 
 		GennyToken tokenUser = GennyJbpmBaseTest.createGennyToken("ABCDEFGH", "internmatch", "adam.crow@gada.io",
 				"Adam Crow", "intern");
-		GennyToken tokenSupervisor = GennyJbpmBaseTest.createGennyToken("BCDEFGSHS", "internmatch",
-				"kanika.gulati@gada.io", "Kanika Gulati", "supervisor");
+		GennyToken tokenSupervisor = GennyJbpmBaseTest.createGennyToken("BCDEFGSHS", "internmatch", "kanika.gulati@gada.io",
+				"Kanika Gulati", "supervisor");
 		System.out.println(tokenUser.getToken());
 		System.out.println(tokenSupervisor.getToken());
 
@@ -6554,8 +6630,8 @@ public class AdamTest {
 		beUtils.setServiceToken(serviceToken);
 
 		String sourceCode = "CPY_%";
-//		String columnCode = "LNK_COMPANY_INDUSTRY";
-//		String attributeCode = "PRI_ASSOC_INDUSTRY";
+		// String columnCode = "LNK_COMPANY_INDUSTRY";
+		// String attributeCode = "PRI_ASSOC_INDUSTRY";
 
 		String columnCode = "LNK_NUMBER_STAFF";
 		String attributeCode = "PRI_NUMBER_STAFF";
@@ -6614,453 +6690,446 @@ public class AdamTest {
 		}
 		System.out.println("updated " + updated);
 
-    }
-    
-    @Test
-    public void fixLnks() {
-        System.out.println("fixLnks");
-        GennyToken userToken = null;
-        GennyToken serviceToken = null;
-        QRules qRules = null;
-
-        if (false) {
-            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
-            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-            qRules = new QRules(eventBusMock, userToken.getToken());
-            qRules.set("realm", userToken.getRealm());
-            qRules.setServiceToken(serviceToken.getToken());
-            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
-            GennyKieSession.loadAttributesJsonFromResources(userToken);
-
-        } else {
-            VertxUtils.cachedEnabled = false;
-            qRules = GennyJbpmBaseTest.setupLocalService();
-            userToken = new GennyToken("userToken", qRules.getToken());
-            serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
-
-        }
-
-        System.out.println("session     =" + userToken.getSessionCode());
-        System.out.println("userToken   =" + userToken.getToken());
-        System.out.println("serviceToken=" + serviceToken.getToken());
-
-        List<String> noLnkDaysPerWeek = new ArrayList<String>();
-        List<String> noLnkInternshipDuration = new ArrayList<String>();
-
-        BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
-        beUtils.setServiceToken(serviceToken);
-
-        SearchEntity appSearch = new SearchEntity("SBE_APP", "SBE_APP")
-                .addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-                .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
-                .addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "PROGRESS").addColumn("PRI_NAME", "Name")
-                .addColumn("PRI_CODE", "Code").addColumn("LNK_DAYS_PER_WEEK", "LNK Days Per Week")
-                .addColumn("LNK_INTERNSHIP_DURATION", "LNK Internship Duration").setPageStart(0).setPageSize(1000);
-
-        appSearch.setRealm(serviceToken.getRealm());
-
-        try {
-            List<BaseEntity> bes = beUtils.getBaseEntitys(appSearch);
-            System.out.println("The number of items is " + (bes == null ? "NULL" : bes.size()));
-            if ((bes != null) && (bes.size() > 0)) {
-                System.out.println("Number of bes returned is " + bes.size());
-
-                for (BaseEntity be : bes) {
-
-                    Optional<String> lnkDaysPerWeek = be.getValue("LNK_DAYS_PER_WEEK");
-                    if (lnkDaysPerWeek.isPresent()) {
-                        BaseEntity days = beUtils.getBaseEntityByCode(
-                                lnkDaysPerWeek.get().substring(2, lnkDaysPerWeek.get().length() - 2));
-                        if (days != null) {
-                            Optional<String> optDaysPerWeek = days.getValue("PRI_NAME");
-
-                            beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(),
-                                    "PRI_DAYS_PER_WEEK", optDaysPerWeek.get()));
-                        }
-                    }else{
-                        noLnkDaysPerWeek.add(be.getCode()+" "+be.getValueAsString("PRI_INTERN_NAME"));
-
-                    }
-
-                    Optional<String> lnkInternshipDuration = be.getValue("LNK_INTERNSHIP_DURATION");
-                    if (lnkInternshipDuration.isPresent()) {
-                        BaseEntity duration = beUtils.getBaseEntityByCode(
-                                lnkInternshipDuration.get().substring(2, lnkInternshipDuration.get().length() - 2));
-                        if (duration != null) {
-                            Optional<String> optInternshipDuration = duration.getValue("PRI_NAME");
-
-                            beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(),
-                                    "PRI_ASSOC_DURATION", optInternshipDuration.get()));
-                        }
-                    }else{
-                        noLnkInternshipDuration.add(be.getCode()+" "+be.getValueAsString("PRI_INTERN_NAME"));
-
-                    }
-
-                }
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        log.info("============= Missing LNK_DAYS_PER_WEEK =============");
-        for (String sd : noLnkDaysPerWeek) {
-            log.info(sd);
-        }
-        log.info("============= Missing LNK_INTERNSHIP_DURATION=============");
-        for (String sd : noLnkInternshipDuration) {
-            log.info(sd);
-        }
-
-    }
-
-    @Test
-    public void updateApplicatinProgress(){
+	}
+
+	@Test
+	public void fixLnks() {
+		System.out.println("fixLnks");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+		} else {
+			VertxUtils.cachedEnabled = false;
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+
+		}
+
+		System.out.println("session     =" + userToken.getSessionCode());
+		System.out.println("userToken   =" + userToken.getToken());
+		System.out.println("serviceToken=" + serviceToken.getToken());
+
+		List<String> noLnkDaysPerWeek = new ArrayList<String>();
+		List<String> noLnkInternshipDuration = new ArrayList<String>();
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		beUtils.setServiceToken(serviceToken);
+
+		SearchEntity appSearch = new SearchEntity("SBE_APP", "SBE_APP")
+				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+				.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "PROGRESS").addColumn("PRI_NAME", "Name")
+				.addColumn("PRI_CODE", "Code").addColumn("LNK_DAYS_PER_WEEK", "LNK Days Per Week")
+				.addColumn("LNK_INTERNSHIP_DURATION", "LNK Internship Duration").setPageStart(0).setPageSize(1000);
+
+		appSearch.setRealm(serviceToken.getRealm());
+
+		try {
+			List<BaseEntity> bes = beUtils.getBaseEntitys(appSearch);
+			System.out.println("The number of items is " + (bes == null ? "NULL" : bes.size()));
+			if ((bes != null) && (bes.size() > 0)) {
+				System.out.println("Number of bes returned is " + bes.size());
+
+				for (BaseEntity be : bes) {
+
+					Optional<String> lnkDaysPerWeek = be.getValue("LNK_DAYS_PER_WEEK");
+					if (lnkDaysPerWeek.isPresent()) {
+						BaseEntity days = beUtils
+								.getBaseEntityByCode(lnkDaysPerWeek.get().substring(2, lnkDaysPerWeek.get().length() - 2));
+						if (days != null) {
+							Optional<String> optDaysPerWeek = days.getValue("PRI_NAME");
+
+							beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_DAYS_PER_WEEK",
+									optDaysPerWeek.get()));
+						}
+					} else {
+						noLnkDaysPerWeek.add(be.getCode() + " " + be.getValueAsString("PRI_INTERN_NAME"));
+
+					}
+
+					Optional<String> lnkInternshipDuration = be.getValue("LNK_INTERNSHIP_DURATION");
+					if (lnkInternshipDuration.isPresent()) {
+						BaseEntity duration = beUtils.getBaseEntityByCode(
+								lnkInternshipDuration.get().substring(2, lnkInternshipDuration.get().length() - 2));
+						if (duration != null) {
+							Optional<String> optInternshipDuration = duration.getValue("PRI_NAME");
+
+							beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), "PRI_ASSOC_DURATION",
+									optInternshipDuration.get()));
+						}
+					} else {
+						noLnkInternshipDuration.add(be.getCode() + " " + be.getValueAsString("PRI_INTERN_NAME"));
+
+					}
+
+				}
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		log.info("============= Missing LNK_DAYS_PER_WEEK =============");
+		for (String sd : noLnkDaysPerWeek) {
+			log.info(sd);
+		}
+		log.info("============= Missing LNK_INTERNSHIP_DURATION=============");
+		for (String sd : noLnkInternshipDuration) {
+			log.info(sd);
+		}
+
+	}
+
+	@Test
+	public void updateApplicatinProgress() {
 
-        System.out.println("applicationProgressCalculation");
-        GennyToken userToken = null;
-        GennyToken serviceToken = null;
-        QRules qRules = null;
+		System.out.println("applicationProgressCalculation");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
 
-        if (false) {
-            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
-            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-            qRules = new QRules(eventBusMock, userToken.getToken());
-            qRules.set("realm", userToken.getRealm());
-            qRules.setServiceToken(serviceToken.getToken());
-            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
-            GennyKieSession.loadAttributesJsonFromResources(userToken);
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
 
-        } else {
-            VertxUtils.cachedEnabled = false;
-            qRules = GennyJbpmBaseTest.setupLocalService();
-            userToken = new GennyToken("userToken", qRules.getToken());
-            serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+		} else {
+			VertxUtils.cachedEnabled = false;
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
 
-        }
+		}
 
-        System.out.println("session     =" + userToken.getSessionCode());
-        System.out.println("userToken   =" + userToken.getToken());
-        System.out.println("serviceToken=" + serviceToken.getToken());
+		System.out.println("session     =" + userToken.getSessionCode());
+		System.out.println("userToken   =" + userToken.getToken());
+		System.out.println("serviceToken=" + serviceToken.getToken());
 
-        BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
-        beUtils.setServiceToken(serviceToken);
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		beUtils.setServiceToken(serviceToken);
 
-        /* get all the apps from PROGRESS bucket */
+		/* get all the apps from PROGRESS bucket */
 
-        SearchEntity appSearch = new SearchEntity("SBE_APP", "SBE_APP")
-                .addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-                .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
-                .addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "PROGRESS")
-                .addColumn("PRI_NAME", "Name")
-                .addColumn("PRI_CODE", "Code")
-                .addColumn("PRI_START_DATE", "Start Date")
-                .addColumn("PRI_END_DATE", "Start Date")
-                .addColumn("PRI_DAYS_PER_WEEK", "DPW")
-                .addColumn("PRI_ASSOC_DURATION", "DurationWeeks")
-                .addColumn("LNK_DAYS_PER_WEEK", "LNK Days Per Week")
-                .addColumn("LNK_INTERNSHIP_DURATION", "LNK Internship Duration").setPageStart(0).setPageSize(1000);
-
-        appSearch.setRealm(serviceToken.getRealm());
-
-        List<String> noStartDate = new ArrayList<String>();
-        List<String> noEndDate = new ArrayList<String>();
-        List<String> noInternCode = new ArrayList<String>();
-
-        Double completedPercentage = 0.0;
-
-        try{
-            List<BaseEntity> apps = beUtils.getBaseEntitys(appSearch);
-            System.out.println("The number of apps is " + (apps == null ? "NULL" : apps.size()));
-            if ((apps != null) && (apps.size() > 0)) {
-
-                for (BaseEntity app : apps) {
-
-                    String internCode = app.getValue("PRI_INTERN_CODE", null);
-                    if(internCode == null){
-                        noInternCode.add(app.getCode()+" "+app.getValueAsString("PRI_INTERN_NAME"));
-                    }
-                    String appCode = app.getCode();
-
-                    // get the start date and end date of the internship
-                    Optional<LocalDate> optStartDate = app.getValue("PRI_START_DATE");
-                    Optional<LocalDate> optEndDate = app.getValue("PRI_END_DATE");
-
-                    if (optStartDate.isPresent() && optEndDate.isPresent()) {
-
-                        LocalDate startDate = optStartDate.get();
-                        LocalDate endDate = optEndDate.get();
-
-                        // calculate internship days
-                        Long internshipDays = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate);
-
-                        // make internshipDays inclusive
-                        internshipDays++;
-
-                        // get the current date
-                        LocalDate currentDate = LocalDate.now();
-
-                        // check if currentDate has passed endDate
-                        Long hasCompletedInternship = java.time.temporal.ChronoUnit.DAYS.between(currentDate, endDate);
-
-                        // check if internship is yet to be started
-                        Long hasNotStartedInternship = java.time.temporal.ChronoUnit.DAYS.between(startDate, currentDate);
-
-                        // if  it's negative, intern has completed the internship
-                        if(hasCompletedInternship < 0){
-
-                            //set internship completed
-                            completedPercentage = 100.0;
-
-                            // if  it's negative, internship has not started
-                        }else if(hasNotStartedInternship < 0){
-
-                            //set internship not started at all
-                            completedPercentage = 0.0;
-
-                        }else{
-
-                            // calculate how many days intern has done internship
-                            Long daysInInternship = java.time.temporal.ChronoUnit.DAYS.between(startDate, currentDate);
-
-                            // make days inclusive ??
-                            daysInInternship++;
-
-                            // calculate completedPercentage
-                            completedPercentage = (100.0 * daysInInternship) / internshipDays;
-
-                        }
-
-                        JsonObject appProgress = new JsonObject();
-                        appProgress.put("completedPercentage", completedPercentage);
-                        appProgress.put("steps", internshipDays);
-
-                        beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), internCode, "PRI_PROGRESS",
-                                appProgress.toString(), false, true));
-                        beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), appCode, "PRI_PROGRESS",
-                                appProgress.toString(), false, true));
-
-                    }else{
-                        log.info("startDate and endDate not present !");
-                        if(!optStartDate.isPresent()){
-                            noStartDate.add(app.getCode()+" "+app.getValueAsString("PRI_INTERN_NAME"));
-                        }
-                        if(!optEndDate.isPresent()){
-                            noEndDate.add(app.getCode()+" "+app.getValueAsString("PRI_INTERN_NAME"));
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        log.info("============= Missing PRI_START_DATE=============");
-        for (String sd : noStartDate) {
-            log.info(sd);
-        }
-        log.info("============= Missing PRI_END_DATE=============");
-        for (String sd : noEndDate) {
-            log.info(sd);
-        }
-
-        log.info("============= Missing PRI_INTERN_CODE=============");
-        for (String sd : noInternCode) {
-            log.info(sd);
-        }
-
-    }
-
-    @Test
-    public void updateJournalProgress(){
-
-        System.out.println("applicationProgressCalculation");
-        GennyToken userToken = null;
-        GennyToken serviceToken = null;
-        QRules qRules = null;
-
-        if (false) {
-            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
-            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-            qRules = new QRules(eventBusMock, userToken.getToken());
-            qRules.set("realm", userToken.getRealm());
-            qRules.setServiceToken(serviceToken.getToken());
-            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
-            GennyKieSession.loadAttributesJsonFromResources(userToken);
-
-        } else {
-            VertxUtils.cachedEnabled = false;
-            qRules = GennyJbpmBaseTest.setupLocalService();
-            userToken = new GennyToken("userToken", qRules.getToken());
-            serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
-
-        }
-
-        System.out.println("session     =" + userToken.getSessionCode());
-        System.out.println("userToken   =" + userToken.getToken());
-        System.out.println("serviceToken=" + serviceToken.getToken());
-
-        BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
-        beUtils.setServiceToken(serviceToken);
-
-        /* get all the apps from PROGRESS bucket */
-
-        SearchEntity appSearch = new SearchEntity("SBE_APP", "SBE_APP")
-                .addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-                .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
-                .addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "PROGRESS")
-                .addColumn("PRI_NAME", "Name")
-                .addColumn("PRI_CODE", "Code")
-
-                .addColumn("PRI_DAYS_PER_WEEK", "DPW")
-                .addColumn("PRI_ASSOC_DURATION", "DurationWeeks")
-
-                .addColumn("LNK_DAYS_PER_WEEK", "LNK Days Per Week")
-                .addColumn("LNK_INTERNSHIP_DURATION", "LNK Internship Duration")
-                .setPageStart(0).setPageSize(1000);
-
-        appSearch.setRealm(serviceToken.getRealm());
-
-        List<String> noDaysPerWeek = new ArrayList<String>();
-        List<String> noInternshipDuration = new ArrayList<String>();
-        List<String> noInternCode = new ArrayList<String>();
-
-        Integer completedJournals = 0;
-        Double completedPercentage = 0.0;
-        String journalStatus="";
-
-        try {
-            List<BaseEntity> apps = beUtils.getBaseEntitys(appSearch);
-            System.out.println("The number of apps is " + (apps == null ? "NULL" : apps.size()));
-            if ((apps != null) && (apps.size() > 0)) {
+		SearchEntity appSearch = new SearchEntity("SBE_APP", "SBE_APP")
+				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+				.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "PROGRESS").addColumn("PRI_NAME", "Name")
+				.addColumn("PRI_CODE", "Code").addColumn("PRI_START_DATE", "Start Date").addColumn("PRI_END_DATE", "Start Date")
+				.addColumn("PRI_DAYS_PER_WEEK", "DPW").addColumn("PRI_ASSOC_DURATION", "DurationWeeks")
+				.addColumn("LNK_DAYS_PER_WEEK", "LNK Days Per Week")
+				.addColumn("LNK_INTERNSHIP_DURATION", "LNK Internship Duration").setPageStart(0).setPageSize(1000);
+
+		appSearch.setRealm(serviceToken.getRealm());
+
+		List<String> noStartDate = new ArrayList<String>();
+		List<String> noEndDate = new ArrayList<String>();
+		List<String> noInternCode = new ArrayList<String>();
+
+		Double completedPercentage = 0.0;
+
+		try {
+			List<BaseEntity> apps = beUtils.getBaseEntitys(appSearch);
+			System.out.println("The number of apps is " + (apps == null ? "NULL" : apps.size()));
+			if ((apps != null) && (apps.size() > 0)) {
+
+				for (BaseEntity app : apps) {
+
+					String internCode = app.getValue("PRI_INTERN_CODE", null);
+					if (internCode == null) {
+						noInternCode.add(app.getCode() + " " + app.getValueAsString("PRI_INTERN_NAME"));
+					}
+					String appCode = app.getCode();
+
+					// get the start date and end date of the internship
+					Optional<LocalDate> optStartDate = app.getValue("PRI_START_DATE");
+					Optional<LocalDate> optEndDate = app.getValue("PRI_END_DATE");
+					Optional<String> optInternshipWeek = app.getValue("PRI_ASSOC_DURATION");
+
+					if (optStartDate.isPresent() && optEndDate.isPresent() && optInternshipWeek.isPresent()) {
+
+						LocalDate startDate = optStartDate.get();
+						LocalDate endDate = optEndDate.get();
+						String internshipWeek = optInternshipWeek.get();
+
+						// calculate internship days
+						Long internshipDays = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate);
+
+						// make internshipDays inclusive
+						internshipDays++;
+
+						// get the current date
+						LocalDate currentDate = LocalDate.now();
+
+						// check if currentDate has passed endDate
+						Long hasCompletedInternship = java.time.temporal.ChronoUnit.DAYS.between(currentDate, endDate);
+
+						// check if internship is yet to be started
+						Long hasNotStartedInternship = java.time.temporal.ChronoUnit.DAYS.between(startDate, currentDate);
+
+						// if it's negative, intern has completed the internship
+						if (hasCompletedInternship < 0) {
+
+							// set internship completed
+							completedPercentage = 100.0;
+
+							// if it's negative, internship has not started
+						} else if (hasNotStartedInternship < 0) {
+
+							// set internship not started at all
+							completedPercentage = 0.0;
+
+						} else {
+
+							// calculate how many days intern has done internship
+							Long daysInInternship = java.time.temporal.ChronoUnit.DAYS.between(startDate, currentDate);
+
+							// make days inclusive ??
+							daysInInternship++;
+
+							// calculate completedPercentage
+							completedPercentage = (100.0 * daysInInternship) / internshipDays;
+
+						}
+
+						JsonObject appProgress = new JsonObject();
+						appProgress.put("completedPercentage", completedPercentage);
+						appProgress.put("steps", internshipWeek);
+
+						beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), internCode, "PRI_PROGRESS",
+								appProgress.toString(), false, true));
+						beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), appCode, "PRI_PROGRESS",
+								appProgress.toString(), false, true));
+
+					} else {
+						log.info("startDate and endDate not present !");
+						if (!optStartDate.isPresent()) {
+							noStartDate.add(app.getCode() + " " + app.getValueAsString("PRI_INTERN_NAME"));
+						}
+						if (!optEndDate.isPresent()) {
+							noEndDate.add(app.getCode() + " " + app.getValueAsString("PRI_INTERN_NAME"));
+						}
+						if (!optEndDate.isPresent()) {
+							noEndDate.add(app.getCode() + " " + app.getValueAsString("PRI_INTERN_NAME"));
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		log.info("============= Missing PRI_START_DATE=============");
+		for (String sd : noStartDate) {
+			log.info(sd);
+		}
+		log.info("============= Missing PRI_END_DATE=============");
+		for (String sd : noEndDate) {
+			log.info(sd);
+		}
+
+		log.info("============= Missing PRI_INTERN_CODE=============");
+		for (String sd : noInternCode) {
+			log.info(sd);
+		}
+
+	}
+
+	@Test
+	public void updateJournalProgress() {
+
+		System.out.println("applicationProgressCalculation");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+		QRules qRules = null;
+
+		if (false) {
+			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules.set("realm", userToken.getRealm());
+			qRules.setServiceToken(serviceToken.getToken());
+			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+			GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+		} else {
+			VertxUtils.cachedEnabled = false;
+			qRules = GennyJbpmBaseTest.setupLocalService();
+			userToken = new GennyToken("userToken", qRules.getToken());
+			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+
+		}
+
+		System.out.println("session     =" + userToken.getSessionCode());
+		System.out.println("userToken   =" + userToken.getToken());
+		System.out.println("serviceToken=" + serviceToken.getToken());
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		beUtils.setServiceToken(serviceToken);
+
+		/* get all the apps from PROGRESS bucket */
+
+		SearchEntity appSearch = new SearchEntity("SBE_APP", "SBE_APP")
+				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+				.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "PROGRESS").addColumn("PRI_NAME", "Name")
+				.addColumn("PRI_CODE", "Code")
+
+				.addColumn("PRI_DAYS_PER_WEEK", "DPW").addColumn("PRI_ASSOC_DURATION", "DurationWeeks")
+
+				.addColumn("LNK_DAYS_PER_WEEK", "LNK Days Per Week")
+				.addColumn("LNK_INTERNSHIP_DURATION", "LNK Internship Duration").setPageStart(0).setPageSize(1000);
+
+		appSearch.setRealm(serviceToken.getRealm());
+
+		List<String> noDaysPerWeek = new ArrayList<String>();
+		List<String> noInternshipDuration = new ArrayList<String>();
+		List<String> noInternCode = new ArrayList<String>();
+
+		Integer completedJournals = 0;
+		Double completedPercentage = 0.0;
+		String journalStatus = "";
 
-                System.out.println("Number of apps returned is " + apps.size());
-
-                // loop through apps
-                for (BaseEntity app : apps) {
-
-                    // get the internCode
-                    String internCode = app.getValue("PRI_INTERN_CODE", null);
-
-                    if(internCode == null){
-                        noInternCode.add(app.getCode());
-                        continue;
-                    }
-
-                    // get the intern be
-                    BaseEntity intern = beUtils.getBaseEntityByCode(internCode);
-                    if(intern != null){
-
-                        // get completedJournals count
-                        completedJournals = intern.getValue("PRI_NUM_JOURNALS", null);
-
-                        if(completedJournals == null ){
-
-                            // find the completedJournals count from sbe
-                            SearchEntity completedJnlSbe = new SearchEntity("SBE_JOURNAL_COUNT",
-                                    "SBE_JOURNAL_COUNT")
-                                    .addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-                                    .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
-                                    .addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%" + internCode + "%")
-                                    .addColumn("PRI_CODE", "Name");
-
-                            Tuple2<String, List<String>> results = beUtils.getHql(completedJnlSbe);
-                            String hql = results._1;
-                            String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
-                            Integer count = 0;
-
-                            try {
-                                String resultJsonStr = QwandaUtils.apiGet(
-                                        GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2,
-                                        serviceToken.getToken(), 120);
-
-                                completedJournals = Integer.decode(resultJsonStr);
-
-                                // save PRI_NUM_JOURNALS to app and intern
-                                beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), internCode,
-                                        "PRI_NUM_JOURNALS", completedJournals));
-                                beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), app.getCode(),
-                                        "PRI_NUM_JOURNALS", completedJournals));
-                                System.out.println("Saved Journal count to intern" + internCode);
-
-                            } catch (Exception e1) {
-                                completedJournals = 0;
-                                System.out.println("No journals yet for " + internCode);
-                            }
-                        }
-
-
-                        // get days per weeks (dpw)
-                        Optional<String> optDaysPerWeek = app.getValue("PRI_DAYS_PER_WEEK");
-
-                        // get internship duration (id)
-                        Optional<String> optInternshipDuration = app.getValue("PRI_ASSOC_DURATION");
-
-                        if ((optDaysPerWeek.isPresent()) && (optInternshipDuration.isPresent())) {
-
-                            Double dpw = Double.valueOf(optDaysPerWeek.get());
-                            Double id = Double.valueOf(optInternshipDuration.get());
-
-                            // get total number of internship days ( id * dpw)
-                            Double totalInternshipDays = dpw * id;
-
-                            // if student has added more journals than the totalInternshipDays
-                            if(totalInternshipDays < completedJournals){
-
-                                // set the completedPercentage to 100
-                                completedPercentage = 100.0;
-                            }else{
-
-                                // calculate journals completed percentage
-                                completedPercentage = (100.0 * completedJournals) / totalInternshipDays;
-                            }
-
-                                // construct journalStatus attribute and save
-                                Integer totalJournals = totalInternshipDays.intValue();
-                                journalStatus = completedJournals.toString() + "/" + totalJournals.toString();
-
-                                Answer journalStatusAnswer = new Answer(beUtils.getGennyToken().getUserCode(), internCode,
-                                        "PRI_JOURNAL_STATUS", journalStatus);
-                                beUtils.saveAnswer(journalStatusAnswer);
-
-                                JsonObject journalProgress = new JsonObject();
-                                journalProgress.put("completedPercentage", completedPercentage);
-                                journalProgress.put("steps", totalInternshipDays.intValue());
-
-                                beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), internCode,
-                                        "PRI_JOURNAL_PROGRESS", journalProgress.toString()));
-
-                                beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), app.getCode(),
-                                        "PRI_JOURNAL_PROGRESS", journalProgress.toString()));
-
-
-                        }else{
-                            log.info("startDate and endDate not present !");
-                            if(!optDaysPerWeek.isPresent()){
-                                noDaysPerWeek.add(app.getCode()+" "+app.getValueAsString("PRI_INTERN_NAME"));
-                            }
-                            if(!optInternshipDuration.isPresent()){
-                                noInternshipDuration.add(app.getCode()+" "+app.getValueAsString("PRI_INTERN_NAME"));
-                            }
-                        }
-                    }
-                }
-            }
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        log.info("============= Missing PRI_START_DATE=============");
-        for (String sd : noDaysPerWeek) {
-            log.info(sd);
-        }
-        log.info("============= Missing PRI_END_DATE=============");
-        for (String sd : noInternshipDuration) {
-            log.info(sd);
-        }
-
-    }
-
-
+		try {
+			List<BaseEntity> apps = beUtils.getBaseEntitys(appSearch);
+			System.out.println("The number of apps is " + (apps == null ? "NULL" : apps.size()));
+			if ((apps != null) && (apps.size() > 0)) {
+
+				System.out.println("Number of apps returned is " + apps.size());
+
+				// loop through apps
+				for (BaseEntity app : apps) {
+
+					// get the internCode
+					String internCode = app.getValue("PRI_INTERN_CODE", null);
+
+					if (internCode == null) {
+						noInternCode.add(app.getCode());
+						continue;
+					}
+
+					// get the intern be
+					BaseEntity intern = beUtils.getBaseEntityByCode(internCode);
+					if (intern != null) {
+
+						// get completedJournals count
+						completedJournals = intern.getValue("PRI_NUM_JOURNALS", null);
+
+						if (completedJournals == null) {
+
+							// find the completedJournals count from sbe
+							SearchEntity completedJnlSbe = new SearchEntity("SBE_JOURNAL_COUNT", "SBE_JOURNAL_COUNT")
+									.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+									.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
+									.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%" + internCode + "%")
+									.addColumn("PRI_CODE", "Name");
+
+							Tuple2<String, List<String>> results = beUtils.getHql(completedJnlSbe);
+							String hql = results._1;
+							String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
+							Integer count = 0;
+
+							try {
+								String resultJsonStr = QwandaUtils.apiGet(
+										GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2, serviceToken.getToken(),
+										120);
+
+								completedJournals = Integer.decode(resultJsonStr);
+
+								// save PRI_NUM_JOURNALS to app and intern
+								beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), internCode, "PRI_NUM_JOURNALS",
+										completedJournals));
+								beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), app.getCode(), "PRI_NUM_JOURNALS",
+										completedJournals));
+								System.out.println("Saved Journal count to intern" + internCode);
+
+							} catch (Exception e1) {
+								completedJournals = 0;
+								System.out.println("No journals yet for " + internCode);
+							}
+						}
+
+						// get days per weeks (dpw)
+						Optional<String> optDaysPerWeek = app.getValue("PRI_DAYS_PER_WEEK");
+
+						// get internship duration (id)
+						Optional<String> optInternshipDuration = app.getValue("PRI_ASSOC_DURATION");
+
+						if ((optDaysPerWeek.isPresent()) && (optInternshipDuration.isPresent())) {
+
+							Double dpw = Double.valueOf(optDaysPerWeek.get());
+							Double id = Double.valueOf(optInternshipDuration.get());
+
+							// get total number of internship days ( id * dpw)
+							Double totalInternshipDays = dpw * id;
+
+							// if student has added more journals than the totalInternshipDays
+							if (totalInternshipDays < completedJournals) {
+
+								// set the completedPercentage to 100
+								completedPercentage = 100.0;
+							} else {
+
+								// calculate journals completed percentage
+								completedPercentage = (100.0 * completedJournals) / totalInternshipDays;
+							}
+
+							// construct journalStatus attribute and save
+							Integer totalJournals = totalInternshipDays.intValue();
+							journalStatus = completedJournals.toString() + "/" + totalJournals.toString();
+
+							Answer journalStatusAnswer = new Answer(beUtils.getGennyToken().getUserCode(), internCode,
+									"PRI_JOURNAL_STATUS", journalStatus);
+							beUtils.saveAnswer(journalStatusAnswer);
+
+							JsonObject journalProgress = new JsonObject();
+							journalProgress.put("completedPercentage", completedPercentage);
+							journalProgress.put("steps", totalInternshipDays.intValue());
+
+							beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), internCode, "PRI_JOURNAL_PROGRESS",
+									journalProgress.toString()));
+
+							beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), app.getCode(),
+									"PRI_JOURNAL_PROGRESS", journalProgress.toString()));
+
+						} else {
+							log.info("startDate and endDate not present !");
+							if (!optDaysPerWeek.isPresent()) {
+								noDaysPerWeek.add(app.getCode() + " " + app.getValueAsString("PRI_INTERN_NAME"));
+							}
+							if (!optInternshipDuration.isPresent()) {
+								noInternshipDuration.add(app.getCode() + " " + app.getValueAsString("PRI_INTERN_NAME"));
+							}
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		log.info("============= Missing PRI_START_DATE=============");
+		for (String sd : noDaysPerWeek) {
+			log.info(sd);
+		}
+		log.info("============= Missing PRI_END_DATE=============");
+		for (String sd : noInternshipDuration) {
+			log.info(sd);
+		}
+
+	}
 
 }
