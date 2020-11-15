@@ -27,7 +27,7 @@ rule "PRI_SEARCH_FILTER"
     when
       beUtils : BaseEntityUtils()
 	  serviceToken : GennyToken( code == "PER_SERVICE") 
-	  answer : Answer( ( attributeCode  matches "PRI_.*" || attributeCode  matches "LNK_.*" || attributeCode  matches "F_.*") && targetCode matches "SBE_.*" )
+	  answer : Answer( ( attributeCode  matches "PRI_.*" || attributeCode  matches "LNK_.*" || attributeCode  matches "FIL_.*") && targetCode matches "SBE_.*"  && (data.code matches "QUE_FILTER") )
 	  answersToSave : Answers()
 	  output : OutputParam( )
      then
