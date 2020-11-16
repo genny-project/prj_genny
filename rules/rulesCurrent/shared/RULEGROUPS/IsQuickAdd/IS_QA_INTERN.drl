@@ -115,7 +115,7 @@ rule "IS_QA_INTERN"
 		HashMap<String, String> templateData = new HashMap<String, String>();
     	templateData.put("intern", firstname);
 
-		EmailHelper.sendGrid(user_email, subject, template_id, hardcodedTemplateData1, hardcodedTemplateData2);
+		EmailHelper.sendGrid(user_email, subject, template_id, templateData);
 		
 		
 		output.setTypeOfResult("NONE");
