@@ -87,14 +87,14 @@ rule "QUE_TABLE_NEXT_BTN"
 		
 			Integer pageStart = searchBE.getValue("SCH_PAGE_START",-1);
 			System.out.println("Actual PageStart from searchBE next is "+pageStart);
-		
+
 			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
 				beUtils.getGennyToken().getToken());
 			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "LAST-SEARCH", userToken.getSessionCode(), searchBE,
 				userToken.getToken());
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" NEXT for "+searchBE.getCode()+" About to go into search! "); 
 		
-			long totalTime = TableUtils.searchTable(beUtils,searchBE, cache,null,null,false);
+			long totalTime = TableUtils.searchTable(beUtils,searchBE, cache,null,null,true);
 
 			System.out.println("total took " + (totalTime) + " ms"); 
 			}
