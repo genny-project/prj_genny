@@ -85,9 +85,8 @@ rule "QUE_TABLE_NEXT_BTN"
 			searchBE = beUtils.updateBaseEntity(searchBE, pageAnswer,SearchEntity.class);
 			searchBE = beUtils.updateBaseEntity(searchBE, pageNumberAnswer,SearchEntity.class);
 		
-			Integer pageStart = searchBE.getValue("SCH_PAGE_START",-1);
-			System.out.println("Actual PageStart from searchBE next is "+pageStart);
-		
+			/* Integer pageStart = searchBE.getValue("SCH_PAGE_START",-1);
+			System.out.println("Actual PageStart from searchBE next is "+pageStart); */
 			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
 				beUtils.getGennyToken().getToken());
 			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "LAST-SEARCH", userToken.getSessionCode(), searchBE,
