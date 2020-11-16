@@ -71,7 +71,7 @@ rule "QUE_TABLE_PREVIOUS_BTN"
 			numRecords = 1000;
 		}		
 		pageIndex = pageIndex - pageSize;
-		
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" NEXT for "+searchBE.getCode()+" pageIndex="+pageIndex+", pageSize="+pageSize+", numRecords="+numRecords); 
 		if (pageIndex <0) {
 			pageIndex = 0;
 		}
