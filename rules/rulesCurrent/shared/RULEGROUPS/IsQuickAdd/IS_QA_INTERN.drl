@@ -89,7 +89,7 @@ rule "IS_QA_INTERN"
 	
 		/*String user_email = user.getValue("PRI_EMAIL",null);*/
 		/*String user_email = "hello@outcome.life";*/
-		String url = "https://internmatch-dev.gada.io/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9JTlRFUk4="
+		String url = "https://internmatch-dev.gada.io/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9JTlRFUk4=";
 
 		String user_email = "c.pyke85@gmail.com";
 		String subject = "You have been registered on InternMatch";
