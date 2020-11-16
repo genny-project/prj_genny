@@ -1,13 +1,18 @@
 package life.genny.test;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -57,6 +62,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.logging.log4j.Logger;
@@ -103,8 +109,7 @@ import io.vertx.core.json.JsonObject;
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
-import life.genny.jbpm.customworkitemhandlers.ShowFrame;
-import life.genny.model.OutputParamTreeSet;
+
 import life.genny.models.BaseEntityImport;
 import life.genny.models.Frame3;
 import life.genny.models.FramePosition;
@@ -182,6 +187,144 @@ public class AdamTest {
     protected static GennyToken newUserToken;
     protected static GennyToken serviceToken;
 
+    
+    @Test
+    public void testKeycloakImpersonation()
+    {
+    	
+    	// Get admin userToken
+    	
+    	String keycloakUrl = System.getenv("KEYCLOAKURL");
+    	String clientId = "internmatch";
+    	String secret = System.getenv("CLIENT_SECRET");
+    	String uuid = "5a666e64-021f-48ce-8111-be3d66901f9c";
+    	
+    	
+    			
+    	String accessToken = null;
+        try {
+            accessToken = KeycloakUtils.getAccessToken(keycloakUrl, "master", "admin-cli", null, "admin",
+                    System.getenv("KEYCLOAK_PASSWORD"));
+ 
+ 
+           	String url = keycloakUrl + "/auth/admin/realms/" + realm + "/users/" + uuid;
+        	String result = sendGET(url,accessToken);
+        	
+        	JsonObject userJson = new JsonObject(result);
+        	
+        	String username = userJson.getString("username");
+        	
+     
+            String exchangedToken = accessToken;
+        //	String userToken = KeycloakUtils.getImpersonatedToken(keycloakUrl, realm,uuid, exchangedToken);
+
+        	HttpClient httpClient = new DefaultHttpClient();
+
+    		try {
+    			ArrayList<NameValuePair> postParameters;											
+
+       			HttpPost post = new HttpPost(keycloakUrl + "/auth/realms/" + realm + "/users/"+uuid+"/impersonation");
+
+    			// this needs -Dkeycloak.profile.feature.token_exchange=enabled
+//    			HttpPost post = new HttpPost(keycloakUrl + "/auth/realms/" + realm + "/protocol/openid-connect/token");
+//    			 postParameters = new ArrayList<NameValuePair>();
+//    			    postParameters.add(new BasicNameValuePair("grant_type", "urn:ietf:params:oauth:grant-type:token-exchange"));
+//    			    postParameters.add(new BasicNameValuePair("client_id", clientId));
+//    			    postParameters.add(new BasicNameValuePair("client_secret", secret));
+//    			    postParameters.add(new BasicNameValuePair("audience", "target-client"));
+//    			    postParameters.add(new BasicNameValuePair("requested_subject", username));
+//    			    post.setEntity(new UrlEncodedFormEntity(postParameters, "UTF-8"));
+// 
+//    			
+    			
+    			post.addHeader("Content-Type", "application/json");
+    			post.addHeader("Authorization", "Bearer " + exchangedToken);
+
+    			
+    			HttpResponse response = httpClient.execute(post);
+
+    			int statusCode = response.getStatusLine().getStatusCode();
+    			log.info("StatusCode: " + statusCode);
+
+    			HttpEntity entity = response.getEntity();
+    			
+    			String content = null;
+    			if (statusCode != 200) {
+    				content = getContent(entity);
+    				throw new IOException("" + statusCode);
+    			}
+    			if (entity == null) {
+    				throw new IOException("Null Entity");
+    			} else {
+    				content = getContent(entity);
+    			}
+    			
+    				
+    				System.out.println(content);
+    		} catch (Exception ee) {
+    		} finally {
+    			httpClient.getConnectionManager().shutdown();
+    		}
+        	
+        } catch (IOException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+    	
+    }
+    
+
+	public static String getContent(final HttpEntity httpEntity) throws IOException {
+		if (httpEntity == null)
+			return null;
+		final InputStream is = httpEntity.getContent();
+		try {
+			final ByteArrayOutputStream os = new ByteArrayOutputStream();
+			int c;
+			while ((c = is.read()) != -1) {
+				os.write(c);
+			}
+			final byte[] bytes = os.toByteArray();
+			final String data = new String(bytes);
+			return data;
+		} finally {
+			try {
+				is.close();
+			} catch (final IOException ignored) {
+
+			}
+		}
+
+	}
+	private static String sendGET(String url, String token) throws IOException {
+		URL obj = new URL(url);
+		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+		con.setRequestMethod("GET");
+		con.addRequestProperty("Content-Type", "application/json");
+		con.addRequestProperty("Authorization", "Bearer " + token);
+
+		//con.setRequestProperty("User-Agent", USER_AGENT);
+		int responseCode = con.getResponseCode();
+		System.out.println("GET Response Code :: " + responseCode);
+		if (responseCode == HttpURLConnection.HTTP_OK) { // success
+			BufferedReader in = new BufferedReader(new InputStreamReader(
+					con.getInputStream()));
+			String inputLine;
+			StringBuffer response = new StringBuffer();
+
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+
+			// print result
+			return response.toString();
+		} else {
+			return null;
+		}
+
+	}
+    
     @Test
     public void fixHCRstatus() {
         System.out.println("fix HCR status test");
@@ -4506,7 +4649,7 @@ public class AdamTest {
 
 //			newKieSession = (StatefulKnowledgeSession)this.runtimeEngine.getKieSession();
 
-        FactHandle outputParamTreeSetHandle = newKieSession.insert(new OutputParamTreeSet());
+     //   FactHandle outputParamTreeSetHandle = newKieSession.insert(new OutputParamTreeSet());
 
     }
 
@@ -5091,7 +5234,7 @@ public class AdamTest {
         VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
                 beUtils.getGennyToken().getToken());
 
-        ShowFrame.display(userToken, "FRM_TABLE_VIEW", "FRM_CONTENT", "Test");
+      //  ShowFrame.display(userToken, "FRM_TABLE_VIEW", "FRM_CONTENT", "Test");
         // tableUtils.performSearch(userToken, "SBE_SEARCHBAR", null);
 
     }
