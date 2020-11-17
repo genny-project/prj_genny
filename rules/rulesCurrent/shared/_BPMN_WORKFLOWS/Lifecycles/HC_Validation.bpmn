@@ -145,7 +145,6 @@ System.out.println(&quot;serviceToken: &quot; +serviceToken.getCode());
 
 BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 
-
 OutputParam data = (OutputParam)sessionFacts.getMessage();
 String codes = data.getTargetCode();
 kcontext.setVariable(&quot;codes&quot;, codes);
@@ -383,7 +382,7 @@ System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ newBe: &quot; + newBe);
         <di:waypoint xsi:type="dc:Point" x="640.0" y="353.0"/>
         <di:waypoint xsi:type="dc:Point" x="800.0" y="353.0"/>
         <di:waypoint xsi:type="dc:Point" x="960.0" y="353.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_12"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">

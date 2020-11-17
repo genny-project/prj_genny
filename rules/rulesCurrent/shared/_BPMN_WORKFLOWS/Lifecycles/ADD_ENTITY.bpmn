@@ -70,6 +70,7 @@
     <bpmn2:property id="beExists" itemSubjectRef="ItemDefinition_2733" name="beExists"/>
     <bpmn2:property id="clean" itemSubjectRef="ItemDefinition_2733" name="clean"/>
     <bpmn2:property id="source" itemSubjectRef="ItemDefinition_2733" name="source"/>
+    <bpmn2:property id="beUtilsTwo" itemSubjectRef="ItemDefinition_2143" name="beUtilsTwo"/>
     <bpmn2:endEvent id="EndEvent_2" name="END ADD_ENTITY">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -437,7 +438,11 @@ kcontext.setVariable(&quot;message&quot;,(QEventMessage)message); </bpmn2:script
 	kcontext.setVariable(&quot;userLNK&quot;, userLNK);
 	System.out.println(&quot;userLNK: &quot; + userLNK);
 
-	beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,&quot;LNK_LIAISON&quot;, userLNK));</bpmn2:script>
+	beUtilsTwo = new BaseEntityUtils(userToken);
+
+	Answer answerLiaison = new Answer(userToken.getUserCode(), newBe.getCode(), &quot;LNK_LIAISON&quot;, userLNK);
+	beUtilsTwo.saveAnswer(answerLiaison);
+</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:exclusiveGateway id="ExclusiveGateway_1" name="|" gatewayDirection="Diverging" default="SequenceFlow_15">
         <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
