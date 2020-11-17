@@ -86,7 +86,7 @@ rule "IS_QA_INTERN"
 		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
 
 
-		String userTokenStr = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(),uuid, serviceToken.getToken());
+		String userTokenStr = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), userCode, serviceToken.getToken());
 		System.out.println("userTokenStr: " + userTokenStr);
 		
 		/*String user_email = user.getValue("PRI_EMAIL",null);*/
