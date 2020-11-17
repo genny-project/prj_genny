@@ -77,7 +77,7 @@ rule "HELPER_ABN_LEGAL_NAME"
     	beUtils.saveAnswer(answerLN);
     	System.out.println("answerLN  :: " + answerLN);
     	
-	
+		
 
 		retract(answer);
 
