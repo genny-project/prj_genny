@@ -101,6 +101,7 @@
     <bpmn2:property id="isLive" itemSubjectRef="ItemDefinition_129" name="isLive"/>
     <bpmn2:property id="questionCode" itemSubjectRef="ItemDefinition_9" name="questionCode"/>
     <bpmn2:property id="key" itemSubjectRef="ItemDefinition_9" name="key"/>
+    <bpmn2:property id="source" itemSubjectRef="ItemDefinition_9" name="source"/>
     <bpmn2:subProcess id="SubProcess_1" name="Intern Builder">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -339,7 +340,18 @@
 	String templateCode = &quot;TEMPLATE_&quot; + baseEntityType;
 	TableUtils.searchTable(beUtils, templateCode, true);
 
+/* Get Agent and add Liaison */
 
+	OutputParam sauce = (OutputParam)sessionFacts.getMessage();
+	source = sauce.getAskSourceCode();
+	kcontext.setVariable(&quot;source&quot;, source);
+	System.out.println(&quot;source: &quot; + source);
+
+	String userLNK = &quot;[\&quot;&quot; + source + &quot;\&quot;]&quot;;
+	kcontext.setVariable(&quot;userLNK&quot;, userLNK);
+	System.out.println(&quot;userLNK: &quot; + userLNK);
+
+	beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,&quot;LNK_LIAISON&quot;, userLNK));
 
 </bpmn2:script>
       </bpmn2:scriptTask>
@@ -446,19 +458,19 @@
         <di:waypoint xsi:type="dc:Point" x="1054.0" y="359.0"/>
         <di:waypoint xsi:type="dc:Point" x="1079.0" y="358.0"/>
         <di:waypoint xsi:type="dc:Point" x="1104.0" y="358.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_7"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_8" bpmnElement="SequenceFlow_8" sourceElement="BPMNShape_1" targetElement="BPMNShape_ScriptTask_1">
         <di:waypoint xsi:type="dc:Point" x="600.0" y="359.0"/>
         <di:waypoint xsi:type="dc:Point" x="622.0" y="359.0"/>
         <di:waypoint xsi:type="dc:Point" x="644.0" y="359.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_10"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_9" bpmnElement="SequenceFlow_9" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_Task_2">
         <di:waypoint xsi:type="dc:Point" x="754.0" y="359.0"/>
         <di:waypoint xsi:type="dc:Point" x="774.0" y="359.0"/>
         <di:waypoint xsi:type="dc:Point" x="794.0" y="359.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_14"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">

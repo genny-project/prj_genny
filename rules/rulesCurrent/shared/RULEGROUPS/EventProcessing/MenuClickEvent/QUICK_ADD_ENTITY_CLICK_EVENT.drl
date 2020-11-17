@@ -23,6 +23,12 @@ rule "QUICK_ADD_ENTITY_CLICK_EVENT"
 
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
 		System.out.println("QUICK_ADD_ENTITY_CLICK_EVENT: Rule fired" );
+
+
+		/* Get Agent */
+		String user = userToken.getUserCode();
+		System.out.println("user: " + user);
+		output.setAskSourceCode(user);		
 		
 		
 		String code = $message.getData().getCode();
