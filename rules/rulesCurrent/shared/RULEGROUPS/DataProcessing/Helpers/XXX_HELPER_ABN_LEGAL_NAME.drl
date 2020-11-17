@@ -83,4 +83,6 @@ rule "HELPER_ABN_LEGAL_NAME"
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
+
 end
+

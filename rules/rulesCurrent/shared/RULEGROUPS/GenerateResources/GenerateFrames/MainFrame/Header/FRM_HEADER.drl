@@ -37,6 +37,7 @@ rule "FRM_HEADER"
       FRM_SEARCH_BAR : Frame3 ( code == "FRM_SEARCH_BAR" ) 
       FRM_HEADER_OPTIONS : Frame3 ( code == "FRM_HEADER_OPTIONS" )
       FRM_HEADER_ADD_ITEMS : Frame3 ( code == "FRM_HEADER_ADD_ITEMS" ) 
+      FRM_HEADER_QUICK_ADD_ITEMS : Frame3 ( code == "FRM_HEADER_QUICK_ADD_ITEMS" )
     then
       System.out.println("   Generate FRM_HEADER Rule  "+serviceToken.getUserCode());
 

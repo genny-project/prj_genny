@@ -50,6 +50,8 @@ rule "CLICK_OHS"
 		System.out.println("user: " + user);
 		output.setAskSourceCode(user);
 		
+		String hcCode = "";
+		
 		if(user != null) {
 				BaseEntity HCRBe = beUtils.getBaseEntityByCode(user);
 				System.out.println("HCRBe = " + HCRBe);
@@ -82,7 +84,7 @@ rule "CLICK_OHS"
 						}
 						
 						
-						String hcCode = HCRBe.getValue("LNK_HOST_COMPANY",null);
+						hcCode = HCRBe.getValue("LNK_HOST_COMPANY",null);
 						System.out.println("hcCode: " + hcCode);
 						
 						hcCode = hcCode.replace("\"", "").replace("[", "").replace("]", "");
@@ -157,6 +159,7 @@ rule "CLICK_OHS"
 
 		output.setTypeOfResult("SIGNAL");
 		output.setResultCode("START_"+workflowSignalCode);
+		output.setSuitCase(hcCode);
 
 	
 		System.out.println("START SIGNAL: " +workflowSignalCode);
