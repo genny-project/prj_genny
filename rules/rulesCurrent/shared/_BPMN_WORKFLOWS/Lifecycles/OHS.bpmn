@@ -160,8 +160,8 @@ kcontext.setVariable(&quot;newBe&quot;, newBe);
 System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ newBe: &quot; + newBe);
 
 
-OutputParam data = (OutputParam)sessionFacts.getMessage();
-key = data.getSuitCase();
+OutputParam dataa = (OutputParam)sessionFacts.getMessage();
+key = dataa.getSuitCase();
 kcontext.setVariable(&quot;key&quot;, key);
 System.out.println(&quot;key: &quot; +key);
 
@@ -411,7 +411,7 @@ System.out.println(&quot;HCBe = &quot; + HCBe);
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_1" bpmnElement="Task_1" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="710.0" y="328.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_7">
           <dc:Bounds height="11.0" width="67.0" x="731.0" y="347.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -449,13 +449,13 @@ System.out.println(&quot;HCBe = &quot; + HCBe);
         <di:waypoint xsi:type="dc:Point" x="640.0" y="353.0"/>
         <di:waypoint xsi:type="dc:Point" x="675.0" y="353.0"/>
         <di:waypoint xsi:type="dc:Point" x="710.0" y="353.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_12"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_ScriptTask_3">
         <di:waypoint xsi:type="dc:Point" x="820.0" y="353.0"/>
         <di:waypoint xsi:type="dc:Point" x="890.0" y="353.0"/>
         <di:waypoint xsi:type="dc:Point" x="960.0" y="353.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_13"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
