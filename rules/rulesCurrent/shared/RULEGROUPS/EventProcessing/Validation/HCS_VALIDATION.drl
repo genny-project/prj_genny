@@ -33,7 +33,7 @@ rule "HCS_VALIDATION"
 		
 		/* Check Validation Status of HC */
 		
-		String validationStatus = hcBe.getValue("PRI_VALIDATION",null);
+		String validationStatus = hcBe.getValue("PRI_VALIDATION", "Incomplete");
 		if (validationStatus != null) {
 		
 				if (validationStatus.equals("Incomplete")) {
