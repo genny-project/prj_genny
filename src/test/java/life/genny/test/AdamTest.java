@@ -187,138 +187,163 @@ public class AdamTest {
     protected static GennyToken newUserToken;
     protected static GennyToken serviceToken;
 
-    @Test
-    public void testKeycloakImpersonation() {
+	@Test
+	public void testKeycloakImpersonation() {
 
-        // Get admin userToken
+		// Get admin userToken
 
-        String keycloakUrl = System.getenv("KEYCLOAKURL");
-        String clientId = "internmatch";
-        String secret = System.getenv("CLIENT_SECRET");
-        String uuid = "5a666e64-021f-48ce-8111-be3d66901f9c";
+		String keycloakUrl = System.getenv("KEYCLOAKURL");
+		String clientId = "internmatch";
+		String secret = System.getenv("CLIENT_SECRET");
+		String uuid = "5a666e64-021f-48ce-8111-be3d66901f9c";
+		String servicePassword = System.getenv("SERVICE_PASSWORD");
+		String adminPassword = System.getenv("KEYCLOAK_PASSWORD");
+		try {
+			String serviceTokenStr = KeycloakUtils.getAccessToken(keycloakUrl, "internmatch", "admin-cli", null,
+					"service", servicePassword);
 
-        String accessToken = null;
-        try {
-            accessToken = KeycloakUtils.getAccessToken(keycloakUrl, "master", "admin-cli", null, "admin",
-                    System.getenv("KEYCLOAK_PASSWORD"));
+//    	String userTokenStr = KeycloakUtils.getUserToken(keycloakUrl,uuid, serviceTokenStr, "internmatch");
+//    	System.out.println(userTokenStr);
+//    			    	String accessToken = null;
+			// accessToken = KeycloakUtils.getAccessToken(keycloakUrl, "master",
+			// "admin-cli", null, "admin",
+			// System.getenv("KEYCLOAK_PASSWORD"));
 
-            String url = keycloakUrl + "/auth/admin/realms/" + realm + "/users/" + uuid;
-            String result = sendGET(url, accessToken);
+			// String url = keycloakUrl + "/auth/admin/realms/" + realm + "/users/" + uuid;
+			// String result = sendGET(url,accessToken);
 
-            JsonObject userJson = new JsonObject(result);
+			// JsonObject userJson = new JsonObject(result);
 
-            String username = userJson.getString("username");
+			// String username = userJson.getString("username");
 
-            String exchangedToken = accessToken;
-            // String userToken = KeycloakUtils.getImpersonatedToken(keycloakUrl,
-            // realm,uuid, exchangedToken);
+			String exchangedToken = serviceTokenStr;
+			String userToken = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(),
+			serviceToken.getRealm(),uuid, serviceToken.getToken());
 
-            HttpClient httpClient = new DefaultHttpClient();
+			System.out.println(userToken);
 
-            try {
-                ArrayList<NameValuePair> postParameters;
+//			HttpClient httpClient = new DefaultHttpClient();
+//
+//			try {
+//				ArrayList<NameValuePair> postParameters;
+//
+//				HttpPost post = new HttpPost(
+//						keycloakUrl + "/auth/admin/realms/" + realm + "/users/" + uuid + "/impersonation");
+//
+//				// this needs -Dkeycloak.profile.feature.token_exchange=enabled
+////    			HttpPost post = new HttpPost(keycloakUrl + "/auth/realms/" + realm + "/protocol/openid-connect/token");
+////    			 postParameters = new ArrayList<NameValuePair>();
+////    			    postParameters.add(new BasicNameValuePair("grant_type", "urn:ietf:params:oauth:grant-type:token-exchange"));
+////    			    postParameters.add(new BasicNameValuePair("client_id", clientId));
+////    			    postParameters.add(new BasicNameValuePair("client_secret", secret));
+////    			    postParameters.add(new BasicNameValuePair("audience", "target-client"));
+////    			    postParameters.add(new BasicNameValuePair("requested_subject", username));
+////    			    post.setEntity(new UrlEncodedFormEntity(postParameters, "UTF-8"));
+//// 
+////    			
+//
+//				post.addHeader("Content-Type", "application/json");
+//				post.addHeader("Authorization", "Bearer " + exchangedToken);
+//
+//				HttpResponse response = httpClient.execute(post);
+//
+//				int statusCode = response.getStatusLine().getStatusCode();
+//				log.info("StatusCode: " + statusCode);
+//
+//				HttpEntity entity = response.getEntity();
+//
+//				String content = null;
+//				if (statusCode != 200) {
+//					content = getContent(entity);
+//					throw new IOException("" + statusCode);
+//				}
+//				if (entity == null) {
+//					throw new IOException("Null Entity");
+//				} else {
+//					content = getContent(entity);
+//					Header[] cookies = response.getHeaders("Set-Cookie");
+//					if (cookies.length > 0) {
+//						for (Header cookie : cookies) {
+//							String value = cookie.getValue();
+//							if (value.startsWith("KEYCLOAK_IDENTITY=")) {
+//								if (!value.startsWith("KEYCLOAK_IDENTITY=;")) {
+//									String token = cookie.getValue();
+//
+//									token = token.substring("KEYCLOAK_IDENTITY=".length());
+//									log.info(token);
+//									// return token;
+//								}
+//							}
+//						}
+//					}
+//				}
+//
+////    				
+////    				System.out.println(content);
+//			} catch (Exception ee) {
+//
+//			} finally {
+//				httpClient.getConnectionManager().shutdown();
+//			}
+//        	
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+//    	
+	}
 
-                HttpPost post = new HttpPost(
-                        keycloakUrl + "/auth/realms/" + realm + "/users/" + uuid + "/impersonation");
+	public static String getContent(final HttpEntity httpEntity) throws IOException {
+		if (httpEntity == null)
+			return null;
+		final InputStream is = httpEntity.getContent();
+		try {
+			final ByteArrayOutputStream os = new ByteArrayOutputStream();
+			int c;
+			while ((c = is.read()) != -1) {
+				os.write(c);
+			}
+			final byte[] bytes = os.toByteArray();
+			final String data = new String(bytes);
+			return data;
+		} finally {
+			try {
+				is.close();
+			} catch (final IOException ignored) {
 
-                // this needs -Dkeycloak.profile.feature.token_exchange=enabled
-                // HttpPost post = new HttpPost(keycloakUrl + "/auth/realms/" + realm +
-                // "/protocol/openid-connect/token");
-                // postParameters = new ArrayList<NameValuePair>();
-                // postParameters.add(new BasicNameValuePair("grant_type",
-                // "urn:ietf:params:oauth:grant-type:token-exchange"));
-                // postParameters.add(new BasicNameValuePair("client_id", clientId));
-                // postParameters.add(new BasicNameValuePair("client_secret", secret));
-                // postParameters.add(new BasicNameValuePair("audience", "target-client"));
-                // postParameters.add(new BasicNameValuePair("requested_subject", username));
-                // post.setEntity(new UrlEncodedFormEntity(postParameters, "UTF-8"));
-                //
-                //
+			}
+		}
 
-                post.addHeader("Content-Type", "application/json");
-                post.addHeader("Authorization", "Bearer " + exchangedToken);
+	}
 
-                HttpResponse response = httpClient.execute(post);
+	private static String sendGET(String url, String token) throws IOException {
+		URL obj = new URL(url);
+		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+		con.setRequestMethod("GET");
+		con.addRequestProperty("Content-Type", "application/json");
+		con.addRequestProperty("Authorization", "Bearer " + token);
 
-                int statusCode = response.getStatusLine().getStatusCode();
-                log.info("StatusCode: " + statusCode);
+		// con.setRequestProperty("User-Agent", USER_AGENT);
+		int responseCode = con.getResponseCode();
+		System.out.println("GET Response Code :: " + responseCode);
+		if (responseCode == HttpURLConnection.HTTP_OK) { // success
+			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			String inputLine;
+			StringBuffer response = new StringBuffer();
 
-                HttpEntity entity = response.getEntity();
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
 
-                String content = null;
-                if (statusCode != 200) {
-                    content = getContent(entity);
-                    throw new IOException("" + statusCode);
-                }
-                if (entity == null) {
-                    throw new IOException("Null Entity");
-                } else {
-                    content = getContent(entity);
-                }
+			// print result
+			return response.toString();
+		} else {
+			return null;
+		}
 
-                System.out.println(content);
-            } catch (Exception ee) {
-            } finally {
-                httpClient.getConnectionManager().shutdown();
-            }
+	}
 
-        } catch (IOException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
-
-    }
-
-    public static String getContent(final HttpEntity httpEntity) throws IOException {
-        if (httpEntity == null)
-            return null;
-        final InputStream is = httpEntity.getContent();
-        try {
-            final ByteArrayOutputStream os = new ByteArrayOutputStream();
-            int c;
-            while ((c = is.read()) != -1) {
-                os.write(c);
-            }
-            final byte[] bytes = os.toByteArray();
-            final String data = new String(bytes);
-            return data;
-        } finally {
-            try {
-                is.close();
-            } catch (final IOException ignored) {
-
-            }
-        }
-
-    }
-
-    private static String sendGET(String url, String token) throws IOException {
-        URL obj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-        con.setRequestMethod("GET");
-        con.addRequestProperty("Content-Type", "application/json");
-        con.addRequestProperty("Authorization", "Bearer " + token);
-
-        // con.setRequestProperty("User-Agent", USER_AGENT);
-        int responseCode = con.getResponseCode();
-        System.out.println("GET Response Code :: " + responseCode);
-        if (responseCode == HttpURLConnection.HTTP_OK) { // success
-            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            StringBuffer response = new StringBuffer();
-
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-
-            // print result
-            return response.toString();
-        } else {
-            return null;
-        }
-
-    }
 
     @Test
     public void fixHCRstatus() {
