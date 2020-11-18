@@ -86,20 +86,18 @@ rule "IS_QA_INTERN"
 		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
 
 
-		String userTokenStr = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), userCode, serviceToken.getToken());
-		System.out.println("userTokenStr: " + userTokenStr);
-		
-		String[] spliturl = userTokenStr.split(";");
-		String first = spliturl[0];
-     	System.out.println(first);
+		/*String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), userCode, serviceToken.getToken());
+		System.out.println("token: " + token);*/
+
 		
 		/*String user_email = user.getValue("PRI_EMAIL",null);*/
 		/*String user_email = "hello@outcome.life";*/
+		
 		String url = "https://internmatch-dev.gada.io/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9JTlRFUk4=";
 		System.out.println("url: " + url);
 		
-		url = url +"?token=" + first;
-		System.out.println("url: " + url);
+		/*url = url +"?token=" + token;
+		System.out.println("url: " + url);*/
 
 		String user_email = "c.pyke85@gmail.com";
 		String subject = "You have been registered on InternMatch";
