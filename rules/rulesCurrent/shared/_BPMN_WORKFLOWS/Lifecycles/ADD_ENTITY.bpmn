@@ -131,22 +131,45 @@
 	newCode = newCode.toUpperCase();
 	*/
 	
+	Map&lt;String, String> prefixMap = new HashMap&lt;String, String>();
+
+
+	/* ------------ ADD BE PREFIX HERE ------------ */
+
+	/* PER */
+	prefixMap.put(&quot;INTERN&quot;, &quot;PER&quot;);
+	prefixMap.put(&quot;HOST_CPY_REP&quot;, &quot;PER&quot;);
+	prefixMap.put(&quot;EDU_PRO_REP&quot;, &quot;PER&quot;);
+	prefixMap.put(&quot;REF_PART_REP&quot;, &quot;PER&quot;);
+	prefixMap.put(&quot;AGENT&quot;, &quot;PER&quot;);
+	prefixMap.put(&quot;STUDENT&quot;, &quot;PER&quot;);
+	prefixMap.put(&quot;ADMIN&quot;, &quot;PER&quot;);
+	prefixMap.put(&quot;PERSON&quot;, &quot;PER&quot;);
+
+	/* CPY */
+	prefixMap.put(&quot;HOST_CPY&quot;, &quot;CPY&quot;);
+	prefixMap.put(&quot;EDU_PRO&quot;, &quot;CPY&quot;);
+	prefixMap.put(&quot;REF_PART&quot;, &quot;CPY&quot;);
+	prefixMap.put(&quot;AGENCY&quot;, &quot;CPY&quot;);
+
+	/* BEG */
+	prefixMap.put(&quot;INTERNSHIP&quot;, &quot;BEG&quot;);
+		
+	/* TEA */
+	prefixMap.put(&quot;TEAM&quot;, &quot;TEA&quot;);
+
+	/* ----------------------------------------------- */
+
+
 	String prefix = &quot;NULL_&quot;;	
 
-	if (clean.equals(&quot;INTERN&quot;) || clean.equals(&quot;HOST_CPY_REP&quot;) || clean.equals(&quot;EDU_PRO_REP&quot;) || clean.equals(&quot;AGENT&quot;)) {
-			prefix = &quot;PER_&quot;;
-			System.out.println(&quot;ADD_ENTITY: Adding a &quot; + prefix);
+	if (prefixMap.containsKey(clean)) {
+		prefix = prefixMap.get(clean) + &quot;_&quot;;
+		System.out.println(&quot;ADD_ENTITY: Adding a &quot; + prefix);
+	} else {
+		System.out.println(&quot;ADD_ENTITY: ERROR - BE TYPE HAS NO PREFIX IN MAP&quot;);
 	}
-
-	if (clean.equals(&quot;HOST_CPY&quot;) || clean.equals(&quot;EDU_PRO&quot;) || clean.equals(&quot;AGENCY&quot;)) {
-			prefix = &quot;CPY_&quot;;
-			System.out.println(&quot;ADD_ENTITY: Adding a &quot; + prefix);
-	}
-
-	if (clean.equals(&quot;INTERNSHIP&quot;)) {
-			prefix = &quot;BEG_&quot;;
-			System.out.println(&quot;ADD_ENTITY: Adding a &quot; + prefix);
-	}
+	
 
 /* Create Entity */
 	newCode = prefix + uuid;
