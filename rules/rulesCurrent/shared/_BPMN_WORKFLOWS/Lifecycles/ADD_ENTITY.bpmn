@@ -32,6 +32,8 @@
   <bpmn2:itemDefinition id="ItemDefinition_7" isCollection="false" structureRef="life.genny.utils.VertxUtils.ESubscriptionType"/>
   <bpmn2:itemDefinition id="ItemDefinition_8" isCollection="false" structureRef="life.genny.utils.VertxUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_17" isCollection="false" structureRef="java.lang.Short"/>
+  <bpmn2:itemDefinition id="ItemDefinition_9" isCollection="false" structureRef="java.util.Map.Entry"/>
+  <bpmn2:itemDefinition id="ItemDefinition_10" isCollection="false" structureRef="java.util.Map"/>
   <bpmn2:signal id="Signal_7" name="START_ADD_ENTITY"/>
   <bpmn2:process id="ADD_ENTITY" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="Default Process" isExecutable="true">
     <bpmn2:extensionElements>
@@ -54,6 +56,8 @@
       <drools:import name="life.genny.qwanda.message.MessageData"/>
       <drools:import name="life.genny.utils.VertxUtils"/>
       <drools:import name="life.genny.utils.VertxUtils.ESubscriptionType"/>
+      <drools:import name="java.util.Map"/>
+      <drools:import name="java.util.Map.Entry"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_2" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_2" name="serviceToken"/>
