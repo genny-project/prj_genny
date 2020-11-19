@@ -454,6 +454,18 @@ kcontext.setVariable(&quot;message&quot;,(QEventMessage)message); </bpmn2:script
 	System.out.println(&quot;ADD_ENTITY: questionCode: &quot; + questionCode);
 
 
+/* Do the template thing*/
+
+	beUtilsTwo = new BaseEntityUtils(userToken);
+
+	if (clean.equals(&quot;HOST_CPY&quot;) || clean.equals(&quot;HOST_CPY_REP&quot;) || clean.equals(&quot;INTERNSHIP&quot;) || clean.equals(&quot;INTERN&quot;)) {
+			String templateCode = &quot;TEMPLATE_&quot; + clean;
+			TableUtils.searchTable(beUtilsTwo, templateCode, true);
+
+	}
+
+
+
 
 </bpmn2:script>
       </bpmn2:scriptTask>
