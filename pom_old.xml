@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<distribution>repo</distribution>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+		</license>
+	</licenses>
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>life.genny.jbpm</groupId>
+	<artifactId>prj_genny</artifactId>
+	<version>7.6.0</version>
+	<packaging>pom</packaging>
+	<name>jBPM Genny </name>
+	<description>jBPM Genny Maven project</description>
+
+	<properties>
+		<kie.version>7.34.0.Final</kie.version>
+		<version.keycloak>11.0.2</version.keycloak>
+		<genny-verticle.version>${project.version}</genny-verticle.version>
+		<genny-rules.version>${project.version}</genny-rules.version>
+		<shared.resources.dir>${basedir}/rules</shared.resources.dir>
+
+		<vertx.version>3.5.4</vertx.version>
+		<hazelcast.version>3.8.2</hazelcast.version>
+		<javax-cache.version>1.1.0</javax-cache.version>
+		<log4j.version>2.13.3</log4j.version>
+		<weld-vertx.version>1.2.0.Final</weld-vertx.version>
+		<jar.finalName>${project.name}</jar.finalName>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<!--java version -->
+		<java-version>1.8</java-version>
+		<!-- plugin versions -->
+		<ejb-plugin-version>2.3</ejb-plugin-version>
+		<war-plugin-version>2.4</war-plugin-version>
+		<ear-plugin-version>2.9</ear-plugin-version>
+		<compiler-plugin-version>3.1</compiler-plugin-version>
+		<version.maven-jar-plugin>3.1.2</version.maven-jar-plugin>
+		<version.maven-source-plugin>3.1.0</version.maven-source-plugin>
+		<dropwizard.version>3.5.1</dropwizard.version>
+		<vertx-concurrent.version>1.0.0</vertx-concurrent.version>
+
+		<junit-version>4.13.1</junit-version>
+
+		<jar.finalName>${project.name}</jar.finalName>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<junit-version>4.12</junit-version>
+
+
+		<!-- dependency versions -->
+		<javaee-api-version>8.0</javaee-api-version>
+
+		<!-- EJB spec version -->
+		<ejb-spec-version>3.2</ejb-spec-version>
+		<!-- <jackson.version>2.8.7</jackson.version> -->
+		<jackson.version>2.9.5</jackson.version>
+		<jersey-version>2.13</jersey-version>
+		<version.apache-httpclient>4.5.3</version.apache-httpclient>
+		<version.hibernate>5.3.13.Final</version.hibernate>
+		<version.hibernate-validator>6.1.0.Final</version.hibernate-validator>
+		<version.hibernate.envers>5.4.6.Final</version.hibernate.envers>
+		<version.hsqldb>2.5.0</version.hsqldb>
+		<version.h2db>1.4.199</version.h2db>
+		<version.resteasy>3.0.10.Final</version.resteasy>
+
+		<m2e.jpa.activation>false</m2e.jpa.activation>
+		<activemq-junit-version>5.13.0</activemq-junit-version>
+		<activemq-version>5.13.0</activemq-version>
+		<spring.version>5.2.0.RELEASE</spring.version>
+		<version.gson>2.8.5</version.gson>
+	</properties>
+
+	
+
+	<distributionManagement>
+		
+	</distributionManagement>
+
+	
+
+
+
+	<dependencies>
+		
+
+	</dependencies>
+	<build>
+		
+
+		<plugins>
+
+
+		</plugins>
+	</build>
+
+</project>
