@@ -76,6 +76,7 @@ public class JunitCache implements WildflyCacheInterface {
 			GennyToken userToken = new GennyToken(token);
 			try {
 				askMsgs2Str = QwandaUtils.apiPostEntity(GennySettings.ddtUrl + "/write/", value, userToken.getToken());
+				System.out.println(askMsgs2Str);
 				JsonObject json = new JsonObject(askMsgs2Str);
 				askMsgs2Str = json.getString("value"); // TODO - assumes always works.....not always case
 			} catch (ClientProtocolException e) {

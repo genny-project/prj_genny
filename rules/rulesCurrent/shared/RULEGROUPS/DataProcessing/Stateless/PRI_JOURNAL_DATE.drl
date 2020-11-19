@@ -25,6 +25,8 @@ import life.genny.qwandautils.QwandaUtils;
 import life.genny.qwandautils.GennySettings;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
+import java.util.Base64;
+import io.vavr.Tuple2;
 
 
 rule "PRI_JOURNAL_DATE"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:g="http://www.jboss.org/drools/flow/gpd" xmlns:java="http://www.java.com/javaTypes" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.2.SNAPSHOT-v20200602-1600-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:g="http://www.jboss.org/drools/flow/gpd" xmlns:java="http://www.java.com/javaTypes" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.1.Final-v20190425-2005-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
   <bpmn2:itemDefinition id="ItemDefinition_10" isCollection="false" structureRef="java.lang.String"/>
   <bpmn2:itemDefinition id="ItemDefinition_628" isCollection="false" structureRef="org.kie.internal.runtime.StatefulKnowledgeSession"/>
   <bpmn2:itemDefinition id="ItemDefinition_635" isCollection="false" structureRef="org.jbpm.bpmn2.handler.SendTaskHandler"/>
@@ -49,6 +49,21 @@
   <bpmn2:itemDefinition id="ItemDefinition_14" isCollection="false" structureRef="life.genny.utils.BaseEntityUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_18" isCollection="false" structureRef="life.genny.qwanda.message.QDataBaseEntityMessage"/>
   <bpmn2:itemDefinition id="ItemDefinition_19" isCollection="false" structureRef="life.genny.utils.TaskUtils"/>
+  <bpmn2:itemDefinition id="ItemDefinition_13" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_17" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_20" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_21" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_22" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_23" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_25" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_26" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_27" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_28" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_29" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_30" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_31" isCollection="false"/>
+  <bpmn2:itemDefinition id="ItemDefinition_32" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_33" isCollection="false" structureRef="Object"/>
   <bpmn2:signal id="Signal_2" name="event"/>
   <bpmn2:signal id="Signal_3" name="data"/>
   <bpmn2:signal id="Signal_4" name="newSession"/>
@@ -1226,7 +1241,9 @@ if (output.getTypeOfResult().equals(&quot;ERROR&quot;)) {
 		output.setResultCode(&quot;USER_LOGOUT&quot;);
 		output.setTypeOfResult(&quot;LOGOUT&quot;);
 } else {
+System.out.println(&quot;userSession: Not Forcing session to logout&quot;);
 /* send out targets that are in output 
+System.out.println(&quot;userSession: logging herer&quot;);
 BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
  for (String targetCode : output.getAttributeTargetCodeMap().values())
 {
@@ -1385,13 +1402,20 @@ if (currentUser == null) {
               <tns:metaValue><![CDATA[ShowFrames]]></tns:metaValue>
             </tns:metaData>
             <tns:onEntry-script scriptFormat="http://www.java.com/java">
-              <tns:script>/*System.out.println(&quot;userSession: Show Page Handler - Entering ShowFrames in userSession using dom &quot;+dom);
+              <tns:script>System.out.println(&quot;userSession: Show Page Handler &quot;);
+/*System.out.println(&quot;userSession: Show Page Handler - Entering ShowFrames in userSession using dom &quot;+dom);
+System.out.println(userToken);
 KieSession kieSession = ((StatefulKnowledgeSession)kcontext.getKnowledgeRuntime());
 System.out.println(&quot;KieSession id = &quot;+kieSession.getId());*/
 </tns:script>
             </tns:onEntry-script>
             <tns:onExit-script scriptFormat="http://www.java.com/java">
-              <tns:script>TaskUtils.sendTaskAskItems(userToken);</tns:script>
+              <tns:script>System.out.println(&quot;TaskUtils.sendTaskAskItems exit &quot;);
+
+TaskUtils.sendTaskAskItems(userToken);
+
+System.out.println(&quot;TaskUtils.sendTaskAskItems end &quot;);
+</tns:script>
             </tns:onExit-script>
           </bpmn2:extensionElements>
           <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>

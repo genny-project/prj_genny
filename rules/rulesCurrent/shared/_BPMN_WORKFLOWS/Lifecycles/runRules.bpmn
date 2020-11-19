@@ -139,7 +139,8 @@
           <tns:metaValue><![CDATA[RunRuleFlowGroup]]></tns:metaValue>
         </tns:metaData>
         <tns:onEntry-script scriptFormat="http://www.java.com/java">
-          <tns:script>KieSession kieSession = ((StatefulKnowledgeSession)kcontext.getKnowledgeRuntime());
+          <tns:script>System.out.println(&quot;run tasks&quot;);
+KieSession kieSession = ((StatefulKnowledgeSession)kcontext.getKnowledgeRuntime());
 SessionFacts sessionFacts2 = (SessionFacts)sessionFacts;
 String realm = sessionFacts2.getUserToken().getRealm();
 String userCode = sessionFacts2.getUserToken().getUserCode();

@@ -30,6 +30,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.drools.core.ClockType;
+import org.drools.core.impl.StatefulKnowledgeSessionImpl;
 import org.drools.core.time.impl.PseudoClockScheduler;
 import org.jbpm.executor.ExecutorServiceFactory;
 import org.jbpm.executor.impl.ExecutorImpl;
@@ -187,6 +188,8 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			}
 			tokens.put("PER_SERVICE", serviceToken);
 			cmds.add(CommandFactory.newInsert(serviceToken, serviceToken.getCode()));
+			cmds.add(CommandFactory.newSetGlobal("payload", new life.genny.qwanda.message.QBulkMessage()));
+
 			super.setUp();
 			this.serviceToken = serviceToken;
 
@@ -204,7 +207,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		if (tokens.isEmpty()) {
 			System.out.println("You must supply at least a service token!");
 		} else {
-			try {
+			try {			
 				results = kieSession.execute(CommandFactory.newBatchExecution(cmds));
 			} catch (Exception ee) {
 
@@ -336,6 +339,13 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 
 		QBulkMessage payload = new QBulkMessage();
 		kieSession.setGlobal("payload", payload);
+//		try {
+//			
+//		}catch (Exception e) {
+//			
+//			System.out.println(e.getMessage());
+//		}
+// 		
 
 		if ((eventMsg != null) && (eventMsg.getData().getCode().equals("INIT_STARTUP"))) {
 			kieSession.startProcess("initProject");
@@ -603,8 +613,16 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 					String ffileAbs = baseDirFilePath+"/"+rpath;
 					String resourceFile = ffileAbs.substring(baseDirFilePath.length() + 1);
 
-					Resource r = ResourceFactory.newClassPathResource(rpath);
+					String path = "/Users/yuxiangxia/projects/genny/prj_genny/rules/"+rpath.replace("/rules/rules", "/rules");
+//					if(rpath.endsWith("bpmn")) {
+//						path = "/Users/yuxiangxia/projects/genny/prj_genny/"+rpath;
+//					}else {
+//						path = "/Users/yuxiangxia/projects/genny/prj_genny/rules/"+rpath;
+//					}
+					
+					Resource r = ResourceFactory.newFileResource(path);
 					ResourceType rt = entry.getValue();
+					//System.out.println("show here "+entry.getKey() +" "+entry.getValue());
 					try {
 						envBuilder.addAsset(r, rt);
 					} catch (Exception e) {
@@ -612,6 +630,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 						System.out.println("ERROR with rule "+ruleFilename);
 						System.out.println("Located at  "+rpath);
 						System.out.println(e.getMessage());
+						//e.printStackTrace();
 					}
 					if (r.getSourcePath().endsWith("drl")) {
 						String ruleText = readLineByLineJava8(ffileAbs);
@@ -884,7 +903,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		// return
 		// found.getAbsoluteFile().getPath().substring(base.getAbsoluteFile().getPath().length()
 		// + 1);
-		return found.getPath();
+ 		return found.getPath();
 	}
 
 	public static void displayForm(final String rootFrameCode, String targetFrameCode, GennyToken userToken) {

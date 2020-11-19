@@ -2989,7 +2989,7 @@ public class AdamTest {
 //		}		
 	}
 
-	// @Test
+    @Test
 	public void showFramesTest() {
 		GennyToken tokenUser = GennyJbpmBaseTest.createGennyToken("ABCDEFGH", "internmatch", "adam.crow@gada.io",
 				"Adam Crow", "intern");

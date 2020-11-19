@@ -140,7 +140,8 @@
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_21</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_33</bpmn2:outgoing>
-      <bpmn2:script>KieSession kieSession = ((StatefulKnowledgeSession)kcontext.getKnowledgeRuntime());
+      <bpmn2:script>System.out.println(&quot;close tasks&quot;);
+KieSession kieSession = ((StatefulKnowledgeSession)kcontext.getKnowledgeRuntime());
 SessionFacts sessionFacts2 = (SessionFacts)sessionFacts;
 String realm = sessionFacts2.getUserToken().getRealm();
 String userCode = sessionFacts2.getUserToken().getUserCode();
