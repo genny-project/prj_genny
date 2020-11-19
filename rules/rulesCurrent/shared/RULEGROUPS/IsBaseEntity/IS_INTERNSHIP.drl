@@ -110,6 +110,19 @@ rule "IS_INTERNSHIP"
 		System.out.println("I just posted the note");
 		System.out.println("Note endPoint: " +endPoint);
 		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
+
+		/* send the detail sbe */
+		long totalTime = TableUtils.searchTable(beUtils,"INTERNSHIP", true, "PRI_CODE", newBe.getCode());
+		System.out.println("total took " + (totalTime) + " ms"); 
+
+		BaseEntity internshipBe = beUtils.getBaseEntityByCode(newBe.getCode());
+		
+		if(internshipBe != null){
+			
+			QDataBaseEntityMessage internshipBeMsg = new QDataBaseEntityMessage(internshipBe);
+			internshipBeMsg.setToken(userToken.getToken());
+			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(internshipBeMsg));
+		}
 		
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
