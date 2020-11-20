@@ -85,26 +85,28 @@ rule "IS_QA_HOST_CPY_REP"
 		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
 
 
-	
-		/*String user_email = user.getValue("PRI_EMAIL",null);*/
-		/*String user_email = "hello@outcome.life";*/
+		/* Send email to Agent */
 		
-		/*
+		String url = "https://internmatch-dev.gada.io/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9JTlRFUk4=";
+		System.out.println("url: " + url);
+
+
 		String user_email = "c.pyke85@gmail.com";
 		String subject = "You have been registered on InternMatch";
-		String template_id = "d-94f647d38d7745a1b925300df2208279";
-		String hardcodedTemplateData1 = "intern";
-		String hardcodedTemplateData2 = firstname;
-		
+		String template_id = "d-8212002ccd994d8c91da80d638cc71ba";
+
+
 		System.out.println("user_email: " + user_email);
 		System.out.println("subject: " + subject);
 		System.out.println("template_id: " + template_id);
-		System.out.println("hardcodedTemplateData1: " + hardcodedTemplateData1);
-		System.out.println("hardcodedTemplateData2: " + hardcodedTemplateData2);
-
 		
-		EmailHelper.sendGrid(user_email, subject, template_id, hardcodedTemplateData1, hardcodedTemplateData2)
-		*/
+		
+		HashMap<String, String> templateData = new HashMap<String, String>();
+    	templateData.put("HostCompanyRep", firstname);
+    	templateData.put("url", url);
+
+		EmailHelper.sendGrid(user_email, subject, template_id, templateData);
+		
 		
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
