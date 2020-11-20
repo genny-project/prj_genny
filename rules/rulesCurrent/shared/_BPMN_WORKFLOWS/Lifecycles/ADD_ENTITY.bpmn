@@ -115,11 +115,12 @@
         <bpmn2:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% START Create Entity WORKFLOW %%%%%%%%%%%%%%%%%%%&quot;);
 
 	userToken = (GennyToken)userToken;
-	beUtils = new BaseEntityUtils(userToken);
+	beUtils = new BaseEntityUtils(serviceToken,userToken);
 	String newCode = &quot;&quot;; 
 
 
 /* Generate UUID */
+System.out.println(&quot;SERVICETOKEN:&quot;+serviceToken.getToken());
 	String uuid = KeycloakUtils.createDummyUser(serviceToken.getToken(), serviceToken.getRealm());
 	kcontext.setVariable(&quot;uuid&quot;, uuid);
 	System.out.println(&quot;ADD_ENTITY: uuid: &quot; + uuid);

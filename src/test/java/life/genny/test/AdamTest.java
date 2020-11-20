@@ -54,6 +54,7 @@ import javax.persistence.EntityManagerFactory;
 import life.genny.qwanda.message.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -205,16 +206,16 @@ public class AdamTest {
 //    	String userTokenStr = KeycloakUtils.getUserToken(keycloakUrl,uuid, serviceTokenStr, "internmatch");
 //    	System.out.println(userTokenStr);
 //    			    	String accessToken = null;
-			// accessToken = KeycloakUtils.getAccessToken(keycloakUrl, "master",
-			// "admin-cli", null, "admin",
-			// System.getenv("KEYCLOAK_PASSWORD"));
+			String accessToken = KeycloakUtils.getAccessToken(keycloakUrl, "master",
+			 "admin-cli", null, "admin",
+			 System.getenv("KEYCLOAK_PASSWORD"));
 
-			// String url = keycloakUrl + "/auth/admin/realms/" + realm + "/users/" + uuid;
-			// String result = sendGET(url,accessToken);
+			 String url = keycloakUrl + "/auth/admin/realms/" + realm + "/users/" + uuid;
+			 String result = sendGET(url,accessToken);
 
-			// JsonObject userJson = new JsonObject(result);
+			 JsonObject userJson = new JsonObject(result);
 
-			// String username = userJson.getString("username");
+			 String username = userJson.getString("username");
 
 			String exchangedToken = serviceTokenStr;
 			String userToken = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(),
@@ -222,69 +223,69 @@ public class AdamTest {
 
 			System.out.println(userToken);
 
-//			HttpClient httpClient = new DefaultHttpClient();
-//
-//			try {
-//				ArrayList<NameValuePair> postParameters;
+			HttpClient httpClient = new DefaultHttpClient();
+
+			try {
+				ArrayList<NameValuePair> postParameters;
 //
 //				HttpPost post = new HttpPost(
 //						keycloakUrl + "/auth/admin/realms/" + realm + "/users/" + uuid + "/impersonation");
 //
 //				// this needs -Dkeycloak.profile.feature.token_exchange=enabled
-////    			HttpPost post = new HttpPost(keycloakUrl + "/auth/realms/" + realm + "/protocol/openid-connect/token");
-////    			 postParameters = new ArrayList<NameValuePair>();
-////    			    postParameters.add(new BasicNameValuePair("grant_type", "urn:ietf:params:oauth:grant-type:token-exchange"));
-////    			    postParameters.add(new BasicNameValuePair("client_id", clientId));
-////    			    postParameters.add(new BasicNameValuePair("client_secret", secret));
-////    			    postParameters.add(new BasicNameValuePair("audience", "target-client"));
-////    			    postParameters.add(new BasicNameValuePair("requested_subject", username));
-////    			    post.setEntity(new UrlEncodedFormEntity(postParameters, "UTF-8"));
-//// 
-////    			
-//
-//				post.addHeader("Content-Type", "application/json");
-//				post.addHeader("Authorization", "Bearer " + exchangedToken);
-//
-//				HttpResponse response = httpClient.execute(post);
-//
-//				int statusCode = response.getStatusLine().getStatusCode();
-//				log.info("StatusCode: " + statusCode);
-//
-//				HttpEntity entity = response.getEntity();
-//
-//				String content = null;
-//				if (statusCode != 200) {
-//					content = getContent(entity);
-//					throw new IOException("" + statusCode);
-//				}
-//				if (entity == null) {
-//					throw new IOException("Null Entity");
-//				} else {
-//					content = getContent(entity);
-//					Header[] cookies = response.getHeaders("Set-Cookie");
-//					if (cookies.length > 0) {
-//						for (Header cookie : cookies) {
-//							String value = cookie.getValue();
-//							if (value.startsWith("KEYCLOAK_IDENTITY=")) {
-//								if (!value.startsWith("KEYCLOAK_IDENTITY=;")) {
-//									String token = cookie.getValue();
-//
-//									token = token.substring("KEYCLOAK_IDENTITY=".length());
-//									log.info(token);
-//									// return token;
-//								}
-//							}
-//						}
-//					}
-//				}
-//
-////    				
-////    				System.out.println(content);
-//			} catch (Exception ee) {
-//
-//			} finally {
-//				httpClient.getConnectionManager().shutdown();
-//			}
+    			HttpPost post = new HttpPost(keycloakUrl + "/auth/realms/" + realm + "/protocol/openid-connect/token");
+    			 postParameters = new ArrayList<NameValuePair>();
+    			    postParameters.add(new BasicNameValuePair("grant_type", "urn:ietf:params:oauth:grant-type:token-exchange"));
+    			    postParameters.add(new BasicNameValuePair("client_id", clientId));
+    			    postParameters.add(new BasicNameValuePair("client_secret", secret));
+    			    postParameters.add(new BasicNameValuePair("audience", "target-client"));
+    			    postParameters.add(new BasicNameValuePair("requested_subject", username));
+    			    post.setEntity(new UrlEncodedFormEntity(postParameters, "UTF-8"));
+ 
+    			
+
+				post.addHeader("Content-Type", "application/json");
+				post.addHeader("Authorization", "Bearer " + exchangedToken);
+
+				HttpResponse response = httpClient.execute(post);
+
+				int statusCode = response.getStatusLine().getStatusCode();
+				log.info("StatusCode: " + statusCode);
+
+				HttpEntity entity = response.getEntity();
+
+				String content = null;
+				if (statusCode != 200) {
+					content = getContent(entity);
+					throw new IOException("" + statusCode);
+				}
+				if (entity == null) {
+					throw new IOException("Null Entity");
+				} else {
+					content = getContent(entity);
+					Header[] cookies = response.getHeaders("Set-Cookie");
+					if (cookies.length > 0) {
+						for (Header cookie : cookies) {
+							String value = cookie.getValue();
+							if (value.startsWith("KEYCLOAK_IDENTITY=")) {
+								if (!value.startsWith("KEYCLOAK_IDENTITY=;")) {
+									String token = cookie.getValue();
+
+									token = token.substring("KEYCLOAK_IDENTITY=".length());
+									log.info(token);
+									// return token;
+								}
+							}
+						}
+					}
+				}
+
+//    				
+//    				System.out.println(content);
+			} catch (Exception ee) {
+
+			} finally {
+				httpClient.getConnectionManager().shutdown();
+			}
 //        	
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block

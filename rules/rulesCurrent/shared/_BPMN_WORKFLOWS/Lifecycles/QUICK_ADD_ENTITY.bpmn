@@ -297,6 +297,7 @@
 	kcontext.setVariable(&quot;serviceToken&quot;, serviceToken);
 	kcontext.setVariable(&quot;userToken&quot;, userToken);
 
+System.out.println(&quot;QUICK_ADD_ENTITY: serviceToken token = &quot; +serviceToken.getToken());
 	System.out.println(&quot;QUICK_ADD_ENTITY: userToken = &quot; +userToken.getCode());
 	System.out.println(&quot;QUICK_ADD_ENTITY: serviceToken = &quot; +serviceToken.getCode());
 
@@ -324,7 +325,7 @@
 
 /* Create Entity */
 	userToken = (GennyToken)userToken;
-	BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+	BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken,userToken);
 	String newCode = &quot;PER_&quot;+uuid;
 	newCode = newCode.toUpperCase();
 	newBe = beUtils.create(newCode, newCode);
