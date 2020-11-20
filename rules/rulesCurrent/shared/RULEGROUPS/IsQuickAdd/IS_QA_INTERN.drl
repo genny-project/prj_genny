@@ -88,10 +88,10 @@ rule "IS_QA_INTERN"
 
 		/* Send email to Intern */
 		
-		/*
+		
 		String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), userCode, serviceToken.getToken());
 		System.out.println("token: " + token);
-		*/
+		
 
 		/*String user_email = "hello@outcome.life";*/
 		
