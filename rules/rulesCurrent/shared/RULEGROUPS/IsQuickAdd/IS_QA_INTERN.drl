@@ -25,13 +25,13 @@ rule "IS_QA_INTERN"
 		output : OutputParam()
 		baseEntityType : String(baseEntityType.equals("QA_INTERN"))
 		newBe : BaseEntity()
+		beUtils: BaseEntityUtils()
 	  
      then
  		System.out.println("IS_QA_INTERN: Rule fired" );
  		System.out.println("IS_QA_INTERN: newBe = " + newBe.getCode()); 
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
- 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
  		
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_INTERN", "true"));
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_DISABLED", "false"));
@@ -93,8 +93,9 @@ rule "IS_QA_INTERN"
 		/*String user_email = user.getValue("PRI_EMAIL",null);*/
 		/*String user_email = "hello@outcome.life";*/
 		
-		String url = "https://internmatch-dev.gada.io/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9JTlRFUk4=";
+		String url = GennySettings.projectUrl+"/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9JTlRFUk4=";
 		System.out.println("url: " + url);
+		
 		
 		url = url +"?token=" + token;
 		System.out.println("url: " + url);
@@ -125,7 +126,7 @@ rule "IS_QA_INTERN"
 		
 		
 		output.setTypeOfResult("NONE");
-		output.setResultCode("NONE");  /* dont display anything new */
+		output.setResultCode("NONE");  /* don't display anything new */
 		
 		retract(newBe)
 	
