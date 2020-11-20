@@ -95,14 +95,14 @@ rule "IS_QA_INTERN"
 
 		/*String user_email = "hello@outcome.life";*/
 		
-		String url = "https://internmatch-dev.gada.io/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9JTlRFUk4=";
-		/*String url = GennySettings.projectUrl+"/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9JTlRFUk4=";*/
+		/*String url = "https://internmatch-dev.gada.io/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9JTlRFUk4=";*/
+		String url = GennySettings.projectUrl+"/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9JTlRFUk4=";
 		System.out.println("url: " + url);
 		
-		/*
+		
 		url = url +"?token=" + token;
 		System.out.println("url: " + url);
-		*/
+		
 
 		String user_email = "c.pyke85@gmail.com";
 		String subject = "You have been registered on InternMatch";
