@@ -94,7 +94,9 @@ rule "IS_QA_EDU_PRO_REP"
 		
 		/* Send email to Agent */
 		
-		String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), userCode, serviceToken.getToken());
+		BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
+		
+		String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, userCode, serviceToken.getToken());
 		System.out.println("token: " + token);
 		
 
