@@ -25,13 +25,13 @@ rule "IS_QA_INTERN"
 		output : OutputParam()
 		baseEntityType : String(baseEntityType.equals("QA_INTERN"))
 		newBe : BaseEntity()
+		beUtils: BaseEntityUtils()
 	  
      then
  		System.out.println("IS_QA_INTERN: Rule fired" );
  		System.out.println("IS_QA_INTERN: newBe = " + newBe.getCode()); 
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
- 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
  		
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_INTERN", "true"));
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_DISABLED", "false"));
@@ -86,37 +86,34 @@ rule "IS_QA_INTERN"
 		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
 
 
-		/*String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), userCode, serviceToken.getToken());
-		System.out.println("token: " + token);*/
-
+		/* Send email to Intern */
 		
-		/*String user_email = user.getValue("PRI_EMAIL",null);*/
+		
+		BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
+		
+		String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, userCode, serviceToken.getToken());
+		System.out.println("token: " + token);
+		
+
 		/*String user_email = "hello@outcome.life";*/
 		
-		String url = "https://internmatch-dev.gada.io/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9JTlRFUk4=";
+		/*String url = "https://internmatch-dev.gada.io/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9JTlRFUk4=";*/
+		String url = GennySettings.projectUrl+"/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9JTlRFUk4=";
 		System.out.println("url: " + url);
 		
-		/*
+		
 		url = url +"?token=" + token;
-		System.out.println("url: " + url);*/
+		System.out.println("url: " + url);
+		
 
 		String user_email = "c.pyke85@gmail.com";
 		String subject = "You have been registered on InternMatch";
 		String template_id = "d-94f647d38d7745a1b925300df2208279";
-		String hardcodedTemplateData1 = "intern";
-		String hardcodedTemplateData2 = firstname;
 		
 
 		System.out.println("user_email: " + user_email);
 		System.out.println("subject: " + subject);
-		System.out.println("template_id: " + template_id);
-		/*
-		System.out.println("hardcodedTemplateData1: " + hardcodedTemplateData1);
-		System.out.println("hardcodedTemplateData2: " + hardcodedTemplateData2);
-
-		
-		EmailHelper.sendGrid(user_email, subject, template_id, hardcodedTemplateData1, hardcodedTemplateData2);*/
-		
+		System.out.println("template_id: " + template_id);		
 		
 		HashMap<String, String> templateData = new HashMap<String, String>();
     	templateData.put("intern", firstname);
@@ -126,7 +123,7 @@ rule "IS_QA_INTERN"
 		
 		
 		output.setTypeOfResult("NONE");
-		output.setResultCode("NONE");  /* dont display anything new */
+		output.setResultCode("NONE");  /* don't display anything new */
 		
 		retract(newBe)
 	
