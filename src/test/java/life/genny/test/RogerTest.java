@@ -193,21 +193,21 @@ public class RogerTest {
 	protected static GennyToken serviceToken;
 	
 	
-	@Test
-	public void rulesloadertest() {
-		//RulesLoader.init();
-		log.info("Loading Rules");
-		Boolean noChangeInRules = RulesLoader.loadRules(GennySettings.rulesDir);
-
-		System.out.println(noChangeInRules);
-		
-		if ((!noChangeInRules) || (!"TRUE".equalsIgnoreCase(System.getenv("DISABLE_INIT_RULES_STARTUP")))) {
-			log.info("Rulesservice triggering rules");
-			(new RulesLoader()).triggerStartupRules(GennySettings.rulesDir);
-		} else {
-			log.warn("DISABLE_INIT_RULES_STARTUP IS TRUE -> No Init Rules triggered.");
-		}
-	}
+//	@Test
+//	public void rulesloadertest() {
+//		//RulesLoader.init();
+//		log.info("Loading Rules");
+//		Boolean noChangeInRules = RulesLoader.loadRules(GennySettings.rulesDir);
+//
+//		System.out.println(noChangeInRules);
+//		
+//		if ((!noChangeInRules) || (!"TRUE".equalsIgnoreCase(System.getenv("DISABLE_INIT_RULES_STARTUP")))) {
+//			log.info("Rulesservice triggering rules");
+//			(new RulesLoader()).triggerStartupRules(GennySettings.rulesDir);
+//		} else {
+//			log.warn("DISABLE_INIT_RULES_STARTUP IS TRUE -> No Init Rules triggered.");
+//		}
+//	}
  	 
 	public GennyToken createGennyToken(final String uuid, final String realm, String username, String name, String role)
 	{
