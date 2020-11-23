@@ -32,6 +32,8 @@
   <bpmn2:itemDefinition id="ItemDefinition_7" isCollection="false" structureRef="life.genny.utils.VertxUtils.ESubscriptionType"/>
   <bpmn2:itemDefinition id="ItemDefinition_8" isCollection="false" structureRef="life.genny.utils.VertxUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_17" isCollection="false" structureRef="java.lang.Short"/>
+  <bpmn2:itemDefinition id="ItemDefinition_9" isCollection="false" structureRef="java.util.Map.Entry"/>
+  <bpmn2:itemDefinition id="ItemDefinition_10" isCollection="false" structureRef="java.util.Map"/>
   <bpmn2:signal id="Signal_7" name="START_ADD_ENTITY"/>
   <bpmn2:process id="ADD_ENTITY" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="Default Process" isExecutable="true">
     <bpmn2:extensionElements>
@@ -54,6 +56,8 @@
       <drools:import name="life.genny.qwanda.message.MessageData"/>
       <drools:import name="life.genny.utils.VertxUtils"/>
       <drools:import name="life.genny.utils.VertxUtils.ESubscriptionType"/>
+      <drools:import name="java.util.Map"/>
+      <drools:import name="java.util.Map.Entry"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_2" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_2" name="serviceToken"/>
@@ -131,22 +135,45 @@
 	newCode = newCode.toUpperCase();
 	*/
 	
+	Map&lt;String, String> prefixMap = new HashMap&lt;String, String>();
+
+
+	/* ------------ ADD BE PREFIX HERE ------------ */
+
+	/* PER */
+	prefixMap.put(&quot;INTERN&quot;, &quot;PER&quot;);
+	prefixMap.put(&quot;HOST_CPY_REP&quot;, &quot;PER&quot;);
+	prefixMap.put(&quot;EDU_PRO_REP&quot;, &quot;PER&quot;);
+	prefixMap.put(&quot;REF_PART_REP&quot;, &quot;PER&quot;);
+	prefixMap.put(&quot;AGENT&quot;, &quot;PER&quot;);
+	prefixMap.put(&quot;STUDENT&quot;, &quot;PER&quot;);
+	prefixMap.put(&quot;ADMIN&quot;, &quot;PER&quot;);
+	prefixMap.put(&quot;PERSON&quot;, &quot;PER&quot;);
+
+	/* CPY */
+	prefixMap.put(&quot;HOST_CPY&quot;, &quot;CPY&quot;);
+	prefixMap.put(&quot;EDU_PRO&quot;, &quot;CPY&quot;);
+	prefixMap.put(&quot;REF_PART&quot;, &quot;CPY&quot;);
+	prefixMap.put(&quot;AGENCY&quot;, &quot;CPY&quot;);
+
+	/* BEG */
+	prefixMap.put(&quot;INTERNSHIP&quot;, &quot;BEG&quot;);
+		
+	/* TEA */
+	prefixMap.put(&quot;TEAM&quot;, &quot;TEA&quot;);
+
+	/* ----------------------------------------------- */
+
+
 	String prefix = &quot;NULL_&quot;;	
 
-	if (clean.equals(&quot;INTERN&quot;) || clean.equals(&quot;HOST_CPY_REP&quot;) || clean.equals(&quot;EDU_PRO_REP&quot;) || clean.equals(&quot;AGENT&quot;)) {
-			prefix = &quot;PER_&quot;;
-			System.out.println(&quot;ADD_ENTITY: Adding a &quot; + prefix);
+	if (prefixMap.containsKey(clean)) {
+		prefix = prefixMap.get(clean) + &quot;_&quot;;
+		System.out.println(&quot;ADD_ENTITY: Adding a &quot; + prefix);
+	} else {
+		System.out.println(&quot;ADD_ENTITY: ERROR - BE TYPE HAS NO PREFIX IN MAP&quot;);
 	}
-
-	if (clean.equals(&quot;HOST_CPY&quot;) || clean.equals(&quot;EDU_PRO&quot;) || clean.equals(&quot;AGENCY&quot;)) {
-			prefix = &quot;CPY_&quot;;
-			System.out.println(&quot;ADD_ENTITY: Adding a &quot; + prefix);
-	}
-
-	if (clean.equals(&quot;INTERNSHIP&quot;)) {
-			prefix = &quot;BEG_&quot;;
-			System.out.println(&quot;ADD_ENTITY: Adding a &quot; + prefix);
-	}
+	
 
 /* Create Entity */
 	newCode = prefix + uuid;
@@ -262,7 +289,7 @@
           <bpmn2:dataInput id="DataInput_2" itemSubjectRef="ItemDefinition_2" name="userToken"/>
           <bpmn2:dataInput id="DataInput_3" name="ruleFlowGroup"/>
           <bpmn2:dataInput id="DataInput_10" name="callingWorkflow"/>
-          <bpmn2:dataInput id="DataInput_11" itemSubjectRef="ItemDefinition_2733" name="key"/>
+          <bpmn2:dataInput id="DataInput_11" itemSubjectRef="ItemDefinition_2733" name="baseEntityType"/>
           <bpmn2:dataInput id="DataInput_12" itemSubjectRef="ItemDefinition_2016" name="newBe"/>
           <bpmn2:inputSet id="_InputSet_123">
             <bpmn2:dataInputRefs>DataInput_1</bpmn2:dataInputRefs>
@@ -297,7 +324,7 @@
           </bpmn2:assignment>
         </bpmn2:dataInputAssociation>
         <bpmn2:dataInputAssociation id="DataInputAssociation_1">
-          <bpmn2:sourceRef>key</bpmn2:sourceRef>
+          <bpmn2:sourceRef>clean</bpmn2:sourceRef>
           <bpmn2:targetRef>DataInput_11</bpmn2:targetRef>
         </bpmn2:dataInputAssociation>
         <bpmn2:dataInputAssociation id="DataInputAssociation_2">
