@@ -109,7 +109,6 @@ rule "IS_QA_HOST_CPY_REP"
 		String subject = "You have been registered on InternMatch";
 		String template_id = "d-6c43211b9b934cb6abaceea171f32e09";
 
-
 		System.out.println("user_email: " + user_email);
 		System.out.println("subject: " + subject);
 		System.out.println("template_id: " + template_id);
