@@ -429,20 +429,17 @@ kcontext.setVariable(&quot;message&quot;,(QEventMessage)message); </bpmn2:script
 
 	beUtilsTwo = new BaseEntityUtils(userToken);
 
-	if (key.equals(&quot;YES&quot;)) {
 	
-			System.out.println(&quot; key = YES &quot;);
-			OutputParam sauce = (OutputParam)sessionFacts.getMessage();
-			source = sauce.getAskSourceCode();
-			kcontext.setVariable(&quot;source&quot;, source);
-			System.out.println(&quot;source: &quot; + source);
+	System.out.println(&quot; key = YES &quot;);
+	OutputParam sauce = (OutputParam)sessionFacts.getMessage();
+	source = sauce.getAskSourceCode();
+	kcontext.setVariable(&quot;source&quot;, source);
+	System.out.println(&quot;source: &quot; + source);
 
-			newBe = beUtilsTwo. getBaseEntityByCode(source);
-			kcontext.setVariable(&quot;newBe&quot;, newBe);
-			System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ newBe: &quot; + newBe);
-	} else {
-		System.out.println(&quot; key = NO &quot;);	
-	}
+	newBe = beUtilsTwo. getBaseEntityByCode(source);
+	kcontext.setVariable(&quot;newBe&quot;, newBe);
+	System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ newBe: &quot; + newBe);
+	
 
 
 /* Do the template thing*/
