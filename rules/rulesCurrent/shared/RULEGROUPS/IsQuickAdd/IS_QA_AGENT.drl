@@ -89,8 +89,8 @@ rule "IS_QA_AGENT"
 
 		/*String user_email = "hello@outcome.life";*/
 		
-		/*String url = "https://internmatch-dev.gada.io/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9JTlRFUk4=";*/
-		String url = GennySettings.projectUrl+"/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9JTlRFUk4=";
+		/*String url = "https://internmatch-dev.gada.io/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9BR0VOVA==";*/
+		String url = GennySettings.projectUrl+"/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9BR0VOVA==";
 		System.out.println("url: " + url);
 		
 		
@@ -106,7 +106,6 @@ rule "IS_QA_AGENT"
 		System.out.println("user_email: " + user_email);
 		System.out.println("subject: " + subject);
 		System.out.println("template_id: " + template_id);
-		
 		
 		HashMap<String, String> templateData = new HashMap<String, String>();
     	templateData.put("intern", firstname);
