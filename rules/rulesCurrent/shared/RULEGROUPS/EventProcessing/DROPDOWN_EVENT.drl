@@ -14,7 +14,7 @@ rule "DROPDOWN_EVENT"
 		salience 200
     no-loop
     when
-		message : QEventMessage((data.code matches "PRI_.*" || data.code matches "LNK_.*") &&  event_type == "DD"  )
+		message : QEventDropdownMessage((data.code matches "PRI_.*" || data.code matches "LNK_.*") &&  event_type == "DD"  )
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam( )
