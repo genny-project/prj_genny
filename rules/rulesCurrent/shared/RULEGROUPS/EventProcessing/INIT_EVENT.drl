@@ -16,7 +16,7 @@ rule "INIT_EVENT"
 	no-loop
 	salience 10000
 	when
-		$message : QEventMessage(event_type == "BTN_CLICK")
+		$message : QEventMessage(event_type == "BTN_CLICK" && redirect == true)
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		beUtils : BaseEntityUtils()
