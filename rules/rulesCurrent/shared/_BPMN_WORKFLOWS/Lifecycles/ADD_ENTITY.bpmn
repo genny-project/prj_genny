@@ -391,6 +391,7 @@ kcontext.setVariable(&quot;message&quot;,(QEventMessage)message); </bpmn2:script
         <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
         <bpmn2:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% START Create Entity WORKFLOW %%%%%%%%%%%%%%%%%%%&quot;);
 
+
 /* Gather Session Facts and Tokens */
 	SessionFacts sessionFacts2 = (SessionFacts)sessionFacts;
 
