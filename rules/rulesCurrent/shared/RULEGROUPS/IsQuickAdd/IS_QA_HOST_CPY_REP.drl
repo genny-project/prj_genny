@@ -85,7 +85,7 @@ rule "IS_QA_HOST_CPY_REP"
 		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
 
 
-		/* Send email to Agent */
+		/* Send email to HCR */
 		
 		
 		BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
@@ -96,8 +96,8 @@ rule "IS_QA_HOST_CPY_REP"
 
 		/*String user_email = "hello@outcome.life";*/
 		
-		/*String url = "https://internmatch-dev.gada.io/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9JTlRFUk4=";*/
-		String url = GennySettings.projectUrl+"/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9JTlRFUk4=";
+		/*String url = "https://internmatch-dev.gada.io/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9IT1NUX0NQWV9SRVA=";*/
+		String url = GennySettings.projectUrl+"/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9IT1NUX0NQWV9SRVA=";
 		System.out.println("url: " + url);
 		
 		
@@ -107,8 +107,7 @@ rule "IS_QA_HOST_CPY_REP"
 
 		String user_email = "c.pyke85@gmail.com";
 		String subject = "You have been registered on InternMatch";
-		String template_id = "d-8212002ccd994d8c91da80d638cc71ba";
-
+		String template_id = "d-6c43211b9b934cb6abaceea171f32e09";
 
 		System.out.println("user_email: " + user_email);
 		System.out.println("subject: " + subject);
