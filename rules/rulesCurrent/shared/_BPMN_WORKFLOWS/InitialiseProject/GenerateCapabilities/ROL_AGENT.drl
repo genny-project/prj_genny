@@ -59,6 +59,7 @@ rule "ROL_AGENT"
    	     capabilityUtils.addCapabilityToRole(role,"ARCHIVE_EPR",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"VALIDATE_HC",CapabilityMode.VIEW);
 	     capabilityUtils.addCapabilityToRole(role,"UNARCHIVE_INTERN",CapabilityMode.VIEW);
+	     capabilityUtils.addCapabilityToRole(role,"POST_INTERVIEW",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"ON_HOLD_APPLICATION",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"REJECT_APPLICATION",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"WITHDRAW_APPLICATION",CapabilityMode.VIEW);
