@@ -301,7 +301,7 @@ if (currentUser != null) {
                         
         if (agencyCode != null) {
                 String aCode = agencyCode.replace(&quot;\&quot;&quot;, &quot;&quot;).replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;);
-                System.out.println(&quot;aCode  :: &quot; + epCode);
+                System.out.println(&quot;aCode  :: &quot; + aCode);
                 
                 BaseEntity agencyBe = beUtils.getBaseEntityByCode(aCode);
                 System.out.println(&quot;agencyBe :: &quot; + agencyBe);
