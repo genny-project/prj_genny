@@ -117,163 +117,167 @@ public class AdamTest {
     protected static GennyToken newUserToken;
     protected static GennyToken serviceToken;
 
-	@Test
-	public void testKeycloakImpersonation() {
+    @Test
+    public void testKeycloakImpersonation() {
 
-		// Get admin userToken
+        // Get admin userToken
 
-		String keycloakUrl = System.getenv("KEYCLOAKURL");
-		String clientId = "internmatch";
-		String secret = System.getenv("CLIENT_SECRET");
-		String uuid = "5a666e64-021f-48ce-8111-be3d66901f9c";
-		String servicePassword = System.getenv("SERVICE_PASSWORD");
-		String adminPassword = System.getenv("KEYCLOAK_PASSWORD");
-		try {
-			String serviceTokenStr = KeycloakUtils.getAccessToken(keycloakUrl, "internmatch", "admin-cli", null,
-					"service", servicePassword);
+        String keycloakUrl = System.getenv("KEYCLOAKURL");
+        String clientId = "internmatch";
+        String secret = System.getenv("CLIENT_SECRET");
+        String uuid = "5a666e64-021f-48ce-8111-be3d66901f9c";
+        String servicePassword = System.getenv("SERVICE_PASSWORD");
+        String adminPassword = System.getenv("KEYCLOAK_PASSWORD");
+        try {
+            String serviceTokenStr = KeycloakUtils.getAccessToken(keycloakUrl, "internmatch", "admin-cli", null,
+                    "service", servicePassword);
 
-//    	String userTokenStr = KeycloakUtils.getUserToken(keycloakUrl,uuid, serviceTokenStr, "internmatch");
-//    	System.out.println(userTokenStr);
-//    			    	String accessToken = null;
-			// accessToken = KeycloakUtils.getAccessToken(keycloakUrl, "master",
-			// "admin-cli", null, "admin",
-			// System.getenv("KEYCLOAK_PASSWORD"));
+            // String userTokenStr = KeycloakUtils.getUserToken(keycloakUrl,uuid,
+            // serviceTokenStr, "internmatch");
+            // System.out.println(userTokenStr);
+            // String accessToken = null;
+            // accessToken = KeycloakUtils.getAccessToken(keycloakUrl, "master",
+            // "admin-cli", null, "admin",
+            // System.getenv("KEYCLOAK_PASSWORD"));
 
-			// String url = keycloakUrl + "/auth/admin/realms/" + realm + "/users/" + uuid;
-			// String result = sendGET(url,accessToken);
+            // String url = keycloakUrl + "/auth/admin/realms/" + realm + "/users/" + uuid;
+            // String result = sendGET(url,accessToken);
 
-			// JsonObject userJson = new JsonObject(result);
+            // JsonObject userJson = new JsonObject(result);
 
-			// String username = userJson.getString("username");
+            // String username = userJson.getString("username");
 
-			String exchangedToken = serviceTokenStr;
-//			String userToken = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(),
-//			serviceToken.getRealm(),uuid, serviceToken.getToken());
+            String exchangedToken = serviceTokenStr;
+            // String userToken =
+            // KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(),
+            // serviceToken.getRealm(),uuid, serviceToken.getToken());
 
-			System.out.println(userToken);
+            System.out.println(userToken);
 
-//			HttpClient httpClient = new DefaultHttpClient();
-//
-//			try {
-//				ArrayList<NameValuePair> postParameters;
-//
-//				HttpPost post = new HttpPost(
-//						keycloakUrl + "/auth/admin/realms/" + realm + "/users/" + uuid + "/impersonation");
-//
-//				// this needs -Dkeycloak.profile.feature.token_exchange=enabled
-////    			HttpPost post = new HttpPost(keycloakUrl + "/auth/realms/" + realm + "/protocol/openid-connect/token");
-////    			 postParameters = new ArrayList<NameValuePair>();
-////    			    postParameters.add(new BasicNameValuePair("grant_type", "urn:ietf:params:oauth:grant-type:token-exchange"));
-////    			    postParameters.add(new BasicNameValuePair("client_id", clientId));
-////    			    postParameters.add(new BasicNameValuePair("client_secret", secret));
-////    			    postParameters.add(new BasicNameValuePair("audience", "target-client"));
-////    			    postParameters.add(new BasicNameValuePair("requested_subject", username));
-////    			    post.setEntity(new UrlEncodedFormEntity(postParameters, "UTF-8"));
-//// 
-////    			
-//
-//				post.addHeader("Content-Type", "application/json");
-//				post.addHeader("Authorization", "Bearer " + exchangedToken);
-//
-//				HttpResponse response = httpClient.execute(post);
-//
-//				int statusCode = response.getStatusLine().getStatusCode();
-//				log.info("StatusCode: " + statusCode);
-//
-//				HttpEntity entity = response.getEntity();
-//
-//				String content = null;
-//				if (statusCode != 200) {
-//					content = getContent(entity);
-//					throw new IOException("" + statusCode);
-//				}
-//				if (entity == null) {
-//					throw new IOException("Null Entity");
-//				} else {
-//					content = getContent(entity);
-//					Header[] cookies = response.getHeaders("Set-Cookie");
-//					if (cookies.length > 0) {
-//						for (Header cookie : cookies) {
-//							String value = cookie.getValue();
-//							if (value.startsWith("KEYCLOAK_IDENTITY=")) {
-//								if (!value.startsWith("KEYCLOAK_IDENTITY=;")) {
-//									String token = cookie.getValue();
-//
-//									token = token.substring("KEYCLOAK_IDENTITY=".length());
-//									log.info(token);
-//									// return token;
-//								}
-//							}
-//						}
-//					}
-//				}
-//
-////    				
-////    				System.out.println(content);
-//			} catch (Exception ee) {
-//
-//			} finally {
-//				httpClient.getConnectionManager().shutdown();
-//			}
-//        	
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-//    	
-	}
+            // HttpClient httpClient = new DefaultHttpClient();
+            //
+            // try {
+            // ArrayList<NameValuePair> postParameters;
+            //
+            // HttpPost post = new HttpPost(
+            // keycloakUrl + "/auth/admin/realms/" + realm + "/users/" + uuid +
+            // "/impersonation");
+            //
+            // // this needs -Dkeycloak.profile.feature.token_exchange=enabled
+            //// HttpPost post = new HttpPost(keycloakUrl + "/auth/realms/" + realm +
+            // "/protocol/openid-connect/token");
+            //// postParameters = new ArrayList<NameValuePair>();
+            //// postParameters.add(new BasicNameValuePair("grant_type",
+            // "urn:ietf:params:oauth:grant-type:token-exchange"));
+            //// postParameters.add(new BasicNameValuePair("client_id", clientId));
+            //// postParameters.add(new BasicNameValuePair("client_secret", secret));
+            //// postParameters.add(new BasicNameValuePair("audience", "target-client"));
+            //// postParameters.add(new BasicNameValuePair("requested_subject", username));
+            //// post.setEntity(new UrlEncodedFormEntity(postParameters, "UTF-8"));
+            ////
+            ////
+            //
+            // post.addHeader("Content-Type", "application/json");
+            // post.addHeader("Authorization", "Bearer " + exchangedToken);
+            //
+            // HttpResponse response = httpClient.execute(post);
+            //
+            // int statusCode = response.getStatusLine().getStatusCode();
+            // log.info("StatusCode: " + statusCode);
+            //
+            // HttpEntity entity = response.getEntity();
+            //
+            // String content = null;
+            // if (statusCode != 200) {
+            // content = getContent(entity);
+            // throw new IOException("" + statusCode);
+            // }
+            // if (entity == null) {
+            // throw new IOException("Null Entity");
+            // } else {
+            // content = getContent(entity);
+            // Header[] cookies = response.getHeaders("Set-Cookie");
+            // if (cookies.length > 0) {
+            // for (Header cookie : cookies) {
+            // String value = cookie.getValue();
+            // if (value.startsWith("KEYCLOAK_IDENTITY=")) {
+            // if (!value.startsWith("KEYCLOAK_IDENTITY=;")) {
+            // String token = cookie.getValue();
+            //
+            // token = token.substring("KEYCLOAK_IDENTITY=".length());
+            // log.info(token);
+            // // return token;
+            // }
+            // }
+            // }
+            // }
+            // }
+            //
+            ////
+            //// System.out.println(content);
+            // } catch (Exception ee) {
+            //
+            // } finally {
+            // httpClient.getConnectionManager().shutdown();
+            // }
+            //
+        } catch (IOException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+        //
+    }
 
-	public static String getContent(final HttpEntity httpEntity) throws IOException {
-		if (httpEntity == null)
-			return null;
-		final InputStream is = httpEntity.getContent();
-		try {
-			final ByteArrayOutputStream os = new ByteArrayOutputStream();
-			int c;
-			while ((c = is.read()) != -1) {
-				os.write(c);
-			}
-			final byte[] bytes = os.toByteArray();
-			final String data = new String(bytes);
-			return data;
-		} finally {
-			try {
-				is.close();
-			} catch (final IOException ignored) {
+    public static String getContent(final HttpEntity httpEntity) throws IOException {
+        if (httpEntity == null)
+            return null;
+        final InputStream is = httpEntity.getContent();
+        try {
+            final ByteArrayOutputStream os = new ByteArrayOutputStream();
+            int c;
+            while ((c = is.read()) != -1) {
+                os.write(c);
+            }
+            final byte[] bytes = os.toByteArray();
+            final String data = new String(bytes);
+            return data;
+        } finally {
+            try {
+                is.close();
+            } catch (final IOException ignored) {
 
-			}
-		}
+            }
+        }
 
-	}
+    }
 
-	private static String sendGET(String url, String token) throws IOException {
-		URL obj = new URL(url);
-		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-		con.setRequestMethod("GET");
-		con.addRequestProperty("Content-Type", "application/json");
-		con.addRequestProperty("Authorization", "Bearer " + token);
+    private static String sendGET(String url, String token) throws IOException {
+        URL obj = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        con.setRequestMethod("GET");
+        con.addRequestProperty("Content-Type", "application/json");
+        con.addRequestProperty("Authorization", "Bearer " + token);
 
-		// con.setRequestProperty("User-Agent", USER_AGENT);
-		int responseCode = con.getResponseCode();
-		System.out.println("GET Response Code :: " + responseCode);
-		if (responseCode == HttpURLConnection.HTTP_OK) { // success
-			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-			String inputLine;
-			StringBuffer response = new StringBuffer();
+        // con.setRequestProperty("User-Agent", USER_AGENT);
+        int responseCode = con.getResponseCode();
+        System.out.println("GET Response Code :: " + responseCode);
+        if (responseCode == HttpURLConnection.HTTP_OK) { // success
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
 
-			while ((inputLine = in.readLine()) != null) {
-				response.append(inputLine);
-			}
-			in.close();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
 
-			// print result
-			return response.toString();
-		} else {
-			return null;
-		}
+            // print result
+            return response.toString();
+        } else {
+            return null;
+        }
 
-	}
-
+    }
 
     @Test
     public void fixHCRstatus() {
@@ -7470,8 +7474,8 @@ public class AdamTest {
                 .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
                 .addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "PROGRESS").addColumn("PRI_NAME", "Name")
                 .addColumn("PRI_CODE", "Code").addColumn("PRI_START_DATE", "Start Date")
-                .addColumn("PRI_END_DATE", "Start Date").addColumn("PRI_DAYS_PER_WEEK", "DPW")
-                .addColumn("PRI_ASSOC_DURATION", "DurationWeeks").addColumn("LNK_DAYS_PER_WEEK", "LNK Days Per Week")
+                .addColumn("PRI_END_DATE", "End Date").addColumn("PRI_ASSOC_DURATION", "DurationWeeks")
+                .addColumn("PRI_DAYS_PER_WEEK", "DPW").addColumn("LNK_DAYS_PER_WEEK", "LNK Days Per Week")
                 .addColumn("LNK_INTERNSHIP_DURATION", "LNK Internship Duration").setPageStart(0).setPageSize(1000);
 
         appSearch.setRealm(serviceToken.getRealm());
@@ -7491,24 +7495,71 @@ public class AdamTest {
 
                 for (BaseEntity app : apps) {
 
-                    String internCode = app.getValue("PRI_INTERN_CODE", null);
-                    if (internCode == null) {
-                        noInternCode.add(app.getCode() + " " + app.getValueAsString("PRI_INTERN_NAME"));
-                    }
                     String appCode = app.getCode();
 
                     /* get the start date and end date of the internship */
+                    Optional<String> optInternCode = app.getValue("PRI_INTERN_CODE");
                     Optional<LocalDate> optStartDate = app.getValue("PRI_START_DATE");
                     Optional<LocalDate> optEndDate = app.getValue("PRI_END_DATE");
                     Optional<String> optInternshipWeek = app.getValue("PRI_ASSOC_DURATION");
 
                     Optional<String> optDaysPerWeek = app.getValue("PRI_DAYS_PER_WEEK");
 
-                    if (optStartDate.isPresent() && optEndDate.isPresent() && optInternshipWeek.isPresent()) {
+
+                    if (optInternCode.isPresent()) {
+                        String internCode = optInternCode.get();
+                        /* get the intern be */
+                        BaseEntity intern = beUtils.getBaseEntityByCode(internCode);
+                        if (intern != null) {
+
+                            /* get completedJournals count */
+                            Integer completedJournals = intern.getValue("PRI_NUM_JOURNALS", null);
+
+                            /* do a count if PRI_NUM_JOURNALS is null */
+                            if (completedJournals == null) {
+
+                                /* find the completedJournals count from sbe */
+                                SearchEntity completedJnlSbe = new SearchEntity("SBE_JOURNAL_COUNT",
+                                        "SBE_JOURNAL_COUNT").addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+                                        .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
+                                        .addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE,
+                                                "%" + internCode + "%")
+                                        .addColumn("PRI_CODE", "Name");
+
+                                Tuple2<String, List<String>> results = beUtils.getHql(completedJnlSbe);
+                                String hql = results._1;
+                                String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
+                                Integer count = 0;
+
+                                try {
+                                    String resultJsonStr = QwandaUtils.apiGet(
+                                            GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2,
+                                            serviceToken.getToken(), 120);
+
+                                    completedJournals = Integer.decode(resultJsonStr);
+
+                                    /* save PRI_NUM_JOURNALS to app and intern */
+                                    beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), internCode,
+                                            "PRI_NUM_JOURNALS", completedJournals));
+                                    beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(),
+                                            app.getCode(), "PRI_NUM_JOURNALS", completedJournals));
+                                    System.out.println("Saved Journal count to intern" + internCode);
+
+                                } catch (Exception e1) {
+                                    completedJournals = 0;
+                                    System.out.println("No journals yet for " + internCode);
+                                }
+                            }
+                        }
+                    }
+
+                    if (optInternCode.isPresent() && optStartDate.isPresent() && optEndDate.isPresent()
+                            && optInternshipWeek.isPresent()) {
 
                         LocalDate startDate = optStartDate.get();
                         LocalDate endDate = optEndDate.get();
                         String internshipWeek = optInternshipWeek.get();
+                        String internCode = optInternCode.get();
 
                         /* calculate internship days */
                         Long internshipDays = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate);
@@ -7554,7 +7605,7 @@ public class AdamTest {
                         JsonObject appProgress = new JsonObject();
                         appProgress.put("completedPercentage", completedPercentage);
                         appProgress.put("steps", Integer.decode(internshipWeek));
-                        
+
                         /* if days per week exists, calculate completedJournals */
                         if ((optDaysPerWeek.isPresent())) {
 
@@ -7616,6 +7667,7 @@ public class AdamTest {
                                 goodApps.add(app.getCode() + " " + app.getValueAsString("PRI_INTERN_NAME"));
 
                             }
+
                         }
 
                         beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), internCode, "PRI_PROGRESS",
@@ -7633,6 +7685,9 @@ public class AdamTest {
                         }
                         if (!optInternshipWeek.isPresent()) {
                             noAssocDuration.add(app.getCode() + " " + app.getValueAsString("PRI_INTERN_NAME"));
+                        }
+                        if (!optInternCode.isPresent()) {
+                            noInternCode.add(app.getCode() + " " + app.getValueAsString("PRI_INTERN_NAME"));
                         }
                     }
                 }
