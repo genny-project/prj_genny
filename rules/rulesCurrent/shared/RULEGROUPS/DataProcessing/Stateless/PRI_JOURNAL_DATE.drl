@@ -240,7 +240,7 @@ rule "PRI_JOURNAL_DATE"
 
 						beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), internCode, "PRI_PROGRESS",
                                 appProgress.toString(), false, true));
-						beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), appCode, "PRI_PROGRESS",
+						beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), app.getCode(), "PRI_PROGRESS",
 										appProgress.toString(), false, true));
 						
 					}else {
