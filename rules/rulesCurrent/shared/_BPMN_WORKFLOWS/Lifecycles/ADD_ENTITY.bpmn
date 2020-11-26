@@ -429,7 +429,6 @@ kcontext.setVariable(&quot;message&quot;,(QEventMessage)message); </bpmn2:script
 
 	beUtilsTwo = new BaseEntityUtils(userToken);
 
-	
 	System.out.println(&quot; key = YES &quot;);
 	OutputParam sauce = (OutputParam)sessionFacts.getMessage();
 	source = sauce.getAskSourceCode();
