@@ -249,7 +249,9 @@
             <drools:metaValue><![CDATA[IS_BASE_ENTITY]]></drools:metaValue>
           </drools:metaData>
           <drools:onEntry-script scriptFormat="http://www.java.com/java">
-            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% ENTER Create Entity IS BASE ENTITY %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
+            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% ENTER Create Entity IS BASE ENTITY %%%%%%%%%%%%%%%%%%%&quot;);
+System.out.println(&quot;%%%%%%%%%%%%%%%%%%% Clean: &quot; + clean);
+System.out.println(&quot;%%%%%%%%%%%%%%%%%%% newBe: &quot; + newBe);</drools:script>
           </drools:onEntry-script>
           <drools:onExit-script scriptFormat="http://www.java.com/java">
             <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% EXIT Create Entity IS BASE ENTITY %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
