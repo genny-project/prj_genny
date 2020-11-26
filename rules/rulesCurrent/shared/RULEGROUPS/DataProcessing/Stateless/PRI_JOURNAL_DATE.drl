@@ -188,52 +188,53 @@ rule "PRI_JOURNAL_DATE"
 								BaseEntity intern = beUtils.getBaseEntityByCode(internCode);
 								if (intern != null) {
 
-										/* get completedJournals count */
-										Integer completedJournals = intern.getValue("PRI_NUM_JOURNALS", null);
+									/* find the completedJournals count from sbe */
+									SearchEntity completedJnlSbe = new SearchEntity("SBE_JOURNAL_COUNT", "SBE_JOURNAL_COUNT")
+																							.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+																							.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
+																							.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%" + internCode + "%")
+																							.addColumn("PRI_CODE", "Name");
 
-										/* do a count if PRI_NUM_JOURNALS is null */
-										if (completedJournals == null || completedJournals == 0) {
+									Tuple2<String, List<String>> results = beUtils.getHql(completedJnlSbe);
+									String hql = results._1;
+									String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
+									Integer count = 0;
+									Integer completedJournals = 0;
 
-												/* find the completedJournals count from sbe */
-												SearchEntity completedJnlSbe = new SearchEntity("SBE_JOURNAL_COUNT",
-																"SBE_JOURNAL_COUNT").addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-																				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
-																				.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE,
-																								"%" + internCode + "%")
-																				.addColumn("PRI_CODE", "Name");
+									try {
+											String resultJsonStr = QwandaUtils.apiGet(
+															GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2,
+															serviceToken.getToken(), 120);
 
-												Tuple2<String, List<String>> results = beUtils.getHql(completedJnlSbe);
-												String hql = results._1;
-												String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
-												Integer count = 0;
+											completedJournals = Integer.decode(resultJsonStr);
 
-												try {
-														String resultJsonStr = QwandaUtils.apiGet(
-																		GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2,
-																		serviceToken.getToken(), 120);
+											/* save PRI_NUM_JOURNALS to app and intern */
+											beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), internCode,
+															"PRI_NUM_JOURNALS", completedJournals));
+											beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(),
+															app.getCode(), "PRI_NUM_JOURNALS", completedJournals));
+											
+											System.out.println("Saved PRI_NUM_JOURNALS to intern      ::   " + internCode);
+											System.out.println("Saved PRI_NUM_JOURNALS to application ::   " + app.getCode());
 
-														completedJournals = Integer.decode(resultJsonStr);
+									} catch (Exception e1) {
+											completedJournals = 0;
+											System.out.println("No journals yet for " + internCode);
+									}
 
-														/* save PRI_NUM_JOURNALS to app and intern */
-														beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), internCode,
-																		"PRI_NUM_JOURNALS", completedJournals));
-														beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(),
-																		app.getCode(), "PRI_NUM_JOURNALS", completedJournals));
-														System.out.println("Saved Journal count to intern" + internCode);
+									String journalStatus = completedJournals.toString() + "/" + totalJournals.toString();
 
-												} catch (Exception e1) {
-														completedJournals = 0;
-														System.out.println("No journals yet for " + internCode);
-												}
-										}
-										String journalStatus = completedJournals.toString() + "/" + totalJournals.toString();
+									beUtils.saveAnswer( new Answer(beUtils.getGennyToken().getUserCode(),
+													internCode, "PRI_JOURNAL_STATUS", journalStatus));
+									beUtils.saveAnswer( new Answer(beUtils.getGennyToken().getUserCode(),
+													app.getCode(), "PRI_JOURNAL_STATUS", journalStatus));
+									
+									System.out.println("Saved PRI_JOURNAL_STATUS to intern      ::   " + internCode);
+									System.out.println("Saved PRI_JOURNAL_STATUS to application ::   " + app.getCode());
 
-										Answer journalStatusAnswer = new Answer(beUtils.getGennyToken().getUserCode(),
-														internCode, "PRI_JOURNAL_STATUS", journalStatus);
-										beUtils.saveAnswer(journalStatusAnswer);
 
-										/* add completedJournals to json */
-										appProgress.put("completedJournals", journalStatus);
+									/* add completedJournals to json */
+									appProgress.put("completedJournals", journalStatus);
 
 								}
 						}
@@ -242,6 +243,9 @@ rule "PRI_JOURNAL_DATE"
                                 appProgress.toString(), false, true));
 						beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), app.getCode(), "PRI_PROGRESS",
 										appProgress.toString(), false, true));
+						
+						System.out.println("Saved PRI_PROGRESS to intern      ::   " + internCode);
+						System.out.println("Saved PRI_PROGRESS to application ::   " + app.getCode());
 						
 					}else {
 
