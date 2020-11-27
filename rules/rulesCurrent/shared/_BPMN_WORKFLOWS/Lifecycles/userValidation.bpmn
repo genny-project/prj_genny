@@ -116,7 +116,7 @@ kcontext.setVariable(&quot;sessionFacts&quot;, sessionFacts);
       <bpmn2:sequenceFlow id="SequenceFlow_5" drools:priority="1" sourceRef="ScriptTask_2" targetRef="ExclusiveGateway_2"/>
       <bpmn2:exclusiveGateway id="ExclusiveGateway_1" name="activeUser" gatewayDirection="Converging" default="SequenceFlow_1">
         <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
-        <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
+        <bpmn2:incoming>SequenceFlow_10</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
       </bpmn2:exclusiveGateway>
       <bpmn2:sequenceFlow id="SequenceFlow_1" drools:priority="1" sourceRef="ExclusiveGateway_1" targetRef="ScriptTask_4"/>
@@ -127,7 +127,7 @@ kcontext.setVariable(&quot;sessionFacts&quot;, sessionFacts);
           </drools:metaData>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_42</bpmn2:incoming>
-        <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
+        <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
         <bpmn2:script>System.out.println(&quot;userValidation: newUser returned -> &quot;+currentUser);
 if (userToken == null) {
 	System.out.println(&quot;userValidation: userToken is NULL&quot;);
@@ -141,7 +141,6 @@ if (currentUser == null) {
 else { System.out.println(&quot;userValidation: currentUser returned from userLifeCycle is NOT NULL ->&quot;+currentUser);}
 </bpmn2:script>
       </bpmn2:scriptTask>
-      <bpmn2:sequenceFlow id="SequenceFlow_2" drools:priority="1" sourceRef="ScriptTask_1" targetRef="ExclusiveGateway_1"/>
       <bpmn2:subProcess id="SubProcess_1" name="Create User">
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
@@ -263,6 +262,25 @@ System.out.println(&quot;userValidation: callingProcessToken = &quot;+ callingPr
         <bpmn2:signalEventDefinition id="SignalEventDefinition_9" signalRef="Signal_5"/>
       </bpmn2:boundaryEvent>
       <bpmn2:sequenceFlow id="SequenceFlow_42" drools:priority="1" sourceRef="BoundaryEvent_4" targetRef="ScriptTask_1"/>
+      <bpmn2:scriptTask id="ScriptTask_5" name="Set Attribute isIntern" scriptFormat="http://www.java.com/java">
+        <bpmn2:extensionElements>
+          <drools:metaData name="elementname">
+            <drools:metaValue><![CDATA[Set Attribute isIntern]]></drools:metaValue>
+          </drools:metaData>
+        </bpmn2:extensionElements>
+        <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
+        <bpmn2:outgoing>SequenceFlow_10</bpmn2:outgoing>
+        <bpmn2:script>System.out.println(&quot;%%%%%%%%%%%% userValidation: About to save PRI_IS_INTERN, PRI_STATUS, PRI_DISABLED);
+System.out.println(&quot;%%%%%%%%%%%% userValidation: currentUser: &quot;+currentUser);
+
+beUtils.saveAnswer(new Answer(userToken.getUserCode(), curentUser.getCode() ,&quot;PRI_IS_INTERN&quot;, &quot;true&quot;));
+beUtils.saveAnswer(new Answer(userToken.getUserCode(), curentUser.getCode() ,&quot;PRI_STATUS&quot;, &quot;AVAILABLE&quot;));
+beUtils.saveAnswer(new Answer(userToken.getUserCode(), curentUser.getCode() ,&quot;PRI_DISABLED&quot;, &quot;false&quot;));
+ 
+System.out.println(&quot;%%%%%%%%%%%% userValidation: DONE!);</bpmn2:script>
+      </bpmn2:scriptTask>
+      <bpmn2:sequenceFlow id="SequenceFlow_9" drools:priority="1" sourceRef="ScriptTask_1" targetRef="ScriptTask_5"/>
+      <bpmn2:sequenceFlow id="SequenceFlow_10" drools:priority="1" sourceRef="ScriptTask_5" targetRef="ExclusiveGateway_1"/>
     </bpmn2:subProcess>
     <bpmn2:startEvent id="StartEvent_1" name="Start userValidation">
       <bpmn2:extensionElements>
@@ -355,9 +373,9 @@ System.out.println(&quot;userValidation: callingProcessToken = &quot;+ callingPr
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_4" bpmnElement="ScriptTask_4" isExpanded="true">
-        <dc:Bounds height="50.0" width="75.0" x="1760.0" y="351.0"/>
+        <dc:Bounds height="50.0" width="75.0" x="1740.0" y="351.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_14">
-          <dc:Bounds height="11.0" width="16.0" x="1789.0" y="370.0"/>
+          <dc:Bounds height="11.0" width="16.0" x="1769.0" y="370.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_2" bpmnElement="StartEvent_3">
@@ -373,9 +391,9 @@ System.out.println(&quot;userValidation: callingProcessToken = &quot;+ callingPr
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_2" bpmnElement="EndEvent_3">
-        <dc:Bounds height="36.0" width="36.0" x="1890.0" y="358.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="2020.0" y="358.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_11">
-          <dc:Bounds height="11.0" width="35.0" x="1890.0" y="394.0"/>
+          <dc:Bounds height="11.0" width="35.0" x="2020.0" y="394.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_1" bpmnElement="StartEvent_2">
@@ -414,6 +432,12 @@ System.out.println(&quot;userValidation: callingProcessToken = &quot;+ callingPr
           <dc:Bounds height="11.0" width="36.0" x="1312.0" y="528.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_5" bpmnElement="ScriptTask_5" isExpanded="true">
+        <dc:Bounds height="50.0" width="110.0" x="1460.0" y="351.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="11.0" width="82.0" x="1474.0" y="370.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="BPMNShape_ScriptTask_3" targetElement="BPMNShape_ExclusiveGateway_1">
         <di:waypoint xsi:type="dc:Point" x="1260.0" y="285.0"/>
         <di:waypoint xsi:type="dc:Point" x="1664.0" y="285.0"/>
@@ -428,16 +452,10 @@ System.out.println(&quot;userValidation: callingProcessToken = &quot;+ callingPr
           <dc:Bounds height="11.0" width="19.0" x="1056.0" y="286.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_ExclusiveGateway_1">
-        <di:waypoint xsi:type="dc:Point" x="1368.0" y="376.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1503.0" y="376.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1639.0" y="376.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_14"/>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="BPMNShape_ExclusiveGateway_1" targetElement="BPMNShape_ScriptTask_4">
         <di:waypoint xsi:type="dc:Point" x="1689.0" y="376.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1724.0" y="376.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1760.0" y="376.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1714.0" y="376.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1740.0" y="376.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_23"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_22" bpmnElement="SequenceFlow_22" sourceElement="BPMNShape_IntermediateThrowEvent_1" targetElement="BPMNShape_ScriptTask_7">
@@ -481,9 +499,9 @@ System.out.println(&quot;userValidation: callingProcessToken = &quot;+ callingPr
         <bpmndi:BPMNLabel id="BPMNLabel_19"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_21" bpmnElement="SequenceFlow_19" sourceElement="BPMNShape_ScriptTask_4" targetElement="BPMNShape_EndEvent_2">
-        <di:waypoint xsi:type="dc:Point" x="1835.0" y="376.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1862.0" y="376.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1890.0" y="376.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1815.0" y="376.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1917.0" y="376.0"/>
+        <di:waypoint xsi:type="dc:Point" x="2020.0" y="376.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_21"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_26" bpmnElement="SequenceFlow_21" sourceElement="BPMNShape_1" targetElement="BPMNShape_SubProcess_2">
@@ -536,6 +554,18 @@ System.out.println(&quot;userValidation: callingProcessToken = &quot;+ callingPr
         <di:waypoint xsi:type="dc:Point" x="1476.0" y="575.0"/>
         <di:waypoint xsi:type="dc:Point" x="1486.0" y="575.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_31"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_11" bpmnElement="SequenceFlow_9" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_ScriptTask_5">
+        <di:waypoint xsi:type="dc:Point" x="1368.0" y="376.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1414.0" y="376.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1460.0" y="376.0"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_12" bpmnElement="SequenceFlow_10" sourceElement="BPMNShape_ScriptTask_5" targetElement="BPMNShape_ExclusiveGateway_1">
+        <di:waypoint xsi:type="dc:Point" x="1570.0" y="376.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1604.0" y="376.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1639.0" y="376.0"/>
+        <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
