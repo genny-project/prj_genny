@@ -1317,7 +1317,7 @@ public class AdamTest {
     }
 
     private void saveAddressItems(BaseEntityUtils beUtils, final BaseEntity target, GennyToken userToken,
-            BaseEntity hostCompany) {
+                                  BaseEntity hostCompany) {
         saveAddressItem(beUtils, target, "PRI_ADDRESS_STATE", userToken, hostCompany);
         saveAddressItem(beUtils, target, "PRI_ADDRESS_ADDRESS1", userToken, hostCompany);
         saveAddressItem(beUtils, target, "PRI_ADDRESS_CITY", userToken, hostCompany);
@@ -1329,7 +1329,7 @@ public class AdamTest {
     }
 
     private void saveAddressItem(BaseEntityUtils beUtils, final BaseEntity target, final String attributeCode,
-            GennyToken userToken, BaseEntity hostCompany) {
+                                 GennyToken userToken, BaseEntity hostCompany) {
         Optional<String> optTargetValue = target.getValue(attributeCode);
         if (optTargetValue.isPresent()) {
             return;
@@ -1343,7 +1343,7 @@ public class AdamTest {
     }
 
     private void saveAddressItem2(BaseEntityUtils beUtils, final BaseEntity target, final String attributeCode,
-            GennyToken userToken, BaseEntity hostCompany) {
+                                  GennyToken userToken, BaseEntity hostCompany) {
         Optional<Double> optTargetValue = target.getValue(attributeCode);
         if (optTargetValue.isPresent()) {
             return;
@@ -2502,9 +2502,9 @@ public class AdamTest {
         LocalDateTime updateTime = null;
 
         List<String> changedJournals = new ArrayList<String>(); /*
-                                                                 * Stream.of(listOfChangedJournals.split(",",
-                                                                 * -1)).collect(Collectors.toList());
-                                                                 */
+         * Stream.of(listOfChangedJournals.split(",",
+         * -1)).collect(Collectors.toList());
+         */
         String[] journalArray = listOfChangedJournals.split(",", -1);
         for (String journalCode : journalArray) {
             changedJournals.add(journalCode);
@@ -6939,10 +6939,10 @@ public class AdamTest {
 
                                 SearchEntity completedJnlSbe = new SearchEntity("SBE_JOURNAL_COUNT",
                                         "SBE_JOURNAL_COUNT").addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-                                                .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
-                                                .addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE,
-                                                        "%" + internCode + "%")
-                                                .addColumn("PRI_CODE", "Name");
+                                        .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
+                                        .addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE,
+                                                "%" + internCode + "%")
+                                        .addColumn("PRI_CODE", "Name");
 
                                 Tuple2<String, List<String>> results = beUtils.getHql(completedJnlSbe);
                                 String hql = results._1;
@@ -7184,10 +7184,10 @@ public class AdamTest {
                                     // find the completedJournals count from sbe
                                     SearchEntity completedJnlSbe = new SearchEntity("SBE_JOURNAL_COUNT",
                                             "SBE_JOURNAL_COUNT").addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-                                                    .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
-                                                    .addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE,
-                                                            "%" + internCode + "%")
-                                                    .addColumn("PRI_CODE", "Name");
+                                            .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
+                                            .addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE,
+                                                    "%" + internCode + "%")
+                                            .addColumn("PRI_CODE", "Name");
 
                                     Tuple2<String, List<String>> results = beUtils.getHql(completedJnlSbe);
                                     String hql = results._1;
@@ -7626,10 +7626,10 @@ public class AdamTest {
                                     /* find the completedJournals count from sbe */
                                     SearchEntity completedJnlSbe = new SearchEntity("SBE_JOURNAL_COUNT",
                                             "SBE_JOURNAL_COUNT").addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-                                                    .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
-                                                    .addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE,
-                                                            "%" + internCode + "%")
-                                                    .addColumn("PRI_CODE", "Name");
+                                            .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
+                                            .addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE,
+                                                    "%" + internCode + "%")
+                                            .addColumn("PRI_CODE", "Name");
 
                                     Tuple2<String, List<String>> results = beUtils.getHql(completedJnlSbe);
                                     String hql = results._1;
@@ -8201,6 +8201,102 @@ public class AdamTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void fixLnkSoftware() {
+        System.out.println("fixLnks");
+        GennyToken userToken = null;
+        GennyToken serviceToken = null;
+        QRules qRules = null;
+
+        if (false) {
+            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+            qRules = new QRules(eventBusMock, userToken.getToken());
+            qRules.set("realm", userToken.getRealm());
+            qRules.setServiceToken(serviceToken.getToken());
+            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+            GennyKieSession.loadAttributesJsonFromResources(userToken);
+
+        } else {
+            VertxUtils.cachedEnabled = false;
+            qRules = GennyJbpmBaseTest.setupLocalService();
+            userToken = new GennyToken("userToken", qRules.getToken());
+            serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+
+        }
+
+        System.out.println("session     =" + userToken.getSessionCode());
+        System.out.println("userToken   =" + userToken.getToken());
+        System.out.println("serviceToken=" + serviceToken.getToken());
+
+        BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+        beUtils.setServiceToken(serviceToken);
+
+        SearchEntity sbe = new SearchEntity("SBE_TEST", "SBE_TEST")
+                .addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+                .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%")
+                .addFilter("PRI_IS_INTERNSHIP", true)
+                .addColumn("PRI_NAME", "Name")
+                .addColumn("PRI_CODE", "Code")
+                .addColumn("LNK_SOFTWARE", "LNK_SOFTWARE")
+                .setPageStart(0).setPageSize(1000);
+
+        sbe.setRealm(serviceToken.getRealm());
+
+        try {
+            List<BaseEntity> bes = beUtils.getBaseEntitys(sbe);
+            System.out.println("The number of items is " + (bes == null ? "NULL" : bes.size()));
+            int index = 0;
+
+            if ((bes != null) && (bes.size() > 0)) {
+                System.out.println("Number of bes returned is " + bes.size());
+
+                for (BaseEntity be : bes) {
+
+                    /* list to store softwareList */
+                    List<String> softwareList = new ArrayList<>();
+
+                    Optional<String> lnkSoftware = be.getValue("LNK_SOFTWARE");
+                    if (lnkSoftware.isPresent()) {
+
+                        String assocBeCode = lnkSoftware.get();
+
+                        if (assocBeCode != null) {
+
+
+                            String code = assocBeCode.replace("\"", "").replace("[", "").replace("]", "");
+                            System.out.println("code  :: " + code);
+
+                            for (String softwareCode : code.split(",")) {
+
+                                System.out.println("softwareCode :: " + softwareCode);
+
+                                /* get the associatedBe */
+                                BaseEntity associatedBe = beUtils.getBaseEntityByCode(softwareCode);
+
+                                /* get the name attribute of the associatedBe */
+                                String name = associatedBe.getValue("PRI_NAME", null);
+                                softwareList.add(name);
+
+                            }
+
+                            String softwares = softwareList.toString().replaceAll("[\\[\\](){}]", "");
+
+                            beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(),
+                                    "PRI_SOFTWARES", softwares));
+                            index++;
+                        }
+                    }
+                }
+            }
+            System.out.println("Records updated :: " + index);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
 }
