@@ -30,6 +30,7 @@
       <drools:import name="life.genny.utils.CallingProcessToken"/>
       <drools:import name="java.util.Optional"/>
       <drools:import name="life.genny.utils.SessionFacts"/>
+      <drools:import name="life.genny.qwanda.Answer"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_2" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_2" name="serviceToken"/>
@@ -273,9 +274,9 @@ System.out.println(&quot;userValidation: callingProcessToken = &quot;+ callingPr
         <bpmn2:script>System.out.println(&quot;%%%%%%%%%%%% userValidation: About to save PRI_IS_INTERN, PRI_STATUS, PRI_DISABLED&quot;);
 System.out.println(&quot;%%%%%%%%%%%% userValidation: currentUser: &quot;+currentUser);
 
-beUtils.saveAnswer(new Answer(userToken.getUserCode(), curentUser.getCode() ,&quot;PRI_IS_INTERN&quot;, &quot;true&quot;));
-beUtils.saveAnswer(new Answer(userToken.getUserCode(), curentUser.getCode() ,&quot;PRI_STATUS&quot;, &quot;AVAILABLE&quot;));
-beUtils.saveAnswer(new Answer(userToken.getUserCode(), curentUser.getCode() ,&quot;PRI_DISABLED&quot;, &quot;false&quot;));
+beUtils.saveAnswer(new Answer(userToken.getUserCode(), currentUser.getCode() ,&quot;PRI_IS_INTERN&quot;, &quot;true&quot;));
+beUtils.saveAnswer(new Answer(userToken.getUserCode(), currentUser.getCode() ,&quot;PRI_STATUS&quot;, &quot;AVAILABLE&quot;));
+beUtils.saveAnswer(new Answer(userToken.getUserCode(), currentUser.getCode() ,&quot;PRI_DISABLED&quot;, &quot;false&quot;));
  
 System.out.println(&quot;%%%%%%%%%%%% userValidation: DONE!&quot;);</bpmn2:script>
       </bpmn2:scriptTask>
