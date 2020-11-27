@@ -89,13 +89,11 @@ rule "IS_QA_INTERN"
 		/* Send email to Intern? */
 		
 		System.out.println("ABOUT TO SEND THE EMAIL OR MAYBE NOT??");
-		Sring rawSendEmail = "";
+		String rawSendEmail = "";
 		
 		if (user != null) {
-				String rawSendEmail = user.getValue("LNK_SEND_EMAIL",null);
+				rawSendEmail = user.getValue("LNK_SEND_EMAIL",null);
 				System.out.println("rawSendEmail: " +rawSendEmail);
-		} else {
-			System.out.println("ERROR: Null user - Email NOT sent");
 		}
 		
 		
@@ -135,11 +133,7 @@ rule "IS_QA_INTERN"
 						EmailHelper.sendGrid(beUtils,user_email, subject, template_id, templateData);
 						System.out.println("SUCCESS - Email Sent!!");
 		
-						} else {
-					System.out.println("Told not to send email - rawSendEmail: " + rawSendEmail);
-		} else {
-			System.out.println("ERROR: Null rawSendEmail - Email NOT sent");
-		}
+						}
 		}
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* don't display anything new */
