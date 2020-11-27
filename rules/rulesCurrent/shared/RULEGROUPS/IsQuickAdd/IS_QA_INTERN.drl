@@ -113,7 +113,6 @@ rule "IS_QA_INTERN"
 						List<String> actions = new ArrayList<>();
 						actions.add("UPDATE_PASSWORD");
 						actions.add("VERIFY_EMAIL");
-						actions.add("TERMS_AND_CONDITIONS");
 						
 						KeycloakUtils.executeActions(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), "alyson", null, 60400, userId, url, actions, token);
 					
