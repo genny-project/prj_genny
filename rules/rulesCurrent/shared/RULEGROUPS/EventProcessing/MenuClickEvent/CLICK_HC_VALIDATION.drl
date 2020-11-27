@@ -231,6 +231,7 @@ rule "CLICK_HC_VALIDATION"
 
 		output.setTypeOfResult("SIGNAL");
 		output.setResultCode("START_"+workflowSignalCode);
+		output.setSuitCase(targetHCCode);
 
 	
 		System.out.println("START SIGNAL: " +workflowSignalCode);
