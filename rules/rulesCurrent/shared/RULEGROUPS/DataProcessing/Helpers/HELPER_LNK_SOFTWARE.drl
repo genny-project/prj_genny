@@ -77,7 +77,7 @@ rule "HELPER_LNK_SOFTWARE"
 
 			String softwares = softwareList.toString().replaceAll("[\\[\\](){}]","");
 			
-			Answer softwaresAnswer = new Answer(sourceCode, targetCode, "PRI_SOFTWARES", softwares,false,true);
+			Answer softwaresAnswer = new Answer(sourceCode, targetCode, "PRI_SOFTWARE", softwares,false,true);
 			answersToSave.add(softwaresAnswer);
 
 			VertxUtils.sendToFrontEnd(userToken, softwaresAnswer);
