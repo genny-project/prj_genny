@@ -49,7 +49,7 @@ rule "IS_QA_INTERN"
 		String userCode = userSplit[1];
 		System.out.println("User "+user+" with userCode = "+userCode);
 		
-		String userId;
+		String userId = "";
 		
 		String firstname = user.getValue("PRI_FIRSTNAME",null);
 		if (firstname != null) {
