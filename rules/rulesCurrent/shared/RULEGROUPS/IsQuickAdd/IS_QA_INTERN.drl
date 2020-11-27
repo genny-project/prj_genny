@@ -114,7 +114,7 @@ rule "IS_QA_INTERN"
 						actions.add("UPDATE_PASSWORD");
 						actions.add("VERIFY_EMAIL");
 						
-						KeycloakUtils.executeActions(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), "alyson", null, 60400, userId, url, actions, token);
+						KeycloakUtils.executeActions(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), "alyson", null, 6000, userId, url, actions, serviceToken.getToken());
 					
 						/*String user_email = "hello@outcome.life";*/
 						
