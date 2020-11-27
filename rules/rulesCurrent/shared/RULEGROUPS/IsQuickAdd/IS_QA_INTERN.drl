@@ -49,6 +49,7 @@ rule "IS_QA_INTERN"
 		String userCode = userSplit[1];
 		System.out.println("User "+user+" with userCode = "+userCode);
 		
+		String userId;
 		
 		String firstname = user.getValue("PRI_FIRSTNAME",null);
 		if (firstname != null) {
@@ -60,7 +61,7 @@ rule "IS_QA_INTERN"
 					/* TODO HACK */
 					if (true) {
 						String userPassword = "password1";
-						String userId = KeycloakUtils.updateUser(userCode,serviceToken.getToken(), serviceToken.getRealm(), email, firstname, lastname,  email, userPassword,"user", "users");
+						userId = KeycloakUtils.updateUser(userCode,serviceToken.getToken(), serviceToken.getRealm(), email, firstname, lastname,  email, userPassword,"user", "users");
 						userId = userId.toUpperCase();
 						Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),newBe.getCode(),"PRI_UUID",userId);
 						beUtils.saveAnswer(keycloakId);
@@ -71,6 +72,7 @@ rule "IS_QA_INTERN"
 				}
 			}
 		}
+
 		
 
 
@@ -104,13 +106,20 @@ rule "IS_QA_INTERN"
 						String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, userCode, serviceToken.getToken());
 						System.out.println("token: " + token);
 						
-					
-						/*String user_email = "hello@outcome.life";*/
-						
 						/*String url = "https://internmatch-dev.gada.io/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9JTlRFUk4=";*/
 						String url = GennySettings.projectUrl+"/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9JTlRFUk4=";
 						System.out.println("url: " + url);
 						
+						List<String> actions = new ArrayList<>();
+						actions.add("UPDATE_PASSWORD");
+						actions.add("VERIFY_EMAIL");
+						actions.add("TERMS_AND_CONDITIONS");
+						
+						KeycloakUtils.executeActions(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), "alyson", null, 60400, userId, url, actions, token);
+					
+						/*String user_email = "hello@outcome.life";*/
+						
+			
 					
 						url = url +"?token=" + token;
 						System.out.println("url: " + url);
