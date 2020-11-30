@@ -36,13 +36,13 @@ rule "DEF_INTERN"
  		 BaseEntity project = beUtils.getBaseEntityByCode(projectCode);
 
 		if (project != null) {
-         BaseEntityDefinition defBE = new BaseEntityDefinition(drools.getRule().getName(),"Intern","PER");
+         BaseEntity defBE = new BaseEntityDefinition(drools.getRule().getName(),"Intern","PER");
   
 
   	     defBE.setRealm(serviceToken.getRealm());
 
  		 insert(defBE);
-		/* beUtils.saveBaseEntity(defBE); */
+		 beUtils.saveBaseEntity(defBE); 
  
    		 } else {
    		 	System.out.println("PROJECT is not in cache "+projectCode);
