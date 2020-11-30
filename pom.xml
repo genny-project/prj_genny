@@ -132,6 +132,50 @@
 			<version>${spring.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<!-- Hibernate ORM specific dependencies -->
+	    <dependency>
+	        <groupId>io.quarkus</groupId>
+	        <artifactId>quarkus-hibernate-orm</artifactId>
+	    </dependency>
+	
+	    <!-- JDBC driver dependencies -->
+	    <dependency>
+	        <groupId>io.quarkus</groupId>
+    		<artifactId>quarkus-jdbc-mysql</artifactId>
+	    </dependency>
+	 <dependency>
+	      <groupId>io.jsonwebtoken</groupId>
+	      <artifactId>jjwt-api</artifactId>
+	      <version>0.10.7</version>
+	    </dependency>
+	    <dependency>
+	      <groupId>io.jsonwebtoken</groupId>
+	      <artifactId>jjwt-impl</artifactId>
+	      <version>0.10.7</version>
+	      <scope>runtime</scope>
+	    </dependency>
+	    <dependency>
+	      <groupId>io.jsonwebtoken</groupId>
+	      <artifactId>jjwt-jackson</artifactId>
+	      <version>0.10.7</version>
+	      <scope>runtime</scope>
+	    </dependency>
+	    <dependency>
+	      <groupId>io.quarkus</groupId>
+	      <artifactId>quarkus-container-image-docker</artifactId>
+	    </dependency>
+	    <dependency>
+	      <groupId>io.quarkus</groupId>
+	      <artifactId>quarkus-quartz</artifactId>
+	    </dependency>
+	    <dependency>
+	      <groupId>io.quarkus</groupId>
+	      <artifactId>quarkus-flyway</artifactId>
+	    </dependency>
+	    <dependency>
+	      <groupId>io.quarkus</groupId>
+	      <artifactId>quarkus-agroal</artifactId>
+	    </dependency>	    
 	</dependencies>
 	<build>
 		<plugins>
