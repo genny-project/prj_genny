@@ -1,4 +1,4 @@
-package life.genny.rules;
+/* package life.genny.rules;
 
 
 import life.genny.qwanda.message.QCmdMessage;
@@ -49,3 +49,4 @@ rule "DEF_INTERN"
    		 }
 
 end
+ */
