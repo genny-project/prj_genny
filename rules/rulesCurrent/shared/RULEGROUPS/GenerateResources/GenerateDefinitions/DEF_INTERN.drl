@@ -36,7 +36,11 @@ rule "DEF_INTERN"
  		 BaseEntity project = beUtils.getBaseEntityByCode(projectCode);
 
 		if (project != null) {
-         BaseEntity defBE = new BaseEntityDefinition(drools.getRule().getName(),"Intern","PER");
+         BaseEntity defBE = new BaseEntityDefinition(drools.getRule().getName(),"Intern","PER")
+         .addLookup("LNK_EDU_PROVIDER","SBE_EDU_PROVIDERS",BaseEntityDefinition.ELookupType.SEARCH)
+         .addLookup("LNK_COMP_INTERNSHIP","GRP_COMP_INTERNSHIP",BaseEntityDefinition.ELookupType.GROUP)
+         .mandateAttribute("PRI_DOB")
+         .mandateAttribute("PRI_USERNAME");
   
 
   	     defBE.setRealm(serviceToken.getRealm());
