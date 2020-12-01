@@ -254,7 +254,9 @@
             <drools:metaValue><![CDATA[IS_BASE_ENTITY]]></drools:metaValue>
           </drools:metaData>
           <drools:onEntry-script scriptFormat="http://www.java.com/java">
-            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% ENTER Create Entity IS BASE ENTITY %%%%%%%%%%%%%%%%%%%&quot;);&#xD;System.out.println(&quot;clean&quot; + clean);&#xD;System.out.println(&quot;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
+            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% ENTER Create Entity IS BASE ENTITY %%%%%%%%%%%%%%%%%%%&quot;);
+System.out.println(&quot;%%%%%%%%%%%%%%%%%%% Clean: &quot; + clean);
+System.out.println(&quot;%%%%%%%%%%%%%%%%%%% newBe: &quot; + newBe);</drools:script>
           </drools:onEntry-script>
           <drools:onExit-script scriptFormat="http://www.java.com/java">
             <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% EXIT Create Entity IS BASE ENTITY %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
@@ -433,20 +435,18 @@ kcontext.setVariable(&quot;message&quot;,(QEventMessage)message); </bpmn2:script
 
 	beUtilsTwo = new BaseEntityUtils(userToken);
 
-	if (key.equals(&quot;YES&quot;)) {
-			System.out.println(&quot;key = YES&quot;);			
 
-			OutputParam sauce = (OutputParam)sessionFacts.getMessage();
-			source = sauce.getAskSourceCode();
-			kcontext.setVariable(&quot;source&quot;, source);
-			System.out.println(&quot;source: &quot; + source);
+	System.out.println(&quot; key = YES &quot;);
+	OutputParam sauce = (OutputParam)sessionFacts.getMessage();
+	source = sauce.getAskSourceCode();
+	kcontext.setVariable(&quot;source&quot;, source);
+	System.out.println(&quot;source: &quot; + source);
 
-			newBe = beUtilsTwo. getBaseEntityByCode(source);
-			kcontext.setVariable(&quot;newBe&quot;, newBe);
-			System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ newBe: &quot; + newBe);
-	} else {
-		System.out.println(&quot;key = NO&quot;);	
-	}
+
+	newBe = beUtilsTwo. getBaseEntityByCode(source);
+	kcontext.setVariable(&quot;newBe&quot;, newBe);
+	System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ newBe: &quot; + newBe);
+
 
 
 /* Do the template thing*/
