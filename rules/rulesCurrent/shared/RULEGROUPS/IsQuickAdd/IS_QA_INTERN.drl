@@ -93,6 +93,7 @@ rule "IS_QA_INTERN"
 		
 		System.out.println("ABOUT TO SEND THE EMAIL OR MAYBE NOT??");
 		String rawSendEmail = "SEL_YES";
+		String trueRawSendEmail = "";
 		
 		if (user != null) {
 				trueRawSendEmail = user.getValue("LNK_SEND_EMAIL",null);
