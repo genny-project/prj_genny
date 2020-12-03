@@ -50,8 +50,14 @@ rule "EDIT_FORM_CLICK_EVENT"
 
 		System.out.println("searchCode with sessionCode      ::   " + searchCode);
 
+		String sessionCode = beUtils.getGennyToken().getSessionCode().toUpperCase();
+		if(sessionCode == null){
+			System.err.println("sessionCode is null");
+			return;
+		}
+
 		/* if the searchCode contains sessionCode, remove it */
-		if (searchCode.contains(beUtils.getGennyToken().getSessionCode().toUpperCase())) {
+		if (searchCode.contains(sessionCode)) {
 			
 			searchCode = searchCode.replaceAll("_"+sessionCode.toUpperCase(), "");
 			System.out.println("searchCode without sessionCode   ::   " + searchCode);
