@@ -191,7 +191,12 @@ rule "IS_INTERNSHIP"
 			System.out.println("ERROR: Null businessHours"); 
 		}
 		
-		
+		/* send cmd msg */
+		QCmdMessage msg = new QCmdMessage("TOAST", "INFO");
+		msg.setMessage("Congrats for adding an internship - We will let you know as soon as an intern has applied.");
+		msg.setToken(beUtils.getGennyToken().getToken());
+		msg.setSend(true);
+		VertxUtils.writeMsg("webcmds", msg);
 		
 		
 		output.setTypeOfResult("NONE");
