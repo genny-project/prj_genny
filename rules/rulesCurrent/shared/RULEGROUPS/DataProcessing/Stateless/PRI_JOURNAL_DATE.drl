@@ -44,7 +44,10 @@ rule "PRI_JOURNAL_DATE"
 		String targetCode = answer.getTargetCode();
 		
 		BaseEntity journal = beUtils.getBaseEntityByCode(targetCode);
+		
+		/* create a journal if it doesnt exists */
 		if (journal == null) {
+			
 			System.out.println(drools.getRule().getName()+" Creating new journal be "+targetCode);
 			/* Reconstructing name */
 			String dateStr = answer.getValue().substring(0,10); /* clip to just date */
@@ -64,7 +67,8 @@ rule "PRI_JOURNAL_DATE"
 			beUtils.saveAnswer(new Answer(sourceCode, targetCode, "LNK_INTERN", "[\""+sourceCode+"\"]",false,true));
 			beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_SYNC", "TRUE",false,true)); /* set to have synced */
 			
-			SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Internship App Details")
+			/* get the apps of the intern from PROGRESS bucket */
+			SearchEntity appSearch = new SearchEntity("SBE_APP", "SBE_APP")
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%") 
 				.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.EQUAL, sourceCode) 
@@ -72,39 +76,32 @@ rule "PRI_JOURNAL_DATE"
 				.addColumn("PRI_NAME", "Name")
 				.addColumn("PRI_CODE", "Code")
 				.addColumn("PRI_START_DATE","Start Date")
+				.addColumn("PRI_END_DATE","End Date")
+				.addColumn("PRI_ASSOC_DURATION", "DurationWeeks")
 				.addColumn("PRI_DAYS_PER_WEEK","DPW") 
-				.addColumn("PRI_ASSOC_DURATION", "DurationWeeks") 
+				.addColumn("LNK_DAYS_PER_WEEK", "LNK Days Per Week")
+				.addColumn("LNK_INTERNSHIP_DURATION", "LNK Internship Duration") 
 				.setPageStart(0)
 				.setPageSize(1000);
 		
-			searchBE.setRealm(serviceToken.getRealm());
+			appSearch.setRealm(serviceToken.getRealm());
 		
- 			BaseEntity result = null; 
+ 			BaseEntity app = null; 
+			Double completedPercentage = 0.0;
+
 			try {
 	
-	
-				List<BaseEntity> bes = beUtils.getBaseEntitys(searchBE);				
-				System.out.println("The number of items is "+(bes ==null?"NULL":bes.size()));
-				if ((bes!=null) && (bes.size() > 0)) {
-					result = bes.get(0); 
-					System.out.println("Number of bes returned is "+bes.size()+":"+result);
-					String hostCompanyCode = null;
-					String hostCompanyRepCode = null;
-					String hostCompanySupervisorCode = null;
-					String internshipCode = null;
-					String daysPerWeek = null;
-					String internshipDuration = null;
-					
+				List<BaseEntity> apps = beUtils.getBaseEntitys(appSearch);				
+				System.out.println("The number of apps is "+(apps ==null?"NULL":apps.size()));
 
-					Optional<String> optDaysPerWeek = result.getValue("PRI_DAYS_PER_WEEK");		
-					Optional<String> optInternshipDuration = result.getValue("PRI_ASSOC_DURATION");	
-					Optional<LocalDate> optInternshipStartDate = result.getValue("PRI_START_DATE");	
-					Optional<LocalDate> optInternshipEndDate = result.getValue("PRI_END_DATE");
-		
-					Optional<String> optHostCompanyCode = result.getValue("LNK_HOST_COMPANY");		
-					Optional<String> optHostCompanyRepCode = result.getValue("LNK_HOST_COMPANY_REP");		
-					Optional<String> optHostCompanySupervisorCode = result.getValue("LNK_INTERN_SUPERVISOR");		
-					Optional<String> optInternshipCode = result.getValue("LNK_INTERNSHIP");		
+				if ((apps!=null) && (apps.size() > 0)) {
+					
+					app = apps.get(0); 
+				
+					Optional<String> optHostCompanyCode = app.getValue("LNK_HOST_COMPANY");		
+					Optional<String> optHostCompanyRepCode = app.getValue("LNK_HOST_COMPANY_REP");		
+					Optional<String> optHostCompanySupervisorCode = app.getValue("LNK_INTERN_SUPERVISOR");		
+					Optional<String> optInternshipCode = app.getValue("LNK_INTERNSHIP");		
 					
 					if (optHostCompanyCode.isPresent()) {
 						beUtils.saveAnswer(new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY", optHostCompanyCode.get(),false,true));
@@ -122,117 +119,162 @@ rule "PRI_JOURNAL_DATE"
 						beUtils.saveAnswer(new Answer(sourceCode, targetCode, "LNK_INTERNSHIP", optInternshipCode.get(),false,true));
 						System.out.println("Rule PRI_JOURNAL_DATE4: Internship Code :"+optInternshipCode.get());
 					}
+
+					Optional<String> optInternCode = app.getValue("PRI_INTERN_CODE");		
+					Optional<String> optDaysPerWeek = app.getValue("PRI_DAYS_PER_WEEK");		
+					Optional<String> optInternshipWeek = app.getValue("PRI_ASSOC_DURATION");	
+					Optional<LocalDate> optStartDate = app.getValue("PRI_START_DATE");	
+					Optional<LocalDate> optEndDate = app.getValue("PRI_END_DATE");
 					
-					
-					
-					if ((optDaysPerWeek.isPresent())&&(optInternshipDuration.isPresent()) && (optInternshipStartDate.isPresent()) && (optInternshipEndDate.isPresent())) {
-						System.out.println("Rule PRI_JOURNAL_DATE5: percentage data available "+optDaysPerWeek.get()+":"+optInternshipDuration.get());
-						Double dpw = Double.valueOf(optDaysPerWeek.get());
-						Double id =  Double.valueOf(optInternshipDuration.get());
-						System.out.println("Rule PRI_JOURNAL_DATE5: percentage data available2");
-						Double totalInternshipDays = dpw * id;
-						System.out.println("Rule PRI_JOURNAL_DATE5: percentage data available3");
-						LocalDate startDate = optInternshipStartDate.get();
-						LocalDate endDate = optInternshipEndDate.get();
-						LocalDate dateNow = LocalDate.now();
-						System.out.println("Rule PRI_JOURNAL_DATE4.5: percentage data available4 "+startDate+":"+endDate+":"+dateNow);
-						Long noOfDaysSoFarLong = java.time.temporal.ChronoUnit.DAYS.between(startDate, dateNow);
-						Long noOfDaysTotalLong = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate);
-						System.out.println("Rule PRI_JOURNAL_DATE5: percentage data available4 "+noOfDaysSoFarLong+" and total "+noOfDaysTotalLong);
+					if (optInternCode.isPresent() && optStartDate.isPresent() && optEndDate.isPresent() && optInternshipWeek.isPresent()) {
 						
-						Double noOfDaysSoFar = noOfDaysSoFarLong.doubleValue();
-						Double noOfDaysTotal = noOfDaysTotalLong.doubleValue();
-						System.out.println("Rule PRI_JOURNAL_DATE5: percentage data available5");
-						Double percentageCalendar = (100.0*noOfDaysSoFar)/noOfDaysTotal;
-						System.out.println("Rule PRI_JOURNAL_DATE5: percentage data available6");
-						
-										Integer count = 0;
-						/* get total number of journals */
-						searchBE = new SearchEntity("SBE_TEST", "internjournals")
-							.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-							.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
-							.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%" + sourceCode + "%")
-							.addColumn("PRI_CODE", "Name");
+						System.out.println("PRI_INTERN_CODE | PRI_ASSOC_DURATION | PRI_START_DATE | PRI_END_DATE present in the application");
 
-						Tuple2<String, List<String>> results = beUtils.getHql(searchBE); 
-												System.out.println("Rule PRI_JOURNAL_DATE5: percentage data available7");								
-						String hql = results._1;
-						String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
-						try {
-							String resultJsonStr = QwandaUtils.apiGet(
-								GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2, serviceToken.getToken(),
-								120);
+						LocalDate startDate = optStartDate.get();
+						LocalDate endDate = optEndDate.get();
+						String internshipWeek = optInternshipWeek.get();
+						String internCode = optInternCode.get();
 
-							count = Integer.decode(resultJsonStr);
-							System.out.println("Count = " + count);
+						/* calculate internship days */
+						Long internshipDays = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate);
 
-							Answer journalCount = new Answer(beUtils.getGennyToken().getUserCode(), sourceCode,
-								"PRI_NUM_JOURNALS", count);
-							beUtils.saveAnswer(journalCount);
+						/* get the current date */
+						LocalDate currentDate = LocalDate.now();
 
-						} catch (Exception e1) {
-							count = 0;
-							System.out.println("No journals yet for "+sourceCode);
+						/* check if currentDate has passed endDate */
+						Long hasCompletedInternship = java.time.temporal.ChronoUnit.DAYS.between(currentDate, endDate);
+
+						/* check if internship is yet to be started */
+						Long hasNotStartedInternship = java.time.temporal.ChronoUnit.DAYS.between(startDate,
+										currentDate);
+
+						/* if it's negative, intern has completed the internship */
+						if (hasCompletedInternship < 0) {
+
+								/* set internship completed */
+								completedPercentage = 100.0;
+
+								/* if it's negative, internship has not started */
+						} else if (hasNotStartedInternship < 0) {
+
+								/* set internship not started at all */
+								completedPercentage = 0.0;
+
+						} else {
+
+								/* calculate how many days intern has done internship */
+								Long daysInInternship = java.time.temporal.ChronoUnit.DAYS.between(startDate, currentDate);
+
+								/* make days inclusive ?? */
+								daysInInternship++;
+
+								/* calculate completedPercentage */
+								completedPercentage = (100.0 * daysInInternship) / internshipDays;
+
 						}
-						Double numOfJournals = count.doubleValue();
-						Double percentageJournals = (100.0*numOfJournals)/totalInternshipDays;
-					
-						beUtils.saveAnswer(new Answer(sourceCode, sourceCode, "PRI_PERCENTAGE", percentageCalendar,false,true));
-						beUtils.saveAnswer(new Answer(sourceCode, result.getCode(), "PRI_PERCENTAGE", percentageCalendar,false,true));
-						beUtils.saveAnswer(new Answer(sourceCode, result.getCode(), "PRI_PERCENTAGE_CALENDAR", percentageCalendar,false,true));
-						beUtils.saveAnswer(new Answer(sourceCode, result.getCode(), "PRI_PERCENTAGE_JOURNALS", percentageJournals,false,true));
+
+						JsonObject appProgress = new JsonObject();
+						appProgress.put("completedPercentage", completedPercentage);
+						appProgress.put("steps", Integer.decode(internshipWeek));
+
+						/* if days per week exists, calculate completedJournals */
+						if ((optDaysPerWeek.isPresent())) {
+
+								Integer totalJournals = Integer.decode(optDaysPerWeek.get())
+												* Integer.decode(optInternshipWeek.get());
+								System.out.println(totalJournals);
+
+								/* get the intern be */
+								BaseEntity intern = beUtils.getBaseEntityByCode(internCode);
+								if (intern != null) {
+
+									/* find the completedJournals count from sbe */
+									SearchEntity completedJnlSbe = new SearchEntity("SBE_JOURNAL_COUNT", "SBE_JOURNAL_COUNT")
+																							.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+																							.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
+																							.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%" + internCode + "%")
+																							.addColumn("PRI_CODE", "Name");
+
+									Tuple2<String, List<String>> results = beUtils.getHql(completedJnlSbe);
+									String hql = results._1;
+									String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
+									Integer count = 0;
+									Integer completedJournals = 0;
+
+									try {
+											String resultJsonStr = QwandaUtils.apiGet(
+															GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2,
+															serviceToken.getToken(), 120);
+
+											completedJournals = Integer.decode(resultJsonStr);
+
+											/* save PRI_NUM_JOURNALS to app and intern */
+											beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), internCode,
+															"PRI_NUM_JOURNALS", completedJournals));
+											beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(),
+															app.getCode(), "PRI_NUM_JOURNALS", completedJournals));
+											
+											System.out.println("Saved PRI_NUM_JOURNALS to intern      ::   " + internCode);
+											System.out.println("Saved PRI_NUM_JOURNALS to application ::   " + app.getCode());
+
+									} catch (Exception e1) {
+											completedJournals = 0;
+											System.out.println("No journals yet for " + internCode);
+									}
+
+									String journalStatus = completedJournals.toString() + "/" + totalJournals.toString();
+
+									beUtils.saveAnswer( new Answer(beUtils.getGennyToken().getUserCode(),
+													internCode, "PRI_JOURNAL_STATUS", journalStatus));
+									beUtils.saveAnswer( new Answer(beUtils.getGennyToken().getUserCode(),
+													app.getCode(), "PRI_JOURNAL_STATUS", journalStatus));
+									
+									System.out.println("Saved PRI_JOURNAL_STATUS to intern      ::   " + internCode);
+									System.out.println("Saved PRI_JOURNAL_STATUS to application ::   " + app.getCode());
+
+
+									/* add completedJournals to json */
+									appProgress.put("completedJournals", journalStatus);
+
+								}
+						}
+
+						beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), internCode, "PRI_PROGRESS",
+                                appProgress.toString(), false, true));
+						beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), app.getCode(), "PRI_PROGRESS",
+										appProgress.toString(), false, true));
 						
-						System.out.println("Rule PRI_JOURNAL_DATE:PercentageCalendar :"+percentageCalendar+" "+noOfDaysSoFarLong+" of "+noOfDaysTotalLong+" days");
-						System.out.println("Rule PRI_JOURNAL_DATE:PercentageJournals :"+percentageJournals+" "+numOfJournals+" of "+totalInternshipDays+" journals");
-						System.out.println("Rule PRI_JOURNAL_DATE: Internship Code :"+optInternshipCode.get());
+						System.out.println("Saved PRI_PROGRESS to intern      ::   " + internCode);
+						System.out.println("Saved PRI_PROGRESS to application ::   " + app.getCode());
+						
+					}else {
+
+						System.out.println("Missing data !");
+
+						if (!optStartDate.isPresent()) {
+								System.out.println("Missing PRI_START_DATE");
+						}
+						if (!optEndDate.isPresent()) {
+								System.out.println("Missing PRI_END_DATE");
+						}
+						if (!optInternshipWeek.isPresent()) {
+								System.out.println("Missing PRI_ASSOC_DURATION");
+						}
 					}
-					
-					
 					
 				}	
 			} catch (Exception e) {
 				System.out.println("Error in establishing new journal be");
 			}
 
-						Integer count = 0;
-						/* get total number of journals */
-						searchBE = new SearchEntity("SBE_TEST", "internjournals")
-							.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-							.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
-							.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%" + sourceCode + "%")
-							.addColumn("PRI_CODE", "Name");
-
-						Tuple2<String, List<String>> results = beUtils.getHql(searchBE); 
-												System.out.println("Rule PRI_JOURNAL_DATE5: percentage data available7");								
-						String hql = results._1;
-						String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
-						try {
-							String resultJsonStr = QwandaUtils.apiGet(
-								GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2, serviceToken.getToken(),
-								120);
-
-							count = Integer.decode(resultJsonStr);
-							System.out.println("Count = " + count);
-
-							Answer journalCount = new Answer(beUtils.getGennyToken().getUserCode(), sourceCode,
-								"PRI_NUM_JOURNALS", count);
-							beUtils.saveAnswer(journalCount);
-
-						} catch (Exception e1) {
-							count = 0;
-							System.out.println("No journals yet for "+sourceCode);
-						}
 		} else {
-				System.out.println(drools.getRule().getName()+" journal be existing "+targetCode);
+			System.out.println(drools.getRule().getName()+" journal be existing "+targetCode);
 		}
 					
 		beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_JOURNAL_DATE", answer.getValue().substring(0,10),false,true));	
 
-
-
-
 		output.setTypeOfResult("NONE");
-  	    output.setResultCode("NONE");  /* dont display anything new */
+		output.setResultCode("NONE");  /* dont display anything new */
 		
 		retract(answer); 
 		update(answersToSave);
