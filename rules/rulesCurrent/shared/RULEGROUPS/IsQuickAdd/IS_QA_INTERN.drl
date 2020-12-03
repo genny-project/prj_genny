@@ -113,10 +113,10 @@ rule "IS_QA_INTERN"
 						System.out.println("url: " + url);
 						
 						List<String> actions = new ArrayList<>();
-						actions.add("UPDATE_PASSWORD");
+					/*	actions.add("UPDATE_PASSWORD"); */
 						actions.add("VERIFY_EMAIL");
 						
-						KeycloakUtils.executeActions(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), "alyson", null, 6000, userId, url, actions, serviceToken.getToken());
+						KeycloakUtils.executeActions(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), "alyson", null, 6000, userId, url, actions, serviceToken.getToken()); 
 					
 						/*String user_email = "hello@outcome.life";*/
 						
@@ -140,7 +140,7 @@ rule "IS_QA_INTERN"
 						templateData.put("intern", firstname);
 						templateData.put("url", url);
 					
-						EmailHelper.sendGrid(beUtils,user_email, subject, template_id, templateData);
+						/* EmailHelper.sendGrid(beUtils,user_email, subject, template_id, templateData); */
 						System.out.println("SUCCESS - Email Sent!!");
 		
 						} 
