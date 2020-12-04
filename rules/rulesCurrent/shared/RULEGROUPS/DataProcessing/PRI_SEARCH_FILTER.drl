@@ -31,23 +31,27 @@ rule "PRI_SEARCH_FILTER"
 	  answersToSave : Answers()
 	  output : OutputParam( )
      then
- 		System.out.println("Rule -> SCH_FILTER :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
+ 		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		if (sourceCode.equals(answer.getSourceCode())) { /* only user */
+			System.out.println(drools.getRule().getName()+" Source user is confirmed "+sourceCode);
 			String targetCode = answer.getTargetCode();
 		
 	
 			SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", targetCode, SearchEntity.class,
 				beUtils.getGennyToken().getToken());
-				Answer filterUpdate = new Answer(beUtils.getGennyToken().getUserCode(), searchBE.getCode(),answer.getAttributeCode(), answer.getValue());
+				Answer filterUpdate = new Answer(sourceCode, targetCode,answer.getAttributeCode(), answer.getValue());
+				System.out.println(drools.getRule().getName()+" Before updateBaseEntity for search ");
 			searchBE = beUtils.updateBaseEntity(searchBE, filterUpdate,SearchEntity.class);
 			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
 				beUtils.getGennyToken().getToken());
-		
+		System.out.println(drools.getRule().getName()+" Before search ");
 			long totalTime = TableUtils.searchTable(beUtils,searchBE, true);
 
 			System.out.println("total took " + (totalTime) + " ms"); 
 		
+		} else {
+			System.out.println(drools.getRule().getName()+" sourceCode ("+sourceCode+") not equal to answer.source ("+answer.getSourceCode()+")");
 		}
 			
 		output.setTypeOfResult("NONE");
