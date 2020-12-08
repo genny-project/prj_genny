@@ -35,7 +35,7 @@ rule "IS_QA_INTERN"
  		
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_INTERN", "true"));
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_DISABLED", "false"));
- 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS_COLOR", "#FF9100"));
+ 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS_COLOR", "#5cb85c"));
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_PROFILE", "Incomplete"));
 
 		
@@ -115,7 +115,7 @@ rule "IS_QA_INTERN"
 					/*	actions.add("UPDATE_PASSWORD"); */
 						actions.add("VERIFY_EMAIL");
 						/* expiry in 48 hours */
-						KeycloakUtils.executeActions(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), "alyson", null, (48*60*60), userId, url, actions, serviceToken.getToken()); 
+						KeycloakUtils.executeActions(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), "alyson", null, (7*24*60*60), userId, url, actions, serviceToken.getToken()); 
 					
 						/*String user_email = "hello@outcome.life";*/
 						

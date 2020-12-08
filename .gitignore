@@ -27,3 +27,4 @@ eclipse/
 .settings/
 .classpath
 *.iml
+.DS_Store
