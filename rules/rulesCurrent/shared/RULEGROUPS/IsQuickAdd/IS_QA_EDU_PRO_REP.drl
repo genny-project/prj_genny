@@ -62,12 +62,13 @@ rule "IS_QA_EDU_PRO_REP"
 		String userCode = userSplit[1];
 		System.out.println("User "+user+" with userCode = "+userCode);
 		
+		String email = "stephenie.pulis-cassar@outcomelife.com.au";
 		
 		String firstname = user.getValue("PRI_FIRSTNAME",null);
 		if (firstname != null) {
 			String lastname = user.getValue("PRI_LASTNAME",null);
 			if (lastname != null) {
-				String email = user.getValue("PRI_EMAIL",null);
+				email = user.getValue("PRI_EMAIL",null);
 				if (email != null) {
 					/*String userPassword = UUID.randomUUID().toString().substring(0,10);*/
 					String userPassword = "password1";
@@ -122,12 +123,12 @@ rule "IS_QA_EDU_PRO_REP"
 						System.out.println("url: " + url);
 						
 				
-						String user_email = "c.pyke85@gmail.com";
+						/*String user_email = "c.pyke85@gmail.com";*/
 						String subject = "You have been registered on InternMatch";
 						String template_id = "d-b569cb15814e4f34b5a57c760b9f38f8";
 				
 				
-						System.out.println("user_email: " + user_email);
+						System.out.println("email: " + email);
 						System.out.println("subject: " + subject);
 						System.out.println("template_id: " + template_id);
 						
@@ -135,7 +136,7 @@ rule "IS_QA_EDU_PRO_REP"
 				    	templateData.put("EduProRep", firstname);
 				    	templateData.put("url", url);
 				
-						EmailHelper.sendGrid(beUtils,user_email, subject, template_id, templateData);
+						EmailHelper.sendGrid(beUtils, email, subject, template_id, templateData);
 					}
 		}	
 		
