@@ -22,7 +22,7 @@ rule "PROCESS_ANSWERS"
 		capabilityUtils : CapabilityUtils()
 	
 	then
-		System.out.println("Rule -> PROCESS_ANSWERS Processing Answer/Data!!! :  user=" + userToken.getUserCode()); 
+		System.out.println("Rule -> "+drools.getRule().getName()+" Processing Answer/Data!!! :  user=" + userToken.getUserCode()); 
 
 		if (dataMsg.getItems()!=null) {
 			Integer count = dataMsg.getItems().length;

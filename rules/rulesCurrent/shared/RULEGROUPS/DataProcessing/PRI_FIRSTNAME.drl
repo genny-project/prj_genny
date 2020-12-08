@@ -31,7 +31,7 @@ rule "PRI_FIRSTNAME"
 		userToken : GennyToken( code != "PER_SERVICE")
 
 	then
- 		System.out.println("Rule -> PRI_FIRSTNAME :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
+ 		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		String targetCode = answer.getTargetCode();
 		
