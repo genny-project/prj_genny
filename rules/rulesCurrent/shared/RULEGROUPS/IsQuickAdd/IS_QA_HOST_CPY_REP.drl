@@ -37,6 +37,19 @@ rule "IS_QA_HOST_CPY_REP"
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS_COLOR", "#FF9100"));
 
 		
+		String linkedHC = newBe.getValue("LNK_HOST_COMPANY", null);
+		System.out.println("linkedHC = " + linkedHC);
+		if (linkedHC == null) {
+			/* CREATE EMPTY CPY FOR THE USER */
+			System.out.println("NO HOST COMPANY SELECTED, CREATING ONE...");
+
+			String uuid = UUID.randomUUID().toString().toUpperCase();
+			String cpyCode = "CPY_"+uuid;
+			beUtils.create(cpyCode, cpyCode);
+
+			beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_HOST_COMPANY", "[\""+cpyCode+"\"]"));
+			beUtils.saveAnswer(new Answer(userToken.getUserCode(), cpyCode, "PRI_PROFILE", "InComplete"));
+		}
 		
 		
 		/* Set up in Keycloak */
