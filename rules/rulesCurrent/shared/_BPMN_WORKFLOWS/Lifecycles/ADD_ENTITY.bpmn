@@ -133,7 +133,7 @@
 	
 	String prefix = &quot;NULL_&quot;;	
 
-	if (clean.equals(&quot;INTERN&quot;) || clean.equals(&quot;HOST_CPY_REP&quot;) || clean.equals(&quot;EDU_PRO_REP&quot;) || clean.equals(&quot;AGENT&quot;) || clean.equals(&quot;ADMIN&quot;) || clean.equals(&quot;STUDENT&quot;)) {
+	if (clean.equals(&quot;INTERN&quot;) || clean.equals(&quot;HOST_CPY_REP&quot;) || clean.equals(&quot;EDU_PRO_REP&quot;) || clean.equals(&quot;AGENT&quot;)) {
 			prefix = &quot;PER_&quot;;
 			System.out.println(&quot;ADD_ENTITY: Adding a &quot; + prefix);
 	}
@@ -145,11 +145,6 @@
 
 	if (clean.equals(&quot;INTERNSHIP&quot;)) {
 			prefix = &quot;BEG_&quot;;
-			System.out.println(&quot;ADD_ENTITY: Adding a &quot; + prefix);
-	}
-
-	if (clean.equals(&quot;TEAM&quot;)) {
-			prefix = &quot;TEA_&quot;;
 			System.out.println(&quot;ADD_ENTITY: Adding a &quot; + prefix);
 	}
 
