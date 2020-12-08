@@ -15,7 +15,9 @@ rule "ADD_ENTITY_CLICK_EVENT"
 		salience 2
     no-loop
     when
-		$message : QEventMessage((data.code matches "QUE_.*" && data.parentCode == "QUE_ADD_ITEMS_GRP") || data.code matches "ACT_PRI_EVENT_QUE_.*")
+		/*$message : QEventMessage((data.code matches "QUE_.*" && data.parentCode == "QUE_ADD_ITEMS_GRP") || data.code matches "ACT_PRI_EVENT_QUE_.*")*/
+		$message : QEventMessage( ((data.code matches "QUE_HOST_CPY_REP_MENU" || data.code matches "QUE_EDU_PRO_REP_MENU" || data.code matches "QUE_INTERNSHIP_MENU" || data.code matches "QUE_INTERN_MENU" || data.code matches "QUE_REF_PART_REP_MENU") 
+									&& data.parentCode == "QUE_ADD_ITEMS_GRP") || data.code matches "ACT_PRI_EVENT_QUE_.*")		
 		userToken : GennyToken (code != "PER_SERVICE" )
 		output : OutputParam( )
  		ruleDetails : RuleDetails()
@@ -26,7 +28,7 @@ rule "ADD_ENTITY_CLICK_EVENT"
 		/* Get Agent */
 		String user = userToken.getUserCode();
 		System.out.println("user: " + user);
-		output.setAskSourceCode(user);	
+		
 		
 		String code = $message.getData().getCode();
 		String workflowSignalCode = StringUtils.removeEnd(code, "_MENU");
@@ -37,8 +39,6 @@ rule "ADD_ENTITY_CLICK_EVENT"
 
 		workflowSignalCode = StringUtils.removeStart(workflowSignalCode,"QUE_");
 		System.out.println("workflowSignalCode: " +workflowSignalCode);
-
-		output.setTypeOfResult("SIGNAL");
 				
 		
 		if (workflowSignalCode.equals("HOST_CPY") || workflowSignalCode.equals("HOST_CPY_REP")) {
@@ -51,7 +51,9 @@ rule "ADD_ENTITY_CLICK_EVENT"
 			output.setResultCode("START_ADD_ENTITY");
 		}
 		
+		output.setAskSourceCode(user);	
 		output.setTargetCode($message.getData().getTargetCode());
+		output.setTypeOfResult("SIGNAL");
 		output.setSuitCase(workflowSignalCode);
 		
 		
