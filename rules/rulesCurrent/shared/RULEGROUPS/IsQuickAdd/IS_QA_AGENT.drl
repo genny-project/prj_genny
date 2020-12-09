@@ -34,7 +34,9 @@ rule "IS_QA_AGENT"
 
 		String linkedAgency = newBe.getValue("LNK_AGENCY", null);
 		System.out.println("linkedAgency = " + linkedAgency);
-		if (linkedAgency == null) {
+		if (linkedAgency != null && !linkedAgency.isEmpty()) {
+			System.out.println("LNK_AGENCY present!");
+		} else {
 			/* CREATE EMPTY CPY FOR THE USER */
 			System.out.println("NO AGENCY SELECTED, CREATING ONE...");
 

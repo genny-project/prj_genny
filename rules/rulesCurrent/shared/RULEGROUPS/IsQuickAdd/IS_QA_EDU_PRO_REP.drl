@@ -39,7 +39,7 @@ rule "IS_QA_EDU_PRO_REP"
 		
 		String linkedEP = newBe.getValue("LNK_EDU_PROVIDER", null);
 		System.out.println("linkedEP = " +linkedEP);
-		if (linkedEP != null) {
+		if (linkedEP != null && !linkedEP.isEmpty()) {
 				String assocEPCode = linkedEP.replace("\"", "").replace("[", "").replace("]", "");
 				System.out.println("assocEPCode = " +assocEPCode);
 				

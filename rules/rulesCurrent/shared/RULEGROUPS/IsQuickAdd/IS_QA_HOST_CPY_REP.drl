@@ -39,7 +39,9 @@ rule "IS_QA_HOST_CPY_REP"
 		
 		String linkedHC = newBe.getValue("LNK_HOST_COMPANY", null);
 		System.out.println("linkedHC = " + linkedHC);
-		if (linkedHC == null) {
+		if (linkedHC != null && !linkedHC.isEmpty()) {
+			System.out.println("LNK_HOST_COMPANY present!");
+		} else {
 			/* CREATE EMPTY CPY FOR THE USER */
 			System.out.println("NO HOST COMPANY SELECTED, CREATING ONE...");
 
