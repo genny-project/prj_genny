@@ -89,18 +89,18 @@ rule "CLICK_OHS"
 								
 								/* Save HC and HCR answers against newBe */
 								
-								String firstName = getValueSaveAnswer(userToken, newBe, HCRBe, "PRI_FIRSTNAME", "PRI_FIRSTNAME", "firstName");
-								String lastName = getValueSaveAnswer(userToken, newBe, HCRBe, "PRI_LASTNAME", "PRI_LASTNAME", "lastName");
-								String jobTitle = getValueSaveAnswer(userToken, newBe, HCRBe, "PRI_JOB_TITLE", "PRI_JOB_TITLE", "jobTitle");
-								String email = getValueSaveAnswer(userToken, newBe, HCRBe, "PRI_EMAIL", "PRI_EMAIL", "email");
+								String firstName = getValueSaveAnswer(userToken.getUserCode(), newBe, HCRBe, "PRI_FIRSTNAME", "PRI_FIRSTNAME", "firstName");
+								String lastName = getValueSaveAnswer(userToken.getUserCode(), newBe, HCRBe, "PRI_LASTNAME", "PRI_LASTNAME", "lastName");
+								String jobTitle = getValueSaveAnswer(userToken.getUserCode(), newBe, HCRBe, "PRI_JOB_TITLE", "PRI_JOB_TITLE", "jobTitle");
+								String email = getValueSaveAnswer(userToken.getUserCode(), newBe, HCRBe, "PRI_EMAIL", "PRI_EMAIL", "email");
 								
-								String legalName = getValueSaveAnswer(userToken, newBe, HCBe, "PRI_LEGAL_NAME", "PRI_LEGAL_NAME", "legalName");
-								String abn = getValueSaveAnswer(userToken, newBe, HCBe, "PRI_ABN", "PRI_ABN", "abn");
-								String addressFull = getValueSaveAnswer(userToken, newBe, HCBe, "PRI_ADDRESS_FULL", "PRI_ADDRESS_FULL", "addressFull");
-								String mobile = getValueSaveAnswer(userToken, newBe, HCBe, "PRI_MOBILE", "PRI_MOBILE", "mobile");
-								String website = getValueSaveAnswer(userToken, newBe, HCBe, "PRI_COMPANY_WEBSITE_URL", "PRI_COMPANY_WEBSITE_URL", "website");
-								String numStaff = getValueSaveAnswer(userToken, newBe, HCBe, "LNK_NUMBER_STAFF", "LNK_NUMBER_STAFF", "numStaff");
-								String cpyINC = getValueSaveAnswer(userToken, newBe, HCBe, "LNK_COMPANY_INC", "LNK_COMPANY_INC", "cpyINC");
+								String legalName = getValueSaveAnswer(userToken.getUserCode(), newBe, HCBe, "PRI_LEGAL_NAME", "PRI_LEGAL_NAME", "legalName");
+								String abn = getValueSaveAnswer(userToken.getUserCode(), newBe, HCBe, "PRI_ABN", "PRI_ABN", "abn");
+								String addressFull = getValueSaveAnswer(userToken.getUserCode(), newBe, HCBe, "PRI_ADDRESS_FULL", "PRI_ADDRESS_FULL", "addressFull");
+								String mobile = getValueSaveAnswer(userToken.getUserCode(), newBe, HCBe, "PRI_MOBILE", "PRI_MOBILE", "mobile");
+								String website = getValueSaveAnswer(userToken.getUserCode(), newBe, HCBe, "PRI_COMPANY_WEBSITE_URL", "PRI_COMPANY_WEBSITE_URL", "website");
+								String numStaff = getValueSaveAnswer(userToken.getUserCode(), newBe, HCBe, "LNK_NUMBER_STAFF", "LNK_NUMBER_STAFF", "numStaff");
+								String cpyINC = getValueSaveAnswer(userToken.getUserCode(), newBe, HCBe, "LNK_COMPANY_INC", "LNK_COMPANY_INC", "cpyINC");
 								
 								
 								/* Save DOC_OHS_CODE against HC */
