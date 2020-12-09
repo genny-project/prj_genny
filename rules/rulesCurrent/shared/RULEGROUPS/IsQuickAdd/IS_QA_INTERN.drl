@@ -51,12 +51,13 @@ rule "IS_QA_INTERN"
 		System.out.println("User "+user+" with userCode = "+userCode);
 		
 		String userId = "";
+		String email = "stephenie.pulis-cassar@outcomelife.com.au";
 		
 		String firstname = user.getValue("PRI_FIRSTNAME",null);
 		if (firstname != null) {
 			String lastname = user.getValue("PRI_LASTNAME",null);
 			if (lastname != null) {
-				String email = user.getValue("PRI_EMAIL",null);
+				email = user.getValue("PRI_EMAIL",null);
 				if (email != null) {
 					/*String userPassword = UUID.randomUUID().toString().substring(0,10);*/
 					/* TODO HACK */
@@ -92,12 +93,9 @@ rule "IS_QA_INTERN"
 		/* Send email to Intern? */
 		
 		System.out.println("ABOUT TO SEND THE EMAIL OR MAYBE NOT??");
-		String rawSendEmail = "SEL_YES";
 		
-		if (user != null) {
-				rawSendEmail = user.getValue("LNK_SEND_EMAIL",null);
-				System.out.println("rawSendEmail: " +rawSendEmail);
-		} 
+		String rawSendEmail = user.getValue("LNK_SEND_EMAIL",null);
+		System.out.println("rawSendEmail: " +rawSendEmail);
 		
 		if (rawSendEmail != null) {
 		
@@ -106,32 +104,18 @@ rule "IS_QA_INTERN"
 		
 						String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, userCode, serviceToken.getToken());
 						System.out.println("token: " + token);
-						
-						/*String url = "https://internmatch-dev.gada.io/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9JTlRFUk4=";*/
+					
 						String url = GennySettings.projectUrl+"/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9JTlRFUk4=";
 						System.out.println("url: " + url);
 						
-						List<String> actions = new ArrayList<>();
-					/*	actions.add("UPDATE_PASSWORD"); */
-						actions.add("VERIFY_EMAIL");
-						/* expiry in 48 hours */
-						KeycloakUtils.executeActions(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), "alyson", null, (7*24*60*60), userId, url, actions, serviceToken.getToken()); 
-					
-						/*String user_email = "hello@outcome.life";*/
-						
-			
-					
 						url = url +"?token=" + token;
 						System.out.println("url: " + url);
 						
-					
-						String user_email = "c.pyke85@gmail.com";
-						/*String user_email = "adamcrow63@gmail.com";*/
+						/*String user_email = "c.pyke85@gmail.com";*/
 						String subject = "You have been registered on InternMatch";
 						String template_id = "d-94f647d38d7745a1b925300df2208279";
 						
-					
-						System.out.println("user_email: " + user_email);
+						System.out.println("email: " + email);
 						System.out.println("subject: " + subject);
 						System.out.println("template_id: " + template_id);		
 						
@@ -139,11 +123,16 @@ rule "IS_QA_INTERN"
 						templateData.put("intern", firstname);
 						templateData.put("url", url);
 					
-						/* EmailHelper.sendGrid(beUtils,user_email, subject, template_id, templateData); */
+						EmailHelper.sendGrid(beUtils, email, subject, template_id, templateData);
 						System.out.println("SUCCESS - Email Sent!!");
 		
-						} 
+						} else {
+							System.out.println("rawSendEmail is not Yes: " + rawSendEmail);
+						}
+		} else {
+			System.out.println("ERROR: null rawSendEmail");
 		}
+		
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* don't display anything new */
 		
