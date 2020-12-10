@@ -50,6 +50,7 @@ rule "IS_QA_HOST_CPY_REP"
 			beUtils.create(cpyCode, cpyCode);
 
 			beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_HOST_COMPANY", "[\""+cpyCode+"\"]"));
+			beUtils.saveAnswer(new Answer(userToken.getUserCode(), cpyCode, "PRI_IS_HOST_CPY", true));
 			beUtils.saveAnswer(new Answer(userToken.getUserCode(), cpyCode, "PRI_PROFILE", "InComplete"));
 		}
 		
