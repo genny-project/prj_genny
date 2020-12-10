@@ -31,6 +31,23 @@ rule "IS_QA_AGENT"
  		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
  		
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_AGENT", "true"));
+
+		String linkedAgency = newBe.getValue("LNK_AGENCY", null);
+		System.out.println("linkedAgency = " + linkedAgency);
+		if (linkedAgency != null && !linkedAgency.isEmpty()) {
+			System.out.println("LNK_AGENCY present!");
+		} else {
+			/* CREATE EMPTY CPY FOR THE USER */
+			System.out.println("NO AGENCY SELECTED, CREATING ONE...");
+
+			String uuid = UUID.randomUUID().toString().toUpperCase();
+			String cpyCode = "CPY_"+uuid;
+			beUtils.create(cpyCode, cpyCode);
+
+			beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_AGENCY", "[\""+cpyCode+"\"]"));
+			beUtils.saveAnswer(new Answer(userToken.getUserCode(), cpyCode, "PRI_PROFILE", "InComplete"));
+		}
+		
 		
 		/* Set up in Keycloak */
 		

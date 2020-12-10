@@ -29,7 +29,7 @@ rule "IS_QA_EDU_PRO_REP"
  		System.out.println("IS_QA_EDU_PRO_REP: Rule fired" );
  		System.out.println("IS_QA_EDU_PRO_REP: newBe = " + newBe.getCode()); 
  		
- 	/*  Construct answer with Source, Target, Attribute Code, Value */
+		/*  Construct answer with Source, Target, Attribute Code, Value */
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
     
 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_EDU_PRO_REP", "true"));
@@ -39,7 +39,7 @@ rule "IS_QA_EDU_PRO_REP"
 		
 		String linkedEP = newBe.getValue("LNK_EDU_PROVIDER", null);
 		System.out.println("linkedEP = " +linkedEP);
-		if (linkedEP != null) {
+		if (linkedEP != null && !linkedEP.isEmpty()) {
 				String assocEPCode = linkedEP.replace("\"", "").replace("[", "").replace("]", "");
 				System.out.println("assocEPCode = " +assocEPCode);
 				
@@ -53,6 +53,16 @@ rule "IS_QA_EDU_PRO_REP"
  						beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_ASSOC_EP", assocEP));
 						beUtils.createLink(assocEPBe.getCode(), newBe.getCode(), "LNK_CPY", "EDU_PRO_REP", 1.0);
  				}
+		} else {
+			/* CREATE EMPTY CPY FOR THE USER */
+			System.out.println("NO EDU PRO SELECTED, CREATING ONE...");
+
+			String uuid = UUID.randomUUID().toString().toUpperCase();
+			String cpyCode = "CPY_"+uuid;
+			beUtils.create(cpyCode, cpyCode);
+
+			beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_EDU_PROVIDER", "[\""+cpyCode+"\"]"));
+			beUtils.saveAnswer(new Answer(userToken.getUserCode(), cpyCode, "PRI_PROFILE", "InComplete"));
 		}
 		
 		/* Set up in Keycloak */
