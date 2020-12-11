@@ -75,12 +75,12 @@ rule "OHS_VALIDATION"
     							System.out.println(value);
     							
     							if (value != null) {
-    									if (value.equals("SEL_YES")) { beUtils.saveAnswer(new Answer(userToken.getUserCode(), ohsDocBe.getCode(), value, "Yes")); }
-    									if (value.equals("SEL_NO")) { beUtils.saveAnswer(new Answer(userToken.getUserCode(), ohsDocBe.getCode(), value, "No")); }
-    									if (value.equals("SEL_NA")) { beUtils.saveAnswer(new Answer(userToken.getUserCode(), ohsDocBe.getCode(), value, "N/A")); }	
-    									if (value.equals("SEL_ANNUAL")) { beUtils.saveAnswer(new Answer(userToken.getUserCode(), ohsDocBe.getCode(), value, "Annual")); }
-    									if (value.equals("SEL_QUARTERLY")) { beUtils.saveAnswer(new Answer(userToken.getUserCode(), ohsDocBe.getCode(), value, "Quarterly")); }
-    									if (value.equals("SEL_MONTHLY")) { beUtils.saveAnswer(new Answer(userToken.getUserCode(), ohsDocBe.getCode(), value, "Monthly")); }
+    									if (value.equals("SEL_YES")) { beUtils.saveAnswer(new Answer(userToken.getUserCode(), ohsDocBe.getCode(), link, "Yes")); }
+    									if (value.equals("SEL_NO")) { beUtils.saveAnswer(new Answer(userToken.getUserCode(), ohsDocBe.getCode(), link, "No")); }
+    									if (value.equals("SEL_NA")) { beUtils.saveAnswer(new Answer(userToken.getUserCode(), ohsDocBe.getCode(), link, "N/A")); }	
+    									if (value.equals("SEL_ANNUAL")) { beUtils.saveAnswer(new Answer(userToken.getUserCode(), ohsDocBe.getCode(), link, "Annual")); }
+    									if (value.equals("SEL_QUARTERLY")) { beUtils.saveAnswer(new Answer(userToken.getUserCode(), ohsDocBe.getCode(), link, "Quarterly")); }
+    									if (value.equals("SEL_MONTHLY")) { beUtils.saveAnswer(new Answer(userToken.getUserCode(), ohsDocBe.getCode(), link, "Monthly")); }
     							}
    						}
 				}
