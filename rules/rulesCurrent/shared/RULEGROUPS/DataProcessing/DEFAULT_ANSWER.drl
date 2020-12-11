@@ -20,7 +20,7 @@ rule "DEFAULT_ANSWER"
  		System.out.println("Rule -> DEFAULT_ANSWER : "+answer); 
 	
 	
-		answer.setChangeEvent(false);
+		answer.setChangeEvent(false)
 		answersToSave.add(answer);
 				
 		output.setTypeOfResult("NONE");
