@@ -189,6 +189,15 @@ rule "IS_INTERN"
 		System.out.println("I just posted the note");
 		System.out.println("Note endPoint: " +endPoint);
 		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
+		
+		BaseEntity internBe = beUtils.getBaseEntityByCode(newBe.getCode());
+		
+		if(internBe != null){
+			
+			QDataBaseEntityMessage internBeMsg = new QDataBaseEntityMessage(internBe);
+			internBeMsg.setToken(userToken.getToken());
+			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(internBeMsg));
+		}
 
 		
 		output.setTypeOfResult("NONE");
