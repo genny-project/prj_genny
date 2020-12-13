@@ -60,7 +60,7 @@ rule "IS_QA_HOST_CPY_REP"
 		/* Set up in Keycloak */
 		
 		
-		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
+		
 		String userStr = newBe.getCode();
 		String[] userSplit = userStr.split("_");
 		String userCode = userSplit[1];
