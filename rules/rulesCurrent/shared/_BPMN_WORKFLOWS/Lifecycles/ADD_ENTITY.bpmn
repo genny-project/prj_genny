@@ -518,7 +518,7 @@ kcontext.setVariable(&quot;message&quot;,(QEventMessage)message); </bpmn2:script
 	have been filled and we can set the profile as completed
 */
 
-System.out.println(&quot;ADD_ENTITY : Setting PRI_PROFILE to Completed for &quot; + newBe.getCode());
+System.out.println(&quot;ADD_ENTITY : Setting PRI_PROFILE to Complete for &quot; + newBe.getCode());
 
 beUtils = new BaseEntityUtils(userToken);
 beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), &quot;PRI_PROFILE&quot;, &quot;Complete&quot;));</bpmn2:script>
