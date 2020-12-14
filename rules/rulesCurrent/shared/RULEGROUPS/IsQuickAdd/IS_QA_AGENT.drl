@@ -29,10 +29,11 @@ rule "IS_QA_AGENT"
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
  		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
  		
- 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_AGENT", "true"));
+ 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), user.getCode() ,"PRI_IS_AGENT", "true"));
 
-		String linkedAgency = newBe.getValue("LNK_AGENCY", null);
+		String linkedAgency = user.getValue("LNK_AGENCY", null);
 		System.out.println("linkedAgency = " + linkedAgency);
 		if (linkedAgency != null && !linkedAgency.isEmpty()) {
 			System.out.println("LNK_AGENCY present!");
@@ -44,14 +45,13 @@ rule "IS_QA_AGENT"
 			String cpyCode = "CPY_"+uuid;
 			beUtils.create(cpyCode, cpyCode);
 
-			beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_AGENCY", "[\""+cpyCode+"\"]"));
+			beUtils.saveAnswer(new Answer(userToken.getUserCode(), user.getCode(), "LNK_AGENCY", "[\""+cpyCode+"\"]"));
 			beUtils.saveAnswer(new Answer(userToken.getUserCode(), cpyCode, "PRI_PROFILE", "InComplete"));
 		}
 		
 		
 		/* Set up in Keycloak */
 		
-		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
 		String name = user.getValue("PRI_NAME",null);
 		
 		String userStr = newBe.getCode();
