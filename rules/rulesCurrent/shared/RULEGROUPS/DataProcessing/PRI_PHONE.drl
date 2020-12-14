@@ -46,8 +46,8 @@ rule "PRI_PHONE"
 				
 				
 				if (QwandaUtils.checkPhone(phonenumber)) {
-							/* Now check if it is an Australian mobile */
-					if ((phonenumber.startsWith("614"))|| (phonenumber.startsWith("615"))) {
+							/* Now check if it is an Australian mobile or any international */
+					if (((phonenumber.startsWith("614"))|| (phonenumber.startsWith("615")))||(!phonenumber.startsWith("61"))) {
 						Boolean inferred = !"PRI_MOBILE".equals(answer.getAttributeCode());
 						Answer mobile = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_MOBILE",phonenumber,false,inferred);
 						answersToSave.add(mobile);
