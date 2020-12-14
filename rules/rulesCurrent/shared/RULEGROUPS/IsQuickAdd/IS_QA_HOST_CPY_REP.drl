@@ -36,8 +36,10 @@ rule "IS_QA_HOST_CPY_REP"
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_HOST_CPY_REP", "true"));
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS_COLOR", "#FF9100"));
 
+
+		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
 		
-		String linkedHC = newBe.getValue("LNK_HOST_COMPANY", null);
+		String linkedHC = user.getValue("LNK_HOST_COMPANY", null);
 		System.out.println("linkedHC = " + linkedHC);
 		if (linkedHC != null && !linkedHC.isEmpty()) {
 			System.out.println("LNK_HOST_COMPANY present!");
@@ -58,7 +60,7 @@ rule "IS_QA_HOST_CPY_REP"
 		/* Set up in Keycloak */
 		
 		
-		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
+		
 		String userStr = newBe.getCode();
 		String[] userSplit = userStr.split("_");
 		String userCode = userSplit[1];
