@@ -33,6 +33,7 @@
 		<quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
 		<quarkus.platform.version>1.9.2.Final</quarkus.platform.version>
 		<surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
+		<keycloak.test.port>8180</keycloak.test.port>
 
 		<kie.version>7.34.0.Final</kie.version>
 		<version.keycloak>11.0.2</version.keycloak>
@@ -53,17 +54,9 @@
 		
 		<commons-lang3.version>3.10</commons-lang3.version>
 		<docker-plugin.version>0.33.0</docker-plugin.version>
-		<keycloak.test.port>8180</keycloak.test.port>
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target>
 		<mysql.test.port>3333</mysql.test.port>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<quarkus-plugin.version>1.9.2.Final</quarkus-plugin.version>
 		<quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
-		<quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
-		<quarkus.platform.version>1.9.2.Final</quarkus.platform.version>
-		<qwanda.version>${project.version}</qwanda.version>
-		<surefire.version>2.22.0</surefire.version>
+ 		<surefire.version>2.22.0</surefire.version>
 		<testcontainers.version>1.14.1</testcontainers.version>
 		<jandex.version>1.0.7</jandex.version>
 		
@@ -139,6 +132,50 @@
 			<version>${spring.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<!-- Hibernate ORM specific dependencies -->
+	    <dependency>
+	        <groupId>io.quarkus</groupId>
+	        <artifactId>quarkus-hibernate-orm</artifactId>
+	    </dependency>
+	
+	    <!-- JDBC driver dependencies -->
+	    <dependency>
+	        <groupId>io.quarkus</groupId>
+    		<artifactId>quarkus-jdbc-mysql</artifactId>
+	    </dependency>
+	 <dependency>
+	      <groupId>io.jsonwebtoken</groupId>
+	      <artifactId>jjwt-api</artifactId>
+	      <version>0.10.7</version>
+	    </dependency>
+	    <dependency>
+	      <groupId>io.jsonwebtoken</groupId>
+	      <artifactId>jjwt-impl</artifactId>
+	      <version>0.10.7</version>
+	      <scope>runtime</scope>
+	    </dependency>
+	    <dependency>
+	      <groupId>io.jsonwebtoken</groupId>
+	      <artifactId>jjwt-jackson</artifactId>
+	      <version>0.10.7</version>
+	      <scope>runtime</scope>
+	    </dependency>
+	    <dependency>
+	      <groupId>io.quarkus</groupId>
+	      <artifactId>quarkus-container-image-docker</artifactId>
+	    </dependency>
+	    <dependency>
+	      <groupId>io.quarkus</groupId>
+	      <artifactId>quarkus-quartz</artifactId>
+	    </dependency>
+	    <dependency>
+	      <groupId>io.quarkus</groupId>
+	      <artifactId>quarkus-flyway</artifactId>
+	    </dependency>
+	    <dependency>
+	      <groupId>io.quarkus</groupId>
+	      <artifactId>quarkus-agroal</artifactId>
+	    </dependency>	    
 	</dependencies>
 	<build>
 		<plugins>
@@ -240,8 +277,8 @@
 								</wait>
 							</run>
 						</image>
-						<!-- <image>
-							<name>quay.io/keycloak/keycloak:11.0.0</name>
+					    <image>
+							<name>quay.io/keycloak/keycloak:11.0.2</name>
 							<run>
 								<env>
 									<KEYCLOAK_USER>admin</KEYCLOAK_USER>
@@ -255,14 +292,14 @@
 									<date>default</date>
 									<color>yellow</color>
 								</log>
-								<wait>
+								<!-- <wait>
 									<log>ready for connections</log>
-									<time>40000</time>
+									<time>120000</time>
 									<shutdown>5000</shutdown>
 									<kill>5000</kill>
-								</wait>
+								</wait> -->
 							</run>
-						</image> -->
+						</image>  
 					</images>
 				</configuration>
 			</plugin>
