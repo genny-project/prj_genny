@@ -35,7 +35,7 @@ rule "PRI_PHONE"
 			
 			if (phonenumber != null) {
 				/* remove all non digits */
-				phonenumber  = phonenumber.replaceAll("[^\\d]", "");
+				phonenumber  = phonenumber.replaceAll("[^\\d\\+]", "");
 				if (!phonenumber.startsWith("+")) {
 					if (phonenumber.startsWith("0")) {
 						phonenumber = "61"+phonenumber.substring(1); /* remove the 0  and assume Australian*/
