@@ -22,7 +22,8 @@ rule "EDU_PRO_REP_DETAIL_VIEW"
 		$message : QEventMessage(	data.targetCode matches "PER_.*" && 
 									(
 										data.parentCode matches "SBE_EPRS_.*" ||
-										data.parentCode matches "QUE_EDU_PRO_REP_GRP"
+										data.parentCode matches "QUE_EDU_PRO_REP_GRP" ||
+										data.parentCode matches "SBE_SUMMARY_EPRS_.*"
 									)
 								)
 		userToken : GennyToken (code != "PER_SERVICE" )
