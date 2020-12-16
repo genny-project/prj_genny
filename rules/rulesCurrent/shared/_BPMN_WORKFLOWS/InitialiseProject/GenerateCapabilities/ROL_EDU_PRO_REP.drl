@@ -51,7 +51,8 @@ rule "ROL_EDU_PRO_REP"
 
 			capabilityUtils.addCapabilityToRole(role,"DASHBOARD_COUNTS",CapabilityMode.VIEW);
 			capabilityUtils.addCapabilityToRole(role,"VIEW_AGREEMENT",CapabilityMode.VIEW);
-			capabilityUtils.addCapabilityToRole(role,"EDIT_EDU_PROVIDER",CapabilityMode.VIEW);
+			capabilityUtils.addCapabilityToRole(role,"EDIT_EDU_PROVIDER",CapabilityMode.EDIT);
+			capabilityUtils.addCapabilityToRole(role,"EDIT_EPR",CapabilityMode.EDIT);
 			
 			role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
 			beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_WEIGHT", 600.0,false,true));
