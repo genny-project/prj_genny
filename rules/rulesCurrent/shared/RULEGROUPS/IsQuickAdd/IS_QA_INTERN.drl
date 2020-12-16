@@ -172,7 +172,7 @@ rule "IS_QA_INTERN"
 		String prettyOrange = dtf.format(orangeTimer);
 		System.out.println("The Orange timer is set for ~ " + prettyOrange);
 		
-		LocalDateTime redTestTimer = now.plusSeconds(30);
+		LocalDateTime redTestTimer = now.plusSeconds(180);
 		LocalDateTime redTimer = now.plusHours(96);
 		String prettyRed = dtf.format(redTimer);
 		System.out.println("The Red timer is set for ~ " + prettyRed);
