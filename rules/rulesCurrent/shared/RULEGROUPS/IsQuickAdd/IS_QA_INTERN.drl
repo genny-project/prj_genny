@@ -198,7 +198,7 @@ rule "IS_QA_INTERN"
 		System.out.println("msgQAInternRed" + scheduleRed);
 		
 		try {
-			QwandaUtils.apiPostEntity(shleemyEndPoint, JsonUtils.toJson(scheduleOrange), userToken.getToken());
+			QwandaUtils.apiPostEntity(shleemyEndPoint, JsonUtils.toJson(scheduleRed), userToken.getToken());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}			
