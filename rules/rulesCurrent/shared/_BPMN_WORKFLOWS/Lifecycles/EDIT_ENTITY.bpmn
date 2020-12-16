@@ -151,7 +151,7 @@
 
 /* Do the template thing*/
 
-	if (key.equals(&quot;HOST_CPY&quot;) || key.equals(&quot;HOST_CPY_REP&quot;) || key.equals(&quot;INTERNSHIP&quot;) || key.equals(&quot;INTERN&quot;) || key.equals(&quot;EDU_PRO&quot;) || || key.equals(&quot;EDU_PRO_REP&quot;)) {
+	if (key.equals(&quot;HOST_CPY&quot;) || key.equals(&quot;HOST_CPY_REP&quot;) || key.equals(&quot;INTERNSHIP&quot;) || key.equals(&quot;INTERN&quot;) || key.equals(&quot;EDU_PRO&quot;) || key.equals(&quot;EDU_PRO_REP&quot;)) {
 			String templateCode = &quot;TEMPLATE_&quot; + key;
 			TableUtils.searchTable(beUtils, templateCode, true);
 

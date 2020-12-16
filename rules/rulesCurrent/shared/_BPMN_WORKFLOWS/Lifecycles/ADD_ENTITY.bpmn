@@ -450,7 +450,7 @@ kcontext.setVariable(&quot;message&quot;,(QEventMessage)message); </bpmn2:script
 
 /* Do the template thing*/
 
-	if (clean.equals(&quot;HOST_CPY&quot;) || clean.equals(&quot;HOST_CPY_REP&quot;) || clean.equals(&quot;INTERNSHIP&quot;) || clean.equals(&quot;INTERN&quot;) || key.equals(&quot;EDU_PRO&quot;) || || key.equals(&quot;EDU_PRO_REP&quot;)) {
+	if (clean.equals(&quot;HOST_CPY&quot;) || clean.equals(&quot;HOST_CPY_REP&quot;) || clean.equals(&quot;INTERNSHIP&quot;) || clean.equals(&quot;INTERN&quot;) || key.equals(&quot;EDU_PRO&quot;) || key.equals(&quot;EDU_PRO_REP&quot;)) {
 			String templateCode = &quot;TEMPLATE_&quot; + clean;
 			TableUtils.searchTable(beUtilsTwo, templateCode, true);
 
