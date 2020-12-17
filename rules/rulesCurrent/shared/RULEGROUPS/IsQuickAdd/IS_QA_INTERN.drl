@@ -172,10 +172,17 @@ rule "IS_QA_INTERN"
 		String prettyOrange = dtf.format(orangeTimer);
 		System.out.println("The Orange timer is set for ~ " + prettyOrange);
 		
+		String orangeCode = newBe.getCode() + "_QA_INTERN-ORANGE";
+		System.out.println("orangeCode " + orangeCode);
+		
 		LocalDateTime redTestTimer = now.plusSeconds(180);
 		LocalDateTime redTimer = now.plusHours(96);
 		String prettyRed = dtf.format(redTimer);
 		System.out.println("The Red timer is set for ~ " + prettyRed);
+		
+		String redCode = newBe.getCode() + "_QA_INTERN-RED";
+		System.out.println("redCode " + redCode);
+		
 		
 		System.out.println("Orange schedule set: " +msgQAInternOrange);
 		System.out.println("Red schedule set: " +msgQAInternRed);
@@ -183,7 +190,7 @@ rule "IS_QA_INTERN"
 
 		System.out.println("################## Schedule Orange Shleemy ##################");
 		
-		QScheduleMessage scheduleOrange = new QScheduleMessage(JsonUtils.toJson(msgQAInternOrange), userToken.getUserCode(), "webcmds", orangeTestTimer, userToken.getRealm());
+		QScheduleMessage scheduleOrange = new QScheduleMessage(orangeCode, JsonUtils.toJson(msgQAInternOrange), userToken.getUserCode(), "project", orangeTestTimer, userToken.getRealm());
 		System.out.println("msgQAInternOrange" + scheduleOrange);
 		
 		try {
@@ -194,7 +201,7 @@ rule "IS_QA_INTERN"
 		
 		System.out.println("################## Schedule Red Shleemy ##################");
 		
-		QScheduleMessage scheduleRed = new QScheduleMessage(JsonUtils.toJson(msgQAInternRed), userToken.getUserCode(), "webcmds", redTestTimer, userToken.getRealm());
+		QScheduleMessage scheduleRed = new QScheduleMessage(redCode, JsonUtils.toJson(msgQAInternRed), userToken.getUserCode(), "project", redTestTimer, userToken.getRealm());
 		System.out.println("msgQAInternRed" + scheduleRed);
 		
 		try {
