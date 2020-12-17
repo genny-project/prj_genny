@@ -134,7 +134,7 @@ rule "IS_QA_INTERN"
 		}
 		
 		
-		
+		/*
 		System.out.println("################## START Shleemy ##################");
 		
 		String shleemyEndPoint = GennySettings.projectUrl+"/api/schedule";
@@ -158,10 +158,10 @@ rule "IS_QA_INTERN"
 		msgQAInternRed.getData().setTargetCode(newBe.getCode());
 		msgQAInternRed.setToken(userToken.getToken());
 		msgQAInternRed.setRecipientCodeArray(rxList);
-		
+		*/
 		
 		/* Set trigger times */
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("hh:mm:ss a, E, dd MMM yyyy");
+		/*DateTimeFormatter dtf = DateTimeFormatter.ofPattern("hh:mm:ss a, E, dd MMM yyyy");
     
    	 	LocalDateTime now = LocalDateTime.now().minusHours(1);
     	String prettyNow = dtf.format(now);
@@ -211,15 +211,15 @@ rule "IS_QA_INTERN"
 		}			
 		
 		System.out.println("################## END Shleemy ##################");
-		
+		*/
 		
 		/* Send Note about reminders */		
-		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), tag, userToken.getUserCode(), "Scheduled two reminders for : " +prettyOrange + " and " + prettyRed , serviceToken.getToken());
+		/*QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), tag, userToken.getUserCode(), "Scheduled two reminders for : " +prettyOrange + " and " + prettyRed , serviceToken.getToken());
 		
 		System.out.println("I just posted the note");
 		System.out.println("Note endPoint: " +endPoint);
 		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
-		
+		*/
 		
 		
 		output.setTypeOfResult("NONE");
