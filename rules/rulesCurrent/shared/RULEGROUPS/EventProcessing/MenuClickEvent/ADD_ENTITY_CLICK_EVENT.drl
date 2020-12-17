@@ -15,7 +15,7 @@ rule "ADD_ENTITY_CLICK_EVENT"
 		salience 2
     no-loop
     when
-		$message : QEventMessage((data.code matches "QUE_.*" && data.parentCode == "QUE_ADD_ITEMS_GRP") || data.code matches "ACT_PRI_EVENT_QUE_.*")
+		$message : QEventMessage((data.code matches "QUE_.*" && data.parentCode == "QUE_ADD_ITEMS_GRP") || data.code matches "SCH_ACT_PRI_EVENT_QUE_.*")
 		/*$message : QEventMessage( ((data.code matches "QUE_HOST_CPY_REP_MENU" || data.code matches "QUE_EDU_PRO_REP_MENU" || data.code matches "QUE_INTERNSHIP_MENU" || data.code matches "QUE_INTERN_MENU" || data.code matches "QUE_REF_PART_REP_MENU") 
 									&& data.parentCode == "QUE_ADD_ITEMS_GRP") || data.code matches "ACT_PRI_EVENT_QUE_.*")*/	
 		userToken : GennyToken (code != "PER_SERVICE" )
@@ -33,8 +33,8 @@ rule "ADD_ENTITY_CLICK_EVENT"
 		String code = $message.getData().getCode();
 		String workflowSignalCode = StringUtils.removeEnd(code, "_MENU");
 
-		if(code.startsWith("ACT_PRI_EVENT_QUE_")){
-			workflowSignalCode = StringUtils.removeStart(workflowSignalCode,"ACT_PRI_EVENT_");
+		if(code.startsWith("SCH_ACT_PRI_EVENT_QUE_")){
+			workflowSignalCode = StringUtils.removeStart(workflowSignalCode,"SCH_ACT_PRI_EVENT_");
 		}
 
 		workflowSignalCode = StringUtils.removeStart(workflowSignalCode,"QUE_");
