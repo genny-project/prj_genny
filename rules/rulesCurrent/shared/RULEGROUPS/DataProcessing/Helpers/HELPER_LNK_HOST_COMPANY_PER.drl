@@ -58,7 +58,8 @@ rule "HELPER_LNK_HOST_COMPANY_PER"
 		System.out.println("lnkHC  :: " + lnkHC);
 
 		/* Save the actual LNK_HOST_COMPANY answer */
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), code ,"LNK_HOST_COMPANY", lnkHC));
+		/*beUtils.saveAnswer(new Answer(userToken.getUserCode(), code ,"LNK_HOST_COMPANY", lnkHC));*/
+		answersToSave.add(answer);
 
 		/* get the company baseentity */
 		BaseEntity companyBe = beUtils.getBaseEntityByCode(code);
@@ -78,6 +79,7 @@ rule "HELPER_LNK_HOST_COMPANY_PER"
 
 		}
 
+		update(answersToSave);
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
