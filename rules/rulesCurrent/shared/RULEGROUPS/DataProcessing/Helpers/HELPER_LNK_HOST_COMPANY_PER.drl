@@ -53,32 +53,35 @@ rule "HELPER_LNK_HOST_COMPANY_PER"
 		
 		String code = hostCompanyCode.replace("\"", "").replace("[", "").replace("]", "");
 		System.out.println("code  :: " + code);
+		
+		String lnkHC = answer.getValue();
+		System.out.println("lnkHC  :: " + lnkHC);
 
 		/* Save the actual LNK_HOST_COMPANY answer */
-		answersToSave.add(answer);
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), code ,"LNK_HOST_COMPANY", lnkHC));
 
 		/* get the company baseentity */
 		BaseEntity companyBe = beUtils.getBaseEntityByCode(code);
 		if(companyBe != null){
 
 			/* get the name attribute of the company */
-			String name = companyBe.getValue("PRI_NAME", null);		
+			String name = companyBe.getValue("PRI_NAME", null);	
+			System.out.println("name  :: " + name);	
 
 			/* save the company's name as PRI_ASSOC_HC attribute for person baseentity */
 			if(name != null){
-				Answer assocHcAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HC", name);
-				answersToSave.add(assocHcAnswer);
-
-				VertxUtils.sendToFrontEnd(userToken, assocHcAnswer);
+				Answer answerHC = new Answer(userToken.getUserCode(), targetCode, "PRI_ASSOC_HC", name);
+	 			beUtils.saveAnswer(answerHC);
+				VertxUtils.sendToFrontEnd(userToken, answerHC);
 
 			}
 
 		}
 
-		update(answersToSave);
-		retract(answer);
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
-		update(output);
+		
+		retract(answer);
+
 end
