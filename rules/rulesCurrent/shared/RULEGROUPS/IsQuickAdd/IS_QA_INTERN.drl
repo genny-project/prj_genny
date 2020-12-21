@@ -160,6 +160,7 @@ rule "IS_QA_INTERN"
 		msgQAInternRed.setRecipientCodeArray(rxList);
 		
 		
+		
 		/* Set trigger times */
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("hh:mm:ss a, E, dd MMM yyyy");
     
