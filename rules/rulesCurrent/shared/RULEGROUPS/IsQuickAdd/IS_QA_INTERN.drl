@@ -164,7 +164,7 @@ rule "IS_QA_INTERN"
 		/* Set trigger times */
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("hh:mm:ss a, E, dd MMM yyyy");
     
-   	 	LocalDateTime now = LocalDateTime.now().minusHours(1);
+   	 	LocalDateTime now = LocalDateTime.now().plusHours(11);
     	String prettyNow = dtf.format(now);
     	System.out.println("The current date and time is ~ " + prettyNow);
 		
@@ -176,7 +176,7 @@ rule "IS_QA_INTERN"
 		String orangeCode = newBe.getCode() + "_QA_INTERN-ORANGE";
 		System.out.println("orangeCode " + orangeCode);
 		
-		LocalDateTime redTestTimer = now.plusSeconds(180);
+		LocalDateTime redTestTimer = now.plusSeconds(90);
 		LocalDateTime redTimer = now.plusHours(96);
 		String prettyRed = dtf.format(redTimer);
 		System.out.println("The Red timer is set for ~ " + prettyRed);
