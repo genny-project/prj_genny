@@ -133,6 +133,96 @@ rule "IS_QA_INTERN"
 			System.out.println("ERROR: null rawSendEmail");
 		}
 		
+		
+		
+		System.out.println("################## START Shleemy ##################");
+		
+		String shleemyEndPoint = GennySettings.projectUrl+"/api/schedule";
+		System.out.println("shleemyEndPoint: "+shleemyEndPoint);
+	
+		QEventMessage msgQAInternOrange = null;
+		QEventMessage msgQAInternRed = null;
+
+		
+		System.out.println("Setting schedule");
+		
+		msgQAInternOrange = new QEventMessage("TEST_EVT", "SCHEDULE_QA_INTERN_ORANGE");
+		msgQAInternOrange.getData().setTargetCode(newBe.getCode());
+		msgQAInternOrange.setToken(userToken.getToken());
+		String[] rxList = new String[2];
+		rxList[0] = "SUPERUSER";
+		rxList[1] = userToken.getUserCode();
+		msgQAInternOrange.setRecipientCodeArray(rxList);
+		
+		msgQAInternRed = new QEventMessage("TEST_EVT", "SCHEDULE_QA_INTERN_RED");
+		msgQAInternRed.getData().setTargetCode(newBe.getCode());
+		msgQAInternRed.setToken(userToken.getToken());
+		msgQAInternRed.setRecipientCodeArray(rxList);
+		
+		
+		
+		/* Set trigger times */
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("hh:mm:ss a, E, dd MMM yyyy");
+    
+   	 	LocalDateTime now = LocalDateTime.now().plusHours(11);
+    	String prettyNow = dtf.format(now);
+    	System.out.println("The current date and time is ~ " + prettyNow);
+		
+		LocalDateTime orangeTestTimer = now.plusSeconds(15);
+    	LocalDateTime orangeTimer = now.plusHours(48);
+		String prettyOrange = dtf.format(orangeTimer);
+		System.out.println("The Orange timer is set for ~ " + prettyOrange);
+		
+		String orangeCode = newBe.getCode() + "_QA_INTERN-ORANGE";
+		System.out.println("orangeCode " + orangeCode);
+		
+		LocalDateTime redTestTimer = now.plusSeconds(90);
+		LocalDateTime redTimer = now.plusHours(96);
+		String prettyRed = dtf.format(redTimer);
+		System.out.println("The Red timer is set for ~ " + prettyRed);
+		
+		String redCode = newBe.getCode() + "_QA_INTERN-RED";
+		System.out.println("redCode " + redCode);
+		
+		
+		System.out.println("Orange schedule set: " +msgQAInternOrange);
+		System.out.println("Red schedule set: " +msgQAInternRed);
+
+
+		System.out.println("################## Schedule Orange Shleemy ##################");
+		
+		QScheduleMessage scheduleOrange = new QScheduleMessage(orangeCode, JsonUtils.toJson(msgQAInternOrange), userToken.getUserCode(), "project", orangeTestTimer, userToken.getRealm());
+		System.out.println("msgQAInternOrange" + scheduleOrange);
+		
+		try {
+			QwandaUtils.apiPostEntity(shleemyEndPoint, JsonUtils.toJson(scheduleOrange), userToken.getToken());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+		
+		System.out.println("################## Schedule Red Shleemy ##################");
+		
+		QScheduleMessage scheduleRed = new QScheduleMessage(redCode, JsonUtils.toJson(msgQAInternRed), userToken.getUserCode(), "project", redTestTimer, userToken.getRealm());
+		System.out.println("msgQAInternRed" + scheduleRed);
+		
+		try {
+			QwandaUtils.apiPostEntity(shleemyEndPoint, JsonUtils.toJson(scheduleRed), userToken.getToken());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}			
+		
+		System.out.println("################## END Shleemy ##################");
+		
+		
+		/* Send Note about reminders */		
+		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), tag, userToken.getUserCode(), "Scheduled two reminders for : " +prettyOrange + " and " + prettyRed , serviceToken.getToken());
+		
+		System.out.println("I just posted the note");
+		System.out.println("Note endPoint: " +endPoint);
+		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
+		
+		
+		
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* don't display anything new */
 		

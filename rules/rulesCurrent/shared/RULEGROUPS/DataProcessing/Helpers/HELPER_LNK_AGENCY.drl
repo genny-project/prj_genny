@@ -26,12 +26,12 @@ import life.genny.utils.DropdownUtils;
 import java.util.List;
 import java.util.ArrayList;
 
-rule "HELPER_LNK_HOST_COMPANY_PER"
+rule "HELPER_LNK_AGENCY"
 	ruleflow-group 'DataProcessing'
 	salience 5000
 	when
 		beUtils : BaseEntityUtils()
-		answer : Answer( attributeCode == "LNK_HOST_COMPANY" && targetCode.startsWith("PER_"))
+		answer : Answer( attributeCode == "LNK_AGENCY")
 		answersToSave : Answers()
 		ruleDetails : RuleDetails()
 		output : OutputParam( )
@@ -39,8 +39,8 @@ rule "HELPER_LNK_HOST_COMPANY_PER"
 		userToken : GennyToken( code != "PER_SERVICE")
 
 	then
-		System.out.println("HELPER_LNK_HOST_COMPANY_PER fired");
-		System.out.println(ruleDetails+" "+drools.getRule().getName()+"Processing Helper HOST COMPANY SELECTION Answer/Data : " + answer );
+		System.out.println("HELPER_LNK_AGENCY fired");
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+"Processing Helper AGENCY SELECTION Answer/Data : " + answer );
 
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		System.out.println("sourceCode :: " + sourceCode);
@@ -48,40 +48,37 @@ rule "HELPER_LNK_HOST_COMPANY_PER"
 		String targetCode = answer.getTargetCode();
 		System.out.println("targetCode :: " + targetCode);
 		
-		String hostCompanyCode = answer.getValue();
-		System.out.println("hostCompanyCode :: " + hostCompanyCode);
+		String agencyCode = answer.getValue();
+		System.out.println("agencyCode :: " + agencyCode);
 		
-		String code = hostCompanyCode.replace("\"", "").replace("[", "").replace("]", "");
+		String code = agencyCode.replace("\"", "").replace("[", "").replace("]", "");
 		System.out.println("code  :: " + code);
-		
-		String lnkHC = answer.getValue();
-		System.out.println("lnkHC  :: " + lnkHC);
 
-		/* Save the actual LNK_HOST_COMPANY answer */
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetCode ,"LNK_HOST_COMPANY", lnkHC));
+		/* Save the actual LNK_AGENCY answer */
+		answersToSave.add(answer);
 
 		/* get the company baseentity */
 		BaseEntity companyBe = beUtils.getBaseEntityByCode(code);
 		if(companyBe != null){
 
 			/* get the name attribute of the company */
-			String name = companyBe.getValue("PRI_NAME", null);	
-			System.out.println("name  :: " + name);	
+			String name = companyBe.getValue("PRI_NAME", null);		
 
 			/* save the company's name as PRI_ASSOC_HC attribute for person baseentity */
 			if(name != null){
-				Answer answerHC = new Answer(userToken.getUserCode(), targetCode, "PRI_ASSOC_HC", name);
-	 			beUtils.saveAnswer(answerHC);
-				VertxUtils.sendToFrontEnd(userToken, answerHC);
+				Answer assocHcAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_AGENCY", name);
+				answersToSave.add(assocHcAnswer);
+
+				VertxUtils.sendToFrontEnd(userToken, assocHcAnswer);
 
 			}
 
 		}
 
+		update(answersToSave);
+		retract(answer);
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
-		
-		retract(answer);
-
+		update(output);
 end
