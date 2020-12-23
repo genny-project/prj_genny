@@ -11,6 +11,7 @@ import life.genny.qwandautils.QwandaUtils;
 import life.genny.qwandautils.GennySettings;
 import java.util.UUID;
 import life.genny.notifications.EmailHelper;
+import life.genny.qwanda.message.QScheduleMessage;
 
 import java.util.List;
 import java.util.ArrayList;
