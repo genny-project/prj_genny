@@ -76,7 +76,7 @@ rule "ROL_AGENT"
    	     capabilityUtils.addCapabilityToRole(role,"EDIT_HOST_COMPANY",CapabilityMode.EDIT);
    	     capabilityUtils.addCapabilityToRole(role,"EDIT_EDU_PROVIDER",CapabilityMode.EDIT);
    	     capabilityUtils.addCapabilityToRole(role,"EDIT_AGENCY",CapabilityMode.EDIT);
-   	     capabilityUtils.addCapabilityToRole(role,"EDIT_APPLICATION",CapabilityMode.EDIT);
+   	     /* capabilityUtils.addCapabilityToRole(role,"EDIT_APPLICATION",CapabilityMode.EDIT); */
    	     capabilityUtils.addCapabilityToRole(role,"DOWNLOAD_OHNS_AGREEMENT_DOC",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"DOWNLOAD_SERVICE_AGREEMENT_DOC",CapabilityMode.VIEW);
  
