@@ -134,8 +134,11 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		/* TODO: Answer should support null  */
 		Answer repAnswer = new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", "",false,true);
 		System.out.println("repAnswer");
+		beUtils.saveAnswer(repAnswer);
+
 		Answer supervisorAnswer = new Answer(sourceCode, targetCode, "LNK_INTERN_SUPERVISOR", "",false,true);
 		System.out.println("supervisorAnswer");
+		beUtils.saveAnswer(supervisorAnswer);
 
 		List<Answer> addressData = new ArrayList<Answer>();
 		addressData.add(answer);
