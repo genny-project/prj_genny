@@ -63,7 +63,7 @@ rule "IS_QA_INTERN"
 					/*String userPassword = UUID.randomUUID().toString().substring(0,10);*/
 					/* TODO HACK */
 					if (true) {
-						String userPassword = "password1";
+						String userPassword = "Password1";
 						userId = KeycloakUtils.updateUser(userCode,serviceToken.getToken(), serviceToken.getRealm(), email, firstname, lastname,  email, userPassword,"user", "users");
 						userId = userId.toUpperCase();
 						Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),newBe.getCode(),"PRI_UUID",userId);
