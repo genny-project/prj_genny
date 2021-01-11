@@ -56,23 +56,26 @@ rule "CLICK_HC_VALIDATION"
 						if (validationStatus.equals("Incomplete") || validationStatus.equals("HCS") || validationStatus.equals("OHS")) {
 								System.out.println("ERROR: PRI_VALIDATION is not ready to be changed: " +validationStatus); 
 								
-								String note = "some of the required forms have not been completed. Please follow up with the Host Company Representive.";
+								String note = "some of the required forms have not been completed. Please follow up with the relevant Host Company Representive.";
 								
 								if (validationStatus.equals("Incomplete")) {
-										note = "the OHS and HC Services documents have not been completed. Please follow up with the Host Company Representive.";
+										note = "the OHS and HC Services documents have not been completed. Please follow up with the relevant Host Company Representive.";
 								}
 								
 								if (validationStatus.equals("HCS")) {
-										note = "the OHS document have not been completed. Please follow up with the Host Company Representive.";
+										note = "the OHS document have not been completed. Please follow up with the relevant Host Company Representive.";
 								}
 								
 								if (validationStatus.equals("OHS")) {
-										note = "the HC Services document have not been completed. Please follow up with the Host Company Representive.";
+										note = "the HC Services document have not been completed. Please follow up with the relevant Host Company Representive.";
 								}
+								
+								String message = "Sorry but the company selected is not ready to be validated because " + note;
+								System.out.println("message = " + message);
 								
 								/* send cmd msg */
 								QCmdMessage msg = new QCmdMessage("TOAST", "INFO");
-								msg.setMessage("Sorry but the company selected is not ready to be validated because " + note);
+								msg.setMessage(message);
 								msg.setToken(beUtils.getGennyToken().getToken());
 								msg.setSend(true);
 								VertxUtils.writeMsg("webcmds", msg);
@@ -150,6 +153,14 @@ rule "CLICK_HC_VALIDATION"
 								System.out.println("ResultCode: "    + output.getResultCode());
 								System.out.println("SuitCase: "      + output.getSuitCase());
 								System.out.println("**************************************************");
+								
+								
+								/* Force redirect */
+								
+								QCmdMessage msg = new QCmdMessage("DISPLAY", "FORM");
+								msg.setToken(beUtils.getGennyToken().getToken());
+								msg.setSend(true);  	
+								VertxUtils.writeMsg("webcmds",msg);
 								
 				} 
 				} else {
