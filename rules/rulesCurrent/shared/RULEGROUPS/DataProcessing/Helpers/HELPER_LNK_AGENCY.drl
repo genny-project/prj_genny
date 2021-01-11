@@ -67,7 +67,8 @@ rule "HELPER_LNK_AGENCY"
 			/* save the company's name as PRI_ASSOC_HC attribute for person baseentity */
 			if(name != null){
 				Answer assocHcAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_AGENCY", name);
-				answersToSave.add(assocHcAnswer);
+				/* answersToSave.add(assocHcAnswer); */
+				beUtils.saveAnswer(assocHcAnswer);
 
 				VertxUtils.sendToFrontEnd(userToken, assocHcAnswer);
 
