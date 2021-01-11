@@ -42,7 +42,6 @@ rule "CLICK_HC_VALIDATION"
 		
 		BaseEntity newBe = beUtils.create("temp", "temp");
 		
-		
 						
 		if(hcCode != null) { 
 		
