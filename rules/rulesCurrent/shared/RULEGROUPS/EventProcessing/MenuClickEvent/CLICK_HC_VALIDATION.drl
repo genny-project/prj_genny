@@ -28,7 +28,7 @@ rule "CLICK_HC_VALIDATION"
 		System.out.println("Processing CLICK HC VALIDATION : " + $message );
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
 		
-		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 		
 		
 		/* Grab the BE for the HC */
