@@ -52,6 +52,7 @@ rule "CLICK_HC_VALIDATION"
 				System.out.println("validationStatus = " + validationStatus);
 				if (validationStatus != null) {
 				
+				
 						if (validationStatus.equals("Incomplete") || validationStatus.equals("HCS") || validationStatus.equals("OHS")) {
 								System.out.println("ERROR: PRI_VALIDATION is not ready to be changed: " +validationStatus); 
 								
