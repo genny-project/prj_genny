@@ -28,7 +28,7 @@ rule "CLICK_HC_VALIDATION"
 		System.out.println("Processing CLICK HC VALIDATION : " + $message );
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
 		
-		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 		
 		
 		/* Grab the BE for the HC */
@@ -42,6 +42,7 @@ rule "CLICK_HC_VALIDATION"
 		
 		BaseEntity newBe = beUtils.create("temp", "temp");
 		
+		
 						
 		if(hcCode != null) { 
 		
@@ -51,7 +52,6 @@ rule "CLICK_HC_VALIDATION"
 				String validationStatus = HCBe.getValue("PRI_VALIDATION", null);
 				System.out.println("validationStatus = " + validationStatus);
 				if (validationStatus != null) {
-				
 				
 						if (validationStatus.equals("Incomplete") || validationStatus.equals("HCS") || validationStatus.equals("OHS")) {
 								System.out.println("ERROR: PRI_VALIDATION is not ready to be changed: " +validationStatus); 
