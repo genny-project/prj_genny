@@ -97,6 +97,12 @@ rule "HELPER_SIGNATURE_DATE"
 		String date = dtf1.format(now);
 		System.out.println("date: " +date);
 		
+		if (attributeCode.startsWith("PRI_OUTCOME_")) {
+				type = "PRI_OUTCOME_REP_SIGNING_DATE"; 
+				System.out.println("attributeCode - PRI_OUTCOME :: " + attributeCode);
+	
+				
+		}
 		
 		/* Save Answer */
 				
@@ -110,6 +116,65 @@ rule "HELPER_SIGNATURE_DATE"
 		} else {
 			System.out.println("ERROR: Null hcBe");
 		}
+		
+		
+		
+	
+		/* Send email to HCR */
+		
+		String supervisor = hcBe.getValue("LNK_INTERN_SUPERVISOR",null);
+		supervisor = supervisor.replace("\"", "").replace("[", "").replace("]", "");
+		System.out.println("supervisor = " +supervisor);
+		BaseEntity supervisorBe = beUtils.getBaseEntityByCode(supervisor);
+		System.out.println("supervisorBe = " + supervisorBe);
+		
+		String supervisorName = supervisorBe.getValue("PRI_FIRSTNAME",null);
+		System.out.println("supervisorName: " +supervisorName);
+		
+		String supervisorEmail = supervisorBe.getValue("PRI_EMAIL",null);
+		System.out.println("supervisorEmail: " +supervisorEmail);
+		
+		BaseEntity user = beUtils.getBaseEntityByCode(supervisorBe.getCode());
+		String userStr = user.getCode();
+		String[] userSplit = userStr.split("_");
+		String userCode = userSplit[1];
+		System.out.println("User "+user+" with userCode = "+userCode);
+		
+		
+		if (attributeCode.startsWith("PRI_OUTCOME_")) {
+				System.out.println("Outcome Life Signature Detected. Sending email to HCR to remind signature");
+	
+				BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
+
+				String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, userCode, serviceToken.getToken());
+				System.out.println("token: " + token);
+			
+				String url = GennySettings.projectUrl+"/home/UVVFX1RBQkxFX1JFU1VMVFNfR1JQ/UVVFX1RBQkxFX0xBWllfTE9BRA==";
+				System.out.println("url: " + url);
+				
+				url = url +"?token=" + token;
+				System.out.println("url: " + url);
+				
+				String email = "c.pyke85@gmail.com";
+				String subject = "We need your signature";
+				String template_id = "d-64ef4bf7b18a4b65a9c7e02b1b8ce7df";
+				
+				System.out.println("email: " + email);
+				System.out.println("subject: " + subject);
+				System.out.println("template_id: " + template_id);		
+				
+				HashMap<String, String> templateData = new HashMap<String, String>();
+				templateData.put("firstname", supervisorName);
+				templateData.put("url", url);
+			
+				EmailHelper.sendGrid(beUtils, email, subject, template_id, templateData);
+				System.out.println("SUCCESS - Email Sent!!");
+				
+		}
+		
+		
+		
+						
 		
 
 		/* Retract the answer message so the rule doesn't fire again */

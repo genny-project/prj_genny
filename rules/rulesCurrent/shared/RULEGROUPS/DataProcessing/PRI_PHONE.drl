@@ -56,7 +56,7 @@ rule "PRI_PHONE"
 					
 						/* Check if person is the target, in which case you want a mobile! */
 						if (targetCode.startsWith("PER_")) {
-							String message = "People require a mobile number! ! please replace with a mobile";
+							String message = "People require a mobile number!! Please replace with a mobile";
 							System.out.println(message);
 							Answer feedbackAnswer = new Answer(answer.getSourceCode(),answer.getTargetCode(),answer.getAttributeCode(),"");
 							VertxUtils.sendFeedbackError(beUtils.getGennyToken(),feedbackAnswer,message);
