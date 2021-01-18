@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:g="http://www.jboss.org/drools/flow/gpd" xmlns:java="http://www.java.com/javaTypes" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.2.SNAPSHOT-v20200602-1600-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:g="http://www.jboss.org/drools/flow/gpd" xmlns:java="http://www.java.com/javaTypes" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.1.Final-v20190425-2005-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
   <bpmn2:itemDefinition id="ItemDefinition_10" isCollection="false" structureRef="java.lang.String"/>
   <bpmn2:itemDefinition id="ItemDefinition_628" isCollection="false" structureRef="org.kie.internal.runtime.StatefulKnowledgeSession"/>
   <bpmn2:itemDefinition id="ItemDefinition_635" isCollection="false" structureRef="org.jbpm.bpmn2.handler.SendTaskHandler"/>
@@ -900,7 +900,9 @@ kcontext.setVariable(&quot;sessionFacts&quot;,sessionFacts);</tns:script>
 dataMessage = (QDataMessage)((SessionFacts)sessionFacts).getMessage();
 serviceToken = (GennyToken)((SessionFacts)sessionFacts).getServiceToken();
 kcontext.setVariable(&quot;serviceToken&quot;,((GennyToken)serviceToken)); 
-kcontext.setVariable(&quot;dataMessage&quot;,(QDataMessage)dataMessage); </bpmn2:script>
+kcontext.setVariable(&quot;dataMessage&quot;,(QDataMessage)dataMessage); 
+
+System.out.println(&quot;Message Code 1: &quot; + message.getData().getCode());</bpmn2:script>
         </bpmn2:scriptTask>
         <bpmn2:sequenceFlow id="SequenceFlow_84" tns:priority="1" sourceRef="StartEvent_6" targetRef="ScriptTask_8"/>
         <bpmn2:endEvent id="EndEvent_5" name="End Data">
@@ -1083,6 +1085,9 @@ kcontext.setVariable(&quot;sessionFacts&quot;,sessionFacts);</tns:script>
             <tns:metaData name="elementname">
               <tns:metaValue><![CDATA[SendSignal]]></tns:metaValue>
             </tns:metaData>
+            <tns:onEntry-script scriptFormat="http://www.java.com/java">
+              <tns:script>System.out.println(&quot;Message Code 2: &quot; + message.getData().getCode());</tns:script>
+            </tns:onEntry-script>
           </bpmn2:extensionElements>
           <bpmn2:incoming>SequenceFlow_48</bpmn2:incoming>
           <bpmn2:outgoing>SequenceFlow_49</bpmn2:outgoing>
@@ -1318,7 +1323,9 @@ BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
           </bpmn2:extensionElements>
           <bpmn2:incoming>SequenceFlow_34</bpmn2:incoming>
           <bpmn2:outgoing>SequenceFlow_35</bpmn2:outgoing>
-          <bpmn2:script>Boolean usingReduxRestore = false;
+          <bpmn2:script>System.out.println(&quot;Message Code 3: &quot; + message.getData().getCode());
+
+Boolean usingReduxRestore = false;
 SessionFacts sessionFacts2 = (SessionFacts)sessionFacts;
 output = (OutputParam)(sessionFacts2.getMessage());
 if (message.getData().getCode().equals(&quot;AUTH_INIT&quot;)) {
@@ -1372,6 +1379,8 @@ if (currentUser == null) {
 
 }
 }
+
+System.out.println(&quot;Message Code 4: &quot; + message.getData().getCode());
 </bpmn2:script>
         </bpmn2:scriptTask>
         <bpmn2:sequenceFlow id="SequenceFlow_34" tns:priority="1" sourceRef="StartEvent_1" targetRef="ScriptTask_11"/>
