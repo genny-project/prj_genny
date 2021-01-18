@@ -901,8 +901,7 @@ dataMessage = (QDataMessage)((SessionFacts)sessionFacts).getMessage();
 serviceToken = (GennyToken)((SessionFacts)sessionFacts).getServiceToken();
 kcontext.setVariable(&quot;serviceToken&quot;,((GennyToken)serviceToken)); 
 kcontext.setVariable(&quot;dataMessage&quot;,(QDataMessage)dataMessage); 
-
-System.out.println(&quot;Message Code 1: &quot; + message.getData().getCode());</bpmn2:script>
+</bpmn2:script>
         </bpmn2:scriptTask>
         <bpmn2:sequenceFlow id="SequenceFlow_84" tns:priority="1" sourceRef="StartEvent_6" targetRef="ScriptTask_8"/>
         <bpmn2:endEvent id="EndEvent_5" name="End Data">
@@ -1086,8 +1085,7 @@ kcontext.setVariable(&quot;sessionFacts&quot;,sessionFacts);</tns:script>
               <tns:metaValue><![CDATA[SendSignal]]></tns:metaValue>
             </tns:metaData>
             <tns:onEntry-script scriptFormat="http://www.java.com/java">
-              <tns:script>System.out.println(&quot;Message Code 2: &quot; + message.getData().getCode());
-if (message.getData().getCode().equals(&quot;AUTH_INIT&quot;)) {
+              <tns:script>if (message.getData().getCode().equals(&quot;AUTH_INIT&quot;)) {
 	System.out.println(&quot;Found init msg after Data Processor, changing to DUMMY&quot;);
 	message = new QEventMessage(&quot;EVT_MSG&quot;, &quot;DUMMY&quot;);
 	kcontext.setVariable(&quot;message&quot;, message); 
@@ -1328,8 +1326,7 @@ BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
           </bpmn2:extensionElements>
           <bpmn2:incoming>SequenceFlow_34</bpmn2:incoming>
           <bpmn2:outgoing>SequenceFlow_35</bpmn2:outgoing>
-          <bpmn2:script>System.out.println(&quot;Message Code 3: &quot; + message.getData().getCode());
-
+          <bpmn2:script>
 Boolean usingReduxRestore = false;
 SessionFacts sessionFacts2 = (SessionFacts)sessionFacts;
 output = (OutputParam)(sessionFacts2.getMessage());
@@ -1385,7 +1382,6 @@ if (currentUser == null) {
 }
 }
 
-System.out.println(&quot;Message Code 4: &quot; + message.getData().getCode());
 </bpmn2:script>
         </bpmn2:scriptTask>
         <bpmn2:sequenceFlow id="SequenceFlow_34" tns:priority="1" sourceRef="StartEvent_1" targetRef="ScriptTask_11"/>
