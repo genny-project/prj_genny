@@ -97,12 +97,13 @@ rule "HELPER_SIGNATURE_DATE"
 		String date = dtf1.format(now);
 		System.out.println("date: " +date);
 		
+		/*
 		if (attributeCode.startsWith("PRI_OUTCOME_")) {
 				type = "PRI_OUTCOME_REP_SIGNING_DATE"; 
 				System.out.println("attributeCode - PRI_OUTCOME :: " + attributeCode);
 	
 				
-		}
+		}*/
 		
 		/* Save Answer */
 				
