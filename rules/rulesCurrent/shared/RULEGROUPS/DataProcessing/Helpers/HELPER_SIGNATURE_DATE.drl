@@ -181,25 +181,26 @@ rule "HELPER_SIGNATURE_DATE"
 				
 				String email = "c.pyke85@gmail.com";
 				String subject = "Important Internship Requirement - Signing the internship agreement";
-				/*String template_id = "d-64ef4bf7b18a4b65a9c7e02b1b8ce7df";*/
-				String template_id = "d-94f647d38d7745a1b925300df2208279";
+				String template_id = "d-64ef4bf7b18a4b65a9c7e02b1b8ce7df";
+				/*String template_id = "d-94f647d38d7745a1b925300df2208279";*/
 				
 				System.out.println("email: " + email);
 				System.out.println("subject: " + subject);
 				System.out.println("template_id: " + template_id);	
 				
-				/*
+				
 				HashMap<String, String> templateData = new HashMap<String, String>();
 				templateData.put("internshipName", internshipName);
 				templateData.put("supervisorName", supervisorName);
 				templateData.put("hostCompanyName", hostCompanyName);
 				templateData.put("url", url);
-				*/
 				
+				/*
 				HashMap<String, String> templateData = new HashMap<String, String>();
 				templateData.put("intern", "Bob");
 				templateData.put("url", url);
-			
+				*/
+				
 				EmailHelper.sendGrid(beUtils, email, subject, template_id, templateData);
 				System.out.println("SUCCESS - Email Sent!!");
 				
