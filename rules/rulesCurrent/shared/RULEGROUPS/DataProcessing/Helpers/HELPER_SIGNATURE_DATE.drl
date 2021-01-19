@@ -125,11 +125,13 @@ rule "HELPER_SIGNATURE_DATE"
 		
 		String supervisorName = supervisorBe.getValue("PRI_FIRSTNAME",null);
 		System.out.println("supervisorName: " +supervisorName);
-		
+		/*
 		String email = supervisorBe.getValue("PRI_EMAIL",null);
 		System.out.println("email: " +email);
+		*/
+		
+		String email = "c.pyke85@gmail.com";
 	
-
 		/* Gather Internship details */
 		
 		String internship = targetBe.getValue("LNK_INTERNSHIP",null);
