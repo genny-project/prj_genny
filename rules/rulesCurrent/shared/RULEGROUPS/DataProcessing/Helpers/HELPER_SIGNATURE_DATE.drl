@@ -42,19 +42,18 @@ rule "HELPER_SIGNATURE_DATE"
 
 	then
 		System.out.println("HELPER_SIGNATURE_DATE fired");
-		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing Helper SIGNATURE DATE Answer/Data : " + answer );
 		
 		/* Save the actual AGREEMENT_SIGNATURE answer */
 		
 		answersToSave.add(answer);
 		
-		String sourceCode = beUtils.getGennyToken().getUserCode();
+		String sourceCode = beUtils.getGennyToken().getUserCode();	
 		System.out.println("sourceCode :: " + sourceCode);
 		
-		String targetCode = answer.getTargetCode();
+		String targetCode = answer.getTargetCode();					
 		System.out.println("targetCode :: " + targetCode);
 		
-		String attributeCode = answer.getAttributeCode();
+		String attributeCode = answer.getAttributeCode();			
 		System.out.println("attributeCode :: " + attributeCode);
 		
 		String value = answer.getValue();
@@ -97,33 +96,28 @@ rule "HELPER_SIGNATURE_DATE"
 		String date = dtf1.format(now);
 		System.out.println("date: " +date);
 		
-		/*
-		if (attributeCode.startsWith("PRI_OUTCOME_")) {
-				type = "PRI_OUTCOME_REP_SIGNING_DATE"; 
-				System.out.println("attributeCode - PRI_OUTCOME :: " + attributeCode);
-	
-				
-		}*/
 		
 		/* Save Answer */
 				
-		BaseEntity hcBe = beUtils.getBaseEntityByCode(targetCode);
-		System.out.println("hcBe: " + hcBe);
+		BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
+		System.out.println("targetBe: " + targetBe);
 		
-		if (hcBe != null) {		
+		if (targetBe != null) {		
 				beUtils.saveAnswer(new Answer(sourceCode, targetCode, type, date));
 				System.out.println("Saving Date: " +date);	
 		
 		} else {
-			System.out.println("ERROR: Null hcBe");
+			System.out.println("ERROR: Null targetBe");
 		}
 		
 		
 		
 	
-		/* Send email to HCR */
+		/* === Send email to HCR === */
 		
-		String supervisor = hcBe.getValue("LNK_INTERN_SUPERVISOR",null);
+		/* Gather Supervisor details */
+		
+		String supervisor = targetBe.getValue("LNK_INTERN_SUPERVISOR",null);
 		supervisor = supervisor.replace("\"", "").replace("[", "").replace("]", "");
 		System.out.println("supervisor = " +supervisor);
 		BaseEntity supervisorBe = beUtils.getBaseEntityByCode(supervisor);
@@ -132,8 +126,35 @@ rule "HELPER_SIGNATURE_DATE"
 		String supervisorName = supervisorBe.getValue("PRI_FIRSTNAME",null);
 		System.out.println("supervisorName: " +supervisorName);
 		
-		String supervisorEmail = supervisorBe.getValue("PRI_EMAIL",null);
-		System.out.println("supervisorEmail: " +supervisorEmail);
+		String email = supervisorBe.getValue("PRI_EMAIL",null);
+		System.out.println("email: " +email);
+	
+
+		/* Gather Internship details */
+		
+		String internship = targetBe.getValue("LNK_INTERNSHIP",null);
+		internship = internship.replace("\"", "").replace("[", "").replace("]", "");
+		System.out.println("internship = " +internship);
+		BaseEntity internshipBe = beUtils.getBaseEntityByCode(internship);
+		System.out.println("internshipBe = " + internshipBe);
+		
+		String internshipName = internshipBe.getValue("PRI_NAME",null);
+		System.out.println("internshipName: " +internshipName);
+		
+		
+		/* Gather Host Company details */
+		
+		String company = targetBe.getValue("LNK_HOST_COMPANY",null);
+		company = company.replace("\"", "").replace("[", "").replace("]", "");
+		System.out.println("company = " +company);
+		BaseEntity companyBe = beUtils.getBaseEntityByCode(company);
+		System.out.println("companyBe = " + companyBe);
+		
+		String hostCompanyName = companyBe.getValue("PRI_NAME",null);
+		System.out.println("hostCompanyName: " +hostCompanyName);
+		
+		
+		/* Gather UserCode string */
 		
 		BaseEntity user = beUtils.getBaseEntityByCode(supervisorBe.getCode());
 		String userStr = user.getCode();
@@ -156,17 +177,28 @@ rule "HELPER_SIGNATURE_DATE"
 				url = url +"?token=" + token;
 				System.out.println("url: " + url);
 				
-				String email = "c.pyke85@gmail.com";
-				String subject = "We need your signature";
+				if (url.startsWith("https://internmatch-interns.gada.io")) {
+						System.out.println("On Interns server so will use real email address");
+						email = "c.pyke85@gmail.com";												
+				} else {
+						System.out.println("Not on Interns server so will use my email address to test");
+						email = "c.pyke85@gmail.com";
+				}
+				
+				
+				String subject = "Important Internship Requirement - Signing the internship agreement";
 				String template_id = "d-64ef4bf7b18a4b65a9c7e02b1b8ce7df";
 				
 				System.out.println("email: " + email);
 				System.out.println("subject: " + subject);
-				System.out.println("template_id: " + template_id);		
+				System.out.println("template_id: " + template_id);	
 				
 				HashMap<String, String> templateData = new HashMap<String, String>();
-				templateData.put("firstname", supervisorName);
+				templateData.put("internshipName", internshipName);
+				templateData.put("supervisorName", supervisorName);
+				templateData.put("hostCompanyName", hostCompanyName);
 				templateData.put("url", url);
+
 			
 				EmailHelper.sendGrid(beUtils, email, subject, template_id, templateData);
 				System.out.println("SUCCESS - Email Sent!!");
@@ -178,7 +210,7 @@ rule "HELPER_SIGNATURE_DATE"
 						
 		
 
-		/* Retract the answer message so the rule doesn't fire again */
+		/* Retract the answer message so the rule does not fire again */
 		retract(answer);
 
 
