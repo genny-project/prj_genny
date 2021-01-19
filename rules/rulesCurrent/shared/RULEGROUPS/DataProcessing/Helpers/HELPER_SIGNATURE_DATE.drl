@@ -125,12 +125,12 @@ rule "HELPER_SIGNATURE_DATE"
 		
 		String supervisorName = supervisorBe.getValue("PRI_FIRSTNAME",null);
 		System.out.println("supervisorName: " +supervisorName);
-		/*
-		String email = supervisorBe.getValue("PRI_EMAIL",null);
-		System.out.println("email: " +email);
-		*/
 		
-		String email = "c.pyke85@gmail.com";
+		String supervisorEmail = supervisorBe.getValue("PRI_EMAIL",null);
+		System.out.println("supervisorEmail: " +supervisorEmail);
+		
+		
+		
 	
 		/* Gather Internship details */
 		
@@ -179,15 +179,7 @@ rule "HELPER_SIGNATURE_DATE"
 				url = url +"?token=" + token;
 				System.out.println("url: " + url);
 				
-				if (url.startsWith("https://internmatch-interns.gada.io")) {
-						System.out.println("On Interns server so will use real email address");
-						email = "c.pyke85@gmail.com";												
-				} else {
-						System.out.println("Not on Interns server so will use my email address to test");
-						email = "c.pyke85@gmail.com";
-				}
-				
-				
+				String email = "c.pyke85@gmail.com";
 				String subject = "Important Internship Requirement - Signing the internship agreement";
 				String template_id = "d-64ef4bf7b18a4b65a9c7e02b1b8ce7df";
 				
