@@ -21,10 +21,12 @@ rule "BUCKET_TAB_ITEM_CLICK_EVENT"
 	salience 2
 	no-loop
 	when
-		$message : QEventMessage(data.code matches "QUE_TAB.*" && 
+		$message : QEventMessage((data.code matches "QUE_TAB.*" && 
 							(	data.parentCode == "QUE_TAB_BUCKET_VIEW" || 
 								data.parentCode == "QUE_TAB_DETAIL_VIEW" || 
-								data.parentCode == "QUE_TAB_TABLE_VIEW") )	
+								data.parentCode == "QUE_TAB_TABLE_VIEW"))  || 
+								data.code matches "SCH_ACT_PRI_EVENT_QUE_TAB_BUCKET_VIEW.*"	
+							)	
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
