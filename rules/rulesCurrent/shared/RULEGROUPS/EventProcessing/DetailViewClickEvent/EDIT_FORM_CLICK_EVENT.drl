@@ -119,17 +119,18 @@ rule "EDIT_FORM_CLICK_EVENT"
 			String hostCompanyCode = be.getValue("LNK_HOST_COMPANY", null);
 			if(hostCompanyCode != null){
 
-				hostCompanyCode = hostCompanyCode.replace("\"", "").replace("[", "").replace("]", "");
 				System.out.println("hostCompanyCode   ::   " + hostCompanyCode);
 
 				/* dropdown search for companyRep */
 				DropdownUtils dropdownHcReps = new DropdownUtils(serviceToken);
 				
 				dropdownHcReps.setNewSearch("HCR Dropdown", "Fetch HCR Dropdown Items")
-													.addFilter("PRI_IS_HOST_CPY_REP", true)
-													.setSourceCode(hostCompanyCode)
-													.setPageStart(0)
-													.setPageSize(1000);
+								.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
+								.addFilter("PRI_IS_HOST_CPY_REP", true)
+								.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "ACTIVE")
+								.addFilter("LNK_HOST_COMPANY", SearchEntity.StringFilter.EQUAL, hostCompanyCode)
+								.setPageStart(0)
+								.setPageSize(1000);
 
 				/* Send the dropdown options */
 				dropdownHcReps.sendSearchResults("GRP_HOST_COMPANY_REP_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
