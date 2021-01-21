@@ -70,58 +70,48 @@ public class GennyTest {
 	protected static GennyToken newUserToken;
 	protected static GennyToken serviceToken;
 	
+	protected static BaseEntityUtils beUtils;
+	
 	@Test
 	public void gennyTest()
 	{
-		System.out.println("This is a test");
+		System.out.println("This is a Gennytest");
 	}
 	
 	
 	@Test
 	public void AdamTest1()
 	{
-		System.out.println("Local Genny test");
-		GennyToken userToken = null;
-		GennyToken serviceToken = null;
-		QRules qRules = null;
+		System.out.println("Local Genny test1 AdamTest");
 
-
-			// VertxUtils.cachedEnabled = false;
-			VertxUtils.cachedEnabled = false;
-			eventBusMock = new EventBusMock();
-			vertxCache = new JunitCache(); // MockCache
-			VertxUtils.init(eventBusMock, vertxCache);
-
-			qRules = GennyJbpmBaseTest.setupLocalService();
-			userToken = new GennyToken("userToken", qRules.getToken());
-			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
-
-		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
-		beUtils.setServiceToken(serviceToken);
 
 		
 	}
 	
-	//@Test
+	@Test
 	public void AdamTest2()
 	{
-			System.out.println("fix HCR status test");
-			GennyToken userToken = null;
-			GennyToken serviceToken = null;
-			QRules qRules = null;
-
-
-				// VertxUtils.cachedEnabled = false;
-				VertxUtils.cachedEnabled = false;
-				qRules = GennyJbpmBaseTest.setupLocalService();
-				userToken = new GennyToken("userToken", qRules.getToken());
-				serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
-				eventBusMock = new EventBusMock();
-				vertxCache = new JunitCache(); // MockCache
-				VertxUtils.init(eventBusMock, vertxCache);
-
-			BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
-			beUtils.setServiceToken(serviceToken);
+//			System.out.println("fix HCR status test");
+//			GennyToken userToken = null;
+//			GennyToken serviceToken = null;
+//			QRules qRules = null;
+//
+//
+//				// VertxUtils.cachedEnabled = false;
+//				VertxUtils.cachedEnabled = false;
+//				qRules = GennyJbpmBaseTest.setupLocalService();
+//				userToken = new GennyToken("userToken", qRules.getToken());
+//				serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+//				eventBusMock = new EventBusMock();
+//				vertxCache = new JunitCache(); // MockCache
+//				VertxUtils.init(eventBusMock, vertxCache);
+//
+//			BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+//			beUtils.setServiceToken(serviceToken);
+		
+		if (beUtils == null) {
+			return;
+		}
 
 			SearchEntity searchBE = new SearchEntity("SBE_TEST", "hcrs")
 					.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
@@ -202,6 +192,19 @@ public class GennyTest {
 	            qRules = GennyJbpmBaseTest.setupLocalService();
 	            userToken = new GennyToken("userToken", qRules.getToken());
 	            serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+	            
+				// VertxUtils.cachedEnabled = false;
+				VertxUtils.cachedEnabled = false;
+//				eventBusMock = new EventBusMock();
+//				vertxCache = new JunitCache(); // MockCache
+//				VertxUtils.init(eventBusMock, vertxCache);
+//
+//				qRules = GennyJbpmBaseTest.setupLocalService();
+//				userToken = new GennyToken("userToken", qRules.getToken());
+//				serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+
+			beUtils = new BaseEntityUtils(userToken);
+			beUtils.setServiceToken(serviceToken);
 //	        }
 
 	        System.out.println("serviceToken=" + serviceToken.getToken());
