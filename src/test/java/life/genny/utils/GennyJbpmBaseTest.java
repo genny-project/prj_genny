@@ -99,9 +99,12 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 	private static final String DRL_EVENT_LISTENER_SERVICE_SETUP = "rulesCurrent/shared/_BPMN_WORKFLOWS/Initialise_Project/eventListenerServiceSetup.drl";
 	private static final String DRL_EVENT_LISTENER_USER_SETUP = "rulesCurrent/shared/_BPMN_WORKFLOWS/Initialise_Project/eventListenerUserSetup.drl";
 
+	public GennyJbpmBaseTest()
+	{
+		
+	}
 
-
-	@BeforeClass
+	//@BeforeClass
 	public static void init() throws FileNotFoundException, SQLException {
 				 
 		System.out.println("BridgeUrl=" + GennySettings.bridgeServiceUrl);

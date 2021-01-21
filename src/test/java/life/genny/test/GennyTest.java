@@ -1,11 +1,17 @@
 package life.genny.test;
 
 import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+
 
 import javax.persistence.EntityManagerFactory;
 
@@ -20,6 +26,7 @@ import org.jbpm.services.api.model.DeploymentUnit;
 import org.jbpm.services.api.query.QueryService;
 import org.jbpm.services.api.utils.KieServiceConfigurator;
 import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import life.genny.eventbus.EventBusInterface;
@@ -33,6 +40,7 @@ import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwandautils.GennyCacheInterface;
 import life.genny.qwandautils.GennySettings;
+import life.genny.qwandautils.QwandaUtils;
 import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.GennyJbpmBaseTest;
@@ -40,8 +48,11 @@ import life.genny.utils.GennyJbpmBaseTest;
 import life.genny.utils.JunitCache;
 import life.genny.utils.VertxUtils;
 
+import io.vertx.core.json.JsonObject;
+import io.vertx.core.json.JsonArray;
 
-public class GennyTest {
+
+public class GennyTest  {
 	private static final Logger log = Logger.getLogger(GennyTest.class);
 
 
@@ -71,6 +82,11 @@ public class GennyTest {
 	protected static GennyToken serviceToken;
 	
 	protected static BaseEntityUtils beUtils;
+	
+	public GennyTest() {
+		super();
+	}
+	
 	
 	@Test
 	public void gennyTest()
@@ -113,10 +129,11 @@ public class GennyTest {
 			return;
 		}
 
-			SearchEntity searchBE = new SearchEntity("SBE_TEST", "hcrs")
+			SearchEntity searchBE = new SearchEntity("SBE_GPS", "hcrs")
 					.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%").addFilter("PRI_IS_HOST_CPY_REP", true)
-					.addColumn("PRI_CODE", "Name");
+					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "CPY_%").addFilter("PRI_IS_HOST_CPY", true)
+					.addColumn("PRI_CODE", "Name")
+					.addColumn("PRI_ADDRESS_FULL", "Address");
 
 			searchBE.setRealm(realm);
 			searchBE.setPageStart(0);
@@ -124,38 +141,111 @@ public class GennyTest {
 
 			List<BaseEntity> items = beUtils.getBaseEntitys(searchBE);
 
+			BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+serviceToken.getRealm().toUpperCase());
+			int icount=0;
 			for (BaseEntity item : items) {
 
 				try {
 					// check if there
-					Optional<EntityAttribute> ea = item.findEntityAttribute("PRI_STATUS");
+					Optional<EntityAttribute> ea = item.findEntityAttribute("PRI_ADDRESS_FULL");
 					if (ea.isPresent()) {
 
-						String status = item.getValue("PRI_STATUS", null);
-						if (StringUtils.isBlank(status)) {
-							Answer activeStatus = new Answer(beUtils.getGennyToken().getUserCode(), item.getCode(),
-									"PRI_STATUS", "ACTIVE");
-							beUtils.saveAnswer(activeStatus);
+						String address = item.getValue("PRI_ADDRESS_FULL", null);
+						if (!StringUtils.isBlank(address)) {
+//							Answer activeStatus = new Answer(beUtils.getGennyToken().getUserCode(), item.getCode(),
+//									"PRI_STATUS", "ACTIVE");
+//							beUtils.saveAnswer(activeStatus);
+							log.info(item.getCode()+" address: "+address);
+							
+							String encodedAddress = null;
+							try {
+					            encodedAddress =  URLEncoder.encode(address, StandardCharsets.UTF_8.toString());
+					        } catch (UnsupportedEncodingException ex) {
+					            throw new RuntimeException(ex.getCause());
+					        }
+							System.out.println("IMPORT ADDRESS: encodedAddress="+encodedAddress);
+							
+							String googleApiUrl = "https://maps.googleapis.com/maps/api/geocode/json?address="+encodedAddress;
+							
+							String googleApiKey = "AIzaSyAe8SEl-uMB_8E7HRj8f_X7Nrmfss8svFQ";//project.getValue("PRI_GOOGLE_API_KEY","");
+							System.out.println("IMPORT ADDRESS: google api key="+googleApiKey);
+					        googleApiUrl  = googleApiUrl  + "&key="+googleApiKey;
+					 
+							String addressJsonStr =  QwandaUtils.apiGet(googleApiUrl , null);
+							JsonObject json = new JsonObject(addressJsonStr);
+						if ("OK".equals(json.getString("status"))) {
+							JsonObject results = json.getJsonArray("results").getJsonObject(0);
+							System.out.println(results);
+							JsonArray address_components = results.getJsonArray("address_components");
+							
+							/* loop through address_components */
+							Integer index = 0;
+							Integer count = address_components.size();
+							Map<String,String> addressMap = new HashMap<String,String>();
+							for (index=0;index<count;index++) {
+								
+								JsonObject addressComponent = address_components.getJsonObject(index);
+								JsonArray types = addressComponent.getJsonArray("types");
+								String mainType = types.getString(0);
+								addressMap.put(mainType, addressComponent.getString("short_name"));
+							}
+							
+							String streetNumber = (addressMap.get("street_number")==null)?"":addressMap.get("street_number");
+							String streetName = (addressMap.get("route")==null)?"":addressMap.get("route");
+							
+							String street_address = (streetNumber+" "+streetName).trim();
+							
+							JsonObject geometry = results.getJsonObject("geometry");
+							JsonObject location = geometry.getJsonObject("location");
+							Double lat = location.getDouble("lat");
+							Double lng = location.getDouble("lng");
+							String full_address = results.getString("formatted_address");
+							System.out.println(address_components);
+							
+							JsonObject address_json = new JsonObject();
+							address_json.put("street_address", street_address);
+							address_json.put("suburb", (addressMap.get("locality")==null?"":addressMap.get("locality")));
+							address_json.put("state",  (addressMap.get("administrative_area_level_1")==null?"":addressMap.get("administrative_area_level_1")));
+							address_json.put("country",  (addressMap.get("country")==null?"":addressMap.get("country")));
+							address_json.put("postcode",  (addressMap.get("postal_code")==null?"":addressMap.get("postal_code")));
+							address_json.put("full_address", full_address);
+							address_json.put("latitude", lat);
+							address_json.put("longitude", lng);
+							
+							String PRI_ADDRESS_JSON = address_json.toString();
+							System.out.println("PRI_ADDRESS_JSON="+PRI_ADDRESS_JSON);		
+							Answer fixedAddress = new Answer(userToken.getUserCode(),item.getCode(), "PRI_ADDRESS_JSON", PRI_ADDRESS_JSON,false,false);			
+							beUtils.saveAnswer(fixedAddress);
+							// Timezone
 
+							String url = "https://maps.googleapis.com/maps/api/timezone/json?location="+lat+","+lng+"&timestamp=1458000000&key=AIzaSyAe8SEl-uMB_8E7HRj8f_X7Nrmfss8svFQ";
+							String timezoneJsonStr =  QwandaUtils.apiGet(url , null);
+							json = new JsonObject(timezoneJsonStr);
+							String timezoneID = json.getString("timeZoneId");
+							Answer fixedTimezone = new Answer(userToken.getUserCode(),item.getCode(), "PRI_TIMEZONE_ID", timezoneID,false,false);			
+							beUtils.saveAnswer(fixedTimezone);
+							System.out.println(item.getCode()+" timezone: "+json);
+
+							}
+
+							
 						}
-
-					} else {
-						Answer activeStatus = new Answer(beUtils.getGennyToken().getUserCode(), item.getCode(),
-								"PRI_STATUS", "ACTIVE");
-						beUtils.saveAnswer(activeStatus);
 
 					}
 
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
-
+				icount++;
+//				if (icount> 3) {
+//					break;
+//				}
 			}
 
 			System.out.println("Finished");
 		}
 	
-	   @BeforeClass
+	  @BeforeAll
 	    public static void init() throws FileNotFoundException, SQLException {
 
 	        System.out.println("BridgeUrl=" + GennySettings.bridgeServiceUrl);
