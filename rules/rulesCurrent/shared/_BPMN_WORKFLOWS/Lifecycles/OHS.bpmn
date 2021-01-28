@@ -191,89 +191,89 @@ System.out.println(&quot;OHS: questionGroup = &quot; + questionGroup);
           <drools:onExit-script scriptFormat="http://www.java.com/java">
             <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% EXIT Ask Question Task %%%%%%%%%%%%%%%%%%%&quot;);
 
-  if (questionGroup.equals(&quot;QUE_OHS_GEN_GRP&quot;)) {
-    questionGroup = &quot;QUE_OHS_RISK_GRP&quot;;
+ if (questionGroup.equals(&quot;QUE_OHS_CONTACT_GRP&quot;)) {
+    questionGroup = &quot;exit&quot;;
 	kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
     System.out.println(questionGroup);
-  } 
-  
-  if (questionGroup.equals(&quot;QUE_OHS_RISK_GRP&quot;)) {
-    questionGroup = &quot;QUE_OHS_PROCEDURES_GRP&quot;;
-	kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
-    System.out.println(questionGroup);
-  }
-  
-  if (questionGroup.equals(&quot;QUE_OHS_PROCEDURES_GRP&quot;)) {
-    questionGroup = &quot;QUE_OHS_INC_REP_GRP&quot;;
-	kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
-    System.out.println(questionGroup);
-  }
-  
-  if (questionGroup.equals(&quot;QUE_OHS_INC_REP_GRP&quot;)) {
-    questionGroup = &quot;QUE_OHS_PRM_GRP&quot;;
-	kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
-    System.out.println(questionGroup);
-  }
-  
-    if (questionGroup.equals(&quot;QUE_OHS_PRM_GRP&quot;)) {
-    questionGroup = &quot;QUE_OHS_EMERG_GRP&quot;;
-	kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
-    System.out.println(questionGroup);
-  }
-  
-   if (questionGroup.equals(&quot;QUE_OHS_EMERG_GRP&quot;)) {
-    questionGroup = &quot;QUE_OHS_EXITS&quot;;
-	kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
-    System.out.println(questionGroup);
-  }
-
-   if (questionGroup.equals(&quot;QUE_OHS_EXITS&quot;)) {
-    questionGroup = &quot;QUE_OHS_FIRE&quot;;
-	kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
-    System.out.println(questionGroup);
-  }
-
-   if (questionGroup.equals(&quot;QUE_OHS_FIRE&quot;)) {
-    questionGroup = &quot;QUE_OHS_FIRSTAID_GRP&quot;;
-	kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
-    System.out.println(questionGroup);
-  }
-
-   if (questionGroup.equals(&quot;QUE_OHS_FIRSTAID_GRP&quot;)) {
-    questionGroup = &quot;QUE_OHS_ELEC_GRP&quot;;
-	kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
-    System.out.println(questionGroup);
-  }
-
-   if (questionGroup.equals(&quot;QUE_OHS_ELEC_GRP&quot;)) {
-    questionGroup = &quot;QUE_OHS_MAN_GRP&quot;;
-	kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
-    System.out.println(questionGroup);
-  }
-
-   if (questionGroup.equals(&quot;QUE_OHS_MAN_GRP&quot;)) {
-    questionGroup = &quot;QUE_OHS_LIGHT_GRP&quot;;
-	kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
-    System.out.println(questionGroup);
-  }
-
-   if (questionGroup.equals(&quot;QUE_OHS_LIGHT_GRP&quot;)) {
-    questionGroup = &quot;QUE_OHS_ENV_GRP&quot;;
-	kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
-    System.out.println(questionGroup);
-  }
-
+   } 
+   
    if (questionGroup.equals(&quot;QUE_OHS_ENV_GRP&quot;)) {
     questionGroup = &quot;QUE_OHS_CONTACT_GRP&quot;;
 	kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
     System.out.println(questionGroup);
    } 
    
-   if (questionGroup.equals(&quot;QUE_OHS_CONTACT_GRP&quot;)) {
-    questionGroup = &quot;exit&quot;;
+   if (questionGroup.equals(&quot;QUE_OHS_LIGHT_GRP&quot;)) {
+    questionGroup = &quot;QUE_OHS_ENV_GRP&quot;;
 	kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
     System.out.println(questionGroup);
-   } </drools:script>
+  }
+   
+   if (questionGroup.equals(&quot;QUE_OHS_MAN_GRP&quot;)) {
+    questionGroup = &quot;QUE_OHS_LIGHT_GRP&quot;;
+	kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
+    System.out.println(questionGroup);
+  }
+   
+   if (questionGroup.equals(&quot;QUE_OHS_ELEC_GRP&quot;)) {
+    questionGroup = &quot;QUE_OHS_MAN_GRP&quot;;
+	kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
+    System.out.println(questionGroup);
+  }
+   
+   if (questionGroup.equals(&quot;QUE_OHS_FIRSTAID_GRP&quot;)) {
+    questionGroup = &quot;QUE_OHS_ELEC_GRP&quot;;
+	kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
+    System.out.println(questionGroup);
+  }
+   
+   if (questionGroup.equals(&quot;QUE_OHS_FIRE&quot;)) {
+    questionGroup = &quot;QUE_OHS_FIRSTAID_GRP&quot;;
+	kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
+    System.out.println(questionGroup);
+  }
+   
+   if (questionGroup.equals(&quot;QUE_OHS_EXITS&quot;)) {
+    questionGroup = &quot;QUE_OHS_FIRE&quot;;
+	kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
+    System.out.println(questionGroup);
+  }
+   
+   if (questionGroup.equals(&quot;QUE_OHS_EMERG_GRP&quot;)) {
+    questionGroup = &quot;QUE_OHS_EXITS&quot;;
+	kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
+    System.out.println(questionGroup);
+  }
+   
+    if (questionGroup.equals(&quot;QUE_OHS_PRM_GRP&quot;)) {
+    questionGroup = &quot;QUE_OHS_EMERG_GRP&quot;;
+	kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
+    System.out.println(questionGroup);
+  }
+   
+   if (questionGroup.equals(&quot;QUE_OHS_INC_REP_GRP&quot;)) {
+    questionGroup = &quot;QUE_OHS_PRM_GRP&quot;;
+	kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
+    System.out.println(questionGroup);
+  }
+   
+   if (questionGroup.equals(&quot;QUE_OHS_PROCEDURES_GRP&quot;)) {
+    questionGroup = &quot;QUE_OHS_INC_REP_GRP&quot;;
+	kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
+    System.out.println(questionGroup);
+  }
+   
+   if (questionGroup.equals(&quot;QUE_OHS_RISK_GRP&quot;)) {
+    questionGroup = &quot;QUE_OHS_PROCEDURES_GRP&quot;;
+	kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
+    System.out.println(questionGroup);
+  }
+
+  if (questionGroup.equals(&quot;QUE_OHS_GEN_GRP&quot;)) {
+    questionGroup = &quot;QUE_OHS_RISK_GRP&quot;;
+	kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
+    System.out.println(questionGroup);
+  } </drools:script>
           </drools:onExit-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
