@@ -171,7 +171,7 @@ kcontext.setVariable(&quot;HCBe&quot;, HCBe);
 System.out.println(&quot;HCBe = &quot; + HCBe);
 
 
-questionGroup = &quot;QUE_OHS_GRP&quot;;
+questionGroup = &quot;QUE_OHS_GEN_GRP&quot;;
 kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
 System.out.println(&quot;OHS: questionGroup = &quot; + questionGroup);
 
