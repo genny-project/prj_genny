@@ -17,7 +17,7 @@ rule "EDIT_FORM_CLICK_EVENT"
 	salience 2
 	no-loop true
 	when
-		$message : QEventMessage(data.code matches "ACT_PRI_EVENT_EDIT")
+		$message : QEventMessage(data.code matches "ACT_PRI_EVENT_EDIT" || data.code matches "ACT_PRI_EVENT_EDIT_APPLICATION")
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam( )
@@ -33,6 +33,14 @@ rule "EDIT_FORM_CLICK_EVENT"
 			code: "ACT_PRI_EVENT_EDIT"
 			parentCode: "SBE_INTERN_4BD9D683-E0AF-4043-8C5C-F4058EC74E04"
 			targetCode: "PER_AFCACF0F-2618-4C5C-A292-2026A974D602"
+			========================		
+		
+		
+			Example of the message
+			=======================
+			code: "ACT_PRI_EVENT_EDIT_APPLICATION"
+			parentCode: "SBE_APPLIED_4BD9D683-E0AF-4043-8C5C-F4058EC74E04"
+			targetCode: "APP_AFCACF0F-2618-4C5C-A292-2026A974D602"
 			========================		
 		*/
 
@@ -72,6 +80,18 @@ rule "EDIT_FORM_CLICK_EVENT"
 
 		/* remove SBE_ prefix */
 		searchCode = searchCode.substring(4);
+		System.out.println("searchCode      ::   " + searchCode);
+		
+		
+		/* Handle Application type */
+		String code = $message.getData().getCode();
+		System.out.println("code      ::   " + code);
+		
+		if (code.equals("ACT_PRI_EVENT_EDIT_APPLICATION")) {
+				searchCode = "APP_AGREEMENT_DOC";
+				System.out.println("searchCode      ::   " + searchCode);
+		}
+		
 
 		output.setTypeOfResult("SIGNAL");
 		output.setResultCode("START_EDIT_ENTITY");
