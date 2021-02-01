@@ -65,6 +65,7 @@ rule "ROL_AGENT"
    	     capabilityUtils.addCapabilityToRole(role,"ON_HOLD_APPLICATION",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"REJECT_APPLICATION",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"WITHDRAW_APPLICATION",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"ACCESS_NOTES",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"VIEW_JOURNAL",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"RATE_INTERN",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"VIEW_RATING",CapabilityMode.VIEW);
