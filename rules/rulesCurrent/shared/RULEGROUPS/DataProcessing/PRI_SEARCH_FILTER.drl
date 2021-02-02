@@ -44,7 +44,21 @@ rule "PRI_SEARCH_FILTER"
 				if (filterAttributeCode.startsWith("FLD_")) {
 					filterAttributeCode = filterAttributeCode.substring(4);
 				}
-				Answer filterUpdate = new Answer(sourceCode, targetCode,filterAttributeCode, ":"+answer.getValue());  /* : used to indicate LIKE */
+				
+				String val = answer.getValue();
+				String operator = "_LIKE_"
+				if (val.contains(":") {
+					/* new search */
+				} else {
+				/* pass value straight through with a like operator */
+				String[] prms = val.split(":");
+					switch (prms[0] {
+						case "L": operator = "LIKE"; break;
+					}
+					val = prms[1];
+				}
+				
+				Answer filterUpdate = new Answer(sourceCode, targetCode,filterAttributeCode, val);  /* : used to indicate LIKE */
 				System.out.println(drools.getRule().getName()+" Before updateBaseEntity for search ");
 				
 				if (StringUtils.isBlank(answer.getValue())) {
