@@ -50,9 +50,9 @@ rule "PRI_SEARCH_FILTER"
 				if (val.contains(":")) {
 					/* new search */
 				} else {
-				/* pass value straight through with a like operator */
-				String[] prms = val.split(":");
-					switch (prms[0] {
+					/* pass value straight through with a like operator */
+					String[] prms = val.split(":");
+					switch (prms[0]) {
 						case "L": operator = "LIKE"; break;
 					}
 					val = prms[1];
