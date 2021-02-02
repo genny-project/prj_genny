@@ -46,7 +46,7 @@ rule "PRI_SEARCH_FILTER"
 				}
 				
 				String val = answer.getValue();
-				String operator = "_LIKE_"
+				String operator = "_LIKE_";
 				if (val.contains(":")) {
 					/* new search */
 				} else {
