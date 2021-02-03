@@ -148,7 +148,7 @@ rule "IS_INTERN"
 		System.out.println("currentSoftware : " + currentSoftware);
 
 		if (currentSoftware != null) {
-			currentSoftware = currentSoftware.replace("\"", "").replace("[", "").replace("]", "");
+			currentSoftware = currentSoftware.replace("\"", "").replace("[", "").replace("]", "").replace(",", ", ");
 			System.out.println("currentSoftware Stripped: " + currentSoftware);
 			beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASSOC_CURRENT_SOFTWARE", currentSoftware));
 		}
@@ -158,7 +158,7 @@ rule "IS_INTERN"
 		System.out.println("futureSoftware : " + futureSoftware);
 		
 		if (futureSoftware != null) {
-			futureSoftware = futureSoftware.replace("\"", "").replace("[", "").replace("]", "");
+			futureSoftware = futureSoftware.replace("\"", "").replace("[", "").replace("]", "").replace(",", ", ");
 			System.out.println("futureSoftware Stripped: " + futureSoftware);
 			beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASSOC_FUTURE_SOFTWARE", futureSoftware));
 		}
