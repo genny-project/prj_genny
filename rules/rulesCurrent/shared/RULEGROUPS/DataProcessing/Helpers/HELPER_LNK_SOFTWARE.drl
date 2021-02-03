@@ -32,7 +32,7 @@ rule "HELPER_LNK_SOFTWARE"
 	no-loop
 	when
 		beUtils : BaseEntityUtils()
-		answer : Answer( attributeCode == "LNK_SOFTWARE" )
+		answer : Answer( attributeCode == "LNK_SOFTWARE" || attributeCode == "LNK_CURRENT_SOFTWARE" || attributeCode == "LNK_FUTURE_SOFTWARE" )
 		answersToSave : Answers()
 		ruleDetails : RuleDetails()
 		output : OutputParam( )
@@ -77,7 +77,15 @@ rule "HELPER_LNK_SOFTWARE"
 
 			String softwares = softwareList.toString().replaceAll("[\\[\\](){}]","");
 			
-			Answer softwaresAnswer = new Answer(sourceCode, targetCode, "PRI_SOFTWARE", softwares,false,true);
+			String saveAttribute = "PRI_SOFTWARE";
+
+			if (answer.getAttributeCode().equals("LNK_CURRENT_SOFTWARE")) {
+				saveAttribute = "PRI_ASSOC_CURRENT_SOFTWARE";
+			} else if (answer.getAttributeCode().equals("LNK_FUTURE_SOFTWARE")) {
+				saveAttribute = "PRI_ASSOC_FUTURE_SOFTWARE";
+			}
+
+			Answer softwaresAnswer = new Answer(sourceCode, targetCode, saveAttribute, softwares,false,true);
 			answersToSave.add(softwaresAnswer);
 
 			VertxUtils.sendToFrontEnd(userToken, softwaresAnswer);
