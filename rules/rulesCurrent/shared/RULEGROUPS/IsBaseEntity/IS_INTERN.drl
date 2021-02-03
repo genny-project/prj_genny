@@ -143,26 +143,6 @@ rule "IS_INTERN"
 		}
 		
 
-		/* CURRENT SOFTWARE LIST */
- 		String currentSoftware = newBe.getValue("LNK_CURRENT_SOFTWARE", null);
-		System.out.println("currentSoftware : " + currentSoftware);
-
-		if (currentSoftware != null) {
-			currentSoftware = currentSoftware.replace("\"", "").replace("[", "").replace("]", "").replace(",", ", ");
-			System.out.println("currentSoftware Stripped: " + currentSoftware);
-			beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASSOC_CURRENT_SOFTWARE", currentSoftware));
-		}
-		
-		/* FUTURE SOFTWARE LIST */
- 		String futureSoftware = newBe.getValue("LNK_FUTURE_SOFTWARE", null);
-		System.out.println("futureSoftware : " + futureSoftware);
-		
-		if (futureSoftware != null) {
-			futureSoftware = futureSoftware.replace("\"", "").replace("[", "").replace("]", "").replace(",", ", ");
-			System.out.println("futureSoftware Stripped: " + futureSoftware);
-			beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASSOC_FUTURE_SOFTWARE", futureSoftware));
-		}
-		
 		/* Set up in Keycloak */
 		
 		
