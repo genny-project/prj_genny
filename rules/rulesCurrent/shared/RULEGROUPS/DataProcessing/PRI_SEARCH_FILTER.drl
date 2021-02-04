@@ -48,17 +48,7 @@ rule "PRI_SEARCH_FILTER"
 				System.out.println(drools.getRule().getName()+" VALUE  = "+answer.getValue());
 				String val = answer.getValue();
 				String operator = "_LIKE_";
-				if (!val.contains(":")) {
-					/* new search */
-					val = "%"+val+"%";
-				} else {
-					/* pass value straight through with a like operator */
-					String[] prms = val.split(":");
-					/* switch (prms[0]) {
-						case "L": operator = "LIKE"; break;
-					} */
-					val = "%"+prms[1]+"%";
-				}
+				
 				
 				Answer filterUpdate = new Answer(sourceCode, targetCode,filterAttributeCode, val);  /* : used to indicate LIKE */
 				System.out.println(drools.getRule().getName()+" Filter ans = "+filterUpdate);
