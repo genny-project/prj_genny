@@ -41,9 +41,9 @@ rule "PRI_SEARCH_FILTER"
 			SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", targetCode, SearchEntity.class,
 				beUtils.getGennyToken().getToken());
 				String filterAttributeCode = answer.getAttributeCode();
-				if (filterAttributeCode.startsWith("FLD_")) {
+			/*	if (filterAttributeCode.startsWith("FLD_")) {
 					filterAttributeCode = filterAttributeCode.substring(4);
-				}
+				} */
 				
 				System.out.println(drools.getRule().getName()+" VALUE  = "+answer.getValue());
 				String val = answer.getValue();
