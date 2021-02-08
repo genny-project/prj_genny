@@ -455,29 +455,34 @@ if (clean.equals(&quot;HOST_CPY&quot;) || clean.equals(&quot;HOST_CPY_REP&quot;)
   TableUtils.searchTable(beUtilsTwo, templateCode, true);
 }
 
-String hcCode = newBe.getValue(&quot;LNK_HOST_COMPANY&quot;, null);
-System.out.println(&quot;hcCode = &quot; + hcCode);
-hcCode = hcCode.replace(&quot;\&quot;&quot;, &quot;&quot;).replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;);
-System.out.println(&quot;hcCode = &quot; + hcCode);
-if (hcCode == null) {
-	System.out.println(&quot;hcCode is NULL&quot;);
-}
+if (clean.equals(&quot;HOST_CPY_REP&quot;)) {
 
-BaseEntity linkedHC = beUtils.getBaseEntityByCode(hcCode);
-if (linkedHC == null) {
-	System.out.println(&quot;linkedHC is NULL&quot;);
-}
+	String hcCode = newBe.getValue(&quot;LNK_HOST_COMPANY&quot;, null);
+	System.out.println(&quot;hcCode = &quot; + hcCode);
+	hcCode = hcCode.replace(&quot;\&quot;&quot;, &quot;&quot;).replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;);
+	System.out.println(&quot;hcCode = &quot; + hcCode);
+	if (hcCode == null) {
+		System.out.println(&quot;hcCode is NULL&quot;);
+	}
 
-String profile = linkedHC.getValue(&quot;PRI_PROFILE&quot;, null);
-System.out.println(&quot;profile = &quot; + profile);
-if (profile == null) {
-	System.out.println(&quot;profile is NULL&quot;);
-}
+	BaseEntity linkedHC = beUtilsTwo.getBaseEntityByCode(hcCode);
+	System.out.println(&quot;linkedHC = &quot; + linkedHC);
+	if (linkedHC == null) {
+		System.out.println(&quot;linkedHC is NULL&quot;);
+	}
 
-if (profile.equals(&quot;InComplete&quot;)) {
-	questionCode = &quot;QUE_FRESH_&quot; +clean + &quot;_GRP&quot;;
-	kcontext.setVariable(&quot;questionCode&quot;, questionCode);
-	System.out.println(&quot;ADD_ENTITY: questionCode: &quot; + questionCode);
+	String profile = linkedHC.getValue(&quot;PRI_PROFILE&quot;, null);
+	System.out.println(&quot;profile = &quot; + profile);
+	if (profile == null) {
+		System.out.println(&quot;profile is NULL&quot;);
+	}
+
+	if (profile.equals(&quot;InComplete&quot;)) {
+		questionCode = &quot;QUE_FRESH_&quot; +clean + &quot;_GRP&quot;;
+		kcontext.setVariable(&quot;questionCode&quot;, questionCode);
+		System.out.println(&quot;ADD_ENTITY: questionCode: &quot; + questionCode);
+	}
+
 }
 
 
