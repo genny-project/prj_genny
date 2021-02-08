@@ -792,7 +792,8 @@ beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), &quot;PR
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_22</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_23</bpmn2:outgoing>
-        <bpmn2:script>
+        <bpmn2:script>beUtilsTwo = new BaseEntityUtils(userToken);
+
 ((OutputParam)((SessionFacts)sessionFacts).getMessage()).setSuitCase(&quot;HOST_CPY_YES&quot;);
 
 ((OutputParam)((SessionFacts)sessionFacts).getMessage()).setAskSourceCode(userToken.getUserCode());
@@ -806,7 +807,7 @@ if (hcCode == null) {
 	System.out.println(&quot;hcCode is NULL&quot;);
 }
 
-BaseEntity linkedHC = beUtils.getBaseEntityByCode(hcCode);
+BaseEntity linkedHC = beUtilsTwo.getBaseEntityByCode(hcCode);
 if (linkedHC == null) {
 	System.out.println(&quot;linkedHC is NULL&quot;);
 }
