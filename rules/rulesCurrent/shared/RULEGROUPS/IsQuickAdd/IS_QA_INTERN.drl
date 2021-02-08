@@ -51,8 +51,12 @@ rule "IS_QA_INTERN"
 		String userCode = userSplit[1];
 		System.out.println("User "+user+" with userCode = "+userCode);
 		
+		String userPassword = UUID.randomUUID().toString().substring(0,8);
+		System.out.println("userPassword: " + userPassword);
+		
 		String userId = "";
 		String email = "stephenie.pulis-cassar@outcomelife.com.au";
+		
 		
 		String firstname = user.getValue("PRI_FIRSTNAME",null);
 		if (firstname != null) {
@@ -60,10 +64,8 @@ rule "IS_QA_INTERN"
 			if (lastname != null) {
 				email = user.getValue("PRI_EMAIL",null);
 				if (email != null) {
-					/*String userPassword = UUID.randomUUID().toString().substring(0,10);*/
-					/* TODO HACK */
+					
 					if (true) {
-						String userPassword = "password1";
 						userId = KeycloakUtils.updateUser(userCode,serviceToken.getToken(), serviceToken.getRealm(), email, firstname, lastname,  email, userPassword,"user", "users");
 						userId = userId.toUpperCase();
 						Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),newBe.getCode(),"PRI_UUID",userId);
@@ -118,10 +120,13 @@ rule "IS_QA_INTERN"
 						
 						System.out.println("email: " + email);
 						System.out.println("subject: " + subject);
-						System.out.println("template_id: " + template_id);		
+						System.out.println("template_id: " + template_id);	
+						System.out.println("userPassword: " + userPassword);	
+							
 						
 						HashMap<String, String> templateData = new HashMap<String, String>();
 						templateData.put("intern", firstname);
+						templateData.put("password", userPassword);
 						templateData.put("url", url);
 					
 						EmailHelper.sendGrid(beUtils, email, subject, template_id, templateData);
