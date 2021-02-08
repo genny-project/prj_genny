@@ -796,7 +796,7 @@ beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), &quot;PR
 
 ((OutputParam)((SessionFacts)sessionFacts).getMessage()).setSuitCase(&quot;HOST_CPY_YES&quot;);
 
-((OutputParam)((SessionFacts)sessionFacts).getMessage()).setAskSourceCode(userToken.getUserCode());
+((OutputParam)((SessionFacts)sessionFacts).getMessage()).setAskSourceCode(linkedHC.getCode());
 
 
 String hcCode = newBe.getValue(&quot;LNK_HOST_COMPANY&quot;, null);
