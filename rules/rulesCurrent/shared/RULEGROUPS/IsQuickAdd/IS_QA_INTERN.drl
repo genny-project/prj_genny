@@ -127,7 +127,7 @@ rule "IS_QA_INTERN"
 						templateData.put("intern", firstname);
 						templateData.put("url", url);
 
-						List<String> bccList = Arrays.asList("internmatch@outcome.life.com.au");
+						List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
 					
 						EmailHelper.sendGrid(beUtils, user_email, null, bccList, subject, template_id, templateData);
 						System.out.println("SUCCESS - Email Sent!!");
