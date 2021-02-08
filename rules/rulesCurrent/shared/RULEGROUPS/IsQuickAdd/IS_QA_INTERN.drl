@@ -12,6 +12,8 @@ import life.genny.qwandautils.GennySettings;
 import java.util.UUID;
 import life.genny.notifications.EmailHelper;
 import life.genny.qwanda.message.QScheduleMessage;
+import life.genny.notifications.SmsHelper;
+import java.util.Arrays;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -123,9 +125,15 @@ rule "IS_QA_INTERN"
 						HashMap<String, String> templateData = new HashMap<String, String>();
 						templateData.put("intern", firstname);
 						templateData.put("url", url);
+
+						List<String> bccList = Arrays.asList("internmatch@outcome.life.com.au");
 					
-						EmailHelper.sendGrid(beUtils, email, subject, template_id, templateData);
+						EmailHelper.sendGrid(beUtils, email, null, bccList, subject, template_id, templateData);
 						System.out.println("SUCCESS - Email Sent!!");
+ 
+						String smsBody = "You have been recommended for an internship on Internmatch. Login to take a look!";
+						SmsHelper smsHelper = new SmsHelper();
+						/* smsHelper.deliverSmsMsg(mobile, smsBody); */
 		
 						} else {
 							System.out.println("rawSendEmail is not Yes: " + rawSendEmail);
