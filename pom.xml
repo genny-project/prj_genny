@@ -11,6 +11,18 @@
 	<version>7.18.0</version>
 	<packaging>jar</packaging>
 
+	<distributionManagement>
+		<repository>
+			<id>life.genny.jbpm</id>
+			<url>https://nexus.outcome-hub.com/nexus/content/repositories/life.genny</url>
+		</repository>
+		<snapshotRepository>
+			<id>nexus-snapshots</id>
+			<url>http://nexus.outcome-hub.com/nexus/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+
 	<properties>
 		<commons-lang3.version>3.10</commons-lang3.version>
 		<compiler-plugin.version>3.8.1</compiler-plugin.version>
@@ -26,10 +38,10 @@
 		<mysql.test.port>3333</mysql.test.port>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<quarkus-plugin.version>1.10.5.Final</quarkus-plugin.version>
+		<quarkus-plugin.version>1.11.1.Final</quarkus-plugin.version>
 		<quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
 		<quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
-		<quarkus.platform.version>1.10.5.Final</quarkus.platform.version>
+		<quarkus.platform.version>1.11.1.Final</quarkus.platform.version>
 		<surefire.version>3.0.0-M5</surefire.version>
 		<testcontainers.version>1.15.1</testcontainers.version>
 		<version.moneta>1.4.2</version.moneta>
