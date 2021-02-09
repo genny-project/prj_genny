@@ -39,6 +39,19 @@ rule "PRI_TRADING_NAME"
 		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_TRADING_NAME", answer.getValue(),false,false));			
 		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_NAME", answer.getValue(),false,true));	
 		
+
+		SearchEntity searchBE = new SearchEntity("SBE_LINKED_HCRS", "Linked HCRs")
+			.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
+			.addFilter("PRI_IS_HOST_CPY_REP", true)
+			.addFilter("LNK_HOST_COMPANY", SearchEntity.StringFilter.LIKE, "%"+targetCode+"%")
+			.setPageStart(0).setPageSize(100000);
+
+		searchBE.setRealm(serviceToken.getRealm());
+		List<BaseEntity> linkedHCRs = beUtils.getBaseEntitys(searchBE);
+
+		for (BaseEntity hcr : linkedHCRs) {
+			beUtils.saveAnswer(new Answer(sourceCode, hcr.getCode(), "PRI_ASSOC_HC", answer.getValue()));
+		}
 			
 		output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */
