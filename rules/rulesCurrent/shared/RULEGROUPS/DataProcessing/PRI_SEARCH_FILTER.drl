@@ -37,18 +37,34 @@ rule "PRI_SEARCH_FILTER"
 			System.out.println(drools.getRule().getName()+" Source user is confirmed "+sourceCode);
 			String targetCode = answer.getTargetCode();
 		
+			System.out.println("sourceCode = " + sourceCode);
+			System.out.println("targetCode = " + targetCode);
 	
 			SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", targetCode, SearchEntity.class,
 				beUtils.getGennyToken().getToken());
 				String filterAttributeCode = answer.getAttributeCode();
-			/*	if (filterAttributeCode.startsWith("FLD_")) {
+				if (filterAttributeCode.startsWith("FLD_")) {
 					filterAttributeCode = filterAttributeCode.substring(4);
-				} */
+				}
 				
+				System.out.println("filterAttributeCode = " + filterAttributeCode);
+
 				System.out.println(drools.getRule().getName()+" VALUE  = "+answer.getValue());
 				String val = answer.getValue();
 				String operator = "_LIKE_";
-				
+
+				if (!val.contains(":")) {
+					/* new search */
+					val = "%"+val+"%";
+				} else {
+					/* pass value straight through with a like operator */
+					String[] prms = val.split(":");
+					/* switch (prms[0]) {
+						case "L": operator = "LIKE"; break;
+					} */
+					val = "%"+prms[1]+"%";
+				}
+				System.out.println("val = " + val);
 				
 				Answer filterUpdate = new Answer(sourceCode, targetCode,filterAttributeCode, val);  /* : used to indicate LIKE */
 				System.out.println(drools.getRule().getName()+" Filter ans = "+filterUpdate);
@@ -59,7 +75,8 @@ rule "PRI_SEARCH_FILTER"
 					searchBE.removeAttribute(filterAttributeCode);
 					System.out.println("Removing "+filterAttributeCode);
 				} else {
-					searchBE = beUtils.updateBaseEntity(searchBE, filterUpdate,SearchEntity.class);
+					/* searchBE = beUtils.updateBaseEntity(searchBE, filterUpdate,SearchEntity.class); */
+					searchBE.addFilter(filterAttributeCode, SearchEntity.StringFilter.LIKE, val);
 				}
 			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
 				beUtils.getGennyToken().getToken());
