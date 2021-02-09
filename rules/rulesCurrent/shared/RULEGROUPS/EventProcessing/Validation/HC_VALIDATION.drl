@@ -48,6 +48,4 @@ rule "HC_VALIDATION"
 			System.out.println("ERROR: Null validationStatus");
 		}
 		
-		retract(hcBe)
-	
 end
