@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 
-	<groupId>life.genny</groupId>
+	<groupId>life.genny.jbpm</groupId>
 	<artifactId>prj_genny</artifactId>
 	<version>7.18.0</version>
 	<packaging>jar</packaging>
@@ -14,7 +14,7 @@
 	<distributionManagement>
 		<repository>
 			<id>life.genny.jbpm</id>
-			<url>https://nexus.outcome-hub.com/nexus/content/repositories/life.genny</url>
+			<url>https://nexus.outcome-hub.com/nexus/content/repositories/life.genny.jbpm</url>
 		</repository>
 		<snapshotRepository>
 			<id>nexus-snapshots</id>
