@@ -86,6 +86,5 @@ rule "OHS_VALIDATION"
 				}
 		}
 		
-		retract(HCBe)
 	
 end
