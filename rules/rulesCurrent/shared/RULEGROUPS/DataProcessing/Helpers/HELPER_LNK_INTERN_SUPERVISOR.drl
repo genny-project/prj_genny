@@ -70,6 +70,29 @@ rule "HELPER_LNK_INTERN_SUPERVISOR"
 			answersToSave.add(assocSupervisorAnswer);
 
 			VertxUtils.sendToFrontEnd(userToken, assocSupervisorAnswer);
+
+
+			/* save the supervisor's name as PRI_ASSOC_SUPERVISOR attribute for the current target baseentity in the form */
+			Answer assocSupervisorNameAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_NAME", name,false,true);
+			answersToSave.add(assocSupervisorNameAnswer);
+
+			VertxUtils.sendToFrontEnd(userToken, assocSupervisorNameAnswer);
+
+
+			String mobile = be.getValue("PRI_MOBILE", null);		
+			
+			Answer assocSupervisorMobileAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_MOBILE", mobile,false,true);
+			answersToSave.add(assocSupervisorMobileAnswer);
+
+			VertxUtils.sendToFrontEnd(userToken, assocSupervisorMobileAnswer);
+
+
+			String email = be.getValue("PRI_EMAIL", null);		
+
+			Answer assocSupervisorEmailAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_EMAIL", email,false,true);
+			answersToSave.add(assocSupervisorEmailAnswer);
+
+			VertxUtils.sendToFrontEnd(userToken, assocSupervisorEmailAnswer);
 		}
 
 		update(answersToSave);
