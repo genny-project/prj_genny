@@ -14,11 +14,11 @@
 	<distributionManagement>
 		<repository>
 			<id>life.genny.jbpm</id>
-			<url>https://nexus.outcome-hub.com/nexus/content/repositories/life.genny.jbpm</url>
+			<url>https://nexus.outcome-hub.com/repository/life.genny.jbpm/</url>
 		</repository>
 		<snapshotRepository>
 			<id>nexus-snapshots</id>
-			<url>http://nexus.outcome-hub.com/nexus/content/repositories/snapshots</url>
+			<url>http://nexus.outcome-hub.com/repository/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
 
