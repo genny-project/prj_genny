@@ -63,6 +63,32 @@ rule "IS_HOST_CPY"
 			QDataBaseEntityMessage cpyBeMsg = new QDataBaseEntityMessage(cpyBe);
 			cpyBeMsg.setToken(userToken.getToken());
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(cpyBeMsg));
+
+			String hcName = cpyBe.getValue("PRI_NAME", null);
+
+			if (hcName != null) {
+
+				/* SET ASSOC HC OF HCRS */
+				SearchEntity searchBE = new SearchEntity("SBE_LINKED_HCRS", "Linked HCRs")
+					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
+					.addFilter("PRI_IS_HOST_CPY_REP", true)
+					.addFilter("LNK_HOST_COMPANY", SearchEntity.StringFilter.LIKE, "%"+newBe.getCode()+"%")
+					.setPageStart(0).setPageSize(100000);
+
+				searchBE.setRealm(serviceToken.getRealm());
+				List<BaseEntity> linkedHCRs = beUtils.getBaseEntitys(searchBE);
+
+				for (BaseEntity hcr : linkedHCRs) {
+					System.out.println("Saving PRI_ASSOC_HC = " + hcName + " for be with code " + hcr.getCode());
+					beUtils.saveAnswer(new Answer(userToken.getUserCode(), hcr.getCode(), "PRI_ASSOC_HC", hcName));
+				}
+
+			} else{
+				System.out.println("hcName is NULL");
+			}
+
+		} else {
+			System.out.println("cpyBe is NULL");
 		}
 
 	
