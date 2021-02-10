@@ -54,6 +54,26 @@ rule "IS_QA_HOST_CPY_REP"
 			beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_HOST_COMPANY", "[\""+cpyCode+"\"]"));
 			beUtils.saveAnswer(new Answer(userToken.getUserCode(), cpyCode, "PRI_IS_HOST_CPY", true));
 			beUtils.saveAnswer(new Answer(userToken.getUserCode(), cpyCode, "PRI_PROFILE", "InComplete"));
+			/* get the company baseentity */
+			BaseEntity companyBe = beUtils.getBaseEntityByCode(cpyCode);
+			if(companyBe != null){
+
+				/* get the name attribute of the company */
+				String hcName = companyBe.getValue("PRI_NAME", null);	
+				System.out.println("hcName  :: " + hcName);	
+
+				/* save the company's name as PRI_ASSOC_HC attribute for person baseentity */
+				if(hcName != null){
+					Answer answerHC = new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASSOC_HC", hcName);
+					beUtils.saveAnswer(answerHC);
+					VertxUtils.sendToFrontEnd(userToken, answerHC);
+
+				} else {
+					System.out.println("hcName is NULL");
+				}
+			} else {
+				System.out.println("companyBe is NULL");
+			}
 		}
 		
 		
