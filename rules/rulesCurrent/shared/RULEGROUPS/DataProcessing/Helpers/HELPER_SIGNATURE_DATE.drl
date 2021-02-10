@@ -214,7 +214,7 @@ rule "HELPER_SIGNATURE_DATE"
 				templateData.put("url", url);
 				*/
 				
-				EmailHelper.sendGrid(beUtils, email, subject, template_id, templateData);
+				/*EmailHelper.sendGrid(beUtils, email, subject, template_id, templateData);*/
 				System.out.println("SUCCESS - Email Sent!!");
 				
 		}
