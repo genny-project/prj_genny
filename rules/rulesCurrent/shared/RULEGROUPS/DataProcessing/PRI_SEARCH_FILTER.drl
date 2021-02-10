@@ -94,10 +94,25 @@ rule "PRI_SEARCH_FILTER"
 					System.out.println("Removing "+filterAttributeCode);
 				} else {
 					/* searchBE = beUtils.updateBaseEntity(searchBE, filterUpdate,SearchEntity.class); */
+
+					Boolean andTrigger = false;
+					for (EntityAttribute ea : searchBE.getBaseEntityAttributes()) {
+						if (ea.getAttributeCode().equals(filterAttributeCode)) {
+							andTrigger = true;
+						}
+					}
 					if (valDate != null) {
-						searchBE.addFilter(filterAttributeCode, filtType, valDate);
+						if (andTrigger) {
+							searchBE.addAnd(filterAttributeCode, filtType, valDate);
+						} else {
+							searchBE.addFilter(filterAttributeCode, filtType, valDate);
+						}
 					} else {
-						searchBE.addFilter(filterAttributeCode, SearchEntity.StringFilter.LIKE, val);
+						if (andTrigger) {
+							searchBE.addAnd(filterAttributeCode, SearchEntity.StringFilter.LIKE, val);
+						} else {
+							searchBE.addFilter(filterAttributeCode, SearchEntity.StringFilter.LIKE, val);
+						}
 					}
 				}
 			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
