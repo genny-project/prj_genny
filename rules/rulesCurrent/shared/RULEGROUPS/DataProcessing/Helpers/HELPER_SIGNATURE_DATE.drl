@@ -214,8 +214,22 @@ rule "HELPER_SIGNATURE_DATE"
 				templateData.put("url", url);
 				*/
 				
-				/*EmailHelper.sendGrid(beUtils, email, subject, template_id, templateData);*/
-				System.out.println("SUCCESS - Email Sent!!");
+				
+				if (subject != null && template_id != null && intern != null && internshipName != null && supervisorName != null && hostCompanyName != null && url != null) {
+					if (!GennySettings.projectUrl.contains("dev")) {
+					
+							/*List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
+							EmailHelper.sendGrid(beUtils, internEmail, null, bccList, subject, template_id, templateData);*/
+							
+							EmailHelper.sendGrid(beUtils, email, subject, template_id, templateData);
+							/*System.out.println("Email Sent ||| Type: Intern ||| Subject: " + subject + "||| template_id: " + template_id);*/
+							System.out.println("SUCCESS - Email Sent!!");
+							
+					}
+				} else {
+				System.out.println("ERROR: EMAIL NOT SENT DUE TO NULL DATA");
+				}
+				
 				
 		}
 		
