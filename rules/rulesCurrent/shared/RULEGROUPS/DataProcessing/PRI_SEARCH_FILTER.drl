@@ -163,7 +163,7 @@ rule "PRI_SEARCH_FILTER"
 					} else if (valLong != null) {
 						searchBE.addFilter(filterAttributeCode, filtType, valLong);
 					} else if (valDouble != null) {
-						searchBE.addFilter(filterAttributeCode, filtType, valDouble);
+						/* searchBE.addFilter(filterAttributeCode, filtType, valDouble); */
 					} else if (valDate != null) {
 						searchBE.addFilter(filterAttributeCode, filtType, valDate);
 					} else if (valDateTime != null) {
@@ -180,7 +180,7 @@ rule "PRI_SEARCH_FILTER"
 					} else if (valLong != null) {
 						searchBE.addAnd(filterAttributeCode, filtType, valLong);
 					} else if (valDouble != null) {
-						searchBE.addAnd(filterAttributeCode, filtType, valDouble);
+						/* searchBE.addAnd(filterAttributeCode, filtType, valDouble); */
 					} else if (valDate != null) {
 						searchBE.addAnd(filterAttributeCode, filtType, valDate);
 					} else if (valDateTime != null) {
