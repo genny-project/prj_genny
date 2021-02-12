@@ -35,6 +35,7 @@ rule "PRI_SEARCH_FILTER"
      then
  		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
 		String sourceCode = beUtils.getGennyToken().getUserCode();
+
 		if (sourceCode.equals(answer.getSourceCode())) { /* only user */
 			System.out.println(drools.getRule().getName()+" Source user is confirmed "+sourceCode);
 			String targetCode = answer.getTargetCode();
@@ -44,80 +45,155 @@ rule "PRI_SEARCH_FILTER"
 	
 			SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", targetCode, SearchEntity.class,
 				beUtils.getGennyToken().getToken());
-				String filterAttributeCode = answer.getAttributeCode();
-				if (filterAttributeCode.startsWith("FLD_")) {
-					filterAttributeCode = filterAttributeCode.substring(4);
-				}
-				
-				System.out.println("filterAttributeCode = " + filterAttributeCode);
 
-				System.out.println(drools.getRule().getName()+" VALUE  = "+answer.getValue());
-				String val = answer.getValue();
-				String operator = "_LIKE_";
+			String val = answer.getValue();
+			String filterAttributeCode = answer.getAttributeCode();
+			if (filterAttributeCode.startsWith("FLD_")) {
+				filterAttributeCode = filterAttributeCode.substring(4);
+			}
+			
+			System.out.println("filterAttributeCode = " + filterAttributeCode);
+			System.out.println("val = " + val);
 
+			if (StringUtils.isBlank(answer.getValue())) {
+				/* remove the attribute if value is blank */
+				searchBE.removeAttribute(filterAttributeCode);
+				System.out.println("Removing "+filterAttributeCode);
+			} else {
+
+				String valString = null;
+				Integer valInt = null;
+				Long valLong = null;
+				Double valDouble = null;
+				Boolean valBoolean = null;
 				LocalDate valDate = null;
-				SearchEntity.Filter filtType = SearchEntity.Filter.LESS_THAN;
-				
-				if (!val.contains(":")) {
-					/* new search */
-					val = "%"+val+"%";
-				} else {
-					/* pass value straight through with a like operator */
-					String[] prms = val.split(":");
-					if (prms.length > 2) {
-						String dateString = prms[1].split("T")[0];
-						if (prms[0].equals(">")) {
-							filtType = SearchEntity.Filter.GREATER_THAN;
-						} else if (prms[0].equals("<")) {
-							filtType = SearchEntity.Filter.LESS_THAN;
-						} else if (prms[0].equals("=")) {
-							filtType = SearchEntity.Filter.EQUALS;
-						}
-						valDate = LocalDate.parse(dateString);
+				LocalDateTime valDateTime = null;
 
-					} else {
-						val = "%"+prms[1]+"%";
-					}
-					/* switch (prms[0]) {
-						case "L": operator = "LIKE"; break;
-					} */
+				String filterString = null;
+				SearchEntity.Filter filtType = null;
+				SearchEntity.StringFilter stringFiltType = null;
+
+				Attribute attr = RulesUtils.getAttribute(filterAttributeCode, serviceToken);
+				String dtt = attr.getDataType().getClassName();
+				System.out.println("Attribute datatype = " + dtt);
+
+				if (val.contains(":")) {
+					String[] prms = val.split(":");
+					filterString = prms[0];
+					val = String.join(":", Arrays.copyOfRange(prms, 1, prms.length));
 				}
 				System.out.println("val = " + val);
-				
-				Answer filterUpdate = new Answer(sourceCode, targetCode,filterAttributeCode, val);  /* : used to indicate LIKE */
-				System.out.println(drools.getRule().getName()+" Filter ans = "+filterUpdate);
-				System.out.println(drools.getRule().getName()+" Before updateBaseEntity for search ");
-				
-				if (StringUtils.isBlank(answer.getValue())) {
-					/* remove the attribute */
-					searchBE.removeAttribute(filterAttributeCode);
-					System.out.println("Removing "+filterAttributeCode);
-				} else {
-					/* searchBE = beUtils.updateBaseEntity(searchBE, filterUpdate,SearchEntity.class); */
 
-					Boolean andTrigger = false;
-					for (EntityAttribute ea : searchBE.getBaseEntityAttributes()) {
-						if (ea.getAttributeCode().equals(filterAttributeCode)) {
-							andTrigger = true;
-						}
-					}
-					if (valDate != null) {
-						if (andTrigger) {
-							searchBE.addAnd(filterAttributeCode, filtType, valDate);
-						} else {
-							searchBE.addFilter(filterAttributeCode, filtType, valDate);
-						}
+				/* Determine the datatype */
+				if (dtt.equals("java.lang.Boolean") || dtt.equals("Boolean")) {
+					valBoolean = Boolean.valueOf(val);
+					System.out.println("valBoolean = " + valBoolean);
+				} else if (dtt.equals("java.lang.Double") || dtt.equals("Double")) {
+					valDouble = Double.valueOf(val);
+					System.out.println("valDouble = " + valDouble);
+				} else if (dtt.equals("java.lang.Integer") || dtt.equals("Integer")) {
+					valInt = Integer.valueOf(val);
+					System.out.println("valInt = " + valInt);
+				} else if (dtt.equals("java.lang.Long") || dtt.equals("Long")) {
+					valLong = Long.valueOf(val);
+					System.out.println("valLong = " + valLong);
+				} else if (dtt.equals("java.time.LocalDateTime") || dtt.equals("LocalDateTime")) {
+					String dateTimeString = val.split("\\.")[0];
+					valDateTime = LocalDateTime.parse(dateTimeString);
+					System.out.println("valDateTime = " + valDateTime);
+				} else if (dtt.equals("java.time.LocalDate") || dtt.equals("LocalDate")) {
+					String dateTimeString = val.split("\\.")[0];
+					LocalDateTime dateTime = LocalDateTime.parse(dateTimeString);
+					valDate = dateTime.toLocalDate();
+					System.out.println("valDate = " + valDate);
+				} else {
+					/* DEFAULTS TO STRING */
+					valString = val;
+					System.out.println("valString = " + valString);
+				}
+
+				System.out.println("filterString = " + filterString);
+
+				/* Determine the filter type */
+				if (filterString.equals("L")) {
+					stringFiltType = SearchEntity.StringFilter.LIKE;
+					valString = "%" + valString + "%";
+				} else if (filterString.equals("NL")) {
+					stringFiltType = SearchEntity.StringFilter.NOT_LIKE;
+					valString = "%" + valString + "%";
+				} else if (filterString.equals(">")) {
+					filtType = SearchEntity.Filter.GREATER_THAN;
+				} else if (filterString.equals("<")) {
+					filtType = SearchEntity.Filter.LESS_THAN;
+				} else if (filterString.equals(">=")) {
+					filtType = SearchEntity.Filter.GREATER_THAN_AND_EQUAL;
+				} else if (filterString.equals("<=")) {
+					filtType = SearchEntity.Filter.LESS_THAN_AND_EQUAL;
+				} else if (filterString.equals("=")) {
+					if (valString != null) {
+						stringFiltType = SearchEntity.StringFilter.EQUAL;
 					} else {
-						if (andTrigger) {
-							searchBE.addAnd(filterAttributeCode, SearchEntity.StringFilter.LIKE, val);
-						} else {
-							searchBE.addFilter(filterAttributeCode, SearchEntity.StringFilter.LIKE, val);
-						}
+						filtType = SearchEntity.Filter.EQUALS;
+					}
+				} else if (filterString.equals("!=")) {
+					if (valString != null) {
+						stringFiltType = SearchEntity.StringFilter.NOT_EQUAL;
+					} else {
+						filtType = SearchEntity.Filter.NOT_EQUALS;
 					}
 				}
+
+				System.out.println("valString = " + valString);
+				
+				Boolean andTrigger = false;
+				for (EntityAttribute ea : searchBE.getBaseEntityAttributes()) {
+					if (ea.getAttributeCode().equals(filterAttributeCode)) {
+						andTrigger = true;
+					}
+				}
+				
+				System.out.println("andTrigger = " + andTrigger);
+
+				/* Add filter */
+				if (!andTrigger) {
+					if (valString != null) {
+						searchBE.addFilter(filterAttributeCode, stringFiltType, valString);
+					} else if (valInt != null) {
+						searchBE.addFilter(filterAttributeCode, filtType, valInt);
+					} else if (valLong != null) {
+						searchBE.addFilter(filterAttributeCode, filtType, valLong);
+					} else if (valDouble != null) {
+						searchBE.addFilter(filterAttributeCode, filtType, valDouble);
+					} else if (valDate != null) {
+						searchBE.addFilter(filterAttributeCode, filtType, valDate);
+					} else if (valDateTime != null) {
+						searchBE.addFilter(filterAttributeCode, filtType, valDateTime);
+					} else if (valBoolean != null) {
+						searchBE.addFilter(filterAttributeCode, valBoolean);
+					}
+				} else {
+					/* Add AND filter if attribute already exists */
+					if (valString != null) {
+						searchBE.addAnd(filterAttributeCode, stringFiltType, valString);
+					} else if (valInt != null) {
+						searchBE.addAnd(filterAttributeCode, filtType, valInt);
+					} else if (valLong != null) {
+						searchBE.addAnd(filterAttributeCode, filtType, valLong);
+					} else if (valDouble != null) {
+						searchBE.addAnd(filterAttributeCode, filtType, valDouble);
+					} else if (valDate != null) {
+						searchBE.addAnd(filterAttributeCode, filtType, valDate);
+					} else if (valDateTime != null) {
+						searchBE.addAnd(filterAttributeCode, filtType, valDateTime);
+					} else if (valBoolean != null) {
+						System.out.println("WARN: Cannot add a second boolean filter on this attribute " + filterAttributeCode);
+					}
+				}
+			}
+
 			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
 				beUtils.getGennyToken().getToken());
-			System.out.println(drools.getRule().getName()+" Before search ");
+			System.out.println("Performing search...");
 			long totalTime = TableUtils.searchTable(beUtils,searchBE, true);
 
 			System.out.println("total took " + (totalTime) + " ms"); 
