@@ -87,25 +87,31 @@ rule "PRI_SEARCH_FILTER"
 				/* Determine the datatype */
 				if (dtt.equals("java.lang.Boolean") || dtt.equals("Boolean")) {
 					valBoolean = Boolean.valueOf(val);
+					System.out.println("valBoolean = " + valBoolean);
 				} else if (dtt.equals("java.lang.Double") || dtt.equals("Double")) {
 					valDouble = Double.valueOf(val);
+					System.out.println("valDouble = " + valDouble);
 				} else if (dtt.equals("java.lang.Integer") || dtt.equals("Integer")) {
 					valInt = Integer.valueOf(val);
+					System.out.println("valInt = " + valInt);
 				} else if (dtt.equals("java.lang.Long") || dtt.equals("Long")) {
 					valLong = Long.valueOf(val);
+					System.out.println("valLong = " + valLong);
 				} else if (dtt.equals("java.time.LocalDateTime") || dtt.equals("LocalDateTime")) {
 					String dateTimeString = val.split("\\.")[0];
 					valDateTime = LocalDateTime.parse(dateTimeString);
+					System.out.println("valDateTime = " + valDateTime);
 				} else if (dtt.equals("java.time.LocalDate") || dtt.equals("LocalDate")) {
 					String dateTimeString = val.split("\\.")[0];
 					LocalDateTime dateTime = LocalDateTime.parse(dateTimeString);
 					valDate = dateTime.toLocalDate();
+					System.out.println("valDate = " + valDate);
 				} else {
 					/* DEFAULTS TO STRING */
 					valString = val;
+					System.out.println("valString = " + valString);
 				}
 
-				System.out.println("valString = " + valString);
 				System.out.println("filterString = " + filterString);
 
 				/* Determine the filter type */
