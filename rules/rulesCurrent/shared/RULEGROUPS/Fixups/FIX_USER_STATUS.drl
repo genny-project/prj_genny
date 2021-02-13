@@ -116,7 +116,9 @@ rule "FIX_USER_STATUS"
 					}
 					System.out.println("new status = " + statusArray[index]);
 					/* beUtils.saveAnswer(new Answer(userToken.getUserCode(), internBE.getCode() , "PRI_STATUS", statusArray[index])); */
-					changeCount += 1;
+					if (!status.equals(statusArray[index])) {
+						changeCount += 1;
+					}
 				}
 
 			}
