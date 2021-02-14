@@ -35,6 +35,7 @@ rule "IS_QA_HOST_CPY_REP"
  		
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_HOST_CPY_REP", "true"));
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS_COLOR", "#FF9100"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_PROFILE", "InComplete"));
 
 
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
