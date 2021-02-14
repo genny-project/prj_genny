@@ -41,15 +41,17 @@ rule "ADD_ENTITY_CLICK_EVENT"
 		System.out.println("workflowSignalCode: " +workflowSignalCode);
 				
 		
+		/*
 		if (workflowSignalCode.equals("HOST_CPY") || workflowSignalCode.equals("HOST_CPY_REP")) {
 			output.setResultCode("START_"+workflowSignalCode);
 		} else {
+		*/
 		
-			workflowSignalCode = workflowSignalCode + "_NO";
-			System.out.println("workflowSignalCode: " +workflowSignalCode);
-			
-			output.setResultCode("START_ADD_ENTITY");
-		}
+		workflowSignalCode = workflowSignalCode + "_NO";
+		System.out.println("workflowSignalCode: " +workflowSignalCode);
+		
+		output.setResultCode("START_ADD_ENTITY");
+		
 		
 		output.setAskSourceCode(user);	
 		output.setTargetCode($message.getData().getTargetCode());
