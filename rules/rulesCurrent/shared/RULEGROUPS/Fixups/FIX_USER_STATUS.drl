@@ -71,7 +71,9 @@ rule "FIX_USER_STATUS"
 			System.out.println("Found " + internBaseEntitys.size() + " Intern BEs");
 
 			Integer changeCount = 0;
-			Integer disableCount = 0;
+			Integer archiveCount = 0;
+			Integer incorrectlyShownAppCount = 0;
+			Integer incorrectlyShownQATestAppCount = 0;
 			Integer qaTestCount = 0;
 			for (BaseEntity intern : internBaseEntitys) {
 				System.out.println("Intern Code = " + intern.getCode());
@@ -93,10 +95,27 @@ rule "FIX_USER_STATUS"
 						/* for (BaseEntity app : linkedApps) { */
 						/* 	beUtils.saveAnswer(new Answer(userToken.getUserCode(), app.getCode(), "PRI_DISABLED", "true")); */
 						/* } */
-						disableCount += 1;
+						archiveCount += 1;
+
+						for (BaseEntity app : linkedApps) {
+							Boolean disabled = app.getValue("PRI_DISABLED", null);
+							if (disabled != null) {
+								if (!disabled) {
+									incorrectlyShownAppCount += 1;
+								}
+							}
+						}
 					} else if (status.equals("QA_TEST")) {
 						System.out.println("Intern is a QA_TEST intern");
 						qaTestCount += 1;
+						for (BaseEntity app : linkedApps) {
+							Boolean disabled = app.getValue("PRI_DISABLED", null);
+							if (disabled != null) {
+								if (!disabled) {
+									incorrectlyShownQATestAppCount += 1;
+								}
+							}
+						}
 					} else {
 						/* Otherwise we find the most progressed app status and save it to the person */
 						String[] statusArray = { "AVAILABLE", "APPLIED", "SHORTLISTED", "INTERVIEWED", "OFFERED", "PLACED", "PROGRESS", "COMPLETED" };
@@ -127,8 +146,10 @@ rule "FIX_USER_STATUS"
 
 			}
 			System.out.println("Number of Changed Interns = " + changeCount.toString());
-			System.out.println("Number of Archived = " + disableCount.toString());
+			System.out.println("Number of Archived = " + archiveCount.toString());
 			System.out.println("Number of QA_TEST Interns = " + qaTestCount.toString());
+			System.out.println("Number of Applications wrongly shown = " + incorrectlyShownAppCount.toString());
+			System.out.println("Number of Applications wrongly shown from QA_TEST BEs = " + incorrectlyShownQATestAppCount.toString());
 
 			retract(message);
 			output.setTypeOfResult("NONE");
