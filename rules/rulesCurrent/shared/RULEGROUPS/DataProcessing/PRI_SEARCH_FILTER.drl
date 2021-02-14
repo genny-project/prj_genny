@@ -43,8 +43,10 @@ rule "PRI_SEARCH_FILTER"
 			System.out.println("sourceCode = " + sourceCode);
 			System.out.println("targetCode = " + targetCode);
 	
+			/* Retrieve the target SBE */
 			SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", targetCode, SearchEntity.class,
 				beUtils.getGennyToken().getToken());
+			
 
 			String val = answer.getValue();
 			String filterAttributeCode = answer.getAttributeCode();
@@ -55,10 +57,37 @@ rule "PRI_SEARCH_FILTER"
 			System.out.println("filterAttributeCode = " + filterAttributeCode);
 			System.out.println("val = " + val);
 
+			/* remove the attribute if value is blank */
 			if (StringUtils.isBlank(answer.getValue())) {
-				/* remove the attribute if value is blank */
-				searchBE.removeAttribute(filterAttributeCode);
-				System.out.println("Removing "+filterAttributeCode);
+
+				/* Retrieve the base SBE */
+				String baseSearchCode = targetCode.substring(0, targetCode.length()-serviceToken.getSessionCode().length()-1);
+				System.out.println("baseSearchCode = " + baseSearchCode);
+
+				SearchEntity baseSearchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", baseSearchCode, SearchEntity.class,
+					beUtils.getGennyToken().getToken());
+
+				/* Find the highest weight of filters in base SBE */
+				Double baseMaxWeight = 0.0;
+				for (EntityAttribute ea : baseSearchBE.getBaseEntityAttributes()) {
+					if (ea.getAttributeCode().startsWith("PRI_") || ea.getAttributeCode().startsWith("LNK_")) {
+						if (ea.getWeight() > baseMaxWeight) {
+							baseMaxWeight = ea.getWeight();
+						}
+					}
+				}
+				System.out.println("baseMaxWeight = " + baseMaxWeight);
+				System.out.println("answer.getWeight() = " + answer.getWeight());
+
+				/* Find and remove the correct filter */
+				for (EntityAttribute ea : searchBE.getBaseEntityAttributes()) {
+					if (ea.getWeight() == (baseMaxWeight + answer.getWeight())) {
+						searchBE.removeAttribute(ea.getAttributeCode());
+						System.out.println("Removing filter with code " + ea.getAttributeCode());
+						break;
+					}
+				}
+
 			} else {
 
 				String valString = null;
