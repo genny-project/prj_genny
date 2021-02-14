@@ -459,11 +459,12 @@ if (clean.equals(&quot;HOST_CPY_REP&quot;)) {
 
 	String hcCode = newBe.getValue(&quot;LNK_HOST_COMPANY&quot;, null);
 	System.out.println(&quot;hcCode = &quot; + hcCode);
-	hcCode = hcCode.replace(&quot;\&quot;&quot;, &quot;&quot;).replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;);
-	System.out.println(&quot;hcCode = &quot; + hcCode);
+
 	if (hcCode == null) {
 		System.out.println(&quot;hcCode is NULL&quot;);
 	} else {
+		hcCode = hcCode.replace(&quot;\&quot;&quot;, &quot;&quot;).replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;);
+		System.out.println(&quot;hcCode = &quot; + hcCode);
 
 		BaseEntity linkedHC = beUtilsTwo.getBaseEntityByCode(hcCode);
 		System.out.println(&quot;linkedHC = &quot; + linkedHC);
@@ -475,12 +476,13 @@ if (clean.equals(&quot;HOST_CPY_REP&quot;)) {
 			System.out.println(&quot;profile = &quot; + profile);
 			if (profile == null) {
 				System.out.println(&quot;profile is NULL&quot;);
-			}
+			} else {
 
-			if (profile.equals(&quot;InComplete&quot;)) {
-				questionCode = &quot;QUE_FRESH_&quot; +clean + &quot;_GRP&quot;;
-				kcontext.setVariable(&quot;questionCode&quot;, questionCode);
-				System.out.println(&quot;ADD_ENTITY: questionCode: &quot; + questionCode);
+				if (profile.equals(&quot;InComplete&quot;)) {
+					questionCode = &quot;QUE_FRESH_&quot; +clean + &quot;_GRP&quot;;
+					kcontext.setVariable(&quot;questionCode&quot;, questionCode);
+					System.out.println(&quot;ADD_ENTITY: questionCode: &quot; + questionCode);
+				}
 			}
 		}
 	}
