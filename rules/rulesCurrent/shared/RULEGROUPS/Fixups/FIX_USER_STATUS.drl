@@ -99,7 +99,7 @@ rule "FIX_USER_STATUS"
 						for (BaseEntity app : linkedApps) {
 							Boolean disabled = app.getValue("PRI_DISABLED", null);
 							if (disabled != null) {
-								if (disabled) {
+								if (!disabled) {
 									incorrectlyShownAppCount += 1;
 								}
 							}
