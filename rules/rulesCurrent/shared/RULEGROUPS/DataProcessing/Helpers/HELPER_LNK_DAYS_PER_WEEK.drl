@@ -70,6 +70,7 @@ rule "HELPER_LNK_DAYS_PER_WEEK"
 					/* save the company's name as PRI_ASSOC_EP attribute for application baseentity */
 					Answer assocAnswer = new Answer(sourceCode, targetCode, "PRI_DAYS_PER_WEEK", name,false,true);
 					answersToSave.add(assocAnswer);
+			 		beUtils.saveAnswer(assocAnswer);		
 					
 					VertxUtils.sendToFrontEnd(userToken, assocAnswer);
 				}
