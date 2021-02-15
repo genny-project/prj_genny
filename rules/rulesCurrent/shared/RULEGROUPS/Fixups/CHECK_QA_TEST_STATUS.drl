@@ -42,12 +42,12 @@ import life.genny.utils.SearchCallable;
 import life.genny.utils.TableFrameCallable;
 import life.genny.utils.CacheSearchUtils;
 
-rule "FIX_USER_STATUS"
+rule "CHECK_QA_TEST_STATUS"
     ruleflow-group 'EventProcessing'
 		salience 2
     no-loop
     when
-			message : QEventMessage(data.code == "QUE_FIX_USER_STATUS" && data.parentCode == "QUE_FIX_USER_STATUS_GRP" )
+			message : QEventMessage(data.code == "QUE_CHECK_QA_TEST_STATUS" && data.parentCode == "QUE_CHECK_QA_TEST_STATUS_GRP" )
 			userToken : GennyToken (code != "PER_SERVICE" )
 			serviceToken : GennyToken( code == "PER_SERVICE")
 			output : OutputParam( )
@@ -61,19 +61,15 @@ rule "FIX_USER_STATUS"
 
 			SearchEntity searchBE = new SearchEntity("SBE_GET_INTERNS", "Get All Interns")
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
-				.addFilter("PRI_STATUS", SearchEntity.StringFilter.LIKE, "%")
+				.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "QA_TEST")
 				.addFilter("PRI_IS_INTERN", true)
 				.setPageStart(0).setPageSize(100000);
 	
 			searchBE.setRealm(serviceToken.getRealm());
 			List<BaseEntity> internBaseEntitys = beUtils.getBaseEntitys(searchBE);
 
-			System.out.println("Found " + internBaseEntitys.size() + " Intern BEs");
+			System.out.println("Found " + internBaseEntitys.size() + " Intern BEs total");
 
-			Integer changeCount = 0;
-			Integer archiveCount = 0;
-			Integer incorrectlyShownAppCount = 0;
-			Integer incorrectlyShownQATestAppCount = 0;
 			Integer qaTestCount = 0;
 			for (BaseEntity intern : internBaseEntitys) {
 				System.out.println("Intern Code = " + intern.getCode());
@@ -89,37 +85,13 @@ rule "FIX_USER_STATUS"
 				List<BaseEntity> linkedApps = beUtils.getBaseEntitys(appSearchBE);
 
 				if (status != null) {
-					/* Disable all apps if person is archived */
-					if (status.equals("ARCHIVED")) {
-						System.out.println("Intern is an ARCHIVED intern");
-						/* for (BaseEntity app : linkedApps) { */
-						/* 	beUtils.saveAnswer(new Answer(userToken.getUserCode(), app.getCode(), "PRI_DISABLED", "true")); */
-						/* } */
-						archiveCount += 1;
 
-						for (BaseEntity app : linkedApps) {
-							Boolean disabled = app.getValue("PRI_DISABLED", null);
-							if (disabled != null) {
-								if (!disabled) {
-									incorrectlyShownAppCount += 1;
-								}
-							}
-						}
-					} else if (status.equals("QA_TEST")) {
-						System.out.println("Intern is a QA_TEST intern");
+						System.out.println("Found another QA_TEST intern");
 						qaTestCount += 1;
-						for (BaseEntity app : linkedApps) {
-							Boolean disabled = app.getValue("PRI_DISABLED", null);
-							if (disabled != null) {
-								if (!disabled) {
-									incorrectlyShownQATestAppCount += 1;
-								}
-							}
-						}
-					} else {
-						/* Otherwise we find the most progressed app status and save it to the person */
+
 						String[] statusArray = { "AVAILABLE", "APPLIED", "SHORTLISTED", "INTERVIEWED", "OFFERED", "PLACED", "PROGRESS", "COMPLETED" };
 						int index = 0;
+
 						for (BaseEntity app : linkedApps) {
 							/* FIND MOST PROGRESSED STATUS */
 							String appStatus = app.getValue("PRI_STATUS", null);
@@ -135,21 +107,13 @@ rule "FIX_USER_STATUS"
 							}
 						}
 						System.out.println("new status = " + statusArray[index]);
-						/* beUtils.saveAnswer(new Answer(userToken.getUserCode(), intern.getCode() , "PRI_STATUS", statusArray[index])); */
-						if (!status.equals(statusArray[index])) {
-							changeCount += 1;
-						}
-					}
+						/* beUtils.saveAnswer(new Answer(userToken.getUserCode(), internBE.getCode() , "PRI_STATUS", statusArray[index])); */
 				} else {
 					System.out.println("status is NULL");
 				}
 
 			}
-			System.out.println("Number of Changed Interns = " + changeCount.toString());
-			System.out.println("Number of Archived = " + archiveCount.toString());
-			System.out.println("Number of QA_TEST Interns = " + qaTestCount.toString());
-			System.out.println("Number of Applications wrongly shown = " + incorrectlyShownAppCount.toString());
-			System.out.println("Number of Applications wrongly shown from QA_TEST BEs = " + incorrectlyShownQATestAppCount.toString());
+			System.out.println("Number of QA_TEST Interns changed = " + qaTestCount.toString());
 
 			retract(message);
 			output.setTypeOfResult("NONE");
