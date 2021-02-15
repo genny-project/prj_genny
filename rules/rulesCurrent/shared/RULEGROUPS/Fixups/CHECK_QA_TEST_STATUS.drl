@@ -61,7 +61,7 @@ rule "CHECK_QA_TEST_STATUS"
 
 			SearchEntity searchBE = new SearchEntity("SBE_GET_INTERNS", "Get All Interns")
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
-				.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUALS, "QA_TEST")
+				.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "QA_TEST")
 				.addFilter("PRI_IS_INTERN", true)
 				.setPageStart(0).setPageSize(100000);
 	

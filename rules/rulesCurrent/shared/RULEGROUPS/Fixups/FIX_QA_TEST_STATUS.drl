@@ -61,7 +61,7 @@ rule "FIX_QA_TEST_STATUS"
 
 			SearchEntity searchBE = new SearchEntity("SBE_GET_INTERNS", "Get All Interns")
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
-				.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUALS, "QA_TEST")
+				.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "QA_TEST")
 				.addFilter("PRI_IS_INTERN", true)
 				.setPageStart(0).setPageSize(100000);
 	
@@ -107,7 +107,7 @@ rule "FIX_QA_TEST_STATUS"
 							}
 						}
 						System.out.println("new status = " + statusArray[index]);
-						beUtils.saveAnswer(new Answer(userToken.getUserCode(), internBE.getCode() , "PRI_STATUS", statusArray[index]));
+						beUtils.saveAnswer(new Answer(userToken.getUserCode(), intern.getCode() , "PRI_STATUS", statusArray[index]));
 				} else {
 					System.out.println("status is NULL");
 				}
