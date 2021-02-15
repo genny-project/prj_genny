@@ -478,7 +478,7 @@ if (clean.equals(&quot;HOST_CPY_REP&quot;)) {
 				System.out.println(&quot;profile is NULL&quot;);
 			} else {
 
-				if (profile.equals(&quot;InComplete&quot;)) {
+				if (profile.equals(&quot;Incomplete&quot;)) {
 					questionCode = &quot;QUE_FRESH_&quot; +clean + &quot;_GRP&quot;;
 					kcontext.setVariable(&quot;questionCode&quot;, questionCode);
 					System.out.println(&quot;ADD_ENTITY: questionCode: &quot; + questionCode);

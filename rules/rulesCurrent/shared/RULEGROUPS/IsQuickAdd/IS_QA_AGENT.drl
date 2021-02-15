@@ -46,7 +46,7 @@ rule "IS_QA_AGENT"
 			beUtils.create(cpyCode, cpyCode);
 
 			beUtils.saveAnswer(new Answer(userToken.getUserCode(), user.getCode(), "LNK_AGENCY", "[\""+cpyCode+"\"]"));
-			beUtils.saveAnswer(new Answer(userToken.getUserCode(), cpyCode, "PRI_PROFILE", "InComplete"));
+			beUtils.saveAnswer(new Answer(userToken.getUserCode(), cpyCode, "PRI_PROFILE", "Incomplete"));
 		}
 		
 		
