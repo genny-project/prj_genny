@@ -177,7 +177,7 @@ rule "IS_QA_INTERN"
 		/* Set trigger times */
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("hh:mm:ss a, E, dd MMM yyyy");
     
-   	 	LocalDateTime now = LocalDateTime.now().plusHours(11);
+   	 	LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
     	String prettyNow = dtf.format(now);
     	System.out.println("The current date and time is ~ " + prettyNow);
 		
