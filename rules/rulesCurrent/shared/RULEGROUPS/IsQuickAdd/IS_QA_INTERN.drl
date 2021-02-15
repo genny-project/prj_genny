@@ -157,7 +157,7 @@ rule "IS_QA_INTERN"
 		
 		System.out.println("Setting schedule");
 		
-		msgQAInternOrange = new QEventMessage("TEST_EVT", "SCHEDULE_QA_INTERN_ORANGE");
+		msgQAInternOrange = new QEventMessage("TEST_EVT", "SCHEDULE_INTERN_COMPLETE_PROFILE_48HR");
 		msgQAInternOrange.getData().setTargetCode(newBe.getCode());
 		msgQAInternOrange.setToken(userToken.getToken());
 		String[] rxList = new String[2];
@@ -165,7 +165,7 @@ rule "IS_QA_INTERN"
 		rxList[1] = userToken.getUserCode();
 		msgQAInternOrange.setRecipientCodeArray(rxList);
 		
-		msgQAInternRed = new QEventMessage("TEST_EVT", "SCHEDULE_QA_INTERN_RED");
+		msgQAInternRed = new QEventMessage("TEST_EVT", "SCHEDULE_INTERN_COMPLETE_PROFILE_96HR");
 		msgQAInternRed.getData().setTargetCode(newBe.getCode());
 		msgQAInternRed.setToken(userToken.getToken());
 		msgQAInternRed.setRecipientCodeArray(rxList);
@@ -179,20 +179,20 @@ rule "IS_QA_INTERN"
     	String prettyNow = dtf.format(now);
     	System.out.println("The current date and time is ~ " + prettyNow);
 		
-		LocalDateTime orangeTestTimer = now.plusSeconds(15);
+		LocalDateTime orangeTestTimer = now.plusSeconds(90);
     	LocalDateTime orangeTimer = now.plusHours(48);
 		String prettyOrange = dtf.format(orangeTimer);
 		System.out.println("The Orange timer is set for ~ " + prettyOrange);
 		
-		String orangeCode = newBe.getCode() + "_QA_INTERN-ORANGE";
+		String orangeCode = newBe.getCode() + "_INTERN_COMPLETE_PROFILE_48HR";
 		System.out.println("orangeCode " + orangeCode);
 		
-		LocalDateTime redTestTimer = now.plusSeconds(90);
+		LocalDateTime redTestTimer = now.plusSeconds(180);
 		LocalDateTime redTimer = now.plusHours(96);
 		String prettyRed = dtf.format(redTimer);
 		System.out.println("The Red timer is set for ~ " + prettyRed);
 		
-		String redCode = newBe.getCode() + "_QA_INTERN-RED";
+		String redCode = newBe.getCode() + "_INTERN_COMPLETE_PROFILE_96HR";
 		System.out.println("redCode " + redCode);
 		
 		
