@@ -180,7 +180,7 @@ rule "HELPER_SIGNATURE_DATE"
 		String userCode = userSplit[1];
 		System.out.println("User "+user+" with userCode = "+userCode);
 		
-		BaseEntity userSuper = beUtils.getBaseEntityByCode(internBe.getCode());
+		BaseEntity userSuper = beUtils.getBaseEntityByCode(supervisorBe.getCode());
 		String userSuperStr = userSuper.getCode();
 		String[] userSuperSplit = userSuperStr.split("_");
 		String userSuperCode = userSuperSplit[1];
@@ -248,7 +248,7 @@ rule "HELPER_SIGNATURE_DATE"
 			
 			System.out.println("The supervisorEmail is : " + supervisorEmail);
 			
-			if (!GennySettings.projectUrl.contains("dev")) {
+			if (!GennySettings.projectUrl.contains("dev"	)) {
 				EmailHelper.sendGrid(beUtils, supervisorEmail, null, bccList, subject, template_id, templateData);
 			} else {
 				System.out.println("WARNING: Email not sent because on Dev server");
