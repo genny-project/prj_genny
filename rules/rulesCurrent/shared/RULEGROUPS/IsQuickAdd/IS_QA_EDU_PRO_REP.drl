@@ -33,7 +33,7 @@ rule "IS_QA_EDU_PRO_REP"
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
     
 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_EDU_PRO_REP", "true"));
-
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "PENDING"));
 		
 		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
 		

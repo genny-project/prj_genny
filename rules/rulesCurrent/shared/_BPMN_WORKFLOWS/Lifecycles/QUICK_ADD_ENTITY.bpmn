@@ -333,9 +333,6 @@
 	System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);
 
 
-	Answer answer = new Answer(userToken.getUserCode(),  newBe.getCode() , &quot;PRI_STATUS&quot;, &quot;QA_TEST&quot;);
-	beUtils.saveAnswer(answer);
-
 
 	String templateCode = &quot;TEMPLATE_&quot; + baseEntityType;
 	TableUtils.searchTable(beUtils, templateCode, true);
