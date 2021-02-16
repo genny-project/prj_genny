@@ -32,6 +32,7 @@ rule "IS_QA_AGENT"
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
  		
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), user.getCode() ,"PRI_IS_AGENT", "true"));
+ 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "PENDING"));
 
 		String linkedAgency = user.getValue("LNK_AGENCY", null);
 		System.out.println("linkedAgency = " + linkedAgency);
