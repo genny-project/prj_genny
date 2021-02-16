@@ -174,7 +174,7 @@ rule "HELPER_SIGNATURE_DATE"
 		
 		/* Gather UserCode string */
 		
-		BaseEntity user = beUtils.getBaseEntityByCode(supervisorBe.getCode());
+		BaseEntity user = beUtils.getBaseEntityByCode(internBe.getCode());
 		String userStr = user.getCode();
 		String[] userSplit = userStr.split("_");
 		String userCode = userSplit[1];
