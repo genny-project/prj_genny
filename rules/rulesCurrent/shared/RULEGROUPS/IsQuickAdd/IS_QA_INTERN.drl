@@ -38,7 +38,6 @@ rule "IS_QA_INTERN"
  	/*  Construct answer with Source, Target, Attribute Code, Value */
  		
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_INTERN", "true"));
- 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_DISABLED", "false"));
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS_COLOR", "#5cb85c"));
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_PROFILE", "Incomplete"));
 
