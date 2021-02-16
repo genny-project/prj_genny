@@ -198,7 +198,7 @@ rule "HELPER_SIGNATURE_DATE"
 		}
 		
 		if (attributeCode.startsWith("PRI_HOST_CPY_REP_")) {
-			template_id = "d-d-501f81d3e2614c3b8691bf9777478fa6";
+			template_id = "d-501f81d3e2614c3b8691bf9777478fa6";
 			subject = "Important Internship Requirement - Sign your internship agreement";
 			System.out.println("HCR Signature Detected. Sending email to Intern to remind signature");
 		}
@@ -229,9 +229,9 @@ rule "HELPER_SIGNATURE_DATE"
 		if (internSignature != null && hcrSignature != null && outcomeSignature != null) {
 			System.out.println("All signatures present");
 			
-			Answer answer = new Answer(serviceToken.getUserCode(), targetCode.getCode(), "PRI_AGREEMENT_SIGNATURES", "Complete");
-			beUtils.saveAnswer(answer);
-			System.out.println("Answer done" +answer);
+			Answer answerSignatures = new Answer(serviceToken.getUserCode(), targetCode, "PRI_AGREEMENT_SIGNATURES", "Complete");
+			beUtils.saveAnswer(answerSignatures);
+			System.out.println("Answer done" +answerSignatures);
 		}
 		
 		
