@@ -96,7 +96,7 @@ rule "FIX_ARCHIVED_APPLICATIONS"
 							if (disabled != null) {
 								if (!disabled) {
 									disabledCount += 1;
-									/* beUtils.saveAnswer(new Answer(userToken.getUserCode(), app.getCode(), "PRI_DISABLED", "true")); */
+									beUtils.saveAnswer(new Answer(userToken.getUserCode(), app.getCode(), "PRI_DISABLED", "true"));
 								}
 							}
 						}

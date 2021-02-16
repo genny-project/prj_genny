@@ -107,7 +107,7 @@ rule "FIX_USER_STATUS"
 						System.out.println("new status = " + statusArray[index]);
 						if (!status.equals(statusArray[index])) {
 							changeCount += 1;
-							/* beUtils.saveAnswer(new Answer(userToken.getUserCode(), intern.getCode() , "PRI_STATUS", statusArray[index])); */
+							beUtils.saveAnswer(new Answer(userToken.getUserCode(), intern.getCode() , "PRI_STATUS", statusArray[index]));
 						}
 					}
 				} else {
