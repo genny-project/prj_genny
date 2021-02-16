@@ -211,6 +211,30 @@ rule "HELPER_SIGNATURE_DATE"
 			templateData.put("hostCompanyName", hostCompanyName);
 			System.out.println("Outcome Life Signature Detected. Sending email to HCR to remind signature");
 		}
+		
+		String internSignature = targetBe.getValue("PRI_INTERN_AGREEMENT_SIGNATURE", null);
+		String hcrSignature = targetBe.getValue("PRI_HOST_CPY_REP_AGREEMENT_SIGNATURE", null);
+		String outcomeSignature = targetBe.getValue("PRI_OUTCOME_AGREEMENT_SIGNATURE", null);
+		
+		if (internSignature != null) {
+			System.out.println("internSignature present");
+		}
+		if (hcrSignature != null) {
+			System.out.println("hcrSignature present");
+		}
+		if (outcomeSignature != null) {
+			System.out.println("outcomeSignature present");
+		}
+		
+		if (internSignature != null && hcrSignature != null && outcomeSignature != null) {
+			System.out.println("All signatures present");
+			
+			Answer answer = new Answer(serviceToken.getUserCode(), targetCode.getCode(), "PRI_AGREEMENT_SIGNATURES", "Complete");
+			beUtils.saveAnswer(answer);
+			System.out.println("Answer done" +answer);
+		}
+		
+		
 			
 		System.out.println("template_id: " + template_id);
 		System.out.println("subject: " + subject);
