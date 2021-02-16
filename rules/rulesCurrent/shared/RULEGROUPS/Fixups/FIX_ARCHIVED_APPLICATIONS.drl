@@ -42,12 +42,12 @@ import life.genny.utils.SearchCallable;
 import life.genny.utils.TableFrameCallable;
 import life.genny.utils.CacheSearchUtils;
 
-rule "CHECK_QA_TEST_STATUS"
+rule "FIX_ARCHIVED_APPLICATIONS"
     ruleflow-group 'EventProcessing'
 		salience 2
     no-loop
     when
-			message : QEventMessage(data.code == "QUE_CHECK_QA_TEST_STATUS" && data.parentCode == "QUE_CHECK_QA_TEST_STATUS_GRP" )
+			message : QEventMessage(data.code == "QUE_FIX_ARCHIVED_APPLICATIONS" && data.parentCode == "QUE_FIX_ARCHIVED_APPLICATIONS_GRP" )
 			userToken : GennyToken (code != "PER_SERVICE" )
 			serviceToken : GennyToken( code == "PER_SERVICE")
 			output : OutputParam( )
@@ -61,16 +61,17 @@ rule "CHECK_QA_TEST_STATUS"
 
 			SearchEntity searchBE = new SearchEntity("SBE_GET_INTERNS", "Get All Interns")
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
-				.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "QA_TEST")
+				.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "ARCHIVED")
 				.addFilter("PRI_IS_INTERN", true)
 				.setPageStart(0).setPageSize(100000);
 	
 			searchBE.setRealm(serviceToken.getRealm());
 			List<BaseEntity> internBaseEntitys = beUtils.getBaseEntitys(searchBE);
 
-			System.out.println("Found " + internBaseEntitys.size() + " Intern BEs total");
+			System.out.println("Found " + internBaseEntitys.size() + " Intern BEs");
 
-			Integer qaTestCount = 0;
+			Integer archiveCount = 0;
+			Integer disabledCount = 0;
 			for (BaseEntity intern : internBaseEntitys) {
 				System.out.println("Intern Code = " + intern.getCode());
 				String status = intern.getValue("PRI_STATUS", null);
@@ -85,35 +86,28 @@ rule "CHECK_QA_TEST_STATUS"
 				List<BaseEntity> linkedApps = beUtils.getBaseEntitys(appSearchBE);
 
 				if (status != null) {
-
-						System.out.println("Found another QA_TEST intern");
-						qaTestCount += 1;
-
-						String[] statusArray = { "AVAILABLE", "APPLIED", "SHORTLISTED", "INTERVIEWED", "OFFERED", "PLACED", "PROGRESS", "COMPLETED" };
-						int index = 0;
+					/* Disable all apps if person is archived */
+					if (status.equals("ARCHIVED")) {
+						System.out.println("Intern is an ARCHIVED intern");
+						archiveCount += 1;
 
 						for (BaseEntity app : linkedApps) {
-							/* FIND MOST PROGRESSED STATUS */
-							String appStatus = app.getValue("PRI_STATUS", null);
-							if (appStatus != null) {
-								if (Arrays.toString(statusArray).contains(appStatus)) {
-									int pos = Arrays.asList(statusArray).indexOf(appStatus);
-									if (pos > index) {
-										index = pos;
-									}
+							Boolean disabled = app.getValue("PRI_DISABLED", null);
+							if (disabled != null) {
+								if (!disabled) {
+									disabledCount += 1;
+									beUtils.saveAnswer(new Answer(userToken.getUserCode(), app.getCode(), "PRI_DISABLED", "true"));
 								}
-							} else {
-								System.out.println("PRI_STATUS is null for " + app.getCode());
 							}
 						}
-						System.out.println("new status = " + statusArray[index]);
-						/* beUtils.saveAnswer(new Answer(userToken.getUserCode(), internBE.getCode() , "PRI_STATUS", statusArray[index])); */
+					}
 				} else {
 					System.out.println("status is NULL");
 				}
 
 			}
-			System.out.println("Number of QA_TEST Interns changed = " + qaTestCount.toString());
+			System.out.println("Number of Archived Interns found = " + archiveCount.toString());
+			System.out.println("Number of Applications Set to Disabled = " + disabledCount.toString());
 
 			retract(message);
 			output.setTypeOfResult("NONE");

@@ -71,10 +71,6 @@ rule "FIX_USER_STATUS"
 			System.out.println("Found " + internBaseEntitys.size() + " Intern BEs");
 
 			Integer changeCount = 0;
-			Integer archiveCount = 0;
-			Integer incorrectlyShownAppCount = 0;
-			Integer incorrectlyShownQATestAppCount = 0;
-			Integer qaTestCount = 0;
 			for (BaseEntity intern : internBaseEntitys) {
 				System.out.println("Intern Code = " + intern.getCode());
 				String status = intern.getValue("PRI_STATUS", null);
@@ -90,33 +86,7 @@ rule "FIX_USER_STATUS"
 
 				if (status != null) {
 					/* Disable all apps if person is archived */
-					if (status.equals("ARCHIVED")) {
-						System.out.println("Intern is an ARCHIVED intern");
-						/* for (BaseEntity app : linkedApps) { */
-						/* 	beUtils.saveAnswer(new Answer(userToken.getUserCode(), app.getCode(), "PRI_DISABLED", "true")); */
-						/* } */
-						archiveCount += 1;
-
-						for (BaseEntity app : linkedApps) {
-							Boolean disabled = app.getValue("PRI_DISABLED", null);
-							if (disabled != null) {
-								if (!disabled) {
-									incorrectlyShownAppCount += 1;
-								}
-							}
-						}
-					} else if (status.equals("QA_TEST")) {
-						System.out.println("Intern is a QA_TEST intern");
-						qaTestCount += 1;
-						for (BaseEntity app : linkedApps) {
-							Boolean disabled = app.getValue("PRI_DISABLED", null);
-							if (disabled != null) {
-								if (!disabled) {
-									incorrectlyShownQATestAppCount += 1;
-								}
-							}
-						}
-					} else {
+					if (!status.equals("ARCHIVED") && !status.equals("PENDING")) {
 						/* Otherwise we find the most progressed app status and save it to the person */
 						String[] statusArray = { "AVAILABLE", "APPLIED", "SHORTLISTED", "INTERVIEWED", "OFFERED", "PLACED", "PROGRESS", "COMPLETED" };
 						int index = 0;
@@ -135,9 +105,9 @@ rule "FIX_USER_STATUS"
 							}
 						}
 						System.out.println("new status = " + statusArray[index]);
-						/* beUtils.saveAnswer(new Answer(userToken.getUserCode(), intern.getCode() , "PRI_STATUS", statusArray[index])); */
 						if (!status.equals(statusArray[index])) {
 							changeCount += 1;
+							beUtils.saveAnswer(new Answer(userToken.getUserCode(), intern.getCode() , "PRI_STATUS", statusArray[index]));
 						}
 					}
 				} else {
@@ -145,11 +115,7 @@ rule "FIX_USER_STATUS"
 				}
 
 			}
-			System.out.println("Number of Changed Interns = " + changeCount.toString());
-			System.out.println("Number of Archived = " + archiveCount.toString());
-			System.out.println("Number of QA_TEST Interns = " + qaTestCount.toString());
-			System.out.println("Number of Applications wrongly shown = " + incorrectlyShownAppCount.toString());
-			System.out.println("Number of Applications wrongly shown from QA_TEST BEs = " + incorrectlyShownQATestAppCount.toString());
+			System.out.println("Number of Changed Intern Status' = " + changeCount.toString());
 
 			retract(message);
 			output.setTypeOfResult("NONE");
