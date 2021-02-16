@@ -74,9 +74,13 @@ rule "FIX_USER_DISABLED"
 				System.out.println("Intern Code = " + intern.getCode());
 				Boolean disabled = intern.getValue("PRI_DISABLED", null);
 				System.out.println("Intern Disabled = " + disabled);
-				if (disabled) {
-					beUtils.saveAnswer(new Answer(userToken.getUserCode(), intern.getCode() , "PRI_DISABLED", "false"));
-					changeCount += 1;
+				if (disabled != null) {
+					if (disabled) {
+						beUtils.saveAnswer(new Answer(userToken.getUserCode(), intern.getCode() , "PRI_DISABLED", "false"));
+						changeCount += 1;
+					}
+				} else {
+					System.out.println("disabled is NULL");
 				}
 				
 			}
