@@ -185,6 +185,17 @@ rule "HELPER_SIGNATURE_DATE"
 		String subject = null;
 		String url = null;
 		
+		BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
+
+		String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, userCode, serviceToken.getToken());
+		System.out.println("token: " + token);
+	
+		url = GennySettings.projectUrl+"/home/UVVFX1RBQkxFX1JFU1VMVFNfR1JQ/UVVFX1RBQkxFX0xBWllfTE9BRA==";
+		System.out.println("url: " + url);
+		
+		url = url +"?token=" + token;
+		System.out.println("url: " + url);
+		
 		HashMap<String, String> templateData = new HashMap<String, String>();
 		templateData.put("intern", intern);
 		/*templateData.put("internshipName", internshipName);
@@ -239,32 +250,6 @@ rule "HELPER_SIGNATURE_DATE"
 		System.out.println("template_id: " + template_id);
 		System.out.println("subject: " + subject);
 		
-		System.out.println("Outcome Life Signature Detected. Sending email to HCR to remind signature");
-
-		BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
-
-		String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, userCode, serviceToken.getToken());
-		System.out.println("token: " + token);
-	
-		url = GennySettings.projectUrl+"/home/UVVFX1RBQkxFX1JFU1VMVFNfR1JQ/UVVFX1RBQkxFX0xBWllfTE9BRA==";
-		System.out.println("url: " + url);
-		
-		url = url +"?token=" + token;
-		System.out.println("url: " + url);
-		
-		/*String email = "c.pyke85@gmail.com";
-		String email = "internmatch@outcomelife.com.au";
-		
-		System.out.println("email: " + email);*/
-		System.out.println("subject: " + subject);
-		System.out.println("template_id: " + template_id);	
-		
-		
-		
-		
-		
-		/*EmailHelper.sendGrid(beUtils, email, subject, template_id, templateData);
-		System.out.println("SUCCESS - Email Sent!!");*/
 				
 		
 		if (subject != null && template_id != null && url != null) {
