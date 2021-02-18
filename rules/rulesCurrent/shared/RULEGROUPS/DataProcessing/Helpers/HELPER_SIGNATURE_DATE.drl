@@ -172,45 +172,93 @@ rule "HELPER_SIGNATURE_DATE"
 		System.out.println("hostCompanyName: " +hostCompanyName);
 		
 		
-		/* Gather UserCode string */
+		/* Gather UserCode strings */
 		
-		BaseEntity user = beUtils.getBaseEntityByCode(supervisorBe.getCode());
+		BaseEntity user = beUtils.getBaseEntityByCode(internBe.getCode());
 		String userStr = user.getCode();
 		String[] userSplit = userStr.split("_");
 		String userCode = userSplit[1];
 		System.out.println("User "+user+" with userCode = "+userCode);
 		
+		BaseEntity userSuper = beUtils.getBaseEntityByCode(supervisorBe.getCode());
+		String userSuperStr = userSuper.getCode();
+		String[] userSuperSplit = userSuperStr.split("_");
+		String userSuperCode = userSuperSplit[1];
+		System.out.println("User "+userSuper+" with userCode = "+userSuperCode);
+		
 		
 		String template_id = null;
 		String subject = null;
-		String url = null;
 		
 		HashMap<String, String> templateData = new HashMap<String, String>();
-		templateData.put("intern", intern);
-		/*templateData.put("internshipName", internshipName);
-		templateData.put("supervisorName", supervisorName);
-		templateData.put("hostCompanyName", hostCompanyName);*/
-		templateData.put("url", url);
+		
+		List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
+		
+		
+		BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
+
+		String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, userCode, serviceToken.getToken());
+		System.out.println("token: " + token);
+	
+		String url = GennySettings.projectUrl+"/home/UVVFX1RBQkxFX1JFU1VMVFNfR1JQ/UVVFX1RBQkxFX0xBWllfTE9BRA==";
+		System.out.println("url: " + url);
+
+		
 		
 		if (attributeCode.startsWith("PRI_INTERN_")) {
-			/*template_id = "d-64ef4bf7b18a4b65a9c7e02b1b8ce7df";*/
+			/*template_id = "d-64ef4bf7b18a4b65a9c7e02b1b8ce7df";
+			subject = "Important Internship Requirement - Signing the internship agreement";*/
+			
+			templateData.put("intern", intern);
+			templateData.put("url", url);
 			System.out.println("Intern Signature Detected. No email but moving them to placed");
 		}
 		
 		if (attributeCode.startsWith("PRI_HOST_CPY_REP_")) {
-			template_id = "d-d-501f81d3e2614c3b8691bf9777478fa6";
+			template_id = "d-501f81d3e2614c3b8691bf9777478fa6";
 			subject = "Important Internship Requirement - Sign your internship agreement";
+			
+			templateData.put("intern", intern);
+			templateData.put("url", url);
+			
+			System.out.println("The internEmail is : " + internEmail);
+			
+			if (!GennySettings.projectUrl.contains("dev")) {
+				EmailHelper.sendGrid(beUtils, internEmail, null, bccList, subject, template_id, templateData);
+			} else {
+				System.out.println("WARNING: Email not sent because on Dev server");
+			}
+			
 			System.out.println("HCR Signature Detected. Sending email to Intern to remind signature");
 		}
 		
 		if (attributeCode.startsWith("PRI_OUTCOME_")) {
 			template_id = "d-64ef4bf7b18a4b65a9c7e02b1b8ce7df";
 			subject = "Important Internship Requirement - Signing the internship agreement";
+			
+			token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, userSuperCode, serviceToken.getToken());
+			System.out.println("token: " + token);
+			url = url +"?token=" + token;
+		
+			templateData.put("intern", intern);
+			templateData.put("url", url);
 			templateData.put("internshipName", internshipName);
 			templateData.put("supervisorName", supervisorName);
 			templateData.put("hostCompanyName", hostCompanyName);
+			
+			System.out.println("The supervisorEmail is : " + supervisorEmail);
+			
+			if (!GennySettings.projectUrl.contains("dev"	)) {
+				EmailHelper.sendGrid(beUtils, supervisorEmail, null, bccList, subject, template_id, templateData);
+			} else {
+				System.out.println("WARNING: Email not sent because on Dev server");
+			}
+			
 			System.out.println("Outcome Life Signature Detected. Sending email to HCR to remind signature");
 		}
+		
+		
+		
 		
 		String internSignature = targetBe.getValue("PRI_INTERN_AGREEMENT_SIGNATURE", null);
 		String hcrSignature = targetBe.getValue("PRI_HOST_CPY_REP_AGREEMENT_SIGNATURE", null);
@@ -229,50 +277,24 @@ rule "HELPER_SIGNATURE_DATE"
 		if (internSignature != null && hcrSignature != null && outcomeSignature != null) {
 			System.out.println("All signatures present");
 			
-			String workflowSignalCode = "PLACED";
-
-			output.setTypeOfResult("SIGNAL");
-			output.setResultCode("START_"+workflowSignalCode);
-			output.setTargetCode(targetCode);
+			Answer answerSignatures = new Answer(serviceToken.getUserCode(), targetCode, "PRI_AGREEMENT_SIGNATURES", "Complete");
+			beUtils.saveAnswer(answerSignatures);
+			System.out.println("Answer done" +answerSignatures);
 		}
+		
+		
 		
 		
 			
 		System.out.println("template_id: " + template_id);
 		System.out.println("subject: " + subject);
 		
-		System.out.println("Outcome Life Signature Detected. Sending email to HCR to remind signature");
-
-		BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
-
-		String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, userCode, serviceToken.getToken());
-		System.out.println("token: " + token);
-	
-		url = GennySettings.projectUrl+"/home/UVVFX1RBQkxFX1JFU1VMVFNfR1JQ/UVVFX1RBQkxFX0xBWllfTE9BRA==";
-		System.out.println("url: " + url);
-		
-		url = url +"?token=" + token;
-		System.out.println("url: " + url);
-		
-		/*String email = "c.pyke85@gmail.com";
-		String email = "internmatch@outcomelife.com.au";
-		
-		System.out.println("email: " + email);*/
-		System.out.println("subject: " + subject);
-		System.out.println("template_id: " + template_id);	
-		
-		
-		
-		
-		
-		/*EmailHelper.sendGrid(beUtils, email, subject, template_id, templateData);
-		System.out.println("SUCCESS - Email Sent!!");*/
 				
-		
+		/*
 		if (subject != null && template_id != null && url != null) {
 				if (!GennySettings.projectUrl.contains("dev")) {
 				
-						List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
+						
 						EmailHelper.sendGrid(beUtils, internEmail, null, bccList, subject, template_id, templateData);
 						
 						System.out.println("Email Sent ||| Type: Intern ||| Subject: " + subject + "||| template_id: " + template_id);
@@ -283,7 +305,7 @@ rule "HELPER_SIGNATURE_DATE"
 		} else {
 			System.out.println("ERROR: EMAIL NOT SENT DUE TO NULL DATA");
 		}
-		
+		*/
 		
 		
 						
