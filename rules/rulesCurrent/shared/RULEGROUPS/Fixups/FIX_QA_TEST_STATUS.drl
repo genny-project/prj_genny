@@ -106,8 +106,17 @@ rule "FIX_QA_TEST_STATUS"
 								System.out.println("PRI_STATUS is null for " + app.getCode());
 							}
 						}
-						System.out.println("new status = " + statusArray[index]);
-						beUtils.saveAnswer(new Answer(userToken.getUserCode(), intern.getCode() , "PRI_STATUS", statusArray[index]));
+						String newStatus = statusArray[index];
+
+						String profile = intern.getValue("PRI_PROFILE", null);
+						if (profile != null) {
+							if (profile.equals("Incomplete") || profile.equals("InComplete")) {
+								newStatus = "PENDING";
+							}
+						}
+
+						System.out.println("new status = " + newStatus);
+						beUtils.saveAnswer(new Answer(userToken.getUserCode(), intern.getCode() , "PRI_STATUS", newStatus));
 				} else {
 					System.out.println("status is NULL");
 				}
