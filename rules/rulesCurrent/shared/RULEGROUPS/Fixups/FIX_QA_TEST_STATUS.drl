@@ -117,8 +117,8 @@ rule "FIX_QA_TEST_STATUS"
 								newStatus = "PENDING";
 								pendingCount += 1;
 
-								/* Answer answerColour = new Answer(serviceToken.getUserCode(), intern.getCode(), "PRI_STATUS_COLOR", "error"); */
-								/* beUtils.saveAnswer(answerColour); */
+								Answer answerColour = new Answer(serviceToken.getUserCode(), intern.getCode(), "PRI_STATUS_COLOR", "error");
+								beUtils.saveAnswer(answerColour);
 
 								String email = intern.getValue("PRI_EMAIL", null);
 								if (email != null) {
@@ -128,7 +128,7 @@ rule "FIX_QA_TEST_STATUS"
 						}
 
 						System.out.println("new status = " + newStatus);
-						/* beUtils.saveAnswer(new Answer(userToken.getUserCode(), intern.getCode() , "PRI_STATUS", newStatus)); */
+						beUtils.saveAnswer(new Answer(userToken.getUserCode(), intern.getCode() , "PRI_STATUS", newStatus));
 				} else {
 					System.out.println("status is NULL");
 				}
