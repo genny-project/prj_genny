@@ -70,7 +70,10 @@ rule "FIX_QA_TEST_STATUS"
 
 			System.out.println("Found " + internBaseEntitys.size() + " Intern BEs total");
 
+			List<String> emailList = new ArrayList<>();
+
 			Integer qaTestCount = 0;
+			Integer pendingCount = 0;
 			for (BaseEntity intern : internBaseEntitys) {
 				System.out.println("Intern Code = " + intern.getCode());
 				String status = intern.getValue("PRI_STATUS", null);
@@ -112,17 +115,29 @@ rule "FIX_QA_TEST_STATUS"
 						if (profile != null) {
 							if (profile.equals("Incomplete") || profile.equals("InComplete")) {
 								newStatus = "PENDING";
+								pendingCount += 1;
+
+								/* Answer answerColour = new Answer(serviceToken.getUserCode(), intern.getCode(), "PRI_STATUS_COLOR", "error"); */
+								/* beUtils.saveAnswer(answerColour); */
+
+								String email = intern.getValue("PRI_EMAIL", null);
+								if (email != null) {
+									emailList.add(email);
+								}
 							}
 						}
 
 						System.out.println("new status = " + newStatus);
-						beUtils.saveAnswer(new Answer(userToken.getUserCode(), intern.getCode() , "PRI_STATUS", newStatus));
+						/* beUtils.saveAnswer(new Answer(userToken.getUserCode(), intern.getCode() , "PRI_STATUS", newStatus)); */
 				} else {
 					System.out.println("status is NULL");
 				}
 
 			}
 			System.out.println("Number of QA_TEST Interns changed = " + qaTestCount.toString());
+			System.out.println("Number of QA_TEST Interns set to PENDING = " + pendingCount.toString());
+			System.out.println("length of Email List = " + emailList.size());
+			System.out.println("EMAIL LIST = " + emailList.toString());
 
 			retract(message);
 			output.setTypeOfResult("NONE");
