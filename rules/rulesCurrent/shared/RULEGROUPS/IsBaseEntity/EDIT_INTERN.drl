@@ -35,6 +35,7 @@ rule "EDIT_INTERN"
  		
 
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetBe.getCode() ,"PRI_PROFILE", "Complete"));  
+ 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetBe.getCode() ,"PRI_STATUS_COLOR", "default"));
 		
 
 		targetBe = beUtils.getBaseEntityByCode(targetBe.getCode());
