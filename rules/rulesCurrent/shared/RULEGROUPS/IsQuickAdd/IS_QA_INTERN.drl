@@ -183,7 +183,7 @@ rule "IS_QA_INTERN"
     	String prettyNow = dtf.format(now);
     	System.out.println("The current date and time is ~ " + prettyNow);
 		
-		LocalDateTime orangeTestTimer = now.plusSeconds(90);
+		LocalDateTime orangeTestTimer = now.plusSeconds(15);
     	LocalDateTime orangeTimer = now.plusHours(48);
 		String prettyOrange = dtf.format(orangeTimer);
 		System.out.println("The Orange timer is set for ~ " + prettyOrange);
@@ -191,7 +191,7 @@ rule "IS_QA_INTERN"
 		String orangeCode = newBe.getCode() + "_INTERN_COMPLETE_PROFILE_48HR";
 		System.out.println("orangeCode " + orangeCode);
 		
-		LocalDateTime redTestTimer = now.plusSeconds(180);
+		LocalDateTime redTestTimer = now.plusSeconds(240);
 		LocalDateTime redTimer = now.plusHours(96);
 		String prettyRed = dtf.format(redTimer);
 		System.out.println("The Red timer is set for ~ " + prettyRed);
