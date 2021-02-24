@@ -140,14 +140,19 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		/* TODO: Answer should support null  */
 		BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
 		if(targetBe != null){
-			String rep = targetBe.getValue("LNK_HOST_COMPANY_REP", null);
-			if(rep != null){
+			Optional<String> optRep = app.getValue("LNK_HOST_COMPANY_REP");
+			Optional<String> optInternSupervisor = app.getValue("LNK_INTERN_SUPERVISOR");
+
+			if (optRep.isPresent()){
+				String rep = optRep.get();
+				System.out.println("rep :: " + rep);
 				beUtils.saveAnswer(repAnswer);
 				addressData.add(repAnswer);
 			}
 
-			String internSupervisor = targetBe.getValue("LNK_INTERN_SUPERVISOR", null);
-			if(internSupervisor != null){
+			if (optInternSupervisor.isPresent()){
+				String internSupervisor = optInternSupervisor.get();
+				System.out.println("internSupervisor :: " + internSupervisor);
 				beUtils.saveAnswer(supervisorAnswer);
 				addressData.add(supervisorAnswer);
 			}
