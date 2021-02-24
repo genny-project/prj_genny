@@ -62,22 +62,14 @@ rule "HELPER_LNK_HCR"
 		BaseEntity be = beUtils.getBaseEntityByCode(code);
 		
 		if(be !=null){
-			
-			/* get the name attribute of the hcr */
 			String name = be.getValue("PRI_NAME", null);		
-			Answer assocHcrAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HCR", name);
-			beUtils.saveAnswer(assocHcrAnswer);
-			answersToSave.add(assocHcrAnswer);
-			VertxUtils.sendToFrontEnd(userToken, assocHcrAnswer);
-
-
+			if(name !=null){
+				Answer assocHcrAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HCR", name);
+				beUtils.saveAnswer(assocHcrAnswer);
+				VertxUtils.sendToFrontEnd(userToken, assocHcrAnswer);
+			}
 		}
-	/*	update(answersToSave); */
-
-		/* Retract the answer message so the rule doesn't fire again */
-	/*	retract(answer); */
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
-	/*	update(output); */
 end
