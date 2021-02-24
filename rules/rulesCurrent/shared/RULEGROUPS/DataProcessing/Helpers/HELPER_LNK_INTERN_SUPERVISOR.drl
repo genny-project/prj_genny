@@ -21,15 +21,13 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.io.UnsupportedEncodingException;
 import life.genny.utils.DropdownUtils;
-
-
 import java.util.List;
 import java.util.ArrayList;
 
 rule "HELPER_LNK_INTERN_SUPERVISOR"
 	ruleflow-group 'DataProcessing'
-			salience 5000
-			no-loop
+	salience 5000
+	no-loop
 	when
 		beUtils : BaseEntityUtils()
 		answer : Answer( attributeCode == "LNK_INTERN_SUPERVISOR")
@@ -55,52 +53,43 @@ rule "HELPER_LNK_INTERN_SUPERVISOR"
 		String code = value.replace("\"", "").replace("[", "").replace("]", "");
 		System.out.println("code  :: " + code);
 
-		/* Save the actual LNK_INTERN_SUPERVISOR answer */
-		answersToSave.add(answer);
+		List<Answer> answers = new ArrayList<Answer>();
 
 		/* get the supervisor baseentity */
 		BaseEntity be = beUtils.getBaseEntityByCode(code);
 		if(be != null){
 
 			/* get the name attribute of the supervisor */
-			String name = be.getValue("PRI_NAME", null);		
+			String name = be.getValue("PRI_NAME", null);	
+			if(name != null)	{
+				Answer assocSupervisorAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_SUPERVISOR", name,false,true);
+				Answer assocSupervisorNameAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_NAME", name,false,true);
+				
+				answers.add(assocSupervisorAnswer);
+				answers.add(assocSupervisorNameAnswer);
 
-			/* save the supervisor's name as PRI_ASSOC_SUPERVISOR attribute for the current target baseentity in the form */
-			Answer assocSupervisorAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_SUPERVISOR", name,false,true);
-			answersToSave.add(assocSupervisorAnswer);
+				VertxUtils.sendToFrontEnd(userToken, assocSupervisorAnswer, assocSupervisorNameAnswer);
+			}
 
-			VertxUtils.sendToFrontEnd(userToken, assocSupervisorAnswer);
+			String mobile = be.getValue("PRI_MOBILE", null);
+			if(mobile != null){
+				Answer assocSupervisorMobileAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_MOBILE", mobile,false,true);
+				answers.add(assocSupervisorMobileAnswer);
 
-
-			/* save the supervisor's name as PRI_ASSOC_SUPERVISOR attribute for the current target baseentity in the form */
-			Answer assocSupervisorNameAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_NAME", name,false,true);
-			answersToSave.add(assocSupervisorNameAnswer);
-
-			VertxUtils.sendToFrontEnd(userToken, assocSupervisorNameAnswer);
-
-
-			String mobile = be.getValue("PRI_MOBILE", null);		
-			
-			Answer assocSupervisorMobileAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_MOBILE", mobile,false,true);
-			answersToSave.add(assocSupervisorMobileAnswer);
-
-			VertxUtils.sendToFrontEnd(userToken, assocSupervisorMobileAnswer);
-
+				VertxUtils.sendToFrontEnd(userToken, assocSupervisorMobileAnswer);
+			}
 
 			String email = be.getValue("PRI_EMAIL", null);		
+			if(email != null){
+				Answer assocSupervisorEmailAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_EMAIL", email,false,true);
+				answers.add(assocSupervisorEmailAnswer);
 
-			Answer assocSupervisorEmailAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_EMAIL", email,false,true);
-			answersToSave.add(assocSupervisorEmailAnswer);
-
-			VertxUtils.sendToFrontEnd(userToken, assocSupervisorEmailAnswer);
+				VertxUtils.sendToFrontEnd(userToken, assocSupervisorEmailAnswer);
+			}
 		}
 
-		update(answersToSave);
-
-		/* Retract the answer message so the rule doesn't fire again */
-		/* retract(answer); */
+		beUtils.saveAnswers(answers);
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
-		/* update(output); */
 end
