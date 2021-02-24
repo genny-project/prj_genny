@@ -144,12 +144,14 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 			if(rep != null){
 				beUtils.saveAnswer(repAnswer);
 				addressData.add(repAnswer);
+				VertxUtils.sendToFrontEnd(userToken, repAnswer);
 			}
 
 			String internSupervisor = targetBe.getValue("LNK_INTERN_SUPERVISOR", null);
 			if(internSupervisor != null){
 				beUtils.saveAnswer(supervisorAnswer);
 				addressData.add(supervisorAnswer);
+				VertxUtils.sendToFrontEnd(userToken, supervisorAnswer);
 			}
 		}
 
@@ -169,7 +171,7 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		beUtils.saveAnswers(addressData);
 		/*update(answersToSave);*/
 
-		VertxUtils.sendToFrontEnd(userToken, addressAnswer, assocHcAnswer, imageAnswer, latitudeAnswer, longitudeAnswer, repAnswer, supervisorAnswer);
+		VertxUtils.sendToFrontEnd(userToken, addressAnswer, assocHcAnswer, imageAnswer, latitudeAnswer, longitudeAnswer);
 			
 		/*retract(answer);*/
 
