@@ -197,10 +197,11 @@ rule "HELPER_SIGNATURE_DATE"
 		
 		BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
 
-		String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, userCode, serviceToken.getToken());
-		System.out.println("token: " + token);
+		String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, internEmail, serviceToken.getToken());
+		System.out.println("token: " + token);			
 	
 		String url = GennySettings.projectUrl+"/home/UVVFX1RBQkxFX1JFU1VMVFNfR1JQ/UVVFX1RBQkxFX0xBWllfTE9BRA==";
+		url = url +"?token=" + token;
 		System.out.println("url: " + url);
 
 		
@@ -248,7 +249,7 @@ rule "HELPER_SIGNATURE_DATE"
 			
 			System.out.println("The supervisorEmail is : " + supervisorEmail);
 			
-			if (!GennySettings.projectUrl.contains("dev"	)) {
+			if (!GennySettings.projectUrl.contains("dev")) {
 				EmailHelper.sendGrid(beUtils, supervisorEmail, null, bccList, subject, template_id, templateData);
 			} else {
 				System.out.println("WARNING: Email not sent because on Dev server");
