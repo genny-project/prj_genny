@@ -110,6 +110,8 @@ rule "PRI_SEARCH_FILTER"
 					String[] prms = val.split(":");
 					filterString = prms[0];
 					val = String.join(":", Arrays.copyOfRange(prms, 1, prms.length));
+				} else {
+					filterString = "=";
 				}
 				System.out.println("val = " + val);
 
