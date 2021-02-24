@@ -133,7 +133,7 @@
 	
 	String prefix = &quot;NULL_&quot;;	
 
-	if (clean.equals(&quot;INTERN&quot;) || clean.equals(&quot;HOST_CPY_REP&quot;) || clean.equals(&quot;EDU_PRO_REP&quot;) || clean.equals(&quot;AGENT&quot;) || clean.equals(&quot;ADMIN&quot;) || clean.equals(&quot;STUDENT&quot;)) {
+	if (clean.equals(&quot;INTERN&quot;) || clean.equals(&quot;HOST_CPY_REP&quot;) || clean.equals(&quot;EDU_PRO_REP&quot;) || clean.equals(&quot;AGENT&quot;) || clean.equals(&quot;ADMIN&quot;) || clean.equals(&quot;STUDENT&quot;) || clean.equals(&quot;MENTEE&quot;)) {
 			prefix = &quot;PER_&quot;;
 			System.out.println(&quot;ADD_ENTITY: Adding a &quot; + prefix);
 	}
@@ -907,7 +907,7 @@ System.out.println(&quot;sessionFacts = &quot; + sessionFacts);</bpmn2:script>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_2" bpmnElement="EndEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="742.0" y="193.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_14">
+        <bpmndi:BPMNLabel id="BPMNLabel_14" labelStyle="BPMNLabelStyle_1">
           <dc:Bounds height="11.0" width="50.0" x="735.0" y="229.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -949,7 +949,7 @@ System.out.println(&quot;sessionFacts = &quot; + sessionFacts);</bpmn2:script>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_3" bpmnElement="EndEvent_3">
         <dc:Bounds height="36.0" width="36.0" x="1450.0" y="367.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_21">
+        <bpmndi:BPMNLabel id="BPMNLabel_21" labelStyle="BPMNLabelStyle_1">
           <dc:Bounds height="11.0" width="50.0" x="1443.0" y="403.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
