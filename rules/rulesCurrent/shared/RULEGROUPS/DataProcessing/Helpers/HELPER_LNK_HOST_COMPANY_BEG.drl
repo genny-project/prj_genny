@@ -131,22 +131,23 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		Answer longitudeAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_LONGITUDE", longitude, false, true);
 		System.out.println("longitudeAnswer");
 
+		Answer repAnswer = new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", "[null]",false,true);
+		System.out.println("repAnswer");
+		Answer supervisorAnswer = new Answer(sourceCode, targetCode, "LNK_INTERN_SUPERVISOR", "[null]",false,true);
+		System.out.println("supervisorAnswer");
+
 		List<Answer> addressData = new ArrayList<Answer>();
 		/* TODO: Answer should support null  */
 		BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
 		if(targetBe != null){
 			String rep = targetBe.getValue("LNK_HOST_COMPANY_REP", null);
 			if(rep != null){
-				Answer repAnswer = new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", "[null]",false,true);
-				System.out.println("repAnswer");
 				beUtils.saveAnswer(repAnswer);
 				addressData.add(repAnswer);
 			}
 
 			String internSupervisor = targetBe.getValue("LNK_INTERN_SUPERVISOR", null);
 			if(internSupervisor != null){
-				Answer supervisorAnswer = new Answer(sourceCode, targetCode, "LNK_INTERN_SUPERVISOR", "[null]",false,true);
-				System.out.println("supervisorAnswer");
 				beUtils.saveAnswer(supervisorAnswer);
 				addressData.add(supervisorAnswer);
 			}
