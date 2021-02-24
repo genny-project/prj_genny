@@ -66,6 +66,7 @@ rule "HELPER_LNK_HCR"
 			/* get the name attribute of the hcr */
 			String name = be.getValue("PRI_NAME", null);		
 			Answer assocHcrAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HCR", name);
+			beUtils.saveAnswer(assocHcrAnswer);
 			answersToSave.add(assocHcrAnswer);
 			VertxUtils.sendToFrontEnd(userToken, assocHcrAnswer);
 
