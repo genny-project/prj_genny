@@ -148,6 +148,7 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 				System.out.println("rep :: " + rep);
 				beUtils.saveAnswer(repAnswer);
 				addressData.add(repAnswer);
+				VertxUtils.sendToFrontEnd(userToken, repAnswer);
 			}
 
 			if (optInternSupervisor.isPresent()){
@@ -155,6 +156,7 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 				System.out.println("internSupervisor :: " + internSupervisor);
 				beUtils.saveAnswer(supervisorAnswer);
 				addressData.add(supervisorAnswer);
+				VertxUtils.sendToFrontEnd(userToken, supervisorAnswer);
 			}
 		}
 
