@@ -58,10 +58,8 @@ rule "HELPER_LNK_INTERN_SUPERVISOR"
 			if(name != null)	{
 				Answer assocSupervisorAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_SUPERVISOR", name,false,true);
 				Answer assocSupervisorNameAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_NAME", name,false,true);
-				
 				answers.add(assocSupervisorAnswer);
 				answers.add(assocSupervisorNameAnswer);
-
 				VertxUtils.sendToFrontEnd(userToken, assocSupervisorAnswer, assocSupervisorNameAnswer);
 			}
 
@@ -69,7 +67,6 @@ rule "HELPER_LNK_INTERN_SUPERVISOR"
 			if(mobile != null){
 				Answer assocSupervisorMobileAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_MOBILE", mobile,false,true);
 				answers.add(assocSupervisorMobileAnswer);
-
 				VertxUtils.sendToFrontEnd(userToken, assocSupervisorMobileAnswer);
 			}
 
@@ -77,7 +74,6 @@ rule "HELPER_LNK_INTERN_SUPERVISOR"
 			if(email != null){
 				Answer assocSupervisorEmailAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_EMAIL", email,false,true);
 				answers.add(assocSupervisorEmailAnswer);
-
 				VertxUtils.sendToFrontEnd(userToken, assocSupervisorEmailAnswer);
 			}
 		}

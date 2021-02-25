@@ -50,9 +50,9 @@ rule "HELPER_LNK_AGENCY"
 		if(be != null){
 			String name = be.getValue("PRI_NAME", null);		
 			if(name != null){
-				Answer assocHcAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_AGENCY", name);
-				beUtils.saveAnswer(assocHcAnswer);
-				VertxUtils.sendToFrontEnd(userToken, assocHcAnswer);
+				Answer ans = new Answer(sourceCode, targetCode, "PRI_ASSOC_AGENCY", name);
+				beUtils.saveAnswer(ans);
+				VertxUtils.sendToFrontEnd(userToken, ans);
 			}
 		}
 end

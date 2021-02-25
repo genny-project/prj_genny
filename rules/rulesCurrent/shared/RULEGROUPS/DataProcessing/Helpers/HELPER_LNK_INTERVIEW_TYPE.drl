@@ -47,13 +47,13 @@ rule "HELPER_LNK_INTERVIEW_TYPE"
 		String code = beUtils.cleanUpAttributeValue(value);
 		System.out.println("code  :: " + code);
 
-		BaseEntity companyBe = beUtils.getBaseEntityByCode(code);
-		if(companyBe != null){
-			String name = companyBe.getValue("PRI_NAME", null);		
+		BaseEntity be = beUtils.getBaseEntityByCode(code);
+		if(be != null){
+			String name = be.getValue("PRI_NAME", null);		
 			if(name != null){
-				Answer assocHcAnswer = new Answer(sourceCode, targetCode, "PRI_INTERVIEW_TYPE", name);
-				beUtils.saveAnswer(assocHcAnswer);
-				VertxUtils.sendToFrontEnd(userToken, assocHcAnswer);
+				Answer ans = new Answer(sourceCode, targetCode, "PRI_INTERVIEW_TYPE", name);
+				beUtils.saveAnswer(ans);
+				VertxUtils.sendToFrontEnd(userToken, ans);
 			}
 		}
 end

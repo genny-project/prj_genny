@@ -48,13 +48,12 @@ rule "HELPER_LNK_EDU_PROVIDER"
 		System.out.println("code  :: " + code);
 
 		BaseEntity be = beUtils.getBaseEntityByCode(code);
-
 		if(be != null ){
 			String name = be.getValue("PRI_NAME", null);		
 			if(name != null){
-				Answer assocEPAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_EP", name,false,true);
-				beUtils.saveAnswer(assocEPAnswer);
-				VertxUtils.sendToFrontEnd(userToken, assocEPAnswer);
+				Answer ans = new Answer(sourceCode, targetCode, "PRI_ASSOC_EP", name,false,true);
+				beUtils.saveAnswer(ans);
+				VertxUtils.sendToFrontEnd(userToken, ans);
 			}
 		}
 end
