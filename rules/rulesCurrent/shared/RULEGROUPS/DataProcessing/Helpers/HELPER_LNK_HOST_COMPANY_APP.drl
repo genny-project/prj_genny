@@ -58,14 +58,12 @@ rule "HELPER_LNK_HOST_COMPANY_APP"
 			}
 		}
 
-		Answer internshipAnswer = new Answer(sourceCode, targetCode, "LNK_INTERNSHIP", "[null]",false,true);
-
 		BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
 		if(targetBe != null){
 			String internship = targetBe.getValue("LNK_INTERNSHIP", null);
 			if(internship != null){
+				Answer internshipAnswer = new Answer(sourceCode, targetCode, "LNK_INTERNSHIP", "[null]",false,true);
 				beUtils.saveAnswer(internshipAnswer);
-				.add(internshipAnswer);
 				VertxUtils.sendToFrontEnd(userToken, internshipAnswer);
 			}
 		}
