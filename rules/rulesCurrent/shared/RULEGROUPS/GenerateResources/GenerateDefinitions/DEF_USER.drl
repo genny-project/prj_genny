@@ -40,8 +40,8 @@ rule "DEF_USER"
         AttributeText attributeTextFirstName = new AttributeText("PRI_EMAIL", "First Name");
         AttributeText attributeTextLastName = new AttributeText("PRI_LASTNAME", "Last Name");
         AttributeText attributeAddress = new AttributeText("PRI_ADDRESS_FULL", "Last Name");
-        AttributeText attributeAddress = new AttributeText("PRI_USERNAME", "Username");
-        AttributeText attributeAddress = new AttributeText("PRI_UUID", "UUID");
+        AttributeText attributeUsername = new AttributeText("PRI_USERNAME", "Username");
+        AttributeText attributeUUID = new AttributeText("PRI_UUID", "UUID");
 
 		if (project != null) {
          BaseEntity defBE = new BaseEntityDefinition(drools.getRule().getName(),"User","USER")
