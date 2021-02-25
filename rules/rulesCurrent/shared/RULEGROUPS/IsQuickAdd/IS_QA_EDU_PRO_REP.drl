@@ -82,7 +82,7 @@ rule "IS_QA_EDU_PRO_REP"
 				if (email != null) {
 					/*String userPassword = UUID.randomUUID().toString().substring(0,10);*/
 					String userPassword = "password1";
-						String userId = KeycloakUtils.updateUser(userCode,serviceToken.getToken(), serviceToken.getRealm(), email, firstname, lastname,  email, userPassword,"user", "users");
+					String userId = KeycloakUtils.updateUser(userCode,serviceToken.getToken(), serviceToken.getRealm(), email, firstname, lastname,  email, userPassword,"user", "users");
 					userId = userId.toUpperCase();
 					Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),newBe.getCode(),"PRI_UUID",userId);
 					beUtils.saveAnswer(keycloakId);
@@ -92,7 +92,6 @@ rule "IS_QA_EDU_PRO_REP"
 		}
 		
 		String endPoint = GennySettings.projectUrl + "/v7/notes";
-		/*String endPoint = "https://internmatch-cyrus.gada.io/v7/notes";*/
 		
 		String tag = "ni";
 		
@@ -152,12 +151,7 @@ rule "IS_QA_EDU_PRO_REP"
 		
 		
 		output.setTypeOfResult("NONE");
-  		output.setResultCode("NONE");  /* dont display anything new */
-		
-		retract(newBe)
-	
-end
- dont display anything new */
+  		output.setResultCode("NONE");
 		
 		retract(newBe)
 	
