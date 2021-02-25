@@ -30,10 +30,8 @@ rule "HELPER_LNK_EDU_PROVIDER"
 	when
 		beUtils : BaseEntityUtils()
 		answer : Answer( attributeCode == "LNK_EDU_PROVIDER" )
-		ruleDetails : RuleDetails()
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		userToken : GennyToken( code != "PER_SERVICE")
-
 	then
 		System.out.println(drools.getRule().getName() + " fired");
 
@@ -49,10 +47,10 @@ rule "HELPER_LNK_EDU_PROVIDER"
 		String code = beUtils.cleanUpAttributeValue(value);
 		System.out.println("code  :: " + code);
 
-		BaseEntity companyBe = beUtils.getBaseEntityByCode(code);
+		BaseEntity be = beUtils.getBaseEntityByCode(code);
 
-		if(companyBe != null ){
-			String name = companyBe.getValue("PRI_NAME", null);		
+		if(be != null ){
+			String name = be.getValue("PRI_NAME", null);		
 			if(name != null){
 				Answer assocEPAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_EP", name,false,true);
 				beUtils.saveAnswer(assocEPAnswer);
