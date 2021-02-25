@@ -32,7 +32,6 @@ rule "HELPER_LNK_AGENCY"
 	when
 		beUtils : BaseEntityUtils()
 		answer : Answer( attributeCode == "LNK_AGENCY")
-		answersToSave : Answers()
 		ruleDetails : RuleDetails()
 		output : OutputParam( )
 		serviceToken : GennyToken( code == "PER_SERVICE")
