@@ -42,7 +42,7 @@ rule "DEF_PERSON"
         AttributeText attributeAddress = new AttributeText("PRI_ADDRESS_FULL", "Last Name");
 
 		if (project != null) {
-         BaseEntity defBE = new BaseEntityDefinition(drools.getRule().getName(),"Mentee","PER")
+         BaseEntity defBE = new BaseEntityDefinition(drools.getRule().getName(),"Person","PER")
          .mandateAttribute("PRI_DOB")
          .mandateAttribute("PRI_USERNAME")
          .mandateAttribute("PRI_EMAIL");
