@@ -28,8 +28,8 @@ import java.util.ArrayList;
 
 rule "HELPER_LNK_HOST_COMPANY_BEG"
 	ruleflow-group 'DataProcessing'
-			salience 6000
-			no-loop
+	salience 6000
+	no-loop
 	when
 		beUtils : BaseEntityUtils()
 		answer : Answer( attributeCode == "LNK_HOST_COMPANY" && targetCode matches "BEG_.*")
@@ -163,19 +163,14 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		addressData.add(suburbAnswer);
 		addressData.add(cityAnswer);
 		addressData.add(stateAnswer);
-		
 		addressData.add(imageAnswer);
 		addressData.add(latitudeAnswer);
 		addressData.add(longitudeAnswer);
 
 		beUtils.saveAnswers(addressData);
-		/*update(answersToSave);*/
 
 		VertxUtils.sendToFrontEnd(userToken, addressAnswer, assocHcAnswer, imageAnswer, latitudeAnswer, longitudeAnswer);
-			
-		/*retract(answer);*/
 
 		output.setTypeOfResult("NONE");
-		output.setResultCode("NONE");  /* dont display anything new */
-	/*	update(output); */
+		output.setResultCode("NONE");
 end
