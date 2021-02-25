@@ -116,15 +116,16 @@ rule "IS_QA_EDU_PRO_REP"
 		if (rawSendEmail != null) {
 		
 				if (rawSendEmail.equals("SEL_YES")) {
+				
+						String epEmail = newBe.getValue("PRI_EMAIL", null);
+						System.out.println("epEmail = " +epEmail);					
+						
 						BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
 						
-						String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, userCode, serviceToken.getToken());
+						String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, epEmail, serviceToken.getToken());
 						System.out.println("token: " + token);
 						
 				
-						/*String user_email = "hello@outcome.life";*/
-						
-						/*String url = "https://internmatch-dev.gada.io/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9FRFVfUFJPX1JFUA==";*/
 						String url = GennySettings.projectUrl+"/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9FRFVfUFJPX1JFUA==";
 						System.out.println("url: " + url);
 						
@@ -132,15 +133,14 @@ rule "IS_QA_EDU_PRO_REP"
 						url = url +"?token=" + token;
 						System.out.println("url: " + url);
 						
-				
-						/*String user_email = "c.pyke85@gmail.com";*/
+	
 						String subject = "You have been registered on InternMatch";
 						String template_id = "d-b569cb15814e4f34b5a57c760b9f38f8";
-				
-				
-						System.out.println("email: " + email);
+						
 						System.out.println("subject: " + subject);
 						System.out.println("template_id: " + template_id);
+						System.out.println("email: " + epEmail);
+						System.out.println("EduProRep: " + firstname);
 						
 						HashMap<String, String> templateData = new HashMap<String, String>();
 				    	templateData.put("EduProRep", firstname);
