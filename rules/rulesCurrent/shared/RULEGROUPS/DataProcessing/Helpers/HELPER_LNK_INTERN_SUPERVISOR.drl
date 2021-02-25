@@ -83,7 +83,4 @@ rule "HELPER_LNK_INTERN_SUPERVISOR"
 		}
 
 		beUtils.saveAnswers(answers);
-
-		output.setTypeOfResult("NONE");
-		output.setResultCode("NONE"); 
 end
