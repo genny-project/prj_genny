@@ -48,38 +48,22 @@ rule "HELPER_LNK_AGENCY"
 		String targetCode = answer.getTargetCode();
 		System.out.println("targetCode :: " + targetCode);
 		
-		String agencyCode = answer.getValue();
-		System.out.println("agencyCode :: " + agencyCode);
+		String value = answer.getValue();
+		System.out.println("value :: " + value);
 		
-		String code = agencyCode.replace("\"", "").replace("[", "").replace("]", "");
+		String code = beUtils.cleanUpAttributeValue(value);
 		System.out.println("code  :: " + code);
 
-		/* Save the actual LNK_AGENCY answer */
-		answersToSave.add(answer);
-
-		/* get the company baseentity */
 		BaseEntity companyBe = beUtils.getBaseEntityByCode(code);
 		if(companyBe != null){
-
-			/* get the name attribute of the company */
 			String name = companyBe.getValue("PRI_NAME", null);		
-
-			/* save the company's name as PRI_ASSOC_HC attribute for person baseentity */
 			if(name != null){
 				Answer assocHcAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_AGENCY", name);
-				/* answersToSave.add(assocHcAnswer); */
 				beUtils.saveAnswer(assocHcAnswer);
-
 				VertxUtils.sendToFrontEnd(userToken, assocHcAnswer);
-
 			}
-
 		}
 
-		update(answersToSave);
-		retract(answer);
-
 		output.setTypeOfResult("NONE");
-		output.setResultCode("NONE");  /* dont display anything new */
-		update(output);
+		output.setResultCode("NONE");
 end
