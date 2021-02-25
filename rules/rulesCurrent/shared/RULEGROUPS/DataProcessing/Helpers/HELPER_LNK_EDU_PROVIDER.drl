@@ -21,19 +21,16 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.io.UnsupportedEncodingException;
 import life.genny.utils.DropdownUtils;
-
-
 import java.util.List;
 import java.util.ArrayList;
 
 rule "HELPER_LNK_EDU_PROVIDER"
 	ruleflow-group 'DataProcessing'
-			salience 5000
-			no-loop
+	salience 5000
+	no-loop
 	when
 		beUtils : BaseEntityUtils()
 		answer : Answer( attributeCode == "LNK_EDU_PROVIDER" )
-		answersToSave : Answers()
 		ruleDetails : RuleDetails()
 		output : OutputParam( )
 		serviceToken : GennyToken( code == "PER_SERVICE")
@@ -48,38 +45,22 @@ rule "HELPER_LNK_EDU_PROVIDER"
 		String targetCode = answer.getTargetCode();
 		System.out.println("targetCode :: " + targetCode);
 		
-		String eduProviderCode = answer.getValue();
-		System.out.println("eduProviderCode :: " + eduProviderCode);
+		String value = answer.getValue();
+		System.out.println("value :: " + value);
+		
+		String code = beUtils.cleanUpAttributeValue(value);
+		System.out.println("code  :: " + code);
 
-		if(eduProviderCode != null){
+		BaseEntity companyBe = beUtils.getBaseEntityByCode(code);
 
-			String code = eduProviderCode.replace("\"", "").replace("[", "").replace("]", "");
-			System.out.println("code  :: " + code);
-
-			/* Save the actual LNK_EDU_PROVIDER answer */
-			answersToSave.add(answer);
-
-			/* get the company baseentity */
-			BaseEntity companyBe = beUtils.getBaseEntityByCode(code);
-
-			if(companyBe != null ){
-				/* get the name attribute of the company */
-				String name = companyBe.getValue("PRI_NAME", null);		
-
-				if(name != null){
-					/* save the company's name as PRI_ASSOC_EP attribute for application baseentity */
-					Answer assocEPAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_EP", name,false,true);
-					answersToSave.add(assocEPAnswer);
-					
-					VertxUtils.sendToFrontEnd(userToken, assocEPAnswer);
-				}
+		if(companyBe != null ){
+			String name = companyBe.getValue("PRI_NAME", null);		
+			if(name != null){
+				Answer assocEPAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_EP", name,false,true);
+				beUtils.saveAnswer(assocEPAnswer);
+				VertxUtils.sendToFrontEnd(userToken, assocEPAnswer);
 			}
 		}
-		
- 	/*	update(answersToSave);	
-		retract(answer); */
-
 		output.setTypeOfResult("NONE");
-		output.setResultCode("NONE");  /* dont display anything new */
-		/* update(output); */
+		output.setResultCode("NONE");
 end
