@@ -126,11 +126,19 @@ rule "IS_QA_INTERN"
 						HashMap<String, String> templateData = new HashMap<String, String>();
 						templateData.put("intern", firstname);
 						templateData.put("url", url);
-
-						List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
-					
-						EmailHelper.sendGrid(beUtils, email, null, bccList, subject, template_id, templateData);
-						System.out.println("SUCCESS - Email Sent!!");
+						
+						
+						if (!GennySettings.projectUrl.contains("dev")) {
+						
+								List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
+								EmailHelper.sendGrid(beUtils, email, null, bccList, subject, template_id, templateData);
+								
+								System.out.println("Email Sent ||| Type: Intern ||| Subject: " + subject + "||| template_id: " + template_id);
+								
+						} else {
+							System.out.println("WARNING: Email not sent because on Dev server");
+						}
+						
  
 						/* 
  						String mobile = "0433501177";
