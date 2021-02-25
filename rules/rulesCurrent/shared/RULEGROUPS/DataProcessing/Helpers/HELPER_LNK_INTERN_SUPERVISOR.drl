@@ -48,9 +48,9 @@ rule "HELPER_LNK_INTERN_SUPERVISOR"
 		System.out.println("targetCode :: " + targetCode);
 		
 		String value = answer.getValue();
-		System.out.println("hcCode :: " + value);
+		System.out.println("value :: " + value);
 		
-		String code = value.replace("\"", "").replace("[", "").replace("]", "");
+		String code = beUtils.cleanUpAttributeValue(value);
 		System.out.println("code  :: " + code);
 
 		List<Answer> answers = new ArrayList<Answer>();
@@ -91,5 +91,5 @@ rule "HELPER_LNK_INTERN_SUPERVISOR"
 		beUtils.saveAnswers(answers);
 
 		output.setTypeOfResult("NONE");
-		output.setResultCode("NONE");  /* dont display anything new */
+		output.setResultCode("NONE"); 
 end
