@@ -72,7 +72,7 @@ rule "IS_QA_EDU_PRO_REP"
 		String userCode = userSplit[1];
 		System.out.println("User "+user+" with userCode = "+userCode);
 		
-		String email = "stephenie.pulis-cassar@outcomelife.com.au";
+		String email = "";
 		
 		String firstname = user.getValue("PRI_FIRSTNAME",null);
 		if (firstname != null) {
@@ -82,7 +82,7 @@ rule "IS_QA_EDU_PRO_REP"
 				if (email != null) {
 					/*String userPassword = UUID.randomUUID().toString().substring(0,10);*/
 					String userPassword = "password1";
-						String userId = KeycloakUtils.updateUser(userCode,serviceToken.getToken(), serviceToken.getRealm(), email, firstname, lastname,  email, userPassword,"user", "users");
+					String userId = KeycloakUtils.updateUser(userCode,serviceToken.getToken(), serviceToken.getRealm(), email, firstname, lastname,  email, userPassword,"user", "users");
 					userId = userId.toUpperCase();
 					Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),newBe.getCode(),"PRI_UUID",userId);
 					beUtils.saveAnswer(keycloakId);
@@ -92,7 +92,6 @@ rule "IS_QA_EDU_PRO_REP"
 		}
 		
 		String endPoint = GennySettings.projectUrl + "/v7/notes";
-		/*String endPoint = "https://internmatch-cyrus.gada.io/v7/notes";*/
 		
 		String tag = "ni";
 		
@@ -147,12 +146,31 @@ rule "IS_QA_EDU_PRO_REP"
 				    	templateData.put("url", url);
 				
 						EmailHelper.sendGrid(beUtils, email, subject, template_id, templateData);
+						
+						if (!GennySettings.projectUrl.contains("dev")) {
+						
+								List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
+								EmailHelper.sendGrid(beUtils, epEmail, null, bccList, subject, template_id, templateData);
+								
+								System.out.println("Email Sent ||| Type: Intern ||| Subject: " + subject + "||| template_id: " + template_id);
+								
+						} else {
+							System.out.println("WARNING: Email not sent because on Dev server");
+						}
+						
+ 
+						/* 
+ 						String mobile = "0433501177";
+						String smsBody = "You have been recommended for an internship on Internmatch. Login to take a look!";
+						SmsHelper smsHelper = new SmsHelper();
+						smsHelper.deliverSmsMsg(mobile, smsBody);
+						*/
 					}
 		}	
 		
 		
 		output.setTypeOfResult("NONE");
-  		output.setResultCode("NONE");  /* dont display anything new */
+  		output.setResultCode("NONE");
 		
 		retract(newBe)
 	

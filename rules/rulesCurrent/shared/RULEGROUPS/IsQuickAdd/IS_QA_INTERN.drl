@@ -250,5 +250,3 @@ rule "IS_QA_INTERN"
 		retract(newBe)
 	
 end
-
-end
