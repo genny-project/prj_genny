@@ -66,6 +66,8 @@ rule "TREE_ITEM_CLICK_EVENT"
 			long totalTime = TableUtils.searchTable(beUtils,code, cache,null,null,true);
 			System.out.println("total took " + (totalTime) + " ms"); 
 
+			TableUtils.sendFilterQuestions(beUtils, code);
+
 			retract(message);
 			output.setTypeOfResult("NONE");
 			output.setResultCode("NONE");  /* dont display anything new */
