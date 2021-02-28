@@ -96,6 +96,13 @@
 	</repositories>
 
 	<dependencies>
+		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+		<dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>slf4j-api</artifactId>
+		    <version>1.7.5</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>life.genny</groupId>
 			<artifactId>qwanda</artifactId>
