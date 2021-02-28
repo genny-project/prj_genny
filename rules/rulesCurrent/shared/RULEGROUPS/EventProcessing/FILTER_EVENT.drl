@@ -34,6 +34,8 @@ rule "FILTER_EVENT"
 		SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", searchCode, SearchEntity.class,
 				beUtils.getGennyToken().getToken());
 
+		searchBE.removeAttribute(attributeCode)
+
 		System.out.println("Performing search...");
 
 		long totalTime = TableUtils.searchTable(beUtils, searchBE, true);
