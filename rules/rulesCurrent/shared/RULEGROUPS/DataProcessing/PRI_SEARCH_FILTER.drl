@@ -46,7 +46,7 @@ rule "PRI_SEARCH_FILTER"
 			/* Retrieve the target SBE */
 			SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", targetCode, SearchEntity.class,
 				beUtils.getGennyToken().getToken());
-			
+			searchBE.setFilterIndex(searchBE.getMaximumFilterWeight() + 1.0);
 
 			String val = answer.getValue();
 			String filterAttributeCode = answer.getAttributeCode();
