@@ -83,6 +83,7 @@ rule "ROL_AGENT"
    	     capabilityUtils.addCapabilityToRole(role,"DOWNLOAD_OHNS_AGREEMENT_DOC",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"DOWNLOAD_SERVICE_AGREEMENT_DOC",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"EDIT_APPLICATION",CapabilityMode.EDIT);
+   	     capabilityUtils.addCapabilityToRole(role,"DOWNLOAD_HC_TERMS_AND_CONDITIONS_DOC",CapabilityMode.VIEW);
  
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
   	     
