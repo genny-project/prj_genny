@@ -192,6 +192,8 @@ rule "HELPER_SIGNATURE_DATE"
 		
 		HashMap<String, String> templateData = new HashMap<String, String>();
 		
+		String agentEmail = "internmatch@outcomelife.com.au";
+		
 		List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
 		
 		
@@ -207,12 +209,34 @@ rule "HELPER_SIGNATURE_DATE"
 		
 		
 		if (attributeCode.startsWith("PRI_INTERN_")) {
-			/*template_id = "d-64ef4bf7b18a4b65a9c7e02b1b8ce7df";
-			subject = "Important Internship Requirement - Signing the internship agreement";*/
+		
+			String urlParentCode = "SBE_INTERNS_"+userToken.getSessionCode().toUpperCase();
+			String urlCode = "ACT_PRI_EVENT_VIEW";
+			String urlTargetCode = internBE.getCode();
+	
+			/* Encode each section of the url */
+			urlParentCode = new String(Base64.getEncoder().encode(urlParentCode.getBytes()));
+			urlCode = new String(Base64.getEncoder().encode(urlCode.getBytes()));
+			urlTargetCode = new String(Base64.getEncoder().encode(urlTargetCode.getBytes()));
+	
+			url = GennySettings.projectUrl+"/home/"+urlParentCode+"/"+urlCode+"/"+urlTargetCode;
+			System.out.println("url: " + url);
+			
+				
+			template_id = "d-e4a25b335fd3497a98a59edea331aa92";
+			subject = "Intern has not signed their internship agreement (More than 96 hours)";
 			
 			templateData.put("intern", intern);
+			templateData.put("internshipName", internshipName);
+			templateData.put("hostCompanyName", hostCompanyName);
 			templateData.put("url", url);
 			System.out.println("Intern Signature Detected. No email but moving them to placed");
+			
+			if (!GennySettings.projectUrl.contains("dev")) {
+				EmailHelper.sendGrid(beUtils, agentEmail, subject, template_id, templateData);
+			} else {
+				System.out.println("WARNING: Email not sent because on Dev server");
+			}
 		}
 		
 		if (attributeCode.startsWith("PRI_HOST_CPY_REP_")) {
