@@ -1,7 +1,6 @@
 package life.genny.rules;
 
 import life.genny.qwandautils.QwandaUtils;
-
 import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.models.GennyToken;
@@ -21,8 +20,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.io.UnsupportedEncodingException;
 import life.genny.utils.DropdownUtils;
-
-
 import java.util.List;
 import java.util.ArrayList;
 
