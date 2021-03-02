@@ -205,6 +205,8 @@ rule "HELPER_SIGNATURE_DATE"
 		String url = GennySettings.projectUrl+"/home/UVVFX1RBQkxFX1JFU1VMVFNfR1JQ/UVVFX1RBQkxFX0xBWllfTE9BRA==";
 		url = url +"?token=" + token;
 		System.out.println("url: " + url);
+		
+		String internThing = internBE.getCode();
 
 		
 		
@@ -212,7 +214,7 @@ rule "HELPER_SIGNATURE_DATE"
 		
 			String urlParentCode = "SBE_INTERNS_"+userToken.getSessionCode().toUpperCase();
 			String urlCode = "ACT_PRI_EVENT_VIEW";
-			String urlTargetCode = internBE.getCode();
+			String urlTargetCode = internThing;
 	
 			/* Encode each section of the url */
 			urlParentCode = new String(Base64.getEncoder().encode(urlParentCode.getBytes()));
