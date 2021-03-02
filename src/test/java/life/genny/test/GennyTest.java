@@ -327,33 +327,41 @@ public class GennyTest  {
 		searchBE.setPageStart(0);
 		searchBE.setPageSize(100000);
 		List<BaseEntity> items = beUtils.getBaseEntitys(searchBE);
+		boolean useDefault = false;
+		String duration = null;
 		for (BaseEntity item : items) {
+			useDefault = false;
 			Optional<EntityAttribute> ea1= item.findEntityAttribute("PRI_PROGRESS");
-			if (ea1.isEmpty()){
+			if (ea1.isEmpty()) {
 				Optional<EntityAttribute> ea2 = item.findEntityAttribute("PRI_ASSOC_DURATION");
 				if(ea2.isPresent()) {
-					String duration = item.getValue("PRI_ASSOC_DURATION", null);
+					duration = item.getValue("PRI_ASSOC_DURATION", "12");
 					//SEL_DURATION_8_WEEKS
 					if ((duration.startsWith("SEL_DURATION_")) && duration.endsWith("_WEEKS")) {
 						duration = duration.split("_")[2];
 					}
+				} else {
+					duration = "12";
+					useDefault = true;
+				}
+				if (!StringUtils.isBlank(duration)) {
+					JsonObject progress_json = new JsonObject();
+					progress_json.put("completedPercentage", 0);
+					progress_json.put("steps", duration);
+					progress_json.put("completedJournals", 0);
 
-					if (!StringUtils.isBlank(duration)) {
-						JsonObject progress_json = new JsonObject();
-						progress_json.put("completedPercentage", 0);
-						progress_json.put("steps", duration);
-						progress_json.put("completedJournals", 0);
+					String PRI_PROGRESS_JSON = progress_json.toString();
 
-						String PRI_PROGRESS_JSON = progress_json.toString();
-						System.out.println(item.getCode()+", duration:"+ duration + ", PRI_PROGRESS_JSON="+PRI_PROGRESS_JSON);
+					if (useDefault)
+						System.out.println(item.getCode() + " doesn't have PRI_ASSOC_DURATION, use default value:12");
 
-						Answer fixedAddress = new Answer(userToken.getUserCode(),item.getCode(),
-						"PRI_PROGRESS", PRI_PROGRESS_JSON,false,true);
-						beUtils.saveAnswer(fixedAddress);
-					}
+					System.out.println(item.getCode() + ", duration:"+ duration + ", PRI_PROGRESS_JSON="+PRI_PROGRESS_JSON);
+
+					Answer fixedAddress = new Answer(userToken.getUserCode(),item.getCode(),
+							"PRI_PROGRESS", PRI_PROGRESS_JSON,false,true);
+					beUtils.saveAnswer(fixedAddress);
 				}
 			}
-
 		}
 	}
 
