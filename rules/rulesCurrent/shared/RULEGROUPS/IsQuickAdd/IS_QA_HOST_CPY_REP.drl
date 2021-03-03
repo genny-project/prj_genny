@@ -158,11 +158,13 @@ rule "IS_QA_HOST_CPY_REP"
 						System.out.println("url: " + url);
 						
 				
-						/*String user_email = "c.pyke85@gmail.com";*/
+						String superEmail = "spc@outcome.life ";
+						System.out.println("superEmail: " +superEmail);
+						
 						String subject = "You have been registered on InternMatch";
 						String template_id = "d-6c43211b9b934cb6abaceea171f32e09";
 				
-						System.out.println("email: " + email);
+						System.out.println("email: " + superEmail);
 						System.out.println("subject: " + subject);
 						System.out.println("template_id: " + template_id);
 						
@@ -171,7 +173,7 @@ rule "IS_QA_HOST_CPY_REP"
 				    	templateData.put("HostCompanyRep", firstname);
 				    	templateData.put("url", url);
 				
-						EmailHelper.sendGrid(beUtils, email, subject, template_id, templateData);
+						EmailHelper.sendGrid(beUtils, superEmail, subject, template_id, templateData);
 				}
 		}
 		
