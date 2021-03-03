@@ -106,8 +106,8 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		if(targetBe != null){
 			String rep = targetBe.getValue("LNK_HOST_COMPANY_REP", null);
 			if(rep != null){
-				Answer repAnswer = new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", "[null]",false,true);
-				Answer assocHcrAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HCR", "",false,true);
+				Answer repAnswer = new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", null,false,true);
+				Answer assocHcrAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HCR", null,false,true);
 				beUtils.removeEntityAttribute(targetBe,"LNK_HOST_COMPANY_REP");
 				beUtils.removeEntityAttribute(targetBe,"PRI_ASSOC_HCR");
 				VertxUtils.sendToFrontEnd(userToken, repAnswer, assocHcrAnswer);
