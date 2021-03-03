@@ -69,23 +69,23 @@ rule "HELPER_LNK_OCCUPATION_BEG"
 					if(specificOutcomes!=null) specificOutcomesList.add(specificOutcomes);		
 				}
 			}
+		
+			String roles = beUtils.cleanUpAttributeValue(rolesList.toString());
+			String baseOutcomes = beUtils.cleanUpAttributeValue(baseOutcomesList.toString());
+			String specificOutcomes = beUtils.cleanUpAttributeValue(specificOutcomesList.toString());
+
+			Answer assocOccupationAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_OCCUPATION", occupations, false, true);
+			Answer rolesAnswer = new Answer(sourceCode, targetCode, "PRI_ROLES_AND_RESPONSIBILITIES", roles, false, true);
+			Answer baseOutcomesAnswer = new Answer(sourceCode, targetCode, "PRI_BASE_LEARNING_OUTCOMES", baseOutcomes, false, true);
+			Answer specificOutcomesAnswer = new Answer(sourceCode, targetCode, "PRI_SPECIFIC_LEARNING_OUTCOMES", specificOutcomes, false, true);
+			
+			List<Answer> answers = new ArrayList<Answer>();
+			answers.add(assocOccupationAnswer);
+			answers.add(rolesAnswer);
+			answers.add(baseOutcomesAnswer);
+			answers.add(specificOutcomesAnswer);
+			beUtils.saveAnswers(answers);
+
+			VertxUtils.sendToFrontEnd(userToken, assocOccupationAnswer, rolesAnswer, baseOutcomesAnswer, specificOutcomesAnswer);
 		}
-		
-		String roles = beUtils.cleanUpAttributeValue(rolesList.toString());
-		String baseOutcomes = beUtils.cleanUpAttributeValue(baseOutcomesList.toString());
-		String specificOutcomes = beUtils.cleanUpAttributeValue(specificOutcomesList.toString());
-
-		Answer assocOccupationAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_OCCUPATION", occupations, false, true);
-		Answer rolesAnswer = new Answer(sourceCode, targetCode, "PRI_ROLES_AND_RESPONSIBILITIES", roles, false, true);
-		Answer baseOutcomesAnswer = new Answer(sourceCode, targetCode, "PRI_BASE_LEARNING_OUTCOMES", baseOutcomes, false, true);
-		Answer specificOutcomesAnswer = new Answer(sourceCode, targetCode, "PRI_SPECIFIC_LEARNING_OUTCOMES", specificOutcomes, false, true);
-		
-		List<Answer> answers = new ArrayList<Answer>();
-		answers.add(assocOccupationAnswer);
-		answers.add(rolesAnswer);
-		answers.add(baseOutcomesAnswer);
-		answers.add(specificOutcomesAnswer);
-		beUtils.saveAnswers(answers);
-
-		VertxUtils.sendToFrontEnd(userToken, assocOccupationAnswer, rolesAnswer, baseOutcomesAnswer, specificOutcomesAnswer);
 end
