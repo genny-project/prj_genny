@@ -45,41 +45,33 @@ rule "HELPER_LNK_SOFTWARE"
 		String targetCode = answer.getTargetCode();
 		System.out.println("targetCode :: " + targetCode);
 		
-		String assocBeCode = answer.getValue();
-		System.out.println("assocBeCode :: " + assocBeCode);
-
-		/* list to store softwareList */
-		List<String> softwareList = new ArrayList<>();
+		String value = answer.getValue();
+		System.out.println("value :: " + value);
 		
-		if(assocBeCode != null){
+		if(value != null){
 
-			String code = assocBeCode.replace("\"", "").replace("[", "").replace("]", "");
-			System.out.println("code  :: " + code);
-
-			for (String softwareCode : code.split(",")) {
+			/* list to store softwares */
+			List<String> softwareList = new ArrayList<>();
+			String codes = beUtils.cleanUpAttributeValue(value);
 			
-				System.out.println("softwareCode :: " + softwareCode);
-
-				/* get the associatedBe */
-				BaseEntity associatedBe = beUtils.getBaseEntityByCode(softwareCode);
-
-				/* get the name attribute of the associatedBe */
-				String name = associatedBe.getValue("PRI_NAME", null);		
-				softwareList.add(name);
-
+			for (String code : codes.split(",")) {
+				BaseEntity be = beUtils.getBaseEntityByCode(code);
+				if(be != null){
+					String name = be.getValue("PRI_NAME", null);		
+					softwareList.add(name);
+				}
 			}
 
-			String softwares = softwareList.toString().replaceAll("[\\[\\](){}]","");
-			
-			String saveAttribute = "PRI_SOFTWARE";
+			String softwares = beUtils.cleanUpAttributeValue(softwareList.toString());
+			String attributeCode = "PRI_SOFTWARE";
 
 			if (answer.getAttributeCode().equals("LNK_CURRENT_SOFTWARE")) {
-				saveAttribute = "PRI_ASSOC_CURRENT_SOFTWARE";
+				attributeCode = "PRI_ASSOC_CURRENT_SOFTWARE";
 			} else if (answer.getAttributeCode().equals("LNK_FUTURE_SOFTWARE")) {
-				saveAttribute = "PRI_ASSOC_FUTURE_SOFTWARE";
+				attributeCode = "PRI_ASSOC_FUTURE_SOFTWARE";
 			}
 
-			Answer softwaresAnswer = new Answer(sourceCode, targetCode, saveAttribute, softwares,false,true);
+			Answer softwaresAnswer = new Answer(sourceCode, targetCode, attributeCode, softwares,false,true);
 			beUtils.saveAnswer(softwaresAnswer);
 			VertxUtils.sendToFrontEnd(userToken, softwaresAnswer);
 		}
