@@ -80,7 +80,7 @@ rule "HELPER_LNK_OCCUPATION_BEG"
 		Answer baseOutcomesAnswer = new Answer(sourceCode, targetCode, "PRI_BASE_LEARNING_OUTCOMES", baseOutcomes, false, true);
 		Answer specificOutcomesAnswer = new Answer(sourceCode, targetCode, "PRI_SPECIFIC_LEARNING_OUTCOMES", specificOutcomes, false, true);
 		
-		List<Answer> answers = new ArrayList<>();
+		List<Answer> answers = new ArrayList<Answer>();
 		answers.add(assocOccupationAnswer);
 		answers.add(rolesAnswer);
 		answers.add(baseOutcomesAnswer);
