@@ -132,6 +132,9 @@ rule "HELPER_SIGNATURE_DATE"
 		String internEmail = internBe.getValue("PRI_EMAIL",null);
 		System.out.println("internEmail: " +internEmail);
 		
+		String internMobile = internBe.getValue("PRI_MOBILE",null);
+		System.out.println("internMobile: " +internMobile);
+		
 		
 		String supervisor = targetBe.getValue("LNK_INTERN_SUPERVISOR",null);
 		supervisor = supervisor.replace("\"", "").replace("[", "").replace("]", "");
@@ -210,12 +213,12 @@ rule "HELPER_SIGNATURE_DATE"
 		
 		
 		if (attributeCode.startsWith("PRI_INTERN_")) {
-		
+			
+			/*
 			String urlParentCode = "SBE_INTERNS_"+userToken.getSessionCode().toUpperCase();
 			String urlCode = "ACT_PRI_EVENT_VIEW";
 			String urlTargetCode = internCode;
 	
-			/* Encode each section of the url */
 			urlParentCode = new String(Base64.getEncoder().encode(urlParentCode.getBytes()));
 			urlCode = new String(Base64.getEncoder().encode(urlCode.getBytes()));
 			urlTargetCode = new String(Base64.getEncoder().encode(urlTargetCode.getBytes()));
@@ -238,6 +241,7 @@ rule "HELPER_SIGNATURE_DATE"
 			} else {
 				System.out.println("WARNING: Email not sent because on Dev server");
 			}
+			*/
 		}
 		
 		if (attributeCode.startsWith("PRI_HOST_CPY_REP_")) {
@@ -256,6 +260,22 @@ rule "HELPER_SIGNATURE_DATE"
 			}
 			
 			System.out.println("HCR Signature Detected. Sending email to Intern to remind signature");
+			
+			if (!GennySettings.projectUrl.contains("dev")) {
+				EmailHelper.sendGrid(beUtils, supervisorEmail, null, bccList, subject, template_id, templateData);
+			
+				if (internMobile != null) {   
+					System.out.println("internMobile: " +internMobile);
+					
+					System.out.println("Inside SMS");        
+		            String smsBody = "Hi " + firstname + " - You are required to sign your Internship Agreement. Click the link below to digitally sign the document. Without signing your internship cannot move forward. https://internmatch-interns.gada.io";
+		            SmsHelper smsHelper = new SmsHelper();
+			    	smsHelper.deliverSmsMsg(internMobile, smsBody);
+		            System.out.println("SMS Sent!!");
+	        	}
+        	} else {
+				System.out.println("WARNING: Sms not sent because on Dev server");
+			}
 		}
 		
 		if (attributeCode.startsWith("PRI_OUTCOME_")) {
