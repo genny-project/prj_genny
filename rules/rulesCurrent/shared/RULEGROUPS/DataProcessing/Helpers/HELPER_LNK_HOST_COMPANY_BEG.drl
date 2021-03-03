@@ -42,16 +42,13 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		String targetCode = answer.getTargetCode();
 		System.out.println("targetCode :: " + targetCode);
 		
-		String hostCompanyCode = answer.getValue();
-		System.out.println("hostCompanyCode :: " + hostCompanyCode);
+		String value = answer.getValue();
+		System.out.println("value :: " + value);
 		
-		String code = hostCompanyCode.replace("\"", "").replace("[", "").replace("]", "");
+		String code = beUtils.cleanUpAttributeValue(value);
 		System.out.println("code  :: " + code);
 
-		/* get the company baseentity */
 		BaseEntity companyBe = beUtils.getBaseEntityByCode(code);
-		
-		System.out.println("Before dropwdown");
 		
 		/* dropdown search here For companyRep */
 		DropdownUtils dropdown = new DropdownUtils(serviceToken);
@@ -59,110 +56,78 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 											.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
 											.addFilter("PRI_IS_HOST_CPY_REP", true)
 											.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "ACTIVE")
-											.addFilter("LNK_HOST_COMPANY", SearchEntity.StringFilter.EQUAL, hostCompanyCode)
+											.addFilter("LNK_HOST_COMPANY", SearchEntity.StringFilter.EQUAL, value)
 											.setPageStart(0)
 											.setPageSize(1000);
 
 		/* Send the dropdown options */
 		dropdown.sendSearchResults("GRP_HOST_COMPANY_REP_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
 
-		/* get the name attribute of the company */
+		List<Answer> answers = new ArrayList<Answer>();
+
 		String name = companyBe.getValue("PRI_NAME", null);
-		System.out.println("name  :: " + name);	
-		
-		String address = companyBe.getValue("PRI_ADDRESS_FULL", null);
-		System.out.println("address  :: " + address);
-			
-		String country = companyBe.getValue("PRI_ADDRESS_COUNTRY", null);
-		System.out.println("country  :: " + country);
-			
-		String postcode = companyBe.getValue("PRI_ADDRESS_POSTCODE", null);	
-		System.out.println("postcode  :: " + postcode);
-		
-		String suburb = companyBe.getValue("PRI_ADDRESS_SUBURB", null);
-		System.out.println("suburb  :: " + suburb);
-			
-		String city = companyBe.getValue("PRI_ADDRESS_CITY", null);	
-		System.out.println("city  :: " + city);	
-		
-		String state = companyBe.getValue("PRI_ADDRESS_STATE", null);
-		System.out.println("state  :: " + state);
+		Answer assocHcAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HC", name, false, true);
+		answers.add(assocHcAnswer);
 
 		String cpyImage = companyBe.getValue("PRI_IMAGE_URL",null);
-		System.out.println("cpyImage  :: " + cpyImage);
+		Answer imageAnswer = new Answer(sourceCode, targetCode, "PRI_IMAGE_URL", cpyImage, false, true);
+		answers.add(imageAnswer);
 
 		Double latitude = companyBe.getValue("PRI_ADDRESS_LATITUDE",null);
-		System.out.println("latitude  :: " + latitude);
+		Answer latitudeAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_LATITUDE", latitude, false, true);
+		answers.add(latitudeAnswer);
 		
 		Double longitude = companyBe.getValue("PRI_ADDRESS_LONGITUDE",null);
-		System.out.println("longitude  :: " + longitude);
-
-
-			
-		System.out.println("company address :: " + address);
-		
-
-		Answer assocHcAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HC", name, false, true);
-		System.out.println("assocHcAnswer");
-		Answer addressAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", address, false, true);
-		System.out.println("addressAnswer");
-		Answer countryAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_COUNTRY", country, false, true);
-		System.out.println("countryAnswer");
-		Answer postcodeAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_POSTCODE", postcode, false, true);
-		System.out.println("postcodeAnswer");
-		Answer suburbAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_SUBURB", suburb, false, true);
-		System.out.println("suburbAnswer");
-		Answer cityAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_CITY", city, false, true);
-		System.out.println("cityAnswer");
-		Answer stateAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", state, false, true);
-		System.out.println("stateAnswer");
-		Answer imageAnswer = new Answer(sourceCode, targetCode, "PRI_IMAGE_URL", cpyImage, false, true);
-		System.out.println("imageAnswer");
-		
-		Answer latitudeAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_LATITUDE", latitude, false, true);
-		System.out.println("latitudeAnswer");
 		Answer longitudeAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_LONGITUDE", longitude, false, true);
-		System.out.println("longitudeAnswer");
+		answers.add(longitudeAnswer);
 
-		List<Answer> addressData = new ArrayList<Answer>();
-		/* TODO: Answer should support null  */
+		String address = companyBe.getValue("PRI_ADDRESS_FULL", null);
+		Answer addressAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", address, false, true);
+		answers.add(addressAnswer);
+
+		VertxUtils.sendToFrontEnd(userToken, assocHcAnswer, imageAnswer, latitudeAnswer, longitudeAnswer, addressAnswer);
+			
+		String country = companyBe.getValue("PRI_ADDRESS_COUNTRY", null);
+		if(country != null) answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_COUNTRY", country, false, true));
+			
+		String postcode = companyBe.getValue("PRI_ADDRESS_POSTCODE", null);	
+		if(postcode != null) answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_POSTCODE", postcode, false, true));
+		
+		String suburb = companyBe.getValue("PRI_ADDRESS_SUBURB", null);
+		if(suburb != null) answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_SUBURB", suburb, false, true));
+			
+		String city = companyBe.getValue("PRI_ADDRESS_CITY", null);	
+		if(city != null) answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_CITY", city, false, true));
+		
+		String state = companyBe.getValue("PRI_ADDRESS_STATE", null);
+		if(state != null) answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", state, false, true));
+
 		BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
 		if(targetBe != null){
 			String rep = targetBe.getValue("LNK_HOST_COMPANY_REP", null);
 			if(rep != null){
 				Answer repAnswer = new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", "[null]",false,true);
-				beUtils.saveAnswer(repAnswer);
-				VertxUtils.sendToFrontEnd(userToken, repAnswer);
-
-				addressData.add(new Answer(sourceCode, targetCode, "PRI_ASSOC_HCR", "[null]",false,true));
+				Answer assocHcrAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HCR", "[null]",false,true);
+				answers.add(repAnswer);
+				answers.add(assocHcrAnswer);
+				VertxUtils.sendToFrontEnd(userToken, repAnswer, assocHcrAnswer);
 			}
 
 			String internSupervisor = targetBe.getValue("LNK_INTERN_SUPERVISOR", null);
 			if(internSupervisor != null){
 				Answer supervisorAnswer = new Answer(sourceCode, targetCode, "LNK_INTERN_SUPERVISOR", "[null]",false,true);
-				beUtils.saveAnswer(supervisorAnswer);
-				VertxUtils.sendToFrontEnd(userToken, supervisorAnswer);
-				
-				addressData.add(new Answer(sourceCode, targetCode, "PRI_ASSOC_SUPERVISOR", "[null]",false,true));
-				addressData.add(new Answer(sourceCode, targetCode, "PRI_SUPER_NAME", "[null]",false,true));
-				addressData.add(new Answer(sourceCode, targetCode, "PRI_SUPER_MOBILE", "[null]",false,true));
-				addressData.add(new Answer(sourceCode, targetCode, "PRI_SUPER_EMAIL", "[null]",false,true));
+				Answer assocSupervisorAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_SUPERVISOR", "[null]",false,true);
+				Answer assocSupervisorNameAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_NAME", "[null]",false,true);
+				Answer assocSupervisorMobileAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_MOBILE", "[null]",false,true);
+				Answer assocSupervisorEmailAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_EMAIL", "[null]",false,true);
+				answers.add(supervisorAnswer);
+				answers.add(assocSupervisorAnswer);
+				answers.add(assocSupervisorNameAnswer);
+				answers.add(assocSupervisorMobileAnswer);
+				answers.add(assocSupervisorEmailAnswer);
+				VertxUtils.sendToFrontEnd(userToken, supervisorAnswer, assocSupervisorAnswer, assocSupervisorNameAnswer, assocSupervisorMobileAnswer, assocSupervisorEmailAnswer);
 			}
 		}
 
-		addressData.add(answer);
-		addressData.add(assocHcAnswer);
-		addressData.add(addressAnswer);
-		addressData.add(countryAnswer);
-		addressData.add(postcodeAnswer);
-		addressData.add(suburbAnswer);
-		addressData.add(cityAnswer);
-		addressData.add(stateAnswer);
-		addressData.add(imageAnswer);
-		addressData.add(latitudeAnswer);
-		addressData.add(longitudeAnswer);
-
-		beUtils.saveAnswers(addressData);
-
-		VertxUtils.sendToFrontEnd(userToken, addressAnswer, assocHcAnswer, imageAnswer, latitudeAnswer, longitudeAnswer);
+		beUtils.saveAnswers(answers);
 end
