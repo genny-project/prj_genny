@@ -286,7 +286,7 @@
         <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
         <bpmn2:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% START Create Quick Add Entity WORKFLOW %%%%%%%%%%%%%%%%%%%&quot;);
-System.out.println(&quot;WORKFLOW CHANGE - JIAN MAGIC&quot;);
+System.out.println(&quot;WORKFLOW CHANGE - JIAN MAGIC ready to go&quot;);
 
 /* Gather Session Facts and Tokens */
 	SessionFacts sessionFacts2 = (SessionFacts)sessionFacts;
