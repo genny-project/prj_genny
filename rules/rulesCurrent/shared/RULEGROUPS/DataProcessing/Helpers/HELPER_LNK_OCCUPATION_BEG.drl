@@ -71,7 +71,6 @@ rule "HELPER_LNK_OCCUPATION_BEG"
 			}
 		}
 		
-		String occupations = beUtils.cleanUpAttributeValue(occupationList.toString());
 		String roles = beUtils.cleanUpAttributeValue(rolesList.toString());
 		String baseOutcomes = beUtils.cleanUpAttributeValue(baseOutcomesList.toString());
 		String specificOutcomes = beUtils.cleanUpAttributeValue(specificOutcomesList.toString());
@@ -88,7 +87,5 @@ rule "HELPER_LNK_OCCUPATION_BEG"
 		answers.add(specificOutcomesAnswer);
 		beUtils.saveAnswers(answers);
 
-		/* send any number of answers to FE for real update */
 		VertxUtils.sendToFrontEnd(userToken, assocOccupationAnswer, rolesAnswer, baseOutcomesAnswer, specificOutcomesAnswer);
-
 end
