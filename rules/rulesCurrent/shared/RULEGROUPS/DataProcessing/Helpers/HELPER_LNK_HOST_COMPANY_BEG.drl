@@ -108,8 +108,8 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 			if(rep != null){
 				Answer repAnswer = new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", "[null]",false,true);
 				Answer assocHcrAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HCR", "",false,true);
-				answers.add(repAnswer);
-				answers.add(assocHcrAnswer);
+				beUtils.removeEntityAttribute(targetBe,"LNK_HOST_COMPANY_REP");
+				beUtils.removeEntityAttribute(targetBe,"PRI_ASSOC_HCR");
 				VertxUtils.sendToFrontEnd(userToken, repAnswer, assocHcrAnswer);
 			}
 
@@ -120,11 +120,8 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 				Answer assocSupervisorNameAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_NAME", "",false,true);
 				Answer assocSupervisorMobileAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_MOBILE", "",false,true);
 				Answer assocSupervisorEmailAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_EMAIL", "",false,true);
-				answers.add(supervisorAnswer);
-				/* answers.add(assocSupervisorAnswer);
-				answers.add(assocSupervisorNameAnswer);
-				answers.add(assocSupervisorMobileAnswer);
-				answers.add(assocSupervisorEmailAnswer); */
+
+				beUtils.removeEntityAttribute(targetBe,"LNK_INTERN_SUPERVISOR");
 				beUtils.removeEntityAttribute(targetBe,"PRI_ASSOC_SUPERVISOR");
 				beUtils.removeEntityAttribute(targetBe,"PRI_SUPER_NAME");
 				beUtils.removeEntityAttribute(targetBe,"PRI_SUPER_MOBILE");

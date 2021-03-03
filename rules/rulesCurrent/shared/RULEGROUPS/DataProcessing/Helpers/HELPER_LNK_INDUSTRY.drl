@@ -68,14 +68,12 @@ rule "HELPER_LNK_INDUSTRY"
 				Answer baseOutcomesAnswer = new Answer(sourceCode, targetCode, "PRI_BASE_LEARNING_OUTCOMES", "", false, true);
 				Answer specificOutcomesAnswer = new Answer(sourceCode, targetCode, "PRI_SPECIFIC_LEARNING_OUTCOMES", "", false, true);
 				
-				List<Answer> answers = new ArrayList<Answer>();
-				answers.add(occupationAnswer);
-				answers.add(assocOccupationAnswer);
-				answers.add(rolesAnswer);
-				answers.add(baseOutcomesAnswer);
-				answers.add(specificOutcomesAnswer);
-				
-				beUtils.saveAnswers(answers);
+				beUtils.removeEntityAttribute(targetBe,"LNK_OCCUPATION");
+				beUtils.removeEntityAttribute(targetBe,"PRI_ASSOC_OCCUPATION");
+				beUtils.removeEntityAttribute(targetBe,"PRI_ROLES_AND_RESPONSIBILITIES");
+				beUtils.removeEntityAttribute(targetBe,"PRI_BASE_LEARNING_OUTCOMES");
+				beUtils.removeEntityAttribute(targetBe,"PRI_SPECIFIC_LEARNING_OUTCOMES");
+
 				VertxUtils.sendToFrontEnd(userToken, occupationAnswer, assocOccupationAnswer, rolesAnswer, baseOutcomesAnswer, specificOutcomesAnswer);
 			}
 		}
