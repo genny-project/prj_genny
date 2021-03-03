@@ -44,7 +44,7 @@ rule "IS_QA_INTERN"
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "PENDING"));
 
 		
-		
+		System.out.println("HOLY FUCKING SHIT I JUST RESTARTED WITH NO DOWNTIME");
 		
 		/* Set up in Keycloak */
 		
