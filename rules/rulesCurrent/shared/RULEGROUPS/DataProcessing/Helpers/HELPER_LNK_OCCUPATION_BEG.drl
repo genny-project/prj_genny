@@ -70,6 +70,7 @@ rule "HELPER_LNK_OCCUPATION_BEG"
 				}
 			}
 		
+			String occupations = beUtils.cleanUpAttributeValue(occupationList.toString());
 			String roles = beUtils.cleanUpAttributeValue(rolesList.toString());
 			String baseOutcomes = beUtils.cleanUpAttributeValue(baseOutcomesList.toString());
 			String specificOutcomes = beUtils.cleanUpAttributeValue(specificOutcomesList.toString());
