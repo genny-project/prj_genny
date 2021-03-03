@@ -125,10 +125,10 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 				answers.add(assocSupervisorNameAnswer);
 				answers.add(assocSupervisorMobileAnswer);
 				answers.add(assocSupervisorEmailAnswer); */
-				beUtils.removeEntityAttribute(targetCode,"PRI_ASSOC_SUPERVISOR");
-				beUtils.removeEntityAttribute(targetCode,"PRI_SUPER_NAME");
-				beUtils.removeEntityAttribute(targetCode,"PRI_SUPER_MOBILE");
-				beUtils.removeEntityAttribute(targetCode,"PRI_SUPER_EMAIL");
+				beUtils.removeEntityAttribute(targetBe,"PRI_ASSOC_SUPERVISOR");
+				beUtils.removeEntityAttribute(targetBe,"PRI_SUPER_NAME");
+				beUtils.removeEntityAttribute(targetBe,"PRI_SUPER_MOBILE");
+				beUtils.removeEntityAttribute(targetBe,"PRI_SUPER_EMAIL");
 				VertxUtils.sendToFrontEnd(userToken, supervisorAnswer, assocSupervisorAnswer, assocSupervisorNameAnswer, assocSupervisorMobileAnswer, assocSupervisorEmailAnswer);
 			}
 		}
