@@ -268,7 +268,7 @@ rule "HELPER_SIGNATURE_DATE"
 					System.out.println("internMobile: " +internMobile);
 					
 					System.out.println("Inside SMS");        
-		            String smsBody = "Hi " + firstname + " - You are required to sign your Internship Agreement. Click the link below to digitally sign the document. Without signing your internship cannot move forward. https://internmatch-interns.gada.io";
+		            String smsBody = "Hi " + intern + " - You are required to sign your Internship Agreement. Click the link below to digitally sign the document. Without signing your internship cannot move forward. https://internmatch-interns.gada.io";
 		            SmsHelper smsHelper = new SmsHelper();
 			    	smsHelper.deliverSmsMsg(internMobile, smsBody);
 		            System.out.println("SMS Sent!!");
