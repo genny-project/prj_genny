@@ -57,15 +57,23 @@ rule "HELPER_LNK_INDUSTRY"
 			}
 		}
 
+		List<Answer> answers = new ArrayList<Answer>();
+
 		BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
 		if(targetBe != null){
 			String occupation = targetBe.getValue("LNK_OCCUPATION", null);
 			if(occupation != null){
-				Answer occupationAnswer = new Answer(sourceCode, targetCode, "LNK_OCCUPATION", "[null]",false,true);
+				Answer occupationAnswer = new Answer(sourceCode, targetCode, "LNK_OCCUPATION", "[null]", false, true);
 				beUtils.saveAnswer(occupationAnswer);
 				VertxUtils.sendToFrontEnd(userToken, occupationAnswer);
+
+				answers.add(new Answer(sourceCode, targetCode, "PRI_ASSOC_OCCUPATION", "[null]", false, true));
+				answers.add(new Answer(sourceCode, targetCode, "PRI_ROLES_AND_RESPONSIBILITIES", "[null]", false, true));
+				answers.add(new Answer(sourceCode, targetCode, "PRI_BASE_LEARNING_OUTCOMES", "[null]", false, true));
+				answers.add(new Answer(sourceCode, targetCode, "PRI_SPECIFIC_LEARNING_OUTCOMES", "[null]", false, true));
 			}
 		}
+		beUtils.saveAnswers(answers);
 
 		/* dropdown search here */
 		DropdownUtils dropdown = new DropdownUtils(serviceToken);
@@ -78,3 +86,7 @@ rule "HELPER_LNK_INDUSTRY"
 		/* Send the dropdown options */
 		dropdown.sendSearchResults("GRP_OCCUPATION_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
 end
+
+
+
+
