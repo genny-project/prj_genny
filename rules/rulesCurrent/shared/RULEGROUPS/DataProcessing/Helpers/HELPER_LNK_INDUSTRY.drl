@@ -63,10 +63,10 @@ rule "HELPER_LNK_INDUSTRY"
 			String occupation = targetBe.getValue("LNK_OCCUPATION", null);
 			if(occupation != null){
 				Answer occupationAnswer = new Answer(sourceCode, targetCode, "LNK_OCCUPATION", "[null]", false, true);
-				Answer assocOccupationAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_OCCUPATION", "[null]", false, true);
-				Answer rolesAnswer = new Answer(sourceCode, targetCode, "PRI_ROLES_AND_RESPONSIBILITIES", "[null]", false, true);
-				Answer baseOutcomesAnswer = new Answer(sourceCode, targetCode, "PRI_BASE_LEARNING_OUTCOMES", "[null]", false, true);
-				Answer specificOutcomesAnswer = new Answer(sourceCode, targetCode, "PRI_SPECIFIC_LEARNING_OUTCOMES", "[null]", false, true);
+				Answer assocOccupationAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_OCCUPATION", "", false, true);
+				Answer rolesAnswer = new Answer(sourceCode, targetCode, "PRI_ROLES_AND_RESPONSIBILITIES", "", false, true);
+				Answer baseOutcomesAnswer = new Answer(sourceCode, targetCode, "PRI_BASE_LEARNING_OUTCOMES", "", false, true);
+				Answer specificOutcomesAnswer = new Answer(sourceCode, targetCode, "PRI_SPECIFIC_LEARNING_OUTCOMES", "", false, true);
 				
 				List<Answer> answers = new ArrayList<Answer>();
 				answers.add(occupationAnswer);

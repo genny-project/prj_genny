@@ -107,7 +107,7 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 			String rep = targetBe.getValue("LNK_HOST_COMPANY_REP", null);
 			if(rep != null){
 				Answer repAnswer = new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", "[null]",false,true);
-				Answer assocHcrAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HCR", "[null]",false,true);
+				Answer assocHcrAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HCR", "",false,true);
 				answers.add(repAnswer);
 				answers.add(assocHcrAnswer);
 				VertxUtils.sendToFrontEnd(userToken, repAnswer, assocHcrAnswer);
@@ -116,10 +116,10 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 			String internSupervisor = targetBe.getValue("LNK_INTERN_SUPERVISOR", null);
 			if(internSupervisor != null){
 				Answer supervisorAnswer = new Answer(sourceCode, targetCode, "LNK_INTERN_SUPERVISOR", "[null]",false,true);
-				Answer assocSupervisorAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_SUPERVISOR", "[null]",false,true);
-				Answer assocSupervisorNameAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_NAME", "[null]",false,true);
-				Answer assocSupervisorMobileAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_MOBILE", "[null]",false,true);
-				Answer assocSupervisorEmailAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_EMAIL", "[null]",false,true);
+				Answer assocSupervisorAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_SUPERVISOR", "",false,true);
+				Answer assocSupervisorNameAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_NAME", "",false,true);
+				Answer assocSupervisorMobileAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_MOBILE", "",false,true);
+				Answer assocSupervisorEmailAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_EMAIL", "",false,true);
 				answers.add(supervisorAnswer);
 				answers.add(assocSupervisorAnswer);
 				answers.add(assocSupervisorNameAnswer);
