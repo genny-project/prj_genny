@@ -58,7 +58,7 @@ rule "HELPER_LNK_SOFTWARE"
 				BaseEntity be = beUtils.getBaseEntityByCode(code);
 				if(be != null){
 					String name = be.getValue("PRI_NAME", null);		
-					softwareList.add(name);
+					if(name != null) softwareList.add(name);
 				}
 			}
 
