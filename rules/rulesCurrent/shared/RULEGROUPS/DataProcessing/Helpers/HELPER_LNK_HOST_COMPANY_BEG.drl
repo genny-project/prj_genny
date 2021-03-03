@@ -121,10 +121,14 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 				Answer assocSupervisorMobileAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_MOBILE", "",false,true);
 				Answer assocSupervisorEmailAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_EMAIL", "",false,true);
 				answers.add(supervisorAnswer);
-				answers.add(assocSupervisorAnswer);
+				/* answers.add(assocSupervisorAnswer);
 				answers.add(assocSupervisorNameAnswer);
 				answers.add(assocSupervisorMobileAnswer);
-				answers.add(assocSupervisorEmailAnswer);
+				answers.add(assocSupervisorEmailAnswer); */
+				beUtils.removeEntityAttribute(targetCode,"PRI_ASSOC_SUPERVISOR");
+				beUtils.removeEntityAttribute(targetCode,"PRI_SUPER_NAME");
+				beUtils.removeEntityAttribute(targetCode,"PRI_SUPER_MOBILE");
+				beUtils.removeEntityAttribute(targetCode,"PRI_SUPER_EMAIL");
 				VertxUtils.sendToFrontEnd(userToken, supervisorAnswer, assocSupervisorAnswer, assocSupervisorNameAnswer, assocSupervisorMobileAnswer, assocSupervisorEmailAnswer);
 			}
 		}
