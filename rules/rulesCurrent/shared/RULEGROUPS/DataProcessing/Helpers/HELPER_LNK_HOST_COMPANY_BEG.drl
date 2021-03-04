@@ -106,7 +106,7 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		if(targetBe != null){
 			String rep = targetBe.getValue("LNK_HOST_COMPANY_REP", null);
 			if(rep != null){
-				Answer repAnswer = new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", "[null]",false,true);
+				Answer repAnswer = new Answer(sourceCode, targetCode, "LNK_HOST_COMPANY_REP", "",false,true);
 				Answer assocHcrAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_HCR", "",false,true);
 				beUtils.removeEntityAttribute(targetBe,"LNK_HOST_COMPANY_REP");
 				beUtils.removeEntityAttribute(targetBe,"PRI_ASSOC_HCR");
@@ -115,7 +115,7 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 
 			String internSupervisor = targetBe.getValue("LNK_INTERN_SUPERVISOR", null);
 			if(internSupervisor != null){
-				Answer supervisorAnswer = new Answer(sourceCode, targetCode, "LNK_INTERN_SUPERVISOR", "[null]",false,true);
+				Answer supervisorAnswer = new Answer(sourceCode, targetCode, "LNK_INTERN_SUPERVISOR", "",false,true);
 				Answer assocSupervisorAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_SUPERVISOR", "",false,true);
 				Answer assocSupervisorNameAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_NAME", "",false,true);
 				Answer assocSupervisorMobileAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_MOBILE", "",false,true);
