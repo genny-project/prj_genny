@@ -62,7 +62,7 @@ rule "HELPER_LNK_INDUSTRY"
 		if(targetBe != null){
 			String occupation = targetBe.getValue("LNK_OCCUPATION", null);
 			if(occupation != null){
-				Answer occupationAnswer = new Answer(sourceCode, targetCode, "LNK_OCCUPATION", "[null]", false, true);
+				Answer occupationAnswer = new Answer(sourceCode, targetCode, "LNK_OCCUPATION", "", false, true);
 				Answer assocOccupationAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_OCCUPATION", "", false, true);
 				Answer rolesAnswer = new Answer(sourceCode, targetCode, "PRI_ROLES_AND_RESPONSIBILITIES", "", false, true);
 				Answer baseOutcomesAnswer = new Answer(sourceCode, targetCode, "PRI_BASE_LEARNING_OUTCOMES", "", false, true);
