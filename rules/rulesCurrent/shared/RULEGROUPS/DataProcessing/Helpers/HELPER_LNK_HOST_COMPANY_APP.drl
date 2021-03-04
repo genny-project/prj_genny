@@ -63,7 +63,7 @@ rule "HELPER_LNK_HOST_COMPANY_APP"
 			String internship = targetBe.getValue("LNK_INTERNSHIP", null);
 			if(internship != null){
 				Answer internshipAnswer = new Answer(sourceCode, targetCode, "LNK_INTERNSHIP", "[null]",false,true);
-				beUtils.saveAnswer(internshipAnswer);
+				beUtils.removeEntityAttribute(targetBe,"LNK_INTERNSHIP");
 				VertxUtils.sendToFrontEnd(userToken, internshipAnswer);
 			}
 		}
