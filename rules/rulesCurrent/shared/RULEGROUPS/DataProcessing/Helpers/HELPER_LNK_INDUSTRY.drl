@@ -1,7 +1,6 @@
 package life.genny.rules;
 
 import life.genny.qwandautils.QwandaUtils;
-
 import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.models.GennyToken;
@@ -21,26 +20,20 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.io.UnsupportedEncodingException;
 import life.genny.utils.DropdownUtils;
-
-
 import java.util.List;
 import java.util.ArrayList;
 
 rule "HELPER_LNK_INDUSTRY"
 	ruleflow-group 'DataProcessing'
-			salience 5000
+	salience 5000
 	when
 		beUtils : BaseEntityUtils()
 		answer : Answer( attributeCode == "LNK_INDUSTRY")
-		answersToSave : Answers()
-		ruleDetails : RuleDetails()
-		output : OutputParam( )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		userToken : GennyToken( code != "PER_SERVICE")
 
 	then
-		System.out.println("HELPER_LNK_INDUSTRY fired");
-		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing Helper INDUSTRY SELECTION Answer/Data : " + answer );
+		System.out.println(drools.getRule().getName() + " triggered");
 		
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		System.out.println("sourceCode :: " + sourceCode);
@@ -48,36 +41,42 @@ rule "HELPER_LNK_INDUSTRY"
 		String targetCode = answer.getTargetCode();
 		System.out.println("targetCode :: " + targetCode);
 		
-		String industryCode = answer.getValue();
-		System.out.println("industryCode :: " + industryCode);
+		String value = answer.getValue();
+		System.out.println("value :: " + value);
 		
-		String code = industryCode.replace("\"", "").replace("[", "").replace("]", "");
+		String code = beUtils.cleanUpAttributeValue(value);
 		System.out.println("code  :: " + code);
 
-		Answer occupationAnswer = new Answer(sourceCode, targetCode, "LNK_OCCUPATION", " ",false,true);
-		System.out.println("occupationAnswer  :: " + occupationAnswer);
-
-		System.out.println("Saving industry and occupation answers !");
-
-		answersToSave.add(answer);
-		answersToSave.add(occupationAnswer);
-
-		/* get the industry baseentity */
 		BaseEntity be = beUtils.getBaseEntityByCode(code);
 		if(be != null){
-		
-			/* get the name attribute of the industry */
 			String name = be.getValue("PRI_NAME", null);		
-
-			/* save the industry's name as PRI_ASSOC_INDUSTRY attribute for the current target baseentity in the form */
-			Answer assocIndustryAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_INDUSTRY", name,false,true);
-			answersToSave.add(assocIndustryAnswer);
-
-			VertxUtils.sendToFrontEnd(userToken, assocIndustryAnswer);
-
+			if(name != null){
+				Answer assocIndustryAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_INDUSTRY", name);
+				beUtils.saveAnswer(assocIndustryAnswer);
+				VertxUtils.sendToFrontEnd(userToken, assocIndustryAnswer);
+			}
 		}
-		
-		update(answersToSave);
+
+
+		BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
+		if(targetBe != null){
+			String occupation = targetBe.getValue("LNK_OCCUPATION", null);
+			if(occupation != null){
+				Answer occupationAnswer = new Answer(sourceCode, targetCode, "LNK_OCCUPATION", "[null]", false, true);
+				Answer assocOccupationAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_OCCUPATION", "", false, true);
+				Answer rolesAnswer = new Answer(sourceCode, targetCode, "PRI_ROLES_AND_RESPONSIBILITIES", "", false, true);
+				Answer baseOutcomesAnswer = new Answer(sourceCode, targetCode, "PRI_BASE_LEARNING_OUTCOMES", "", false, true);
+				Answer specificOutcomesAnswer = new Answer(sourceCode, targetCode, "PRI_SPECIFIC_LEARNING_OUTCOMES", "", false, true);
+				
+				beUtils.removeEntityAttribute(targetBe,"LNK_OCCUPATION");
+				beUtils.removeEntityAttribute(targetBe,"PRI_ASSOC_OCCUPATION");
+				beUtils.removeEntityAttribute(targetBe,"PRI_ROLES_AND_RESPONSIBILITIES");
+				beUtils.removeEntityAttribute(targetBe,"PRI_BASE_LEARNING_OUTCOMES");
+				beUtils.removeEntityAttribute(targetBe,"PRI_SPECIFIC_LEARNING_OUTCOMES");
+
+				VertxUtils.sendToFrontEnd(userToken, occupationAnswer, assocOccupationAnswer, rolesAnswer, baseOutcomesAnswer, specificOutcomesAnswer);
+			}
+		}
 
 		/* dropdown search here */
 		DropdownUtils dropdown = new DropdownUtils(serviceToken);
@@ -89,10 +88,8 @@ rule "HELPER_LNK_INDUSTRY"
 
 		/* Send the dropdown options */
 		dropdown.sendSearchResults("GRP_OCCUPATION_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
-
-		/* Retract the answer message so the rule doesn't fire again */
-		retract(answer);
-
-		output.setTypeOfResult("NONE");
-		output.setResultCode("NONE");  /* dont display anything new */
 end
+
+
+
+
