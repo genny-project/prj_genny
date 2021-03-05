@@ -22,6 +22,7 @@ rule "EDU_PRO_DETAIL_VIEW"
 		$message : QEventMessage(	data.targetCode matches "CPY_.*" &&
 									(
 										data.parentCode matches "SBE_EDU_PROVIDERS_.*" ||
+										data.parentCode matches "SBE_EDUCATION_PROVIDERS_.*" ||
 										data.parentCode matches "QUE_EDU_PRO_GRP" 
 									)
 								)
