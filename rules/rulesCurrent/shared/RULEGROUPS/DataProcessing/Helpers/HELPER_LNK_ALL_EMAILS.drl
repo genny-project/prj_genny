@@ -52,14 +52,9 @@ rule "HELPER_LNK_ALL_EMAILS"
 			System.out.println("hcCode: " + hcCode);
 			
 			if(hcCode != null){
-				BaseEntity HCBe = beUtils.getBaseEntityByCode(hcCode);
-				System.out.println("HCBe = " + HCBe);
-						
-				if(HCBe != null){
-					Answer ans = new Answer(sourceCode, hcCode, "LNK_ALL_EMAILS", value);
-					beUtils.saveAnswer(ans);
-					VertxUtils.sendToFrontEnd(userToken, ans);
-				}
+				Answer ans = new Answer(sourceCode, hcCode, "LNK_ALL_EMAILS", value);
+				beUtils.saveAnswer(ans);
+				VertxUtils.sendToFrontEnd(userToken, ans);
 			}
 		}
 end
