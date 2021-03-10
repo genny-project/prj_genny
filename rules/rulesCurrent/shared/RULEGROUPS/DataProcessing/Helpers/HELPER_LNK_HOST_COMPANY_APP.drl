@@ -70,7 +70,7 @@ rule "HELPER_LNK_HOST_COMPANY_APP"
 			}
 		}
 		
-		SearchEntity searchBe = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "SBE_GRP_INTERNSHIP_SELECTION",
+		SearchEntity searchBe = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "SBE_INTERNSHIPS",
 				userToken.getSessionCode(), SearchEntity.class);
 		
 		if(searchBe != null){
@@ -79,7 +79,7 @@ rule "HELPER_LNK_HOST_COMPANY_APP"
 			dropdownInternship.setSearch(searchBe);
 			dropdownInternship.sendSearchResults("GRP_INTERNSHIP_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
 		}else{
-			System.out.println("SBE_GRP_INTERNSHIP_SELECTION not in cache");
+			System.out.println("SBE_INTERNSHIPS not in cache");
 		}
 
 		/* dropdown search here For internship */
