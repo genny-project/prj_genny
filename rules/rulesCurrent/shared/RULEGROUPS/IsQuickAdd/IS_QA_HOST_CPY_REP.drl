@@ -131,6 +131,8 @@ rule "IS_QA_HOST_CPY_REP"
 		String superEmail = "spc@outcome.life ";
 		System.out.println("superEmail: " +superEmail);
 		
+		String allEmails = "";
+		
 		if (user != null) {
 				allEmails = user.getValue("LNK_ALL_EMAILS",null);
 				System.out.println("allEmails: " +allEmails);
@@ -165,6 +167,7 @@ rule "IS_QA_HOST_CPY_REP"
 		    	templateData.put("url", url);
 		
 				if (!GennySettings.projectUrl.contains("dev")) {
+					List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
 					EmailHelper.sendGrid(beUtils, superEmail, null, bccList, subject, template_id, templateData);
 					System.out.println("HCR email sent");
 				} else {
