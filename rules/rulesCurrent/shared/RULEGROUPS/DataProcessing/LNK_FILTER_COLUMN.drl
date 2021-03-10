@@ -46,7 +46,7 @@ rule "LNK_FILTER_COLUMN"
 		System.out.println("value = " + value);
 
 		/* Strip value to find attribute code */
-		String attributeCode = value.substring("SEL_FILTER_COLUMN_SRT_".length());
+		String attributeCode = beUtils.cleanUpAttributeValue(value).substring("SEL_FILTER_COLUMN_SRT_".length());
 		System.out.println("attributeCode = " + attributeCode);
 
 		/* Get associated Attribute */
