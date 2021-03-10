@@ -29,7 +29,15 @@ rule "PRI_SEARCH_FILTER"
     when
       beUtils : BaseEntityUtils()
 	  serviceToken : GennyToken( code == "PER_SERVICE") 
-	  answer : Answer( ( attributeCode  matches "FLD_.*" ||  attributeCode  matches "PRI_.*" || attributeCode  matches "LNK_.*" ) && targetCode matches "SBE_.*"  && !(value.startsWith("!")))
+	  answer : Answer( 
+	  			code == "QUE_FILTER" &&
+	  			( 
+					attributeCode  matches "FLD_.*" ||
+					attributeCode  matches "PRI_.*" || 
+					attributeCode  matches "LNK_.*" 
+				) && 
+				targetCode matches "SBE_.*"  && 
+				!(value.startsWith("!")))
 	  answersToSave : Answers()
 	  output : OutputParam( )
      then
