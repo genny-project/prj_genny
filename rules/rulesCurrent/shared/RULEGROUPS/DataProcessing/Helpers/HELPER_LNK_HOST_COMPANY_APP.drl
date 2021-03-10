@@ -70,13 +70,13 @@ rule "HELPER_LNK_HOST_COMPANY_APP"
 			}
 		}
 		
-		SearchEntity SBE_GRP_INTERNSHIP_SELECTION = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "SBE_GRP_INTERNSHIP_SELECTION",
+		SearchEntity searchBe = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "SBE_GRP_INTERNSHIP_SELECTION",
 				userToken.getSessionCode(), SearchEntity.class);
 		
-		if(SBE_GRP_INTERNSHIP_SELECTION != null){
+		if(searchBe != null){
+			searchBe.addFilter("LNK_HOST_COMPANY", SearchEntity.StringFilter.EQUAL, value);
 			DropdownUtils dropdownInternship = new DropdownUtils(serviceToken);
-			dropdownInternship.setSearch(SBE_GRP_INTERNSHIP_SELECTION)
-												.addFilter("LNK_HOST_COMPANY", SearchEntity.StringFilter.EQUAL, value);
+			dropdownInternship.setSearch(searchBe);
 			dropdownInternship.sendSearchResults("GRP_INTERNSHIP_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
 		}else{
 			System.out.println("SBE_GRP_INTERNSHIP_SELECTION not in cache");
