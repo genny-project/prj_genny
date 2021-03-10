@@ -56,7 +56,10 @@ rule "LNK_FILTER_COLUMN"
 			String dtt = attr.getDataType().getClassName();
 			System.out.println("dtt = " + dtt);
 			if (dtt != null) {
+
 				List<BaseEntity> filterOptionsArray = new ArrayList<>();
+				/* Grab Ask group from cache */
+				Ask filterGrpAsk = VertxUtils.getObject(serviceToken.getRealm(), "", targetCode, Ask.class, serviceToken.getToken());
 				
 				if (dtt.equals("java.lang.String") || dtt.equals("String") || dtt.equals("Text")) {
 					BaseEntity like = beUtils.getBaseEntityByCode("SEL_LIKE");
@@ -67,12 +70,20 @@ rule "LNK_FILTER_COLUMN"
 					filterOptionsArray.add(notLike);
 					filterOptionsArray.add(equalTo);
 					filterOptionsArray.add(notEqualTo);
+					
+					/* Hide the date field */
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[2].setHidden(false);
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[3].setHidden(true);
 
 				} else if (dtt.equals("java.lang.Boolean") || dtt.equals("Boolean")) {
 					BaseEntity isTrue = beUtils.getBaseEntityByCode("SEL_IS_TRUE");
 					BaseEntity isFalse = beUtils.getBaseEntityByCode("SEL_IS_FALSE");
 					filterOptionsArray.add(isTrue);
 					filterOptionsArray.add(isFalse);
+
+					/* Hide both value fields */
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[2].setHidden(true);
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[3].setHidden(true);
 
 				} else if (dtt.equals("java.lang.Double") || dtt.equals("Double")
 							|| dtt.equals("java.lang.Integer") || dtt.equals("Integer")
@@ -90,6 +101,10 @@ rule "LNK_FILTER_COLUMN"
 					filterOptionsArray.add(equalTo);
 					filterOptionsArray.add(notEqualTo);
 
+					/* Hide the date field */
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[2].setHidden(false);
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[3].setHidden(true);
+
 				} else if (dtt.equals("java.time.LocalDateTime") || dtt.equals("LocalDateTime")
 							|| dtt.equals("java.time.LocalDate") || dtt.equals("LocalDate")
 							|| dtt.equals("java.time.LocalTime") || dtt.equals("LocalTime")) {
@@ -101,6 +116,10 @@ rule "LNK_FILTER_COLUMN"
 					filterOptionsArray.add(lessThan);
 					filterOptionsArray.add(equalTo);
 					filterOptionsArray.add(notEqualTo);
+
+					/* Hide the string field */
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[2].setHidden(true);
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[3].setHidden(false);
 				}
 
 				BaseEntity optionGrp = new BaseEntity("GRP_FILTER_OPTIONS", "Filter Options");
@@ -126,6 +145,14 @@ rule "LNK_FILTER_COLUMN"
 				filterOptionsMsg.setReplace(true);
 				VertxUtils.writeMsg("webcmds", filterOptionsMsg);
 				System.out.println("Filter Options sent to FE");
+
+				/* Send Asks to FE */
+				QDataAskMessage askMsg = new QDataAskMessage(filterGrpAsk);
+				askMsg.setToken(beUtils.getGennyToken().getToken());
+				askMsg.setReplace(true);
+				VertxUtils.writeMsg("webcmds", askMsg);
+				System.out.println("Asks sent to FE");
+
 			} else {
 				System.out.println("dtt is NULL");
 			}
