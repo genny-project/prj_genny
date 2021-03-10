@@ -126,56 +126,53 @@ rule "IS_QA_HOST_CPY_REP"
 		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
 
 
-		/* Send email to Intern? */
+		/* Send email to HCR? */
 		
-		System.out.println("ABOUT TO SEND THE EMAIL OR MAYBE NOT??");
-		String rawSendEmail = "";
+		String superEmail = "spc@outcome.life ";
+		System.out.println("superEmail: " +superEmail);
 		
 		if (user != null) {
-				rawSendEmail = user.getValue("LNK_SEND_EMAIL",null);
-				System.out.println("rawSendEmail: " +rawSendEmail);
+				allEmails = user.getValue("LNK_ALL_EMAILS",null);
+				System.out.println("allEmails: " +allEmails);
 		}
 		
-		if (rawSendEmail != null) {
+		if (allEmails.equals("SEL_YES")) {
 		
-				if (rawSendEmail.equals("SEL_YES")) {
+				BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
+				
+				String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, userCode, serviceToken.getToken());
+				System.out.println("token: " + token);
+				
+				String url = GennySettings.projectUrl+"/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9IT1NUX0NQWV9SRVA=";
+				System.out.println("url: " + url);
+				
+				url = url +"?token=" + token;
+				System.out.println("url: " + url);
 		
+				superEmail = user.getValue("PRI_EMAIL", null);
+				System.out.println("superEmail: " +superEmail);
+				
+				String subject = "You have been registered on InternMatch";
+				String template_id = "d-6c43211b9b934cb6abaceea171f32e09";
 		
-						BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
-						
-						String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, userCode, serviceToken.getToken());
-						System.out.println("token: " + token);
-						
+				System.out.println("email: " + superEmail);
+				System.out.println("subject: " + subject);
+				System.out.println("template_id: " + template_id);
 				
-						/*String user_email = "hello@outcome.life";*/
-						
-						/*String url = "https://internmatch-dev.gada.io/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9IT1NUX0NQWV9SRVA=";*/
-						String url = GennySettings.projectUrl+"/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9IT1NUX0NQWV9SRVA=";
-						System.out.println("url: " + url);
-						
-						
-						url = url +"?token=" + token;
-						System.out.println("url: " + url);
-						
 				
-						String superEmail = "spc@outcome.life ";
-						System.out.println("superEmail: " +superEmail);
-						
-						String subject = "You have been registered on InternMatch";
-						String template_id = "d-6c43211b9b934cb6abaceea171f32e09";
-				
-						System.out.println("email: " + superEmail);
-						System.out.println("subject: " + subject);
-						System.out.println("template_id: " + template_id);
-						
-						
-						HashMap<String, String> templateData = new HashMap<String, String>();
-				    	templateData.put("HostCompanyRep", firstname);
-				    	templateData.put("url", url);
-				
-						EmailHelper.sendGrid(beUtils, superEmail, subject, template_id, templateData);
+				HashMap<String, String> templateData = new HashMap<String, String>();
+		    	templateData.put("HostCompanyRep", firstname);
+		    	templateData.put("url", url);
+		
+				if (!GennySettings.projectUrl.contains("dev")) {
+					EmailHelper.sendGrid(beUtils, superEmail, null, bccList, subject, template_id, templateData);
+					System.out.println("HCR email sent");
+				} else {
+					System.out.println("WARNING: Email not sent because on Dev server or allEmails turned off");
 				}
 		}
+		
+		
 		
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
