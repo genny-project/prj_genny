@@ -59,7 +59,7 @@ rule "LNK_FILTER_COLUMN"
 
 				List<BaseEntity> filterOptionsArray = new ArrayList<>();
 				/* Grab Ask group from cache */
-				Ask filterGrpAsk = VertxUtils.getObject(serviceToken.getRealm(), "", targetCode, Ask.class, serviceToken.getToken());
+				Ask filterGrpAsk = VertxUtils.getObject(serviceToken.getRealm(), "", "QUE_FILTER_GRP_"+targetCode, Ask.class, serviceToken.getToken());
 				
 				if (dtt.equals("java.lang.String") || dtt.equals("String") || dtt.equals("Text")) {
 					BaseEntity like = beUtils.getBaseEntityByCode("SEL_LIKE");
