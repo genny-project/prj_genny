@@ -137,11 +137,13 @@ rule "LNK_FILTER_COLUMN"
 				}
 				optionGrp.setLinks(childLinks);
 				filterOptionsArray.add(optionGrp);
+				System.out.println("filterOptionsArray = " + filterOptionsArray);
+				System.out.println("filterOptionsArray size = " + filterOptionsArray.size());
 
 				/* Send filter option dropdown items */
 				QDataBaseEntityMessage filterOptionsMsg = new QDataBaseEntityMessage(filterOptionsArray);
 				filterOptionsMsg.setParentCode(optionGrp.getCode());
-				filterOptionsMsg.setToken(serviceToken.getToken());
+				filterOptionsMsg.setToken(beUtils.getGennyToken().getToken());
 				filterOptionsMsg.setReplace(true);
 				VertxUtils.writeMsg("webcmds", filterOptionsMsg);
 				System.out.println("Filter Options sent to FE");
