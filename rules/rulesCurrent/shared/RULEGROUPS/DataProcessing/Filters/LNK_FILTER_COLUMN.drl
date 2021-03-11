@@ -45,6 +45,12 @@ rule "LNK_FILTER_COLUMN"
 		String value = answer.getValue();
 		System.out.println("value = " + value);
 
+		/* Save the new filter items in cache */
+		String[] newFilterArray = new String[3];
+		newFilterArray[0] = value;
+
+		VertxUtils.putObject(serviceToken.getRealm(), "", "FLT_"+targetCode, newFilterArray, serviceToken.getToken());
+
 		/* Strip value to find attribute code */
 		String attributeCode = beUtils.cleanUpAttributeValue(value).substring("SEL_FILTER_COLUMN_SRT_".length());
 		System.out.println("attributeCode = " + attributeCode);
@@ -74,6 +80,8 @@ rule "LNK_FILTER_COLUMN"
 					/* Hide the date field */
 					filterGrpAsk.getChildAsks()[0].getChildAsks()[2].setHidden(false);
 					filterGrpAsk.getChildAsks()[0].getChildAsks()[3].setHidden(true);
+					/* Disable Submit */
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[4].setDisabled(true);
 
 				} else if (dtt.equals("java.lang.Boolean") || dtt.equalsIgnoreCase("Boolean")) {
 					BaseEntity isTrue = beUtils.getBaseEntityByCode("SEL_IS_TRUE");
@@ -84,6 +92,8 @@ rule "LNK_FILTER_COLUMN"
 					/* Hide both value fields */
 					filterGrpAsk.getChildAsks()[0].getChildAsks()[2].setHidden(true);
 					filterGrpAsk.getChildAsks()[0].getChildAsks()[3].setHidden(true);
+					/* Enable Submit */
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[4].setDisabled(false);
 
 				} else if (dtt.equals("java.lang.Double") || dtt.equalsIgnoreCase("Double")
 							|| dtt.equals("java.lang.Integer") || dtt.equalsIgnoreCase("Integer")
@@ -104,6 +114,8 @@ rule "LNK_FILTER_COLUMN"
 					/* Hide the date field */
 					filterGrpAsk.getChildAsks()[0].getChildAsks()[2].setHidden(false);
 					filterGrpAsk.getChildAsks()[0].getChildAsks()[3].setHidden(true);
+					/* Disable Submit */
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[4].setDisabled(true);
 
 				} else if (dtt.equals("java.time.LocalDateTime") || dtt.equalsIgnoreCase("LocalDateTime")
 							|| dtt.equals("java.time.LocalDate") || dtt.equalsIgnoreCase("LocalDate")
@@ -120,6 +132,8 @@ rule "LNK_FILTER_COLUMN"
 					/* Hide the string field */
 					filterGrpAsk.getChildAsks()[0].getChildAsks()[2].setHidden(true);
 					filterGrpAsk.getChildAsks()[0].getChildAsks()[3].setHidden(false);
+					/* Disable Submit */
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[4].setDisabled(true);
 				}
 
 				BaseEntity optionGrp = new BaseEntity("GRP_FILTER_OPTIONS", "Filter Options");
@@ -137,6 +151,9 @@ rule "LNK_FILTER_COLUMN"
 				}
 				optionGrp.setLinks(childLinks);
 				filterOptionsArray.add(optionGrp);
+
+				/* Cache changes to filter grp */
+				VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", filterGrpAsk.getQuestionCode(), filterGrpAsk, serviceToken.getToken());
 
 				/* Send filter option dropdown items */
 				QDataBaseEntityMessage filterOptionsMsg = new QDataBaseEntityMessage(filterOptionsArray);
