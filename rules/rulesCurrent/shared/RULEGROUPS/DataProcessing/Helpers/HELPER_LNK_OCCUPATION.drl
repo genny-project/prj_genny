@@ -52,7 +52,7 @@ rule "HELPER_LNK_OCCUPATION"
 				String name = be.getValue("PRI_NAME", null);		
 				if(name != null) occupationList.add(name);
 			}
-			String occupations = beUtils.cleanUpAttributeValue(occupationList.toString());
+			String occupations = occupationList.toString().replaceAll("[\\[\\](){}]","");
 			Answer ans = new Answer(sourceCode, targetCode, "PRI_ASSOC_OCCUPATION", occupations, false, true);
 			beUtils.saveAnswer(ans);
 			VertxUtils.sendToFrontEnd(userToken, ans);
