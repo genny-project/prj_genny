@@ -70,8 +70,7 @@ rule "HELPER_LNK_HOST_COMPANY_APP"
 			}
 		}
 		
-		SearchEntity searchBe = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "SBE_INTERNSHIPS",
-				userToken.getSessionCode(), SearchEntity.class);
+		SearchEntity searchBe = VertxUtils.getObject(serviceToken.getRealm(), "", "SBE_INTERNSHIPS", SearchEntity.class, serviceToken.getToken());
 		
 		if(searchBe != null){
 			searchBe.addFilter("LNK_HOST_COMPANY", SearchEntity.StringFilter.EQUAL, value);
