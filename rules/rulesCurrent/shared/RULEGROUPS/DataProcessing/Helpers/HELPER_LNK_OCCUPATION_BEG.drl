@@ -70,10 +70,15 @@ rule "HELPER_LNK_OCCUPATION_BEG"
 				}
 			}
 		
-			String occupations = beUtils.cleanUpAttributeValue(occupationList.toString());
+			/* String occupations = beUtils.cleanUpAttributeValue(occupationList.toString());
 			String roles = beUtils.cleanUpAttributeValue(rolesList.toString());
 			String baseOutcomes = beUtils.cleanUpAttributeValue(baseOutcomesList.toString());
-			String specificOutcomes = beUtils.cleanUpAttributeValue(specificOutcomesList.toString());
+			String specificOutcomes = beUtils.cleanUpAttributeValue(specificOutcomesList.toString()); */
+
+			String occupations = occupationNames.toString().replaceAll("[\\[\\](){}]","");
+      String roles = rolesList.toString().replaceAll("[\\[\\](){}]","");
+      String baseOutcomes = baseOutcomesList.toString().replaceAll("[\\[\\](){}]","");
+      String specificOutcomes = specificOutcomesList.toString().replaceAll("[\\[\\](){}]","");
 
 			Answer assocOccupationAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_OCCUPATION", occupations, false, true);
 			Answer rolesAnswer = new Answer(sourceCode, targetCode, "PRI_ROLES_AND_RESPONSIBILITIES", roles, false, true);
