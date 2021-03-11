@@ -61,7 +61,7 @@ rule "LNK_FILTER_COLUMN"
 				/* Grab Ask group from cache */
 				Ask filterGrpAsk = VertxUtils.getObject(serviceToken.getRealm(), "", "QUE_FILTER_GRP_"+targetCode, Ask.class, serviceToken.getToken());
 				
-				if (dtt.equals("java.lang.String") || dtt.equals("String") || dtt.equals("Text")) {
+				if (dtt.equals("java.lang.String") || dtt.equals("String") || dtt.equalsIgnoreCase("Text")) {
 					BaseEntity like = beUtils.getBaseEntityByCode("SEL_LIKE");
 					BaseEntity notLike = beUtils.getBaseEntityByCode("SEL_NOT_LIKE");
 					BaseEntity equalTo = beUtils.getBaseEntityByCode("SEL_EQUAL_TO");
@@ -75,7 +75,7 @@ rule "LNK_FILTER_COLUMN"
 					filterGrpAsk.getChildAsks()[0].getChildAsks()[2].setHidden(false);
 					filterGrpAsk.getChildAsks()[0].getChildAsks()[3].setHidden(true);
 
-				} else if (dtt.equals("java.lang.Boolean") || dtt.equals("Boolean")) {
+				} else if (dtt.equals("java.lang.Boolean") || dtt.equalsIgnoreCase("Boolean")) {
 					BaseEntity isTrue = beUtils.getBaseEntityByCode("SEL_IS_TRUE");
 					BaseEntity isFalse = beUtils.getBaseEntityByCode("SEL_IS_FALSE");
 					filterOptionsArray.add(isTrue);
@@ -85,9 +85,9 @@ rule "LNK_FILTER_COLUMN"
 					filterGrpAsk.getChildAsks()[0].getChildAsks()[2].setHidden(true);
 					filterGrpAsk.getChildAsks()[0].getChildAsks()[3].setHidden(true);
 
-				} else if (dtt.equals("java.lang.Double") || dtt.equals("Double")
-							|| dtt.equals("java.lang.Integer") || dtt.equals("Integer")
-							|| dtt.equals("java.lang.Long") || dtt.equals("Long")) {
+				} else if (dtt.equals("java.lang.Double") || dtt.equalsIgnoreCase("Double")
+							|| dtt.equals("java.lang.Integer") || dtt.equalsIgnoreCase("Integer")
+							|| dtt.equals("java.lang.Long") || dtt.equalsIgnoreCase("Long")) {
 					BaseEntity greaterThan = beUtils.getBaseEntityByCode("SEL_GREATER_THAN");
 					BaseEntity greaterThanOrEqualTo = beUtils.getBaseEntityByCode("SEL_GREATER_THAN_OR_EQUAL_TO");
 					BaseEntity lessThan = beUtils.getBaseEntityByCode("SEL_LESS_THAN");
@@ -105,9 +105,9 @@ rule "LNK_FILTER_COLUMN"
 					filterGrpAsk.getChildAsks()[0].getChildAsks()[2].setHidden(false);
 					filterGrpAsk.getChildAsks()[0].getChildAsks()[3].setHidden(true);
 
-				} else if (dtt.equals("java.time.LocalDateTime") || dtt.equals("LocalDateTime")
-							|| dtt.equals("java.time.LocalDate") || dtt.equals("LocalDate")
-							|| dtt.equals("java.time.LocalTime") || dtt.equals("LocalTime")) {
+				} else if (dtt.equals("java.time.LocalDateTime") || dtt.equalsIgnoreCase("LocalDateTime")
+							|| dtt.equals("java.time.LocalDate") || dtt.equalsIgnoreCase("LocalDate")
+							|| dtt.equals("java.time.LocalTime") || dtt.equalsIgnoreCase("LocalTime")) {
 					BaseEntity greaterThan = beUtils.getBaseEntityByCode("SEL_GREATER_THAN");
 					BaseEntity lessThan = beUtils.getBaseEntityByCode("SEL_LESS_THAN");
 					BaseEntity equalTo = beUtils.getBaseEntityByCode("SEL_EQUAL_TO");
@@ -137,8 +137,6 @@ rule "LNK_FILTER_COLUMN"
 				}
 				optionGrp.setLinks(childLinks);
 				filterOptionsArray.add(optionGrp);
-				System.out.println("filterOptionsArray = " + filterOptionsArray);
-				System.out.println("filterOptionsArray size = " + filterOptionsArray.size());
 
 				/* Send filter option dropdown items */
 				QDataBaseEntityMessage filterOptionsMsg = new QDataBaseEntityMessage(filterOptionsArray);
