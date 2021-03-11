@@ -69,8 +69,20 @@ rule "HELPER_LNK_HOST_COMPANY_APP"
 				VertxUtils.sendToFrontEnd(userToken, internshipAnswer, titleAnswer);
 			}
 		}
+
+		SearchEntity searchBE = tableUtils.copySearch("SBE_GRP_INTERNSHIP_SELECTION", "SBE_INTERNSHIP_DROPDOWN");
+		if(searchBE != null){
+			searchBe.addFilter("LNK_HOST_COMPANY", SearchEntity.StringFilter.EQUAL, value);
+			searchBE.setPageSize(GennySettings.defaultDropDownPageSize);
+
+			DropdownUtils dropdownInternship = new DropdownUtils(serviceToken);
+			dropdownInternship.setSearch(searchBe);
+			dropdownInternship.sendSearchResults("GRP_INTERNSHIP_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
+		}else{
+			System.out.println("SBE_INTERNSHIPS not in cache");
+		}
 		
-		SearchEntity searchBe = VertxUtils.getObject(serviceToken.getRealm(), "", "SBE_INTERNSHIPS", SearchEntity.class, serviceToken.getToken());
+		/* SearchEntity searchBe = VertxUtils.getObject(serviceToken.getRealm(), "", "SBE_GRP_INTERNSHIP_SELECTION", SearchEntity.class, serviceToken.getToken());
 		
 		if(searchBe != null){
 			searchBe.addFilter("LNK_HOST_COMPANY", SearchEntity.StringFilter.EQUAL, value);
@@ -79,7 +91,7 @@ rule "HELPER_LNK_HOST_COMPANY_APP"
 			dropdownInternship.sendSearchResults("GRP_INTERNSHIP_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
 		}else{
 			System.out.println("SBE_INTERNSHIPS not in cache");
-		}
+		} */
 
 		/* dropdown search here For internship */
 	/* 	dropdownInternship.setNewSearch("Internship Dropdown", "Fetch Internship Dropdown Items")
