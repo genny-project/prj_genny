@@ -70,10 +70,11 @@ rule "HELPER_LNK_HOST_COMPANY_APP"
 			}
 		}
 
-		SearchEntity searchBE = tableUtils.copySearch("SBE_GRP_INTERNSHIP_SELECTION", "SBE_INTERNSHIP_DROPDOWN");
-		if(searchBE != null){
+		TableUtils tableUtils = new TableUtils(beUtils);
+		SearchEntity searchBe = tableUtils.copySearch("SBE_GRP_INTERNSHIP_SELECTION", "SBE_INTERNSHIP_DROPDOWN");
+		if(searchBe != null){
 			searchBe.addFilter("LNK_HOST_COMPANY", SearchEntity.StringFilter.EQUAL, value);
-			searchBE.setPageSize(GennySettings.defaultDropDownPageSize);
+			searchBe.setPageSize(GennySettings.defaultDropDownPageSize);
 
 			DropdownUtils dropdownInternship = new DropdownUtils(serviceToken);
 			dropdownInternship.setSearch(searchBe);
