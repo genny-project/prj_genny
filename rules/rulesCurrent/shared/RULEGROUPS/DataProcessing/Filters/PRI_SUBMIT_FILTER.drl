@@ -46,145 +46,153 @@ rule "PRI_SUBMIT_FILTER"
 
 			/* Get filter details from cache */
 			String[] filterDetailArray = VertxUtils.getObject(serviceToken.getRealm(), "", "FLT_"+targetCode, String[].class, serviceToken.getToken());
+			if (filterDetailArray != null) {
+	 
+				String filterAttributeCode = filterDetailArray[0];
+				String filterOptionCode = filterDetailArray[1];
+				String val = filterDetailArray[2];
+				
+				System.out.println("filterAttributeCode = " + filterAttributeCode);
+				System.out.println("filterOptionCode = " + filterOptionCode);
+				System.out.println("val = " + val);
 
-			String filterAttributeCode = filterDetailArray[0];
-			String filterOptionCode = filterDetailArray[1];
-			String val = filterDetailArray[2];
-			
-			System.out.println("filterAttributeCode = " + filterAttributeCode);
-			System.out.println("filterOptionCode = " + filterOptionCode);
-			System.out.println("val = " + val);
+				String valString = null;
+				Integer valInt = null;
+				Long valLong = null;
+				Double valDouble = null;
+				Boolean valBoolean = null;
+				LocalDate valDate = null;
+				LocalDateTime valDateTime = null;
 
-			String valString = null;
-			Integer valInt = null;
-			Long valLong = null;
-			Double valDouble = null;
-			Boolean valBoolean = null;
-			LocalDate valDate = null;
-			LocalDateTime valDateTime = null;
+				String filterString = null;
+				SearchEntity.Filter filtType = null;
+				SearchEntity.StringFilter stringFiltType = null;
 
-			String filterString = null;
-			SearchEntity.Filter filtType = null;
-			SearchEntity.StringFilter stringFiltType = null;
+				Attribute attr = RulesUtils.getAttribute(filterAttributeCode, serviceToken);
+				String dtt = attr.getDataType().getClassName();
+				System.out.println("Attribute datatype = " + dtt);
 
-			Attribute attr = RulesUtils.getAttribute(filterAttributeCode, serviceToken);
-			String dtt = attr.getDataType().getClassName();
-			System.out.println("Attribute datatype = " + dtt);
+				/* Determine the datatype */
+				if (dtt.equals("java.lang.Boolean") || dtt.equals("Boolean")) {
+					valBoolean = Boolean.valueOf(val);
+					System.out.println("valBoolean = " + valBoolean);
+				} else if (dtt.equals("java.lang.Double") || dtt.equals("Double")) {
+					valDouble = Double.valueOf(val);
+					System.out.println("valDouble = " + valDouble);
+				} else if (dtt.equals("java.lang.Integer") || dtt.equals("Integer")) {
+					valInt = Integer.valueOf(val);
+					System.out.println("valInt = " + valInt);
+				} else if (dtt.equals("java.lang.Long") || dtt.equals("Long")) {
+					valLong = Long.valueOf(val);
+					System.out.println("valLong = " + valLong);
+				} else if (dtt.equals("java.time.LocalDateTime") || dtt.equals("LocalDateTime")) {
+					String dateTimeString = val.split("\\.")[0];
+					valDateTime = LocalDateTime.parse(dateTimeString);
+					System.out.println("valDateTime = " + valDateTime);
+				} else if (dtt.equals("java.time.LocalDate") || dtt.equals("LocalDate")) {
+					String dateTimeString = val.split("\\.")[0];
+					LocalDateTime dateTime = LocalDateTime.parse(dateTimeString);
+					valDate = dateTime.toLocalDate();
+					System.out.println("valDate = " + valDate);
+				} else {
+					/* DEFAULTS TO STRING */
+					valString = val;
+					System.out.println("valString = " + valString);
+				}
 
-			/* Determine the datatype */
-			if (dtt.equals("java.lang.Boolean") || dtt.equals("Boolean")) {
-				valBoolean = Boolean.valueOf(val);
-				System.out.println("valBoolean = " + valBoolean);
-			} else if (dtt.equals("java.lang.Double") || dtt.equals("Double")) {
-				valDouble = Double.valueOf(val);
-				System.out.println("valDouble = " + valDouble);
-			} else if (dtt.equals("java.lang.Integer") || dtt.equals("Integer")) {
-				valInt = Integer.valueOf(val);
-				System.out.println("valInt = " + valInt);
-			} else if (dtt.equals("java.lang.Long") || dtt.equals("Long")) {
-				valLong = Long.valueOf(val);
-				System.out.println("valLong = " + valLong);
-			} else if (dtt.equals("java.time.LocalDateTime") || dtt.equals("LocalDateTime")) {
-				String dateTimeString = val.split("\\.")[0];
-				valDateTime = LocalDateTime.parse(dateTimeString);
-				System.out.println("valDateTime = " + valDateTime);
-			} else if (dtt.equals("java.time.LocalDate") || dtt.equals("LocalDate")) {
-				String dateTimeString = val.split("\\.")[0];
-				LocalDateTime dateTime = LocalDateTime.parse(dateTimeString);
-				valDate = dateTime.toLocalDate();
-				System.out.println("valDate = " + valDate);
-			} else {
-				/* DEFAULTS TO STRING */
-				valString = val;
+				/* Determine the filter type */
+				if (filterOptionCode.equals("SEL_LIKE")) {
+					stringFiltType = SearchEntity.StringFilter.LIKE;
+					valString = "%" + valString + "%";
+				} else if (filterOptionCode.equals("SEL_NOT_LIKE")) {
+					stringFiltType = SearchEntity.StringFilter.NOT_LIKE;
+					valString = "%" + valString + "%";
+				} else if (filterOptionCode.equals("SEL_GREATER_THAN")) {
+					filtType = SearchEntity.Filter.GREATER_THAN;
+				} else if (filterOptionCode.equals("SEL_LESS_THAN")) {
+					filtType = SearchEntity.Filter.LESS_THAN;
+				} else if (filterOptionCode.equals("SEL_GREATER_THAN_OR_EQUAL")) {
+					filtType = SearchEntity.Filter.GREATER_THAN_AND_EQUAL;
+				} else if (filterOptionCode.equals("SEL_LESS_THAN_OR_EQUAL")) {
+					filtType = SearchEntity.Filter.LESS_THAN_AND_EQUAL;
+				} else if (filterOptionCode.equals("SEL_EQUAL_TO")) {
+					if (valString != null) {
+						stringFiltType = SearchEntity.StringFilter.EQUAL;
+					} else {
+						filtType = SearchEntity.Filter.EQUALS;
+					}
+				} else if (filterOptionCode.equals("SEL_NOT_EQUAL_TO")) {
+					if (valString != null) {
+						stringFiltType = SearchEntity.StringFilter.NOT_EQUAL;
+					} else {
+						filtType = SearchEntity.Filter.NOT_EQUALS;
+					}
+				}
+
 				System.out.println("valString = " + valString);
-			}
+				
+				Boolean andTrigger = false;
+				for (EntityAttribute ea : searchBE.getBaseEntityAttributes()) {
+					if (ea.getAttributeCode().equals(filterAttributeCode)) {
+						andTrigger = true;
+					}
+				}
+				
+				System.out.println("andTrigger = " + andTrigger);
 
-			/* Determine the filter type */
-			if (filterOptionCode.equals("SEL_LIKE")) {
-				stringFiltType = SearchEntity.StringFilter.LIKE;
-				valString = "%" + valString + "%";
-			} else if (filterOptionCode.equals("SEL_NOT_LIKE")) {
-				stringFiltType = SearchEntity.StringFilter.NOT_LIKE;
-				valString = "%" + valString + "%";
-			} else if (filterOptionCode.equals("SEL_GREATER_THAN")) {
-				filtType = SearchEntity.Filter.GREATER_THAN;
-			} else if (filterOptionCode.equals("SEL_LESS_THAN")) {
-				filtType = SearchEntity.Filter.LESS_THAN;
-			} else if (filterOptionCode.equals("SEL_GREATER_THAN_OR_EQUAL")) {
-				filtType = SearchEntity.Filter.GREATER_THAN_AND_EQUAL;
-			} else if (filterOptionCode.equals("SEL_LESS_THAN_OR_EQUAL")) {
-				filtType = SearchEntity.Filter.LESS_THAN_AND_EQUAL;
-			} else if (filterOptionCode.equals("SEL_EQUAL_TO")) {
-				if (valString != null) {
-					stringFiltType = SearchEntity.StringFilter.EQUAL;
+				/* Add filter */
+				if (!andTrigger) {
+					if (valString != null) {
+						searchBE.addFilter(filterAttributeCode, stringFiltType, valString);
+					} else if (valInt != null) {
+						searchBE.addFilter(filterAttributeCode, filtType, valInt);
+					} else if (valLong != null) {
+						searchBE.addFilter(filterAttributeCode, filtType, valLong);
+					} else if (valDouble != null) {
+						searchBE.addFilter(filterAttributeCode, filtType, valDouble);
+					} else if (valDate != null) {
+						searchBE.addFilter(filterAttributeCode, filtType, valDate);
+					} else if (valDateTime != null) {
+						searchBE.addFilter(filterAttributeCode, filtType, valDateTime);
+					} else if (valBoolean != null) {
+						searchBE.addFilter(filterAttributeCode, valBoolean);
+					}
 				} else {
-					filtType = SearchEntity.Filter.EQUALS;
+					/* Add AND filter if attribute already exists */
+					if (valString != null) {
+						searchBE.addAnd(filterAttributeCode, stringFiltType, valString);
+					} else if (valInt != null) {
+						searchBE.addAnd(filterAttributeCode, filtType, valInt);
+					} else if (valLong != null) {
+						searchBE.addAnd(filterAttributeCode, filtType, valLong);
+					} else if (valDouble != null) {
+						searchBE.addAnd(filterAttributeCode, filtType, valDouble);
+					} else if (valDate != null) {
+						searchBE.addAnd(filterAttributeCode, filtType, valDate);
+					} else if (valDateTime != null) {
+						searchBE.addAnd(filterAttributeCode, filtType, valDateTime);
+					} else if (valBoolean != null) {
+						System.out.println("WARN: Cannot add a second boolean filter on this attribute " + filterAttributeCode);
+					}
 				}
-			} else if (filterOptionCode.equals("SEL_NOT_EQUAL_TO")) {
-				if (valString != null) {
-					stringFiltType = SearchEntity.StringFilter.NOT_EQUAL;
-				} else {
-					filtType = SearchEntity.Filter.NOT_EQUALS;
-				}
-			}
+				
 
-			System.out.println("valString = " + valString);
-			
-			Boolean andTrigger = false;
-			for (EntityAttribute ea : searchBE.getBaseEntityAttributes()) {
-				if (ea.getAttributeCode().equals(filterAttributeCode)) {
-					andTrigger = true;
-				}
-			}
-			
-			System.out.println("andTrigger = " + andTrigger);
+				VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
+					beUtils.getGennyToken().getToken());
+				System.out.println("Performing search...");
 
-			/* Add filter */
-			if (!andTrigger) {
-				if (valString != null) {
-					searchBE.addFilter(filterAttributeCode, stringFiltType, valString);
-				} else if (valInt != null) {
-					searchBE.addFilter(filterAttributeCode, filtType, valInt);
-				} else if (valLong != null) {
-					searchBE.addFilter(filterAttributeCode, filtType, valLong);
-				} else if (valDouble != null) {
-					searchBE.addFilter(filterAttributeCode, filtType, valDouble);
-				} else if (valDate != null) {
-					searchBE.addFilter(filterAttributeCode, filtType, valDate);
-				} else if (valDateTime != null) {
-					searchBE.addFilter(filterAttributeCode, filtType, valDateTime);
-				} else if (valBoolean != null) {
-					searchBE.addFilter(filterAttributeCode, valBoolean);
-				}
+				/* Remove the filter array from cache */
+				VertxUtils.putObject(serviceToken.getRealm(), "", "FLT_"+targetCode, null, serviceToken.getToken());
+
+				long totalTime = TableUtils.searchTable(beUtils, searchBE, true);
+				System.out.println("total took " + (totalTime) + " ms"); 
+
+				/* Send out the Filter question group */
+				TableUtils.sendFilterQuestions(beUtils, searchBE);
+
 			} else {
-				/* Add AND filter if attribute already exists */
-				if (valString != null) {
-					searchBE.addAnd(filterAttributeCode, stringFiltType, valString);
-				} else if (valInt != null) {
-					searchBE.addAnd(filterAttributeCode, filtType, valInt);
-				} else if (valLong != null) {
-					searchBE.addAnd(filterAttributeCode, filtType, valLong);
-				} else if (valDouble != null) {
-					searchBE.addAnd(filterAttributeCode, filtType, valDouble);
-				} else if (valDate != null) {
-					searchBE.addAnd(filterAttributeCode, filtType, valDate);
-				} else if (valDateTime != null) {
-					searchBE.addAnd(filterAttributeCode, filtType, valDateTime);
-				} else if (valBoolean != null) {
-					System.out.println("WARN: Cannot add a second boolean filter on this attribute " + filterAttributeCode);
-				}
+				System.out.println("filterDetailArray is NULL, not adding new filter");
 			}
-			
-
-			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
-				beUtils.getGennyToken().getToken());
-			System.out.println("Performing search...");
-
-			long totalTime = TableUtils.searchTable(beUtils, searchBE, true);
-			System.out.println("total took " + (totalTime) + " ms"); 
-
-			/* Send out the Filter question group */
-			TableUtils.sendFilterQuestions(beUtils, searchBE);
 		
 		} else {
 			System.out.println(drools.getRule().getName()+" sourceCode ("+sourceCode+") not equal to answer.source ("+answer.getSourceCode()+")");
