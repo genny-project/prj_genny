@@ -50,7 +50,7 @@ rule "IS_QA_INTERN"
 	
 		String randomPW = "VZQ564P828";
 		
-		String target = newBe.getCode()
+		String target = newBe.getCode();
 		System.out.println(target);
 	    int targetLength = target.length();
 	    
