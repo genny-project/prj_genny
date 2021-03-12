@@ -145,7 +145,10 @@ rule "IS_QA_INTERN"
 						templateData.put("pw", randomPW);
 						templateData.put("url", url);
 						
+						List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
+						EmailHelper.sendGrid(beUtils, email, null, bccList, subject, template_id, templateData);
 						
+						/*
 						if (!GennySettings.projectUrl.contains("dev")) {
 						
 								List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
@@ -156,7 +159,7 @@ rule "IS_QA_INTERN"
 						} else {
 							System.out.println("WARNING: Email not sent because on Dev server");
 						}
-						
+						*/
  
 						/* 
  						String mobile = "0433501177";
