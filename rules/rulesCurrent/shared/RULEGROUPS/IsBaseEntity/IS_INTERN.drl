@@ -204,7 +204,7 @@ rule "IS_INTERN"
 		
 		
 		
-		/* ========= BASIC AF MATCHING ALGORITHM ========= */
+		/* ================== BASIC AF MATCHING ALGORITHM ================== */
 		
 		/* Recommendation Algorithm Rules
 		From Highest Priority to Lowest Priority
@@ -212,53 +212,66 @@ rule "IS_INTERN"
 		Match of Intern Location & Internship Location (By State)
 		Match of Intern 'Technology Known' and Technology Used in Internship */
 		
+		String industryAttribute = "PRI_ASSOC_INDUSTRY";
+		String occupationAttribute = "PRI_ASSOC_OCCUPATION;
+		String stateAttribute = "PRI_ADDRESS_STATE";
+		String softwareAttribute = "PRI_ASSOC_CURRENT_SOFTWARE";
+		
 		
 		/* Gather Matching Info */
 		String assocIndustry = user.getValue("PRI_ASSOC_INDUSTRY", null);	
-		String linkIndustry = user.getValue("LNK_INDUSTRY", null);
 		String assocOccupation = user.getValue("PRI_ASSOC_OCCUPATION", null);	
-		String linkOccupation = user.getValue("LNK_OCCUPATION", null);
 		String state = user.getValue("PRI_ADDRESS_STATE", null);
 		String assocSoftware = user.getValue("PRI_ASSOC_CURRENT_SOFTWARE", null);
-		String linkSoftware = user.getValue("LNK_CURRENT_SOFTWARE", null);
+
+		
+		if (assocIndustry == null) 		{ industryAttribute = "PRI_CODE";   assocIndustry = "BEG_%" }
+		if (assocOccupation == null) 	{ occupationAttribute = "PRI_CODE";	assocOccupation = "BEG_%" }
+		if (state == null) 				{ stateAttribute = "PRI_CODE";  	state = "BEG_%" }
+		if (assocSoftware = null) 		{ softwareAttribute = "PRI_CODE";  	assocSoftware = "BEG_%" }
+		
 		
 		/* Print Matching Info */
-		System.out.println("assocIndustry " +assocIndustry);
-		System.out.println("linkIndustry " +linkIndustry);
-		System.out.println("assocOccupation " +assocOccupation);
-		System.out.println("linkOccupation " +linkOccupation);
-		System.out.println("state " +state);
-		System.out.println("assocSoftware " +assocSoftware);
-		System.out.println("linkSoftware " +linkSoftware);
+		System.out.println("Industry: " + industryAttribute + " = " + assocIndustry);
+		System.out.println("Occupation: " + occupationAttribute + " = " + assocOccupation);
+		System.out.println("State: " + stateAttribute + " = " + state);
+		System.out.println("Software: " + softwareAttribute + " = " + assocSoftware);
 		
 		
 		/* Get all the all the matching Internships */
-		if (state != null && assocIndustry != null) {
+	    SearchEntity internshipMatch = new SearchEntity("SBE_INTERN_RECOMMENDATIONS_BASIC", "Matching Internships")
+	            .addFilter("PRI_IS_INTERNSHIP", true)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%")
+				.addFilter(industryAttribute, SearchEntity.StringFilter.LIKE, assocIndustry)
+				.addFilter(stateAttribute, SearchEntity.StringFilter.LIKE, state)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%")
+				/*.addFilter("PRI_ASSOC_CURRENT_SOFTWARE", SearchEntity.StringFilter.LIKE, assocSoftware)*/
+				
+	            .setPageStart(0).setPageSize(1000);
 	
-		    SearchEntity internshipMatch = new SearchEntity("SBE_INTERN_RECOMMENDATIONS_BASIC", "Matching Internships")
-		            .addFilter("PRI_IS_INTERNSHIP", true)
-					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%")
-					.addFilter("PRI_ADDRESS_STATE", SearchEntity.StringFilter.LIKE, state)
-					.addFilter("PRI_ASSOC_INDUSTRY", SearchEntity.StringFilter.LIKE, assocIndustry)
-		            .setPageStart(0).setPageSize(1000);
+	    internshipMatch.setRealm(serviceToken.getRealm());
+		insert(internshipMatch);
+		VertxUtils.putObject(serviceToken.getRealm(), "", internshipMatch.getCode(), internshipMatch, serviceToken.getToken());
 		
-		    internshipMatch.setRealm(serviceToken.getRealm());
-			insert(internshipMatch);
-			VertxUtils.putObject(serviceToken.getRealm(), "", internshipMatch.getCode(), internshipMatch, serviceToken.getToken());
-			
-			try {
-		        List<BaseEntity> internships = beUtils.getBaseEntitys(internshipMatch);
-		        System.out.println("The number of matching internships is " + (internships == null ? "NULL" : internships.size()));
-		        if ((internships != null) && (internships.size() > 0)) {
-			        for (BaseEntity internship : internships) {
-						System.out.println("Matching internship: = " +internship);
-					}
+		try {
+	        List<BaseEntity> internships = beUtils.getBaseEntitys(internshipMatch);
+	        System.out.println("The number of matching internships is " + (internships == null ? "NULL" : internships.size()));
+	        if ((internships != null) && (internships.size() > 0)) {
+		        for (BaseEntity internship : internships) {
+					System.out.println("Matching internship: = " +internship);
 				}
-			} catch (Exception e) {
-	        	e.printStackTrace();
-	    	}
-		} 
-		/* =============================================== */
+			}
+		} catch (Exception e) {
+        	e.printStackTrace();
+    	}
+		
+		/* ================================================================= */
+		
+		0 : -
+		1 : 1, 0
+		2 : 2, 1, 0
+		3 : 3, 2, 1, 0
+		
 		
 		retract(newBe)
 	
