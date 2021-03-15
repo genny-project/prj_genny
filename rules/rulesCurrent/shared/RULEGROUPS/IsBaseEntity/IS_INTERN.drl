@@ -224,12 +224,12 @@ rule "IS_INTERN"
 		
 		/* Print Matching Info */
 		System.out.println("assocIndustry " +assocIndustry);
-		System.out.println("linkIndustry " +lnkIndustry);
+		System.out.println("linkIndustry " +linkIndustry);
 		System.out.println("assocOccupation " +assocOccupation);
-		System.out.println("linkOccupation " +lnkOccupation);
+		System.out.println("linkOccupation " +linkOccupation);
 		System.out.println("state " +state);
 		System.out.println("assocSoftware " +assocSoftware);
-		System.out.println("linkSoftware " +lnkSoftware);
+		System.out.println("linkSoftware " +linkSoftware);
 		
 		
 		/* Get all the all the matching Internships */
@@ -254,10 +254,10 @@ rule "IS_INTERN"
 						System.out.println("Matching internship: = " +internship);
 					}
 				}
-			}
-		} catch (Exception e) {
-	        e.printStackTrace();
-	    }
+			} catch (Exception e) {
+	        	e.printStackTrace();
+	    	}
+		} 
 		/* =============================================== */
 		
 		retract(newBe)
