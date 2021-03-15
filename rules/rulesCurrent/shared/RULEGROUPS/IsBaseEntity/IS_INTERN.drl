@@ -213,7 +213,7 @@ rule "IS_INTERN"
 		Match of Intern 'Technology Known' and Technology Used in Internship */
 		
 		String industryAttribute = "PRI_ASSOC_INDUSTRY";
-		String occupationAttribute = "PRI_ASSOC_OCCUPATION;
+		String occupationAttribute = "PRI_ASSOC_OCCUPATION";
 		String stateAttribute = "PRI_ADDRESS_STATE";
 		String softwareAttribute = "PRI_ASSOC_CURRENT_SOFTWARE";
 		
