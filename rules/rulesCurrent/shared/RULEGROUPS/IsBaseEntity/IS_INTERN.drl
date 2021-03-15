@@ -248,6 +248,23 @@ rule "IS_INTERN"
 				/*.addFilter(occupationAttribute, SearchEntity.StringFilter.LIKE, assocOccupation)
 				.addFilter(softwareAttribute, SearchEntity.StringFilter.LIKE, assocSoftware)*/
 				
+				/* Table Columns */
+				.addColumn("PRI_IMAGE_URL", "Company Logo")
+				.addColumn("PRI_NAME", "Name")
+				.addColumn("PRI_STATUS", "Status")
+				.addColumn("PRI_ASSOC_HC", "Host Company")
+				.addColumn("PRI_ADDRESS_FULL", "Address")
+				.addColumn("PRI_INTERNSHIP_START_DATE", "Proposed Start Date")
+				.addColumn("PRI_ASSOC_INDUSTRY", "Industry")
+				.addColumn("PRI_ROLES_AND_RESPONSIBILITIES", "Roles and Responsibilities");
+				.addColumn("PRI_BASE_LEARNING_OUTCOMES", "Base Learning Outcomes");
+				.addColumn("PRI_SPECIFIC_LEARNING_OUTCOMES", "Technical Skills Learning Outcomes");
+				.addColumn("PRI_SOFTWARE", "Software");
+				.addColumn("PRI_WHICH_DAYS_STRIPPED", "Which Days");
+				.addColumn("PRI_WORKSITE", "Worksite");
+				.addColumn("PRI_ASSOC_NUM_INTERNS", "No of Interns");
+				.addColumn("PRI_VIDEO_URL", "Video");
+				
 	            .setPageStart(0).setPageSize(1000);
 	
 	    internshipMatch.setRealm(serviceToken.getRealm());
