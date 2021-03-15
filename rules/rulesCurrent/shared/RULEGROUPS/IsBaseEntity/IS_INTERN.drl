@@ -228,7 +228,7 @@ rule "IS_INTERN"
 		if (assocIndustry == null) 		{ industryAttribute = "PRI_CODE";   assocIndustry = "BEG_%"; }
 		if (assocOccupation == null) 	{ occupationAttribute = "PRI_CODE";	assocOccupation = "BEG_%"; }
 		if (state == null) 				{ stateAttribute = "PRI_CODE";  	state = "BEG_%"; }
-		if (assocSoftware = null) 		{ softwareAttribute = "PRI_CODE";  	assocSoftware = "BEG_%"; }
+		if (assocSoftware == null) 		{ softwareAttribute = "PRI_CODE";  	assocSoftware = "BEG_%"; }
 		
 		
 		/* Print Matching Info */
@@ -267,10 +267,6 @@ rule "IS_INTERN"
 		
 		/* ================================================================= */
 		
-		0 : -
-		1 : 1, 0
-		2 : 2, 1, 0
-		3 : 3, 2, 1, 0
 		
 		
 		retract(newBe)
