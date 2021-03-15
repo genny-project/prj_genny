@@ -202,6 +202,62 @@ rule "IS_INTERN"
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
 		
+		
+		
+		/* ========= BASIC AF MATCHING ALGORITHM ========= */
+		
+		/* Recommendation Algorithm Rules
+		From Highest Priority to Lowest Priority
+		Match of Intern Industry & Specialisation & Internship Opportunity Industry & Specialisation
+		Match of Intern Location & Internship Location (By State)
+		Match of Intern 'Technology Known' and Technology Used in Internship */
+		
+		
+		/* Gather Matching Info */
+		String assocIndustry = user.getValue("PRI_ASSOC_INDUSTRY", null);	
+		String lnkIndustry = user.getValue("LNK_INDUSTRY", null);
+		String assocOccupation = user.getValue("PRI_ASSOC_OCCUPATION", null);	
+		String lnkOccupation = user.getValue("LNK_OCCUPATION", null);
+		String state = user.getValue("PRI_ADDRESS_STATE", null);
+		String assocSoftware = user.getValue("PRI_ASSOC_CURRENT_SOFTWARE", null);
+		String lnkSoftware = user.getValue("LNK_CURRENT_SOFTWARE", null);
+		
+		/* Print Matching Info */
+		System.out.println("assocIndustry " +assocIndustry);
+		System.out.println("lnkIndustry " +lnkIndustry);
+		System.out.println("assocOccupation " +assocOccupation);
+		System.out.println("lnkOccupation " +lnkOccupation);
+		System.out.println("state " +state);
+		System.out.println("assocSoftware " +assocSoftware);
+		System.out.println("lnkSoftware " +lnkSoftware);
+		
+		
+		/* Get all the all the matching Internships */
+		if (state != null && assocIndustry != null) {
+	
+		    SearchEntity internshipMatch = new SearchEntity("SBE_INTERN_RECOMMENDATIONS_BASIC", "Matching Internships")
+		            .addFilter("PRI_IS_INTERNSHIP", true)
+					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%")
+					.addFilter("PRI_ADDRESS_STATE", SearchEntity.StringFilter.LIKE, state)
+					.addFilter("PRI_ASSOC_INDUSTRY", SearchEntity.StringFilter.LIKE, assocIndustry)
+		            .setPageStart(0).setPageSize(1000);
+		
+		    internshipMatch.setRealm(serviceToken.getRealm());
+			insert(internshipMatch);
+			VertxUtils.putObject(serviceToken.getRealm(), "", internshipMatch.getCode(), internshipMatch, serviceToken.getToken());
+			
+			try {
+		        List<BaseEntity> internships = beUtils.getBaseEntitys(internshipMatch);
+		        System.out.println("The number of matching internships is " + (internships == null ? "NULL" : internships.size()));
+		        if ((internships != null) && (internships.size() > 0)) {
+			        for (BaseEntity internships : internships) {
+						System.out.println("Matching internship: = " +internships);
+					}
+				}
+			}
+		}
+		/* =============================================== */
+		
 		retract(newBe)
 	
 end
