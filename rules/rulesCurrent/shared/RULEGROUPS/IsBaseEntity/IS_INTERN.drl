@@ -215,21 +215,21 @@ rule "IS_INTERN"
 		
 		/* Gather Matching Info */
 		String assocIndustry = user.getValue("PRI_ASSOC_INDUSTRY", null);	
-		String lnkIndustry = user.getValue("LNK_INDUSTRY", null);
+		String linkIndustry = user.getValue("LNK_INDUSTRY", null);
 		String assocOccupation = user.getValue("PRI_ASSOC_OCCUPATION", null);	
-		String lnkOccupation = user.getValue("LNK_OCCUPATION", null);
+		String linkOccupation = user.getValue("LNK_OCCUPATION", null);
 		String state = user.getValue("PRI_ADDRESS_STATE", null);
 		String assocSoftware = user.getValue("PRI_ASSOC_CURRENT_SOFTWARE", null);
-		String lnkSoftware = user.getValue("LNK_CURRENT_SOFTWARE", null);
+		String linkSoftware = user.getValue("LNK_CURRENT_SOFTWARE", null);
 		
 		/* Print Matching Info */
 		System.out.println("assocIndustry " +assocIndustry);
-		System.out.println("lnkIndustry " +lnkIndustry);
+		System.out.println("linkIndustry " +lnkIndustry);
 		System.out.println("assocOccupation " +assocOccupation);
-		System.out.println("lnkOccupation " +lnkOccupation);
+		System.out.println("linkOccupation " +lnkOccupation);
 		System.out.println("state " +state);
 		System.out.println("assocSoftware " +assocSoftware);
-		System.out.println("lnkSoftware " +lnkSoftware);
+		System.out.println("linkSoftware " +lnkSoftware);
 		
 		
 		/* Get all the all the matching Internships */
@@ -250,12 +250,14 @@ rule "IS_INTERN"
 		        List<BaseEntity> internships = beUtils.getBaseEntitys(internshipMatch);
 		        System.out.println("The number of matching internships is " + (internships == null ? "NULL" : internships.size()));
 		        if ((internships != null) && (internships.size() > 0)) {
-			        for (BaseEntity internships : internships) {
-						System.out.println("Matching internship: = " +internships);
+			        for (BaseEntity internship : internships) {
+						System.out.println("Matching internship: = " +internship);
 					}
 				}
 			}
-		}
+		} catch (Exception e) {
+	        e.printStackTrace();
+	    }
 		/* =============================================== */
 		
 		retract(newBe)
