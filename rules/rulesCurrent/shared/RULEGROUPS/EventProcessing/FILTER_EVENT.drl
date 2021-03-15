@@ -14,11 +14,11 @@ rule "FILTER_EVENT"
     no-loop
     when
 		message : QEventMessage( 
-					data.parentCode matches "QUE_FILTER_GRP_.*" &&
+					data.targetCode matches "SBE_.*" &&
 					( 
-						data.code matches "PRI_.*" || 
-						data.code matches "LNK_.*" || 
-						data.code matches "AND_.*" 
+						data.code matches "QUE_PRI_.*" || 
+						data.code matches "QUE_LNK_.*" || 
+						data.code matches "QUE_AND_.*" 
 					) 
 				)
 		userToken : GennyToken (code != "PER_SERVICE" )
@@ -28,10 +28,15 @@ rule "FILTER_EVENT"
     then
 		System.out.println(drools.getRule().getName()+" Processing : " + message );
 
-		String attributeCode = message.getData().getCode();
-		String searchCode = message.getData().getParentCode().split("QUE_FILTER_GRP_")[1];
+		String targetCode = message.getData().getTargetCode();
+		System.out.println("targetCode = " + targetCode);
+		String code = message.getData().getCode();
+		System.out.println("code = " + code);
 
-		SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", searchCode, SearchEntity.class,
+		String attributeCode = code.substring("QUE_".length());
+		System.out.println("attributeCode = " + attributeCode);
+
+		SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", targetCode, SearchEntity.class,
 				beUtils.getGennyToken().getToken());
 
 		searchBE.removeAttribute(attributeCode);
