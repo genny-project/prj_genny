@@ -242,17 +242,21 @@ rule "IS_INTERN"
 	    SearchEntity internshipMatch = new SearchEntity("SBE_INTERN_RECOMMENDATIONS_BASIC", "Matching Internships")
 	            .addFilter("PRI_IS_INTERNSHIP", true)
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%")
+				
 				.addFilter(industryAttribute, SearchEntity.StringFilter.LIKE, assocIndustry)
 				.addFilter(stateAttribute, SearchEntity.StringFilter.LIKE, state)
-				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%")
-				/*.addFilter("PRI_ASSOC_CURRENT_SOFTWARE", SearchEntity.StringFilter.LIKE, assocSoftware)*/
+				/*.addFilter(occupationAttribute, SearchEntity.StringFilter.LIKE, assocOccupation)
+				.addFilter(softwareAttribute, SearchEntity.StringFilter.LIKE, assocSoftware)*/
 				
 	            .setPageStart(0).setPageSize(1000);
 	
 	    internshipMatch.setRealm(serviceToken.getRealm());
-		insert(internshipMatch);
-		VertxUtils.putObject(serviceToken.getRealm(), "", internshipMatch.getCode(), internshipMatch, serviceToken.getToken());
+
+		/* Publish Search */
+	    TableUtils tableUtils = new TableUtils(beUtils);
+		TableUtils.searchTable(beUtils, internshipMatch, true);
 		
+		/* Print out nice things */
 		try {
 	        List<BaseEntity> internships = beUtils.getBaseEntitys(internshipMatch);
 	        System.out.println("The number of matching internships is " + (internships == null ? "NULL" : internships.size()));
