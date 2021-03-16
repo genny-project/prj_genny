@@ -267,10 +267,7 @@ rule "IS_INTERN"
 				
 				/* Row Actions */
 				.addAction("PRI_EVENT_VIEW", "View")
-				.addDefaultAction("PRI_EVENT_APPLY", "Apply")
 
-				/* Table Actions */
-				.addSearchAction("PRI_EVENT_MAP_VIEW", "Map View")
 				
 	            .setPageStart(0).setPageSize(1000);
 	
