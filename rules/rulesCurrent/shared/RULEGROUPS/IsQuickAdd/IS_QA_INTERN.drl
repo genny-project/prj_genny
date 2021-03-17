@@ -43,7 +43,60 @@ rule "IS_QA_INTERN"
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_PROFILE", "Incomplete"));
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "PENDING"));
 
+
+
+		String lnkAgent = newBe.getValue("LNK_AGENT", null);
+		System.out.println("lnkAgent = " +lnkAgent);
+		if (lnkAgent != null) {
+				beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_AGENT", lnkAgent));
 		
+				lnkAgent = lnkAgent.replace("\"", "").replace("[", "").replace("]", "");
+				System.out.println("lnkAgent = " +lnkAgent);
+				
+				BaseEntity agentBe = beUtils.getBaseEntityByCode(lnkAgent);
+				System.out.println("agentBe = " + agentBe);
+				
+				if (agentBe != null) {
+						agent = agentBe.getValue("PRI_NAME", null);
+						System.out.println("agent = " +agent);
+						
+						if (agent !=null ) {
+							beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_AGENT_NAME", agent));
+						}
+				} else {
+					System.out.println("ERROR: Null agentBe"); 
+				}
+		} else {
+			System.out.println("ERROR: Null lnkAgent"); 
+		}
+		
+		
+		String lnkBatch = newBe.getValue("LNK_BATCH", null);
+		System.out.println("lnkBatch = " +lnkBatch);
+		if (lnkBatch != null) {
+				beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), " LNK_BATCH", lnkBatch));
+		
+				lnkBatch = lnkBatch.replace("\"", "").replace("[", "").replace("]", "");
+				System.out.println("lnkBatch = " +lnkBatch);
+				
+				BaseEntity batchBe = beUtils.getBaseEntityByCode(lnkBatch);
+				System.out.println("batchBe = " + batchBe);
+				
+				if (batchBe != null) {
+						batch = batchBe.getValue("PRI_NAME", null);
+						System.out.println("batch = " +batch);
+						
+						if (batch !=null ) {
+							beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_BATCH", batch));
+						}
+				} else {
+					System.out.println("ERROR: Null batchBe"); 
+				}
+		} else {
+			System.out.println("ERROR: Null lnkBatch"); 
+		}
+		
+
 		
 		
 		/* Set up in Keycloak */
@@ -94,9 +147,8 @@ rule "IS_QA_INTERN"
 				}
 			}
 		}
-
-		
-
+			
+			
 
 		String endPoint = GennySettings.projectUrl + "/v7/notes";
 		/*String endPoint = "https://internmatch-cyrus.gada.io/v7/notes";*/
@@ -267,6 +319,7 @@ rule "IS_QA_INTERN"
 		
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* don't display anything new */
+
 		
 		retract(newBe)
 	
