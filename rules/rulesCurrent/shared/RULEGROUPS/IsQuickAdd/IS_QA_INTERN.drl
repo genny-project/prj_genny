@@ -44,8 +44,10 @@ rule "IS_QA_INTERN"
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "PENDING"));
 
 
-
-		String lnkAgent = newBe.getValue("LNK_AGENT", null);
+		BaseEntity user = beUtils.getBaseEntityByCode(target);
+		System.out.println("user = " +user);
+		
+		String lnkAgent = user.getValue("LNK_AGENT", null);
 		System.out.println("lnkAgent = " +lnkAgent);
 		if (lnkAgent != null) {
 				beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_AGENT", lnkAgent));
@@ -71,7 +73,7 @@ rule "IS_QA_INTERN"
 		}
 		
 		
-		String lnkBatch = newBe.getValue("LNK_BATCH", null);
+		String lnkBatch = user.getValue("LNK_BATCH", null);
 		System.out.println("lnkBatch = " +lnkBatch);
 		if (lnkBatch != null) {
 				beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), " LNK_BATCH", lnkBatch));
