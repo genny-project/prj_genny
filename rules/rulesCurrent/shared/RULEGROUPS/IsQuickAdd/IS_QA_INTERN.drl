@@ -57,7 +57,7 @@ rule "IS_QA_INTERN"
 				System.out.println("agentBe = " + agentBe);
 				
 				if (agentBe != null) {
-						agent = agentBe.getValue("PRI_NAME", null);
+						String agent = agentBe.getValue("PRI_NAME", null);
 						System.out.println("agent = " +agent);
 						
 						if (agent !=null ) {
@@ -83,7 +83,7 @@ rule "IS_QA_INTERN"
 				System.out.println("batchBe = " + batchBe);
 				
 				if (batchBe != null) {
-						batch = batchBe.getValue("PRI_NAME", null);
+						String batch = batchBe.getValue("PRI_NAME", null);
 						System.out.println("batch = " +batch);
 						
 						if (batch !=null ) {
