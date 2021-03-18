@@ -58,7 +58,7 @@ rule "PRI_SEARCH_FILTER"
 
 			String val = answer.getValue();
 			String filterAttributeCode = answer.getAttributeCode();
-			if (filterAttributeCode.startsWith("FLD_")) {
+			if (filterAttributeCode.startsWith("FLD_") || filterAttributeCode.startsWith("FLC_")) {
 				filterAttributeCode = filterAttributeCode.substring(4);
 			}
 			
