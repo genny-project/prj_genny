@@ -107,23 +107,29 @@ public class GennyTest  {
 	@Test
 	public void AdamTest2()
 	{
-//			System.out.println("fix HCR status test");
-//			GennyToken userToken = null;
-//			GennyToken serviceToken = null;
-//			QRules qRules = null;
-//
-//
-//				// VertxUtils.cachedEnabled = false;
-//				VertxUtils.cachedEnabled = false;
-//				qRules = GennyJbpmBaseTest.setupLocalService();
-//				userToken = new GennyToken("userToken", qRules.getToken());
-//				serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
-//				eventBusMock = new EventBusMock();
-//				vertxCache = new JunitCache(); // MockCache
-//				VertxUtils.init(eventBusMock, vertxCache);
-//
-//			BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
-//			beUtils.setServiceToken(serviceToken);
+			System.out.println("fix HCR status test");
+			GennyToken userToken = null;
+			GennyToken serviceToken = null;
+			QRules qRules = null;
+
+
+				// VertxUtils.cachedEnabled = false;
+				VertxUtils.cachedEnabled = false;
+				try {
+					GennyJbpmBaseTest.init();//.setupLocalService();
+				//	qRules = GennyJbpmBaseTest.plement();
+				} catch (FileNotFoundException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				userToken = new GennyToken("userToken", GennyJbpmBaseTest.projectParms.getString("userToken"));
+				serviceToken = new GennyToken("PER_SERVICE", GennyJbpmBaseTest.projectParms.getString("serviceToken"));
+				eventBusMock = new EventBusMock();
+				vertxCache = new JunitCache(); // MockCache
+				VertxUtils.init(eventBusMock, vertxCache);
+
+			BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+			beUtils.setServiceToken(serviceToken);
 		
 		if (beUtils == null) {
 			return;
@@ -131,7 +137,7 @@ public class GennyTest  {
 
 			SearchEntity searchBE = new SearchEntity("SBE_GPS", "hcrs")
 					.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "CPY_%").addFilter("PRI_IS_HOST_CPY", true)
+					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%").addFilter("PRI_IS_INTERN", true)
 					.addColumn("PRI_CODE", "Name")
 					.addColumn("PRI_ADDRESS_FULL", "Address");
 
@@ -248,7 +254,7 @@ public class GennyTest  {
 	  @BeforeAll
 	    public static void init() throws FileNotFoundException, SQLException {
 
-	        System.out.println("BridgeUrl=" + GennySettings.bridgeServiceUrl);
+        System.out.println("BridgeUrl=" + GennySettings.bridgeServiceUrl);
 	        System.out.println("QwandaUrl=" + GennySettings.qwandaServiceUrl);
 
 	        GennyToken tokenUser = GennyJbpmBaseTest.createGennyToken("ABCDEFGH", "internmatch", "adam.crow@gada.io",
@@ -279,9 +285,19 @@ public class GennyTest  {
 //	            GennyKieSession.loadAttributesJsonFromResources(serviceToken);
 //
 //	        } else {
-	            qRules = GennyJbpmBaseTest.setupLocalService();
-	            userToken = new GennyToken("userToken", qRules.getToken());
-	            serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+	          //  qRules = GennyJbpmBaseTest.setupLocalService();
+				try {
+					GennyJbpmBaseTest.init();//.setupLocalService();
+					String uToken = GennyJbpmBaseTest.projectParms.getString("userToken");
+					userToken = new GennyToken("userToken",uToken);
+		            serviceToken = new GennyToken("PER_SERVICE", GennyJbpmBaseTest.projectParms.getString("serviceToken"));
+
+
+				} catch (FileNotFoundException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
 	            
 				// VertxUtils.cachedEnabled = false;
 				VertxUtils.cachedEnabled = false;
