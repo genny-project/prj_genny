@@ -30,9 +30,10 @@ rule "PRI_SEARCH_FILTER"
       beUtils : BaseEntityUtils()
 	  serviceToken : GennyToken( code == "PER_SERVICE") 
 	  answer : Answer(( 
-						attributeCode  matches "FLD_.*" 
-						/* attributeCode  matches "PRI_.*" || */ 
-						/* attributeCode  matches "LNK_.*" */ 
+						attributeCode matches "FLD_.*" ||
+						attributeCode matches "FLC_.*" ||
+						attributeCode == "PRI_ASSOC_INDUSTRY" ||
+						attributeCode == "PRI_ADDRESS_STATE" 
 					) && 
 					targetCode matches "SBE_.*"  && 
 					!(value.startsWith("!"))
