@@ -31,6 +31,7 @@ rule "PRI_SEARCH_FILTER"
 	  serviceToken : GennyToken( code == "PER_SERVICE") 
 	  answer : Answer(( 
 						attributeCode matches "FLD_.*" ||
+						attributeCode matches "FLC_.*" ||
 						attributeCode == "PRI_ASSOC_INDUSTRY" ||
 						attributeCode == "PRI_ADDRESS_STATE" 
 					) && 
