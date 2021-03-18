@@ -200,7 +200,7 @@ rule "IS_INTERNSHIP"
 		
 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_CREATED_DATE", prettyCreated));
 		
-		/*quantumCopy(sourceBE, sourceAtt, saveLink, strip, userToken, targetBE, targetAtt)*/
+		/* quantumCopy(sourceBE, sourceAtt, saveLink, strip, userToken, targetBE, targetAtt)*/
 		beUtils.quantumCopy(newBe, "LNK_NO_OF_INTERNS", false, true, userToken.getUserCode(), newBe.getCode(), "PRI_NO_OF_INTERNS");
 	
 		
