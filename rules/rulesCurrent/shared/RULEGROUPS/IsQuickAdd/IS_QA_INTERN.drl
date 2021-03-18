@@ -43,11 +43,12 @@ rule "IS_QA_INTERN"
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_PROFILE", "Incomplete"));
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "PENDING"));
 
+		String target = newBe.getCode();	
 
-		BaseEntity user = beUtils.getBaseEntityByCode(target);
+		BaseEntity userBE = beUtils.getBaseEntityByCode(target);
 		System.out.println("user = " +user);
 		
-		String lnkAgent = user.getValue("LNK_AGENT", null);
+		String lnkAgent = userBE.getValue("LNK_AGENT", null);
 		System.out.println("lnkAgent = " +lnkAgent);
 		if (lnkAgent != null) {
 				beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_AGENT", lnkAgent));
@@ -73,7 +74,7 @@ rule "IS_QA_INTERN"
 		}
 		
 		
-		String lnkBatch = user.getValue("LNK_BATCH", null);
+		String lnkBatch = userBE.getValue("LNK_BATCH", null);
 		System.out.println("lnkBatch = " +lnkBatch);
 		if (lnkBatch != null) {
 				beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), " LNK_BATCH", lnkBatch));
@@ -104,9 +105,6 @@ rule "IS_QA_INTERN"
 		/* Set up in Keycloak */
 	
 		String randomPW = "VZQ564P828";
-		
-		String target = newBe.getCode();
-		System.out.println(target);
 	    int targetLength = target.length();
 	    
 	    System.out.println(target);
