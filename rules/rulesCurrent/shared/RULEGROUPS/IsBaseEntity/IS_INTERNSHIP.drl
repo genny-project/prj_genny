@@ -213,5 +213,79 @@ rule "IS_INTERNSHIP"
 		output.setResultCode("NONE");  /* dont display anything new */
 		
 		retract(newBe)
+		
+				SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Internships")
+			/* Sorts */
+			.addSort("PRI_NAME","Title",SearchEntity.Sort.ASC)
+			/* .addSort("PRI_STATUS","Status",SearchEntity.Sort.ASC) */
+			/* .addSort("PRI_ASSOC_INDUSTRY","Industry",SearchEntity.Sort.ASC) */
+			/* .addSort("PRI_ASSOC_HC","Host Company",SearchEntity.Sort.ASC) */
+			/* .addSort("PRI_INTERNSHIP_START_DATE","Start Date",SearchEntity.Sort.ASC) */
+			
+			/* Filters */
+			.addFilter("PRI_IS_INTERNSHIP", true)
+			.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%")
+			.addFilter("PRI_ADDRESS_STATE", SearchEntity.StringFilter.LIKE, "%")
+			.addFilter("PRI_ASSOC_INDUSTRY", SearchEntity.StringFilter.LIKE, "%")
+			
+			/* Table Columns */
+			.addColumn("PRI_IMAGE_URL", "Company Logo")
+			.addColumn("PRI_NAME", "Title")
+			.addColumn("PRI_CREATED_DATE", "Date Created")
+			.addColumn("PRI_STATUS", "Status")
+			.addColumn("PRI_ASSOC_HC", "Host Company")
+			.addColumn("PRI_ADDRESS_FULL", "Address")
+			.addColumn("PRI_INTERNSHIP_START_DATE", "Proposed Start Date")
+			.addColumn("PRI_ASSOC_INDUSTRY", "Industry")
+
+			/* Filterable Columns */
+			.addFilterableColumn("PRI_NAME", "Title")
+			.addFilterableColumn("PRI_STATUS", "Status")
+			.addFilterableColumn("PRI_ASSOC_INDUSTRY", "Industry")
+			.addFilterableColumn("PRI_ASSOC_HC", "Host Company")
+			.addFilterableColumn("PRI_INTERNSHIP_START_DATE", "Start Date")
+			
+			/* Row Actions */
+			.addAction("PRI_EVENT_VIEW", "View")
+
+			/* Table Actions */
+			.addSearchAction("PRI_EVENT_MAP_VIEW", "Map View")
+
+			.setPageStart(0).setPageSize(GennySettings.defaultPageSize);
+
+		searchBE.setRealm(serviceToken.getRealm());
+		insert(searchBE);
+		VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken.getToken());
+		
+		
+		
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd MMM yyyy");
+    	
+    	
+		
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_CREATED_DATE", prettyCreated));
+		
+		try{
+	        List<BaseEntity> apps = beUtils.getBaseEntitys(searchBE);
+	        System.out.println("The number of BEGs is " + (apps == null ? "NULL" : apps.size()));
+	        if ((apps != null) && (apps.size() > 0)) {
+						
+				Integer appIndex = 1;
+	          	for (BaseEntity app : apps) {
+				
+				System.out.println("***** appIndex = " + appIndex + " *****");
+				System.out.println("app = " +app);
+	
+				LocalDateTime created = app.getCreated();
+				System.out.println("created = " +created);
+				String prettyCreated = dtf.format(created);
+		    	System.out.println("prettyCreated ~ " + prettyCreated);
+		    	beUtils.saveAnswer(new Answer(userToken.getUserCode(), app.getCode(), "PRI_CREATED_DATE", prettyCreated));
+		    	
+	        	}
+	    	}
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 	
 end
