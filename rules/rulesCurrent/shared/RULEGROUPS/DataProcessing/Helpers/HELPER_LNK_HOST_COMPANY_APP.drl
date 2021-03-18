@@ -75,10 +75,10 @@ rule "HELPER_LNK_HOST_COMPANY_APP"
 		dropdownInternship.setNewSearch("Internship Dropdown", "Fetch Internship Dropdown Items")
 											/* Sorts */
 											.addSort("PRI_NAME","Name",SearchEntity.Sort.ASC)
-											.addSort("PRI_STATUS","Status",SearchEntity.Sort.ASC)
-											.addSort("PRI_ASSOC_INDUSTRY","Industry",SearchEntity.Sort.ASC)
-											.addSort("PRI_ASSOC_HC","Host Company",SearchEntity.Sort.ASC)
-											.addSort("PRI_INTERNSHIP_START_DATE","Start Date",SearchEntity.Sort.ASC)
+											/* .addSort("PRI_STATUS","Status",SearchEntity.Sort.ASC) */
+											/* .addSort("PRI_ASSOC_INDUSTRY","Industry",SearchEntity.Sort.ASC) */
+											/* .addSort("PRI_ASSOC_HC","Host Company",SearchEntity.Sort.ASC) */
+											/* .addSort("PRI_INTERNSHIP_START_DATE","Start Date",SearchEntity.Sort.ASC) */
 
 											/* Filters */
 											.addFilter("PRI_IS_INTERNSHIP", true)
