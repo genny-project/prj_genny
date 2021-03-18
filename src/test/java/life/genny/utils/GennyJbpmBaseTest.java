@@ -86,12 +86,12 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 	protected static EventBusInterface eventBusMock;
 	protected static GennyCacheInterface vertxCache;
 	
-	protected static JsonObject projectParms;
+	public static JsonObject projectParms;
 	
 	protected static Optional<Boolean> isUsingRemote = Optional.empty();
 	
-	protected  GennyToken userToken;
-	protected  GennyToken serviceToken;
+	public static  GennyToken userToken;
+	public static  GennyToken serviceToken;
 	
 	private static final String DRL_PROJECT = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/project.drl";
 	private static final String DRL_USER_COMPANY = "rulesCurrent/shared/_BPMN_WORKFLOWS/AuthInit/SendUserData/user_company.drl";
@@ -493,7 +493,7 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 		String apiUrl = GennySettings.projectUrl+"/api/events/init?url="+GennySettings.projectUrl;
 		System.out.println("Fetching setup info from "+apiUrl);
 		try {
-			String keycloakJson = QwandaUtils.apiGet(apiUrl, "DUMMY");
+			String keycloakJson = QwandaUtils.apiGet(apiUrl, null);
 			projectParms = new JsonObject(keycloakJson);
 			String authServer = projectParms.getString("auth-server-url");
 			authServer = StringUtils.removeEnd(authServer, "/auth");
@@ -545,7 +545,7 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 	}
 	
 
-	static 	public  QRules setupLocalService() {
+	static 	public  QRules plement () {
 		GennyJbpmBaseTest localService = new GennyJbpmBaseTest(false);
 		try {
 			localService.init();
