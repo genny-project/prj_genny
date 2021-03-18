@@ -46,7 +46,7 @@ rule "IS_QA_INTERN"
 		String target = newBe.getCode();	
 
 		BaseEntity userBE = beUtils.getBaseEntityByCode(target);
-		System.out.println("user = " +user);
+		System.out.println("userBE = " +userBE);
 		
 		String lnkAgent = userBE.getValue("LNK_AGENT", null);
 		System.out.println("lnkAgent = " +lnkAgent);
