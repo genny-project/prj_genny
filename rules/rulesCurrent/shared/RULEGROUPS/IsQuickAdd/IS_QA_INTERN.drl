@@ -74,7 +74,7 @@ rule "IS_QA_INTERN"
 		}
 		
 		
-		String lnkBatch = userBE.getValue("LNK_BATCH", null);
+		String lnkBatch = userBE.getValue("LNK_SELECT_BATCH", null);
 		System.out.println("lnkBatch = " +lnkBatch);
 		if (lnkBatch != null) {
 				beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), " LNK_BATCH", lnkBatch));

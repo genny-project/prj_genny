@@ -57,6 +57,7 @@ rule "ROL_AGENT"
    	     capabilityUtils.addCapabilityToRole(role,"ARCHIVE_INTERN",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"ARCHIVE_INTERNSHIP",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"UNARCHIVE_INTERNSHIP",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"DUPLICATE_INTERNSHIP",CapabilityMode.VIEW);
 	     capabilityUtils.addCapabilityToRole(role,"ARCHIVE_HCR",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"ARCHIVE_EPR",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"VALIDATE_HC",CapabilityMode.VIEW);
