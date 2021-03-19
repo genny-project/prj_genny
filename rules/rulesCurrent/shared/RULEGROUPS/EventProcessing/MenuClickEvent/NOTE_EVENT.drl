@@ -35,7 +35,7 @@ rule "NOTE_EVENT"
 				System.out.println("notes :: " + notes);
 				
 				if(notes != null){
-					VertxUtils.writeMsg("webcmds", JsonUtils.toJson(notes));
+					VertxUtils.writeMsg("webcmds", notes);
 				}
 			}catch (Exception e) {
 				System.out.println("Exception :: " + e);
