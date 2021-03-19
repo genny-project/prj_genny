@@ -30,7 +30,8 @@ rule "NOTE_EVENT"
 		if(targetCode != null){
 			try {
 				String url = "https://internmatch-dev.gada.io/v7/notes/"+targetCode+"?tags=''&pageStart=0&pageSize=1000000000";
-				String notes = QwandaUtils.sendGET(url);
+				System.out.println("url :: " + url);
+				String notes = QwandaUtils.sendGET(url, serviceToken.getToken());
 				System.out.println("notes :: " + notes);
 				
 				if(notes != null){
