@@ -28,9 +28,17 @@ rule "NOTE_EVENT"
 		System.out.println("targetCode :: " + targetCode);
 
 		if(targetCode != null){
-			String url = "https://internmatch-dev.gada.io/v7/notes/"+targetCode+"?tags=''&pageStart=0&pageSize=1000000000";
-			String notes = QwandaUtils.sendGET(url);
-			System.out.println("notes :: " + notes);
+			try {
+				String url = "https://internmatch-dev.gada.io/v7/notes/"+targetCode+"?tags=''&pageStart=0&pageSize=1000000000";
+				String notes = QwandaUtils.sendGET(url);
+				System.out.println("notes :: " + notes);
+				
+				if(notes != null){
+					VertxUtils.writeMsg("webcmds", JsonUtils.toJson(notes));
+				}
+			}catch (Exception e) {
+				System.out.println("Exception :: " + e);
+			}
 		}
 
 		retract( $message);
