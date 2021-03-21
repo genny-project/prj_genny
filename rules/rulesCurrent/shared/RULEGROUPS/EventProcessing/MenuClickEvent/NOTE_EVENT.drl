@@ -27,9 +27,6 @@ rule "NOTE_EVENT"
 		String targetCode = $message.getData().getTargetCode();
 		System.out.println("targetCode :: " + targetCode);
 
-		String sourceCode = $message.getData().getSourceCode();
-		System.out.println("sourceCode :: " + sourceCode);
-
 		if(targetCode != null){
 			try {
 				String endPoint = GennySettings.projectUrl + "/v7/notes";
@@ -37,7 +34,7 @@ rule "NOTE_EVENT"
 
 				String url = endPoint + "/"+targetCode+"?tags=''&pageStart=0&pageSize=1000000000";
 				System.out.println("url :: " + url);
-				
+
 				String notes = QwandaUtils.sendGET(url, serviceToken.getToken());
 				System.out.println("notes :: " + notes);
 
