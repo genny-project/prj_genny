@@ -33,14 +33,19 @@ rule "NOTE_EVENT"
 		if(targetCode != null){
 			try {
 				String endPoint = GennySettings.projectUrl + "/v7/notes";
+				System.out.println("endPoint :: " + endPoint);
+
 				String url = endPoint + "/"+targetCode+"?tags=''&pageStart=0&pageSize=1000000000";
 				System.out.println("url :: " + url);
+				
 				String notes = QwandaUtils.sendGET(url, serviceToken.getToken());
 				System.out.println("notes :: " + notes);
 
 				if(notes != null){
 					JsonObject json = new JsonObject(notes);
 					json.put("token", userToken.getToken());
+					System.out.println("json :: " + json);
+
 					VertxUtils.writeMsg("webcmds", notes);
 					VertxUtils.writeMsg("webcmds", json);
 				}
