@@ -24,18 +24,34 @@ rule "NOTE_EVENT"
 		
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 
-		String targetCode = $message.getData().getTargetCode();
+		/* String targetCode = $message.getData().getTargetCode(); */
+		String targetCode = "PER_5A666E64-021F-48CE-8111-BE3D66901F9C";
 		System.out.println("targetCode :: " + targetCode);
 
 		if(targetCode != null){
 			try {
-				String url = "https://internmatch-dev.gada.io/v7/notes/"+targetCode+"?tags=''&pageStart=0&pageSize=1000000000";
+				String endPoint = GennySettings.projectUrl + "/v7/notes";
+				System.out.println("endPoint :: " + endPoint);
+
+				/* to fetch all notes default page size = 20 */
+/* 				String url = endPoint + "/"+targetCode; */
+				
+				/* to fetch all notes with size limit */
+				String url = endPoint + "/"+targetCode + "?pageIndex=0&pageSize=100";
+				
+				/* to fetch all notes with tags */
+				/* String url = endPoint + "/"+targetCode + "?tags=''&pageIndex=0&pageSize=100"; */
 				System.out.println("url :: " + url);
+
 				String notes = QwandaUtils.sendGET(url, serviceToken.getToken());
 				System.out.println("notes :: " + notes);
-				
+
 				if(notes != null){
-					VertxUtils.writeMsg("webcmds", notes);
+					JsonObject json = new JsonObject(notes);
+					json.put("token", userToken.getToken());
+
+					System.out.println("json :: " + json.toString());
+					VertxUtils.writeMsg("webcmds", json.toString());
 				}
 			}catch (Exception e) {
 				System.out.println("Exception :: " + e);
@@ -44,3 +60,5 @@ rule "NOTE_EVENT"
 
 		retract( $message);
 	end
+
+

@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-
 import javax.persistence.EntityManagerFactory;
 
 import org.apache.commons.lang.StringUtils;
@@ -51,14 +50,11 @@ import life.genny.utils.VertxUtils;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.JsonArray;
 
-
-public class GennyTest  {
+public class GennyTest {
 	private static final Logger log = Logger.getLogger(GennyTest.class);
 
-
 	protected static String realm = GennySettings.mainrealm;
-    protected static Set<String> realms;
-
+	protected static Set<String> realms;
 
 	protected static EventBusInterface eventBusMock;
 	protected static GennyCacheInterface vertxCache;
@@ -80,78 +76,91 @@ public class GennyTest  {
 	protected static GennyToken userToken;
 	protected static GennyToken newUserToken;
 	protected static GennyToken serviceToken;
-	
+
 	protected static BaseEntityUtils beUtils;
-	
+
 	public GennyTest() {
 		super();
 	}
-	
-	
+
 	@Test
-	public void gennyTest()
-	{
+	public void gennyTest() {
 		System.out.println("This is a Gennytest");
 	}
-	
-	
+
 	@Test
-	public void AdamTest1()
-	{
+	public void AdamTest1() {
 		System.out.println("Local Genny test1 AdamTest");
 
-
-		
 	}
-	
+
 	@Test
-	public void AdamTest2()
-	{
-			System.out.println("fix HCR status test");
-			GennyToken userToken = null;
-			GennyToken serviceToken = null;
-			QRules qRules = null;
+	public void AdamTest2() {
+		System.out.println("fix Timezones test");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
 
+		// VertxUtils.cachedEnabled = false;
+		VertxUtils.cachedEnabled = false;
+		try {
+			GennyJbpmBaseTest.init();// .setupLocalService();
+			// qRules = GennyJbpmBaseTest.plement();
+		} catch (FileNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		userToken = new GennyToken("userToken", GennyJbpmBaseTest.projectParms.getString("userToken"));
+		serviceToken = new GennyToken("PER_SERVICE", GennyJbpmBaseTest.projectParms.getString("serviceToken"));
+		eventBusMock = new EventBusMock();
+		vertxCache = new JunitCache(); // MockCache
+		VertxUtils.init(eventBusMock, vertxCache);
 
-				// VertxUtils.cachedEnabled = false;
-				VertxUtils.cachedEnabled = false;
-				try {
-					GennyJbpmBaseTest.init();//.setupLocalService();
-				//	qRules = GennyJbpmBaseTest.plement();
-				} catch (FileNotFoundException | SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				userToken = new GennyToken("userToken", GennyJbpmBaseTest.projectParms.getString("userToken"));
-				serviceToken = new GennyToken("PER_SERVICE", GennyJbpmBaseTest.projectParms.getString("serviceToken"));
-				eventBusMock = new EventBusMock();
-				vertxCache = new JunitCache(); // MockCache
-				VertxUtils.init(eventBusMock, vertxCache);
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		beUtils.setServiceToken(serviceToken);
 
-			BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
-			beUtils.setServiceToken(serviceToken);
-		
 		if (beUtils == null) {
 			return;
 		}
 
-			SearchEntity searchBE = new SearchEntity("SBE_GPS", "hcrs")
+		boolean ok = true;
+		Integer pageStart = 0;
+		Integer pageSize = 100;
+
+		while (ok) {
+
+			SearchEntity searchBE = new SearchEntity("SBE_GPS", "timezone fix")
 					.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%").addFilter("PRI_IS_INTERN", true)
-					.addColumn("PRI_CODE", "Name")
-					.addColumn("PRI_ADDRESS_FULL", "Address");
+					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
+					
+					.addColumn("PRI_CODE", "Name").addColumn("PRI_ADDRESS_FULL", "Address").addColumn("PRI_TIMEZONE_ID","TimezoneId");
 
 			searchBE.setRealm(realm);
-			searchBE.setPageStart(0);
-			searchBE.setPageSize(100000);
+			searchBE.setPageStart(pageStart);
+			searchBE.setPageSize(pageSize);
+			pageStart += pageSize;
 
 			List<BaseEntity> items = beUtils.getBaseEntitys(searchBE);
+			if (items.isEmpty()) {
+				ok = false;
+				break;
+			} else {
+				log.info("Loaded "+items.size()+" baseentitys");
+			}
 
-			BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+serviceToken.getRealm().toUpperCase());
-			int icount=0;
+			BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
+			int icount = 0;
 			for (BaseEntity item : items) {
 
 				try {
+					
+					// check if there
+					Optional<EntityAttribute> tz = item.findEntityAttribute("PRI_TIMEZONE_ID");
+					if (tz.isPresent()) {
+						log.info("Already has a Timezone ID "+tz.get().getAsString());
+						continue;
+					
+					}
+					
 					// check if there
 					Optional<EntityAttribute> ea = item.findEntityAttribute("PRI_ADDRESS_FULL");
 					if (ea.isPresent()) {
@@ -161,80 +170,88 @@ public class GennyTest  {
 //							Answer activeStatus = new Answer(beUtils.getGennyToken().getUserCode(), item.getCode(),
 //									"PRI_STATUS", "ACTIVE");
 //							beUtils.saveAnswer(activeStatus);
-							log.info(item.getCode()+" address: "+address);
-							
+							log.info(item.getCode() + " address: " + address);
+
 							String encodedAddress = null;
 							try {
-					            encodedAddress =  URLEncoder.encode(address, StandardCharsets.UTF_8.toString());
-					        } catch (UnsupportedEncodingException ex) {
-					            throw new RuntimeException(ex.getCause());
-					        }
-							System.out.println("IMPORT ADDRESS: encodedAddress="+encodedAddress);
-							
-							String googleApiUrl = "https://maps.googleapis.com/maps/api/geocode/json?address="+encodedAddress;
-							
-							String googleApiKey = "AIzaSyAe8SEl-uMB_8E7HRj8f_X7Nrmfss8svFQ";//project.getValue("PRI_GOOGLE_API_KEY","");
-							System.out.println("IMPORT ADDRESS: google api key="+googleApiKey);
-					        googleApiUrl  = googleApiUrl  + "&key="+googleApiKey;
-					 
-							String addressJsonStr =  QwandaUtils.apiGet(googleApiUrl , null);
+								encodedAddress = URLEncoder.encode(address, StandardCharsets.UTF_8.toString());
+							} catch (UnsupportedEncodingException ex) {
+								throw new RuntimeException(ex.getCause());
+							}
+							//System.out.println("IMPORT ADDRESS: encodedAddress=" + encodedAddress);
+
+							String googleApiUrl = "https://maps.googleapis.com/maps/api/geocode/json?address="
+									+ encodedAddress;
+
+							String googleApiKey = project.getValue("PRI_GOOGLE_API_KEY","");
+							//System.out.println("IMPORT ADDRESS: google api key=" + googleApiKey);
+							googleApiUrl = googleApiUrl + "&key=" + googleApiKey;
+
+							String addressJsonStr = QwandaUtils.apiGet(googleApiUrl, null);
 							JsonObject json = new JsonObject(addressJsonStr);
-						if ("OK".equals(json.getString("status"))) {
-							JsonObject results = json.getJsonArray("results").getJsonObject(0);
-							System.out.println(results);
-							JsonArray address_components = results.getJsonArray("address_components");
-							
-							/* loop through address_components */
-							Integer index = 0;
-							Integer count = address_components.size();
-							Map<String,String> addressMap = new HashMap<String,String>();
-							for (index=0;index<count;index++) {
-								
-								JsonObject addressComponent = address_components.getJsonObject(index);
-								JsonArray types = addressComponent.getJsonArray("types");
-								String mainType = types.getString(0);
-								addressMap.put(mainType, addressComponent.getString("short_name"));
+							if ("OK".equals(json.getString("status"))) {
+								JsonObject results = json.getJsonArray("results").getJsonObject(0);
+								System.out.println(results);
+								JsonArray address_components = results.getJsonArray("address_components");
+
+								/* loop through address_components */
+								Integer index = 0;
+								Integer count = address_components.size();
+								Map<String, String> addressMap = new HashMap<String, String>();
+								for (index = 0; index < count; index++) {
+
+									JsonObject addressComponent = address_components.getJsonObject(index);
+									JsonArray types = addressComponent.getJsonArray("types");
+									String mainType = types.getString(0);
+									addressMap.put(mainType, addressComponent.getString("short_name"));
+								}
+
+								String streetNumber = (addressMap.get("street_number") == null) ? ""
+										: addressMap.get("street_number");
+								String streetName = (addressMap.get("route") == null) ? "" : addressMap.get("route");
+
+								String street_address = (streetNumber + " " + streetName).trim();
+
+								JsonObject geometry = results.getJsonObject("geometry");
+								JsonObject location = geometry.getJsonObject("location");
+								Double lat = location.getDouble("lat");
+								Double lng = location.getDouble("lng");
+								String full_address = results.getString("formatted_address");
+								System.out.println(address_components);
+
+								JsonObject address_json = new JsonObject();
+								address_json.put("street_address", street_address);
+								address_json.put("suburb",
+										(addressMap.get("locality") == null ? "" : addressMap.get("locality")));
+								address_json.put("state", (addressMap.get("administrative_area_level_1") == null ? ""
+										: addressMap.get("administrative_area_level_1")));
+								address_json.put("country",
+										(addressMap.get("country") == null ? "" : addressMap.get("country")));
+								address_json.put("postcode",
+										(addressMap.get("postal_code") == null ? "" : addressMap.get("postal_code")));
+								address_json.put("full_address", full_address);
+								address_json.put("latitude", lat);
+								address_json.put("longitude", lng);
+
+								String PRI_ADDRESS_JSON = address_json.toString();
+								System.out.println("PRI_ADDRESS_JSON=" + PRI_ADDRESS_JSON);
+								Answer fixedAddress = new Answer(userToken.getUserCode(), item.getCode(),
+										"PRI_ADDRESS_JSON", PRI_ADDRESS_JSON, false, false);
+								beUtils.saveAnswer(fixedAddress);
+								// Timezone
+
+								String url = "https://maps.googleapis.com/maps/api/timezone/json?location=" + lat + ","
+										+ lng + "&timestamp=1458000000&key="+googleApiKey;
+								String timezoneJsonStr = QwandaUtils.apiGet(url, null);
+								json = new JsonObject(timezoneJsonStr);
+								String timezoneID = json.getString("timeZoneId");
+								Answer fixedTimezone = new Answer(userToken.getUserCode(), item.getCode(),
+										"PRI_TIMEZONE_ID", timezoneID, false, false);
+								beUtils.saveAnswer(fixedTimezone);
+								System.out.println(item.getCode() + " timezone: " + json);
+
 							}
-							
-							String streetNumber = (addressMap.get("street_number")==null)?"":addressMap.get("street_number");
-							String streetName = (addressMap.get("route")==null)?"":addressMap.get("route");
-							
-							String street_address = (streetNumber+" "+streetName).trim();
-							
-							JsonObject geometry = results.getJsonObject("geometry");
-							JsonObject location = geometry.getJsonObject("location");
-							Double lat = location.getDouble("lat");
-							Double lng = location.getDouble("lng");
-							String full_address = results.getString("formatted_address");
-							System.out.println(address_components);
-							
-							JsonObject address_json = new JsonObject();
-							address_json.put("street_address", street_address);
-							address_json.put("suburb", (addressMap.get("locality")==null?"":addressMap.get("locality")));
-							address_json.put("state",  (addressMap.get("administrative_area_level_1")==null?"":addressMap.get("administrative_area_level_1")));
-							address_json.put("country",  (addressMap.get("country")==null?"":addressMap.get("country")));
-							address_json.put("postcode",  (addressMap.get("postal_code")==null?"":addressMap.get("postal_code")));
-							address_json.put("full_address", full_address);
-							address_json.put("latitude", lat);
-							address_json.put("longitude", lng);
-							
-							String PRI_ADDRESS_JSON = address_json.toString();
-							System.out.println("PRI_ADDRESS_JSON="+PRI_ADDRESS_JSON);		
-							Answer fixedAddress = new Answer(userToken.getUserCode(),item.getCode(), "PRI_ADDRESS_JSON", PRI_ADDRESS_JSON,false,false);			
-							beUtils.saveAnswer(fixedAddress);
-							// Timezone
 
-							String url = "https://maps.googleapis.com/maps/api/timezone/json?location="+lat+","+lng+"&timestamp=1458000000&key=AIzaSyAe8SEl-uMB_8E7HRj8f_X7Nrmfss8svFQ";
-							String timezoneJsonStr =  QwandaUtils.apiGet(url , null);
-							json = new JsonObject(timezoneJsonStr);
-							String timezoneID = json.getString("timeZoneId");
-							Answer fixedTimezone = new Answer(userToken.getUserCode(),item.getCode(), "PRI_TIMEZONE_ID", timezoneID,false,false);			
-							beUtils.saveAnswer(fixedTimezone);
-							System.out.println(item.getCode()+" timezone: "+json);
-
-							}
-
-							
 						}
 
 					}
@@ -248,36 +265,38 @@ public class GennyTest  {
 //				}
 			}
 
-			System.out.println("Finished");
 		}
-	
-	  @BeforeAll
-	    public static void init() throws FileNotFoundException, SQLException {
 
-        System.out.println("BridgeUrl=" + GennySettings.bridgeServiceUrl);
-	        System.out.println("QwandaUrl=" + GennySettings.qwandaServiceUrl);
+		System.out.println("Finished");
+	}
 
-	        GennyToken tokenUser = GennyJbpmBaseTest.createGennyToken("ABCDEFGH", "internmatch", "adam.crow@gada.io",
-	                "Adam Crow", "intern");
-	        GennyToken tokenSupervisor = GennyJbpmBaseTest.createGennyToken("BCDEFGSHS", "internmatch",
-	                "kanika.gulati@gada.io", "Kanika Gulati", "supervisor");
-	        System.out.println(tokenUser.getToken());
-	        System.out.println(tokenSupervisor.getToken());
+	@BeforeAll
+	public static void init() throws FileNotFoundException, SQLException {
 
-	        // Set up realm
-	        realms = new HashSet<String>();
-	        realms.add(realm);
-	        realms.stream().forEach(System.out::println);
-	        realms.remove("genny");
+		System.out.println("BridgeUrl=" + GennySettings.bridgeServiceUrl);
+		System.out.println("QwandaUrl=" + GennySettings.qwandaServiceUrl);
 
-	        // Enable the PseudoClock using the following system property.
-	        System.setProperty("drools.clockType", "pseudo");
+		GennyToken tokenUser = GennyJbpmBaseTest.createGennyToken("ABCDEFGH", "internmatch", "adam.crow@gada.io",
+				"Adam Crow", "intern");
+		GennyToken tokenSupervisor = GennyJbpmBaseTest.createGennyToken("BCDEFGSHS", "internmatch",
+				"kanika.gulati@gada.io", "Kanika Gulati", "supervisor");
+		System.out.println(tokenUser.getToken());
+		System.out.println(tokenSupervisor.getToken());
 
-	        eventBusMock = new EventBusMock();
-	        vertxCache = new VertxCache(); // MockCache
-	        VertxUtils.init(eventBusMock, vertxCache);
+		// Set up realm
+		realms = new HashSet<String>();
+		realms.add(realm);
+		realms.stream().forEach(System.out::println);
+		realms.remove("genny");
 
-	        QRules qRules = null;
+		// Enable the PseudoClock using the following system property.
+		System.setProperty("drools.clockType", "pseudo");
+
+		eventBusMock = new EventBusMock();
+		vertxCache = new VertxCache(); // MockCache
+		VertxUtils.init(eventBusMock, vertxCache);
+
+		QRules qRules = null;
 
 //	        if (USE_STANDALONE) {
 //	            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
@@ -285,22 +304,20 @@ public class GennyTest  {
 //	            GennyKieSession.loadAttributesJsonFromResources(serviceToken);
 //
 //	        } else {
-	          //  qRules = GennyJbpmBaseTest.setupLocalService();
-				try {
-					GennyJbpmBaseTest.init();//.setupLocalService();
-					String uToken = GennyJbpmBaseTest.projectParms.getString("userToken");
-					userToken = new GennyToken("userToken",uToken);
-		            serviceToken = new GennyToken("PER_SERVICE", GennyJbpmBaseTest.projectParms.getString("serviceToken"));
+		// qRules = GennyJbpmBaseTest.setupLocalService();
+		try {
+			GennyJbpmBaseTest.init();// .setupLocalService();
+			String uToken = GennyJbpmBaseTest.projectParms.getString("userToken");
+			userToken = new GennyToken("userToken", uToken);
+			serviceToken = new GennyToken("PER_SERVICE", GennyJbpmBaseTest.projectParms.getString("serviceToken"));
 
+		} catch (FileNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-				} catch (FileNotFoundException | SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-	            
-				// VertxUtils.cachedEnabled = false;
-				VertxUtils.cachedEnabled = false;
+		// VertxUtils.cachedEnabled = false;
+		VertxUtils.cachedEnabled = false;
 //				eventBusMock = new EventBusMock();
 //				vertxCache = new JunitCache(); // MockCache
 //				VertxUtils.init(eventBusMock, vertxCache);
@@ -309,25 +326,25 @@ public class GennyTest  {
 //				userToken = new GennyToken("userToken", qRules.getToken());
 //				serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
 
-			beUtils = new BaseEntityUtils(userToken);
-			beUtils.setServiceToken(serviceToken);
+		beUtils = new BaseEntityUtils(userToken);
+		beUtils.setServiceToken(serviceToken);
 //	        }
 
-	        System.out.println("serviceToken=" + serviceToken.getToken());
+		System.out.println("serviceToken=" + serviceToken.getToken());
 
-	    }
+	}
 
-	    private void update(Object obj) {
-	        log.info("Updated fact " + obj + " in rules engine");
-	    }
+	private void update(Object obj) {
+		log.info("Updated fact " + obj + " in rules engine");
+	}
 
-	    private void retract(Object obj) {
-	        log.info("Retract fact " + obj + " in rules engine");
-	    }
+	private void retract(Object obj) {
+		log.info("Retract fact " + obj + " in rules engine");
+	}
 
-	    private void insert(Object obj) {
-	        // log.info("Insert fact "+obj+" in rules engine");
-	    }
+	private void insert(Object obj) {
+		// log.info("Insert fact "+obj+" in rules engine");
+	}
 
 	@Test
 	void backFillProcessViewTest() {
@@ -347,12 +364,12 @@ public class GennyTest  {
 		String duration = null;
 		for (BaseEntity item : items) {
 			useDefault = false;
-			Optional<EntityAttribute> ea1= item.findEntityAttribute("PRI_PROGRESS");
+			Optional<EntityAttribute> ea1 = item.findEntityAttribute("PRI_PROGRESS");
 			if (ea1.isEmpty()) {
 				Optional<EntityAttribute> ea2 = item.findEntityAttribute("PRI_ASSOC_DURATION");
-				if(ea2.isPresent()) {
+				if (ea2.isPresent()) {
 					duration = item.getValue("PRI_ASSOC_DURATION", "12");
-					//SEL_DURATION_8_WEEKS
+					// SEL_DURATION_8_WEEKS
 					if ((duration.startsWith("SEL_DURATION_")) && duration.endsWith("_WEEKS")) {
 						duration = duration.split("_")[2];
 					}
@@ -371,15 +388,15 @@ public class GennyTest  {
 					if (useDefault)
 						System.out.println(item.getCode() + " doesn't have PRI_ASSOC_DURATION, use default value:12");
 
-					System.out.println(item.getCode() + ", duration:"+ duration + ", PRI_PROGRESS_JSON="+PRI_PROGRESS_JSON);
+					System.out.println(
+							item.getCode() + ", duration:" + duration + ", PRI_PROGRESS_JSON=" + PRI_PROGRESS_JSON);
 
-					Answer fixedAddress = new Answer(userToken.getUserCode(),item.getCode(),
-							"PRI_PROGRESS", PRI_PROGRESS_JSON,false,true);
+					Answer fixedAddress = new Answer(userToken.getUserCode(), item.getCode(), "PRI_PROGRESS",
+							PRI_PROGRESS_JSON, false, true);
 					beUtils.saveAnswer(fixedAddress);
 				}
 			}
 		}
 	}
-
 
 }
