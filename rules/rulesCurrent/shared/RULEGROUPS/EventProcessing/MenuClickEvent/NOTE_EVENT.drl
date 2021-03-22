@@ -33,14 +33,12 @@ rule "NOTE_EVENT"
 				String endPoint = GennySettings.projectUrl + "/v7/notes";
 				System.out.println("endPoint :: " + endPoint);
 
-				/* to fetch all notes default page size = 20 */
-/* 				String url = endPoint + "/"+targetCode; */
+				/* to fetch all notes with default page size(20) */
+				/* String url = endPoint + "/"+targetCode; */
 				
-				/* to fetch all notes with size limit */
+				/* to fetch all notes with size limit from 0 to 100 */
 				String url = endPoint + "/"+targetCode + "?pageIndex=0&pageSize=100";
 				
-				/* to fetch all notes with tags */
-				/* String url = endPoint + "/"+targetCode + "?tags=''&pageIndex=0&pageSize=100"; */
 				System.out.println("url :: " + url);
 
 				String notes = QwandaUtils.sendGET(url, serviceToken.getToken());
