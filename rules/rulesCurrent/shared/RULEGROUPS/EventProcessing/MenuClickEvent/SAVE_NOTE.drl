@@ -40,7 +40,7 @@ rule "SAVE_NOTE"
 		*/
 		
 		String content = "This student is great!";
-		String tags = "Business Developmen";
+		String tags = "Business Development";
 		
 		String endPoint = GennySettings.projectUrl + "/v7/notes";
 		
