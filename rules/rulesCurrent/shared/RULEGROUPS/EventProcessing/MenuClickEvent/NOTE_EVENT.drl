@@ -34,7 +34,7 @@ rule "NOTE_EVENT"
 				System.out.println("endPoint :: " + endPoint);
 
 				/* String url = endPoint + "/"+targetCode+"?tags=''&pageStart=0&pageSize=1000000000"; */
-				String url = endPoint + "/"+targetCode+"?pageStart=0&pageSize=1000000000";
+				String url = endPoint + "/"+targetCode;
 				System.out.println("url :: " + url);
 
 				String notes = QwandaUtils.sendGET(url, serviceToken.getToken());
