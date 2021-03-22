@@ -42,10 +42,10 @@ rule "NOTE_EVENT"
 				if(notes != null){
 					JsonObject json = new JsonObject(notes);
 					json.put("token", userToken.getToken());
-					System.out.println("json :: " + json);
+					System.out.println("json :: " + json.toString());
 
 					VertxUtils.writeMsg("webcmds", notes);
-					VertxUtils.writeMsg("webcmds", json);
+					VertxUtils.writeMsg("webcmds", json.toString());
 				}
 			}catch (Exception e) {
 				System.out.println("Exception :: " + e);
