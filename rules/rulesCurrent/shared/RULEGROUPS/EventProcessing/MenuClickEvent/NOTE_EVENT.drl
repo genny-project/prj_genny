@@ -32,6 +32,8 @@ rule "NOTE_EVENT"
 				String endPoint = GennySettings.projectUrl + "/v7/notes";
 				System.out.println("endPoint :: " + endPoint);
 
+				targetCode = "PER_5A666E64-021F-48CE-8111-BE3D66901F9C";
+
 				String url = endPoint + "/"+targetCode+"?tags=''&pageStart=0&pageSize=1000000000";
 				System.out.println("url :: " + url);
 
