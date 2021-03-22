@@ -74,7 +74,7 @@ rule "IS_QA_INTERN"
 		}
 		
 		
-		String lnkBatch = userBE.getValue("LNK_BATCH", null);
+		String lnkBatch = userBE.getValue("LNK_SELECT_BATCH", null);
 		System.out.println("lnkBatch = " +lnkBatch);
 		if (lnkBatch != null) {
 				beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), " LNK_BATCH", lnkBatch));
@@ -162,72 +162,57 @@ rule "IS_QA_INTERN"
 		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
 
 
-		/* Send email to Intern? */
-		
-		System.out.println("ABOUT TO SEND THE EMAIL OR MAYBE NOT??");
+		/* Send email to Intern */
 		
 		String rawSendEmail = user.getValue("LNK_SEND_EMAIL",null);
 		System.out.println("rawSendEmail: " +rawSendEmail);
 		
-		if (rawSendEmail != null) {
+		if (rawSendEmail.equals("SEL_YES")) {
+	 
+			BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
 		
-				if (rawSendEmail.equals("SEL_YES")) { 
-						BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
+			String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, email, serviceToken.getToken());
+			System.out.println("token: " + token);
 		
-						String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, email, serviceToken.getToken());
-						System.out.println("token: " + token);
-					
-						String url = GennySettings.projectUrl+"/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9JTlRFUk4=";
-						System.out.println("url: " + url);
-						
-						url = url +"?token=" + token;
-						System.out.println("url: " + url);
-						
-						String subject = "You have been registered on InternMatch";
-						String template_id = "d-94f647d38d7745a1b925300df2208279";
-						
-						System.out.println("email: " + email);
-						System.out.println("subject: " + subject);
-						System.out.println("template_id: " + template_id);
-						System.out.println("randomPW: " + randomPW);
+			String url = GennySettings.projectUrl+"/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9JTlRFUk4=";
+			System.out.println("url: " + url);
+			
+			url = url +"?token=" + token;
+			System.out.println("url: " + url);
+			
+			String subject = "You have been registered on InternMatch";
+			String template_id = "d-94f647d38d7745a1b925300df2208279";
+			
+			System.out.println("email: " + email);
+			System.out.println("subject: " + subject);
+			System.out.println("template_id: " + template_id);
+			System.out.println("randomPW: " + randomPW);
 								
 						
-						HashMap<String, String> templateData = new HashMap<String, String>();
-						templateData.put("intern", firstname);
-						templateData.put("pw", randomPW);
-						templateData.put("url", url);
-						
-						List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
-						EmailHelper.sendGrid(beUtils, email, null, bccList, subject, template_id, templateData);
-						
-						/*
-						if (!GennySettings.projectUrl.contains("dev")) {
-						
-								List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
-								EmailHelper.sendGrid(beUtils, email, null, bccList, subject, template_id, templateData);
-								
-								System.out.println("Email Sent ||| Type: Intern ||| Subject: " + subject + "||| template_id: " + template_id);
-								
-						} else {
-							System.out.println("WARNING: Email not sent because on Dev server");
-						}
-						*/
+			HashMap<String, String> templateData = new HashMap<String, String>();
+			templateData.put("intern", firstname);
+			templateData.put("pw", randomPW);
+			templateData.put("url", url);
+			
+			List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
+		
+			if (!GennySettings.projectUrl.contains("dev")) {
+					EmailHelper.sendGrid(beUtils, email, null, bccList, subject, template_id, templateData);				
+			} else {
+				System.out.println("WARNING: Email not sent because on Dev server");
+			}
  
-						/* 
- 						String mobile = "0433501177";
-						String smsBody = "You have been recommended for an internship on Internmatch. Login to take a look!";
-						SmsHelper smsHelper = new SmsHelper();
-						smsHelper.deliverSmsMsg(mobile, smsBody);
-						*/
+			/* 
+ 			String mobile = "0433501177";
+			String smsBody = "You have been recommended for an internship on Internmatch. Login to take a look!";
+			SmsHelper smsHelper = new SmsHelper();
+			smsHelper.deliverSmsMsg(mobile, smsBody);
+			*/
 		
-						} else {
-							System.out.println("rawSendEmail is not Yes: " + rawSendEmail);
-						}
-		} else {
-			System.out.println("ERROR: null rawSendEmail");
-		}
-		
-		
+			} else {
+				System.out.println("rawSendEmail is not Yes: " + rawSendEmail);
+			}
+	
 		
 		System.out.println("################## START Shleemy ##################");
 		
@@ -262,7 +247,6 @@ rule "IS_QA_INTERN"
     	String prettyNow = dtf.format(now);
     	System.out.println("The current date and time is ~ " + prettyNow);
 		
-		/*LocalDateTime orangeTestTimer = now.plusSeconds(15);*/
     	LocalDateTime orangeTimer = now.plusHours(48);
 		String prettyOrange = dtf.format(orangeTimer);
 		System.out.println("The Orange timer is set for ~ " + prettyOrange);
@@ -270,7 +254,6 @@ rule "IS_QA_INTERN"
 		String orangeCode = newBe.getCode() + "_INTERN_COMPLETE_PROFILE_48HR";
 		System.out.println("orangeCode " + orangeCode);
 		
-		/*LocalDateTime redTestTimer = now.plusSeconds(240);*/
 		LocalDateTime redTimer = now.plusHours(96);
 		String prettyRed = dtf.format(redTimer);
 		System.out.println("The Red timer is set for ~ " + prettyRed);

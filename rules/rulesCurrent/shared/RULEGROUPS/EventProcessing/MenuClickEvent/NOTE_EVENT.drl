@@ -8,87 +8,57 @@ import life.genny.utils.OutputParam;
 import org.apache.commons.lang3.StringUtils;
 import life.genny.qwanda.message.QCmdMessage;
 import life.genny.utils.VertxUtils;
-
+import life.genny.qwandautils.QwandaUtils;
 
 rule "NOTE_EVENT"
-    ruleflow-group 'EventProcessing'
-		salience 2
-    no-loop
-    when
+	ruleflow-group 'EventProcessing'
+	salience 2
+	no-loop
+	when
 		$message : QEventMessage(data.code matches "ACT_PRI_EVENT_ACCESS_NOTES")
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam( )
-    then
-
-		
-		/*
-		code: "ACT_PRI_EVENT_EDIT_AGREEMENT"
-		parentCode: "SBE_OFFERED_APPLICATIONS_A1F5B232-3984-43E3-A2DF-1506E2AA859D"
-		targetCode: "APP_E30617D8-1D8F-4F81-B9E7-F3887830437E"
-		*/
-
-		
-		System.out.println("NOTE_EVENT fired");
+	then
+		System.out.println(drools.getRule().getName() + " triggered");
 		
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 
-		String sourceCode = beUtils.getGennyToken().getUserCode();
-		System.out.println("sourceCode :: " + sourceCode);
-		
-		String targetCode = $message.getData().getTargetCode();
+		/* String targetCode = $message.getData().getTargetCode(); */
+		String targetCode = "PER_5A666E64-021F-48CE-8111-BE3D66901F9C";
 		System.out.println("targetCode :: " + targetCode);
-		
-		/* get the company baseentity */
-		BaseEntity appBe = beUtils.getBaseEntityByCode(targetCode);
-		System.out.println("appBe :: " + appBe);
-		
-		/*String words = getNotesByTargetCodeAndTags(targetCode, "ni", 0, 20);
-		System.out.println("words :: " + words);	*/
-		
-		
-		/*
-		@Expose
-	private String code;
 
-	@Expose
-	private String parentCode;
+		if(targetCode != null){
+			try {
+				String endPoint = GennySettings.projectUrl + "/v7/notes";
+				System.out.println("endPoint :: " + endPoint);
 
-	@Expose
-	private String rootCode;
+				/* to fetch all notes default page size = 20 */
+/* 				String url = endPoint + "/"+targetCode; */
+				
+				/* to fetch all notes with size limit */
+				String url = endPoint + "/"+targetCode + "?pageIndex=0&pageSize=100";
+				
+				/* to fetch all notes with tags */
+				/* String url = endPoint + "/"+targetCode + "?tags=''&pageIndex=0&pageSize=100"; */
+				System.out.println("url :: " + url);
 
-	@Expose
-	private String targetCode;
-	*/
-		/*
-		Want to get the user
-		Want to get the targetCode of the note (should be in $message)
-		
-		targetCode = $message.getData.getTargetCode(); -> PER_XXX
-		Grab linked BE's -> HC, HCR, APP -> findPrefixEntityAttributes 
-		
-		LOOP
-		public BaseEntity getBaseEntityFromLNKAttr(String baseEntityCode, String attributeCode) {
-		
-		End up with list of BE's
-		
-		PER_XXX
-		CPY_XXX
-		BEG_XXX
-		APP_XXX
-		
-		
-		PER_XXX
-		
-		
-		getNotesByTargetCodeAndTags(targetCode, CPY_XXX, 0, 20)
-		
-		vertxUtils.writeMSg()
-		*/
-		
-		
-		
+				String notes = QwandaUtils.sendGET(url, serviceToken.getToken());
+				System.out.println("notes :: " + notes);
 
+				if(notes != null){
+					JsonObject json = new JsonObject(notes);
+					json.put("token", userToken.getToken());
+
+					System.out.println("json :: " + json.toString());
+					VertxUtils.writeMsg("webcmds", json.toString());
+				}
+			}catch (Exception e) {
+				System.out.println("Exception :: " + e);
+			}
+		}
 
 		retract( $message);
 	end
+
+

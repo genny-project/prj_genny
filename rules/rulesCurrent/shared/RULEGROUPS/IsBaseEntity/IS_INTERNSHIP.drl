@@ -191,6 +191,20 @@ rule "IS_INTERNSHIP"
 			System.out.println("ERROR: Null businessHours"); 
 		}
 		
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd MMM yyyy");
+    	
+    	LocalDateTime created = newBe.getCreated();
+		System.out.println("created = " +created);
+		String prettyCreated = dtf.format(created);
+    	System.out.println("prettyCreated ~ " + prettyCreated);
+		
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_CREATED_DATE", prettyCreated));
+		
+		/* quantumCopy(sourceBE, sourceAtt, saveLink, strip, userToken, targetBE, targetAtt)*/
+		beUtils.quantumCopy(newBe, "LNK_NO_OF_INTERNS", false, true, userToken.getUserCode(), newBe.getCode(), "PRI_NO_OF_INTERNS");
+	
+		
+		
 		/* send cmd msg */
 		QCmdMessage msg = new QCmdMessage("TOAST", "INFO");
 		msg.setMessage("Congrats for adding an internship - We will let you know as soon as an intern has applied.");

@@ -112,61 +112,53 @@ rule "IS_QA_EDU_PRO_REP"
 				System.out.println("rawSendEmail: " +rawSendEmail);
 		}
 		
-		if (rawSendEmail != null) {
-		
-				if (rawSendEmail.equals("SEL_YES")) {
-				
-						String epEmail = newBe.getValue("PRI_EMAIL", null);
-						System.out.println("epEmail = " +epEmail);					
-						
-						BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
-						
-						String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, epEmail, serviceToken.getToken());
-						System.out.println("token: " + token);
-						
-				
-						String url = GennySettings.projectUrl+"/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9FRFVfUFJPX1JFUA==";
-						System.out.println("url: " + url);
-						
-						
-						url = url +"?token=" + token;
-						System.out.println("url: " + url);
-						
+		if (rawSendEmail.equals("SEL_YES")) {
+			String epEmail = newBe.getValue("PRI_EMAIL", null);
+			System.out.println("epEmail = " +epEmail);					
+			
+			BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
+			
+			String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, epEmail, serviceToken.getToken());
+			System.out.println("token: " + token);
+			
 	
-						String subject = "You have been registered on InternMatch";
-						String template_id = "d-b569cb15814e4f34b5a57c760b9f38f8";
-						
-						System.out.println("subject: " + subject);
-						System.out.println("template_id: " + template_id);
-						System.out.println("email: " + epEmail);
-						System.out.println("EduProRep: " + firstname);
-						
-						HashMap<String, String> templateData = new HashMap<String, String>();
-				    	templateData.put("EduProRep", firstname);
-				    	templateData.put("url", url);
+			String url = GennySettings.projectUrl+"/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9FRFVfUFJPX1JFUA==";
+			System.out.println("url: " + url);
+			
+			
+			url = url +"?token=" + token;
+			System.out.println("url: " + url);
+			
+
+			String subject = "You have been registered on InternMatch";
+			String template_id = "d-b569cb15814e4f34b5a57c760b9f38f8";
+			
+			System.out.println("subject: " + subject);
+			System.out.println("template_id: " + template_id);
+			System.out.println("email: " + epEmail);
+			System.out.println("EduProRep: " + firstname);
+			
+			HashMap<String, String> templateData = new HashMap<String, String>();
+	    	templateData.put("EduProRep", firstname);
+	    	templateData.put("url", url);
 				
-						EmailHelper.sendGrid(beUtils, email, subject, template_id, templateData);
+			List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
 						
-						if (!GennySettings.projectUrl.contains("dev")) {
-						
-								List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
-								EmailHelper.sendGrid(beUtils, epEmail, null, bccList, subject, template_id, templateData);
-								
-								System.out.println("Email Sent ||| Type: Intern ||| Subject: " + subject + "||| template_id: " + template_id);
-								
-						} else {
-							System.out.println("WARNING: Email not sent because on Dev server");
-						}
+			if (!GennySettings.projectUrl.contains("dev")) {
+				EmailHelper.sendGrid(beUtils, epEmail, null, bccList, subject, template_id, templateData);		
+			} else {
+				System.out.println("WARNING: Email not sent because on Dev server");
+			}
 						
  
-						/* 
- 						String mobile = "0433501177";
-						String smsBody = "You have been recommended for an internship on Internmatch. Login to take a look!";
-						SmsHelper smsHelper = new SmsHelper();
-						smsHelper.deliverSmsMsg(mobile, smsBody);
-						*/
-					}
-		}	
+			/* 
+ 			String mobile = "0433501177";
+			String smsBody = "You have been recommended for an internship on Internmatch. Login to take a look!";
+			SmsHelper smsHelper = new SmsHelper();
+			smsHelper.deliverSmsMsg(mobile, smsBody);
+			*/
+		}
+		
 		
 		
 		output.setTypeOfResult("NONE");

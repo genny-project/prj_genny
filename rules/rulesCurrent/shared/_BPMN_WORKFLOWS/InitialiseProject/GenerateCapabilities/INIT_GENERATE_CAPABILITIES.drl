@@ -93,6 +93,7 @@ rule "INIT_GENERATE_CAPABILITIES"
 		capabilityUtils.addCapability( "ARCHIVE_EPR", "Archive Education Provider Rep");
  		capabilityUtils.addCapability( "ARCHIVE_INTERNSHIP", "Deactivate Internship");
  		capabilityUtils.addCapability( "UNARCHIVE_INTERNSHIP", "Reactivate Internship");
+ 		capabilityUtils.addCapability( "DUPLICATE_INTERNSHIP", "Copy");
  		capabilityUtils.addCapability( "POST_INTERVIEW", "Enter Star Rating");
 		capabilityUtils.addCapability( "SHORTLIST_APPLICATION", "Shortlist Application");
 		capabilityUtils.addCapability( "INTERVIEW_APPLICATION", "Interview Application");
