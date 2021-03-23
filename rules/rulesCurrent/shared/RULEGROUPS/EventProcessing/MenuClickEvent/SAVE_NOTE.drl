@@ -39,6 +39,10 @@ rule "SAVE_NOTE"
 		String tags = jsonObject.getString("tags");
 		*/
 		
+		
+		String data = $message.getData();
+		System.out.println("data :: " + data);
+		
 		String content = "This student is great!";
 		String tags = "Business Development";
 		
@@ -47,10 +51,14 @@ rule "SAVE_NOTE"
 		QwandaUtils.apiPostNote(endPoint, sourceCode, tags, targetCode, content, serviceToken.getToken());
 		System.out.println("Note saved against " + targetCode + " with content: " + content);	
 		
+		BaseEntity targetBE = beUtils.getBaseEntityByCode(targetCode);
+		
+		String name = targetBE.getValue("PRI_NAME", null);
+		System.out.println("name: " +name);
 		
 		/* send cmd msg */
 		QCmdMessage msg = new QCmdMessage("TOAST", "INFO");
-		msg.setMessage("Note saved against " + targetCode + " with content: " + content);
+		msg.setMessage("Note saved against " + name + " with content: " + content);
 		msg.setToken(beUtils.getGennyToken().getToken());
 		msg.setSend(true);
 		VertxUtils.writeMsg("webcmds", msg);	
