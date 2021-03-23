@@ -40,10 +40,10 @@ rule "SAVE_NOTE"
 		*/
 		
 		
-		String data = $message.getData();
-		System.out.println("data :: " + data);
+		String content = $message.getData().getContent();
+		System.out.println("content :: " + content);
 		
-		String content = "This student is great!";
+		/*String content = "This student is great!";*/
 		String tags = "Business Development";
 		
 		String endPoint = GennySettings.projectUrl + "/v7/notes";
