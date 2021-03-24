@@ -24,8 +24,8 @@ rule "NOTE_EVENT"
 		
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 
-		/*String targetCode = $message.getData().getTargetCode();*/
-		String targetCode = "PER_5A666E64-021F-48CE-8111-BE3D66901F9C";
+		String targetCode = $message.getData().getTargetCode();
+		/*String targetCode = "PER_5A666E64-021F-48CE-8111-BE3D66901F9C";*/
 		System.out.println("targetCode :: " + targetCode);
 
 		if(targetCode != null){
