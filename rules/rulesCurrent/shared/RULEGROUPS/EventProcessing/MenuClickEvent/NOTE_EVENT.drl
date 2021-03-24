@@ -37,7 +37,7 @@ rule "NOTE_EVENT"
 /* 				String url = endPoint + "/"+targetCode; */
 				
 				/* to fetch all notes with size limit */
-				String url = endPoint + "/"+targetCode + "?pageIndex=0&pageSize=100";
+				String url = endPoint + "/"+targetCode + "?tags=&pageIndex=0&pageSize=100";
 				
 				/* to fetch all notes with tags */
 				/* String url = endPoint + "/"+targetCode + "?tags=''&pageIndex=0&pageSize=100"; */
