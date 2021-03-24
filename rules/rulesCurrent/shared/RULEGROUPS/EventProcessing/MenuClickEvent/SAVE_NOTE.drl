@@ -46,7 +46,8 @@ rule "SAVE_NOTE"
 		/*String content = "This student is great!";*/
 		String tags = "Business Development";
 		
-		String endPoint = GennySettings.projectUrl + "/v7/notes";
+		/*String endPoint = GennySettings.projectUrl + "/v7/notes";*/
+		String endPoint = "https://internmatch-dev.gada.io/v7/notes";
 		
 		QwandaUtils.apiPostNote(endPoint, sourceCode, tags, targetCode, content, serviceToken.getToken());
 		System.out.println("Note saved against " + targetCode + " with content: " + content);	
