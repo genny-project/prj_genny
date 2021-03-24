@@ -1,0 +1,47 @@
+package life.genny.rules;
+import life.genny.qwanda.message.QDataAnswerMessage;
+import life.genny.models.GennyToken;
+import life.genny.rules.QRules;
+import life.genny.utils.BaseEntityUtils;
+import life.genny.qwanda.Answer;
+import life.genny.qwanda.entity.BaseEntity;
+import life.genny.utils.OutputParam;
+import life.genny.qwandautils.GennySettings;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+import java.util.List;
+import java.util.ArrayList;
+import org.json.JSONArray;
+
+rule "IS_LOGBOOK"
+  ruleflow-group 'IsBaseEntity'
+  no-loop true
+  salience 1 
+  when
+	 	userToken : GennyToken (code != "PER_SERVICE" )
+		serviceToken : GennyToken (code == "PER_SERVICE" )
+		output : OutputParam()
+		baseEntityType : String(baseEntityType.equals("LOGBOOK"))
+		journalBe : BaseEntity()
+	  
+  then
+    System.out.println(drools.getRule().getName() + " triggered");
+ 		System.out.println("journalCode ::   " + journalBe.getCode()); 
+ 		System.out.println("internCode  ::   " + userToken.getUserCode()); 
+ 		
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+ 		
+ 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), journalBe.getCode() ,"PRI_STATUS", "UNAPPROVED"));
+ 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), journalBe.getCode() ,"PRI_SYNC", "true"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), journalBe.getCode() ,"LNK_INTERN", "[\"" + userToken.getUserCode() + "\"]"));
+		
+		/* send cmd msg */
+		QCmdMessage msg = new QCmdMessage("TOAST", "INFO");
+		msg.setMessage("Thanks for completing your logbook!");
+		msg.setToken(beUtils.getGennyToken().getToken());
+		msg.setSend(true);
+		VertxUtils.writeMsg("webcmds", msg);
+		
+		retract(journalBe)
+end
