@@ -27,12 +27,13 @@ rule "IS_LOGBOOK"
 	  
   then
     System.out.println(drools.getRule().getName() + " triggered");
- 		System.out.println("journalCode" + journalBe.getCode()); 
- 		System.out.println("internCode" + userToken.getUserCode()); 
+ 		System.out.println("journalCode ::   " + journalBe.getCode()); 
+ 		System.out.println("internCode  ::   " + userToken.getUserCode()); 
  		
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
  		
- 		/* beUtils.saveAnswer(new Answer(userToken.getUserCode(), journalBe.getCode() ,"PRI_IS_LOGBOOK", "true")); */
+ 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), journalBe.getCode() ,"PRI_STATUS", "UNAPPROVED"));
+ 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), journalBe.getCode() ,"PRI_SYNC", "true"));
 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), journalBe.getCode() ,"LNK_INTERN", "[\"" + userToken.getUserCode() + "\"]"));
 		
 		/* send cmd msg */
