@@ -24,8 +24,8 @@ rule "NOTE_EVENT"
 		
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 
-		/*String targetCode = $message.getData().getTargetCode();*/
-		String targetCode = "PER_5A666E64-021F-48CE-8111-BE3D66901F9C";
+		String targetCode = $message.getData().getTargetCode();
+		/*String targetCode = "PER_5A666E64-021F-48CE-8111-BE3D66901F9C";*/
 		System.out.println("targetCode :: " + targetCode);
 
 		if(targetCode != null){
@@ -37,7 +37,7 @@ rule "NOTE_EVENT"
 /* 				String url = endPoint + "/"+targetCode; */
 				
 				/* to fetch all notes with size limit */
-				String url = endPoint + "/"+targetCode + "?pageIndex=0&pageSize=100";
+				String url = endPoint + "/"+targetCode + "?tags=&pageIndex=0&pageSize=100";
 				
 				/* to fetch all notes with tags */
 				/* String url = endPoint + "/"+targetCode + "?tags=''&pageIndex=0&pageSize=100"; */
