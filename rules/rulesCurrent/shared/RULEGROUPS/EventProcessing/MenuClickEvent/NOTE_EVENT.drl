@@ -15,7 +15,7 @@ rule "NOTE_EVENT"
 	salience 2
 	no-loop
 	when
-		$message : QEventMessage(data.code matches "ACT_PRI_EVENT_ACCESS_NOTES")
+		$message : QEventMessage(data.code matches "ACT_PRI_EVENT_ACCESS_NOTES" && data.parentCode matches )
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam( )
@@ -46,9 +46,56 @@ rule "NOTE_EVENT"
 				String notes = QwandaUtils.sendGET(url, serviceToken.getToken());
 				System.out.println("notes :: " + notes);
 
+/*
+				{"msg_type":"DATA_MSG","option":"EXEC","targetCodes":["APP_327132BE-56B0-44EB-A6C4-40E153155D08", "PER_"],"data_type":"Note","delete":false,"replace":false,"items":[],"status":"READ","total":0,"token":"jt8PUTuGgDRzSxcIYx3MrlQ"}
+*/				
+				
+				BaseEntity targetBE = beUtils.getBaseEntityByCode(targetCode);
+				
+				String image = targetBE.getValue("PRI_IMAGE_URL", null);
+				System.out.println("image: " +image);
+				
+				String title = targetBE.getValue("PRI_TITLE", null);
+				System.out.println("title: " +title);
+				
+		
+				String assocHC = targetBE.getValue("LNK_HOST_COMPANY", null);
+				assocHC = assocHC.replace("\"", "").replace("[", "").replace("]", "");
+				System.out.println("assocHC: " +assocHC);
+				
+				String assocInternship = targetBE.getValue("LNK_INTERNSHIP", null);
+				assocInternship = assocInternship.replace("\"", "").replace("[", "").replace("]", "");
+				System.out.println("assocInternship: " +assocInternship);
+				
+				String assocSuper = targetBE.getValue("LNK_INTERN_SUPERVISOR", null);
+				assocSuper = assocSuper.replace("\"", "").replace("[", "").replace("]", "");
+				System.out.println("assocSuper: " +assocSuper);
+				
+				String assocIntern = targetBE.getValue("PRI_INTERN_CODE", null);
+				System.out.println("assocIntern: " +assocIntern);
+				
 				if(notes != null){
 					JsonObject json = new JsonObject(notes);
 					json.put("token", userToken.getToken());
+					
+					JsonObject jsonApplicationONE = new JsonObject();
+					jsonApplicationONE.put("code", targetCode);
+					
+					JsonObject jsonApplicationTWO = new JsonObject();
+					jsonApplicationTWO.put("title", title);
+					
+					JsonObject jsonApplicationTHREE = new JsonObject();
+					jsonApplicationTHREE.put("image", image);
+					
+					/*json.put("tabs", [Name, BECode, Image] Appplication: "APP_327132BE-56B0-44EB-A6C4-40E153155D08");
+					json.put("tabs", [Name, BECode, Image] Appplication: "APP_327132BE-56B0-44EB-A6C4-40E153155D08");*/
+					
+					JSONArray tabs = new JSONArray();
+				    tabs.add(jsonApplicationONE);
+					tabs.add(jsonApplicationTWO);
+					tabs.add(jsonApplicationTHREE);			  
+					
+				    json.put("tabs", tabs);
 
 					System.out.println("json :: " + json.toString());
 					VertxUtils.writeMsg("webcmds", json.toString());
