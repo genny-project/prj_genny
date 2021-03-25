@@ -68,6 +68,8 @@ rule "SAVE_NOTE"
 			}	
 		
 		
+		BaseEntity targetBE = beUtils.getBaseEntityByCode(targetCode);
+		
 		String assocHC = targetBE.getValue("LNK_HOST_COMPANY", null);
 		assocHC = assocHC.replace("\"", "").replace("[", "").replace("]", "");
 		System.out.println("assocHC: " +assocHC);
@@ -84,8 +86,6 @@ rule "SAVE_NOTE"
 		System.out.println("asoscIntern: " +asoscIntern);
 		
 		
-		
-		BaseEntity targetBE = beUtils.getBaseEntityByCode(targetCode);
 		
 		String name = targetBE.getValue("PRI_NAME", null);
 		System.out.println("name: " +name);
