@@ -33,21 +33,7 @@ rule "SAVE_NOTE"
 		
 		String content = $message.getData().getContent();
 		System.out.println("content :: " + content);
-		
-		
-		String hostCpy = targetBE.getValue("LNK_HOST_COMPANY", null);
-		hostCpy = hostCpy.replace("\"", "").replace("[", "").replace("]", "");
-		System.out.println("hostCpy: " +hostCpy);
-		
-		
-		
-		LNK_HOST_COMPANY
-		LNK_INTERNSHIP
-		LNK_INTERN_SUPERVISOR
-		PRI_INTERN_CODE
-		
-		
-		/*String content = "This student is great!";*/
+			
 		String tags = "BD";
 		
 		/*String endPoint = GennySettings.projectUrl + "/v7/notes";*/
@@ -80,6 +66,24 @@ rule "SAVE_NOTE"
 			}catch (Exception e) {
 				System.out.println("Exception :: " + e);
 			}	
+		
+		
+		String assocHC = targetBE.getValue("LNK_HOST_COMPANY", null);
+		assocHC = assocHC.replace("\"", "").replace("[", "").replace("]", "");
+		System.out.println("assocHC: " +assocHC);
+		
+		String asoscInternship = targetBE.getValue("LNK_INTERNSHIP", null);
+		asoscInternship = asoscInternship.replace("\"", "").replace("[", "").replace("]", "");
+		System.out.println("asoscInternship: " +asoscInternship);
+		
+		String asoscSuper = targetBE.getValue("LNK_INTERN_SUPERVISOR", null);
+		asoscSuper = asoscSuper.replace("\"", "").replace("[", "").replace("]", "");
+		System.out.println("asoscSuper: " +asoscSuper);
+		
+		String asoscIntern = targetBE.getValue("PRI_INTERN_CODE", null);
+		System.out.println("asoscIntern: " +asoscIntern);
+		
+		
 		
 		BaseEntity targetBE = beUtils.getBaseEntityByCode(targetCode);
 		
