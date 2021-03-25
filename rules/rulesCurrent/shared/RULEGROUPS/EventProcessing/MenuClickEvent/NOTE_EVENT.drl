@@ -33,22 +33,15 @@ rule "NOTE_EVENT"
 				String endPoint = GennySettings.projectUrl + "/v7/notes";
 				System.out.println("endPoint :: " + endPoint);
 
-				/* to fetch all notes default page size = 20 */
-/* 				String url = endPoint + "/"+targetCode; */
-				
-				/* to fetch all notes with size limit */
 				String url = endPoint + "/"+targetCode + "?tags=&pageIndex=0&pageSize=100";
-				
-				/* to fetch all notes with tags */
-				/* String url = endPoint + "/"+targetCode + "?tags=''&pageIndex=0&pageSize=100"; */
 				System.out.println("url :: " + url);
 
 				String notes = QwandaUtils.sendGET(url, serviceToken.getToken());
 				System.out.println("notes :: " + notes);
 
-/*
+				/*
 				{"msg_type":"DATA_MSG","option":"EXEC","targetCodes":["APP_327132BE-56B0-44EB-A6C4-40E153155D08", "PER_"],"data_type":"Note","delete":false,"replace":false,"items":[],"status":"READ","total":0,"token":"jt8PUTuGgDRzSxcIYx3MrlQ"}
-*/				
+				*/				
 				
 				BaseEntity targetBE = beUtils.getBaseEntityByCode(targetCode);
 				
@@ -100,7 +93,7 @@ rule "NOTE_EVENT"
 					System.out.println("json :: " + json.toString());
 					VertxUtils.writeMsg("webcmds", json.toString());
 				}
-			}catch (Exception e) {
+			} catch (Exception e) {
 				System.out.println("Exception :: " + e);
 			}
 		}
