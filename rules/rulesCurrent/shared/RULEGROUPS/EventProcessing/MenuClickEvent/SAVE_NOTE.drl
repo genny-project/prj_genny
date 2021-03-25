@@ -44,18 +44,12 @@ rule "SAVE_NOTE"
 		System.out.println("Note saved against " + targetCode + " with content: " + content);
 		
 		try {				
-				/* to fetch all notes with size limit */
-				String url = endPoint + "/"+targetCode + "?tags=&pageIndex=0&pageSize=100";
-				
-				/* to fetch all notes with tags */
-				/* String url = endPoint + "/"+targetCode + "?tags=''&pageIndex=0&pageSize=100"; */
+				String url = endPoint + "/"+targetCode + "?tags=&pageIndex=0&pageSize=100";				
 				System.out.println("url :: " + url);
 
 				String notes = QwandaUtils.sendGET(url, serviceToken.getToken());
 				System.out.println("notes :: " + notes);
 
-				/*{"msg_type":"DATA_MSG","option":"EXEC","targetCodes":["APP_327132BE-56B0-44EB-A6C4-40E153155D08", "PER_"],"data_type":"Note","delete":false,"replace":false,"items":[],"status":"READ","total":0,"token":"jt8PUTuGgDRzSxcIYx3MrlQ"}
-				*/
 				if(notes != null){
 					JsonObject json = new JsonObject(notes);
 					json.put("token", userToken.getToken());
