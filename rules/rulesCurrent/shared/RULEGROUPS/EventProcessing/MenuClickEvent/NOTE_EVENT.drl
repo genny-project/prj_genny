@@ -83,8 +83,8 @@ rule "NOTE_EVENT"
 					/*json.put("tabs", [Name, BECode, Image] Appplication: "APP_327132BE-56B0-44EB-A6C4-40E153155D08");
 					json.put("tabs", [Name, BECode, Image] Appplication: "APP_327132BE-56B0-44EB-A6C4-40E153155D08");*/
 					
-					JSONArray tabs = new JSONArray();
-				    tabs.add(jsonApplicationONE);
+					JSONArray tabs = new JSONArray(jsonApplicationONE);
+				   /* tabs.add(jsonApplicationONE);*/
 					tabs.add(jsonApplicationTWO);
 					tabs.add(jsonApplicationTHREE);			  
 					
