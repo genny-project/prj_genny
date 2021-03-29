@@ -173,11 +173,11 @@ rule "IS_QA_HOST_CPY_REP"
 				List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
 				
 				SmsHelper smsHelper = new SmsHelper();
-				String smsBody = "Hi " + firstname + " - You have been registered as a Host Company Rep on InternMatch. Please check your email to verify the account: " + email;
+				String smsBody = "Hi " + firstname + " - You have been registered as a Host Company Rep on InternMatch. Please check your email to verify the account: " + superEmail;
 									
 				if (!GennySettings.projectUrl.contains("dev")) {
 					EmailHelper.sendGrid(beUtils, superEmail, null, bccList, subject, template_id, templateData);
-					smsHelper.deliverSmsMsg(mobile, smsBody);	
+					smsHelper.deliverSmsMsg(superMobile, smsBody);	
 					System.out.println("QA_INTERN: Email and sms sent!");
 					
 				} else {

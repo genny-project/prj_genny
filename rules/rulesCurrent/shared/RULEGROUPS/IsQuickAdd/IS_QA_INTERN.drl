@@ -169,9 +169,7 @@ rule "IS_QA_INTERN"
 		
 		String internMobile = user.getValue("PRI_MOBILE",null);
 		System.out.println("internMobile: " +internMobile);
-		
-		String internMobile = user.getValue("PRI_MOBILE",null);
-		System.out.println("internMobile: " +internMobile);
+	
 		
 		if (rawSendEmail.equals("SEL_YES")) {
 	 
@@ -207,7 +205,7 @@ rule "IS_QA_INTERN"
 			
 			if (!GennySettings.projectUrl.contains("dev")) {
 					EmailHelper.sendGrid(beUtils, email, null, bccList, subject, template_id, templateData);	
-					smsHelper.deliverSmsMsg(mobile, smsBody);	
+					smsHelper.deliverSmsMsg(internMobile, smsBody);	
 					System.out.println("QA_INTERN: Email and sms sent!");
 			} else {
 				System.out.println("WARNING: Email not sent because on Dev server");
