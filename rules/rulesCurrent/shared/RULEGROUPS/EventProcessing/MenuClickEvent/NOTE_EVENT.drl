@@ -89,10 +89,10 @@ rule "NOTE_EVENT"
 					tabs.add(jsonApplicationONE);
 					tabs.add(jsonApplicationTWO);
 					tabs.add(jsonApplicationTHREE);
-					*/			  
+								  
 					
 				    json.put("tabs", tabs);
-
+*/
 					System.out.println("json :: " + json.toString());
 					VertxUtils.writeMsg("webcmds", json.toString());
 				}
