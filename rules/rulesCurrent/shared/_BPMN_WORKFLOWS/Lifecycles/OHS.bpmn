@@ -133,7 +133,7 @@
           </drools:metaData>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
-        <bpmn2:outgoing>SequenceFlow_16</bpmn2:outgoing>
+        <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
         <bpmn2:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% START OHS WORKFLOW %%%%%%%%%%%%%%%%%%%&quot;);
 
 userToken = (GennyToken)sessionFacts.getUserToken();
@@ -171,7 +171,7 @@ kcontext.setVariable(&quot;HCBe&quot;, HCBe);
 System.out.println(&quot;HCBe = &quot; + HCBe);
 
 
-questionGroup = &quot;QUE_OHS_GEN_GRP&quot;;
+questionGroup = &quot;QUE_OHS_GRP&quot;;
 kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
 System.out.println(&quot;OHS: questionGroup = &quot; + questionGroup);
 
@@ -195,7 +195,7 @@ System.out.println(&quot;OHS: questionGroup = &quot; + questionGroup);
             <drools:metaValue><![CDATA[Check Validation]]></drools:metaValue>
           </drools:metaData>
         </bpmn2:extensionElements>
-        <bpmn2:incoming>SequenceFlow_12</bpmn2:incoming>
+        <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
         <bpmn2:ioSpecification id="InputOutputSpecification_1">
           <bpmn2:dataInput id="DataInput_6" itemSubjectRef="ItemDefinition_556" name="serviceToken"/>
@@ -246,20 +246,6 @@ System.out.println(&quot;OHS: questionGroup = &quot; + questionGroup);
         </bpmn2:dataInputAssociation>
       </bpmn2:task>
       <bpmn2:sequenceFlow id="SequenceFlow_6" drools:priority="1" sourceRef="Task_1" targetRef="ScriptTask_3"/>
-      <bpmn2:exclusiveGateway id="ExclusiveGateway_1" name="Exclusive Gateway 1" gatewayDirection="Diverging" default="SequenceFlow_12">
-        <bpmn2:incoming>SequenceFlow_18</bpmn2:incoming>
-        <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
-        <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
-      </bpmn2:exclusiveGateway>
-      <bpmn2:exclusiveGateway id="ExclusiveGateway_2" name="Exclusive Gateway 2" gatewayDirection="Converging">
-        <bpmn2:incoming>SequenceFlow_15</bpmn2:incoming>
-        <bpmn2:incoming>SequenceFlow_16</bpmn2:incoming>
-        <bpmn2:outgoing>SequenceFlow_17</bpmn2:outgoing>
-      </bpmn2:exclusiveGateway>
-      <bpmn2:sequenceFlow id="SequenceFlow_12" drools:priority="1" sourceRef="ExclusiveGateway_1" targetRef="Task_1"/>
-      <bpmn2:sequenceFlow id="SequenceFlow_3" drools:priority="1" sourceRef="ExclusiveGateway_1" targetRef="ScriptTask_4">
-        <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_1" language="http://www.java.com/java">return(!questionGroup.equals(&quot;exit&quot;));</bpmn2:conditionExpression>
-      </bpmn2:sequenceFlow>
       <bpmn2:task id="Task_2" drools:taskName="AskQuestionTask" drools:displayName="Ask Question Task" drools:icon="icons/icon-info.gif" name="QUE_OHS_GRP">
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
@@ -365,8 +351,8 @@ System.out.println(&quot;%%%%%%%%%%%%%%%%%%% ENTER Ask Question Task %%%%%%%%%%%
 System.out.println(&quot;%%%%%%%%%%%%%%%%%%% EXIT Ask Question Task %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
           </drools:onExit-script>
         </bpmn2:extensionElements>
-        <bpmn2:incoming>SequenceFlow_17</bpmn2:incoming>
-        <bpmn2:outgoing>SequenceFlow_18</bpmn2:outgoing>
+        <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
+        <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
         <bpmn2:ioSpecification id="InputOutputSpecification_2">
           <bpmn2:dataInput id="DataInput_8" itemSubjectRef="ItemDefinition_556" name="userToken"/>
           <bpmn2:dataInput id="DataInput_9" itemSubjectRef="ItemDefinition_9" name="questionCode"/>
@@ -439,20 +425,8 @@ System.out.println(&quot;%%%%%%%%%%%%%%%%%%% EXIT Ask Question Task %%%%%%%%%%%%
           <bpmn2:targetRef>results</bpmn2:targetRef>
         </bpmn2:dataOutputAssociation>
       </bpmn2:task>
-      <bpmn2:scriptTask id="ScriptTask_4" name="Script Task 4" scriptFormat="http://www.java.com/java">
-        <bpmn2:extensionElements>
-          <drools:metaData name="elementname">
-            <drools:metaValue><![CDATA[Script Task 4]]></drools:metaValue>
-          </drools:metaData>
-        </bpmn2:extensionElements>
-        <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
-        <bpmn2:outgoing>SequenceFlow_15</bpmn2:outgoing>
-        <bpmn2:script>System.out.println(&quot;Loop&quot;);</bpmn2:script>
-      </bpmn2:scriptTask>
-      <bpmn2:sequenceFlow id="SequenceFlow_15" drools:priority="1" sourceRef="ScriptTask_4" targetRef="ExclusiveGateway_2"/>
-      <bpmn2:sequenceFlow id="SequenceFlow_16" drools:priority="1" sourceRef="ScriptTask_1" targetRef="ExclusiveGateway_2"/>
-      <bpmn2:sequenceFlow id="SequenceFlow_17" drools:priority="1" sourceRef="ExclusiveGateway_2" targetRef="Task_2"/>
-      <bpmn2:sequenceFlow id="SequenceFlow_18" drools:priority="1" sourceRef="Task_2" targetRef="ExclusiveGateway_1"/>
+      <bpmn2:sequenceFlow id="SequenceFlow_5" drools:priority="1" sourceRef="ScriptTask_1" targetRef="Task_2"/>
+      <bpmn2:sequenceFlow id="SequenceFlow_7" drools:priority="1" sourceRef="Task_2" targetRef="Task_1"/>
     </bpmn2:subProcess>
     <bpmn2:endEvent id="EndEvent_2" name="End Intern Builder">
       <bpmn2:extensionElements>
@@ -538,24 +512,6 @@ System.out.println(&quot;%%%%%%%%%%%%%%%%%%% EXIT Ask Question Task %%%%%%%%%%%%
           <dc:Bounds height="11.0" width="67.0" x="1091.0" y="347.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_1" bpmnElement="ExclusiveGateway_1" isMarkerVisible="true">
-        <dc:Bounds height="50.0" width="50.0" x="950.0" y="327.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_10">
-          <dc:Bounds height="22.0" width="44.0" x="953.0" y="377.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_2" bpmnElement="ExclusiveGateway_2" isMarkerVisible="true">
-        <dc:Bounds height="50.0" width="50.0" x="720.0" y="328.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_11">
-          <dc:Bounds height="22.0" width="44.0" x="723.0" y="378.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_4" bpmnElement="ScriptTask_4" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="810.0" y="250.0"/>
-        <bpmndi:BPMNLabel>
-          <dc:Bounds height="11.0" width="52.0" x="839.0" y="269.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_1" targetElement="BPMNShape_ScriptTask_1">
         <di:waypoint xsi:type="dc:Point" x="356.0" y="353.0"/>
         <di:waypoint xsi:type="dc:Point" x="373.0" y="353.0"/>
@@ -586,40 +542,16 @@ System.out.println(&quot;%%%%%%%%%%%%%%%%%%% EXIT Ask Question Task %%%%%%%%%%%%
         <di:waypoint xsi:type="dc:Point" x="1220.0" y="353.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_13"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_12" bpmnElement="SequenceFlow_12" sourceElement="BPMNShape_ExclusiveGateway_1" targetElement="BPMNShape_Task_1">
-        <di:waypoint xsi:type="dc:Point" x="1000.0" y="352.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1035.0" y="352.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1070.0" y="353.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_17"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_ExclusiveGateway_1" targetElement="BPMNShape_ScriptTask_4">
-        <di:waypoint xsi:type="dc:Point" x="975.0" y="327.0"/>
-        <di:waypoint xsi:type="dc:Point" x="975.0" y="275.0"/>
-        <di:waypoint xsi:type="dc:Point" x="920.0" y="275.0"/>
-        <bpmndi:BPMNLabel/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_15" bpmnElement="SequenceFlow_15" sourceElement="BPMNShape_ScriptTask_4" targetElement="BPMNShape_ExclusiveGateway_2">
-        <di:waypoint xsi:type="dc:Point" x="810.0" y="275.0"/>
-        <di:waypoint xsi:type="dc:Point" x="745.0" y="275.0"/>
-        <di:waypoint xsi:type="dc:Point" x="745.0" y="328.0"/>
-        <bpmndi:BPMNLabel/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_16" bpmnElement="SequenceFlow_16" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_ExclusiveGateway_2">
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_5" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_Task_2">
         <di:waypoint xsi:type="dc:Point" x="500.0" y="353.0"/>
-        <di:waypoint xsi:type="dc:Point" x="610.0" y="353.0"/>
-        <di:waypoint xsi:type="dc:Point" x="720.0" y="353.0"/>
-        <bpmndi:BPMNLabel/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_17" bpmnElement="SequenceFlow_17" sourceElement="BPMNShape_ExclusiveGateway_2" targetElement="BPMNShape_Task_2">
-        <di:waypoint xsi:type="dc:Point" x="770.0" y="353.0"/>
-        <di:waypoint xsi:type="dc:Point" x="790.0" y="352.0"/>
+        <di:waypoint xsi:type="dc:Point" x="655.0" y="352.0"/>
         <di:waypoint xsi:type="dc:Point" x="810.0" y="352.0"/>
         <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_18" bpmnElement="SequenceFlow_18" sourceElement="BPMNShape_Task_2" targetElement="BPMNShape_ExclusiveGateway_1">
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_7" bpmnElement="SequenceFlow_7" sourceElement="BPMNShape_Task_2" targetElement="BPMNShape_Task_1">
         <di:waypoint xsi:type="dc:Point" x="920.0" y="352.0"/>
-        <di:waypoint xsi:type="dc:Point" x="935.0" y="352.0"/>
-        <di:waypoint xsi:type="dc:Point" x="950.0" y="352.0"/>
+        <di:waypoint xsi:type="dc:Point" x="995.0" y="353.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1070.0" y="353.0"/>
         <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
