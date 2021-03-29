@@ -142,11 +142,14 @@ rule "HELPER_SIGNATURE_DATE"
 		BaseEntity supervisorBe = beUtils.getBaseEntityByCode(supervisor);
 		System.out.println("supervisorBe = " + supervisorBe);
 		
-		String supervisorName = supervisorBe.getValue("PRI_FIRSTNAME",null);
-		System.out.println("supervisorName: " +supervisorName);
+		String superName = supervisorBe.getValue("PRI_FIRSTNAME",null);
+		System.out.println("superName: " +superName);
 		
-		String supervisorEmail = supervisorBe.getValue("PRI_EMAIL",null);
-		System.out.println("supervisorEmail: " +supervisorEmail);
+		String superEmail = supervisorBe.getValue("PRI_EMAIL",null);
+		System.out.println("superEmail: " +superEmail);
+		
+		String superMobile = supervisorBe.getValue("PRI_MOBILE",null);
+		System.out.println("superMobile: " +superMobile);
 		
 		
 		
@@ -192,12 +195,11 @@ rule "HELPER_SIGNATURE_DATE"
 		
 		String template_id = null;
 		String subject = null;
-		
 		HashMap<String, String> templateData = new HashMap<String, String>();
-		
 		String agentEmail = "internmatch@outcomelife.com.au";
-		
 		List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
+		SmsHelper smsHelper = new SmsHelper();
+		String smsBody = "";
 		
 		
 		BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
@@ -251,18 +253,25 @@ rule "HELPER_SIGNATURE_DATE"
 			templateData.put("intern", intern);
 			templateData.put("url", url);
 			
-			System.out.println("The internEmail is : " + internEmail);
+			
+			
+			smsBody = "Hi " + intern + " - The time has come for you to sign your Internship Agreement Document. If possible log into Internmatch on a laptop for this task";
+
 			
 			if (!GennySettings.projectUrl.contains("dev")) {
 				EmailHelper.sendGrid(beUtils, internEmail, null, bccList, subject, template_id, templateData);
+				smsHelper.deliverSmsMsg(internMobile, smsBody);		
+				System.out.println("AGREEMENT_DOC: Email and sms sent!");
 			} else {
 				System.out.println("WARNING: Email not sent because on Dev server");
 			}
 			
 			System.out.println("HCR Signature Detected. Sending email to Intern to remind signature");
 			
+			
+			/*
 			if (!GennySettings.projectUrl.contains("dev")) {
-				EmailHelper.sendGrid(beUtils, supervisorEmail, null, bccList, subject, template_id, templateData);
+				EmailHelper.sendGrid(beUtils, superEmail, null, bccList, subject, template_id, templateData);
 			
 				if (internMobile != null) {   
 					System.out.println("internMobile: " +internMobile);
@@ -276,10 +285,11 @@ rule "HELPER_SIGNATURE_DATE"
         	} else {
 				System.out.println("WARNING: Sms not sent because on Dev server");
 			}
+			*/
 		}
 		
 		if (attributeCode.startsWith("PRI_OUTCOME_")) {
-			/*template_id = "d-64ef4bf7b18a4b65a9c7e02b1b8ce7df";
+			template_id = "d-64ef4bf7b18a4b65a9c7e02b1b8ce7df";
 			subject = "Important Internship Requirement - Signing the internship agreement";
 			
 			token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, userSuperCode, serviceToken.getToken());
@@ -289,14 +299,15 @@ rule "HELPER_SIGNATURE_DATE"
 			templateData.put("intern", intern);
 			templateData.put("url", url);
 			templateData.put("internshipName", internshipName);
-			templateData.put("supervisorName", supervisorName);
+			templateData.put("supervisorName", superName);
 			templateData.put("hostCompanyName", hostCompanyName);
-			*/
 			
-			System.out.println("The supervisorEmail is : " + supervisorEmail);
+			smsBody = "Hi " + superName + " - The time has come for you to sign your Internship Agreement Document. If possible log into Internmatch on a laptop for this task";
 			
 			if (!GennySettings.projectUrl.contains("dev")) {
-				EmailHelper.sendGrid(beUtils, supervisorEmail, null, bccList, subject, template_id, templateData);
+				EmailHelper.sendGrid(beUtils, superEmail, null, bccList, subject, template_id, templateData);
+				smsHelper.deliverSmsMsg(superMobile, smsBody);		
+				System.out.println("AGREEMENT_DOC: Email and sms sent!");
 			} else {
 				System.out.println("WARNING: Email not sent because on Dev server");
 			}
@@ -328,33 +339,6 @@ rule "HELPER_SIGNATURE_DATE"
 			beUtils.saveAnswer(answerSignatures);
 			System.out.println("Answer done" +answerSignatures);
 		}
-		
-		
-		
-		
-			
-		System.out.println("template_id: " + template_id);
-		System.out.println("subject: " + subject);
-		
-				
-		/*
-		if (subject != null && template_id != null && url != null) {
-				if (!GennySettings.projectUrl.contains("dev")) {
-				
-						
-						EmailHelper.sendGrid(beUtils, internEmail, null, bccList, subject, template_id, templateData);
-						
-						System.out.println("Email Sent ||| Type: Intern ||| Subject: " + subject + "||| template_id: " + template_id);
-						
-				} else {
-					System.out.println("WARNING: Email not sent because on Dev server");
-				}
-		} else {
-			System.out.println("ERROR: EMAIL NOT SENT DUE TO NULL DATA");
-		}
-		*/
-		
-		
 						
 		
 
