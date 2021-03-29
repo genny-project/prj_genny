@@ -99,8 +99,7 @@ rule "NOTE_EVENT"
 				    
 				    String type = "Intern";
 				    
-				    
-				    String jsonString = '["code":"APP_XXX"]';
+				    String jsonString = String.format("{\"tabs\":[{\"code\":\""+targetCode+"\",\"name\":\""+title+"\",\"image\":\""+image+"\"}, {\"name\":\"sys\",\"value\":0}]\"}");
 					System.out.println("jsonString: " +jsonString);
 	
 	
