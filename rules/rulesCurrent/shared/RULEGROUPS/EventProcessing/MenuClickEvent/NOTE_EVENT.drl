@@ -100,8 +100,10 @@ rule "NOTE_EVENT"
 				    String type = "Intern";
 				    
 				    
-				    
-
+				    String jsonString = '[{"code":"APP_XXX"}]';
+					System.out.println("jsonString: " +jsonString);
+	
+	
 					System.out.println("json :: " + json.toString());
 					VertxUtils.writeMsg("webcmds", json.toString());
 				}
