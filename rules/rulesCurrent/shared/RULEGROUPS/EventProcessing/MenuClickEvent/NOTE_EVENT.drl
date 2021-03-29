@@ -102,7 +102,7 @@ rule "NOTE_EVENT"
 				    
 				    /*String jsonString = '[{"code":' + targetCode + ',"type":' + type + ',"name":' + title + ',"image":' + image + '}]';*/
 				    
-				    String jsonString = '[{"code": ' + targetCode + ',"name": ' + title + ',"image": ' + image + }']';
+				    String jsonString = '[{"code": ' + targetCode + ',"name": ' + title + ',"image": ' + image + '}]';
 				    System.out.println("jsonString: " +jsonString);
 				    /*JSONObject jo = new JSONObject("{\"city\":\"chicago\",\"name\":\"jon doe\",\"age\":\"22\"}");*/
 				    json.put("tabs", jsonString);
