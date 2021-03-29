@@ -100,7 +100,7 @@ rule "NOTE_EVENT"
 				    String type = "Intern";
 				    
 				    
-				    String jsonString = '[{"code":' + targetCode + ',"type":' + type + ',"name":' + title + ',"image":' + image + '}]';
+				    String jsonString = '[\{"code":' + targetCode + ',"type":' + type + ',"name":' + title + ',"image":' + image + '\}]';
 				    
 				    /*String jsonString = '["code": ' + targetCode + ',"name": ' + title + ',"image": ' + image + ']';*/
 				    System.out.println("jsonString: " +jsonString);
