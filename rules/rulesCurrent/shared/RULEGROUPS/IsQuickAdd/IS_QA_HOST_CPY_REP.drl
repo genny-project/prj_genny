@@ -154,6 +154,9 @@ rule "IS_QA_HOST_CPY_REP"
 				superEmail = user.getValue("PRI_EMAIL", null);
 				System.out.println("superEmail: " +superEmail);
 				
+				String superMobile = user.getValue("PRI_MOBILE",null);
+				System.out.println("superMobile: " +superMobile);
+				
 				String subject = "You have been registered on InternMatch";
 				String template_id = "d-6c43211b9b934cb6abaceea171f32e09";
 		
@@ -168,13 +171,20 @@ rule "IS_QA_HOST_CPY_REP"
 		
 		
 				List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
+				
+				SmsHelper smsHelper = new SmsHelper();
+				String smsBody = "Hi " + firstname + " - You have been registered as a Host Company Rep on InternMatch. Please check your email to verify the account: " + email;
 									
 				if (!GennySettings.projectUrl.contains("dev")) {
 					EmailHelper.sendGrid(beUtils, superEmail, null, bccList, subject, template_id, templateData);
+					smsHelper.deliverSmsMsg(mobile, smsBody);	
+					System.out.println("QA_INTERN: Email and sms sent!");
 					
 				} else {
 					System.out.println("WARNING: Email not sent because on Dev server or allEmails turned off");
 				}
+				
+				
 		}
 		
 		

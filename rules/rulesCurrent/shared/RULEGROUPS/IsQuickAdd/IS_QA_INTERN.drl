@@ -136,7 +136,7 @@ rule "IS_QA_INTERN"
 					/* TODO HACK */
 					if (true) {
 						/*String userPassword = "password1";*/
-						userId = KeycloakUtils.updateUser(userCode,serviceToken.getToken(), serviceToken.getRealm(), email, firstname, lastname,  email, randomPW,"user", "users");
+						userId = KeycloakUtils.updateUser(userCode,serviceToken.getToken(), serviceToken.getRealm(), email, firstname, lastname,  email, "password1","user", "users");
 						userId = userId.toUpperCase();
 						Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),newBe.getCode(),"PRI_UUID",userId);
 						beUtils.saveAnswer(keycloakId);
@@ -167,6 +167,12 @@ rule "IS_QA_INTERN"
 		String rawSendEmail = user.getValue("LNK_SEND_EMAIL",null);
 		System.out.println("rawSendEmail: " +rawSendEmail);
 		
+		String internMobile = user.getValue("PRI_MOBILE",null);
+		System.out.println("internMobile: " +internMobile);
+		
+		String internMobile = user.getValue("PRI_MOBILE",null);
+		System.out.println("internMobile: " +internMobile);
+		
 		if (rawSendEmail.equals("SEL_YES")) {
 	 
 			BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
@@ -195,23 +201,21 @@ rule "IS_QA_INTERN"
 			templateData.put("url", url);
 			
 			List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
-		
+			
+			SmsHelper smsHelper = new SmsHelper();
+			String smsBody = "Hi " + firstname + " - You have been registered as an intern on InternMatch. Please check your email to verify the account: " + email;
+			
 			if (!GennySettings.projectUrl.contains("dev")) {
-					EmailHelper.sendGrid(beUtils, email, null, bccList, subject, template_id, templateData);				
+					EmailHelper.sendGrid(beUtils, email, null, bccList, subject, template_id, templateData);	
+					smsHelper.deliverSmsMsg(mobile, smsBody);	
+					System.out.println("QA_INTERN: Email and sms sent!");
 			} else {
 				System.out.println("WARNING: Email not sent because on Dev server");
 			}
- 
-			/* 
- 			String mobile = "0433501177";
-			String smsBody = "You have been recommended for an internship on Internmatch. Login to take a look!";
-			SmsHelper smsHelper = new SmsHelper();
-			smsHelper.deliverSmsMsg(mobile, smsBody);
-			*/
 		
-			} else {
-				System.out.println("rawSendEmail is not Yes: " + rawSendEmail);
-			}
+		} else {
+			System.out.println("rawSendEmail is not Yes: " + rawSendEmail);
+		}
 	
 		
 		System.out.println("################## START Shleemy ##################");
