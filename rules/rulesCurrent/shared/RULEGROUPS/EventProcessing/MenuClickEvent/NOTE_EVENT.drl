@@ -100,7 +100,7 @@ rule "NOTE_EVENT"
 				    String type = "Intern";
 				    
 				    
-				    String jsonString = '[{"code":"APP_XXX"}]';
+				    String jsonString = '["code":"APP_XXX"]';
 					System.out.println("jsonString: " +jsonString);
 	
 	
