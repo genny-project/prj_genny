@@ -99,9 +99,9 @@ rule "NOTE_EVENT"
 				    
 				    String type = "Intern";
 				    
-				    String jsonString = String.format("{\"tabs\":[{\"code\":\""+targetCode+"\",\"name\":\""+title+"\",\"image\":\""+image+"\"}, {\"name\":\"sys\",\"value\":0}]\"}");
+				    String jsonString = String.format("{\"tabs\":[{\"code\":\""+targetCode+"\",\"type\":\""+type+"\",\"name\":\""+title+"\",\"image\":\""+image+"\"},{\"name\":\"sys\",\"value\":0}]\"}");
 					System.out.println("jsonString: " +jsonString);
-	
+					json.put("tabs", jsonString);
 	
 					System.out.println("json :: " + json.toString());
 					VertxUtils.writeMsg("webcmds", json.toString());
