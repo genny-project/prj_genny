@@ -178,7 +178,7 @@ rule "IS_QA_HOST_CPY_REP"
 				if (!GennySettings.projectUrl.contains("dev")) {
 					EmailHelper.sendGrid(beUtils, superEmail, null, bccList, subject, template_id, templateData);
 					smsHelper.deliverSmsMsg(superMobile, smsBody);	
-					System.out.println("QA_INTERN: Email and sms sent!");
+					System.out.println("QA_HCR: Email and sms sent!");
 					
 				} else {
 					System.out.println("WARNING: Email not sent because on Dev server or allEmails turned off");
