@@ -68,6 +68,14 @@ rule "NOTE_EVENT"
 				String assocIntern = targetBE.getValue("PRI_INTERN_CODE", null);
 				System.out.println("assocIntern: " +assocIntern);
 				
+				BaseEntity internBE = beUtils.getBaseEntityByCode(assocIntern);
+				
+				String interName = internBE.getValue("PRI_NAME", null);
+				System.out.println("interName: " +interName);
+				
+				String internImage = internBE.getValue("PRI_IMAGE_URL", null);
+				System.out.println("internImage: " +internImage);
+				
 				if(notes != null){
 					JsonObject json = new JsonObject(notes);
 					json.put("token", userToken.getToken());
@@ -97,9 +105,10 @@ rule "NOTE_EVENT"
 					
 				    json.put("tabs", tabs);*/
 				    
-				    String type = "Intern";
+				    String appType = "Application";
+				    String internType = "Intern";
 				    
-				    String jsonString = String.format("{\"tabs\":[{\"code\":\""+targetCode+"\",\"type\":\""+type+"\",\"name\":\""+title+"\",\"image\":\""+image+"\"},{\"name\":\"sys\",\"value\":0}]\"}");
+				    String jsonString = String.format("{\"tabs\":[{\"code\":\""+targetCode+"\",\"type\":\""+appType+"\",\"name\":\""+title+"\",\"image\":\""+image+"\"},{\"code\":\""+assocIntern+"\",\"type\":\""+internType+"\",\"name\":\""+interName+"\",\"image\":\""+internImage+"\"}");
 					System.out.println("jsonString: " +jsonString);
 					json.put("tabs", jsonString);
 	
