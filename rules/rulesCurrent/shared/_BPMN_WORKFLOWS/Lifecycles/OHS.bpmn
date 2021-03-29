@@ -171,7 +171,7 @@ kcontext.setVariable(&quot;HCBe&quot;, HCBe);
 System.out.println(&quot;HCBe = &quot; + HCBe);
 
 
-questionGroup = &quot;QUE_OHS_GRP&quot;;
+questionGroup = &quot;QUE_OHS_JIAN_GRP&quot;;
 kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
 System.out.println(&quot;OHS: questionGroup = &quot; + questionGroup);
 
@@ -546,13 +546,13 @@ System.out.println(&quot;%%%%%%%%%%%%%%%%%%% EXIT Ask Question Task %%%%%%%%%%%%
         <di:waypoint xsi:type="dc:Point" x="500.0" y="353.0"/>
         <di:waypoint xsi:type="dc:Point" x="655.0" y="352.0"/>
         <di:waypoint xsi:type="dc:Point" x="810.0" y="352.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_10"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_7" bpmnElement="SequenceFlow_7" sourceElement="BPMNShape_Task_2" targetElement="BPMNShape_Task_1">
         <di:waypoint xsi:type="dc:Point" x="920.0" y="352.0"/>
         <di:waypoint xsi:type="dc:Point" x="995.0" y="353.0"/>
         <di:waypoint xsi:type="dc:Point" x="1070.0" y="353.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_12"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">

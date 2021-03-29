@@ -96,6 +96,11 @@ rule "NOTE_EVENT"
 								  
 					
 				    json.put("tabs", tabs);*/
+				    
+				    String jsonString = "{\"code\": " + targetCode + ",\"name\": " + title + ",\"image\": " + image + "}";
+				    System.out.println("jsonString: " +jsonString);
+				    /*JSONObject jo = new JSONObject("{\"city\":\"chicago\",\"name\":\"jon doe\",\"age\":\"22\"}");*/
+				    json.put("tabs", jsonString);
 
 					System.out.println("json :: " + json.toString());
 					VertxUtils.writeMsg("webcmds", json.toString());
