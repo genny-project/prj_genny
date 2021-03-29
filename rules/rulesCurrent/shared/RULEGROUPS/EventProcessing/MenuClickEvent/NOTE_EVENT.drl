@@ -81,17 +81,21 @@ rule "NOTE_EVENT"
 					JsonObject jsonApplicationTHREE = new JsonObject(notes);
 					jsonApplicationTHREE.put("image", image);
 					
+					json.put("CODE", jsonApplicationONE);
+					json.put("TITLE", jsonApplicationTWO);
+					json.put("IMAGE", jsonApplicationTHREE);
+					
 					/*json.put("tabs", [Name, BECode, Image] Appplication: "APP_327132BE-56B0-44EB-A6C4-40E153155D08");
 					json.put("tabs", [Name, BECode, Image] Appplication: "APP_327132BE-56B0-44EB-A6C4-40E153155D08");*/
 					
-					
+					/*
 					JSONArray tabs = new JSONArray();
 					tabs.put(jsonApplicationONE);
 					tabs.put(jsonApplicationTWO);
 					tabs.put(jsonApplicationTHREE);
 								  
 					
-				    json.put("tabs", tabs);
+				    json.put("tabs", tabs);*/
 
 					System.out.println("json :: " + json.toString());
 					VertxUtils.writeMsg("webcmds", json.toString());
