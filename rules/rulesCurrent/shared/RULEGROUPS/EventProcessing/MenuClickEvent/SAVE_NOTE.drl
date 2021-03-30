@@ -36,6 +36,8 @@ rule "SAVE_NOTE"
 			
 		String tags = "BD";
 		
+		BaseEntity targetBE = beUtils.getBaseEntityByCode(targetCode);
+		
 		/*String endPoint = GennySettings.projectUrl + "/v7/notes";*/
 		String endPoint = "https://internmatch-dev.gada.io/v7/notes";
 		System.out.println("endPoint :: " + endPoint);
@@ -44,8 +46,8 @@ rule "SAVE_NOTE"
 		System.out.println("Note saved against " + targetCode + " with content: " + content);
 		
 		try {				
-				String endPoint = GennySettings.projectUrl + "/v7/notes";
-				System.out.println("endPoint :: " + endPoint);
+				/*String endPoint = GennySettings.projectUrl + "/v7/notes";
+				System.out.println("endPoint :: " + endPoint);*/
 
 				String url = endPoint + "/"+targetCode + "?tags=&pageIndex=0&pageSize=100";
 				System.out.println("url :: " + url);
@@ -54,8 +56,6 @@ rule "SAVE_NOTE"
 				System.out.println("notes :: " + notes);
 				
 				/* Application Details */
-				
-				BaseEntity targetBE = beUtils.getBaseEntityByCode(targetCode);
 				
 				String image = targetBE.getValue("PRI_IMAGE_URL", null);
 				System.out.println("image: " +image);
@@ -161,12 +161,7 @@ rule "SAVE_NOTE"
 			}catch (Exception e) {
 				System.out.println("Exception :: " + e);
 			}	
-		
-	
-		output.setAskSourceCode(user);	
-		output.setTargetCode(targetCode);
-		output.setTypeOfResult("SIGNAL");
-		output.setResultCode("START_NOTE_EVENT");
+
 		
 		
 		String name = targetBE.getValue("PRI_NAME", null);
