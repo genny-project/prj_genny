@@ -118,7 +118,7 @@ rule "SAVE_NOTE"
 				String superImage = superBE.getValue("PRI_IMAGE_URL", null);
 				System.out.println("superImage: " +superImage);
 				
-				String[] tags = {"Business Development", "Placement", "Outcome Life", "Miscellaneous"};
+				String[] tagList = {"Business Development", "Placement", "Outcome Life", "Miscellaneous"};
 				
 				if(notes != null){
 					JsonObject json = new JsonObject(notes);
@@ -128,31 +128,31 @@ rule "SAVE_NOTE"
 					jsonApplication.put("code", targetCode);
 					jsonApplication.put("title", title);
 					jsonApplication.put("image", image);
-					jsonApplication.put("tags", tags);
+					jsonApplication.put("tags", tagList);
 					
 					JsonObject jsonIntern = new JsonObject();
 					jsonIntern.put("code", assocIntern);
 					jsonIntern.put("title", internName);
 					jsonIntern.put("image", internImage);
-					jsonIntern.put("tags", tags);
+					jsonIntern.put("tags", tagList);
 					
 					JsonObject jsonInternship = new JsonObject();
 					jsonInternship.put("code", assocInternship);
 					jsonInternship.put("title", internshipName);
 					jsonInternship.put("image", internshipImage);
-					jsonInternship.put("tags", tags);
+					jsonInternship.put("tags", tagList);
 					
 					JsonObject jsonHC = new JsonObject();
 					jsonHC.put("code", assocHC);
 					jsonHC.put("title", HCName);
 					jsonHC.put("image", HCImage);
-					jsonHC.put("tags", tags);
+					jsonHC.put("tags", tagList);
 					
 					JsonObject jsonSuper = new JsonObject();
 					jsonSuper.put("code", assocSuper);
 					jsonSuper.put("title", superName);
 					jsonSuper.put("image", superImage);
-					jsonSuper.put("tags", tags);
+					jsonSuper.put("tags", tagList);
 					
 					
 					json.put("Tab_Application", jsonApplication);
