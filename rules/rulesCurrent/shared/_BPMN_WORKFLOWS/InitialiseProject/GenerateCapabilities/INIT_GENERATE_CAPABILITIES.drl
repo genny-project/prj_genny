@@ -80,6 +80,7 @@ rule "INIT_GENERATE_CAPABILITIES"
  		capabilityUtils.addCapability( "READ_HOST_COMPANY", "Read Host Company");
  		capabilityUtils.addCapability( "CREATE_JOURNALS", "Create Journals");
  		capabilityUtils.addCapability( "APPROVE_JOURNALS", "Approve Journals");
+ 		capabilityUtils.addCapability( "UNAPPROVE_JOURNALS", "Unapprove Journals");
  		capabilityUtils.addCapability( "READ_JOURNALS", "Read Journals");
 		capabilityUtils.addCapability( "SEARCHBAR_CMDS", "Run Commands From SearchBar");
  		
