@@ -25,7 +25,6 @@ rule "NOTE_EVENT"
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 
 		String targetCode = $message.getData().getTargetCode();
-		/*String targetCode = "PER_5A666E64-021F-48CE-8111-BE3D66901F9C";*/
 		System.out.println("targetCode :: " + targetCode);
 
 		if(targetCode != null){
@@ -39,12 +38,12 @@ rule "NOTE_EVENT"
 				String notes = QwandaUtils.sendGET(url, serviceToken.getToken());
 				System.out.println("notes :: " + notes);
 
-				/*
-				{"msg_type":"DATA_MSG","option":"EXEC","targetCodes":["APP_327132BE-56B0-44EB-A6C4-40E153155D08", "PER_"],"data_type":"Note","delete":false,"replace":false,"items":[],"status":"READ","total":0,"token":"jt8PUTuGgDRzSxcIYx3MrlQ"}
-				*/				
-				
+
 				BaseEntity targetBE = beUtils.getBaseEntityByCode(targetCode);
 				
+				/* Application Details */
+				
+				BaseEntity targetBE = beUtils.getBaseEntityByCode(targetCode);
 				
 				String image = targetBE.getValue("PRI_IMAGE_URL", null);
 				System.out.println("image: " +image);
@@ -52,46 +51,96 @@ rule "NOTE_EVENT"
 				String title = targetBE.getValue("PRI_TITLE", null);
 				System.out.println("title: " +title);
 				
-		
-				String assocHC = targetBE.getValue("LNK_HOST_COMPANY", null);
-				assocHC = assocHC.replace("\"", "").replace("[", "").replace("]", "");
-				System.out.println("assocHC: " +assocHC);
 				
-				String assocInternship = targetBE.getValue("LNK_INTERNSHIP", null);
-				assocInternship = assocInternship.replace("\"", "").replace("[", "").replace("]", "");
-				System.out.println("assocInternship: " +assocInternship);
-				
-				String assocSuper = targetBE.getValue("LNK_INTERN_SUPERVISOR", null);
-				assocSuper = assocSuper.replace("\"", "").replace("[", "").replace("]", "");
-				System.out.println("assocSuper: " +assocSuper);
-				
+				/* Intern Details */
 				String assocIntern = targetBE.getValue("PRI_INTERN_CODE", null);
 				System.out.println("assocIntern: " +assocIntern);
 				
 				BaseEntity internBE = beUtils.getBaseEntityByCode(assocIntern);
 				
-				String interName = internBE.getValue("PRI_NAME", null);
-				System.out.println("interName: " +interName);
+				String internName = internBE.getValue("PRI_NAME", null);
+				System.out.println("internName: " +internName);
 				
 				String internImage = internBE.getValue("PRI_IMAGE_URL", null);
 				System.out.println("internImage: " +internImage);
+		
+				/* Internship Details */
+				String assocInternship = targetBE.getValue("LNK_INTERNSHIP", null);
+				assocInternship = assocInternship.replace("\"", "").replace("[", "").replace("]", "");
+				System.out.println("assocInternship: " +assocInternship);
+				
+				BaseEntity internshipBE = beUtils.getBaseEntityByCode(assocInternship);
+				
+				String internshipName = internshipBE.getValue("PRI_NAME", null);
+				System.out.println("internshipName: " +internshipName);
+				
+				String internshipImage = internshipBE.getValue("PRI_IMAGE_URL", null);
+				System.out.println("internshipImage: " +internshipImage);
+				
+				/* Host Company Details */
+				String assocHC = targetBE.getValue("LNK_HOST_COMPANY", null);
+				assocHC = assocHC.replace("\"", "").replace("[", "").replace("]", "");
+				System.out.println("assocHC: " +assocHC);
+				
+				BaseEntity hostCpyBE = beUtils.getBaseEntityByCode(assocHC);
+				
+				String HCName = hostCpyBE.getValue("PRI_NAME", null);
+				System.out.println("HCName: " +HCName);
+				
+				String HCImage = hostCpyBE.getValue("PRI_IMAGE_URL", null);
+				System.out.println("HCImage: " +HCImage);
+				
+				
+				/* Supervisor Details */
+				String assocSuper = targetBE.getValue("LNK_INTERN_SUPERVISOR", null);
+				assocSuper = assocSuper.replace("\"", "").replace("[", "").replace("]", "");
+				System.out.println("assocSuper: " +assocSuper);
+				
+				BaseEntity superBE = beUtils.getBaseEntityByCode(assocSuper);
+				
+				String superName = superBE.getValue("PRI_NAME", null);
+				System.out.println("superName: " +superName);
+				
+				String superImage = superBE.getValue("PRI_IMAGE_URL", null);
+				System.out.println("superImage: " +superImage);
+				
+				
 				
 				if(notes != null){
 					JsonObject json = new JsonObject(notes);
 					json.put("token", userToken.getToken());
 					
-					JsonObject jsonApplicationONE = new JsonObject(notes);
-					jsonApplicationONE.put("code", targetCode);
+					JsonObject jsonApplication = new JsonObject(notes);
+					jsonApplication.put("code", targetCode);
+					jsonApplication.put("title", title);
+					jsonApplication.put("image", image);
 					
-					JsonObject jsonApplicationTWO = new JsonObject(notes);
-					jsonApplicationTWO.put("title", title);
+					JsonObject jsonIntern = new JsonObject(notes);
+					jsonIntern.put("code", targetCode);
+					jsonIntern.put("title", internName);
+					jsonIntern.put("image", internImage);
 					
-					JsonObject jsonApplicationTHREE = new JsonObject(notes);
-					jsonApplicationTHREE.put("image", image);
+					JsonObject jsonInternship = new JsonObject(notes);
+					jsonInternship.put("code", targetCode);
+					jsonInternship.put("title", internshipName);
+					jsonInternship.put("image", internshipImage);
 					
-					json.put("CODE", jsonApplicationONE);
-					json.put("TITLE", jsonApplicationTWO);
-					json.put("IMAGE", jsonApplicationTHREE);
+					JsonObject jsonHC = new JsonObject(notes);
+					jsonHC.put("code", assocHC);
+					jsonHC.put("title", HCName);
+					jsonHC.put("image", HCImage);
+					
+					JsonObject jsonSuper = new JsonObject(notes);
+					jsonHC.put("code", assocSuper);
+					jsonHC.put("title", superName);
+					jsonHC.put("image", superImage);
+					
+					
+					json.put("Tab_Application", jsonApplication);
+					json.put("Tab_Intern", jsonIntern);
+					json.put("Tab_Internship", jsonInternship);
+					json.put("Tab_HC", jsonHC);
+					json.put("Tab_Super", jsonSuper);
 					
 					/*json.put("tabs", [Name, BECode, Image] Appplication: "APP_327132BE-56B0-44EB-A6C4-40E153155D08");
 					json.put("tabs", [Name, BECode, Image] Appplication: "APP_327132BE-56B0-44EB-A6C4-40E153155D08");*/
