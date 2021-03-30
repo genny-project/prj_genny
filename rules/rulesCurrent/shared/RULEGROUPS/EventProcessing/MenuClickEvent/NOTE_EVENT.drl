@@ -61,6 +61,7 @@ rule "NOTE_EVENT"
 				String internImage = internBE.getValue("PRI_IMAGE_URL", null);
 				System.out.println("internImage: " +internImage);
 		
+		
 				/* Internship Details */
 				String assocInternship = targetBE.getValue("LNK_INTERNSHIP", null);
 				assocInternship = assocInternship.replace("\"", "").replace("[", "").replace("]", "");
@@ -73,6 +74,7 @@ rule "NOTE_EVENT"
 				
 				String internshipImage = internshipBE.getValue("PRI_IMAGE_URL", null);
 				System.out.println("internshipImage: " +internshipImage);
+				
 				
 				/* Host Company Details */
 				String assocHC = targetBE.getValue("LNK_HOST_COMPANY", null);
@@ -101,8 +103,6 @@ rule "NOTE_EVENT"
 				String superImage = superBE.getValue("PRI_IMAGE_URL", null);
 				System.out.println("superImage: " +superImage);
 				
-				
-				
 				if(notes != null){
 					JsonObject json = new JsonObject(notes);
 					json.put("token", userToken.getToken());
@@ -113,12 +113,12 @@ rule "NOTE_EVENT"
 					jsonApplication.put("image", image);
 					
 					JsonObject jsonIntern = new JsonObject(notes);
-					jsonIntern.put("code", targetCode);
+					jsonIntern.put("code", assocIntern);
 					jsonIntern.put("title", internName);
 					jsonIntern.put("image", internImage);
 					
 					JsonObject jsonInternship = new JsonObject(notes);
-					jsonInternship.put("code", targetCode);
+					jsonInternship.put("code", assocInternship);
 					jsonInternship.put("title", internshipName);
 					jsonInternship.put("image", internshipImage);
 					
