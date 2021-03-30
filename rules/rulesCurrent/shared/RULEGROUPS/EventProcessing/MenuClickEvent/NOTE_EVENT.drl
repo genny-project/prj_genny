@@ -127,10 +127,10 @@ rule "NOTE_EVENT"
 					jsonHC.put("title", HCName);
 					jsonHC.put("image", HCImage);
 					
-					JsonObject jsonSuper = new JsonObject(notes);
-					jsonHC.put("code", assocSuper);
-					jsonHC.put("title", superName);
-					jsonHC.put("image", superImage);
+					JsonObject jsonSuper = new JsonObject();
+					jsonSuper.put("code", assocSuper);
+					jsonSuper.put("title", superName);
+					jsonSuper.put("image", superImage);
 					
 					
 					json.put("Tab_Application", jsonApplication);
@@ -139,25 +139,7 @@ rule "NOTE_EVENT"
 					json.put("Tab_Host Company", jsonHC);
 					json.put("Tab_Supervisor", jsonSuper);
 					
-					/*json.put("tabs", [Name, BECode, Image] Appplication: "APP_327132BE-56B0-44EB-A6C4-40E153155D08");
-					json.put("tabs", [Name, BECode, Image] Appplication: "APP_327132BE-56B0-44EB-A6C4-40E153155D08");*/
 					
-					/*
-					JSONArray tabs = new JSONArray();
-					tabs.put(jsonApplicationONE);
-					tabs.put(jsonApplicationTWO);
-					tabs.put(jsonApplicationTHREE);
-								  
-					
-				    json.put("tabs", tabs);
-				    
-				    String appType = "Application";
-				    String internType = "Intern";
-				    
-				    String jsonString = String.format("{\"tabs\":[{\"code\":\""+targetCode+"\",\"type\":\""+appType+"\",\"name\":\""+title+"\",\"image\":\""+image+"\"},{\"code\":\""+assocIntern+"\",\"type\":\""+internType+"\",\"name\":\""+interName+"\",\"image\":\""+internImage+"\"}");
-					System.out.println("jsonString: " +jsonString);
-					json.put("tabs", jsonString);*/
-	
 					System.out.println("json :: " + json.toString());
 					VertxUtils.writeMsg("webcmds", json.toString());
 				}
