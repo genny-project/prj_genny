@@ -37,9 +37,6 @@ rule "NOTE_EVENT"
 
 				String notes = QwandaUtils.sendGET(url, serviceToken.getToken());
 				System.out.println("notes :: " + notes);
-
-
-				BaseEntity targetBE = beUtils.getBaseEntityByCode(targetCode);
 				
 				/* Application Details */
 				
@@ -152,14 +149,14 @@ rule "NOTE_EVENT"
 					tabs.put(jsonApplicationTHREE);
 								  
 					
-				    json.put("tabs", tabs);*/
+				    json.put("tabs", tabs);
 				    
 				    String appType = "Application";
 				    String internType = "Intern";
 				    
 				    String jsonString = String.format("{\"tabs\":[{\"code\":\""+targetCode+"\",\"type\":\""+appType+"\",\"name\":\""+title+"\",\"image\":\""+image+"\"},{\"code\":\""+assocIntern+"\",\"type\":\""+internType+"\",\"name\":\""+interName+"\",\"image\":\""+internImage+"\"}");
 					System.out.println("jsonString: " +jsonString);
-					json.put("tabs", jsonString);
+					json.put("tabs", jsonString);*/
 	
 					System.out.println("json :: " + json.toString());
 					VertxUtils.writeMsg("webcmds", json.toString());
