@@ -107,22 +107,22 @@ rule "NOTE_EVENT"
 					JsonObject json = new JsonObject(notes);
 					json.put("token", userToken.getToken());
 					
-					JsonObject jsonApplication = new JsonObject(notes);
+					JsonObject jsonApplication = new JsonObject();
 					jsonApplication.put("code", targetCode);
 					jsonApplication.put("title", title);
 					jsonApplication.put("image", image);
 					
-					JsonObject jsonIntern = new JsonObject(notes);
+					JsonObject jsonIntern = new JsonObject();
 					jsonIntern.put("code", assocIntern);
 					jsonIntern.put("title", internName);
 					jsonIntern.put("image", internImage);
 					
-					JsonObject jsonInternship = new JsonObject(notes);
+					JsonObject jsonInternship = new JsonObject();
 					jsonInternship.put("code", assocInternship);
 					jsonInternship.put("title", internshipName);
 					jsonInternship.put("image", internshipImage);
 					
-					JsonObject jsonHC = new JsonObject(notes);
+					JsonObject jsonHC = new JsonObject();
 					jsonHC.put("code", assocHC);
 					jsonHC.put("title", HCName);
 					jsonHC.put("image", HCImage);
@@ -136,8 +136,8 @@ rule "NOTE_EVENT"
 					json.put("Tab_Application", jsonApplication);
 					json.put("Tab_Intern", jsonIntern);
 					json.put("Tab_Internship", jsonInternship);
-					json.put("Tab_HC", jsonHC);
-					json.put("Tab_Super", jsonSuper);
+					json.put("Tab_Host Company", jsonHC);
+					json.put("Tab_Supervisor", jsonSuper);
 					
 					/*json.put("tabs", [Name, BECode, Image] Appplication: "APP_327132BE-56B0-44EB-A6C4-40E153155D08");
 					json.put("tabs", [Name, BECode, Image] Appplication: "APP_327132BE-56B0-44EB-A6C4-40E153155D08");*/
