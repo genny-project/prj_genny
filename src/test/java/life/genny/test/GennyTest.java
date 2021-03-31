@@ -1,20 +1,35 @@
 package life.genny.test;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TimeZone;
+import java.util.UUID;
 
 import javax.persistence.EntityManagerFactory;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.jboss.logging.Logger;
 import org.jbpm.services.api.DefinitionService;
 import org.jbpm.services.api.ProcessService;
@@ -27,6 +42,8 @@ import org.jbpm.services.api.utils.KieServiceConfigurator;
 import org.junit.BeforeClass;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.keycloak.representations.idm.UserRepresentation;
+import org.keycloak.util.JsonSerialization;
 
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
@@ -39,6 +56,7 @@ import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwandautils.GennyCacheInterface;
 import life.genny.qwandautils.GennySettings;
+import life.genny.qwandautils.KeycloakUtils;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
@@ -95,6 +113,186 @@ public class GennyTest {
 	}
 
 	@Test
+	public void DEFTest2() {
+		System.out.println("DEF Test test");
+		GennyToken userToken = null;
+		GennyToken serviceToken = null;
+
+		// VertxUtils.cachedEnabled = false;
+		VertxUtils.cachedEnabled = false;
+		try {
+			GennyJbpmBaseTest.init();// .setupLocalService();
+			// qRules = GennyJbpmBaseTest.plement();
+		} catch (FileNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		userToken = new GennyToken("userToken", GennyJbpmBaseTest.projectParms.getString("userToken"));
+		serviceToken = new GennyToken("PER_SERVICE", GennyJbpmBaseTest.projectParms.getString("serviceToken"));
+		eventBusMock = new EventBusMock();
+		vertxCache = new JunitCache(); // MockCache
+		VertxUtils.init(eventBusMock, vertxCache);
+
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+		beUtils.setServiceToken(serviceToken);
+
+		if (beUtils == null) {
+			return;
+		}
+
+		boolean ok = true;
+		Integer pageStart = 0;
+		Integer pageSize = 100;
+
+
+			SearchEntity searchBE = new SearchEntity("SBE_DEF", "DEF test")
+					.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "DEF_%")
+					
+					.addColumn("PRI_NAME", "Name");
+
+			searchBE.setRealm(realm);
+			searchBE.setPageStart(pageStart);
+			searchBE.setPageSize(pageSize);
+			pageStart += pageSize;
+
+			List<BaseEntity> items = beUtils.getBaseEntitys(searchBE);
+				log.info("Loaded "+items.size()+" baseentitys");
+
+
+			BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
+			log.info("Project = "+project);
+
+	
+	}
+	
+	@Test
+	public void fixKeycloaks()
+	{
+        // Get Keycloak User
+        String accessToken = null;
+        try {
+            String keycloakUrl = "https://keycloak.gada.io";
+            accessToken = KeycloakUtils.getAccessToken(keycloakUrl, "master", "admin-cli", null, "admin",
+                    System.getenv("KEYCLOAK_PASSWORD"));
+        } catch (IOException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+
+        // fetch all keycloak users
+
+        String keycloakUrl = "https://keycloak.gada.io";
+        List<LinkedHashMap> results = new ArrayList<LinkedHashMap>();
+        Integer pageStart = 0;
+        Integer pageSize = 200;
+        List<LinkedHashMap>  pageResults = null;
+        
+        do {
+        String resultsJson = "";
+        try {
+			resultsJson = QwandaUtils.apiGet("https://keycloak.gada.io/auth/admin/realms/" + realm + "/users?first="+pageStart+"&max="+pageSize, accessToken);
+			InputStream is = new ByteArrayInputStream(resultsJson.getBytes());
+			try {
+				 pageResults = JsonSerialization.readValue(is, (new ArrayList<UserRepresentation>()).getClass());
+				 for (LinkedHashMap user : pageResults) {
+					 String username = (String) user.get("username");
+					 if (username.startsWith("gentest")) {
+						 results.add(user);
+					 }
+				 }
+          } finally {
+              is.close();
+          }
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+        pageStart += pageSize;
+        System.out.println("count = "+pageStart+" with "+results.size()+" gentests");
+        } while (!pageResults.isEmpty());
+        
+//        final HttpClient client = new DefaultHttpClient();
+//
+//        try {
+//            final HttpGet get = new HttpGet(
+//                    "https://keycloak.gada.io/auth/admin/realms/" + realm + "/users?first=0&max=200");
+//            get.addHeader("Authorization", "Bearer " + accessToken);
+//            try {
+//                final HttpResponse response = client.execute(get);
+//                if (response.getStatusLine().getStatusCode() != 200) {
+//                    throw new IOException();
+//                }
+//                final HttpEntity entity = response.getEntity();
+//                final InputStream is = entity.getContent();
+//                try {
+//                    results = JsonSerialization.readValue(is, (new ArrayList<UserRepresentation>()).getClass());
+//                } finally {
+//                    is.close();
+//                }
+//            } catch (final IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        } finally {
+//            client.getConnectionManager().shutdown();
+//        }
+
+        Map<String, String> keycloakEmailUuidMap = new HashMap<String, String>();
+
+        System.out.println("Number of keycloak users = " + results.size());
+        int count = 0;
+        LocalDateTime latest = LocalDateTime.of(2000, 1, 1, 1, 1);
+        LocalDateTime earliest = LocalDateTime.of(2200, 1, 1, 1, 1);
+        try {
+            accessToken = KeycloakUtils.getAccessToken(keycloakUrl, "master", "admin-cli", null, "admin",
+                    System.getenv("KEYCLOAK_PASSWORD"));
+        } catch (IOException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+
+        for (LinkedHashMap userMap : results) {
+        	Long createdTimestamp = (Long)userMap.get("createdTimestamp");
+  //      	Long test_timestamp = Long.parseLong(createdTimestamp);
+        	LocalDateTime triggerTime =
+        	        LocalDateTime.ofInstant(Instant.ofEpochMilli(createdTimestamp), 
+        	                                TimeZone.getDefault().toZoneId());
+        	try {
+				if (triggerTime.isAfter(latest)) {
+					latest = triggerTime;
+				}
+				if (triggerTime.isBefore(earliest)) {
+					earliest = triggerTime;
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	String uuid = (String) userMap.get("id");
+            String username = (String) userMap.get("username");
+            String email = (String) userMap.get("email");
+            String code = QwandaUtils.getNormalisedUsername("PER_" + uuid.toUpperCase());
+            String id = (String) userMap.get("id");
+            keycloakEmailUuidMap.put(email, id);
+            String deleteUrl = keycloakUrl + "/auth/admin/realms/" + realm + "/users/" + uuid;
+            try {
+			//	KeycloakUtils.sendDELETE(deleteUrl,accessToken);
+ 
+				KeycloakUtils.setPassword(accessToken, realm, uuid, UUID.randomUUID().toString().replaceAll("-", "").substring(0, 15));
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
+
+        log.info("Earliest = "+earliest);
+        log.info("Latest = "+latest);
+        
+	}
+	
+	
+	//@Test
 	public void AdamTest2() {
 		System.out.println("fix Timezones test");
 		GennyToken userToken = null;
@@ -346,7 +544,7 @@ public class GennyTest {
 		// log.info("Insert fact "+obj+" in rules engine");
 	}
 
-	@Test
+	//@Test
 	void backFillProcessViewTest() {
 		if (beUtils == null) {
 			return;
