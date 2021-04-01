@@ -1,0 +1,12 @@
+import org.drools.core.process.core.datatype.impl.type.StringDataType;
+[
+  // the Print work item
+  [
+    "name" : "Print",
+    "parameters" : [     
+      "message" : new StringDataType()
+      ],
+    "displayName" : "Print",
+    "icon" : "icons/icon-info.gif"
+  ]
+]

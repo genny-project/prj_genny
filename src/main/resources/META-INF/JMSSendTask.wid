@@ -1,0 +1,20 @@
+[
+        [
+            "name" : "JMSSendTask",
+            "displayName" : "JMSSendTask",
+            "category" : "jbpm-workitems-jms",
+            "description" : "",
+ 
+            "parameters" : [
+                                "Signal" : new StringDataType()
+                ,"SignalWorkItemId" : new StringDataType()
+                ,"SignalProcessInstanceId" : new StringDataType()
+                ,"SignalDeploymentId" : new StringDataType()
+                ,"Data" : new StringDataType()
+
+            ],
+             "icon" : "JMSSendTask.png"
+
+        ]
+
+]
