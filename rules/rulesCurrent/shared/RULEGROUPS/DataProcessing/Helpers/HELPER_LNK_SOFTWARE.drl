@@ -62,7 +62,8 @@ rule "HELPER_LNK_SOFTWARE"
 				}
 			}
 
-			String softwares = softwareList.toString().replaceAll("[\\[\\](){}]","");
+			/* The last two replace statements ensure spaces between items */
+			String softwares = softwareList.toString().replaceAll("[\\[\\](){}]","").replace(",", ", ").replaceAll("\\s+", " ");
 			String attributeCode = "PRI_SOFTWARE";
 
 			if (answer.getAttributeCode().equals("LNK_CURRENT_SOFTWARE")) {
