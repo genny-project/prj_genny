@@ -130,7 +130,7 @@ public class ChrisTest {
 			GennyKieSession.loadAttributesJsonFromResources(userToken);
 
 		} else {
-			qRules = GennyJbpmBaseTest.setupLocalService();
+			qRules = GennyJbpmBaseTest.plement();
 			userToken = new GennyToken("userToken", qRules.getToken());
 			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
 			eventBusMock = new EventBusMock();
@@ -236,7 +236,7 @@ public class ChrisTest {
 			GennyKieSession.loadAttributesJsonFromResources(userToken);
 
 		} else {
-			qRules = GennyJbpmBaseTest.setupLocalService();
+			qRules = GennyJbpmBaseTest.plement();
 			userToken = new GennyToken("userToken", qRules.getToken());
 			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
 		}
@@ -330,7 +330,7 @@ public class ChrisTest {
             qRules.setServiceToken(serviceToken.getToken());
             VertxUtils.cachedEnabled = true; // don't send to local Service Cache
         } else {
-            qRules = GennyJbpmBaseTest.setupLocalService();
+            qRules = GennyJbpmBaseTest.plement();
             userToken = new GennyToken("userToken", qRules.getToken());
             serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
         }
@@ -425,7 +425,7 @@ public class ChrisTest {
 			qRules.setServiceToken(serviceToken.getToken());
 			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
 		} else {
-			qRules = GennyJbpmBaseTest.setupLocalService();
+			qRules = GennyJbpmBaseTest.plement();
 			userToken = new GennyToken("userToken", qRules.getToken());
 			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
 		}
@@ -586,7 +586,7 @@ public class ChrisTest {
 			GennyKieSession.loadAttributesJsonFromResources(serviceToken);
 
 		} else {
-			qRules = GennyJbpmBaseTest.setupLocalService();
+			qRules = GennyJbpmBaseTest.plement();
 			userToken = new GennyToken("userToken", qRules.getToken());
 			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
 		}

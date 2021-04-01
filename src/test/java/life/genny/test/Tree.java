@@ -73,7 +73,7 @@ public class Tree extends GennyJbpmBaseTest {
 		@Test
 	public void testSearchBe() {
 
-		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		QRules rules = GennyJbpmBaseTest.plement();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);

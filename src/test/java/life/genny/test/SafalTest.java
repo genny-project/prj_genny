@@ -288,7 +288,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 
 		} else {
 
-			rules = GennyJbpmBaseTest.setupLocalService();
+			rules = GennyJbpmBaseTest.plement();
 			userToken = new GennyToken("userToken", rules.getToken());
 			serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 		}
@@ -1187,7 +1187,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 			qRules.setServiceToken(serviceToken.getToken());
 			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
 		} else {
-			qRules = GennyJbpmBaseTest.setupLocalService();
+			qRules = GennyJbpmBaseTest.plement();
 			userToken = new GennyToken("userToken", qRules.getToken());
 			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
 		}
@@ -1240,7 +1240,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 
 		// VertxUtils.cachedEnabled = true; // don't try and use any local services
 
-		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		QRules rules = GennyJbpmBaseTest.plement();
 		GennyToken userToken = getToken(realm, "user1", "Barry Allan", "hero");
 
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
@@ -1282,7 +1282,7 @@ public class SafalTest extends GennyJbpmBaseTest {
 
 	// @Test
 	public void simpleTest() {
-		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		QRules rules = GennyJbpmBaseTest.plement();
 		rules.sendAllAttributes();
 
 	}

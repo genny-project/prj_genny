@@ -99,7 +99,7 @@ public class BaradTest {
             qRules.setServiceToken(serviceToken.getToken());
             VertxUtils.cachedEnabled = true; // don't send to local Service Cache
         } else {
-            qRules = GennyJbpmBaseTest.setupLocalService();
+            qRules = GennyJbpmBaseTest.plement();
             userToken = new GennyToken("userToken", qRules.getToken());
             serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
         }
@@ -211,7 +211,7 @@ public class BaradTest {
 			GennyKieSession.loadAttributesJsonFromResources(serviceToken);
 
 		} else {
-			qRules = GennyJbpmBaseTest.setupLocalService();
+			qRules = GennyJbpmBaseTest.plement();
 			userToken = new GennyToken("userToken", qRules.getToken());
 			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
 		}

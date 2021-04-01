@@ -81,7 +81,7 @@ public class JournalTest extends GennyJbpmBaseTest {
 	//@Test
 	public void generatePdf() {
 
-		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		QRules rules = GennyJbpmBaseTest.plement();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
@@ -159,7 +159,7 @@ public class JournalTest extends GennyJbpmBaseTest {
 	@Test
 	public void generatePdfs() {
 		System.out.println("Starting the test");
-		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		QRules rules = GennyJbpmBaseTest.plement();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);

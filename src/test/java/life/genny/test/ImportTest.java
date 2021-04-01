@@ -180,7 +180,7 @@ public class ImportTest {
 		} else {
 			// VertxUtils.cachedEnabled = false;
 			VertxUtils.cachedEnabled = false;
-			qRules = GennyJbpmBaseTest.setupLocalService();
+			qRules = GennyJbpmBaseTest.plement();
 			userToken = new GennyToken("userToken", qRules.getToken());
 			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
 			eventBusMock = new EventBusMock();
@@ -353,7 +353,7 @@ public class ImportTest {
 		} else {
 			// VertxUtils.cachedEnabled = false;
 			VertxUtils.cachedEnabled = false;
-			qRules = GennyJbpmBaseTest.setupLocalService();
+			qRules = GennyJbpmBaseTest.plement();
 			userToken = new GennyToken("userToken", qRules.getToken());
 			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
 			eventBusMock = new EventBusMock();
@@ -456,7 +456,7 @@ public class ImportTest {
 		} else {
 			// VertxUtils.cachedEnabled = false;
 			VertxUtils.cachedEnabled = false;
-			qRules = GennyJbpmBaseTest.setupLocalService();
+			qRules = GennyJbpmBaseTest.plement();
 			userToken = new GennyToken("userToken", qRules.getToken());
 			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
 			eventBusMock = new EventBusMock();
@@ -696,7 +696,7 @@ public class ImportTest {
 			GennyKieSession.loadAttributesJsonFromResources(serviceToken);
 
 		} else {
-			qRules = GennyJbpmBaseTest.setupLocalService();
+			qRules = GennyJbpmBaseTest.plement();
 			userToken = new GennyToken("userToken", qRules.getToken());
 			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
 		}

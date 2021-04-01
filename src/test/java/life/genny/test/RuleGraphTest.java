@@ -87,7 +87,7 @@ public class RuleGraphTest {
 
 		} else {
 			VertxUtils.cachedEnabled = false;
-			qRules = GennyJbpmBaseTest.setupLocalService();
+			qRules = GennyJbpmBaseTest.plement();
 			userToken = new GennyToken("userToken", qRules.getToken());
 			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
 		}
@@ -157,7 +157,7 @@ public class RuleGraphTest {
 			GennyKieSession.loadAttributesJsonFromResources(serviceToken);
 
 		} else {
-			qRules = GennyJbpmBaseTest.setupLocalService();
+			qRules = GennyJbpmBaseTest.plement();
 			userToken = new GennyToken("userToken", qRules.getToken());
 			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
 		}

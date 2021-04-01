@@ -121,7 +121,7 @@ public class JasperTest {
             VertxUtils.cachedEnabled = true; // don't send to local Service Cache
         } else {
         	VertxUtils.cachedEnabled = false;
-            qRules = GennyJbpmBaseTest.setupLocalService();
+            qRules = GennyJbpmBaseTest.plement();
             userToken = new GennyToken("userToken", qRules.getToken());
             serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
         }
@@ -187,7 +187,7 @@ public class JasperTest {
             VertxUtils.cachedEnabled = true; // don't send to local Service Cache
         } else {
         	VertxUtils.cachedEnabled = false;
-            qRules = GennyJbpmBaseTest.setupLocalService();
+            qRules = GennyJbpmBaseTest.plement();
             userToken = new GennyToken("userToken", qRules.getToken());
             serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
         }
@@ -283,7 +283,7 @@ public class JasperTest {
             VertxUtils.cachedEnabled = true; // don't send to local Service Cache
         } else {
         	VertxUtils.cachedEnabled = false;
-            qRules = GennyJbpmBaseTest.setupLocalService();
+            qRules = GennyJbpmBaseTest.plement();
             userToken = new GennyToken("userToken", qRules.getToken());
             serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
         }
@@ -339,7 +339,7 @@ public class JasperTest {
             VertxUtils.cachedEnabled = true; // don't send to local Service Cache
         } else {
         	VertxUtils.cachedEnabled = false;
-            qRules = GennyJbpmBaseTest.setupLocalService();
+            qRules = GennyJbpmBaseTest.plement();
             userToken = new GennyToken("userToken", qRules.getToken());
             serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
         }
@@ -393,7 +393,7 @@ public class JasperTest {
             VertxUtils.cachedEnabled = true; // don't send to local Service Cache
         } else {
         	VertxUtils.cachedEnabled = false;
-            qRules = GennyJbpmBaseTest.setupLocalService();
+            qRules = GennyJbpmBaseTest.plement();
             userToken = new GennyToken("userToken", qRules.getToken());
             serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
         }
@@ -423,7 +423,7 @@ public class JasperTest {
             VertxUtils.cachedEnabled = true; // don't send to local Service Cache
         } else {
         	VertxUtils.cachedEnabled = false;
-            qRules = GennyJbpmBaseTest.setupLocalService();
+            qRules = GennyJbpmBaseTest.plement();
             userToken = new GennyToken("userToken", qRules.getToken());
             serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
         }
@@ -545,7 +545,7 @@ public class JasperTest {
             VertxUtils.cachedEnabled = true; // don't send to local Service Cache
         } else {
         	VertxUtils.cachedEnabled = false;
-            qRules = GennyJbpmBaseTest.setupLocalService();
+            qRules = GennyJbpmBaseTest.plement();
             userToken = new GennyToken("userToken", qRules.getToken());
             serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
         }
@@ -948,7 +948,7 @@ public class JasperTest {
 			GennyKieSession.loadAttributesJsonFromResources(serviceToken);
 
 		} else {
-			qRules = GennyJbpmBaseTest.setupLocalService();
+			qRules = GennyJbpmBaseTest.plement();
 			userToken = new GennyToken("userToken", qRules.getToken());
 			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
 		}

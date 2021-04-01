@@ -137,7 +137,7 @@ public class LinTestNotificationHub extends GennyJbpmBaseTest {
     } else {
       // This should login with internmatch.genny.life locally to get the user
       // session.
-      qRules = GennyJbpmBaseTest.setupLocalService();
+      qRules = GennyJbpmBaseTest.plement();
       userToken = new GennyToken("userToken", qRules.getToken());
       serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
     }

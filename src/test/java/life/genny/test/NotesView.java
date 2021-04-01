@@ -70,7 +70,7 @@ public class NotesView extends GennyJbpmBaseTest {
 
 	public Frame3 getNotes() {
 
-		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		QRules rules = GennyJbpmBaseTest.plement();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
@@ -100,7 +100,7 @@ public class NotesView extends GennyJbpmBaseTest {
 
 	public Frame3 getTabHeaderNotes() {
 
-		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		QRules rules = GennyJbpmBaseTest.plement();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
@@ -136,7 +136,7 @@ public class NotesView extends GennyJbpmBaseTest {
 
 	public Frame3 getTabContentNotes() {
 
-		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		QRules rules = GennyJbpmBaseTest.plement();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
@@ -162,7 +162,7 @@ public class NotesView extends GennyJbpmBaseTest {
 	@Test
 	public void sendOuterFrame() {
 
-		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		QRules rules = GennyJbpmBaseTest.plement();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
@@ -202,7 +202,7 @@ public class NotesView extends GennyJbpmBaseTest {
 
 	public Frame3 getOuterFrames() {
 
-		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		QRules rules = GennyJbpmBaseTest.plement();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
@@ -239,7 +239,7 @@ public class NotesView extends GennyJbpmBaseTest {
 	public void sendCards() {
 		Frame3 test = this.getBucketHeaderFame("test", "test", "test");
 
-		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		QRules rules = GennyJbpmBaseTest.plement();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
@@ -271,7 +271,7 @@ public class NotesView extends GennyJbpmBaseTest {
 	// @Test
 	public void testProcessView() {
 
-		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		QRules rules = GennyJbpmBaseTest.plement();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);

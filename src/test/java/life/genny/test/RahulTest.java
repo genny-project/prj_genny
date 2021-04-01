@@ -107,7 +107,7 @@ public class RahulTest {
 			GennyKieSession.loadAttributesJsonFromResources(userToken);
 
 		} else {
-			qRules = GennyJbpmBaseTest.setupLocalService();
+			qRules = GennyJbpmBaseTest.plement();
 			userToken = new GennyToken("userToken", qRules.getToken());
 			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
 		}
@@ -250,7 +250,7 @@ public void testTableHeader() {
 		VertxUtils.cachedEnabled = true; // don't send to local Service Cache
 		GennyKieSession.loadAttributesJsonFromResources(userToken);
 	} else {
-		qRules = GennyJbpmBaseTest.setupLocalService();
+		qRules = GennyJbpmBaseTest.plement();
 		userToken = new GennyToken("userToken", qRules.getToken());
 		serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
 		GennyKieSession.loadAttributesJsonFromResources(userToken);
@@ -334,7 +334,7 @@ public void testTableHeader() {
 			qRules.setServiceToken(serviceToken.getToken());
 			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
 		} else {
-			qRules = GennyJbpmBaseTest.setupLocalService();
+			qRules = GennyJbpmBaseTest.plement();
 			userToken = new GennyToken("userToken", qRules.getToken());
 			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
 			GennyKieSession.loadAttributesJsonFromResources(userToken);
@@ -481,7 +481,7 @@ public void testTableHeader() {
 			qRules.setServiceToken(serviceToken.getToken());
 			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
 		} else {
-			qRules = GennyJbpmBaseTest.setupLocalService();
+			qRules = GennyJbpmBaseTest.plement();
 			userToken = new GennyToken("userToken", qRules.getToken());
 			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
 		}
@@ -614,7 +614,7 @@ public void testTableHeader() {
 			qRules.setServiceToken(serviceToken.getToken());
 			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
 		} else {
-			qRules = GennyJbpmBaseTest.setupLocalService();
+			qRules = GennyJbpmBaseTest.plement();
 			userToken = new GennyToken("userToken", qRules.getToken());
 			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
 		}
@@ -721,7 +721,7 @@ public void testTableHeader() {
 			qRules.setServiceToken(serviceToken.getToken());
 			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
 		} else {
-			qRules = GennyJbpmBaseTest.setupLocalService();
+			qRules = GennyJbpmBaseTest.plement();
 			userToken = new GennyToken("userToken", qRules.getToken());
 			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
 		}
@@ -803,7 +803,7 @@ public void testTableHeader() {
 			qRules.setServiceToken(serviceToken.getToken());
 			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
 		} else {
-			qRules = GennyJbpmBaseTest.setupLocalService();
+			qRules = GennyJbpmBaseTest.plement();
 			userToken = new GennyToken("userToken", qRules.getToken());
 			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
 		}
@@ -877,7 +877,7 @@ public void testTableHeader() {
 			qRules.setServiceToken(serviceToken.getToken());
 			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
 		} else {
-			qRules = GennyJbpmBaseTest.setupLocalService();
+			qRules = GennyJbpmBaseTest.plement();
 			userToken = new GennyToken("userToken", qRules.getToken());
 			serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
 		}
@@ -935,7 +935,7 @@ public void testTableHeader() {
 	// @Test
 	public void userSessionTest2() {
 		System.out.println("Show UserSession");
-		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		QRules rules = GennyJbpmBaseTest.plement();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
@@ -983,7 +983,7 @@ public void testTableHeader() {
 //@Test
 	public void displayBucketPage() {
 		System.out.println("Show Bucket Page");
-		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		QRules rules = GennyJbpmBaseTest.plement();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
@@ -1014,7 +1014,7 @@ public void testTableHeader() {
 	// @Test
 	public void displayTestPage1() {
 		System.out.println("Show test page 1");
-		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		QRules rules = GennyJbpmBaseTest.plement();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
@@ -1045,7 +1045,7 @@ public void testTableHeader() {
 //@Test
 	public void sendAuthInit() {
 
-		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		QRules rules = GennyJbpmBaseTest.plement();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
@@ -1159,7 +1159,7 @@ public void testTableHeader() {
 
 	// @Test
 	public void testTheme() {
-		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		QRules rules = GennyJbpmBaseTest.plement();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
@@ -1399,7 +1399,7 @@ public void testTableHeader() {
 	// @Test
 	public void testCacheTheme() {
 
-		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		QRules rules = GennyJbpmBaseTest.plement();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
@@ -1436,7 +1436,7 @@ public void testTableHeader() {
 
 	// @Test
 	public void formsTest() {
-		QRules rules = GennyJbpmBaseTest.setupLocalService();
+		QRules rules = GennyJbpmBaseTest.plement();
 		GennyToken userToken = new GennyToken("userToken", rules.getToken());
 		GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
@@ -1467,7 +1467,7 @@ public void testTableHeader() {
 	
     // @Test
     public void virtualAskAndContextTest() {
-            QRules rules = GennyJbpmBaseTest.setupLocalService();
+            QRules rules = GennyJbpmBaseTest.plement();
             GennyToken userToken = new GennyToken("userToken", rules.getToken());
             GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
 
@@ -1501,7 +1501,7 @@ public void testTableHeader() {
     }
 
     public Frame3 generateHeader() {
-            QRules rules = GennyJbpmBaseTest.setupLocalService();
+            QRules rules = GennyJbpmBaseTest.plement();
             GennyToken userToken = new GennyToken("userToken", rules.getToken());
             GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
             BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
@@ -1757,7 +1757,7 @@ public void testTableHeader() {
     }
 
     public Frame3 generateSidebar() {
-            QRules rules = GennyJbpmBaseTest.setupLocalService();
+            QRules rules = GennyJbpmBaseTest.plement();
             GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
             BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
             BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
@@ -1867,7 +1867,7 @@ public void testTableHeader() {
     }
 
     public Frame3 generateFooter() {
-            QRules rules = GennyJbpmBaseTest.setupLocalService();
+            QRules rules = GennyJbpmBaseTest.plement();
             GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
             BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
             BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
@@ -1910,7 +1910,7 @@ public void testTableHeader() {
     }
 
     public Frame3 getDashboard() {
-        QRules rules = GennyJbpmBaseTest.setupLocalService();
+        QRules rules = GennyJbpmBaseTest.plement();
         GennyToken userToken = new GennyToken("userToken", rules.getToken());
         GennyToken serviceToken = new GennyToken("PER_SERVICE", rules.getServiceToken());
         BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);

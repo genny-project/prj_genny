@@ -276,7 +276,7 @@ public class GennyTest {
             keycloakEmailUuidMap.put(email, id);
             String deleteUrl = keycloakUrl + "/auth/admin/realms/" + realm + "/users/" + uuid;
             try {
-			//	KeycloakUtils.sendDELETE(deleteUrl,accessToken);
+				KeycloakUtils.sendDELETE(deleteUrl,accessToken);
  
 				KeycloakUtils.setPassword(accessToken, realm, uuid, UUID.randomUUID().toString().replaceAll("-", "").substring(0, 15));
 				
