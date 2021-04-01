@@ -24,12 +24,6 @@ import java.util.UUID;
 import javax.persistence.EntityManagerFactory;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.jboss.logging.Logger;
 import org.jbpm.services.api.DefinitionService;
 import org.jbpm.services.api.ProcessService;
@@ -39,7 +33,6 @@ import org.jbpm.services.api.admin.ProcessInstanceAdminService;
 import org.jbpm.services.api.model.DeploymentUnit;
 import org.jbpm.services.api.query.QueryService;
 import org.jbpm.services.api.utils.KieServiceConfigurator;
-import org.junit.BeforeClass;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -163,9 +156,9 @@ public class GennyTest {
 			BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
 			log.info("Project = "+project);
 
-	
+
 	}
-	
+
 	@Test
 	public void fixKeycloaks()
 	{
@@ -243,13 +236,13 @@ public class GennyTest {
         int count = 0;
         LocalDateTime latest = LocalDateTime.of(2000, 1, 1, 1, 1);
         LocalDateTime earliest = LocalDateTime.of(2200, 1, 1, 1, 1);
-        try {
-            accessToken = KeycloakUtils.getAccessToken(keycloakUrl, "master", "admin-cli", null, "admin",
-                    System.getenv("KEYCLOAK_PASSWORD"));
-        } catch (IOException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
+//        try {
+//            accessToken = KeycloakUtils.getAccessToken(keycloakUrl, "master", "admin-cli", null, "admin",
+//                    System.getenv("KEYCLOAK_PASSWORD"));
+//        } catch (IOException e1) {
+//            // TODO Auto-generated catch block
+//            e1.printStackTrace();
+//        }
 
         for (LinkedHashMap userMap : results) {
         	Long createdTimestamp = (Long)userMap.get("createdTimestamp");
@@ -278,7 +271,7 @@ public class GennyTest {
             try {
 				KeycloakUtils.sendDELETE(deleteUrl,accessToken);
  
-				KeycloakUtils.setPassword(accessToken, realm, uuid, UUID.randomUUID().toString().replaceAll("-", "").substring(0, 15));
+//				KeycloakUtils.setPassword(accessToken, realm, uuid, UUID.randomUUID().toString().replaceAll("-", "").substring(0, 15));
 				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
