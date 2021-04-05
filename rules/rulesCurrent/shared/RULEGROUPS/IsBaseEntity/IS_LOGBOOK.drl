@@ -31,11 +31,57 @@ rule "IS_LOGBOOK"
  		System.out.println("internCode  ::   " + userToken.getUserCode()); 
  		
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
- 		
- 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), journalBe.getCode() ,"PRI_STATUS", "UNAPPROVED"));
- 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), journalBe.getCode() ,"PRI_SYNC", "true"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), journalBe.getCode() ,"LNK_INTERN", "[\"" + userToken.getUserCode() + "\"]"));
-		
+		List<Answer> answers = new ArrayList<Answer>();
+ 		answers.add(new Answer(userToken.getUserCode(), journalBe.getCode() ,"PRI_STATUS", "UNAPPROVED"));
+ 		answers.add(new Answer(userToken.getUserCode(), journalBe.getCode() ,"PRI_SYNC", "true"));
+		answers.add(new Answer(userToken.getUserCode(), journalBe.getCode() ,"LNK_INTERN", "[\"" + userToken.getUserCode() + "\"]"));
+
+		/* need to save the appCode to JNL */
+
+		/* get the app from inprogress bucket */
+		SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", "SBE_APPLICATIONS_INPROGRESS",SearchEntity.class, serviceToken.getToken());
+		if(searchBE != null){
+			searchBE.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.EQUAL, userToken.getUserCode());
+
+			try {
+ 			  BaseEntity app = null; 
+				List<BaseEntity> apps = beUtils.getBaseEntitys(appSearch);				
+				System.out.println("The number of apps is "+(apps ==null?"NULL":apps.size()));
+				if ((apps!=null) && (apps.size() > 0)) {
+				  System.out.println("Get the first app");
+					app = apps.get(0); 
+				  System.out.println("appCode   ::   " + app.getCode());
+					Optional<String> optHostCompanyCode = app.getValue("LNK_HOST_COMPANY");		
+					Optional<String> optHostCompanyRepCode = app.getValue("LNK_HOST_COMPANY_REP");		
+					Optional<String> optHostCompanySupervisorCode = app.getValue("LNK_INTERN_SUPERVISOR");		
+					Optional<String> optInternshipCode = app.getValue("LNK_INTERNSHIP");		
+
+					if (optHostCompanyCode.isPresent()) {
+						answers.add(new Answer(userToken.getUserCode(), journalBe.getCode(), "LNK_HOST_COMPANY", optHostCompanyCode.get(),false,true));
+						System.out.println("LNK_HOST_COMPANY   ::   "+optHostCompanyCode.get());
+					}
+					if (optHostCompanyRepCode.isPresent()) {
+						answers.add(new Answer(userToken.getUserCode(), journalBe.getCode(), "LNK_HOST_COMPANY_REP", optHostCompanyRepCode.get(),false,true));
+						System.out.println("LNK_HOST_COMPANY_REP   ::   "+optHostCompanyRepCode.get());
+					}
+					if (optHostCompanySupervisorCode.isPresent()) {
+						answers.add(new Answer(userToken.getUserCode(), journalBe.getCode(), "LNK_INTERN_SUPERVISOR", optHostCompanySupervisorCode.get(),false,true));
+						System.out.println("LNK_INTERN_SUPERVISOR   ::   "+optHostCompanySupervisorCode.get());
+					}
+					if (optInternshipCode.isPresent()) {
+						answers.add(new Answer(userToken.getUserCode(), journalBe.getCode(), "LNK_INTERNSHIP", optInternshipCode.get(),false,true));
+						System.out.println("LNK_INTERNSHIP   ::   "+optInternshipCode.get());
+					}
+				}
+			}catch (Exception e) {
+				System.out.println("Error in " + drools.getRule().getName() +"\n Exception Details   ::   "+e.toString());
+			}
+		}else{
+			System.out.println("SBE_APPLICATIONS_INPROGRESS was null");
+		}
+
+		beUtils.saveAnswers(answers);
+
 		/* send cmd msg */
 		QCmdMessage msg = new QCmdMessage("TOAST", "INFO");
 		msg.setMessage("Thanks for completing your logbook!");
