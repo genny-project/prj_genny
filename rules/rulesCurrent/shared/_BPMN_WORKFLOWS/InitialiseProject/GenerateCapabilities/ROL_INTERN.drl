@@ -52,6 +52,7 @@ rule "ROL_INTERN"
 				 capabilityUtils.addCapabilityToRole(role,"WITHDRAW_APPLICATION",CapabilityMode.VIEW);
 				 capabilityUtils.addCapabilityToRole(role,"VIEW_JOURNAL",CapabilityMode.VIEW);
 				 capabilityUtils.addCapabilityToRole(role,"EDIT_JOURNAL",CapabilityMode.EDIT);
+				 capabilityUtils.addCapabilityToRole(role,"ADD_JOURNAL",CapabilityMode.ADD);
 				 capabilityUtils.addCapabilityToRole(role,"APPLY",CapabilityMode.VIEW);
 				 capabilityUtils.addCapabilityToRole(role,"VIEW_AGREEMENT",CapabilityMode.VIEW);
   	     
