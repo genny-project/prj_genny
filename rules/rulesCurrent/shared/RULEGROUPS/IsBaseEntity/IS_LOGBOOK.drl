@@ -72,6 +72,142 @@ rule "IS_LOGBOOK"
 						answers.add(new Answer(userToken.getUserCode(), journalBe.getCode(), "LNK_INTERNSHIP", optInternshipCode.get(),false,true));
 						System.out.println("LNK_INTERNSHIP   ::   "+optInternshipCode.get());
 					}
+
+					Optional<String> optInternCode = app.getValue("PRI_INTERN_CODE");		
+					Optional<String> optDaysPerWeek = app.getValue("PRI_DAYS_PER_WEEK");		
+					Optional<String> optInternshipWeek = app.getValue("PRI_ASSOC_DURATION");	
+					Optional<LocalDate> optStartDate = app.getValue("PRI_START_DATE");	
+					Optional<LocalDate> optEndDate = app.getValue("PRI_END_DATE");
+
+					if (optInternCode.isPresent() && optStartDate.isPresent() && optEndDate.isPresent() && optInternshipWeek.isPresent()) {
+						
+						System.out.println("PRI_INTERN_CODE | PRI_ASSOC_DURATION | PRI_START_DATE | PRI_END_DATE present in the application");
+
+						LocalDate startDate = optStartDate.get();
+						LocalDate endDate = optEndDate.get();
+						String internshipWeek = optInternshipWeek.get();
+						String internCode = optInternCode.get();
+
+							/* calculate internship days */
+						Long internshipDays = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate);
+
+						/* get the current date */
+						LocalDate currentDate = LocalDate.now();
+
+						/* check if currentDate has passed endDate */
+						Long hasCompletedInternship = java.time.temporal.ChronoUnit.DAYS.between(currentDate, endDate);
+
+						/* check if internship is yet to be started */
+						Long hasNotStartedInternship = java.time.temporal.ChronoUnit.DAYS.between(startDate,
+										currentDate);
+
+							/* if it's negative, intern has completed the internship */
+						if (hasCompletedInternship < 0) {
+
+							/* set internship completed */
+							completedPercentage = 100.0;
+
+							/* if it's negative, internship has not started */
+						} else if (hasNotStartedInternship < 0) {
+
+							/* set internship not started at all */
+							completedPercentage = 0.0;
+
+						} else {
+							/* calculate how many days intern has done internship */
+							Long daysInInternship = java.time.temporal.ChronoUnit.DAYS.between(startDate, currentDate);
+
+							/* make days inclusive ?? */
+							daysInInternship++;
+
+							/* calculate completedPercentage */
+							completedPercentage = (100.0 * daysInInternship) / internshipDays;
+						}
+						
+						JsonObject appProgress = new JsonObject();
+						appProgress.put("completedPercentage", completedPercentage);
+						appProgress.put("steps", Integer.decode(internshipWeek));
+
+						if ((optDaysPerWeek.isPresent())) {
+
+							Integer totalJournals = Integer.decode(optDaysPerWeek.get())
+											* Integer.decode(optInternshipWeek.get());
+							System.out.println(totalJournals);
+
+							/* get the intern be */
+							BaseEntity intern = beUtils.getBaseEntityByCode(internCode);
+							if (intern != null) {
+
+								/* find the completedJournals count from sbe */
+								SearchEntity completedJnlSbe = new SearchEntity("SBE_JOURNAL_COUNT", "SBE_JOURNAL_COUNT")
+																						.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+																						.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
+																						.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%" + internCode + "%")
+																						.addColumn("PRI_CODE", "Name");
+
+								Tuple2<String, List<String>> results = beUtils.getHql(completedJnlSbe);
+								String hql = results._1;
+								String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
+								Integer count = 0;
+								Integer completedJournals = 0;
+
+								try {
+									String resultJsonStr = QwandaUtils.apiGet(
+													GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2,
+													serviceToken.getToken(), 120);
+
+									completedJournals = Integer.decode(resultJsonStr);
+
+									/* save PRI_NUM_JOURNALS to app and intern */
+									beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), internCode,
+													"PRI_NUM_JOURNALS", completedJournals));
+									beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(),
+													app.getCode(), "PRI_NUM_JOURNALS", completedJournals));
+									
+									System.out.println("Saved PRI_NUM_JOURNALS to intern      ::   " + internCode);
+									System.out.println("Saved PRI_NUM_JOURNALS to application ::   " + app.getCode());
+
+								} catch (Exception e1) {
+									completedJournals = 0;
+									System.out.println("No journals yet for " + internCode);
+								}
+
+								String journalStatus = completedJournals.toString() + "/" + totalJournals.toString();
+
+								beUtils.saveAnswer( new Answer(beUtils.getGennyToken().getUserCode(),
+												internCode, "PRI_JOURNAL_STATUS", journalStatus));
+								beUtils.saveAnswer( new Answer(beUtils.getGennyToken().getUserCode(),
+												app.getCode(), "PRI_JOURNAL_STATUS", journalStatus));
+								
+								System.out.println("Saved PRI_JOURNAL_STATUS to intern      ::   " + internCode);
+								System.out.println("Saved PRI_JOURNAL_STATUS to application ::   " + app.getCode());
+
+								/* add completedJournals to json */
+								appProgress.put("completedJournals", journalStatus);
+							}
+						}
+
+						beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), internCode, "PRI_PROGRESS",
+                                appProgress.toString(), false, true));
+						beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), app.getCode(), "PRI_PROGRESS",
+										appProgress.toString(), false, true));
+						
+						System.out.println("Saved PRI_PROGRESS to intern      ::   " + internCode);
+						System.out.println("Saved PRI_PROGRESS to application ::   " + app.getCode());
+						
+					}else {
+						System.out.println("Missing data !");
+
+						if (!optStartDate.isPresent()) {
+								System.out.println("Missing PRI_START_DATE");
+						}
+						if (!optEndDate.isPresent()) {
+								System.out.println("Missing PRI_END_DATE");
+						}
+						if (!optInternshipWeek.isPresent()) {
+								System.out.println("Missing PRI_ASSOC_DURATION");
+						}
+					}
 				}
 			}catch (Exception e) {
 				System.out.println("Error in " + drools.getRule().getName() +"\n Exception Details   ::   "+e.toString());
