@@ -44,7 +44,8 @@ rule "IS_LOGBOOK"
 			searchBE.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.EQUAL, userToken.getUserCode());
 
 			try {
- 			  BaseEntity app = null; 
+ 			  BaseEntity app = null;
+				Double completedPercentage = 0.0;
 				List<BaseEntity> apps = beUtils.getBaseEntitys(searchBE);				
 				System.out.println("The number of apps is "+(apps ==null?"NULL":apps.size()));
 				if ((apps!=null) && (apps.size() > 0)) {
