@@ -45,7 +45,7 @@ rule "IS_LOGBOOK"
 
 			try {
  			  BaseEntity app = null; 
-				List<BaseEntity> apps = beUtils.getBaseEntitys(appSearch);				
+				List<BaseEntity> apps = beUtils.getBaseEntitys(searchBE);				
 				System.out.println("The number of apps is "+(apps ==null?"NULL":apps.size()));
 				if ((apps!=null) && (apps.size() > 0)) {
 				  System.out.println("Get the first app");
