@@ -215,6 +215,7 @@ rule "IS_LOGBOOK"
 						appProgress.put("completedJournals", journalStatus);
 					}
 
+					System.out.println("appProgress   ::   " + appProgress.toString());
 					beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), internCode, "PRI_PROGRESS",
 															appProgress.toString(), false, true));
 					beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), app.getCode(), "PRI_PROGRESS",
