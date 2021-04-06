@@ -236,7 +236,7 @@ rule "IS_LOGBOOK"
 				System.out.println("Error in " + drools.getRule().getName() +"\n Exception Details   ::   "+e.toString());
 			}
 		}else{
-			System.out.println("SBE_APPLICATIONS_INPROGRESS was null");
+			System.out.println("SBE_APPLICATIONS_INPROGRESS is not in cache!");
 		}
 
 		beUtils.saveAnswers(answers);
