@@ -16,13 +16,11 @@ import life.genny.qwanda.entity.BaseEntity;
        "baseEntityTarget" : new BaseEntity(),
        "formCode"  :  new StringDataType(),
        "targetCode"  :  new StringDataType(),
-
        "liveQuestions" : new Boolean(),
        "showInDrafts" : new Boolean()
-
       ],
       "results" : [
-        "Result" : new ObjectDataType(),
+        "submitCode" : new StringDataType(),
     ],
     "displayName" : "Ask Question Task",
     "icon" : "icons/icon-info.gif"
