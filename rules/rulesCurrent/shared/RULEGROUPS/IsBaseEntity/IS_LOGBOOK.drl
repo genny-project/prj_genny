@@ -29,7 +29,7 @@ rule "IS_LOGBOOK"
     System.out.println(drools.getRule().getName() + " triggered");
  		System.out.println("journalCode ::   " + journalBe.getCode()); 
  		System.out.println("internCode  ::   " + userToken.getUserCode()); 
-		String internCode = userToken.getUserCode());
+		String internCode = userToken.getUserCode();
  		
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 		List<Answer> answers = new ArrayList<Answer>();
