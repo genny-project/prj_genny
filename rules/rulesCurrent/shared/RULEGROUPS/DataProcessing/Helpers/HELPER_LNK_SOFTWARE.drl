@@ -62,7 +62,7 @@ rule "HELPER_LNK_SOFTWARE"
 				}
 			}
 
-			String softwares = beUtils.cleanUpAttributeValue(softwareList.toString());
+			String softwares = softwareList.toString().replaceAll("[\\[\\](){}]","");
 			String attributeCode = "PRI_SOFTWARE";
 
 			if (answer.getAttributeCode().equals("LNK_CURRENT_SOFTWARE")) {
