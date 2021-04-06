@@ -239,5 +239,5 @@ rule "IS_LOGBOOK"
 		msg.setSend(true);
 		VertxUtils.writeMsg("webcmds", msg);
 		
-		retract(journalBe)
+		retract(journalBe);
 end
