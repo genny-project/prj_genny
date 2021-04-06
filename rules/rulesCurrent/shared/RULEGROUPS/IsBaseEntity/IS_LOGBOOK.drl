@@ -29,6 +29,7 @@ rule "IS_LOGBOOK"
     System.out.println(drools.getRule().getName() + " triggered");
  		System.out.println("journalCode ::   " + journalBe.getCode()); 
  		System.out.println("internCode  ::   " + userToken.getUserCode()); 
+		String internCode = userToken.getUserCode());
  		
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 		List<Answer> answers = new ArrayList<Answer>();
@@ -74,20 +75,19 @@ rule "IS_LOGBOOK"
 						System.out.println("LNK_INTERNSHIP   ::   "+optInternshipCode.get());
 					}
 
-					Optional<String> optInternCode = app.getValue("PRI_INTERN_CODE");		
 					Optional<String> optDaysPerWeek = app.getValue("PRI_DAYS_PER_WEEK");		
 					Optional<String> optInternshipWeek = app.getValue("PRI_ASSOC_DURATION");	
 					Optional<LocalDate> optStartDate = app.getValue("PRI_START_DATE");	
 					Optional<LocalDate> optEndDate = app.getValue("PRI_END_DATE");
+					JsonObject appProgress = new JsonObject();
 
-					if (optInternCode.isPresent() && optStartDate.isPresent() && optEndDate.isPresent() && optInternshipWeek.isPresent()) {
+					if (optStartDate.isPresent() && optEndDate.isPresent() && optInternshipWeek.isPresent()) {
 						
 						System.out.println("PRI_INTERN_CODE | PRI_ASSOC_DURATION | PRI_START_DATE | PRI_END_DATE present in the application");
 
 						LocalDate startDate = optStartDate.get();
 						LocalDate endDate = optEndDate.get();
 						String internshipWeek = optInternshipWeek.get();
-						String internCode = optInternCode.get();
 
 							/* calculate internship days */
 						Long internshipDays = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate);
@@ -125,77 +125,8 @@ rule "IS_LOGBOOK"
 							completedPercentage = (100.0 * daysInInternship) / internshipDays;
 						}
 						
-						JsonObject appProgress = new JsonObject();
 						appProgress.put("completedPercentage", completedPercentage);
 						appProgress.put("steps", Integer.decode(internshipWeek));
-
-						if ((optDaysPerWeek.isPresent())) {
-
-							Integer totalJournals = Integer.decode(optDaysPerWeek.get())
-											* Integer.decode(optInternshipWeek.get());
-							System.out.println(totalJournals);
-
-							/* get the intern be */
-							BaseEntity intern = beUtils.getBaseEntityByCode(internCode);
-							if (intern != null) {
-
-								/* find the completedJournals count from sbe */
-								SearchEntity completedJnlSbe = new SearchEntity("SBE_JOURNAL_COUNT", "SBE_JOURNAL_COUNT")
-																						.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-																						.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
-																						.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%" + internCode + "%")
-																						.addColumn("PRI_CODE", "Name");
-
-								Tuple2<String, List<String>> results = beUtils.getHql(completedJnlSbe);
-								String hql = results._1;
-								String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
-								Integer count = 0;
-								Integer completedJournals = 0;
-
-								try {
-									String resultJsonStr = QwandaUtils.apiGet(
-													GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2,
-													serviceToken.getToken(), 120);
-
-									completedJournals = Integer.decode(resultJsonStr);
-
-									/* save PRI_NUM_JOURNALS to app and intern */
-									beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), internCode,
-													"PRI_NUM_JOURNALS", completedJournals));
-									beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(),
-													app.getCode(), "PRI_NUM_JOURNALS", completedJournals));
-									
-									System.out.println("Saved PRI_NUM_JOURNALS to intern      ::   " + internCode);
-									System.out.println("Saved PRI_NUM_JOURNALS to application ::   " + app.getCode());
-
-								} catch (Exception e1) {
-									completedJournals = 0;
-									System.out.println("No journals yet for " + internCode);
-								}
-
-								String journalStatus = completedJournals.toString() + "/" + totalJournals.toString();
-
-								beUtils.saveAnswer( new Answer(beUtils.getGennyToken().getUserCode(),
-												internCode, "PRI_JOURNAL_STATUS", journalStatus));
-								beUtils.saveAnswer( new Answer(beUtils.getGennyToken().getUserCode(),
-												app.getCode(), "PRI_JOURNAL_STATUS", journalStatus));
-								
-								System.out.println("Saved PRI_JOURNAL_STATUS to intern      ::   " + internCode);
-								System.out.println("Saved PRI_JOURNAL_STATUS to application ::   " + app.getCode());
-
-								/* add completedJournals to json */
-								appProgress.put("completedJournals", journalStatus);
-							}
-						}
-
-						beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), internCode, "PRI_PROGRESS",
-                                appProgress.toString(), false, true));
-						beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), app.getCode(), "PRI_PROGRESS",
-										appProgress.toString(), false, true));
-						
-						System.out.println("Saved PRI_PROGRESS to intern      ::   " + internCode);
-						System.out.println("Saved PRI_PROGRESS to application ::   " + app.getCode());
-						
 					}else {
 						System.out.println("Missing data !");
 
@@ -208,8 +139,90 @@ rule "IS_LOGBOOK"
 						if (!optInternshipWeek.isPresent()) {
 								System.out.println("Missing PRI_ASSOC_DURATION");
 						}
+						/* Since attributes are missing and we cant calculate  completedPercentage or steps, lets get the value from attribute itself */
+						Optional<String> optProgress = app.getValue("PRI_PROGRESS");		
+
+						if (optProgress.isPresent()) {
+							appProgress = new JsonObject(optProgress.get());
+						}else{
+							/* since PRI_PROGRESS doesnt exists, lets create a new one */
+							String internshipWeek = "12";
+							if (optInternshipWeek.isPresent()) {
+								internshipWeek = optInternshipWeek.get();
+							}
+							appProgress.put("completedPercentage",  0.0);
+							appProgress.put("steps", Integer.decode(internshipWeek));
+							appProgress.put("completedJournals", 0);
+						}
 					}
-				}
+
+					Integer completedJournals = 1;
+					
+					/* get the intern be */
+					BaseEntity intern = beUtils.getBaseEntityByCode(internCode);
+					if (intern != null) {
+
+						/* find the completedJournals count from sbe */
+						SearchEntity completedJnlSbe = new SearchEntity("SBE_JOURNAL_COUNT", "SBE_JOURNAL_COUNT")
+																				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+																				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
+																				.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%" + internCode + "%")
+																				.addColumn("PRI_CODE", "Name");
+
+						Tuple2<String, List<String>> results = beUtils.getHql(completedJnlSbe);
+						String hql = results._1;
+						String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
+
+						try {
+							String resultJsonStr = QwandaUtils.apiGet(
+											GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2,
+											serviceToken.getToken(), 120);
+							completedJournals = completedJournals + Integer.decode(resultJsonStr);
+
+						} catch (Exception e1) {
+							System.out.println("This is the first journal for " + internCode);
+						}
+
+						/* save PRI_NUM_JOURNALS to app and intern */
+						beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), internCode,
+										"PRI_NUM_JOURNALS", completedJournals));
+						beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(),
+										app.getCode(), "PRI_NUM_JOURNALS", completedJournals));
+						
+						System.out.println("Saved PRI_NUM_JOURNALS to intern      ::   " + internCode);
+						System.out.println("Saved PRI_NUM_JOURNALS to application ::   " + app.getCode());
+					}
+
+					if (optDaysPerWeek.isPresent() && optInternshipWeek.isPresent()) {
+
+						Integer totalJournals = Integer.decode(optDaysPerWeek.get())
+										* Integer.decode(optInternshipWeek.get());
+						System.out.println(totalJournals);
+
+
+						String journalStatus = completedJournals.toString() + "/" + totalJournals.toString();
+
+						beUtils.saveAnswer( new Answer(beUtils.getGennyToken().getUserCode(),
+										internCode, "PRI_JOURNAL_STATUS", journalStatus));
+						beUtils.saveAnswer( new Answer(beUtils.getGennyToken().getUserCode(),
+										app.getCode(), "PRI_JOURNAL_STATUS", journalStatus));
+						
+						System.out.println("Saved PRI_JOURNAL_STATUS to intern      ::   " + internCode);
+						System.out.println("Saved PRI_JOURNAL_STATUS to application ::   " + app.getCode());
+
+						/* add completedJournals to json */
+						appProgress.put("completedJournals", journalStatus);
+					}
+
+					beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), internCode, "PRI_PROGRESS",
+															appProgress.toString(), false, true));
+					beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), app.getCode(), "PRI_PROGRESS",
+									appProgress.toString(), false, true));
+					
+					System.out.println("Saved PRI_PROGRESS to intern      ::   " + internCode);
+					System.out.println("Saved PRI_PROGRESS to application ::   " + app.getCode());
+
+
 			}catch (Exception e) {
 				System.out.println("Error in " + drools.getRule().getName() +"\n Exception Details   ::   "+e.toString());
 			}
