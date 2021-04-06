@@ -49,6 +49,7 @@ rule "IS_LOGBOOK"
 				Double completedPercentage = 0.0;
 				List<BaseEntity> apps = beUtils.getBaseEntitys(searchBE);				
 				System.out.println("The number of apps is "+(apps ==null?"NULL":apps.size()));
+				
 				if ((apps!=null) && (apps.size() > 0)) {
 				  System.out.println("Get the first app");
 					app = apps.get(0); 
@@ -221,8 +222,7 @@ rule "IS_LOGBOOK"
 					
 					System.out.println("Saved PRI_PROGRESS to intern      ::   " + internCode);
 					System.out.println("Saved PRI_PROGRESS to application ::   " + app.getCode());
-
-
+				}
 			}catch (Exception e) {
 				System.out.println("Error in " + drools.getRule().getName() +"\n Exception Details   ::   "+e.toString());
 			}
