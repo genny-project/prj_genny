@@ -140,6 +140,9 @@ rule "IS_LOGBOOK"
 						if (!optInternshipWeek.isPresent()) {
 								System.out.println("Missing PRI_ASSOC_DURATION");
 						}
+						if (!optDaysPerWeek.isPresent()) {
+								System.out.println("Missing PRI_DAYS_PER_WEEK");
+						}
 						/* Since attributes are missing and we cant calculate  completedPercentage or steps, lets get the value from attribute itself */
 						Optional<String> optProgress = app.getValue("PRI_PROGRESS");		
 
