@@ -144,8 +144,11 @@ rule "IS_LOGBOOK"
 						Optional<String> optProgress = app.getValue("PRI_PROGRESS");		
 
 						if (optProgress.isPresent()) {
+							System.out.println("PRI_PROGRESS is present");
 							appProgress = new JsonObject(optProgress.get());
+							System.out.println("appProgress  148  ::   " + appProgress.toString());
 						}else{
+							System.out.println("PRI_PROGRESS is NOT present");
 							/* since PRI_PROGRESS doesnt exists, lets create a new one */
 							String internshipWeek = "12";
 							if (optInternshipWeek.isPresent()) {
@@ -154,6 +157,7 @@ rule "IS_LOGBOOK"
 							appProgress.put("completedPercentage",  0.0);
 							appProgress.put("steps", Integer.decode(internshipWeek));
 							appProgress.put("completedJournals", 0);
+							System.out.println("appProgress  160  ::   " + appProgress.toString());
 						}
 					}
 
@@ -196,12 +200,13 @@ rule "IS_LOGBOOK"
 
 					if (optDaysPerWeek.isPresent() && optInternshipWeek.isPresent()) {
 
+						System.out.println("PRI_DAYS_PER_WEEK and PRI_ASSOC_DURATION is present");
 						Integer totalJournals = Integer.decode(optDaysPerWeek.get())
 										* Integer.decode(optInternshipWeek.get());
-						System.out.println(totalJournals);
-
+						System.out.println("totalJournals   ::   " + totalJournals);
 
 						String journalStatus = completedJournals.toString() + "/" + totalJournals.toString();
+						System.out.println("journalStatus   ::   " + journalStatus);
 
 						beUtils.saveAnswer( new Answer(beUtils.getGennyToken().getUserCode(),
 										internCode, "PRI_JOURNAL_STATUS", journalStatus));
