@@ -75,7 +75,7 @@ rule "IS_INTERNSHIP"
 		
 		/* ========== Add the Application to the Intern ========== */	
 		
-		quantumLink(userToken.getUserCode(), appHC, newBe.getCode(), "LNK_INTERNSHIPS");
+		beUtils.quantumLink(userToken.getUserCode(), appHC, newBe.getCode(), "LNK_INTERNSHIPS");
 		
 		
 		
