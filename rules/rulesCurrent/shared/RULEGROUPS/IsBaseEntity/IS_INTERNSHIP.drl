@@ -43,6 +43,7 @@ rule "IS_INTERNSHIP"
 		/* Refresh the BaseEntity because reasons... */
  		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
  		
+ 		
  		String appHC = newBe.getValue("LNK_HOST_COMPANY", null);
 		System.out.println("appHC = " + appHC);
 		
@@ -68,6 +69,15 @@ rule "IS_INTERNSHIP"
 		} else {
 			System.out.println("ERROR: Null appHC"); 
 		}
+		
+		
+		
+		
+		/* ========== Add the Application to the Intern ========== */	
+		
+		quantumLink(userToken.getUserCode(), appHC, newBe.getCode(), "LNK_INTERNSHIPS");
+		
+		
 		
 
 		JSONArray jsonArrayWhichDays = new JSONArray(beUtils.getBaseEntityValue(newBe.getCode(), "LNK_WHICH_DAYS").toString());
