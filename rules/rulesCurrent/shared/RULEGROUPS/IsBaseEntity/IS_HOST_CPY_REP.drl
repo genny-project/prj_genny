@@ -35,6 +35,18 @@ rule "IS_HOST_CPY_REP"
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_HOST_CPY_REP", "true"));
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));		
 		
+		
+		/* Refresh the BaseEntity because reasons... */
+ 		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
+ 		
+ 		String assocHC = newBe.getValue("LNK_INTERN_SUPERVISOR", null);
+		assocHC = assocHC.replace("\"", "").replace("[", "").replace("]", "");
+		System.out.println("assocHC = " +assocHC);
+		
+		/* ========== Add the HCR to the HC ========== */	
+		beUtils.quantumLink(userToken.getUserCode(), assocHC, newBe.getCode(), "LNK_HCRS");
+		
+		
 		/* Set up in Keycloak */
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
 		String userStr = newBe.getCode();

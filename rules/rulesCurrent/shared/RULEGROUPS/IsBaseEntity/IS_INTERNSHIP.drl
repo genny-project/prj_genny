@@ -70,12 +70,14 @@ rule "IS_INTERNSHIP"
 			System.out.println("ERROR: Null appHC"); 
 		}
 		
+		String appHCR = newBe.getValue("LNK_INTERN_SUPERVISOR", null);
+		appHCR = appHCR.replace("\"", "").replace("[", "").replace("]", "");
+		System.out.println("appHCR = " +appHCR);
 		
 		
-		
-		/* ========== Add the Application to the Intern ========== */	
-		
+		/* ========== Add the Internships to the HC and HCR ========== */	
 		beUtils.quantumLink(userToken.getUserCode(), appHC, newBe.getCode(), "LNK_INTERNSHIPS");
+		beUtils.quantumLink(userToken.getUserCode(), appHCR, newBe.getCode(), "LNK_INTERNSHIPS");
 		
 		
 		
