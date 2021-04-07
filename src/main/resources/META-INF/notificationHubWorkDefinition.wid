@@ -7,9 +7,9 @@ import org.drools.core.process.core.datatype.impl.type.StringDataType;
     "parameters" : [
       "notificationType" : new StringDataType(),
       "templateID" : new StringDataType(),
-      "notificationRecipientArray" : new String[](),
-      "ccArray" : new String[](),
-      "bccArray" : new String[](),
+      "recipient" : new StringDataType(),
+      "cc" : new StringDataType(),
+      "bcc" : new StringDataType(),
       "templateData" : new Map<String,ContextList>(),
       "userToken"  : new GennyToken()
     ],
