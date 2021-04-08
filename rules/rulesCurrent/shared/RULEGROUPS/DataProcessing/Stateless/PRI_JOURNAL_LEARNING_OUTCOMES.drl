@@ -29,6 +29,7 @@ rule "PRI_JOURNAL_LEARNING_OUTCOMES"
     when
       beUtils : BaseEntityUtils()
 	  serviceToken : GennyToken( code == "PER_SERVICE") 
+		userToken : GennyToken( code != "PER_SERVICE")
 	  answer : Answer( attributeCode == "PRI_JOURNAL_LEARNING_OUTCOMES" )
 	  answersToSave : Answers()
 	  output : OutputParam( )
@@ -107,7 +108,9 @@ rule "PRI_JOURNAL_LEARNING_OUTCOMES"
 				System.out.println(drools.getRule().getName()+" journal be existing "+targetCode);
 		}
 					
-		beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_JOURNAL_LEARNING_OUTCOMES", answer.getValue(),false,true));	
+		Answer ans = new Answer(sourceCode, targetCode, "PRI_JOURNAL_LEARNING_OUTCOMES", answer.getValue(),false,true);	
+		beUtils.saveAnswer(ans);	
+		VertxUtils.sendToFrontEnd(userToken, ans);
 
 		output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */
