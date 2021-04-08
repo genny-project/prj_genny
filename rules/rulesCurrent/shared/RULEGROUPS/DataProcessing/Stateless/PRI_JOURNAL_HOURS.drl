@@ -106,7 +106,7 @@ rule "PRI_JOURNAL_HOURS"
 				System.out.println(drools.getRule().getName()+" journal be existing "+targetCode);
 		}
 		
-		Answer ans = new Answer(sourceCode, targetCode, "PRI_JOURNAL_HOURS", answer.getValue(),false,true)		
+		Answer ans = new Answer(sourceCode, targetCode, "PRI_JOURNAL_HOURS", answer.getValue(),false,true);		
 		beUtils.saveAnswer(ans);	
 		VertxUtils.sendToFrontEnd(userToken, ans);
 
