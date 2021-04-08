@@ -23,13 +23,11 @@ rule "CLICK_OHS"
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam()
 		ruleDetails : RuleDetails()
+		beUtils : BaseEntityUtils()
 
     then
 		System.out.println("Processing CLICK OHS : " + $message );
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
-		
-		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
-		
 		
 		/* Grab the BE's for the HCR and HC */
 		String user = userToken.getUserCode();
