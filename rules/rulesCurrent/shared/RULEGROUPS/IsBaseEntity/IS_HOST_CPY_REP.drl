@@ -40,11 +40,14 @@ rule "IS_HOST_CPY_REP"
  		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
  		
  		String assocHC = newBe.getValue("LNK_INTERN_SUPERVISOR", null);
-		assocHC = assocHC.replace("\"", "").replace("[", "").replace("]", "");
-		System.out.println("assocHC = " +assocHC);
-		
-		/* ========== Add the HCR to the HC ========== */	
-		beUtils.quantumLink(userToken.getUserCode(), assocHC, newBe.getCode(), "LNK_HCRS");
+		System.out.println("assocHC = " + assocHC);
+		if (assocHC != null) {
+			assocHC = assocHC.replace("\"", "").replace("[", "").replace("]", "");
+			System.out.println("assocHC = " +assocHC);
+			
+			/* ========== Add the HCR to the HC ========== */	
+			beUtils.quantumLink(userToken.getUserCode(), assocHC, newBe.getCode(), "LNK_HCRS");
+		}
 		
 		
 		/* Set up in Keycloak */
