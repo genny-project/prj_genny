@@ -8,6 +8,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_2060" isCollection="false" structureRef="life.genny.qwanda.entity.BaseEntity"/>
   <bpmn2:itemDefinition id="ItemDefinition_2092" isCollection="false" structureRef="life.genny.utils.BaseEntityUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_2491" isCollection="false" structureRef="java.lang.String"/>
+  <bpmn2:itemDefinition id="ItemDefinition_3450" isCollection="false" structureRef="life.genny.qwanda.Answer"/>
   <bpmn2:signal id="Signal_1" name="START_TERMS_AND_CONDITIONS"/>
   <bpmn2:process id="termsAndConditions" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="Default Process" isExecutable="true">
     <bpmn2:extensionElements>
@@ -17,6 +18,7 @@
       <drools:import name="life.genny.utils.OutputParam"/>
       <drools:import name="life.genny.qwanda.entity.BaseEntity"/>
       <drools:import name="life.genny.utils.BaseEntityUtils"/>
+      <drools:import name="life.genny.qwanda.Answer"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="sessionFacts" itemSubjectRef="ItemDefinition_642" name="sessionFacts"/>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_644" name="userToken"/>
@@ -61,7 +63,7 @@ BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 
 String projectCode = &quot;PRJ_&quot; + serviceToken.getRealm().toUpperCase();
 System.out.println(&quot;projectCode = &quot; + projectCode);
-BaseEntity projectBE = beUtils.getBaseEntityByCode(projectCode);
+projectBE = beUtils.getBaseEntityByCode(projectCode);
 
 kcontext.setVariable(&quot;projectBE&quot;, projectBE);
 System.out.println(&quot;projectBE = &quot; + projectBE);</bpmn2:script>
