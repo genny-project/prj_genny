@@ -8217,4 +8217,150 @@ public class AdamTest {
         }
     }
 
+
+    private void doFixSoftware(String lnkAttributeCode,String priAttributeCode, BaseEntityUtils beUtils ) {
+        SearchEntity softwareSearch = new SearchEntity("SBE_LNK_SOFTWARE", "SBE_LNK_SOFTWARE")
+                .addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+                .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%")
+                .addOr("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
+                .addColumn(lnkAttributeCode, "Software Code")
+                .setPageStart(0).setPageSize(1000000);
+        softwareSearch.setRealm(serviceToken.getRealm());
+        int i = 0;
+        try {
+            List<BaseEntity> bes = beUtils.getBaseEntitys(softwareSearch);
+            System.out.println("The number of BEs with "+lnkAttributeCode+" is " + (bes == null ? "NULL" : bes.size()));
+            if ((bes != null) && (bes.size() > 0)) {
+                System.out.println("The number of BEs with "+lnkAttributeCode+" is " + bes.size());
+                for (BaseEntity be : bes) {
+                    Optional<String> value = be.getValue(lnkAttributeCode);
+                    if (value.isPresent()  && value.get().length() > 0) {
+                        /* list to store softwares */
+                        List<String> softwareList = new ArrayList<>();
+                        String codes = beUtils.cleanUpAttributeValue(value.get());
+                        for (String code : codes.split(",")) {
+                            BaseEntity softwareBe = beUtils.getBaseEntityByCode(code);
+                            if(softwareBe != null){
+                                String name = softwareBe.getValue("PRI_NAME", null);
+                                if(name != null) softwareList.add(name);
+                            }
+                        }
+                        String softwares = softwareList.toString().replaceAll("[\\[\\](){}]","").replace(",",", ").replaceAll("\\s+"," ");
+                        Answer softwaresAnswer = new Answer(beUtils.getGennyToken().getUserCode(),  be.getCode(), priAttributeCode, softwares);
+                        beUtils.saveAnswer(softwaresAnswer);
+                        i++;
+                        System.out.println("Be " + be.getCode() + ":" +  lnkAttributeCode + ", index:" + i + "/" + bes.size());
+                    } else {
+                        i++;
+                        System.out.println("Be " + be.getCode() + " doesnt have " + lnkAttributeCode + ", index:" + i + "/" + bes.size());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @Test
+    public void softwareFix() {
+        System.out.println("softwareFix");
+        GennyToken userToken = null;
+        GennyToken serviceToken = null;
+        QRules qRules = null;
+        if (false) {
+            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
+            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
+            qRules = new QRules(eventBusMock, userToken.getToken());
+            qRules.set("realm", userToken.getRealm());
+            qRules.setServiceToken(serviceToken.getToken());
+            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
+            GennyKieSession.loadAttributesJsonFromResources(userToken);
+        } else {
+            VertxUtils.cachedEnabled = false;
+            qRules = GennyJbpmBaseTest.plement();
+            userToken = new GennyToken("userToken", qRules.getToken());
+            serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+        }
+        System.out.println("session     =" + userToken.getSessionCode());
+        System.out.println("userToken   =" + userToken.getToken());
+        System.out.println("serviceToken=" + serviceToken.getToken());
+        BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+        beUtils.setServiceToken(serviceToken);
+//        String lnkAttributeCode = "LNK_SOFTWARE";
+//        String priAttributeCode = "PRI_SOFTWARE";
+        /*
+        String lnkAttributeCode = "LNK_CURRENT_SOFTWARE";
+        String priAttributeCode = "PRI_ASSOC_CURRENT_SOFTWARE";
+       /*
+        String lnkAttributeCode = "LNK_FUTURE_SOFTWARE";
+        String priAttributeCode = "PRI_ASSOC_FUTURE_SOFTWARE";
+        */
+
+        HashMap<String, String> lnk_pri_attribute = new HashMap<>();
+        lnk_pri_attribute.put("LNK_CURRENT_SOFTWARE","PRI_ASSOC_CURRENT_SOFTWARE" );
+        lnk_pri_attribute.put("LNK_FUTURE_SOFTWARE","PRI_ASSOC_FUTURE_SOFTWARE" );
+        lnk_pri_attribute.put("LNK_SOFTWARE","PRI_SOFTWARE" );
+
+        lnk_pri_attribute.keySet().forEach(lnkAttributeCode -> doFixSoftware(lnkAttributeCode, lnk_pri_attribute.get(lnkAttributeCode), beUtils));
+    }
+
+
+
+
+    @Test
+    public void copyBegAttrToApp() {
+        System.out.println("copyBegAttrToApp");
+        GennyToken userToken = null;
+        GennyToken serviceToken = null;
+        QRules qRules = null;
+        String appBasentityCode = "APP_A6E0CB82-8C31-4A64-853B-23231162F0DF";
+        String begbaseentityCode = "BEG_C93F6C66-A358-4CF4-AC9C-6E81131337C4";
+
+        VertxUtils.cachedEnabled = false;
+        qRules = GennyJbpmBaseTest.plement();
+        userToken = new GennyToken("userToken", qRules.getToken());
+        serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+
+        System.out.println("session     =" + userToken.getSessionCode());
+        System.out.println("userToken   =" + userToken.getToken());
+        System.out.println("serviceToken=" + serviceToken.getToken());
+
+        BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+        beUtils.setServiceToken(serviceToken);
+
+        SearchEntity appSearch = new SearchEntity("SBE_BEG", "SBE_BEG")
+                .addFilter("PRI_CODE", SearchEntity.StringFilter.EQUAL, begbaseentityCode)
+                .addColumn("PRI_BASE_LEARNING_OUTCOMES", "base learning outcomes")
+                .addColumn("PRI_SPECIFIC_LEARNING_OUTCOMES", "specific learning outcomes")
+                .addColumn("PRI_ROLES_AND_RESPONSIBILITIES", "roles responsibilities")
+                .setPageStart(0).setPageSize(1000);
+
+        appSearch.setRealm(serviceToken.getRealm());
+
+        BaseEntity result = null;
+
+        List<BaseEntity> bes = beUtils.getBaseEntitys(appSearch);
+        System.out.println("The number of items is " + (bes == null ? "NULL" : bes.size()));
+        if ((bes != null) && (bes.size() > 0)) {
+            System.out.println("Number of bes returned is " + bes.size() + ":" + result);
+
+            for (BaseEntity be : bes) {
+// Step 1
+                String baseLearningOutcomes = be.getValue("PRI_BASE_LEARNING_OUTCOMES", null);
+                beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), appBasentityCode,
+                        "PRI_BASE_LEARNING_OUTCOMES", baseLearningOutcomes));
+
+// Step 2
+                String specificLearningOutcomes = be.getValue("PRI_SPECIFIC_LEARNING_OUTCOMES", null);
+                beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), appBasentityCode,
+                        "PRI_SPECIFIC_LEARNING_OUTCOMES", specificLearningOutcomes));
+
+// Step 3
+                String rolesAndResponsibilities = be.getValue("PRI_ROLES_AND_RESPONSIBILITIES", null);
+                beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), appBasentityCode,
+                        "PRI_ROLES_AND_RESPONSIBILITIES", rolesAndResponsibilities));
+            }
+        }
+    }
+
 }
+
