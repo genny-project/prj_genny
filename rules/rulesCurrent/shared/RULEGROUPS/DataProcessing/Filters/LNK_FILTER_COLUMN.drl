@@ -49,10 +49,15 @@ rule "LNK_FILTER_COLUMN"
 		String attributeCode = beUtils.cleanUpAttributeValue(value).substring("SEL_FILTER_COLUMN_SRT_".length());
 		System.out.println("attributeCode = " + attributeCode);
 
-		/* Save the new filter items in cache */
-		String[] newFilterArray = new String[3];
-		newFilterArray[0] = attributeCode;
+		/* Get filter array from cache */
+		String[] newFilterArray = VertxUtils.getObject(serviceToken.getRealm(), "", "FLT_"+targetCode, String[].class, serviceToken.getToken());
 
+		/* Create if it doesn't exist */
+		if (newFilterArray == null) {
+			String[] newFilterArray = new String[3];
+		}
+
+		newFilterArray[0] = attributeCode;
 		VertxUtils.putObject(serviceToken.getRealm(), "", "FLT_"+targetCode, newFilterArray, serviceToken.getToken());
 
 		/* Get associated Attribute */

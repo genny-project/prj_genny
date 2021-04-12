@@ -29,6 +29,11 @@ rule "PRI_FILTER_VALUE"
 		/* Get filter array from cache */
 		String[] newFilterArray = VertxUtils.getObject(serviceToken.getRealm(), "", "FLT_"+targetCode, String[].class, serviceToken.getToken());
 
+		/* Create if it doesn't exist */
+		if (newFilterArray == null) {
+			String[] newFilterArray = new String[3];
+		}
+
 		/* Save the new filter items in cache */
 		newFilterArray[2] = value;
 
