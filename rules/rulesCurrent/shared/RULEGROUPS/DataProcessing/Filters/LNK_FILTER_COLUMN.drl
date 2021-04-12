@@ -34,7 +34,7 @@ rule "LNK_FILTER_COLUMN"
 	when
 		beUtils : BaseEntityUtils()
 		serviceToken : GennyToken( code == "PER_SERVICE")
-		answer : Answer( attributeCode  matches "LNK_FILTER_COLUMN" )
+		answer : Answer( attributeCode == "LNK_FILTER_COLUMN" && targetCode matches "SBE_.*" )
 		output : OutputParam( )
  
 	 then
@@ -177,7 +177,6 @@ rule "LNK_FILTER_COLUMN"
 			System.out.println("attr is NULL");
 		}
 
-		retract(answer);
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");
 
