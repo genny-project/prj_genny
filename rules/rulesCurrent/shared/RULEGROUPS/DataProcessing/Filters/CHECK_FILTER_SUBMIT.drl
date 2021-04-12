@@ -26,7 +26,7 @@ rule "CHECK_FILTER_SUBMIT"
 		output : OutputParam( )
 		answersToSave : Answers()
 	then
-		System.out.println("Rule -> PRI_FILTER_VALUE : "+answer); 
+		System.out.println("Rule -> CHECK_FILTER_SUBMIT : "+answer); 
 
 		String targetCode = answer.getTargetCode();
 		System.out.println("targetCode = " + targetCode);
