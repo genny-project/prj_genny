@@ -31,11 +31,11 @@ rule "LNK_FILTER_OPTION"
 
 		/* Create if it doesn't exist */
 		if (newFilterArray == null) {
-			String[] newFilterArray = new String[3];
+			newFilterArray = new String[3];
 		}
 
 		/* Save the new filter items in cache */
-		value = beUtils.cleanUpAttributeValue(value)
+		value = beUtils.cleanUpAttributeValue(value);
 		System.out.println("clean value = " + value);
 
 		newFilterArray[1] = value;

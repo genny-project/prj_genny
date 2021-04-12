@@ -54,7 +54,7 @@ rule "LNK_FILTER_COLUMN"
 
 		/* Create if it doesn't exist */
 		if (newFilterArray == null) {
-			String[] newFilterArray = new String[3];
+			newFilterArray = new String[3];
 		}
 
 		newFilterArray[0] = attributeCode;

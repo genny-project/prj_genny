@@ -31,7 +31,7 @@ rule "PRI_FILTER_VALUE"
 
 		/* Create if it doesn't exist */
 		if (newFilterArray == null) {
-			String[] newFilterArray = new String[3];
+			newFilterArray = new String[3];
 		}
 
 		/* Save the new filter items in cache */
