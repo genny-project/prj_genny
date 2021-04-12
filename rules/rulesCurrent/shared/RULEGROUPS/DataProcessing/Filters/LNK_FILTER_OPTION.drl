@@ -8,7 +8,7 @@ import life.genny.qwanda.Answers;
 import java.util.List;
 import java.util.ArrayList;
 
-rule "PRI_FILTER_OPTION"
+rule "LNK_FILTER_OPTION"
     ruleflow-group 'DataProcessing'
     salience 500 
     no-loop true
@@ -19,7 +19,7 @@ rule "PRI_FILTER_OPTION"
 		output : OutputParam( )
 		answersToSave : Answers()
 	then
-		System.out.println("Rule -> PRI_FILTER_OPTION : "+answer); 
+		System.out.println("Rule -> LNK_FILTER_OPTION : "+answer); 
 
 		String targetCode = answer.getTargetCode();
 		System.out.println("targetCode = " + targetCode);
@@ -30,7 +30,10 @@ rule "PRI_FILTER_OPTION"
 		String[] newFilterArray = VertxUtils.getObject(serviceToken.getRealm(), "", "FLT_"+targetCode, String[].class, serviceToken.getToken());
 
 		/* Save the new filter items in cache */
-		newFilterArray[1] = beUtils.cleanUpAttributeValue(value);
+		value = value.replace("\"", "").replace("[", "").replace("]", "");
+		System.out.println("clean value = " + value);
+
+		newFilterArray[1] = value;
 
 		VertxUtils.putObject(serviceToken.getRealm(), "", "FLT_"+targetCode, newFilterArray, serviceToken.getToken());
 
