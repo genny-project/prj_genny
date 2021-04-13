@@ -313,9 +313,7 @@ rule "IS_INTERN"
 			System.out.println("Eligble internships: = " +eligbleInternships);
 			
 			Random rand = new Random();
-			Gson gson = new Gson();
-			List<String> beList = gson.fromJson("Dude", List.class);
-			System.out.println("beList: = " +beList);
+			String results = "";
 			String beCode = "";
 					
 		    for (int i = 0; i < 3; i++) {
@@ -324,17 +322,15 @@ rule "IS_INTERN"
 		        
 		        beCode = randomElement.getCode();
 		        System.out.println("beCode: = " +beCode);
-				if (beCode != null) {
-					beList.add(beCode);
-				}
+				
+				if(1 == 0) {results = "[\""+ beCode + "\", ";}
+				if(1 == 1) {results = results + beCode + "\", ";}
+				if(1 == 2) {results = results + beCode + "\"]";}
+				System.out.println("results::  " + results);
 			 }
 			 
-			String results =gson.toJson(beList);
+			
 			System.out.println("Results::  " + results);
-			results =gson.toJson(beList);
-			beList.remove(0);
-			System.out.println("Results::  " + results);
-	
 			beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHED_INTERNSHIPS", results));
 			
 			/* Send BE to the FE */
