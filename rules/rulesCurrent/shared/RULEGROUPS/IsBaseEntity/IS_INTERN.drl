@@ -314,7 +314,8 @@ rule "IS_INTERN"
 			
 			Random rand = new Random();
 			Gson gson = new Gson();
-			List<String> beList = gson.fromJson("", List.class);
+			List<String> beList = gson.fromJson("Dude", List.class);
+			System.out.println("beList: = " +beList);
 			String beCode = "";
 					
 		    for (int i = 0; i < 3; i++) {
