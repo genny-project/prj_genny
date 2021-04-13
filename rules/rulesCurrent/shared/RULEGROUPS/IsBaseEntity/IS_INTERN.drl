@@ -320,21 +320,27 @@ rule "IS_INTERN"
 		    for (int i = 0; i < 3; i++) {
 		        BaseEntity randomElement = eligbleInternships.get(rand.nextInt(eligbleInternships.size()));
 		        System.out.println("Random internships: = " +randomElement);
-		        beCode = randomElement.getCode();
 		        
-				/* add the new BE code to list */
-				beList.add(beCode);
+		        beCode = randomElement.getCode();
+		        System.out.println("beCode: = " +beCode);
+				if (beCode != null) {
+					beList.add(beCode);
+				}
 			 }
 			 
-			/* convert to string */
 			String results =gson.toJson(beList);
 			System.out.println("Results::  " + results);
 			results =gson.toJson(beList);
 			beList.remove(0);
 			System.out.println("Results::  " + results);
 	
-			/* save the answer to target */
 			beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHED_INTERNSHIPS", results));
+			
+			/* Send BE to the FE */
+			QDataBaseEntityMessage msg = new QDataBaseEntityMessage(newBe);
+			msg.setToken(userToken.getToken());
+			msg.setReplace(true);
+			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 			
 		} catch (Exception e) {
         	e.printStackTrace();
