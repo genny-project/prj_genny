@@ -311,11 +311,28 @@ rule "IS_INTERN"
 			
 			System.out.println("Eligble internships: = " +eligbleInternships);
 			
-			Random rand = new Random();		
+			Random rand = new Random();
+			Gson gson = new Gson();
+			List<String> beList = gson.fromJson("", List.class);
+					
 		    for (int i = 0; i < 3; i++) {
 		        BaseEntity randomElement = eligbleInternships.get(rand.nextInt(eligbleInternships.size()));
 		        System.out.println("Random internships: = " +randomElement);
+		        
+				/* add the new BE code to list */
+				beList.add(randomElement);
 			 }
+			 
+			/* convert to string */
+			String results =gson.toJson(beList);
+			System.out.println(attribute + "  after::  " + results);
+			results =gson.toJson(beList);
+			beList.remove(0);
+			System.out.println(attribute + "  after::  " + results);
+	
+			/* save the answer to target */
+			beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHED_INTERNSHIPS", results));
+			
 		} catch (Exception e) {
         	e.printStackTrace();
     	}
