@@ -12,6 +12,7 @@ import life.genny.qwandautils.GennySettings;
 import java.util.UUID;
 import life.genny.notifications.EmailHelper;
 import java.util.Random;
+import com.google.gson.Gson;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -314,21 +315,23 @@ rule "IS_INTERN"
 			Random rand = new Random();
 			Gson gson = new Gson();
 			List<String> beList = gson.fromJson("", List.class);
+			String beCode = "";
 					
 		    for (int i = 0; i < 3; i++) {
 		        BaseEntity randomElement = eligbleInternships.get(rand.nextInt(eligbleInternships.size()));
 		        System.out.println("Random internships: = " +randomElement);
+		        beCode = randomElement.getCode();
 		        
 				/* add the new BE code to list */
-				beList.add(randomElement);
+				beList.add(beCode);
 			 }
 			 
 			/* convert to string */
 			String results =gson.toJson(beList);
-			System.out.println(attribute + "  after::  " + results);
+			System.out.println("Results::  " + results);
 			results =gson.toJson(beList);
 			beList.remove(0);
-			System.out.println(attribute + "  after::  " + results);
+			System.out.println("Results::  " + results);
 	
 			/* save the answer to target */
 			beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHED_INTERNSHIPS", results));
