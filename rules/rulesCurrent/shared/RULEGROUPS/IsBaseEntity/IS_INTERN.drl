@@ -323,15 +323,15 @@ rule "IS_INTERN"
 		        beCode = randomElement.getCode();
 		        System.out.println("beCode: = " +beCode);
 				
-				if(1 == 0) {results = "[\""+ beCode + "\", ";}
-				if(1 == 1) {results = results + beCode + "\", ";}
-				if(1 == 2) {results = results + beCode + "\"]";}
+				if(i == 0) {results = '[\"' + beCode + '\", ';}
+				if(i == 1) {results = results + beCode + '\", ';}
+				if(i == 2) {results = results + beCode + '\"]';}
 				System.out.println("results::  " + results);
 			 }
 			 
 			
 			System.out.println("Results::  " + results);
-			beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHED_INTERNSHIPS", results));
+			beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_CREATED_DATE", results));
 			
 			/* Send BE to the FE */
 			QDataBaseEntityMessage msg = new QDataBaseEntityMessage(newBe);
