@@ -293,10 +293,14 @@ rule "IS_INTERN"
 					System.out.println("lnk_HC: " +lnk_HC);
 					
 					BaseEntity hcBe = beUtils.getBaseEntityByCode(lnk_HC);
+				    
 				    String rocket = hcBe.getValue("PRI_NAME", null);
 				    System.out.println("rocket: " +rocket);
 				    
-				    if (rocket.equals("Rocket Coders")) {
+				    String image = hcBe.getValue("PRI_IMAGE_URL", null);
+				    System.out.println("image: " +image);
+				    
+				    if (rocket.equals("Rocket Coders" || image == null)) {
 				    	eligbleInternships.remove(internship);
 				    	System.out.println("Gone!!");
 				    }
@@ -305,6 +309,12 @@ rule "IS_INTERN"
 			}
 			
 			System.out.println("Eligble internships: = " +eligbleInternships);
+			
+			Random rand = new Random();		
+		    for (int i = 0; i < 3; i++) {
+		        BaseEntity randomElement = eligbleInternships.get(rand.nextInt(eligbleInternships.size());
+		        System.out.println("Random internships: = " +randomElement);
+			 }
 		} catch (Exception e) {
         	e.printStackTrace();
     	}
