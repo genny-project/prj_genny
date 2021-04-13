@@ -11,6 +11,8 @@ import life.genny.qwandautils.QwandaUtils;
 import life.genny.qwandautils.GennySettings;
 import java.util.UUID;
 import life.genny.notifications.EmailHelper;
+import java.util.Random;
+import com.google.gson.Gson;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -278,14 +280,65 @@ rule "IS_INTERN"
 		TableUtils.searchTable(beUtils, internshipMatch, true);
 		
 		/* Print out nice things */
+		
+		List<BaseEntity> internships = beUtils.getBaseEntitys(internshipMatch);
+		List<BaseEntity> eligbleInternships = beUtils.getBaseEntitys(internshipMatch);
+		
 		try {
-	        List<BaseEntity> internships = beUtils.getBaseEntitys(internshipMatch);
 	        System.out.println("The number of matching internships is " + (internships == null ? "NULL" : internships.size()));
 	        if ((internships != null) && (internships.size() > 0)) {
 		        for (BaseEntity internship : internships) {
 					System.out.println("Matching internship: = " +internship);
+				
+					String lnk_HC = internship.getValue("LNK_HOST_COMPANY", null);	
+					lnk_HC = lnk_HC.replace("\"", "").replace("[", "").replace("]", "");
+					System.out.println("lnk_HC: " +lnk_HC);
+					
+					BaseEntity hcBe = beUtils.getBaseEntityByCode(lnk_HC);
+				    
+				    String rocket = hcBe.getValue("PRI_NAME", null);
+				    System.out.println("rocket: " +rocket);
+				    
+				    String image = hcBe.getValue("PRI_IMAGE_URL", null);
+				    System.out.println("image: " +image);
+				    
+				    if (rocket.equals("Rocket Coders") && image == null) {
+				    	eligbleInternships.remove(internship);
+				    	System.out.println("Gone!!");
+				    }
+					
 				}
 			}
+			
+			System.out.println("Eligble internships: = " +eligbleInternships);
+			
+			Random rand = new Random();
+			String results = "";
+			String beCode = "";
+					
+		    for (int i = 0; i < 3; i++) {
+		        BaseEntity randomElement = eligbleInternships.get(rand.nextInt(eligbleInternships.size()));
+		        System.out.println("Random internships: = " +randomElement);
+		        
+		        beCode = randomElement.getCode();
+		        System.out.println("beCode: = " +beCode);
+				
+				if(i == 0) {results = '[\"' + beCode + '\", ';}
+				if(i == 1) {results = results + beCode + '\", ';}
+				if(i == 2) {results = results + beCode + '\"]';}
+				System.out.println("results::  " + results);
+			 }
+			 
+			
+			System.out.println("Results::  " + results);
+			beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHED_INTERNSHIPS", results));
+			
+			/* Send BE to the FE */
+			QDataBaseEntityMessage msg = new QDataBaseEntityMessage(newBe);
+			msg.setToken(userToken.getToken());
+			msg.setReplace(true);
+			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+			
 		} catch (Exception e) {
         	e.printStackTrace();
     	}
