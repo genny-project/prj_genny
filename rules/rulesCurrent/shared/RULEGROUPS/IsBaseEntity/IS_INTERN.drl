@@ -297,7 +297,7 @@ rule "IS_INTERN"
 				    System.out.println("rocket: " +rocket);
 				    
 				    if (rocket.equals("Rocket Coders")) {
-				    	eligbleInternships.remove();
+				    	eligbleInternships.remove(internship);
 				    	System.out.println("Gone!!");
 				    }
 					
