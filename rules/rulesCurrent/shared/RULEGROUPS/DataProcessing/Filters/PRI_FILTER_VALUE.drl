@@ -29,29 +29,19 @@ rule "PRI_FILTER_VALUE"
 		/* Get filter array from cache */
 		String[] newFilterArray = VertxUtils.getObject(serviceToken.getRealm(), "", "FLT_"+targetCode, String[].class, serviceToken.getToken());
 
+		/* Create if it doesn't exist */
+		if (newFilterArray == null) {
+			newFilterArray = new String[3];
+		}
+
 		/* Save the new filter items in cache */
 		newFilterArray[2] = value;
 
 		VertxUtils.putObject(serviceToken.getRealm(), "", "FLT_"+targetCode, newFilterArray, serviceToken.getToken());
 
-		/* Disable Submit */
-		Ask filterGrpAsk = VertxUtils.getObject(serviceToken.getRealm(), "", "QUE_FILTER_GRP_"+targetCode, Ask.class, serviceToken.getToken());
-		filterGrpAsk.getChildAsks()[0].getChildAsks()[4].setDisabled(false);
-
-		/* Cache changes */
-		VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", filterGrpAsk.getQuestionCode(), filterGrpAsk, serviceToken.getToken());
-
-		/* Send Asks to FE */
-		QDataAskMessage askMsg = new QDataAskMessage(filterGrpAsk);
-		askMsg.setToken(beUtils.getGennyToken().getToken());
-		askMsg.setReplace(true);
-		VertxUtils.writeMsg("webcmds", askMsg);
-		System.out.println("Asks sent to FE");
-
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
 
-		retract(answer);
 		update(output);
 
 end

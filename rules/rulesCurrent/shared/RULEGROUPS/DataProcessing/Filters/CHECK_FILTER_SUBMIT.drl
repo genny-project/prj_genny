@@ -1,0 +1,64 @@
+package life.genny.rules;
+import life.genny.qwanda.message.QDataAnswerMessage;
+import life.genny.models.GennyToken;
+import life.genny.rules.QRules;
+import life.genny.utils.BaseEntityUtils;
+import life.genny.qwanda.Answer;
+import life.genny.qwanda.Answers;
+import java.util.List;
+import java.util.ArrayList;
+
+rule "CHECK_FILTER_SUBMIT"
+    ruleflow-group 'DataProcessing'
+    salience 100 
+    no-loop true
+    when
+		beUtils : BaseEntityUtils()
+		serviceToken : GennyToken( code == "PER_SERVICE")
+		answer : Answer( 
+			(
+				attributeCode == "LNK_FILTER_COLUMN" ||
+				attributeCode == "LNK_FILTER_OPTION" ||
+				attributeCode matches "PRI_FILTER_VALUE_.*" 
+			)
+			&& targetCode matches "SBE_.*" 
+			)
+		output : OutputParam( )
+		answersToSave : Answers()
+	then
+		System.out.println("Rule -> CHECK_FILTER_SUBMIT : "+answer); 
+
+		String targetCode = answer.getTargetCode();
+		System.out.println("targetCode = " + targetCode);
+
+		/* Get filter array from cache */
+		String[] newFilterArray = VertxUtils.getObject(serviceToken.getRealm(), "", "FLT_"+targetCode, String[].class, serviceToken.getToken());
+
+		boolean isFilled = Arrays.asList(newFilterArray).stream().allMatch(val -> val != null);
+
+		/* If all are answered */
+		if (isFilled) {
+			/* Disable Submit */
+			Ask filterGrpAsk = VertxUtils.getObject(serviceToken.getRealm(), "", "QUE_FILTER_GRP_"+targetCode, Ask.class, serviceToken.getToken());
+			filterGrpAsk.getChildAsks()[0].getChildAsks()[4].setDisabled(false);
+
+			/* Cache changes */
+			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", filterGrpAsk.getQuestionCode(), filterGrpAsk, serviceToken.getToken());
+
+			/* Send Asks to FE */
+			QDataAskMessage askMsg = new QDataAskMessage(filterGrpAsk);
+			askMsg.setToken(beUtils.getGennyToken().getToken());
+			askMsg.setReplace(true);
+			VertxUtils.writeMsg("webcmds", askMsg);
+			System.out.println("Enabling SUBMIT, Asks sent to FE");
+		} else {
+			System.out.println("Not all have been answered yet!");
+		}
+
+		output.setTypeOfResult("NONE");
+		output.setResultCode("NONE");  /* dont display anything new */
+
+		retract(answer);
+		update(output);
+
+end
