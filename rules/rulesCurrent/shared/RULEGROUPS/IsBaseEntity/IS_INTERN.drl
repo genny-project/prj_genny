@@ -280,7 +280,6 @@ rule "IS_INTERN"
 		/* Print out nice things */
 		
 		List<BaseEntity> internships = beUtils.getBaseEntitys(internshipMatch);
-		List<BaseEntity> eligbleInternships = new List<BaseEntity>();
 		
 		try {
 	        System.out.println("The number of matching internships is " + (internships == null ? "NULL" : internships.size()));
@@ -296,8 +295,9 @@ rule "IS_INTERN"
 				    String rocket = hcBe.getValue("PRI_NAME", null);
 				    System.out.println("rocket: " +rocket);
 				    
-				    if (!rocket.equals("Rocket Coders")) {
-				    eligbleInternships.add(internship);
+				    if (rocket.equals("Rocket Coders")) {
+				    	internships.remove(internship);
+				    	System.out.println("Gone!!");
 				    }
 					
 				}
