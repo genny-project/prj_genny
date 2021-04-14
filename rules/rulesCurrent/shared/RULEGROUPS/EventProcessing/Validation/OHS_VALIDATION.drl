@@ -27,13 +27,10 @@ rule "OHS_VALIDATION"
  		System.out.println("OHS_VALIDATION: Rule fired" );
  		System.out.println("OHS_VALIDATION: HCBe = " + HCBe.getCode()); 
  		
- 	    /* Construct answer with Source, Target, Attribute Code, Value */
  		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
  		
 		
-		/* Check Validation Status of HC */
-		
-		String validationStatus = HCBe.getValue("PRI_VALIDATION", "Incomplete);
+		String validationStatus = HCBe.getValue("PRI_VALIDATION", "Incomplete");
 		if (validationStatus != null) {
 		
 				
