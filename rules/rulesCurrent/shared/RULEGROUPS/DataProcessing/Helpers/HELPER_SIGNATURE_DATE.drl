@@ -114,15 +114,17 @@ rule "HELPER_SIGNATURE_DATE"
 		System.out.println("targetBe: " + targetBe);
 		
 		if (targetBe != null) {		
-				Answer dateAnswer = new Answer(sourceCode, targetCode, type, date);
-				beUtils.saveAnswer(dateAnswer);
+				beUtils.saveAnswer(new Answer(sourceCode, targetCode, type, date));
 				System.out.println("Saving Date: " +date);	
 		
 		} else {
 			System.out.println("ERROR: Null targetBe");
 		}
 		
-		VertxUtils.sendToFrontEnd(userToken, dateAnswer);
+		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(targetBe);
+		msg.setToken(userToken.getToken());
+		msg.setReplace(true);
+		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 		
 		
 	

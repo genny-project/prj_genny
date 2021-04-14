@@ -36,17 +36,14 @@ rule "HCS_VALIDATION"
 		String validationStatus = hcBe.getValue("PRI_VALIDATION", "Incomplete");
 		if (validationStatus != null) {
 		
-				Answer hcsAnswer = new Answer();
 				
 				if (validationStatus.equals("Incomplete")) {
-						hcsAnswer = new Answer(userToken.getUserCode(), hcBe.getCode() ,"PRI_VALIDATION", "HCS");
- 						beUtils.saveAnswer(hcsAnswer);
+						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hcBe.getCode() ,"PRI_VALIDATION", "HCS"));
 						System.out.println("PRI_VALIDATION set to : HCS"); 
 				}
 				
 				if (validationStatus.equals("OHS")) {
-						hcsAnswer = new Answer(userToken.getUserCode(), hcBe.getCode() ,"PRI_VALIDATION", "Ready");	
-						beUtils.saveAnswer(hcsAnswer);
+						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hcBe.getCode() ,"PRI_VALIDATION", "Ready"));	
 						System.out.println("PRI_VALIDATION set to : Ready"); 	
 						
 						/* Send Email/signal to Agent fro HC Val */	
@@ -55,7 +52,10 @@ rule "HCS_VALIDATION"
 			System.out.println("ERROR: Null validationStatus");
 		}
 		
-		VertxUtils.sendToFrontEnd(userToken, hcsAnswer);
+		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(hcBe);
+		msg.setToken(userToken.getToken());
+		msg.setReplace(true);
+		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 		
 		
 	

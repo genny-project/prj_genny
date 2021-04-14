@@ -33,20 +33,17 @@ rule "OHS_VALIDATION"
 		
 		/* Check Validation Status of HC */
 		
-		String validationStatus = HCBe.getValue("PRI_VALIDATION", "Incomplete");
+		String validationStatus = HCBe.getValue("PRI_VALIDATION", "Incomplete);
 		if (validationStatus != null) {
 		
-				Answer ohsAnswer = new Answer();
 				
 				if (validationStatus.equals("Incomplete")) {
-						ohsAnswer = new Answer(userToken.getUserCode(), HCBe.getCode() ,"PRI_VALIDATION", "OHS");
- 						beUtils.saveAnswer(ohsAnswer);
+						beUtils.saveAnswer(new Answer(userToken.getUserCode(), HCBe.getCode() ,"PRI_VALIDATION", "OHS"));
 						System.out.println("PRI_VALIDATION set to : OHS");
 				}
 				
 				if (validationStatus.equals("HCS")) {
-						ohsAnswer = new Answer(userToken.getUserCode(), HCBe.getCode() ,"PRI_VALIDATION", "Ready");	
-						beUtils.saveAnswer(ohsAnswer);
+						beUtils.saveAnswer(new Answer(userToken.getUserCode(), HCBe.getCode() ,"PRI_VALIDATION", "Ready"));	
 						System.out.println("PRI_VALIDATION set to : Ready");  
 						
 						/* Send Email/signal to Agent fro HC Val */	
@@ -55,42 +52,11 @@ rule "OHS_VALIDATION"
 			System.out.println("ERROR: Null validationStatus");
 		}
 		
-		VertxUtils.sendToFrontEnd(userToken, ohsAnswer);
+		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(HCBe);
+		msg.setToken(userToken.getToken());
+		msg.setReplace(true);
+		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 		
-		
-		/* Convert SEL_XXX to value
-		String docOHS = HCBe.getValue("DOC_OHS_CODE", null);
-		System.out.println("docOHS: " + docOHS);
-		
-		if (docOHS != null) {
-				BaseEntity ohsDocBe = beUtils.getBaseEntityByCode(docOHS);
-				System.out.println("ohsDocBe = " + ohsDocBe);
-				
-				if (ohsDocBe != null) {
-						String[] convertAns = {"LNK_PROSECUTED_BREACH", "PRI_PROSECUTED_YES", "LNK_RISK_ASSESSMENT_EMPLOYEES", "LNK_ASSESSED_PERIODICALLY", "LNK_CONTROLS_IMPLEMENTED", 
-												"LNK_ORG_OHSMS", "LNK_OHSMS_CERTIFIED", "LNK_WRITTEN_POLICY", "LNK_INTERN_INDUCTION", "LNK_EMERGENCY_PROCEDURES", "LNK_SWMS_JSA", 
-												"LNK_SWMS_JSA_AVAIL", "LNK_DISCRIMINATION", "LNK_SAFETY_INDUSCTION", "LNK_REPORT_HAZ", "LNK_HAZ_ACCESS", "LNK_FLOORS", "LNK_EMERG_PROC", 
-												"LNK_EXTING_SIGNED", "LNK_ILLUMINATED", "LNK_COR_CLEAR", "LNK_DETECTORS", "LNK_LOCATION_HOSES", "LNK_REEL_ACCESS", "LNK_HEAD_DAMAGE", 
-												"LNK_KIT_CLEAN", "LNK_KIT_ACCESSIBLE", "LNK_ELEC_EQUIPMENT", "LNK_POWER_SUPPLY", "LNK_STORAGE", "LNK_TRNSPORT", "LNK_ADE_LIGHTING", 
-												"LNK_KITCHEN", "LNK_TOILETS", "LNK_PROF_ENVIRONMENT", "LNK_HEAT_COOL", "LNK_WALKWAYS"};
-						
-    					for (int i = 0; i < convertAns.length; i++) {
-    							String link = convertAns[i];
-    							System.out.println(link);
-    							String value = ohsDocBe.getValue(link, null);
-    							System.out.println(value);
-    							
-    							if (value != null) {
-    									if (value.equals("SEL_YES")) { beUtils.saveAnswer(new Answer(userToken.getUserCode(), ohsDocBe.getCode(), link, "Yes")); }
-    									if (value.equals("SEL_NO")) { beUtils.saveAnswer(new Answer(userToken.getUserCode(), ohsDocBe.getCode(), link, "No")); }
-    									if (value.equals("SEL_NA")) { beUtils.saveAnswer(new Answer(userToken.getUserCode(), ohsDocBe.getCode(), link, "N/A")); }	
-    									if (value.equals("SEL_ANNUAL")) { beUtils.saveAnswer(new Answer(userToken.getUserCode(), ohsDocBe.getCode(), link, "Annual")); }
-    									if (value.equals("SEL_QUARTERLY")) { beUtils.saveAnswer(new Answer(userToken.getUserCode(), ohsDocBe.getCode(), link, "Quarterly")); }
-    									if (value.equals("SEL_MONTHLY")) { beUtils.saveAnswer(new Answer(userToken.getUserCode(), ohsDocBe.getCode(), link, "Monthly")); }
-    							}
-   						}
-				}
-		}
-		*/
+
 	
 end
