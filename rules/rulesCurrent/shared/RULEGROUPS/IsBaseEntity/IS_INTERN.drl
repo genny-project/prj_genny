@@ -316,7 +316,7 @@ rule "IS_INTERN"
 			String results = "";
 			String beCode = "";
 					
-			BaseEntity[] matchedBe = new BaseEntity[];
+			BaseEntity[] matchedBe = new BaseEntity[3];
 					
 		    for (int i = 0; i < 3; i++) {
 		        BaseEntity randomElement = eligbleInternships.get(rand.nextInt(eligbleInternships.size()));
