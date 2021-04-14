@@ -114,15 +114,15 @@ rule "HELPER_SIGNATURE_DATE"
 		System.out.println("targetBe: " + targetBe);
 		
 		if (targetBe != null) {		
-				Answer answer = new Answer(sourceCode, targetCode, type, date);
-				beUtils.saveAnswer(answer);
+				Answer dateAnswer = new Answer(sourceCode, targetCode, type, date);
+				beUtils.saveAnswer(dateAnswer);
 				System.out.println("Saving Date: " +date);	
 		
 		} else {
 			System.out.println("ERROR: Null targetBe");
 		}
 		
-		VertxUtils.sendToFrontEnd(userToken, answer);
+		VertxUtils.sendToFrontEnd(userToken, dateAnswer);
 		
 		
 	
