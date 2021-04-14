@@ -36,17 +36,17 @@ rule "OHS_VALIDATION"
 		String validationStatus = HCBe.getValue("PRI_VALIDATION", "Incomplete");
 		if (validationStatus != null) {
 		
-				Answer answer = new Answer();
+				Answer ohsAnswer = new Answer();
 				
 				if (validationStatus.equals("Incomplete")) {
-						answer = new Answer(userToken.getUserCode(), HCBe.getCode() ,"PRI_VALIDATION", "OHS");
- 						beUtils.saveAnswer(answer);
+						ohsAnswer = new Answer(userToken.getUserCode(), HCBe.getCode() ,"PRI_VALIDATION", "OHS");
+ 						beUtils.saveAnswer(ohsAnswer);
 						System.out.println("PRI_VALIDATION set to : OHS");
 				}
 				
 				if (validationStatus.equals("HCS")) {
-						answer = new Answer(userToken.getUserCode(), HCBe.getCode() ,"PRI_VALIDATION", "Ready");	
-						beUtils.saveAnswer(answer);
+						ohsAnswer = new Answer(userToken.getUserCode(), HCBe.getCode() ,"PRI_VALIDATION", "Ready");	
+						beUtils.saveAnswer(ohsAnswer);
 						System.out.println("PRI_VALIDATION set to : Ready");  
 						
 						/* Send Email/signal to Agent fro HC Val */	
@@ -55,7 +55,7 @@ rule "OHS_VALIDATION"
 			System.out.println("ERROR: Null validationStatus");
 		}
 		
-		VertxUtils.sendToFrontEnd(userToken, answer);
+		VertxUtils.sendToFrontEnd(userToken, ohsAnswer);
 		
 		
 		/* Convert SEL_XXX to value
