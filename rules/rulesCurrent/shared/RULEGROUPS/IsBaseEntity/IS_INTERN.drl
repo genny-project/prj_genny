@@ -316,6 +316,8 @@ rule "IS_INTERN"
 			String results = "";
 			String beCode = "";
 					
+			BaseEntity[] matchedBe = new BaseEntity[];
+					
 		    for (int i = 0; i < 3; i++) {
 		        BaseEntity randomElement = eligbleInternships.get(rand.nextInt(eligbleInternships.size()));
 		        System.out.println("Random internships: = " +randomElement);
@@ -326,7 +328,11 @@ rule "IS_INTERN"
 				if(i == 0) {results = '[\"' + beCode + '\", ';}
 				if(i == 1) {results = results + '\"' + beCode + '\", ';}
 				if(i == 2) {results = results + '\"' + beCode + '\"]';}
+				
+				matchedBe[i] = randomElement;
+				System.out.println("matchedBe::  " + matchedBe);
 				System.out.println("results::  " + results);
+			
 			 }
 			 
 			
@@ -338,6 +344,13 @@ rule "IS_INTERN"
 			msg.setToken(userToken.getToken());
 			msg.setReplace(true);
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+			
+			QDataBaseEntityMessage msgArray = new QDataBaseEntityMessage(matchedBe);
+			msgArray.setToken(userToken.getToken());
+			msgArray.setReplace(true);
+			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msgArray));
+			
+			
 			
 		} catch (Exception e) {
         	e.printStackTrace();
