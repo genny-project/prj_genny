@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.HashMap;
 import life.genny.utils.VertxUtils;
 import life.genny.qwanda.attribute.EntityAttribute;
-import life.genny.qwanda.attribute.Attribute;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwandautils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -22,357 +21,62 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.io.UnsupportedEncodingException;
 import life.genny.utils.DropdownUtils;
-import java.time.format.DateTimeFormatter;
 
 
 import java.util.List;
 import java.util.ArrayList;
 
-rule "HELPER_SIGNATURE_DATE"
+rule "HELPER_LNK_SOFTWARE"
 	ruleflow-group 'DataProcessing'
-			salience 5000
+	salience 5000
+	no-loop
 	when
 		beUtils : BaseEntityUtils()
-		answer : Answer( attributeCode == "PRI_INTERN_AGREEMENT_SIGNATURE" 
-						|| attributeCode == "PRI_HOST_CPY_REP_AGREEMENT_SIGNATURE" 
-						|| attributeCode == "PRI_OUTCOME_AGREEMENT_SIGNATURE" 
-						|| attributeCode == "PRI_HC_SERVICES_AGREEMENT_SIGNATURE"
-						|| attributeCode == "PRI_OHS_SIGNATURE")
-		answersToSave : Answers()
-		ruleDetails : RuleDetails()
-		output : OutputParam( )
+		answer : Answer( attributeCode == "LNK_SOFTWARE" || attributeCode == "LNK_CURRENT_SOFTWARE" || attributeCode == "LNK_FUTURE_SOFTWARE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		userToken : GennyToken( code != "PER_SERVICE")
 
 	then
-		System.out.println("HELPER_SIGNATURE_DATE fired");
-		
-		/* Save the actual AGREEMENT_SIGNATURE answer */
-		
-		answersToSave.add(answer);
-		
-		String sourceCode = beUtils.getGennyToken().getUserCode();	
+		System.out.println(drools.getRule().getName() + " fired");
+
+		String sourceCode = beUtils.getGennyToken().getUserCode();
 		System.out.println("sourceCode :: " + sourceCode);
 		
-		String targetCode = answer.getTargetCode();					
+		String targetCode = answer.getTargetCode();
 		System.out.println("targetCode :: " + targetCode);
 		
-		String attributeCode = answer.getAttributeCode();			
-		System.out.println("attributeCode :: " + attributeCode);
-		
 		String value = answer.getValue();
-		System.out.println("value :: " + value);		
+		System.out.println("value :: " + value);
 		
-		
-		/* Select Type */
-		String type = "EMPTY";
-		
-		if (attributeCode.startsWith("PRI_HC_SERVICES_")) {
-				type = "PRI_HOST_CPY_REP_SIGNING_DATE"; 
-				System.out.println("attributeCode - PRI_HC_SERVICES :: " + attributeCode);
-	
-		} else if (attributeCode.startsWith("PRI_OHS_")){
-				type = "PRI_OHS_SIGNING_DATE"; 
-				System.out.println("attributeCode - PRI_OHS_ :: " + attributeCode);
-		} else {
-			System.out.println("ERROR: startsWith failed - attributeCode: "+ attributeCode);	
-		}
-	
-		
-		
-		if (attributeCode.startsWith("PRI_INTERN_")) {
-				type = "PRI_INTERN_SIGNING_DATE"; 
-				System.out.println("attributeCode - PRI_INTERN :: " + attributeCode);
-				
-		} else if (attributeCode.startsWith("PRI_HOST_CPY_REP_")) {
-				type = "PRI_HOST_COMPANY_REP_SIGNING_DATE"; 
-				System.out.println("attributeCode - PRI_HOST_CPY_REP :: " + attributeCode);
-	
-		} else if (attributeCode.startsWith("PRI_OUTCOME_")) {
-				type = "PRI_OUTCOME_REP_SIGNING_DATE"; 
-				System.out.println("attributeCode - PRI_OUTCOME :: " + attributeCode);
-				
-		} else {
-			System.out.println("ERROR: startsWith failed - attributeCode: "+ attributeCode);	
-		}
-		
-		System.out.println("type :: " + type);	
-		
-		
-		
-		/* Do the Date stuff */	
-		
-		DateTimeFormatter dtf1 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		LocalDateTime now = LocalDateTime.now();
-		String date = dtf1.format(now);
-		System.out.println("date: " +date);
-		
-		
-		/* Save Answer */
-				
-		BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
-		System.out.println("targetBe: " + targetBe);
-		
-		if (targetBe != null) {		
-				Answer answer = new Answer(sourceCode, targetCode, type, date);
-				beUtils.saveAnswer(answer);
-				System.out.println("Saving Date: " +date);	
-		
-		} else {
-			System.out.println("ERROR: Null targetBe");
-		}
-		
-		VertxUtils.sendToFrontEnd(userToken, answer);
-		
-		
-	
-		/* === Send email to HCR === */
-		
-		/* Gather Supervisor details */
-		
-		String internCode = targetBe.getValue("PRI_INTERN_CODE",null);
-		System.out.println("internCode = " +internCode);
-		BaseEntity internBe = beUtils.getBaseEntityByCode(internCode);
-		System.out.println("internBe = " + internBe);
-		
-		String intern = internBe.getValue("PRI_FIRSTNAME",null);
-		System.out.println("intern: " +intern);
-		
-		String internEmail = internBe.getValue("PRI_EMAIL",null);
-		System.out.println("internEmail: " +internEmail);
-		
-		String internMobile = internBe.getValue("PRI_MOBILE",null);
-		System.out.println("internMobile: " +internMobile);
-		
-		
-		String supervisor = targetBe.getValue("LNK_INTERN_SUPERVISOR",null);
-		supervisor = supervisor.replace("\"", "").replace("[", "").replace("]", "");
-		System.out.println("supervisor = " +supervisor);
-		BaseEntity supervisorBe = beUtils.getBaseEntityByCode(supervisor);
-		System.out.println("supervisorBe = " + supervisorBe);
-		
-		String supervisorName = supervisorBe.getValue("PRI_FIRSTNAME",null);
-		System.out.println("supervisorName: " +supervisorName);
-		
-		String supervisorEmail = supervisorBe.getValue("PRI_EMAIL",null);
-		System.out.println("supervisorEmail: " +supervisorEmail);
-		
-		
-		
-	
-		/* Gather Internship details */
-		
-		String internship = targetBe.getValue("LNK_INTERNSHIP",null);
-		internship = internship.replace("\"", "").replace("[", "").replace("]", "");
-		System.out.println("internship = " +internship);
-		BaseEntity internshipBe = beUtils.getBaseEntityByCode(internship);
-		System.out.println("internshipBe = " + internshipBe);
-	
-		String internshipName = internshipBe.getValue("PRI_NAME",null);
-		System.out.println("internshipName: " +internshipName);
-		
-		
-		/* Gather Host Company details */
-		
-		String company = targetBe.getValue("LNK_HOST_COMPANY",null);
-		company = company.replace("\"", "").replace("[", "").replace("]", "");
-		System.out.println("company = " +company);
-		BaseEntity companyBe = beUtils.getBaseEntityByCode(company);
-		System.out.println("companyBe = " + companyBe);
-		
-		String hostCompanyName = companyBe.getValue("PRI_NAME",null);
-		System.out.println("hostCompanyName: " +hostCompanyName);
-		
-		
-		/* Gather UserCode strings */
-		
-		BaseEntity user = beUtils.getBaseEntityByCode(internBe.getCode());
-		String userStr = user.getCode();
-		String[] userSplit = userStr.split("_");
-		String userCode = userSplit[1];
-		System.out.println("User "+user+" with userCode = "+userCode);
-		
-		BaseEntity userSuper = beUtils.getBaseEntityByCode(supervisorBe.getCode());
-		String userSuperStr = userSuper.getCode();
-		String[] userSuperSplit = userSuperStr.split("_");
-		String userSuperCode = userSuperSplit[1];
-		System.out.println("User "+userSuper+" with userCode = "+userSuperCode);
-		
-		
-		String template_id = null;
-		String subject = null;
-		
-		HashMap<String, String> templateData = new HashMap<String, String>();
-		
-		String agentEmail = "internmatch@outcomelife.com.au";
-		
-		List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
-		
-		
-		BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
+		if(value != null){
 
-		String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, internEmail, serviceToken.getToken());
-		System.out.println("token: " + token);			
-	
-		String url = GennySettings.projectUrl+"/home/UVVFX1RBQkxFX1JFU1VMVFNfR1JQ/UVVFX1RBQkxFX0xBWllfTE9BRA==";
-		url = url +"?token=" + token;
-		System.out.println("url: " + url);
-
-
-		
-		
-		if (attributeCode.startsWith("PRI_INTERN_")) {
+			/* list to store softwares */
+			List<String> softwareList = new ArrayList<>();
+			String codes = beUtils.cleanUpAttributeValue(value);
 			
-			/*
-			String urlParentCode = "SBE_INTERNS_"+userToken.getSessionCode().toUpperCase();
-			String urlCode = "ACT_PRI_EVENT_VIEW";
-			String urlTargetCode = internCode;
-	
-			urlParentCode = new String(Base64.getEncoder().encode(urlParentCode.getBytes()));
-			urlCode = new String(Base64.getEncoder().encode(urlCode.getBytes()));
-			urlTargetCode = new String(Base64.getEncoder().encode(urlTargetCode.getBytes()));
-	
-			url = GennySettings.projectUrl+"/home/"+urlParentCode+"/"+urlCode+"/"+urlTargetCode;
-			System.out.println("url: " + url);
-			
-				
-			template_id = "d-e4a25b335fd3497a98a59edea331aa92";
-			subject = "Intern has not signed their internship agreement (More than 96 hours)";
-			
-			templateData.put("intern", intern);
-			templateData.put("internshipName", internshipName);
-			templateData.put("hostCompanyName", hostCompanyName);
-			templateData.put("url", url);
-			System.out.println("Intern Signature Detected. No email but moving them to placed");
-			
-			if (!GennySettings.projectUrl.contains("dev")) {
-				EmailHelper.sendGrid(beUtils, agentEmail, subject, template_id, templateData);
-			} else {
-				System.out.println("WARNING: Email not sent because on Dev server");
-			}
-			*/
-		}
-		
-		if (attributeCode.startsWith("PRI_HOST_CPY_REP_")) {
-			template_id = "d-501f81d3e2614c3b8691bf9777478fa6";
-			subject = "Important Internship Requirement - Sign your internship agreement";
-			
-			templateData.put("intern", intern);
-			templateData.put("url", url);
-			
-			System.out.println("The internEmail is : " + internEmail);
-			
-			if (!GennySettings.projectUrl.contains("dev")) {
-				EmailHelper.sendGrid(beUtils, internEmail, null, bccList, subject, template_id, templateData);
-			} else {
-				System.out.println("WARNING: Email not sent because on Dev server");
-			}
-			
-			System.out.println("HCR Signature Detected. Sending email to Intern to remind signature");
-			
-			if (!GennySettings.projectUrl.contains("dev")) {
-				EmailHelper.sendGrid(beUtils, supervisorEmail, null, bccList, subject, template_id, templateData);
-			
-				if (internMobile != null) {   
-					System.out.println("internMobile: " +internMobile);
-					
-					System.out.println("Inside SMS");        
-		            String smsBody = "Hi " + intern + " - You are required to sign your Internship Agreement. Click the link below to digitally sign the document. Without signing your internship cannot move forward. https://internmatch-interns.gada.io";
-		            SmsHelper smsHelper = new SmsHelper();
-			    	smsHelper.deliverSmsMsg(internMobile, smsBody);
-		            System.out.println("SMS Sent!!");
-	        	}
-        	} else {
-				System.out.println("WARNING: Sms not sent because on Dev server");
-			}
-		}
-		
-		if (attributeCode.startsWith("PRI_OUTCOME_")) {
-			/*template_id = "d-64ef4bf7b18a4b65a9c7e02b1b8ce7df";
-			subject = "Important Internship Requirement - Signing the internship agreement";
-			
-			token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, userSuperCode, serviceToken.getToken());
-			System.out.println("token: " + token);
-			url = url +"?token=" + token;
-		
-			templateData.put("intern", intern);
-			templateData.put("url", url);
-			templateData.put("internshipName", internshipName);
-			templateData.put("supervisorName", supervisorName);
-			templateData.put("hostCompanyName", hostCompanyName);
-			*/
-			
-			System.out.println("The supervisorEmail is : " + supervisorEmail);
-			
-			if (!GennySettings.projectUrl.contains("dev")) {
-				EmailHelper.sendGrid(beUtils, supervisorEmail, null, bccList, subject, template_id, templateData);
-			} else {
-				System.out.println("WARNING: Email not sent because on Dev server");
-			}
-			
-			System.out.println("Outcome Life Signature Detected. Sending email to HCR to remind signature");
-		}
-		
-		
-		
-		
-		String internSignature = targetBe.getValue("PRI_INTERN_AGREEMENT_SIGNATURE", null);
-		String hcrSignature = targetBe.getValue("PRI_HOST_CPY_REP_AGREEMENT_SIGNATURE", null);
-		String outcomeSignature = targetBe.getValue("PRI_OUTCOME_AGREEMENT_SIGNATURE", null);
-		
-		if (internSignature != null) {
-			System.out.println("internSignature present");
-		}
-		if (hcrSignature != null) {
-			System.out.println("hcrSignature present");
-		}
-		if (outcomeSignature != null) {
-			System.out.println("outcomeSignature present");
-		}
-		
-		if (internSignature != null && hcrSignature != null && outcomeSignature != null) {
-			System.out.println("All signatures present");
-			
-			Answer answerSignatures = new Answer(serviceToken.getUserCode(), targetCode, "PRI_AGREEMENT_SIGNATURES", "Complete");
-			beUtils.saveAnswer(answerSignatures);
-			System.out.println("Answer done" +answerSignatures);
-		}
-		
-		
-		
-		
-			
-		System.out.println("template_id: " + template_id);
-		System.out.println("subject: " + subject);
-		
-				
-		/*
-		if (subject != null && template_id != null && url != null) {
-				if (!GennySettings.projectUrl.contains("dev")) {
-				
-						
-						EmailHelper.sendGrid(beUtils, internEmail, null, bccList, subject, template_id, templateData);
-						
-						System.out.println("Email Sent ||| Type: Intern ||| Subject: " + subject + "||| template_id: " + template_id);
-						
-				} else {
-					System.out.println("WARNING: Email not sent because on Dev server");
+			for (String code : codes.split(",")) {
+				BaseEntity be = beUtils.getBaseEntityByCode(code);
+				if(be != null){
+					String name = be.getValue("PRI_NAME", null);		
+					if(name != null) softwareList.add(name);
 				}
-		} else {
-			System.out.println("ERROR: EMAIL NOT SENT DUE TO NULL DATA");
+			}
+
+			/* The last two replace statements ensure spaces between items */
+			String softwares = softwareList.toString().replaceAll("[\\[\\](){}]","").replace(",",", ").replaceAll("\\s+"," ");
+			String attributeCode = "PRI_SOFTWARE";
+
+			if (answer.getAttributeCode().equals("LNK_CURRENT_SOFTWARE")) {
+				attributeCode = "PRI_ASSOC_CURRENT_SOFTWARE";
+			} else if (answer.getAttributeCode().equals("LNK_FUTURE_SOFTWARE")) {
+				attributeCode = "PRI_ASSOC_FUTURE_SOFTWARE";
+			} else if (answer.getAttributeCode().equals("LNK_SOFTWARE")) {
+				attributeCode = "PRI_SOFTWARE";
+			}
+			System.out.println("attributeCode :: " + attributeCode);
+			
+			Answer softwaresAnswer = new Answer(sourceCode, targetCode, attributeCode, softwares,false,true);
+			beUtils.saveAnswer(softwaresAnswer);
+			VertxUtils.sendToFrontEnd(userToken, softwaresAnswer);
 		}
-		*/
-		
-		
-						
-		
-
-		/* Retract the answer message so the rule does not fire again */
-		retract(answer);
-
-
-		/* Dont display anything new */
-		
-		output.setTypeOfResult("NONE");
-		output.setResultCode("NONE");  
 end

@@ -33,7 +33,7 @@ rule "HELPER_SIGNATURE_DATE"
 			salience 5000
 	when
 		beUtils : BaseEntityUtils()
-		answer : Answer( attributeCode == "PRI_INTERN_AGREEMENT_SIGNATURE" 
+		answerTwo : Answer( attributeCode == "PRI_INTERN_AGREEMENT_SIGNATURE" 
 						|| attributeCode == "PRI_HOST_CPY_REP_AGREEMENT_SIGNATURE" 
 						|| attributeCode == "PRI_OUTCOME_AGREEMENT_SIGNATURE" 
 						|| attributeCode == "PRI_HC_SERVICES_AGREEMENT_SIGNATURE"
@@ -49,18 +49,18 @@ rule "HELPER_SIGNATURE_DATE"
 		
 		/* Save the actual AGREEMENT_SIGNATURE answer */
 		
-		answersToSave.add(answer);
+		answersToSave.add(answerTwo);
 		
 		String sourceCode = beUtils.getGennyToken().getUserCode();	
 		System.out.println("sourceCode :: " + sourceCode);
 		
-		String targetCode = answer.getTargetCode();					
+		String targetCode = answerTwo.getTargetCode();					
 		System.out.println("targetCode :: " + targetCode);
 		
-		String attributeCode = answer.getAttributeCode();			
+		String attributeCode = answerTwo.getAttributeCode();			
 		System.out.println("attributeCode :: " + attributeCode);
 		
-		String value = answer.getValue();
+		String value = answerTwo.getValue();
 		System.out.println("value :: " + value);		
 		
 		
@@ -112,17 +112,19 @@ rule "HELPER_SIGNATURE_DATE"
 				
 		BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
 		System.out.println("targetBe: " + targetBe);
-		
+		/*
 		if (targetBe != null) {		
-				Answer dateAnswer = new Answer(sourceCode, targetCode, type, date);
-				beUtils.saveAnswer(dateAnswer);
+				beUtils.saveAnswer(new Answer(sourceCode, targetCode, type, date));
 				System.out.println("Saving Date: " +date);	
 		
 		} else {
 			System.out.println("ERROR: Null targetBe");
 		}
-		
-		VertxUtils.sendToFrontEnd(userToken, dateAnswer);
+		*/
+		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(targetBe);
+		msg.setToken(userToken.getToken());
+		msg.setReplace(true);
+		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 		
 		
 	
@@ -368,7 +370,7 @@ rule "HELPER_SIGNATURE_DATE"
 		
 
 		/* Retract the answer message so the rule does not fire again */
-		retract(answer);
+		retract(answerTwo);
 
 
 		/* Dont display anything new */
