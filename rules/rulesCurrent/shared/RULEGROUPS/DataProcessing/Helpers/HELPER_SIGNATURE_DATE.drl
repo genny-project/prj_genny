@@ -33,7 +33,11 @@ rule "HELPER_SIGNATURE_DATE"
 			salience 5000
 	when
 		beUtils : BaseEntityUtils()
-		answer : Answer( attributeCode == "PRI_INTERN_AGREEMENT_SIGNATURE" || attributeCode == "PRI_HOST_CPY_REP_AGREEMENT_SIGNATURE" || attributeCode == "PRI_OUTCOME_AGREEMENT_SIGNATURE" || attributeCode == "PRI_HC_SERVICES_AGREEMENT_SIGNATURE")
+		answer : Answer( attributeCode == "PRI_INTERN_AGREEMENT_SIGNATURE" 
+						|| attributeCode == "PRI_HOST_CPY_REP_AGREEMENT_SIGNATURE" 
+						|| attributeCode == "PRI_OUTCOME_AGREEMENT_SIGNATURE" 
+						|| attributeCode == "PRI_HC_SERVICES_AGREEMENT_SIGNATURE"
+						|| attributeCode == "PRI_OHS_SIGNATURE")
 		answersToSave : Answers()
 		ruleDetails : RuleDetails()
 		output : OutputParam( )
@@ -67,6 +71,9 @@ rule "HELPER_SIGNATURE_DATE"
 				type = "PRI_HOST_CPY_REP_SIGNING_DATE"; 
 				System.out.println("attributeCode - PRI_HC_SERVICES :: " + attributeCode);
 	
+		} else if (attributeCode.startsWith("PRI_OHS_")){
+				type = "PRI_OHS_SIGNING_DATE"; 
+				System.out.println("attributeCode - PRI_OHS_ :: " + attributeCode);
 		} else {
 			System.out.println("ERROR: startsWith failed - attributeCode: "+ attributeCode);	
 		}
@@ -107,13 +114,15 @@ rule "HELPER_SIGNATURE_DATE"
 		System.out.println("targetBe: " + targetBe);
 		
 		if (targetBe != null) {		
-				beUtils.saveAnswer(new Answer(sourceCode, targetCode, type, date));
+				Answer answer = new Answer(sourceCode, targetCode, type, date);
+				beUtils.saveAnswer(answer);
 				System.out.println("Saving Date: " +date);	
 		
 		} else {
 			System.out.println("ERROR: Null targetBe");
 		}
 		
+		VertxUtils.sendToFrontEnd(userToken, answer);
 		
 		
 	

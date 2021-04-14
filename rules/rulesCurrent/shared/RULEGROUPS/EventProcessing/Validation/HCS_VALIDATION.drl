@@ -36,13 +36,17 @@ rule "HCS_VALIDATION"
 		String validationStatus = hcBe.getValue("PRI_VALIDATION", "Incomplete");
 		if (validationStatus != null) {
 		
+				Answer answer = new Answer();
+				
 				if (validationStatus.equals("Incomplete")) {
-						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hcBe.getCode() ,"PRI_VALIDATION", "HCS"));
+						answer = new Answer(userToken.getUserCode(), HCBe.getCode() ,"PRI_VALIDATION", "HCS");
+ 						beUtils.saveAnswer(answer);
 						System.out.println("PRI_VALIDATION set to : HCS"); 
 				}
 				
 				if (validationStatus.equals("OHS")) {
-						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hcBe.getCode() ,"PRI_VALIDATION", "Ready"));
+						answer = new Answer(userToken.getUserCode(), HCBe.getCode() ,"PRI_VALIDATION", "Ready");	
+						beUtils.saveAnswer(answer);
 						System.out.println("PRI_VALIDATION set to : Ready"); 	
 						
 						/* Send Email/signal to Agent fro HC Val */	
@@ -50,6 +54,9 @@ rule "HCS_VALIDATION"
 		} else {
 			System.out.println("ERROR: Null validationStatus");
 		}
+		
+		VertxUtils.sendToFrontEnd(userToken, answer);
+		
 		
 	
 end
