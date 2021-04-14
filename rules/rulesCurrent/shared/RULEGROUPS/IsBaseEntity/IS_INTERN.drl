@@ -316,7 +316,8 @@ rule "IS_INTERN"
 			String results = "";
 			String beCode = "";
 					
-			BaseEntity[] matchedBe = new BaseEntity[3];
+			/*BaseEntity[] matchedBe = new BaseEntity[3];*/
+			List<BaseEntity> matchedBe = new ArrayList<BaseEntity>();
 					
 		    for (int i = 0; i < 3; i++) {
 		        BaseEntity randomElement = eligbleInternships.get(rand.nextInt(eligbleInternships.size()));
@@ -329,7 +330,8 @@ rule "IS_INTERN"
 				if(i == 1) {results = results + '\"' + beCode + '\", ';}
 				if(i == 2) {results = results + '\"' + beCode + '\"]';}
 				
-				matchedBe[i] = randomElement;
+				matchedBe.add(randomElement);
+				/*matchedBe[i] = randomElement;*/
 				System.out.println("matchedBe::  " + matchedBe);
 				System.out.println("results::  " + results);
 			
