@@ -33,7 +33,7 @@ rule "HELPER_SIGNATURE_DATE"
 			salience 5000
 	when
 		beUtils : BaseEntityUtils()
-		answerTwo : Answer( attributeCode == "PRI_INTERN_AGREEMENT_SIGNATURE" 
+		answer : Answer( attributeCode == "PRI_INTERN_AGREEMENT_SIGNATURE" 
 						|| attributeCode == "PRI_HOST_CPY_REP_AGREEMENT_SIGNATURE" 
 						|| attributeCode == "PRI_OUTCOME_AGREEMENT_SIGNATURE" 
 						|| attributeCode == "PRI_HC_SERVICES_AGREEMENT_SIGNATURE"
@@ -49,18 +49,18 @@ rule "HELPER_SIGNATURE_DATE"
 		
 		/* Save the actual AGREEMENT_SIGNATURE answer */
 		
-		answersToSave.add(answerTwo);
+		answersToSave.add(answer);
 		
 		String sourceCode = beUtils.getGennyToken().getUserCode();	
 		System.out.println("sourceCode :: " + sourceCode);
 		
-		String targetCode = answerTwo.getTargetCode();					
+		String targetCode = answer.getTargetCode();					
 		System.out.println("targetCode :: " + targetCode);
 		
-		String attributeCode = answerTwo.getAttributeCode();			
+		String attributeCode = answer.getAttributeCode();			
 		System.out.println("attributeCode :: " + attributeCode);
 		
-		String value = answerTwo.getValue();
+		String value = answer.getValue();
 		System.out.println("value :: " + value);		
 		
 		
@@ -370,7 +370,7 @@ rule "HELPER_SIGNATURE_DATE"
 		
 
 		/* Retract the answer message so the rule does not fire again */
-		retract(answerTwo);
+		retract(answer);
 
 
 		/* Dont display anything new */
