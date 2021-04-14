@@ -70,8 +70,11 @@ rule "HELPER_LNK_SOFTWARE"
 				attributeCode = "PRI_ASSOC_CURRENT_SOFTWARE";
 			} else if (answer.getAttributeCode().equals("LNK_FUTURE_SOFTWARE")) {
 				attributeCode = "PRI_ASSOC_FUTURE_SOFTWARE";
+			} else if (answer.getAttributeCode().equals("LNK_SOFTWARE")) {
+				attributeCode = "PRI_SOFTWARE";
 			}
-
+			System.out.println("attributeCode :: " + attributeCode);
+			
 			Answer softwaresAnswer = new Answer(sourceCode, targetCode, attributeCode, softwares,false,true);
 			beUtils.saveAnswer(softwaresAnswer);
 			VertxUtils.sendToFrontEnd(userToken, softwaresAnswer);
