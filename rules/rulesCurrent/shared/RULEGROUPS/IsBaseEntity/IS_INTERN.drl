@@ -325,7 +325,7 @@ rule "IS_INTERN"
 				
 				if(i == 0) {results = '[\"' + beCode + '\", ';}
 				if(i == 1) {results = results + '\"' + beCode + '\", ';}
-				if(i == 2) {results = results + beCode + '\"]';}
+				if(i == 2) {results = results + '\"' + beCode + '\"]';}
 				System.out.println("results::  " + results);
 			 }
 			 
