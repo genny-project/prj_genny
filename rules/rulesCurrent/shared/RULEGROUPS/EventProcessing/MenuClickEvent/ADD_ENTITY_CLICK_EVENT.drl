@@ -23,7 +23,7 @@ rule "ADD_ENTITY_CLICK_EVENT"
  		ruleDetails : RuleDetails()
     then
 
-		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
+		System.out.println(drools.getRule().getName() + " - Rule fired");
 		
 		/* Get Agent */
 		String user = userToken.getUserCode();
@@ -31,38 +31,36 @@ rule "ADD_ENTITY_CLICK_EVENT"
 		
 		
 		String code = $message.getData().getCode();
-		String workflowSignalCode = StringUtils.removeEnd(code, "_MENU");
+		String key = StringUtils.removeEnd(code, "_MENU");
 
 		if(code.startsWith("SCH_ACT_PRI_EVENT_QUE_")){
-			workflowSignalCode = StringUtils.removeStart(workflowSignalCode,"SCH_ACT_PRI_EVENT_");
+			key = StringUtils.removeStart(key,"SCH_ACT_PRI_EVENT_");
 		}
 
-		workflowSignalCode = StringUtils.removeStart(workflowSignalCode,"QUE_");
-		System.out.println("workflowSignalCode: " +workflowSignalCode);
+		key = StringUtils.removeStart(key,"QUE_");
+		System.out.println("key: " +key);
 				
-		
 		/*
 		if (workflowSignalCode.equals("HOST_CPY") || workflowSignalCode.equals("HOST_CPY_REP")) {
 			output.setResultCode("START_"+workflowSignalCode);
 		} else {
 		*/
 		
-		workflowSignalCode = workflowSignalCode + "_NO";
-		System.out.println("workflowSignalCode: " +workflowSignalCode);
-		
+		output.setTypeOfResult("SIGNAL");
 		output.setResultCode("START_ADD_ENTITY");
 		
-		
+		output.setSuitCase(key);
 		output.setAskSourceCode(user);	
-		output.setTargetCode($message.getData().getTargetCode());
-		output.setTypeOfResult("SIGNAL");
-		output.setSuitCase(workflowSignalCode);
+		output.setTargetCode("NONE");
 		
 		
+		System.out.println("**************************************************");
+		System.out.println("TypeOfResult: "  + output.getTypeOfResult());
+		System.out.println("ResultCode: "    + output.getResultCode());
+		System.out.println("SuitCase: "      + output.getSuitCase());
+		System.out.println("AskSourceCode: " + output.getAskSourceCode());
+		System.out.println("TargetCode: "    + output.getTargetCode());
+		System.out.println("**************************************************");
 		
-		System.out.println("START SIGNAL: " +workflowSignalCode);
-		System.out.println("STARTING ADD_ENTITY WORKFLOW WITH: " +output);
-
-
 		retract( $message);
 	end

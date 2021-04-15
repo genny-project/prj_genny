@@ -21,36 +21,36 @@ rule "FINISH_ENTITY_CLICK_EVENT"
  		ruleDetails : RuleDetails()
     then
 
-		System.out.println("FINISH_ENTITY_CLICK_EVENT Rule fired");
+		System.out.println(drools.getRule().getName() + " - Rule fired");
 
 		/* QUE_FINISH_INTERN */
 		
 		String code = $message.getData().getCode();
 		System.out.println("code: " +code);
 		
-		String workflowSignalCode = StringUtils.removeStart(code,"QUE_FINISH_");
-		System.out.println("workflowSignalCode: " +workflowSignalCode);
-		
-		workflowSignalCode = workflowSignalCode + "_YES";
-		System.out.println("workflowSignalCode: " +workflowSignalCode);
-		
-		/* INTERN_YES */
-		/* HOST_CPY_REP_YES */
-		
+		String key = StringUtils.removeStart(code,"QUE_FINISH_");
+		System.out.println("key: " +key);
 		
 		String user = userToken.getUserCode();
 		System.out.println("user: " + user);
 		
-		
-		output.setAskSourceCode(user);
-		output.setTargetCode(user);
+
 		output.setTypeOfResult("SIGNAL");
 		output.setResultCode("START_ADD_ENTITY");
-		output.setSuitCase(workflowSignalCode);
-		
-	
-		System.out.println("STARTING ADD_ENTITY WORKFLOW WITH: " +output);
 
+		output.setSuitCase(key);
+		output.setAskSourceCode(user);
+		/* targetCode is the BaseEntity we want to finish */
+		output.setTargetCode(user);
+
+		
+		System.out.println("**************************************************");
+		System.out.println("TypeOfResult: "  + output.getTypeOfResult());
+		System.out.println("ResultCode: "    + output.getResultCode());
+		System.out.println("SuitCase: "      + output.getSuitCase());
+		System.out.println("AskSourceCode: " + output.getAskSourceCode());
+		System.out.println("TargetCode: "    + output.getTargetCode());
+		System.out.println("**************************************************");
 
 		retract( $message);
 	end
