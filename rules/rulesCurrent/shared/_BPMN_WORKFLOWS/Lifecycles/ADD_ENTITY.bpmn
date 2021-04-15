@@ -378,8 +378,8 @@ System.out.println(&quot;%%%%%%%%%%%%%%%%%%% newBe: &quot; + newBe);</drools:scr
 	kcontext.setVariable(&quot;questionCode&quot;, questionCode);
 	System.out.println(&quot;questionCode: &quot; + questionCode);
 
-	if (key.contains(&quot;_FRESH_&quot;)) {
-		key = key.replace(&quot;_FRESH_&quot;, &quot;_&quot;);
+	if (key.startsWith(&quot;FRESH_&quot;)) {
+		key = key.substring(&quot;FRESH_&quot;.length());
 	}
 
 	System.out.println(&quot;key: &quot; + key);
