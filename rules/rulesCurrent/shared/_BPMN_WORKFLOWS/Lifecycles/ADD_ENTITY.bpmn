@@ -263,7 +263,7 @@
           </drools:metaData>
           <drools:onEntry-script scriptFormat="http://www.java.com/java">
             <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% ENTER Create Entity IS BASE ENTITY %%%%%%%%%%%%%%%%%%%&quot;);
-System.out.println(&quot;%%%%%%%%%%%%%%%%%%% Clean: &quot; + clean);
+System.out.println(&quot;%%%%%%%%%%%%%%%%%%% key: &quot; + key);
 System.out.println(&quot;%%%%%%%%%%%%%%%%%%% newBe: &quot; + newBe);</drools:script>
           </drools:onEntry-script>
           <drools:onExit-script scriptFormat="http://www.java.com/java">
@@ -277,7 +277,7 @@ System.out.println(&quot;%%%%%%%%%%%%%%%%%%% newBe: &quot; + newBe);</drools:scr
           <bpmn2:dataInput id="DataInput_2" itemSubjectRef="ItemDefinition_2" name="userToken"/>
           <bpmn2:dataInput id="DataInput_3" name="ruleFlowGroup"/>
           <bpmn2:dataInput id="DataInput_10" name="callingWorkflow"/>
-          <bpmn2:dataInput id="DataInput_11" itemSubjectRef="ItemDefinition_2733" name="clean"/>
+          <bpmn2:dataInput id="DataInput_11" itemSubjectRef="ItemDefinition_2733" name="key"/>
           <bpmn2:dataInput id="DataInput_12" itemSubjectRef="ItemDefinition_2016" name="newBe"/>
           <bpmn2:inputSet id="_InputSet_123">
             <bpmn2:dataInputRefs>DataInput_1</bpmn2:dataInputRefs>
@@ -312,7 +312,7 @@ System.out.println(&quot;%%%%%%%%%%%%%%%%%%% newBe: &quot; + newBe);</drools:scr
           </bpmn2:assignment>
         </bpmn2:dataInputAssociation>
         <bpmn2:dataInputAssociation id="DataInputAssociation_1">
-          <bpmn2:sourceRef>clean</bpmn2:sourceRef>
+          <bpmn2:sourceRef>key</bpmn2:sourceRef>
           <bpmn2:targetRef>DataInput_11</bpmn2:targetRef>
         </bpmn2:dataInputAssociation>
         <bpmn2:dataInputAssociation id="DataInputAssociation_2">
@@ -600,7 +600,7 @@ System.out.println(&quot;sessionFacts = &quot; + sessionFacts);
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_2" bpmnElement="ScriptTask_2" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="1296.0" y="275.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_17">
           <dc:Bounds height="11.0" width="81.0" x="1310.0" y="294.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -705,7 +705,7 @@ System.out.println(&quot;sessionFacts = &quot; + sessionFacts);
         <di:waypoint xsi:type="dc:Point" x="1240.0" y="299.0"/>
         <di:waypoint xsi:type="dc:Point" x="1268.0" y="299.0"/>
         <di:waypoint xsi:type="dc:Point" x="1296.0" y="300.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_29"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
