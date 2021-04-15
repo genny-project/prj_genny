@@ -342,7 +342,7 @@ System.out.println(&quot;%%%%%%%%%%%%%%%%%%% newBe: &quot; + newBe);</drools:scr
 	System.out.println(&quot;ADD_ENTITY: userToken = &quot; +userToken.getCode());
 	System.out.println(&quot;ADD_ENTITY: serviceToken = &quot; +serviceToken.getCode());
 
-	BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+	beUtils = new BaseEntityUtils(userToken);
 
 
 /* Gather Key and construct Question Code */
@@ -566,13 +566,13 @@ beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), &quot;PR
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_3" bpmnElement="ExclusiveGateway_3" isMarkerVisible="true">
         <dc:Bounds height="50.0" width="50.0" x="1460.0" y="273.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_7">
           <dc:Bounds height="11.0" width="44.0" x="1463.0" y="323.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_4" bpmnElement="EndEvent_4">
         <dc:Bounds height="36.0" width="36.0" x="1580.0" y="337.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_10">
           <dc:Bounds height="11.0" width="17.0" x="1589.0" y="373.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -659,19 +659,19 @@ beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), &quot;PR
         <di:waypoint xsi:type="dc:Point" x="1240.0" y="299.0"/>
         <di:waypoint xsi:type="dc:Point" x="1275.0" y="299.0"/>
         <di:waypoint xsi:type="dc:Point" x="1310.0" y="299.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_26"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_26" bpmnElement="SequenceFlow_26" sourceElement="BPMNShape_ExclusiveGateway_3" targetElement="BPMNShape_EndEvent_1">
         <di:waypoint xsi:type="dc:Point" x="1485.0" y="273.0"/>
         <di:waypoint xsi:type="dc:Point" x="1485.0" y="240.0"/>
         <di:waypoint xsi:type="dc:Point" x="1580.0" y="240.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_27"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_27" bpmnElement="SequenceFlow_27" sourceElement="BPMNShape_ExclusiveGateway_3" targetElement="BPMNShape_EndEvent_4">
         <di:waypoint xsi:type="dc:Point" x="1485.0" y="323.0"/>
         <di:waypoint xsi:type="dc:Point" x="1485.0" y="355.0"/>
         <di:waypoint xsi:type="dc:Point" x="1580.0" y="355.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_28"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
