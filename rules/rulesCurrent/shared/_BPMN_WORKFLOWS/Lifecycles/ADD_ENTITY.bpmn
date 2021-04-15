@@ -474,19 +474,20 @@ beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), &quot;PR
 
 kcontext.setVariable(&quot;sessionFacts&quot;, sessionFacts);
 System.out.println(&quot;sessionFacts = &quot; + sessionFacts);
-</bpmn2:script>
+
+System.out.println(&quot;beExists = &quot; + beExists);</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_6" drools:priority="1" sourceRef="ScriptTask_5" targetRef="ScriptTask_2"/>
     </bpmn2:subProcess>
     <bpmn2:sequenceFlow id="SequenceFlow_8" drools:priority="1" sourceRef="StartEvent_2" targetRef="SubProcess_2"/>
     <bpmn2:sequenceFlow id="SequenceFlow_14" drools:priority="1" sourceRef="SubProcess_2" targetRef="ExclusiveGateway_3"/>
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_3" name="BE Exists?" gatewayDirection="Diverging">
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_3" name="BE Exists?" gatewayDirection="Diverging" default="SequenceFlow_27">
       <bpmn2:incoming>SequenceFlow_14</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_26</bpmn2:outgoing>
       <bpmn2:outgoing>SequenceFlow_27</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
     <bpmn2:sequenceFlow id="SequenceFlow_26" drools:priority="1" sourceRef="ExclusiveGateway_3" targetRef="EndEvent_2">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_24" language="http://www.java.com/java">return(beExists == false);</bpmn2:conditionExpression>
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_24" language="http://www.java.com/java">return(!beExists);</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:endEvent id="EndEvent_4" name="End">
       <bpmn2:extensionElements>
@@ -496,9 +497,7 @@ System.out.println(&quot;sessionFacts = &quot; + sessionFacts);
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_27</bpmn2:incoming>
     </bpmn2:endEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_27" drools:priority="1" sourceRef="ExclusiveGateway_3" targetRef="EndEvent_4">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_25" language="http://www.java.com/java">return(beExists == true);</bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_27" drools:priority="1" sourceRef="ExclusiveGateway_3" targetRef="EndEvent_4"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Process Diagram">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="ADD_ENTITY">
