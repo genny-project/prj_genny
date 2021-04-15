@@ -378,6 +378,13 @@ System.out.println(&quot;%%%%%%%%%%%%%%%%%%% newBe: &quot; + newBe);</drools:scr
 	kcontext.setVariable(&quot;questionCode&quot;, questionCode);
 	System.out.println(&quot;questionCode: &quot; + questionCode);
 
+	if (key.contains(&quot;_FRESH_&quot;)) {
+		key = key.replace(&quot;_FRESH_&quot;, &quot;_&quot;);
+	}
+
+	System.out.println(&quot;key: &quot; + key);
+	kcontext.setVariable(&quot;key&quot;, key);
+
 /* Do the template thing*/
 
 if (key.equals(&quot;HOST_CPY&quot;) || key.equals(&quot;HOST_CPY_REP&quot;) || key.equals(&quot;INTERNSHIP&quot;) || key.equals(&quot;INTERN&quot;) || key.equals(&quot;EDU_PRO&quot;) || key.equals(&quot;EDU_PRO_REP&quot;)) {
