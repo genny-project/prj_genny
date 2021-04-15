@@ -13,6 +13,7 @@ import life.genny.qwanda.entity.BaseEntity;
        "userToken"  : new GennyToken(),
        "questionCode"  :  new StringDataType(),
        "callingWorkflow"  :  new StringDataType(),
+       "baseEntitySource" : new BaseEntity(),
        "baseEntityTarget" : new BaseEntity(),
        "formCode"  :  new StringDataType(),
        "targetCode"  :  new StringDataType(),

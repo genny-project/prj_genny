@@ -30,7 +30,15 @@ rule "CLICK_TERMS_AND_CONDITIONS"
 		/* Just Fire WF, it handles everything else */
 		
 		output.setTypeOfResult("SIGNAL");
-		output.setResultCode("START_TERMS_AND_CONDITIONS");	
+		output.setResultCode("START_TERMS_AND_CONDITIONS");
 
-		retract($message);
+		output.setAskSourceCode(userToken.getUserCode());
+
+		System.out.println("**************************************************");
+		System.out.println("TypeOfResult: "  + output.getTypeOfResult());
+		System.out.println("ResultCode: "    + output.getResultCode());
+		System.out.println("AskSourceCode: " + output.getAskSourceCode());
+		System.out.println("**************************************************");
+
+		retract( $message);
 	end
