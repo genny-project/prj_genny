@@ -82,7 +82,7 @@ System.out.println(&quot;projectBE = &quot; + projectBE);
 
 /* Grab sourceCode */
 OutputParam data = (OutputParam)sessionFacts.getMessage();
-sourceCode = data.getAskSourceCode();
+String sourceCode = data.getAskSourceCode();
 
 sourceEntity = beUtils.getBaseEntityByCode(sourceCode);
 kcontext.setVariable(&quot;sourceEntity&quot;, sourceEntity);
