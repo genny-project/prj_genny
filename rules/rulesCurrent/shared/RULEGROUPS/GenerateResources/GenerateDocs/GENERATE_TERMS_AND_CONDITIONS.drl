@@ -20,10 +20,10 @@ rule "GENERATE_TERMS_AND_CONDITIONS"
 		System.out.println("projectCode = " + projectCode);
 		BaseEntity projectBE = beUtils.getBaseEntityByCode(projectCode);
 
-		String termsAndConditionsURL = projectBE.getValue("PRI_TERMS_AND_CONDITIONS_URL", null);
+		String termsAndConditionsURL = projectBE.getValue("PRI_TERMS_AND_CONDITIONS_URL", "");
 		System.out.println("termsAndConditionsURL = " + termsAndConditionsURL);
 
-		if (termsAndConditionsURL != null) {
+		if (termsAndConditionsURL != null && !termsAndConditionsURL.isEmpty()) {
 			String documentAsString = QwandaUtils.apiGet(termsAndConditionsURL, null);
 
 			if (documentAsString != null) {
@@ -32,7 +32,7 @@ rule "GENERATE_TERMS_AND_CONDITIONS"
 				System.out.println("documentAsString is NULL");
 			}
 		} else {
-			System.out.println("termsAndConditionsURL is NULL");
+			System.out.println("termsAndConditionsURL is NULL or EMPTY");
 		}
 
 	end
