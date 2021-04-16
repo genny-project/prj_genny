@@ -283,7 +283,7 @@ rule "IS_INTERN"
 		
 		List<BaseEntity> internships = beUtils.getBaseEntitys(internshipMatch);
 		List<BaseEntity> eligbleInternships = beUtils.getBaseEntitys(internshipMatch);
-		List<BaseEntity> matchedInternships = null;
+		List<BaseEntity> $matchedInternships = null;
 		
 		try {
 	        System.out.println("The number of matching internships is " + (internships == null ? "NULL" : internships.size()));
@@ -325,7 +325,7 @@ rule "IS_INTERN"
 		        beCode = randomElement.getCode();
 		        System.out.println("beCode: = " +beCode);
 				
-				matchedInternships.add(randomElement);
+				$matchedInternships.add(randomElement);
 				
 				if(i == 0) {results = '[\"' + beCode + '\", ';}
 				if(i == 1) {results = results + '\"' + beCode + '\", ';}
