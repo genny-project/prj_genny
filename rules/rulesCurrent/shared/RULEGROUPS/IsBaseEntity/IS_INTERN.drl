@@ -283,7 +283,7 @@ rule "IS_INTERN"
 		
 		List<BaseEntity> internships = beUtils.getBaseEntitys(internshipMatch);
 		List<BaseEntity> eligbleInternships = beUtils.getBaseEntitys(internshipMatch);
-		List<BaseEntity> matchedInternships = new List<BaseEntity>();
+		List<BaseEntity> matchedInternships = null;
 		
 		try {
 	        System.out.println("The number of matching internships is " + (internships == null ? "NULL" : internships.size()));
@@ -331,7 +331,7 @@ rule "IS_INTERN"
 				if(i == 1) {results = results + '\"' + beCode + '\", ';}
 				if(i == 2) {results = results + '\"' + beCode + '\"]';}
 				
-				beCodes.add[i] = beCode;
+				beCodes[i] = beCode;
 				System.out.println("results::  " + results);
 			 }
 			 
@@ -348,7 +348,7 @@ rule "IS_INTERN"
 			
 			beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHED_INTERNSHIPS", results));
 			
-			BaseEntity user = beUtils.getBaseEntityByCode(beCode);
+			/*BaseEntity user = beUtils.getBaseEntityByCode(beCode);*/
 			
 			/* Send BE to the FE */
 			QDataBaseEntityMessage msg = new QDataBaseEntityMessage(newBe);
@@ -356,10 +356,10 @@ rule "IS_INTERN"
 			msg.setReplace(true);
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 			
-			QDataBaseEntityMessage msg = new QDataBaseEntityMessage(matchedInternships);
-			msg.setToken(userToken.getToken());
-			msg.setReplace(true);
-			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+			QDataBaseEntityMessage msgMatches = new QDataBaseEntityMessage(matchedInternships);
+			msgMatches.setToken(userToken.getToken());
+			msgMatches.setReplace(true);
+			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msgMatches));
 			
 		} catch (Exception e) {
         	e.printStackTrace();
