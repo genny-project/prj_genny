@@ -33,7 +33,7 @@ rule "BASE_ENTITY_ATTRIBUTES"
 		if(baseEntity!= null){
 			QDataBaseEntityMessage beMsg = new QDataBaseEntityMessage(baseEntity);
 			beMsg.setToken(userToken.getToken());
-			beMsg.setReplace(true);
+			beMsg.setReplace(false);
 			
 			/* publish baseentity */
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(beMsg));
