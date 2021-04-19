@@ -92,7 +92,7 @@ rule "HELPER_SIGNATURE_DATE"
 				type = "PRI_OUTCOME_REP_SIGNING_DATE"; 
 				System.out.println("attributeCode - PRI_OUTCOME :: " + attributeCode);
 				
-		else if (attributeCode.startsWith("PRI_OHS_")) {
+		} else if (attributeCode.startsWith("PRI_OHS_")) {
 				type = "PRI_OHS_SIGNING_DATE"; 
 				System.out.println("attributeCode - PRI_OHS :: " + attributeCode);		
 				
