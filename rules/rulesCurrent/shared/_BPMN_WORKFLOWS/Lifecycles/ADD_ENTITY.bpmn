@@ -471,6 +471,7 @@ beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), &quot;PR
         <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_25</bpmn2:outgoing>
         <bpmn2:script>((OutputParam)((SessionFacts)sessionFacts).getMessage()).setTargetCode(newBe.getCode());
+((OutputParam)((SessionFacts)sessionFacts).getMessage()).setSuitCase(key);
 
 /* This is a little hacky but works for the moment */
 if (beExists) {
@@ -671,7 +672,7 @@ System.out.println(&quot;beExists = &quot; + beExists);</bpmn2:script>
         <di:waypoint xsi:type="dc:Point" x="1531.0" y="298.0"/>
         <di:waypoint xsi:type="dc:Point" x="1569.0" y="298.0"/>
         <di:waypoint xsi:type="dc:Point" x="1607.0" y="298.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_7"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
