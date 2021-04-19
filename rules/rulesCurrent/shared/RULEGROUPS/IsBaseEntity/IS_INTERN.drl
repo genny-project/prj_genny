@@ -346,7 +346,7 @@ rule "IS_INTERN"
 			
 			beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHED_INTERNSHIPS", results));
 			
-			/*BaseEntity user = beUtils.getBaseEntityByCode(beCode);*/
+			newBe = beUtils.getBaseEntityByCode(newBe.getCode());
 			
 			/* Send BE to the FE */
 			QDataBaseEntityMessage msg = new QDataBaseEntityMessage(newBe);
