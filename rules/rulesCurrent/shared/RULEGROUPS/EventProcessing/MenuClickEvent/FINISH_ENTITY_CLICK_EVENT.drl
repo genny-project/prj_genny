@@ -30,6 +30,11 @@ rule "FINISH_ENTITY_CLICK_EVENT"
 		
 		String key = StringUtils.removeStart(code,"QUE_FINISH_");
 		System.out.println("key: " +key);
+
+		if (key.equals("HOST_CPY_REP")) {
+			key = "FRESH_" + key;
+			System.out.println("key: " + key);
+		}
 		
 		String user = userToken.getUserCode();
 		System.out.println("user: " + user);
