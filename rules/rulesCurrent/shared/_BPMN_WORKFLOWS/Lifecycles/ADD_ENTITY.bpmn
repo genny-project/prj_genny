@@ -472,10 +472,11 @@ beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), &quot;PR
         <bpmn2:outgoing>SequenceFlow_25</bpmn2:outgoing>
         <bpmn2:script>((OutputParam)((SessionFacts)sessionFacts).getMessage()).setTargetCode(newBe.getCode());
 
+/* This is a little hacky but works for the moment */
 if (beExists) {
-	((OutputParam)((SessionFacts)sessionFacts).getMessage()).setSuitCase(&quot;FINISHED&quot;);
+	((OutputParam)((SessionFacts)sessionFacts).getMessage()).setAskSourceCode(&quot;FINISHED&quot;);
 } else {
-	((OutputParam)((SessionFacts)sessionFacts).getMessage()).setSuitCase(&quot;CREATED&quot;);
+	((OutputParam)((SessionFacts)sessionFacts).getMessage()).setAskSourceCode(&quot;CREATED&quot;);
 }
 
 
