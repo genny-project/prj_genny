@@ -68,9 +68,9 @@ rule "OHS_VALIDATION"
 						System.out.println("hostCompanyName: " +assocHC);
 						System.out.println("intern: " +name);
 						System.out.println("----------------------------");
-						
+*/						
 						HashMap<String, String> templateData = new HashMap<String, String>();
-			
+/*			
 						templateData.put("hostCompanyName", assocHC);
 						templateData.put("intern", name);
 						templateData.put("internshipName", title);
