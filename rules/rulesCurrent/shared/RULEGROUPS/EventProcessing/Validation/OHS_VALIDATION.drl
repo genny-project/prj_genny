@@ -52,14 +52,14 @@ rule "OHS_VALIDATION"
 						urlParentCode = new String(Base64.getEncoder().encode(urlParentCode.getBytes()));
 						urlCode = new String(Base64.getEncoder().encode(urlCode.getBytes()));
 	
-						url = GennySettings.projectUrl+"/home/"+urlParentCode+"/"+urlCode+"/"+urlTargetCode;
+						String url = GennySettings.projectUrl+"/home/"+urlParentCode+"/"+urlCode;
 						System.out.println("url: " + url);
 
 						String agentEmail = "internmatch@outcomelife.com.au";
 
-						subject = "Host Company ready to be Vaildated";
-						template_id = "d-95472fd28165474f80346ff9a1912a4b";
-
+						String subject = "Host Company ready to be Vaildated";
+						String template_id = "d-95472fd28165474f80346ff9a1912a4b";
+/*
 						System.out.println("-------- AGENT EMAIL DATA --------");
 						System.out.println("subject: " +subject);
 						System.out.println("template_id: " +template_id);
@@ -68,12 +68,13 @@ rule "OHS_VALIDATION"
 						System.out.println("hostCompanyName: " +assocHC);
 						System.out.println("intern: " +name);
 						System.out.println("----------------------------");
-			
-						templateData = new HashMap<String, String>();
+						
+						HashMap<String, String> templateData = new HashMap<String, String>();
 			
 						templateData.put("hostCompanyName", assocHC);
 						templateData.put("intern", name);
 						templateData.put("internshipName", title);
+*/
 						templateData.put("url", url);
 			
 						EmailHelper.sendGrid(beUtils, agentEmail, null, null, subject, template_id, templateData);
