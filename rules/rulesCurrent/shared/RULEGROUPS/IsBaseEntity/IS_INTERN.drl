@@ -315,9 +315,8 @@ rule "IS_INTERN"
 			Random rand = new Random();
 			String results = "";
 			String beCode = "";
-					
-			/*BaseEntity[] matchedBe = new BaseEntity[3];*/
-			List<BaseEntity> matchedBe = new ArrayList<BaseEntity>();
+			String[] beCodes = new String[3];
+			BaseEntity[] beCodez = new BaseEntity[3];
 					
 		    for (int i = 0; i < 3; i++) {
 		        BaseEntity randomElement = eligbleInternships.get(rand.nextInt(eligbleInternships.size()));
@@ -326,20 +325,28 @@ rule "IS_INTERN"
 		        beCode = randomElement.getCode();
 		        System.out.println("beCode: = " +beCode);
 				
+				/*matchedInternships.add(randomElement);*/
+				
 				if(i == 0) {results = '[\"' + beCode + '\", ';}
 				if(i == 1) {results = results + '\"' + beCode + '\", ';}
 				if(i == 2) {results = results + '\"' + beCode + '\"]';}
 				
-				matchedBe.add(randomElement);
-				/*matchedBe[i] = randomElement;*/
-				System.out.println("matchedBe::  " + matchedBe);
+				beCodes[i] = beCode;
+				beCodez[i] = randomElement;
 				System.out.println("results::  " + results);
-			
 			 }
 			 
 			
 			System.out.println("Results::  " + results);
+			System.out.println("results::  " + beCodes[0]);
+			System.out.println("results::  " + beCodes[1]);
+			System.out.println("results::  " + beCodes[2]);
+			
+  			  
+			
 			beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHED_INTERNSHIPS", results));
+			
+			/*BaseEntity user = beUtils.getBaseEntityByCode(beCode);*/
 			
 			/* Send BE to the FE */
 			QDataBaseEntityMessage msg = new QDataBaseEntityMessage(newBe);
@@ -347,12 +354,11 @@ rule "IS_INTERN"
 			msg.setReplace(true);
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 			
-			QDataBaseEntityMessage msgArray = new QDataBaseEntityMessage(matchedBe);
-			msgArray.setToken(userToken.getToken());
-			msgArray.setReplace(true);
-			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msgArray));
 			
-			
+			QDataBaseEntityMessage msgMatches = new QDataBaseEntityMessage(beCodez);
+			msgMatches.setToken(userToken.getToken());
+			msgMatches.setReplace(true);
+			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msgMatches));
 			
 		} catch (Exception e) {
         	e.printStackTrace();
