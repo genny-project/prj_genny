@@ -27,79 +27,79 @@ rule "IS_INTERN"
 		output : OutputParam()
 		baseEntityType : String(baseEntityType.equals("INTERN"))
 		newBe : BaseEntity()
-	  
+
      then
  		System.out.println("IS_INTERN: Rule fired" );
- 		System.out.println("IS_INTERN: newBe = " + newBe.getCode()); 
- 		
+ 		System.out.println("IS_INTERN: newBe = " + newBe.getCode());
+
  	/*  Construct answer with Source, Target, Attribute Code, Value */
  		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
- 		
+
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_INTERN", "true"));
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "AVAILABLE"));
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_DISABLED", "false"));
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS_COLOR", "default"));
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_NUM_JOURNALS", "0"));
- 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_PROFILE", "Complete"));  
-		
+ 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_PROFILE", "Complete"));
+
 
 		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
-		
+
 		/* LNK_INTERNSHIP_DURATION */
-		
+
 		String lnkDuration = newBe.getValue("LNK_INTERNSHIP_DURATION", null);
 		System.out.println("lnkDuration = " +lnkDuration);
 		if (lnkDuration != null) {
 				String assoc_duration = lnkDuration.replace("\"", "").replace("[", "").replace("]", "");
 				System.out.println("assoc_duration = " +assoc_duration);
-				
+
 				BaseEntity assoc_durationBe = beUtils.getBaseEntityByCode(assoc_duration);
 				System.out.println("assoc_durationBe = " + assoc_durationBe);
-				
+
 				if (assoc_durationBe != null) {
 						assoc_duration = assoc_durationBe.getValue("PRI_NAME", null);
 						System.out.println("assoc_duration = " +assoc_duration);
-						
+
 						beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASSOC_DURATION", assoc_duration));
-					
+
 				} else {
-					System.out.println("ERROR: Null assoc_durationBe"); 
+					System.out.println("ERROR: Null assoc_durationBe");
 				}
 		} else {
-			System.out.println("ERROR: Null assoc_duration"); 
+			System.out.println("ERROR: Null assoc_duration");
 		}
-		
+
 		/* ANZCO */
 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ANZCO", "NA"));
-		
+
 		String lnkIndustry = newBe.getValue("LNK_INDUSTRY", null);
 		System.out.println("lnkIndustry : " + lnkIndustry);
-		
+
 		String lnkOcc = newBe.getValue("LNK_OCCUPATION", null);
 		System.out.println("lnkOcc : " + lnkOcc);
-	
-		
+
+
 		String lnkCI = newBe.getValue("LNK_COMP_INTERNSHIP", null);
 		System.out.println("lnkCI : " + lnkCI);
-		
-		
+
+
 		if(lnkIndustry != null && lnkOcc != null && lnkCI != null) {
-				
+
 				String Industry = lnkIndustry.replace("\"", "").replace("[", "").replace("]", "");
 				String Occ = lnkOcc.replace("\"", "").replace("[", "").replace("]", "");
 				String CI = lnkCI.replace("\"", "").replace("[", "").replace("]", "");
 				System.out.println("Industry: " + Industry);
 				System.out.println("Occ: " + Occ);
 				System.out.println("CI: " + CI);
-				
+
 				if(Industry.equals("SEL_INDUSTRY_INFORMATION_COMMUNICATION_TECHNOLOGY") && CI.equals("SEL_PROFESSIONAL_YEAR")) {
 						BaseEntity occBe = beUtils.getBaseEntityByCode(Occ);
 						System.out.println("occBe: " + occBe);
-						
+
 						if(occBe != null) {
 								String anzcoCode = occBe.getValue("PRI_ANZCO", null);
 								System.out.println("anzcoCode: " + anzcoCode);
-								
+
 								if(anzcoCode != null) {
 										beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ANZCO", anzcoCode));
 										System.out.println("Reached the holy land - anzcoCode: " + anzcoCode);
@@ -115,23 +115,23 @@ rule "IS_INTERN"
 		} else {
 			System.out.println("ERROR: Null LNK_INDUSTRY or LNK_OCCUPATION or LNK_COMP_INTERNSHIP");
 		}
-		
-		
- 		
+
+
+
  		String intEP = newBe.getValue("LNK_EDU_PROVIDER", null);
 		System.out.println("intEP : " + intEP);
-		
+
 		if(intEP != null) {
 				String EP = intEP.replace("\"", "").replace("[", "").replace("]", "");
 				System.out.println("EP: " + EP);
-			
+
 				BaseEntity intEPBe = beUtils.getBaseEntityByCode(EP);
 				System.out.println("intEPBe: " + intEPBe);
-				
+
 				if(intEPBe != null) {
 						String ep_name = intEPBe.getValue("PRI_NAME", null);
 						System.out.println("ep_name: " + ep_name);
-						
+
 						if(ep_name != null) {
 								beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASSOC_EP", ep_name));
 						} else {
@@ -143,19 +143,19 @@ rule "IS_INTERN"
 		} else {
 			System.out.println("ERROR: Null intEP");
 		}
-		
+
 
 		/* Set up in Keycloak */
-		
-		
+
+
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
 		String userStr = newBe.getCode();
 		String[] userSplit = userStr.split("_");
 		String userCode = userSplit[1];
 		System.out.println("User "+user+" with userCode = "+userCode);
-		
+
 		String userId = "";
-		
+
 		String firstname = user.getValue("PRI_FIRSTNAME",null);
 		if (firstname != null) {
 			String lastname = user.getValue("PRI_LASTNAME",null);
@@ -177,79 +177,79 @@ rule "IS_INTERN"
 				}
 			}
 		}
-		
+
 
 
 		String endPoint = GennySettings.projectUrl + "/v7/notes";
 		/*String endPoint = "https://internmatch-cyrus.gada.io/v7/notes";*/
-		
+
 		String tag = "ni";
-		
+
 		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), tag, userToken.getUserCode(), "Added an Intern: " + firstname, serviceToken.getToken());
-		
+
 		System.out.println("I just posted the note");
 		System.out.println("Note endPoint: " +endPoint);
 		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
-		
+
 		BaseEntity internBe = beUtils.getBaseEntityByCode(newBe.getCode());
-		
+
 		if(internBe != null){
-			
+
 			QDataBaseEntityMessage internBeMsg = new QDataBaseEntityMessage(internBe);
 			internBeMsg.setToken(userToken.getToken());
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(internBeMsg));
 		}
 
-		
+
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
-		
-		
-		
+
+
+
 		/* ================== BASIC AF MATCHING ALGORITHM ================== */
-		
+
 		/* Recommendation Algorithm Rules
 		From Highest Priority to Lowest Priority
 		Match of Intern Industry & Specialisation & Internship Opportunity Industry & Specialisation
 		Match of Intern Location & Internship Location (By State)
 		Match of Intern 'Technology Known' and Technology Used in Internship */
-		
+
 		String industryAttribute = "PRI_ASSOC_INDUSTRY";
 		String occupationAttribute = "PRI_ASSOC_OCCUPATION";
 		String stateAttribute = "PRI_ADDRESS_STATE";
 		String softwareAttribute = "PRI_ASSOC_CURRENT_SOFTWARE";
-		
-		
+
+
 		/* Gather Matching Info */
-		String assocIndustry = user.getValue("PRI_ASSOC_INDUSTRY", null);	
-		String assocOccupation = user.getValue("PRI_ASSOC_OCCUPATION", null);	
+		String assocIndustry = user.getValue("PRI_ASSOC_INDUSTRY", null);
+		String assocOccupation = user.getValue("PRI_ASSOC_OCCUPATION", null);
 		String state = user.getValue("PRI_ADDRESS_STATE", null);
 		String assocSoftware = user.getValue("PRI_ASSOC_CURRENT_SOFTWARE", null);
 
-		
+
 		if (assocIndustry == null) 		{ industryAttribute = "PRI_CODE";   assocIndustry = "BEG_%"; }
 		if (assocOccupation == null) 	{ occupationAttribute = "PRI_CODE";	assocOccupation = "BEG_%"; }
 		if (state == null) 				{ stateAttribute = "PRI_CODE";  	state = "BEG_%"; }
 		if (assocSoftware == null) 		{ softwareAttribute = "PRI_CODE";  	assocSoftware = "BEG_%"; }
-		
-		
+
+
 		/* Print Matching Info */
 		System.out.println("Industry: " + industryAttribute + " = " + assocIndustry);
 		System.out.println("Occupation: " + occupationAttribute + " = " + assocOccupation);
 		System.out.println("State: " + stateAttribute + " = " + state);
 		System.out.println("Software: " + softwareAttribute + " = " + assocSoftware);
-		
-		
+
+
 		/* Get all the all the matching Internships */
 	    SearchEntity internshipMatch = new SearchEntity("SBE_INTERN_RECOMMENDATIONS_BASIC", "Matching Internships")
 	            .addFilter("PRI_IS_INTERNSHIP", true)
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%")
-				
+
 				.addFilter(industryAttribute, SearchEntity.StringFilter.LIKE, assocIndustry)
 				.addFilter(stateAttribute, SearchEntity.StringFilter.LIKE, state)
 				/*.addFilter(occupationAttribute, SearchEntity.StringFilter.LIKE, assocOccupation)
 				.addFilter(softwareAttribute, SearchEntity.StringFilter.LIKE, assocSoftware)*/
-				
+
 				/* Table Columns */
 				.addColumn("PRI_IMAGE_URL", "Company Logo")
 				.addColumn("PRI_NAME", "Name")
@@ -266,108 +266,108 @@ rule "IS_INTERN"
 				.addColumn("PRI_WORKSITE", "Worksite")
 				.addColumn("PRI_ASSOC_NUM_INTERNS", "No of Interns")
 				.addColumn("PRI_VIDEO_URL", "Video")
-				
+
 				/* Row Actions */
 				.addAction("PRI_EVENT_VIEW", "View")
 
-				
+
 	            .setPageStart(0).setPageSize(1000);
-	
+
 	    internshipMatch.setRealm(serviceToken.getRealm());
 
-		/* Publish Search 
+		/* Publish Search
 	    TableUtils tableUtils = new TableUtils(beUtils);
 		TableUtils.searchTable(beUtils, internshipMatch, true);*/
-		
-		/* Print out nice things 
-		
+
+		/* Print out nice things*/
+
 		List<BaseEntity> internships = beUtils.getBaseEntitys(internshipMatch);
-		List<BaseEntity> eligbleInternships = beUtils.getBaseEntitys(internshipMatch);*/
-		
+		List<BaseEntity> eligbleInternships = beUtils.getBaseEntitys(internshipMatch);
+
 		try {
 	        System.out.println("The number of matching internships is " + (internships == null ? "NULL" : internships.size()));
 	        if ((internships != null) && (internships.size() > 0)) {
 		        for (BaseEntity internship : internships) {
 					System.out.println("Matching internship: = " +internship);
-				
-					String lnk_HC = internship.getValue("LNK_HOST_COMPANY", null);	
+
+					String lnk_HC = internship.getValue("LNK_HOST_COMPANY", null);
 					lnk_HC = lnk_HC.replace("\"", "").replace("[", "").replace("]", "");
 					System.out.println("lnk_HC: " +lnk_HC);
-					
+
 					BaseEntity hcBe = beUtils.getBaseEntityByCode(lnk_HC);
-				    
+
 				    String rocket = hcBe.getValue("PRI_NAME", null);
 				    System.out.println("rocket: " +rocket);
-				    
+
 				    String image = hcBe.getValue("PRI_IMAGE_URL", null);
 				    System.out.println("image: " +image);
-				    
+
 				    if (rocket.equals("Rocket Coders") || image == null) {
 				    	eligbleInternships.remove(internship);
 				    	System.out.println("Gone!!");
 				    }
-					
+
 				}
 			}
-			
+
 			System.out.println("Eligble internships: = " +eligbleInternships);
-			
+
 			Random rand = new Random();
 			String results = "";
 			String beCode = "";
 			String[] beCodes = new String[3];
 			BaseEntity[] beCodez = new BaseEntity[3];
-					
+
 		    for (int i = 0; i < 3; i++) {
 		        BaseEntity randomElement = eligbleInternships.get(rand.nextInt(eligbleInternships.size()));
 		        System.out.println("Random internships: = " +randomElement);
-		        
+
 		        beCode = randomElement.getCode();
 		        System.out.println("beCode: = " +beCode);
-				
+
 				/*matchedInternships.add(randomElement);*/
-				
+
 				if(i == 0) {results = '[\"' + beCode + '\", ';}
 				if(i == 1) {results = results + '\"' + beCode + '\", ';}
 				if(i == 2) {results = results + '\"' + beCode + '\"]';}
-				
+
 				beCodes[i] = beCode;
 				beCodez[i] = randomElement;
 				System.out.println("results::  " + results);
 			 }
-			 
-			
+
+
 			System.out.println("Results::  " + results);
 			System.out.println("results::  " + beCodes[0]);
 			System.out.println("results::  " + beCodes[1]);
 			System.out.println("results::  " + beCodes[2]);
-			
-  			  
-			
+
+
+
 			beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHED_INTERNSHIPS", results));
-			
+
 			newBe = beUtils.getBaseEntityByCode(newBe.getCode());
-			
+
 			/* Send BE to the FE */
 			QDataBaseEntityMessage msg = new QDataBaseEntityMessage(newBe);
 			msg.setToken(userToken.getToken());
 			msg.setReplace(true);
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
-			
-			
+
+
 			QDataBaseEntityMessage msgMatches = new QDataBaseEntityMessage(beCodez);
 			msgMatches.setToken(userToken.getToken());
 			msgMatches.setReplace(true);
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msgMatches));
-			
+
 		} catch (Exception e) {
         	e.printStackTrace();
     	}
-		
+
 		/* ================================================================= */
-		
-		
-		
+
+
+
 		retract(newBe)
-	
+
 end
