@@ -275,14 +275,14 @@ rule "IS_INTERN"
 	
 	    internshipMatch.setRealm(serviceToken.getRealm());
 
-		/* Publish Search */
+		/* Publish Search 
 	    TableUtils tableUtils = new TableUtils(beUtils);
-		TableUtils.searchTable(beUtils, internshipMatch, true);
+		TableUtils.searchTable(beUtils, internshipMatch, true);*/
 		
-		/* Print out nice things */
+		/* Print out nice things 
 		
 		List<BaseEntity> internships = beUtils.getBaseEntitys(internshipMatch);
-		List<BaseEntity> eligbleInternships = beUtils.getBaseEntitys(internshipMatch);
+		List<BaseEntity> eligbleInternships = beUtils.getBaseEntitys(internshipMatch);*/
 		
 		try {
 	        System.out.println("The number of matching internships is " + (internships == null ? "NULL" : internships.size()));
