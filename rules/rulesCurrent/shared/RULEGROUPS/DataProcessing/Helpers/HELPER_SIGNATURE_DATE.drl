@@ -33,10 +33,10 @@ rule "HELPER_SIGNATURE_DATE"
 			salience 5000
 	when
 		beUtils : BaseEntityUtils()
-		answerTwo : Answer( attributeCode == "PRI_INTERN_AGREEMENT_SIGNATURE" 
-						|| attributeCode == "PRI_HOST_CPY_REP_AGREEMENT_SIGNATURE" 
-						|| attributeCode == "PRI_OUTCOME_AGREEMENT_SIGNATURE" 
-						|| attributeCode == "PRI_HC_SERVICES_AGREEMENT_SIGNATURE"
+		answerTwo : Answer( attributeCode == "PRI_AGR_DOC_INT_SIGNATURE" 
+						|| attributeCode == "PRI_AGR_DOC_HC_SIGNATURE" 
+						|| attributeCode == "PRI_AGR_DOC_OUTCOME_SIGNATURE" 
+						|| attributeCode == "PRI_HCS_AGR_SIGNATURE"
 						|| attributeCode == "PRI_OHS_SIGNATURE")
 		answersToSave : Answers()
 		ruleDetails : RuleDetails()
@@ -67,8 +67,8 @@ rule "HELPER_SIGNATURE_DATE"
 		/* Select Type */
 		String type = "EMPTY";
 		
-		if (attributeCode.startsWith("PRI_HC_SERVICES_")) {
-				type = "PRI_HOST_CPY_REP_SIGNING_DATE"; 
+		if (attributeCode.startsWith("PRI_HCS_AGR_")) {
+				type = "PRI_HCS_AGR_SIGN_DATE"; 
 				System.out.println("attributeCode - PRI_HC_SERVICES :: " + attributeCode);
 	
 		} else if (attributeCode.startsWith("PRI_OHS_")){
@@ -80,22 +80,18 @@ rule "HELPER_SIGNATURE_DATE"
 	
 		
 		
-		if (attributeCode.startsWith("PRI_INTERN_")) {
-				type = "PRI_INTERN_SIGNING_DATE"; 
+		if (attributeCode.startsWith("PRI_AGR_DOC_INT_")) {
+				type = "PRI_AGR_DOC_INT_SIGN_DATE"; 
 				System.out.println("attributeCode - PRI_INTERN :: " + attributeCode);
 				
-		} else if (attributeCode.startsWith("PRI_HOST_CPY_REP_")) {
-				type = "PRI_HOST_COMPANY_REP_SIGNING_DATE"; 
+		} else if (attributeCode.startsWith("PRI_AGR_DOC_HC_")) {
+				type = "PRI_AGR_DOC_HC_SIGN_DATE"; 
 				System.out.println("attributeCode - PRI_HOST_CPY_REP :: " + attributeCode);
 	
-		} else if (attributeCode.startsWith("PRI_OUTCOME_")) {
-				type = "PRI_OUTCOME_REP_SIGNING_DATE"; 
+		} else if (attributeCode.startsWith("PRI_AGR_DOC_OUTCOME_")) {
+				type = "PRI_AGR_DOC_OUTCOME_SIGN_DATE"; 
 				System.out.println("attributeCode - PRI_OUTCOME :: " + attributeCode);
-				
-		} else if (attributeCode.startsWith("PRI_OHS_")) {
-				type = "PRI_OHS_SIGNING_DATE"; 
-				System.out.println("attributeCode - PRI_OHS :: " + attributeCode);		
-				
+		
 		} else {
 			System.out.println("ERROR: startsWith failed - attributeCode: "+ attributeCode);	
 		}
@@ -116,7 +112,7 @@ rule "HELPER_SIGNATURE_DATE"
 				
 		BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
 		System.out.println("targetBe: " + targetBe);
-		/*
+		
 		if (targetBe != null) {		
 				beUtils.saveAnswer(new Answer(sourceCode, targetCode, type, date));
 				System.out.println("Saving Date: " +date);	
@@ -124,7 +120,9 @@ rule "HELPER_SIGNATURE_DATE"
 		} else {
 			System.out.println("ERROR: Null targetBe");
 		}
-		*/
+		
+		targetBe = beUtils.getBaseEntityByCode(targetCode);
+		
 		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(targetBe);
 		msg.setToken(userToken.getToken());
 		msg.setReplace(true);
