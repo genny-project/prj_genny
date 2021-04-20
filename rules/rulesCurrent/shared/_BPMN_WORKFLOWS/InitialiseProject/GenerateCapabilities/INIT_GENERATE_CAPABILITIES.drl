@@ -128,7 +128,7 @@ rule "INIT_GENERATE_CAPABILITIES"
 		capabilityUtils.addCapability( "EDIT_HOST_COMPANY", "Edit Host Company");
 		capabilityUtils.addCapability( "EDIT_EDU_PROVIDER", "Edit Education Provider");
 		capabilityUtils.addCapability( "EDIT_AGENCY", "Edit Agency");
-   
+   		capabilityUtils.addCapability( "ON_SHORE_APPLICATION", "Move to on-shore");
 		capabilityUtils.addCapability( "WEB_ONLY", "Public Web Use");
 		
 		capabilityUtils.addCapability( "DOWNLOAD_OHNS_AGREEMENT_DOC", "Download OHNS Agreement Document");
