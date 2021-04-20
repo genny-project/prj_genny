@@ -32,21 +32,21 @@ rule "INIT_GENERATE_CAPABILITIES"
   		capabilityUtils : CapabilityUtils()
      then
      	System.out.println("   Initialise Generate Capabilities");
- 		
- 		
+
+
  		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
  		beUtils.setServiceToken(serviceToken);
-     	
+
      	String projectCode = "PRJ_"+serviceToken.getRealm().toUpperCase();
-     	
+
  		BaseEntity project = beUtils.getBaseEntityByCode(projectCode);
- 		
- 
+
+
 	/*	CapabilityUtils capabilityUtils = new CapabilityUtils(beUtils); */
-		
+
 		/* Add all Capabilities in the prj_genny system */
 		capabilityUtils.addCapability( "IMPORT", "Import");
-		
+
 		capabilityUtils.addCapability( "LOGIN", "Login");
 		capabilityUtils.addCapability( "LOGOUT", "Logout");
   	   	capabilityUtils.addCapability( "NOTES", "Notes");
@@ -62,10 +62,10 @@ rule "INIT_GENERATE_CAPABILITIES"
   	 	capabilityUtils.addCapability( "DASHBOARD", "Dashboard");
   	 	capabilityUtils.addCapability( "DASHBOARD_COUNTS", "Dashboard Counts");
   	 	capabilityUtils.addCapability( "DASHBOARD_TIMELINE", "Dashboard Timeline");
-  	 	
+
   	 	capabilityUtils.addCapability( "SHOW_DEV_INFO","Show Dev Info");
   	 	capabilityUtils.addCapability( "RULE_TIMINGS","Show Rules Timings");
-  	 	
+
   	 	capabilityUtils.addCapability( "SHOW_TABLE","Show a table from searchBar Command");
   	 	capabilityUtils.addCapability( "VERIFY_EMAIL","Send a Keycloak Verify Email");
   	 	capabilityUtils.addCapability( "EDIT_ACCOUNT","Edit Account");
@@ -83,10 +83,10 @@ rule "INIT_GENERATE_CAPABILITIES"
  		capabilityUtils.addCapability( "UNAPPROVE_JOURNALS", "Unapprove Journals");
  		capabilityUtils.addCapability( "READ_JOURNALS", "Read Journals");
 		capabilityUtils.addCapability( "SEARCHBAR_CMDS", "Run Commands From SearchBar");
- 		
+
 		capabilityUtils.addCapability( "VIEW_AVAILABLE_INTERNS", "View Available Interns");
  		capabilityUtils.addCapability( "VIEW_INTERNS", "View Interns");
- 		
+
  		capabilityUtils.addCapability( "VALIDATE_HC", "Validate Host Company");
 		capabilityUtils.addCapability( "UNARCHIVE_INTERN", "Unarchive Intern");
  		capabilityUtils.addCapability( "ARCHIVE_INTERN", "Archive Intern");
@@ -106,7 +106,7 @@ rule "INIT_GENERATE_CAPABILITIES"
 		capabilityUtils.addCapability( "ACCESS_NOTES", "Access Notes");
 		capabilityUtils.addCapability( "FINISH_APPLICATION", "Finish Application");
 		capabilityUtils.addCapability( "START_INTERNSHIP", "Start Internship");
-		
+
 		capabilityUtils.addCapability( "EDIT_AGREEMENT", "Edit Agreement");
 		capabilityUtils.addCapability( "VIEW_AGREEMENT", "View Agreement");
 		capabilityUtils.addCapability( "OFFER", "Offer");
@@ -116,7 +116,7 @@ rule "INIT_GENERATE_CAPABILITIES"
 		capabilityUtils.addCapability( "ADD_JOURNAL", "Add Journal");
 		capabilityUtils.addCapability( "RATE_INTERN", "Rate Intern");
 		capabilityUtils.addCapability( "VIEW_RATING", "View Rating");
-		
+
 		capabilityUtils.addCapability( "EDIT_APPLICATION", "Edit Application");
 		capabilityUtils.addCapability( "EDIT_INTERNSHIP", "Edit Internship");
 		capabilityUtils.addCapability( "EDIT_INTERN", "Edit Intern");
@@ -129,17 +129,23 @@ rule "INIT_GENERATE_CAPABILITIES"
 		capabilityUtils.addCapability( "EDIT_EDU_PROVIDER", "Edit Education Provider");
 		capabilityUtils.addCapability( "EDIT_AGENCY", "Edit Agency");
    		capabilityUtils.addCapability( "ON_SHORE_APPLICATION", "Move to on-shore");
+   		capabilityUtils.addCapability( "TRAINING_APPLICATION", "Training");
+   		capabilityUtils.addCapability( "MATCHED_APPLICATION", "Matched");
+   		capabilityUtils.addCapability( "MENTORING_APPLICATION", "Mentoring");
+		capabilityUtils.addCapability( "ALUMNI_APPLICATION", "Alumni");
+
+
 		capabilityUtils.addCapability( "WEB_ONLY", "Public Web Use");
-		
+
 		capabilityUtils.addCapability( "DOWNLOAD_OHNS_AGREEMENT_DOC", "Download OHNS Agreement Document");
 		capabilityUtils.addCapability( "DOWNLOAD_SERVICE_AGREEMENT_DOC", "Download Service Agreement Document");
 		capabilityUtils.addCapability( "DOWNLOAD_HC_TERMS_AND_CONDITIONS_DOC", "Download Host Company Terms and Conditions Document");
 		capabilityUtils.addCapability( "ACCESS_NOTES", "Access Notes");
-   		
+
 		capabilityUtils.process();
-		
+
 		System.out.println("   Completed initial setup of Capabilities - "+capabilityUtils);
-		
- 		update(capabilityUtils);  		
+
+ 		update(capabilityUtils);
  		insert(project);
 end
