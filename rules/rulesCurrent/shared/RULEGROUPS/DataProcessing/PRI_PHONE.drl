@@ -31,8 +31,35 @@ rule "PRI_PHONE"
 		/* Parse json answer and save the individual answers */
 					
 			String phonenumber = answer.getValue();
-			/* convert to E164 */
 			
+			if (phonenumber != null) {
+			
+				/* remove all non digits */
+				phonenumber  = phonenumber.replaceAll("[^\\d\\+]", "");
+			
+				if (!phonenumber.startsWith("+")) {
+					if (phonenumber.startsWith("0")) {
+						phonenumber = "61"+phonenumber.substring(1); /* remove the 0  and assume Australian*/
+					}
+				}
+				phonenumber = StringUtils.deleteWhitespace(phonenumber);
+				System.out.println(ruleDetails+" "+drools.getRule().getName()+" Raw Phone number is "+answer.getValue()+" , fixed number is "+phonenumber);
+				
+				beUtils.SaveAnswer(new Answer(answer.getSourceCode(), answer.getTargetCode(), attributeCode, phonenumber));
+				System.out.println("Saving a Phone Number! Type: " + attributeCode + " with phone number: " + phonenumber);	
+			} else {
+					String message = "Phone number is empty!";
+					System.out.println(message);
+					Answer feedbackAnswer = new Answer(answer.getSourceCode(),answer.getTargetCode(),answer.getAttributeCode(),"");
+					VertxUtils.sendFeedbackError(beUtils.getGennyToken(),feedbackAnswer,message);
+					System.out.println("Sent error message back to frontend");		
+			}
+		
+		
+			
+			/* OLD METHOD - PUTTING IN EASE OF USE POLICY */
+			/* convert to E164 */
+			/*
 			if (phonenumber != null) {
 				/* remove all non digits */
 				phonenumber  = phonenumber.replaceAll("[^\\d\\+]", "");
@@ -99,7 +126,7 @@ rule "PRI_PHONE"
 					}
 				}
 			}
-			
+			*/
 			
 
 /* Watch out TODO , this may override other answers */
