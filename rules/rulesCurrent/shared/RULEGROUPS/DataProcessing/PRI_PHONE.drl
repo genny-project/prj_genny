@@ -48,8 +48,7 @@ rule "PRI_PHONE"
 				beUtils.SaveAnswer(new Answer(answer.getSourceCode(), answer.getTargetCode(), attributeCode, phonenumber));
 				System.out.println("Saving a Phone Number! Type: " + attributeCode + " with phone number: " + phonenumber);	
 			} else {
-					String message = "Phone number is empty!";
-					System.out.println(message);
+					System.out.println("Phone number is empty!");
 					Answer feedbackAnswer = new Answer(answer.getSourceCode(),answer.getTargetCode(),answer.getAttributeCode(),"");
 					VertxUtils.sendFeedbackError(beUtils.getGennyToken(),feedbackAnswer,message);
 					System.out.println("Sent error message back to frontend");		
@@ -61,11 +60,11 @@ rule "PRI_PHONE"
 			/* convert to E164 */
 			/*
 			if (phonenumber != null) {
-				/* remove all non digits */
+			
 				phonenumber  = phonenumber.replaceAll("[^\\d\\+]", "");
 				if (!phonenumber.startsWith("+")) {
 					if (phonenumber.startsWith("0")) {
-						phonenumber = "61"+phonenumber.substring(1); /* remove the 0  and assume Australian*/
+						phonenumber = "61"+phonenumber.substring(1); 
 					}
 				}
 				phonenumber = StringUtils.deleteWhitespace(phonenumber);
@@ -73,7 +72,7 @@ rule "PRI_PHONE"
 				
 				
 				if (QwandaUtils.checkPhone(phonenumber)) {
-							/* Now check if it is an Australian mobile or any international */
+							
 					if (((phonenumber.startsWith("614"))|| (phonenumber.startsWith("615")))||(!phonenumber.startsWith("61"))) {
 						Boolean inferred = !"PRI_MOBILE".equals(answer.getAttributeCode());
 						Answer mobile = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_MOBILE",phonenumber,false,inferred);
@@ -81,7 +80,7 @@ rule "PRI_PHONE"
 					} else {
 					
 					
-						/* Check if person is the target, in which case you want a mobile! */
+						
 						if (targetCode.startsWith("PER_")) {
 							String message = "People require a mobile number! ! please replace with a mobile";
 							System.out.println(message);
@@ -92,7 +91,7 @@ rule "PRI_PHONE"
 						} else {
 							Boolean inferred = !"PRI_LANDLINE".equals(answer.getAttributeCode());
 							Answer landline = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_LANDLINE",phonenumber,false,inferred);
-							landline.setChangeEvent(false); /* no attribute change */
+							landline.setChangeEvent(false); 
 							answersToSave.add(landline);	
 						}		
 					}
@@ -113,7 +112,7 @@ rule "PRI_PHONE"
 		
 			if ("PRI_PHONE".equals(answer.getAttributeCode())) {
 				Answer phone = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_PHONE",phonenumber,false,false);
-				phone.setChangeEvent(false); /* no attribute change */
+				phone.setChangeEvent(false); 
 				answersToSave.add(phone);				
 			} else {
 				BaseEntity be = beUtils.getBaseEntityByCode(answer.getTargetCode());
@@ -121,7 +120,7 @@ rule "PRI_PHONE"
 					String pn = be.getValue("PRI_PHONE","");
 					if (StringUtils.isBlank(pn)) {
 						Answer phone = new Answer(answer.getSourceCode(),answer.getTargetCode(),"PRI_PHONE",phonenumber,false,true);
-						phone.setChangeEvent(false); /* no attribute change */
+						phone.setChangeEvent(false); 
 						answersToSave.add(phone);									
 					}
 				}
@@ -134,6 +133,5 @@ rule "PRI_PHONE"
   	    output.setResultCode("NONE");  /* dont display anything new */
 
 		retract(answer);
-		update(answersToSave);
 	
 end
