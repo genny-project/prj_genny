@@ -143,11 +143,15 @@ if (rs != null ){
 kcontext.setVariable(&quot;currentUser&quot;,currentUser);
 kcontext.setVariable(&quot;userToken&quot;, userToken);
 
+/*
 termsAndConditions = currentUser.getValue(&quot;PRI_TERMS_ACCEPTED&quot;, null);
 if (termsAndConditions == null) {
 	termsAndConditions = false;
 	System.out.println(&quot;termsAndConditions attr is NULL&quot;);
 }
+*/
+
+termsAndConditions = true;
 
 kcontext.setVariable(&quot;termsAndConditions&quot;, termsAndConditions);</bpmn2:script>
     </bpmn2:scriptTask>
