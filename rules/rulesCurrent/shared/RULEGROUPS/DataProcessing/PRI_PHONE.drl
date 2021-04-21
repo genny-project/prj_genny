@@ -49,7 +49,8 @@ rule "PRI_PHONE"
 				beUtils.saveAnswer(new Answer(answer.getSourceCode(), answer.getTargetCode(), answer.getAttributeCode(), phonenumber));
 				System.out.println("Saving a Phone Number! Type: " + answer.getAttributeCode() + " with phone number: " + phonenumber);
 			} else {
-					System.out.println("Phone number is empty!");
+					message = "Phone number is empty!";
+					System.out.println(message);
 					Answer feedbackAnswer = new Answer(answer.getSourceCode(),answer.getTargetCode(),answer.getAttributeCode(),"");
 					VertxUtils.sendFeedbackError(beUtils.getGennyToken(),feedbackAnswer,message);
 					System.out.println("Sent error message back to frontend");
