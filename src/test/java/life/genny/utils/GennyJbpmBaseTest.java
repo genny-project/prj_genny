@@ -136,7 +136,7 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 		// Set up realm
 		realms = new HashSet<String>();
 		realms.add(realm);
-		realms.stream().forEach(System.out::println);
+	//	realms.stream().forEach(System.out::println);
 		realms.remove("genny");
 
 		// Enable the PseudoClock using the following system property.
