@@ -46,7 +46,8 @@ rule "PRI_PHONE"
 				phonenumber = StringUtils.deleteWhitespace(phonenumber);
 				System.out.println(ruleDetails+" "+drools.getRule().getName()+" Raw Phone number is "+answer.getValue()+" , fixed number is "+phonenumber);
 
-				beUtils.saveAnswer(new Answer(answer.getSourceCode(), answer.getTargetCode(), answer.getAttributeCode(), phonenumber));
+				Answer phone = new Answer(answer.getSourceCode(), answer.getTargetCode(), answer.getAttributeCode(), phonenumber));
+				answersToSave.add(mobile);
 				System.out.println("Saving a Phone Number! Type: " + answer.getAttributeCode() + " with phone number: " + phonenumber);
 			} else {
 					message = "Phone number is empty!";
@@ -135,5 +136,5 @@ rule "PRI_PHONE"
   	    output.setResultCode("NONE");  /* dont display anything new */
 
 		retract(answer);
-
+		update(answersToSave);
 end
