@@ -23,13 +23,13 @@ import life.genny.utils.DropdownUtils;
 import java.util.List;
 import java.util.ArrayList;
 
-rule "HELPER_LNK_EDU_PROVIDER_ACADEMY"
+rule "HELPER_LNK_COMP_INTERNSHIP"
 	ruleflow-group 'DataProcessing'
 	salience 5000
 	no-loop
 	when
 		beUtils : BaseEntityUtils()
-		answer : Answer( attributeCode == "LNK_EDU_PROVIDER_ACADEMY" )
+		answer : Answer( attributeCode == "LNK_COMP_INTERNSHIP" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		userToken : GennyToken( code != "PER_SERVICE")
 	then
@@ -49,9 +49,9 @@ rule "HELPER_LNK_EDU_PROVIDER_ACADEMY"
 
 		BaseEntity be = beUtils.getBaseEntityByCode(code);
 		if(be != null ){
-			String name = be.getValue("PRI_NAME", null);		
+			String name = be.getValue("PRI_ACRONYM", null);		
 			if(name != null){
-				Answer ans = new Answer(sourceCode, targetCode, "PRI_ASSOC_EP_ACADEMY", name,false,true);
+				Answer ans = new Answer(sourceCode, targetCode, "PRI_ASSOC_COMP_INTERNSHIP", name,false,true);
 				beUtils.saveAnswer(ans);
 				VertxUtils.sendToFrontEnd(userToken, ans);
 			}
