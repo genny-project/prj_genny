@@ -31,6 +31,7 @@ rule "PRI_PHONE"
 		/* Parse json answer and save the individual answers */
 
 			String phonenumber = answer.getValue();
+			String message = "People require a mobile number! Please replace with a mobile";
 
 			if (phonenumber != null) {
 
