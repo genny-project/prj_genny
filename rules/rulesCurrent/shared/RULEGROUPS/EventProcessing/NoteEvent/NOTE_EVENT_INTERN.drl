@@ -39,9 +39,9 @@ rule "NOTE_EVENT_APPLICATION"
 				String notes = QwandaUtils.sendGET(url, serviceToken.getToken());
 				System.out.println("notes :: " + notes);
 				
-				BaseEntity appBe = beUtils.getBaseEntityByCode(targetCode);
+				BaseEntity actualAppBe = beUtils.getBaseEntityByCode(targetCode);
 				
-				String internCode = appBe.getValue("PRI_INTERN_CODE", null);
+				String internCode = actualAppBe.getValue("PRI_INTERN_CODE", null);
 				System.out.println("internCode: " +internCode);
 				
 				/* Intern Details */
