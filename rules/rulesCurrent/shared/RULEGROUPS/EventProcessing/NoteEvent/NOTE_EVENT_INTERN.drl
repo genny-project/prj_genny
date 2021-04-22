@@ -39,8 +39,13 @@ rule "NOTE_EVENT_APPLICATION"
 				String notes = QwandaUtils.sendGET(url, serviceToken.getToken());
 				System.out.println("notes :: " + notes);
 				
+				BaseEntity appBE = beUtils.getBaseEntityByCode(targetCode);
+				
+				String internCode = appBe.getValue("PRI_INTERN_CODE", null);
+				System.out.println("internCode: " +internCode);
+				
 				/* Intern Details */
-				BaseEntity internBE = beUtils.getBaseEntityByCode(targetCode);
+				BaseEntity internBE = beUtils.getBaseEntityByCode(internCode);
 				
 				String internName = internBE.getValue("PRI_NAME", null);
 				System.out.println("internName: " +internName);
@@ -76,7 +81,7 @@ rule "NOTE_EVENT_APPLICATION"
 					json.put("token", userToken.getToken());
 					
 					JsonObject jsonIntern = new JsonObject();
-					jsonIntern.put("code", targetCode);
+					jsonIntern.put("code", internCode);
 					jsonIntern.put("title", internName);
 					jsonIntern.put("image", internImage);
 					/*jsonIntern.put("tagList", tagList);*/
