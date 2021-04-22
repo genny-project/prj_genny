@@ -70,10 +70,8 @@ rule "NOTE_EVENT_APPLICATION"
 						beCodez[i] = appBe;
 						System.out.println("beCodez: " +beCodez[i]);
 					}
-				}
-				/*String[] tagList = {"Business Development", "Placement", "Outcome Life", "Miscellaneous"};*/
-				
-				if(notes != null){
+					
+					if(notes != null){
 					JsonObject json = new JsonObject(notes);
 					json.put("token", userToken.getToken());
 					
@@ -94,6 +92,10 @@ rule "NOTE_EVENT_APPLICATION"
 					System.out.println("json :: " + json.toString());
 					VertxUtils.writeMsg("webcmds", json.toString());
 				}
+				}
+				/*String[] tagList = {"Business Development", "Placement", "Outcome Life", "Miscellaneous"};*/
+				
+				
 			} catch (Exception e) {
 				System.out.println("Exception :: " + e);
 			}
