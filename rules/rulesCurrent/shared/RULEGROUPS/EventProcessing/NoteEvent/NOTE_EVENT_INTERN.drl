@@ -78,7 +78,7 @@ rule "NOTE_EVENT_APPLICATION"
 					json.put("token", userToken.getToken());
 					
 					JsonObject jsonIntern = new JsonObject();
-					jsonIntern.put("code", assocIntern);
+					jsonIntern.put("code", targetCode);
 					jsonIntern.put("title", internName);
 					jsonIntern.put("image", internImage);
 					/*jsonIntern.put("tagList", tagList);*/
