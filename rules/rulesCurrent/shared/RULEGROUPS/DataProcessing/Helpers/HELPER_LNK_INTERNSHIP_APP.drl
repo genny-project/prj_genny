@@ -79,7 +79,7 @@ rule "HELPER_LNK_INTERNSHIP_APP"
 									canApplyToInternship = false;
 
 									/* alert intern has already applied to this internship */
-									String message = internName + " has already been applied to this internship.";
+									String message = internName == null ? "The intern" : internName + " has already been applied to this internship.";
 									String applicationStatus = app.getValue("PRI_STATUS", null);
 									if(applicationStatus != null)
 										message += " Application Status: "+ applicationStatus;
@@ -100,6 +100,8 @@ rule "HELPER_LNK_INTERNSHIP_APP"
 				}
 			}
 		}
+
+		System.out.println("The intern CAN" + canApplyToInternship ? " " : " NOT " + "apply to this internship" );
 
 		if(canApplyToInternship){
 			BaseEntity be = beUtils.getBaseEntityByCode(code);
