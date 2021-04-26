@@ -101,7 +101,7 @@ rule "HELPER_LNK_INTERNSHIP_APP"
 			}
 		}
 
-		System.out.println("The intern CAN" + canApplyToInternship ? " " : " NOT " + "apply to this internship" );
+		System.out.println("The intern CAN" + canApplyToInternship == true ? " " : " NOT " + "apply to this internship" );
 
 		if(canApplyToInternship){
 			BaseEntity be = beUtils.getBaseEntityByCode(code);
