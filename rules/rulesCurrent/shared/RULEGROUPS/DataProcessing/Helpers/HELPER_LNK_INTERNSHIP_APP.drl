@@ -40,6 +40,9 @@ rule "HELPER_LNK_INTERNSHIP_APP"
 		
 		String targetCode = answer.getTargetCode();
 		System.out.println("targetCode :: " + targetCode);
+
+		String attributeCode = answer.getAttributeCode();
+		System.out.println("attributeCode :: " + attributeCode);
 		
 		String value = answer.getValue();
 		System.out.println("value :: " + value);
@@ -114,6 +117,7 @@ rule "HELPER_LNK_INTERNSHIP_APP"
 			}else{
 				System.out.println("The intern CAN NOT apply to this internship");
 				beUtils.removeEntityAttribute(be, attributeCode);
+				beUtils.removeEntityAttribute(be, "PRI_TITLE");
 				answer.setValue("");
 				VertxUtils.sendToFrontEnd(userToken, answer);
 				retract(answer);
