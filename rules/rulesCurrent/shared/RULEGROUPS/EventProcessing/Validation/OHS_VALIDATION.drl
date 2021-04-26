@@ -195,5 +195,7 @@ Open Opportunities:
 		System.out.println("----------------------------");
 		
 		retract(baseEntityType)
+		retract(HCBe)
+		
 	
 end
