@@ -87,6 +87,7 @@ rule "OHS_VALIDATION"
 		BaseEntity tempBe = null;
 		String tempName = null;
 		String linkedIS = "";
+		int length;
 		String lnkIS = HCBe.getValue("LNK_INTERNSHIPS", null);
 		
 		if (lnkIS != null) {
@@ -94,7 +95,7 @@ rule "OHS_VALIDATION"
 			System.out.println("lnkIS = " +lnkIS);
 		
 			String[] splitIS = lnkIS.split(",");
-			int length = splitIS.length;
+			length = splitIS.length;
 			System.out.println("length: " + length);
 			
 			if (length > 0) {

@@ -63,7 +63,7 @@ rule "HCS_VALIDATION"
 				System.out.println("PRI_VALIDATION set to Ready"); 	
 		} 
 		
-		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(HCBe);
+		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(hcBe);
 		msg.setToken(userToken.getToken());
 		msg.setReplace(true);
 		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
@@ -82,20 +82,21 @@ rule "HCS_VALIDATION"
 		System.out.println("url: " + url);
 
 		String agentEmail = "internmatch@outcomelife.com.au";
-		String assocHC = HCBe.getValue("PRI_NAME", null);
+		String assocHC = hcBe.getValue("PRI_NAME", null);
 		
 		String[] internshipNames = new String[length];
 		BaseEntity tempBe = null;
 		String tempName = null;
 		String linkedIS = "";
-		String lnkIS = HCBe.getValue("LNK_INTERNSHIPS", null);
+		int length;
+		String lnkIS = hcBe.getValue("LNK_INTERNSHIPS", null);
 		
 		if (lnkIS != null) {
 			lnkIS = lnkIS.replace("\"", "").replace("[", "").replace("]", "");
 			System.out.println("lnkIS = " +lnkIS);
 		
 			String[] splitIS = lnkIS.split(",");
-			int length = splitIS.length;
+			length = splitIS.length;
 			System.out.println("length: " + length);
 			
 			if (length > 0) {
