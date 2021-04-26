@@ -93,7 +93,6 @@ rule "HELPER_LNK_INTERNSHIP_APP"
 									msg.setToken(beUtils.getGennyToken().getToken());
 									msg.setSend(true);
 									VertxUtils.writeMsg("webcmds", msg);
-									return;
 								}
 							}
 						}
