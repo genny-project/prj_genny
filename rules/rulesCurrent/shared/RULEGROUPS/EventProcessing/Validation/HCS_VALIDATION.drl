@@ -88,7 +88,7 @@ rule "HCS_VALIDATION"
 		BaseEntity tempBe = null;
 		String tempName = null;
 		String linkedIS = "";
-		int length;
+		int length = 0;
 		String lnkIS = hcBe.getValue("LNK_INTERNSHIPS", null);
 		
 		if (lnkIS != null) {
