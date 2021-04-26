@@ -18,7 +18,7 @@ rule "CLICK_OHS"
 		salience 1000
     no-loop
     when
-		$message : QEventMessage(data.code == "ACT_PRI_EVENT_OHS")
+		$message : QEventMessage(data.code == "ACT_PRI_EVENT_OHS_UNVALIDATED")
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam()
