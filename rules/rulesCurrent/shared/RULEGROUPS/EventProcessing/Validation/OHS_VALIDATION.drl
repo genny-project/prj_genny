@@ -88,7 +88,7 @@ rule "OHS_VALIDATION"
 					
 		String urlParentCode = "QUE_DASHBOARD_VIEW";
 		String urlCode = "QUE_DASHBOARD_VIEW";
-		String urlTargetCode = hcBe.getCode();
+		String urlTargetCode = HCBe.getCode();
 		
 		urlParentCode = new String(Base64.getEncoder().encode(urlParentCode.getBytes()));
 		urlCode = new String(Base64.getEncoder().encode(urlCode.getBytes()));
