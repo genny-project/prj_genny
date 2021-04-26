@@ -101,18 +101,22 @@ rule "HELPER_LNK_INTERNSHIP_APP"
 			}
 		}
 
-		if(canApplyToInternship){
-			BaseEntity be = beUtils.getBaseEntityByCode(code);
-			if(be != null){
+		BaseEntity be = beUtils.getBaseEntityByCode(code);
+		if(be != null){
+
+			if(canApplyToInternship){
 				String name = be.getValue("PRI_NAME", null);		
 				if(name != null){
 					Answer ans = new Answer(sourceCode, targetCode, "PRI_TITLE", name);
 					beUtils.saveAnswer(ans);
 					VertxUtils.sendToFrontEnd(userToken, ans);
 				}
+			}else{
+				System.out.println("The intern CAN NOT apply to this internship");
+				beUtils.removeEntityAttribute(be, attributeCode);
+				answer.setValue("");
+				VertxUtils.sendToFrontEnd(userToken, answer);
+				retract(answer);
 			}
-		}else{
-			System.out.println("The intern CAN NOT apply to this internship");
-			retract(answer);
 		}
 end
