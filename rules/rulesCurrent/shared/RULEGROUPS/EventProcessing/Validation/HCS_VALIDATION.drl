@@ -68,7 +68,6 @@ rule "HCS_VALIDATION"
 		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 		
 
-
 		/* SEND EMAIL TO AGENT */	
 		
 		String user = userToken.getUserCode();
@@ -86,9 +85,9 @@ rule "HCS_VALIDATION"
 			System.out.println("token: " + token);
 		}
 					
-		String urlParentCode = "QUE_DASHBOARD_VIEW";
-		String urlCode = "QUE_DASHBOARD_VIEW";
-		String urlTargetCode = hcBe.getCode();
+		String urlParentCode = "SBE_HCRS_"+userToken.getSessionCode().toUpperCase();
+		String urlCode = "ACT_PRI_EVENT_VIEW";
+		String urlTargetCode = hcrBe.getCode();
 		
 		urlParentCode = new String(Base64.getEncoder().encode(urlParentCode.getBytes()));
 		urlCode = new String(Base64.getEncoder().encode(urlCode.getBytes()));

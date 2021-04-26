@@ -86,8 +86,8 @@ rule "OHS_VALIDATION"
 			System.out.println("token: " + token);
 		}
 					
-		String urlParentCode = "QUE_DASHBOARD_VIEW";
-		String urlCode = "QUE_DASHBOARD_VIEW";
+		String urlParentCode = "SBE_HCRS_"+userToken.getSessionCode().toUpperCase();
+		String urlCode = "ACT_PRI_EVENT_VIEW";
 		String urlTargetCode = HCBe.getCode();
 		
 		urlParentCode = new String(Base64.getEncoder().encode(urlParentCode.getBytes()));
@@ -128,11 +128,9 @@ rule "OHS_VALIDATION"
 							System.out.println("tempName = " +tempName);
 							System.out.println("linkedIS = " +linkedIS);
 						}
-					}
-					
+					}	
 				}
 			}
-			
 		} else {
 			linkedIS = "No current Internships. Please help them add an Internship!";
 			System.out.println("linkedIS: " + linkedIS);
