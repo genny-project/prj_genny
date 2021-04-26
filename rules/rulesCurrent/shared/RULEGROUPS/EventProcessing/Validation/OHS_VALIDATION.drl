@@ -47,7 +47,7 @@ rule "OHS_VALIDATION"
 				todo = "Please complete the Host Company Services Agreement";
 				subject = "New Host Company - OHS form completed";
 				template_id = "d-95472fd28165474f80346ff9a1912a4b";
-				System.out.println("PRI_VALIDATION set to : OHS");
+				System.out.println("PRI_VALIDATION set to OHS");
 		}
 		
 		if (validationStatus.equals("HCS")) {
@@ -57,7 +57,7 @@ rule "OHS_VALIDATION"
 				todo = "Please complete the HC Validation form";
 				subject = "Host Company Services form completed";
 				template_id = "d-95472fd28165474f80346ff9a1912a4b";	
-				System.out.println("PRI_VALIDATION set to : Ready");  
+				System.out.println("PRI_VALIDATION set to Ready");  
 		}				
 						
 						
@@ -83,7 +83,42 @@ rule "OHS_VALIDATION"
 		String agentEmail = "internmatch@outcomelife.com.au";
 		String assocHC = HCBe.getValue("PRI_NAME", null);
 		
-		String linkedIS = beUtils.quantumStrip(HCBe, "LNK_INTERNSHIPS", "linkedIS");
+		String[] internshipNames = new String[length];
+		BaseEntity tempBe = null;
+		String tempName = null;
+		String linkedIS = "";
+		String lnkIS = HCBe.getValue("LNK_INTERNSHIPS", null);
+		
+		if (lnkIS != null) {
+			lnkIS = lnkIS.replace("\"", "").replace("[", "").replace("]", "");
+			System.out.println("lnkIS = " +lnkIS);
+		
+			String[] splitIS = lnkIS.split(",");
+			int length = splitIS.length;
+			System.out.println("length: " + length);
+			
+			if (length > 0) {
+				for (int i = 0; i < length; i++) {
+					tempBe = beUtils.getBaseEntityByCode(splitIS[i]);
+					System.out.println("tempBe = " +tempBe);
+					if (tempBe != null) {
+						if (i == 0) {
+							linkedIS = tempBe.getValue("PRI_NAME", null);
+							System.out.println("linkedIS = " +linkedIS);
+						} else {
+							tempName = tempBe.getValue("PRI_NAME", null);
+							linkedIS = linkedIS + ", " + tempName;
+							System.out.println("tempName = " +tempName);
+							System.out.println("linkedIS = " +linkedIS);
+						}
+					}
+					
+				}
+			}
+			
+		} else {
+			linkedIS = "No current Internships. Please help them add an Internship!";
+		}
 		
 	
 /*
