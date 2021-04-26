@@ -143,6 +143,9 @@ if (rs != null ){
 kcontext.setVariable(&quot;currentUser&quot;,currentUser);
 kcontext.setVariable(&quot;userToken&quot;, userToken);
 
+BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+beUtils.saveAnswer(new Answer(userToken.getUserCode(), currentUser.getCode(), &quot;PRI_TERMS_ACCEPTED&quot;, true));
+
 /*
 termsAndConditions = currentUser.getValue(&quot;PRI_TERMS_ACCEPTED&quot;, null);
 if (termsAndConditions == null) {
