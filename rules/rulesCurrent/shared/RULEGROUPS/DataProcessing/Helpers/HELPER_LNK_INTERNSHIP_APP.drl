@@ -116,8 +116,12 @@ rule "HELPER_LNK_INTERNSHIP_APP"
 				}
 			}else{
 				System.out.println("The intern CAN NOT apply to this internship");
+				
+				/* remove these atrributes from db */
 				beUtils.removeEntityAttribute(be, attributeCode);
 				beUtils.removeEntityAttribute(be, "PRI_TITLE");
+				
+				/* to clear the answer from the frontend */
 				answer.setValue("");
 				VertxUtils.sendToFrontEnd(userToken, answer);
 				retract(answer);
