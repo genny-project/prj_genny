@@ -29,7 +29,6 @@ rule "HCS_VALIDATION"
  		
  	    /* Construct answer with Source, Target, Attribute Code, Value */
  		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
- 		
 		
 		/* Set up email stuff */
 		String subject = null;
@@ -56,7 +55,7 @@ rule "HCS_VALIDATION"
 		if (validationStatus.equals("OHS")) {
 				beUtils.saveAnswer(new Answer(userToken.getUserCode(), hcBe.getCode() ,"PRI_VALIDATION", "Ready"));	
 				ready = true;
-					doc = "OHS and HC Services documents completed";
+				doc = "OHS and HC Services documents completed";
 				todo = "Please complete the HC Validation form";
 				subject = "Host Company Services form completed";
 				template_id = "d-95472fd28165474f80346ff9a1912a4b";
@@ -71,16 +70,34 @@ rule "HCS_VALIDATION"
 
 
 		/* SEND EMAIL TO AGENT */	
-						
+		
+		String user = userToken.getUserCode();
+		System.out.println("user: " + user);
+		
+		String token = "";
+		
+		BaseEntity hcrBe = beUtils.getBaseEntityByCode(user);
+		if (hcrBe != null) {
+			String hcrEmail = hcrBe.getValue("PRI_EMAIL", null);
+			System.out.println("user: " + user);
+			
+			BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
+			token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, hcrEmail, serviceToken.getToken());
+			System.out.println("token: " + token);
+		}
+					
 		String urlParentCode = "QUE_DASHBOARD_VIEW";
 		String urlCode = "QUE_DASHBOARD_VIEW";
+		String urlTargetCode = hcBe.getCode();
 		
 		urlParentCode = new String(Base64.getEncoder().encode(urlParentCode.getBytes()));
 		urlCode = new String(Base64.getEncoder().encode(urlCode.getBytes()));
+		urlTargetCode = new String(Base64.getEncoder().encode(urlTargetCode.getBytes()));
 
-		String url = GennySettings.projectUrl+"/home/"+urlParentCode+"/"+urlCode;
-		System.out.println("url: " + url);
-
+		String url = GennySettings.projectUrl+"/home/"+urlParentCode+"/"+urlCode+"/"+urlTargetCode;
+		url = url +"?token=" + token;
+		System.out.println("url with token: " + url);
+		
 		String agentEmail = "internmatch@outcomelife.com.au";
 		String assocHC = hcBe.getValue("PRI_NAME", null);
 
@@ -88,6 +105,7 @@ rule "HCS_VALIDATION"
 		String tempName = null;
 		String linkedIS = "";
 		String lnkIS = hcBe.getValue("LNK_INTERNSHIPS", null);
+		System.out.println("lnkIS: " + lnkIS);
 		
 		if (lnkIS != null) {
 			lnkIS = lnkIS.replace("\"", "").replace("[", "").replace("]", "");
@@ -118,6 +136,7 @@ rule "HCS_VALIDATION"
 			
 		} else {
 			linkedIS = "No current Internships. Please help them add an Internship!";
+			System.out.println("linkedIS: " + linkedIS);
 		}
 	
 /*
