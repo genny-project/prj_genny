@@ -34,6 +34,7 @@ rule "LNK_FILTER_COLUMN"
 	when
 		beUtils : BaseEntityUtils()
 		serviceToken : GennyToken( code == "PER_SERVICE")
+		userToken : GennyToken( code != "PER_SERVICE")
 		answer : Answer( attributeCode == "LNK_FILTER_COLUMN" && targetCode matches "SBE_.*" )
 		output : OutputParam( )
  
@@ -60,6 +61,9 @@ rule "LNK_FILTER_COLUMN"
 		newFilterArray[0] = attributeCode;
 		VertxUtils.putObject(serviceToken.getRealm(), "", "FLT_"+targetCode, newFilterArray, serviceToken.getToken());
 
+		/* Define dropdown items selector */
+		String dropdownCode = null;
+
 		/* Get associated Attribute */
 		Attribute attr = RulesUtils.getAttribute(attributeCode, serviceToken);
 		if (attr != null) {
@@ -71,8 +75,40 @@ rule "LNK_FILTER_COLUMN"
 				List<BaseEntity> filterOptionsArray = new ArrayList<>();
 				/* Grab Ask group from cache */
 				Ask filterGrpAsk = VertxUtils.getObject(serviceToken.getRealm(), "", "QUE_FILTER_GRP_"+targetCode, Ask.class, serviceToken.getToken());
+
+				if (attr.getCode().equals("PRI_ADDRESS_COUNTRY")) {
+					BaseEntity equalTo = beUtils.getBaseEntityByCode("SEL_EQUAL_TO");
+					BaseEntity notEqualTo = beUtils.getBaseEntityByCode("SEL_NOT_EQUAL_TO");
+					filterOptionsArray.add(equalTo);
+					filterOptionsArray.add(notEqualTo);
+
+					/* Hide all except Country Picker */
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[2].setHidden(true);
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[3].setHidden(true);
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[4].setHidden(false);
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[5].setHidden(true);
+					/* Disable Submit */
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[6].setDisabled(true);
+
+					dropdownCode = "LNK_SELECT_COUNTRY";
+
+				} else if (attr.getCode().equals("PRI_ADDRESS_STATE")) {
+					BaseEntity equalTo = beUtils.getBaseEntityByCode("SEL_EQUAL_TO");
+					BaseEntity notEqualTo = beUtils.getBaseEntityByCode("SEL_NOT_EQUAL_TO");
+					filterOptionsArray.add(equalTo);
+					filterOptionsArray.add(notEqualTo);
+
+					/* Hide all except State Picker */
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[2].setHidden(true);
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[3].setHidden(true);
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[4].setHidden(true);
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[5].setHidden(false);
+					/* Disable Submit */
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[6].setDisabled(true);
+
+					dropdownCode = "LNK_SELECT_STATE";
 				
-				if (dtt.equals("java.lang.String") || dtt.equals("String") || dtt.equalsIgnoreCase("Text")) {
+				} else if (dtt.equals("java.lang.String") || dtt.equals("String") || dtt.equalsIgnoreCase("Text")) {
 					BaseEntity like = beUtils.getBaseEntityByCode("SEL_LIKE");
 					BaseEntity notLike = beUtils.getBaseEntityByCode("SEL_NOT_LIKE");
 					BaseEntity equalTo = beUtils.getBaseEntityByCode("SEL_EQUAL_TO");
@@ -82,11 +118,13 @@ rule "LNK_FILTER_COLUMN"
 					filterOptionsArray.add(equalTo);
 					filterOptionsArray.add(notEqualTo);
 					
-					/* Hide the date field */
+					/* Hide all except Text Field */
 					filterGrpAsk.getChildAsks()[0].getChildAsks()[2].setHidden(false);
 					filterGrpAsk.getChildAsks()[0].getChildAsks()[3].setHidden(true);
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[4].setHidden(true);
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[5].setHidden(true);
 					/* Disable Submit */
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[4].setDisabled(true);
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[6].setDisabled(true);
 
 				} else if (dtt.equals("java.lang.Boolean") || dtt.equalsIgnoreCase("Boolean")) {
 					BaseEntity isTrue = beUtils.getBaseEntityByCode("SEL_IS_TRUE");
@@ -94,11 +132,13 @@ rule "LNK_FILTER_COLUMN"
 					filterOptionsArray.add(isTrue);
 					filterOptionsArray.add(isFalse);
 
-					/* Hide both value fields */
+					/* Hide all value fields */
 					filterGrpAsk.getChildAsks()[0].getChildAsks()[2].setHidden(true);
 					filterGrpAsk.getChildAsks()[0].getChildAsks()[3].setHidden(true);
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[4].setHidden(true);
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[5].setHidden(true);
 					/* Enable Submit */
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[4].setDisabled(false);
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[6].setDisabled(false);
 
 				} else if (dtt.equals("java.lang.Double") || dtt.equalsIgnoreCase("Double")
 							|| dtt.equals("java.lang.Integer") || dtt.equalsIgnoreCase("Integer")
@@ -116,11 +156,13 @@ rule "LNK_FILTER_COLUMN"
 					filterOptionsArray.add(equalTo);
 					filterOptionsArray.add(notEqualTo);
 
-					/* Hide the date field */
+					/* Hide all except Text Field */
 					filterGrpAsk.getChildAsks()[0].getChildAsks()[2].setHidden(false);
 					filterGrpAsk.getChildAsks()[0].getChildAsks()[3].setHidden(true);
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[4].setHidden(true);
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[5].setHidden(true);
 					/* Disable Submit */
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[4].setDisabled(true);
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[6].setDisabled(true);
 
 				} else if (dtt.equals("java.time.LocalDateTime") || dtt.equalsIgnoreCase("LocalDateTime")
 							|| dtt.equals("java.time.LocalDate") || dtt.equalsIgnoreCase("LocalDate")
@@ -134,11 +176,13 @@ rule "LNK_FILTER_COLUMN"
 					filterOptionsArray.add(equalTo);
 					filterOptionsArray.add(notEqualTo);
 
-					/* Hide the string field */
+					/* Hide all except Date Field */
 					filterGrpAsk.getChildAsks()[0].getChildAsks()[2].setHidden(true);
 					filterGrpAsk.getChildAsks()[0].getChildAsks()[3].setHidden(false);
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[4].setHidden(true);
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[5].setHidden(true);
 					/* Disable Submit */
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[4].setDisabled(true);
+					filterGrpAsk.getChildAsks()[0].getChildAsks()[6].setDisabled(true);
 				}
 
 				BaseEntity optionGrp = new BaseEntity("GRP_FILTER_OPTIONS", "Filter Options");
@@ -174,6 +218,10 @@ rule "LNK_FILTER_COLUMN"
 				askMsg.setReplace(true);
 				VertxUtils.writeMsg("webcmds", askMsg);
 				System.out.println("Asks sent to FE");
+
+				if (dropdownCode != null) {
+					ShowFrame.sendSelectionItems(dropdownCode, userToken, serviceToken, false, targetCode);												
+				}
 
 			} else {
 				System.out.println("dtt is NULL");

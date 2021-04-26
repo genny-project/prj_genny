@@ -15,7 +15,15 @@ rule "PRI_FILTER_VALUE"
     when
 		beUtils : BaseEntityUtils()
 		serviceToken : GennyToken( code == "PER_SERVICE")
-		answer : Answer( attributeCode matches "PRI_FILTER_VALUE_.*" && targetCode matches "SBE_.*" )
+		userToken : GennyToken( code != "PER_SERVICE")
+		answer : Answer( 
+			(
+				attributeCode matches "PRI_FILTER_VALUE_.*" ||
+				attributeCode == "LNK_SELECT_COUNTRY" ||
+				attributeCode == "LNK_SELECT_STATE"
+			)
+			&& targetCode matches "SBE_.*"
+		)
 		output : OutputParam( )
 		answersToSave : Answers()
 	then
@@ -23,6 +31,8 @@ rule "PRI_FILTER_VALUE"
 
 		String targetCode = answer.getTargetCode();
 		System.out.println("targetCode = " + targetCode);
+		String attributeCode = answer.getAttributeCode();
+		System.out.println("attributeCode = " + attributeCode);
 		String value = answer.getValue();
 		System.out.println("value = " + value);
 
@@ -34,9 +44,31 @@ rule "PRI_FILTER_VALUE"
 			newFilterArray = new String[3];
 		}
 
+		/* Get Asks from cache */
+		Ask filterGrpAsk = VertxUtils.getObject(serviceToken.getRealm(), "", "QUE_FILTER_GRP_"+targetCode, Ask.class, serviceToken.getToken());
+
+		/* Translate any dropdown items to text */
+		if (attributeCode.startsWith("LNK_SELECT_")) {
+			BaseEntity selectionEntity = beUtils.getBaseEntityByCode(beUtils.cleanUpAttributeValue(value));
+			System.out.println("selectionEntity = " + selectionEntity);
+
+			if (selectionEntity != null) {
+				String selectionName = selectionEntity.getValue("PRI_NAME", null);
+				System.out.println("selectionName = " + selectionName);
+
+				if (selectionName != null) {
+					value = selectionName;
+				} else {
+					System.out.println("selectionName is NULL");
+				}
+			} else {
+				System.out.println("selectionEntity is NULL");
+			}
+
+		}
+
 		/* Save the new filter items in cache */
 		newFilterArray[2] = value;
-
 		VertxUtils.putObject(serviceToken.getRealm(), "", "FLT_"+targetCode, newFilterArray, serviceToken.getToken());
 
 		output.setTypeOfResult("NONE");
