@@ -83,12 +83,10 @@ rule "HCS_VALIDATION"
 
 		String agentEmail = "internmatch@outcomelife.com.au";
 		String assocHC = hcBe.getValue("PRI_NAME", null);
-		
-		String[] internshipNames = new String[length];
+
 		BaseEntity tempBe = null;
 		String tempName = null;
 		String linkedIS = "";
-		int length = null;
 		String lnkIS = hcBe.getValue("LNK_INTERNSHIPS", null);
 		
 		if (lnkIS != null) {
@@ -96,7 +94,7 @@ rule "HCS_VALIDATION"
 			System.out.println("lnkIS = " +lnkIS);
 		
 			String[] splitIS = lnkIS.split(",");
-			length = splitIS.length;
+			int length = splitIS.length;
 			System.out.println("length: " + length);
 			
 			if (length > 0) {
