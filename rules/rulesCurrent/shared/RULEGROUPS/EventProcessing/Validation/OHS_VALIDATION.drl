@@ -193,5 +193,7 @@ Open Opportunities:
 		System.out.println("Todo: " +todo);
 		System.out.println("IS1: " +linkedIS);
 		System.out.println("----------------------------");
+		
+		retract(baseEntityType)
 	
 end
