@@ -572,7 +572,7 @@ System.out.println(&quot;beExists = &quot; + beExists);</bpmn2:script>
         <bpmn2:outgoing>SequenceFlow_11</bpmn2:outgoing>
         <bpmn2:outgoing>SequenceFlow_18</bpmn2:outgoing>
       </bpmn2:exclusiveGateway>
-      <bpmn2:exclusiveGateway id="ExclusiveGateway_4" name=" " gatewayDirection="Converging">
+      <bpmn2:exclusiveGateway id="ExclusiveGateway_4" name="Name" gatewayDirection="Converging">
         <bpmn2:incoming>SequenceFlow_14</bpmn2:incoming>
         <bpmn2:incoming>SequenceFlow_18</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_17</bpmn2:outgoing>
@@ -682,20 +682,20 @@ System.out.println(&quot;beExists = &quot; + beExists);</bpmn2:script>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_3" bpmnElement="Task_3" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="1040.0" y="274.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_7">
           <dc:Bounds height="11.0" width="99.0" x="1045.0" y="293.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_3" bpmnElement="ExclusiveGateway_3" isMarkerVisible="true">
         <dc:Bounds height="50.0" width="50.0" x="960.0" y="275.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_10">
           <dc:Bounds height="11.0" width="77.0" x="947.0" y="325.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_4" bpmnElement="ExclusiveGateway_4" isMarkerVisible="true">
         <dc:Bounds height="50.0" width="50.0" x="1190.0" y="275.0"/>
-        <bpmndi:BPMNLabel>
-          <dc:Bounds height="11.0" width="3.0" x="1213.0" y="325.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_18">
+          <dc:Bounds height="11.0" width="25.0" x="1202.0" y="325.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_8" bpmnElement="SequenceFlow_8" sourceElement="BPMNShape_StartEvent_1" targetElement="BPMNShape_SubProcess_2">
@@ -787,32 +787,32 @@ System.out.println(&quot;beExists = &quot; + beExists);</bpmn2:script>
         <di:waypoint xsi:type="dc:Point" x="920.0" y="299.0"/>
         <di:waypoint xsi:type="dc:Point" x="940.0" y="299.0"/>
         <di:waypoint xsi:type="dc:Point" x="960.0" y="300.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_27"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_11" bpmnElement="SequenceFlow_11" sourceElement="BPMNShape_ExclusiveGateway_3" targetElement="BPMNShape_Task_3">
         <di:waypoint xsi:type="dc:Point" x="1010.0" y="300.0"/>
         <di:waypoint xsi:type="dc:Point" x="1025.0" y="300.0"/>
         <di:waypoint xsi:type="dc:Point" x="1040.0" y="299.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_28"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_14" bpmnElement="SequenceFlow_14" sourceElement="BPMNShape_Task_3" targetElement="BPMNShape_ExclusiveGateway_4">
         <di:waypoint xsi:type="dc:Point" x="1150.0" y="299.0"/>
         <di:waypoint xsi:type="dc:Point" x="1170.0" y="300.0"/>
         <di:waypoint xsi:type="dc:Point" x="1190.0" y="300.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_30"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_17" bpmnElement="SequenceFlow_17" sourceElement="BPMNShape_ExclusiveGateway_4" targetElement="BPMNShape_Task_2">
         <di:waypoint xsi:type="dc:Point" x="1240.0" y="300.0"/>
         <di:waypoint xsi:type="dc:Point" x="1270.0" y="300.0"/>
         <di:waypoint xsi:type="dc:Point" x="1300.0" y="300.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_31"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_18" bpmnElement="SequenceFlow_18" sourceElement="BPMNShape_ExclusiveGateway_3" targetElement="BPMNShape_ExclusiveGateway_4">
         <di:waypoint xsi:type="dc:Point" x="985.0" y="275.0"/>
         <di:waypoint xsi:type="dc:Point" x="985.0" y="232.0"/>
         <di:waypoint xsi:type="dc:Point" x="1215.0" y="232.0"/>
         <di:waypoint xsi:type="dc:Point" x="1215.0" y="275.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_32">
           <dc:Bounds height="11.0" width="18.0" x="1092.0" y="233.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
