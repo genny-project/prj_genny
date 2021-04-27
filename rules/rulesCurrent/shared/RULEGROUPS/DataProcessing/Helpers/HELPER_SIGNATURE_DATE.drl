@@ -63,8 +63,6 @@ rule "HELPER_SIGNATURE_DATE"
 		String value = answerTwo.getValue();
 		System.out.println("value :: " + value);		
 		
-		PRI_OHS_SIGNATURE
-		
 		/* Select Type */
 		String type = "EMPTY";
 		
