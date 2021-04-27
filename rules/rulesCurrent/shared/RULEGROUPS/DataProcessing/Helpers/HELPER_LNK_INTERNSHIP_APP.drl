@@ -124,6 +124,24 @@ rule "HELPER_LNK_INTERNSHIP_APP"
 				answer.setValue("");
 				VertxUtils.sendToFrontEnd(userToken, answer);
 				retract(answer);
+
+				/* set QUE_SUBMIT disable=true and send question */
+				boolean enabled = canApplyToInternship;
+
+				QDataAskMessage askMsg = QuestionUtils.getAsks(userToken.getUserCode(), targetCode, "QUE_ADD_APPLICATION_GRP", userToken.getToken());
+
+				if (askMsg != null) {
+					/* SET REPLACE TRUE */
+					for (Ask ask : askMsg.getItems()[0].getChildAsks()) {
+						if (ask.getQuestionCode().equals("QUE_SUBMIT")) {
+							/* Disable and send the ask */
+							System.out.println("Setting QUE_SUBMIT field to enabled = " + enabled);
+							TaskUtils.enableTaskQuestion(ask, enabled, userToken);
+						}
+					}
+				} else {
+					System.out.println("Could not fetch ask from cache: QUE_ADD_APPLICATION_GRP"); 
+				}
 			}
 		}
 end
