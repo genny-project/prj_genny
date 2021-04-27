@@ -54,6 +54,10 @@ rule "PRI_FILTER_VALUE"
 
 			if (selectionEntity != null) {
 				String selName = selectionEntity.getName();
+				System.out.println("selName = " + selName);
+				if (selName != null) {
+					value = selName;
+				}
 				/* String selectionName = selectionEntity.getValue("PRI_NAME", null); */
 				/* System.out.println("selectionName = " + selectionName); */
 
