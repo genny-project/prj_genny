@@ -66,9 +66,37 @@ rule "HELPER_SIGNATURE_DATE"
 		/* Select Type */
 		String type = "EMPTY";
 		
-		if (attributeCode.startsWith("PRI_HCS_AGR_")) {
+		switch (attributeCode) {
+			case "PRI_OHS_SIGNATURE":
+				type = "PRI_OHS_SIGNING_DATE"; 
+				System.out.println("attributeCode - PRI_OHS_ :: " + attributeCode);
+			break;
+			
+			case "PRI_HCS_AGR_SIGNATURE":
 				type = "PRI_HCS_AGR_SIGN_DATE"; 
 				System.out.println("attributeCode - PRI_HC_SERVICES :: " + attributeCode);
+			break;
+			
+			case "PRI_AGR_DOC_INT_SIGNATURE":
+				type = "PRI_AGR_DOC_INT_SIGN_DATE"; 
+				System.out.println("attributeCode - PRI_INTERN :: " + attributeCode);
+			break;
+			
+			case "PRI_AGR_DOC_HC_SIGNATURE":
+				type = "PRI_AGR_DOC_HC_SIGN_DATE"; 
+				System.out.println("attributeCode - PRI_HOST_CPY_REP :: " + attributeCode);
+			break;
+			
+			case "PRI_AGR_DOC_OUTCOME_SIGNATURE":
+				type = "PRI_AGR_DOC_OUTCOME_SIGN_DATE"; 
+				System.out.println("attributeCode - PRI_OUTCOME :: " + attributeCode);
+			break;
+		}
+		
+		/*
+		if (attributeCode.startsWith("PRI_HCS_AGR_")) {
+				type = "PRI_AGR_DOC_HC_SIGN_DATE"; 
+				System.out.println("attributeCode - PRI_HOST_CPY_REP :: " + attributeCode);
 	
 		} else if (attributeCode.startsWith("PRI_OHS_")){
 				type = "PRI_OHS_SIGNING_DATE"; 
@@ -94,7 +122,7 @@ rule "HELPER_SIGNATURE_DATE"
 		} else {
 			System.out.println("ERROR: startsWith failed - attributeCode: "+ attributeCode);	
 		}
-		
+		*/
 		System.out.println("type :: " + type);	
 		
 		
