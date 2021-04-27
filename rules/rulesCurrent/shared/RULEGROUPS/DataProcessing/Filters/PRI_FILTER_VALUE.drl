@@ -53,14 +53,15 @@ rule "PRI_FILTER_VALUE"
 			System.out.println("selectionEntity = " + selectionEntity);
 
 			if (selectionEntity != null) {
-				String selectionName = selectionEntity.getValue("PRI_NAME", null);
-				System.out.println("selectionName = " + selectionName);
+				String selName = selectionEntity.getName();
+				/* String selectionName = selectionEntity.getValue("PRI_NAME", null); */
+				/* System.out.println("selectionName = " + selectionName); */
 
-				if (selectionName != null) {
-					value = selectionName;
-				} else {
-					System.out.println("selectionName is NULL");
-				}
+				/* if (selectionName != null) { */
+				/* 	value = selectionName; */
+				/* } else { */
+				/* 	System.out.println("selectionName is NULL"); */
+				/* } */
 			} else {
 				System.out.println("selectionEntity is NULL");
 			}
