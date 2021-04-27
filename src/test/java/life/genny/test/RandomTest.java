@@ -24,6 +24,7 @@ import java.util.UUID;
 import javax.persistence.EntityManagerFactory;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.client.ClientProtocolException;
 import org.jboss.logging.Logger;
 import org.jbpm.services.api.DefinitionService;
 import org.jbpm.services.api.ProcessService;
@@ -67,6 +68,13 @@ public class RandomTest {
 	protected static String realm = GennySettings.mainrealm;
 	protected static Set<String> realms;
 
+	public static JsonObject projectParms;
+
+	protected static Optional<Boolean> isUsingRemote = Optional.empty();
+
+	public static GennyToken userToken;
+	public static GennyToken serviceToken;
+
 	protected static EventBusInterface eventBusMock;
 	protected static GennyCacheInterface vertxCache;
 
@@ -84,9 +92,7 @@ public class RandomTest {
 
 	protected DeploymentUnit deploymentUnit;
 
-	protected static GennyToken userToken;
 	protected static GennyToken newUserToken;
-	protected static GennyToken serviceToken;
 
 	protected static BaseEntityUtils beUtils;
 
@@ -105,9 +111,6 @@ public class RandomTest {
 
 	}
 
-
-
-
 	@Test
 	public void Randoise() {
 		System.out.println("Randomise test");
@@ -116,21 +119,21 @@ public class RandomTest {
 
 		// VertxUtils.cachedEnabled = false;
 		VertxUtils.cachedEnabled = false;
-		try {
-			GennyJbpmBaseTest.init();// .setupLocalService();
-			// qRules = GennyJbpmBaseTest.plement();
-		} catch (FileNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		userToken = new GennyToken("userToken", GennyJbpmBaseTest.projectParms.getString("userToken"));
-		serviceToken = new GennyToken("PER_SERVICE", GennyJbpmBaseTest.projectParms.getString("serviceToken"));
-		eventBusMock = new EventBusMock();
-		vertxCache = new JunitCache(); // MockCache
-		VertxUtils.init(eventBusMock, vertxCache);
+//		try {
+//			GennyJbpmBaseTest.init();// .setupLocalService();
+//			// qRules = GennyJbpmBaseTest.plement();
+//		} catch (FileNotFoundException | SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		userToken = new GennyToken("userToken", GennyJbpmBaseTest.projectParms.getString("userToken"));
+//		serviceToken = new GennyToken("PER_SERVICE", GennyJbpmBaseTest.projectParms.getString("serviceToken"));
+//		eventBusMock = new EventBusMock();
+//		vertxCache = new JunitCache(); // MockCache
+//		VertxUtils.init(eventBusMock, vertxCache);
 
-		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
-		beUtils.setServiceToken(serviceToken);
+//		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+//		beUtils.setServiceToken(serviceToken);
 
 		if (beUtils == null) {
 			return;
@@ -145,7 +148,7 @@ public class RandomTest {
 			SearchEntity searchBE = new SearchEntity("SBE_PER", "person fix")
 					.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
 					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
-					
+
 					.addColumn("PRI_CODE", "Name");
 
 			searchBE.setRealm(realm);
@@ -158,7 +161,7 @@ public class RandomTest {
 				ok = false;
 				break;
 			} else {
-				log.info("Loaded "+items.size()+" baseentitys");
+				log.info("Loaded " + items.size() + " baseentitys");
 			}
 
 			BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
@@ -166,39 +169,54 @@ public class RandomTest {
 			for (BaseEntity item : items) {
 
 				try {
-					
-					String jsonStr = QwandaUtils.apiGet("https://randomuser.me/api/?results=1&nat=au&format=json&dl&inc=name,email,picture,cell,gender,timezone", null);
-					
+
+					String jsonStr = QwandaUtils.apiGet(
+							"https://randomuser.me/api/?results=1&nat=au&format=json&dl&inc=name,email,picture,cell,gender,timezone",
+							null);
+
 					JsonObject json = new JsonObject(jsonStr);
 
+					// {"results":[{"gender":"male","name":{"title":"Mr","first":"Brandon","last":"Stone"},
+					// "location":{"street":{"number":2787,"name":"Thornridge
+					// Cir"},"city":"Kalgoorlie","state":"Western
+					// Australia","country":"Australia","postcode":8870,"coordinates":{"latitude":"82.7676","longitude":"-47.9134"},
+					// "timezone":{"offset":"+1:00","description":"Brussels, Copenhagen, Madrid,
+					// Paris"}},
+					// "email":"brandon.stone@example.com",
+					// "login":{"uuid":"1e74d7ef-b98e-4008-99df-7094ea2985b2","username":"ticklishzebra524","password":"matthew1","salt":"RJG5caIf","md5":"cb753e10b245ff24a4930f2388b45c61","sha1":"4016472b5e44d581d14789b221bac29b0bd198a9","sha256":"11f68f754d3268900002ad9d2792b3b516e106c5ac6c099af43db04f61151809"},
+					// "dob":{"date":"1944-11-25T15:51:56.452Z","age":77},"registered":{"date":"2012-12-18T08:04:55.143Z","age":9},
+					// "phone":"08-6165-3715","cell":"0434-344-332","id":{"name":"TFN","value":"837223755"},
+					// "picture":{"large":"https://randomuser.me/api/portraits/men/27.jpg","medium":"https://randomuser.me/api/portraits/med/men/27.jpg","thumbnail":"https://randomuser.me/api/portraits/thumb/men/27.jpg"},"nat":"AU"}],
+					// "info":{"seed":"da1c48ae9a193d9f","results":1,"page":1,"version":"1.3"}}
 
-					//{"results":[{"gender":"male","name":{"title":"Mr","first":"Brandon","last":"Stone"},
-					//"location":{"street":{"number":2787,"name":"Thornridge Cir"},"city":"Kalgoorlie","state":"Western Australia","country":"Australia","postcode":8870,"coordinates":{"latitude":"82.7676","longitude":"-47.9134"},
-					//"timezone":{"offset":"+1:00","description":"Brussels, Copenhagen, Madrid, Paris"}},
-					//"email":"brandon.stone@example.com",
-					//"login":{"uuid":"1e74d7ef-b98e-4008-99df-7094ea2985b2","username":"ticklishzebra524","password":"matthew1","salt":"RJG5caIf","md5":"cb753e10b245ff24a4930f2388b45c61","sha1":"4016472b5e44d581d14789b221bac29b0bd198a9","sha256":"11f68f754d3268900002ad9d2792b3b516e106c5ac6c099af43db04f61151809"},
-					//"dob":{"date":"1944-11-25T15:51:56.452Z","age":77},"registered":{"date":"2012-12-18T08:04:55.143Z","age":9},
-					//"phone":"08-6165-3715","cell":"0434-344-332","id":{"name":"TFN","value":"837223755"},
-					//"picture":{"large":"https://randomuser.me/api/portraits/men/27.jpg","medium":"https://randomuser.me/api/portraits/med/men/27.jpg","thumbnail":"https://randomuser.me/api/portraits/thumb/men/27.jpg"},"nat":"AU"}],
-					//"info":{"seed":"da1c48ae9a193d9f","results":1,"page":1,"version":"1.3"}}
+					saveAnswer(item.getCode(), "PRI_EMAIL",
+							json.getJsonArray("results").getJsonObject(0).getString("email"));
+					String firstname = json.getJsonArray("results").getJsonObject(0).getJsonObject("name")
+							.getString("first");
+					String lastname = json.getJsonArray("results").getJsonObject(0).getJsonObject("name")
+							.getString("last");
+					String name = firstname + " " + lastname;
+					saveAnswer(item.getCode(), "PRI_NAME", name);
 
-								saveAnswer(item.getCode(),"PRI_EMAIL",json.getJsonArray("results").getJsonObject(0).getString("email"));
-								String firstname = json.getJsonArray("results").getJsonObject(0).getJsonObject("name").getString("first");
-								String lastname = json.getJsonArray("results").getJsonObject(0).getJsonObject("name").getString("last");
-								String name = firstname+" "+lastname;
-								saveAnswer(item.getCode(),"PRI_NAME",name);
-								
-								String number = json.getJsonArray("results").getJsonObject(0).getJsonObject("location").getString("number");
-								String street = json.getJsonArray("results").getJsonObject(0).getJsonObject("location").getString("street");
-								String city = json.getJsonArray("results").getJsonObject(0).getJsonObject("location").getString("city");
-								String state = json.getJsonArray("results").getJsonObject(0).getJsonObject("location").getString("state");
-								String country = json.getJsonArray("results").getJsonObject(0).getJsonObject("location").getString("country");
-								String postcode = json.getJsonArray("results").getJsonObject(0).getJsonObject("location").getString("postcode");
-								JsonObject gps  = json.getJsonArray("results").getJsonObject(0).getJsonObject("location").getJsonObject("coordinates");
-								Double latitude = Double.valueOf(gps.getString("latitude"));
-								Double longitude = Double.valueOf(gps.getString("longitude"));
-								
-								System.out.println(item.getCode() + " done "+json.getJsonArray("results").getJsonObject(0).getString("email"));
+					String number = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
+							.getString("number");
+					String street = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
+							.getString("street");
+					String city = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
+							.getString("city");
+					String state = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
+							.getString("state");
+					String country = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
+							.getString("country");
+					String postcode = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
+							.getString("postcode");
+					JsonObject gps = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
+							.getJsonObject("coordinates");
+					Double latitude = Double.valueOf(gps.getString("latitude"));
+					Double longitude = Double.valueOf(gps.getString("longitude"));
+
+					System.out.println(item.getCode() + " done "
+							+ json.getJsonArray("results").getJsonObject(0).getString("email"));
 
 				} catch (Exception e1) {
 					e1.printStackTrace();
@@ -213,10 +231,9 @@ public class RandomTest {
 
 		System.out.println("Finished");
 	}
-	
-	private void saveAnswer(String targetCode,String attributeCode,String value) {
-		Answer ans = new Answer(userToken.getUserCode(), targetCode,
-				attributeCode, value, false, false);
+
+	private void saveAnswer(String targetCode, String attributeCode, String value) {
+		Answer ans = new Answer(userToken.getUserCode(), targetCode, attributeCode, value, false, false);
 		beUtils.saveAnswer(ans);
 	}
 
@@ -226,17 +243,17 @@ public class RandomTest {
 		System.out.println("BridgeUrl=" + GennySettings.bridgeServiceUrl);
 		System.out.println("QwandaUrl=" + GennySettings.qwandaServiceUrl);
 
-		GennyToken tokenUser = GennyJbpmBaseTest.createGennyToken("ABCDEFGH", "internmatch", "adam.crow@gada.io",
-				"Adam Crow", "intern");
-		GennyToken tokenSupervisor = GennyJbpmBaseTest.createGennyToken("BCDEFGSHS", "internmatch",
-				"kanika.gulati@gada.io", "Kanika Gulati", "supervisor");
-		System.out.println(tokenUser.getToken());
-		System.out.println(tokenSupervisor.getToken());
+//		GennyToken tokenUser = GennyJbpmBaseTest.createGennyToken("ABCDEFGH", "internmatch", "adam.crow@gada.io",
+//				"Adam Crow", "intern");
+//		GennyToken tokenSupervisor = GennyJbpmBaseTest.createGennyToken("BCDEFGSHS", "internmatch",
+//				"kanika.gulati@gada.io", "Kanika Gulati", "supervisor");
+//		System.out.println(tokenUser.getToken());
+//		System.out.println(tokenSupervisor.getToken());
 
 		// Set up realm
 		realms = new HashSet<String>();
 		realms.add(realm);
-	//	realms.stream().forEach(System.out::println);
+		// realms.stream().forEach(System.out::println);
 		realms.remove("genny");
 
 		// Enable the PseudoClock using the following system property.
@@ -246,25 +263,66 @@ public class RandomTest {
 		vertxCache = new VertxCache(); // MockCache
 		VertxUtils.init(eventBusMock, vertxCache);
 
-		QRules qRules = null;
+		// QRules qRules = null;
 
-//	        if (USE_STANDALONE) {
-//	            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//	            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
-//	            GennyKieSession.loadAttributesJsonFromResources(serviceToken);
-//
-//	        } else {
-		// qRules = GennyJbpmBaseTest.setupLocalService();
+		String apiUrl = GennySettings.projectUrl + "/api/events/init?url=" + GennySettings.projectUrl;
+		System.out.println("Fetching setup info from " + apiUrl);
 		try {
-			GennyJbpmBaseTest.init();// .setupLocalService();
-			String uToken = GennyJbpmBaseTest.projectParms.getString("userToken");
-			userToken = new GennyToken("userToken", uToken);
-			serviceToken = new GennyToken("PER_SERVICE", GennyJbpmBaseTest.projectParms.getString("serviceToken"));
+			String keycloakJson = QwandaUtils.apiGet(apiUrl, null);
+			projectParms = new JsonObject(keycloakJson);
+			String authServer = projectParms.getString("auth-server-url");
+			authServer = StringUtils.removeEnd(authServer, "/auth");
+			JsonObject credentials = projectParms.getJsonObject("credentials");
+			String secret = credentials.getString("secret");
+			String username = System.getenv("USERNAME");
+			String password = System.getenv("PASSWORD");
 
-		} catch (FileNotFoundException | SQLException e) {
+			String token = KeycloakUtils.getAccessToken(authServer, realm, realm, secret, username, password);
+			GennyToken uToken = new GennyToken(token);
+			// check if user token already exists
+			String userCode = uToken.getUserCode();// "PER_"+QwandaUtils.getNormalisedUsername(username);
+			JsonObject cacheJson = VertxUtils.readCachedJson(realm, "TOKEN:" + userCode, token);
+			String status = cacheJson.getString("status");
+
+			if ("ok".equals(status)) {
+				String userToken = cacheJson.getString("value");
+				GennyToken userGennyToken = new GennyToken("userToken", userToken);
+				System.out.println("User " + username + " is logged in! "
+						+ userGennyToken.getAdecodedTokenMap().get("session_state"));
+				;
+				projectParms.put("userToken", userToken);
+			} else {
+				System.out.println("User " + username + " is NOT LOGGED IN!");
+				;
+				projectParms.put("userToken", token); // use non alyson token
+				return;
+			}
+
+			JsonObject serviceTokenJson = VertxUtils.readCachedJson(GennySettings.GENNY_REALM,
+					"TOKEN" + realm.toUpperCase(), token);
+			status = serviceTokenJson.getString("status");
+
+			if ("ok".equals(status)) {
+				String serviceToken = serviceTokenJson.getString("value");
+				System.out.println("Service Account available!");
+				;
+				projectParms.put("serviceToken", serviceToken);
+			} else {
+				log.error("Service Token UNAVAILABLE!");
+				;
+				projectParms.put("serviceToken", token); // use non alyson token
+				//return;
+			}
+
+		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (IOException e) {
+			return;
 		}
+		String uToken = projectParms.getString("userToken");
+		userToken = new GennyToken("userToken", uToken);
+	//	serviceToken = new GennyToken("PER_SERVICE", projectParms.getString("serviceToken"));
 
 		// VertxUtils.cachedEnabled = false;
 		VertxUtils.cachedEnabled = false;
@@ -277,10 +335,10 @@ public class RandomTest {
 //				serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
 
 		beUtils = new BaseEntityUtils(userToken);
-		beUtils.setServiceToken(serviceToken);
+	//	beUtils.setServiceToken(serviceToken);
 //	        }
 
-		System.out.println("serviceToken=" + serviceToken.getToken());
+		//System.out.println("serviceToken=" + serviceToken.getToken());
 
 	}
 
@@ -296,7 +354,7 @@ public class RandomTest {
 		// log.info("Insert fact "+obj+" in rules engine");
 	}
 
-	//@Test
+	// @Test
 	void backFillProcessViewTest() {
 		if (beUtils == null) {
 			return;
