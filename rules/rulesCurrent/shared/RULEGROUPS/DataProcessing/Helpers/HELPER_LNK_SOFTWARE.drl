@@ -60,12 +60,12 @@ rule "HELPER_LNK_SOFTWARE"
 				if(code.startsWith("NEW_")){
 					/* it is a new software */
 					/* 
-						- remove NEW keyword ✅
-						- get the user typed software name ✅
-						- create be ✅
-						- save PRI_NAME ✅
-						- replace NEW with SEL in codes or value ✅
-						- softwareList.add(new software's name) ✅
+						- remove NEW keyword 
+						- get the user typed software name 
+						- create be 
+						- save PRI_NAME 
+						- replace NEW with SEL in codes or value 
+						- softwareList.add(new software's name) 
 						- send this new SEL using search and send to frontend
 					 */
 					String softwareName= code.substring(4).toLowerCase();
