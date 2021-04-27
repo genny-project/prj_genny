@@ -130,7 +130,7 @@ rule "HELPER_SIGNATURE_DATE"
 		/* Do the Date stuff */	
 		
 		DateTimeFormatter dtf1 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		LocalDateTime now = LocalDateTime.now();
+		LocalDate now = LocalDate.now();
 		String date = dtf1.format(now);
 		System.out.println("date: " +date);
 		
@@ -141,7 +141,7 @@ rule "HELPER_SIGNATURE_DATE"
 		System.out.println("targetBe: " + targetBe);
 		
 		if (targetBe != null) {		
-				beUtils.saveAnswer(new Answer(sourceCode, targetCode, type, date));
+				beUtils.saveAnswer(new Answer(sourceCode, targetCode, type, now));
 				System.out.println("Saving Date: " +date);	
 		
 		} else {
