@@ -63,13 +63,40 @@ rule "HELPER_SIGNATURE_DATE"
 		String value = answerTwo.getValue();
 		System.out.println("value :: " + value);		
 		
-		
 		/* Select Type */
 		String type = "EMPTY";
 		
-		if (attributeCode.startsWith("PRI_HCS_AGR_")) {
+		switch (attributeCode) {
+			case "PRI_OHS_SIGNATURE":
+				type = "PRI_OHS_SIGNING_DATE"; 
+				System.out.println("attributeCode - PRI_OHS_ :: " + attributeCode);
+			break;
+			
+			case "PRI_HCS_AGR_SIGNATURE":
 				type = "PRI_HCS_AGR_SIGN_DATE"; 
 				System.out.println("attributeCode - PRI_HC_SERVICES :: " + attributeCode);
+			break;
+			
+			case "PRI_AGR_DOC_INT_SIGNATURE":
+				type = "PRI_AGR_DOC_INT_SIGN_DATE"; 
+				System.out.println("attributeCode - PRI_INTERN :: " + attributeCode);
+			break;
+			
+			case "PRI_AGR_DOC_HC_SIGNATURE":
+				type = "PRI_AGR_DOC_HC_SIGN_DATE"; 
+				System.out.println("attributeCode - PRI_HOST_CPY_REP :: " + attributeCode);
+			break;
+			
+			case "PRI_AGR_DOC_OUTCOME_SIGNATURE":
+				type = "PRI_AGR_DOC_OUTCOME_SIGN_DATE"; 
+				System.out.println("attributeCode - PRI_OUTCOME :: " + attributeCode);
+			break;
+		}
+		
+		/*
+		if (attributeCode.startsWith("PRI_HCS_AGR_")) {
+				type = "PRI_AGR_DOC_HC_SIGN_DATE"; 
+				System.out.println("attributeCode - PRI_HOST_CPY_REP :: " + attributeCode);
 	
 		} else if (attributeCode.startsWith("PRI_OHS_")){
 				type = "PRI_OHS_SIGNING_DATE"; 
@@ -95,7 +122,7 @@ rule "HELPER_SIGNATURE_DATE"
 		} else {
 			System.out.println("ERROR: startsWith failed - attributeCode: "+ attributeCode);	
 		}
-		
+		*/
 		System.out.println("type :: " + type);	
 		
 		
@@ -103,7 +130,7 @@ rule "HELPER_SIGNATURE_DATE"
 		/* Do the Date stuff */	
 		
 		DateTimeFormatter dtf1 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		LocalDateTime now = LocalDateTime.now();
+		LocalDate now = LocalDate.now();
 		String date = dtf1.format(now);
 		System.out.println("date: " +date);
 		
@@ -114,7 +141,7 @@ rule "HELPER_SIGNATURE_DATE"
 		System.out.println("targetBe: " + targetBe);
 		
 		if (targetBe != null) {		
-				beUtils.saveAnswer(new Answer(sourceCode, targetCode, type, date));
+				beUtils.saveAnswer(new Answer(sourceCode, targetCode, type, now));
 				System.out.println("Saving Date: " +date);	
 		
 		} else {
@@ -128,7 +155,7 @@ rule "HELPER_SIGNATURE_DATE"
 		msg.setReplace(true);
 		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 		
-		
+		if (type.equals("PRI_AGR_DOC_INT_SIGN_DATE") || type.equals("PRI_AGR_DOC_HC_SIGN_DATE") || type.equals("PRI_AGR_DOC_OUTCOME_SIGN_DATE")) {
 	
 		/* === Send email to HCR === */
 		
@@ -367,7 +394,7 @@ rule "HELPER_SIGNATURE_DATE"
 		}
 		*/
 		
-		
+		}
 						
 		
 

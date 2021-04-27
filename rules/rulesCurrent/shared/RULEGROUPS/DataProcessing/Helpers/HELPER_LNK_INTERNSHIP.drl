@@ -28,7 +28,7 @@ rule "HELPER_LNK_INTERNSHIP"
 	salience 5000
 	when
 		beUtils : BaseEntityUtils()
-		answer : Answer( attributeCode == "LNK_INTERNSHIP")
+		answer : Answer( attributeCode == "LNK_INTERNSHIP" && !(targetCode matches "APP_.*"))
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		userToken : GennyToken( code != "PER_SERVICE")
 
