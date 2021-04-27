@@ -583,7 +583,7 @@ System.out.println(&quot;beExists = &quot; + beExists);</bpmn2:script>
       </bpmn2:sequenceFlow>
       <bpmn2:sequenceFlow id="SequenceFlow_14" drools:priority="1" sourceRef="Task_3" targetRef="ExclusiveGateway_4"/>
       <bpmn2:sequenceFlow id="SequenceFlow_17" drools:priority="1" sourceRef="ExclusiveGateway_4" targetRef="Task_2"/>
-      <bpmn2:sequenceFlow id="SequenceFlow_18" drools:priority="1" sourceRef="ExclusiveGateway_3" targetRef="ExclusiveGateway_4"/>
+      <bpmn2:sequenceFlow id="SequenceFlow_18" drools:priority="1" name="Skip" sourceRef="ExclusiveGateway_3" targetRef="ExclusiveGateway_4"/>
     </bpmn2:subProcess>
     <bpmn2:sequenceFlow id="SequenceFlow_8" drools:priority="1" sourceRef="StartEvent_2" targetRef="SubProcess_2"/>
     <bpmn2:sequenceFlow id="SequenceFlow_7" drools:priority="1" sourceRef="SubProcess_2" targetRef="EndEvent_2"/>
@@ -812,7 +812,9 @@ System.out.println(&quot;beExists = &quot; + beExists);</bpmn2:script>
         <di:waypoint xsi:type="dc:Point" x="985.0" y="232.0"/>
         <di:waypoint xsi:type="dc:Point" x="1215.0" y="232.0"/>
         <di:waypoint xsi:type="dc:Point" x="1215.0" y="275.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="11.0" width="18.0" x="1092.0" y="233.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
