@@ -69,7 +69,7 @@ rule "HELPER_LNK_SOFTWARE"
 						- send this new SEL using search and send to frontend
 					 */
 					String softwareName= code.substring(4).toLowerCase();
-					String softwareCode = "SEL_SOFTWARE_" + UUID.randomUUID().toUpperCase();
+					String softwareCode = "SEL_SOFTWARE_" + UUID.randomUUID().toString().toUpperCase();
 					
 					/* create BE */
 					BaseEntity software = beUtils.create(softwareCode, softwareName);
