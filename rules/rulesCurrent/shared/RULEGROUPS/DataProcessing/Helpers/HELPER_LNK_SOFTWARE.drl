@@ -68,7 +68,7 @@ rule "HELPER_LNK_SOFTWARE"
 						- softwareList.add(new software's name) 
 						- send this new SEL using search and send to frontend
 					 */
-					String softwareName= code.substring(4).toLowerCase();
+					String softwareName= StringUtils.removeStart(code,"NEW_");
 					String softwareCode = "SEL_SOFTWARE_" + UUID.randomUUID().toString().toUpperCase();
 					
 					/* create BE */
@@ -80,17 +80,18 @@ rule "HELPER_LNK_SOFTWARE"
 
 						/* get the update be */
 						software = beUtils.getBaseEntityByCode(softwareCode);
+						System.out.println("new software :: " + software.getCode());
 						
 						/* add to the list */
 						softwareBes.add(software);
 
 						/* replace NEW with SEL code in codes and value*/
 						System.out.println("before codes :: " + codes);
-						codes.replace(code, software.getCode());
+						codes = codes.replace(code, software.getCode());
 						System.out.println("after codes :: " + codes);
 						
 						System.out.println("before value :: " + value);
-						value.replace(code, software.getCode());
+						value = value.replace(code, software.getCode());
 						System.out.println("after value :: " + value);
 						
 						/* add to the software list */
@@ -112,6 +113,9 @@ rule "HELPER_LNK_SOFTWARE"
 				QDataBaseEntityMessage msg = new QDataBaseEntityMessage(softwareBes);
 				msg.setToken(userToken.getToken());
 				msg.setParentCode("GRP_SOFTWARES");
+				msg.setReplace(false);
+        msg.setTotal((long) softwareBes.size());
+
 				String json = JsonUtils.toJson(msg);
 				VertxUtils.writeMsg("webcmds", json);
 			}
