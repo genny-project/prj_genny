@@ -71,6 +71,14 @@ rule "PRI_FILTER_VALUE"
 		newFilterArray[2] = value;
 		VertxUtils.putObject(serviceToken.getRealm(), "", "FLT_"+targetCode, newFilterArray, serviceToken.getToken());
 
+		/* Enable Submit and send to frontend */
+		filterGrpAsk.getChildAsks()[0].getChildAsks()[6].setDisabled(false);
+		QDataAskMessage askMsg = new QDataAskMessage(filterGrpAsk);
+		askMsg.setToken(beUtils.getGennyToken().getToken());
+		askMsg.setReplace(true);
+		VertxUtils.writeMsg("webcmds", askMsg);
+		System.out.println("Asks sent to FE");
+
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
 
