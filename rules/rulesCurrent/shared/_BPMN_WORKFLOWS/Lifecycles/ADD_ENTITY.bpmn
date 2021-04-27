@@ -573,7 +573,7 @@ System.out.println(&quot;beExists = &quot; + beExists);</bpmn2:script>
         </bpmn2:dataOutputAssociation>
       </bpmn2:task>
       <bpmn2:sequenceFlow id="SequenceFlow_2" drools:priority="1" sourceRef="ExclusiveGateway_3" targetRef="Task_4">
-        <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_20" language="http://www.java.com/java">return(key.equals(&quot;INTERN&quot;))</bpmn2:conditionExpression>
+        <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_20" language="http://www.java.com/java">return(key.equals(&quot;INTERN&quot;));</bpmn2:conditionExpression>
       </bpmn2:sequenceFlow>
       <bpmn2:sequenceFlow id="SequenceFlow_19" drools:priority="1" sourceRef="Task_4" targetRef="ExclusiveGateway_4"/>
     </bpmn2:subProcess>
