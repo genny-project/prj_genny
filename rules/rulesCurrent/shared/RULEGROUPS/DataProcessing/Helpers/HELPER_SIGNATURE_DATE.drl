@@ -63,6 +63,7 @@ rule "HELPER_SIGNATURE_DATE"
 		String value = answerTwo.getValue();
 		System.out.println("value :: " + value);		
 		
+		PRI_OHS_SIGNATURE
 		
 		/* Select Type */
 		String type = "EMPTY";
@@ -128,7 +129,7 @@ rule "HELPER_SIGNATURE_DATE"
 		msg.setReplace(true);
 		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 		
-		
+		if (type.equals("PRI_AGR_DOC_INT_SIGN_DATE") || type.equals("PRI_AGR_DOC_HC_SIGN_DATE") || type.equals("PRI_AGR_DOC_OUTCOME_SIGN_DATE")) {
 	
 		/* === Send email to HCR === */
 		
@@ -367,7 +368,7 @@ rule "HELPER_SIGNATURE_DATE"
 		}
 		*/
 		
-		
+		}
 						
 		
 
