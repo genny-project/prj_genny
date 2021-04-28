@@ -117,9 +117,9 @@ rule "HELPER_LNK_SOFTWARE"
 
 				/* link each new software to GRP_SOFTWARES */
 				for(BaseEntity softwareBe : softwareBes){
-					beUtils.createLink("GRP_SOFTWARES", softwareBe.getCode(), "LNK_CORE", "ITEMS", 1.0);
+					beUtils.createLink("GRP_SOFTWARES", softwareBe.getCode(), "LNK_CORE", "SOFTWARE", 1.0);
 				}
-				
+
 				QDataBaseEntityMessage msg = new QDataBaseEntityMessage(softwareBes);
 				msg.setToken(userToken.getToken());
 				msg.setParentCode("GRP_SOFTWARES");
