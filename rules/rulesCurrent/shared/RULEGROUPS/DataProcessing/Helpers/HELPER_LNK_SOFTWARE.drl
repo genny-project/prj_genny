@@ -96,6 +96,7 @@ rule "HELPER_LNK_SOFTWARE"
 						
 						System.out.println("before value :: " + value);
 						value = value.replace(code, software.getCode());
+						answer.setValue(value); /* set the answer's value to new be code */
 						System.out.println("after value :: " + value);
 						
 						/* add to the software list */
