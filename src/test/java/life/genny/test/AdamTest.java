@@ -51,6 +51,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.EntityManagerFactory;
 
+import life.genny.bootxport.bootx.StateModel;
 import life.genny.qwanda.message.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
@@ -8307,6 +8308,52 @@ public class AdamTest {
 
 
     @Test
+    public void addPRI_APPLICANT_CODEToApp() {
+        System.out.println("addPRI_APPLICANT_CODEToApp");
+        GennyToken userToken = null;
+        GennyToken serviceToken = null;
+        QRules qRules = null;
+        String appBasentityCode = "APP_%";
+        String sourceAttrCode = "PRI_INTERN_CODE";
+        String targetAttrCode = "PRI_APPLICANT_CODE";
+
+        VertxUtils.cachedEnabled = false;
+        qRules = GennyJbpmBaseTest.plement();
+        userToken = new GennyToken("userToken", qRules.getToken());
+        serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+
+        System.out.println("session     =" + userToken.getSessionCode());
+        System.out.println("userToken   =" + userToken.getToken());
+        System.out.println("serviceToken=" + serviceToken.getToken());
+
+        BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+        beUtils.setServiceToken(serviceToken);
+        SearchEntity appSearch = new SearchEntity("SBE_APP", "SBE_APP")
+                .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, appBasentityCode)
+                .addColumn(sourceAttrCode, "intern code")
+                .setPageStart(0).setPageSize(100000);
+
+        appSearch.setRealm(serviceToken.getRealm());
+
+        BaseEntity result = null;
+
+        List<BaseEntity> bes = beUtils.getBaseEntitys(appSearch);
+        System.out.println("The number of items is " + (bes == null ? "NULL" : bes.size()));
+        if ((bes != null) && (bes.size() > 0)) {
+            System.out.println("Number of bes returned is " + bes.size() + ":" + result);
+
+            for (BaseEntity be : bes) {
+                String internCode = be.getValue(sourceAttrCode, null);
+                if (internCode == null)
+                    continue;
+                beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(),
+                        targetAttrCode, internCode));
+                System.out.println("Create attribute:" + targetAttrCode + " for be:" + be.getCode());
+            }
+        }
+    }
+
+    @Test
     public void copyBegAttrToApp() {
         System.out.println("copyBegAttrToApp");
         GennyToken userToken = null;
@@ -8332,7 +8379,7 @@ public class AdamTest {
                 .addColumn("PRI_BASE_LEARNING_OUTCOMES", "base learning outcomes")
                 .addColumn("PRI_SPECIFIC_LEARNING_OUTCOMES", "specific learning outcomes")
                 .addColumn("PRI_ROLES_AND_RESPONSIBILITIES", "roles responsibilities")
-                .setPageStart(0).setPageSize(1000);
+                .setPageStart(0).setPageSize(10);
 
         appSearch.setRealm(serviceToken.getRealm());
 
@@ -8361,6 +8408,24 @@ public class AdamTest {
             }
         }
     }
+
+/*
+    @Test
+    public void jianliCurlTest() throws IOException {
+        StateModel stateModel = new StateModel();
+        realms.add("internmatch");
+
+        Set<String> sheetIds = new HashSet<>();
+        sheetIds.add("xxxxx");
+        stateModel.setSheetIDWorksheetConcatenated(sheetIds);
+
+        String jsonSearchBE = JsonUtils.toJson(stateModel);
+        String url= "http://10.0.0.47:8280/qwanda/syncsheets";
+
+        String resultJson = QwandaUtils.apiPostEntity(url, jsonSearchBE, token);
+        System.out.println(resultJson);
+    }
+ */
 
 }
 
