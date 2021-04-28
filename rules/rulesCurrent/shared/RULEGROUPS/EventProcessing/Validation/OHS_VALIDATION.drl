@@ -98,7 +98,7 @@ rule "OHS_VALIDATION"
 		url = url +"?token=" + token;
 		System.out.println("url with token: " + url);
 
-		String agentEmail = "internmatch@outcomelife.com.au";
+		String agentEmail = "outcomestaff@outcomelife.com.au";
 		String assocHC = HCBe.getValue("PRI_NAME", null);
 		
 		BaseEntity tempBe = null;
@@ -136,20 +136,9 @@ rule "OHS_VALIDATION"
 			System.out.println("linkedIS: " + linkedIS);
 		}
 		
-	
-/*
-Host Company: {{ HC }}
-Documentation: {{ Doc }} 
-Requirement: {{ Todo }}
-
-Open Opportunities:
-{{ IS1 }}
-{{ IS2 }}
-{{ IS3 }}
-{{ IS4 }}
-{{ IS5 }}
-*/				
+			
 		HashMap<String, String> templateData = new HashMap<String, String>();
+		List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
 		
 		templateData.put("HC", assocHC);
 		templateData.put("Doc", doc);
@@ -176,12 +165,12 @@ Open Opportunities:
 		
 		if (OHS){
 			System.out.println("Sending Agent - OHS email");
-			EmailHelper.sendGrid(beUtils, agentEmail, null, null, subject, template_id, templateData);
+			EmailHelper.sendGrid(beUtils, agentEmail, null, bccList, subject, template_id, templateData);
 		}
 		
 		if (ready){
 			System.out.println("Sending Agent - HC Validation email");
-			EmailHelper.sendGrid(beUtils, agentEmail, null, null, subject, template_id, templateData);
+			EmailHelper.sendGrid(beUtils, agentEmail, null, bccList, subject, template_id, templateData);
 		}
 		
 		System.out.println("-------- AGENT EMAIL DATA --------");
