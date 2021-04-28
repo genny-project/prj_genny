@@ -62,6 +62,8 @@ rule "HCS_VALIDATION"
 				System.out.println("PRI_VALIDATION set to Ready"); 	
 		} 
 		
+		hcBe = beUtils.getBaseEntityByCode(hcBe.getCode());	
+		
 		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(hcBe);
 		msg.setToken(userToken.getToken());
 		msg.setReplace(true);
