@@ -21,7 +21,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.io.UnsupportedEncodingException;
 import life.genny.utils.DropdownUtils;
-
+import java.util.UUID;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -52,14 +52,83 @@ rule "HELPER_LNK_SOFTWARE"
 
 			/* list to store softwares */
 			List<String> softwareList = new ArrayList<>();
+			List<BaseEntity> softwareBes = new ArrayList<BaseEntity>();
+
 			String codes = beUtils.cleanUpAttributeValue(value);
 			
 			for (String code : codes.split(",")) {
-				BaseEntity be = beUtils.getBaseEntityByCode(code);
-				if(be != null){
-					String name = be.getValue("PRI_NAME", null);		
-					if(name != null) softwareList.add(name);
+				if(code.startsWith("NEW_")){
+					/* it is a new software */
+					/* 
+						- remove NEW keyword 
+						- get the user typed software name 
+						- create be 
+						- save PRI_NAME 
+						- replace NEW with SEL in codes or value 
+						- softwareList.add(new software's name) 
+						- send this new SEL using search and send to frontend
+					 */
+					String softwareName= StringUtils.removeStart(code,"NEW_");
+					softwareName = softwareName.replaceAll("_"," ");
+					String softwareCode = "SEL_SOFTWARE_" + UUID.randomUUID().toString().toUpperCase();
+
+					System.out.println("softwareName :: " + softwareName);
+					System.out.println("softwareCode :: " + softwareCode);
+
+					/* create BE */
+					BaseEntity software = beUtils.create(softwareCode, softwareName);
+
+					if(software != null){
+						/* save the software name */
+						beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), software.getCode(), "PRI_NAME", softwareName));
+
+						/* get the update be */
+						software = beUtils.getBaseEntityByCode(softwareCode);
+						System.out.println("new software :: " + software.getCode());
+						
+						/* add to the list */
+						softwareBes.add(software);
+
+						/* replace NEW with SEL code in codes and value*/
+						System.out.println("before codes :: " + codes);
+						codes = codes.replace(code, software.getCode());
+						System.out.println("after codes :: " + codes);
+						
+						System.out.println("before value :: " + value);
+						value = value.replace(code, software.getCode());
+						answer.setValue(value); /* set the answer's value to new be code */
+						System.out.println("after value :: " + value);
+						
+						/* add to the software list */
+						System.out.println("before softwareList :: " + softwareList);
+						softwareList.add(softwareName);
+						System.out.println("after softwareList :: " + softwareList);
+					}
+				}else{
+					BaseEntity be = beUtils.getBaseEntityByCode(code);
+					if(be != null){
+						String name = be.getValue("PRI_NAME", null);		
+						if(name != null) softwareList.add(name);
+					}
 				}
+			}
+
+			System.out.println("softwareBes size :: " + softwareBes.size());
+			if(softwareBes.size()>0){
+
+				/* link each new software to GRP_SOFTWARES */
+				for(BaseEntity softwareBe : softwareBes){
+					beUtils.createLink("GRP_SOFTWARES", softwareBe.getCode(), "LNK_CORE", "SOFTWARE", 1.0);
+				}
+
+				QDataBaseEntityMessage msg = new QDataBaseEntityMessage(softwareBes);
+				msg.setToken(userToken.getToken());
+				msg.setParentCode("GRP_SOFTWARES");
+				msg.setReplace(false);
+        msg.setTotal((long) softwareBes.size());
+
+				String json = JsonUtils.toJson(msg);
+				VertxUtils.writeMsg("webcmds", json);
 			}
 
 			/* The last two replace statements ensure spaces between items */
