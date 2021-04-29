@@ -27,6 +27,7 @@
     <bpmn2:property id="projectBE" itemSubjectRef="ItemDefinition_2060" name="projectBE"/>
     <bpmn2:property id="submitCode" itemSubjectRef="ItemDefinition_2491" name="submitCode"/>
     <bpmn2:property id="sourceEntity" itemSubjectRef="ItemDefinition_2060" name="sourceEntity"/>
+    <bpmn2:property id="questionGroup" itemSubjectRef="ItemDefinition_2491" name="questionGroup"/>
     <bpmn2:startEvent id="StartEvent_1" name="Start T's &amp; C's">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -88,6 +89,15 @@ sourceEntity = beUtils.getBaseEntityByCode(sourceCode);
 kcontext.setVariable(&quot;sourceEntity&quot;, sourceEntity);
 System.out.println(&quot;sourceEntity: &quot; + sourceEntity);
 
+questionGroup = &quot;QUE_TERMS_AND_CONDITIONS_GRP&quot;;
+BaseEntity userBE = beUtils.getBaseEntityByCode(userToken.getUserCode());
+if (userBE != null) {
+	Boolean termsAccepted = userBE.getValue(&quot;PRI_TERMS_ACCEPTED&quot;, null);
+	if (termsAccepted != null &amp;&amp; termsAccepted) {
+		questionGroup = &quot;QUE_VIEW_TERMS_AND_CONDITIONS_GRP&quot;;
+	}
+}
+kcontext.setVariable(&quot;questionGroup&quot;, questionGroup);
 </bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_2" drools:priority="1" sourceRef="StartEvent_1" targetRef="ScriptTask_1"/>
@@ -101,7 +111,7 @@ System.out.println(&quot;sourceEntity: &quot; + sourceEntity);
       <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
       <bpmn2:ioSpecification id="InputOutputSpecification_1">
         <bpmn2:dataInput id="DataInput_1" itemSubjectRef="ItemDefinition_644" name="userToken"/>
-        <bpmn2:dataInput id="DataInput_2" name="questionCode"/>
+        <bpmn2:dataInput id="DataInput_2" itemSubjectRef="ItemDefinition_2491" name="questionCode"/>
         <bpmn2:dataInput id="DataInput_3" name="callingWorkflow"/>
         <bpmn2:dataInput id="DataInput_4" itemSubjectRef="ItemDefinition_2060" name="baseEntityTarget"/>
         <bpmn2:dataInput id="DataInput_5" name="formCode"/>
@@ -130,11 +140,8 @@ System.out.println(&quot;sourceEntity: &quot; + sourceEntity);
         <bpmn2:targetRef>DataInput_1</bpmn2:targetRef>
       </bpmn2:dataInputAssociation>
       <bpmn2:dataInputAssociation id="_DataInputAssociation_597">
+        <bpmn2:sourceRef>questionGroup</bpmn2:sourceRef>
         <bpmn2:targetRef>DataInput_2</bpmn2:targetRef>
-        <bpmn2:assignment id="Assignment_1">
-          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_3">QUE_TERMS_AND_CONDITIONS_GRP</bpmn2:from>
-          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_1">DataInput_2</bpmn2:to>
-        </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
       <bpmn2:dataInputAssociation id="_DataInputAssociation_598">
         <bpmn2:targetRef>DataInput_3</bpmn2:targetRef>
