@@ -169,7 +169,7 @@ public class RandomTest {
 				try {
 
 					String jsonStr = QwandaUtils.apiGet(
-							"https://randomuser.me/api/?results=1&nat=au&format=json&dl&inc=name,email,picture,cell,gender,timezone",
+							"https://randomuser.me/api/?results=1&nat=au&format=json&dl&inc=name,email,location,picture,cell,gender,timezone",
 							null);
 
 					JsonObject json = new JsonObject(jsonStr);
@@ -198,9 +198,9 @@ public class RandomTest {
 					saveAnswer(item.getCode(), "PRI_NAME", name);
 
 					String number = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
-							.getString("number");
+							.getJsonObject("street").getNumber("number")+"";
 					String street = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
-							.getString("street");
+							.getJsonObject("street").getString("name");
 					String city = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
 							.getString("city");
 					String state = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
@@ -208,7 +208,7 @@ public class RandomTest {
 					String country = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
 							.getString("country");
 					String postcode = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
-							.getString("postcode");
+							.getNumber("postcode")+"";
 					JsonObject gps = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
 							.getJsonObject("coordinates");
 					Double latitude = Double.valueOf(gps.getString("latitude"));
@@ -222,6 +222,7 @@ public class RandomTest {
 				}
 				icount++;
 				if (icount > 3) {
+					ok = false;
 					break;
 				}
 			}
