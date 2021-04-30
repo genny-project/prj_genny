@@ -8330,7 +8330,7 @@ public class AdamTest {
         beUtils.setServiceToken(serviceToken);
         SearchEntity appSearch = new SearchEntity("SBE_APP", "SBE_APP")
                 .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, appBasentityCode)
-                .addColumn(sourceAttrCode, "intern code")
+                .addColumn(sourceAttrCode, "intern_code")
                 .setPageStart(0).setPageSize(100000);
 
         appSearch.setRealm(serviceToken.getRealm());
@@ -8339,16 +8339,18 @@ public class AdamTest {
 
         List<BaseEntity> bes = beUtils.getBaseEntitys(appSearch);
         System.out.println("The number of items is " + (bes == null ? "NULL" : bes.size()));
+        int index = 0;
         if ((bes != null) && (bes.size() > 0)) {
-            System.out.println("Number of bes returned is " + bes.size() + ":" + result);
-
+            int total = bes.size();
+            System.out.println("Number of bes returned is " + bes.size());
             for (BaseEntity be : bes) {
                 String internCode = be.getValue(sourceAttrCode, null);
-                if (internCode == null)
+                if (internCode == null) {
+                    System.out.println("Skip be doesn't have attributeCode:" + sourceAttrCode + ", " + index++ + "/" + total);
                     continue;
-                beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(),
-                        targetAttrCode, internCode));
-                System.out.println("Create attribute:" + targetAttrCode + " for be:" + be.getCode());
+                }
+                beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), be.getCode(), targetAttrCode, internCode));
+                System.out.println("Create attribute:" + targetAttrCode + " for be:" + be.getCode() + ", " + index++ +  "/" + total);
             }
         }
     }
