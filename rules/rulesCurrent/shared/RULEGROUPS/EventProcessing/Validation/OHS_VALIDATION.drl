@@ -152,25 +152,25 @@ rule "OHS_VALIDATION"
 			System.out.println("Sending Agent - OHS email");
 			subject = "Host Company Services form completed";
 			template_id = "d-d-56a883c433ba4ce7a92d6ae8082a9dad";
-			EmailHelper.sendGrid(beUtils, agentEmail, null, null, subject, template_id, templateData);
+			EmailHelper.sendGrid(beUtils, agentEmail, null, null, subject, template_id, templateData, false);
 			
 			System.out.println("======================================");
 			
 			System.out.println("Sending HCR - OHS email");
 			subject = "Host Company Services form completed";
 			template_id = "d-d-56a883c433ba4ce7a92d6ae8082a9dad";
-			EmailHelper.sendGrid(beUtils, agentEmail, null, null, subject, template_id, templateData);
+			EmailHelper.sendGrid(beUtils, agentEmail, null, null, subject, template_id, templateData, false);
 		}
 		*/
 		
 		if (OHS){
 			System.out.println("Sending Agent - OHS email");
-			EmailHelper.sendGrid(beUtils, agentEmail, null, bccList, subject, template_id, templateData);
+			EmailHelper.sendGrid(beUtils, agentEmail, null, bccList, subject, template_id, templateData, false);
 		}
 		
 		if (ready){
 			System.out.println("Sending Agent - HC Validation email");
-			EmailHelper.sendGrid(beUtils, agentEmail, null, bccList, subject, template_id, templateData);
+			EmailHelper.sendGrid(beUtils, agentEmail, null, bccList, subject, template_id, templateData, false);
 		}
 		
 		System.out.println("-------- AGENT EMAIL DATA --------");

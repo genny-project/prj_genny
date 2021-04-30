@@ -169,15 +169,7 @@ rule "IS_QA_HOST_CPY_REP"
 		
 				List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
 				
-				/*					
-				if (!GennySettings.projectUrl.contains("dev")) {
-					EmailHelper.sendGrid(beUtils, superEmail, null, bccList, subject, template_id, templateData);
-					
-				} else {
-					System.out.println("WARNING: Email not sent because on Dev server or allEmails turned off");
-				}
-				*/
-				EmailHelper.sendGrid(beUtils, superEmail, null, bccList, subject, template_id, templateData);
+				EmailHelper.sendGrid(beUtils, superEmail, null, bccList, subject, template_id, templateData, false);
 		}
 		
 		
