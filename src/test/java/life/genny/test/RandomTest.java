@@ -114,8 +114,6 @@ public class RandomTest {
 	@Test
 	public void Randoise() {
 		System.out.println("Randomise test");
-		GennyToken userToken = null;
-		GennyToken serviceToken = null;
 
 		// VertxUtils.cachedEnabled = false;
 		VertxUtils.cachedEnabled = false;
@@ -189,6 +187,7 @@ public class RandomTest {
 					// "picture":{"large":"https://randomuser.me/api/portraits/men/27.jpg","medium":"https://randomuser.me/api/portraits/med/men/27.jpg","thumbnail":"https://randomuser.me/api/portraits/thumb/men/27.jpg"},"nat":"AU"}],
 					// "info":{"seed":"da1c48ae9a193d9f","results":1,"page":1,"version":"1.3"}}
 
+					log.info("TARGET = "+item.getCode());
 					saveAnswer(item.getCode(), "PRI_EMAIL",
 							json.getJsonArray("results").getJsonObject(0).getString("email"));
 					String firstname = json.getJsonArray("results").getJsonObject(0).getJsonObject("name")
@@ -298,21 +297,8 @@ public class RandomTest {
 				return;
 			}
 
-			JsonObject serviceTokenJson = VertxUtils.readCachedJson(GennySettings.GENNY_REALM,
-					"TOKEN" + realm.toUpperCase(), token);
-			status = serviceTokenJson.getString("status");
-
-			if ("ok".equals(status)) {
-				String serviceToken = serviceTokenJson.getString("value");
-				System.out.println("Service Account available!");
-				;
-				projectParms.put("serviceToken", serviceToken);
-			} else {
-				log.error("Service Token UNAVAILABLE!");
-				;
-				projectParms.put("serviceToken", token); // use non alyson token
-				//return;
-			}
+			String servicetoken = KeycloakUtils.getAccessToken(authServer, realm, realm, secret, "service", System.getenv("SERVICE_PASSWORD"));
+			projectParms.put("serviceToken", servicetoken);
 
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
@@ -322,7 +308,7 @@ public class RandomTest {
 		}
 		String uToken = projectParms.getString("userToken");
 		userToken = new GennyToken("userToken", uToken);
-	//	serviceToken = new GennyToken("PER_SERVICE", projectParms.getString("serviceToken"));
+		serviceToken = new GennyToken("PER_SERVICE", projectParms.getString("serviceToken"));
 
 		// VertxUtils.cachedEnabled = false;
 		VertxUtils.cachedEnabled = false;

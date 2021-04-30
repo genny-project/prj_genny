@@ -51,7 +51,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.EntityManagerFactory;
 
-import life.genny.bootxport.bootx.StateModel;
+
 import life.genny.qwanda.message.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
