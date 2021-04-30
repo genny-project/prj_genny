@@ -18,7 +18,7 @@ rule "CLICK_TERMS_AND_CONDITIONS"
 		salience 1000
     no-loop
     when
-		$message : QEventMessage(data.code == "ACT_PRI_EVENT_TERMS_AND_CONDITIONS")
+		$message : QEventMessage(data.code matches "ACT_PRI_EVENT_TERMS_AND_CONDITIONS.*")
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam()

@@ -151,22 +151,24 @@ rule "HCS_VALIDATION"
 		
 		
 		/* Send emails??? 
+		
 		if (HCS){
-			System.out.println("Sending HCS email");
 			subject = "Host Company Services form completed";
 			template_id = "d-1ab75e61abd744228db69b5e93a46ac0";
-			EmailHelper.sendGrid(beUtils, agentEmail, null, null, subject, template_id, templateData);
+			
+			System.out.println("Sending HCS email");
+			EmailHelper.sendGrid(beUtils, agentEmail, null, null, subject, template_id, templateData, false);
 		}
 		*/
 		
 		if (HCS){
 			System.out.println("Sending Agent - HCS email");
-			EmailHelper.sendGrid(beUtils, agentEmail, null, bccList, subject, template_id, templateData);
+			EmailHelper.sendGrid(beUtils, agentEmail, null, bccList, subject, template_id, templateData, false);
 		}
 		
 		if (ready){
 			System.out.println("Sending Agent - HC Validation email");
-			EmailHelper.sendGrid(beUtils, agentEmail, null, bccList, subject, template_id, templateData);
+			EmailHelper.sendGrid(beUtils, agentEmail, null, bccList, subject, template_id, templateData, false);
 		}
 		
 		System.out.println("-------- AGENT EMAIL DATA --------");
@@ -178,6 +180,7 @@ rule "HCS_VALIDATION"
 		System.out.println("Todo: " +todo);
 		System.out.println("IS1: " +linkedIS);
 		System.out.println("----------------------------");
+	
 		
 		retract(baseEntityType)
 		retract(hcBe)

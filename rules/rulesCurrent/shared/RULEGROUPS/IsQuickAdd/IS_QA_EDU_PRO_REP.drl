@@ -144,14 +144,7 @@ rule "IS_QA_EDU_PRO_REP"
 				
 			List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
 			
-			/*			
-			if (!GennySettings.projectUrl.contains("dev")) {
-				EmailHelper.sendGrid(beUtils, epEmail, null, bccList, subject, template_id, templateData);		
-			} else {
-				System.out.println("WARNING: Email not sent because on Dev server");
-			}
-			*/
-			EmailHelper.sendGrid(beUtils, epEmail, null, bccList, subject, template_id, templateData);		
+			EmailHelper.sendGrid(beUtils, epEmail, null, bccList, subject, template_id, templateData, false);		
 						
  
 			/* 

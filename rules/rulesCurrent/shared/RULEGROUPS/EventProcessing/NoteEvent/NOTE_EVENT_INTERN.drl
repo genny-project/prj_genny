@@ -92,6 +92,7 @@ rule "NOTE_EVENT_APPLICATION"
 					jsonIntern.put("code", internCode);
 					jsonIntern.put("title", internName);
 					jsonIntern.put("image", internImage);
+					jsonIntern.put("linkedAPPs", linkedAPPs);
 					/*jsonIntern.put("tagList", tagList);*/
 					
 					json.put("Tab_Intern", jsonIntern);
