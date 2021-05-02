@@ -111,32 +111,88 @@ public class RandomTest {
 
 	}
 
+	private void scrub(String attributeCodeLike,String fakedata) {
+		
+	
+    try {
+        String encodedsql = encodeValue("update baseentity_attribute set valueString='" + fakedata
+                + "' where attributeCode like '"+attributeCodeLike+"'");
+        String resultJson = QwandaUtils.apiGet(
+                GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql, serviceToken.getToken());
+    } catch (Exception e)
+    {
+    	
+    }
+}
+	
 	@Test
 	public void Randoise() {
 		System.out.println("Randomise test");
 
-		// VertxUtils.cachedEnabled = false;
 		VertxUtils.cachedEnabled = false;
-//		try {
-//			GennyJbpmBaseTest.init();// .setupLocalService();
-//			// qRules = GennyJbpmBaseTest.plement();
-//		} catch (FileNotFoundException | SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		userToken = new GennyToken("userToken", GennyJbpmBaseTest.projectParms.getString("userToken"));
-//		serviceToken = new GennyToken("PER_SERVICE", GennyJbpmBaseTest.projectParms.getString("serviceToken"));
-//		eventBusMock = new EventBusMock();
-//		vertxCache = new JunitCache(); // MockCache
-//		VertxUtils.init(eventBusMock, vertxCache);
-
-//		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
-//		beUtils.setServiceToken(serviceToken);
 
 		if (beUtils == null) {
 			return;
 		}
 
+		// clear any ENV
+		scrub("ENV%","XXXXXXXX");
+ 		
+		scrub("PRI_INTERN_SUPERVISOR%","Super Man");
+		scrub("PRI_SINTERN_SUPERVISOR%","Super Man");
+		scrub("PRI_ASSOC_SUPERVISOR%","Assoc Super Man");
+		scrub("PRI_SIGNING_DATE_OUTCOME_REP%","Outcome Rep");
+		scrub("PRI_SIGNING_DATE_INTERN%","Intern");
+		scrub("PRI_INTERNSHIP_DESCRIPTION%","Internship Description... blah blah");
+		scrub("PRI_HOST_COMPANY_REP_MOBILE%","614444233121");
+		scrub("PRI_EDU_PROVIDER_REP_MOBILE%","614444233122");
+		scrub("PRI_EDU_PROVIDER_REP_EMAIL%","edu@education.edu");
+		scrub("PRI_EDU_PROVIDER_REP_LEGAL_NAME%","Edu Rep Legal Name");
+		scrub("PRI_REJECTED_BY%","Super Man");
+		scrub("PRI_HOST_COMPANY_REP_LEGAL_NAME%","Hosst Company Legal");
+		scrub("PRI_HOST_COMPANY_NAME%","Hosst Company");
+		scrub("PRI_HOST_COMPANY_REP_EMAIL%","hcr@hostcompany.com");
+		scrub("PRI_EDU_PROVIDER_NAME%","University of Outcome");
+		scrub("PRI_SUPER_FIRSTNAME%","Super");
+		scrub("PRI_SUPER_NAME%","Super Man");
+		scrub("PRI_SUPER_MOBILE%","614444222333");
+		scrub("PRI_SUPER_EMAIL%","super@hostcompany.com");
+		scrub("PRI_OUTCOME_LIFE_REP_NAME%","Gerard Holland");
+		scrub("PRI_INTERN_NAME%","Intern");
+		scrub("PRI_INTERN_MOBILE%","614444333222");
+		scrub("PRI_INTERN_EMAIL%","intern@intern.com");
+		scrub("PRI_ASSOC_SUPER%","Super Man");
+		scrub("PRI_ASSOC_HC%","Host Company inc");
+		scrub("PRI_ASSOC_HOST_COMPANY%","Host Company inc");
+		scrub("PRI_ASSOC_HOST_COMPANY_EMAIL%","hc@email.com");
+		scrub("PRI_ASSOC_EP%","Univerity of Outcome");
+		scrub("PRI_ABN%","12345678991");
+		scrub("PRI_ANZCO%","765765");
+		scrub("PRI_ADDRESS_FULL%","17 Hardware lane, Melbourne 3000 AU");
+		
+		
+		scrub("PRI_JOURNAL_TASKS%","This is a journal Task");
+		scrub("PRI_JOURNAL_LEARNING_OUTCOMES%","This is a learning outcome");
+		scrub("PRI_MOBILE%","614444222444");
+		scrub("PRI_HOST_COMPANY_NAME%","Host Company");
+		scrub("PRI_CREATOR_NAME%","Creator Name");
+		scrub("PRI_INTERNSHIP_LEARNING_OUTCOMES%","These are learning outcomes");
+		scrub("PRI_ADDRESS_JSON","17 Hardware Lane, Melbourne VIC 3000 AU");
+		scrub("PRI_ADDRESS_ADDRESS1","17 Hardware Lane");
+		scrub("PRI_STUDENT_ID","12334");
+		scrub("PRI_LASTNAME","Lastname");
+		scrub("PRI_FIRSTNAME","Firstname");
+		scrub("PRI_INTERN_NAME","Intern Name");
+		scrub("PRI_INITIALS","OL");
+		scrub("PRI_EMAIL","intern@outcome.life");
+		scrub("PRI_ADDRESS_CITY%","Melbourne");
+		scrub("PRI_ADDRESS_FULL%","17 Hardware Lane, Melbourne VIC 3000 AU");
+		scrub("PRI_ADDRESS_LATITUDE%","-37.01");
+		scrub("PRI_ADDRESS_LONGITUDE%","142.01");
+		scrub("PRI_ADDRESS_POSTCODE%","3000");
+		scrub("PRI_ADDRESS_STATE%","VIC");
+		scrub("PRI_ADDRESS_SUBURB%","Melbourne");
+		
 		boolean ok = true;
 		Integer pageStart = 0;
 		Integer pageSize = 5;
@@ -147,7 +203,8 @@ public class RandomTest {
 					.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
 					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
 
-					.addColumn("PRI_CODE", "Name");
+					.addColumn("PRI_CODE", "Name")
+					.addColumn("PRI_ADDRESS_COUNTRY", "Country");
 
 			searchBE.setRealm(realm);
 			searchBE.setPageStart(pageStart);
@@ -168,8 +225,11 @@ public class RandomTest {
 
 				try {
 
+					String existingCountry = item.getValueAsString("PRI_ADDRESS_COUNTRY");
+					String existingCountryCode = shortenCountry(existingCountry);
+					
 					String jsonStr = QwandaUtils.apiGet(
-							"https://randomuser.me/api/?results=1&nat=au&format=json&dl&inc=name,email,location,picture,cell,gender,timezone",
+							"https://randomuser.me/api/?results=1&nat="+existingCountryCode.toLowerCase()+"&format=json&dl&inc=name,email,location,picture,cell,gender,timezone",
 							null);
 
 					JsonObject json = new JsonObject(jsonStr);
@@ -187,15 +247,22 @@ public class RandomTest {
 					// "picture":{"large":"https://randomuser.me/api/portraits/men/27.jpg","medium":"https://randomuser.me/api/portraits/med/men/27.jpg","thumbnail":"https://randomuser.me/api/portraits/thumb/men/27.jpg"},"nat":"AU"}],
 					// "info":{"seed":"da1c48ae9a193d9f","results":1,"page":1,"version":"1.3"}}
 
+					String phone = json.getJsonArray("results").getJsonObject(0).getString("phone");
+						phone = "61"+phone.substring(1).replaceAll("-", "");
+						
+						saveAnswer(item, "PRI_PHONE",phone);
+						saveAnswer(item, "PRI_MOBILE",phone);
+						saveAnswer(item, "PRI_LANDLINE",phone);
 					log.info("TARGET = "+item.getCode());
-					saveAnswer(item.getCode(), "PRI_EMAIL",
-							json.getJsonArray("results").getJsonObject(0).getString("email"));
+					String email = json.getJsonArray("results").getJsonObject(0).getString("email");
+					email= "test+"+email.replaceAll("example.com", "gada.io");
+					saveAnswer(item, "PRI_EMAIL",email);
 					String firstname = json.getJsonArray("results").getJsonObject(0).getJsonObject("name")
 							.getString("first");
 					String lastname = json.getJsonArray("results").getJsonObject(0).getJsonObject("name")
 							.getString("last");
 					String name = firstname + " " + lastname;
-					saveAnswer(item.getCode(), "PRI_NAME", name);
+					saveAnswer(item, "PRI_NAME", name);
 
 					String number = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
 							.getJsonObject("street").getNumber("number")+"";
@@ -205,6 +272,9 @@ public class RandomTest {
 							.getString("city");
 					String state = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
 							.getString("state");
+					state = ShortenState(state);
+					
+					
 					String country = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
 							.getString("country");
 					String postcode = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
@@ -214,27 +284,295 @@ public class RandomTest {
 					Double latitude = Double.valueOf(gps.getString("latitude"));
 					Double longitude = Double.valueOf(gps.getString("longitude"));
 
-					System.out.println(item.getCode() + " done "
-							+ json.getJsonArray("results").getJsonObject(0).getString("email"));
+					saveAnswer(item, "PRI_ADDRESS_ADDRESS1",number+" "+street);
+					saveAnswer(item, "PRI_ADDRESS_CITY",city);
+					saveAnswer(item, "PRI_ADDRESS_SUBURB",city);
+					saveAnswer(item, "PRI_ADDRESS_STATE",state);
+					saveAnswer(item, "PRI_ADDRESS_COUNTRY",country);
+					saveAnswer(item, "PRI_ADDRESS_POSTCODE",postcode);
+					saveAnswer(item, "PRI_ADDRESS_LATITUDE",latitude+"");
+					saveAnswer(item, "PRI_ADDRESS_LONGITUDE",longitude+"");
+					String fulladdress = number+" "+street+", "+city+", "+state+" "+postcode+", "+country;
+					saveAnswer(item, "PRI_ADDRESS_FULL",fulladdress);
+					
+					
+					String addressJson = "{\"street_address\":\""+number+" "+street+"\",\"suburb\":\""+city+"\" \"state\":\""+state+"\",\"country\":\""+country+"\",\"postcode\":\""+postcode+"\",\"full_address\":\""+fulladdress+"\",\"latitude\":"+latitude+",\"longitude\":"+longitude+"}";
+					saveAnswer(item, "PRI_ADDRESS_JSON",addressJson);
+					System.out.println(item.getCode() + " done "+name+" "+email+" "+fulladdress);
+					
 
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
 				icount++;
-				if (icount > 3) {
-					ok = false;
-					break;
-				}
+			//	if (icount > 3) {
+			//		ok = false;
+			//		break;
+			//	}
 			}
 
 		}
 
+		
+		ok = true;
+
+		while (ok) {
+
+			SearchEntity searchBE = new SearchEntity("SBE_CPY", "company fix")
+					.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "CPY_%")
+					.addFilter("PRI_IS_HOST_CPY", true)
+					.addColumn("PRI_CODE", "Name");
+
+			searchBE.setRealm(realm);
+			searchBE.setPageStart(pageStart);
+			searchBE.setPageSize(pageSize);
+			pageStart += pageSize;
+
+			List<BaseEntity> items = beUtils.getBaseEntitys(searchBE);
+			if (items.isEmpty()) {
+				ok = false;
+				break;
+			} else {
+				log.info("Loaded " + items.size() + " baseentitys");
+			}
+			int icount=0;
+			
+			for (BaseEntity item : items) {
+
+				try {
+
+					String jsonStr = QwandaUtils.apiGet(
+							"https://randomuser.me/api/?results=1&nat=au&format=json&dl&inc=name,email,location,picture,cell,gender,timezone",
+							null);
+
+					JsonObject json = new JsonObject(jsonStr);
+
+
+					log.info("TARGET = "+item.getCode());
+					
+					String phone = json.getJsonArray("results").getJsonObject(0).getString("cell");
+					phone = "61"+phone.substring(1).replaceAll("-", "");
+					
+					saveAnswer(item, "PRI_PHONE",phone);
+					saveAnswer(item, "PRI_MOBILE",phone);
+					saveAnswer(item, "PRI_LANDLINE",phone);
+
+					
+					String email = json.getJsonArray("results").getJsonObject(0).getString("email");
+					email= "test+"+email.replaceAll("example.com", "gada.io");
+					saveAnswer(item, "PRI_EMAIL",email);
+					String firstname = json.getJsonArray("results").getJsonObject(0).getJsonObject("name")
+							.getString("first");
+					String lastname = json.getJsonArray("results").getJsonObject(0).getJsonObject("name")
+							.getString("last");
+					String name = firstname + " " + lastname;
+					saveAnswer(item, "PRI_NAME", lastname+" Pty Ltd");
+
+					String number = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
+							.getJsonObject("street").getNumber("number")+"";
+					String street = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
+							.getJsonObject("street").getString("name");
+					String city = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
+							.getString("city");
+					String state = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
+							.getString("state");
+					state = ShortenState(state);
+					
+					
+					String country = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
+							.getString("country");
+					String postcode = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
+							.getNumber("postcode")+"";
+					JsonObject gps = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
+							.getJsonObject("coordinates");
+					Double latitude = Double.valueOf(gps.getString("latitude"));
+					Double longitude = Double.valueOf(gps.getString("longitude"));
+
+					saveAnswer(item, "PRI_ADDRESS_ADDRESS1",number+" "+street);
+					saveAnswer(item, "PRI_ADDRESS_CITY",city);
+					saveAnswer(item, "PRI_ADDRESS_SUBURB",city);
+					saveAnswer(item, "PRI_ADDRESS_STATE",state);
+					saveAnswer(item, "PRI_ADDRESS_COUNTRY",country);
+					saveAnswer(item, "PRI_ADDRESS_POSTCODE",postcode);
+					saveAnswer(item, "PRI_ADDRESS_LATITUDE",latitude+"");
+					saveAnswer(item, "PRI_ADDRESS_LONGITUDE",longitude+"");
+					String fulladdress = number+" "+street+", "+city+", "+state+" "+postcode+", "+country;
+					saveAnswer(item, "PRI_ADDRESS_FULL",fulladdress);
+					
+					
+					String addressJson = "{\"street_address\":\""+number+" "+street+"\",\"suburb\":\""+city+"\" \"state\":\""+state+"\",\"country\":\""+country+"\",\"postcode\":\""+postcode+"\",\"full_address\":\""+fulladdress+"\",\"latitude\":"+latitude+",\"longitude\":"+longitude+"}";
+					saveAnswer(item, "PRI_ADDRESS_JSON",addressJson);
+					System.out.println(item.getCode() + " done "+name+" "+email+" "+fulladdress);
+
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				icount++;
+			//	if (icount > 3) {
+			//		ok = false;
+			//		break;
+			//	}
+			}
+
+		}
+
+		ok = true;
+
+		while (ok) {
+
+			SearchEntity searchBE = new SearchEntity("SBE_EDU", "edu fix")
+					.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "CPY_%")
+					.addFilter("PRI_IS_EDU_PROVIDER", true)
+					.addColumn("PRI_CODE", "Name");
+
+			searchBE.setRealm(realm);
+			searchBE.setPageStart(pageStart);
+			searchBE.setPageSize(pageSize);
+			pageStart += pageSize;
+
+			List<BaseEntity> items = beUtils.getBaseEntitys(searchBE);
+			if (items.isEmpty()) {
+				ok = false;
+				break;
+			} else {
+				log.info("Loaded " + items.size() + " baseentitys");
+			}
+			int icount=0;
+			
+			Map<String,String> unis = new HashMap<String,String>();
+			
+			for (BaseEntity item : items) {
+
+				try {
+					String city = null;
+					JsonObject json = null;
+					Boolean uniOk = true;
+					while (uniOk) {
+						String jsonStr = QwandaUtils.apiGet(
+							"https://randomuser.me/api/?results=1&nat=au&format=json&dl&inc=name,email,location,picture,cell,gender,timezone",
+							null);
+
+						 json = new JsonObject(jsonStr);
+
+						city = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
+							.getString("city");
+						if (!unis.containsKey(city)) {
+							saveAnswer(item, "PRI_NAME", "University of "+city);
+							unis.put(city, city);
+							uniOk  = false;
+						}
+					}
+
+					log.info("TARGET = "+item.getCode());
+					
+					String phone = json.getJsonArray("results").getJsonObject(0).getString("phone");
+					phone = "61"+phone.substring(1).replaceAll("-", "");
+					
+					saveAnswer(item, "PRI_PHONE",phone);
+					saveAnswer(item, "PRI_MOBILE",phone);
+					saveAnswer(item, "PRI_LANDLINE",phone);
+
+					String email = json.getJsonArray("results").getJsonObject(0).getString("email");
+					email= "test+"+email.replaceAll("example.com", "gada.io");
+					saveAnswer(item, "PRI_EMAIL",email);
+					String firstname = json.getJsonArray("results").getJsonObject(0).getJsonObject("name")
+							.getString("first");
+					String lastname = json.getJsonArray("results").getJsonObject(0).getJsonObject("name")
+							.getString("last");
+					String name = firstname + " " + lastname;
+
+					String number = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
+							.getJsonObject("street").getNumber("number")+"";
+					String street = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
+							.getJsonObject("street").getString("name");
+					String state = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
+							.getString("state");
+					state = ShortenState(state);
+					
+					
+					String country = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
+							.getString("country");
+					String postcode = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
+							.getNumber("postcode")+"";
+					JsonObject gps = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
+							.getJsonObject("coordinates");
+					Double latitude = Double.valueOf(gps.getString("latitude"));
+					Double longitude = Double.valueOf(gps.getString("longitude"));
+
+					saveAnswer(item, "PRI_ADDRESS_ADDRESS1",number+" "+street);
+					saveAnswer(item, "PRI_ADDRESS_CITY",city);
+					saveAnswer(item, "PRI_ADDRESS_SUBURB",city);
+					saveAnswer(item, "PRI_ADDRESS_STATE",state);
+					saveAnswer(item, "PRI_ADDRESS_COUNTRY",country);
+					saveAnswer(item, "PRI_ADDRESS_POSTCODE",postcode);
+					saveAnswer(item, "PRI_ADDRESS_LATITUDE",latitude+"");
+					saveAnswer(item, "PRI_ADDRESS_LONGITUDE",longitude+"");
+					String fulladdress = number+" "+street+", "+city+", "+state+" "+postcode+", "+country;
+					saveAnswer(item, "PRI_ADDRESS_FULL",fulladdress);
+					
+					
+					String addressJson = "{\"street_address\":\""+number+" "+street+"\",\"suburb\":\""+city+"\" \"state\":\""+state+"\",\"country\":\""+country+"\",\"postcode\":\""+postcode+"\",\"full_address\":\""+fulladdress+"\",\"latitude\":"+latitude+",\"longitude\":"+longitude+"}";
+					saveAnswer(item, "PRI_ADDRESS_JSON",addressJson);
+					System.out.println(item.getCode() + " done "+name+" "+email+" "+fulladdress);
+
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				icount++;
+			//	if (icount > 3) {
+			//		ok = false;
+			//		break;
+			//	}
+			}
+
+		}
+		
 		System.out.println("Finished");
 	}
 
-	private void saveAnswer(String targetCode, String attributeCode, String value) {
-		Answer ans = new Answer(userToken.getUserCode(), targetCode, attributeCode, value, false, false);
-		beUtils.saveAnswer(ans);
+	/**
+	 * @param state
+	 * @return
+	 */
+	private String ShortenState(String state) {
+		switch (state) {
+		case "Victoria" : state = "VIC";break;
+		case "New South Wales" : state = "NSW";break;
+		case "Queensland" : state = "QLD";break;
+		case "South Australia" : state = "SA";break;
+		case "Western Australia" : state = "WA";break;
+		case "Tasmania" : state = "TAS";break;
+		case "Australian Capital Territory" : state = "ACT";break;
+		case "Northern Territory" : state = "NT";break;
+		default:
+		}
+		return state;
+	}
+	
+	/**
+	 * @param state
+	 * @return
+	 */
+	private String shortenCountry(String country) {
+		if (StringUtils.isBlank(country)) {
+			return "au";
+		}
+		switch (country) {
+		case "Australia" : country = "AU";break;
+		case "New Zealand" : country = "NZ";break;
+		case "South Africa" : country = "SA";break;
+		default:
+		}
+		return country;
+	}
+
+	private void saveAnswer(BaseEntity item, String attributeCode, String value) {
+		if (item.containsEntityAttribute(attributeCode)) {
+			Answer ans = new Answer(userToken.getUserCode(), item.getCode(), attributeCode, value, false, false);
+			beUtils.saveAnswer(ans);
+		}
 	}
 
 	@BeforeAll
@@ -393,5 +731,13 @@ public class RandomTest {
 			}
 		}
 	}
+
+    private static String encodeValue(String value) {
+        try {
+            return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException(ex.getCause());
+        }
+    }
 
 }
