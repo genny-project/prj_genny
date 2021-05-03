@@ -70,6 +70,7 @@ rule "PRI_EMAIL"
 			} else {
 					
 					System.out.println("Inside");
+					System.out.println("resultJsonStr: " +resultJsonStr);
 					resultJson = new JsonObject(resultJsonStr);
 					System.out.println("resultJson: " +resultJson);
 					io.vertx.core.json.JsonArray result = resultJson.getJsonArray("codes");
