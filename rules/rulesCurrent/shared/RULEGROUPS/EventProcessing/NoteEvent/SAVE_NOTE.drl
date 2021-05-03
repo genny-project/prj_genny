@@ -31,7 +31,7 @@ rule "SAVE_NOTE"
 		String targetCode = $message.getData().getTargetCode();
 		System.out.println("targetCode :: " + targetCode);
 		
-		String parentCode = $message.getData().parentCode();
+		String parentCode = $message.getData().getParentCode();
 		System.out.println("parentCode :: " + parentCode);
 		
 		String content = $message.getData().getContent();
