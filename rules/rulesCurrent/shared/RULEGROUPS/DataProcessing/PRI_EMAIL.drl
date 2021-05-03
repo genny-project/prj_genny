@@ -70,6 +70,18 @@ rule "PRI_EMAIL"
 					msg.setReplace(true);
 					VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 					
+					String number = null; 
+					if (resultJsonStr.equals("0") {
+						number = "There is 1 duplicate email";
+					} else {
+						number = "There are " + resultJsonStr + " duplicate emails";
+					}
+					
+					QCmdMessage msg = new QCmdMessage("TOAST", "INFO");
+					msg.setMessage(number);
+					msg.setToken(beUtils.getGennyToken().getToken());
+					msg.setSend(true);
+					VertxUtils.writeMsg("webcmds", msg);
 					
 					retract(answer);
 					String message = "Email Address "+answer.getValue()+" is already taken";
