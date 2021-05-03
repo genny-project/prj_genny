@@ -68,8 +68,9 @@ rule "SAVE_NOTE"
 		System.out.println("code: " +code);
 		
 		QEventMessage refreshNotes = new QEventMessage("SAVE_NOTE", code);
-		refreshNotes.setToken(serviceToken.getToken());
-		VertxUtils.writeMsg("events", code);
+		/*refreshNotes.setToken(serviceToken.getToken());
+		VertxUtils.writeMsg("events", code);*/
+		VertxUtils.sendEvent(code, parentCode, targetCode, serviceToken);
 		
 		System.out.println("Sent QEventMessage!! - Should be another Note Rule firing...");
 
