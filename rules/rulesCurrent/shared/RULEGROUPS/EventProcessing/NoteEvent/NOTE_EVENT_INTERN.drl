@@ -55,7 +55,7 @@ rule "NOTE_EVENT_INTERN"
 				if (linkedApps != null){
 					System.out.println("linkedApps: " +linkedApps);									/*["APP_AA3FEB35-FD12-49B9-A595-AA315773A37F","APP_41484401-7C82-4CD0-9B75-AA9E224B23ED"]*/
 					linkedApps = linkedApps.replace("\"", "").replace("[", "").replace("]", "");	
-					System.out.println("linkedApps: " +linlinkedAppskedAPPs);									/*APP_AA3FEB35-FD12-49B9-A595-AA315773A37F,APP_41484401-7C82-4CD0-9B75-AA9E224B23ED*/
+					System.out.println("linkedApps: " +linkedApps);									/*APP_AA3FEB35-FD12-49B9-A595-AA315773A37F,APP_41484401-7C82-4CD0-9B75-AA9E224B23ED*/
 					
 					String[] splitApps = linkedApps.split(",");
 					int length = splitApps.length;
