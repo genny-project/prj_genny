@@ -50,15 +50,15 @@ rule "NOTE_EVENT_INTERN"
 
 
 				/* Search for Applications */
-				String linkedAPPs = internBE.getValue("LNK_APPLICATIONS", null);
+				String linkedApps = internBE.getValue("LNK_APPLICATIONS", null);
 				
-				if (linkedAPPs != null){
-					System.out.println("linkedAPPs: " +linkedAPPs);									/*["APP_AA3FEB35-FD12-49B9-A595-AA315773A37F","APP_41484401-7C82-4CD0-9B75-AA9E224B23ED"]*/
-					linkedAPPs = linkedAPPs.replace("\"", "").replace("[", "").replace("]", "");	
-					System.out.println("linkedAPPs: " +linkedAPPs);									/*APP_AA3FEB35-FD12-49B9-A595-AA315773A37F,APP_41484401-7C82-4CD0-9B75-AA9E224B23ED*/
+				if (linkedApps != null){
+					System.out.println("linkedApps: " +linkedApps);									/*["APP_AA3FEB35-FD12-49B9-A595-AA315773A37F","APP_41484401-7C82-4CD0-9B75-AA9E224B23ED"]*/
+					linkedApps = linkedApps.replace("\"", "").replace("[", "").replace("]", "");	
+					System.out.println("linkedApps: " +linlinkedAppskedAPPs);									/*APP_AA3FEB35-FD12-49B9-A595-AA315773A37F,APP_41484401-7C82-4CD0-9B75-AA9E224B23ED*/
 					
-					String[] splitAPPs = linkedAPPs.split(",");
-					int length = splitAPPs.length;
+					String[] splitApps = linkedApps.split(",");
+					int length = splitApps.length;
 					System.out.println("length: " +length);	
 					
 					BaseEntity[] beCodez = new BaseEntity[length];
@@ -66,7 +66,7 @@ rule "NOTE_EVENT_INTERN"
 					
 					
 					for (int i = 0; i < length; i++) {
-						appBe = beUtils.getBaseEntityByCode(splitAPPs[i]);
+						appBe = beUtils.getBaseEntityByCode(splitApps[i]);
 						beCodez[i] = appBe;
 						System.out.println("beCodez: " +beCodez[i]);
 					}
