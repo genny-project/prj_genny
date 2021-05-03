@@ -40,25 +40,25 @@ rule "NOTE_EVENT_INTERNSHIP"
 
 				
 				/* Intern Details */
-				BaseEntity internBE = beUtils.getBaseEntityByCode(targetCode);
+				BaseEntity internshipBE = beUtils.getBaseEntityByCode(targetCode);
 				
-				String internName = internBE.getValue("PRI_NAME", null);
-				System.out.println("internName: " +internName);
+				String internshipName = internshipBE.getValue("PRI_NAME", null);
+				System.out.println("internshipName: " +internshipName);
 				
-				String internImage = internBE.getValue("PRI_IMAGE_URL", null);
-				System.out.println("internImage: " +internImage);
+				String internshipImage = internshipBE.getValue("PRI_IMAGE_URL", null);
+				System.out.println("internshipImage: " +internshipImage);
 
 
 				/* Search for Applications */
-				String linkedAPPs = internBE.getValue("LNK_APPLICATIONS", null);
+				String linkedApps = internshipBE.getValue("LNK_APPLICATIONS", null);
 				
-				if (linkedAPPs != null){
-					System.out.println("linkedAPPs: " +linkedAPPs);									/*["APP_AA3FEB35-FD12-49B9-A595-AA315773A37F","APP_41484401-7C82-4CD0-9B75-AA9E224B23ED"]*/
-					linkedAPPs = linkedAPPs.replace("\"", "").replace("[", "").replace("]", "");	
-					System.out.println("linkedAPPs: " +linkedAPPs);									/*APP_AA3FEB35-FD12-49B9-A595-AA315773A37F,APP_41484401-7C82-4CD0-9B75-AA9E224B23ED*/
+				if (linkedApps != null){
+					System.out.println("linkedApps: " +linkedApps);									/*["APP_AA3FEB35-FD12-49B9-A595-AA315773A37F","APP_41484401-7C82-4CD0-9B75-AA9E224B23ED"]*/
+					linkedApps = linkedApps.replace("\"", "").replace("[", "").replace("]", "");	
+					System.out.println("linkedApps: " +linkedApps);									/*APP_AA3FEB35-FD12-49B9-A595-AA315773A37F,APP_41484401-7C82-4CD0-9B75-AA9E224B23ED*/
 					
-					String[] splitAPPs = linkedAPPs.split(",");
-					int length = splitAPPs.length;
+					String[] splitApps = linkedApps.split(",");
+					int length = splitApps.length;
 					System.out.println("length: " +length);	
 					
 					BaseEntity[] beCodez = new BaseEntity[length];
@@ -66,7 +66,7 @@ rule "NOTE_EVENT_INTERNSHIP"
 					
 					
 					for (int i = 0; i < length; i++) {
-						appBe = beUtils.getBaseEntityByCode(splitAPPs[i]);
+						appBe = beUtils.getBaseEntityByCode(splitApps[i]);
 						beCodez[i] = appBe;
 						System.out.println("beCodez: " +beCodez[i]);
 					}
@@ -83,14 +83,15 @@ rule "NOTE_EVENT_INTERNSHIP"
 					JsonObject json = new JsonObject(notes);
 					json.put("token", userToken.getToken());
 					
-					JsonObject jsonIntern = new JsonObject();
-					jsonIntern.put("code", targetCode);
-					jsonIntern.put("title", internName);
-					jsonIntern.put("image", internImage);
-					jsonIntern.put("linkedAPPs", linkedAPPs);
+					JsonObject jsonInternship = new JsonObject();
+					jsonInternship.put("code", targetCode);
+					jsonInternship.put("title", internshipName);
+					jsonInternship.put("image", internshipImage);
+					json.put("Tab_Internship", jsonInternship);
 					/*jsonIntern.put("tagList", tagList);*/
 					
-					json.put("Tab_Intern", jsonIntern);
+					JsonObject jsonApplication = new JsonObject();
+					json.put("linkedApps", linkedApps);
 					
 					System.out.println("json :: " + json.toString());
 					VertxUtils.writeMsg("webcmds", json.toString());

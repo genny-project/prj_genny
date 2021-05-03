@@ -29,6 +29,10 @@ rule "PRI_EMAIL"
 	  output : OutputParam( )
      then
  		System.out.println("Rule -> PRI_EMAIL :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
+ 		
+ 		String sourceCode = beUtils.getGennyToken().getUserCode();
+		String targetCode = answer.getTargetCode();
+		JsonObject resultJson = null;
 		
 		/* check if email is already in use for a person */
 		
@@ -40,6 +44,14 @@ rule "PRI_EMAIL"
 				.setPageSize(100);
 		
 			searchBE.setRealm(beUtils.getServiceToken().getRealm());
+			
+		System.out.println("*********************************************");
+		System.out.println("*********************************************");
+		
+		System.out.println("searchBE: " + searchBE);
+		
+		System.out.println("*********************************************");
+		System.out.println("*********************************************");
 		
  		List<BaseEntity> people = new ArrayList<BaseEntity>();
 
@@ -55,7 +67,23 @@ rule "PRI_EMAIL"
 			System.out.println("Search EMAIL result is "+resultJsonStr);
 			if (resultJsonStr.equals("0")) {
 				System.out.println("This email "+answer.getValue()+" is unique");
-			}	else {
+			} else {
+					
+					System.out.println("Inside");
+					System.out.println("resultJsonStr: " +resultJsonStr);
+					resultJson = new JsonObject(resultJsonStr);
+					System.out.println("resultJson: " +resultJson);
+					io.vertx.core.json.JsonArray result = resultJson.getJsonArray("codes");
+					int size = result.size();
+					System.out.println("size: " +size);
+					for (int i = 0; i < size; i++) {
+						String code = result.getString(i);
+						System.out.println("code: " + code);
+						BaseEntity be = beUtils.getBaseEntityByCode(code);
+						be.setIndex(i);
+						people.add(be);
+					}
+							
 					retract(answer);
 					String message = "Email Address "+answer.getValue()+" is already taken";
 					System.out.println(message);

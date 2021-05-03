@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 rule "TAG_IS_TYPE"
-    ruleflow-group 'IsBaseEntity'
+    ruleflow-group 'IsTypeTag'
     no-loop true
     salience 1000
     when
