@@ -76,7 +76,6 @@ rule "PRI_EMAIL"
 							String code = result.getString(i);
 							System.out.println("code: " + code);
 							BaseEntity be = getBaseEntityByCode(code);
-		//					System.out.println("code:" + code + ",index:" + (i+1) + "/" + size);
 							be.setIndex(i);
 							people.add(be);
 						}
