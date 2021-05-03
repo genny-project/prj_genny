@@ -40,13 +40,13 @@ rule "NOTE_EVENT_INTERNSHIP"
 
 				
 				/* Intern Details */
-				BaseEntity internBE = beUtils.getBaseEntityByCode(targetCode);
+				BaseEntity internshipBE = beUtils.getBaseEntityByCode(targetCode);
 				
-				String internName = internBE.getValue("PRI_NAME", null);
-				System.out.println("internName: " +internName);
+				String internshipName = internBE.getValue("PRI_NAME", null);
+				System.out.println("internshipName: " +internshipName);
 				
-				String internImage = internBE.getValue("PRI_IMAGE_URL", null);
-				System.out.println("internImage: " +internImage);
+				String internshipImage = internBE.getValue("PRI_IMAGE_URL", null);
+				System.out.println("internshipImage: " +internshipImage);
 
 
 				/* Search for Applications */
@@ -83,14 +83,15 @@ rule "NOTE_EVENT_INTERNSHIP"
 					JsonObject json = new JsonObject(notes);
 					json.put("token", userToken.getToken());
 					
-					JsonObject jsonIntern = new JsonObject();
-					jsonIntern.put("code", targetCode);
-					jsonIntern.put("title", internName);
-					jsonIntern.put("image", internImage);
-					jsonIntern.put("linkedAPPs", linkedAPPs);
+					JsonObject jsonInternship = new JsonObject();
+					jsonInternship.put("code", targetCode);
+					jsonInternship.put("title", internshipName);
+					jsonInternship.put("image", internshipImage);
+					json.put("Tab_Internship", jsonInternship);
 					/*jsonIntern.put("tagList", tagList);*/
 					
-					json.put("Tab_Intern", jsonIntern);
+					JsonObject jsonApplication = new JsonObject();
+					json.put("linkedApps", linkedApps);
 					
 					System.out.println("json :: " + json.toString());
 					VertxUtils.writeMsg("webcmds", json.toString());
