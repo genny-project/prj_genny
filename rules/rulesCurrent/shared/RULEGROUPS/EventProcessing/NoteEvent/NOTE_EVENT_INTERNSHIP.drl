@@ -10,12 +10,12 @@ import life.genny.qwanda.message.QCmdMessage;
 import life.genny.utils.VertxUtils;
 import life.genny.qwandautils.QwandaUtils;
 
-rule "NOTE_EVENT_INTERN"
+rule "NOTE_EVENT_INTERNSHIP"
 	ruleflow-group 'EventProcessing'
 	salience 2
 	no-loop
 	when
-		$message : QEventMessage(data.code matches "ACT_PRI_EVENT_ACCESS_NOTES_INTERN")
+		$message : QEventMessage(data.code matches "ACT_PRI_EVENT_ACCESS_NOTES_INTERNSHIP")
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam( )
@@ -37,20 +37,20 @@ rule "NOTE_EVENT_INTERN"
 
 				String notes = QwandaUtils.sendGET(url, serviceToken.getToken());
 				System.out.println("notes :: " + notes);
+
 				
+				/* Intern Details */
+				BaseEntity internBE = beUtils.getBaseEntityByCode(targetCode);
 				
-				/* Internship Details */
-				BaseEntity internshipBE = beUtils.getBaseEntityByCode(targetCode);
+				String internName = internBE.getValue("PRI_NAME", null);
+				System.out.println("internName: " +internName);
 				
-				String internshipName = internshipBE.getValue("PRI_NAME", null);
-				System.out.println("internshipName: " +internshipName);
-				
-				String internshipImage = internshipBE.getValue("PRI_IMAGE_URL", null);
-				System.out.println("internshipImage: " +internshipImage);
+				String internImage = internBE.getValue("PRI_IMAGE_URL", null);
+				System.out.println("internImage: " +internImage);
 
 
 				/* Search for Applications */
-				String linkedAPPs = internshipBE.getValue("LNK_APPLICATIONS", null);
+				String linkedAPPs = internBE.getValue("LNK_APPLICATIONS", null);
 				
 				if (linkedAPPs != null){
 					System.out.println("linkedAPPs: " +linkedAPPs);									/*["APP_AA3FEB35-FD12-49B9-A595-AA315773A37F","APP_41484401-7C82-4CD0-9B75-AA9E224B23ED"]*/
@@ -85,8 +85,8 @@ rule "NOTE_EVENT_INTERN"
 					
 					JsonObject jsonIntern = new JsonObject();
 					jsonIntern.put("code", targetCode);
-					jsonIntern.put("title", internshipName);
-					jsonIntern.put("image", internshipImage);
+					jsonIntern.put("title", internName);
+					jsonIntern.put("image", internImage);
 					jsonIntern.put("linkedAPPs", linkedAPPs);
 					/*jsonIntern.put("tagList", tagList);*/
 					

@@ -103,9 +103,14 @@ rule "INIT_GENERATE_CAPABILITIES"
 		capabilityUtils.addCapability( "ON_HOLD_APPLICATION", "On Hold Application");
 		capabilityUtils.addCapability( "REJECT_APPLICATION", "Reject Application");
 		capabilityUtils.addCapability( "WITHDRAW_APPLICATION", "Withdraw Application");
-		capabilityUtils.addCapability( "ACCESS_NOTES", "Access Notes");
 		capabilityUtils.addCapability( "FINISH_APPLICATION", "Finish Application");
 		capabilityUtils.addCapability( "START_INTERNSHIP", "Start Internship");
+		
+		capabilityUtils.addCapability( "ACCESS_NOTES_INTERN", "Access Notes");
+		capabilityUtils.addCapability( "ACCESS_NOTES_APPLICATION", "Access Notes");
+		capabilityUtils.addCapability( "ACCESS_NOTES_INTERNSHIP", "Access Notes");
+		capabilityUtils.addCapability( "ACCESS_NOTES_HC", "Access Notes");
+		capabilityUtils.addCapability( "ACCESS_NOTES_HCR", "Access Notes");
 
 		capabilityUtils.addCapability( "EDIT_AGREEMENT", "Edit Agreement");
 		capabilityUtils.addCapability( "VIEW_AGREEMENT", "View Agreement");
@@ -140,7 +145,7 @@ rule "INIT_GENERATE_CAPABILITIES"
 		capabilityUtils.addCapability( "DOWNLOAD_OHNS_AGREEMENT_DOC", "Download OHNS Agreement Document");
 		capabilityUtils.addCapability( "DOWNLOAD_SERVICE_AGREEMENT_DOC", "Download Service Agreement Document");
 		capabilityUtils.addCapability( "DOWNLOAD_HC_TERMS_AND_CONDITIONS_DOC", "Download Host Company Terms and Conditions Document");
-		capabilityUtils.addCapability( "ACCESS_NOTES", "Access Notes");
+		
 
 		capabilityUtils.process();
 

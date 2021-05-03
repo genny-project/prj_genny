@@ -67,7 +67,6 @@ rule "ROL_AGENT"
    	     capabilityUtils.addCapabilityToRole(role,"ON_HOLD_APPLICATION",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"REJECT_APPLICATION",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"WITHDRAW_APPLICATION",CapabilityMode.VIEW);
-   	     capabilityUtils.addCapabilityToRole(role,"ACCESS_NOTES",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"VIEW_JOURNAL",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"RATE_INTERN",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"VIEW_RATING",CapabilityMode.VIEW);
@@ -86,8 +85,13 @@ rule "ROL_AGENT"
    	     capabilityUtils.addCapabilityToRole(role,"DOWNLOAD_SERVICE_AGREEMENT_DOC",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"EDIT_APPLICATION",CapabilityMode.EDIT);
    	     capabilityUtils.addCapabilityToRole(role,"DOWNLOAD_HC_TERMS_AND_CONDITIONS_DOC",CapabilityMode.VIEW);
-				capabilityUtils.addCapabilityToRole(role,"APPROVE_JOURNALS",CapabilityMode.EDIT);
-				capabilityUtils.addCapabilityToRole(role,"UNAPPROVE_JOURNALS",CapabilityMode.EDIT);
+		 capabilityUtils.addCapabilityToRole(role,"APPROVE_JOURNALS",CapabilityMode.EDIT);
+		 capabilityUtils.addCapabilityToRole(role,"UNAPPROVE_JOURNALS",CapabilityMode.EDIT);
+		 capabilityUtils.addCapabilityToRole(role,"ACCESS_NOTES_INTERN",CapabilityMode.VIEW);
+		 capabilityUtils.addCapabilityToRole(role,"ACCESS_NOTES_APPLICATION",CapabilityMode.VIEW);
+		 capabilityUtils.addCapabilityToRole(role,"ACCESS_NOTES_INTERNSHIP",CapabilityMode.VIEW);
+		 capabilityUtils.addCapabilityToRole(role,"ACCESS_NOTES_HC",CapabilityMode.VIEW);
+		 capabilityUtils.addCapabilityToRole(role,"ACCESS_NOTES_HCR",CapabilityMode.VIEW);
  
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
   	     
