@@ -24,9 +24,11 @@ rule "PRI_EMAIL"
     ruleflow-group 'DataProcessing'
         salience 5000 
     when
-      beUtils : BaseEntityUtils()
-	  answer : Answer( attributeCode == "PRI_EMAIL" )
-	  output : OutputParam( )
+      	beUtils : BaseEntityUtils()
+	  	answer : Answer( attributeCode == "PRI_EMAIL" )
+	  	serviceToken : GennyToken( code == "PER_SERVICE")
+	 	userToken : GennyToken( code != "PER_SERVICE")
+	  	output : OutputParam( )
      then
  		System.out.println("Rule -> PRI_EMAIL :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
  		
