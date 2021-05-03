@@ -50,6 +50,10 @@ rule "PRI_EMAIL"
 		
 		System.out.println("searchBE: " + searchBE);
 		
+		List<BaseEntity> why = beUtils.getBaseEntitys(searchBE);
+		
+		System.out.println("why: " + why);
+		
 		System.out.println("*********************************************");
 		System.out.println("*********************************************");
 		
@@ -69,7 +73,7 @@ rule "PRI_EMAIL"
 				System.out.println("This email "+answer.getValue()+" is unique");
 			} else {
 					retract(answer);
-					System.out.println("Inside");
+					/*System.out.println("Inside");
 					System.out.println("resultJsonStr: " +resultJsonStr);
 					resultJson = new JsonObject();
 					System.out.println("resultJson: " +resultJson);
@@ -84,7 +88,7 @@ rule "PRI_EMAIL"
 						people.add(be);
 					}
 							
-					/*retract(answer);*/
+					retract(answer);*/
 					String message = "Email Address "+answer.getValue()+" is already taken";
 					System.out.println(message);
 					Answer feedbackAnswer = new Answer(answer.getSourceCode(),answer.getTargetCode(),answer.getAttributeCode(),"");
