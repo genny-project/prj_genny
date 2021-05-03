@@ -15,7 +15,7 @@ rule "NOTE_EVENT_INTERNSHIP"
 	salience 2
 	no-loop
 	when
-		$message : QEventMessage(data.code matches "ACT_PRI_EVENT_ACCESS_NOTES" && data.parentCode matches "Tab_Internship")
+		$message : QEventMessage(data.code matches "ACT_PRI_EVENT_ACCESS_NOTES_INTERNSHIP")
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam( )
