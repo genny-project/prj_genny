@@ -68,23 +68,20 @@ rule "PRI_EMAIL"
 			if (resultJsonStr.equals("0")) {
 				System.out.println("This email "+answer.getValue()+" is unique");
 			} else {
-					/*
-					try {
-						resultJson = new JsonObject(resultJsonStr);
-						io.vertx.core.json.JsonArray result = resultJson.getJsonArray("codes");
-						int size = result.size();
-						for (int i = 0; i < size; i++) {
-							String code = result.getString(i);
-							System.out.println("code: " + code);
-							BaseEntity be = beUtils.getBaseEntityByCode(code);
-							be.setIndex(i);
-							people.add(be);
-						}
-		
-					} catch (Exception e1) {
-						log.error("Bad Json -> [" + resultJsonStr);
+					
+					System.out.println("Inside");
+					resultJson = new JsonObject(resultJsonStr);
+					System.out.println("resultJson: " +resultJson);
+					io.vertx.core.json.JsonArray result = resultJson.getJsonArray("codes");
+					int size = result.size();
+					System.out.println("size: " +size);
+					for (int i = 0; i < size; i++) {
+						String code = result.getString(i);
+						System.out.println("code: " + code);
+						BaseEntity be = beUtils.getBaseEntityByCode(code);
+						be.setIndex(i);
+						people.add(be);
 					}
-					*/
 							
 					retract(answer);
 					String message = "Email Address "+answer.getValue()+" is already taken";
