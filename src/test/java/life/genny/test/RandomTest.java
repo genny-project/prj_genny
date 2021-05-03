@@ -113,7 +113,7 @@ public class RandomTest {
 
 	private void scrub(String attributeCodeLike,String fakedata) {
 		
-	
+	System.out.println("Replacing all the "+attributeCodeLike+" with "+fakedata);
     try {
         String encodedsql = encodeValue("update baseentity_attribute set valueString='" + fakedata
                 + "' where attributeCode like '"+attributeCodeLike+"'");
@@ -192,6 +192,9 @@ public class RandomTest {
 		scrub("PRI_ADDRESS_POSTCODE%","3000");
 		scrub("PRI_ADDRESS_STATE%","VIC");
 		scrub("PRI_ADDRESS_SUBURB%","Melbourne");
+		scrub("PRI_IMAGE_URL","https://image.shutterstock.com/image-vector/hand-drawn-modern-woman-avatar-600w-1373621021.jpg");
+		scrub("PRI_AGENT_IMAGE","https://image.shutterstock.com/image-vector/hand-drawn-modern-woman-avatar-600w-1373621021.jpg");
+		scrub("PRI_IMAGE_SECONDARY","https://image.shutterstock.com/image-vector/hand-drawn-modern-woman-avatar-600w-1373621021.jpg");
 		
 		boolean ok = true;
 		Integer pageStart = 0;
@@ -247,7 +250,7 @@ public class RandomTest {
 					// "picture":{"large":"https://randomuser.me/api/portraits/men/27.jpg","medium":"https://randomuser.me/api/portraits/med/men/27.jpg","thumbnail":"https://randomuser.me/api/portraits/thumb/men/27.jpg"},"nat":"AU"}],
 					// "info":{"seed":"da1c48ae9a193d9f","results":1,"page":1,"version":"1.3"}}
 
-					String phone = json.getJsonArray("results").getJsonObject(0).getString("phone");
+					String phone = json.getJsonArray("results").getJsonObject(0).getString("cell");
 						phone = "61"+phone.substring(1).replaceAll("-", "");
 						
 						saveAnswer(item, "PRI_PHONE",phone);
@@ -277,8 +280,20 @@ public class RandomTest {
 					
 					String country = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
 							.getString("country");
-					String postcode = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
-							.getNumber("postcode")+"";
+					String postcode = null;
+					
+					try {
+						postcode = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
+								.getNumber("postcode")+"";
+					} catch (Exception e) {
+						log.error("Bad postcode "+e.getLocalizedMessage());
+						try {
+							postcode = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
+									.getString("postcode");
+						} catch (Exception e1) {
+							log.error("Bad postcode "+e1.getLocalizedMessage());
+						}
+					}
 					JsonObject gps = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
 							.getJsonObject("coordinates");
 					Double latitude = Double.valueOf(gps.getString("latitude"));
@@ -298,6 +313,11 @@ public class RandomTest {
 					
 					String addressJson = "{\"street_address\":\""+number+" "+street+"\",\"suburb\":\""+city+"\" \"state\":\""+state+"\",\"country\":\""+country+"\",\"postcode\":\""+postcode+"\",\"full_address\":\""+fulladdress+"\",\"latitude\":"+latitude+",\"longitude\":"+longitude+"}";
 					saveAnswer(item, "PRI_ADDRESS_JSON",addressJson);
+					
+					String picture = json.getJsonArray("results").getJsonObject(0).getJsonObject("picture")
+							.getString("large");
+					saveAnswer(item, "PRI_IMAGE_URL",picture);
+					
 					System.out.println(item.getCode() + " done "+name+" "+email+" "+fulladdress);
 					
 
@@ -403,6 +423,12 @@ public class RandomTest {
 					
 					String addressJson = "{\"street_address\":\""+number+" "+street+"\",\"suburb\":\""+city+"\" \"state\":\""+state+"\",\"country\":\""+country+"\",\"postcode\":\""+postcode+"\",\"full_address\":\""+fulladdress+"\",\"latitude\":"+latitude+",\"longitude\":"+longitude+"}";
 					saveAnswer(item, "PRI_ADDRESS_JSON",addressJson);
+					
+					String picture = json.getJsonArray("results").getJsonObject(0).getJsonObject("picture")
+							.getString("large");
+					saveAnswer(item, "PRI_IMAGE_URL",picture);
+
+					
 					System.out.println(item.getCode() + " done "+name+" "+email+" "+fulladdress);
 
 				} catch (Exception e1) {
@@ -467,7 +493,7 @@ public class RandomTest {
 
 					log.info("TARGET = "+item.getCode());
 					
-					String phone = json.getJsonArray("results").getJsonObject(0).getString("phone");
+					String phone = json.getJsonArray("results").getJsonObject(0).getString("cell");
 					phone = "61"+phone.substring(1).replaceAll("-", "");
 					
 					saveAnswer(item, "PRI_PHONE",phone);
@@ -563,6 +589,7 @@ public class RandomTest {
 		case "Australia" : country = "AU";break;
 		case "New Zealand" : country = "NZ";break;
 		case "South Africa" : country = "SA";break;
+		case "United States" : country = "US";break;
 		default:
 		}
 		return country;
