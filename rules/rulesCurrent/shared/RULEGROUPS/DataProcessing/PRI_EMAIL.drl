@@ -36,29 +36,16 @@ rule "PRI_EMAIL"
 		
 		/* check if email is already in use for a person */
 		
-				SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Email People")
+		SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Email People")
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%") 
 				.addFilter("PRI_EMAIL", SearchEntity.StringFilter.EQUAL, answer.getValue()) 
 				.addColumn("PRI_NAME", "Name")
 				.setPageStart(0)
 				.setPageSize(100);
 		
-			searchBE.setRealm(beUtils.getServiceToken().getRealm());
+		searchBE.setRealm(beUtils.getServiceToken().getRealm());
 			
-		System.out.println("*********************************************");
-		System.out.println("*********************************************");
-		
-		System.out.println("searchBE: " + searchBE);
-		
-		List<BaseEntity> why = beUtils.getBaseEntitys(searchBE);
-		
-		System.out.println("why: " + why);
-		
-		System.out.println("*********************************************");
-		System.out.println("*********************************************");
-		
- 		List<BaseEntity> people = new ArrayList<BaseEntity>();
-
+		/* Check number of duplicates */
 		Tuple2<String, List<String>> data = beUtils.getHql(searchBE);
 		String hql = data._1;
 
@@ -69,26 +56,20 @@ rule "PRI_EMAIL"
 					beUtils.getServiceToken().getToken(), 120);
 
 			System.out.println("Search EMAIL result is "+resultJsonStr);
+			
 			if (resultJsonStr.equals("0")) {
 				System.out.println("This email "+answer.getValue()+" is unique");
 			} else {
+					List<BaseEntity> duplicateBes = beUtils.getBaseEntitys(searchBE);
+					System.out.println("duplicateBE's: " + duplicateBes);
+			
+					QDataBaseEntityMessage msg = new QDataBaseEntityMessage(duplicateBes);
+					msg.setToken(userToken.getToken());
+					msg.setReplace(true);
+					VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+					
+					
 					retract(answer);
-					/*System.out.println("Inside");
-					System.out.println("resultJsonStr: " +resultJsonStr);
-					resultJson = new JsonObject();
-					System.out.println("resultJson: " +resultJson);
-					io.vertx.core.json.JsonArray result = resultJson.getJsonArray("codes");
-					int size = result.size();
-					System.out.println("size: " +size);
-					for (int i = 0; i < size; i++) {
-						String code = result.getString(i);
-						System.out.println("code: " + code);
-						BaseEntity be = beUtils.getBaseEntityByCode(code);
-						be.setIndex(i);
-						people.add(be);
-					}
-							
-					retract(answer);*/
 					String message = "Email Address "+answer.getValue()+" is already taken";
 					System.out.println(message);
 					Answer feedbackAnswer = new Answer(answer.getSourceCode(),answer.getTargetCode(),answer.getAttributeCode(),"");
