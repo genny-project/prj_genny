@@ -32,6 +32,7 @@ rule "PRI_EMAIL"
  		
  		String sourceCode = beUtils.getGennyToken().getUserCode();
 		String targetCode = answer.getTargetCode();
+		JsonObject resultJson = null;
 		
 		/* check if email is already in use for a person */
 		
@@ -67,7 +68,23 @@ rule "PRI_EMAIL"
 			if (resultJsonStr.equals("0")) {
 				System.out.println("This email "+answer.getValue()+" is unique");
 			} else {
-			
+					try {
+						resultJson = new JsonObject(resultJsonStr);
+						io.vertx.core.json.JsonArray result = resultJson.getJsonArray("codes");
+						int size = result.size();
+						for (int i = 0; i < size; i++) {
+							String code = result.getString(i);
+							System.out.println("code: " + code);
+							BaseEntity be = getBaseEntityByCode(code);
+		//					System.out.println("code:" + code + ",index:" + (i+1) + "/" + size);
+							be.setIndex(i);
+							people.add(be);
+						}
+		
+					} catch (Exception e1) {
+						log.error("Bad Json -> [" + resultJsonStr);
+					}
+					
 							
 					retract(answer);
 					String message = "Email Address "+answer.getValue()+" is already taken";
