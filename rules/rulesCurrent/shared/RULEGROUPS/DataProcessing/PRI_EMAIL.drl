@@ -29,6 +29,9 @@ rule "PRI_EMAIL"
 	  output : OutputParam( )
      then
  		System.out.println("Rule -> PRI_EMAIL :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
+ 		
+ 		String sourceCode = beUtils.getGennyToken().getUserCode();
+		String targetCode = answer.getTargetCode();
 		
 		/* check if email is already in use for a person */
 		
@@ -40,6 +43,14 @@ rule "PRI_EMAIL"
 				.setPageSize(100);
 		
 			searchBE.setRealm(beUtils.getServiceToken().getRealm());
+			
+		System.out.println("*********************************************");
+		System.out.println("*********************************************");
+		
+		System.out.println("searchBE: " + searchBE);
+		
+		System.out.println("*********************************************");
+		System.out.println("*********************************************");
 		
  		List<BaseEntity> people = new ArrayList<BaseEntity>();
 
@@ -55,7 +66,9 @@ rule "PRI_EMAIL"
 			System.out.println("Search EMAIL result is "+resultJsonStr);
 			if (resultJsonStr.equals("0")) {
 				System.out.println("This email "+answer.getValue()+" is unique");
-			}	else {
+			} else {
+			
+							
 					retract(answer);
 					String message = "Email Address "+answer.getValue()+" is already taken";
 					System.out.println(message);
