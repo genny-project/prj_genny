@@ -24,37 +24,32 @@ rule "PRI_EMAIL"
     ruleflow-group 'DataProcessing'
         salience 5000 
     when
-      beUtils : BaseEntityUtils()
-	  answer : Answer( attributeCode == "PRI_EMAIL" )
-	  output : OutputParam( )
+      	beUtils : BaseEntityUtils()
+	  	answer : Answer( attributeCode == "PRI_EMAIL" )
+	  	serviceToken : GennyToken( code == "PER_SERVICE")
+	 	userToken : GennyToken( code != "PER_SERVICE")
+	  	output : OutputParam( )
      then
  		System.out.println("Rule -> PRI_EMAIL :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
  		
  		String sourceCode = beUtils.getGennyToken().getUserCode();
 		String targetCode = answer.getTargetCode();
 		JsonObject resultJson = null;
+		String duplicateCodes = null;
+		String number = null; 
 		
 		/* check if email is already in use for a person */
 		
-				SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Email People")
+		SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Email People")
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%") 
 				.addFilter("PRI_EMAIL", SearchEntity.StringFilter.EQUAL, answer.getValue()) 
 				.addColumn("PRI_NAME", "Name")
 				.setPageStart(0)
 				.setPageSize(100);
 		
-			searchBE.setRealm(beUtils.getServiceToken().getRealm());
+		searchBE.setRealm(beUtils.getServiceToken().getRealm());
 			
-		System.out.println("*********************************************");
-		System.out.println("*********************************************");
-		
-		System.out.println("searchBE: " + searchBE);
-		
-		System.out.println("*********************************************");
-		System.out.println("*********************************************");
-		
- 		List<BaseEntity> people = new ArrayList<BaseEntity>();
-
+		/* Check number of duplicates */
 		Tuple2<String, List<String>> data = beUtils.getHql(searchBE);
 		String hql = data._1;
 
@@ -65,25 +60,46 @@ rule "PRI_EMAIL"
 					beUtils.getServiceToken().getToken(), 120);
 
 			System.out.println("Search EMAIL result is "+resultJsonStr);
+			
 			if (resultJsonStr.equals("0")) {
 				System.out.println("This email "+answer.getValue()+" is unique");
 			} else {
+					List<BaseEntity> duplicateBes = beUtils.getBaseEntitys(searchBE);
+					System.out.println("duplicateBE's: " + duplicateBes);
 					
-					System.out.println("Inside");
-					System.out.println("resultJsonStr: " +resultJsonStr);
-					resultJson = new JsonObject(resultJsonStr);
-					System.out.println("resultJson: " +resultJson);
-					io.vertx.core.json.JsonArray result = resultJson.getJsonArray("codes");
-					int size = result.size();
-					System.out.println("size: " +size);
-					for (int i = 0; i < size; i++) {
-						String code = result.getString(i);
-						System.out.println("code: " + code);
-						BaseEntity be = beUtils.getBaseEntityByCode(code);
-						be.setIndex(i);
-						people.add(be);
+					QDataBaseEntityMessage msg = new QDataBaseEntityMessage(duplicateBes);
+					msg.setToken(userToken.getToken());
+					msg.setReplace(true);
+					VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+					
+					for (BaseEntity duplicateBe : duplicateBes) {
+							System.out.println("duplicateBe: " + duplicateBe);
+							duplicateCodes = duplicateCodes + "," + duplicateBe.getCode();
+							System.out.println("duplicateCodes: " + duplicateCodes);
 					}
-							
+					
+					duplicateCodes = duplicateCodes.substring(5);
+					System.out.println("Final duplicateCodes: " + duplicateCodes);
+					
+					QCmdMessage duplicateEmailMsg = new QCmdMessage("DUPLICATE_EMAILS", duplicateCodes);
+					duplicateEmailMsg.setMessage(number);
+					duplicateEmailMsg.setToken(beUtils.getGennyToken().getToken());
+					duplicateEmailMsg.setSend(true);
+					VertxUtils.writeMsg("webcmds", duplicateEmailMsg);
+					
+					
+					if (resultJsonStr.equals("0")) {
+						number = "There is 1 duplicate email";
+					} else {
+						number = "There are " + resultJsonStr + " duplicate emails";
+					}
+					
+					QCmdMessage toastMsg = new QCmdMessage("TOAST", "INFO");
+					toastMsg.setMessage(number);
+					toastMsg.setToken(beUtils.getGennyToken().getToken());
+					toastMsg.setSend(true);
+					VertxUtils.writeMsg("webcmds", toastMsg);
+					
 					retract(answer);
 					String message = "Email Address "+answer.getValue()+" is already taken";
 					System.out.println(message);
