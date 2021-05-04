@@ -48,12 +48,12 @@ rule "SAVE_NOTE"
 		System.out.println("Note saved against " + targetCode + " with content: " + content);
 	
 	
-		String name = targetBE.getValue("PRI_NAME", null);
-		System.out.println("name: " +name);
+		String toastName = targetBE.getValue("PRI_NAME", null);
+		System.out.println("toastName: " +toastName);
 		
 		/* send cmd msg */
 		QCmdMessage msg = new QCmdMessage("TOAST", "INFO");
-		msg.setMessage("Note saved against " + name + " with content: " + content);
+		msg.setMessage("Note saved against " + toastName + " with content: " + content);
 		msg.setToken(beUtils.getGennyToken().getToken());
 		msg.setSend(true);
 		VertxUtils.writeMsg("webcmds", msg);	
@@ -69,11 +69,11 @@ rule "SAVE_NOTE"
 										System.out.println("notes :: " + notes);
 										
 		
-										String image = targetBE.getValue("PRI_IMAGE_URL", null);
-										System.out.println("image: " +image);
+										String appImage = targetBE.getValue("PRI_IMAGE_URL", null);
+										System.out.println("appImage: " +appImage);
 										
-										String title = targetBE.getValue("PRI_TITLE", null);
-										System.out.println("title: " +title);
+										String appTitle = targetBE.getValue("PRI_TITLE", null);
+										System.out.println("appTitle: " +appTitle);
 										
 										
 										/* Intern Details */
@@ -138,8 +138,8 @@ rule "SAVE_NOTE"
 											
 											JsonObject jsonApplication = new JsonObject();
 											jsonApplication.put("code", targetCode);
-											jsonApplication.put("title", title);
-											jsonApplication.put("image", image);
+											jsonApplication.put("title", appTitle);
+											jsonApplication.put("image", appImage);
 											/*jsonApplication.put("tagList", tagList);*/
 											
 											JsonObject jsonIntern = new JsonObject();
