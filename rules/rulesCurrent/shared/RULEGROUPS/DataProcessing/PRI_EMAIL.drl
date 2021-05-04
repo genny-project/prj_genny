@@ -78,7 +78,7 @@ rule "PRI_EMAIL"
 							System.out.println("duplicateCodes: " + duplicateCodes);
 					}
 					
-					duplicateCodes = duplicateCodes.substring(1);
+					duplicateCodes = duplicateCodes.substring(5);
 					System.out.println("Final duplicateCodes: " + duplicateCodes);
 					
 					QCmdMessage duplicateEmailMsg = new QCmdMessage("DUPLICATE_EMAILS", duplicateCodes);
