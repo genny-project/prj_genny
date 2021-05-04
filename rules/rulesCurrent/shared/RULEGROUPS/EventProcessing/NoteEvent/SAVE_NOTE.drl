@@ -61,12 +61,6 @@ rule "SAVE_NOTE"
 		
 		
 		/* I put this here because this system sucks and i wasted 2 full days trrying to get a rule to fire. Sue me lol */
-										String endPoint = GennySettings.projectUrl + "/v7/notes";
-										System.out.println("endPoint :: " + endPoint);
-						
-										String url = endPoint + "/"+targetCode + "?tags=&pageIndex=0&pageSize=100";
-										System.out.println("url :: " + url);
-						
 										String notes = QwandaUtils.sendGET(url, serviceToken.getToken());
 										System.out.println("notes :: " + notes);
 										
