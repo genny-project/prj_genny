@@ -35,6 +35,7 @@ rule "PRI_EMAIL"
  		String sourceCode = beUtils.getGennyToken().getUserCode();
 		String targetCode = answer.getTargetCode();
 		JsonObject resultJson = null;
+		String duplicateCodes = null;
 		
 		/* check if email is already in use for a person */
 		
@@ -64,11 +65,26 @@ rule "PRI_EMAIL"
 			} else {
 					List<BaseEntity> duplicateBes = beUtils.getBaseEntitys(searchBE);
 					System.out.println("duplicateBE's: " + duplicateBes);
-			
+					
 					QDataBaseEntityMessage msg = new QDataBaseEntityMessage(duplicateBes);
 					msg.setToken(userToken.getToken());
 					msg.setReplace(true);
 					VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+					
+					for (BaseEntity duplicateBe : duplicateBes) {
+							System.out.println("duplicateBe: " + duplicateBe);
+							duplicateCodes = duplicateCodes + "," + duplicateBe.getCode()
+							System.out.println("duplicateCodes: " + duplicateCodes);
+					}
+					
+					duplicateCodes = duplicateCodes.substring(1);
+					System.out.println("Final duplicateCodes: " + duplicateCodes);
+					
+					QCmdMessage duplicateEmailMsg = new QCmdMessage("DUPLICATE_EMAILS", duplicateCodes);
+					duplicateEmailMsg.setMessage(number);
+					duplicateEmailMsg.setToken(beUtils.getGennyToken().getToken());
+					duplicateEmailMsg.setSend(true);
+					VertxUtils.writeMsg("webcmds", duplicateEmailMsg);
 					
 					String number = null; 
 					if (resultJsonStr.equals("0")) {
