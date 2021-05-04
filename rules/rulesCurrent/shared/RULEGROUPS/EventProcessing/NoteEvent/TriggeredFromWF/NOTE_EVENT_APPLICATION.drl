@@ -154,7 +154,7 @@ rule "NOTE_EVENT_APPLICATION"
 			}
 		}
 
-		retract( $message);
+		retract(key);
 	end
 
 

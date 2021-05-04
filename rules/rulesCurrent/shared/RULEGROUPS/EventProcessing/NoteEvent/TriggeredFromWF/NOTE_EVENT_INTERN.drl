@@ -25,7 +25,7 @@ rule "NOTE_EVENT_INTERN"
 		
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 
-		String targetCode = targetBe.getCode();
+		String targetCode = targetBE.getCode();
 		System.out.println("targetCode :: " + targetCode);
 
 		if(targetCode != null){
@@ -41,15 +41,15 @@ rule "NOTE_EVENT_INTERN"
 				
 				
 				/* Internship Details */	
-				String internName = targetBe.getValue("PRI_NAME", null);
+				String internName = targetBE.getValue("PRI_NAME", null);
 				System.out.println("internName: " +internName);
 				
-				String internImage = targetBe.getValue("PRI_IMAGE_URL", null);
+				String internImage = targetBE.getValue("PRI_IMAGE_URL", null);
 				System.out.println("internImage: " +internImage);
 
 
 				/* Search for Applications */
-				String linkedApps = targetBe.getValue("LNK_APPLICATIONS", null);
+				String linkedApps = targetBE.getValue("LNK_APPLICATIONS", null);
 				
 				if (linkedApps != null){
 					System.out.println("linkedApps: " +linkedApps);									/*["APP_AA3FEB35-FD12-49B9-A595-AA315773A37F","APP_41484401-7C82-4CD0-9B75-AA9E224B23ED"]*/
@@ -103,7 +103,7 @@ rule "NOTE_EVENT_INTERN"
 			}
 		}
 
-		retract( $message);
+		retract(key);
 	end
 
 

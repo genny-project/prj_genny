@@ -103,7 +103,7 @@ rule "NOTE_EVENT_INTERNSHIP"
 			}
 		}
 
-		retract( $message);
+		retract(key);
 	end
 
 
