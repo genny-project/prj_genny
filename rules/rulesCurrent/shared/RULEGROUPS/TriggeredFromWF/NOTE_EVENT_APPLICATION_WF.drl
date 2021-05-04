@@ -10,17 +10,15 @@ import life.genny.qwanda.message.QCmdMessage;
 import life.genny.utils.VertxUtils;
 import life.genny.qwandautils.QwandaUtils;
 
-rule "NOTE_EVENT_APPLICATION_WF"
+rule "NOTE_EVENT_APPLICATION"
 	ruleflow-group 'EventProcessing'
-	salience 1
+	salience 2
 	no-loop
 	when
-		$message : QEventMessage(data.code matches "ACT_PRI_EVENT_SAVE_NOTE")
+		$message : QEventMessage(data.code matches "ACT_PRI_EVENT_SAVE_NOTE" && data.parentCode == "Tab_Application")
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam( )
-		/*key : String(key.equals("Application"))
-		targetBE : BaseEntity()*/
 	then
 		System.out.println("HOLY FUCK PLS WORK 2");
 		
