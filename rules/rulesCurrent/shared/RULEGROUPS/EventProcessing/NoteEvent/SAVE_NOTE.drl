@@ -177,6 +177,8 @@ rule "SAVE_NOTE"
 											System.out.println("json :: " + json.toString());
 											VertxUtils.writeMsg("webcmds", json.toString());
 										}
+		}
+		
 		if (parentCode.equals("Tab_Intern") || parentCode.equals("Tab_Internship") || parentCode.equals("Tab_HostCompany") || parentCode.equals("Tab_Supervisor")) {
 		
 										String name = targetBE.getValue("PRI_NAME", null);
@@ -233,8 +235,7 @@ rule "SAVE_NOTE"
 											System.out.println("json :: " + json.toString());
 											VertxUtils.writeMsg("webcmds", json.toString());
 										}
-		}							
-		}									
+		}																
 		retract( $message);
 		
 	end
