@@ -45,7 +45,7 @@ rule "MERGE_DUPLICATE_EMAIL"
 		
 		if (sourceBe != null && targetBe != null) {
 		
-			beUtils.duplicateAttributes(sourceBe, targetBe)
+			beUtils.duplicateAttributes(sourceBe, targetBe);
 			
 			targetBe = beUtils.getBaseEntityByCode(targetCode);
 			
