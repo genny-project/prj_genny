@@ -41,14 +41,13 @@ rule "SAVE_NOTE"
 		
 		BaseEntity targetBE = beUtils.getBaseEntityByCode(targetCode);
 		
-		/*String endPoint = GennySettings.projectUrl + "/v7/notes";*/
 		String endPoint = "https://internmatch-dev.gada.io/v7/notes";
 		System.out.println("endPoint :: " + endPoint);
 		
 		QwandaUtils.apiPostNote(endPoint, sourceCode, tags, targetCode, content, serviceToken.getToken());
 		System.out.println("Note saved against " + targetCode + " with content: " + content);
-		
-
+	
+	
 		String name = targetBE.getValue("PRI_NAME", null);
 		System.out.println("name: " +name);
 		
@@ -60,60 +59,119 @@ rule "SAVE_NOTE"
 		VertxUtils.writeMsg("webcmds", msg);	
 		
 		
-		/* Send QEventMessage to refresh page */
-		String[] parent = parentCode.split("_");
-		String type = parent[1];
-		System.out.println("parent[1]: " +parent[1]);
 		
-		String code = "ACT_PRI_EVENT_ACCESS_NOTES_" + parent[1].toUpperCase();
-		System.out.println("code: " +code);
-		
-		/*retract($message);*/
-		/*
-		List<String> targetList = new ArrayList<String>();
-		targetList.add(targetCode);*/
-		
-		QEventMessage refreshNotes = new QEventMessage("SAVE_NOTE", code);
-		refreshNotes.setTargetCode(targetCode);
-		
-		/*VertxUtils.writeMsg("events", code);
-		VertxUtils.sendEvent(code, sourceCode, targetCode, serviceToken);*/
-		
-		System.out.println("Sent QEventMessage!! - Should be another Note Rule firing...");
-		/*String key = "Application";
-		insert(key);
-		insert(targetBE);
-		insert(refreshNotes);*/
-		/*
-		
-		output.setTypeOfResult("SIGNAL");
-		output.setResultCode("START_SAVE_NOTE");
-		output.setAskSourceCode(sourceCode);	
-		output.setTargetCode(targetCode);
-		output.setSuitCase(type);
+		/* I put this here because this system sucks and i wasted 2 full days trrying to get a rule to fire. Sue me lol */
 		
 		
-		System.out.println("**************************************************");
-		System.out.println("TypeOfResult: "  + output.getTypeOfResult());
-		System.out.println("ResultCode: "    + output.getResultCode());
-		System.out.println("AskSourceCode: " + output.getAskSourceCode());
-		System.out.println("TargetCode: "    + output.getTargetCode());
-		System.out.println("SuitCase: "      + output.getSuitCase());
-		System.out.println("**************************************************");
-		*/
-		
-		/*
-		drools.setFocus("SendSummary");
-		*/
-		
-		/*
-		output.setTypeOfResult("SIGNAL");
-		output.setSuitCase(rulegroup);
-		output.setTargetCode(code);
-		output.setResultCode("code");
-		*/
-		
-		
-		
+										String image = targetBE.getValue("PRI_IMAGE_URL", null);
+										System.out.println("image: " +image);
+										
+										String title = targetBE.getValue("PRI_TITLE", null);
+										System.out.println("title: " +title);
+										
+										
+										/* Intern Details */
+										String assocIntern = targetBE.getValue("PRI_INTERN_CODE", null);
+										System.out.println("assocIntern: " +assocIntern);
+										
+										BaseEntity internBE = beUtils.getBaseEntityByCode(assocIntern);
+										
+										String internName = internBE.getValue("PRI_NAME", null);
+										System.out.println("internName: " +internName);
+										
+										String internImage = internBE.getValue("PRI_IMAGE_URL", null);
+										System.out.println("internImage: " +internImage);
+								
+								
+										/* Internship Details */
+										String assocInternship = targetBE.getValue("LNK_INTERNSHIP", null);
+										assocInternship = assocInternship.replace("\"", "").replace("[", "").replace("]", "");
+										System.out.println("assocInternship: " +assocInternship);
+										
+										BaseEntity internshipBE = beUtils.getBaseEntityByCode(assocInternship);
+										
+										String internshipName = internshipBE.getValue("PRI_NAME", null);
+										System.out.println("internshipName: " +internshipName);
+										
+										String internshipImage = internshipBE.getValue("PRI_IMAGE_URL", null);
+										System.out.println("internshipImage: " +internshipImage);
+										
+										
+										/* Host Company Details */
+										String assocHC = targetBE.getValue("LNK_HOST_COMPANY", null);
+										assocHC = assocHC.replace("\"", "").replace("[", "").replace("]", "");
+										System.out.println("assocHC: " +assocHC);
+										
+										BaseEntity hostCpyBE = beUtils.getBaseEntityByCode(assocHC);
+										
+										String HCName = hostCpyBE.getValue("PRI_NAME", null);
+										System.out.println("HCName: " +HCName);
+										
+										String HCImage = hostCpyBE.getValue("PRI_IMAGE_URL", null);
+										System.out.println("HCImage: " +HCImage);
+										
+										
+										/* Supervisor Details */
+										String assocSuper = targetBE.getValue("LNK_INTERN_SUPERVISOR", null);
+										assocSuper = assocSuper.replace("\"", "").replace("[", "").replace("]", "");
+										System.out.println("assocSuper: " +assocSuper);
+										
+										BaseEntity superBE = beUtils.getBaseEntityByCode(assocSuper);
+										
+										String superName = superBE.getValue("PRI_NAME", null);
+										System.out.println("superName: " +superName);
+										
+										String superImage = superBE.getValue("PRI_IMAGE_URL", null);
+										System.out.println("superImage: " +superImage);
+										
+										/*String[] tagList = {"Business Development", "Placement", "Outcome Life", "Miscellaneous"};*/
+										
+										if(notes != null){
+											JsonObject json = new JsonObject(notes);
+											json.put("token", userToken.getToken());
+											
+											JsonObject jsonApplication = new JsonObject();
+											jsonApplication.put("code", targetCode);
+											jsonApplication.put("title", title);
+											jsonApplication.put("image", image);
+											/*jsonApplication.put("tagList", tagList);*/
+											
+											JsonObject jsonIntern = new JsonObject();
+											jsonIntern.put("code", assocIntern);
+											jsonIntern.put("title", internName);
+											jsonIntern.put("image", internImage);
+											/*jsonIntern.put("tagList", tagList);*/
+											
+											JsonObject jsonInternship = new JsonObject();
+											jsonInternship.put("code", assocInternship);
+											jsonInternship.put("title", internshipName);
+											jsonInternship.put("image", internshipImage);
+											/*jsonInternship.put("tagList", tagList);*/
+											
+											JsonObject jsonHC = new JsonObject();
+											jsonHC.put("code", assocHC);
+											jsonHC.put("title", HCName);
+											jsonHC.put("image", HCImage);
+											/*jsonHC.put("tagList", tagList);*/
+											
+											JsonObject jsonSuper = new JsonObject();
+											jsonSuper.put("code", assocSuper);
+											jsonSuper.put("title", superName);
+											jsonSuper.put("image", superImage);
+											/*jsonSuper.put("tagList", tagList);*/
+											
+											
+											json.put("Tab_Application", jsonApplication);
+											json.put("Tab_Intern", jsonIntern);
+											json.put("Tab_Internship", jsonInternship);
+											json.put("Tab_Host Company", jsonHC);
+											json.put("Tab_Supervisor", jsonSuper);
+											
+											
+											System.out.println("json :: " + json.toString());
+											VertxUtils.writeMsg("webcmds", json.toString());
+										}
+											
+		retract( $message);
 		
 	end
