@@ -69,12 +69,20 @@ rule "SAVE_NOTE"
 		
 		retract($message);
 		
-		/*QEventMessage refreshNotes = new QEventMessage("SAVE_NOTE", code);
-		refreshNotes.setToken(serviceToken.getToken());
+		QEventMessage refreshNotes = new QEventMessage("SAVE_NOTE", code);
+		/*refreshNotes.setToken(serviceToken.getToken());
 		VertxUtils.writeMsg("events", code);*/
-		VertxUtils.sendEvent(code, sourceCode, targetCode, serviceToken);
+		VertxUtils.sendEvent(code, sourceCode, targetCode, serviceToken);*/
 		
 		System.out.println("Sent QEventMessage!! - Should be another Note Rule firing...");
-
+		insert(refreshNotes)
+		
+		/*
+		output.setTypeOfResult("SIGNAL");
+		output.setSuitCase(rulegroup);
+		output.setTargetCode(code);
+		output.setResultCode("code");
+		*/
+		
 		
 	end
