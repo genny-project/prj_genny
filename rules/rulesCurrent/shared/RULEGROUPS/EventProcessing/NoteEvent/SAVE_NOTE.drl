@@ -73,13 +73,31 @@ rule "SAVE_NOTE"
 		targetList.add(targetCode);
 		
 		QEventMessage refreshNotes = new QEventMessage("SAVE_NOTE", code);
-		refreshNotes.setTargetCodes(targetList);
+		refreshNotes.setTargetCode(targetCode);
 		
 		/*VertxUtils.writeMsg("events", code);
 		VertxUtils.sendEvent(code, sourceCode, targetCode, serviceToken);*/
 		
 		System.out.println("Sent QEventMessage!! - Should be another Note Rule firing...");
 		insert(refreshNotes);
+		
+		/*
+		output.setTypeOfResult("SIGNAL");
+		output.setResultCode("START_ADD_ENTITY");
+		
+		output.setSuitCase(key);
+		output.setAskSourceCode(user);	
+		output.setTargetCode("NONE");
+		
+		
+		System.out.println("**************************************************");
+		System.out.println("TypeOfResult: "  + output.getTypeOfResult());
+		System.out.println("ResultCode: "    + output.getResultCode());
+		System.out.println("SuitCase: "      + output.getSuitCase());
+		System.out.println("AskSourceCode: " + output.getAskSourceCode());
+		System.out.println("TargetCode: "    + output.getTargetCode());
+		System.out.println("**************************************************");
+		*/
 		
 		/*
 		drools.setFocus("SendSummary");
