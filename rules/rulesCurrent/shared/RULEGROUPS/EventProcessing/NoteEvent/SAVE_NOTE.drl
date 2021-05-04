@@ -59,8 +59,9 @@ rule "SAVE_NOTE"
 		VertxUtils.writeMsg("webcmds", msg);	
 		
 		
+		/* I put this here because this system sucks and i wasted 2 full days trrying to get a rule to fire. Sue me lol */	
 		
-		/* I put this here because this system sucks and i wasted 2 full days trrying to get a rule to fire. Sue me lol */						
+		if (parentCode.equals("Tab_Application")) {			
 										String url = endPoint + "/"+targetCode + "?tags=&pageIndex=0&pageSize=100";
 										System.out.println("url :: " + url);
 						
@@ -169,14 +170,71 @@ rule "SAVE_NOTE"
 											json.put("Tab_Application", jsonApplication);
 											json.put("Tab_Intern", jsonIntern);
 											json.put("Tab_Internship", jsonInternship);
-											json.put("Tab_Host Company", jsonHC);
+											json.put("Tab_HostCompany", jsonHC);
 											json.put("Tab_Supervisor", jsonSuper);
 											
 											
 											System.out.println("json :: " + json.toString());
 											VertxUtils.writeMsg("webcmds", json.toString());
 										}
+		if (parentCode.equals("Tab_Intern") || parentCode.equals("Tab_Internship") || parentCode.equals("Tab_HostCompany") || parentCode.equals("Tab_Supervisor")) {
+		
+										String name = targetBE.getValue("PRI_NAME", null);
+										System.out.println("name: " +name);
+										
+										String image = targetBE.getValue("PRI_IMAGE_URL", null);
+										System.out.println("image: " +image);
+						
+						
+										/* Search for Applications */
+										String linkedApps = targetBE.getValue("LNK_APPLICATIONS", null);
+										
+										if (linkedApps != null){
+											System.out.println("linkedApps: " +linkedApps);									/*["APP_AA3FEB35-FD12-49B9-A595-AA315773A37F","APP_41484401-7C82-4CD0-9B75-AA9E224B23ED"]*/
+											linkedApps = linkedApps.replace("\"", "").replace("[", "").replace("]", "");	
+											System.out.println("linkedApps: " +linkedApps);									/*APP_AA3FEB35-FD12-49B9-A595-AA315773A37F,APP_41484401-7C82-4CD0-9B75-AA9E224B23ED*/
 											
+											String[] splitApps = linkedApps.split(",");
+											int length = splitApps.length;
+											System.out.println("length: " +length);	
+											
+											BaseEntity[] beCodez = new BaseEntity[length];
+											BaseEntity appBe = null;
+											
+											
+											for (int i = 0; i < length; i++) {
+												appBe = beUtils.getBaseEntityByCode(splitApps[i]);
+												beCodez[i] = appBe;
+												System.out.println("beCodez: " +beCodez[i]);
+											}
+											
+											QDataBaseEntityMessage msgMatches = new QDataBaseEntityMessage(beCodez);
+											msgMatches.setToken(userToken.getToken());
+											msgMatches.setReplace(true);
+											VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msgMatches));
+										}
+										/*String[] tagList = {"Business Development", "Placement", "Outcome Life", "Miscellaneous"};*/
+										
+										
+										if(notes != null){
+											JsonObject json = new JsonObject(notes);
+											json.put("token", userToken.getToken());
+											
+											JsonObject jsonStuff = new JsonObject();
+											jsonStuff.put("code", targetCode);
+											jsonStuff.put("title", name);
+											jsonStuff.put("image", image);
+											json.put(parentCode, jsonStuff);
+											/*jsonIntern.put("tagList", tagList);*/
+											
+											JsonObject jsonApplication = new JsonObject();
+											json.put("linkedApps", linkedApps);
+											
+											System.out.println("json :: " + json.toString());
+											VertxUtils.writeMsg("webcmds", json.toString());
+										}
+		}							
+		}									
 		retract( $message);
 		
 	end
