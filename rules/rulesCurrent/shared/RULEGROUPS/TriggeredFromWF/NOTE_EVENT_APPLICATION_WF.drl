@@ -10,7 +10,7 @@ import life.genny.qwanda.message.QCmdMessage;
 import life.genny.utils.VertxUtils;
 import life.genny.qwandautils.QwandaUtils;
 
-rule "NOTE_EVENT_APPLICATION"
+rule "NOTE_EVENT_APPLICATION_WF"
 	ruleflow-group 'TriggeredFromWF'
 	salience 2
 	no-loop
@@ -25,7 +25,7 @@ rule "NOTE_EVENT_APPLICATION"
 		
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 
-		String targetCode = targetBe.getCode();
+		String targetCode = targetBE.getCode();
 		System.out.println("targetCode :: " + targetCode);
 
 		if(targetCode != null){
