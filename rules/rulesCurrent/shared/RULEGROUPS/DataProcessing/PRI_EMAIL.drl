@@ -73,7 +73,7 @@ rule "PRI_EMAIL"
 					
 					for (BaseEntity duplicateBe : duplicateBes) {
 							System.out.println("duplicateBe: " + duplicateBe);
-							duplicateCodes = duplicateCodes + "," + duplicateBe.getCode()
+							duplicateCodes = duplicateCodes + "," + duplicateBe.getCode();
 							System.out.println("duplicateCodes: " + duplicateCodes);
 					}
 					
