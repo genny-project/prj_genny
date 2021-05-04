@@ -11,17 +11,21 @@ import life.genny.utils.VertxUtils;
 import life.genny.qwandautils.QwandaUtils;
 
 rule "NOTE_EVENT_APPLICATION_WF"
-	ruleflow-group 'TriggeredFromWF'
-	salience 2
+	ruleflow-group 'EventProcessing'
+	salience 1
 	no-loop
 	when
-		key : String(key.equals("Application"))
-		targetBE : BaseEntity()
+		$message : QEventMessage(data.code matches "ACT_PRI_EVENT_SAVE_NOTE")
+		userToken : GennyToken (code != "PER_SERVICE" )
+		serviceToken : GennyToken (code == "PER_SERVICE" )
+		output : OutputParam( )
+		/*key : String(key.equals("Application"))
+		targetBE : BaseEntity()*/
 	then
 		System.out.println("HOLY FUCK PLS WORK 2");
 		
-		
-		retract(key);
+		retract($message);
+		/*retract(key);*/
 	end
 
 
