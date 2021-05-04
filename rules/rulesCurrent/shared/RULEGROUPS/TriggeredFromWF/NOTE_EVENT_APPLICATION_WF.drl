@@ -26,7 +26,7 @@ rule "NOTE_EVENT_APPLICATION_WF"
 		
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 
-		String targetCode = targetBE.getCode();
+		String targetCode = $message.getData().getTargetCode();
 		System.out.println("targetCode :: " + targetCode);
 
 		if(targetCode != null){
@@ -41,6 +41,7 @@ rule "NOTE_EVENT_APPLICATION_WF"
 				System.out.println("notes :: " + notes);
 				
 				/* Application Details */
+				BaseEntity targetBE = beUtils.getBaseEntityByCode(targetCode);
 					
 				String image = targetBE.getValue("PRI_IMAGE_URL", null);
 				System.out.println("image: " +image);
