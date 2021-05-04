@@ -38,6 +38,7 @@ rule "SAVE_NOTE"
 		System.out.println("content :: " + content);
 			
 		String tags = "BD";
+		String notes = null;
 		
 		BaseEntity targetBE = beUtils.getBaseEntityByCode(targetCode);
 		
@@ -65,7 +66,7 @@ rule "SAVE_NOTE"
 										String url = endPoint + "/"+targetCode + "?tags=&pageIndex=0&pageSize=100";
 										System.out.println("url :: " + url);
 						
-										String notes = QwandaUtils.sendGET(url, serviceToken.getToken());
+										notes = QwandaUtils.sendGET(url, serviceToken.getToken());
 										System.out.println("notes :: " + notes);
 										
 		
