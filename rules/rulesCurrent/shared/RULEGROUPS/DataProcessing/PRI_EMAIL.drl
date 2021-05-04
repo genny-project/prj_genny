@@ -36,6 +36,7 @@ rule "PRI_EMAIL"
 		String targetCode = answer.getTargetCode();
 		JsonObject resultJson = null;
 		String duplicateCodes = null;
+		String number = null; 
 		
 		/* check if email is already in use for a person */
 		
@@ -86,7 +87,7 @@ rule "PRI_EMAIL"
 					duplicateEmailMsg.setSend(true);
 					VertxUtils.writeMsg("webcmds", duplicateEmailMsg);
 					
-					String number = null; 
+					
 					if (resultJsonStr.equals("0")) {
 						number = "There is 1 duplicate email";
 					} else {
