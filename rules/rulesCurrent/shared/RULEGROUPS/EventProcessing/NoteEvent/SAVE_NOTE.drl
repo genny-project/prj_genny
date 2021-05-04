@@ -80,12 +80,12 @@ rule "SAVE_NOTE"
 		VertxUtils.sendEvent(code, sourceCode, targetCode, serviceToken);*/
 		
 		System.out.println("Sent QEventMessage!! - Should be another Note Rule firing...");
-		String key = "Application";
+		/*String key = "Application";
 		insert(key);
 		insert(targetBE);
-		/*insert(refreshNotes);*/
+		insert(refreshNotes);*/
 		
-		/*
+		
 		output.setTypeOfResult("SIGNAL");
 		output.setResultCode("START_SAVE_NOTE");
 		output.setAskSourceCode(sourceCode);	
@@ -100,7 +100,7 @@ rule "SAVE_NOTE"
 		System.out.println("TargetCode: "    + output.getTargetCode());
 		System.out.println("SuitCase: "      + output.getSuitCase());
 		System.out.println("**************************************************");
-		*/
+		
 		
 		/*
 		drools.setFocus("SendSummary");
