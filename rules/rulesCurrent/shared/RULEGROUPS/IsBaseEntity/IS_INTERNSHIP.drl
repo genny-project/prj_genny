@@ -117,7 +117,7 @@ rule "IS_INTERNSHIP"
 		
 		String tag = "ni";
 		
-		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), tag, userToken.getUserCode(), "Added an Internship: " + title, serviceToken.getToken());
+		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), tag, newBe.getCode(), "Added an Internship: " + title, serviceToken.getToken());
 		
 		System.out.println("I just posted the note");
 		System.out.println("Note endPoint: " +endPoint);

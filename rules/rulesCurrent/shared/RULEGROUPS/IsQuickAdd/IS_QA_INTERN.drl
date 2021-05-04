@@ -155,7 +155,7 @@ rule "IS_QA_INTERN"
 		
 		String tag = "ni";
 		
-		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), tag, userToken.getUserCode(), "Added an Intern: " + firstname, serviceToken.getToken());
+		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), tag, newBe.getCode(), "Added an Intern: " + firstname, serviceToken.getToken());
 		
 		System.out.println("I just posted the note");
 		System.out.println("Note endPoint: " +endPoint);
@@ -285,10 +285,7 @@ rule "IS_QA_INTERN"
 		}			
 		
 		System.out.println("################## END Shleemy ##################");
-		
-		
-		/* Send Note about reminders */		
-		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), tag, userToken.getUserCode(), "Scheduled two reminders for : " +prettyOrange + " and " + prettyRed , serviceToken.getToken());
+	
 		
 		System.out.println("I just posted the note");
 		System.out.println("Note endPoint: " +endPoint);

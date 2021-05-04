@@ -10,7 +10,7 @@ import life.genny.qwanda.message.QCmdMessage;
 import life.genny.utils.VertxUtils;
 import life.genny.qwandautils.QwandaUtils;
 
-rule "NOTE_EVENT_INTERN"
+rule "NOTE_EVENT_INTERNSHIP"
 	ruleflow-group 'TriggeredFromWF'
 	salience 2
 	no-loop
@@ -18,14 +18,14 @@ rule "NOTE_EVENT_INTERN"
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam( )
-		key: String(key.equals("Intern"))
+		key : String(key.equals("Internship"))
 		targetBE : BaseEntity()
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
 		
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 
-		String targetCode = targetBE.getCode();
+		String targetCode = targetBe.getCode();
 		System.out.println("targetCode :: " + targetCode);
 
 		if(targetCode != null){
@@ -38,18 +38,18 @@ rule "NOTE_EVENT_INTERN"
 
 				String notes = QwandaUtils.sendGET(url, serviceToken.getToken());
 				System.out.println("notes :: " + notes);
+
 				
+				/* Intern Details */		
+				String internshipName = targetBe.getValue("PRI_NAME", null);
+				System.out.println("internshipName: " +internshipName);
 				
-				/* Internship Details */	
-				String internName = targetBE.getValue("PRI_NAME", null);
-				System.out.println("internName: " +internName);
-				
-				String internImage = targetBE.getValue("PRI_IMAGE_URL", null);
-				System.out.println("internImage: " +internImage);
+				String internshipImage = targetBe.getValue("PRI_IMAGE_URL", null);
+				System.out.println("internshipImage: " +internshipImage);
 
 
 				/* Search for Applications */
-				String linkedApps = targetBE.getValue("LNK_APPLICATIONS", null);
+				String linkedApps = targetBe.getValue("LNK_APPLICATIONS", null);
 				
 				if (linkedApps != null){
 					System.out.println("linkedApps: " +linkedApps);									/*["APP_AA3FEB35-FD12-49B9-A595-AA315773A37F","APP_41484401-7C82-4CD0-9B75-AA9E224B23ED"]*/
@@ -82,11 +82,11 @@ rule "NOTE_EVENT_INTERN"
 					JsonObject json = new JsonObject(notes);
 					json.put("token", userToken.getToken());
 					
-					JsonObject jsonIntern = new JsonObject();
-					jsonIntern.put("code", targetCode);
-					jsonIntern.put("title", internName);
-					jsonIntern.put("image", internImage);
-					json.put("Tab_Intern", jsonIntern);
+					JsonObject jsonInternship = new JsonObject();
+					jsonInternship.put("code", targetCode);
+					jsonInternship.put("title", internshipName);
+					jsonInternship.put("image", internshipImage);
+					json.put("Tab_Internship", jsonInternship);
 					/*jsonIntern.put("tagList", tagList);*/
 					
 					JsonObject jsonApplication = new JsonObject();

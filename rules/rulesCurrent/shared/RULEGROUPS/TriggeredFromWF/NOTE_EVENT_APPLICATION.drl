@@ -18,7 +18,7 @@ rule "NOTE_EVENT_APPLICATION"
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam( )
-		key: String(key.equals("Application"))
+		key : String(key.equals("Application"))
 		targetBE : BaseEntity()
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
