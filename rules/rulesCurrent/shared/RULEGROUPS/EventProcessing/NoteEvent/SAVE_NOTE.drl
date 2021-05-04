@@ -62,42 +62,42 @@ rule "SAVE_NOTE"
 		
 		/* Send QEventMessage to refresh page */
 		String[] parent = parentCode.split("_");
+		String type = parent[1];
 		System.out.println("parent[1]: " +parent[1]);
 		
-		String code = "ACT_PRI_EVENT_ACCESS_NOTES_" + parent[1].toUpperCase();
-		System.out.println("code: " +code);
+		/*String code = "ACT_PRI_EVENT_ACCESS_NOTES_" + parent[1].toUpperCase();
+		System.out.println("code: " +code);*/
 		
 		retract($message);
-		
+		/*
 		List<String> targetList = new ArrayList<String>();
 		targetList.add(targetCode);
 		
 		QEventMessage refreshNotes = new QEventMessage("SAVE_NOTE", code);
-		refreshNotes.setTargetCode(targetCode);
+		refreshNotes.setTargetCode(targetCode);*/
 		
 		/*VertxUtils.writeMsg("events", code);
 		VertxUtils.sendEvent(code, sourceCode, targetCode, serviceToken);*/
-		
-		System.out.println("Sent QEventMessage!! - Should be another Note Rule firing...");
-		insert(refreshNotes);
-		
 		/*
-		output.setTypeOfResult("SIGNAL");
-		output.setResultCode("START_ADD_ENTITY");
+		System.out.println("Sent QEventMessage!! - Should be another Note Rule firing...");
+		insert(refreshNotes);*/
 		
-		output.setSuitCase(key);
-		output.setAskSourceCode(user);	
-		output.setTargetCode("NONE");
+		
+		output.setTypeOfResult("SIGNAL");
+		output.setResultCode("START_SAVE_NOTE");
+		output.setAskSourceCode(sourceCode);	
+		output.setTargetCode(targetCode);
+		output.setSuitCase(type);
 		
 		
 		System.out.println("**************************************************");
 		System.out.println("TypeOfResult: "  + output.getTypeOfResult());
 		System.out.println("ResultCode: "    + output.getResultCode());
-		System.out.println("SuitCase: "      + output.getSuitCase());
 		System.out.println("AskSourceCode: " + output.getAskSourceCode());
 		System.out.println("TargetCode: "    + output.getTargetCode());
+		System.out.println("SuitCase: "      + output.getSuitCase());
 		System.out.println("**************************************************");
-		*/
+		
 		
 		/*
 		drools.setFocus("SendSummary");
