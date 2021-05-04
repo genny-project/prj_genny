@@ -25,7 +25,7 @@ rule "MERGE_DUPLICATE_EMAIL"
 		String code = $message.getData().getCode();
 		System.out.println("code: "+code);
 		
-		String sourceCode = beUtils.getGennyToken().getUserCode();
+		String sourceCode = $message.getData().getSourceCode();
 		System.out.println("sourceCode :: " + sourceCode);
 		
 		String targetCode = $message.getData().getTargetCode();
@@ -45,9 +45,35 @@ rule "MERGE_DUPLICATE_EMAIL"
 		
 		if (sourceBe != null && targetBe != null) {
 		
+			System.out.println("Duplicating attributes");
 			beUtils.duplicateAttributes(sourceBe, targetBe);
 			
 			targetBe = beUtils.getBaseEntityByCode(targetCode);
+			System.out.println("targetBe :: " + targetBe);
+			
+			String type = beUtils.whoAreYou(targetCode);
+			System.out.println("type :: " + type);
+			
+			if (targetCode.startsWith("PER_")){
+					System.out.println("Deleting a Person");
+					
+					beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetCode, type, false));
+					beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetCode, "PRI_IS_DELETED", true));
+					beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetCode, "PRI_EMAIL", "NULL"));
+					
+					if (type.equals("PRI_IS_HOST_CPY_REP")) {
+					
+						BaseEntity hcrBe = beUtils.getBaseEntityByCode("targetCode");
+						System.out.println("hcrBe = " + hcrBe);
+					
+						String assocHC = hcrBe.getValue("LNK_HOST_COMPANY", null);
+						assocHC = assocHC.replace("\"", "").replace("[", "").replace("]", "");
+						System.out.println("assocHC = " +assocHC);
+					
+						beUtils.removeQuantumLinkElement(userToken.getUserCode(), assocHC, targetCode, "LNK_HCRS");
+					}
+					
+			}
 			
 			QDataBaseEntityMessage msg = new QDataBaseEntityMessage(targetBe);
 			msg.setToken(userToken.getToken());
