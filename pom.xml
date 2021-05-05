@@ -9,7 +9,7 @@
 	<groupId>life.genny.jbpm</groupId>
 	<artifactId>prj_genny</artifactId>
 	<version>7.29.0</version>
-	<packaging>jar</packaging>
+	<packaging>pom</packaging>
 
 	<distributionManagement>
 		<repository>
