@@ -36,6 +36,14 @@ rule "KILL_DUPLICATE_EMAIL"
 			System.out.println("targetBe :: " + targetBe);
 			if (targetBe != null) {
 				rootCode = targetBe.getValue("PRI_EMAIL", null);
+				System.out.println("rootCode :: " + rootCode);
+				if (rootCode == null) {
+					QCmdMessage toastMsg = new QCmdMessage("TOAST", "INFO");
+					toastMsg.setMessage("This Base Entity is very old and corrupted so it cannot be removed by this widget. Please talk to Chris to remove.");
+					toastMsg.setToken(beUtils.getGennyToken().getToken());
+					toastMsg.setSend(true);
+					VertxUtils.writeMsg("webcmds", toastMsg);
+				}
 			} else {
 				System.out.println("ERROR: targetBe is null");
 			}
@@ -79,7 +87,7 @@ rule "KILL_DUPLICATE_EMAIL"
 		
 		SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Email People")
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%") 
-				.addFilter("PRI_EMAIL", SearchEntity.StringFilter.EQUAL, answer.getValue()) 
+				.addFilter("PRI_EMAIL", SearchEntity.StringFilter.EQUAL, rootCode) 
 				.addColumn("PRI_NAME", "Name")
 				.setPageStart(0)
 				.setPageSize(100);
@@ -124,7 +132,13 @@ rule "KILL_DUPLICATE_EMAIL"
 					duplicateEmailMsg.setSend(true);
 					VertxUtils.writeMsg("webcmds", duplicateEmailMsg);
 					
-		System.out.println("Sent QCmdMessage to the FE");
+					System.out.println("Sent QCmdMessage to the FE");
+					
+		} catch (Exception e) {
+		
+		}			
+					
+		
 		
 		retract($message);
 end
