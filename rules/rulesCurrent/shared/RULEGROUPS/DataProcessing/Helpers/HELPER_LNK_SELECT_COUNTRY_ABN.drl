@@ -69,5 +69,3 @@ rule "HELPER_LNK_SELECT_COUNTRY_ABN"
 			System.out.println("Could not fetch ask from cache: QUE_HOST_CPY_GRP"); 
 		}
 end
-
-QUE_SELECT_COUNTRY
