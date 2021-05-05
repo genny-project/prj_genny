@@ -10,22 +10,23 @@ import life.genny.qwanda.message.QCmdMessage;
 import life.genny.utils.VertxUtils;
 import life.genny.qwandautils.QwandaUtils;
 
-rule "NOTE_EVENT_APPLICATION"
-	ruleflow-group 'TriggeredFromWF'
+rule "NOTE_EVENT_APPLICATION_WF"
+	ruleflow-group 'EventProcessing'
 	salience 2
 	no-loop
 	when
+		$message : QEventMessage(data.code matches "ACT_PRI_EVENT_SAVE_NOTE" && data.parentCode == "Tab_Application")
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam( )
-		key: String(key.equals("Application"))
-		targetBE : BaseEntity()
 	then
+		System.out.println("HOLY FUCK PLS WORK 3");
+		
 		System.out.println(drools.getRule().getName() + " triggered");
 		
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 
-		String targetCode = targetBe.getCode();
+		String targetCode = $message.getData().getTargetCode();
 		System.out.println("targetCode :: " + targetCode);
 
 		if(targetCode != null){
@@ -40,6 +41,7 @@ rule "NOTE_EVENT_APPLICATION"
 				System.out.println("notes :: " + notes);
 				
 				/* Application Details */
+				BaseEntity targetBE = beUtils.getBaseEntityByCode(targetCode);
 					
 				String image = targetBE.getValue("PRI_IMAGE_URL", null);
 				System.out.println("image: " +image);
@@ -153,8 +155,10 @@ rule "NOTE_EVENT_APPLICATION"
 				System.out.println("Exception :: " + e);
 			}
 		}
-
-		retract(key);
+		
+		
+		retract($message);
+		/*retract(key);*/
 	end
 
 
