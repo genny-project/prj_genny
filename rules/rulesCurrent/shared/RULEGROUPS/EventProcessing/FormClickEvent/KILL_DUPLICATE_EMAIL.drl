@@ -22,7 +22,7 @@ rule "KILL_DUPLICATE_EMAIL"
 		
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 		
-		String sourceCode = $message.getData().getRootCode();
+		String sourceCode = $message.getData().getSourceCode();
 		System.out.println("sourceCode :: " + sourceCode);
 		
 		String targetCode = $message.getData().getTargetCode();
