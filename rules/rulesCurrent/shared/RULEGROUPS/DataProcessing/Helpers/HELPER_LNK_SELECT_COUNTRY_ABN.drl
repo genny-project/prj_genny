@@ -53,7 +53,7 @@ rule "HELPER_LNK_SELECT_COUNTRY_ABN"
 					TaskUtils.enableTaskQuestion(ask, isAbnEnabled, userToken);
 
 					/* Remove PRI_ABN and LNK_SPECIFY_ABN if user toggles the country dropdown */
-					BaseEntity be = beUtils.getBaseEntityByCode(code);
+					BaseEntity be = beUtils.getBaseEntityByCode(targetCode);
 					if(be != null){
 						beUtils.removeEntityAttribute(be, "PRI_ABN");
 						beUtils.removeEntityAttribute(be, "LNK_SPECIFY_ABN");
