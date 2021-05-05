@@ -32,7 +32,7 @@ rule "KILL_DUPLICATE_EMAIL"
 		System.out.println("rootCode :: " + rootCode);
 		
 		if (rootCode == null) {
-			BaseEntity targetBe = beutils.getBaseEntityByCode(targetCode);
+			BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
 			System.out.println("targetBe :: " + targetBe);
 			if (targetBe != null) {
 				rootCode = targetBe.getValue("PRI_EMAIL", null);
