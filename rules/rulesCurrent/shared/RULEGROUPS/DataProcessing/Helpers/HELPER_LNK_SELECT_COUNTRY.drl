@@ -60,10 +60,11 @@ rule "HELPER_LNK_SELECT_COUNTRY"
 				String phoneCode = "+" + countryCode;
 				System.out.println("phoneCode  :: " + phoneCode);
 
-				Answer ans = new Answer(sourceCode, targetCode, "PRI_LANDLINE", phoneCode);
-				Answer ans = new Answer(sourceCode, targetCode, "PRI_MOBILE", phoneCode);
-				beUtils.saveAnswer(ans);
-				VertxUtils.sendToFrontEnd(userToken, ans);
+				Answer landlineAns = new Answer(sourceCode, targetCode, "PRI_LANDLINE", phoneCode);
+				Answer mobileAns = new Answer(sourceCode, targetCode, "PRI_MOBILE", phoneCode);
+				beUtils.saveAnswer(landlineAns);
+				beUtils.saveAnswer(mobileAns);
+				VertxUtils.sendToFrontEnd(userToken, landlineAns, mobileAns);
 			}
 		}
 end
