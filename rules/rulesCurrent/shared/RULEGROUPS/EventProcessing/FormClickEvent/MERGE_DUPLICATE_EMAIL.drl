@@ -28,7 +28,7 @@ rule "MERGE_DUPLICATE_EMAIL"
 		String code = $message.getData().getCode();
 		System.out.println("code: "+code);
 		
-		String sourceCode = $message.getData().getSourceCode();
+		String sourceCode = $message.getData().getRootCode();
 		System.out.println("sourceCode :: " + sourceCode);
 		
 		String targetCode = $message.getData().getTargetCode();
