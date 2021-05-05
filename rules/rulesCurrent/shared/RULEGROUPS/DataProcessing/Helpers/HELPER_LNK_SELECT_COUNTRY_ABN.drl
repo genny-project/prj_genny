@@ -23,7 +23,9 @@ rule "HELPER_LNK_SELECT_COUNTRY_ABN"
 	then
 		System.out.println(drools.getRule().getName()+": Rule fired");
  		
-		/* Get Target User BE */
+		String sourceCode = beUtils.getGennyToken().getUserCode();
+		System.out.println("sourceCode :: " + sourceCode);
+
 		String targetCode = answer.getTargetCode();
 		System.out.println("targetCode :: " + targetCode);
 		
@@ -44,12 +46,25 @@ rule "HELPER_LNK_SELECT_COUNTRY_ABN"
 			/* SET REPLACE TRUE */
 			for (Ask ask : askMsg.getItems()[0].getChildAsks()) {
 				if (ask.getQuestionCode().equals("QUE_SPECIFY_ABN") || ask.getQuestionCode().equals("QUE_COMPANY_ABN")) {
+					
 					/* Disable and send the ask */
 					System.out.println("Setting ABN field to enabled = " + enabled);
 					TaskUtils.enableTaskQuestion(ask, enabled, userToken);
+
+					BaseEntity be = beUtils.getBaseEntityByCode(code);
+					if(be != null){
+						beUtils.removeEntityAttribute(be, "PRI_ABN");
+						beUtils.removeEntityAttribute(be, "LNK_SPECIFY_ABN");
+
+						Answer abnAns = new Answer(sourceCode, targetCode, "PRI_ABN", "");
+						Answer specifyAbnAns = new Answer(sourceCode, targetCode, "LNK_SPECIFY_ABN", "");
+						VertxUtils.sendToFrontEnd(userToken, abnAns, specifyAbnAns);
+					}
 				}	
 			}
 		} else {
 			System.out.println("Could not fetch ask from cache: QUE_HOST_CPY_GRP"); 
 		}
 end
+
+QUE_SELECT_COUNTRY
