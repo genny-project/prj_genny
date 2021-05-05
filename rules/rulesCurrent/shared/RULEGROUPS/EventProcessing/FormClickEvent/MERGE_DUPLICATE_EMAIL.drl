@@ -21,11 +21,14 @@ rule "MERGE_DUPLICATE_EMAIL"
 		System.out.println("MERGE_DUPLICATE_EMAIL fired");
 		
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
-
+		
+		String user = userToken.getUserCode();
+		System.out.println("user: " + user);
+		
 		String code = $message.getData().getCode();
 		System.out.println("code: "+code);
 		
-		String sourceCode = $message.getData().getRootCode();
+		String sourceCode = $message.getData().getSourceCode();
 		System.out.println("sourceCode :: " + sourceCode);
 		
 		String targetCode = $message.getData().getTargetCode();
@@ -54,26 +57,31 @@ rule "MERGE_DUPLICATE_EMAIL"
 			String type = beUtils.whoAreYou(targetCode);
 			System.out.println("type :: " + type);
 			
-			if (targetCode.startsWith("PER_")){
-					System.out.println("Deleting a Person");
-					
-					beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetCode, type, false));
-					beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetCode, "PRI_IS_DELETED", true));
-					beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetCode, "PRI_EMAIL", "NULL"));
-					
-					if (type.equals("PRI_IS_HOST_CPY_REP")) {
-					
-						BaseEntity hcrBe = beUtils.getBaseEntityByCode("targetCode");
-						System.out.println("hcrBe = " + hcrBe);
-					
-						String assocHC = hcrBe.getValue("LNK_HOST_COMPANY", null);
-						assocHC = assocHC.replace("\"", "").replace("[", "").replace("]", "");
-						System.out.println("assocHC = " +assocHC);
-					
-						beUtils.removeQuantumLinkElement(userToken.getUserCode(), assocHC, targetCode, "LNK_HCRS");
-					}
-					
+			String key = type.substring(7);
+			System.out.println("key :: " + key);
+			switch (type) {
+				case "PRI_IS_EDU_PROVIDER":
+				key = "EDU_PRO";
+				System.out.println("key :: " + key);
+				break;
+			
 			}
+			
+			output.setTypeOfResult("SIGNAL");
+			output.setResultCode("START_ADD_ENTITY");
+			output.setSuitCase(key);
+			output.setAskSourceCode(user);	
+			output.setTargetCode(targetCode);
+		
+		
+			System.out.println("**************************************************");
+			System.out.println("TypeOfResult: "  + output.getTypeOfResult());
+			System.out.println("ResultCode: "    + output.getResultCode());
+			System.out.println("SuitCase: "      + output.getSuitCase());
+			System.out.println("AskSourceCode: " + output.getAskSourceCode());
+			System.out.println("TargetCode: "    + output.getTargetCode());
+			System.out.println("**************************************************");
+			
 			
 			QDataBaseEntityMessage msg = new QDataBaseEntityMessage(targetBe);
 			msg.setToken(userToken.getToken());
