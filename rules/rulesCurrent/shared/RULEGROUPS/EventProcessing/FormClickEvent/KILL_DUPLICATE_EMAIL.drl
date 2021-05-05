@@ -31,6 +31,18 @@ rule "KILL_DUPLICATE_EMAIL"
 		String rootCode = $message.getData().getRootCode();
 		System.out.println("rootCode :: " + rootCode);
 		
+		if (rootCode == null) {
+			BaseEntity targetBe = beutils.getBaseEntityByCode(targetCode);
+			System.out.println("targetBe :: " + targetBe);
+			if (targetBe != null) {
+				rootCode = targetBe.getValue("PRI_EMAIL", null);
+			} else {
+				System.out.println("ERROR: targetBe is null");
+			}
+		} else {
+			System.out.println("FYI: rootCode is not null");
+		}
+		
 		/*
 		code: kill
 		parentCode: DUPLICATE_EMAILS
@@ -54,11 +66,65 @@ rule "KILL_DUPLICATE_EMAIL"
 		System.out.println("Killed the target email :: " + targetCode);
 		
 		
-		/* Send same email back as an answer to the source */
+		/* Send same email back as an answer to the source 
 		Answer answer = new Answer(userToken.getUserCode(), sourceCode, "PRI_EMAIL", rootCode);
 		beUtils.saveAnswer(answer);		
-		VertxUtils.sendToFrontEnd(userToken, answer);
-		System.out.println("Sent target email to the FE :: " + targetCode);
+		VertxUtils.sendToFrontEnd(userToken, answer);*/
+		
+		JsonObject resultJson = null;
+		String duplicateCodes = null;
+		String number = null; 
+		
+		/* check if email is already in use for a person */
+		
+		SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Email People")
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%") 
+				.addFilter("PRI_EMAIL", SearchEntity.StringFilter.EQUAL, answer.getValue()) 
+				.addColumn("PRI_NAME", "Name")
+				.setPageStart(0)
+				.setPageSize(100);
+		
+		searchBE.setRealm(beUtils.getServiceToken().getRealm());
+			
+		/* Check number of duplicates */
+		Tuple2<String, List<String>> data = beUtils.getHql(searchBE);
+		String hql = data._1;
+
+		hql = Base64.getUrlEncoder().encodeToString(hql.getBytes());
+		try {
+			String resultJsonStr = QwandaUtils.apiGet(
+					GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql ,
+					beUtils.getServiceToken().getToken(), 120);
+
+			System.out.println("Search EMAIL result is "+resultJsonStr);
+			
+			if (resultJsonStr.equals("0")) {
+				System.out.println("This email "+answer.getValue()+" is unique");
+			} else {
+					List<BaseEntity> duplicateBes = beUtils.getBaseEntitys(searchBE);
+					System.out.println("duplicateBE's: " + duplicateBes);
+					
+					QDataBaseEntityMessage msg = new QDataBaseEntityMessage(duplicateBes);
+					msg.setToken(userToken.getToken());
+					msg.setReplace(true);
+					VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+					
+					for (BaseEntity duplicateBe : duplicateBes) {
+							System.out.println("duplicateBe: " + duplicateBe);
+							duplicateCodes = duplicateCodes + "," + duplicateBe.getCode();
+							System.out.println("duplicateCodes: " + duplicateCodes);
+					}
+					
+					duplicateCodes = duplicateCodes.substring(5);
+					System.out.println("Final duplicateCodes: " + duplicateCodes);
+					
+					QCmdMessage duplicateEmailMsg = new QCmdMessage("DUPLICATE_EMAILS", duplicateCodes);
+					duplicateEmailMsg.setMessage(number);
+					duplicateEmailMsg.setToken(beUtils.getGennyToken().getToken());
+					duplicateEmailMsg.setSend(true);
+					VertxUtils.writeMsg("webcmds", duplicateEmailMsg);
+					
+		System.out.println("Sent QCmdMessage to the FE");
 		
 		retract($message);
 end
