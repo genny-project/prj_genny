@@ -133,12 +133,10 @@ rule "KILL_DUPLICATE_EMAIL"
 					VertxUtils.writeMsg("webcmds", duplicateEmailMsg);
 					
 					System.out.println("Sent QCmdMessage to the FE");
-					
+			}			
 		} catch (Exception e) {
 		
 		}			
-					
-		
-		
+
 		retract($message);
 end
