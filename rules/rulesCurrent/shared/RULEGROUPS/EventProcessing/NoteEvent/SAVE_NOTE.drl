@@ -45,9 +45,11 @@ rule "SAVE_NOTE"
 		String endPoint = "https://internmatch-dev.gada.io/v7/notes";
 		System.out.println("endPoint :: " + endPoint);
 		
+		String url = endPoint + "/"+targetCode + "?tags=&pageIndex=0&pageSize=100";
+		System.out.println("url :: " + url);
+		
 		QwandaUtils.apiPostNote(endPoint, sourceCode, tags, targetCode, content, serviceToken.getToken());
 		System.out.println("Note saved against " + targetCode + " with content: " + content);
-	
 	
 		String toastName = targetBE.getValue("PRI_NAME", null);
 		System.out.println("toastName: " +toastName);
@@ -63,9 +65,6 @@ rule "SAVE_NOTE"
 		/* I put this here because this system sucks and I wasted 2 full days trying to get a rule to fire. Sue me lol */	
 		
 		if (parentCode.equals("Tab_Application")) {			
-										String url = endPoint + "/"+targetCode + "?tags=&pageIndex=0&pageSize=100";
-										System.out.println("url :: " + url);
-						
 										notes = QwandaUtils.sendGET(url, serviceToken.getToken());
 										System.out.println("notes :: " + notes);
 										
@@ -181,7 +180,9 @@ rule "SAVE_NOTE"
 		}
 		
 		if (parentCode.equals("Tab_Intern") || parentCode.equals("Tab_Internship") || parentCode.equals("Tab_HostCompany") || parentCode.equals("Tab_Supervisor")) {
-		
+										notes = QwandaUtils.sendGET(url, serviceToken.getToken());
+										System.out.println("notes :: " + notes);
+										
 										String name = targetBE.getValue("PRI_NAME", null);
 										System.out.println("name: " +name);
 										
