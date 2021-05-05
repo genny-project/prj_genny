@@ -18,7 +18,7 @@ rule "KILL_DUPLICATE_EMAIL"
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam( )
     then
-		System.out.println("MERGE_DUPLICATE_EMAIL fired");
+		System.out.println("KILL_DUPLICATE_EMAIL fired");
 		
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 		
@@ -31,7 +31,11 @@ rule "KILL_DUPLICATE_EMAIL"
 		String rootCode = $message.getData().getRootCode();
 		System.out.println("rootCode :: " + rootCode);
 		
-		if (rootCode == null) {
+		if (rootCode == null || rootCode.equals("") || rootCode.equals(" ")) {
+			if (rootCode == null) {System.out.println("Hmmmm: rootCode == null");}
+			if (rootCode.equals("")) {System.out.println("Hmmmm: rootCode.equals()");}
+			if (rootCode.equals(" ")) {System.out.println("Hmmmm: rootCode.equals( )");}
+		
 			BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
 			System.out.println("targetBe :: " + targetBe);
 			if (targetBe != null) {
@@ -118,9 +122,7 @@ rule "KILL_DUPLICATE_EMAIL"
 					VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 					
 					for (BaseEntity duplicateBe : duplicateBes) {
-							System.out.println("duplicateBe: " + duplicateBe);
 							duplicateCodes = duplicateCodes + "," + duplicateBe.getCode();
-							System.out.println("duplicateCodes: " + duplicateCodes);
 					}
 					
 					duplicateCodes = duplicateCodes.substring(5);
