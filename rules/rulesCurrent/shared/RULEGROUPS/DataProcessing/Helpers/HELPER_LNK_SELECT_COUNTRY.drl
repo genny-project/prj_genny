@@ -64,7 +64,6 @@ rule "HELPER_LNK_SELECT_COUNTRY"
 			if(name != null){
 				Answer ans = new Answer(sourceCode, targetCode, "PRI_SELECT_COUNTRY", name);
 				beUtils.saveAnswer(ans);
-				VertxUtils.sendToFrontEnd(userToken, ans);
 			}
 		}
 end
