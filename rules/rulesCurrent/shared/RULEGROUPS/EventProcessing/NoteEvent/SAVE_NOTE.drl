@@ -34,6 +34,9 @@ rule "SAVE_NOTE"
 		String parentCode = $message.getData().getParentCode();
 		System.out.println("parentCode :: " + parentCode);
 		
+		String rootCode = $message.getData().getRootCode();
+		System.out.println("rootCode :: " + rootCode);
+		
 		String content = $message.getData().getContent();
 		System.out.println("content :: " + content);
 			
@@ -193,7 +196,7 @@ rule "SAVE_NOTE"
 										/* Search for Applications */
 										String linkedApps = targetBE.getValue("LNK_APPLICATIONS", null);
 										
-										if (linkedApps != null){
+										if (linkedApps != null && rootCode == null){
 											System.out.println("linkedApps: " +linkedApps);									/*["APP_AA3FEB35-FD12-49B9-A595-AA315773A37F","APP_41484401-7C82-4CD0-9B75-AA9E224B23ED"]*/
 											linkedApps = linkedApps.replace("\"", "").replace("[", "").replace("]", "");	
 											System.out.println("linkedApps: " +linkedApps);									/*APP_AA3FEB35-FD12-49B9-A595-AA315773A37F,APP_41484401-7C82-4CD0-9B75-AA9E224B23ED*/
@@ -230,10 +233,10 @@ rule "SAVE_NOTE"
 											jsonStuff.put("image", image);
 											json.put(parentCode, jsonStuff);
 											/*jsonIntern.put("tagList", tagList);*/
-											
-											JsonObject jsonApplication = new JsonObject();
-											json.put("linkedApps", linkedApps);
-											
+											if (rootCode == null) {
+												JsonObject jsonApplication = new JsonObject();
+												json.put("linkedApps", linkedApps);
+											}
 											System.out.println("json :: " + json.toString());
 											VertxUtils.writeMsg("webcmds", json.toString());
 											System.out.println("Finished with non Application note");
