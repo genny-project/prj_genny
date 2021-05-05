@@ -107,7 +107,7 @@ rule "KILL_DUPLICATE_EMAIL"
 			System.out.println("Search EMAIL result is "+resultJsonStr);
 			
 			if (resultJsonStr.equals("0")) {
-				System.out.println("This email "+answer.getValue()+" is unique");
+				System.out.println("This email answer is unique");
 			} else {
 					List<BaseEntity> duplicateBes = beUtils.getBaseEntitys(searchBE);
 					System.out.println("duplicateBE's: " + duplicateBes);
