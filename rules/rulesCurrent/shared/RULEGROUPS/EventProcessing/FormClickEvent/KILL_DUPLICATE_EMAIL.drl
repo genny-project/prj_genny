@@ -49,8 +49,9 @@ rule "KILL_DUPLICATE_EMAIL"
 		
 		
 		/* Send same email back as an answer to the source */
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), sourceCode, "PRI_EMAIL", rootCode));
-							
+		Answer answer = new Answer(userToken.getUserCode(), sourceCode, "PRI_EMAIL", rootCode)
+		beUtils.saveAnswer(answer);		
+		VertxUtils.sendToFrontEnd(userToken, answer);
 		
-		retract( $message);
+		retract($message);
 end
