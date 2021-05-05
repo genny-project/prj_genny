@@ -12,13 +12,12 @@ import life.genny.utils.QuestionUtils;
 
 rule "HELPER_LNK_SELECT_COUNTRY_ABN"
 	ruleflow-group 'DataProcessing'
-	salience 500
+	salience 6000
 	no-loop true
 	when
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		answer : Answer( attributeCode == "LNK_SELECT_COUNTRY" && ( targetCode.startsWith("CPY_") ) )
-		output : OutputParam()
 		beUtils : BaseEntityUtils()
 
 	then
@@ -44,16 +43,13 @@ rule "HELPER_LNK_SELECT_COUNTRY_ABN"
 		if (askMsg != null) {
 			/* SET REPLACE TRUE */
 			for (Ask ask : askMsg.getItems()[0].getChildAsks()) {
-				if (ask.getQuestionCode().equals("QUE_COMPANY_ABN")) {
+				if (ask.getQuestionCode().equals("QUE_SPECIFY_ABN") || ask.getQuestionCode().equals("QUE_COMPANY_ABN")) {
 					/* Disable and send the ask */
 					System.out.println("Setting ABN field to enabled = " + enabled);
 					TaskUtils.enableTaskQuestion(ask, enabled, userToken);
-				}
+				}	
 			}
 		} else {
 			System.out.println("Could not fetch ask from cache: QUE_HOST_CPY_GRP"); 
 		}
-
-		output.setTypeOfResult("NONE");
-		output.setResultCode("NONE");
 end
