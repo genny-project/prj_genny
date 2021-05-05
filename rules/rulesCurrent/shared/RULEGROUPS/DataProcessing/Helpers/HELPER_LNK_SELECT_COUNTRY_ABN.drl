@@ -35,9 +35,10 @@ rule "HELPER_LNK_SELECT_COUNTRY_ABN"
 		String countryCode = beUtils.cleanUpAttributeValue(value);
 		System.out.println("countryCode  :: " + countryCode);
 
-		boolean enabled = false;
+		boolean isAbnEnabled = false;
 		if (countryCode.equals("SEL_AUSTRALIA")) {
-			enabled = true;
+			/* if the country is Australia, enable the abn questions */
+			isAbnEnabled = true;
 		}
 
 		QDataAskMessage askMsg = QuestionUtils.getAsks(userToken.getUserCode(), targetCode, "QUE_HOST_CPY_GRP", userToken.getToken());
@@ -47,10 +48,11 @@ rule "HELPER_LNK_SELECT_COUNTRY_ABN"
 			for (Ask ask : askMsg.getItems()[0].getChildAsks()) {
 				if (ask.getQuestionCode().equals("QUE_SPECIFY_ABN") || ask.getQuestionCode().equals("QUE_COMPANY_ABN")) {
 					
-					/* Disable and send the ask */
-					System.out.println("Setting ABN field to enabled = " + enabled);
-					TaskUtils.enableTaskQuestion(ask, enabled, userToken);
+					/* Enable / Disable and send the ask */
+					System.out.println("Setting ABN field to   ::   " + isAbnEnabled);
+					TaskUtils.enableTaskQuestion(ask, isAbnEnabled, userToken);
 
+					/* Remove PRI_ABN and LNK_SPECIFY_ABN if user toggles the country dropdown */
 					BaseEntity be = beUtils.getBaseEntityByCode(code);
 					if(be != null){
 						beUtils.removeEntityAttribute(be, "PRI_ABN");
@@ -58,6 +60,7 @@ rule "HELPER_LNK_SELECT_COUNTRY_ABN"
 
 						Answer abnAns = new Answer(sourceCode, targetCode, "PRI_ABN", "");
 						Answer specifyAbnAns = new Answer(sourceCode, targetCode, "LNK_SPECIFY_ABN", "");
+						
 						VertxUtils.sendToFrontEnd(userToken, abnAns, specifyAbnAns);
 					}
 				}	
