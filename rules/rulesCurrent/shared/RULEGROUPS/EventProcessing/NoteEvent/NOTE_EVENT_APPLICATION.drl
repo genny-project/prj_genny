@@ -113,30 +113,35 @@ rule "NOTE_EVENT_APPLICATION"
 					jsonApplication.put("code", targetCode);
 					jsonApplication.put("title", title);
 					jsonApplication.put("image", image);
+					jsonApplication.put("click", "ACT_PRI_EVENT_ACCESS_NOTES_APPLICATION");
 					/*jsonApplication.put("tagList", tagList);*/
 					
 					JsonObject jsonIntern = new JsonObject();
 					jsonIntern.put("code", assocIntern);
 					jsonIntern.put("title", internName);
 					jsonIntern.put("image", internImage);
+					jsonIntern.put("click", "ACT_PRI_EVENT_ACCESS_NOTES_INTERN");
 					/*jsonIntern.put("tagList", tagList);*/
 					
 					JsonObject jsonInternship = new JsonObject();
 					jsonInternship.put("code", assocInternship);
 					jsonInternship.put("title", internshipName);
 					jsonInternship.put("image", internshipImage);
+					jsonInternship.put("click", "ACT_PRI_EVENT_ACCESS_NOTES_INTERNSHIP");
 					/*jsonInternship.put("tagList", tagList);*/
 					
 					JsonObject jsonHC = new JsonObject();
 					jsonHC.put("code", assocHC);
 					jsonHC.put("title", HCName);
 					jsonHC.put("image", HCImage);
+					jsonHC.put("click", "ACT_PRI_EVENT_ACCESS_NOTES_HC");
 					/*jsonHC.put("tagList", tagList);*/
 					
 					JsonObject jsonSuper = new JsonObject();
 					jsonSuper.put("code", assocSuper);
 					jsonSuper.put("title", superName);
 					jsonSuper.put("image", superImage);
+					jsonSuper.put("click", "ACT_PRI_EVENT_ACCESS_NOTES_HCR");
 					/*jsonSuper.put("tagList", tagList);*/
 					
 					
