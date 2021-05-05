@@ -196,7 +196,7 @@ rule "IS_QA_INTERN"
 			
 			List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
 			
-			EmailHelper.sendGrid(beUtils, email, null, bccList, subject, template_id, templateData, false);
+			EmailHelper.sendGrid(beUtils, email, null, bccList, subject, template_id, templateData, true);
  
 			/* 
  			String mobile = "0433501177";
