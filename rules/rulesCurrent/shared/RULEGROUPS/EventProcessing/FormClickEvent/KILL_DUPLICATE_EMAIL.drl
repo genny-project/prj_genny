@@ -58,7 +58,7 @@ rule "KILL_DUPLICATE_EMAIL"
 		Answer answer = new Answer(userToken.getUserCode(), sourceCode, "PRI_EMAIL", rootCode);
 		beUtils.saveAnswer(answer);		
 		VertxUtils.sendToFrontEnd(userToken, answer);
-		ystem.out.println("Sent target email to the FE :: " + targetCode);
+		System.out.println("Sent target email to the FE :: " + targetCode);
 		
 		retract($message);
 end
