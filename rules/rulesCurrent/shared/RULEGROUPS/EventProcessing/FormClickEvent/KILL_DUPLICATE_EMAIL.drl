@@ -33,7 +33,7 @@ rule "KILL_DUPLICATE_EMAIL"
 		
 		if (rootCode == null || rootCode.equals("") || rootCode.equals(" ")) {
 			if (rootCode == null) {System.out.println("Hmmmm: rootCode == null");}
-			if (rootCode.equals("")) {System.out.println("Hmmmm: rootCode.equals()");}
+			if (rootCode.equals("	")) {System.out.println("Hmmmm: rootCode.equals()");}
 			if (rootCode.equals(" ")) {System.out.println("Hmmmm: rootCode.equals( )");}
 		
 			BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
@@ -78,10 +78,10 @@ rule "KILL_DUPLICATE_EMAIL"
 		System.out.println("Killed the target email :: " + targetCode);
 		
 		
-		/* Send same email back as an answer to the source 
+		/* Send same email back as an answer to the source */
 		Answer answer = new Answer(userToken.getUserCode(), sourceCode, "PRI_EMAIL", rootCode);
 		beUtils.saveAnswer(answer);		
-		VertxUtils.sendToFrontEnd(userToken, answer);*/
+		VertxUtils.sendToFrontEnd(userToken, answer);
 		
 		JsonObject resultJson = null;
 		String duplicateCodes = null;
@@ -104,15 +104,13 @@ rule "KILL_DUPLICATE_EMAIL"
 
 		hql = Base64.getUrlEncoder().encodeToString(hql.getBytes());
 		try {
-			String resultJsonStr = QwandaUtils.apiGet(
+					String resultJsonStr = QwandaUtils.apiGet(
 					GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql ,
 					beUtils.getServiceToken().getToken(), 120);
 
-			System.out.println("Search EMAIL result is "+resultJsonStr);
+					System.out.println("Search EMAIL result is "+resultJsonStr);
 			
-			if (resultJsonStr.equals("0")) {
-				System.out.println("This email answer is unique");
-			} else {
+			
 					List<BaseEntity> duplicateBes = beUtils.getBaseEntitys(searchBE);
 					System.out.println("duplicateBE's: " + duplicateBes);
 					
@@ -135,7 +133,7 @@ rule "KILL_DUPLICATE_EMAIL"
 					VertxUtils.writeMsg("webcmds", duplicateEmailMsg);
 					
 					System.out.println("Sent QCmdMessage to the FE");
-			}			
+					
 		} catch (Exception e) {
 		
 		}			
