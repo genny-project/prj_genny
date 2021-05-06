@@ -166,7 +166,7 @@ rule "NOTE_EVENT_APPLICATION"
 				
 				if(notes2 != null){
 					JsonObject json2 = new JsonObject(notes2);
-					json.put("token", userToken.getToken());
+					json2.put("token", userToken.getToken());
 					
 					JsonObject jsonApplication2 = new JsonObject();
 					jsonApplication2.put("code", targetCode);
