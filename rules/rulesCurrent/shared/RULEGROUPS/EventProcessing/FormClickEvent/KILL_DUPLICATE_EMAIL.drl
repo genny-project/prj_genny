@@ -77,12 +77,8 @@ rule "KILL_DUPLICATE_EMAIL"
 		}
 		System.out.println("Killed the target email :: " + targetCode);
 		
-		
-		/* Send same email back as an answer to the source */
-		Answer answer = new Answer(userToken.getUserCode(), sourceCode, "PRI_EMAIL", rootCode);
-		beUtils.saveAnswer(answer);		
-		VertxUtils.sendToFrontEnd(userToken, answer);
-		
+	
+		/* Duplicate check again */	
 		JsonObject resultJson = null;
 		String duplicateCodes = null;
 		String number = null; 
@@ -136,7 +132,12 @@ rule "KILL_DUPLICATE_EMAIL"
 					
 		} catch (Exception e) {
 		
-		}			
+		}	
+		
+		/* Send same email back as an answer to the source */
+		Answer answer = new Answer(userToken.getUserCode(), sourceCode, "PRI_EMAIL", rootCode);
+		beUtils.saveAnswer(answer);		
+		VertxUtils.sendToFrontEnd(userToken, answer);		
 
 		retract($message);
 end
