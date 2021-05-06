@@ -23,7 +23,10 @@ rule "NOTE_EVENT_INTERN"
 		System.out.println(drools.getRule().getName() + " triggered");
 		
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
-
+		
+		String sourceCode = $message.getData().getsourceCode();
+		System.out.println("sourceCode :: " + sourceCode);
+	
 		String targetCode = $message.getData().getTargetCode();
 		System.out.println("targetCode :: " + targetCode);
 		

@@ -67,6 +67,16 @@ rule "SAVE_NOTE"
 		
 		/* I put this here because this system sucks and I wasted 2 full days trying to get a rule to fire. Sue me lol */	
 		
+		if (sourceCode != null) {
+			System.out.println("sourceCode is not null :: " + sourceCode);
+			parentCode = "Tab_Application";
+			targetBE = beUtils.getBaseEntityByCode(sourceCode);
+			System.out.println("parentCode changed to  :: " + parentCode);
+			System.out.println("targetBE changed to  :: " + targetBE);
+		} else {
+			System.out.println("sourceCode is null proceeding as usual");
+		}
+		
 		if (parentCode.equals("Tab_Application")) {			
 										notes = QwandaUtils.sendGET(url, serviceToken.getToken());
 										System.out.println("notes :: " + notes);
@@ -141,8 +151,8 @@ rule "SAVE_NOTE"
 											
 											JsonObject jsonApplication = new JsonObject();
 											jsonApplication.put("code", targetCode);
-											jsonApplication.put("title", appTitle);
-											jsonApplication.put("image", appImage);
+											jsonApplication.put("title", title);
+											jsonApplication.put("image", image);
 											/*jsonApplication.put("tagList", tagList);*/
 											
 											JsonObject jsonIntern = new JsonObject();
@@ -235,7 +245,7 @@ rule "SAVE_NOTE"
 											/*jsonIntern.put("tagList", tagList);*/
 											if (rootCode == null) {
 												JsonObject jsonApplication = new JsonObject();
-												json.put("linkedApps", linkedApps);
+												json.put("null rootCode linkedApps", linkedApps);
 											}
 											System.out.println("json :: " + json.toString());
 											VertxUtils.writeMsg("webcmds", json.toString());
