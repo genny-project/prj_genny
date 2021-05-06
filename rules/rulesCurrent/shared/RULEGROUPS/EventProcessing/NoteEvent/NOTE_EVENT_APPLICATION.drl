@@ -164,6 +164,7 @@ rule "NOTE_EVENT_APPLICATION"
 					VertxUtils.writeMsg("webcmds", json.toString());
 				}
 				
+				
 				if(notes2 != null){
 					JsonObject json2 = new JsonObject(notes2);
 					json2.put("token", userToken.getToken());
