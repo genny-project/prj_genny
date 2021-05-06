@@ -152,7 +152,7 @@ rule "SAVE_NOTE"
 											JsonObject jsonApplication = new JsonObject();
 											jsonApplication.put("code", targetCode);
 											jsonApplication.put("title", appTitle);
-											jsonApplication.put("image", appimage);
+											jsonApplication.put("image", appImage);
 											/*jsonApplication.put("tagList", tagList);*/
 											
 											JsonObject jsonIntern = new JsonObject();
