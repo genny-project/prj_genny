@@ -204,11 +204,11 @@ rule "NOTE_EVENT_APPLICATION"
 					jsonSuper.put("tagList", tagList);*/
 					
 					
-					json.put("Tab_Application", jsonApplication2);
-					json.put("Tab_Intern", jsonIntern2);
-					json.put("Tab_Internship", jsonInternship2);
-					json.put("Tab_Host Company", jsonHC2);
-					json.put("Tab_Supervisor", jsonSuper2);
+					json2.put("Tab_Application", jsonApplication2);
+					json2.put("Tab_Intern", jsonIntern2);
+					json2.put("Tab_Internship", jsonInternship2);
+					json2.put("Tab_Host Company", jsonHC2);
+					json2.put("Tab_Supervisor", jsonSuper2);
 					
 					
 					System.out.println("json2 :: " + json2.toString());
