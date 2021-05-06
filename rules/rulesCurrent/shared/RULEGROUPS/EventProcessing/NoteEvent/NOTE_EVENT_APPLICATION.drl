@@ -29,14 +29,6 @@ rule "NOTE_EVENT_APPLICATION"
 
 		if(targetCode != null){
 			try {
-				String endPoint = GennySettings.projectUrl + "/v7/notes";
-				System.out.println("endPoint :: " + endPoint);
-
-				String url = endPoint + "/"+targetCode + "?tags=&pageIndex=0&pageSize=100";
-				System.out.println("url :: " + url);
-
-				String notes = QwandaUtils.sendGET(url, serviceToken.getToken());
-				System.out.println("notes :: " + notes);
 				
 				/* Application Details */
 				
@@ -105,6 +97,22 @@ rule "NOTE_EVENT_APPLICATION"
 				
 				/*String[] tagList = {"Business Development", "Placement", "Outcome Life", "Miscellaneous"};*/
 				
+				
+				String endPoint = GennySettings.projectUrl + "/v7/notes";
+				System.out.println("endPoint :: " + endPoint);
+
+				String url = endPoint + "/"+targetCode + "?tags=&pageIndex=0&pageSize=100";
+				String url2 = endPoint + "/"+targetCode + "?tags=&tc=" + targetCode + "&tc=" + assocIntern + "&tc=" + assocInternship + "&tc=" + assocHC + "&tc=" + assocSuper + "&pageIndex=0&pageSize=100";
+				System.out.println("url :: " + url);
+				System.out.println("url2 :: " + url2);
+
+				String notes = QwandaUtils.sendGET(url, serviceToken.getToken());				
+				String notes2 = QwandaUtils.sendGET(url2, serviceToken.getToken());
+				System.out.println("notes :: " + notes);
+				System.out.println("notes2 :: " + notes2);
+				
+				
+				
 				if(notes != null){
 					JsonObject json = new JsonObject(notes);
 					json.put("token", userToken.getToken());
@@ -154,6 +162,57 @@ rule "NOTE_EVENT_APPLICATION"
 					
 					System.out.println("json :: " + json.toString());
 					VertxUtils.writeMsg("webcmds", json.toString());
+				}
+				
+				if(notes2 != null){
+					JsonObject json2 = new JsonObject(notes2);
+					json.put("token", userToken.getToken());
+					
+					JsonObject jsonApplication2 = new JsonObject();
+					jsonApplication2.put("code", targetCode);
+					jsonApplication2.put("title", title);
+					jsonApplication2.put("image", image);
+					/*jsonApplication.put("click", "ACT_PRI_EVENT_ACCESS_NOTES_APPLICATION");
+					jsonApplication.put("tagList", tagList);*/
+					
+					JsonObject jsonIntern2 = new JsonObject();
+					jsonIntern2.put("code", assocIntern);
+					jsonIntern2.put("title", internName);
+					jsonIntern2.put("image", internImage);
+					/*jsonIntern.put("click", "ACT_PRI_EVENT_ACCESS_NOTES_INTERN");
+					jsonIntern.put("tagList", tagList);*/
+					
+					JsonObject jsonInternship2 = new JsonObject();
+					jsonInternship2.put("code", assocInternship);
+					jsonInternship2.put("title", internshipName);
+					jsonInternship2.put("image", internshipImage);
+					/*jsonInternship.put("click", "ACT_PRI_EVENT_ACCESS_NOTES_INTERNSHIP");
+					jsonInternship.put("tagList", tagList);*/
+					
+					JsonObject jsonHC2 = new JsonObject();
+					jsonHC2.put("code", assocHC);
+					jsonHC2.put("title", HCName);
+					jsonHC2.put("image", HCImage);
+					/*jsonHC.put("click", "ACT_PRI_EVENT_ACCESS_NOTES_HC");
+					jsonHC.put("tagList", tagList);*/
+					
+					JsonObject jsonSuper2 = new JsonObject();
+					jsonSuper2.put("code", assocSuper);
+					jsonSuper2.put("title", superName);
+					jsonSuper2.put("image", superImage);
+					/*jsonSuper.put("click", "ACT_PRI_EVENT_ACCESS_NOTES_HCR");
+					jsonSuper.put("tagList", tagList);*/
+					
+					
+					json.put("Tab_Application", jsonApplication2);
+					json.put("Tab_Intern", jsonIntern2);
+					json.put("Tab_Internship", jsonInternship2);
+					json.put("Tab_Host Company", jsonHC2);
+					json.put("Tab_Supervisor", jsonSuper2);
+					
+					
+					System.out.println("json2 :: " + json2.toString());
+					VertxUtils.writeMsg("webcmds", json2.toString());
 				}
 			} catch (Exception e) {
 				System.out.println("Exception :: " + e);
