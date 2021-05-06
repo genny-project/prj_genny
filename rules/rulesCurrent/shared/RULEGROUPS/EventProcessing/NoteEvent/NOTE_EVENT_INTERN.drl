@@ -24,8 +24,8 @@ rule "NOTE_EVENT_INTERN"
 		
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 		
-		String sourceCode = $message.getData().getsourceCode();
-		System.out.println("sourceCode :: " + sourceCode);
+		/*String sourceCode = $message.getData().getsourceCode();
+		System.out.println("sourceCode :: " + sourceCode);*/
 	
 		String targetCode = $message.getData().getTargetCode();
 		System.out.println("targetCode :: " + targetCode);
