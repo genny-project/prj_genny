@@ -115,13 +115,17 @@ rule "KILL_DUPLICATE_EMAIL"
 					msg.setReplace(true);
 					VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 					
-					for (BaseEntity duplicateBe : duplicateBes) {
-							duplicateCodes = duplicateCodes + "," + duplicateBe.getCode();
+					if (!resultJsonStr.equals("0")) {
+						for (BaseEntity duplicateBe : duplicateBes) {
+								duplicateCodes = duplicateCodes + "," + duplicateBe.getCode();
+						}
+						
+						duplicateCodes = duplicateCodes.substring(5);
+						System.out.println("Final duplicateCodes: " + duplicateCodes);
+					} else {
+						System.out.println("Zero duplicates. resultJsonStr: " + resultJsonStr);
 					}
-					
-					duplicateCodes = duplicateCodes.substring(5);
-					System.out.println("Final duplicateCodes: " + duplicateCodes);
-					
+
 					QCmdMessage duplicateEmailMsg = new QCmdMessage("DUPLICATE_EMAILS", duplicateCodes);
 					duplicateEmailMsg.setMessage(number);
 					duplicateEmailMsg.setToken(beUtils.getGennyToken().getToken());
