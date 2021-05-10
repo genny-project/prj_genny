@@ -13,16 +13,13 @@ import java.util.HashMap;
 import life.genny.utils.VertxUtils;
 import life.genny.qwandautils.JsonUtils;
 import org.apache.commons.lang3.text.WordUtils;
-
 import java.util.List;
 import java.util.ArrayList;
 import org.apache.commons.lang3.StringUtils;
 
-
-
 rule "PRI_ABN"
     ruleflow-group 'DataProcessing'
-        salience 5000 
+	salience 5000 
     when
       beUtils : BaseEntityUtils()
 	  answer : Answer( attributeCode == "PRI_ABN" )
@@ -35,23 +32,45 @@ rule "PRI_ABN"
 		
 		/* check if abn is valid */
 		
-			String abn = StringUtils.deleteWhitespace(answer.getValue());
-			
+		String abn = StringUtils.deleteWhitespace(answer.getValue());
 		
-			if (QwandaUtils.isValidAbnFormat(abn)) {
-				System.out.println("This abn "+answer.getValue()+" is good");
+	
+		if (QwandaUtils.isValidAbnFormat(abn)) {
+			System.out.println("This abn "+answer.getValue()+" is good");
+			
+			/* if abn is valid, check if the abn exists in the system */
+			SearchEntity searchBE = new SearchEntity("SBE_UNIQUE_ABN", "Unique Abn")
+					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "CPY_%") 
+					.addFilter("PRI_ABN", SearchEntity.StringFilter.EQUAL, abn) 
+					.addColumn("PRI_NAME", "Name")
+					.setPageStart(0)
+					.setPageSize(100);
+			
+			searchBE.setRealm(beUtils.getServiceToken().getRealm());
+
+			TableUtils tableUtils = new TableUtils(beUtils);
+			Long abnCount = tableUtils.performCount(searchBE);
+			System.out.println("abnCount   ::   " + abnCount);
+
+			if(abnCount > 0){
+				String message = "A company with " +  abn + "already exists. Please use a unique ABN.";
+				Answer feedbackAnswer = new Answer(answer.getSourceCode(),answer.getTargetCode(),answer.getAttributeCode(),"");
+				VertxUtils.sendFeedbackError(beUtils.getGennyToken(),feedbackAnswer,message);
+				System.out.println("Sent not unique ABN error message to frontend");		
+
+			}else{
 				answer.setValue(abn);
 				answersToSave.add(answer);
-			}	else {
-					String message = "ABN "+answer.getValue()+" is an invalid ABN format";
-					System.out.println(message);
-					Answer feedbackAnswer = new Answer(answer.getSourceCode(),answer.getTargetCode(),answer.getAttributeCode(),"");
-					VertxUtils.sendFeedbackError(beUtils.getGennyToken(),feedbackAnswer,message);
-					System.out.println("Sent error message back to frontend");		
 			}
-			retract(answer);
-			
-			
+
+		}else {
+			String message = "ABN "+answer.getValue()+" is an invalid ABN format";
+			System.out.println(message);
+			Answer feedbackAnswer = new Answer(answer.getSourceCode(),answer.getTargetCode(),answer.getAttributeCode(),"");
+			VertxUtils.sendFeedbackError(beUtils.getGennyToken(),feedbackAnswer,message);
+			System.out.println("Sent error message back to frontend");		
+		}
+		retract(answer);
 		output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */
 		
