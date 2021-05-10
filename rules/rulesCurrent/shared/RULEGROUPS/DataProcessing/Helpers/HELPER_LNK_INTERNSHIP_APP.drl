@@ -102,7 +102,7 @@ rule "HELPER_LNK_INTERNSHIP_APP"
 				}
 			}
 		}
-*/
+
 		BaseEntity be = beUtils.getBaseEntityByCode(code);
 		if(be != null){
 
@@ -144,4 +144,5 @@ rule "HELPER_LNK_INTERNSHIP_APP"
 				}
 			}
 		}
+		*/
 end
