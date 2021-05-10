@@ -34,7 +34,7 @@ rule "HELPER_LNK_INTERNSHIP_APP"
 
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
-		
+
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		System.out.println("sourceCode :: " + sourceCode);
 		
@@ -51,7 +51,7 @@ rule "HELPER_LNK_INTERNSHIP_APP"
 		System.out.println("code  :: " + code);
 
 		Boolean canApplyToInternship = true;
-/*
+
 		BaseEntity applicationBe = beUtils.getBaseEntityByCode(targetCode);
 		if(applicationBe != null){
 
@@ -144,5 +144,5 @@ rule "HELPER_LNK_INTERNSHIP_APP"
 				}
 			}
 		}
-		*/
+		
 end
