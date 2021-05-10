@@ -51,7 +51,7 @@ rule "HELPER_LNK_INTERNSHIP_APP"
 		System.out.println("code  :: " + code);
 
 		Boolean canApplyToInternship = true;
-
+/*
 		BaseEntity applicationBe = beUtils.getBaseEntityByCode(targetCode);
 		if(applicationBe != null){
 
@@ -102,7 +102,7 @@ rule "HELPER_LNK_INTERNSHIP_APP"
 				}
 			}
 		}
-
+*/
 		BaseEntity be = beUtils.getBaseEntityByCode(code);
 		if(be != null){
 
