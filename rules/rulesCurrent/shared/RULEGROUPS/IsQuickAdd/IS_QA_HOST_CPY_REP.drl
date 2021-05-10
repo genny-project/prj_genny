@@ -37,6 +37,8 @@ rule "IS_QA_HOST_CPY_REP"
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS_COLOR", "#FF9100"));
 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_PROFILE", "Incomplete"));
 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
+		
+		Boolean isHostCpyRep = (Boolean) beUtils.getBaseEntityValue(userToken.getUserCode(), "PRI_IS_HOST_CPY_REP");
 
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
 		
@@ -45,36 +47,42 @@ rule "IS_QA_HOST_CPY_REP"
 		if (linkedHC != null && !linkedHC.isEmpty()) {
 			System.out.println("LNK_HOST_COMPANY present!");
 		} else {
-			/* CREATE EMPTY CPY FOR THE USER */
-			System.out.println("NO HOST COMPANY SELECTED, CREATING ONE...");
-
-			String uuid = UUID.randomUUID().toString().toUpperCase();
-			String cpyCode = "CPY_"+uuid;
-			beUtils.create(cpyCode, cpyCode);
-
-			beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_HOST_COMPANY", "[\""+cpyCode+"\"]"));
-			beUtils.saveAnswer(new Answer(userToken.getUserCode(), cpyCode, "PRI_IS_HOST_CPY", true));
-			beUtils.saveAnswer(new Answer(userToken.getUserCode(), cpyCode, "PRI_PROFILE", "Incomplete"));
-			
-			/* get the company baseentity */
-			BaseEntity companyBe = beUtils.getBaseEntityByCode(cpyCode);
-			if(companyBe != null){
-
-				/* get the name attribute of the company */
-				String hcName = companyBe.getValue("PRI_NAME", null);	
-				System.out.println("hcName  :: " + hcName);	
-
-				/* save the company's name as PRI_ASSOC_HC attribute for person baseentity */
-				if(hcName != null){
-					Answer answerHC = new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASSOC_HC", hcName);
-					beUtils.saveAnswer(answerHC);
-					VertxUtils.sendToFrontEnd(userToken, answerHC);
-
-				} else {
-					System.out.println("hcName is NULL");
-				}
+			if (isHostCpyRep != null && isHostCpyRep) {
+				/* If HostCpyRep adding another HostCpyRep, then set same company */
+				String userHostCpy = beUtils.getBaseEntityValueAsString(userToken.getUserCode(), "LNK_HOST_COMPANY");
+				beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_HOST_COMPANY", userHostCpy));
 			} else {
-				System.out.println("companyBe is NULL");
+				/* CREATE EMPTY CPY FOR THE USER */
+				System.out.println("NO HOST COMPANY SELECTED, CREATING ONE...");
+
+				String uuid = UUID.randomUUID().toString().toUpperCase();
+				String cpyCode = "CPY_"+uuid;
+				beUtils.create(cpyCode, cpyCode);
+
+				beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_HOST_COMPANY", "[\""+cpyCode+"\"]"));
+				beUtils.saveAnswer(new Answer(userToken.getUserCode(), cpyCode, "PRI_IS_HOST_CPY", true));
+				beUtils.saveAnswer(new Answer(userToken.getUserCode(), cpyCode, "PRI_PROFILE", "Incomplete"));
+				
+				/* get the company baseentity */
+				BaseEntity companyBe = beUtils.getBaseEntityByCode(cpyCode);
+				if(companyBe != null){
+
+					/* get the name attribute of the company */
+					String hcName = companyBe.getValue("PRI_NAME", null);	
+					System.out.println("hcName  :: " + hcName);	
+
+					/* save the company's name as PRI_ASSOC_HC attribute for person baseentity */
+					if(hcName != null){
+						Answer answerHC = new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASSOC_HC", hcName);
+						beUtils.saveAnswer(answerHC);
+						VertxUtils.sendToFrontEnd(userToken, answerHC);
+
+					} else {
+						System.out.println("hcName is NULL");
+					}
+				} else {
+					System.out.println("companyBe is NULL");
+				}
 			}
 		}
 		

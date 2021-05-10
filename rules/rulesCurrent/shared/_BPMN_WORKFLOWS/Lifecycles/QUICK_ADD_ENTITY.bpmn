@@ -311,6 +311,10 @@ System.out.println(&quot;WORKFLOW CHANGE - DRIVING WITH DOM&quot;);
 	kcontext.setVariable(&quot;questionCode&quot;, questionCode);
 	System.out.println(&quot;QUICK_ADD_ENTITY: questionCode: &quot; + questionCode);
 
+	if (key.startsWith(&quot;FRESH_&quot;)) {
+		key = key.substring(&quot;FRESH_&quot;.length());
+	}
+
 
 /* Generate UUID */
 	uuid = KeycloakUtils.createDummyUser(serviceToken.getToken(), serviceToken.getRealm());
@@ -456,7 +460,7 @@ System.out.println(&quot;WORKFLOW CHANGE - DRIVING WITH DOM&quot;);
         <di:waypoint xsi:type="dc:Point" x="540.0" y="358.0"/>
         <di:waypoint xsi:type="dc:Point" x="667.0" y="359.0"/>
         <di:waypoint xsi:type="dc:Point" x="794.0" y="359.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_14"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
