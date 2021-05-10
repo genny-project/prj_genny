@@ -45,7 +45,7 @@ rule "HELPER_LNK_DAYS_PER_WEEK"
 		System.out.println("value :: " + value);
 		
 		String code = beUtils.cleanUpAttributeValue(value);
-		System.out.println("code  :: " + code);
+		System.out.println("code  :: " + code)
 
 		BaseEntity be = beUtils.getBaseEntityByCode(code);
 		if(be != null){
