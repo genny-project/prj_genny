@@ -107,19 +107,6 @@ rule "IS_QA_INTERN"
 		
 		/* Set up in Keycloak */
 	
-		String randomPW = "VZQ564P828";
-	    int targetLength = target.length();
-	    
-	    System.out.println(target);
-	    System.out.println(targetLength);
-	    
-	    if (target.startsWith("PER_") && targetLength == 40) {
-	      randomPW = target.substring(30,40);
-	      System.out.println("Random Password used: " + randomPW);
-	    } else {
-	      System.out.println("Backup password used: " + randomPW);
-	    }
-		
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
 		String userStr = newBe.getCode();
 		String[] userSplit = userStr.split("_");
@@ -202,12 +189,9 @@ rule "IS_QA_INTERN"
 			System.out.println("email: " + email);
 			System.out.println("subject: " + subject);
 			System.out.println("template_id: " + template_id);
-			System.out.println("randomPW: " + randomPW);
-								
 						
 			HashMap<String, String> templateData = new HashMap<String, String>();
 			templateData.put("intern", firstname);
-			templateData.put("pw", randomPW);
 			templateData.put("url", url);
 			
 			List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
