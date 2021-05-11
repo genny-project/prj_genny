@@ -34,7 +34,7 @@ rule "HELPER_LNK_INTERNSHIP_APP"
 
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
-		
+
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		System.out.println("sourceCode :: " + sourceCode);
 		
@@ -144,4 +144,5 @@ rule "HELPER_LNK_INTERNSHIP_APP"
 				}
 			}
 		}
+		
 end

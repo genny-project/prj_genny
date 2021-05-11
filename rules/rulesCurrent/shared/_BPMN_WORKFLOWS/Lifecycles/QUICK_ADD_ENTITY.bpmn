@@ -138,7 +138,7 @@
             <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% EXIT Ask Question Task %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
           </drools:onExit-script>
         </bpmn2:extensionElements>
-        <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
+        <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
         <bpmn2:ioSpecification id="InputOutputSpecification_2">
           <bpmn2:dataInput id="DataInput_8" itemSubjectRef="ItemDefinition_556" name="userToken"/>
@@ -284,7 +284,7 @@
           </drools:metaData>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
-        <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
+        <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
         <bpmn2:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% START Create Quick Add Entity WORKFLOW %%%%%%%%%%%%%%%%%%%&quot;);
 System.out.println(&quot;WORKFLOW CHANGE - DRIVING WITH DOM&quot;);
 
@@ -310,6 +310,10 @@ System.out.println(&quot;WORKFLOW CHANGE - DRIVING WITH DOM&quot;);
 	questionCode = &quot;QUE_&quot; +key + &quot;_GRP&quot;;
 	kcontext.setVariable(&quot;questionCode&quot;, questionCode);
 	System.out.println(&quot;QUICK_ADD_ENTITY: questionCode: &quot; + questionCode);
+
+	if (key.startsWith(&quot;FRESH_&quot;)) {
+		key = key.substring(&quot;FRESH_&quot;.length());
+	}
 
 
 /* Generate UUID */
@@ -342,64 +346,7 @@ System.out.println(&quot;WORKFLOW CHANGE - DRIVING WITH DOM&quot;);
 </bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_8" drools:priority="1" sourceRef="StartEvent_1" targetRef="ScriptTask_1"/>
-      <bpmn2:task id="Task_1" drools:taskName="RuleFlowGroup" drools:displayName="RunRuleFlowGroup" drools:icon="icons/icon-info.gif" name="Tag type of user">
-        <bpmn2:extensionElements>
-          <drools:metaData name="elementname">
-            <drools:metaValue><![CDATA[Tag type of user]]></drools:metaValue>
-          </drools:metaData>
-        </bpmn2:extensionElements>
-        <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
-        <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
-        <bpmn2:ioSpecification id="InputOutputSpecification_1">
-          <bpmn2:dataInput id="DataInput_5" itemSubjectRef="ItemDefinition_556" name="serviceToken"/>
-          <bpmn2:dataInput id="DataInput_6" itemSubjectRef="ItemDefinition_556" name="userToken"/>
-          <bpmn2:dataInput id="DataInput_7" name="ruleFlowGroup"/>
-          <bpmn2:dataInput id="DataInput_11" name="callingWorkflow"/>
-          <bpmn2:dataInput id="DataInput_12" itemSubjectRef="ItemDefinition_9" name="baseEntityType"/>
-          <bpmn2:dataInput id="DataInput_13" itemSubjectRef="ItemDefinition_1076" name="newBe"/>
-          <bpmn2:inputSet id="_InputSet_128">
-            <bpmn2:dataInputRefs>DataInput_5</bpmn2:dataInputRefs>
-            <bpmn2:dataInputRefs>DataInput_6</bpmn2:dataInputRefs>
-            <bpmn2:dataInputRefs>DataInput_7</bpmn2:dataInputRefs>
-            <bpmn2:dataInputRefs>DataInput_11</bpmn2:dataInputRefs>
-            <bpmn2:dataInputRefs>DataInput_12</bpmn2:dataInputRefs>
-            <bpmn2:dataInputRefs>DataInput_13</bpmn2:dataInputRefs>
-          </bpmn2:inputSet>
-          <bpmn2:outputSet id="OutputSet_2" name="Output Set 2"/>
-        </bpmn2:ioSpecification>
-        <bpmn2:dataInputAssociation id="_DataInputAssociation_574">
-          <bpmn2:sourceRef>serviceToken</bpmn2:sourceRef>
-          <bpmn2:targetRef>DataInput_5</bpmn2:targetRef>
-        </bpmn2:dataInputAssociation>
-        <bpmn2:dataInputAssociation id="_DataInputAssociation_575">
-          <bpmn2:sourceRef>userToken</bpmn2:sourceRef>
-          <bpmn2:targetRef>DataInput_6</bpmn2:targetRef>
-        </bpmn2:dataInputAssociation>
-        <bpmn2:dataInputAssociation id="_DataInputAssociation_576">
-          <bpmn2:targetRef>DataInput_7</bpmn2:targetRef>
-          <bpmn2:assignment id="Assignment_2">
-            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_6">IsTypeTag</bpmn2:from>
-            <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_4">DataInput_7</bpmn2:to>
-          </bpmn2:assignment>
-        </bpmn2:dataInputAssociation>
-        <bpmn2:dataInputAssociation id="_DataInputAssociation_577">
-          <bpmn2:targetRef>DataInput_11</bpmn2:targetRef>
-          <bpmn2:assignment id="Assignment_3">
-            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_9">QUICK_ADD_ENTITY</bpmn2:from>
-            <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_7">DataInput_11</bpmn2:to>
-          </bpmn2:assignment>
-        </bpmn2:dataInputAssociation>
-        <bpmn2:dataInputAssociation id="DataInputAssociation_6">
-          <bpmn2:sourceRef>baseEntityType</bpmn2:sourceRef>
-          <bpmn2:targetRef>DataInput_12</bpmn2:targetRef>
-        </bpmn2:dataInputAssociation>
-        <bpmn2:dataInputAssociation id="DataInputAssociation_7">
-          <bpmn2:sourceRef>newBe</bpmn2:sourceRef>
-          <bpmn2:targetRef>DataInput_13</bpmn2:targetRef>
-        </bpmn2:dataInputAssociation>
-      </bpmn2:task>
-      <bpmn2:sequenceFlow id="SequenceFlow_2" drools:priority="1" sourceRef="ScriptTask_1" targetRef="Task_1"/>
-      <bpmn2:sequenceFlow id="SequenceFlow_3" drools:priority="1" sourceRef="Task_1" targetRef="Task_2"/>
+      <bpmn2:sequenceFlow id="SequenceFlow_5" drools:priority="1" sourceRef="ScriptTask_1" targetRef="Task_2"/>
     </bpmn2:subProcess>
     <bpmn2:endEvent id="EndEvent_2" name="End Intern Builder">
       <bpmn2:extensionElements>
@@ -479,12 +426,6 @@ System.out.println(&quot;WORKFLOW CHANGE - DRIVING WITH DOM&quot;);
           <dc:Bounds height="11.0" width="56.0" x="971.0" y="353.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_Task_1" bpmnElement="Task_1" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="610.0" y="333.0"/>
-        <bpmndi:BPMNLabel>
-          <dc:Bounds height="11.0" width="65.0" x="632.0" y="352.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="SequenceFlow_4" sourceElement="BPMNShape_SubProcess_1" targetElement="BPMNShape_EndEvent_1">
         <di:waypoint xsi:type="dc:Point" x="1205.0" y="357.0"/>
         <di:waypoint xsi:type="dc:Point" x="1229.0" y="357.0"/>
@@ -515,17 +456,11 @@ System.out.println(&quot;WORKFLOW CHANGE - DRIVING WITH DOM&quot;);
         <di:waypoint xsi:type="dc:Point" x="430.0" y="358.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_10"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_Task_1">
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_5" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_Task_2">
         <di:waypoint xsi:type="dc:Point" x="540.0" y="358.0"/>
-        <di:waypoint xsi:type="dc:Point" x="575.0" y="358.0"/>
-        <di:waypoint xsi:type="dc:Point" x="610.0" y="358.0"/>
-        <bpmndi:BPMNLabel/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_Task_2">
-        <di:waypoint xsi:type="dc:Point" x="720.0" y="358.0"/>
-        <di:waypoint xsi:type="dc:Point" x="757.0" y="358.0"/>
+        <di:waypoint xsi:type="dc:Point" x="667.0" y="359.0"/>
         <di:waypoint xsi:type="dc:Point" x="794.0" y="359.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_14"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
