@@ -300,6 +300,8 @@ System.out.println(&quot;WORKFLOW CHANGE - DRIVING WITH DOM&quot;);
 	System.out.println(&quot;QUICK_ADD_ENTITY: userToken = &quot; +userToken.getCode());
 	System.out.println(&quot;QUICK_ADD_ENTITY: serviceToken = &quot; +serviceToken.getCode());
 
+	BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+
 
 /* Gather Key and construct Question Code */
 	OutputParam data = (OutputParam)sessionFacts.getMessage();
@@ -334,7 +336,6 @@ System.out.println(&quot;WORKFLOW CHANGE - DRIVING WITH DOM&quot;);
 
 /* Create Entity */
 	userToken = (GennyToken)userToken;
-	BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 	String newCode = &quot;PER_&quot;+uuid;
 	newCode = newCode.toUpperCase();
 	newBe = beUtils.create(newCode, newCode);
