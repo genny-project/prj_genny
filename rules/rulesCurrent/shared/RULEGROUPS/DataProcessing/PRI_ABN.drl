@@ -21,17 +21,16 @@ rule "PRI_ABN"
     ruleflow-group 'DataProcessing'
 	salience 5000 
     when
-      beUtils : BaseEntityUtils()
-	  answer : Answer( attributeCode == "PRI_ABN" )
-	  output : OutputParam( )
-	  answersToSave : Answers()
-	  ruleDetails : RuleDetails()
-	  
-     then
- 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
+		beUtils : BaseEntityUtils()
+		answer : Answer( attributeCode == "PRI_ABN" )
+		output : OutputParam( )
+		answersToSave : Answers()
+		ruleDetails : RuleDetails()
+		userToken : GennyToken( code != "PER_SERVICE")  
+	then
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
 		
 		/* check if abn is valid */
-		
 		String abn = StringUtils.deleteWhitespace(answer.getValue());
 		
 	
@@ -63,8 +62,8 @@ rule "PRI_ABN"
 					beUtils.removeEntityAttribute(companyBe, "PRI_ABN");
 					beUtils.removeEntityAttribute(companyBe, "LNK_SPECIFY_ABN");	
 
-					Answer nameAns = new Answer(sourceCode, targetCode, "PRI_NAME", "");
-					Answer legalNameAns = new Answer(sourceCode, targetCode, "PRI_LEGAL_NAME", "");
+					Answer nameAns = new Answer(answer.getSourceCode(), answer.getTargetCode(), "PRI_NAME", "");
+					Answer legalNameAns = new Answer(answer.getSourceCode(), answer.getTargetCode(), "PRI_LEGAL_NAME", "");
 					VertxUtils.sendToFrontEnd(userToken, nameAns, legalNameAns);
 				}
 
