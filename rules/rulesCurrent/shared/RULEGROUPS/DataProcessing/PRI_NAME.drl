@@ -36,6 +36,6 @@ rule "PRI_NAME"
 		System.out.println(drools.getRule().getName() + " triggered");
         Answer nameAnswer = new Answer(answer.getSourceCode(), answer.getTargetCode(), answer.getAttributeCode(), answer.getValue());
         beUtils.saveAnswer(nameAnswer);
-        VertxUtils.sendToFrontEnd(userToken, ans);
+        VertxUtils.sendToFrontEnd(userToken, nameAnswer);
         retract(answer);
 end
