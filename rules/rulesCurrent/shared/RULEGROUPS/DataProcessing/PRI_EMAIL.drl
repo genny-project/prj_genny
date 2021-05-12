@@ -65,7 +65,7 @@ rule "PRI_EMAIL"
 			if (resultJsonStr.equals("0")) {
 				System.out.println("This email "+answer.getValue()+" is unique");
 			} else {
-					if(allowed.code.equals("AGENT") {
+					if(allowed.code.equals("AGENT")) {
 						List<BaseEntity> duplicateBes = beUtils.getBaseEntitys(searchBE);
 						System.out.println("duplicateBE's: " + duplicateBes);
 						
