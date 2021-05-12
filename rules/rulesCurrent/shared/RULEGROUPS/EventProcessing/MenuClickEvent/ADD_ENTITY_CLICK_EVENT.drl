@@ -48,17 +48,10 @@ rule "ADD_ENTITY_CLICK_EVENT"
 			output.setResultCode("START_"+workflowSignalCode);
 		} else {
 		*/
-		
-		String whichWF = "START_ADD_ENTITY";
-		
-		String userType = beUtils.whoAreYou(user);
-		if (userType.equals("PRI_IS_HOST_CPY_REP")) {
-			whichWF = "START_QUICK_ADD";
-		}
-		System.out.println("whichWF: " + whichWF);
+	
 		
 		output.setTypeOfResult("SIGNAL");
-		output.setResultCode(whichWF);
+		output.setResultCode("START_ADD_ENTITY");
 		
 		output.setSuitCase(key);
 		output.setAskSourceCode(user);	
