@@ -16,6 +16,9 @@ import org.apache.commons.lang3.text.WordUtils;
 import java.util.List;
 import java.util.ArrayList;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 rule "PRI_ABN"
     ruleflow-group 'DataProcessing'
@@ -32,9 +35,24 @@ rule "PRI_ABN"
 		/* check if abn is valid */
 		
 		String abn = StringUtils.deleteWhitespace(answer.getValue());
+
+		Boolean validAbn = true;
+		if (NumberUtils.isDigits(abn) && abn.length() != 11) {
+			validAbn = false;
+		}
+		final int[] weights = { 10, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19 };
+		/* split abn number string by digits to get int array */
+		int[] abnDigits = Stream.of(abn.split("\\B")).mapToInt(Integer::parseInt).toArray();
+		/* reduce by applying weight[index] * abnDigits[index] (NOTE: substract 1 for */
+		/* the first digit in abn number) */
+		int sum = IntStream.range(0, weights.length).reduce(0,
+				(total, idx) -> total + weights[idx] * (idx == 0 ? abnDigits[idx] - 1 : abnDigits[idx]));
+		validAbn = (sum % 89 == 0);
+		System.out.println("validAbn :: " + validAbn);
 		
 	
-		if (QwandaUtils.isValidAbnFormat(abn)) {
+		if (validAbn) {
+		/* if (QwandaUtils.isValidAbnFormat(abn)) { */
 			System.out.println("This abn "+answer.getValue()+" is good");
 			
 			/* if abn is valid, check if the abn exists in the system */
