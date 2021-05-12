@@ -34,8 +34,17 @@ rule "PRI_NAME"
 		userToken : GennyToken( code != "PER_SERVICE")
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
-        Answer nameAnswer = new Answer(answer.getSourceCode(), answer.getTargetCode(), answer.getAttributeCode(), answer.getValue());
-        beUtils.saveAnswer(nameAnswer);
-        VertxUtils.sendToFrontEnd(userToken, nameAnswer);
+
+        String targetCode = answer.getTargetCode();
+        if(targetCode != null){
+            BaseEntity companyBe = beUtils.getBaseEntityByCode(targetCode);
+
+            String abn = companyBe.getValue("PRI_ABN", null);
+            if (QwandaUtils.isValidAbnFormat(abn)) {
+                Answer nameAnswer = new Answer(answer.getSourceCode(), answer.getTargetCode(), answer.getAttributeCode(), answer.getValue());
+                beUtils.saveAnswer(nameAnswer);
+                VertxUtils.sendToFrontEnd(userToken, nameAnswer);
+            }
+        }
         retract(answer);
 end
