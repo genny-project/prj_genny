@@ -74,15 +74,16 @@ rule "IS_QA_AGENT"
 				if (email != null) {
 					/* TODO HACK */
 					if (true) {
-						/* Generate a random 15 char password */
-						char[] allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGJKLMNPRSTUVWXYZ0123456789^$?!@#%&".toCharArray();
-						String password = new SecureRandom().ints(15, 0, allowed.length).mapToObj(i -> String.valueOf(allowed[i])).collect(Collectors.joining());
-						/* String password = "password1"; */
-						userId = KeycloakUtils.updateUser(userCode,serviceToken.getToken(), serviceToken.getRealm(), email, firstname, lastname,  email, password, "user", "users");
+						userId = KeycloakUtils.updateUser(userCode,serviceToken.getToken(), serviceToken.getRealm(), email, firstname, lastname,  email, null, "user", "users");
 						userId = userId.toUpperCase();
 						Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),newBe.getCode(),"PRI_UUID",userId);
 						beUtils.saveAnswer(keycloakId);
 						System.out.println("Created User "+email+" in Keycloak with id = "+userId);
+
+						/* Generate a random 15 char password */
+						char[] allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGJKLMNPRSTUVWXYZ0123456789^$?!@#%&".toCharArray();
+						String password = new SecureRandom().ints(15, 0, allowed.length).mapToObj(i -> String.valueOf(allowed[i])).collect(Collectors.joining());
+						KeycloakUtils.setPassword(serviceToken.getToken(), serviceToken.getRealm(), userId, password, true);
 
 						/* Send them an email with their password */
 						String url = GennySettings.projectUrl + "/home";
