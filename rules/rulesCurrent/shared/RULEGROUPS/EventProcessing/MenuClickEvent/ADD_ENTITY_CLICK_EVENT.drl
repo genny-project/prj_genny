@@ -19,11 +19,15 @@ rule "ADD_ENTITY_CLICK_EVENT"
 															(data.code matches "SCH_ACT_PRI_EVENT_QUE_.*" &&  !(data.code matches "SCH_ACT_PRI_EVENT_QUE_TREE_ITEM_.*") && !(data.code matches "SCH_ACT_PRI_EVENT_QUE_TAB_BUCKET_VIEW") ))
 		
 		userToken : GennyToken (code != "PER_SERVICE" )
+		serviceToken : GennyToken (code == "PER_SERVICE" )
+		userToken : GennyToken (code != "PER_SERVICE" )
 		output : OutputParam( )
  		ruleDetails : RuleDetails()
     then
 
 		System.out.println(drools.getRule().getName() + " - Rule fired");
+		
+		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 		
 		/* Get Agent */
 		String user = userToken.getUserCode();

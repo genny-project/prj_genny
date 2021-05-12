@@ -21,7 +21,27 @@ rule "MERGE_DUPLICATE_EMAIL"
 		System.out.println("MERGE_DUPLICATE_EMAIL fired");
 		
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+		/*
+		CPY_1
+		Name: ABC
+		ABN: 111
+		Profile pic: ajhasdjha
 		
+		
+		CPY_2
+		Name: ABC
+		ABN: 111
+		Address: Vic 
+		Num interns: 6
+		
+		
+		CPY_2
+		Name: ABC
+		ABN: 111
+		Address: Vic 
+		Num interns: 6
+		Profile pic: ajhasdjha
+		*/
 		String user = userToken.getUserCode();
 		System.out.println("user: " + user);
 		
