@@ -21,17 +21,16 @@ rule "PRI_ABN"
     ruleflow-group 'DataProcessing'
 	salience 5000 
     when
-      beUtils : BaseEntityUtils()
-	  answer : Answer( attributeCode == "PRI_ABN" )
-	  output : OutputParam( )
-	  answersToSave : Answers()
-	  ruleDetails : RuleDetails()
-	  
-     then
- 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
+		beUtils : BaseEntityUtils()
+		answer : Answer( attributeCode == "PRI_ABN" )
+		output : OutputParam( )
+		answersToSave : Answers()
+		ruleDetails : RuleDetails()
+		userToken : GennyToken( code != "PER_SERVICE")  
+	then
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
 		
 		/* check if abn is valid */
-		
 		String abn = StringUtils.deleteWhitespace(answer.getValue());
 		
 	
@@ -56,7 +55,17 @@ rule "PRI_ABN"
 				String message = "A company with " +  abn + "already exists. Please use a unique ABN.";
 				Answer feedbackAnswer = new Answer(answer.getSourceCode(),answer.getTargetCode(),answer.getAttributeCode(),"");
 				VertxUtils.sendFeedbackError(beUtils.getGennyToken(),feedbackAnswer,message);
-				System.out.println("Sent not unique ABN error message to frontend");		
+				System.out.println("Sent not unique ABN error message to frontend");	
+
+				BaseEntity companyBe = beUtils.getBaseEntityByCode(answer.getTargetCode());
+				if(companyBe != null){
+					beUtils.removeEntityAttribute(companyBe, "PRI_ABN");
+					beUtils.removeEntityAttribute(companyBe, "LNK_SPECIFY_ABN");	
+
+					Answer nameAns = new Answer(answer.getSourceCode(), answer.getTargetCode(), "PRI_NAME", "");
+					Answer legalNameAns = new Answer(answer.getSourceCode(), answer.getTargetCode(), "PRI_LEGAL_NAME", "");
+					VertxUtils.sendToFrontEnd(userToken, nameAns, legalNameAns);
+				}
 
 			}else{
 				answer.setValue(abn);

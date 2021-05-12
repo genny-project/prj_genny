@@ -16,6 +16,9 @@ import life.genny.notifications.SmsHelper;
 import java.util.Arrays;
 import java.time.ZoneOffset;
 
+import java.security.SecureRandom;
+import java.util.stream.Collectors;
+
 import java.util.List;
 import java.util.ArrayList;
 
@@ -104,19 +107,6 @@ rule "IS_QA_INTERN"
 		
 		/* Set up in Keycloak */
 	
-		String randomPW = "VZQ564P828";
-	    int targetLength = target.length();
-	    
-	    System.out.println(target);
-	    System.out.println(targetLength);
-	    
-	    if (target.startsWith("PER_") && targetLength == 40) {
-	      randomPW = target.substring(30,40);
-	      System.out.println("Random Password used: " + randomPW);
-	    } else {
-	      System.out.println("Backup password used: " + randomPW);
-	    }
-		
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
 		String userStr = newBe.getCode();
 		String[] userSplit = userStr.split("_");
@@ -132,15 +122,28 @@ rule "IS_QA_INTERN"
 			if (lastname != null) {
 				email = user.getValue("PRI_EMAIL",null);
 				if (email != null) {
-					/*String userPassword = UUID.randomUUID().toString().substring(0,10);*/
 					/* TODO HACK */
 					if (true) {
-						/*String userPassword = "password1";*/
-						userId = KeycloakUtils.updateUser(userCode,serviceToken.getToken(), serviceToken.getRealm(), email, firstname, lastname,  email, randomPW,"user", "users");
+						/* Generate a random 15 char password */
+						char[] allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGJKLMNPRSTUVWXYZ0123456789^$?!@#%&".toCharArray();
+						String password = new SecureRandom().ints(15, 0, allowed.length).mapToObj(i -> String.valueOf(allowed[i])).collect(Collectors.joining());
+						/* String password = "password1"; */
+						userId = KeycloakUtils.updateUser(userCode,serviceToken.getToken(), serviceToken.getRealm(), email, firstname, lastname,  email, password, "user", "users");
 						userId = userId.toUpperCase();
 						Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),newBe.getCode(),"PRI_UUID",userId);
 						beUtils.saveAnswer(keycloakId);
-						System.out.println("Created Quick Add User "+email+" in Keycloak with id = "+userId + " and password:" +randomPW);
+						System.out.println("Created User "+email+" in Keycloak with id = "+userId);
+
+						/* Send them an email with their password */
+						String url = GennySettings.projectUrl + "/home";
+						HashMap<String, String> templateData = new HashMap<String, String>();
+						templateData.put("name", firstname);
+						templateData.put("password", password);
+						templateData.put("url", url);
+							
+						List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
+						
+						EmailHelper.sendGrid(beUtils, email, null, bccList, "", "d-100adae110bb46eb999cd8b48666cad0", templateData, true);		
 					} else {
 					     System.out.println("KEYCLOAK QUICK ADD USER CREATION DISABLED IN RULE IS_INTERN");
 					}
@@ -186,12 +189,9 @@ rule "IS_QA_INTERN"
 			System.out.println("email: " + email);
 			System.out.println("subject: " + subject);
 			System.out.println("template_id: " + template_id);
-			System.out.println("randomPW: " + randomPW);
-								
 						
 			HashMap<String, String> templateData = new HashMap<String, String>();
 			templateData.put("intern", firstname);
-			templateData.put("pw", randomPW);
 			templateData.put("url", url);
 			
 			List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
