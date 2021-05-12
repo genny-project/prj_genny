@@ -36,15 +36,46 @@ rule "PRI_NAME"
 		System.out.println(drools.getRule().getName() + " triggered");
 
         String targetCode = answer.getTargetCode();
-        if(targetCode != null){
-            BaseEntity companyBe = beUtils.getBaseEntityByCode(targetCode);
+		System.out.println("targetCode   ::   " + targetCode);
 
-            String abn = companyBe.getValue("PRI_ABN", null);
-            if (QwandaUtils.isValidAbnFormat(abn)) {
-                Answer nameAnswer = new Answer(answer.getSourceCode(), answer.getTargetCode(), answer.getAttributeCode(), answer.getValue());
-                beUtils.saveAnswer(nameAnswer);
-                VertxUtils.sendToFrontEnd(userToken, nameAnswer);
-            }
-        }
+        if(targetCode == null){
+			System.out.println("Answer message doesnt have targetCode");
+			return;
+		}
+
+		BaseEntity companyBe = beUtils.getBaseEntityByCode(targetCode);
+		if(companyBe == null){
+			System.out.println("companyBe is null");
+			return;
+		}
+
+		String abn = companyBe.getValue("PRI_ABN", null);
+		if (QwandaUtils.isValidAbnFormat(abn)) {
+			System.out.println("ABN is valid");
+
+			/* if abn is valid, check if the abn exists in the system */
+			SearchEntity searchBE = new SearchEntity("SBE_UNIQUE_ABN", "Unique Abn")
+					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "CPY_%") 
+					.addFilter("PRI_ABN", SearchEntity.StringFilter.EQUAL, abn) 
+					.addColumn("PRI_NAME", "Name")
+					.setPageStart(0)
+					.setPageSize(100);
+			
+			searchBE.setRealm(beUtils.getServiceToken().getRealm());
+
+			TableUtils tableUtils = new TableUtils(beUtils);
+			Long abnCount = tableUtils.performCount(searchBE);
+			System.out.println("abnCount   ::   " + abnCount);
+
+			if(abnCount > 0){
+				System.out.println("ABN is NOT UNIQUE. Not saving PRI_NAME and PRI_LEGAL_NAME");
+			}else{
+				Answer nameAnswer = new Answer(answer.getSourceCode(), answer.getTargetCode(), answer.getAttributeCode(), answer.getValue());
+				beUtils.saveAnswer(nameAnswer);
+				VertxUtils.sendToFrontEnd(userToken, nameAnswer);
+			}
+		}else{
+			System.out.println("ABN is NOT valid. Not saving PRI_NAME and PRI_LEGAL_NAME");
+		}
         retract(answer);
 end
