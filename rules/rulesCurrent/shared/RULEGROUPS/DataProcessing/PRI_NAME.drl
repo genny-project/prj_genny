@@ -23,7 +23,7 @@ import life.genny.utils.DropdownUtils;
 import java.util.List;
 import java.util.ArrayList;
 
-rule "PRI_NAME"
+rule "AUTOFILL_NAME"
 	ruleflow-group 'DataProcessing'
 	salience 5000
 	when
@@ -38,6 +38,9 @@ rule "PRI_NAME"
         String targetCode = answer.getTargetCode();
 		System.out.println("targetCode   ::   " + targetCode);
 
+		String attributeCode = answer.getAttributeCode();
+		System.out.println("attributeCode   ::   " + attributeCode);
+
         if(targetCode == null){
 			System.out.println("Answer message doesnt have targetCode");
 			return;
@@ -49,7 +52,9 @@ rule "PRI_NAME"
 			return;
 		}
 
-		String abn = companyBe.getValue("PRI_ABN", null);
+		String abn = companyBe.getValue("PRI_ABN", "");
+		System.out.println("abn  ::  " + abn);
+
 		if (QwandaUtils.isValidAbnFormat(abn)) {
 			System.out.println("ABN is valid");
 

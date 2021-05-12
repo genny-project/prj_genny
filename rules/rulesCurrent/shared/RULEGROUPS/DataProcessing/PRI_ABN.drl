@@ -27,7 +27,7 @@ rule "PRI_ABN"
 		answersToSave : Answers()
 		ruleDetails : RuleDetails()
 	then
-		System.out.println(ruleDetails+" "+drools.getRule().getName()+" user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
+		System.out.println(drools.getRule().getName() + " triggered");
 		
 		/* check if abn is valid */
 		
