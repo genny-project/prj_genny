@@ -145,7 +145,7 @@ rule "INIT_GENERATE_CAPABILITIES"
 		capabilityUtils.addCapability( "DOWNLOAD_OHNS_AGREEMENT_DOC", "Download OHNS Agreement Document");
 		capabilityUtils.addCapability( "DOWNLOAD_SERVICE_AGREEMENT_DOC", "Download Service Agreement Document");
 		capabilityUtils.addCapability( "DOWNLOAD_HC_TERMS_AND_CONDITIONS_DOC", "Download Host Company Terms and Conditions Document");
-		
+		capabilityUtils.addCapability( "DOWNLOAD_INTERNSHIP_AGREEMENT_DOC", "Download Internship Agreement Document");
 
 		capabilityUtils.process();
 
