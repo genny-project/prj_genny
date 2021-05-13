@@ -70,9 +70,13 @@ rule "HELPER_LNK_INTERN_SUPERVISOR_APP"
 				
 				
 				/* Prepare Question and Ask */
-				Attribute eventAttribute = new Attribute("PRI_SUPER_MOBILE", "link", new DataType(String.class));
+				/*Attribute eventAttribute = new Attribute("PRI_SUPER_MOBILE", "link", new DataType(String.class));*/
+				Attribute attr = RulesUtils.getAttribute("PRI_SUPER_MOBILE", serviceToken);
+				System.out.println("attr  :: " + attr);
+				String dtt = attr.getDataType().getClassName();
+				System.out.println("Attribute datatype = " + dtt);
 				
-				Question supervisorMobileQues = new Question("QUE_SUPER_MOBILE", "Supervisor Mobile", eventAttribute, true);
+				Question supervisorMobileQues = new Question("QUE_SUPER_MOBILE", "Supervisor Mobile", attr, true);
 				Ask supervisorMobileAsk = new Ask(supervisorMobileQues, sourceCode, targetCode);
 				
 				
