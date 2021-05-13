@@ -21,14 +21,13 @@ rule "PRI_ABN"
     ruleflow-group 'DataProcessing'
 	salience 5000 
     when
-      beUtils : BaseEntityUtils()
-	  answer : Answer( attributeCode == "PRI_ABN" )
-	  output : OutputParam( )
-	  answersToSave : Answers()
-	  ruleDetails : RuleDetails()
-	  
-     then
- 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
+		beUtils : BaseEntityUtils()
+		answer : Answer( attributeCode == "PRI_ABN" )
+		output : OutputParam( )
+		answersToSave : Answers()
+		ruleDetails : RuleDetails()
+	then
+		System.out.println(drools.getRule().getName() + " triggered");
 		
 		/* check if abn is valid */
 		

@@ -254,7 +254,6 @@ rule "HELPER_SIGNATURE_DATE"
 		
 		if (attributeCode.startsWith("PRI_INTERN_")) {
 			
-			/*
 			String urlParentCode = "SBE_INTERNS_"+userToken.getSessionCode().toUpperCase();
 			String urlCode = "ACT_PRI_EVENT_VIEW";
 			String urlTargetCode = internCode;
@@ -278,7 +277,6 @@ rule "HELPER_SIGNATURE_DATE"
 			
 			EmailHelper.sendGrid(beUtils, agentEmail, subject, template_id, templateData, false);
 		
-			*/
 		}
 		
 		if (attributeCode.startsWith("PRI_HOST_CPY_REP_")) {
@@ -305,8 +303,8 @@ rule "HELPER_SIGNATURE_DATE"
         	}
 		}
 		
-		if (attributeCode.startsWith("PRI_OUTCOME_")) {
-			/*template_id = "d-64ef4bf7b18a4b65a9c7e02b1b8ce7df";
+		if (attributeCode.startsWith("PRI_OUTCOME_") || attributeCode.startsWith("PRI_AGR_DOC_OUTCOME_")) {
+			template_id = "d-64ef4bf7b18a4b65a9c7e02b1b8ce7df";
 			subject = "Important Internship Requirement - Signing the internship agreement";
 			
 			token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, userSuperCode, serviceToken.getToken());
@@ -318,7 +316,6 @@ rule "HELPER_SIGNATURE_DATE"
 			templateData.put("internshipName", internshipName);
 			templateData.put("supervisorName", supervisorName);
 			templateData.put("hostCompanyName", hostCompanyName);
-			*/
 			
 			System.out.println("The supervisorEmail is : " + supervisorEmail);
 			

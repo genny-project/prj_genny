@@ -17,6 +17,7 @@ rule "KILL_DUPLICATE_EMAIL"
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam( )
+		allowed: Allowed(code == "AGENT")
     then
 		System.out.println("KILL_DUPLICATE_EMAIL fired");
 		

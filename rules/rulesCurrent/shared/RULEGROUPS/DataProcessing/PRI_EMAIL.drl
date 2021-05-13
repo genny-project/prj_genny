@@ -24,25 +24,33 @@ rule "PRI_EMAIL"
     ruleflow-group 'DataProcessing'
         salience 5000 
     when
-      beUtils : BaseEntityUtils()
-	  answer : Answer( attributeCode == "PRI_EMAIL" )
-	  output : OutputParam( )
+      	beUtils : BaseEntityUtils()
+	  	answer : Answer( attributeCode == "PRI_EMAIL" )
+	  	serviceToken : GennyToken( code == "PER_SERVICE")
+	 	userToken : GennyToken( code != "PER_SERVICE")
+	  	output : OutputParam( )
+	  	allowed: Allowed(code == "AGENT" || code == "INTERN" || code == "EDU_PRO_REP" || code == "HOST_CPY_REP")
      then
  		System.out.println("Rule -> PRI_EMAIL :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
+ 		
+ 		String sourceCode = beUtils.getGennyToken().getUserCode();
+		String targetCode = answer.getTargetCode();
+		JsonObject resultJson = null;
+		String duplicateCodes = null;
+		String number = null; 
 		
 		/* check if email is already in use for a person */
 		
-				SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Email People")
+		SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Email People")
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%") 
 				.addFilter("PRI_EMAIL", SearchEntity.StringFilter.EQUAL, answer.getValue()) 
 				.addColumn("PRI_NAME", "Name")
 				.setPageStart(0)
 				.setPageSize(100);
 		
-			searchBE.setRealm(beUtils.getServiceToken().getRealm());
-		
- 		List<BaseEntity> people = new ArrayList<BaseEntity>();
-
+		searchBE.setRealm(beUtils.getServiceToken().getRealm());
+			
+		/* Check number of duplicates */
 		Tuple2<String, List<String>> data = beUtils.getHql(searchBE);
 		String hql = data._1;
 
@@ -53,11 +61,50 @@ rule "PRI_EMAIL"
 					beUtils.getServiceToken().getToken(), 120);
 
 			System.out.println("Search EMAIL result is "+resultJsonStr);
+			
 			if (resultJsonStr.equals("0")) {
 				System.out.println("This email "+answer.getValue()+" is unique");
-			}	else {
+			} else {
+					if(allowed.code.equals("AGENT")) {
+						List<BaseEntity> duplicateBes = beUtils.getBaseEntitys(searchBE);
+						System.out.println("duplicateBE's: " + duplicateBes);
+						
+						QDataBaseEntityMessage msg = new QDataBaseEntityMessage(duplicateBes);
+						msg.setToken(userToken.getToken());
+						msg.setReplace(true);
+						VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+						
+						for (BaseEntity duplicateBe : duplicateBes) {
+								System.out.println("duplicateBe: " + duplicateBe);
+								duplicateCodes = duplicateCodes + "," + duplicateBe.getCode();
+								System.out.println("duplicateCodes: " + duplicateCodes);
+						}
+						
+						duplicateCodes = duplicateCodes.substring(5);
+						System.out.println("Final duplicateCodes: " + duplicateCodes);
+						
+						QCmdMessage duplicateEmailMsg = new QCmdMessage("DUPLICATE_EMAILS", duplicateCodes);
+						duplicateEmailMsg.setMessage(number);
+						duplicateEmailMsg.setToken(beUtils.getGennyToken().getToken());
+						duplicateEmailMsg.setSend(true);
+						VertxUtils.writeMsg("webcmds", duplicateEmailMsg);
+						
+						
+						if (resultJsonStr.equals("0")) {
+							number = "There is 1 duplicate email";
+						} else {
+							number = "There are " + resultJsonStr + " duplicate emails";
+						}
+						
+						QCmdMessage toastMsg = new QCmdMessage("TOAST", "INFO");
+						toastMsg.setMessage(number);
+						toastMsg.setToken(beUtils.getGennyToken().getToken());
+						toastMsg.setSend(true);
+						VertxUtils.writeMsg("webcmds", toastMsg);
+					}
+					
 					retract(answer);
-					String message = "Email Address "+answer.getValue()+" is already taken";
+					String message = "Email Address "+answer.getValue()+" is already taken. Please delete any unwanted copies or merge data with an existing";
 					System.out.println(message);
 					Answer feedbackAnswer = new Answer(answer.getSourceCode(),answer.getTargetCode(),answer.getAttributeCode(),"");
 					VertxUtils.sendFeedbackError(beUtils.getGennyToken(),feedbackAnswer,message);
