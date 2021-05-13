@@ -303,7 +303,7 @@ rule "HELPER_SIGNATURE_DATE"
         	}
 		}
 		
-		if (attributeCode.startsWith("PRI_OUTCOME_")) {
+		if (attributeCode.startsWith("PRI_OUTCOME_") || attributeCode.startsWith("PRI_AGR_DOC_OUTCOME_")) {
 			template_id = "d-64ef4bf7b18a4b65a9c7e02b1b8ce7df";
 			subject = "Important Internship Requirement - Signing the internship agreement";
 			
