@@ -93,6 +93,7 @@ rule "ROL_AGENT"
 		 capabilityUtils.addCapabilityToRole(role,"ACCESS_NOTES_INTERNSHIP",CapabilityMode.VIEW);
 		 capabilityUtils.addCapabilityToRole(role,"ACCESS_NOTES_HC",CapabilityMode.VIEW);
 		 capabilityUtils.addCapabilityToRole(role,"ACCESS_NOTES_HCR",CapabilityMode.VIEW);
+		 capabilityUtils.addCapabilityToRole(role,"ASSIGN_AGENT_TO_INTERN",CapabilityMode.ADD);
  
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
   	     
