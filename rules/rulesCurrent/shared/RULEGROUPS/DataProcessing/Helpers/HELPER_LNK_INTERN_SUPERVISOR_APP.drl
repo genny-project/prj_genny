@@ -60,7 +60,7 @@ rule "HELPER_LNK_INTERN_SUPERVISOR_APP"
 				Answer assocSupervisorNameAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_NAME", name,false,true);
 				answers.add(assocSupervisorAnswer);
 				answers.add(assocSupervisorNameAnswer);
-				/*VertxUtils.sendToFrontEnd(userToken, assocSupervisorAnswer, assocSupervisorNameAnswer);*/
+				VertxUtils.sendToFrontEnd(userToken, assocSupervisorAnswer, assocSupervisorNameAnswer);
 			}
 
 			String mobile = be.getValue("PRI_MOBILE", null);
@@ -70,11 +70,7 @@ rule "HELPER_LNK_INTERN_SUPERVISOR_APP"
 				
 				
 				/* Prepare Question and Ask */
-				/*Attribute eventAttribute = new Attribute("PRI_SUPER_MOBILE", "link", new DataType(String.class));*/
 				Attribute attr = RulesUtils.getAttribute("PRI_SUPER_MOBILE", serviceToken);
-				System.out.println("attr  :: " + attr);
-				String dtt = attr.getDataType().getClassName();
-				System.out.println("Attribute datatype = " + dtt);
 				
 				Question supervisorMobileQues = new Question("QUE_SUPER_MOBILE", "Supervisor Mobile", attr, true);
 				Ask supervisorMobileAsk = new Ask(supervisorMobileQues, sourceCode, targetCode);
@@ -86,6 +82,7 @@ rule "HELPER_LNK_INTERN_SUPERVISOR_APP"
 				QDataAskMessage supervisorMobileAskMsgDisable = new QDataAskMessage(supervisorMobileAsk);
 				supervisorMobileAskMsgDisable.setToken(userToken.getToken());
 				VertxUtils.writeMsg("webcmds", supervisorMobileAskMsgDisable);
+				
 				
 				/* Send Answer to Front End */
 				VertxUtils.sendToFrontEnd(userToken, assocSupervisorMobileAnswer);
@@ -103,14 +100,64 @@ rule "HELPER_LNK_INTERN_SUPERVISOR_APP"
 			if(email != null){
 				Answer assocSupervisorEmailAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_EMAIL", email,false,true);
 				answers.add(assocSupervisorEmailAnswer);
-				/*VertxUtils.sendToFrontEnd(userToken, assocSupervisorEmailAnswer);*/
+				
+				/* Prepare Question and Ask */
+				Attribute attr = RulesUtils.getAttribute("PRI_SUPER_EMAIL", serviceToken);
+				
+				Question supervisorEmailQues = new Question("QUE_SUPER_EMAIL", "Supervisor Email", attr, true);
+				Ask supervisorEmailAsk = new Ask(supervisorEmailQues, sourceCode, targetCode);
+				
+				
+				/* Send Disable for this Ask */
+				supervisorEmailAsk.setDisabled(true);
+				
+				QDataAskMessage supervisorEmailAskMsgDisable = new QDataAskMessage(supervisorEmailAsk);
+				supervisorEmailAskMsgDisable.setToken(userToken.getToken());
+				VertxUtils.writeMsg("webcmds", supervisorEmailAskMsgDisable);
+				
+				
+				/* Send Answer to Front End */
+				VertxUtils.sendToFrontEnd(userToken, assocSupervisorEmailAnswer);
+		
+				
+				/* Send enable for this Ask */
+				supervisorMobileAsk.setDisabled(false);
+				
+				QDataAskMessage supervisorEmailAskMsgEnable = new QDataAskMessage(supervisorEmailAsk);
+				supervisorEmailAskMsgEnable.setToken(userToken.getToken());
+				VertxUtils.writeMsg("webcmds", supervisorEmailAskMsgEnable);
 			}
 			
 			String job = be.getValue("PRI_JOB_TITLE", null);		
 			if(job != null){
 				Answer assocSupervisorJobAnswer = new Answer(sourceCode, targetCode, "PRI_SUPER_JOB_TITLE", job,false,true);
 				answers.add(assocSupervisorJobAnswer);
-				/*VertxUtils.sendToFrontEnd(userToken, assocSupervisorJobAnswer);*/
+				
+				/* Prepare Question and Ask */
+				Attribute attr = RulesUtils.getAttribute("PRI_SUPER_JOB_TITLE", serviceToken);
+				
+				Question supervisorJobQues = new Question("QUE_SUPER_JOB_TITLE", "Supervisor Job Title", attr, true);
+				Ask supervisorJobAsk = new Ask(supervisorJobQues, sourceCode, targetCode);
+				
+				
+				/* Send Disable for this Ask */
+				supervisorJobAsk.setDisabled(true);
+				
+				QDataAskMessage supervisorJobAskMsgDisable = new QDataAskMessage(supervisorJobAsk);
+				supervisorJobAskMsgDisable.setToken(userToken.getToken());
+				VertxUtils.writeMsg("webcmds", supervisorJobAskMsgDisable);
+				
+				
+				/* Send Answer to Front End */
+				VertxUtils.sendToFrontEnd(userToken, assocSupervisorJobAnswer);
+		
+				
+				/* Send enable for this Ask */
+				supervisorJobAsk.setDisabled(false);
+				
+				QDataAskMessage supervisorJobAskMsgEnable = new QDataAskMessage(supervisorJobAsk);
+				supervisorJobAskMsgEnable.setToken(userToken.getToken());
+				VertxUtils.writeMsg("webcmds", supervisorJobAskMsgEnable);
 			}	
 		}
 
