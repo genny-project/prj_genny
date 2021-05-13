@@ -44,6 +44,7 @@ rule "IS_REF_PART_REP"
 		String userCode = userSplit[1];
 		System.out.println("User "+user+" with userCode = "+userCode);
 		
+		String userId = "";
 		
 		String firstname = user.getValue("PRI_FIRSTNAME",null);
 		if (firstname != null) {
@@ -51,13 +52,27 @@ rule "IS_REF_PART_REP"
 			if (lastname != null) {
 				String email = user.getValue("PRI_EMAIL",null);
 				if (email != null) {
-					/*String userPassword = UUID.randomUUID().toString().substring(0,10);*/
-					String userPassword = "password1";
-						String userId = KeycloakUtils.updateUser(userCode,serviceToken.getToken(), serviceToken.getRealm(), email, firstname, lastname,  email, userPassword,"user", "users");
-					userId = userId.toUpperCase();
-					Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),newBe.getCode(),"PRI_UUID",userId);
-					beUtils.saveAnswer(keycloakId);
-					System.out.println("Created User "+email+" in Keycloak with id = "+userId + " and password:" +userPassword);
+						userId = KeycloakUtils.updateUser(userCode,serviceToken.getToken(), serviceToken.getRealm(), email, firstname, lastname,  email, null, "user", "users");
+						userId = userId.toUpperCase();
+						Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),newBe.getCode(),"PRI_UUID",userId);
+						beUtils.saveAnswer(keycloakId);
+						System.out.println("Created User "+email+" in Keycloak with id = "+userId);
+
+						/* Generate a random 15 char password */
+						char[] allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGJKLMNPRSTUVWXYZ0123456789^$?!@#%&".toCharArray();
+						String password = new SecureRandom().ints(15, 0, allowed.length).mapToObj(i -> String.valueOf(allowed[i])).collect(Collectors.joining());
+						KeycloakUtils.setPassword(serviceToken.getToken(), serviceToken.getRealm(), userId, password, true);
+
+						/* Send them an email with their password */
+						String url = GennySettings.projectUrl + "/home";
+						HashMap<String, String> templateData = new HashMap<String, String>();
+						templateData.put("name", firstname);
+						templateData.put("password", password);
+						templateData.put("url", url);
+							
+						List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
+						
+						EmailHelper.sendGrid(beUtils, email, null, bccList, "", "d-100adae110bb46eb999cd8b48666cad0", templateData, false);		
 				}
 			}
 		}
