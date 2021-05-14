@@ -58,7 +58,46 @@ rule "HELPER_LNK_SELECT_COUNTRY"
 				Answer mobileAns = new Answer(sourceCode, targetCode, "PRI_MOBILE", phoneCode);
 				beUtils.saveAnswer(landlineAns);
 				beUtils.saveAnswer(mobileAns);
+
+				/* Prepare landline ask */
+				Attribute landlineAttr = RulesUtils.getAttribute("PRI_LANDLINE", serviceToken);
+				Question landlineQues = new Question("QUE_PHONE", "Landline Phone Number", landlineAttr, true);
+				Ask landlineAsk = new Ask(landlineQues, sourceCode, targetCode);
+
+				/* Prepare mobile ask */
+				Attribute mobileAttr = RulesUtils.getAttribute("PRI_MOBILE", serviceToken);
+				Question mobileQues = new Question("QUE_MOBILE", "Phone", mobileAttr, true);
+				Ask mobileAsk = new Ask(mobileQues, sourceCode, targetCode);
+
+
+				/* Send the ask as DISABLE = true */
+				landlineAsk.setDisabled(true);
+				mobileAsk.setDisabled(true);
+				
+				QDataAskMessage disableLandline = new QDataAskMessage(landlineAsk);
+				disableLandline.setToken(userToken.getToken());
+				VertxUtils.writeMsg("webcmds", disableLandline);
+
+				QDataAskMessage disableMobile = new QDataAskMessage(mobileAsk);
+				disableMobile.setToken(userToken.getToken());
+				VertxUtils.writeMsg("webcmds", disableMobile);
+
+				/* Send Answer to Front End */
 				VertxUtils.sendToFrontEnd(userToken, landlineAns, mobileAns);
+
+				/* Send the ask as DISABLE = false */
+				landlineAsk.setDisabled(true);
+				mobileAsk.setDisabled(true);
+				
+				QDataAskMessage enableLandline = new QDataAskMessage(landlineAsk);
+				enableLandline.setToken(userToken.getToken());
+				VertxUtils.writeMsg("webcmds", enableLandline);
+
+				QDataAskMessage enableMobile = new QDataAskMessage(mobileAsk);
+				enableMobile.setToken(userToken.getToken());
+				VertxUtils.writeMsg("webcmds", enableMobile);
+
+
 			}
 			String name = be.getValue("PRI_NAME", null);		
 			if(name != null){
