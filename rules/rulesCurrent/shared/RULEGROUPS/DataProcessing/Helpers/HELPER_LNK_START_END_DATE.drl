@@ -233,7 +233,7 @@ rule "HELPER_LNK_START_END_DATE"
 				LocalDate endDate = date1.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 				beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_END_DATE", endDate));
 				
-				Answer endDateAnswer = new Answer(sourceCode, targetCode, "PRI_END_DATE", endDate,false,true);
+				Answer endDateAnswer = new Answer(sourceCode, targetCode, "PRI_END_DATE", endDate);
 				answers.add(endDateAnswer);
 				
 				
