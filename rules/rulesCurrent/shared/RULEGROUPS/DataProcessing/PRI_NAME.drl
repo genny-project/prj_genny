@@ -52,10 +52,10 @@ rule "AUTOFILL_NAME"
 			return;
 		}
 
-		String abn = companyBe.getValue("PRI_ABN", "");
+		String abn = companyBe.getValue("PRI_ABN", null);
 		System.out.println("abn  ::  " + abn);
 
-		if (QwandaUtils.isValidAbnFormat(abn)) {
+		if (abn != null && QwandaUtils.isValidAbnFormat(abn)) {
 			System.out.println("ABN is valid");
 
 			/* if abn is valid, check if the abn exists in the system */
