@@ -93,7 +93,7 @@ rule "IS_EDU_PRO_REP"
 						
 					List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
 					
-					EmailHelper.sendGrid(beUtils, email, null, bccList, "", "d-100adae110bb46eb999cd8b48666cad0", templateData, false);		
+					EmailHelper.sendGrid(beUtils, email, null, bccList, "", "d-100adae110bb46eb999cd8b48666cad0", templateData, true);		
 				}
 			}
 		}

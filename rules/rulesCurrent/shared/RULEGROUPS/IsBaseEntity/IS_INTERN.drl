@@ -187,7 +187,7 @@ rule "IS_INTERN"
 							
 						List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
 						
-						EmailHelper.sendGrid(beUtils, email, null, bccList, "", "d-100adae110bb46eb999cd8b48666cad0", templateData, false);		
+						EmailHelper.sendGrid(beUtils, email, null, bccList, "", "d-100adae110bb46eb999cd8b48666cad0", templateData, true);		
 					} else {
 					     System.out.println("KEYCLOAK USER CREATION DISABLED IN RULE IS_INTERN");
 					}
