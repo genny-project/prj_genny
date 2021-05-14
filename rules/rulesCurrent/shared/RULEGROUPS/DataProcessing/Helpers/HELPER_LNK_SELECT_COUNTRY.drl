@@ -86,8 +86,8 @@ rule "HELPER_LNK_SELECT_COUNTRY"
 				VertxUtils.sendToFrontEnd(userToken, landlineAns, mobileAns);
 
 				/* Send the ask as DISABLE = false */
-				landlineAsk.setDisabled(true);
-				mobileAsk.setDisabled(true);
+				landlineAsk.setDisabled(false);
+				mobileAsk.setDisabled(false);
 				
 				QDataAskMessage enableLandline = new QDataAskMessage(landlineAsk);
 				enableLandline.setToken(userToken.getToken());
