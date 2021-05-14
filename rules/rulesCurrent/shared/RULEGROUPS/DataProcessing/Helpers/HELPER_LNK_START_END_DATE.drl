@@ -134,7 +134,7 @@ rule "HELPER_LNK_START_END_DATE"
 				String lastDay = "Friday";
 			    int lastDayKey = 0;
 				
-				String[] whichDays = wdsStr.split(", ");
+				String[] whichDays = wdsStr.split(",");
 				for (int i = 0; i < whichDays.length; i++) {
 					/*System.out.println("Day = " + whichDays[i] + " with key = " + daysOfWeek.get(whichDays[i]));*/
 			      
