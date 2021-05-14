@@ -23,6 +23,12 @@ import life.genny.utils.DropdownUtils;
 import java.util.List;
 import java.util.ArrayList;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 rule "HELPER_LNK_START_END_DATE"
 	ruleflow-group 'DataProcessing'
 	salience 5000
@@ -74,10 +80,10 @@ rule "HELPER_LNK_START_END_DATE"
 		String start_date = beUtils.getBaseEntityValueAsLocalDate(targetBe.getCode(), attributeStr).toString();
 		System.out.println("start_date = " +start_date);
 		
-		String durationStr = newApplication.getValue("PRI_ASSOC_DURATION", null);
+		String durationStr = targetBe.getValue("PRI_ASSOC_DURATION", null);
         System.out.println("durationStr = " + durationStr);
         
-        String wdsStr = newApplication.getValue("PRI_WHICH_DAYS_STRIPPED", null);
+        String wdsStr = targetBe.getValue("PRI_WHICH_DAYS_STRIPPED", null);
         System.out.println("wdsStr = " + wdsStr);
         
         String nullValue = null;
