@@ -55,6 +55,14 @@ rule "AUTOFILL_NAME"
 		String abn = companyBe.getValue("PRI_ABN", null);
 		System.out.println("abn  ::  " + abn);
 
+		if(abn == null){
+			System.out.println("ABN is NULL. Saving PRI_NAME and PRI_LEGAL_NAME");
+
+			Answer nameAnswer = new Answer(answer.getSourceCode(), answer.getTargetCode(), answer.getAttributeCode(), answer.getValue());
+			beUtils.saveAnswer(nameAnswer);
+			VertxUtils.sendToFrontEnd(userToken, nameAnswer);
+		}
+
 		if (abn != null && QwandaUtils.isValidAbnFormat(abn)) {
 			System.out.println("ABN is valid");
 
