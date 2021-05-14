@@ -58,6 +58,13 @@ rule "PRI_ABN"
 				System.out.println("Sent not unique ABN error message to frontend");		
 
 			}else{
+
+				String endPoint = GennySettings.projectUrl + "/json";
+				System.out.println("endPoint :: " + endPoint);
+
+				String abnData = QwandaUtils.sendGET(endPoint, serviceToken.getToken());
+				System.out.println("abnData :: " + abnData);
+				
 				answer.setValue(abn);
 				answersToSave.add(answer);
 			}
