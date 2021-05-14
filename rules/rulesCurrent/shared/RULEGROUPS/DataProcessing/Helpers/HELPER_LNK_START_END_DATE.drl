@@ -164,6 +164,7 @@ rule "HELPER_LNK_START_END_DATE"
 				
 				Calendar date1 = Calendar.getInstance();
 				date1.set(year, month, day);
+				System.out.println("date1 = " + date1.getTime());
 				
 				switch (lastDay) {
 					case "Monday":
@@ -231,6 +232,36 @@ rule "HELPER_LNK_START_END_DATE"
 				
 				LocalDate endDate = date1.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 				beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_END_DATE", endDate));
+				
+				Answer endDateAnswer = new Answer(sourceCode, targetCode, "PRI_END_DATE", endDate,false,true);
+				answers.add(endDateAnswer);
+				
+				
+				/* Prepare Question and Ask */
+				Attribute attr = RulesUtils.getAttribute("PRI_END_DATE", serviceToken);
+				
+				Question endDateQues = new Question("QUE_WORD_START_DATE", "End Date", attr, true);
+				Ask endDateAsk = new Ask(endDateQues, sourceCode, targetCode);
+				
+				
+				/* Send Disable for this Ask */
+				endDateAsk.setDisabled(true);
+				
+				QDataAskMessage endDateAskMsgDisable = new QDataAskMessage(endDateAsk);
+				endDateAskMsgDisable.setToken(userToken.getToken());
+				VertxUtils.writeMsg("webcmds", endDateAskMsgDisable);
+				
+				
+				/* Send Answer to Front End */
+				VertxUtils.sendToFrontEnd(userToken, endDateAnswer);
+		
+				
+				/* Send enable for this Ask */
+				endDateAsk.setDisabled(false);
+				
+				QDataAskMessage endDateAskMsgEnable = new QDataAskMessage(endDateAsk);
+				endDateAskMsgEnable.setToken(userToken.getToken());
+				VertxUtils.writeMsg("webcmds", endDateAskMsgEnable);
 	 		}
 		}
 end
