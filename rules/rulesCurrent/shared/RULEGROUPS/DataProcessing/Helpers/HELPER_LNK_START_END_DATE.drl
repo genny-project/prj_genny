@@ -36,7 +36,8 @@ rule "HELPER_LNK_START_END_DATE"
 	no-loop
 	when
 		beUtils : BaseEntityUtils()
-		answer : Answer( attributeCode == "PRI_INTERNSHIP_START_DATE" || attributeCode == "PRI_WORD_START_DATE")
+		/*answer : Answer( attributeCode == "PRI_INTERNSHIP_START_DATE" || attributeCode == "PRI_WORD_START_DATE")*/
+		answer : Answer( attributeCode == "PRI_WORD_START_DATE")
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		userToken : GennyToken( code != "PER_SERVICE")
 	then
@@ -75,6 +76,14 @@ rule "HELPER_LNK_START_END_DATE"
 		
 		String start_date = value.substring(0, 10);
 		System.out.println("start_date  :: " + start_date);
+		
+		if (attribute.equals("PRI_WORD_START_DATE")) {
+			value = start_date;
+			System.out.println("value :: " + value);
+		}
+		Answer startDateAnswer = new Answer(sourceCode, targetCode, attribute, value);
+		beUtils.saveAnswer(startDateAnswer);
+		VertxUtils.sendToFrontEnd(userToken, startDateAnswer);
 
 
 		BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
