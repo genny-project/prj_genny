@@ -70,10 +70,6 @@ rule "HELPER_LNK_START_END_DATE"
 		String attribute = answer.getAttributeCode();
 		System.out.println("attribute :: " + attribute);
 		
-		Answer startDateAnswer = new Answer(sourceCode, targetCode, attribute, value);
-		beUtils.saveAnswer(startDateAnswer);
-		VertxUtils.sendToFrontEnd(userToken, startDateAnswer);
-		
 		String start_date = value.substring(0, 10);
 		System.out.println("start_date  :: " + start_date);
 		
