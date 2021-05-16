@@ -47,6 +47,7 @@ rule "IS_QA_HOST_CPY_REP"
 		
 		String linkedHC = user.getValue("LNK_HOST_COMPANY", null);
 		System.out.println("linkedHC = " + linkedHC);
+		BaseEntity companyBe = null;
 		if (linkedHC != null && !linkedHC.isEmpty()) {
 			System.out.println("LNK_HOST_COMPANY present!");
 		} else {
@@ -54,6 +55,8 @@ rule "IS_QA_HOST_CPY_REP"
 				/* If HostCpyRep adding another HostCpyRep, then set same company */
 				String userHostCpy = beUtils.getBaseEntityValueAsString(userToken.getUserCode(), "LNK_HOST_COMPANY");
 				beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_HOST_COMPANY", userHostCpy));
+
+				companyBe = beUtils.getBaseEntityByCode(userHostCpy);
 			} else {
 				/* CREATE EMPTY CPY FOR THE USER */
 				System.out.println("NO HOST COMPANY SELECTED, CREATING ONE...");
@@ -66,26 +69,26 @@ rule "IS_QA_HOST_CPY_REP"
 				beUtils.saveAnswer(new Answer(userToken.getUserCode(), cpyCode, "PRI_IS_HOST_CPY", true));
 				beUtils.saveAnswer(new Answer(userToken.getUserCode(), cpyCode, "PRI_PROFILE", "Incomplete"));
 				
-				/* get the company baseentity */
-				BaseEntity companyBe = beUtils.getBaseEntityByCode(cpyCode);
-				if(companyBe != null){
+				companyBe = beUtils.getBaseEntityByCode(cpyCode);
+			}
 
-					/* get the name attribute of the company */
-					String hcName = companyBe.getValue("PRI_NAME", null);	
-					System.out.println("hcName  :: " + hcName);	
+			/* Save the CPY name to the rep BE */
+			if(companyBe != null) {
+				/* get the name attribute of the company */
+				String hcName = companyBe.getValue("PRI_NAME", null);	
+				System.out.println("hcName  :: " + hcName);	
 
-					/* save the company's name as PRI_ASSOC_HC attribute for person baseentity */
-					if(hcName != null){
-						Answer answerHC = new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASSOC_HC", hcName);
-						beUtils.saveAnswer(answerHC);
-						VertxUtils.sendToFrontEnd(userToken, answerHC);
+				/* save the company's name as PRI_ASSOC_HC attribute for person baseentity */
+				if(hcName != null){
+					Answer answerHC = new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASSOC_HC", hcName);
+					beUtils.saveAnswer(answerHC);
+					VertxUtils.sendToFrontEnd(userToken, answerHC);
 
-					} else {
-						System.out.println("hcName is NULL");
-					}
 				} else {
-					System.out.println("companyBe is NULL");
+					System.out.println("hcName is NULL");
 				}
+			} else {
+				System.out.println("companyBe is NULL");
 			}
 		}
 		
