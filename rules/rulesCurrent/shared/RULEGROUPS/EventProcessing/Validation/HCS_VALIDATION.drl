@@ -47,7 +47,7 @@ rule "HCS_VALIDATION"
 				doc = "HC Services document completed";
 				todo = "Please complete the OHS Agreement";
 				subject = "New Host Company - HCS form completed";
-				template_id = "d-95472fd28165474f80346ff9a1912a4b";
+				template_id = "d-1ab75e61abd744228db69b5e93a46ac0";
 				System.out.println("PRI_VALIDATION set to HCS"); 
 					
 		}
@@ -76,11 +76,15 @@ rule "HCS_VALIDATION"
 		System.out.println("user: " + user);
 		
 		String token = "";
+		String hcrName = null;
 		
 		BaseEntity hcrBe = beUtils.getBaseEntityByCode(user);
 		if (hcrBe != null) {
 			String hcrEmail = hcrBe.getValue("PRI_EMAIL", null);
 			System.out.println("user: " + user);
+			
+			hcrName = hcrBe.getValue("PRI_NAME", null);
+			System.out.println("hcrName: " + hcrName);
 			
 			BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
 			token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, hcrEmail, serviceToken.getToken());
@@ -141,46 +145,48 @@ rule "HCS_VALIDATION"
 		}
 					
 		HashMap<String, String> templateData = new HashMap<String, String>();
-		List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
+		List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");	
 		
-		templateData.put("HC", assocHC);
-		templateData.put("Doc", doc);
-		templateData.put("Todo", todo);
-		templateData.put("IS1", linkedIS);
-		templateData.put("url", url);
-		
-		
-		/* Send emails??? 
-		
-		if (HCS){
-			subject = "Host Company Services form completed";
-			template_id = "d-1ab75e61abd744228db69b5e93a46ac0";
-			
-			System.out.println("Sending HCS email");
-			EmailHelper.sendGrid(beUtils, agentEmail, null, null, subject, template_id, templateData, false);
-		}
-		*/
+		/* Send emails??? */
 		
 		if (HCS){
 			System.out.println("Sending Agent - HCS email");
+			
+			templateData.put("hcName", assocHC);
+			templateData.put("hcrName", hcrName);
+			
+			System.out.println("-------- AGENT EMAIL DATA --------");
+			System.out.println("subject: " +subject);
+			System.out.println("template_id: " +template_id);
+			System.out.println("email: " +agentEmail);
+			System.out.println("hcName: " +assocHC);
+			System.out.println("hcrName: " +hcrName);
+			System.out.println("----------------------------");
+			
 			EmailHelper.sendGrid(beUtils, agentEmail, null, bccList, subject, template_id, templateData, false);
 		}
 		
 		if (ready){
 			System.out.println("Sending Agent - HC Validation email");
+			
+			templateData.put("HC", assocHC);
+			templateData.put("Doc", doc);
+			templateData.put("Todo", todo);
+			templateData.put("IS1", linkedIS);
+			templateData.put("url", url);
+			
+			System.out.println("-------- AGENT EMAIL DATA --------");
+			System.out.println("subject: " +subject);
+			System.out.println("template_id: " +template_id);
+			System.out.println("email: " +agentEmail);
+			System.out.println("HC: " +assocHC);
+			System.out.println("Doc: " +doc);
+			System.out.println("Todo: " +todo);
+			System.out.println("IS1: " +linkedIS);
+			System.out.println("----------------------------");
+			
 			EmailHelper.sendGrid(beUtils, agentEmail, null, bccList, subject, template_id, templateData, false);
-		}
-		
-		System.out.println("-------- AGENT EMAIL DATA --------");
-		System.out.println("subject: " +subject);
-		System.out.println("template_id: " +template_id);
-		System.out.println("email: " +agentEmail);
-		System.out.println("HC: " +assocHC);
-		System.out.println("Doc: " +doc);
-		System.out.println("Todo: " +todo);
-		System.out.println("IS1: " +linkedIS);
-		System.out.println("----------------------------");
-	
+		}	
 		
 		retract(baseEntityType)
 		retract(hcBe)
