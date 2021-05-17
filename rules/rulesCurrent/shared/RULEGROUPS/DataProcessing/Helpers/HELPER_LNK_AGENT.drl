@@ -46,7 +46,7 @@ rule "HELPER_LNK_AGENT"
 		BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
 		if(targetBe != null){
 		
-			String linkedApps = be.getValue("LNK_APPLICATIONS", null);
+			String linkedApps = targetBe.getValue("LNK_APPLICATIONS", null);
 			if (linkedApps != null) {
 			
 				linkedApps = linkedApps.replace("\"", "").replace("[", "").replace("]", "");
