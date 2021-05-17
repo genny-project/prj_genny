@@ -275,7 +275,7 @@ rule "HELPER_SIGNATURE_DATE"
 			templateData.put("url", url);
 			System.out.println("Intern Signature Detected. No email but moving them to placed");
 			
-			EmailHelper.sendGrid(beUtils, agentEmail, subject, template_id, templateData, false);
+			/*EmailHelper.sendGrid(beUtils, agentEmail, subject, template_id, templateData, false);*/
 		
 		}
 		
