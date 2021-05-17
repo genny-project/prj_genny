@@ -56,7 +56,7 @@ rule "HELPER_LNK_AGENT"
 					String[] applications = linkedApps.split(",");
 					int length = applications.length;
 					
-					for (int i; i < length; i++) {
+					for (int i = 0; i < length; i++) {
 						System.out.println("applications[i]  :: " + applications[i]);
 						BaseEntity appBe = beUtils.getBaseEntityByCode(applications[i]);
 						System.out.println("appBe  :: " + appBe);
