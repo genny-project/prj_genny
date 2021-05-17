@@ -56,7 +56,7 @@ rule "IS_QA_HOST_CPY_REP"
 				String userHostCpy = beUtils.getBaseEntityValueAsString(userToken.getUserCode(), "LNK_HOST_COMPANY");
 				beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_HOST_COMPANY", userHostCpy));
 
-				companyBe = beUtils.getBaseEntityByCode(userHostCpy);
+				companyBe = beUtils.getBaseEntityByCode(beUtils.cleanUpAttributeValue(userHostCpy));
 			} else {
 				/* CREATE EMPTY CPY FOR THE USER */
 				System.out.println("NO HOST COMPANY SELECTED, CREATING ONE...");
