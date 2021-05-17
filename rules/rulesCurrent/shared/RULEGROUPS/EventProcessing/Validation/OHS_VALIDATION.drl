@@ -75,13 +75,14 @@ rule "OHS_VALIDATION"
 		System.out.println("user: " + user);
 		
 		String token = "";
+		String hcrName = null;
 		
 		BaseEntity hcrBe = beUtils.getBaseEntityByCode(user);
 		if (hcrBe != null) {
 			String hcrEmail = hcrBe.getValue("PRI_EMAIL", null);
 			System.out.println("user: " + user);
 			
-			String hcrName = hcrBe.getValue("PRI_NAME", null);
+			hcrName = hcrBe.getValue("PRI_NAME", null);
 			System.out.println("hcrName: " + hcrName);
 			
 			BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
