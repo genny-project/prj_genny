@@ -164,6 +164,12 @@ rule "IS_QA_HOST_CPY_REP"
 		if (user != null) {
 				allEmails = user.getValue("LNK_ALL_EMAILS",null);
 				System.out.println("allEmails: " +allEmails);
+
+				Boolean allEmailsBool = false;
+				if (allEmails != null && allEmails.contains("SEL_YES")) {
+					allEmailsBool = true;
+				}
+				beUtils.saveAnswer(new Answer(userToken.getUserCode(), user.getCode(), "PRI_ALL_EMAILS", allEmailsBool));
 		}
 		
 		if (allEmails.equals("SEL_YES")) {
