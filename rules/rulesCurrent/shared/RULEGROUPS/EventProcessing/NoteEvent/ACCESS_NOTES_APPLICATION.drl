@@ -124,7 +124,7 @@ rule "ACCESS_NOTES_APPLICATION"
 			System.out.println("hcNotes :: " + hcNotes);
 			System.out.println("superNotes :: " + superNotes);
 			
-			String codes = '[\"" + appCode + "," + internCode + "," + internshipCode + "," + hcCode + "," + superCode + "]'';
+			String codes = "[\"" + appCode + "\",\"" + internCode + "\",\"" + internshipCode + "\",\"" + hcCode + "\",\"" + superCode + "\"]";
 			System.out.println("codes :: " + codes);
 			/*setCode(“[PER_,APP_,BEG_…]“)*/
 
