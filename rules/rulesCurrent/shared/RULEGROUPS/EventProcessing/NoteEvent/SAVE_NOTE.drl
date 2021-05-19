@@ -54,7 +54,7 @@ rule "SAVE_NOTE"
 			QwandaUtils.apiPostNote(endPoint, sourceCode, tags, targetCode, content, serviceToken.getToken());
 			System.out.println("Note saved against " + targetCode + " with content: " + content);
 		
-			String toastName = targetBE.getValue("PRI_NAME", null);
+			String toastName = targetBe.getValue("PRI_NAME", null);
 			System.out.println("toastName: " +toastName);
 			
 			/* send cmd msg */
@@ -74,6 +74,6 @@ rule "SAVE_NOTE"
 		}
 															
 		retract(targetBe);
-		retract(type);
+		retract(key);
 		
 	end

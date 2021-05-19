@@ -90,7 +90,7 @@ rule "ACCESS_NOTES"
 					msgMatches.setReplace(true);
 					VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msgMatches));
 				} else {
-					System.out.println("rootCode was not NULL. rootCode: " +rootCode);
+					System.out.println("ERROR: linkedApps is Null");
 				} 
 				/*String[] tagList = {"Business Development", "Placement", "Outcome Life", "Miscellaneous"};*/
 				
@@ -100,8 +100,6 @@ rule "ACCESS_NOTES"
 					json.put("code", targetCode);
 					json.put("title", targetName);
 					json.put("image", targetImage);
-					json.put("Tab_Intern", jsonIntern);
-					/*jsonIntern.put("tagList", tagList);*/
 					
 					if (linkedApps != null) {
 						JsonObject jsonApplication = new JsonObject();
@@ -122,7 +120,7 @@ rule "ACCESS_NOTES"
 		}
 
 		retract(targetBe);
-		retract(type);
+		retract(key);
 	end
 
 
