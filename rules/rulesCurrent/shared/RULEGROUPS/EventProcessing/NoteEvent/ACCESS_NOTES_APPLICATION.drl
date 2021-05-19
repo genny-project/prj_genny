@@ -27,7 +27,7 @@ rule "ACCESS_NOTES_APPLICATION"
 		System.out.println(drools.getRule().getName() + " triggered");
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 		
-		BaseEntity targetBe = beUtils.getBaseEntityByCode(targetBe.getCode());
+		targetBe = beUtils.getBaseEntityByCode(targetBe.getCode());
 
 		if(targetBe != null){
 			/* Application Details */
@@ -55,7 +55,7 @@ rule "ACCESS_NOTES_APPLICATION"
 	
 	
 			/* Internship Details */
-			String internshipCode = targetBE.getValue("LNK_INTERNSHIP", null);
+			String internshipCode = targetBe.getValue("LNK_INTERNSHIP", null);
 			internshipCode = internshipCode.replace("\"", "").replace("[", "").replace("]", "");
 			System.out.println("internshipCode: " +internshipCode);
 			
@@ -69,7 +69,7 @@ rule "ACCESS_NOTES_APPLICATION"
 			
 			
 			/* Host Company Details */
-			String hcCode = targetBE.getValue("LNK_HOST_COMPANY", null);
+			String hcCode = targetBe.getValue("LNK_HOST_COMPANY", null);
 			hcCode = hcCode.replace("\"", "").replace("[", "").replace("]", "");
 			System.out.println("hcCode: " +hcCode);
 			
@@ -83,7 +83,7 @@ rule "ACCESS_NOTES_APPLICATION"
 			
 			
 			/* Supervisor Details */
-			String superCode = targetBE.getValue("LNK_INTERN_SUPERVISOR", null);
+			String superCode = targetBe.getValue("LNK_INTERN_SUPERVISOR", null);
 			superCode = superCode.replace("\"", "").replace("[", "").replace("]", "");
 			System.out.println("superCode: " +superCode);
 			
@@ -112,7 +112,7 @@ rule "ACCESS_NOTES_APPLICATION"
 			System.out.println("urlHC :: " + urlHC);
 			System.out.println("urlSuper :: " + urlSuper);
 
-			String appNotes = QwandaUtils.sendGET(url, serviceToken.getToken());
+			String appNotes = QwandaUtils.sendGET(urlApp, serviceToken.getToken());
 			String internNotes = QwandaUtils.sendGET(urlIntern, serviceToken.getToken());
 			String internshipNotes = QwandaUtils.sendGET(urlInternship, serviceToken.getToken());
 			String hcNotes = QwandaUtils.sendGET(urlHC, serviceToken.getToken());
@@ -126,8 +126,13 @@ rule "ACCESS_NOTES_APPLICATION"
 			
 			
 			/* Send notes to FE */
+			JsonObject jsonApplication = new JsonObject(appNotes);
+			JsonObject jsonIntern = new JsonObject(internNotes);
+			JsonObject jsonInternship = new JsonObject(internshipNotes);
+			JsonObject jsonHC = new JsonObject(hcNotes);
+			JsonObject jsonSuper = new JsonObject(superNotes);
+
 			if(appNotes != null){
-				JsonObject jsonApplication = new JsonObject(appNotes);
 				jsonApplication.put("token", userToken.getToken());
 				jsonApplication.put("code", appCode);
 				jsonApplication.put("title", appName);
@@ -143,7 +148,6 @@ rule "ACCESS_NOTES_APPLICATION"
 			}	
 
 			if(internNotes != null){
-				JsonObject jsonIntern = new JsonObject(internNotes);
 				jsonIntern.put("token", userToken.getToken());
 				jsonIntern.put("code", internCode);
 				jsonIntern.put("title", internName);
@@ -159,7 +163,6 @@ rule "ACCESS_NOTES_APPLICATION"
 			}	
 
 			if(internshipNotes != null){
-				JsonObject jsonInternship = new JsonObject(internshipNotes);
 				jsonInternship.put("token", userToken.getToken());
 				jsonInternship.put("code", internshipCode);
 				jsonInternship.put("title", internshipName);
@@ -175,7 +178,6 @@ rule "ACCESS_NOTES_APPLICATION"
 			}	
 
 			if(hcNotes != null){
-				JsonObject jsonHC = new JsonObject(hcNotes);
 				jsonHC.put("token", userToken.getToken());
 				jsonHC.put("code", hcCode);
 				jsonHC.put("title", hcName);
@@ -191,7 +193,6 @@ rule "ACCESS_NOTES_APPLICATION"
 			}	
 
 			if(superNotes != null){
-				JsonObject jsonSuper = new JsonObject(superNotes);
 				jsonSuper.put("token", userToken.getToken());
 				jsonSuper.put("code", superCode);
 				jsonSuper.put("title", superName);
@@ -224,7 +225,8 @@ rule "ACCESS_NOTES_APPLICATION"
 			VertxUtils.writeMsg("webcmds", msg);
 		}
 
-		retract( $message);
+		retract(targetBe);
+		retract(type);
 	end
 
 
