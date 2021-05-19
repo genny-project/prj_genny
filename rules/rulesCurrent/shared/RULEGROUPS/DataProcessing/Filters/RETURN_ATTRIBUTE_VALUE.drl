@@ -14,6 +14,7 @@ rule "RETURN_ATTRIBUTE_VALUE"
     no-loop true
     when
 		beUtils : BaseEntityUtils()
+		userToken : GennyToken( code != "PER_SERVICE")
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		answer : Answer( 
 			(
@@ -41,8 +42,8 @@ rule "RETURN_ATTRIBUTE_VALUE"
 
 		/* Send val to FE */
 		Answer answerColumn = new Answer(userToken.getUserCode(), targetCode, attributeCode, value);
-		beUtils.saveAnswer(answerName);		
-		VertxUtils.sendToFrontEnd(userToken, answerName);
+		beUtils.saveAnswer(answerColumn);		
+		VertxUtils.sendToFrontEnd(userToken, answerColumn);
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
