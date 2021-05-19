@@ -128,11 +128,11 @@ rule "ACCESS_NOTES_APPLICATION"
 			System.out.println("codes :: " + codes);
 			/*setCode(“[PER_,APP_,BEG_…]“)*/
 
-			QCmdMessage msg = new QCmdMessage("NOTES", "TABS");
-			msg.setCode("\"[" +appCode + ",");
-			msg.setToken(beUtils.getGennyToken().getToken());
-			msg.setSend(true);
-			VertxUtils.writeMsg("webcmds", msg);
+			QCmdMessage notesMsg = new QCmdMessage("NOTES", "TABS");
+			notesMsg.setCode("\"[" +appCode + ",");
+			notesMsg.setToken(beUtils.getGennyToken().getToken());
+			notesMsg.setSend(true);
+			VertxUtils.writeMsg("webcmds", notesMsg);
 
 			
 			/* Send notes to FE */
