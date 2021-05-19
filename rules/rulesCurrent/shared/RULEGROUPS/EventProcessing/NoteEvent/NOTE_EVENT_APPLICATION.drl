@@ -15,7 +15,7 @@ rule "NOTE_EVENT_APPLICATION"
 	salience 2
 	no-loop
 	when
-		$message : QEventMessage(data.code matches "ACT_PRI_EVENT_ACCESS_NOTES_APPLICATION")
+		$message : QEventMessage(data.code matches "ACT_PRI_EVENT_ACCESS_NOTES_APPLICATIONSSS")
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam( )
@@ -23,7 +23,13 @@ rule "NOTE_EVENT_APPLICATION"
 		System.out.println(drools.getRule().getName() + " triggered");
 		
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
-
+		
+		/*
+		code: "ACT_PRI_EVENT_ACCESS_NOTES_APPLICATION"
+		parentCode: "SBE_APPLIED_APPLICATIONS_D12A7273-656D-4408-A12F-714E2A38D3E3"
+		targetCode: "APP_8CC599CA-CA86-4AC3-A0C6-24B025B40D92"
+		*/ 
+		
 		String targetCode = $message.getData().getTargetCode();
 		System.out.println("targetCode :: " + targetCode);
 

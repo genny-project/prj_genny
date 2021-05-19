@@ -88,6 +88,8 @@
       <bpmn2:incoming>SequenceFlow_12</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_21</bpmn2:outgoing>
       <bpmn2:script>/* Gather the input data */
+
+System.out.println(&quot;WOOOOOOOO&quot;);
 serviceToken = (GennyToken)sessionFacts.getServiceToken();
 userToken = (GennyToken)sessionFacts.getUserToken();
 beUtils = new BaseEntityUtils(userToken);
@@ -200,13 +202,13 @@ System.out.println(&quot;saveNote: targetBE = &quot; + targetBE);
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_3" bpmnElement="EndEvent_3">
         <dc:Bounds height="36.0" width="36.0" x="1020.0" y="310.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_1">
           <dc:Bounds height="11.0" width="78.0" x="999.0" y="346.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_5" bpmnElement="Task_5" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="870.0" y="303.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_2">
           <dc:Bounds height="11.0" width="58.0" x="896.0" y="322.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -214,19 +216,19 @@ System.out.println(&quot;saveNote: targetBE = &quot; + targetBE);
         <di:waypoint xsi:type="dc:Point" x="686.0" y="328.0"/>
         <di:waypoint xsi:type="dc:Point" x="703.0" y="328.0"/>
         <di:waypoint xsi:type="dc:Point" x="720.0" y="328.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_3"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_21" bpmnElement="SequenceFlow_21" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_Task_5">
         <di:waypoint xsi:type="dc:Point" x="830.0" y="328.0"/>
         <di:waypoint xsi:type="dc:Point" x="850.0" y="328.0"/>
         <di:waypoint xsi:type="dc:Point" x="870.0" y="328.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_4"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_22" bpmnElement="SequenceFlow_22" sourceElement="BPMNShape_Task_5" targetElement="BPMNShape_EndEvent_3">
         <di:waypoint xsi:type="dc:Point" x="980.0" y="328.0"/>
         <di:waypoint xsi:type="dc:Point" x="1000.0" y="328.0"/>
         <di:waypoint xsi:type="dc:Point" x="1020.0" y="328.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_5"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
