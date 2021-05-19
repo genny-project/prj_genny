@@ -62,6 +62,7 @@
     <bpmn2:property id="sourceCode" itemSubjectRef="ItemDefinition_2733" name="sourceCode"/>
     <bpmn2:property id="targetCode" itemSubjectRef="ItemDefinition_2733" name="targetCode"/>
     <bpmn2:property id="submitCode" itemSubjectRef="ItemDefinition_2733" name="submitCode"/>
+    <bpmn2:property id="luggage" itemSubjectRef="ItemDefinition_2733" name="luggage"/>
     <bpmn2:startEvent id="StartEvent_2" name="SAVE_NOTES">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">

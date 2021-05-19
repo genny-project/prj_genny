@@ -36,7 +36,7 @@ rule "SAVE_NOTES_CLICK_EVENT"
 		String code = $message.getData().getCode();
 		String app = StringUtils.removeStart(code, "ACT_PRI_EVENT_SAVE_NOTES_");
 
-		String luggage = "nah":
+		String luggage = "nah";
 		if (app.equals("APPLICATION")) {
 			luggage = "AppSet";
 		}
