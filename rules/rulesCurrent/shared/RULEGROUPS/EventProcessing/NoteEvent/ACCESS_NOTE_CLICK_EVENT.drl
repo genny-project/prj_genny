@@ -39,7 +39,7 @@ rule "ACCESS_NOTES_CLICK_EVENT"
 	
 		
 		output.setTypeOfResult("SIGNAL");
-		output.setResultCode("START_SAVE_NOTE");
+		output.setResultCode("START_ACCESS_NOTES");
 		output.setTargetCode(targetCode);
 		output.setSuitCase(key);
 		output.setLuggage("ACCESS");
