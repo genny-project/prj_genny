@@ -74,7 +74,7 @@ rule "PRI_SUBMIT_FILTER"
 
 				/* Determine the datatype */
 				if (dtt.equals("java.lang.Boolean") || dtt.equals("Boolean")) {
-					valBoolean = Boolean.valueOf(val);
+					valBoolean = filterOptionCode.contains("TRUE") ? true : false;
 					System.out.println("valBoolean = " + valBoolean);
 				} else if (dtt.equals("java.lang.Double") || dtt.equals("Double")) {
 					valDouble = Double.valueOf(val);
