@@ -42,7 +42,6 @@ rule "RETURN_ATTRIBUTE_VALUE"
 
 		/* Send val to FE */
 		Answer answerColumn = new Answer(userToken.getUserCode(), targetCode, attributeCode, value);
-		beUtils.saveAnswer(answerColumn);		
 		VertxUtils.sendToFrontEnd(userToken, answerColumn);
 
 		output.setTypeOfResult("NONE");
