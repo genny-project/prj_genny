@@ -15,7 +15,7 @@ rule "ACCESS_NOTES_CLICK_EVENT"
 		salience 2
     no-loop
     when
-		$message : QEventMessage(data.code matches "ACT_PRI_EVENT_ACCESS_NOTES_APPLICATION")
+		$message : QEventMessage(data.code matches "ACT_PRI_EVENT_ACCESS_NOTES_.*")
 		userToken : GennyToken (code != "PER_SERVICE")
 		serviceToken : GennyToken (code == "PER_SERVICE")
 		output : OutputParam()
@@ -42,12 +42,14 @@ rule "ACCESS_NOTES_CLICK_EVENT"
 		output.setResultCode("START_SAVE_NOTE");
 		output.setTargetCode(targetCode);
 		output.setSuitCase(key);
+		output.setLuggage("ACCESS");
 		
 		System.out.println("**************************************************");
 		System.out.println("TypeOfResult: "  + output.getTypeOfResult());
 		System.out.println("ResultCode: "    + output.getResultCode());
 		System.out.println("TargetCode: "    + output.getTargetCode());
 		System.out.println("SuitCase: "      + output.getSuitCase());
+		System.out.println("Luggage: "      + output.getLuggage());
 		System.out.println("**************************************************");
 		
 		retract( $message);

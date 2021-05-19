@@ -31,8 +31,8 @@
   <bpmn2:itemDefinition id="ItemDefinition_1536" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_17" isCollection="false" structureRef="java.lang.Short"/>
   <bpmn2:itemDefinition id="ItemDefinition_340" isCollection="false" structureRef="java.lang.Boolean"/>
-  <bpmn2:signal id="Signal_7" name="START_SAVE_NOTE"/>
-  <bpmn2:process id="saveNote" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="Default Process" isExecutable="true">
+  <bpmn2:signal id="Signal_7" name="START_ACCESS_NOTES"/>
+  <bpmn2:process id="accessNotes" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="Default Process" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.models.GennyToken"/>
       <drools:import name="life.genny.utils.SessionFacts"/>
@@ -56,16 +56,16 @@
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_2" name="serviceToken"/>
     <bpmn2:property id="sessionFacts" itemSubjectRef="ItemDefinition_954" name="sessionFacts"/>
     <bpmn2:property id="results" itemSubjectRef="ItemDefinition_1240" name="results"/>
-    <bpmn2:property id="targetBE" itemSubjectRef="ItemDefinition_2016" name="targetBE"/>
+    <bpmn2:property id="targetBe" itemSubjectRef="ItemDefinition_2016" name="targetBe"/>
     <bpmn2:property id="key" itemSubjectRef="ItemDefinition_2733" name="key"/>
     <bpmn2:property id="beUtils" itemSubjectRef="ItemDefinition_2143" name="beUtils"/>
     <bpmn2:property id="sourceCode" itemSubjectRef="ItemDefinition_2733" name="sourceCode"/>
     <bpmn2:property id="targetCode" itemSubjectRef="ItemDefinition_2733" name="targetCode"/>
     <bpmn2:property id="submitCode" itemSubjectRef="ItemDefinition_2733" name="submitCode"/>
-    <bpmn2:startEvent id="StartEvent_2" name="Start SAVE_NOTE">
+    <bpmn2:startEvent id="StartEvent_2" name="Start ACCESS_NOTES">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Start SAVE_NOTE]]></drools:metaValue>
+          <drools:metaValue><![CDATA[Start ACCESS_NOTES]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
@@ -88,48 +88,44 @@
       <bpmn2:incoming>SequenceFlow_12</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_21</bpmn2:outgoing>
       <bpmn2:script>/* Gather the input data */
-
-System.out.println(&quot;WOOOOOOOO&quot;);
 serviceToken = (GennyToken)sessionFacts.getServiceToken();
 userToken = (GennyToken)sessionFacts.getUserToken();
 beUtils = new BaseEntityUtils(userToken);
 
 OutputParam data = (OutputParam)sessionFacts.getMessage();
 targetCode = data.getTargetCode();
-sourceCode = data.getAskSourceCode();
 key = data.getSuitCase();
 
 kcontext.setVariable(&quot;serviceToken&quot;, serviceToken);
 kcontext.setVariable(&quot;userToken&quot;, userToken);
 kcontext.setVariable(&quot;targetCode&quot;, targetCode);
-kcontext.setVariable(&quot;sourceCode&quot;, sourceCode);
 kcontext.setVariable(&quot;key&quot;, key);
 
 System.out.println(&quot;saveNote: userToken = &quot; +userToken.getCode());
 System.out.println(&quot;saveNote: serviceToken = &quot; +serviceToken.getCode());
 System.out.println(&quot;saveNote: targetCode = &quot; +targetCode);
-System.out.println(&quot;saveNote: sourceCode = &quot; +sourceCode);
 System.out.println(&quot;saveNote: key = &quot; +key);
 
 
 /* Get target BE */
-targetBE = beUtils.getBaseEntityByCode(targetCode);
-System.out.println(&quot;saveNote: targetBE = &quot; + targetBE);
+targetBe = beUtils.getBaseEntityByCode(targetCode);
+kcontext.setVariable(&quot;targetBe&quot;, targetBe);
+System.out.println(&quot;saveNote: targetBe = &quot; + targetBe);
 
 </bpmn2:script>
     </bpmn2:scriptTask>
-    <bpmn2:endEvent id="EndEvent_3" name="End START_NOTE">
+    <bpmn2:endEvent id="EndEvent_3" name="End ACCESS_NOTES">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[End START_NOTE]]></drools:metaValue>
+          <drools:metaValue><![CDATA[End ACCESS_NOTES]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_22</bpmn2:incoming>
     </bpmn2:endEvent>
-    <bpmn2:task id="Task_5" drools:taskName="RuleFlowGroup" drools:displayName="RunRuleFlowGroup" drools:icon="icons/icon-info.gif" name="Refresh Notes">
+    <bpmn2:task id="Task_5" drools:taskName="RuleFlowGroup" drools:displayName="RunRuleFlowGroup" drools:icon="icons/icon-info.gif" name="Access Notes">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Refresh Notes]]></drools:metaValue>
+          <drools:metaValue><![CDATA[Access Notes]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_21</bpmn2:incoming>
@@ -162,14 +158,14 @@ System.out.println(&quot;saveNote: targetBE = &quot; + targetBE);
       <bpmn2:dataInputAssociation id="_DataInputAssociation_584">
         <bpmn2:targetRef>DataInput_21</bpmn2:targetRef>
         <bpmn2:assignment id="Assignment_8">
-          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_21">TriggeredFromWF</bpmn2:from>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_21">NoteEvent</bpmn2:from>
           <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_18">DataInput_21</bpmn2:to>
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
       <bpmn2:dataInputAssociation id="_DataInputAssociation_585">
         <bpmn2:targetRef>DataInput_22</bpmn2:targetRef>
         <bpmn2:assignment id="Assignment_9">
-          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_24">saveNote</bpmn2:from>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_24">accessNotes</bpmn2:from>
           <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_22">DataInput_22</bpmn2:to>
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
@@ -178,7 +174,7 @@ System.out.println(&quot;saveNote: targetBE = &quot; + targetBE);
         <bpmn2:targetRef>DataInput_23</bpmn2:targetRef>
       </bpmn2:dataInputAssociation>
       <bpmn2:dataInputAssociation id="DataInputAssociation_6">
-        <bpmn2:sourceRef>targetBE</bpmn2:sourceRef>
+        <bpmn2:sourceRef>targetBe</bpmn2:sourceRef>
         <bpmn2:targetRef>DataInput_24</bpmn2:targetRef>
       </bpmn2:dataInputAssociation>
     </bpmn2:task>
@@ -187,11 +183,11 @@ System.out.println(&quot;saveNote: targetBE = &quot; + targetBE);
     <bpmn2:sequenceFlow id="SequenceFlow_22" drools:priority="1" sourceRef="Task_5" targetRef="EndEvent_3"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Process Diagram">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="saveNote">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="accessNotes">
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_1" bpmnElement="StartEvent_2">
         <dc:Bounds height="36.0" width="36.0" x="650.0" y="310.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_6" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="75.0" x="631.0" y="346.0"/>
+          <dc:Bounds height="22.0" width="64.0" x="636.0" y="346.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_1" bpmnElement="ScriptTask_1" isExpanded="true">
@@ -203,13 +199,13 @@ System.out.println(&quot;saveNote: targetBE = &quot; + targetBE);
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_3" bpmnElement="EndEvent_3">
         <dc:Bounds height="36.0" width="36.0" x="1020.0" y="310.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1">
-          <dc:Bounds height="11.0" width="78.0" x="999.0" y="346.0"/>
+          <dc:Bounds height="22.0" width="61.0" x="1008.0" y="346.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_5" bpmnElement="Task_5" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="870.0" y="303.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_2">
-          <dc:Bounds height="11.0" width="58.0" x="896.0" y="322.0"/>
+          <dc:Bounds height="11.0" width="56.0" x="897.0" y="322.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_12" bpmnElement="SequenceFlow_12" sourceElement="BPMNShape_StartEvent_1" targetElement="BPMNShape_ScriptTask_1">

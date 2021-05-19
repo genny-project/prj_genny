@@ -25,10 +25,10 @@ rule "TAG_IS_TYPE"
 	 	userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam()
-		baseEntityType : String(baseEntityType.equals("INTERN") || 
-								baseEntityType.equals("HOST_CPY_REP") ||
-								baseEntityType.equals("EDU_PRO_REP") ||
-								baseEntityType.equals("AGENT")
+		key : String(key.equals("INTERN") || 
+								key.equals("HOST_CPY_REP") ||
+								key.equals("EDU_PRO_REP") ||
+								key.equals("AGENT")
 								)
 		newBe : BaseEntity()
 
@@ -36,7 +36,7 @@ rule "TAG_IS_TYPE"
  		System.out.println("TAG_IS_TYPE: Rule fired" );
  		System.out.println("TAG_IS_TYPE: newBe = " + newBe.getCode());
  	
- 		String type = "PRI_IS_" + baseEntityType;
+ 		String type = "PRI_IS_" + key;
  		System.out.println("type = " + type);
  		
  		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
