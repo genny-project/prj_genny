@@ -124,6 +124,16 @@ rule "ACCESS_NOTES_APPLICATION"
 			System.out.println("hcNotes :: " + hcNotes);
 			System.out.println("superNotes :: " + superNotes);
 			
+			String codes = '\"[';
+			System.out.println("codes :: " + codes);
+			/*setCode(“[PER_,APP_,BEG_…]“)*/
+
+			QCmdMessage msg = new QCmdMessage("NOTES", "TABS");
+			msg.setCode("\"[" +appCode + ",");
+			msg.setToken(beUtils.getGennyToken().getToken());
+			msg.setSend(true);
+			VertxUtils.writeMsg("webcmds", msg);
+
 			
 			/* Send notes to FE */
 			JsonObject jsonApplication = new JsonObject(appNotes);
