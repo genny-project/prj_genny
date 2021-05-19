@@ -169,7 +169,7 @@ rule "IS_QA_HOST_CPY_REP"
 				if (allEmails != null && allEmails.contains("SEL_YES")) {
 					allEmailsBool = true;
 				}
-				beUtils.saveAnswer(new Answer(userToken.getUserCode(), user.getCode(), "PRI_ALL_EMAILS", allEmailsBool));
+				beUtils.saveAnswer(new Answer(userToken.getUserCode(), user.getCode(), "PRI_EMAIL_FLAG", allEmailsBool));
 		}
 		
 		if (allEmails.equals("SEL_YES")) {

@@ -82,7 +82,7 @@ rule "FIX_ALL_EMAILS"
 					allEmailsBool = true;
 				}
 				if (targetCode.equals("SAVE_YES")) {
-					beUtils.saveAnswer(new Answer(userToken.getUserCode(), hcr.getCode(), "PRI_ALL_EMAILS", allEmailsBool));
+					beUtils.saveAnswer(new Answer(userToken.getUserCode(), hcr.getCode(), "PRI_EMAIL_FLAG", allEmailsBool));
 				} else {
 					System.out.println("NOT SAVING");
 				}
