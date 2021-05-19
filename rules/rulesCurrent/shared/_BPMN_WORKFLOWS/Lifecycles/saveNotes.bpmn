@@ -62,10 +62,10 @@
     <bpmn2:property id="sourceCode" itemSubjectRef="ItemDefinition_2733" name="sourceCode"/>
     <bpmn2:property id="targetCode" itemSubjectRef="ItemDefinition_2733" name="targetCode"/>
     <bpmn2:property id="submitCode" itemSubjectRef="ItemDefinition_2733" name="submitCode"/>
-    <bpmn2:startEvent id="StartEvent_2" name="ACCESS_NOTES">
+    <bpmn2:startEvent id="StartEvent_2" name="SAVE_NOTES">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[ACCESS_NOTES]]></drools:metaValue>
+          <drools:metaValue><![CDATA[SAVE_NOTES]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
@@ -95,16 +95,19 @@ beUtils = new BaseEntityUtils(userToken);
 OutputParam data = (OutputParam)sessionFacts.getMessage();
 targetCode = data.getTargetCode();
 key = data.getSuitCase();
+luggage = data.getLuggage();
 
 kcontext.setVariable(&quot;serviceToken&quot;, serviceToken);
 kcontext.setVariable(&quot;userToken&quot;, userToken);
 kcontext.setVariable(&quot;targetCode&quot;, targetCode);
 kcontext.setVariable(&quot;key&quot;, key);
+kcontext.setVariable(&quot;luggage&quot;, luggage);
 
 System.out.println(&quot;saveNote: userToken = &quot; +userToken.getCode());
 System.out.println(&quot;saveNote: serviceToken = &quot; +serviceToken.getCode());
 System.out.println(&quot;saveNote: targetCode = &quot; +targetCode);
 System.out.println(&quot;saveNote: key = &quot; +key);
+System.out.println(&quot;saveNote: luggage = &quot; +luggage);
 
 
 /* Get target BE */
@@ -122,11 +125,20 @@ System.out.println(&quot;saveNote: targetBe = &quot; + targetBe);
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
     </bpmn2:endEvent>
-    <bpmn2:task id="Task_5" drools:taskName="RuleFlowGroup" drools:displayName="RunRuleFlowGroup" drools:icon="icons/icon-info.gif" name="Access Notes">
+    <bpmn2:task id="Task_5" drools:taskName="RuleFlowGroup" drools:displayName="RunRuleFlowGroup" drools:icon="icons/icon-info.gif" name="Save Notes">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Access Notes]]></drools:metaValue>
+          <drools:metaValue><![CDATA[Save Notes]]></drools:metaValue>
         </drools:metaData>
+        <drools:onExit-script scriptFormat="http://www.java.com/java">
+          <drools:script>if (luggage.equals(&quot;AppSet&quot;)) {
+	key = &quot;APPLICATION&quot;;
+	kcontext.setVariable(&quot;key&quot;, key);
+	System.out.println(&quot;saveNote: key changed = &quot; +key);
+} else {
+	System.out.println(&quot;saveNote: Key unchanged = &quot; +key);
+}</drools:script>
+        </drools:onExit-script>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_21</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
@@ -158,7 +170,7 @@ System.out.println(&quot;saveNote: targetBe = &quot; + targetBe);
       <bpmn2:dataInputAssociation id="_DataInputAssociation_584">
         <bpmn2:targetRef>DataInput_21</bpmn2:targetRef>
         <bpmn2:assignment id="Assignment_8">
-          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_21">NoteEvent</bpmn2:from>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_21">SaveNote</bpmn2:from>
           <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_18">DataInput_21</bpmn2:to>
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
@@ -180,10 +192,10 @@ System.out.println(&quot;saveNote: targetBe = &quot; + targetBe);
     </bpmn2:task>
     <bpmn2:sequenceFlow id="SequenceFlow_12" drools:priority="1" sourceRef="StartEvent_2" targetRef="ScriptTask_1"/>
     <bpmn2:sequenceFlow id="SequenceFlow_21" drools:priority="1" sourceRef="ScriptTask_1" targetRef="Task_5"/>
-    <bpmn2:task id="Task_1" drools:taskName="RuleFlowGroup" drools:displayName="RunRuleFlowGroup" drools:icon="icons/icon-info.gif" name="RunRuleFlowGroup">
+    <bpmn2:task id="Task_1" drools:taskName="RuleFlowGroup" drools:displayName="RunRuleFlowGroup" drools:icon="icons/icon-info.gif" name="Access Notes">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[RunRuleFlowGroup]]></drools:metaValue>
+          <drools:metaValue><![CDATA[Access Notes]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
@@ -193,11 +205,15 @@ System.out.println(&quot;saveNote: targetBe = &quot; + targetBe);
         <bpmn2:dataInput id="DataInput_2" itemSubjectRef="ItemDefinition_2" name="userToken"/>
         <bpmn2:dataInput id="DataInput_3" name="ruleFlowGroup"/>
         <bpmn2:dataInput id="DataInput_4" name="callingWorkflow"/>
+        <bpmn2:dataInput id="DataInput_5" itemSubjectRef="ItemDefinition_2733" name="key"/>
+        <bpmn2:dataInput id="DataInput_6" itemSubjectRef="ItemDefinition_2016" name="targetBe"/>
         <bpmn2:inputSet id="_InputSet_131">
           <bpmn2:dataInputRefs>DataInput_1</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>DataInput_2</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>DataInput_3</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>DataInput_4</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_5</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_6</bpmn2:dataInputRefs>
         </bpmn2:inputSet>
         <bpmn2:outputSet id="OutputSet_2" name="Output Set 2"/>
       </bpmn2:ioSpecification>
@@ -211,9 +227,25 @@ System.out.println(&quot;saveNote: targetBe = &quot; + targetBe);
       </bpmn2:dataInputAssociation>
       <bpmn2:dataInputAssociation id="_DataInputAssociation_588">
         <bpmn2:targetRef>DataInput_3</bpmn2:targetRef>
+        <bpmn2:assignment id="Assignment_1">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_3">AccessNote</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_1">DataInput_3</bpmn2:to>
+        </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
       <bpmn2:dataInputAssociation id="_DataInputAssociation_589">
         <bpmn2:targetRef>DataInput_4</bpmn2:targetRef>
+        <bpmn2:assignment id="Assignment_2">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_6">accessNotes</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_4">DataInput_4</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_1">
+        <bpmn2:sourceRef>key</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_5</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_2">
+        <bpmn2:sourceRef>targetBe</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_6</bpmn2:targetRef>
       </bpmn2:dataInputAssociation>
     </bpmn2:task>
     <bpmn2:sequenceFlow id="SequenceFlow_1" drools:priority="1" sourceRef="Task_5" targetRef="Task_1"/>
@@ -222,58 +254,58 @@ System.out.println(&quot;saveNote: targetBe = &quot; + targetBe);
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Process Diagram">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="saveNotes">
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_1" bpmnElement="StartEvent_2">
-        <dc:Bounds height="36.0" width="36.0" x="650.0" y="310.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="350.0" y="247.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_6" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="74.0" x="631.0" y="346.0"/>
+          <dc:Bounds height="11.0" width="60.0" x="338.0" y="283.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_1" bpmnElement="ScriptTask_1" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="720.0" y="303.0"/>
+        <dc:Bounds height="50.0" width="110.0" x="420.0" y="240.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_11">
-          <dc:Bounds height="11.0" width="24.0" x="763.0" y="322.0"/>
+          <dc:Bounds height="11.0" width="24.0" x="463.0" y="259.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_3" bpmnElement="EndEvent_3">
-        <dc:Bounds height="36.0" width="36.0" x="1160.0" y="310.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="860.0" y="247.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1">
-          <dc:Bounds height="11.0" width="17.0" x="1169.0" y="346.0"/>
+          <dc:Bounds height="11.0" width="17.0" x="869.0" y="283.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_5" bpmnElement="Task_5" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="870.0" y="303.0"/>
+        <dc:Bounds height="50.0" width="110.0" x="570.0" y="240.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_2">
-          <dc:Bounds height="11.0" width="56.0" x="897.0" y="322.0"/>
+          <dc:Bounds height="11.0" width="47.0" x="601.0" y="259.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_1" bpmnElement="Task_1" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="1020.0" y="303.0"/>
-        <bpmndi:BPMNLabel>
-          <dc:Bounds height="11.0" width="80.0" x="1035.0" y="322.0"/>
+        <dc:Bounds height="50.0" width="110.0" x="720.0" y="240.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_3">
+          <dc:Bounds height="11.0" width="56.0" x="747.0" y="259.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_12" bpmnElement="SequenceFlow_12" sourceElement="BPMNShape_StartEvent_1" targetElement="BPMNShape_ScriptTask_1">
-        <di:waypoint xsi:type="dc:Point" x="686.0" y="328.0"/>
-        <di:waypoint xsi:type="dc:Point" x="703.0" y="328.0"/>
-        <di:waypoint xsi:type="dc:Point" x="720.0" y="328.0"/>
+        <di:waypoint xsi:type="dc:Point" x="386.0" y="265.0"/>
+        <di:waypoint xsi:type="dc:Point" x="403.0" y="265.0"/>
+        <di:waypoint xsi:type="dc:Point" x="420.0" y="265.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_3"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_21" bpmnElement="SequenceFlow_21" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_Task_5">
-        <di:waypoint xsi:type="dc:Point" x="830.0" y="328.0"/>
-        <di:waypoint xsi:type="dc:Point" x="850.0" y="328.0"/>
-        <di:waypoint xsi:type="dc:Point" x="870.0" y="328.0"/>
+        <di:waypoint xsi:type="dc:Point" x="530.0" y="265.0"/>
+        <di:waypoint xsi:type="dc:Point" x="550.0" y="265.0"/>
+        <di:waypoint xsi:type="dc:Point" x="570.0" y="265.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_4"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="BPMNShape_Task_5" targetElement="BPMNShape_Task_1">
-        <di:waypoint xsi:type="dc:Point" x="980.0" y="328.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1000.0" y="328.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1020.0" y="328.0"/>
-        <bpmndi:BPMNLabel/>
+        <di:waypoint xsi:type="dc:Point" x="680.0" y="265.0"/>
+        <di:waypoint xsi:type="dc:Point" x="700.0" y="265.0"/>
+        <di:waypoint xsi:type="dc:Point" x="720.0" y="265.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_5"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_EndEvent_3">
-        <di:waypoint xsi:type="dc:Point" x="1130.0" y="328.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1145.0" y="328.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1160.0" y="328.0"/>
-        <bpmndi:BPMNLabel/>
+        <di:waypoint xsi:type="dc:Point" x="830.0" y="265.0"/>
+        <di:waypoint xsi:type="dc:Point" x="845.0" y="265.0"/>
+        <di:waypoint xsi:type="dc:Point" x="860.0" y="265.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_7"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">

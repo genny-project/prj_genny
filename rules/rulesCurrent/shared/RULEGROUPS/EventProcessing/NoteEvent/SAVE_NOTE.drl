@@ -11,18 +11,24 @@ import life.genny.utils.VertxUtils;
 
 
 rule "SAVE_NOTE"
-    ruleflow-group 'EventProcessing'
+    ruleflow-group 'SaveNote'
 		salience 2
     no-loop
     when
-		$message : QEventMessage(data.code matches "ACT_PRI_EVENT_SAVE_NOTE")
+		targetBe : BaseEntity()
+		key : String(key.equals("INTERN") || 
+					key.equals("INTERNSHIP") || 
+					key.equals("HOST_CPY") || 
+					key.equals("HOST_CPY_REP") || 
+					key.equals("APPLICATION"))
+		
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
-		output : OutputParam( )
+		output : OutputParam()
+		ruleDetails : RuleDetails()
     then
 
 		System.out.println("SAVE_NOTE fired");
-		
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 
 		String sourceCode = beUtils.getGennyToken().getUserCode();
@@ -31,228 +37,43 @@ rule "SAVE_NOTE"
 		String targetCode = $message.getData().getTargetCode();
 		System.out.println("targetCode :: " + targetCode);
 		
-		String parentCode = $message.getData().getParentCode();
-		System.out.println("parentCode :: " + parentCode);
-		
-		String rootCode = $message.getData().getRootCode();
-		System.out.println("rootCode :: " + rootCode);
-		
 		String content = $message.getData().getContent();
 		System.out.println("content :: " + content);
 			
 		String tags = "BD";
-		String notes = null;
 		
-		BaseEntity targetBE = beUtils.getBaseEntityByCode(targetCode);
+		targetBe = beUtils.getBaseEntityByCode(targetBe.getCode());
 		
-		String endPoint = "https://internmatch-dev.gada.io/v7/notes";
-		System.out.println("endPoint :: " + endPoint);
+		if (targetBe != null) {
+			String endPoint = "https://internmatch-dev.gada.io/v7/notes";
+			System.out.println("endPoint :: " + endPoint);
+			
+			String url = endPoint + "/"+targetCode + "?tags=&pageIndex=0&pageSize=100";
+			System.out.println("url :: " + url);
+			
+			QwandaUtils.apiPostNote(endPoint, sourceCode, tags, targetCode, content, serviceToken.getToken());
+			System.out.println("Note saved against " + targetCode + " with content: " + content);
 		
-		String url = endPoint + "/"+targetCode + "?tags=&pageIndex=0&pageSize=100";
-		System.out.println("url :: " + url);
-		
-		QwandaUtils.apiPostNote(endPoint, sourceCode, tags, targetCode, content, serviceToken.getToken());
-		System.out.println("Note saved against " + targetCode + " with content: " + content);
-	
-		String toastName = targetBE.getValue("PRI_NAME", null);
-		System.out.println("toastName: " +toastName);
-		
-		/* send cmd msg */
-		QCmdMessage msg = new QCmdMessage("TOAST", "INFO");
-		msg.setMessage("Note saved against " + toastName + " with content: " + content);
-		msg.setToken(beUtils.getGennyToken().getToken());
-		msg.setSend(true);
-		VertxUtils.writeMsg("webcmds", msg);	
-		
-		
-		/* I put this here because this system sucks and I wasted 2 full days trying to get a rule to fire. Sue me lol */	
-		
-		if (sourceCode != null) {
-			System.out.println("sourceCode is not null :: " + sourceCode);
-			parentCode = "Tab_Application";
-			targetBE = beUtils.getBaseEntityByCode(sourceCode);
-			System.out.println("parentCode changed to  :: " + parentCode);
-			System.out.println("targetBE changed to  :: " + targetBE);
+			String toastName = targetBE.getValue("PRI_NAME", null);
+			System.out.println("toastName: " +toastName);
+			
+			/* send cmd msg */
+			QCmdMessage msg = new QCmdMessage("TOAST", "INFO");
+			msg.setMessage("Note saved against " + toastName + " with content: " + content);
+			msg.setToken(beUtils.getGennyToken().getToken());
+			msg.setSend(true);
+			VertxUtils.writeMsg("webcmds", msg);	
 		} else {
-			System.out.println("sourceCode is null proceeding as usual");
+			System.out.println("ERROR: Notes failed to save");
+			
+			QCmdMessage msg = new QCmdMessage("TOAST", "ERROR");
+			msg.setMessage("ERROR: Notes failed to save");
+			msg.setToken(beUtils.getGennyToken().getToken());
+			msg.setSend(true);
+			VertxUtils.writeMsg("webcmds", msg);
 		}
-		
-		if (parentCode.equals("Tab_Application")) {			
-										notes = QwandaUtils.sendGET(url, serviceToken.getToken());
-										System.out.println("notes :: " + notes);
-										
-		
-										String appImage = targetBE.getValue("PRI_IMAGE_URL", null);
-										System.out.println("appImage: " +appImage);
-										
-										String appTitle = targetBE.getValue("PRI_TITLE", null);
-										System.out.println("appTitle: " +appTitle);
-										
-										
-										/* Intern Details */
-										String assocIntern = targetBE.getValue("PRI_INTERN_CODE", null);
-										System.out.println("assocIntern: " +assocIntern);
-										
-										BaseEntity internBE = beUtils.getBaseEntityByCode(assocIntern);
-										
-										String internName = internBE.getValue("PRI_NAME", null);
-										System.out.println("internName: " +internName);
-										
-										String internImage = internBE.getValue("PRI_IMAGE_URL", null);
-										System.out.println("internImage: " +internImage);
-								
-								
-										/* Internship Details */
-										String assocInternship = targetBE.getValue("LNK_INTERNSHIP", null);
-										assocInternship = assocInternship.replace("\"", "").replace("[", "").replace("]", "");
-										System.out.println("assocInternship: " +assocInternship);
-										
-										BaseEntity internshipBE = beUtils.getBaseEntityByCode(assocInternship);
-										
-										String internshipName = internshipBE.getValue("PRI_NAME", null);
-										System.out.println("internshipName: " +internshipName);
-										
-										String internshipImage = internshipBE.getValue("PRI_IMAGE_URL", null);
-										System.out.println("internshipImage: " +internshipImage);
-										
-										
-										/* Host Company Details */
-										String assocHC = targetBE.getValue("LNK_HOST_COMPANY", null);
-										assocHC = assocHC.replace("\"", "").replace("[", "").replace("]", "");
-										System.out.println("assocHC: " +assocHC);
-										
-										BaseEntity hostCpyBE = beUtils.getBaseEntityByCode(assocHC);
-										
-										String HCName = hostCpyBE.getValue("PRI_NAME", null);
-										System.out.println("HCName: " +HCName);
-										
-										String HCImage = hostCpyBE.getValue("PRI_IMAGE_URL", null);
-										System.out.println("HCImage: " +HCImage);
-										
-										
-										/* Supervisor Details */
-										String assocSuper = targetBE.getValue("LNK_INTERN_SUPERVISOR", null);
-										assocSuper = assocSuper.replace("\"", "").replace("[", "").replace("]", "");
-										System.out.println("assocSuper: " +assocSuper);
-										
-										BaseEntity superBE = beUtils.getBaseEntityByCode(assocSuper);
-										
-										String superName = superBE.getValue("PRI_NAME", null);
-										System.out.println("superName: " +superName);
-										
-										String superImage = superBE.getValue("PRI_IMAGE_URL", null);
-										System.out.println("superImage: " +superImage);
-										
-										/*String[] tagList = {"Business Development", "Placement", "Outcome Life", "Miscellaneous"};*/
-										
-										if(notes != null){
-											JsonObject json = new JsonObject(notes);
-											json.put("token", userToken.getToken());
-											
-											JsonObject jsonApplication = new JsonObject();
-											jsonApplication.put("code", targetCode);
-											jsonApplication.put("title", appTitle);
-											jsonApplication.put("image", appImage);
-											/*jsonApplication.put("tagList", tagList);*/
-											
-											JsonObject jsonIntern = new JsonObject();
-											jsonIntern.put("code", assocIntern);
-											jsonIntern.put("title", internName);
-											jsonIntern.put("image", internImage);
-											/*jsonIntern.put("tagList", tagList);*/
-											
-											JsonObject jsonInternship = new JsonObject();
-											jsonInternship.put("code", assocInternship);
-											jsonInternship.put("title", internshipName);
-											jsonInternship.put("image", internshipImage);
-											/*jsonInternship.put("tagList", tagList);*/
-											
-											JsonObject jsonHC = new JsonObject();
-											jsonHC.put("code", assocHC);
-											jsonHC.put("title", HCName);
-											jsonHC.put("image", HCImage);
-											/*jsonHC.put("tagList", tagList);*/
-											
-											JsonObject jsonSuper = new JsonObject();
-											jsonSuper.put("code", assocSuper);
-											jsonSuper.put("title", superName);
-											jsonSuper.put("image", superImage);
-											/*jsonSuper.put("tagList", tagList);*/
-											
-											
-											json.put("Tab_Application", jsonApplication);
-											json.put("Tab_Intern", jsonIntern);
-											json.put("Tab_Internship", jsonInternship);
-											json.put("Tab_HostCompany", jsonHC);
-											json.put("Tab_Supervisor", jsonSuper);
-											
-											
-											System.out.println("json :: " + json.toString());
-											VertxUtils.writeMsg("webcmds", json.toString());
-										}
-		}
-		
-		if (parentCode.equals("Tab_Intern") || parentCode.equals("Tab_Internship") || parentCode.equals("Tab_HostCompany") || parentCode.equals("Tab_Supervisor")) {
-										notes = QwandaUtils.sendGET(url, serviceToken.getToken());
-										System.out.println("notes :: " + notes);
-										
-										String name = targetBE.getValue("PRI_NAME", null);
-										System.out.println("name: " +name);
-										
-										String image = targetBE.getValue("PRI_IMAGE_URL", null);
-										System.out.println("image: " +image);
-						
-						
-										/* Search for Applications */
-										String linkedApps = targetBE.getValue("LNK_APPLICATIONS", null);
-										
-										if (linkedApps != null && rootCode == null){
-											System.out.println("linkedApps: " +linkedApps);									/*["APP_AA3FEB35-FD12-49B9-A595-AA315773A37F","APP_41484401-7C82-4CD0-9B75-AA9E224B23ED"]*/
-											linkedApps = linkedApps.replace("\"", "").replace("[", "").replace("]", "");	
-											System.out.println("linkedApps: " +linkedApps);									/*APP_AA3FEB35-FD12-49B9-A595-AA315773A37F,APP_41484401-7C82-4CD0-9B75-AA9E224B23ED*/
-											
-											String[] splitApps = linkedApps.split(",");
-											int length = splitApps.length;
-											System.out.println("length: " +length);	
-											
-											BaseEntity[] beCodez = new BaseEntity[length];
-											BaseEntity appBe = null;
-											
-											
-											for (int i = 0; i < length; i++) {
-												appBe = beUtils.getBaseEntityByCode(splitApps[i]);
-												beCodez[i] = appBe;
-												System.out.println("beCodez: " +beCodez[i]);
-											}
-											
-											QDataBaseEntityMessage msgMatches = new QDataBaseEntityMessage(beCodez);
-											msgMatches.setToken(userToken.getToken());
-											msgMatches.setReplace(true);
-											VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msgMatches));
-										}
-										/*String[] tagList = {"Business Development", "Placement", "Outcome Life", "Miscellaneous"};*/
-										
-										System.out.println("notes :: " + notes);
-										if(notes != null){
-											JsonObject json = new JsonObject(notes);
-											json.put("token", userToken.getToken());
-											
-											JsonObject jsonStuff = new JsonObject();
-											jsonStuff.put("code", targetCode);
-											jsonStuff.put("title", name);
-											jsonStuff.put("image", image);
-											json.put(parentCode, jsonStuff);
-											/*jsonIntern.put("tagList", tagList);*/
-											if (rootCode == null) {
-												JsonObject jsonApplication = new JsonObject();
-												json.put("null rootCode linkedApps", linkedApps);
-											}
-											System.out.println("json :: " + json.toString());
-											VertxUtils.writeMsg("webcmds", json.toString());
-											System.out.println("Finished with non Application note");
-											
-										}
-		}																
-		retract( $message);
+															
+		retract(targetBe);
+		retract(type);
 		
 	end

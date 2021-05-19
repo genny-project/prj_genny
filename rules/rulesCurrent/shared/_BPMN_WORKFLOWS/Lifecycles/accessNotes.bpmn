@@ -158,7 +158,7 @@ System.out.println(&quot;saveNote: targetBe = &quot; + targetBe);
       <bpmn2:dataInputAssociation id="_DataInputAssociation_584">
         <bpmn2:targetRef>DataInput_21</bpmn2:targetRef>
         <bpmn2:assignment id="Assignment_8">
-          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_21">NoteEvent</bpmn2:from>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_21">AccessNote</bpmn2:from>
           <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_18">DataInput_21</bpmn2:to>
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>

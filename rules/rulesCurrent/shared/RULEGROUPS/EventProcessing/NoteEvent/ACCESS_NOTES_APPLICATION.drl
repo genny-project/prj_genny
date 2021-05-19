@@ -11,12 +11,12 @@ import life.genny.utils.VertxUtils;
 import life.genny.qwandautils.QwandaUtils;
 
 rule "ACCESS_NOTES_APPLICATION"
-	ruleflow-group 'NoteEvent'
+	ruleflow-group 'AccessNote'
 	salience 2
 	no-loop
 	when
 		targetBe : BaseEntity()
-		type : String(type.equals("APPLICATION"))
+		key : String(key.equals("APPLICATION"))
 		
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
@@ -223,7 +223,7 @@ rule "ACCESS_NOTES_APPLICATION"
 			VertxUtils.writeMsg("webcmds", jsonInternship.toString());
 			VertxUtils.writeMsg("webcmds", jsonHC.toString());
 			VertxUtils.writeMsg("webcmds", jsonSuper.toString());
-			System.out.println("Successfully navigated ApplicationAccess Notes");
+			System.out.println("Successfully navigated Application Access Notes");
 			
 		} else {
 			System.out.println("ERROR: Failed to retrieve Application Base Entity");
