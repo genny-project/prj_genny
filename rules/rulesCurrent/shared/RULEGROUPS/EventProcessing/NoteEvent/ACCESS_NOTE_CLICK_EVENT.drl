@@ -45,6 +45,7 @@ rule "ACCESS_NOTES_CLICK_EVENT"
 		output.setLuggage("ACCESS");
 		
 		System.out.println("**************************************************");
+		System.out.println("Rahul eats steak");
 		System.out.println("TypeOfResult: "  + output.getTypeOfResult());
 		System.out.println("ResultCode: "    + output.getResultCode());
 		System.out.println("TargetCode: "    + output.getTargetCode());
