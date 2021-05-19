@@ -124,12 +124,12 @@ rule "ACCESS_NOTES_APPLICATION"
 			System.out.println("hcNotes :: " + hcNotes);
 			System.out.println("superNotes :: " + superNotes);
 			
+			/* Send Tab order to FE */
 			String codes = "[\"" + appCode + "\",\"" + internCode + "\",\"" + internshipCode + "\",\"" + hcCode + "\",\"" + superCode + "\"]";
 			System.out.println("codes :: " + codes);
-			/*setCode(“[PER_,APP_,BEG_…]“)*/
 
 			QCmdMessage notesMsg = new QCmdMessage("NOTES", "TABS");
-			notesMsg.setCode("\"[" +appCode + ",");
+			notesMsg.setCode(codes);
 			notesMsg.setToken(beUtils.getGennyToken().getToken());
 			notesMsg.setSend(true);
 			VertxUtils.writeMsg("webcmds", notesMsg);
