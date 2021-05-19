@@ -28,7 +28,7 @@ rule "HELPER_LNK_SELECT_COUNTRY"
 	salience 5000
 	when
 		beUtils : BaseEntityUtils()
-		answer : Answer( attributeCode == "LNK_SELECT_COUNTRY")
+		answer : Answer( attributeCode == "LNK_SELECT_COUNTRY" && !(targetCode matches "SBE_.*") )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		userToken : GennyToken( code != "PER_SERVICE")
 
