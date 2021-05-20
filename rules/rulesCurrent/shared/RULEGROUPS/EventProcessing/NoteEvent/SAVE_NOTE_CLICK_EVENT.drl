@@ -30,14 +30,51 @@ rule "SAVE_NOTES_CLICK_EVENT"
 		System.out.println(drools.getRule().getName() + " - Rule fired");
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 		
-		String targetCode = $message.getData().getTargetCode();
-		System.out.println("targetCode: " + targetCode);
+		String sourceCode = beUtils.getGennyToken().getUserCode();
+		System.out.println("sourceCode :: " + sourceCode);
 		
-		String code = $message.getData().getCode();
-		String app = StringUtils.removeStart(code, "ACT_PRI_EVENT_SAVE_NOTES_");
+		String targetCode = $message.getData().getTargetCode();
+		System.out.println("targetCode :: " + targetCode);
+		
+		String content = $message.getData().getContent();
+		System.out.println("content :: " + content);
+			
+		String tags = "BD";
+		
+		targetBe = beUtils.getBaseEntityByCode(targetBe.getCode());
+		
+		if (targetBe != null) {
+			String endPoint = "https://internmatch-dev.gada.io/v7/notes";
+			System.out.println("endPoint :: " + endPoint);
+			
+			String url = endPoint + "/"+targetCode + "?tags=&pageIndex=0&pageSize=100";
+			System.out.println("url :: " + url);
+			
+			QwandaUtils.apiPostNote(endPoint, sourceCode, tags, targetCode, content, serviceToken.getToken());
+			System.out.println("Note saved against " + targetCode + " with content: " + content);
+		
+			String toastName = targetBe.getValue("PRI_NAME", null);
+			System.out.println("toastName: " +toastName);
+			
+			/* send cmd msg */
+			QCmdMessage msg = new QCmdMessage("TOAST", "INFO");
+			msg.setMessage("Note saved against " + toastName + " with content: " + content);
+			msg.setToken(beUtils.getGennyToken().getToken());
+			msg.setSend(true);
+			VertxUtils.writeMsg("webcmds", msg);	
+		} else {
+			System.out.println("ERROR: Notes failed to save");
+			
+			QCmdMessage msg = new QCmdMessage("TOAST", "ERROR");
+			msg.setMessage("ERROR: Notes failed to save");
+			msg.setToken(beUtils.getGennyToken().getToken());
+			msg.setSend(true);
+			VertxUtils.writeMsg("webcmds", msg);
+		}
+
 
 		String luggage = "nah";
-		if (app.equals("APPLICATION")) {
+		if (targetCode.startsWith("APP_")) {
 			luggage = "AppSet";
 		}
 		System.out.println("luggage: " + luggage);
