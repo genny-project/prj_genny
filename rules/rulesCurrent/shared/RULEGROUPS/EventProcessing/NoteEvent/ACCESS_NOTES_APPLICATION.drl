@@ -17,7 +17,7 @@ rule "ACCESS_NOTES_APPLICATION"
 	when
 		targetBe : BaseEntity()
 		key : String(key.equals("APPLICATION"))
-		luggage : String (luggage matches "APP_.*")
+		luggage : String (luggage matches "APP_.*" || luggage matches "ACCESS")
 		
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
