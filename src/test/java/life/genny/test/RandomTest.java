@@ -1,26 +1,22 @@
 package life.genny.test;
 
-import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.TimeZone;
-import java.util.UUID;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 import javax.persistence.EntityManagerFactory;
 
 import org.apache.commons.lang.StringUtils;
@@ -36,39 +32,31 @@ import org.jbpm.services.api.query.QueryService;
 import org.jbpm.services.api.utils.KieServiceConfigurator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.keycloak.representations.idm.UserRepresentation;
-import org.keycloak.util.JsonSerialization;
 
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
 import life.genny.models.GennyToken;
-
 import life.genny.qwanda.Answer;
 import life.genny.qwanda.attribute.EntityAttribute;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.SearchEntity;
+import life.genny.qwanda.message.QBulkMessage;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.qwanda.message.QEventDropdownMessage;
 import life.genny.qwandautils.GennyCacheInterface;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.KeycloakUtils;
 import life.genny.qwandautils.QwandaUtils;
-import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
-import life.genny.utils.GennyJbpmBaseTest;
-
-import life.genny.utils.JunitCache;
+import life.genny.utils.SearchUtils;
 import life.genny.utils.VertxUtils;
-
-import io.vertx.core.json.JsonObject;
-import io.vertx.core.json.JsonArray;
 
 public class RandomTest {
 	private static final Logger log = Logger.getLogger(RandomTest.class);
 
 	protected static String realm = GennySettings.mainrealm;
 	protected static Set<String> realms;
-
-	public static JsonObject projectParms;
 
 	protected static Optional<Boolean> isUsingRemote = Optional.empty();
 
@@ -100,6 +88,54 @@ public class RandomTest {
 		super();
 	}
 
+
+
+	// QEventDropdownMessage
+	@Test
+	public void Randoise() {
+		System.out.println("Randomise test");
+
+		VertxUtils.cachedEnabled = false;
+
+		if (beUtils == null) {
+			return;
+		}
+		BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
+		
+		SearchEntity searchBE = new SearchEntity("SBE_DEF", "DEF check")
+				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "DEF_%")
+
+				.addColumn("PRI_CODE", "Name");
+
+		searchBE.setRealm(realm);
+		searchBE.setPageStart(0);
+		searchBE.setPageSize(1000);
+
+		List<BaseEntity> items = beUtils.getBaseEntitys(searchBE);
+
+
+		QEventDropdownMessage message = new QEventDropdownMessage("LNK_EDU_PROVIDER");
+		message.setAttributeCode("LNK_EDU_PROVIDER");
+		message.setQuestionCode("GRP_EDU_PROVIDER_SELECTION");
+		message.getData().setParentCode("GRP_EDU_PROVIDER_SELECTION");
+		message.getData().setTargetCode("PER_086CDF1F-A98F-4E73-9825-0A4CFE2BB943");
+		message.getData().setValue("Mel");
+		
+		if ("LNK_EDU_PROVIDER".equalsIgnoreCase(message.getAttributeCode())) {
+
+			QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message);
+			System.out.println(msg);
+			msg.setToken(userToken.getToken());
+			
+			VertxUtils.writeMsg("webcmds", msg);
+			
+		}
+		
+	
+
+	}
+
 	@Test
 	public void gennyTest() {
 		System.out.println("This is a Gennytest");
@@ -111,36 +147,33 @@ public class RandomTest {
 
 	}
 
-	private void scrub(String attributeCodeLike,String fakedata) {
-		
-	System.out.println("Replacing all the "+attributeCodeLike+" with "+fakedata);
-    try {
-        String encodedsql = encodeValue("update baseentity_attribute set valueString='" + fakedata
-                + "' where attributeCode like '"+attributeCodeLike+"'");
-        String resultJson = QwandaUtils.apiGet(
-                GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql, serviceToken.getToken());
-    } catch (Exception e)
-    {
-    	
-    }
-}
-	
+	private void scrub(String attributeCodeLike, String fakedata) {
+
+		System.out.println("Replacing all the " + attributeCodeLike + " with " + fakedata);
+		try {
+			String encodedsql = encodeValue("update baseentity_attribute set valueString='" + fakedata
+					+ "' where attributeCode like '" + attributeCodeLike + "'");
+			String resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql,
+					serviceToken.getToken());
+		} catch (Exception e) {
+
+		}
+	}
+
 	private void scrubname(String fakedata) {
-		
-	System.out.println("Replacing all the names with "+fakedata);
-    try {
-        String encodedsql = encodeValue("update baseentity set name='" + fakedata+"';"
-                );
-        String resultJson = QwandaUtils.apiGet(
-                GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql, serviceToken.getToken());
-    } catch (Exception e)
-    {
-    	
-    }
-}
-	
-	@Test
-	public void Randoise() {
+
+		System.out.println("Replacing all the names with " + fakedata);
+		try {
+			String encodedsql = encodeValue("update baseentity set name='" + fakedata + "';");
+			String resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql,
+					serviceToken.getToken());
+		} catch (Exception e) {
+
+		}
+	}
+
+	// @Test
+	public void Randoise2() {
 		System.out.println("Randomise test");
 
 		VertxUtils.cachedEnabled = false;
@@ -248,11 +281,9 @@ public class RandomTest {
 //		scrub("ENV_TWILIO_ACCOUNT_SID","XXXXXXXXXXXXXXXX");
 //		scrub("ENV_TWILIO_AUTH_TOKEN","XXXXXXXXXXXX");
 //		scrub("ENV_TWILIO_SOURCE_PHONE","XXXXXXXXXXXXXX");
-		
+
 		scrubname("GennyName");
-		
-	
-		
+
 		boolean ok = true;
 		Integer pageStart = 0;
 		Integer pageSize = 5;
@@ -263,8 +294,7 @@ public class RandomTest {
 					.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
 					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
 
-					.addColumn("PRI_CODE", "Name")
-					.addColumn("PRI_ADDRESS_COUNTRY", "Country");
+					.addColumn("PRI_CODE", "Name").addColumn("PRI_ADDRESS_COUNTRY", "Country");
 
 			searchBE.setRealm(realm);
 			searchBE.setPageStart(pageStart);
@@ -287,12 +317,14 @@ public class RandomTest {
 
 					String existingCountry = item.getValueAsString("PRI_ADDRESS_COUNTRY");
 					String existingCountryCode = shortenCountry(existingCountry);
-					
-					String jsonStr = QwandaUtils.apiGet(
-							"https://randomuser.me/api/?results=1&nat="+existingCountryCode.toLowerCase()+"&format=json&dl&inc=name,email,location,picture,cell,gender,timezone",
-							null);
 
-					JsonObject json = new JsonObject(jsonStr);
+					String jsonStr = QwandaUtils
+							.apiGet("https://randomuser.me/api/?results=1&nat=" + existingCountryCode.toLowerCase()
+									+ "&format=json&dl&inc=name,email,location,picture,cell,gender,timezone", null);
+
+					JsonReader jsonReader = Json.createReader(new StringReader(jsonStr));
+					javax.json.JsonObject json = jsonReader.readObject();
+					jsonReader.close();
 
 					// {"results":[{"gender":"male","name":{"title":"Mr","first":"Brandon","last":"Stone"},
 					// "location":{"street":{"number":2787,"name":"Thornridge
@@ -308,15 +340,15 @@ public class RandomTest {
 					// "info":{"seed":"da1c48ae9a193d9f","results":1,"page":1,"version":"1.3"}}
 
 					String phone = json.getJsonArray("results").getJsonObject(0).getString("cell");
-						phone = "61"+phone.substring(1).replaceAll("-", "");
-						
-						saveAnswer(item, "PRI_PHONE",phone);
-						saveAnswer(item, "PRI_MOBILE",phone);
-						saveAnswer(item, "PRI_LANDLINE",phone);
-					log.info("TARGET = "+item.getCode());
+					phone = "61" + phone.substring(1).replaceAll("-", "");
+
+					saveAnswer(item, "PRI_PHONE", phone);
+					saveAnswer(item, "PRI_MOBILE", phone);
+					saveAnswer(item, "PRI_LANDLINE", phone);
+					log.info("TARGET = " + item.getCode());
 					String email = json.getJsonArray("results").getJsonObject(0).getString("email");
-					email= "test+"+email.replaceAll("example.com", "gada.io");
-					saveAnswer(item, "PRI_EMAIL",email);
+					email = "test+" + email.replaceAll("example.com", "gada.io");
+					saveAnswer(item, "PRI_EMAIL", email);
 					String firstname = json.getJsonArray("results").getJsonObject(0).getJsonObject("name")
 							.getString("first");
 					String lastname = json.getJsonArray("results").getJsonObject(0).getJsonObject("name")
@@ -325,7 +357,7 @@ public class RandomTest {
 					saveAnswer(item, "PRI_NAME", name);
 
 					String number = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
-							.getJsonObject("street").getNumber("number")+"";
+							.getJsonObject("street").getJsonNumber("number") + "";
 					String street = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
 							.getJsonObject("street").getString("name");
 					String city = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
@@ -333,22 +365,21 @@ public class RandomTest {
 					String state = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
 							.getString("state");
 					state = ShortenState(state);
-					
-					
+
 					String country = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
 							.getString("country");
 					String postcode = null;
-					
+
 					try {
 						postcode = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
-								.getNumber("postcode")+"";
+								.getJsonNumber("postcode") + "";
 					} catch (Exception e) {
-						log.error("Bad postcode "+e.getLocalizedMessage());
+						log.error("Bad postcode " + e.getLocalizedMessage());
 						try {
 							postcode = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
 									.getString("postcode");
 						} catch (Exception e1) {
-							log.error("Bad postcode "+e1.getLocalizedMessage());
+							log.error("Bad postcode " + e1.getLocalizedMessage());
 						}
 					}
 					JsonObject gps = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
@@ -356,49 +387,49 @@ public class RandomTest {
 					Double latitude = Double.valueOf(gps.getString("latitude"));
 					Double longitude = Double.valueOf(gps.getString("longitude"));
 
-					saveAnswer(item, "PRI_ADDRESS_ADDRESS1",number+" "+street);
-					saveAnswer(item, "PRI_ADDRESS_CITY",city);
-					saveAnswer(item, "PRI_ADDRESS_SUBURB",city);
-					saveAnswer(item, "PRI_ADDRESS_STATE",state);
-					saveAnswer(item, "PRI_ADDRESS_COUNTRY",country);
-					saveAnswer(item, "PRI_ADDRESS_POSTCODE",postcode);
-					saveAnswer(item, "PRI_ADDRESS_LATITUDE",latitude+"");
-					saveAnswer(item, "PRI_ADDRESS_LONGITUDE",longitude+"");
-					String fulladdress = number+" "+street+", "+city+", "+state+" "+postcode+", "+country;
-					saveAnswer(item, "PRI_ADDRESS_FULL",fulladdress);
-					
-					
-					String addressJson = "{\"street_address\":\""+number+" "+street+"\",\"suburb\":\""+city+"\" \"state\":\""+state+"\",\"country\":\""+country+"\",\"postcode\":\""+postcode+"\",\"full_address\":\""+fulladdress+"\",\"latitude\":"+latitude+",\"longitude\":"+longitude+"}";
-					saveAnswer(item, "PRI_ADDRESS_JSON",addressJson);
-					
+					saveAnswer(item, "PRI_ADDRESS_ADDRESS1", number + " " + street);
+					saveAnswer(item, "PRI_ADDRESS_CITY", city);
+					saveAnswer(item, "PRI_ADDRESS_SUBURB", city);
+					saveAnswer(item, "PRI_ADDRESS_STATE", state);
+					saveAnswer(item, "PRI_ADDRESS_COUNTRY", country);
+					saveAnswer(item, "PRI_ADDRESS_POSTCODE", postcode);
+					saveAnswer(item, "PRI_ADDRESS_LATITUDE", latitude + "");
+					saveAnswer(item, "PRI_ADDRESS_LONGITUDE", longitude + "");
+					String fulladdress = number + " " + street + ", " + city + ", " + state + " " + postcode + ", "
+							+ country;
+					saveAnswer(item, "PRI_ADDRESS_FULL", fulladdress);
+
+					String addressJson = "{\"street_address\":\"" + number + " " + street + "\",\"suburb\":\"" + city
+							+ "\" \"state\":\"" + state + "\",\"country\":\"" + country + "\",\"postcode\":\""
+							+ postcode + "\",\"full_address\":\"" + fulladdress + "\",\"latitude\":" + latitude
+							+ ",\"longitude\":" + longitude + "}";
+					saveAnswer(item, "PRI_ADDRESS_JSON", addressJson);
+
 					String picture = json.getJsonArray("results").getJsonObject(0).getJsonObject("picture")
 							.getString("large");
-					saveAnswer(item, "PRI_IMAGE_URL",picture);
-					
-					System.out.println(item.getCode() + " done "+name+" "+email+" "+fulladdress);
-					
+					saveAnswer(item, "PRI_IMAGE_URL", picture);
+
+					System.out.println(item.getCode() + " done " + name + " " + email + " " + fulladdress);
 
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
 				icount++;
-			//	if (icount > 3) {
-			//		ok = false;
-			//		break;
-			//	}
+				// if (icount > 3) {
+				// ok = false;
+				// break;
+				// }
 			}
 
 		}
 
-		
 		ok = true;
 
 		while (ok) {
 
 			SearchEntity searchBE = new SearchEntity("SBE_CPY", "company fix")
 					.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "CPY_%")
-					.addFilter("PRI_IS_HOST_CPY", true)
+					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "CPY_%").addFilter("PRI_IS_HOST_CPY", true)
 					.addColumn("PRI_CODE", "Name");
 
 			searchBE.setRealm(realm);
@@ -413,8 +444,8 @@ public class RandomTest {
 			} else {
 				log.info("Loaded " + items.size() + " baseentitys");
 			}
-			int icount=0;
-			
+			int icount = 0;
+
 			for (BaseEntity item : items) {
 
 				try {
@@ -423,31 +454,31 @@ public class RandomTest {
 							"https://randomuser.me/api/?results=1&nat=au&format=json&dl&inc=name,email,location,picture,cell,gender,timezone",
 							null);
 
-					JsonObject json = new JsonObject(jsonStr);
+					JsonReader jsonReader = Json.createReader(new StringReader(jsonStr));
+					JsonObject json = jsonReader.readObject();
+					jsonReader.close();
 
+					log.info("TARGET = " + item.getCode());
 
-					log.info("TARGET = "+item.getCode());
-					
 					String phone = json.getJsonArray("results").getJsonObject(0).getString("cell");
-					phone = "61"+phone.substring(1).replaceAll("-", "");
-					
-					saveAnswer(item, "PRI_PHONE",phone);
-					saveAnswer(item, "PRI_MOBILE",phone);
-					saveAnswer(item, "PRI_LANDLINE",phone);
+					phone = "61" + phone.substring(1).replaceAll("-", "");
 
-					
+					saveAnswer(item, "PRI_PHONE", phone);
+					saveAnswer(item, "PRI_MOBILE", phone);
+					saveAnswer(item, "PRI_LANDLINE", phone);
+
 					String email = json.getJsonArray("results").getJsonObject(0).getString("email");
-					email= "test+"+email.replaceAll("example.com", "gada.io");
-					saveAnswer(item, "PRI_EMAIL",email);
+					email = "test+" + email.replaceAll("example.com", "gada.io");
+					saveAnswer(item, "PRI_EMAIL", email);
 					String firstname = json.getJsonArray("results").getJsonObject(0).getJsonObject("name")
 							.getString("first");
 					String lastname = json.getJsonArray("results").getJsonObject(0).getJsonObject("name")
 							.getString("last");
 					String name = firstname + " " + lastname;
-					saveAnswer(item, "PRI_NAME", lastname+" Pty Ltd");
+					saveAnswer(item, "PRI_NAME", lastname + " Pty Ltd");
 
 					String number = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
-							.getJsonObject("street").getNumber("number")+"";
+							.getJsonObject("street").getJsonNumber("number") + "";
 					String street = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
 							.getJsonObject("street").getString("name");
 					String city = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
@@ -455,47 +486,48 @@ public class RandomTest {
 					String state = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
 							.getString("state");
 					state = ShortenState(state);
-					
-					
+
 					String country = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
 							.getString("country");
 					String postcode = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
-							.getNumber("postcode")+"";
+							.getJsonNumber("postcode") + "";
 					JsonObject gps = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
 							.getJsonObject("coordinates");
 					Double latitude = Double.valueOf(gps.getString("latitude"));
 					Double longitude = Double.valueOf(gps.getString("longitude"));
 
-					saveAnswer(item, "PRI_ADDRESS_ADDRESS1",number+" "+street);
-					saveAnswer(item, "PRI_ADDRESS_CITY",city);
-					saveAnswer(item, "PRI_ADDRESS_SUBURB",city);
-					saveAnswer(item, "PRI_ADDRESS_STATE",state);
-					saveAnswer(item, "PRI_ADDRESS_COUNTRY",country);
-					saveAnswer(item, "PRI_ADDRESS_POSTCODE",postcode);
-					saveAnswer(item, "PRI_ADDRESS_LATITUDE",latitude+"");
-					saveAnswer(item, "PRI_ADDRESS_LONGITUDE",longitude+"");
-					String fulladdress = number+" "+street+", "+city+", "+state+" "+postcode+", "+country;
-					saveAnswer(item, "PRI_ADDRESS_FULL",fulladdress);
-					
-					
-					String addressJson = "{\"street_address\":\""+number+" "+street+"\",\"suburb\":\""+city+"\" \"state\":\""+state+"\",\"country\":\""+country+"\",\"postcode\":\""+postcode+"\",\"full_address\":\""+fulladdress+"\",\"latitude\":"+latitude+",\"longitude\":"+longitude+"}";
-					saveAnswer(item, "PRI_ADDRESS_JSON",addressJson);
-					
+					saveAnswer(item, "PRI_ADDRESS_ADDRESS1", number + " " + street);
+					saveAnswer(item, "PRI_ADDRESS_CITY", city);
+					saveAnswer(item, "PRI_ADDRESS_SUBURB", city);
+					saveAnswer(item, "PRI_ADDRESS_STATE", state);
+					saveAnswer(item, "PRI_ADDRESS_COUNTRY", country);
+					saveAnswer(item, "PRI_ADDRESS_POSTCODE", postcode);
+					saveAnswer(item, "PRI_ADDRESS_LATITUDE", latitude + "");
+					saveAnswer(item, "PRI_ADDRESS_LONGITUDE", longitude + "");
+					String fulladdress = number + " " + street + ", " + city + ", " + state + " " + postcode + ", "
+							+ country;
+					saveAnswer(item, "PRI_ADDRESS_FULL", fulladdress);
+
+					String addressJson = "{\"street_address\":\"" + number + " " + street + "\",\"suburb\":\"" + city
+							+ "\" \"state\":\"" + state + "\",\"country\":\"" + country + "\",\"postcode\":\""
+							+ postcode + "\",\"full_address\":\"" + fulladdress + "\",\"latitude\":" + latitude
+							+ ",\"longitude\":" + longitude + "}";
+					saveAnswer(item, "PRI_ADDRESS_JSON", addressJson);
+
 					String picture = json.getJsonArray("results").getJsonObject(0).getJsonObject("picture")
 							.getString("large");
-					saveAnswer(item, "PRI_IMAGE_URL",picture);
+					saveAnswer(item, "PRI_IMAGE_URL", picture);
 
-					
-					System.out.println(item.getCode() + " done "+name+" "+email+" "+fulladdress);
+					System.out.println(item.getCode() + " done " + name + " " + email + " " + fulladdress);
 
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
 				icount++;
-			//	if (icount > 3) {
-			//		ok = false;
-			//		break;
-			//	}
+				// if (icount > 3) {
+				// ok = false;
+				// break;
+				// }
 			}
 
 		}
@@ -507,8 +539,7 @@ public class RandomTest {
 			SearchEntity searchBE = new SearchEntity("SBE_EDU", "edu fix")
 					.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
 					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "CPY_%")
-					.addFilter("PRI_IS_EDU_PROVIDER", true)
-					.addColumn("PRI_CODE", "Name");
+					.addFilter("PRI_IS_EDU_PROVIDER", true).addColumn("PRI_CODE", "Name");
 
 			searchBE.setRealm(realm);
 			searchBE.setPageStart(pageStart);
@@ -522,10 +553,10 @@ public class RandomTest {
 			} else {
 				log.info("Loaded " + items.size() + " baseentitys");
 			}
-			int icount=0;
-			
-			Map<String,String> unis = new HashMap<String,String>();
-			
+			int icount = 0;
+
+			Map<String, String> unis = new HashMap<String, String>();
+
 			for (BaseEntity item : items) {
 
 				try {
@@ -534,32 +565,34 @@ public class RandomTest {
 					Boolean uniOk = true;
 					while (uniOk) {
 						String jsonStr = QwandaUtils.apiGet(
-							"https://randomuser.me/api/?results=1&nat=au&format=json&dl&inc=name,email,location,picture,cell,gender,timezone",
-							null);
+								"https://randomuser.me/api/?results=1&nat=au&format=json&dl&inc=name,email,location,picture,cell,gender,timezone",
+								null);
 
-						 json = new JsonObject(jsonStr);
+						JsonReader jsonReader = Json.createReader(new StringReader(jsonStr));
+						json = jsonReader.readObject();
+						jsonReader.close();
 
 						city = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
-							.getString("city");
+								.getString("city");
 						if (!unis.containsKey(city)) {
-							saveAnswer(item, "PRI_NAME", "University of "+city);
+							saveAnswer(item, "PRI_NAME", "University of " + city);
 							unis.put(city, city);
-							uniOk  = false;
+							uniOk = false;
 						}
 					}
 
-					log.info("TARGET = "+item.getCode());
-					
+					log.info("TARGET = " + item.getCode());
+
 					String phone = json.getJsonArray("results").getJsonObject(0).getString("cell");
-					phone = "61"+phone.substring(1).replaceAll("-", "");
-					
-					saveAnswer(item, "PRI_PHONE",phone);
-					saveAnswer(item, "PRI_MOBILE",phone);
-					saveAnswer(item, "PRI_LANDLINE",phone);
+					phone = "61" + phone.substring(1).replaceAll("-", "");
+
+					saveAnswer(item, "PRI_PHONE", phone);
+					saveAnswer(item, "PRI_MOBILE", phone);
+					saveAnswer(item, "PRI_LANDLINE", phone);
 
 					String email = json.getJsonArray("results").getJsonObject(0).getString("email");
-					email= "test+"+email.replaceAll("example.com", "gada.io");
-					saveAnswer(item, "PRI_EMAIL",email);
+					email = "test+" + email.replaceAll("example.com", "gada.io");
+					saveAnswer(item, "PRI_EMAIL", email);
 					String firstname = json.getJsonArray("results").getJsonObject(0).getJsonObject("name")
 							.getString("first");
 					String lastname = json.getJsonArray("results").getJsonObject(0).getJsonObject("name")
@@ -567,51 +600,53 @@ public class RandomTest {
 					String name = firstname + " " + lastname;
 
 					String number = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
-							.getJsonObject("street").getNumber("number")+"";
+							.getJsonObject("street").getJsonNumber("number") + "";
 					String street = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
 							.getJsonObject("street").getString("name");
 					String state = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
 							.getString("state");
 					state = ShortenState(state);
-					
-					
+
 					String country = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
 							.getString("country");
 					String postcode = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
-							.getNumber("postcode")+"";
+							.getJsonNumber("postcode") + "";
 					JsonObject gps = json.getJsonArray("results").getJsonObject(0).getJsonObject("location")
 							.getJsonObject("coordinates");
 					Double latitude = Double.valueOf(gps.getString("latitude"));
 					Double longitude = Double.valueOf(gps.getString("longitude"));
 
-					saveAnswer(item, "PRI_ADDRESS_ADDRESS1",number+" "+street);
-					saveAnswer(item, "PRI_ADDRESS_CITY",city);
-					saveAnswer(item, "PRI_ADDRESS_SUBURB",city);
-					saveAnswer(item, "PRI_ADDRESS_STATE",state);
-					saveAnswer(item, "PRI_ADDRESS_COUNTRY",country);
-					saveAnswer(item, "PRI_ADDRESS_POSTCODE",postcode);
-					saveAnswer(item, "PRI_ADDRESS_LATITUDE",latitude+"");
-					saveAnswer(item, "PRI_ADDRESS_LONGITUDE",longitude+"");
-					String fulladdress = number+" "+street+", "+city+", "+state+" "+postcode+", "+country;
-					saveAnswer(item, "PRI_ADDRESS_FULL",fulladdress);
-					
-					
-					String addressJson = "{\"street_address\":\""+number+" "+street+"\",\"suburb\":\""+city+"\" \"state\":\""+state+"\",\"country\":\""+country+"\",\"postcode\":\""+postcode+"\",\"full_address\":\""+fulladdress+"\",\"latitude\":"+latitude+",\"longitude\":"+longitude+"}";
-					saveAnswer(item, "PRI_ADDRESS_JSON",addressJson);
-					System.out.println(item.getCode() + " done "+name+" "+email+" "+fulladdress);
+					saveAnswer(item, "PRI_ADDRESS_ADDRESS1", number + " " + street);
+					saveAnswer(item, "PRI_ADDRESS_CITY", city);
+					saveAnswer(item, "PRI_ADDRESS_SUBURB", city);
+					saveAnswer(item, "PRI_ADDRESS_STATE", state);
+					saveAnswer(item, "PRI_ADDRESS_COUNTRY", country);
+					saveAnswer(item, "PRI_ADDRESS_POSTCODE", postcode);
+					saveAnswer(item, "PRI_ADDRESS_LATITUDE", latitude + "");
+					saveAnswer(item, "PRI_ADDRESS_LONGITUDE", longitude + "");
+					String fulladdress = number + " " + street + ", " + city + ", " + state + " " + postcode + ", "
+							+ country;
+					saveAnswer(item, "PRI_ADDRESS_FULL", fulladdress);
+
+					String addressJson = "{\"street_address\":\"" + number + " " + street + "\",\"suburb\":\"" + city
+							+ "\" \"state\":\"" + state + "\",\"country\":\"" + country + "\",\"postcode\":\""
+							+ postcode + "\",\"full_address\":\"" + fulladdress + "\",\"latitude\":" + latitude
+							+ ",\"longitude\":" + longitude + "}";
+					saveAnswer(item, "PRI_ADDRESS_JSON", addressJson);
+					System.out.println(item.getCode() + " done " + name + " " + email + " " + fulladdress);
 
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
 				icount++;
-			//	if (icount > 3) {
-			//		ok = false;
-			//		break;
-			//	}
+				// if (icount > 3) {
+				// ok = false;
+				// break;
+				// }
 			}
 
 		}
-		
+
 		System.out.println("Finished");
 	}
 
@@ -621,19 +656,35 @@ public class RandomTest {
 	 */
 	private String ShortenState(String state) {
 		switch (state) {
-		case "Victoria" : state = "VIC";break;
-		case "New South Wales" : state = "NSW";break;
-		case "Queensland" : state = "QLD";break;
-		case "South Australia" : state = "SA";break;
-		case "Western Australia" : state = "WA";break;
-		case "Tasmania" : state = "TAS";break;
-		case "Australian Capital Territory" : state = "ACT";break;
-		case "Northern Territory" : state = "NT";break;
+		case "Victoria":
+			state = "VIC";
+			break;
+		case "New South Wales":
+			state = "NSW";
+			break;
+		case "Queensland":
+			state = "QLD";
+			break;
+		case "South Australia":
+			state = "SA";
+			break;
+		case "Western Australia":
+			state = "WA";
+			break;
+		case "Tasmania":
+			state = "TAS";
+			break;
+		case "Australian Capital Territory":
+			state = "ACT";
+			break;
+		case "Northern Territory":
+			state = "NT";
+			break;
 		default:
 		}
 		return state;
 	}
-	
+
 	/**
 	 * @param state
 	 * @return
@@ -643,11 +694,21 @@ public class RandomTest {
 			return "au";
 		}
 		switch (country) {
-		case "Australia" : country = "AU";break;
-		case "New Zealand" : country = "NZ";break;
-		case "South Africa" : country = "SA";break;
-		case "United States" : country = "US";break;
-		case "United Kingdom" : country = "UK";break;
+		case "Australia":
+			country = "AU";
+			break;
+		case "New Zealand":
+			country = "NZ";
+			break;
+		case "South Africa":
+			country = "SA";
+			break;
+		case "United States":
+			country = "US";
+			break;
+		case "United Kingdom":
+			country = "UK";
+			break;
 		default:
 		}
 		return country;
@@ -691,8 +752,12 @@ public class RandomTest {
 		String apiUrl = GennySettings.projectUrl + "/api/events/init?url=" + GennySettings.projectUrl;
 		System.out.println("Fetching setup info from " + apiUrl);
 		try {
+			JsonObject projectParms = null;
 			String keycloakJson = QwandaUtils.apiGet(apiUrl, null);
-			projectParms = new JsonObject(keycloakJson);
+			JsonReader jsonReader = Json.createReader(new StringReader(keycloakJson));
+			projectParms = jsonReader.readObject();
+			jsonReader.close();
+
 			String authServer = projectParms.getString("auth-server-url");
 			authServer = StringUtils.removeEnd(authServer, "/auth");
 			JsonObject credentials = projectParms.getJsonObject("credentials");
@@ -704,25 +769,25 @@ public class RandomTest {
 			GennyToken uToken = new GennyToken(token);
 			// check if user token already exists
 			String userCode = uToken.getUserCode();// "PER_"+QwandaUtils.getNormalisedUsername(username);
-			JsonObject cacheJson = VertxUtils.readCachedJson(realm, "TOKEN:" + userCode, token);
+			io.vertx.core.json.JsonObject cacheJson = VertxUtils.readCachedJson(realm, "TOKEN:" + userCode, token);
 			String status = cacheJson.getString("status");
 
 			if ("ok".equals(status)) {
-				String userToken = cacheJson.getString("value");
-				GennyToken userGennyToken = new GennyToken("userToken", userToken);
-				System.out.println("User " + username + " is logged in! "
-						+ userGennyToken.getAdecodedTokenMap().get("session_state"));
-				;
-				projectParms.put("userToken", userToken);
+				String userTokenStr = cacheJson.getString("value");
+				userToken = new GennyToken("userToken", userTokenStr);
+				System.out.println(
+						"User " + username + " is logged in! " + userToken.getAdecodedTokenMap().get("session_state"));
+
 			} else {
 				System.out.println("User " + username + " is NOT LOGGED IN!");
 				;
-				projectParms.put("userToken", token); // use non alyson token
+				userToken = new GennyToken(token);
 				return;
 			}
 
-			String servicetoken = KeycloakUtils.getAccessToken(authServer, realm, realm, secret, "service", System.getenv("SERVICE_PASSWORD"));
-			projectParms.put("serviceToken", servicetoken);
+			String serviceTokenStr = KeycloakUtils.getAccessToken(authServer, realm, realm, secret, "service",
+					System.getenv("SERVICE_PASSWORD"));
+			serviceToken = new GennyToken(serviceTokenStr);
 
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
@@ -730,9 +795,7 @@ public class RandomTest {
 		} catch (IOException e) {
 			return;
 		}
-		String uToken = projectParms.getString("userToken");
-		userToken = new GennyToken("userToken", uToken);
-		serviceToken = new GennyToken("PER_SERVICE", projectParms.getString("serviceToken"));
+		serviceToken = new GennyToken("PER_SERVICE", serviceToken.getToken());
 
 		// VertxUtils.cachedEnabled = false;
 		VertxUtils.cachedEnabled = false;
@@ -745,10 +808,10 @@ public class RandomTest {
 //				serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
 
 		beUtils = new BaseEntityUtils(userToken);
-	//	beUtils.setServiceToken(serviceToken);
+		beUtils.setServiceToken(serviceToken);
 //	        }
 
-		//System.out.println("serviceToken=" + serviceToken.getToken());
+		// System.out.println("serviceToken=" + serviceToken.getToken());
 
 	}
 
@@ -795,34 +858,34 @@ public class RandomTest {
 					duration = "12";
 					useDefault = true;
 				}
-				if (!StringUtils.isBlank(duration)) {
-					JsonObject progress_json = new JsonObject();
-					progress_json.put("completedPercentage", 0);
-					progress_json.put("steps", duration);
-					progress_json.put("completedJournals", 0);
-
-					String PRI_PROGRESS_JSON = progress_json.toString();
-
-					if (useDefault)
-						System.out.println(item.getCode() + " doesn't have PRI_ASSOC_DURATION, use default value:12");
-
-					System.out.println(
-							item.getCode() + ", duration:" + duration + ", PRI_PROGRESS_JSON=" + PRI_PROGRESS_JSON);
-
-					Answer fixedAddress = new Answer(userToken.getUserCode(), item.getCode(), "PRI_PROGRESS",
-							PRI_PROGRESS_JSON, false, true);
-					beUtils.saveAnswer(fixedAddress);
-				}
+//				if (!StringUtils.isBlank(duration)) {
+//					JsonObject progress_json = new JsonObject();
+//					progress_json.put("completedPercentage", 0);
+//					progress_json.put("steps", duration);
+//					progress_json.put("completedJournals", 0);
+//
+//					String PRI_PROGRESS_JSON = progress_json.toString();
+//
+//					if (useDefault)
+//						System.out.println(item.getCode() + " doesn't have PRI_ASSOC_DURATION, use default value:12");
+//
+//					System.out.println(
+//							item.getCode() + ", duration:" + duration + ", PRI_PROGRESS_JSON=" + PRI_PROGRESS_JSON);
+//
+//					Answer fixedAddress = new Answer(userToken.getUserCode(), item.getCode(), "PRI_PROGRESS",
+//							PRI_PROGRESS_JSON, false, true);
+//					beUtils.saveAnswer(fixedAddress);
+//				}
 			}
 		}
 	}
 
-    private static String encodeValue(String value) {
-        try {
-            return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
-        } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException(ex.getCause());
-        }
-    }
+	private static String encodeValue(String value) {
+		try {
+			return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
+		} catch (UnsupportedEncodingException ex) {
+			throw new RuntimeException(ex.getCause());
+		}
+	}
 
 }
