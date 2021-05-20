@@ -87,7 +87,7 @@ rule "SAVE_NOTES_CLICK_EVENT"
 			if (parentCode.contains(",")) {
 				key = "APPLICATION";
 				String[] parents = parentCode.split(",");
-				luggage = parents[0]
+				luggage = parents[0];
 			} else {
 				key = "INTERN";	
 			}			
