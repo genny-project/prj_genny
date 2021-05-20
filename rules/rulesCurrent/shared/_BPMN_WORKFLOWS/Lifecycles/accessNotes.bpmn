@@ -101,16 +101,16 @@ kcontext.setVariable(&quot;userToken&quot;, userToken);
 kcontext.setVariable(&quot;targetCode&quot;, targetCode);
 kcontext.setVariable(&quot;key&quot;, key);
 
-System.out.println(&quot;saveNote: userToken = &quot; +userToken.getCode());
-System.out.println(&quot;saveNote: serviceToken = &quot; +serviceToken.getCode());
-System.out.println(&quot;saveNote: targetCode = &quot; +targetCode);
-System.out.println(&quot;saveNote: key = &quot; +key);
+System.out.println(&quot;accessNotes: userToken = &quot; +userToken.getCode());
+System.out.println(&quot;accessNotes: serviceToken = &quot; +serviceToken.getCode());
+System.out.println(&quot;accessNotes: targetCode = &quot; +targetCode);
+System.out.println(&quot;accessNotes: key = &quot; +key);
 
 
 /* Get target BE */
 targetBe = beUtils.getBaseEntityByCode(targetCode);
 kcontext.setVariable(&quot;targetBe&quot;, targetBe);
-System.out.println(&quot;saveNote: targetBe = &quot; + targetBe);
+System.out.println(&quot;accessNotes: targetBe = &quot; + targetBe);
 
 </bpmn2:script>
     </bpmn2:scriptTask>
