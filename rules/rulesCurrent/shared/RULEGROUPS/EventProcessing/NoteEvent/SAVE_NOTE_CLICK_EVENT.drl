@@ -84,22 +84,9 @@ rule "SAVE_NOTES_CLICK_EVENT"
 			System.out.println("parentCode: " + parentCode);
 
 			if (parentCode.contains(",")) {
-			System.out.println("parentCode contains a comma");
-				String[] parents = parentCode.split(",");
-
-				for (int i = 0; i < parents.length; i++) {
-					if (targetCode.equals(parents[i])) {
-						if(i == 0) {key = "APPLICATION";}
-						if(i == 1) {key = "INTERN";}
-						if(i == 2) {key = "INTERNSHIP";}
-						if(i == 3) {key = "HOST_CPY";}
-						if(i == 4) {key = "HOST_CPY_REP";}
-					}
-				}	
-			} else {
-				System.out.println("parentCode does not contain a comma");
 				key = "APPLICATION";	
-			}
+			} else {
+				key = "INTERN";			
 		}
 
 		output.setTypeOfResult("SIGNAL");
