@@ -32,6 +32,7 @@ rule "ACCESS_NOTES_APPLICATION"
 		System.out.println("targetCode: " +targetCode);
 
 		System.out.println("luggage: " +luggage);
+		System.out.println("key: " +key);
 
 		if (targetBe.getCode().startsWith("APP_")) {
 			targetBe = beUtils.getBaseEntityByCode(targetBe.getCode());
