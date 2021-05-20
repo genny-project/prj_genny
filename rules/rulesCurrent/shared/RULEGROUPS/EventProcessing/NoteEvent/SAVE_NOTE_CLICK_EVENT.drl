@@ -78,21 +78,28 @@ rule "SAVE_NOTES_CLICK_EVENT"
 
 		/*["APP_8CC599CA-CA86-4AC3-A0C6-24B025B40D92","PER_0E23D8C1-D9EB-4A47-BF36-FB8ABE76ABEC","BEG_3416F0D9-FD89-4F1D-83DC-369761023BF0","CPY_7268CA0A-D19A-44F0-AC50-629A64E8F81C","PER_AEC7B678-4227-4EA9-8147-EB20458B43DF"]*/
 		String key = "nah";
-		String luggage = "nah";
 		
-		parentCode = parentCode.replace("\"", "").replace("[", "").replace("]", "");
-		System.out.println("parentCode: " + parentCode);
+		if (parentCode != null) {
+			parentCode = parentCode.replace("\"", "").replace("[", "").replace("]", "");
+			System.out.println("parentCode: " + parentCode);
 
-		if (parentCode != null) {}
-			String[] parents = parentCode.split(",");
-			for (int i = 0; i < parents.length; i++) {
-				if (targetCode.equals(parents[i])) {
-					if(i == 0) {key = "APPLICATION"; luggage = "AppSet";}
-					if(i == 1) {key = "INTERN";}
-					if(i == 2) {key = "INTERNSHIP";}
-					if(i == 3) {key = "HOST_CPY";}
-					if(i == 4) {key = "HOST_CPY_REP";}
-				}
+			if (parentCode.contains(",")) {
+			System.out.println("parentCode contains a comma");
+				String[] parents = parentCode.split(",");
+
+				for (int i = 0; i < parents.length; i++) {
+					if (targetCode.equals(parents[i])) {
+						if(i == 0) {key = "APPLICATION";}
+						if(i == 1) {key = "INTERN";}
+						if(i == 2) {key = "INTERNSHIP";}
+						if(i == 3) {key = "HOST_CPY";}
+						if(i == 4) {key = "HOST_CPY_REP";}
+					}
+				}	
+			} else {
+				System.out.println("parentCode does not contain a comma");
+				key = "APPLICATION";	
+			}
 		}
 
 		System.out.println("key: " + key);
@@ -103,14 +110,12 @@ rule "SAVE_NOTES_CLICK_EVENT"
 		output.setResultCode("START_ACCESS_NOTES");
 		output.setTargetCode(targetCode);
 		output.setSuitCase(key);
-		output.setLuggage(luggage);
 		
 		System.out.println("**************************************************");
 		System.out.println("TypeOfResult: "  + output.getTypeOfResult());
 		System.out.println("ResultCode: "    + output.getResultCode());
 		System.out.println("TargetCode: "    + output.getTargetCode());
 		System.out.println("SuitCase: "      + output.getSuitCase());
-		System.out.println("Luggage: "      + output.getLuggage());
 		System.out.println("**************************************************");
 		
 		retract( $message);
