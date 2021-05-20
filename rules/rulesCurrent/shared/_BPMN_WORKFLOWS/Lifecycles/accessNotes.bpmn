@@ -62,6 +62,7 @@
     <bpmn2:property id="sourceCode" itemSubjectRef="ItemDefinition_2733" name="sourceCode"/>
     <bpmn2:property id="targetCode" itemSubjectRef="ItemDefinition_2733" name="targetCode"/>
     <bpmn2:property id="submitCode" itemSubjectRef="ItemDefinition_2733" name="submitCode"/>
+    <bpmn2:property id="luggage" itemSubjectRef="ItemDefinition_2733" name="luggage"/>
     <bpmn2:startEvent id="StartEvent_2" name="ACCESS_NOTES">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -95,16 +96,19 @@ beUtils = new BaseEntityUtils(userToken);
 OutputParam data = (OutputParam)sessionFacts.getMessage();
 targetCode = data.getTargetCode();
 key = data.getSuitCase();
+luggage = data.getLuggage();
 
 kcontext.setVariable(&quot;serviceToken&quot;, serviceToken);
 kcontext.setVariable(&quot;userToken&quot;, userToken);
 kcontext.setVariable(&quot;targetCode&quot;, targetCode);
 kcontext.setVariable(&quot;key&quot;, key);
+kcontext.setVariable(&quot;luggage&quot;, luggage);
 
 System.out.println(&quot;accessNotes: userToken = &quot; +userToken.getCode());
 System.out.println(&quot;accessNotes: serviceToken = &quot; +serviceToken.getCode());
 System.out.println(&quot;accessNotes: targetCode = &quot; +targetCode);
 System.out.println(&quot;accessNotes: key = &quot; +key);
+System.out.println(&quot;accessNotes: luggage = &quot; +luggage);
 
 
 /* Get target BE */
@@ -137,6 +141,7 @@ System.out.println(&quot;accessNotes: targetBe = &quot; + targetBe);
         <bpmn2:dataInput id="DataInput_22" name="callingWorkflow"/>
         <bpmn2:dataInput id="DataInput_23" itemSubjectRef="ItemDefinition_2733" name="key"/>
         <bpmn2:dataInput id="DataInput_24" itemSubjectRef="ItemDefinition_2016" name="targetBE"/>
+        <bpmn2:dataInput id="DataInput_1" itemSubjectRef="ItemDefinition_2733" name="luggage"/>
         <bpmn2:inputSet id="_InputSet_130">
           <bpmn2:dataInputRefs>DataInput_19</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>DataInput_20</bpmn2:dataInputRefs>
@@ -144,6 +149,7 @@ System.out.println(&quot;accessNotes: targetBe = &quot; + targetBe);
           <bpmn2:dataInputRefs>DataInput_22</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>DataInput_23</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>DataInput_24</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_1</bpmn2:dataInputRefs>
         </bpmn2:inputSet>
         <bpmn2:outputSet id="OutputSet_4" name="Output Set 4"/>
       </bpmn2:ioSpecification>
@@ -177,6 +183,10 @@ System.out.println(&quot;accessNotes: targetBe = &quot; + targetBe);
         <bpmn2:sourceRef>targetBe</bpmn2:sourceRef>
         <bpmn2:targetRef>DataInput_24</bpmn2:targetRef>
       </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_1">
+        <bpmn2:sourceRef>luggage</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_1</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
     </bpmn2:task>
     <bpmn2:sequenceFlow id="SequenceFlow_12" drools:priority="1" sourceRef="StartEvent_2" targetRef="ScriptTask_1"/>
     <bpmn2:sequenceFlow id="SequenceFlow_21" drools:priority="1" sourceRef="ScriptTask_1" targetRef="Task_5"/>
@@ -185,45 +195,45 @@ System.out.println(&quot;accessNotes: targetBe = &quot; + targetBe);
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Process Diagram">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="accessNotes">
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_1" bpmnElement="StartEvent_2">
-        <dc:Bounds height="36.0" width="36.0" x="650.0" y="310.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="370.0" y="177.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_6" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="74.0" x="631.0" y="346.0"/>
+          <dc:Bounds height="11.0" width="74.0" x="351.0" y="213.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_1" bpmnElement="ScriptTask_1" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="720.0" y="303.0"/>
+        <dc:Bounds height="50.0" width="110.0" x="440.0" y="170.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_11">
-          <dc:Bounds height="11.0" width="24.0" x="763.0" y="322.0"/>
+          <dc:Bounds height="11.0" width="24.0" x="483.0" y="189.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_3" bpmnElement="EndEvent_3">
-        <dc:Bounds height="36.0" width="36.0" x="1020.0" y="310.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="740.0" y="177.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1">
-          <dc:Bounds height="11.0" width="17.0" x="1029.0" y="346.0"/>
+          <dc:Bounds height="11.0" width="17.0" x="749.0" y="213.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_5" bpmnElement="Task_5" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="870.0" y="303.0"/>
+        <dc:Bounds height="50.0" width="110.0" x="590.0" y="170.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_2">
-          <dc:Bounds height="11.0" width="56.0" x="897.0" y="322.0"/>
+          <dc:Bounds height="11.0" width="56.0" x="617.0" y="189.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_12" bpmnElement="SequenceFlow_12" sourceElement="BPMNShape_StartEvent_1" targetElement="BPMNShape_ScriptTask_1">
-        <di:waypoint xsi:type="dc:Point" x="686.0" y="328.0"/>
-        <di:waypoint xsi:type="dc:Point" x="703.0" y="328.0"/>
-        <di:waypoint xsi:type="dc:Point" x="720.0" y="328.0"/>
+        <di:waypoint xsi:type="dc:Point" x="406.0" y="195.0"/>
+        <di:waypoint xsi:type="dc:Point" x="423.0" y="195.0"/>
+        <di:waypoint xsi:type="dc:Point" x="440.0" y="195.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_3"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_21" bpmnElement="SequenceFlow_21" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_Task_5">
-        <di:waypoint xsi:type="dc:Point" x="830.0" y="328.0"/>
-        <di:waypoint xsi:type="dc:Point" x="850.0" y="328.0"/>
-        <di:waypoint xsi:type="dc:Point" x="870.0" y="328.0"/>
+        <di:waypoint xsi:type="dc:Point" x="550.0" y="195.0"/>
+        <di:waypoint xsi:type="dc:Point" x="570.0" y="195.0"/>
+        <di:waypoint xsi:type="dc:Point" x="590.0" y="195.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_4"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_22" bpmnElement="SequenceFlow_22" sourceElement="BPMNShape_Task_5" targetElement="BPMNShape_EndEvent_3">
-        <di:waypoint xsi:type="dc:Point" x="980.0" y="328.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1000.0" y="328.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1020.0" y="328.0"/>
+        <di:waypoint xsi:type="dc:Point" x="700.0" y="195.0"/>
+        <di:waypoint xsi:type="dc:Point" x="720.0" y="195.0"/>
+        <di:waypoint xsi:type="dc:Point" x="740.0" y="195.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_5"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
