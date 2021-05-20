@@ -86,7 +86,8 @@ rule "SAVE_NOTES_CLICK_EVENT"
 			if (parentCode.contains(",")) {
 				key = "APPLICATION";	
 			} else {
-				key = "INTERN";			
+				key = "INTERN";	
+			}			
 		}
 
 		output.setTypeOfResult("SIGNAL");
