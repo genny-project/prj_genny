@@ -44,7 +44,7 @@ rule "SAVE_NOTES_CLICK_EVENT"
 			
 		String tags = "BD";
 		
-		targetBe = beUtils.getBaseEntityByCode(targetCode);
+		BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
 		
 		if (targetBe != null) {
 			String endPoint = "https://internmatch-dev.gada.io/v7/notes";
