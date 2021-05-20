@@ -127,7 +127,7 @@ rule "ACCESS_NOTES_APPLICATION"
 			JsonObject jsonSuper = new JsonObject(superNotes);
 				jsonSuper.put("token", userToken.getToken());
 
-			if(appNotes != null || internNotes != null || internshipNotes != null || hcNotes != null || superNotes != null){
+			if(appNotes == null || internNotes == null || internshipNotes == null || hcNotes == null || superNotes == null){
 		
 				System.out.println("ERROR: Some Notes failed to be retrieved");
 		
