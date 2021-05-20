@@ -66,6 +66,7 @@ rule "ACCESS_NOTES"
 
 				/* Search for Applications */
 				String linkedApps = targetBe.getValue("LNK_APPLICATIONS", null);
+				System.out.println("linkedApps: " +linkedApps);
 				
 				if (linkedApps != null || !linkedApps.equals("[]")) {
 					System.out.println("linkedApps: " +linkedApps);									
