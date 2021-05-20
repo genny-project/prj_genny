@@ -109,10 +109,10 @@ rule "ACCESS_NOTES_APPLICATION"
 			baseEntitys.add(hcBe);
 			baseEntitys.add(superBe);
 
-			QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntitys);
-			msg.setToken(userToken.getToken());
-			msg.setReplace(true);
-			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+			QDataBaseEntityMessage beMsg = new QDataBaseEntityMessage(baseEntitys);
+			beMsg.setToken(userToken.getToken());
+			beMsg.setReplace(true);
+			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(beMsg));
 
 			
 			/* Send notes to FE */
