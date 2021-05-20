@@ -102,10 +102,6 @@ rule "SAVE_NOTES_CLICK_EVENT"
 			}
 		}
 
-		System.out.println("key: " + key);
-		System.out.println("luggage: " + luggage);
-
-
 		output.setTypeOfResult("SIGNAL");
 		output.setResultCode("START_ACCESS_NOTES");
 		output.setTargetCode(targetCode);
