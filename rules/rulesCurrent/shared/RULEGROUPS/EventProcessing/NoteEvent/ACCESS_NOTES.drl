@@ -68,30 +68,34 @@ rule "ACCESS_NOTES"
 				String linkedApps = targetBe.getValue("LNK_APPLICATIONS", null);
 				System.out.println("linkedApps: " +linkedApps);
 				
-				if (linkedApps != null || !linkedApps.equals("[]")) {
-					System.out.println("linkedApps: " +linkedApps);									
-					linkedApps = linkedApps.replace("\"", "").replace("[", "").replace("]", "");	
-					System.out.println("linkedApps: " +linkedApps);
-					
-					String[] splitApps = linkedApps.split(",");
-					int length = splitApps.length;
-					System.out.println("length: " +length);	
-					
-					BaseEntity[] beCodez = new BaseEntity[length];
-					BaseEntity appBe = null;
-					
-					for (int i = 0; i < length; i++) {
-						appBe = beUtils.getBaseEntityByCode(splitApps[i]);
-						beCodez[i] = appBe;
-						System.out.println("beCodez: " +beCodez[i]);
-					}
-					
-					QDataBaseEntityMessage msgMatches = new QDataBaseEntityMessage(beCodez);
-					msgMatches.setToken(userToken.getToken());
-					msgMatches.setReplace(true);
-					VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msgMatches));
+				if (linkedApps != null) {
+					if (!linkedApps.equals("[]")) {
+						System.out.println("linkedApps: " +linkedApps);									
+						linkedApps = linkedApps.replace("\"", "").replace("[", "").replace("]", "");	
+						System.out.println("linkedApps: " +linkedApps);
+						
+						String[] splitApps = linkedApps.split(",");
+						int length = splitApps.length;
+						System.out.println("length: " +length);	
+						
+						BaseEntity[] beCodez = new BaseEntity[length];
+						BaseEntity appBe = null;
+						
+						for (int i = 0; i < length; i++) {
+							appBe = beUtils.getBaseEntityByCode(splitApps[i]);
+							beCodez[i] = appBe;
+							System.out.println("beCodez: " +beCodez[i]);
+						}
+						
+						QDataBaseEntityMessage msgMatches = new QDataBaseEntityMessage(beCodez);
+						msgMatches.setToken(userToken.getToken());
+						msgMatches.setReplace(true);
+						VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msgMatches));
+					} else {
+					System.out.println("ERROR: linkedApps []");
+					} 
 				} else {
-					System.out.println("ERROR: linkedApps is Null or []");
+					System.out.println("ERROR: linkedApps is Null");
 				} 
 				/*String[] tagList = {"Business Development", "Placement", "Outcome Life", "Miscellaneous"};*/
 				
