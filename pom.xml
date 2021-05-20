@@ -245,13 +245,13 @@
 			<version>${spring.version}</version>
 			<scope>test</scope>
 		</dependency>
-<!-- https://mvnrepository.com/artifact/org.jbpm/jbpm-test -->
-<dependency>
-    <groupId>org.jbpm</groupId>
-    <artifactId>jbpm-test</artifactId>
-    <version>7.34.0.Final</version>
-    <scope>test</scope>
-</dependency>
+		<!-- https://mvnrepository.com/artifact/org.jbpm/jbpm-test -->
+		<dependency>
+			<groupId>org.jbpm</groupId>
+			<artifactId>jbpm-test</artifactId>
+			<version>7.34.0.Final</version>
+			<scope>test</scope>
+		</dependency>
 
 	</dependencies>
 	<build>
