@@ -245,8 +245,8 @@ rule "HELPER_SIGNATURE_DATE"
 		String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, internEmail, serviceToken.getToken());
 		System.out.println("token: " + token);			
 	
-		String url = GennySettings.projectUrl+"/home/UVVFX1RBQkxFX1JFU1VMVFNfR1JQ/UVVFX1RBQkxFX0xBWllfTE9BRA==";
-		url = url +"?token=" + token;
+		String cleanUrl = GennySettings.projectUrl+"/home/UVVFX1RBQkxFX1JFU1VMVFNfR1JQ/UVVFX1RBQkxFX0xBWllfTE9BRA==";
+		String url = cleanUrl +"?token=" + token;
 		System.out.println("url: " + url);
 
 
@@ -309,7 +309,7 @@ rule "HELPER_SIGNATURE_DATE"
 			
 			token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, userSuperCode, serviceToken.getToken());
 			System.out.println("token: " + token);
-			url = url +"?token=" + token;
+			url = cleanUrl +"?token=" + token;
 		
 			templateData.put("intern", intern);
 			templateData.put("url", url);
