@@ -246,6 +246,7 @@ rule "HELPER_SIGNATURE_DATE"
 		System.out.println("token: " + token);			
 	
 		String cleanUrl = GennySettings.projectUrl+"/home/UVVFX1RBQkxFX1JFU1VMVFNfR1JQ/UVVFX1RBQkxFX0xBWllfTE9BRA==";
+		System.out.println("cleanUrl = " + cleanUrl);
 		String url = cleanUrl +"?token=" + token;
 		System.out.println("url: " + url);
 
