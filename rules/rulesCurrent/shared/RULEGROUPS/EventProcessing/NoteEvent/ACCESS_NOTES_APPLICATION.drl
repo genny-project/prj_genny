@@ -28,6 +28,11 @@ rule "ACCESS_NOTES_APPLICATION"
 		System.out.println(drools.getRule().getName() + " triggered");
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 		
+		String targetCode = targetBe.getCode();
+		System.out.println("targetCode: " +targetCode);
+
+		System.out.println("luggage: " +luggage);
+
 		if (targetBe.getCode().startsWith("APP_")) {
 			targetBe = beUtils.getBaseEntityByCode(targetBe.getCode());
 		} else if (luggage.startsWith("APP_")) {
@@ -170,6 +175,7 @@ rule "ACCESS_NOTES_APPLICATION"
 
 		retract(targetBe);
 		retract(key);
+		retract(luggage);
 	end
 
 
