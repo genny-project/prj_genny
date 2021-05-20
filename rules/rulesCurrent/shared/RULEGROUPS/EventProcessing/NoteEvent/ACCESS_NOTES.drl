@@ -16,7 +16,7 @@ rule "ACCESS_NOTES"
 	no-loop
 	when
 		targetBe : BaseEntity()
-		key : String(key.equals("INTERN") || key.equals("INTERNSHIP") || key.equals("HOST_CPY") || key.equals("HOST_CPY_REP"))
+		key : String(key.equals("INTERN") || key.equals("INTERNSHIP") || key.equals("HC") || key.equals("HCR"))
 		
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
