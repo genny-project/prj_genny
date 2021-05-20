@@ -44,7 +44,7 @@ rule "SAVE_NOTES_CLICK_EVENT"
 			
 		String tags = "BD";
 		
-		targetBe = beUtils.getBaseEntityByCode(targetBe.getCode());
+		targetBe = beUtils.getBaseEntityByCode(targetCode);
 		
 		if (targetBe != null) {
 			String endPoint = "https://internmatch-dev.gada.io/v7/notes";
@@ -86,14 +86,14 @@ rule "SAVE_NOTES_CLICK_EVENT"
 		output.setTypeOfResult("SIGNAL");
 		output.setResultCode("START_ACCESS_NOTES");
 		output.setTargetCode(targetCode);
-		output.setSuitCase(key);
+		/*output.setSuitCase(key);*/
 		output.setLuggage(luggage);
 		
 		System.out.println("**************************************************");
 		System.out.println("TypeOfResult: "  + output.getTypeOfResult());
 		System.out.println("ResultCode: "    + output.getResultCode());
 		System.out.println("TargetCode: "    + output.getTargetCode());
-		System.out.println("SuitCase: "      + output.getSuitCase());
+		/*System.out.println("SuitCase: "      + output.getSuitCase());*/
 		System.out.println("Luggage: "      + output.getLuggage());
 		System.out.println("**************************************************");
 		
