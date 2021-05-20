@@ -35,6 +35,9 @@ rule "SAVE_NOTES_CLICK_EVENT"
 		
 		String targetCode = $message.getData().getTargetCode();
 		System.out.println("targetCode :: " + targetCode);
+
+		String parentCode = $message.getData().getParentCode();
+		System.out.println("parentCode :: " + parentCode);
 		
 		String content = $message.getData().getContent();
 		System.out.println("content :: " + content);
