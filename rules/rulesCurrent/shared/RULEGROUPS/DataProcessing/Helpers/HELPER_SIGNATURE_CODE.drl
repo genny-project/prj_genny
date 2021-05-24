@@ -58,10 +58,7 @@ rule "HELPER_SIGNATURE_CODE"
 		System.out.println("attributeCode :: " + attributeCode);
 
 		/* Add this user as the host company rep */
-		Answer hostCompanyRep =  new Answer(userToken.getUserCode(), targetCode, "LNK_HOST_COMPANY_REP", "[\""+sourceCode+"\"]");
-		answersToSave.add(hostCompanyRep);
-
-		update(answersToSave);
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetCode, "LNK_HOST_COMPANY_REP", "[\""+sourceCode+"\"]"));
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  
