@@ -30,7 +30,7 @@ import java.util.ArrayList;
 
 rule "HELPER_SIGNATURE_CODE"
 	ruleflow-group 'DataProcessing'
-			salience 5000
+			salience 10000
 	when
 		beUtils : BaseEntityUtils()
 		answer : Answer( 
@@ -47,8 +47,6 @@ rule "HELPER_SIGNATURE_CODE"
 	then
 		System.out.println(drools.getRule().getName() + " fired!");
 		
-		answersToSave.add(answer);
-		
 		String sourceCode = beUtils.getGennyToken().getUserCode();	
 		System.out.println("sourceCode :: " + sourceCode);
 		
@@ -62,8 +60,8 @@ rule "HELPER_SIGNATURE_CODE"
 		Answer hostCompanyRep =  new Answer(userToken.getUserCode(), targetCode, "LNK_HOST_COMPANY_REP", "[\""+sourceCode+"\"]");
 		answersToSave.add(hostCompanyRep);
 
-		retract(answer);
-		
+		update(answersToSave);
+
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  
 end
