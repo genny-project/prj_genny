@@ -30,7 +30,8 @@ import java.util.ArrayList;
 
 rule "HELPER_SIGNATURE_CODE"
 	ruleflow-group 'DataProcessing'
-			salience 10000
+		salience 10000
+		no-loop
 	when
 		beUtils : BaseEntityUtils()
 		answer : Answer( 
