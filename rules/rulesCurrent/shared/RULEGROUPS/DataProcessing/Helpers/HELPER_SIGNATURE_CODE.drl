@@ -63,4 +63,3 @@ rule "HELPER_SIGNATURE_CODE"
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  
 end
-t
