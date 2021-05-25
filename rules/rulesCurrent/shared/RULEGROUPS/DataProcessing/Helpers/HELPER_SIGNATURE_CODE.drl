@@ -19,7 +19,7 @@ import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwandautils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 import java.net.URLEncoder;
-import java.nio.charset.SandardCharsets;
+import java.nio.charset.StandardCharsets;
 import java.io.UnsupportedEncodingException;
 import life.genny.utils.DropdownUtils;
 import java.time.format.DateTimeFormatter;
