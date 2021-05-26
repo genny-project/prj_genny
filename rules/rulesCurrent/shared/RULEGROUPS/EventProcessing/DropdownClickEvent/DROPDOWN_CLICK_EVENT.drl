@@ -48,6 +48,7 @@ import java.util.concurrent.TimeUnit;
 import life.genny.utils.SearchCallable;
 import life.genny.utils.TableFrameCallable;
 import life.genny.utils.CacheSearchUtils;
+import life.genny.utils.SearchUtils;
 
 rule "DROPDOWN_CLICK_EVENT"
     ruleflow-group 'EventProcessing'
@@ -64,17 +65,17 @@ rule "DROPDOWN_CLICK_EVENT"
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processings : " + message );
 
 				BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
-		
+
 		BaseEntity targetBe = null;
-		
+
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" attributeCode = "+message.getAttributeCode()+" question:"+message.getData().getParentCode());
 		Integer dropdownSize = GennySettings.defaultDropDownPageSize;
-		
+
 		if ("LNK_EDU_PROVIDER".equalsIgnoreCase(message.getAttributeCode())) {
 			dropdownSize = 20; /* To accomodate the larger group sizes , like 'Melbourne' */
 		}
 			QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message,dropdownSize);
-	
+
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" "+msg);
 			msg.setToken(userToken.getToken());
 			VertxUtils.writeMsg("webcmds",msg);
