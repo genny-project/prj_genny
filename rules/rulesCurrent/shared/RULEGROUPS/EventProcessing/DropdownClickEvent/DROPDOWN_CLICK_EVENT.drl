@@ -68,14 +68,18 @@ rule "DROPDOWN_CLICK_EVENT"
 		BaseEntity targetBe = null;
 		
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" attributeCode = "+message.getAttributeCode()+" question:"+message.getData().getParentCode());
-	if ("LNK_EDU_PROVIDER".equalsIgnoreCase(message.getAttributeCode())) {
-			System.out.println(ruleDetails+" "+drools.getRule().getName()+" recognised LNK_EDU_PROVIDER");
-			QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message);
+		Integer dropdownSize = GennySettings.defaultDropDownPageSize;
+		
+		if ("LNK_EDU_PROVIDER".equalsIgnoreCase(message.getAttributeCode())) {
+			dropdownSize = 20; /* To accomodate the larger group sizes , like 'Melbourne' */
+		}
+			QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message,dropdownSize);
+	
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" "+msg);
 			msg.setToken(userToken.getToken());
 			VertxUtils.writeMsg("webcmds",msg);
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Sent dropdown message2");
-		}
+
 			retract(message);
 			System.out.println("Retracted message");
 			output.setTypeOfResult("NONE");

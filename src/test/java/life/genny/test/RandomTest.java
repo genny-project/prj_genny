@@ -117,7 +117,7 @@ public class RandomTest {
 
 		QEventDropdownMessage message = new QEventDropdownMessage("LNK_EDU_PROVIDER");
 		message.setAttributeCode("LNK_EDU_PROVIDER");
-		message.setQuestionCode("GRP_EDU_PROVIDER_SELECTION");
+		message.setQuestionCode("QUE_EDU_PROVIDER_SELECTION");
 		message.getData().setParentCode("GRP_EDU_PROVIDER_SELECTION");
 		message.getData().setTargetCode("PER_086CDF1F-A98F-4E73-9825-0A4CFE2BB943");
 		message.getData().setValue("Mel");
