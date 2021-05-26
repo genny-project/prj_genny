@@ -19,6 +19,7 @@ import com.google.gson.reflect.TypeToken;
 import life.genny.qwandautils.JsonUtils;
 import life.genny.utils.VertxUtils;
 import life.genny.utils.TableUtils;
+import life.genny.utils.SearchUtils;
 import life.genny.models.TableData;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.entity.BaseEntity;
