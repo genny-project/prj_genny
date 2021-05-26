@@ -17,6 +17,7 @@ rule "ACCESS_NOTES_APPLICATION"
 	when
 		targetBe : BaseEntity()
 		key : String(key.equals("APPLICATION"))
+		luggage : String (luggage matches "APP_.*" || luggage matches "ACCESS")
 		
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
@@ -27,46 +28,43 @@ rule "ACCESS_NOTES_APPLICATION"
 		System.out.println(drools.getRule().getName() + " triggered");
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 		
-		targetBe = beUtils.getBaseEntityByCode(targetBe.getCode());
+		String targetCode = targetBe.getCode();
+		System.out.println("targetCode: " +targetCode);
+
+		System.out.println("luggage: " +luggage);
+		System.out.println("key: " +key);
+
+		if (targetBe.getCode().startsWith("APP_")) {
+			targetBe = beUtils.getBaseEntityByCode(targetBe.getCode());
+		} else if (luggage.startsWith("APP_")) {
+			targetBe = beUtils.getBaseEntityByCode(luggage);
+		} else {
+			System.out.println("ERROR: Failed to retrieve Application Base Entity");
+			
+			QCmdMessage msg = new QCmdMessage("TOAST", "ERROR");
+			msg.setMessage("ERROR: Failed to retrieve Application Base Entity");
+			msg.setToken(beUtils.getGennyToken().getToken());
+			msg.setSend(true);
+			VertxUtils.writeMsg("webcmds", msg);
+		}
 
 		if(targetBe != null){
 			/* Application Details */
 			String appCode = targetBe.getCode();
 			System.out.println("appCode: " +appCode);
-
-			String appName = targetBe.getValue("PRI_TITLE", null);
-			System.out.println("appName: " +appName);
-			
-			String appImage = targetBe.getValue("PRI_IMAGE_URL", null);
-			System.out.println("appImage: " +appImage);
-			
 			
 			/* Intern Details */
 			String internCode = targetBe.getValue("PRI_INTERN_CODE", null);
 			System.out.println("internCode: " +internCode);
 			
 			BaseEntity internBe = beUtils.getBaseEntityByCode(internCode);
-			
-			String internName = internBe.getValue("PRI_NAME", null);
-			System.out.println("internName: " +internName);
-			
-			String internImage = internBe.getValue("PRI_IMAGE_URL", null);
-			System.out.println("internImage: " +internImage);
-	
 	
 			/* Internship Details */
 			String internshipCode = targetBe.getValue("LNK_INTERNSHIP", null);
 			internshipCode = internshipCode.replace("\"", "").replace("[", "").replace("]", "");
 			System.out.println("internshipCode: " +internshipCode);
 			
-			BaseEntity internshipBe = beUtils.getBaseEntityByCode(internshipCode);
-			
-			String internshipName = internshipBe.getValue("PRI_NAME", null);
-			System.out.println("internshipName: " +internshipName);
-			
-			String internshipImage = internshipBe.getValue("PRI_IMAGE_URL", null);
-			System.out.println("internshipImage: " +internshipImage);
-			
+			BaseEntity internshipBe = beUtils.getBaseEntityByCode(internshipCode);		
 			
 			/* Host Company Details */
 			String hcCode = targetBe.getValue("LNK_HOST_COMPANY", null);
@@ -75,13 +73,6 @@ rule "ACCESS_NOTES_APPLICATION"
 			
 			BaseEntity hcBe = beUtils.getBaseEntityByCode(hcCode);
 			
-			String hcName = hcBe.getValue("PRI_NAME", null);
-			System.out.println("hcName: " +hcName);
-			
-			String hcImage = hcBe.getValue("PRI_IMAGE_URL", null);
-			System.out.println("hcImage: " +hcImage);
-			
-			
 			/* Supervisor Details */
 			String superCode = targetBe.getValue("LNK_INTERN_SUPERVISOR", null);
 			superCode = superCode.replace("\"", "").replace("[", "").replace("]", "");
@@ -89,11 +80,6 @@ rule "ACCESS_NOTES_APPLICATION"
 			
 			BaseEntity superBe = beUtils.getBaseEntityByCode(superCode);
 			
-			String superName = superBe.getValue("PRI_NAME", null);
-			System.out.println("superName: " +superName);
-			
-			String superImage = superBe.getValue("PRI_IMAGE_URL", null);
-			System.out.println("superImage: " +superImage);
 			
 			
 			/* Get all notes for Application Set */
@@ -134,90 +120,43 @@ rule "ACCESS_NOTES_APPLICATION"
 			notesMsg.setSend(true);
 			VertxUtils.writeMsg("webcmds", notesMsg);
 
+			/* Send BEs to FE */
+			List<BaseEntity> baseEntitys = new ArrayList<BaseEntity>();
+			baseEntitys.add(targetBe);
+			baseEntitys.add(internBe);
+			baseEntitys.add(internshipBe);
+			baseEntitys.add(hcBe);
+			baseEntitys.add(superBe);
+
+			QDataBaseEntityMessage beMsg = new QDataBaseEntityMessage(baseEntitys);
+			beMsg.setToken(userToken.getToken());
+			beMsg.setReplace(true);
+			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(beMsg));
+
 			
 			/* Send notes to FE */
 			JsonObject jsonApplication = new JsonObject(appNotes);
-			JsonObject jsonIntern = new JsonObject(internNotes);
-			JsonObject jsonInternship = new JsonObject(internshipNotes);
-			JsonObject jsonHC = new JsonObject(hcNotes);
-			JsonObject jsonSuper = new JsonObject(superNotes);
-
-			if(appNotes != null){
 				jsonApplication.put("token", userToken.getToken());
-				jsonApplication.put("code", appCode);
-				jsonApplication.put("title", appName);
-				jsonApplication.put("image", appImage);
-			} else {
-				System.out.println("ERROR: Application Notes failed to send");
-		
-				QCmdMessage msg = new QCmdMessage("TOAST", "ERROR");
-				msg.setMessage("ERROR: Application Notes failed to send");
-				msg.setToken(beUtils.getGennyToken().getToken());
-				msg.setSend(true);
-				VertxUtils.writeMsg("webcmds", msg);
-			}	
-
-			if(internNotes != null){
+			JsonObject jsonIntern = new JsonObject(internNotes);
 				jsonIntern.put("token", userToken.getToken());
-				jsonIntern.put("code", internCode);
-				jsonIntern.put("title", internName);
-				jsonIntern.put("image", internImage);
-			} else {
-				System.out.println("ERROR: Intern Notes failed to send");
-		
-				QCmdMessage msg = new QCmdMessage("TOAST", "ERROR");
-				msg.setMessage("ERROR: Intern Notes failed to send");
-				msg.setToken(beUtils.getGennyToken().getToken());
-				msg.setSend(true);
-				VertxUtils.writeMsg("webcmds", msg);
-			}	
-
-			if(internshipNotes != null){
+			JsonObject jsonInternship = new JsonObject(internshipNotes);
 				jsonInternship.put("token", userToken.getToken());
-				jsonInternship.put("code", internshipCode);
-				jsonInternship.put("title", internshipName);
-				jsonInternship.put("image", internshipImage);
-			} else {
-				System.out.println("ERROR: Internship Notes failed to send");
-		
-				QCmdMessage msg = new QCmdMessage("TOAST", "ERROR");
-				msg.setMessage("ERROR: Internship Notes failed to send");
-				msg.setToken(beUtils.getGennyToken().getToken());
-				msg.setSend(true);
-				VertxUtils.writeMsg("webcmds", msg);
-			}	
-
-			if(hcNotes != null){
+			JsonObject jsonHC = new JsonObject(hcNotes);
 				jsonHC.put("token", userToken.getToken());
-				jsonHC.put("code", hcCode);
-				jsonHC.put("title", hcName);
-				jsonHC.put("image", hcImage);
-			} else {
-				System.out.println("ERROR: HC Notes failed to send");
-		
-				QCmdMessage msg = new QCmdMessage("TOAST", "ERROR");
-				msg.setMessage("ERROR: HC Notes failed to send");
-				msg.setToken(beUtils.getGennyToken().getToken());
-				msg.setSend(true);
-				VertxUtils.writeMsg("webcmds", msg);
-			}	
-
-			if(superNotes != null){
+			JsonObject jsonSuper = new JsonObject(superNotes);
 				jsonSuper.put("token", userToken.getToken());
-				jsonSuper.put("code", superCode);
-				jsonSuper.put("title", superName);
-				jsonSuper.put("image", superImage);
-			} else {
-				System.out.println("ERROR: Supervisor Notes failed to send");
+
+			if(appNotes == null || internNotes == null || internshipNotes == null || hcNotes == null || superNotes == null){
+		
+				System.out.println("ERROR: Some Notes failed to be retrieved");
 		
 				QCmdMessage msg = new QCmdMessage("TOAST", "ERROR");
-				msg.setMessage("ERROR: Supervisor Notes failed to send");
+				msg.setMessage("ERROR: Some Notes failed to be retrieved");
 				msg.setToken(beUtils.getGennyToken().getToken());
 				msg.setSend(true);
 				VertxUtils.writeMsg("webcmds", msg);
 			}	
 
-			
 			VertxUtils.writeMsg("webcmds", jsonApplication.toString());
 			VertxUtils.writeMsg("webcmds", jsonIntern.toString());
 			VertxUtils.writeMsg("webcmds", jsonInternship.toString());
@@ -237,6 +176,7 @@ rule "ACCESS_NOTES_APPLICATION"
 
 		retract(targetBe);
 		retract(key);
+		retract(luggage);
 	end
 
 

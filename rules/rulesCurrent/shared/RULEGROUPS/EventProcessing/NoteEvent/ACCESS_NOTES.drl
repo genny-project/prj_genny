@@ -16,7 +16,7 @@ rule "ACCESS_NOTES"
 	no-loop
 	when
 		targetBe : BaseEntity()
-		key : String(key.equals("INTERN") || key.equals("INTERNSHIP") || key.equals("HOST_CPY") || key.equals("HOST_CPY_REP"))
+		key : String(key.equals("INTERN") || key.equals("INTERNSHIP") || key.equals("HC") || key.equals("HCR"))
 		
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
@@ -66,29 +66,34 @@ rule "ACCESS_NOTES"
 
 				/* Search for Applications */
 				String linkedApps = targetBe.getValue("LNK_APPLICATIONS", null);
+				System.out.println("linkedApps: " +linkedApps);
 				
 				if (linkedApps != null) {
-					System.out.println("linkedApps: " +linkedApps);									
-					linkedApps = linkedApps.replace("\"", "").replace("[", "").replace("]", "");	
-					System.out.println("linkedApps: " +linkedApps);
-					
-					String[] splitApps = linkedApps.split(",");
-					int length = splitApps.length;
-					System.out.println("length: " +length);	
-					
-					BaseEntity[] beCodez = new BaseEntity[length];
-					BaseEntity appBe = null;
-					
-					for (int i = 0; i < length; i++) {
-						appBe = beUtils.getBaseEntityByCode(splitApps[i]);
-						beCodez[i] = appBe;
-						System.out.println("beCodez: " +beCodez[i]);
-					}
-					
-					QDataBaseEntityMessage msgMatches = new QDataBaseEntityMessage(beCodez);
-					msgMatches.setToken(userToken.getToken());
-					msgMatches.setReplace(true);
-					VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msgMatches));
+					if (!linkedApps.equals("[]")) {
+						System.out.println("linkedApps: " +linkedApps);									
+						linkedApps = linkedApps.replace("\"", "").replace("[", "").replace("]", "");	
+						System.out.println("linkedApps: " +linkedApps);
+						
+						String[] splitApps = linkedApps.split(",");
+						int length = splitApps.length;
+						System.out.println("length: " +length);	
+						
+						BaseEntity[] beCodez = new BaseEntity[length];
+						BaseEntity appBe = null;
+						
+						for (int i = 0; i < length; i++) {
+							appBe = beUtils.getBaseEntityByCode(splitApps[i]);
+							beCodez[i] = appBe;
+							System.out.println("beCodez: " +beCodez[i]);
+						}
+						
+						QDataBaseEntityMessage msgMatches = new QDataBaseEntityMessage(beCodez);
+						msgMatches.setToken(userToken.getToken());
+						msgMatches.setReplace(true);
+						VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msgMatches));
+					} else {
+					System.out.println("ERROR: linkedApps []");
+					} 
 				} else {
 					System.out.println("ERROR: linkedApps is Null");
 				} 
