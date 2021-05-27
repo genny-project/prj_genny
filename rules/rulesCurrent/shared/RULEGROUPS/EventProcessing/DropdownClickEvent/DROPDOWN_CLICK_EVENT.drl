@@ -71,7 +71,7 @@ rule "DROPDOWN_CLICK_EVENT"
 
 		if ("LNK_EDU_PROVIDER".equalsIgnoreCase(message.getAttributeCode())) {
 			dropdownSize = 20; /* To accomodate the larger group sizes , like 'Melbourne' */
-		}
+		
 		
 			QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message,dropdownSize);
 
@@ -82,6 +82,7 @@ rule "DROPDOWN_CLICK_EVENT"
 				System.out.println(ruleDetails+" "+drools.getRule().getName()+" Sent dropdown message2 with "+msg.getItems().length+" items");
 			} else {
 				System.out.println(ruleDetails+" "+drools.getRule().getName()+" No Dropdown Data sent");
+			}
 			}
 			retract(message);
 			System.out.println("Retracted message");
