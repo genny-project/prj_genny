@@ -88,9 +88,11 @@ rule "IS_AGENT"
 		String endPoint = GennySettings.projectUrl + "/v7/notes";
 		/*String endPoint = "https://internmatch-cyrus.gada.io/v7/notes";*/
 		
-		String tag = "ni";
+		String tag = "System";
+		String userName = "System";
+		String userImage = "";
 		
-		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), tag, newBe.getCode(), "Added an Agent: " + name, serviceToken.getToken());
+		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), newBe.getCode(), "Completed profile for Agent account", tag, userName, userImage, serviceToken.getToken());
 		
 		System.out.println("I just posted the note");
 		System.out.println("Note endPoint: " +endPoint);

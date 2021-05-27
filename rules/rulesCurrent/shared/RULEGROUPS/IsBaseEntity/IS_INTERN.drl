@@ -200,10 +200,12 @@ rule "IS_INTERN"
 		String endPoint = GennySettings.projectUrl + "/v7/notes";
 		/*String endPoint = "https://internmatch-cyrus.gada.io/v7/notes";*/
 
-		String tag = "ni";
-
-		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), tag, newBe.getCode(), "Added an Intern: " + firstname, serviceToken.getToken());
-
+		String tag = "System";
+		String userName = "System";
+		String userImage = "";
+		
+		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), newBe.getCode(), "Completed profile for Intern account", tag, userName, userImage, serviceToken.getToken());
+		
 		System.out.println("I just posted the note");
 		System.out.println("Note endPoint: " +endPoint);
 		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
