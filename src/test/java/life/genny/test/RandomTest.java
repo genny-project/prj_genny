@@ -129,7 +129,8 @@ public class RandomTest {
 			
 		}
 		
-	
+		QDataBaseEntityMessage q = new QDataBaseEntityMessage();
+		int g = q.getItems().length + 1;
 
 	}
 
