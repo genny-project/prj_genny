@@ -1087,10 +1087,14 @@ kcontext.setVariable(&quot;sessionFacts&quot;,sessionFacts);</tns:script>
               <tns:metaValue><![CDATA[SendSignal]]></tns:metaValue>
             </tns:metaData>
             <tns:onEntry-script scriptFormat="http://www.java.com/java">
-              <tns:script>if (message.getData().getCode().equals(&quot;AUTH_INIT&quot;)) {
+              <tns:script>if (message.getData() == null) {
+	System.out.println(&quot;Data Handler - Send Signal ---> ERROR , null in message.getData()&quot;);
+} else {
+if (message.getData().getCode().equals(&quot;AUTH_INIT&quot;)) {
 	System.out.println(&quot;Found init msg after Data Processor, changing to DUMMY&quot;);
 	message = new QEventMessage(&quot;EVT_MSG&quot;, &quot;DUMMY&quot;);
 	kcontext.setVariable(&quot;message&quot;, message); 
+}
 }</tns:script>
             </tns:onEntry-script>
           </bpmn2:extensionElements>

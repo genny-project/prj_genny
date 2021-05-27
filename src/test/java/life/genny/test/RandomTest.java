@@ -88,11 +88,56 @@ public class RandomTest {
 		super();
 	}
 
+	@Test
+	public void Randoise() {
+		System.out.println("Randomise test");
+
+		VertxUtils.cachedEnabled = false;
+
+		if (beUtils == null) {
+			return;
+		}
+		BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
+		
+		SearchEntity searchBE = new SearchEntity("SBE_DEF", "DEF check")
+				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "DEF_%")
+
+				.addColumn("PRI_CODE", "Name");
+
+		searchBE.setRealm(realm);
+		searchBE.setPageStart(0);
+		searchBE.setPageSize(1000);
+
+		List<BaseEntity> items = beUtils.getBaseEntitys(searchBE);
+
+
+		QEventDropdownMessage message = new QEventDropdownMessage("LNK_CURRENT_SOFTWARE");
+		message.setAttributeCode("LNK_CURRENT_SOFTWARE");
+		message.setQuestionCode("QUE_CURRENT_SOFTWARE");
+		message.getData().setParentCode("GRP_EDU_PROVIDER_SELECTION");
+		message.getData().setTargetCode("PER_086CDF1F-A98F-4E73-9825-0A4CFE2BB943");
+		message.getData().setValue("Wor");
+		
+		if ("LNK_EDU_PROVIDER".equalsIgnoreCase(message.getAttributeCode())) {
+
+			QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message);
+			System.out.println(msg);
+			msg.setToken(userToken.getToken());
+			
+			VertxUtils.writeMsg("webcmds", msg);
+			
+		}
+		
+		QDataBaseEntityMessage q = new QDataBaseEntityMessage();
+		int g = q.getItems().length + 1;
+
+	}
 
 
 	// QEventDropdownMessage
-	@Test
-	public void Randoise() {
+	//@Test
+	public void Randoise3() {
 		System.out.println("Randomise test");
 
 		VertxUtils.cachedEnabled = false;

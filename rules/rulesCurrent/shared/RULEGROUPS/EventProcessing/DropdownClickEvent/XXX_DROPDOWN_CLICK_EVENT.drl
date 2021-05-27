@@ -53,7 +53,7 @@ import life.genny.utils.SearchUtils;
 
 rule "DROPDOWN_CLICK_EVENT"
     ruleflow-group 'EventProcessing'
-		salience 2000
+	salience 2000
     no-loop
     when
 			message : QEventDropdownMessage(  )
@@ -63,25 +63,26 @@ rule "DROPDOWN_CLICK_EVENT"
 			ruleDetails : RuleDetails()
 			beUtils : BaseEntityUtils()
     then
-			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processings : " + message );
+			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + message );
 
-				BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
 
-		BaseEntity targetBe = null;
-
-		System.out.println(ruleDetails+" "+drools.getRule().getName()+" attributeCode = "+message.getAttributeCode()+" question:"+message.getData().getParentCode());
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" attributeCode = "+message.getAttributeCode()+" question:"+message.getQuestionCode());
 		Integer dropdownSize = GennySettings.defaultDropDownPageSize;
 
 		if ("LNK_EDU_PROVIDER".equalsIgnoreCase(message.getAttributeCode())) {
 			dropdownSize = 20; /* To accomodate the larger group sizes , like 'Melbourne' */
 		}
+		
 			QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message,dropdownSize);
 
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" "+msg);
 			msg.setToken(userToken.getToken());
-			VertxUtils.writeMsg("webcmds",msg);
-			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Sent dropdown message2");
-
+			if (msg.getItems().length >1) {
+				VertxUtils.writeMsg("webcmds",msg);
+				System.out.println(ruleDetails+" "+drools.getRule().getName()+" Sent dropdown message2 with "+msg.getItems().length+" items");
+			} else {
+				System.out.println(ruleDetails+" "+drools.getRule().getName()+" No Dropdown Data sent");
+			}
 			retract(message);
 			System.out.println("Retracted message");
 			output.setTypeOfResult("NONE");
