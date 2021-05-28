@@ -69,7 +69,7 @@ rule "DROPDOWN_CLICK_EVENT"
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" attributeCode = "+message.getAttributeCode()+" question:"+message.getQuestionCode());
 		Integer dropdownSize = GennySettings.defaultDropDownPageSize;
 
-		if ("LNK_EDU_PROVIDER".equalsIgnoreCase(message.getAttributeCode())) {
+		if (("LNK_EDU_PROVIDER".equalsIgnoreCase(message.getAttributeCode()))||("LNK_CURRENT_SOFTWARE".equalsIgnoreCase(message.getAttributeCode())) ) {
 			dropdownSize = 20; /* To accomodate the larger group sizes , like 'Melbourne' */
 		
 		
