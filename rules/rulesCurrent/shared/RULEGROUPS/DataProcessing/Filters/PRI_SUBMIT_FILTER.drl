@@ -26,6 +26,7 @@ rule "PRI_SUBMIT_FILTER"
     when
 		beUtils : BaseEntityUtils()
 		serviceToken : GennyToken( code == "PER_SERVICE") 
+		userToken : GennyToken( code != "PER_SERVICE") 
 		answer : Answer( attributeCode == "PRI_SUBMIT" && targetCode matches "SBE_.*" )
 		answersToSave : Answers()
 		output : OutputParam( )
@@ -193,10 +194,45 @@ rule "PRI_SUBMIT_FILTER"
 			} else {
 				System.out.println("filterDetailArray is NULL, not adding new filter");
 			}
+			
+			/* CLEAR DROPDOWNS */
+			Answer answerColumn = new Answer(sourceCode, targetCode, "LNK_FILTER_COLUMN", "");
+			VertxUtils.sendToFrontEnd(userToken, answerColumn);
+
+			Answer answerOption = new Answer(sourceCode, targetCode, "LNK_FILTER_OPTION", "");
+			VertxUtils.sendToFrontEnd(userToken, answerOption);
+
+			Answer answerValueText = new Answer(sourceCode, targetCode, "PRI_FILTER_VALUE_TEXT", "");
+			VertxUtils.sendToFrontEnd(userToken, answerValueText);
+
+			Answer answerValueDatetime = new Answer(sourceCode, targetCode, "PRI_FILTER_VALUE_DATETIME", "");
+			VertxUtils.sendToFrontEnd(userToken, answerValueDatetime);
+
+			Answer answerValueCountry = new Answer(sourceCode, targetCode, "LNK_SELECT_COUNTRY", "");
+			VertxUtils.sendToFrontEnd(userToken, answerValueCountry);
+
+			Answer answerValueState = new Answer(sourceCode, targetCode, "LNK_SELECT_STATE", "");
+			VertxUtils.sendToFrontEnd(userToken, answerValueState);
+
+			System.out.println("Dropdowns cleared!");
+
+			/* CLEAR OPTIONS */
+			BaseEntity optionGrp = new BaseEntity("GRP_FILTER_OPTIONS", "Filter Options");
+			optionGrp.setLinks(new HashSet<>());
+			List<BaseEntity> filterOptionsArray = new ArrayList<>();
+			filterOptionsArray.add(optionGrp);
+
+			QDataBaseEntityMessage filterOptionsMsg = new QDataBaseEntityMessage(filterOptionsArray);
+			filterOptionsMsg.setParentCode(optionGrp.getCode());
+			filterOptionsMsg.setToken(beUtils.getGennyToken().getToken());
+			filterOptionsMsg.setReplace(true);
+			VertxUtils.writeMsg("webcmds", filterOptionsMsg);
+			System.out.println("Filter Options cleared!");
 		
 		} else {
 			System.out.println(drools.getRule().getName()+" sourceCode ("+sourceCode+") not equal to answer.source ("+answer.getSourceCode()+")");
 		}
+
 			
 		output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */
