@@ -31,7 +31,7 @@
 		<jackson-datatype-money>1.2.0</jackson-datatype-money>
 		<jandex.version>1.0.8</jandex.version>
 		<keycloak.test.port>8180</keycloak.test.port>
-		<keycloak.version>12.0.1</keycloak.version>
+		<keycloak.version>13.0.1</keycloak.version>
 		<maven.compiler.parameters>true</maven.compiler.parameters>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
