@@ -309,12 +309,7 @@ System.out.println(&quot;WORKFLOW CHANGE - DRIVING WITH DOM&quot;);
 	kcontext.setVariable(&quot;key&quot;, key);
 	System.out.println(&quot;QUICK_ADD_ENTITY: key = &quot; + key);
 
-	Boolean isHostCpyRep = (Boolean) beUtils.getBaseEntityValue(userToken.getUserCode(), &quot;PRI_IS_HOST_CPY_REP&quot;);
-	if (isHostCpyRep != null &amp;&amp; isHostCpyRep) {
-		questionCode = &quot;QUE_FRESH_&quot; +key + &quot;_GRP&quot;;
-	} else {
-		questionCode = &quot;QUE_&quot; +key + &quot;_GRP&quot;;
-	}
+  questionCode = &quot;QUE_&quot; +key + &quot;_GRP&quot;;
 
 	kcontext.setVariable(&quot;questionCode&quot;, questionCode);
 	System.out.println(&quot;QUICK_ADD_ENTITY: questionCode: &quot; + questionCode);
