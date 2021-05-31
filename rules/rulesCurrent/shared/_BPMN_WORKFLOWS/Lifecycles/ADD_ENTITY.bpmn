@@ -161,23 +161,23 @@
 	newCode = prefix + uuid;
 	newCode = newCode.toUpperCase();	
 
-  if (key.equals(&quot;LOGBOOK&quot;)) {
-			prefix = &quot;JNL_&quot;;
-			System.out.println(&quot;ADD_ENTITY: Adding a &quot; + prefix);
+	if (key.equals(&quot;LOGBOOK&quot;)) {
+		prefix = &quot;JNL_&quot;;
+		System.out.println(&quot;ADD_ENTITY: Adding a &quot; + prefix);
 			
-      String userCode = beUtils.getGennyToken().getUserCode();
-  		userCode = StringUtils.removeStart(userCode,&quot;PER_&quot;);
+		String userCode = beUtils.getGennyToken().getUserCode();
+		userCode = StringUtils.removeStart(userCode,&quot;PER_&quot;);
 
-      LocalDateTime dateTime = LocalDateTime.now();  
+		LocalDateTime dateTime = LocalDateTime.now();  
       
-      String pattern = &quot;yyyyMMddHHmmss&quot;;
-      DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+		String pattern = &quot;yyyyMMddHHmmss&quot;;
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
 
-      String dateTimeString = dateTime.format(formatter);
-      System.out.println(&quot;DateTime code :: &quot; + dateTimeString);  
+		String dateTimeString = dateTime.format(formatter);
+		System.out.println(&quot;DateTime code :: &quot; + dateTimeString);  
 
-      newCode = prefix + userCode + dateTimeString;
-      System.out.println(&quot;journalCode  ::  &quot; + newCode);  
+		newCode = prefix + userCode + dateTimeString;
+		System.out.println(&quot;journalCode  ::  &quot; + newCode);  
 	}
 
 	newBe = beUtils.create(newCode, newCode);
@@ -661,7 +661,7 @@ System.out.println(&quot;beExists = &quot; + beExists);</bpmn2:script>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_3" bpmnElement="Task_3" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="680.0" y="275.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_7">
           <dc:Bounds height="11.0" width="37.0" x="716.0" y="294.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -754,13 +754,13 @@ System.out.println(&quot;beExists = &quot; + beExists);</bpmn2:script>
         <di:waypoint xsi:type="dc:Point" x="603.0" y="299.0"/>
         <di:waypoint xsi:type="dc:Point" x="641.0" y="300.0"/>
         <di:waypoint xsi:type="dc:Point" x="680.0" y="300.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_21"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_11" bpmnElement="SequenceFlow_11" sourceElement="BPMNShape_Task_3" targetElement="BPMNShape_Task_1">
         <di:waypoint xsi:type="dc:Point" x="790.0" y="300.0"/>
         <di:waypoint xsi:type="dc:Point" x="850.0" y="299.0"/>
         <di:waypoint xsi:type="dc:Point" x="910.0" y="299.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_27"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
