@@ -247,7 +247,7 @@ rule "HELPER_LNK_START_END_DATE"
 				/* Prepare Question and Ask */
 				Attribute attr = RulesUtils.getAttribute("PRI_END_DATE", serviceToken);
 				
-				Question endDateQues = new Question("QUE_WORD_START_DATE", "End Date", attr, true);
+				Question endDateQues = new Question("PRI_END_DATE", "End Date", attr, true);
 				Ask endDateAsk = new Ask(endDateQues, sourceCode, targetCode);
 				
 				

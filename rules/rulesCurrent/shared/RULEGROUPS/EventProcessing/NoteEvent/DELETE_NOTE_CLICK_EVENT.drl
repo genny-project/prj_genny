@@ -15,7 +15,7 @@ rule "DELETE_NOTE_CLICK_EVENT"
 		salience 2
     no-loop
     when
-		$message : QEventMessage(data.code matches "ACT_PRI_EVENT_SAVE_NOTE")
+		$message : QEventMessage(data.code matches "ACT_PRI_EVENT_DELETE_NOTE")
 		userToken : GennyToken (code != "PER_SERVICE")
 		serviceToken : GennyToken (code == "PER_SERVICE")
 		output : OutputParam()
