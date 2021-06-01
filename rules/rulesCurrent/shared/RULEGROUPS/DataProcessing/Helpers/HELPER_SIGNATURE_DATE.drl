@@ -320,7 +320,7 @@ rule "HELPER_SIGNATURE_DATE"
 			
 			System.out.println("The supervisorEmail is : " + supervisorEmail);
 			
-			EmailHelper.sendGrid(beUtils, supervisorEmail, null, bccList, subject, template_id, templateData, true);
+			EmailHelper.sendGrid(beUtils, supervisorEmail, null, bccList, subject, template_id, templateData, false);
 			System.out.println("Outcome Life Signature Detected. Sending email to HCR to remind signature");
 		}
 		
