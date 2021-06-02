@@ -91,7 +91,7 @@ rule "HELPER_LNK_BUSINESS_HOURS"
         System.out.println("hpwDbl = " + hpwDbl);
 
 		/* Save Answer */
-		Answer hoursAnswer = new Answer(sourceCode, targetCode, "PRI_HOURS_PER_WEEK", hpwDbl));
+		Answer hoursAnswer = new Answer(sourceCode, targetCode, "PRI_HOURS_PER_WEEK", hpwDbl);
 		beUtils.saveAnswer(hoursAnswer);
 		
 		
