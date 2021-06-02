@@ -60,7 +60,7 @@ rule "HELPER_LNK_INTERNSHIP_DURATION"
 		LocalDate sd = beUtils.getValue("PRI_WORD_START_DATE", null);
 		System.out.println("sd = " +sd);
 
-		String start_date = sd..toString();
+		String start_date = sd.toString();
 		System.out.println("start_date = " +start_date);
 		/*String start_date = beUtils.getBaseEntityValueAsLocalDate(targetBe.getCode(), "PRI_WORD_START_DATE").toString();
 		System.out.println("start_date = " +start_date);*/
