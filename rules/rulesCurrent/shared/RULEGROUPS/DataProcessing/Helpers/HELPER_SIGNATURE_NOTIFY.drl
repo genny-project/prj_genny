@@ -48,88 +48,95 @@ rule "HELPER_SIGNATURE_NOTIFY"
 		System.out.println("targetCode :: " + targetCode);
 		String attributeCode = answer.getAttributeCode();			
 		System.out.println("attributeCode :: " + attributeCode);
-		String value = answer.getValue();
-		System.out.println("value :: " + value);		
 		BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
 		System.out.println("targetBe: " + targetBe);
+
+		String value = answer.getValue();
+		System.out.println("value = " + value);
 		
-		/* Get Intern BE, Name and Email */
-		BaseEntity internBE = beUtils.getBaseEntityFromLNKAttr(targetBe, "PRI_INTERN_CODE");
-		String internName = null;
+		if (value != null) {
+				
+			/* Get Intern BE, Name and Email */
+			BaseEntity internBE = beUtils.getBaseEntityFromLNKAttr(targetBe, "PRI_INTERN_CODE");
+			String internName = null;
+			
+			if (internBE != null) {
+				internName = internBE.getValue("PRI_FIRSTNAME",null);
+			} else {
+				System.out.println("internBE is NULL");
+			}
+			System.out.println("internBE = " + internBE);
+			System.out.println("internName = " + internName);
+			
+			/* Get Supervisor BE and Name */
+			BaseEntity supervisorBE = beUtils.getBaseEntityFromLNKAttr(targetBe, "LNK_INTERN_SUPERVISOR");
+			String supervisorName = null;
+
+			if (supervisorBE != null) {
+				supervisorName = supervisorBE.getValue("PRI_FIRSTNAME",null);
+			} else {
+				System.out.println("supervisorBE is NULL");
+			}
+			System.out.println("supervisorBE = " + supervisorBE);
+			System.out.println("supervisorName = " + supervisorName);
+			
+			/* Get Internship Entity */
+			BaseEntity internshipBE = beUtils.getBaseEntityFromLNKAttr(targetBe, "LNK_INTERNSHIP");
+			String internshipName = null;
+
+			if (internshipBE != null) {
+				internshipName = internshipBE.getValue("PRI_NAME",null);
+			} else {
+				System.out.println("internshipBE is NULL");
+			}
+			System.out.println("internshipBE = " + internshipBE);
+			System.out.println("internshipName = " + internshipName);
+
+			/* Gather Host Company details */
+			BaseEntity companyBE = beUtils.getBaseEntityFromLNKAttr(targetBe, "LNK_HOST_COMPANY");
+			String hostCompanyName = null;
+
+			if (companyBE != null) {
+				hostCompanyName = companyBE.getValue("PRI_NAME",null);
+			} else {
+				System.out.println("companyBE is NULL");
+			}
+			System.out.println("companyBE = " + companyBE);
+			System.out.println("hostCompanyName = " + hostCompanyName);
+			
+			/* Init Data for Email */
+			BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
+
+			String url = GennySettings.projectUrl+"/home/UVVFX1RBQkxFX1JFU1VMVFNfR1JQ/UVVFX1RBQkxFX0xBWllfTE9BRA==";
+			System.out.println("url = " + url);
+
+			/* Send Confirmation of HC Rep Signature to Agent */
+			HashMap<String, String> templateData = new HashMap<String, String>();
+			templateData.put("url", url);
+			templateData.put("intern", internName);
+			templateData.put("internshipName", internshipName);
+			templateData.put("hostCompanyName", hostCompanyName);
+			templateData.put("hostCompanyRepName", supervisorName);
+			templateData.put("agentName", "Outcome Agent");
+
+			String templateId = null;
+
+			if (attributeCode.startsWith("PRI_AGR_DOC_INT_SIGNATURE")) {
+				/* Intern has signed */
+				templateId = "d-c0eb435cbc844647a20d6ecfe165998f";
+
+			} else if (attributeCode.startsWith("PRI_AGR_DOC_HC_SIGNATURE")) {
+				/* HC Rep has signed */
+				templateId = "d-550f8a48d8a1482889b4c547bf581552";
+			}
+
+			/* Send Email to Agent notifying of Signature */
+			EmailHelper.sendGrid(beUtils, "internmatch@outcomelife.com.au", "", templateId, templateData, true);
 		
-		if (internBE != null) {
-			internName = internBE.getValue("PRI_FIRSTNAME",null);
 		} else {
-			System.out.println("internBE is NULL");
-		}
-		System.out.println("internBE = " + internBE);
-		System.out.println("internName = " + internName);
-		
-		/* Get Supervisor BE and Name */
-		BaseEntity supervisorBE = beUtils.getBaseEntityFromLNKAttr(targetBe, "LNK_INTERN_SUPERVISOR");
-		String supervisorName = null;
-
-		if (supervisorBE != null) {
-			supervisorName = supervisorBE.getValue("PRI_FIRSTNAME",null);
-		} else {
-			System.out.println("supervisorBE is NULL");
-		}
-		System.out.println("supervisorBE = " + supervisorBE);
-		System.out.println("supervisorName = " + supervisorName);
-		
-		/* Get Internship Entity */
-		BaseEntity internshipBE = beUtils.getBaseEntityFromLNKAttr(targetBe, "LNK_INTERNSHIP");
-		String internshipName = null;
-
-		if (internshipBE != null) {
-			internshipName = internshipBE.getValue("PRI_NAME",null);
-		} else {
-			System.out.println("internshipBE is NULL");
-		}
-		System.out.println("internshipBE = " + internshipBE);
-		System.out.println("internshipName = " + internshipName);
-
-		/* Gather Host Company details */
-		BaseEntity companyBE = beUtils.getBaseEntityFromLNKAttr(targetBe, "LNK_HOST_COMPANY");
-		String hostCompanyName = null;
-
-		if (companyBE != null) {
-			hostCompanyName = companyBE.getValue("PRI_NAME",null);
-		} else {
-			System.out.println("companyBE is NULL");
-		}
-		System.out.println("companyBE = " + companyBE);
-		System.out.println("hostCompanyName = " + hostCompanyName);
-		
-		/* Init Data for Email */
-		BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
-
-		String url = GennySettings.projectUrl+"/home/UVVFX1RBQkxFX1JFU1VMVFNfR1JQ/UVVFX1RBQkxFX0xBWllfTE9BRA==";
-		System.out.println("url = " + url);
-
-		/* Send Confirmation of HC Rep Signature to Agent */
-		HashMap<String, String> templateData = new HashMap<String, String>();
-		templateData.put("url", url);
-		templateData.put("intern", internName);
-		templateData.put("internshipName", internshipName);
-		templateData.put("hostCompanyName", hostCompanyName);
-		templateData.put("hostCompanyRepName", supervisorName);
-		templateData.put("agentName", "Outcome Agent");
-
-		String templateId = null;
-
-		if (attributeCode.startsWith("PRI_AGR_DOC_INT_SIGNATURE")) {
-			/* Intern has signed */
-			templateId = "d-c0eb435cbc844647a20d6ecfe165998f";
-
-		} else if (attributeCode.startsWith("PRI_AGR_DOC_HC_SIGNATURE")) {
-			/* HC Rep has signed */
-			templateId = "d-550f8a48d8a1482889b4c547bf581552";
+			System.out.println("value is NULL, not sending confirmation email!");
 		}
 
-		/* Send Email to Agent notifying of Signature */
-		EmailHelper.sendGrid(beUtils, "internmatch@outcomelife.com.au", "", templateId, templateData, true);
-		
 		/* Dont display anything new */
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  
