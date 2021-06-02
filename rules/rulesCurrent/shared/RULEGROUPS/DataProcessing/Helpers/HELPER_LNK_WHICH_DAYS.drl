@@ -44,12 +44,13 @@ rule "HELPER_LNK_WHICH_DAYS"
 		
 		String value = answer.getValue();
 		System.out.println("value :: " + value);
+		BaseEntity targetBe = null;
 		
 		if(value != null){
 			List<String> daysList = new ArrayList<>();
 			String codes = beUtils.cleanUpAttributeValue(value);
 			for (String code : codes.split(",")) {
-				BaseEntity targetBe = beUtils.getBaseEntityByCode(code);
+				targetBe = beUtils.getBaseEntityByCode(code);
 				if(targetBe != null){
 					String name = targetBe.getValue("PRI_NAME", null);		
 					if(name != null) daysList.add(name);
