@@ -49,9 +49,9 @@ rule "HELPER_LNK_WHICH_DAYS"
 			List<String> daysList = new ArrayList<>();
 			String codes = beUtils.cleanUpAttributeValue(value);
 			for (String code : codes.split(",")) {
-				BaseEntity be = beUtils.getBaseEntityByCode(code);
-				if(be != null){
-					String name = be.getValue("PRI_NAME", null);		
+				BaseEntity targetBe = beUtils.getBaseEntityByCode(code);
+				if(targetBe != null){
+					String name = btargetBee.getValue("PRI_NAME", null);		
 					if(name != null) daysList.add(name);
 				}
 			}
@@ -61,7 +61,7 @@ rule "HELPER_LNK_WHICH_DAYS"
 			VertxUtils.sendToFrontEnd(userToken, ans);
 		}
 
-		String start_date = beUtils.getBaseEntityValueAsLocalDate(targetBe.getCode(), attributeStr).toString();
+		String start_date = beUtils.getBaseEntityValueAsLocalDate(targetBe.getCode(), "PRI_WORD_START_DATE").toString();
 		System.out.println("start_date = " +start_date);
 
 		String durationStr = targetBe.getValue("PRI_ASSOC_DURATION", null);

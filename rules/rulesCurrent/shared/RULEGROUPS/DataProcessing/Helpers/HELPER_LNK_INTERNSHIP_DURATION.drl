@@ -47,17 +47,18 @@ rule "HELPER_LNK_INTERNSHIP_DURATION"
 		String code = beUtils.cleanUpAttributeValue(value);
 		System.out.println("code  :: " + code);
 
-		BaseEntity be = beUtils.getBaseEntityByCode(code);
+		BaseEntity targetBe = beUtils.getBaseEntityByCode(code);
+		String durationStr = "";
 		if(be != null){
-			String durationStr = be.getValue("PRI_NAME", null);		
-			if(name != null){
+			durationStr = targetBe.getValue("PRI_NAME", null);		
+			if(durationStr != null){
 				Answer ans = new Answer(sourceCode, targetCode, "PRI_ASSOC_DURATION", durationStr);
 				beUtils.saveAnswer(ans);
 				VertxUtils.sendToFrontEnd(userToken, ans);
 			}
 		}
 
-		String start_date = beUtils.getBaseEntityValueAsLocalDate(targetBe.getCode(), attributeStr).toString();
+		String start_date = beUtils.getBaseEntityValueAsLocalDate(targetBe.getCode(), "PRI_WORD_START_DATE").toString();
 		System.out.println("start_date = " +start_date);
 		
 		String wdsStr = targetBe.getValue("PRI_WHICH_DAYS_STRIPPED", null);
