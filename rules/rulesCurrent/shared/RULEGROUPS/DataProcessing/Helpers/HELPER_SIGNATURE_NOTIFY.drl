@@ -109,6 +109,7 @@ rule "HELPER_SIGNATURE_NOTIFY"
 
 		/* Send Confirmation of HC Rep Signature to Agent */
 		HashMap<String, String> templateData = new HashMap<String, String>();
+		templateData.put("url", url);
 		templateData.put("intern", internName);
 		templateData.put("internshipName", internshipName);
 		templateData.put("hostCompanyName", hostCompanyName);
