@@ -57,6 +57,10 @@ rule "HELPER_LNK_INTERNSHIP_DURATION"
 				VertxUtils.sendToFrontEnd(userToken, ans);
 			}
 		}
+
+		Optional<EntityAttribute> ea = targetBe.findEntityAttribute(attributeCode);
+		System.out.println(ea);
+
 		LocalDate sdc = beUtils.getBaseEntityValueAsLocalDate(targetBe.getCode(), "PRI_WORD_START_DATE");
 		System.out.println("sdc = " +sdc);
 
