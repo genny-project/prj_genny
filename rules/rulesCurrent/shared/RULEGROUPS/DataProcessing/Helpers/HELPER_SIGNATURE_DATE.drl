@@ -278,7 +278,7 @@ rule "HELPER_SIGNATURE_DATE"
 			
 			/* Send Confirmation of Intern Signature to Agent */
 			templateData.put("agentName", "Outcome Agent");
-			EmailHelper.sendGrid(beUtils, agentEmail, "", "d-c0eb435cbc844647a20d6ecfe165998f", templateData, false);
+			EmailHelper.sendGrid(beUtils, agentEmail, "", "d-c0eb435cbc844647a20d6ecfe165998f", templateData, true);
 		
 		}
 		
@@ -312,7 +312,7 @@ rule "HELPER_SIGNATURE_DATE"
 			templateData.put("hostCompanyRepName", supervisorName);
 			templateData.put("agentName", "Outcome Agent");
 
-			EmailHelper.sendGrid(beUtils, agentEmail, "", "d-550f8a48d8a1482889b4c547bf581552", templateData, false);
+			EmailHelper.sendGrid(beUtils, agentEmail, "", "d-550f8a48d8a1482889b4c547bf581552", templateData, true);
 		}
 		
 		if (attributeCode.startsWith("PRI_OUTCOME_") || attributeCode.startsWith("PRI_AGR_DOC_OUTCOME_")) {
