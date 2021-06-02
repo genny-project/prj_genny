@@ -60,7 +60,7 @@ rule "HELPER_LNK_INTERNSHIP_DURATION"
 		}
 
 
-		targetBe = beUtils.getBaseEntityByCode(code);
+		targetBe = beUtils.getBaseEntityByCode(targetCode);
 		System.out.println("targetBe = " +targetBe);
 
 		LocalDate sdc = beUtils.getBaseEntityValueAsLocalDate("APP_1A262724-A988-4B13-96C5-C113FDA2DDCD", "PRI_WORD_START_DATE");
