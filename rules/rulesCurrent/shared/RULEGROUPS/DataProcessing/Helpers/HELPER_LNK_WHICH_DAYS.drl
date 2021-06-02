@@ -51,7 +51,7 @@ rule "HELPER_LNK_WHICH_DAYS"
 			for (String code : codes.split(",")) {
 				BaseEntity targetBe = beUtils.getBaseEntityByCode(code);
 				if(targetBe != null){
-					String name = btargetBee.getValue("PRI_NAME", null);		
+					String name = targetBe.getValue("PRI_NAME", null);		
 					if(name != null) daysList.add(name);
 				}
 			}

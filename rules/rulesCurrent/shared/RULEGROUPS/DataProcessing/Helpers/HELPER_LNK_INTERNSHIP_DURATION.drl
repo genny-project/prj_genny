@@ -49,7 +49,7 @@ rule "HELPER_LNK_INTERNSHIP_DURATION"
 
 		BaseEntity targetBe = beUtils.getBaseEntityByCode(code);
 		String durationStr = "";
-		if(be != null){
+		if(targetBe != null){
 			durationStr = targetBe.getValue("PRI_NAME", null);		
 			if(durationStr != null){
 				Answer ans = new Answer(sourceCode, targetCode, "PRI_ASSOC_DURATION", durationStr);
