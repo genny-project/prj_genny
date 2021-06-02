@@ -253,7 +253,7 @@ rule "HELPER_SIGNATURE_DATE"
 
 		
 		
-		if (attributeCode.startsWith("PRI_INTERN_")) {
+		if (attributeCode.startsWith("PRI_INTERN")) {
 			
 			String urlParentCode = "SBE_INTERNS_"+userToken.getSessionCode().toUpperCase();
 			String urlCode = "ACT_PRI_EVENT_VIEW";
