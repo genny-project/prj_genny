@@ -260,8 +260,7 @@ rule "HELPER_LNK_START_END_DATE"
 					VertxUtils.writeMsg("webcmds", endDateAskMsgDisable);
 					
 					
-					/* Send Answer to Front End */
-					VertxUtils.sendToFrontEnd(userToken, endDateAnswer);
+					
 			
 					
 					/* Send enable for this Ask */
@@ -270,6 +269,9 @@ rule "HELPER_LNK_START_END_DATE"
 					QDataAskMessage endDateAskMsgEnable = new QDataAskMessage(endDateAsk);
 					endDateAskMsgEnable.setToken(userToken.getToken());
 					VertxUtils.writeMsg("webcmds", endDateAskMsgEnable);
+
+					/* Send Answer to Front End */
+					VertxUtils.sendToFrontEnd(userToken, endDateAnswer);
 				}
 			}
 		} else {
