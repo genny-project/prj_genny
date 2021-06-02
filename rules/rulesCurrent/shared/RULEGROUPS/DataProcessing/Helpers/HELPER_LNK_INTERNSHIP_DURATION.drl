@@ -61,7 +61,7 @@ rule "HELPER_LNK_INTERNSHIP_DURATION"
 		Optional<EntityAttribute> ea = targetBe.findEntityAttribute(attributeCode);
 		System.out.println(ea);
 
-		LocalDate sdc = beUtils.getBaseEntityValueAsLocalDate(targetBe.getCode(), "PRI_WORD_START_DATE");
+		LocalDate sdc = beUtils.getBaseEntityValueAsLocalDate("APP_1A262724-A988-4B13-96C5-C113FDA2DDCD", "PRI_WORD_START_DATE");
 		System.out.println("sdc = " +sdc);
 
 		String start_date = sdc.toString();
