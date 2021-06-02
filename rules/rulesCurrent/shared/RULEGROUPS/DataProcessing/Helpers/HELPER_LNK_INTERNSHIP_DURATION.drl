@@ -50,7 +50,8 @@ rule "HELPER_LNK_INTERNSHIP_DURATION"
 		BaseEntity targetBe = beUtils.getBaseEntityByCode(code);
 		String durationStr = "";
 		if(targetBe != null){
-			durationStr = targetBe.getValue("PRI_NAME", null);		
+			durationStr = targetBe.getValue("PRI_NAME", null);
+			System.out.println("durationStr = " +durationStr);		
 			if(durationStr != null){
 				Answer ans = new Answer(sourceCode, targetCode, "PRI_ASSOC_DURATION", durationStr);
 				beUtils.saveAnswer(ans);
@@ -58,17 +59,14 @@ rule "HELPER_LNK_INTERNSHIP_DURATION"
 			}
 		}
 
-		Optional<EntityAttribute> ea = targetBe.findEntityAttribute("PRI_START_DATE");
-		System.out.println(ea);
 
 		targetBe = beUtils.getBaseEntityByCode(targetBe.getCode());
+
 		LocalDate sdc = beUtils.getBaseEntityValueAsLocalDate("APP_1A262724-A988-4B13-96C5-C113FDA2DDCD", "PRI_WORD_START_DATE");
 		System.out.println("sdc = " +sdc);
 
 		String start_date = sdc.toString();
 		System.out.println("start_date = " +start_date);
-		/*String start_date = beUtils.getBaseEntityValueAsLocalDate(targetBe.getCode(), "PRI_WORD_START_DATE").toString();
-		System.out.println("start_date = " +start_date);*/
 		
 		String wdsStr = targetBe.getValue("PRI_WHICH_DAYS_STRIPPED", null);
 		System.out.println("wdsStr = " + wdsStr);
