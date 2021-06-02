@@ -44,16 +44,17 @@ rule "HELPER_LNK_WHICH_DAYS"
 		
 		String value = answer.getValue();
 		System.out.println("value :: " + value);
-		BaseEntity targetBe = null;
-		
+		BaseEntity targetBe = null;		
+		String wdsStr = "";
+
 		if(value != null){
 			List<String> daysList = new ArrayList<>();
 			String codes = beUtils.cleanUpAttributeValue(value);
 			for (String code : codes.split(",")) {
 				targetBe = beUtils.getBaseEntityByCode(code);
 				if(targetBe != null){
-					String name = targetBe.getValue("PRI_NAME", null);		
-					if(name != null) daysList.add(name);
+					String wdsStr = targetBe.getValue("PRI_NAME", null);		
+					if(wdsStr != null) daysList.add(wdsStr);
 				}
 			}
 			String days = beUtils.cleanUpAttributeValue(daysList.toString());
@@ -72,8 +73,8 @@ rule "HELPER_LNK_WHICH_DAYS"
 			String start_date = sdc.toString();
 			System.out.println("start_date = " +start_date);
 			
-			String wdsStr = targetBe.getValue("PRI_WHICH_DAYS_STRIPPED", null);
-			System.out.println("wdsStr = " + wdsStr);
+			String durationStr = targetBe.getValue("PRI_ASSOC_DURATION", null);
+			System.out.println("durationStr = " + durationStr);
 
 			String nullValue = null;
 				
