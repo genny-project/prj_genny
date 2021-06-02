@@ -131,7 +131,7 @@ rule "HELPER_SIGNATURE_NOTIFY"
 			}
 
 			/* Send Email to Agent notifying of Signature */
-			EmailHelper.sendGrid(beUtils, "internmatch@outcomelife.com.au", "", templateId, templateData, true);
+			EmailHelper.sendGrid(beUtils, "internmatch@outcomelife.com.au", "", templateId, templateData, false);
 		
 		} else {
 			System.out.println("value is NULL, not sending confirmation email!");
