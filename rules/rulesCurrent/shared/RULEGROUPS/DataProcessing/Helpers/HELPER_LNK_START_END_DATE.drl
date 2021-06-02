@@ -94,8 +94,6 @@ rule "HELPER_LNK_START_END_DATE"
 				
 				String wdsStr = targetBe.getValue("PRI_WHICH_DAYS_STRIPPED", null);
 				System.out.println("wdsStr = " + wdsStr);
-				wdsStr = wdsStr.replace(" ", "");
-				System.out.println("wdsStr = " + wdsStr);
 				
 				String nullValue = null;
 				
