@@ -70,7 +70,7 @@ rule "HELPER_LNK_START_END_DATE"
 		String attribute = answer.getAttributeCode();
 		System.out.println("attribute :: " + attribute);
 		
-		if (!value.eqauls("")) {
+		if (!value.equals("")) {
 			String start_date = value.substring(0, 10);
 			System.out.println("start_date  :: " + start_date);
 			
