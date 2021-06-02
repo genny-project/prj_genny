@@ -60,11 +60,7 @@ rule "HELPER_LNK_BUSINESS_HOURS"
  		BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
  		
  		/* Business hours */
- 		String lnkBH = targetBe.getValue("LNK_BUSINESS_HOURS", null);
-        lnkBH = lnkBH.replace("[","").replace("]","");
-        System.out.println("lnkBH = " + lnkBH);	
-      
-        String[] splt = lnkBH.split(",");
+        String[] code = lnkBH.split(",");
         
         String startStr = splt[0];
         String endStr = splt[1];
