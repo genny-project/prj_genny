@@ -30,14 +30,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.time.ZoneId;
 
-rule "HELPER_LNK_START_END_DATE"
+rule "SET_START_END_DATE"
 	ruleflow-group 'DataProcessing'
 	salience 5000
 	no-loop
 	when
 		beUtils : BaseEntityUtils()
 		/*answer : Answer( attributeCode == "PRI_INTERNSHIP_START_DATE" || attributeCode == "PRI_WORD_START_DATE")*/
-		answer : Answer( attributeCode == "PRI_WORD_START_DATE")
+		answer : Answer( attributeCode == "PRI_WORD_START_DATE" || attributeCode == "LNK_WHICH_DAYS")
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		userToken : GennyToken( code != "PER_SERVICE")
 	then
