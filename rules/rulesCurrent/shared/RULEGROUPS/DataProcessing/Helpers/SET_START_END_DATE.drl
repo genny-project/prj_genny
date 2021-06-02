@@ -37,7 +37,7 @@ rule "SET_START_END_DATE"
 	when
 		beUtils : BaseEntityUtils()
 		/*answer : Answer( attributeCode == "PRI_INTERNSHIP_START_DATE" || attributeCode == "PRI_WORD_START_DATE")*/
-		answer : Answer( attributeCode == "PRI_WORD_START_DATE" || attributeCode == "LNK_WHICH_DAYS")
+		answer : Answer( attributeCode == "PRI_WORD_START_DATE")
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		userToken : GennyToken( code != "PER_SERVICE")
 	then
