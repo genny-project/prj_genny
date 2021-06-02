@@ -57,9 +57,13 @@ rule "HELPER_LNK_INTERNSHIP_DURATION"
 				VertxUtils.sendToFrontEnd(userToken, ans);
 			}
 		}
+		LocalDate sd = beUtils.getValue("PRI_WORD_START_DATE", null);
+		System.out.println("sd = " +sd);
 
-		String start_date = beUtils.getBaseEntityValueAsLocalDate(targetBe.getCode(), "PRI_WORD_START_DATE").toString();
+		String start_date = sd..toString();
 		System.out.println("start_date = " +start_date);
+		/*String start_date = beUtils.getBaseEntityValueAsLocalDate(targetBe.getCode(), "PRI_WORD_START_DATE").toString();
+		System.out.println("start_date = " +start_date);*/
 		
 		String wdsStr = targetBe.getValue("PRI_WHICH_DAYS_STRIPPED", null);
 		System.out.println("wdsStr = " + wdsStr);
