@@ -54,7 +54,7 @@ rule "PRI_ADDRESS_FULL"
 				BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
 				if(targetBe != null){
 
-					Optional<LocalDate> optAddressExtra = targetBe.getValue("PRI_ADDRESS_EXTRA");
+					Optional<String> optAddressExtra = targetBe.getValue("PRI_ADDRESS_EXTRA");
 					if (optAddressExtra.isPresent()){
 						System.out.println("PRI_ADDRESS_EXTRA is present");
 						String addressExtra = optAddressExtra.get();
@@ -62,7 +62,7 @@ rule "PRI_ADDRESS_FULL"
 
 						System.out.println("addressExtra  :: " + addressExtra);
 						System.out.println("address  :: " + address);
-						
+
 					}else{
 						System.out.println("PRI_ADDRESS_EXTRA is NOT present");
 					}
