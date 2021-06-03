@@ -12,8 +12,6 @@ import java.util.Map;
 import java.util.HashMap;
 import life.genny.utils.VertxUtils;
 import life.genny.qwandautils.JsonUtils;
-
-
 import java.util.List;
 import java.util.ArrayList;
 
@@ -49,7 +47,28 @@ rule "PRI_ADDRESS_FULL"
 				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_CITY", addressDataJson.getString("suburb"),false,true));
 				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", addressDataJson.getString("state"),false,true));
 				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_ADDRESS1", addressDataJson.getString("street_address"),false,true));
-				Answer addressFull = new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", addressDataJson.getString("full_address"),false,false);
+
+				String address = addressDataJson.getString("full_address");
+				
+				/* check if PRI_ADDRESS_EXTRA exists */
+				BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
+				if(targetBe != null){
+
+					Optional<LocalDate> optAddressExtra = targetBe.getValue("PRI_ADDRESS_EXTRA");
+					if (optAddressExtra.isPresent()){
+						System.out.println("PRI_ADDRESS_EXTRA is present");
+						String addressExtra = optAddressExtra.get();
+						address = addressExtra + "/" + address;
+
+						System.out.println("addressExtra  :: " + addressExtra);
+						System.out.println("address  :: " + address);
+						
+					}else{
+						System.out.println("PRI_ADDRESS_EXTRA is NOT present");
+					}
+				}
+
+				Answer addressFull = new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", address, false, false);
 				answersToSave.add(addressFull);
 				
 				
