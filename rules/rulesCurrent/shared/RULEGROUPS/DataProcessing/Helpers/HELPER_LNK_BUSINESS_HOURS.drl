@@ -90,8 +90,13 @@ rule "HELPER_LNK_BUSINESS_HOURS"
         Double hpwDbl = dpwDbl * businessHrs;
         System.out.println("hpwDbl = " + hpwDbl);
 
+		String hpwStr=Double.toString(hpwDbl);  
+		System.out.println("hpwStr = " + hpwStr);
+
+
+
 		/* Save Answer */
-		Answer hoursAnswer = new Answer(sourceCode, targetCode, "PRI_HOURS_PER_WEEK", hpwDbl);
+		Answer hoursAnswer = new Answer(sourceCode, targetCode, "PRI_HOURS_PER_WEEK", hpwStr);
 		beUtils.saveAnswer(hoursAnswer);
 		
 		
