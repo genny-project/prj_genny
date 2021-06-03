@@ -94,8 +94,7 @@ rule "HELPER_LNK_BUSINESS_HOURS"
 		Answer hoursAnswer = new Answer(sourceCode, targetCode, "PRI_HOURS_PER_WEEK", hpwDbl);
 		beUtils.saveAnswer(hoursAnswer);
 		
-		/* Send Answer to Front End */
-		VertxUtils.sendToFrontEnd(userToken, hoursAnswer);
+		
 		
 		/* Prepare Question and Ask */
 		Attribute attr = RulesUtils.getAttribute("PRI_HOURS_PER_WEEK", serviceToken);
@@ -121,5 +120,4 @@ rule "HELPER_LNK_BUSINESS_HOURS"
 		VertxUtils.writeMsg("webcmds", hoursAskMsgEnable);
 
 		
-       
 end
