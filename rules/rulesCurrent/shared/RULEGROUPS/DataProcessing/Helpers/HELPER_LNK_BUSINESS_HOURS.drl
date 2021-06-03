@@ -108,14 +108,16 @@ rule "HELPER_LNK_BUSINESS_HOURS"
 		hoursAskMsgDisable.setToken(userToken.getToken());
 		VertxUtils.writeMsg("webcmds", hoursAskMsgDisable);
 		
+		/* Send Answer to Front End */
+		VertxUtils.sendToFrontEnd(userToken, hoursAnswer);
+
 		/* Send enable for this Ask */
 		hoursAsk.setDisabled(false);
-		
+	
 		QDataAskMessage hoursAskMsgEnable = new QDataAskMessage(hoursAsk);
 		hoursAskMsgEnable.setToken(userToken.getToken());
 		VertxUtils.writeMsg("webcmds", hoursAskMsgEnable);
 
-		/* Send Answer to Front End */
-		VertxUtils.sendToFrontEnd(userToken, hoursAnswer);
+		
        
 end
