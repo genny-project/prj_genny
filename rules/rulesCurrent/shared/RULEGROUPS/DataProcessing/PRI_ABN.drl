@@ -52,7 +52,7 @@ rule "PRI_ABN"
 			System.out.println("abnCount   ::   " + abnCount);
 
 			if(abnCount > 0){
-				String message = "A company with " +  abn + " already exists. Please use a unique ABN.";
+				String message = "A company with this ABN " +  abn + " already been registered, go to the Host Companies table to see this account.";
 				Answer feedbackAnswer = new Answer(answer.getSourceCode(),answer.getTargetCode(),answer.getAttributeCode(),"");
 				VertxUtils.sendFeedbackError(beUtils.getGennyToken(),feedbackAnswer,message);
 				System.out.println("Sent not unique ABN error message to frontend");	
