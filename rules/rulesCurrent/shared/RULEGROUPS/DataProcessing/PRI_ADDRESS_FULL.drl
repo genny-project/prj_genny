@@ -57,7 +57,7 @@ rule "PRI_ADDRESS_FULL"
 					Optional<String> optAddressExtra = targetBe.getValue("PRI_ADDRESS_EXTRA");
 					if (optAddressExtra.isPresent()){
 						System.out.println("PRI_ADDRESS_EXTRA is present");
-						String addressExtra = optAddressExtra.get();
+						String addressExtra = optAddressExtra.get().trim();
 						address = addressExtra + "/" + address;
 
 						System.out.println("addressExtra  :: " + addressExtra);
