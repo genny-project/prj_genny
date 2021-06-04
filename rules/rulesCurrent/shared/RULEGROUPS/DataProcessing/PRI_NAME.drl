@@ -23,7 +23,7 @@ import life.genny.utils.DropdownUtils;
 import java.util.List;
 import java.util.ArrayList;
 
-rule "PRI_NAME"
+rule "AUTOFILL_NAME"
 	ruleflow-group 'DataProcessing'
 	salience 5000
 	when
@@ -34,8 +34,61 @@ rule "PRI_NAME"
 		userToken : GennyToken( code != "PER_SERVICE")
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
-        Answer nameAnswer = new Answer(answer.getSourceCode(), answer.getTargetCode(), answer.getAttributeCode(), answer.getValue());
-        beUtils.saveAnswer(nameAnswer);
-        VertxUtils.sendToFrontEnd(userToken, nameAnswer);
+
+        String targetCode = answer.getTargetCode();
+		System.out.println("targetCode   ::   " + targetCode);
+
+		String attributeCode = answer.getAttributeCode();
+		System.out.println("attributeCode   ::   " + attributeCode);
+
+        if(targetCode == null){
+			System.out.println("Answer message doesnt have targetCode");
+			return;
+		}
+
+		BaseEntity companyBe = beUtils.getBaseEntityByCode(targetCode);
+		if(companyBe == null){
+			System.out.println("companyBe is null");
+			return;
+		}
+
+		String abn = companyBe.getValue("PRI_ABN", null);
+		System.out.println("abn  ::  " + abn);
+
+		if(abn == null){
+			System.out.println("ABN is NULL. Saving PRI_NAME and PRI_LEGAL_NAME");
+
+			Answer nameAnswer = new Answer(answer.getSourceCode(), answer.getTargetCode(), answer.getAttributeCode(), answer.getValue());
+			beUtils.saveAnswer(nameAnswer);
+			VertxUtils.sendToFrontEnd(userToken, nameAnswer);
+		}
+
+		if (abn != null && QwandaUtils.isValidAbnFormat(abn)) {
+			System.out.println("ABN is valid");
+
+			/* if abn is valid, check if the abn exists in the system */
+			SearchEntity searchBE = new SearchEntity("SBE_UNIQUE_ABN", "Unique Abn")
+					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "CPY_%") 
+					.addFilter("PRI_ABN", SearchEntity.StringFilter.EQUAL, abn) 
+					.addColumn("PRI_NAME", "Name")
+					.setPageStart(0)
+					.setPageSize(100);
+			
+			searchBE.setRealm(beUtils.getServiceToken().getRealm());
+
+			TableUtils tableUtils = new TableUtils(beUtils);
+			Long abnCount = tableUtils.performCount(searchBE);
+			System.out.println("abnCount   ::   " + abnCount);
+
+			if(abnCount > 0){
+				System.out.println("ABN is NOT UNIQUE. Not saving PRI_NAME and PRI_LEGAL_NAME");
+			}else{
+				Answer nameAnswer = new Answer(answer.getSourceCode(), answer.getTargetCode(), answer.getAttributeCode(), answer.getValue());
+				beUtils.saveAnswer(nameAnswer);
+				VertxUtils.sendToFrontEnd(userToken, nameAnswer);
+			}
+		}else{
+			System.out.println("ABN is NOT valid. Not saving PRI_NAME and PRI_LEGAL_NAME");
+		}
         retract(answer);
 end
