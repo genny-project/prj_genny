@@ -40,60 +40,71 @@ rule "AUTOFILL_NAME"
 		Boolean inferred = answer.getInferred();
 		System.out.println("inferred   ::   " + inferred);
 
-        String targetCode = answer.getTargetCode();
-		System.out.println("targetCode   ::   " + targetCode); 
-
-		String attributeCode = answer.getAttributeCode();
-		System.out.println("attributeCode   ::   " + attributeCode);
-
-        if(targetCode == null){
-			System.out.println("Answer message doesnt have targetCode");
+		 if(inferred == null){
+			System.out.println("Answer message doesnt have inferred set to true");
 			return;
 		}
-
-		BaseEntity companyBe = beUtils.getBaseEntityByCode(targetCode);
-		if(companyBe == null){
-			System.out.println("companyBe is null");
-			return;
-		}
-
-		Optional<String> optAbn = companyBe.getValue("PRI_ABN");
+		
 		Boolean saveName = false;
-		if (optAbn.isPresent()){
-			String abn = optAbn.get().trim();
-			if(!abn.isEmpty()){
 
-				if (QwandaUtils.isValidAbnFormat(abn)) {
-					System.out.println("ABN is valid");
+		if(inferred){
+			String targetCode = answer.getTargetCode();
+			System.out.println("targetCode   ::   " + targetCode); 
 
-					/* if abn is valid, check if the abn exists in the system */
-					SearchEntity searchBE = new SearchEntity("SBE_UNIQUE_ABN", "Unique Abn")
-							.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "CPY_%") 
-							.addFilter("PRI_ABN", SearchEntity.StringFilter.EQUAL, abn) 
-							.addColumn("PRI_NAME", "Name")
-							.setPageStart(0)
-							.setPageSize(100);
-					
-					searchBE.setRealm(beUtils.getServiceToken().getRealm());
+			String attributeCode = answer.getAttributeCode();
+			System.out.println("attributeCode   ::   " + attributeCode);
 
-					TableUtils tableUtils = new TableUtils(beUtils);
-					Long abnCount = tableUtils.performCount(searchBE);
-					System.out.println("abnCount   ::   " + abnCount);
+			if(targetCode == null){
+				System.out.println("Answer message doesnt have targetCode");
+				return;
+			}
 
-					if(abnCount > 0){
-						System.out.println("ABN is NOT UNIQUE. Not saving PRI_NAME and PRI_LEGAL_NAME");
-						saveName = false;
+			BaseEntity companyBe = beUtils.getBaseEntityByCode(targetCode);
+			if(companyBe == null){
+				System.out.println("companyBe is null");
+				return;
+			}
+
+			Optional<String> optAbn = companyBe.getValue("PRI_ABN");
+			if (optAbn.isPresent()){
+				String abn = optAbn.get().trim();
+				if(!abn.isEmpty()){
+
+					if (QwandaUtils.isValidAbnFormat(abn)) {
+						System.out.println("ABN is valid");
+
+						/* if abn is valid, check if the abn exists in the system */
+						SearchEntity searchBE = new SearchEntity("SBE_UNIQUE_ABN", "Unique Abn")
+								.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "CPY_%") 
+								.addFilter("PRI_ABN", SearchEntity.StringFilter.EQUAL, abn) 
+								.addColumn("PRI_NAME", "Name")
+								.setPageStart(0)
+								.setPageSize(100);
+						
+						searchBE.setRealm(beUtils.getServiceToken().getRealm());
+
+						TableUtils tableUtils = new TableUtils(beUtils);
+						Long abnCount = tableUtils.performCount(searchBE);
+						System.out.println("abnCount   ::   " + abnCount);
+
+						if(abnCount > 0){
+							System.out.println("ABN is NOT UNIQUE. Not saving PRI_NAME and PRI_LEGAL_NAME");
+							saveName = false;
+						}
 					}
 				}
+			}else{
+				saveName = true;
 			}
+
 		}else{
 			saveName = true;
 		}
-
 		if(saveName){
 			Answer nameAnswer = new Answer(answer.getSourceCode(), answer.getTargetCode(), answer.getAttributeCode(), answer.getValue());
 			beUtils.saveAnswer(nameAnswer);
 			VertxUtils.sendToFrontEnd(userToken, nameAnswer);
 		}
+
         retract(answer);
 end
