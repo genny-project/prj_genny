@@ -92,10 +92,10 @@ rule "AUTOFILL_NAME"
 		}else{
 			saveName = true;
 		}
-		if(saveName){
-			Answer nameAnswer = new Answer(answer.getSourceCode(), answer.getTargetCode(), answer.getAttributeCode(), answer.getValue());
+		if(!saveName){
+			/* Answer nameAnswer = new Answer(answer.getSourceCode(), answer.getTargetCode(), answer.getAttributeCode(), answer.getValue());
 			beUtils.saveAnswer(nameAnswer);
-			VertxUtils.sendToFrontEnd(userToken, nameAnswer);
+			VertxUtils.sendToFrontEnd(userToken, nameAnswer); */
+        	retract(answer);
 		}
-        retract(answer);
 end
