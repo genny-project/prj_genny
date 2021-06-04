@@ -58,7 +58,7 @@ rule "HELPER_LNK_DAYS_PER_WEEK"
 			}
 		}
 		
-		if (value .equals("")) {
+		if (value.equals("")) {
 
 			BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
 			
