@@ -40,7 +40,7 @@ rule "AUTOFILL_NAME"
 		Boolean inferred = answer.getInferred();
 		System.out.println("inferred   ::   " + inferred);
 
-		 if(inferred == null){
+		if(inferred == null){
 			System.out.println("Answer message doesnt have inferred set to true");
 			return;
 		}
