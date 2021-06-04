@@ -58,9 +58,12 @@ rule "PRI_ADDRESS_FULL"
 					if (optAddressExtra.isPresent()){
 						System.out.println("PRI_ADDRESS_EXTRA is present");
 						String addressExtra = optAddressExtra.get().trim();
-						address = addressExtra + "/" + address;
-
 						System.out.println("addressExtra  :: " + addressExtra);
+						
+						if(!addressExtra.isEmpty()){
+							System.out.println("PRI_ADDRESS_EXTRA is NOT EMPTY");
+							address = addressExtra + "/" + address;
+						}
 						System.out.println("address  :: " + address);
 
 					}else{
