@@ -36,11 +36,11 @@ import java.util.UUID;
 
 rule "PRI_SEARCH_TEXT_SAVE_ANSWER"
     ruleflow-group 'DataProcessing'
-        salience 400
+        salience 500
         no-loop true
     when
  	  beUtils : BaseEntityUtils()
- 	  allowed : Allowed(code == "TEST") 
+ 	  /*allowed : Allowed(code == "TEST")*/
 	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" && (value.startsWith("!saveanswer:")) )   /* this is a pure search */
 	  serviceToken : GennyToken (code == "PER_SERVICE")
 	  userToken : GennyToken( code != "PER_SERVICE")
