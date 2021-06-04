@@ -29,9 +29,7 @@ rule "AUTOFILL_NAME"
 	when
 		beUtils : BaseEntityUtils()
 		answer : Answer ((attributeCode == "PRI_NAME" || attributeCode == "PRI_LEGAL_NAME") && 
-                            targetCode matches "CPY_.*" &&
-							inferred == true
-						)
+                            targetCode matches "CPY_.*" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		userToken : GennyToken( code != "PER_SERVICE")
 	then
