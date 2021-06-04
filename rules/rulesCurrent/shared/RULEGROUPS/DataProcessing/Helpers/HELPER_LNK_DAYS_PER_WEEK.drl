@@ -49,11 +49,75 @@ rule "HELPER_LNK_DAYS_PER_WEEK"
 
 		BaseEntity be = beUtils.getBaseEntityByCode(code);
 		if(be != null){
-			String name = be.getValue("PRI_NAME", null);		
+			String name = be.getValue("PRI_NAME", null);
+			System.out.println("name  :: " + name);		
 			if(name != null){
 				Answer ans = new Answer(sourceCode, targetCode, "PRI_DAYS_PER_WEEK", name);
 				beUtils.saveAnswer(ans);
 				VertxUtils.sendToFrontEnd(userToken, ans);
 			}
 		}
+
+		QUE_INTERNSHIP_DAYS_PER_WEEK
+		LNK_DAYS_PER_WEEK
+
+		BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
+ 		
+ 		/* Business hours */
+ 		String lnkBH = targetBe.getValue("LNK_BUSINESS_HOURS", null);
+        lnkBH = lnkBH.replace("[","").replace("]","");
+        System.out.println("lnkBH = " + lnkBH);	
+      
+        String[] splt = code.split(",");
+        
+        String startStr = splt[0];
+        String endStr = splt[1];
+        
+        Double startDbl = Double.parseDouble(startStr);  
+        Double endDbl = Double.parseDouble(endStr);
+        
+        System.out.println("startDbl = " + startDbl);
+        System.out.println("endDbl = " + endDbl);
+        
+        Double businessHrs = endDbl - startDbl;
+        System.out.println("businessHrs = " + businessHrs);
+        
+        
+        /* Days per week */
+        String dpwStr = targetBe.getValue("PRI_DAYS_PER_WEEK", null);
+        System.out.println("dpwStr = " + dpwStr);	
+        
+        Double dpwDbl = Double.parseDouble(dpwStr);
+        System.out.println("dpwDbl = " + dpwDbl);
+        
+        /* Hours per week */
+        Double hpwDbl = dpwDbl * businessHrs;
+        System.out.println("hpwDbl = " + hpwDbl);
+
+		/* Save Answer */
+		Answer hoursAnswer = new Answer(sourceCode, targetCode, "PRI_HOURS_PER_WEEK", hpwDbl);
+		beUtils.saveAnswer(hoursAnswer);
+		
+		/* Prepare Question and Ask */
+		Attribute attr = RulesUtils.getAttribute("PRI_HOURS_PER_WEEK", serviceToken);
+		
+		Question hoursQues = new Question("QUE_INTERNSHIP_HOURS_PER_WEEK", "Internship Hours per week", attr, true);
+		Ask hoursAsk = new Ask(hoursQues, sourceCode, targetCode);
+		
+		/* Send Disable for this Ask */
+		hoursAsk.setDisabled(true);
+		
+		QDataAskMessage hoursAskMsgDisable = new QDataAskMessage(hoursAsk);
+		hoursAskMsgDisable.setToken(userToken.getToken());
+		VertxUtils.writeMsg("webcmds", hoursAskMsgDisable);
+		
+		/* Send Answer to Front End */
+		VertxUtils.sendToFrontEnd(userToken, hoursAnswer);
+
+		/* Send enable for this Ask */
+		hoursAsk.setDisabled(false);
+	
+		QDataAskMessage hoursAskMsgEnable = new QDataAskMessage(hoursAsk);
+		hoursAskMsgEnable.setToken(userToken.getToken());
+		VertxUtils.writeMsg("webcmds", hoursAskMsgEnable);
 end
