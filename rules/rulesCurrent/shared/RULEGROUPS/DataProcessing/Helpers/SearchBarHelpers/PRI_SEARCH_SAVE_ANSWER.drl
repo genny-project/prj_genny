@@ -70,18 +70,18 @@ rule "PRI_SEARCH_TEXT_SAVE_ANSWER"
 			System.out.println("attribute :: " + attribute);
 			System.out.println("input :: " + input);
 			
-			try {
+			if (targetCode != null && attribute != null && input != null) {
 				Answer saveThisAnswer = new Answer(sourceCode, targetCode, attribute, input);
 				beUtils.saveAnswer(saveThisAnswer);
-				System.out.println("Saved answer!!");
-			} catch (IOException e) {
+				System.out.println("Created User "+email+" in Keycloak with id = "+userId);
+			} else {
+				System.out.println("One of your dudes was null");
 			}
-			
 		} else {
 			System.out.println("length was incorrect for saveanswser: " +split.length);
 		}
 		
-
+	
 		output.setTypeOfResult("NO_PROCESSING");
   	    output.setResultCode("NONE");  /* dont display anything new */
 		
