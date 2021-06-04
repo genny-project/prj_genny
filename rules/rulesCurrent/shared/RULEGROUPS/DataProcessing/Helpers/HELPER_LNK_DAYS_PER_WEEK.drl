@@ -68,7 +68,7 @@ rule "HELPER_LNK_DAYS_PER_WEEK"
         lnkBH = lnkBH.replace("[","").replace("]","");
         System.out.println("lnkBH = " + lnkBH);	
       
-        String[] splt = code.split(",");
+        String[] splt = lnkBH.split(",");
 		System.out.println("splt[0] = " + splt[0]);
 		System.out.println("splt[1] = " + splt[1]);
         
