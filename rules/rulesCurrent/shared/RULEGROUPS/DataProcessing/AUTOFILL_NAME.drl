@@ -32,8 +32,10 @@ rule "AUTOFILL_NAME"
                             targetCode matches "CPY_.*" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		userToken : GennyToken( code != "PER_SERVICE")
+
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
+		System.out.println("answer  ::  " + answer); 
 
 		Boolean inferred = answer.getInferred();
 		System.out.println("inferred   ::   " + inferred);
