@@ -41,6 +41,8 @@ rule "AUTOFILL_NAME"
 
 		Boolean inferred = answer.getInferred();
 		System.out.println("inferred   ::   " + inferred);
+		answer.setInferred(!inferred);
+		System.out.println("inferred   ::   " + inferred);
 		
 		Boolean saveName = false;
 
