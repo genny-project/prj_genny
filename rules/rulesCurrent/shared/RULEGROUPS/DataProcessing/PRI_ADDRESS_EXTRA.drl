@@ -54,13 +54,15 @@ rule "HELPER_PRI_ADDRESS_EXTRA"
 				if(!address.isEmpty()){
 					System.out.println("PRI_ADDRESS_FULL is NOT EMPTY");
 
-					/* Remove the extra address field if it exists  */
+					/* Check if the extra address field exists  */
 					int index = address.indexOf("/");
 					if(index >= 0){
 						System.out.println("PRI_ADDRESS_FULL before ::  " + address);
+						/* Remove the extra address field if it exists  */
 						address = address.substring(index+1).trim();
 					}
 					
+					/* add the new extra field to the adress */
 					address = addressExtra + "/" + address;
 					System.out.println("PRI_ADDRESS_FULL ::  " + address);
 
