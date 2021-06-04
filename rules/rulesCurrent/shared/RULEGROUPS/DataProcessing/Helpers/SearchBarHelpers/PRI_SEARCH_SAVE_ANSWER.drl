@@ -41,7 +41,7 @@ rule "PRI_SEARCH_TEXT_SAVE_ANSWER"
     when
  	  beUtils : BaseEntityUtils()
  	  allowed : Allowed(code == "TEST") 
-	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" && (value.startsWith("saveanswer:")) )   /* this is a pure search */
+	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" && (value.startsWith("!saveanswer:")) )   /* this is a pure search */
 	  serviceToken : GennyToken (code == "PER_SERVICE")
 	  userToken : GennyToken( code != "PER_SERVICE")
 	  output : OutputParam( )
