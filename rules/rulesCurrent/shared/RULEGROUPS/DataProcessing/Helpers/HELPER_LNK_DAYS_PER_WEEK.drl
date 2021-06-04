@@ -57,10 +57,10 @@ rule "HELPER_LNK_DAYS_PER_WEEK"
 				VertxUtils.sendToFrontEnd(userToken, ans);
 			}
 		}
-
+		/*
 		QUE_INTERNSHIP_DAYS_PER_WEEK
 		LNK_DAYS_PER_WEEK
-
+		*/
 		BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
  		
  		/* Business hours */
