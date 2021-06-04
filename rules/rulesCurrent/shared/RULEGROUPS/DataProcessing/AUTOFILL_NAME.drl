@@ -96,6 +96,6 @@ rule "AUTOFILL_NAME"
 			/* Answer nameAnswer = new Answer(answer.getSourceCode(), answer.getTargetCode(), answer.getAttributeCode(), answer.getValue());
 			beUtils.saveAnswer(nameAnswer);
 			VertxUtils.sendToFrontEnd(userToken, nameAnswer); */
-        	retract(answer);
+			retract(answer);
 		}
 end
