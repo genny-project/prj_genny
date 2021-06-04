@@ -247,7 +247,7 @@ rule "SET_START_END_DATE"
 					/* Prepare Question and Ask */
 					Attribute attr = RulesUtils.getAttribute("PRI_END_DATE", serviceToken);
 					
-					Question endDateQues = new Question("PRI_END_DATE", "End Date", attr, true);
+					Question endDateQues = new Question("QUE_END_DATE", "End Date", attr, true);
 					Ask endDateAsk = new Ask(endDateQues, sourceCode, targetCode);
 					
 					/* Send Disable for this Ask */
@@ -256,6 +256,9 @@ rule "SET_START_END_DATE"
 					QDataAskMessage endDateAskMsgDisable = new QDataAskMessage(endDateAsk);
 					endDateAskMsgDisable.setToken(userToken.getToken());
 					VertxUtils.writeMsg("webcmds", endDateAskMsgDisable);
+
+					/* Send Answer to Front End */
+					VertxUtils.sendToFrontEnd(userToken, endDateAnswer);
 					
 					/* Send enable for this Ask */
 					endDateAsk.setDisabled(false);
@@ -264,8 +267,7 @@ rule "SET_START_END_DATE"
 					endDateAskMsgEnable.setToken(userToken.getToken());
 					VertxUtils.writeMsg("webcmds", endDateAskMsgEnable);
 
-					/* Send Answer to Front End */
-					VertxUtils.sendToFrontEnd(userToken, endDateAnswer);
+					
 				}
 			}
 		} else {
