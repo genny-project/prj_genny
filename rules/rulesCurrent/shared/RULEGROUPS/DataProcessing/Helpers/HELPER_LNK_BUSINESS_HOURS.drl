@@ -51,7 +51,7 @@ rule "HELPER_LNK_BUSINESS_HOURS"
 		if(be != null){
 			String name = be.getValue("PRI_NAME", null);		
 			if(name != null){
-				Answer ans = new Answer(sourceCode, targetCode, "PRI_DAYS_PER_WEEK", name);
+				Answer ans = new Answer(sourceCode, targetCode, "LNK_BUSINESS_HOURS", name);
 				beUtils.saveAnswer(ans);
 				VertxUtils.sendToFrontEnd(userToken, ans);
 			}
