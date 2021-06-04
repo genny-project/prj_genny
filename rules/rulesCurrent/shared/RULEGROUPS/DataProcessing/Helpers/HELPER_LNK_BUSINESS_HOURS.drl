@@ -97,7 +97,7 @@ rule "HELPER_LNK_BUSINESS_HOURS"
 		/* Prepare Question and Ask */
 		Attribute attr = RulesUtils.getAttribute("PRI_HOURS_PER_WEEK", serviceToken);
 		
-		Question hoursQues = new Question("PRI_HOURS_PER_WEEK", "Internship Hours per week", attr, true);
+		Question hoursQues = new Question("QUE_INTERNSHIP_HOURS_PER_WEEK", "Internship Hours per week", attr, true);
 		Ask hoursAsk = new Ask(hoursQues, sourceCode, targetCode);
 		
 		/* Send Disable for this Ask */
