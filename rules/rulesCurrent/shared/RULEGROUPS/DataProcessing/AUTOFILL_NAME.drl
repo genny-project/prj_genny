@@ -57,7 +57,7 @@ rule "AUTOFILL_NAME"
 			return;
 		}
 
-		Optional<String> optAbn = be.getValue("PRI_ABN");
+		Optional<String> optAbn = companyBe.getValue("PRI_ABN");
 		Boolean saveName = false;
 		if (optAbn.isPresent()){
 			String abn = optAbn.get().trim();
@@ -89,7 +89,7 @@ rule "AUTOFILL_NAME"
 		}else{
 			saveName = true;
 		}
-		
+
 		if(saveName){
 			Answer nameAnswer = new Answer(answer.getSourceCode(), answer.getTargetCode(), answer.getAttributeCode(), answer.getValue());
 			beUtils.saveAnswer(nameAnswer);
