@@ -53,9 +53,17 @@ rule "HELPER_PRI_ADDRESS_EXTRA"
 				
 				if(!address.isEmpty()){
 					System.out.println("PRI_ADDRESS_FULL is NOT EMPTY");
+
+					/* Remove the extra address field if it exists  */
+					int index = address.indexOf("/");
+					if(index >= 0){
+						System.out.println("PRI_ADDRESS_FULL before ::  " + address);
+						address = address.substring(index+1).trim();
+					}
+					
 					address = addressExtra + "/" + address;
 					System.out.println("PRI_ADDRESS_FULL ::  " + address);
-					
+
 					Answer addressAnswer = new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", address);
 					beUtils.saveAnswer(addressAnswer);
 					VertxUtils.sendToFrontEnd(userToken, addressAnswer);
