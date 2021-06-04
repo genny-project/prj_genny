@@ -41,7 +41,7 @@ rule "HELPER_PRI_ADDRESS_EXTRA"
 		String targetCode = answer.getTargetCode();
 		System.out.println("targetCode :: " + targetCode);
 		
-		String addressExtra = answer.getValue();
+		String addressExtra = answer.getValue().trim();
 		System.out.println("addressExtra :: " + addressExtra);
 
 		BaseEntity be = beUtils.getBaseEntityByCode(targetCode);
