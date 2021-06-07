@@ -122,6 +122,8 @@ rule "AUTOFILL_NAME"
 				TaskUtils.enableTaskQuestion(newAsk, false, userToken);
 				
 				/* save the answer */
+				answer.setAskId(ask.getId());
+				System.out.println("Ask ID" + ask.getId());
 				beUtils.saveAnswer(answer);
 				VertxUtils.sendToFrontEnd(userToken, answer);
 				
