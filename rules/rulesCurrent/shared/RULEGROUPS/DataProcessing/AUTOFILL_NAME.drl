@@ -98,7 +98,7 @@ rule "AUTOFILL_NAME"
 		if(!cannotSaveName){
 			
 			QDataAskMessage askMsg = QuestionUtils.getAsks(userToken.getUserCode(), targetCode, "QUE_HOST_CPY_GRP", userToken.getToken());
-			Ask newAsk;
+			Ask newAsk=null;
 			if (askMsg != null) {
 				/* SET REPLACE TRUE */
 				for (Ask ask : askMsg.getItems()[0].getChildAsks()) {
