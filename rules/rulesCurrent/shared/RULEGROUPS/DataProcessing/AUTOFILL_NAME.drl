@@ -44,7 +44,7 @@ rule "AUTOFILL_NAME"
 		answer.setInferred(!inferred);
 		System.out.println("inferred   ::   " + inferred);
 		
-		Boolean saveName = false;
+		Boolean cannotSaveName = false;
 
 		String targetCode = answer.getTargetCode();
 		System.out.println("targetCode   ::   " + targetCode); 
@@ -88,14 +88,39 @@ rule "AUTOFILL_NAME"
 
 					if(abnCount > 1){
 						System.out.println("ABN is NOT UNIQUE. Not saving PRI_NAME and PRI_LEGAL_NAME");
-						saveName = false;
+						cannotSaveName = false;
 					}
 				}
 			}
 		}else{
-			saveName = true;
+			cannotSaveName = true;
 		}
-		if(saveName){
-			retract(answer);
+		if(!cannotSaveName){
+			
+			QDataAskMessage askMsg = QuestionUtils.getAsks(userToken.getUserCode(), targetCode, "QUE_HOST_CPY_GRP", userToken.getToken());
+			Ask newAsk;
+			if (askMsg != null) {
+				/* SET REPLACE TRUE */
+				for (Ask ask : askMsg.getItems()[0].getChildAsks()) {
+					if (ask.getQuestionCode().equals("QUE_LEGAL_NAME") || ask.getQuestionCode().equals("QUE_TRADING_NAME")) {
+						newAsk = ask;
+						break;
+					}	
+				}
+			} else {
+				System.out.println("Could not fetch ask from cache: QUE_HOST_CPY_GRP"); 
+			}
+			if(newAsk != null){
+				/* Enable / Disable and send the ask */
+				System.out.println("Setting "+ newAsk.getQuestionCode() + " field to   ::   false");
+				TaskUtils.enableTaskQuestion(ask, false, userToken);
+				
+				/* save the answer */
+				beUtils.saveAnswer(answer);
+				VertxUtils.sendToFrontEnd(userToken, answer);
+				System.out.println("Setting "+ newAsk.getQuestionCode() + " field to   ::   true");
+				TaskUtils.enableTaskQuestion(ask, true, userToken);
+			}
 		}
+		retract(answer);
 end
