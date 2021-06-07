@@ -121,9 +121,11 @@ rule "AUTOFILL_NAME"
 				System.out.println("Disabling the questionCode :: "+ newAsk.getQuestionCode());
 				TaskUtils.enableTaskQuestion(newAsk, false, userToken);
 				
+				if(answer.getAskId() != newAsk.getId()){
+					answer.setAskId(newAsk.getId());
+					System.out.println("Ask ID" + newAsk.getId());
+				}
 				/* save the answer */
-				answer.setAskId(newAsk.getId());
-				System.out.println("Ask ID" + newAsk.getId());
 				beUtils.saveAnswer(answer);
 				VertxUtils.sendToFrontEnd(userToken, answer);
 				
