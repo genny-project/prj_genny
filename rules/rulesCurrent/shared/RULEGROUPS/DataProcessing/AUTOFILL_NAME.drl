@@ -122,8 +122,9 @@ rule "AUTOFILL_NAME"
 				TaskUtils.enableTaskQuestion(newAsk, false, userToken);
 				
 				if(answer.getAskId() != newAsk.getId()){
+					System.out.println("Answer ask ID ::" + answer.getAskId());
+					System.out.println("Ask        ID ::" + newAsk.getId());
 					answer.setAskId(newAsk.getId());
-					System.out.println("Ask ID" + newAsk.getId());
 				}
 				/* save the answer */
 				beUtils.saveAnswer(answer);
