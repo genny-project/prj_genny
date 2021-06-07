@@ -97,12 +97,16 @@ rule "AUTOFILL_NAME"
 		}
 		if(!cannotSaveName){
 			
-			QDataAskMessage askMsg = QuestionUtils.getAsks(userToken.getUserCode(), targetCode, "QUE_HOST_CPY_GRP", userToken.getToken());
 			Ask newAsk=null;
+			String questionCode="";
+			if(attributeCode.equals("PRI_NAME")) questionCode="QUE_TRADING_NAME";
+			if(attributeCode.equals("PRI_LEGAL_NAME")) questionCode="QUE_LEGAL_NAME";
+
+			QDataAskMessage askMsg = QuestionUtils.getAsks(userToken.getUserCode(), targetCode, "QUE_HOST_CPY_GRP", userToken.getToken());
 			if (askMsg != null) {
-				/* SET REPLACE TRUE */
+				/* Find the ask */
 				for (Ask ask : askMsg.getItems()[0].getChildAsks()) {
-					if (ask.getQuestionCode().equals("QUE_LEGAL_NAME") || ask.getQuestionCode().equals("QUE_TRADING_NAME")) {
+					if (ask.getQuestionCode().equals(questionCode)) {
 						newAsk = ask;
 						break;
 					}	
@@ -110,15 +114,18 @@ rule "AUTOFILL_NAME"
 			} else {
 				System.out.println("Could not fetch ask from cache: QUE_HOST_CPY_GRP"); 
 			}
-			if(newAsk != null){
-				/* Enable / Disable and send the ask */
-				System.out.println("Setting "+ newAsk.getQuestionCode() + " field to   ::   false");
+			if(newAsk != null && !questionCode.isEmpty()){
+				
+				/* Disable the ask */
+				System.out.println("Disabling the questionCode :: "+ newAsk.getQuestionCode());
 				TaskUtils.enableTaskQuestion(newAsk, false, userToken);
 				
 				/* save the answer */
 				beUtils.saveAnswer(answer);
 				VertxUtils.sendToFrontEnd(userToken, answer);
-				System.out.println("Setting "+ newAsk.getQuestionCode() + " field to   ::   true");
+				
+				/* Enable the ask */
+				System.out.println("Enabling the questionCode :: "+ newAsk.getQuestionCode());
 				TaskUtils.enableTaskQuestion(newAsk, true, userToken);
 			}
 		}
