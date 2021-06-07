@@ -122,11 +122,11 @@ rule "AUTOFILL_NAME"
 				TaskUtils.enableTaskQuestion(newAsk, false, userToken);
 				
 				/* if the answer's askId is not equal to real askId, change it */
-				if(answer.getAskId() != newAsk.getId()){
+				/* if(answer.getAskId() != newAsk.getId()){
 					System.out.println("Answer ask ID ::" + answer.getAskId());
 					System.out.println("Ask        ID ::" + newAsk.getId());
 					answer.setAskId(newAsk.getId());
-				}
+				} */
 				/* save the answer */
 				beUtils.saveAnswer(answer);
 				VertxUtils.sendToFrontEnd(userToken, answer);
