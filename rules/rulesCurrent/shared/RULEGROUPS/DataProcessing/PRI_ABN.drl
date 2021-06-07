@@ -42,6 +42,7 @@ rule "PRI_ABN"
 			SearchEntity searchBE = new SearchEntity("SBE_UNIQUE_ABN", "Unique Abn")
 					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "CPY_%") 
 					.addFilter("PRI_ABN", SearchEntity.StringFilter.EQUAL, abn) 
+					.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "ACTIVE")
 					.addColumn("PRI_NAME", "Name")
 					.setPageStart(0)
 					.setPageSize(100);
