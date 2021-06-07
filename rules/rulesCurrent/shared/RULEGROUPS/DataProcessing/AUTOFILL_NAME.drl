@@ -104,25 +104,16 @@ rule "AUTOFILL_NAME"
 
 			QDataAskMessage askMsg = QuestionUtils.getAsks(userToken.getUserCode(), targetCode, "QUE_HOST_CPY_GRP", userToken.getToken());
 			if (askMsg != null) {
-
-				List<Ask> asks = Arrays.asList(askMsg.getItems()[0].getChildAsks());
-				newAsk = asks.stream()
-					.filter(ask -> ask.getQuestionCode().equals(questionCode))
-					.findFirst()
-					.orElse(null);
-
 				/* Find the ask */
-				/* for (Ask ask : askMsg.getItems()[0].getChildAsks()) {
+				for (Ask ask : askMsg.getItems()[0].getChildAsks()) {
 					if (ask.getQuestionCode().equals(questionCode)) {
 						newAsk = ask;
 						break;
 					}	
-				} */
+				}
 			} else {
 				System.out.println("Could not fetch ask from cache: QUE_HOST_CPY_GRP"); 
 			}
-
-			System.out.println("Ask from filtering is :: " + newAsk);
 
 			if(newAsk != null && !questionCode.isEmpty()){
 				
