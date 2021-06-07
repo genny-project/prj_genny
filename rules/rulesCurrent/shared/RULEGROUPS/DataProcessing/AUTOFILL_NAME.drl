@@ -121,6 +121,7 @@ rule "AUTOFILL_NAME"
 				System.out.println("Disabling the questionCode :: "+ newAsk.getQuestionCode());
 				TaskUtils.enableTaskQuestion(newAsk, false, userToken);
 				
+				/* if the answer's askId is not equal to real askId, change it */
 				if(answer.getAskId() != newAsk.getId()){
 					System.out.println("Answer ask ID ::" + answer.getAskId());
 					System.out.println("Ask        ID ::" + newAsk.getId());
