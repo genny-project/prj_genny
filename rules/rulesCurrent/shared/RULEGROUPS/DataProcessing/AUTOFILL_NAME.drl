@@ -113,13 +113,13 @@ rule "AUTOFILL_NAME"
 			if(newAsk != null){
 				/* Enable / Disable and send the ask */
 				System.out.println("Setting "+ newAsk.getQuestionCode() + " field to   ::   false");
-				TaskUtils.enableTaskQuestion(ask, false, userToken);
+				TaskUtils.enableTaskQuestion(newAsk, false, userToken);
 				
 				/* save the answer */
 				beUtils.saveAnswer(answer);
 				VertxUtils.sendToFrontEnd(userToken, answer);
 				System.out.println("Setting "+ newAsk.getQuestionCode() + " field to   ::   true");
-				TaskUtils.enableTaskQuestion(ask, true, userToken);
+				TaskUtils.enableTaskQuestion(newAsk, true, userToken);
 			}
 		}
 		retract(answer);
