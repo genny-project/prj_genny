@@ -123,7 +123,7 @@ rule "AUTOFILL_NAME"
 				
 				/* save the answer */
 				answer.setAskId(ask.getId());
-				System.out.println("Ask ID" + ask.getId());
+				System.out.println("Ask ID" + newAsk.getId());
 				beUtils.saveAnswer(answer);
 				VertxUtils.sendToFrontEnd(userToken, answer);
 				
