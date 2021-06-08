@@ -123,6 +123,6 @@ rule "HELPER_LNK_DAYS_PER_WEEK"
 			VertxUtils.writeMsg("webcmds", hoursAskMsgEnable);
 		} else {
 
-			System.out.println("dude = ");
+			System.out.println("Looks like you just cleared the start date");
 		}
 end
