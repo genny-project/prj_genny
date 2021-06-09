@@ -50,10 +50,12 @@ rule "HELPER_LNK_WHICH_DAYS"
 		if(value != null){
 			List<String> daysList = new ArrayList<>();
 			String codes = beUtils.cleanUpAttributeValue(value);
+			System.out.println("codes :: " + codes);
 			for (String code : codes.split(",")) {
 				targetBe = beUtils.getBaseEntityByCode(code);
 				if(targetBe != null){
-					wdsStr = targetBe.getValue("PRI_NAME", null);		
+					wdsStr = targetBe.getValue("PRI_NAME", null);	
+					System.out.println("wdsStr :: " + wdsStr);
 					if(wdsStr != null) daysList.add(wdsStr);
 				}
 			}
@@ -104,7 +106,7 @@ rule "HELPER_LNK_WHICH_DAYS"
 				System.out.println("startDate = " + startDate);
 
 				c.setTime(startDate);
-				c.add(Calendar.DATE, dayz);
+				c.add(Calendar.DATE, dayzAdj);
 				
 				String toDate = df.format(c.getTime());
 				System.out.println("endDate minus dayzAdj = " + toDate);
