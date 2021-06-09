@@ -129,10 +129,12 @@ rule "HELPER_LNK_WHICH_DAYS"
 				String[] whichDays = null;
 				int lastDayKey = 0;
 				
-				if (wdsStr.contains(", ")) {
-					whichDays = wdsStr.split(", ");
+				if (days.contains(", ")) {
+					whichDays = days.split(", ");
+				} else if (days.contains(",")) {
+					whichDays = days.split(",");
 				} else {
-					whichDays = wdsStr.split(",");
+					System.out.println("Only one day: " + days);
 				}
 				
 				for (int i = 0; i < whichDays.length; i++) {
