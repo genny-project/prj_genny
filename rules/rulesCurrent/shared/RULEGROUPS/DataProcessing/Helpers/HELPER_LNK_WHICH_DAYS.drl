@@ -46,6 +46,7 @@ rule "HELPER_LNK_WHICH_DAYS"
 		System.out.println("value :: " + value);
 		BaseEntity targetBe = null;		
 		String wdsStr = "";
+		String days = "";
 
 		if(value != null){
 			List<String> daysList = new ArrayList<>();
@@ -59,7 +60,7 @@ rule "HELPER_LNK_WHICH_DAYS"
 					if(wdsStr != null) daysList.add(wdsStr);
 				}
 			}
-			String days = beUtils.cleanUpAttributeValue(daysList.toString());
+			days = beUtils.cleanUpAttributeValue(daysList.toString());
 			System.out.println("days :: " + days);
 			Answer ans = new Answer(sourceCode, targetCode, "PRI_WHICH_DAYS_STRIPPED", days,false,true);
 			beUtils.saveAnswer(ans);
