@@ -34,7 +34,7 @@ import java.util.UUID;
 
 
 
-rule "PRI_SEARCH_TEXT_SAVE_ANSWER"
+rule "PRI_SEARCH_SAVE_ANSWER"
     ruleflow-group 'DataProcessing'
         salience 500
         no-loop true
