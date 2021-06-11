@@ -153,7 +153,7 @@ rule "IS_INTERN"
 		if (userBe != null) {
 			String addedBy = userBe.getValue("PRI_NAME", null);
 			System.out.println("addedBy: " + addedBy);
-			beUtils.saveAnswer(new Answer(userToken.getCode(), newBe.getCode(), "PRI_ADDED_BY", addedBy))
+			beUtils.saveAnswer(new Answer(userToken.getCode(), newBe.getCode(), "PRI_ADDED_BY", addedBy));
 		}
 
 		/* Set up in Keycloak */
