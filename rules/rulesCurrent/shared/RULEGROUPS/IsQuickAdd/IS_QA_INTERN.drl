@@ -46,12 +46,20 @@ rule "IS_QA_INTERN"
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_PROFILE", "Incomplete"));
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "PENDING"));
 
+ 		/* Record who added them */
+		BaseEntity userBe = beUtils.getBaseEntityByCode(userToken.getUserCode());
+		if (userBe != null) {
+			String addedBy = userBe.getValue("PRI_NAME", null);
+			System.out.println("addedBy: " + addedBy);
+			beUtils.saveAnswer(new Answer(userToken.getCode(), newBe.getCode(), "PRI_ADDED_BY", addedBy));
+		}
+
 		String target = newBe.getCode();	
 
-		BaseEntity userBE = beUtils.getBaseEntityByCode(target);
-		System.out.println("userBE = " +userBE);
+		BaseEntity targetBe = beUtils.getBaseEntityByCode(target);
+		System.out.println("targetBe = " +targetBe);
 		
-		String lnkAgent = userBE.getValue("LNK_AGENT", null);
+		String lnkAgent = targetBe.getValue("LNK_AGENT", null);
 		System.out.println("lnkAgent = " +lnkAgent);
 		if (lnkAgent != null) {
 				beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_AGENT", lnkAgent));
@@ -77,7 +85,7 @@ rule "IS_QA_INTERN"
 		}
 		
 		
-		String lnkBatch = userBE.getValue("LNK_SELECT_BATCH", null);
+		String lnkBatch = targetBe.getValue("LNK_SELECT_BATCH", null);
 		System.out.println("lnkBatch = " +lnkBatch);
 		if (lnkBatch != null) {
 				beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), " LNK_BATCH", lnkBatch));
