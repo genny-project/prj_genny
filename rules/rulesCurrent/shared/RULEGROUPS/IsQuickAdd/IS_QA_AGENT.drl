@@ -34,6 +34,7 @@ rule "IS_QA_AGENT"
  		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
  		
+ 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_ADDED_BY", userToken.getUserCode()));
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), user.getCode() ,"PRI_IS_AGENT", "true"));
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "PENDING"));
 

@@ -34,6 +34,7 @@ rule "IS_INTERNSHIP"
  		
  		/* Construct answer with Source, Target, Attribute Code, Value */
  		
+ 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_ADDED_BY", userToken.getUserCode()));
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_INTERNSHIP", "true"));
 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_FULL", "false"));

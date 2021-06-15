@@ -30,6 +30,7 @@ rule "IS_ADMIN"
  		System.out.println("IS_ADMIN: Rule fired" );
  		System.out.println("IS_ADMIN: newBe = " + newBe.getCode());
 
+ 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_ADDED_BY", userToken.getUserCode()));
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_ADMIN", "true"));
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "REGISTERED"));
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_STATUS_COLOR","#5cb85c"));
