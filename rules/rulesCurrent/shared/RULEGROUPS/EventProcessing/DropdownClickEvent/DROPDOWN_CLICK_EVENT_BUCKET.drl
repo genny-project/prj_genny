@@ -45,6 +45,7 @@ import life.genny.utils.SearchCallable;
 import life.genny.utils.TableFrameCallable;
 import life.genny.utils.CacheSearchUtils;
 import life.genny.utils.SearchUtils;
+import life.genny.qwandautils.GennySettings;
 
 rule "DROPDOWN_CLICK_EVENT_BUCKET"
     ruleflow-group 'EventProcessing'
@@ -61,8 +62,9 @@ rule "DROPDOWN_CLICK_EVENT_BUCKET"
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + message );
 
 
-		System.out.println(ruleDetails+" "+drools.getRule().getName()+" attributeCode = "+message.getAttributeCode()+" question:"+message.getQuestionCode());
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" attributeCode = "+message.getAttributeCode()+" question:"+message.getData().getCode());
 		Integer dropdownSize = GennySettings.defaultDropDownPageSize;
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" dropdownsize = "+dropdownSize);
 
 		QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message,dropdownSize);
 
@@ -72,6 +74,7 @@ rule "DROPDOWN_CLICK_EVENT_BUCKET"
 			VertxUtils.writeMsg("webcmds",msg);
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Sent dropdown message2 with "+msg.getItems().length+" items");
 		} else {
+			VertxUtils.writeMsg("webcmds",msg);
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" No Dropdown Data sent");
 		}
 		retract(message);
