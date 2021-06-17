@@ -34,7 +34,7 @@ rule "IS_LOGBOOK"
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 
 		List<Answer> answers = new ArrayList<Answer>();
-		
+
  		answers.add(new Answer(userToken.getUserCode(), journalBe.getCode() ,"PRI_STATUS", "UNAPPROVED"));
  		answers.add(new Answer(userToken.getUserCode(), journalBe.getCode() ,"PRI_SYNC", "true"));
 		answers.add(new Answer(userToken.getUserCode(), journalBe.getCode() ,"LNK_INTERN", "[\"" + userToken.getUserCode() + "\"]"));
@@ -241,7 +241,6 @@ rule "IS_LOGBOOK"
 			System.out.println("SBE_APPLICATIONS_INPROGRESS is not in cache!");
 		}
 
-		answers.adds(answers);
 
 		/* send cmd msg */
 		QCmdMessage msg = new QCmdMessage("TOAST", "INFO");
