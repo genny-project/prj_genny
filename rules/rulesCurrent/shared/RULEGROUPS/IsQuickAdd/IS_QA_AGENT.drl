@@ -32,17 +32,20 @@ rule "IS_QA_AGENT"
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
  		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+
+ 		List<Answer> answers = new ArrayList<>();
+
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
  		
- 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), user.getCode() ,"PRI_IS_AGENT", "true"));
- 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "PENDING"));
+ 		answers.add(new Answer(userToken.getUserCode(), user.getCode() ,"PRI_IS_AGENT", "true"));
+ 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "PENDING"));
 
  		/* Record who added them */
 		BaseEntity userBe = beUtils.getBaseEntityByCode(userToken.getUserCode());
 		if (userBe != null) {
 			String addedBy = userBe.getValue("PRI_NAME", null);
 			System.out.println("addedBy: " + addedBy);
-			beUtils.saveAnswer(new Answer(userToken.getCode(), newBe.getCode(), "PRI_ADDED_BY", addedBy));
+			answers.add(new Answer(userToken.getCode(), newBe.getCode(), "PRI_ADDED_BY", addedBy));
 		}
 
 		String linkedAgency = user.getValue("LNK_AGENCY", null);
@@ -57,8 +60,8 @@ rule "IS_QA_AGENT"
 			String cpyCode = "CPY_"+uuid;
 			beUtils.create(cpyCode, cpyCode);
 
-			beUtils.saveAnswer(new Answer(userToken.getUserCode(), user.getCode(), "LNK_AGENCY", "[\""+cpyCode+"\"]"));
-			beUtils.saveAnswer(new Answer(userToken.getUserCode(), cpyCode, "PRI_PROFILE", "Incomplete"));
+			answers.add(new Answer(userToken.getUserCode(), user.getCode(), "LNK_AGENCY", "[\""+cpyCode+"\"]"));
+			answers.add(new Answer(userToken.getUserCode(), cpyCode, "PRI_PROFILE", "Incomplete"));
 		}
 		
 		
@@ -85,7 +88,7 @@ rule "IS_QA_AGENT"
 						userId = KeycloakUtils.updateUser(userCode,serviceToken.getToken(), serviceToken.getRealm(), email, firstname, lastname,  email, null, "user", "users");
 						userId = userId.toUpperCase();
 						Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),newBe.getCode(),"PRI_UUID",userId);
-						beUtils.saveAnswer(keycloakId);
+						answers.add(keycloakId);
 						System.out.println("Created User "+email+" in Keycloak with id = "+userId);
 
 						/* Generate a random 15 char password */
@@ -179,6 +182,8 @@ rule "IS_QA_AGENT"
 		
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
+
+		beUtils.saveAnswers(answers);
 		
 		retract(newBe)
 	

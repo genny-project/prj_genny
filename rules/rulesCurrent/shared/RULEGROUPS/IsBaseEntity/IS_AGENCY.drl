@@ -29,9 +29,11 @@ rule "IS_AGENCY"
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
  		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+
+ 		List<Answer> answers = new ArrayList<>();
  		
- 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_AGENCY", "true"));
- 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
+ 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_AGENCY", "true"));
+ 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
 		
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
 		String name = user.getValue("PRI_NAME",null);
@@ -54,6 +56,8 @@ rule "IS_AGENCY"
 		
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
+
+		beUtils.saveAnswers(answers);
 		
 		retract(newBe)
 	

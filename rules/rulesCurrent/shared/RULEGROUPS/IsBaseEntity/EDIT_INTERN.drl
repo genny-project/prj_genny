@@ -32,9 +32,11 @@ rule "EDIT_INTERN"
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
  		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+
+ 		List<Answer> answers = new ArrayList<>();
  		
 
- 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetBe.getCode() ,"PRI_PROFILE", "Complete"));  
+ 		answers.add(new Answer(userToken.getUserCode(), targetBe.getCode() ,"PRI_PROFILE", "Complete"));  
 		
 
 		targetBe = beUtils.getBaseEntityByCode(targetBe.getCode());
@@ -54,7 +56,7 @@ rule "EDIT_INTERN"
 						assoc_duration = assoc_durationBe.getValue("PRI_NAME", null);
 						System.out.println("assoc_duration = " +assoc_duration);
 						
-						beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetBe.getCode(), "PRI_ASSOC_DURATION", assoc_duration));
+						answers.add(new Answer(userToken.getUserCode(), targetBe.getCode(), "PRI_ASSOC_DURATION", assoc_duration));
 					
 				} else {
 					System.out.println("ERROR: Null assoc_durationBe"); 
@@ -64,7 +66,7 @@ rule "EDIT_INTERN"
 		}
 		
 		/* ANZCO */
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetBe.getCode(), "PRI_ANZCO", "NA"));
+		answers.add(new Answer(userToken.getUserCode(), targetBe.getCode(), "PRI_ANZCO", "NA"));
 		
 		String lnkIndustry = targetBe.getValue("LNK_INDUSTRY", null);
 		System.out.println("lnkIndustry : " + lnkIndustry);
@@ -95,7 +97,7 @@ rule "EDIT_INTERN"
 								System.out.println("anzcoCode: " + anzcoCode);
 								
 								if(anzcoCode != null) {
-										beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetBe.getCode(), "PRI_ANZCO", anzcoCode));
+										answers.add(new Answer(userToken.getUserCode(), targetBe.getCode(), "PRI_ANZCO", anzcoCode));
 										System.out.println("Reached the holy land - anzcoCode: " + anzcoCode);
 								} else {
 									System.out.println("ERROR: Null anzcoCode");
@@ -127,7 +129,7 @@ rule "EDIT_INTERN"
 						System.out.println("ep_name: " + ep_name);
 						
 						if(ep_name != null) {
-								beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetBe.getCode(), "PRI_ASSOC_EP", ep_name));
+								answers.add(new Answer(userToken.getUserCode(), targetBe.getCode(), "PRI_ASSOC_EP", ep_name));
 						} else {
 							System.out.println("ERROR: Null ep_name");
 						}
@@ -151,6 +153,8 @@ rule "EDIT_INTERN"
 		
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
+
+		beUtils.saveAnswers(answers);
 		
 		retract(targetBe)
 	

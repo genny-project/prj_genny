@@ -31,9 +31,11 @@ rule "IS_REF_PART_REP"
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
  		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+
+ 		List<Answer> answers = new ArrayList<>();
  		
- 	 	beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_REF_PART_REP", "true"));
- 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
+ 	 	answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_REF_PART_REP", "true"));
+ 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
 		
 		
 		
@@ -55,7 +57,7 @@ rule "IS_REF_PART_REP"
 						userId = KeycloakUtils.updateUser(userCode,serviceToken.getToken(), serviceToken.getRealm(), email, firstname, lastname,  email, null, "user", "users");
 						userId = userId.toUpperCase();
 						Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),newBe.getCode(),"PRI_UUID",userId);
-						beUtils.saveAnswer(keycloakId);
+						answers.add(keycloakId);
 						System.out.println("Created User "+email+" in Keycloak with id = "+userId);
 
 						/* Generate a random 15 char password */
@@ -94,6 +96,9 @@ rule "IS_REF_PART_REP"
 		
 		output.setTypeOfResult("NONE");
   		output.setResultCode("NONE");  /* dont display anything new */
+
+  		answers.adds(answers);
+
 		retract(newBe)
 	
 end

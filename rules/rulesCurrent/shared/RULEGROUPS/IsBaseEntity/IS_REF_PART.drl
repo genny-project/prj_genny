@@ -29,9 +29,11 @@ rule "IS_REF_PART"
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
  		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+
+ 		List<Answer> answers = new ArrayList<>();
  		
- 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_REF_PART", "true"));
- 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
+ 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_REF_PART", "true"));
+ 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
 		
 		
 		
@@ -54,6 +56,8 @@ rule "IS_REF_PART"
 		
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
+
+		beUtils.saveAnswers(answers);
 		
 		retract(newBe)
 	

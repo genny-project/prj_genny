@@ -29,10 +29,12 @@ rule "IS_HOST_CPY"
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
  		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+
+ 		List<Answer> answers = new ArrayList<>();
  		
- 	 	beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_HOST_CPY", "true"));	
- 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
- 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_VALIDATION", "Incomplete"));
+ 	 	answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_HOST_CPY", "true"));	
+ 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
+ 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_VALIDATION", "Incomplete"));
  		
  		
 		
@@ -82,7 +84,7 @@ rule "IS_HOST_CPY"
 
 				for (BaseEntity hcr : linkedHCRs) {
 					System.out.println("Saving PRI_ASSOC_HC = " + hcName + " for be with code " + hcr.getCode());
-					beUtils.saveAnswer(new Answer(userToken.getUserCode(), hcr.getCode(), "PRI_ASSOC_HC", hcName));
+					answers.add(new Answer(userToken.getUserCode(), hcr.getCode(), "PRI_ASSOC_HC", hcName));
 				}
 
 			} else{
@@ -96,6 +98,8 @@ rule "IS_HOST_CPY"
 	
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
+
+		beUtils.saveAnswers(answers);
 		
 		retract(newBe)
 	

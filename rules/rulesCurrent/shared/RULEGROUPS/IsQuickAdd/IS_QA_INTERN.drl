@@ -41,7 +41,6 @@ rule "IS_QA_INTERN"
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
  		
- 		newBe.setFastAttributes(true);
  		List<Answer> answers = new ArrayList<>();
 
  		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_INTERN", "true"));

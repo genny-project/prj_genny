@@ -29,8 +29,11 @@ rule "IS_EDU_PROVIDER"
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
- 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_EDU_PROVIDER", "true"));
- 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
+
+		List<Answer> answers = new ArrayList<>();
+
+ 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_EDU_PROVIDER", "true"));
+ 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
 
 		/* beUtils.createLink("GRP_EDU_PROVIDER_SELECTION", newBe.getCode(), "LNK_CORE", "OPTION", 1.0); */
 		
@@ -54,6 +57,8 @@ rule "IS_EDU_PROVIDER"
 		
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
+
+		beUtils.saveAnswers(answers);
 		
 		retract(newBe)
 	

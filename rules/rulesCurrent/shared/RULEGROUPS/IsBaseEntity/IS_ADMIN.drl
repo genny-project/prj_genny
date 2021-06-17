@@ -30,9 +30,11 @@ rule "IS_ADMIN"
  		System.out.println("IS_ADMIN: Rule fired" );
  		System.out.println("IS_ADMIN: newBe = " + newBe.getCode());
 
- 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_ADMIN", "true"));
- 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "REGISTERED"));
- 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_STATUS_COLOR","#5cb85c"));
+ 		List<Answer> answers = new ArrayList<>();
+
+ 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_ADMIN", "true"));
+ 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "REGISTERED"));
+ 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_STATUS_COLOR","#5cb85c"));
 
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
 		String userCode = newBe.getCode().split("_")[1];
@@ -52,7 +54,7 @@ rule "IS_ADMIN"
 						userId = KeycloakUtils.updateUser(userCode,serviceToken.getToken(), serviceToken.getRealm(), email, firstname, lastname,  email, null, "user", "users");
 						userId = userId.toUpperCase();
 						Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),newBe.getCode(),"PRI_UUID",userId);
-						beUtils.saveAnswer(keycloakId);
+						answers.add(keycloakId);
 						System.out.println("Created User "+email+" in Keycloak with id = "+userId);
 
 						/* Generate a random 15 char password */
@@ -79,6 +81,8 @@ rule "IS_ADMIN"
 
 		output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */
+
+  	    beUtils.saveAnswers(answers);
 
 		retract(newBe)
 end

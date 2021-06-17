@@ -31,13 +31,15 @@ rule "IS_INTERNSHIP"
  		System.out.println("IS_INTERNSHIP: newBe = " + newBe.getCode()); 
  		
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+
+		List<Answer> answers = new ArrayList<>();
  		
  		/* Construct answer with Source, Target, Attribute Code, Value */
  		
- 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_INTERNSHIP", "true"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_FULL", "false"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_CURRENT_INTERNS", "0"));
+ 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_INTERNSHIP", "true"));
+		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
+		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_FULL", "false"));
+		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_CURRENT_INTERNS", "0"));
 		
  				
 		/* Refresh the BaseEntity because reasons... */
@@ -58,7 +60,7 @@ rule "IS_INTERNSHIP"
  						System.out.println("imageHC = " + imageHC);
  						
  						if(imageHC != null) {
- 								beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IMAGE_URL", imageHC));
+ 								answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IMAGE_URL", imageHC));
  								
  						} else {
 							System.out.println("ERROR: Null imageHC"); 
@@ -103,7 +105,7 @@ rule "IS_INTERNSHIP"
 		}
 		
 		Answer answerWhichDays = new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_WHICH_DAYS_STRIPPED", whichDays);
-		beUtils.saveAnswer(answerWhichDays);
+		answers.add(answerWhichDays);
 		
 	
 		
@@ -199,7 +201,7 @@ rule "IS_INTERNSHIP"
     	System.out.println("Business hours = " + businessHours);
 		
 		if (businessHours != null) {
-				beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_BUSINESS_HOURS", businessHours));
+				answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_BUSINESS_HOURS", businessHours));
 				System.out.println("businessHours: " + businessHours);	
 		} else {
 			System.out.println("ERROR: Null businessHours"); 
@@ -210,7 +212,7 @@ rule "IS_INTERNSHIP"
 		System.out.println("created = " +created);
 		String prettyCreated = dtf.format(created);
     	System.out.println("prettyCreated ~ " + prettyCreated);
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_CREATED_DATE", prettyCreated)); */
+		answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_CREATED_DATE", prettyCreated)); */
 		
 		/* quantumCopy(sourceBE, sourceAtt, saveLink, strip, userToken, targetBE, targetAtt)*/
 		beUtils.quantumCopy(newBe, "LNK_NO_OF_INTERNS", false, true, userToken.getUserCode(), newBe.getCode(), "PRI_NO_OF_INTERNS");
@@ -227,6 +229,8 @@ rule "IS_INTERNSHIP"
 		
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
+
+		beUtils.saveAnswers(answers);
 		
 		retract(newBe)
 	

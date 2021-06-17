@@ -35,18 +35,20 @@ rule "IS_QA_HOST_CPY_REP"
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
  		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+
+ 		List<Answer> answers = new ArrayList<>();
  		
- 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_HOST_CPY_REP", "true"));
- 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS_COLOR", "#FF9100"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_PROFILE", "Incomplete"));
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
+ 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_HOST_CPY_REP", "true"));
+ 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS_COLOR", "#FF9100"));
+		answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_PROFILE", "Incomplete"));
+		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
 
 		/* Record who added them */
 		BaseEntity userBe = beUtils.getBaseEntityByCode(userToken.getUserCode());
 		if (userBe != null) {
 			String addedBy = userBe.getValue("PRI_NAME", null);
 			System.out.println("addedBy: " + addedBy);
-			beUtils.saveAnswer(new Answer(userToken.getCode(), newBe.getCode(), "PRI_ADDED_BY", addedBy));
+			answers.add(new Answer(userToken.getCode(), newBe.getCode(), "PRI_ADDED_BY", addedBy));
 		}
 		
 		Boolean isHostCpyRep = (Boolean) beUtils.getBaseEntityValue(userToken.getUserCode(), "PRI_IS_HOST_CPY_REP");
@@ -62,7 +64,7 @@ rule "IS_QA_HOST_CPY_REP"
 			if (isHostCpyRep != null && isHostCpyRep) {
 				/* If HostCpyRep adding another HostCpyRep, then set same company */
 				String userHostCpy = beUtils.getBaseEntityValueAsString(userToken.getUserCode(), "LNK_HOST_COMPANY");
-				beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_HOST_COMPANY", userHostCpy));
+				answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_HOST_COMPANY", userHostCpy));
 
 				companyBe = beUtils.getBaseEntityByCode(beUtils.cleanUpAttributeValue(userHostCpy));
 			} else {
@@ -73,9 +75,9 @@ rule "IS_QA_HOST_CPY_REP"
 				String cpyCode = "CPY_"+uuid;
 				beUtils.create(cpyCode, cpyCode);
 
-				beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_HOST_COMPANY", "[\""+cpyCode+"\"]"));
-				beUtils.saveAnswer(new Answer(userToken.getUserCode(), cpyCode, "PRI_IS_HOST_CPY", true));
-				beUtils.saveAnswer(new Answer(userToken.getUserCode(), cpyCode, "PRI_PROFILE", "Incomplete"));
+				answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_HOST_COMPANY", "[\""+cpyCode+"\"]"));
+				answers.add(new Answer(userToken.getUserCode(), cpyCode, "PRI_IS_HOST_CPY", true));
+				answers.add(new Answer(userToken.getUserCode(), cpyCode, "PRI_PROFILE", "Incomplete"));
 				
 				companyBe = beUtils.getBaseEntityByCode(cpyCode);
 			}
@@ -89,7 +91,7 @@ rule "IS_QA_HOST_CPY_REP"
 				/* save the company's name as PRI_ASSOC_HC attribute for person baseentity */
 				if(hcName != null){
 					Answer answerHC = new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASSOC_HC", hcName);
-					beUtils.saveAnswer(answerHC);
+					answers.add(answerHC);
 					VertxUtils.sendToFrontEnd(userToken, answerHC);
 
 				} else {
@@ -123,7 +125,7 @@ rule "IS_QA_HOST_CPY_REP"
 						userId = KeycloakUtils.updateUser(userCode,serviceToken.getToken(), serviceToken.getRealm(), email, firstname, lastname,  email, null, "user", "users");
 						userId = userId.toUpperCase();
 						Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),newBe.getCode(),"PRI_UUID",userId);
-						beUtils.saveAnswer(keycloakId);
+						answers.add(keycloakId);
 						System.out.println("Created User "+email+" in Keycloak with id = "+userId);
 
 						/* Generate a random 15 char password */
@@ -179,7 +181,7 @@ rule "IS_QA_HOST_CPY_REP"
 				if (allEmails != null && allEmails.contains("SEL_YES")) {
 					allEmailsBool = true;
 				}
-				beUtils.saveAnswer(new Answer(userToken.getUserCode(), user.getCode(), "PRI_EMAIL_FLAG", allEmailsBool));
+				answers.add(new Answer(userToken.getUserCode(), user.getCode(), "PRI_EMAIL_FLAG", allEmailsBool));
 		}
 		
 		if (allEmails.equals("SEL_YES")) {
@@ -220,6 +222,8 @@ rule "IS_QA_HOST_CPY_REP"
 		
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
+
+		beUtils.saveAnswers(answers);
 		
 		retract(newBe)
 	

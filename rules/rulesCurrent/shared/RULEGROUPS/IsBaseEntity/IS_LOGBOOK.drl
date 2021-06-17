@@ -32,7 +32,9 @@ rule "IS_LOGBOOK"
 		String internCode = userToken.getUserCode();
  		
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+
 		List<Answer> answers = new ArrayList<Answer>();
+		
  		answers.add(new Answer(userToken.getUserCode(), journalBe.getCode() ,"PRI_STATUS", "UNAPPROVED"));
  		answers.add(new Answer(userToken.getUserCode(), journalBe.getCode() ,"PRI_SYNC", "true"));
 		answers.add(new Answer(userToken.getUserCode(), journalBe.getCode() ,"LNK_INTERN", "[\"" + userToken.getUserCode() + "\"]"));
@@ -192,9 +194,9 @@ rule "IS_LOGBOOK"
 						}
 
 						/* save PRI_NUM_JOURNALS to app and intern */
-						beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), internCode,
+						answers.add(new Answer(beUtils.getGennyToken().getUserCode(), internCode,
 										"PRI_NUM_JOURNALS", completedJournals));
-						beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(),
+						answers.add(new Answer(beUtils.getGennyToken().getUserCode(),
 										app.getCode(), "PRI_NUM_JOURNALS", completedJournals));
 						
 						System.out.println("Saved PRI_NUM_JOURNALS to intern      ::   " + internCode);
@@ -211,9 +213,9 @@ rule "IS_LOGBOOK"
 						String journalStatus = completedJournals.toString() + "/" + totalJournals.toString();
 						System.out.println("journalStatus   ::   " + journalStatus);
 
-						beUtils.saveAnswer( new Answer(beUtils.getGennyToken().getUserCode(),
+						answers.add( new Answer(beUtils.getGennyToken().getUserCode(),
 										internCode, "PRI_JOURNAL_STATUS", journalStatus));
-						beUtils.saveAnswer( new Answer(beUtils.getGennyToken().getUserCode(),
+						answers.add( new Answer(beUtils.getGennyToken().getUserCode(),
 										app.getCode(), "PRI_JOURNAL_STATUS", journalStatus));
 						
 						System.out.println("Saved PRI_JOURNAL_STATUS to intern      ::   " + internCode);
@@ -224,9 +226,9 @@ rule "IS_LOGBOOK"
 					}
 
 					System.out.println("appProgress   ::   " + appProgress.toString());
-					beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), internCode, "PRI_PROGRESS",
+					answers.add(new Answer(beUtils.getGennyToken().getUserCode(), internCode, "PRI_PROGRESS",
 															appProgress.toString(), false, true));
-					beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), app.getCode(), "PRI_PROGRESS",
+					answers.add(new Answer(beUtils.getGennyToken().getUserCode(), app.getCode(), "PRI_PROGRESS",
 									appProgress.toString(), false, true));
 					
 					System.out.println("Saved PRI_PROGRESS to intern      ::   " + internCode);
@@ -239,7 +241,7 @@ rule "IS_LOGBOOK"
 			System.out.println("SBE_APPLICATIONS_INPROGRESS is not in cache!");
 		}
 
-		beUtils.saveAnswers(answers);
+		answers.adds(answers);
 
 		/* send cmd msg */
 		QCmdMessage msg = new QCmdMessage("TOAST", "INFO");
@@ -247,6 +249,8 @@ rule "IS_LOGBOOK"
 		msg.setToken(beUtils.getGennyToken().getToken());
 		msg.setSend(true);
 		VertxUtils.writeMsg("webcmds", msg);
+
+		beUtils.saveAnswers(answers);
 		
 		retract(journalBe);
 end
