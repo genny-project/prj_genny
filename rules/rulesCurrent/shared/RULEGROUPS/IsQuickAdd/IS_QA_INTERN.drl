@@ -310,6 +310,7 @@ rule "IS_QA_INTERN"
 		output.setResultCode("NONE");  /* don't display anything new */
 
 		
+		
 		beUtils.saveAnswers(answers);
 
 		retract(newBe)
