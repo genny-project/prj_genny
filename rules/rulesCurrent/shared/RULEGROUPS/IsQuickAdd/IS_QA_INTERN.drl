@@ -313,7 +313,6 @@ rule "IS_QA_INTERN"
 		
 
 		/*beUtils.saveAnswers(answers);*/
-		answersToSave.addAll(answers);
 		update(answersToSave);
 
 		retract(newBe)
