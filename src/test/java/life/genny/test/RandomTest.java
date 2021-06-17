@@ -128,7 +128,7 @@ public class RandomTest {
 		message.getData().setCode("QUE_SELECT_INTERN");
 		message.getData().setParentCode("QUE_BUCKET_INTERNS_GRP");
 		message.getData().setTargetCode("BKT_APPLICATIONS");
-		message.getData().setValue("Chri");
+		message.getData().setValue("");
 
 //		message = new QEventDropdownMessage("LNK_EDU_PROVIDER");
 //		message.setAttributeCode("LNK_EDU_PROVIDER");
@@ -148,7 +148,7 @@ public class RandomTest {
 
 		
 		if ("LNK_PERSON".equalsIgnoreCase(message.getAttributeCode())) {
-			QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message);
+			QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message,GennySettings.defaultDropDownPageSize);
 			System.out.println(msg);
 			msg.setToken(userToken.getToken());
 			
@@ -157,7 +157,7 @@ public class RandomTest {
 
 		
 		if ("LNK_EDU_PROVIDER".equalsIgnoreCase(message.getAttributeCode())) {
-			QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message);
+			QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message,GennySettings.defaultDropDownPageSize);
 			System.out.println(msg);
 			msg.setToken(userToken.getToken());
 			
@@ -166,7 +166,7 @@ public class RandomTest {
 
 		
 		if ("LNK_CURRENT_SOFTWARE".equalsIgnoreCase(message.getAttributeCode())) {
-			QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message);
+			QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message,GennySettings.defaultDropDownPageSize);
 			System.out.println(msg);
 			msg.setToken(userToken.getToken());
 			
