@@ -111,22 +111,55 @@ public class RandomTest {
 
 		List<BaseEntity> items = beUtils.getBaseEntitys(searchBE);
 
+		QEventDropdownMessage message = null;
+		message = new QEventDropdownMessage("LNK_PERSON");
+		message.setAttributeCode("LNK_PERSON");
+		message.setQuestionCode("QUE_SELECT_INTERN");
+		message.getData().setParentCode("QUE_BUCKET_INTERNS");
+		message.getData().setTargetCode("BKT_APPLICATIONS");
+		message.getData().setValue("Chris");
 
-		QEventDropdownMessage message = new QEventDropdownMessage("LNK_CURRENT_SOFTWARE");
-		message.setAttributeCode("LNK_CURRENT_SOFTWARE");
-		message.setQuestionCode("QUE_CURRENT_SOFTWARE");
-		message.getData().setParentCode("GRP_EDU_PROVIDER_SELECTION");
-		message.getData().setTargetCode("PER_086CDF1F-A98F-4E73-9825-0A4CFE2BB943");
-		message.getData().setValue("Wor");
+//		message = new QEventDropdownMessage("LNK_EDU_PROVIDER");
+//		message.setAttributeCode("LNK_EDU_PROVIDER");
+//		message.setQuestionCode("QUE_EDU_PROVIDER");
+//		message.getData().setParentCode("GRP_EDU_PROVIDER_SELECTION");
+//		message.getData().setTargetCode("PER_086CDF1F-A98F-4E73-9825-0A4CFE2BB943");
+//		message.getData().setValue("Melb");
 		
-		if ("LNK_EDU_PROVIDER".equalsIgnoreCase(message.getAttributeCode())) {
+		
+		
+//		message = new QEventDropdownMessage("LNK_CURRENT_SOFTWARE");
+//		message.setAttributeCode("LNK_CURRENT_SOFTWARE");
+//		message.setQuestionCode("QUE_CURRENT_SOFTWARE");
+//		message.getData().setParentCode("GRP_CURRENT_SOFTWARE_SELECTION");
+//		message.getData().setTargetCode("PER_086CDF1F-A98F-4E73-9825-0A4CFE2BB943");
+//		message.getData().setValue("Wor");
 
+		
+		if ("LNK_PERSON".equalsIgnoreCase(message.getAttributeCode())) {
 			QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message);
 			System.out.println(msg);
 			msg.setToken(userToken.getToken());
 			
-			VertxUtils.writeMsg("webcmds", msg);
+			VertxUtils.writeMsg("webcmds", msg);			
+		}
+
+		
+		if ("LNK_EDU_PROVIDER".equalsIgnoreCase(message.getAttributeCode())) {
+			QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message);
+			System.out.println(msg);
+			msg.setToken(userToken.getToken());
 			
+			VertxUtils.writeMsg("webcmds", msg);			
+		}
+
+		
+		if ("LNK_CURRENT_SOFTWARE".equalsIgnoreCase(message.getAttributeCode())) {
+			QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message);
+			System.out.println(msg);
+			msg.setToken(userToken.getToken());
+			
+			VertxUtils.writeMsg("webcmds", msg);			
 		}
 		
 		QDataBaseEntityMessage q = new QDataBaseEntityMessage();
