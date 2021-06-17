@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -49,6 +50,7 @@ import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.KeycloakUtils;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.utils.BaseEntityUtils;
+import life.genny.utils.RulesUtils;
 import life.genny.utils.SearchUtils;
 import life.genny.utils.VertxUtils;
 
@@ -110,14 +112,23 @@ public class RandomTest {
 		searchBE.setPageSize(1000);
 
 		List<BaseEntity> items = beUtils.getBaseEntitys(searchBE);
-
+		// Load up RuleUtils.defs
+		
+		RulesUtils.defs.put(realm,new ConcurrentHashMap<String,BaseEntity>());	
+		
+		for (BaseEntity item : items) {
+			item.setFastAttributes(true); // make fast
+			RulesUtils.defs.get(realm).put(item.getCode(),item);
+			//log.info("Saving ("+realm+") DEF "+item.getCode());
+		}
+		
 		QEventDropdownMessage message = null;
 		message = new QEventDropdownMessage("LNK_PERSON");
 		message.setAttributeCode("LNK_PERSON");
 		message.getData().setCode("QUE_SELECT_INTERN");
 		message.getData().setParentCode("QUE_BUCKET_INTERNS_GRP");
 		message.getData().setTargetCode("BKT_APPLICATIONS");
-		message.getData().setValue("Sam");
+		message.getData().setValue("Chri");
 
 //		message = new QEventDropdownMessage("LNK_EDU_PROVIDER");
 //		message.setAttributeCode("LNK_EDU_PROVIDER");
