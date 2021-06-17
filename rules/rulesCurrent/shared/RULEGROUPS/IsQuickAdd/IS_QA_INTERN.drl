@@ -44,18 +44,18 @@ rule "IS_QA_INTERN"
  		newBe.setFastAttributes(true);
  		List<Answer> answers = new ArrayList<>();
 
- 		answersToSave.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_INTERN", "true"));
- 		answersToSave.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_DISABLED", "false"));
- 		answersToSave.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS_COLOR", "#5cb85c"));
- 		answersToSave.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_PROFILE", "Incomplete"));
- 		answersToSave.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "PENDING"));
+ 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_INTERN", "true"));
+ 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_DISABLED", "false"));
+ 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS_COLOR", "#5cb85c"));
+ 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_PROFILE", "Incomplete"));
+ 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "PENDING"));
 
  		/* Record who added them */
 		BaseEntity userBe = beUtils.getBaseEntityByCode(userToken.getUserCode());
 		if (userBe != null) {
 			String addedBy = userBe.getValue("PRI_NAME", null);
 			System.out.println("addedBy: " + addedBy);
-			answersToSave.add(new Answer(userToken.getCode(), newBe.getCode(), "PRI_ADDED_BY", addedBy));
+			answers.add(new Answer(userToken.getCode(), newBe.getCode(), "PRI_ADDED_BY", addedBy));
 		}
 
 		String target = newBe.getCode();	
@@ -66,7 +66,7 @@ rule "IS_QA_INTERN"
 		String lnkAgent = targetBe.getValue("LNK_AGENT", null);
 		System.out.println("lnkAgent = " +lnkAgent);
 		if (lnkAgent != null) {
-				answersToSave.add(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_AGENT", lnkAgent));
+				answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_AGENT", lnkAgent));
 		
 				lnkAgent = lnkAgent.replace("\"", "").replace("[", "").replace("]", "");
 				System.out.println("lnkAgent = " +lnkAgent);
@@ -79,7 +79,7 @@ rule "IS_QA_INTERN"
 						System.out.println("agent = " +agent);
 						
 						if (agent !=null ) {
-							answersToSave.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_AGENT_NAME", agent));
+							answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_AGENT_NAME", agent));
 						}
 				} else {
 					System.out.println("ERROR: Null agentBe"); 
@@ -92,7 +92,7 @@ rule "IS_QA_INTERN"
 		String lnkBatch = targetBe.getValue("LNK_SELECT_BATCH", null);
 		System.out.println("lnkBatch = " +lnkBatch);
 		if (lnkBatch != null) {
-				answersToSave.add(new Answer(userToken.getUserCode(), newBe.getCode(), " LNK_BATCH", lnkBatch));
+				answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), " LNK_BATCH", lnkBatch));
 		
 				lnkBatch = lnkBatch.replace("\"", "").replace("[", "").replace("]", "");
 				System.out.println("lnkBatch = " +lnkBatch);
@@ -105,7 +105,7 @@ rule "IS_QA_INTERN"
 						System.out.println("batch = " +batch);
 						
 						if (batch !=null ) {
-							answersToSave.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_BATCH", batch));
+							answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_BATCH", batch));
 						}
 				} else {
 					System.out.println("ERROR: Null batchBe"); 
@@ -139,7 +139,7 @@ rule "IS_QA_INTERN"
 						userId = KeycloakUtils.updateUser(userCode,serviceToken.getToken(), serviceToken.getRealm(), email, firstname, lastname,  email, null, "user", "users");
 						userId = userId.toUpperCase();
 						Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),newBe.getCode(),"PRI_UUID",userId);
-						answersToSave.add(keycloakId);
+						answers.add(keycloakId);
 						System.out.println("Created User "+email+" in Keycloak with id = "+userId);
 
 						/* Generate a random 15 char password */
