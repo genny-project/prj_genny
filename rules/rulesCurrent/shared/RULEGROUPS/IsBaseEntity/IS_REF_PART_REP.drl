@@ -97,7 +97,7 @@ rule "IS_REF_PART_REP"
 		output.setTypeOfResult("NONE");
   		output.setResultCode("NONE");  /* dont display anything new */
 
-  		answers.adds(answers);
+  		beUtils.saveAnswers(answers);
 
 		retract(newBe)
 	

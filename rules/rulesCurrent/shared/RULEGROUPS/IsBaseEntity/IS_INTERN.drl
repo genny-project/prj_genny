@@ -363,7 +363,7 @@ rule "IS_INTERN"
 
 
 
-			newBe = answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHED_INTERNSHIPS", results));
+			newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHED_INTERNSHIPS", results));
 
 			newBe = beUtils.getBaseEntityByCode(newBe.getCode());
 
