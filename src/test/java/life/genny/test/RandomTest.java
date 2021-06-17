@@ -114,10 +114,10 @@ public class RandomTest {
 		QEventDropdownMessage message = null;
 		message = new QEventDropdownMessage("LNK_PERSON");
 		message.setAttributeCode("LNK_PERSON");
-		message.setQuestionCode("QUE_SELECT_INTERN");
-		message.getData().setParentCode("QUE_BUCKET_INTERNS");
+		message.getData().setCode("QUE_SELECT_INTERN");
+		message.getData().setParentCode("QUE_BUCKET_INTERNS_GRP");
 		message.getData().setTargetCode("BKT_APPLICATIONS");
-		message.getData().setValue("Chris");
+		message.getData().setValue("Sam");
 
 //		message = new QEventDropdownMessage("LNK_EDU_PROVIDER");
 //		message.setAttributeCode("LNK_EDU_PROVIDER");
