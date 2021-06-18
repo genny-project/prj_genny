@@ -62,7 +62,7 @@ rule "DROPDOWN_CLICK_EVENT_BUCKET"
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + message );
 
 
-		System.out.println(ruleDetails+" "+drools.getRule().getName()+" attributeCode = "+message.getAttributeCode()+" question:"+message.getData().getCode());
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" attributeCode = "+message.getAttributeCode()+" question:"+message.getQuestionCode() + " code: " + message.getData().getCode());
 		Integer dropdownSize = GennySettings.defaultDropDownPageSize;
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" dropdownsize = "+dropdownSize);
 
@@ -70,13 +70,9 @@ rule "DROPDOWN_CLICK_EVENT_BUCKET"
 
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" "+msg);
 		msg.setToken(userToken.getToken());
-		if (msg.getItems().length >1) {
-			VertxUtils.writeMsg("webcmds",msg);
-			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Sent dropdown message2 with "+msg.getItems().length+" items");
-		} else {
-			VertxUtils.writeMsg("webcmds",msg);
-			System.out.println(ruleDetails+" "+drools.getRule().getName()+" No Dropdown Data sent");
-		}
+		VertxUtils.writeMsg("webcmds",msg);
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Sent dropdown message2 with "+msg.getItems().length+" items");
+
 		retract(message);
 		System.out.println("Retracted message");
 		output.setTypeOfResult("NONE");
