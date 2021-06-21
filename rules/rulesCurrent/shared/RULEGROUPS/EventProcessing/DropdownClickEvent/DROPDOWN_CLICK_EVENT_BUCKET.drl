@@ -52,14 +52,18 @@ rule "DROPDOWN_CLICK_EVENT_BUCKET"
 	salience 2000
     no-loop
     when
-			message : QEventDropdownMessage( attributeCode matches "LNK_.*" )
-			userToken : GennyToken (code != "PER_SERVICE" )
-			serviceToken : GennyToken( code == "PER_SERVICE")
-			output : OutputParam( )
-			ruleDetails : RuleDetails()
-			beUtils : BaseEntityUtils()
+		message : QEventDropdownMessage( 
+			attributeCode == "LNK_PERSON" ||
+			attributeCode == "LNK_HOST_COMPANY" ||
+			attributeCode == "LNK_EDU_PROVIDER"
+			)
+		userToken : GennyToken (code != "PER_SERVICE" )
+		serviceToken : GennyToken( code == "PER_SERVICE")
+		output : OutputParam( )
+		ruleDetails : RuleDetails()
+		beUtils : BaseEntityUtils()
     then
-			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + message );
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + message );
 
 
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" attributeCode = "+message.getAttributeCode()+" question:"+message.getQuestionCode() + " code: " + message.getData().getCode());
