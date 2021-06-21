@@ -77,6 +77,8 @@
       <drools:import name="life.genny.qwanda.Answer"/>
       <drools:import name="life.genny.qwandautils.KeycloakUtils"/>
       <drools:import name="life.genny.utils.TableUtils"/>
+	  <drools:import name="java.util.ArrayList"/>
+      <drools:import name="java.util.List"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_556" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_556" name="serviceToken"/>
@@ -338,6 +340,13 @@ System.out.println(&quot;WORKFLOW CHANGE - DRIVING WITH DOM&quot;);
 	System.out.println(&quot;QUICK_ADD_ENTITY: newBe = &quot; + newBe);
 	System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);
 
+	String typeAttribute = &quot;PRI_IS_&quot; + key.split("QA_")[1];
+	if (key.equals(&quot;QA_EDU_PRO&quot;)) {
+		typeAttribute = &quot;PRI_IS_EDU_PROVIDER&quot;;
+	}
+	List&lt;Answer> answers = new ArrayList&lt;Answer>();
+	answers.add(new Answer(userToken.getUserCode(), newCode, typeAttribute, &quot;true&quot;));
+	beUtils.saveAnswers(answers);
 
 
 	String templateCode = &quot;TEMPLATE_&quot; + baseEntityType;
