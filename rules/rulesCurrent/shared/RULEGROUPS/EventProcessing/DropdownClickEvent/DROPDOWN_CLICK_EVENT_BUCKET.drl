@@ -52,7 +52,10 @@ rule "DROPDOWN_CLICK_EVENT_BUCKET"
 	salience 2000
     no-loop
     when
-			message : QEventDropdownMessage( attributeCode == "LNK_PERSON" )
+			message : QEventDropdownMessage( 
+				attributeCode == "LNK_PERSON" ||
+				attributeCode == "LNK_HOST_COMPANY"
+				)
 			userToken : GennyToken (code != "PER_SERVICE" )
 			serviceToken : GennyToken( code == "PER_SERVICE")
 			output : OutputParam( )
