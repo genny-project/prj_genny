@@ -40,9 +40,24 @@ rule "RETURN_ATTRIBUTE_VALUE"
 		String value = answer.getValue();
 		System.out.println("value = " + value);
 
-		/* Send val to FE */
-		Answer answerColumn = new Answer(userToken.getUserCode(), targetCode, attributeCode, value);
-		VertxUtils.sendToFrontEnd(userToken, answerColumn);
+		BaseEntity be = VertxUtils.getObject(userToken.getRealm(), "", targetCode, BaseEntity.class,
+				userToken.getToken());
+		if (be != null) {
+
+			be.setRealm(userToken.getRealm());
+
+			try {
+				Attribute att = RulesUtils.getAttribute(attributeCode, userToken.getToken());
+				be.addAttribute(att);
+				be.setValue(att, value);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			QDataBaseEntityMessage msg = new QDataBaseEntityMessage(be);
+			msg.setReplace(true);
+			msg.setToken(userToken.getToken());
+			VertxUtils.writeMsg("webcmds", msg);
+		}
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
