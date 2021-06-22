@@ -47,15 +47,12 @@ import life.genny.utils.CacheSearchUtils;
 import life.genny.utils.SearchUtils;
 import life.genny.qwandautils.GennySettings;
 
-rule "DROPDOWN_CLICK_EVENT_BUCKET"
+rule "DROPDOWN_CLICK_EVENT"
     ruleflow-group 'EventProcessing'
 	salience 2000
     no-loop
     when
-			message : QEventDropdownMessage( 
-				attributeCode == "LNK_PERSON" ||
-				attributeCode == "LNK_HOST_COMPANY"
-				)
+			message : QEventDropdownMessage(	)
 			userToken : GennyToken (code != "PER_SERVICE" )
 			serviceToken : GennyToken( code == "PER_SERVICE")
 			output : OutputParam( )
@@ -69,18 +66,30 @@ rule "DROPDOWN_CLICK_EVENT_BUCKET"
 		Integer dropdownSize = GennySettings.defaultDropDownPageSize;
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" dropdownsize = "+dropdownSize);
 
-		QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message,dropdownSize);
+		/* Now filter these initial dropdown events until everything is captured */
+		BaseEntity targetBe = beUtils.getBaseEntityByCode(message.getData().getTargetCode());
+		BaseEntity defBe = beUtils.getDEF(targetBe);
+		
+		if ("LNK_EDU_PROVIDER".equals(message.getAttributeCode()) && "DEF_INTERN".equals(defBe.getCode())
+		|| "LNK_PERSON".equals(message.getAttributeCode()) && "DEF_BUCKET_PAGE".equals(defBe.getCode())
+		)
+		{
+						QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message,dropdownSize);
 
-		System.out.println(ruleDetails+" "+drools.getRule().getName()+" "+msg);
-		msg.setToken(userToken.getToken());
-		VertxUtils.writeMsg("webcmds",msg);
-		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Sent dropdown message2 with "+msg.getItems().length+" items");
+						System.out.println(ruleDetails+" "+drools.getRule().getName()+" "+msg);
+						msg.setToken(userToken.getToken());
+						VertxUtils.writeMsg("webcmds",msg);
+						System.out.println(ruleDetails+" "+drools.getRule().getName()+" Sent dropdown message2 with "+msg.getItems().length+" items");
 
-		retract(message);
-		System.out.println("Retracted message");
-		output.setTypeOfResult("NONE");
-		output.setResultCode("NONE");  /* don't display anything new */
-		update(output);
+						retract(message);
+						System.out.println("Retracted message");
+						output.setTypeOfResult("NONE");
+						output.setResultCode("NONE");  /* don't display anything new */
+						update(output);
+
+		}
+
+		
 		System.out.println("End Dropdown Rule");
 
 	end
