@@ -76,7 +76,7 @@ rule "DROPDOWN_CLICK_EVENT"
 		|| "LNK_PERSON".equals(message.getAttributeCode()) && "DEF_BUCKET_PAGE".equals(defBe.getCode())
 		)
 		{
-						System.out.println(ruleDetails+" "+drools.getRule().getName()+" INVOKING DEF DROPDOWN RULE")
+						System.out.println(ruleDetails+" "+drools.getRule().getName()+" INVOKING DEF DROPDOWN RULE");
 						QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message,dropdownSize);
 
 						System.out.println(ruleDetails+" "+drools.getRule().getName()+" "+msg);
