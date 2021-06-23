@@ -70,7 +70,7 @@ rule "DROPDOWN_CLICK_EVENT"
 		BaseEntity targetBe = beUtils.getBaseEntityByCode(message.getData().getTargetCode());
 		BaseEntity defBe = beUtils.getDEF(targetBe);
 		if (defBe != null) {
-			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Target DEF identified as "+defBe.getCode()+" "+defBe.getName()));
+			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Target DEF identified as "+defBe.getCode()+" "+defBe.getName());
 		
 			if ("LNK_EDU_PROVIDER".equals(message.getAttributeCode()) && "DEF_INTERN".equals(defBe.getCode())
 				|| "LNK_PERSON".equals(message.getAttributeCode()) && "DEF_BUCKET_PAGE".equals(defBe.getCode())
