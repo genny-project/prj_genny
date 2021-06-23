@@ -70,12 +70,12 @@ rule "DROPDOWN_CLICK_EVENT"
 		BaseEntity targetBe = beUtils.getBaseEntityByCode(message.getData().getTargetCode());
 		BaseEntity defBe = beUtils.getDEF(targetBe);
 		if (defBe != null) {
-		System.out.println(	System.out.println(ruleDetails+" "+drools.getRule().getName()+" Target DEF identified as "+defBe.getCode()+" "+defBe.getName()));
+			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Target DEF identified as "+defBe.getCode()+" "+defBe.getName()));
 		
-		if ("LNK_EDU_PROVIDER".equals(message.getAttributeCode()) && "DEF_INTERN".equals(defBe.getCode())
-		|| "LNK_PERSON".equals(message.getAttributeCode()) && "DEF_BUCKET_PAGE".equals(defBe.getCode())
-		)
-		{
+			if ("LNK_EDU_PROVIDER".equals(message.getAttributeCode()) && "DEF_INTERN".equals(defBe.getCode())
+				|| "LNK_PERSON".equals(message.getAttributeCode()) && "DEF_BUCKET_PAGE".equals(defBe.getCode())
+			)
+			{
 						System.out.println(ruleDetails+" "+drools.getRule().getName()+" INVOKING DEF DROPDOWN RULE");
 						QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message,dropdownSize);
 
@@ -90,7 +90,7 @@ rule "DROPDOWN_CLICK_EVENT"
 						output.setResultCode("NONE");  /* don't display anything new */
 						update(output);
 
-		}
+			}
 		}
 		
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" End Dropdown Rule");
