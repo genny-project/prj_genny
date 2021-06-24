@@ -148,6 +148,18 @@ rule "IS_QA_INTERN"
 						password = new SecureRandom().ints(15, 0, allowed.length).mapToObj(i -> String.valueOf(allowed[i])).collect(Collectors.joining());
 						KeycloakUtils.setPassword(serviceToken.getToken(), serviceToken.getRealm(), userId, password, true);
 
+						/* TEMPORARY UNTIL PRODUCTION REACHES 9.2.0 */
+						if (GennySettings.projectUrl.contains("dev")) {
+							/* Send them an email with their password */
+							String url = GennySettings.projectUrl + "/home";
+							HashMap<String, String> templateData = new HashMap<String, String>();
+							templateData.put("name", firstname);
+							templateData.put("password", password);
+							templateData.put("url", url);
+
+							EmailHelper.sendGrid(beUtils, email, "", "d-100adae110bb46eb999cd8b48666cad0", templateData, true);
+						}
+
 					} else {
 					     System.out.println("KEYCLOAK QUICK ADD USER CREATION DISABLED IN RULE IS_INTERN");
 					}
