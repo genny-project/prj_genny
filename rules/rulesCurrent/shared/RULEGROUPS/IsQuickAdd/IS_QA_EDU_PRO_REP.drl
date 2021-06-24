@@ -86,6 +86,8 @@ rule "IS_QA_EDU_PRO_REP"
 		System.out.println("User "+user+" with userCode = "+userCode);
 		
 		String email = "";
+		/* NOTE: THIS IS ONLY A BACKUP PASSWORD */
+		String password = "password1";
 		String userId = "";
 		
 		String firstname = user.getValue("PRI_FIRSTNAME",null);
@@ -102,19 +104,9 @@ rule "IS_QA_EDU_PRO_REP"
 
 					/* Generate a random 15 char password */
 					char[] allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGJKLMNPRSTUVWXYZ0123456789^$?!@#%&".toCharArray();
-					String password = new SecureRandom().ints(15, 0, allowed.length).mapToObj(i -> String.valueOf(allowed[i])).collect(Collectors.joining());
+					password = new SecureRandom().ints(15, 0, allowed.length).mapToObj(i -> String.valueOf(allowed[i])).collect(Collectors.joining());
 					KeycloakUtils.setPassword(serviceToken.getToken(), serviceToken.getRealm(), userId, password, true);
 
-					/* Send them an email with their password */
-					String url = GennySettings.projectUrl + "/home";
-					HashMap<String, String> templateData = new HashMap<String, String>();
-					templateData.put("name", firstname);
-					templateData.put("password", password);
-					templateData.put("url", url);
-						
-					List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
-					
-					EmailHelper.sendGrid(beUtils, email, null, bccList, "", "d-100adae110bb46eb999cd8b48666cad0", templateData, true);		
 				}
 			}
 		}
@@ -170,6 +162,7 @@ rule "IS_QA_EDU_PRO_REP"
 			
 			HashMap<String, String> templateData = new HashMap<String, String>();
 	    	templateData.put("EduProRep", firstname);
+			templateData.put("password", password);
 	    	templateData.put("url", url);
 				
 			List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");

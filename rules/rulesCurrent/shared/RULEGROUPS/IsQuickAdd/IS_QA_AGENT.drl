@@ -76,6 +76,8 @@ rule "IS_QA_AGENT"
 		System.out.println("User "+user+" with userCode = "+userCode);
 		
 		String email = "stephenie.pulis-cassar@outcomelife.com.au";
+		/* NOTE: THIS IS ONLY A BACKUP PASSWORD */
+		String password = "password1";
 		
 		String firstname = user.getValue("PRI_FIRSTNAME",null);
 		if (firstname != null) {
@@ -93,19 +95,9 @@ rule "IS_QA_AGENT"
 
 						/* Generate a random 15 char password */
 						char[] allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGJKLMNPRSTUVWXYZ0123456789^$?!@#%&".toCharArray();
-						String password = new SecureRandom().ints(15, 0, allowed.length).mapToObj(i -> String.valueOf(allowed[i])).collect(Collectors.joining());
+						password = new SecureRandom().ints(15, 0, allowed.length).mapToObj(i -> String.valueOf(allowed[i])).collect(Collectors.joining());
 						KeycloakUtils.setPassword(serviceToken.getToken(), serviceToken.getRealm(), userId, password, true);
 
-						/* Send them an email with their password */
-						String url = GennySettings.projectUrl + "/home";
-						HashMap<String, String> templateData = new HashMap<String, String>();
-						templateData.put("name", firstname);
-						templateData.put("password", password);
-						templateData.put("url", url);
-							
-						List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
-						
-						EmailHelper.sendGrid(beUtils, email, null, bccList, "", "d-100adae110bb46eb999cd8b48666cad0", templateData, true);		
 					} else {
 					     System.out.println("KEYCLOAK USER CREATION DISABLED IN RULE IS_AGENT");
 					}
@@ -143,7 +135,7 @@ rule "IS_QA_AGENT"
 		
 			BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
 			
-			String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, userCode, serviceToken.getToken());
+			String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, email, serviceToken.getToken());
 			System.out.println("token: " + token);
 		
 	
@@ -169,6 +161,7 @@ rule "IS_QA_AGENT"
 			
 			HashMap<String, String> templateData = new HashMap<String, String>();
 	    	templateData.put("intern", firstname);
+			templateData.put("password", password);
 	    	templateData.put("url", url);
 			
 			List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
