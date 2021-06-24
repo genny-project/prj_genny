@@ -194,25 +194,31 @@ rule "PRI_SUBMIT_FILTER"
 			} else {
 				System.out.println("filterDetailArray is NULL, not adding new filter");
 			}
-			
+
 			/* CLEAR DROPDOWNS */
-			Answer answerColumn = new Answer(sourceCode, targetCode, "LNK_FILTER_COLUMN", "");
-			VertxUtils.sendToFrontEnd(userToken, answerColumn);
 
-			Answer answerOption = new Answer(sourceCode, targetCode, "LNK_FILTER_OPTION", "");
-			VertxUtils.sendToFrontEnd(userToken, answerOption);
+			String[] clearAttributes = { "LNK_FILTER_COLUMN", "LNK_FILTER_OPTION", "PRI_FILTER_VALUE_TEXT", "PRI_FILTER_VALUE_DATETIME", "LNK_SELECT_COUNTRY", "LNK_SELECT_STATE" };
 
-			Answer answerValueText = new Answer(sourceCode, targetCode, "PRI_FILTER_VALUE_TEXT", "");
-			VertxUtils.sendToFrontEnd(userToken, answerValueText);
+			BaseEntity be = VertxUtils.getObject(userToken.getRealm(), "", targetCode, BaseEntity.class,
+					userToken.getToken());
+			if (be != null) {
 
-			Answer answerValueDatetime = new Answer(sourceCode, targetCode, "PRI_FILTER_VALUE_DATETIME", "");
-			VertxUtils.sendToFrontEnd(userToken, answerValueDatetime);
+				be.setRealm(userToken.getRealm());
 
-			Answer answerValueCountry = new Answer(sourceCode, targetCode, "LNK_SELECT_COUNTRY", "");
-			VertxUtils.sendToFrontEnd(userToken, answerValueCountry);
-
-			Answer answerValueState = new Answer(sourceCode, targetCode, "LNK_SELECT_STATE", "");
-			VertxUtils.sendToFrontEnd(userToken, answerValueState);
+				for (String attributeCode : clearAttributes) {
+					try {
+						Attribute att = RulesUtils.getAttribute(attributeCode, userToken.getToken());
+						be.addAttribute(att);
+						be.setValue(att, "");
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				QDataBaseEntityMessage msg = new QDataBaseEntityMessage(be);
+				msg.setReplace(true);
+				msg.setToken(userToken.getToken());
+				VertxUtils.writeMsg("webcmds", msg);
+			}
 
 			System.out.println("Dropdowns cleared!");
 
