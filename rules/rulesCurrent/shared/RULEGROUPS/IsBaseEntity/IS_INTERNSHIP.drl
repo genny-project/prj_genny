@@ -131,7 +131,7 @@ rule "IS_INTERNSHIP"
 		/* ========== Sending Slack Notification ============ */
 
 				BaseEntity agent = beUtils.getBaseEntityByCode("CPY_OUTCOME_LIFE");
-				webhookURL = agent.getValueAsString("https://hooks.slack.com/services/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");
+				String webhookURL = agent.getValueAsString("https://hooks.slack.com/services/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");
 				System.out.println("Slack Notification :: webhookURL :: " + webhookURL);
 				LocalDateTime updateTime = LocalDateTime.now();
 
