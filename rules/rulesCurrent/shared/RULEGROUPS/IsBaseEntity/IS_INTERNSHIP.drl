@@ -128,6 +128,24 @@ rule "IS_INTERNSHIP"
 		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
 		
 		
+		/* ========== Sending Slack Notification ============ */
+
+				BaseEntity agent = beUtils.getBaseEntityByCode("CPY_OUTCOME_LIFE");
+				webhookURL = agent.getValueAsString("https://hooks.slack.com/services/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");
+				System.out.println("Slack Notification :: webhookURL :: " + webhookURL);
+				updateTime = LocalDateTime.now();
+
+				JsonObject msgpayload = new JsonObject();
+
+			/*	System.out.println("Payload is" + msgpayload.toString()); */
+				
+				try {
+					QwandaUtils.apiPostEntity(webhookURL, "New Intership created", serviceToken.getToken());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+		
+		
 		/* Construct Business Hours */
 		String lnkBH = newBe.getValue("LNK_BUSINESS_HOURS", null);
 		System.out.println("lnkBH = " + lnkBH);
