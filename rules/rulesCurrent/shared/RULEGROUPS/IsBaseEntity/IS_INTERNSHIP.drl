@@ -133,7 +133,7 @@ rule "IS_INTERNSHIP"
 				BaseEntity agent = beUtils.getBaseEntityByCode("CPY_OUTCOME_LIFE");
 				webhookURL = agent.getValueAsString("https://hooks.slack.com/services/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");
 				System.out.println("Slack Notification :: webhookURL :: " + webhookURL);
-				updateTime = LocalDateTime.now();
+				LocalDateTime updateTime = LocalDateTime.now();
 
 				JsonObject msgpayload = new JsonObject();
 
