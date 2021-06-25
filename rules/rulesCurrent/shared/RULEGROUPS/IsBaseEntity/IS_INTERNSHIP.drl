@@ -40,7 +40,7 @@ rule "IS_INTERNSHIP"
 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_FULL", "false"));
 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_CURRENT_INTERNS", "0"));
-		
+		beUtils.saveAnswers(answers);
  				
 		/* Refresh the BaseEntity because reasons... */
  		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
@@ -130,83 +130,85 @@ rule "IS_INTERNSHIP"
 		
 		/* Construct Business Hours */
 		String lnkBH = newBe.getValue("LNK_BUSINESS_HOURS", null);
-		System.out.println("lnkBH = " + lnkBH);
-		
-        
-        String input = lnkBH.replace("[","").replace("]","");
-      
-        String[] splt = input.split(",");
-        
-        String startStr = splt[0];
-        String endStr = splt[1];
-    
-    	String minStart = "";
-    	String minEnd = "";
-    
-    	int lenStart = startStr.length();
-    	int lenEnd = endStr.length();    
-    
-    	if (startStr.contains(".5")) {  
-          	minStart = ":30";
-          	startStr = startStr.substring(0, lenStart - 2);
-        } else {
-            minStart = ":00"; 
-        }
-        
-        if (endStr.contains(".5")) {
-            minEnd = ":30";
-          	endStr = endStr.substring(0, lenEnd - 2);
-        } else {
-            minEnd = ":00";
-        }
-    
-    
-    	double startD = Double.parseDouble(startStr);
-        double endD = Double.parseDouble(endStr);
-    
-    	String startMeridiem = "";
-        String endMeridiem = "";
-    	
-    
-        if (startD < 12.0) {
-            startMeridiem = "AM";
-        } else {
-            startMeridiem = "PM";
-            startD = startD - 12.0;
-        }
-        
-        if (endD < 12.0) {
-            endMeridiem = "AM";
-        } else {
-            endMeridiem = "PM";
-          	endD = endD - 12.0;
-        }
-    
-    	String newStartStr = String.valueOf(startD);
-    	String newEndStr = String.valueOf(endD);
-    
-    	int lenNewStart = newStartStr.length();
-    	int lenNewEnd = newEndStr.length();   
-    
-    	String trimStartStr = newStartStr.substring(0, lenNewStart - 2);
-    	String trimEndStr = newEndStr.substring(0, lenNewEnd - 2);
-    
-    	String startTime = trimStartStr + minStart + " "+ startMeridiem;
-    	String endTime = trimEndStr + minEnd + " "+ endMeridiem;
-    
-    	System.out.println("Start time = " + startTime);
-        System.out.println("End time = " + endTime);
-    
-    	String businessHours = startTime + " - " + endTime;
-    	System.out.println("Business hours = " + businessHours);
-		
-		if (businessHours != null) {
-				answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_BUSINESS_HOURS", businessHours));
-				System.out.println("businessHours: " + businessHours);	
-		} else {
-			System.out.println("ERROR: Null businessHours"); 
-		}
-		
+		if(!(lnkBH.isEmpty()))
+		{
+			System.out.println("lnkBH = " + lnkBH);
+			
+	        
+	        String input = lnkBH.replace("[","").replace("]","");
+	      
+	        String[] splt = input.split(",");
+	        
+	        String startStr = splt[0];
+	        String endStr = splt[1];
+	    
+	    	String minStart = "";
+	    	String minEnd = "";
+	    
+	    	int lenStart = startStr.length();
+	    	int lenEnd = endStr.length();    
+	    
+	    	if (startStr.contains(".5")) {  
+	          	minStart = ":30";
+	          	startStr = startStr.substring(0, lenStart - 2);
+	        } else {
+	            minStart = ":00"; 
+	        }
+	        
+	        if (endStr.contains(".5")) {
+	            minEnd = ":30";
+	          	endStr = endStr.substring(0, lenEnd - 2);
+	        } else {
+	            minEnd = ":00";
+	        }
+	    
+	    
+	    	double startD = Double.parseDouble(startStr);
+	        double endD = Double.parseDouble(endStr);
+	    
+	    	String startMeridiem = "";
+	        String endMeridiem = "";
+	    	
+	    
+	        if (startD < 12.0) {
+	            startMeridiem = "AM";
+	        } else {
+	            startMeridiem = "PM";
+	            startD = startD - 12.0;
+	        }
+	        
+	        if (endD < 12.0) {
+	            endMeridiem = "AM";
+	        } else {
+	            endMeridiem = "PM";
+	          	endD = endD - 12.0;
+	        }
+	    
+	    	String newStartStr = String.valueOf(startD);
+	    	String newEndStr = String.valueOf(endD);
+	    
+	    	int lenNewStart = newStartStr.length();
+	    	int lenNewEnd = newEndStr.length();   
+	    
+	    	String trimStartStr = newStartStr.substring(0, lenNewStart - 2);
+	    	String trimEndStr = newEndStr.substring(0, lenNewEnd - 2);
+	    
+	    	String startTime = trimStartStr + minStart + " "+ startMeridiem;
+	    	String endTime = trimEndStr + minEnd + " "+ endMeridiem;
+	    
+	    	System.out.println("Start time = " + startTime);
+	        System.out.println("End time = " + endTime);
+	    
+	    	String businessHours = startTime + " - " + endTime;
+	    	System.out.println("Business hours = " + businessHours);
+			
+			if (businessHours != null) {
+					answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_BUSINESS_HOURS", businessHours));
+					System.out.println("businessHours: " + businessHours);	
+			} else {
+				System.out.println("ERROR: Null businessHours"); 
+			}
+		}	
 		/* DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd MMM yyyy");
     	LocalDateTime created = newBe.getCreated();
 		System.out.println("created = " +created);
