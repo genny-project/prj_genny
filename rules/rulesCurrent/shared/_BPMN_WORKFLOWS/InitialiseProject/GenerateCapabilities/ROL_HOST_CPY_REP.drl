@@ -68,6 +68,7 @@ rule "ROL_HOST_CPY_REP"
    	     capabilityUtils.addCapabilityToRole(role,"DOWNLOAD_OHNS_AGREEMENT_DOC",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"DOWNLOAD_SERVICE_AGREEMENT_DOC",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"DOWNLOAD_HC_TERMS_AND_CONDITIONS_DOC",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"DOWNLOAD_INTERNSHIP_AGREEMENT_DOC",CapabilityMode.VIEW);
   	     
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
   	     beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_WEIGHT", 500.0,false,true));
