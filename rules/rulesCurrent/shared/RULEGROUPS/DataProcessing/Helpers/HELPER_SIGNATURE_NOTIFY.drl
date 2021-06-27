@@ -110,13 +110,19 @@ rule "HELPER_SIGNATURE_NOTIFY"
 			}
 			System.out.println("companyBE = " + companyBE);
 			System.out.println("hostCompanyName = " + hostCompanyName);
+
+			String agentEmail = "internmatch@outcomelife.com.au";
 			
 			/* Init Data for Email */
 			BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
 
-			String cleanUrl = GennySettings.projectUrl+"/home/UVVFX1RBQkxFX1JFU1VMVFNfR1JQ/UVVFX1RBQkxFX0xBWllfTE9BRA==";
-			/* TODO: PUT IN TOKEN */
-			String url = cleanUrl;
+			String urlParentCode = "SBE_OFFERED_APPLICATIONS_"+userToken.getSessionCode().toUpperCase();
+			String cleanUrl = EmailHelper.encodeUrl(GennySettings.projectUrl+"/home", urlParentCode, "ACT_PRI_EVENT_VIEW_APPLICATION", targetBe.getCode());
+
+			String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, agentEmail, serviceToken.getToken());
+			System.out.println("token: " + token);
+
+			String url = cleanUrl +"?token=" + token;
 			System.out.println("url = " + url);
 
 			/* Send Confirmation of HC Rep Signature to Agent */
@@ -134,21 +140,21 @@ rule "HELPER_SIGNATURE_NOTIFY"
 				/* Intern has signed */
 				templateId = "d-c0eb435cbc844647a20d6ecfe165998f";
 				/* Send Email to Agent notifying of Signature */
-				EmailHelper.sendGrid(beUtils, "internmatch@outcomelife.com.au", "", templateId, templateData, false);
+				EmailHelper.sendGrid(beUtils, agentEmail, "", templateId, templateData, false);
 
 			} else if (attributeCode.startsWith("PRI_AGR_DOC_HC_SIGNATURE")) {
 				/* HC Rep has signed */
 				templateId = "d-550f8a48d8a1482889b4c547bf581552";
 
 				/* Send Email to Agent notifying of Signature */
-				EmailHelper.sendGrid(beUtils, "internmatch@outcomelife.com.au", "", templateId, templateData, false);
+				EmailHelper.sendGrid(beUtils, agentEmail, "", templateId, templateData, false);
 			} else if (attributeCode.startsWith("PRI_AGR_DOC_OUTCOME_")) {
 				/* Agent has signed */
 				System.out.println("Outcome Life Signature Detected. Sending email to HCR and INTERN to remind signature");
 				List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
 				
 				/* SEND TO SUPERVISOR */
-				String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, supervisorEmail, serviceToken.getToken());
+				token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, supervisorEmail, serviceToken.getToken());
 				System.out.println("token: " + token);
 				url = cleanUrl +"?token=" + token;
 			
