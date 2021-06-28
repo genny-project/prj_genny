@@ -161,11 +161,16 @@ rule "IS_INTERNSHIP"
 				parent.put("type", "section");
 				parent.put("text", child);
 				
+				JsonObject child4 = new JsonObject();
+				child4.put("type", "divider");
+				
 				JsonArray jsonArray = new JsonArray();
 				jsonArray.add(parent);
+				jsonArray.add(child2);
+				jsonArray.add(child4);
 				
 				JsonObject msgPayload = new JsonObject();
-     			msgPayload.put("blocks", jsonArray2);
+     			msgPayload.put("blocks", jsonArray);
      			
      			
 				
