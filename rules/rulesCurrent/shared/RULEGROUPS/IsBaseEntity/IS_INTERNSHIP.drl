@@ -137,37 +137,53 @@ rule "IS_INTERNSHIP"
 				LocalDateTime updateTime = LocalDateTime.now();
 				
 				
-				JsonObject parent2 = new JsonObject();
-				parent2.put("type", "*Host Company:*");
-				parent2.put("text", "GADA Technology");
+				JsonObject child2 = new JsonObject();
+				child2.put("type", "mrkdwn");
+				child2.put("text", "*Host Company:* GADA Technology");
 				
-				JsonObject parent3 = new JsonObject();
-				parent3.put("type", "*Host Company:*");
-				parent3.put("text", "GADA Technology");
+				JsonObject child3 = new JsonObject();
+				child3.put("type", "mrkdwn");
+				child3.put("text", "*Internship Name:* Software Developer");
+				
+				JsonObject child4 = new JsonObject();
+				child4.put("type", "mrkdwn");
+				child4.put("text", "*Available Vacancies:* 3");
+				
+				JsonObject child5 = new JsonObject();
+				child5.put("type", "mrkdwn");
+				child5.put("text", "*Start Date:* 10/07/2021");
+				
+				JsonObject child6 = new JsonObject();
+				child6.put("type", "mrkdwn");
+				child6.put("text", "*Added on:* 01/07/2021");
+				
+				
+				JsonArray jsonArray2 = new JsonArray();
+				jsonArray2.add(child2);
+				jsonArray2.add(child3);
+				jsonArray2.add(child4);
+				jsonArray2.add(child5);
+				jsonArray2.add(child6);
+				
+				JsonObject parent2 = new JsonObject();
+				parent2.put("type", "section");
+				parent2.put("fields", jsonArray2);
 				
 				JsonObject child = new JsonObject();
 				child.put("type", "mrkdwn");
 				child.put("text", ":new: *New Internship Opportunity Added!*");
 				
-				JsonArray jsonArray2 = new JsonArray();
-				jsonArray2.add(parent2);
-				jsonArray2.add(parent3);
-				
-				JsonObject child2 = new JsonObject();
-				child2.put("type", "section");
-				child2.put("fields", jsonArray2);
-				
 				JsonObject parent = new JsonObject();
 				parent.put("type", "section");
 				parent.put("text", child);
 				
-				JsonObject child4 = new JsonObject();
-				child4.put("type", "divider");
+				JsonObject parent3 = new JsonObject();
+				parent3.put("type", "divider");
 				
 				JsonArray jsonArray = new JsonArray();
 				jsonArray.add(parent);
-				jsonArray.add(child2);
-				jsonArray.add(child4);
+				jsonArray.add(parent2);
+				jsonArray.add(parent3);
 				
 				JsonObject msgPayload = new JsonObject();
      			msgPayload.put("blocks", jsonArray);
