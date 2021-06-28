@@ -135,13 +135,17 @@ rule "IS_INTERNSHIP"
 				String webhookURL = agent.getValueAsString("PRI_SLACK_NEW_INTERNSHIP_URL");
 				System.out.println("Slack Notification :: webhookURL :: " + webhookURL);
 				LocalDateTime updateTime = LocalDateTime.now();
+				String stringToParse = "Hello Slack";
+				JsonParser parser = new JSONParser();
+				JsonObject json = (JsonObject) parser.parse(stringToParse);
+				
 
-				JsonObject msgpayload = new JsonObject();
+				JsonObject msgpayload = new JsonObject("{\n" + "Hello Slack" + "}");
 
-			/*	System.out.println("Payload is" + msgpayload.toString()); */
+				System.out.println("Payload is" + msgpayload.toString()); 
 				
 				try {
-					QwandaUtils.apiPostEntity(webhookURL, "New Intership created", serviceToken.getToken());
+					QwandaUtils.apiPostEntity(webhookURL, msgpayload.toString(), serviceToken.getToken());
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
