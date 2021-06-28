@@ -156,7 +156,7 @@ rule "IS_INTERNSHIP"
 				System.out.println("Payload is" + msgPayload.toString()); 
 				
 				try {
-					QwandaUtils.apiPostEntity(webhookURL, stringToParse, serviceToken.getToken());
+					QwandaUtils.apiPostEntity(webhookURL, msgPayload.toString(), serviceToken.getToken());
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
