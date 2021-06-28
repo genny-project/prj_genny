@@ -57,36 +57,42 @@ rule "HELPER_SIGNATURE_COMPLETE"
 		String targetCode = answer.getTargetCode();					
 		System.out.println("targetCode :: " + targetCode);
 
+		String value = answer.getValue();
+		System.out.println("value = " + value);
+
 		BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
 		System.out.println("targetBe = " + targetBe);
-		
-		String internSignature = targetBe.getValue("PRI_INTERN_AGREEMENT_SIGNATURE", null);
-		String hcrSignature = targetBe.getValue("PRI_HOST_CPY_REP_AGREEMENT_SIGNATURE", null);
-		String outcomeSignature = targetBe.getValue("PRI_OUTCOME_AGREEMENT_SIGNATURE", null);
-		
-		if (internSignature != null) {
-			System.out.println("internSignature present");
-		}
-		if (hcrSignature != null) {
-			System.out.println("hcrSignature present");
-		}
-		if (outcomeSignature != null) {
-			System.out.println("outcomeSignature present");
-		}
-		
-		if (internSignature != null && hcrSignature != null && outcomeSignature != null) {
-			System.out.println("All signatures present");
-			
-			Answer answerSignatures = new Answer(serviceToken.getUserCode(), targetCode, "PRI_AGREEMENT_SIGNATURES", "Complete");
-			answers.add(answerSignatures);
-			System.out.println("Answer done" +answerSignatures);
 
-			output.setTypeOfResult("SIGNAL");
-			output.setResultCode("START_PLACED");
-			output.setTargetCode(targetBe.getCode());
-		} else {
-			output.setTypeOfResult("NONE");
-			output.setResultCode("NONE");  
+		if (value != null && !value.equals("null")) {
+			
+			String internSignature = targetBe.getValue("PRI_AGR_DOC_INT_SIGNATURE", null);
+			String hcrSignature = targetBe.getValue("PRI_AGR_DOC_HC_SIGNATURE", null);
+			String outcomeSignature = targetBe.getValue("PRI_AGR_DOC_OUTCOME_SIGNATURE", null);
+			
+			if (internSignature != null) {
+				System.out.println("internSignature present");
+			}
+			if (hcrSignature != null) {
+				System.out.println("hcrSignature present");
+			}
+			if (outcomeSignature != null) {
+				System.out.println("outcomeSignature present");
+			}
+			
+			if (internSignature != null && hcrSignature != null && outcomeSignature != null) {
+				System.out.println("All signatures present");
+				
+				Answer answerSignatures = new Answer(serviceToken.getUserCode(), targetCode, "PRI_AGREEMENT_SIGNATURES", "Complete");
+				answers.add(answerSignatures);
+				System.out.println("Answer done" +answerSignatures);
+
+				output.setTypeOfResult("SIGNAL");
+				output.setResultCode("START_PLACED");
+				output.setTargetCode(targetBe.getCode());
+			} else {
+				output.setTypeOfResult("NONE");
+				output.setResultCode("NONE");  
+			}
 		}
 	
 		beUtils.saveAnswers(answers);
