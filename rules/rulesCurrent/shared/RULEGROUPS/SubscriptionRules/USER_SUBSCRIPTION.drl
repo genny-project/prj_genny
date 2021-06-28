@@ -55,15 +55,15 @@ rule "USER_SUBSCRIPTION"
  			String role = eaRole.getAttributeCode().substring("PRI_IS_".length());
  			stringSet.add(EncryptionUtils.getEncryptedString(role,securityKey,userToken));	
  		}
- 		
+
  		Optional<String> company = user.getValue("PRI_COMPANY");
- 		if (company.isPresent()) {
+ 		if (company.isPresent() && company.get().length() > 4) {
  			String companyCode = company.get().substring(2,company.get().length()-2);
  			stringSet.add(EncryptionUtils.getEncryptedString(companyCode,securityKey,userToken));
  		}
  		
  		Optional<String> hcompany = user.getValue("LNK_HOST_COMPANY");
- 		if (hcompany.isPresent()) {
+ 		if (hcompany.isPresent() && company.get().length() > 4) {
  			String companyCode = hcompany.get().substring(2,hcompany.get().length()-2);
  			stringSet.add(EncryptionUtils.getEncryptedString(companyCode,securityKey,userToken));
  		}	
