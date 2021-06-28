@@ -61,10 +61,20 @@ rule "HELPER_SIGNATURE_NOTIFY"
 			BaseEntity internBE = beUtils.getBaseEntityFromLNKAttr(targetBe, "PRI_INTERN_CODE");
 			String internName = null;
 			String internEmail = null;
+			String agentEmail = null;
+			String agentName = null;
 			
 			if (internBE != null) {
 				internName = internBE.getValue("PRI_FIRSTNAME", null);
 				internEmail = internBE.getValue("PRI_EMAIL", null);
+
+				BaseEntity agent = beUtils.getBaseEntityFromLNKAttr(internBE, "LNK_AGENT");
+				if (agent != null) {
+					agentEmail = agent.getValue("PRI_EMAIL", null);
+					System.out.println("agentEmail = " + agentEmail);
+					agentName = agent.getValue("PRI_NAME", null);
+					System.out.println("agentName = " + agentName);
+				}
 			} else {
 				System.out.println("internBE is NULL");
 			}
@@ -111,8 +121,6 @@ rule "HELPER_SIGNATURE_NOTIFY"
 			System.out.println("companyBE = " + companyBE);
 			System.out.println("hostCompanyName = " + hostCompanyName);
 
-			String agentEmail = "internmatch@outcomelife.com.au";
-			
 			/* Init Data for Email */
 			BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
 
@@ -132,7 +140,7 @@ rule "HELPER_SIGNATURE_NOTIFY"
 			templateData.put("internshipName", internshipName);
 			templateData.put("hostCompanyName", hostCompanyName);
 			templateData.put("hostCompanyRepName", supervisorName);
-			templateData.put("agentName", "Outcome Agent");
+			templateData.put("agentName", agentName);
 
 			String templateId = null;
 
@@ -165,7 +173,7 @@ rule "HELPER_SIGNATURE_NOTIFY"
 				System.out.println("token: " + token);
 				url = cleanUrl +"?token=" + token;
 			
-				EmailHelper.sendGrid(beUtils, supervisorEmail, null, bccList, "", "d-501f81d3e2614c3b8691bf9777478fa6", templateData, true);
+				EmailHelper.sendGrid(beUtils, internEmail, null, bccList, "", "d-501f81d3e2614c3b8691bf9777478fa6", templateData, true);
 			}
 		
 		} else {
