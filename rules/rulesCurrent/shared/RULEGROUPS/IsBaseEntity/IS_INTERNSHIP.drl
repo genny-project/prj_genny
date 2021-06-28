@@ -137,7 +137,11 @@ rule "IS_INTERNSHIP"
 				LocalDateTime updateTime = LocalDateTime.now();
 				String stringToParse = "Hello Slack";
 
-				JsonObject msgpayload = new JsonObject("{\n" + "   \"blocks\":[\n"  + "   ]\n" + "}");
+				JsonObject msgpayload = new JsonObject("{\n" + "   \"blocks\":[\n" + "      {\n"
+						+ "         \"type\":\"section\",\n" + "         \"text\":{\n"
+						+ "            \"type\":\"mrkdwn\",\n" + "            \"text\": \": \"new :" "\* New Internship Opportunity Added!*\" \n"
+						+ "		}\n"
+						+ "      }\n" + "   ]\n" + "}");
 
 				System.out.println("Payload is" + msgpayload.toString()); 
 				
