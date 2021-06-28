@@ -135,7 +135,7 @@ rule "IS_INTERNSHIP"
 		String assocHC = newBe.getValue("PRI_ASSOC_HC", null);
 		String internshipName = newBe.getValue("PRI_NAME", null);
 		LocalDate internshipStartDate = newBe.getValue("PRI_INTERNSHIP_START_DATE", null);
-		/*String numberOfIntern = newBe.getValue("PRI_NO_OF_INTERNS", null);*/
+		Integer numberOfIntern = newBe.getValue("PRI_NO_OF_INTERNS", null);
 
 				BaseEntity agent = beUtils.getBaseEntityByCode("CPY_OUTCOME_LIFE");
 				System.out.println("Slack Notification :: agent :: " + agent);
@@ -154,11 +154,11 @@ rule "IS_INTERNSHIP"
 				
 				JsonObject child4 = new JsonObject();
 				child4.put("type", "mrkdwn");
-				child4.put("text", "*Available Vacancies:* ");
+				child4.put("text", "*Available Vacancies:* " + numberOfIntern.toString());
 				
 				JsonObject child5 = new JsonObject();
 				child5.put("type", "mrkdwn");
-				child5.put("text", "*Start Date:* "+internshipStartDate.toString());
+				child5.put("text", "*Start Date:* "+ dtf.format(internshipStartDate));
 				
 				JsonObject child6 = new JsonObject();
 				child6.put("type", "mrkdwn");
