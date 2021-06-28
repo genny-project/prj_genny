@@ -136,20 +136,23 @@ rule "IS_INTERNSHIP"
 				System.out.println("Slack Notification :: webhookURL :: " + webhookURL);
 				LocalDateTime updateTime = LocalDateTime.now();
 				String stringToParse = "Hello Slack";
-
+				
 				JsonObject child = new JsonObject();
 				child.put("type", "mrkdwn");
 				child.put("text", ":new: *New Internship Opportunity Added!");
 				
-				JsonObject jsonTemplates = new JsonObject();
-				jsonTemplates.put("type", "section");
-				jsonTemplates.put("text", child);
+				JsonObject parent = new JsonObject();
+				child.put("type", "section");
+				child.put("text", child);
 				
 				JSONArray jsonArray = new JSONArray();
-     			jsonArray.add(jsonTemplates.toString());
-     			
-     			JsonObject msgPayload = new JsonObject();
+				jsonArray.add(parent);
+				
+				JsonObject msgPayload = new JsonObject();
      			msgPayload.put("blocks", jsonArray);
+     			
+     			
+				
 				System.out.println("Payload is" + msgPayload.toString()); 
 				
 				try {
