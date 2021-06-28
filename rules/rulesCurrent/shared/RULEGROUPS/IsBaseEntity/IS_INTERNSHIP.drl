@@ -137,12 +137,12 @@ rule "IS_INTERNSHIP"
 				LocalDateTime updateTime = LocalDateTime.now();
 				String stringToParse = "Hello Slack";
 
-				JsonObject msgpayload = new JsonObject("{\n" + "Hello Slack" + "}");
+				JsonObject msgpayload = new JsonObject("{\n" + "   \"blocks\":[\n"  + "   ]\n" + "}");
 
 				System.out.println("Payload is" + msgpayload.toString()); 
 				
 				try {
-					QwandaUtils.apiPostEntity(webhookURL, msgpayload.toString(), serviceToken.getToken());
+					QwandaUtils.apiPostEntity(webhookURL, stringToParse, serviceToken.getToken());
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
