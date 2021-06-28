@@ -142,8 +142,8 @@ rule "IS_INTERNSHIP"
 				child.put("text", ":new: *New Internship Opportunity Added!");
 				
 				JsonObject parent = new JsonObject();
-				child.put("type", "section");
-				child.put("text", child);
+				parent.put("type", "section");
+				parent.put("text", child);
 				
 				JsonArray jsonArray = new JsonArray();
 				jsonArray.add(parent);
