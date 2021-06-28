@@ -137,7 +137,7 @@ rule "IS_INTERNSHIP"
 				LocalDateTime updateTime = LocalDateTime.now();
 				String stringToParse = "Hello Slack";
 
-				
+				JsonObject msgpayload = new JsonObject();
 
 				System.out.println("Payload is" + msgpayload.toString()); 
 				
