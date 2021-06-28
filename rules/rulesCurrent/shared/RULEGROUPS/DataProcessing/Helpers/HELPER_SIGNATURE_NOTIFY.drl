@@ -27,7 +27,7 @@ rule "HELPER_SIGNATURE_NOTIFY"
 		answer : Answer( 
 				attributeCode == "PRI_AGR_DOC_INT_SIGNATURE" ||
 				attributeCode == "PRI_AGR_DOC_HC_SIGNATURE" ||
-				attributeCode matches "PRI_AGR_DOC_OUTCOME_"
+				attributeCode matches "PRI_AGR_DOC_OUTCOME_.*"
 			)
 		answersToSave : Answers()
 		ruleDetails : RuleDetails()
@@ -140,14 +140,14 @@ rule "HELPER_SIGNATURE_NOTIFY"
 				/* Intern has signed */
 				templateId = "d-c0eb435cbc844647a20d6ecfe165998f";
 				/* Send Email to Agent notifying of Signature */
-				EmailHelper.sendGrid(beUtils, agentEmail, "", templateId, templateData, false);
+				EmailHelper.sendGrid(beUtils, agentEmail, "", templateId, templateData, true);
 
 			} else if (attributeCode.startsWith("PRI_AGR_DOC_HC_SIGNATURE")) {
 				/* HC Rep has signed */
 				templateId = "d-550f8a48d8a1482889b4c547bf581552";
 
 				/* Send Email to Agent notifying of Signature */
-				EmailHelper.sendGrid(beUtils, agentEmail, "", templateId, templateData, false);
+				EmailHelper.sendGrid(beUtils, agentEmail, "", templateId, templateData, true);
 			} else if (attributeCode.startsWith("PRI_AGR_DOC_OUTCOME_")) {
 				/* Agent has signed */
 				System.out.println("Outcome Life Signature Detected. Sending email to HCR and INTERN to remind signature");
@@ -158,14 +158,14 @@ rule "HELPER_SIGNATURE_NOTIFY"
 				System.out.println("token: " + token);
 				url = cleanUrl +"?token=" + token;
 			
-				EmailHelper.sendGrid(beUtils, supervisorEmail, null, bccList, "", "d-64ef4bf7b18a4b65a9c7e02b1b8ce7df", templateData, false);
+				EmailHelper.sendGrid(beUtils, supervisorEmail, null, bccList, "", "d-64ef4bf7b18a4b65a9c7e02b1b8ce7df", templateData, true);
 
 				/* SEND TO INTERN */
 				token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, internEmail, serviceToken.getToken());
 				System.out.println("token: " + token);
 				url = cleanUrl +"?token=" + token;
 			
-				EmailHelper.sendGrid(beUtils, supervisorEmail, null, bccList, "", "d-501f81d3e2614c3b8691bf9777478fa6", templateData, false);
+				EmailHelper.sendGrid(beUtils, supervisorEmail, null, bccList, "", "d-501f81d3e2614c3b8691bf9777478fa6", templateData, true);
 			}
 		
 		} else {
