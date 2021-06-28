@@ -162,16 +162,18 @@ rule "HELPER_SIGNATURE_NOTIFY"
 				List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
 				
 				/* SEND TO SUPERVISOR */
-				token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, supervisorEmail, serviceToken.getToken());
-				System.out.println("token: " + token);
-				url = cleanUrl +"?token=" + token;
+				String hcrToken = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, supervisorEmail, serviceToken.getToken());
+				System.out.println("hcrToken = " + hcrToken);
+				url = cleanUrl +"?token=" + hcrToken;
+				templateData.put("url", url);
 			
 				EmailHelper.sendGrid(beUtils, supervisorEmail, null, bccList, "", "d-64ef4bf7b18a4b65a9c7e02b1b8ce7df", templateData, true);
 
 				/* SEND TO INTERN */
-				token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, internEmail, serviceToken.getToken());
-				System.out.println("token: " + token);
-				url = cleanUrl +"?token=" + token;
+				String internToken = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, internEmail, serviceToken.getToken());
+				System.out.println("internToken = " + internToken);
+				url = cleanUrl +"?token=" + internToken;
+				templateData.put("url", url);
 			
 				EmailHelper.sendGrid(beUtils, internEmail, null, bccList, "", "d-501f81d3e2614c3b8691bf9777478fa6", templateData, true);
 			}
