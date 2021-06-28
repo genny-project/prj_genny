@@ -26,7 +26,8 @@ rule "HELPER_SIGNATURE_NOTIFY"
 		beUtils : BaseEntityUtils()
 		answer : Answer( 
 				attributeCode == "PRI_AGR_DOC_INT_SIGNATURE" ||
-				attributeCode == "PRI_AGR_DOC_HC_SIGNATURE"
+				attributeCode == "PRI_AGR_DOC_HC_SIGNATURE" ||
+				attributeCode matches "PRI_AGR_DOC_OUTCOME_"
 			)
 		answersToSave : Answers()
 		ruleDetails : RuleDetails()
@@ -59,33 +60,39 @@ rule "HELPER_SIGNATURE_NOTIFY"
 			/* Get Intern BE, Name and Email */
 			BaseEntity internBE = beUtils.getBaseEntityFromLNKAttr(targetBe, "PRI_INTERN_CODE");
 			String internName = null;
+			String internEmail = null;
 			
 			if (internBE != null) {
-				internName = internBE.getValue("PRI_FIRSTNAME",null);
+				internName = internBE.getValue("PRI_FIRSTNAME", null);
+				internEmail = internBE.getValue("PRI_EMAIL", null);
 			} else {
 				System.out.println("internBE is NULL");
 			}
 			System.out.println("internBE = " + internBE);
 			System.out.println("internName = " + internName);
+			System.out.println("internEmail = " + internEmail);
 			
 			/* Get Supervisor BE and Name */
 			BaseEntity supervisorBE = beUtils.getBaseEntityFromLNKAttr(targetBe, "LNK_INTERN_SUPERVISOR");
 			String supervisorName = null;
+			String supervisorEmail = null;
 
 			if (supervisorBE != null) {
-				supervisorName = supervisorBE.getValue("PRI_FIRSTNAME",null);
+				supervisorName = supervisorBE.getValue("PRI_FIRSTNAME", null);
+				supervisorEmail = supervisorBE.getValue("PRI_EMAIL", null);
 			} else {
 				System.out.println("supervisorBE is NULL");
 			}
 			System.out.println("supervisorBE = " + supervisorBE);
 			System.out.println("supervisorName = " + supervisorName);
+			System.out.println("supervisorEmail = " + supervisorEmail);
 			
 			/* Get Internship Entity */
 			BaseEntity internshipBE = beUtils.getBaseEntityFromLNKAttr(targetBe, "LNK_INTERNSHIP");
 			String internshipName = null;
 
 			if (internshipBE != null) {
-				internshipName = internshipBE.getValue("PRI_NAME",null);
+				internshipName = internshipBE.getValue("PRI_NAME", null);
 			} else {
 				System.out.println("internshipBE is NULL");
 			}
@@ -97,17 +104,25 @@ rule "HELPER_SIGNATURE_NOTIFY"
 			String hostCompanyName = null;
 
 			if (companyBE != null) {
-				hostCompanyName = companyBE.getValue("PRI_NAME",null);
+				hostCompanyName = companyBE.getValue("PRI_NAME", null);
 			} else {
 				System.out.println("companyBE is NULL");
 			}
 			System.out.println("companyBE = " + companyBE);
 			System.out.println("hostCompanyName = " + hostCompanyName);
+
+			String agentEmail = "internmatch@outcomelife.com.au";
 			
 			/* Init Data for Email */
 			BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
 
-			String url = GennySettings.projectUrl+"/home/UVVFX1RBQkxFX1JFU1VMVFNfR1JQ/UVVFX1RBQkxFX0xBWllfTE9BRA==";
+			String urlParentCode = "SBE_OFFERED_APPLICATIONS_"+userToken.getSessionCode().toUpperCase();
+			String cleanUrl = EmailHelper.encodeUrl(GennySettings.projectUrl+"/home", urlParentCode, "ACT_PRI_EVENT_VIEW_APPLICATION", targetBe.getCode());
+
+			String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, agentEmail, serviceToken.getToken());
+			System.out.println("token: " + token);
+
+			String url = cleanUrl +"?token=" + token;
 			System.out.println("url = " + url);
 
 			/* Send Confirmation of HC Rep Signature to Agent */
@@ -124,14 +139,34 @@ rule "HELPER_SIGNATURE_NOTIFY"
 			if (attributeCode.startsWith("PRI_AGR_DOC_INT_SIGNATURE")) {
 				/* Intern has signed */
 				templateId = "d-c0eb435cbc844647a20d6ecfe165998f";
+				/* Send Email to Agent notifying of Signature */
+				EmailHelper.sendGrid(beUtils, agentEmail, "", templateId, templateData, false);
 
 			} else if (attributeCode.startsWith("PRI_AGR_DOC_HC_SIGNATURE")) {
 				/* HC Rep has signed */
 				templateId = "d-550f8a48d8a1482889b4c547bf581552";
-			}
 
-			/* Send Email to Agent notifying of Signature */
-			EmailHelper.sendGrid(beUtils, "internmatch@outcomelife.com.au", "", templateId, templateData, false);
+				/* Send Email to Agent notifying of Signature */
+				EmailHelper.sendGrid(beUtils, agentEmail, "", templateId, templateData, false);
+			} else if (attributeCode.startsWith("PRI_AGR_DOC_OUTCOME_")) {
+				/* Agent has signed */
+				System.out.println("Outcome Life Signature Detected. Sending email to HCR and INTERN to remind signature");
+				List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
+				
+				/* SEND TO SUPERVISOR */
+				token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, supervisorEmail, serviceToken.getToken());
+				System.out.println("token: " + token);
+				url = cleanUrl +"?token=" + token;
+			
+				EmailHelper.sendGrid(beUtils, supervisorEmail, null, bccList, "", "d-64ef4bf7b18a4b65a9c7e02b1b8ce7df", templateData, false);
+
+				/* SEND TO INTERN */
+				token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, internEmail, serviceToken.getToken());
+				System.out.println("token: " + token);
+				url = cleanUrl +"?token=" + token;
+			
+				EmailHelper.sendGrid(beUtils, supervisorEmail, null, bccList, "", "d-501f81d3e2614c3b8691bf9777478fa6", templateData, false);
+			}
 		
 		} else {
 			System.out.println("value is NULL, not sending confirmation email!");

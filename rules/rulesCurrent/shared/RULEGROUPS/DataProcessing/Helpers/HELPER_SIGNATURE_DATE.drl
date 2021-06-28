@@ -253,75 +253,75 @@ rule "HELPER_SIGNATURE_DATE"
 
 		
 		
-		if (attributeCode.startsWith("PRI_INTERN_")) {
+		/* if (attributeCode.startsWith("PRI_INTERN_")) { */
 			
-			String urlParentCode = "SBE_INTERNS_"+userToken.getSessionCode().toUpperCase();
-			String urlCode = "ACT_PRI_EVENT_VIEW";
-			String urlTargetCode = internCode;
+		/* 	String urlParentCode = "SBE_INTERNS_"+userToken.getSessionCode().toUpperCase(); */
+		/* 	String urlCode = "ACT_PRI_EVENT_VIEW"; */
+		/* 	String urlTargetCode = internCode; */
 	
-			urlParentCode = new String(Base64.getEncoder().encode(urlParentCode.getBytes()));
-			urlCode = new String(Base64.getEncoder().encode(urlCode.getBytes()));
-			urlTargetCode = new String(Base64.getEncoder().encode(urlTargetCode.getBytes()));
+		/* 	urlParentCode = new String(Base64.getEncoder().encode(urlParentCode.getBytes())); */
+		/* 	urlCode = new String(Base64.getEncoder().encode(urlCode.getBytes())); */
+		/* 	urlTargetCode = new String(Base64.getEncoder().encode(urlTargetCode.getBytes())); */
 	
-			url = GennySettings.projectUrl+"/home/"+urlParentCode+"/"+urlCode+"/"+urlTargetCode;
-			System.out.println("url: " + url);
+		/* 	url = GennySettings.projectUrl+"/home/"+urlParentCode+"/"+urlCode+"/"+urlTargetCode; */
+		/* 	System.out.println("url: " + url); */
 			
 				
-			template_id = "d-e4a25b335fd3497a98a59edea331aa92";
-			subject = "Intern has not signed their internship agreement (More than 96 hours)";
+		/* 	template_id = "d-e4a25b335fd3497a98a59edea331aa92"; */
+		/* 	subject = "Intern has not signed their internship agreement (More than 96 hours)"; */
 			
-			templateData.put("intern", intern);
-			templateData.put("internshipName", internshipName);
-			templateData.put("hostCompanyName", hostCompanyName);
-			templateData.put("url", url);
-			System.out.println("Intern Signature Detected. No email but moving them to placed");
+		/* 	templateData.put("intern", intern); */
+		/* 	templateData.put("internshipName", internshipName); */
+		/* 	templateData.put("hostCompanyName", hostCompanyName); */
+		/* 	templateData.put("url", url); */
+		/* 	System.out.println("Intern Signature Detected. No email but moving them to placed"); */
 			
-		}
+		/* } */
 		
-		if (attributeCode.startsWith("PRI_HOST_CPY_REP_")) {
-			template_id = "d-501f81d3e2614c3b8691bf9777478fa6";
-			subject = "Important Internship Requirement - Sign your internship agreement";
+		/* if (attributeCode.startsWith("PRI_HOST_CPY_REP_")) { */
+		/* 	template_id = "d-501f81d3e2614c3b8691bf9777478fa6"; */
+		/* 	subject = "Important Internship Requirement - Sign your internship agreement"; */
 			
-			templateData.put("intern", intern);
-			templateData.put("url", url);
+		/* 	templateData.put("intern", intern); */
+		/* 	templateData.put("url", url); */
 			
-			System.out.println("The internEmail is : " + internEmail);
-			EmailHelper.sendGrid(beUtils, internEmail, null, bccList, subject, template_id, templateData, false);
+		/* 	System.out.println("The internEmail is : " + internEmail); */
+		/* 	EmailHelper.sendGrid(beUtils, internEmail, null, bccList, subject, template_id, templateData, false); */
 			
-			System.out.println("HCR Signature Detected. Sending email to Intern to remind signature");
-			EmailHelper.sendGrid(beUtils, supervisorEmail, null, bccList, subject, template_id, templateData, false);
+		/* 	System.out.println("HCR Signature Detected. Sending email to Intern to remind signature"); */
+		/* 	EmailHelper.sendGrid(beUtils, supervisorEmail, null, bccList, subject, template_id, templateData, false); */
 			
-			if (internMobile != null) {   
-				System.out.println("internMobile: " +internMobile);
+		/* 	if (internMobile != null) { */   
+		/* 		System.out.println("internMobile: " +internMobile); */
 				
-				System.out.println("Inside SMS");        
-	            String smsBody = "Hi " + intern + " - You are required to sign your Internship Agreement. Click the link below to digitally sign the document. Without signing your internship cannot move forward. https://internmatch-interns.gada.io";
-	            SmsHelper smsHelper = new SmsHelper();
-		    	smsHelper.deliverSmsMsg(internMobile, smsBody);
-	            System.out.println("SMS Sent!!");
-        	}
+		/* 		System.out.println("Inside SMS"); */        
+	            /* String smsBody = "Hi " + intern + " - You are required to sign your Internship Agreement. Click the link below to digitally sign the document. Without signing your internship cannot move forward. https://internmatch-interns.gada.io"; */
+	            /* SmsHelper smsHelper = new SmsHelper(); */
+		/*     	smsHelper.deliverSmsMsg(internMobile, smsBody); */
+	            /* System.out.println("SMS Sent!!"); */
+        	/* } */
 
-		}
+		/* } */
 		
-		if (attributeCode.startsWith("PRI_OUTCOME_") || attributeCode.startsWith("PRI_AGR_DOC_OUTCOME_")) {
-			template_id = "d-64ef4bf7b18a4b65a9c7e02b1b8ce7df";
-			subject = "Important Internship Requirement - Signing the internship agreement";
+		/* if (attributeCode.startsWith("PRI_OUTCOME_") || attributeCode.startsWith("PRI_AGR_DOC_OUTCOME_")) { */
+		/* 	template_id = "d-64ef4bf7b18a4b65a9c7e02b1b8ce7df"; */
+		/* 	subject = "Important Internship Requirement - Signing the internship agreement"; */
 			
-			token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, userSuperCode, serviceToken.getToken());
-			System.out.println("token: " + token);
-			url = cleanUrl +"?token=" + token;
+		/* 	token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, userSuperCode, serviceToken.getToken()); */
+		/* 	System.out.println("token: " + token); */
+		/* 	url = cleanUrl +"?token=" + token; */
 		
-			templateData.put("intern", intern);
-			templateData.put("url", url);
-			templateData.put("internshipName", internshipName);
-			templateData.put("supervisorName", supervisorName);
-			templateData.put("hostCompanyName", hostCompanyName);
+		/* 	templateData.put("intern", intern); */
+		/* 	templateData.put("url", url); */
+		/* 	templateData.put("internshipName", internshipName); */
+		/* 	templateData.put("supervisorName", supervisorName); */
+		/* 	templateData.put("hostCompanyName", hostCompanyName); */
 			
-			System.out.println("The supervisorEmail is : " + supervisorEmail);
+		/* 	System.out.println("The supervisorEmail is : " + supervisorEmail); */
 			
-			EmailHelper.sendGrid(beUtils, supervisorEmail, null, bccList, subject, template_id, templateData, false);
-			System.out.println("Outcome Life Signature Detected. Sending email to HCR to remind signature");
-		}
+		/* 	EmailHelper.sendGrid(beUtils, supervisorEmail, null, bccList, subject, template_id, templateData, false); */
+		/* 	System.out.println("Outcome Life Signature Detected. Sending email to HCR to remind signature"); */
+		/* } */
 		
 		
 		String internSignature = targetBe.getValue("PRI_INTERN_AGREEMENT_SIGNATURE", null);
