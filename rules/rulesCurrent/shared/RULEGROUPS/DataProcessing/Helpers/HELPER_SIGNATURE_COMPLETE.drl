@@ -30,7 +30,7 @@ import java.util.ArrayList;
 
 rule "HELPER_SIGNATURE_COMPLETE"
 	ruleflow-group 'DataProcessing'
-			salience 6000
+			salience 5000
 	when
 		beUtils : BaseEntityUtils()
 		answer : Answer( attributeCode == "PRI_AGR_DOC_INT_SIGNATURE" 
@@ -80,10 +80,17 @@ rule "HELPER_SIGNATURE_COMPLETE"
 			Answer answerSignatures = new Answer(serviceToken.getUserCode(), targetCode, "PRI_AGREEMENT_SIGNATURES", "Complete");
 			answers.add(answerSignatures);
 			System.out.println("Answer done" +answerSignatures);
+
+			output.setTypeOfResult("SIGNAL");
+			output.setResultCode("START_PLACED");
+			output.setTargetCode(targetBe.getCode());
+		} else {
+			output.setTypeOfResult("NONE");
+			output.setResultCode("NONE");  
 		}
 	
 		beUtils.saveAnswers(answers);
+
+		retract(answer);
 		
-		output.setTypeOfResult("NONE");
-		output.setResultCode("NONE");  
 end

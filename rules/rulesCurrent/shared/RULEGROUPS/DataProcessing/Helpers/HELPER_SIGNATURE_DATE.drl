@@ -30,7 +30,7 @@ import java.util.ArrayList;
 
 rule "HELPER_SIGNATURE_DATE"
 	ruleflow-group 'DataProcessing'
-			salience 5000
+			salience 6000
 	when
 		beUtils : BaseEntityUtils()
 		answerTwo : Answer( attributeCode == "PRI_AGR_DOC_INT_SIGNATURE" 
@@ -156,10 +156,6 @@ rule "HELPER_SIGNATURE_DATE"
 		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 		
 		
-		/* Retract the answer message so the rule does not fire again */
-		retract(answerTwo);
-
-
 		/* Dont display anything new */
 		
 		output.setTypeOfResult("NONE");
