@@ -146,7 +146,7 @@ rule "IS_INTERNSHIP"
 				jsonTemplates.put("text", child);
 				
 				JSONArray jsonArray = new JSONArray();
-     			jsonArray.put(jsonTemplates);
+     			jsonArray.put(jsonTemplates.toString());
      			
      			JsonObject msgPayload = new JsonObject();
      			msgPayload.put("blocks", jsonArray);
