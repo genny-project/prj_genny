@@ -130,12 +130,12 @@ rule "IS_INTERNSHIP"
 		
 		/* ========== Sending Slack Notification ============ */
 		LocalDateTime updateTime = LocalDateTime.now();
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd MMM yyyy, E, hh:mm:ss a");
-		/*String addedOn = dtf.format(updateTime);*/
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd MMM yyyy");
+		String addedOn = dtf.format(updateTime);
 		String assocHC = newBe.getValue("PRI_ASSOC_HC", null);
 		String internshipName = newBe.getValue("PRI_NAME", null);
-		String internshipStartDate = newBe.getValue("PRI_INTERNSHIP_START_DATE", null);
-		String numberOfIntern = newBe.getValue("PRI_NO_OF_INTERNS", null);
+		LocalDate internshipStartDate = newBe.getValue("PRI_INTERNSHIP_START_DATE", null);
+		/*String numberOfIntern = newBe.getValue("PRI_NO_OF_INTERNS", null);*/
 
 				BaseEntity agent = beUtils.getBaseEntityByCode("CPY_OUTCOME_LIFE");
 				System.out.println("Slack Notification :: agent :: " + agent);
@@ -154,15 +154,15 @@ rule "IS_INTERNSHIP"
 				
 				JsonObject child4 = new JsonObject();
 				child4.put("type", "mrkdwn");
-				child4.put("text", "*Available Vacancies:* "+ numberOfIntern);
+				child4.put("text", "*Available Vacancies:* ");
 				
 				JsonObject child5 = new JsonObject();
 				child5.put("type", "mrkdwn");
-				child5.put("text", "*Start Date:* "+internshipStartDate);
+				child5.put("text", "*Start Date:* "+internshipStartDate.toString());
 				
 				JsonObject child6 = new JsonObject();
 				child6.put("type", "mrkdwn");
-				child6.put("text", "*Added on:* ");
+				child6.put("text", "*Added on:* " + addedOn);
 				
 				
 				JsonArray jsonArray2 = new JsonArray();
