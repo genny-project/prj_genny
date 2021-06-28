@@ -136,7 +136,7 @@ rule "IS_INTERNSHIP"
 				System.out.println("Slack Notification :: webhookURL :: " + webhookURL);
 				LocalDateTime updateTime = LocalDateTime.now();
 				String stringToParse = "Hello Slack";
-				JsonParser parser = new JSONParser();
+				JsonParser parser = new JsonParser();
 				JsonObject json = (JsonObject) parser.parse(stringToParse);
 				
 
