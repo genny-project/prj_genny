@@ -137,18 +137,18 @@ rule "IS_INTERNSHIP"
 				LocalDateTime updateTime = LocalDateTime.now();
 				String stringToParse = "Hello Slack";
 				
-				JSONObject child = new JSONObject();
+				JsonObject child = new JsonObject();
 				child.put("type", "mrkdwn");
 				child.put("text", ":new: *New Internship Opportunity Added!");
 				
-				JSONObject parent = new JSONObject();
+				JsonObject parent = new JsonObject();
 				child.put("type", "section");
 				child.put("text", child);
 				
-				JSONArray jsonArray = new JSONArray();
+				JsonArray jsonArray = new JsonArray();
 				jsonArray.add(parent);
 				
-				JSONObject msgPayload = new JSONObject();
+				JsonObject msgPayload = new JsonObject();
      			msgPayload.put("blocks", jsonArray);
      			
      			
