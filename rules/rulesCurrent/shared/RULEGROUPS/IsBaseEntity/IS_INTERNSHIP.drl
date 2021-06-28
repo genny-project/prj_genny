@@ -162,7 +162,7 @@ rule "IS_INTERNSHIP"
 				
 				JsonObject child6 = new JsonObject();
 				child6.put("type", "mrkdwn");
-				child6.put("text", "*Added on:* "+addedOn);
+				child6.put("text", "*Added on:* ");
 				
 				
 				JsonArray jsonArray2 = new JsonArray();
