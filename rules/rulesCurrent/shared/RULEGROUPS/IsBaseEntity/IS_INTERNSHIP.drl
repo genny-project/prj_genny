@@ -137,9 +137,15 @@ rule "IS_INTERNSHIP"
 				LocalDateTime updateTime = LocalDateTime.now();
 				String stringToParse = "Hello Slack";
 
-				JsonObject msgpayload = new JsonObject();
+				JsonObject child = new JsonObject();
+				child.put("type", "mrkdwn");
+				child.put("text", ":new: *New Internship Opportunity Added!");
+				
+				JsonObject jsonTemplates = new JsonObject();
+				jsonTemplates.put("type", "section");
+				jsonTemplates.put("text", child);
 
-				System.out.println("Payload is" + msgpayload.toString()); 
+				System.out.println("Payload is" + jsonTemplates.toString()); 
 				
 				try {
 					QwandaUtils.apiPostEntity(webhookURL, stringToParse, serviceToken.getToken());
