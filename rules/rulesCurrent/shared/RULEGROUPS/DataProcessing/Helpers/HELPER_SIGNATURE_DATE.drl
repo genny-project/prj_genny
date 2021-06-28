@@ -49,7 +49,8 @@ rule "HELPER_SIGNATURE_DATE"
 		
 		/* Save the actual AGREEMENT_SIGNATURE answer */
 		
-		answersToSave.add(answerTwo);
+		/* answersToSave.add(answerTwo); */
+		beUtils.saveAnswer(answerTwo);
 		
 		String sourceCode = beUtils.getGennyToken().getUserCode();	
 		System.out.println("sourceCode :: " + sourceCode);
