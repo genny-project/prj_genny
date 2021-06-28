@@ -131,7 +131,7 @@ rule "IS_INTERNSHIP"
 		/* ========== Sending Slack Notification ============ */
 		LocalDateTime updateTime = LocalDateTime.now();
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd MMM yyyy, E, hh:mm:ss a");
-		String addedOn = dtf.format(updateTime);
+		/*String addedOn = dtf.format(updateTime);*/
 		String assocHC = newBe.getValue("PRI_ASSOC_HC", null);
 		String internshipName = newBe.getValue("PRI_NAME", null);
 		String internshipStartDate = newBe.getValue("PRI_INTERNSHIP_START_DATE", null);
