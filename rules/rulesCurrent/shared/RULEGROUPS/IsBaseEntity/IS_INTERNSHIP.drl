@@ -135,11 +135,28 @@ rule "IS_INTERNSHIP"
 				String webhookURL = agent.getValueAsString("PRI_SLACK_NEW_INTERNSHIP_URL");
 				System.out.println("Slack Notification :: webhookURL :: " + webhookURL);
 				LocalDateTime updateTime = LocalDateTime.now();
-				String stringToParse = "Hello Slack";
+				
+				String msg = "*Host Company:*\nGADA Technology\n*Internship Name:*\nSoftware Developer\n*Available Vacancies:*\n3\n*Start Date:*\nAug 01, 2021\n*Added on:*\n9:00 AM Jun 01, 2021";
+				
+				JsonObject parent2 = new JsonObject();
+				parent2.put("type", "*Host Company:*");
+				parent2.put("text", "GADA Technology");
+				
+				JsonObject parent3 = new JsonObject();
+				parent3.put("type", "*Host Company:*");
+				parent3.put("text", "GADA Technology");
 				
 				JsonObject child = new JsonObject();
 				child.put("type", "mrkdwn");
-				child.put("text", ":new: *New Internship Opportunity Added!");
+				child.put("text", ":new: *New Internship Opportunity Added!*");
+				
+				JsonArray jsonArray2 = new JsonArray();
+				jsonArray2.add(parent2);
+				jsonArray2.add(parent3);
+				
+				JsonObject child2 = new JsonObject();
+				child2.put("type", "section");
+				child2.put("fields", jsonArray2);
 				
 				JsonObject parent = new JsonObject();
 				parent.put("type", "section");
@@ -149,7 +166,7 @@ rule "IS_INTERNSHIP"
 				jsonArray.add(parent);
 				
 				JsonObject msgPayload = new JsonObject();
-     			msgPayload.put("blocks", jsonArray);
+     			msgPayload.put("blocks", jsonArray2);
      			
      			
 				
