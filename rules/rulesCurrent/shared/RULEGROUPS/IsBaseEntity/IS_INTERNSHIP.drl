@@ -136,7 +136,6 @@ rule "IS_INTERNSHIP"
 				System.out.println("Slack Notification :: webhookURL :: " + webhookURL);
 				LocalDateTime updateTime = LocalDateTime.now();
 				
-				String msg = "*Host Company:*\nGADA Technology\n*Internship Name:*\nSoftware Developer\n*Available Vacancies:*\n3\n*Start Date:*\nAug 01, 2021\n*Added on:*\n9:00 AM Jun 01, 2021";
 				
 				JsonObject parent2 = new JsonObject();
 				parent2.put("type", "*Host Company:*");
