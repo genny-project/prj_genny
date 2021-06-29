@@ -157,7 +157,7 @@ rule "IS_QA_AGENT"
 			
 			List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
 			
-			EmailHelper.sendGrid(beUtils, email, null, bccList, subject, template_id, templateData, false);
+			EmailHelper.sendGrid(beUtils, email, null, bccList, subject, template_id, templateData, true);
 			
 		} else {
 			System.out.println("rawSendEmail is not Yes: " + rawSendEmail);
