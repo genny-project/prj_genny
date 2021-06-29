@@ -104,9 +104,6 @@ rule "IS_AGENT"
 		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
 		System.out.println("Note newBe.getCode(): " +newBe.getCode());
 		
-		output.setTypeOfResult("NONE");
-		output.setResultCode("NONE");  /* dont display anything new */
-		
-		retract(newBe)
+		retract(newBe);
 	
 end

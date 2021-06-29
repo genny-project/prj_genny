@@ -73,27 +73,32 @@ rule "IS_EDU_PRO_REP"
 			if (lastname != null) {
 				String email = user.getValue("PRI_EMAIL",null);
 				if (email != null) {
-					userId = KeycloakUtils.updateUser(userCode,serviceToken.getToken(), serviceToken.getRealm(), email, firstname, lastname,  email, null, "user", "users");
-					userId = userId.toUpperCase();
-					Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),newBe.getCode(),"PRI_UUID",userId);
-					beUtils.saveAnswer(keycloakId);
-					System.out.println("Created User "+email+" in Keycloak with id = "+userId);
+					String profile = user.getValue("PRI_PROFILE", null);
+					if (profile != null && profile.equals("Incomplete")) {
+						System.out.println("User was already Quick added, not setting new Password!");
+					} else {
+						userId = KeycloakUtils.updateUser(userCode,serviceToken.getToken(), serviceToken.getRealm(), email, firstname, lastname,  email, null, "user", "users");
+						userId = userId.toUpperCase();
+						Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),newBe.getCode(),"PRI_UUID",userId);
+						answers.add(keycloakId);
+						System.out.println("Created User "+email+" in Keycloak with id = "+userId);
 
-					/* Generate a random 15 char password */
-					char[] allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGJKLMNPRSTUVWXYZ0123456789^$?!@#%&".toCharArray();
-					String password = new SecureRandom().ints(15, 0, allowed.length).mapToObj(i -> String.valueOf(allowed[i])).collect(Collectors.joining());
-					KeycloakUtils.setPassword(serviceToken.getToken(), serviceToken.getRealm(), userId, password, true);
+						/* Generate a random 15 char password */
+						char[] allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGJKLMNPRSTUVWXYZ0123456789^$?!@#%&".toCharArray();
+						String password = new SecureRandom().ints(15, 0, allowed.length).mapToObj(i -> String.valueOf(allowed[i])).collect(Collectors.joining());
+						KeycloakUtils.setPassword(serviceToken.getToken(), serviceToken.getRealm(), userId, password, true);
 
-					/* Send them an email with their password */
-					String url = GennySettings.projectUrl + "/home";
-					HashMap<String, String> templateData = new HashMap<String, String>();
-					templateData.put("name", firstname);
-					templateData.put("password", password);
-					templateData.put("url", url);
+						/* Send them an email with their password */
+						String url = GennySettings.projectUrl + "/home";
+						HashMap<String, String> templateData = new HashMap<String, String>();
+						templateData.put("name", firstname);
+						templateData.put("password", password);
+						templateData.put("url", url);
+							
+						List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
 						
-					List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
-					
-					EmailHelper.sendGrid(beUtils, email, null, bccList, "", "d-100adae110bb46eb999cd8b48666cad0", templateData, true);		
+						EmailHelper.sendGrid(beUtils, email, null, bccList, "", "d-100adae110bb46eb999cd8b48666cad0", templateData, true);		
+					}
 				}
 			}
 		}
@@ -112,9 +117,6 @@ rule "IS_EDU_PRO_REP"
 		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
 
 		
-		output.setTypeOfResult("NONE");
-  	output.setResultCode("NONE");  /* dont display anything new */
-		
-		retract(newBe)
+		retract(newBe);
 	
 end
