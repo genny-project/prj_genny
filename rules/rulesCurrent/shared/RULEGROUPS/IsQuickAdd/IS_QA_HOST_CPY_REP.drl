@@ -205,7 +205,7 @@ rule "IS_QA_HOST_CPY_REP"
 		
 				List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
 				
-				EmailHelper.sendGrid(beUtils, superEmail, null, bccList, subject, template_id, templateData, false);
+				EmailHelper.sendGrid(beUtils, superEmail, null, bccList, subject, template_id, templateData, true);
 		}
 		
 		
