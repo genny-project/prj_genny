@@ -129,29 +129,55 @@ rule "IS_INTERNSHIP"
 		
 		
 		/* ========== Sending Slack Notification ============ */
-
-				BaseEntity agent = beUtils.getBaseEntityByCode("CPY_OUTCOME_LIFE");
-				System.out.println("Slack Notification :: agent :: " + agent);
-				String webhookURL = agent.getValueAsString("PRI_SLACK_NEW_INTERNSHIP_URL");
-				System.out.println("Slack Notification :: webhookURL :: " + webhookURL);
-				LocalDateTime updateTime = LocalDateTime.now();
-				String stringToParse = "Hello Slack";
+		BaseEntity agent = beUtils.getBaseEntityByCode("CPY_OUTCOME_LIFE");
+		System.out.println("Slack Notification :: agent :: " + agent);
+		String webhookURL = agent.getValueAsString("PRI_SLACK_NEW_INTERNSHIP_URL");
+		System.out.println("Slack Notification :: webhookURL :: " + webhookURL);
+		
+		LocalDateTime updateTime = LocalDateTime.now();
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd MMM yyyy");
+		String addedOn = dtf.format(updateTime);
+		String assocHC = newBe.getValue("PRI_ASSOC_HC", null);
+		String internshipName = newBe.getValue("PRI_NAME", null);
+		LocalDate internshipStartDate = newBe.getValue("PRI_INTERNSHIP_START_DATE", null);
+		
+		HashMap<String, String> payloadDataMap = new HashMap<String, String>();
+		payloadDataMap.put("*Added on:* ", dtf.format(internshipStartDate));
+		payloadDataMap.put("*Start Date:* ", internshipName);
+		payloadDataMap.put("*Internship Name:* ",addedOn);
+		payloadDataMap.put("*Host Company:* ",assocHC);
+		
+		JsonArray jsonArray2 = new JsonArray();
+		for(String key : payloadDataMap.keySet())	
+		{
+			JsonObject jsonChildObj = new JsonObject();
+			jsonChildObj.put("type", "mrkdwn");
+			jsonChildObj.put("text", key + payloadDataMap.get(key));
+			jsonArray2.add(jsonChildObj);
+		}
+				
+				JsonObject parent2 = new JsonObject();
+				parent2.put("type", "section");
+				parent2.put("fields", jsonArray2);
 				
 				JsonObject child = new JsonObject();
 				child.put("type", "mrkdwn");
-				child.put("text", ":new: *New Internship Opportunity Added!");
+				child.put("text", ":new: *New Internship Opportunity Added!*");
 				
 				JsonObject parent = new JsonObject();
 				parent.put("type", "section");
 				parent.put("text", child);
 				
+				JsonObject parent3 = new JsonObject();
+				parent3.put("type", "divider");
+				
 				JsonArray jsonArray = new JsonArray();
 				jsonArray.add(parent);
+				jsonArray.add(parent2);
+				jsonArray.add(parent3);
 				
 				JsonObject msgPayload = new JsonObject();
      			msgPayload.put("blocks", jsonArray);
-     			
-     			
 				
 				System.out.println("Payload is" + msgPayload.toString()); 
 				
