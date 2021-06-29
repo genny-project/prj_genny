@@ -142,9 +142,9 @@ rule "IS_INTERNSHIP"
 		LocalDate internshipStartDate = newBe.getValue("PRI_INTERNSHIP_START_DATE", null);
 		
 		HashMap<String, String> payloadDataMap = new HashMap<String, String>();
-		payloadDataMap.put("*Added on:* ", dtf.format(internshipStartDate));
-		payloadDataMap.put("*Start Date:* ", internshipName);
-		payloadDataMap.put("*Internship Name:* ",addedOn);
+		payloadDataMap.put("*Added on:* ", addedOn);
+		payloadDataMap.put("*Start Date:* ", dtf.format(internshipStartDate));
+		payloadDataMap.put("*Internship Name:* ",internshipName);
 		payloadDataMap.put("*Host Company:* ",assocHC);
 		
 		JsonArray jsonArray2 = new JsonArray();
