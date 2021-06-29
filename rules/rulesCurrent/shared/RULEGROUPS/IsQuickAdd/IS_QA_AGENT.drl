@@ -161,7 +161,7 @@ rule "IS_QA_AGENT"
 			System.out.println("template_id: " + template_id);
 			
 			HashMap<String, String> templateData = new HashMap<String, String>();
-	    	templateData.put("intern", firstname);
+	    	templateData.put("agent", firstname);
 			templateData.put("password", password);
 	    	templateData.put("url", url);
 			
