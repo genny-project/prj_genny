@@ -37,6 +37,7 @@ rule "IS_QA_AGENT"
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_ADDED_BY", userToken.getUserCode()));
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), user.getCode() ,"PRI_IS_AGENT", "true"));
  		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "PENDING"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_PROFILE", "Incomplete"));
 
 		String linkedAgency = user.getValue("LNK_AGENCY", null);
 		System.out.println("linkedAgency = " + linkedAgency);
@@ -150,13 +151,13 @@ rule "IS_QA_AGENT"
 			System.out.println("template_id: " + template_id);
 			
 			HashMap<String, String> templateData = new HashMap<String, String>();
-	    	templateData.put("intern", firstname);
+	    	templateData.put("agent", firstname);
 			templateData.put("password", password);
 	    	templateData.put("url", url);
 			
 			List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
 			
-			EmailHelper.sendGrid(beUtils, email, null, bccList, subject, template_id, templateData, false);
+			EmailHelper.sendGrid(beUtils, email, null, bccList, subject, template_id, templateData, true);
 			
 		} else {
 			System.out.println("rawSendEmail is not Yes: " + rawSendEmail);
