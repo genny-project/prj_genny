@@ -63,7 +63,7 @@ rule "IS_AGENT"
 							userId = KeycloakUtils.updateUser(userCode,serviceToken.getToken(), serviceToken.getRealm(), email, firstname, lastname,  email, null, "user", "users");
 							userId = userId.toUpperCase();
 							Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),newBe.getCode(),"PRI_UUID",userId);
-							answers.add(keycloakId);
+							beUtils.saveAnswer(keycloakId);
 							System.out.println("Created User "+email+" in Keycloak with id = "+userId);
 
 							/* Generate a random 15 char password */
