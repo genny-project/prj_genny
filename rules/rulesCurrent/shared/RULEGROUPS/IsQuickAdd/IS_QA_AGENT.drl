@@ -39,6 +39,7 @@ rule "IS_QA_AGENT"
  		
  		answers.add(new Answer(userToken.getUserCode(), user.getCode() ,"PRI_IS_AGENT", "true"));
  		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "PENDING"));
+		answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_PROFILE", "Incomplete"));
 
  		/* Record who added them */
 		BaseEntity userBe = beUtils.getBaseEntityByCode(userToken.getUserCode());

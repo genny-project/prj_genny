@@ -39,6 +39,7 @@ rule "IS_QA_EDU_PRO_REP"
     
 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_EDU_PRO_REP", "true"));
 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "PENDING"));
+		answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_PROFILE", "Incomplete"));
 
 		/* Record who added them */
 		BaseEntity userBe = beUtils.getBaseEntityByCode(userToken.getUserCode());
