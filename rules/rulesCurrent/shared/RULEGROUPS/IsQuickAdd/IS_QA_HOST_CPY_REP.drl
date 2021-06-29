@@ -172,9 +172,6 @@ rule "IS_QA_HOST_CPY_REP"
 
 		/* Send email to HCR? */
 		
-		String superEmail = "spc@outcome.life ";
-		System.out.println("superEmail: " +superEmail);
-		
 		String allEmails = "";
 		
 		if (user != null) {
@@ -189,21 +186,21 @@ rule "IS_QA_HOST_CPY_REP"
 		}
 		
 		if (allEmails.equals("SEL_YES")) {
+
+				String superEmail = user.getValue("PRI_EMAIL", null);
+				System.out.println("superEmail: " +superEmail);
 		
 				BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
 				
 				String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, superEmail, serviceToken.getToken());
 				System.out.println("token: " + token);
 				
-				String url = GennySettings.projectUrl+"/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9IT1NUX0NQWV9SRVA=";
+				String url = GennySettings.projectUrl + "/home";
 				System.out.println("url: " + url);
 				
 				url = url +"?token=" + token;
 				System.out.println("url: " + url);
 		
-				superEmail = user.getValue("PRI_EMAIL", null);
-				System.out.println("superEmail: " +superEmail);
-				
 				String subject = "You have been registered on InternMatch";
 				String template_id = "d-6c43211b9b934cb6abaceea171f32e09";
 		
