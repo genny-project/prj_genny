@@ -38,6 +38,7 @@ rule "IS_QA_EDU_PRO_REP"
 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_ADDED_BY", userToken.getUserCode()));    
 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_EDU_PRO_REP", "true"));
 		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "PENDING"));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_PROFILE", "Incomplete"));
 		
 		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
 		
