@@ -73,7 +73,7 @@ rule "DROPDOWN_CLICK_EVENT"
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Target DEF identified as "+defBe.getCode()+"! "+defBe.getName());
 		
 			if ("LNK_EDU_PROVIDER".equals(message.getAttributeCode()) && "DEF_INTERN".equals(defBe.getCode())
-			|| "LNK_COUNTRY".equals(message.getAttributeCode()) && "DEF_INTERN".equals(defBe.getCode())
+			|| "LNK_SELECT_COUNTRY".equals(message.getAttributeCode()) && "DEF_INTERN".equals(defBe.getCode())
 				|| "LNK_PERSON".equals(message.getAttributeCode()) && "DEF_BUCKET_PAGE".equals(defBe.getCode())
 			)
 			{
