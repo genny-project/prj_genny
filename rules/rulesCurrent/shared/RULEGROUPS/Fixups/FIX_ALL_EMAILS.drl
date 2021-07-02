@@ -56,6 +56,8 @@ rule "FIX_ALL_EMAILS"
     then
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processings : " + message );
 
+			List<Answer> answers = new ArrayList<>();
+
 			System.out.println("Fixing All HCR Send Emails'");
 
 			String targetCode = message.getData().getTargetCode();
@@ -82,12 +84,14 @@ rule "FIX_ALL_EMAILS"
 					allEmailsBool = true;
 				}
 				if (targetCode.equals("SAVE_YES")) {
-					beUtils.saveAnswer(new Answer(userToken.getUserCode(), hcr.getCode(), "PRI_EMAIL_FLAG", allEmailsBool));
+					answers.add(new Answer(userToken.getUserCode(), hcr.getCode(), "PRI_EMAIL_FLAG", allEmailsBool));
 				} else {
 					System.out.println("NOT SAVING");
 				}
 			}
 			System.out.println("Number of Changed HCR All emails' = " + changeCount.toString());
+
+			beUtils.saveAnswers(answers);
 
 			retract(message);
 			output.setTypeOfResult("NONE");
