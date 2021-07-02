@@ -86,10 +86,12 @@ rule "HELPER_SIGNATURE_NOTIFY"
 			BaseEntity supervisorBE = beUtils.getBaseEntityFromLNKAttr(targetBe, "LNK_INTERN_SUPERVISOR");
 			String supervisorName = null;
 			String supervisorEmail = null;
+			Boolean sendToSupervisor = false;
 
 			if (supervisorBE != null) {
 				supervisorName = supervisorBE.getValue("PRI_FIRSTNAME", null);
 				supervisorEmail = supervisorBE.getValue("PRI_EMAIL", null);
+				sendToSupervisor = supervisorBE.getValue("PRI_EMAIL_FLAG", false);
 			} else {
 				System.out.println("supervisorBE is NULL");
 			}
@@ -167,7 +169,11 @@ rule "HELPER_SIGNATURE_NOTIFY"
 				url = cleanUrl +"?token=" + hcrToken;
 				templateData.put("url", url);
 			
-				EmailHelper.sendGrid(beUtils, supervisorEmail, null, bccList, "", "d-64ef4bf7b18a4b65a9c7e02b1b8ce7df", templateData, true);
+				if (sendToSupervisor) {
+					EmailHelper.sendGrid(beUtils, supervisorEmail, null, bccList, "", "d-64ef4bf7b18a4b65a9c7e02b1b8ce7df", templateData, true);
+				} else {
+					System.out.println("Email Flag is FALSE, not sending to supervisor!");
+				}
 
 				/* SEND TO INTERN */
 				String internToken = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, internEmail, serviceToken.getToken());
