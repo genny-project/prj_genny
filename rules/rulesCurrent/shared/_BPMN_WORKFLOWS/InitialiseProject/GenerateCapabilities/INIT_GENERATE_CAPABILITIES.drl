@@ -49,6 +49,16 @@ rule "INIT_GENERATE_CAPABILITIES"
 
 		capabilityUtils.addCapability( "LOGIN", "Login");
 		capabilityUtils.addCapability( "LOGOUT", "Logout");
+
+		 /* BUCKETS SEARCHES */
+   	     capabilityUtils.addCapability("SBE_AVAILABLE_INTERNS","Available");
+   	     capabilityUtils.addCapability("SBE_APPLIED_APPLICATIONS","Applied");
+   	     capabilityUtils.addCapability("SBE_SHORTLISTED_APPLICATIONS","Shortlisted");
+   	     capabilityUtils.addCapability("SBE_INTERVIEWED_APPLICATIONS","Interviewed");
+   	     capabilityUtils.addCapability("SBE_OFFERED_APPLICATIONS", "Offered");
+   	     capabilityUtils.addCapability("SBE_PLACED_APPLICATIONS","Placed");
+   	     capabilityUtils.addCapability("SBE_INPROGRESS_APPLICATIONS","In Progress");
+
   	   	capabilityUtils.addCapability( "NOTES", "Notes");
 		capabilityUtils.addCapability( "NOTES_USER_OWN", "Notes Users Own");
   	 	capabilityUtils.addCapability( "TOAST", "Toast");
