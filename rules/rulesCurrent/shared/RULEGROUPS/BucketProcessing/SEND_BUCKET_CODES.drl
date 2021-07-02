@@ -40,6 +40,9 @@ rule "SEND_BUCKET_CODES"
 		/* get BUCKET_CODES from cache */
 		List<String> bucketCodes = VertxUtils.getObject(serviceToken.getRealm(), "", "BUCKET_CODES", List.class);
 
+		System.out.println("bucketCodes:");
+		System.out.println(bucketCodes);
+
 		if(bucketCodes!= null && bucketCodes.size() > 0){
 
 			for (String code : bucketCodes) {
