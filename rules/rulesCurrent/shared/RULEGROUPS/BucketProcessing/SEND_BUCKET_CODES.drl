@@ -30,7 +30,7 @@ rule "SEND_BUCKET_CODES"
 		System.out.println(drools.getRule().getName() + " triggered");
 		Boolean cache = true;
 
-		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+		BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 		CapabilityUtils capabilityUtils = new CapabilityUtils(beUtils);
   
 		String sessionCode = beUtils.getGennyToken().getSessionCode().toUpperCase();
