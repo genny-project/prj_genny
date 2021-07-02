@@ -47,9 +47,11 @@ rule "SEND_BUCKET_CODES"
 
 			for (String code : bucketCodes) {
 				if (!capabilityUtils.hasCapability(code, CapabilityMode.VIEW)) {
+					System.out.println("No Permission");
 					bucketCodes.remove(code);
 				}
 			}
+			System.out.println("Adding sessionCode");
 
 			List<String> sbeSessionCodes = bucketCodes.stream().map(code -> code+"_"+sessionCode).collect(Collectors.toList());
 
