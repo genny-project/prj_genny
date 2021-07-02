@@ -118,8 +118,9 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 
 		
 		if(timeZone != null) {
-			answers.add(new Answer(sourceCode, targetCode, "PRI_TIME_ZONE", timeZone, false, true));
-			VertxUtils.sendToFrontEnd(userToken, timeZone);
+			Answer timeZoneAnswer = new Answer(sourceCode, targetCode, "PRI_TIME_ZONE", timeZone, false, true);
+			answers.add(timeZoneAnswer);
+			VertxUtils.sendToFrontEnd(userToken, timeZoneAnswer);
 		}
 
 		BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
