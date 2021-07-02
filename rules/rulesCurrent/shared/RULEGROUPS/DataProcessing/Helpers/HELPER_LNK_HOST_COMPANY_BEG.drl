@@ -92,9 +92,14 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		answers.add(addressAnswer);
 
 		VertxUtils.sendToFrontEnd(userToken, assocHcAnswer, imageAnswer, latitudeAnswer, longitudeAnswer, addressAnswer);
+
+		String timeZone = null;
 			
 		String country = companyBe.getValue("PRI_ADDRESS_COUNTRY", null);
-		if(country != null) answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_COUNTRY", country, false, true));
+		if(country != null) {
+			answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_COUNTRY", country, false, true));
+			timeZone = country;
+		}
 			
 		String postcode = companyBe.getValue("PRI_ADDRESS_POSTCODE", null);	
 		if(postcode != null) answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_POSTCODE", postcode, false, true));
@@ -103,10 +108,20 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		if(suburb != null) answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_SUBURB", suburb, false, true));
 			
 		String city = companyBe.getValue("PRI_ADDRESS_CITY", null);	
-		if(city != null) answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_CITY", city, false, true));
+		if(city != null) {
+			answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_CITY", city, false, true));
+			timeZone = timeZone != null ? (timeZone + "/" +  city) : city;
+		}
 		
 		String state = companyBe.getValue("PRI_ADDRESS_STATE", null);
 		if(state != null) answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", state, false, true));
+
+		
+		if(timeZone != null) {
+			Answer timeZoneAnswer = new Answer(sourceCode, targetCode, "PRI_TIME_ZONE", timeZone, false, true);
+			answers.add(timeZoneAnswer);
+			VertxUtils.sendToFrontEnd(userToken, timeZoneAnswer);
+		}
 
 		BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
 		if(targetBe != null){
