@@ -39,6 +39,7 @@ rule "SEND_BUCKET_CODES"
 
 		/* get BUCKET_CODES from cache */
 		List<String> bucketCodes = VertxUtils.getObject(serviceToken.getRealm(), "", "BUCKET_CODES", List.class);
+		List<String> sendCodes = new ArrayList<>();
 
 		System.out.println("bucketCodes:");
 		System.out.println(bucketCodes);
@@ -46,14 +47,14 @@ rule "SEND_BUCKET_CODES"
 		if(bucketCodes!= null && bucketCodes.size() > 0){
 
 			for (String code : bucketCodes) {
-				if (!capabilityUtils.hasCapability(code, CapabilityMode.VIEW)) {
-					System.out.println("No Permission");
-					bucketCodes.remove(code);
+				if (capabilityUtils.hasCapability(code, CapabilityMode.VIEW)) {
+					System.out.println("Has Permission for " + code);
+					sendCodes.add(code);
 				}
 			}
 			System.out.println("Adding sessionCode");
 
-			List<String> sbeSessionCodes = bucketCodes.stream().map(code -> code+"_"+sessionCode).collect(Collectors.toList());
+			List<String> sbeSessionCodes = sendCodes.stream().map(code -> code+"_"+sessionCode).collect(Collectors.toList());
 
 			System.out.println("1. Sending bucketCodes !");
 			System.out.println(sbeSessionCodes);
