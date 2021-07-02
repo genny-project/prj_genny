@@ -11,6 +11,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import life.genny.qwanda.message.QCmdMessage;
 
+/* The first rule that gets triggered when an event is sent from Frontend */
 rule "INIT_EVENT"
 	ruleflow-group 'EventProcessing'
 	no-loop
