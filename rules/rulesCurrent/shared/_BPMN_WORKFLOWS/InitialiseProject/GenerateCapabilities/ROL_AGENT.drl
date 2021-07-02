@@ -94,6 +94,15 @@ rule "ROL_AGENT"
 		 capabilityUtils.addCapabilityToRole(role,"ACCESS_NOTES_HC",CapabilityMode.VIEW);
 		 capabilityUtils.addCapabilityToRole(role,"ACCESS_NOTES_HCR",CapabilityMode.VIEW);
 		 capabilityUtils.addCapabilityToRole(role,"ASSIGN_AGENT_TO_INTERN",CapabilityMode.ADD);
+
+		 /* BUCKETS SEARCHES */
+   	     capabilityUtils.addCapabilityToRole(role,"SBE_AVAILABLE_INTERNS",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"SBE_APPLIED_APPLICATIONS",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"SBE_SHORTLISTED_APPLICATIONS",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"SBE_INTERVIEWED_APPLICATIONS",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"SBE_OFFERED_APPLICATIONS",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"SBE_PLACED_APPLICATIONS",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"SBE_INPROGRESS_APPLICATIONS",CapabilityMode.VIEW);
  
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
   	     
