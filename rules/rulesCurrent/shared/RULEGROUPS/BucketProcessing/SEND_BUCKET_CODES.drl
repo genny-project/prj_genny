@@ -47,10 +47,11 @@ rule "SEND_BUCKET_CODES"
 		if(bucketCodes!= null && bucketCodes.size() > 0){
 
 			for (String code : bucketCodes) {
-				if (capabilityUtils.hasCapability(code, CapabilityMode.VIEW)) {
-					System.out.println("Has Permission for " + code);
-					sendCodes.add(code);
-				}
+				/* if (capabilityUtils.hasCapability(code, CapabilityMode.VIEW)) { */
+				/* 	System.out.println("Has Permission for " + code); */
+				/* 	sendCodes.add(code); */
+				/* } */
+				sendCodes.add(code);
 			}
 			System.out.println("Adding sessionCode");
 
