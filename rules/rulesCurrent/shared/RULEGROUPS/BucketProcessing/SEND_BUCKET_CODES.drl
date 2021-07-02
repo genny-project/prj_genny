@@ -24,7 +24,7 @@ rule "SEND_BUCKET_CODES"
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
-		allowed: Allowed(code == "BUCKETS" && mode == CapabilityMode.VIEW)
+		/* allowed: Allowed(code == "BUCKETS" && mode == CapabilityMode.VIEW) */
 
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
