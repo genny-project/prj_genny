@@ -67,6 +67,11 @@ rule "SEND_BUCKET_CODES"
 			msg.setSend(true);  		
 			VertxUtils.writeMsg("webcmds",msg);
 
+			for (String code : sendCodes) {
+				long totalTime = TableUtils.searchTable(beUtils, code, cache);
+				System.out.println("total took " + (totalTime) + " ms"); 
+			}
+
 		}
 
 		output.setTypeOfResult("NONE");
