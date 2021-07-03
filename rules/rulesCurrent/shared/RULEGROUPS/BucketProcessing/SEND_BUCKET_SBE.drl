@@ -16,7 +16,7 @@ import org.drools.core.spi.KnowledgeHelper;
 import life.genny.qwanda.datatype.Allowed;
 
 
-rule "SEND_BUCKET_CODES"
+rule "SEND_BUCKET_SBE"
 	ruleflow-group 'BucketProcessing'
 	salience 8
 	no-loop true
@@ -28,7 +28,6 @@ rule "SEND_BUCKET_CODES"
 
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
-		Boolean cache = true;
 
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 		CapabilityUtils capabilityUtils = new CapabilityUtils(beUtils);
@@ -51,7 +50,6 @@ rule "SEND_BUCKET_CODES"
 					System.out.println("Has Permission for " + code);
 					sendCodes.add(code);
 				}
-				/* sendCodes.add(code); */
 			}
 			System.out.println("Adding sessionCode");
 
@@ -65,10 +63,12 @@ rule "SEND_BUCKET_CODES"
 			msg.setTargetCodes(sbeSessionCodes);
 			msg.setToken(beUtils.getGennyToken().getToken());
 			msg.setSend(true);  		
-			VertxUtils.writeMsg("webcmds",msg);
+			if (!sbeSessionCodes.isEmpty()) {
+				VertxUtils.writeMsg("webcmds",msg);
+			}
 
 			for (String code : sendCodes) {
-				long totalTime = TableUtils.searchTable(beUtils, code, cache);
+				long totalTime = TableUtils.searchTable(beUtils, code, true);
 				System.out.println("total took " + (totalTime) + " ms"); 
 			}
 

@@ -77,6 +77,13 @@ rule "ROL_HOST_CPY_REP"
    	     capabilityUtils.addCapabilityToRole(role,"SBE_PLACED_APPLICATIONS",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"SBE_INPROGRESS_APPLICATIONS",CapabilityMode.VIEW);
 
+		 /* SUMMARY SEARCHES */
+   	     capabilityUtils.addCapabilityToRole(role,"SBE_SUMMARY_SERVICE_AGREEMENT_DOC",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"SBE_SUMMARY_OHNS_AGREEMENT_DOC",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"SBE_SUMMARY_HOST_CPY",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"SBE_SUMMARY_INTERNSHIPS",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"SBE_SUMMARY_HCRS",CapabilityMode.VIEW);
+
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
   	     beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_WEIGHT", 500.0,false,true));
  

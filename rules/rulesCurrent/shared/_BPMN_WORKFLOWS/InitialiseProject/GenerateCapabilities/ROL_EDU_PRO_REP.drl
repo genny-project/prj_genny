@@ -63,6 +63,12 @@ rule "ROL_EDU_PRO_REP"
 			 capabilityUtils.addCapabilityToRole(role,"SBE_PLACED_APPLICATIONS",CapabilityMode.VIEW);
 			 capabilityUtils.addCapabilityToRole(role,"SBE_INPROGRESS_APPLICATIONS",CapabilityMode.VIEW);
 			
+			 /* SUMMARY SEARCHES */
+			 capabilityUtils.addCapabilityToRole(role,"SBE_COUNTS_EDU_PRO_REP",CapabilityMode.VIEW);
+			 capabilityUtils.addCapabilityToRole(role,"SBE_SUMMARY_EDU_PRO",CapabilityMode.VIEW);
+			 capabilityUtils.addCapabilityToRole(role,"SBE_SUMMARY_EPRS",CapabilityMode.VIEW);
+			 capabilityUtils.addCapabilityToRole(role,"SBE_SUMMARY_INTERNS",CapabilityMode.VIEW);
+
 			role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
 			beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_WEIGHT", 600.0,false,true));
 

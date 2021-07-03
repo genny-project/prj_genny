@@ -50,14 +50,31 @@ rule "INIT_GENERATE_CAPABILITIES"
 		capabilityUtils.addCapability( "LOGIN", "Login");
 		capabilityUtils.addCapability( "LOGOUT", "Logout");
 
-		 /* BUCKETS SEARCHES */
-   	     capabilityUtils.addCapability("SBE_AVAILABLE_INTERNS","Available");
-   	     capabilityUtils.addCapability("SBE_APPLIED_APPLICATIONS","Applied");
-   	     capabilityUtils.addCapability("SBE_SHORTLISTED_APPLICATIONS","Shortlisted");
-   	     capabilityUtils.addCapability("SBE_INTERVIEWED_APPLICATIONS","Interviewed");
-   	     capabilityUtils.addCapability("SBE_OFFERED_APPLICATIONS", "Offered");
-   	     capabilityUtils.addCapability("SBE_PLACED_APPLICATIONS","Placed");
-   	     capabilityUtils.addCapability("SBE_INPROGRESS_APPLICATIONS","In Progress");
+		/* BUCKETS SEARCHES */
+		capabilityUtils.addCapability("SBE_AVAILABLE_INTERNS","Available");
+		capabilityUtils.addCapability("SBE_APPLIED_APPLICATIONS","Applied");
+		capabilityUtils.addCapability("SBE_SHORTLISTED_APPLICATIONS","Shortlisted");
+		capabilityUtils.addCapability("SBE_INTERVIEWED_APPLICATIONS","Interviewed");
+		capabilityUtils.addCapability("SBE_OFFERED_APPLICATIONS", "Offered");
+		capabilityUtils.addCapability("SBE_PLACED_APPLICATIONS","Placed");
+		capabilityUtils.addCapability("SBE_INPROGRESS_APPLICATIONS","In Progress");
+
+		/* SUMMARY SEARCHES */
+		capabilityUtils.addCapability("SBE_SUMMARY_SERVICE_AGREEMENT_DOC", "Services Agreement Summary");
+		capabilityUtils.addCapability("SBE_SUMMARY_OHNS_AGREEMENT_DOC", "OH&S Document Summary");
+		capabilityUtils.addCapability("SBE_SUMMARY_HOST_CPY", "Host Company Summary");
+		capabilityUtils.addCapability("SBE_SUMMARY_INTERNSHIPS", "Internships Summary");
+		capabilityUtils.addCapability("SBE_SUMMARY_HCRS", "Host Company Rep Summary");
+		capabilityUtils.addCapability("SBE_SUMMARY_INTERN", "Intern Summary");
+		capabilityUtils.addCapability("SBE_SUMMARY_MY_APPLICATIONS", "My Applications Summary");
+		capabilityUtils.addCapability("SBE_SUMMARY_INTERVIEWS_INTERN", "Intern Interviews Summary");
+		capabilityUtils.addCapability("SBE_SUMMARY_INPROGRESS_APPLICATION", "In Progress Summary");
+		capabilityUtils.addCapability("SBE_COUNTS_EDU_PRO_REP", "Edu Pro Rep Summary");
+		capabilityUtils.addCapability("SBE_SUMMARY_EDU_PRO", "Edu Pro Summary");
+		capabilityUtils.addCapability("SBE_SUMMARY_EPRS", " Company Edu Pro Reps Summary");
+		capabilityUtils.addCapability("SBE_SUMMARY_INTERNS", "Interns Summary");
+		capabilityUtils.addCapability("SBE_SUMMARY_AGENCY", "Agency Summary");
+		capabilityUtils.addCapability("SBE_SUMMARY_AGENTS", "Agents Summary");
 
   	   	capabilityUtils.addCapability( "NOTES", "Notes");
 		capabilityUtils.addCapability( "NOTES_USER_OWN", "Notes Users Own");

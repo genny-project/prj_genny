@@ -65,6 +65,12 @@ rule "ROL_INTERN"
    	     capabilityUtils.addCapabilityToRole(role,"SBE_PLACED_APPLICATIONS",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"SBE_INPROGRESS_APPLICATIONS",CapabilityMode.VIEW);
 
+		 /* SUMMARY SEARCHES */
+   	     capabilityUtils.addCapabilityToRole(role,"SBE_SUMMARY_INTERN",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"SBE_SUMMARY_MY_APPLICATIONS",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"SBE_SUMMARY_INTERVIEWS_INTERN",CapabilityMode.VIEW);
+   	     capabilityUtils.addCapabilityToRole(role,"SBE_SUMMARY_INPROGRESS_APPLICATION",CapabilityMode.VIEW);
+
 		role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
 		beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_WEIGHT", 200.0,false,true));
 

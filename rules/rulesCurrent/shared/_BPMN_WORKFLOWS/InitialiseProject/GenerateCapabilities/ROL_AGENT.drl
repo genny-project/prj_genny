@@ -103,7 +103,12 @@ rule "ROL_AGENT"
    	     capabilityUtils.addCapabilityToRole(role,"SBE_OFFERED_APPLICATIONS",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"SBE_PLACED_APPLICATIONS",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"SBE_INPROGRESS_APPLICATIONS",CapabilityMode.VIEW);
- 
+
+		 /* SUMMARY SEARCHES */
+		 capabilityUtils.addCapabilityToRole(role,"SBE_SUMMARY_AGENCY",CapabilityMode.VIEW);
+		 capabilityUtils.addCapabilityToRole(role,"SBE_SUMMARY_AGENTS",CapabilityMode.VIEW);
+		 capabilityUtils.addCapabilityToRole(role,"SBE_SUMMARY_INTERNS",CapabilityMode.VIEW);
+
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
   	     
   	    beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_WEIGHT", 700.0,false,true));
