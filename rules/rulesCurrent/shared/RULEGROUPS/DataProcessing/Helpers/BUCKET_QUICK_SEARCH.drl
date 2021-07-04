@@ -101,14 +101,15 @@ rule "BUCKET_QUICK_SEARCH"
 									Optional<EntityAttribute> optEA = targetBE.findEntityAttribute(ea.getAttributeCode());
 
 									Boolean valueBoolean = null;
-									System.out.println("valueBoolean = " + valueBoolean);
 									String valueString = null;
-									System.out.println("valueString = " + valueString);
 
 									if (optEA.isPresent()) {
 										valueBoolean = optEA.get().getValueBoolean();
 										valueString = optEA.get().getValueString();
 									}
+
+									System.out.println("valueBoolean = " + valueBoolean);
+									System.out.println("valueString = " + valueString);
 
 									/* NOTE: This only does string and bool equals operations as of yet */
 
