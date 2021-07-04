@@ -134,7 +134,6 @@ rule "LNK_FILTER_COLUMN"
 
 				System.out.println("Unhiding " + unhidden);
 				for (Ask childAsk : filterGrpAsk.getChildAsks()[0].getChildAsks()) {
-					System.out.println(childAsk.getQuestionCode());
 
 					if (childAsk.getQuestionCode().contains("QUE_FILTER_VALUE")) {
 						if (childAsk.getQuestionCode().equals(unhidden)) {
@@ -164,7 +163,9 @@ rule "LNK_FILTER_COLUMN"
 					index += 1.0;
 				}
 				optionGrp.setLinks(childLinks);
+				System.out.println("BEFORE");
 				filterOptionsArray.add(optionGrp);
+				System.out.println("AFTER");
 
 				/* Cache changes to filter grp */
 				VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", filterGrpAsk.getQuestionCode(), filterGrpAsk, serviceToken.getToken());
