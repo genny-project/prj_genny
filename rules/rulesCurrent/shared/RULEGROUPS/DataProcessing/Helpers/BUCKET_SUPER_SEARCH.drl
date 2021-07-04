@@ -85,7 +85,9 @@ rule "BUCKET_SUPER_SEARCH"
 
 								if (ea.getAttributeCode().startsWith("PRI_") || ea.getAttributeCode().startsWith("LNK_")) {
 
+									System.out.println("Getting attr");
 									Optional<EntityAttribute> optEA = targetBE.findEntityAttribute(ea.getAttributeCode());
+									System.out.println("unpacking");
 
 									Boolean valueBoolean = null;
 									String valueString = null;
@@ -114,6 +116,7 @@ rule "BUCKET_SUPER_SEARCH"
 								}
 							}
 
+							System.out.println("Satisfied = " + satisfied);
 							if (satisfied) {
 								satisfiedEntityList.add(entity);
 							}
@@ -123,7 +126,9 @@ rule "BUCKET_SUPER_SEARCH"
 						QDataBaseEntityMessage msg = new QDataBaseEntityMessage(satisfiedEntityList);
 						msg.setToken(userToken.getToken());
 						msg.setReplace(true);
+						System.out.println("before get items");
 						msg.setTotal(Long.valueOf(msg.getItems().length));
+						System.out.println("after get items");
 						msg.setParentCode(searchCode);
 						VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 
