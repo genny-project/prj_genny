@@ -87,7 +87,8 @@ rule "BUCKET_QUICK_SEARCH"
 
 							for (EntityAttribute ea : searchBE.getBaseEntityAttributes()) {
 
-								if (ea.getAttributeCode().startsWith("PRI_") || ea.getAttributeCode().startsWith("LNK_")) {
+								if (ea.getAttributeCode().startsWith("PRI_") || ea.getAttributeCode().startsWith("LNK_")
+									&& !(ea.getAttributeCode().equals("PRI_CODE"))) {
 
 									Optional<EntityAttribute> optEA = targetBE.findEntityAttribute(ea.getAttributeCode());
 
