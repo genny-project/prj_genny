@@ -60,8 +60,12 @@ rule "BUCKET_SUPER_SEARCH"
 
 						} else {
 
-							String[] entityCodes = beUtils.cleanUpAttributeValue(targetBE.getValue(relationship, "")).split(",");
-							System.out.println("entityCode 0 = " + entityCodes[0]);
+							String linkedCodes = targetBE.getValue(relationship, null);
+							if (linkedCodes == null) {
+								System.out.println("targetBE has no attribute for " + relationship);
+								linkedCodes = "";
+							}
+							String[] entityCodes = beUtils.cleanUpAttributeValue(linkedCodes).split(",");
 							for (String entityCode : entityCodes) {
 								BaseEntity be = beUtils.getBaseEntityByCode(entityCode);
 								if (be != null) {
@@ -73,9 +77,7 @@ rule "BUCKET_SUPER_SEARCH"
 
 						String searchCode = code + "_" + userToken.getSessionCode().toUpperCase();
 
-						System.out.println("Getting search now");
 						SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", searchCode, SearchEntity.class, serviceToken.getToken());
-						System.out.println("search = " + searchBE.getCode());
 
 						List<BaseEntity> satisfiedEntityList = new ArrayList<>();
 						
@@ -87,9 +89,7 @@ rule "BUCKET_SUPER_SEARCH"
 
 								if (ea.getAttributeCode().startsWith("PRI_") || ea.getAttributeCode().startsWith("LNK_")) {
 
-									System.out.println("Getting attr");
 									Optional<EntityAttribute> optEA = targetBE.findEntityAttribute(ea.getAttributeCode());
-									System.out.println("unpacking");
 
 									Boolean valueBoolean = null;
 									String valueString = null;
@@ -118,7 +118,6 @@ rule "BUCKET_SUPER_SEARCH"
 								}
 							}
 
-							System.out.println("Satisfied = " + satisfied);
 							if (satisfied) {
 								satisfiedEntityList.add(entity);
 							}
@@ -128,20 +127,15 @@ rule "BUCKET_SUPER_SEARCH"
 						QDataBaseEntityMessage msg = new QDataBaseEntityMessage(satisfiedEntityList);
 						msg.setToken(userToken.getToken());
 						msg.setReplace(true);
-						System.out.println("before get items");
 						msg.setTotal(Long.valueOf(msg.getItems().length));
-						System.out.println("after get items");
 						msg.setParentCode(searchCode);
 						VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 
-						System.out.println("before set results");
 						tableUtils.updateBaseEntity(searchBE, "PRI_TOTAL_RESULTS", Long.valueOf(msg.getItems().length) + "");
-						System.out.println("after set results");
 
 						QDataBaseEntityMessage searchMsg = new QDataBaseEntityMessage(searchBE);
 						searchMsg.setToken(userToken.getToken());
 						searchMsg.setReplace(true);
-						System.out.println("before send search");
 						VertxUtils.writeMsg("webcmds", JsonUtils.toJson(searchMsg));
 
 					} else {
