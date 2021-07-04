@@ -88,8 +88,13 @@ rule "BUCKET_QUICK_SEARCH"
 
 							for (EntityAttribute ea : searchBE.getBaseEntityAttributes()) {
 
-								if (ea.getAttributeCode().startsWith("PRI_") || ea.getAttributeCode().startsWith("LNK_")
-									&& !(ea.getAttributeCode().equals("PRI_CODE"))) {
+								String attributeCode = ea.getAttributeCode();
+
+								if ((attributeCode.startsWith("PRI_") || attributeCode.startsWith("LNK_"))
+									&& !attributeCode.equals("PRI_CODE") && !attributeCode.equals("PRI_TOTAL_RESULTS")
+									&& !attributeCode.startsWith("PRI_CREATED") && !attributeCode.startsWith("PRI_UPDATED")
+									&& !attributeCode.equals("PRI_INDEX")
+									) {
 
 									System.out.println("ea = " + ea.getAttributeCode());
 
