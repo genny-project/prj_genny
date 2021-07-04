@@ -50,6 +50,7 @@ rule "BUCKET_SUPER_SEARCH"
 						System.out.println("Updating bucket search " + code);
 
 						String relationship = (String) superSearchData.get(code);
+						System.out.println("relationship = " + relationship);
 
 						List<BaseEntity> entityList = new ArrayList<>();
 
@@ -60,6 +61,7 @@ rule "BUCKET_SUPER_SEARCH"
 						} else {
 
 							String[] entityCodes = beUtils.cleanUpAttributeValue(targetBE.getValue(relationship, "")).split(",");
+							System.out.println("entityCodes = " + entityCodes);
 							for (String entityCode : entityCodes) {
 								BaseEntity be = beUtils.getBaseEntityByCode(entityCode);
 								if (be != null) {
@@ -132,11 +134,14 @@ rule "BUCKET_SUPER_SEARCH"
 						msg.setParentCode(searchCode);
 						VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 
+						System.out.println("before set results");
 						tableUtils.updateBaseEntity(searchBE, "PRI_TOTAL_RESULTS", Long.valueOf(msg.getItems().length) + "");
+						System.out.println("after set results");
 
 						QDataBaseEntityMessage searchMsg = new QDataBaseEntityMessage(searchBE);
 						searchMsg.setToken(userToken.getToken());
 						searchMsg.setReplace(true);
+						System.out.println("before send search");
 						VertxUtils.writeMsg("webcmds", JsonUtils.toJson(searchMsg));
 
 					} else {
