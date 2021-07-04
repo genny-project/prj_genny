@@ -92,6 +92,8 @@ rule "LNK_FILTER_COLUMN"
 				BaseEntity[] stringSelection = { equalTo, notEqualTo, like, notLike };
 				BaseEntity[] numSelection = { greaterThan, greaterThanOrEqualTo, lessThan, lessThanOrEqualTo, equalTo, notEqualTo };
 
+				System.out.println("Selecting options...");
+
 				if (attr.getCode().equals("PRI_ADDRESS_COUNTRY")) {
 					filterOptionsArray = Arrays.asList(equalSelection);
 					unhidden = "QUE_FILTER_VALUE_COUNTRY";
@@ -132,6 +134,7 @@ rule "LNK_FILTER_COLUMN"
 
 				Ask filterGrpAsk = VertxUtils.getObject(serviceToken.getRealm(), "", "QUE_FILTER_GRP_"+targetCode, Ask.class, serviceToken.getToken());
 
+				System.out.println("Unhiding " + unhidden);
 				for (Ask childAsk : filterGrpAsk.getChildAsks()[0].getChildAsks()) {
 
 					if (childAsk.getQuestionCode().contains("QUE_FILTER_VALUE")) {
