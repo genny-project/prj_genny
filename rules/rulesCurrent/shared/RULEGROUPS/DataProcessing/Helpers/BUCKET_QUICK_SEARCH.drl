@@ -82,6 +82,7 @@ rule "BUCKET_QUICK_SEARCH"
 						List<BaseEntity> satisfiedEntityList = new ArrayList<>();
 						
 						for (BaseEntity entity : entityList) {
+							System.out.println("entity = " + entity.getCode());
 
 							Boolean satisfied = true;
 
