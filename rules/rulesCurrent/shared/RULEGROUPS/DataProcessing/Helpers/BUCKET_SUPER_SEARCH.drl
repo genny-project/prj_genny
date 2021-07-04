@@ -71,7 +71,9 @@ rule "BUCKET_SUPER_SEARCH"
 
 						String searchCode = code + "_" + userToken.getSessionCode().toUpperCase();
 
+						System.out.println("Getting search now");
 						SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", searchCode, SearchEntity.class, serviceToken.getToken());
+						System.out.println("search = " + searchBE.getCode());
 
 						List<BaseEntity> satisfiedEntityList = new ArrayList<>();
 						
