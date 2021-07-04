@@ -54,14 +54,14 @@ rule "BUCKET_SUPER_SEARCH"
 
 						List<BaseEntity> entityList = new ArrayList<>();
 
-						if (relationship == "SELF") {
+						if (relationship.equals("SELF")) {
 							
 							entityList.add(targetBE);
 
 						} else {
 
 							String[] entityCodes = beUtils.cleanUpAttributeValue(targetBE.getValue(relationship, "")).split(",");
-							System.out.println("entityCodes = " + entityCodes);
+							System.out.println("entityCodes = " + entityCodes.toString());
 							for (String entityCode : entityCodes) {
 								BaseEntity be = beUtils.getBaseEntityByCode(entityCode);
 								if (be != null) {
