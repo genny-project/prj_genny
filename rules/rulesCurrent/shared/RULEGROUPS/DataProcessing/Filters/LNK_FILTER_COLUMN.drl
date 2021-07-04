@@ -146,8 +146,8 @@ rule "LNK_FILTER_COLUMN"
 						childAsk.setDisabled(submitEnabled);
 					}
 				}
-				System.out.println("Linking");
 
+				filterOptionsArray = new ArrayList<>(filterOptionsArray);
 
 				BaseEntity optionGrp = new BaseEntity("GRP_FILTER_OPTIONS", "Filter Options");
 				Attribute attributeLink = new Attribute("LNK_CORE", "LNK_CORE", new DataType(String.class));
@@ -163,9 +163,7 @@ rule "LNK_FILTER_COLUMN"
 					index += 1.0;
 				}
 				optionGrp.setLinks(childLinks);
-				System.out.println("BEFORE");
 				filterOptionsArray.add(optionGrp);
-				System.out.println("AFTER");
 
 				/* Cache changes to filter grp */
 				VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", filterGrpAsk.getQuestionCode(), filterGrpAsk, serviceToken.getToken());
