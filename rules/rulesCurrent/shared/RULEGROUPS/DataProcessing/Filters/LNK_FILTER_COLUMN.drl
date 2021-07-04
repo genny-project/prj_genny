@@ -63,6 +63,8 @@ rule "LNK_FILTER_COLUMN"
 
 		/* Define dropdown items selector */
 		String dropdownCode = null;
+		String unhidden = null;
+		Boolean submitEnabled = false;
 
 		/* Get associated Attribute */
 		Attribute attr = RulesUtils.getAttribute(attributeCode, serviceToken);
@@ -74,116 +76,76 @@ rule "LNK_FILTER_COLUMN"
 
 				List<BaseEntity> filterOptionsArray = new ArrayList<>();
 				/* Grab Ask group from cache */
-				Ask filterGrpAsk = VertxUtils.getObject(serviceToken.getRealm(), "", "QUE_FILTER_GRP_"+targetCode, Ask.class, serviceToken.getToken());
+				BaseEntity equalTo = beUtils.getBaseEntityByCode("SEL_EQUAL_TO");
+				BaseEntity notEqualTo = beUtils.getBaseEntityByCode("SEL_NOT_EQUAL_TO");
+				BaseEntity like = beUtils.getBaseEntityByCode("SEL_LIKE");
+				BaseEntity notLike = beUtils.getBaseEntityByCode("SEL_NOT_LIKE");
+				BaseEntity isTrue = beUtils.getBaseEntityByCode("SEL_IS_TRUE");
+				BaseEntity isFalse = beUtils.getBaseEntityByCode("SEL_IS_FALSE");
+				BaseEntity greaterThan = beUtils.getBaseEntityByCode("SEL_GREATER_THAN");
+				BaseEntity greaterThanOrEqualTo = beUtils.getBaseEntityByCode("SEL_GREATER_THAN_OR_EQUAL_TO");
+				BaseEntity lessThan = beUtils.getBaseEntityByCode("SEL_LESS_THAN");
+				BaseEntity lessThanOrEqualTo = beUtils.getBaseEntityByCode("SEL_LESS_THAN_OR_EQUAL_TO");
+
+				BaseEntity[] booleanSelection = { isTrue, isFalse };
+				BaseEntity[] equalSelection = { equalTo, notEqualTo };
+				BaseEntity[] stringSelection = { equalTo, notEqualTo, like, notLike };
+				BaseEntity[] numSelection = { greaterThan, greaterThanOrEqualTo, lessThan, lessThanOrEqualTo, equalTo, notEqualTo };
 
 				if (attr.getCode().equals("PRI_ADDRESS_COUNTRY")) {
-					BaseEntity equalTo = beUtils.getBaseEntityByCode("SEL_EQUAL_TO");
-					BaseEntity notEqualTo = beUtils.getBaseEntityByCode("SEL_NOT_EQUAL_TO");
-					filterOptionsArray.add(equalTo);
-					filterOptionsArray.add(notEqualTo);
-
-					/* Hide all except Country Picker */
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[2].setHidden(true);
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[3].setHidden(true);
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[4].setHidden(false);
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[5].setHidden(true);
-					/* Disable Submit */
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[6].setDisabled(true);
-
+					filterOptionsArray = Arrays.asList(equalSelection);
+					unhidden = "QUE_FILTER_VALUE_COUNTRY";
 					dropdownCode = "LNK_SELECT_COUNTRY";
 
 				} else if (attr.getCode().equals("PRI_ADDRESS_STATE")) {
-					BaseEntity equalTo = beUtils.getBaseEntityByCode("SEL_EQUAL_TO");
-					BaseEntity notEqualTo = beUtils.getBaseEntityByCode("SEL_NOT_EQUAL_TO");
-					filterOptionsArray.add(equalTo);
-					filterOptionsArray.add(notEqualTo);
-
-					/* Hide all except State Picker */
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[2].setHidden(true);
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[3].setHidden(true);
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[4].setHidden(true);
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[5].setHidden(false);
-					/* Disable Submit */
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[6].setDisabled(true);
-
+					filterOptionsArray = Arrays.asList(equalSelection);
+					unhidden = "QUE_FILTER_VALUE_STATE";
 					dropdownCode = "LNK_SELECT_STATE";
 				
 				} else if (dtt.equals("java.lang.String") || dtt.equals("String") || dtt.equalsIgnoreCase("Text")) {
-					BaseEntity like = beUtils.getBaseEntityByCode("SEL_LIKE");
-					BaseEntity notLike = beUtils.getBaseEntityByCode("SEL_NOT_LIKE");
-					BaseEntity equalTo = beUtils.getBaseEntityByCode("SEL_EQUAL_TO");
-					BaseEntity notEqualTo = beUtils.getBaseEntityByCode("SEL_NOT_EQUAL_TO");
-					filterOptionsArray.add(like);
-					filterOptionsArray.add(notLike);
-					filterOptionsArray.add(equalTo);
-					filterOptionsArray.add(notEqualTo);
+					filterOptionsArray = Arrays.asList(stringSelection);
+					unhidden = "QUE_FILTER_VALUE_TEXT";
 					
-					/* Hide all except Text Field */
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[2].setHidden(false);
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[3].setHidden(true);
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[4].setHidden(true);
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[5].setHidden(true);
-					/* Disable Submit */
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[6].setDisabled(true);
-
 				} else if (dtt.equals("java.lang.Boolean") || dtt.equalsIgnoreCase("Boolean")) {
-					BaseEntity isTrue = beUtils.getBaseEntityByCode("SEL_IS_TRUE");
-					BaseEntity isFalse = beUtils.getBaseEntityByCode("SEL_IS_FALSE");
-					filterOptionsArray.add(isTrue);
-					filterOptionsArray.add(isFalse);
-
-					/* Hide all value fields */
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[2].setHidden(true);
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[3].setHidden(true);
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[4].setHidden(true);
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[5].setHidden(true);
-					/* Enable Submit */
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[6].setDisabled(false);
+					filterOptionsArray = Arrays.asList(booleanSelection);
+					submitEnabled = true;
 
 				} else if (dtt.equals("java.lang.Double") || dtt.equalsIgnoreCase("Double")
 							|| dtt.equals("java.lang.Integer") || dtt.equalsIgnoreCase("Integer")
 							|| dtt.equals("java.lang.Long") || dtt.equalsIgnoreCase("Long")) {
-					BaseEntity greaterThan = beUtils.getBaseEntityByCode("SEL_GREATER_THAN");
-					BaseEntity greaterThanOrEqualTo = beUtils.getBaseEntityByCode("SEL_GREATER_THAN_OR_EQUAL_TO");
-					BaseEntity lessThan = beUtils.getBaseEntityByCode("SEL_LESS_THAN");
-					BaseEntity lessThanOrEqualTo = beUtils.getBaseEntityByCode("SEL_LESS_THAN_OR_EQUAL_TO");
-					BaseEntity equalTo = beUtils.getBaseEntityByCode("SEL_EQUAL_TO");
-					BaseEntity notEqualTo = beUtils.getBaseEntityByCode("SEL_NOT_EQUAL_TO");
-					filterOptionsArray.add(greaterThan);
-					filterOptionsArray.add(greaterThanOrEqualTo);
-					filterOptionsArray.add(lessThan);
-					filterOptionsArray.add(lessThanOrEqualTo);
-					filterOptionsArray.add(equalTo);
-					filterOptionsArray.add(notEqualTo);
+					filterOptionsArray = Arrays.asList(numSelection);
+					unhidden = "QUE_FILTER_VALUE_TEXT";
 
-					/* Hide all except Text Field */
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[2].setHidden(false);
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[3].setHidden(true);
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[4].setHidden(true);
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[5].setHidden(true);
-					/* Disable Submit */
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[6].setDisabled(true);
+				} else if (dtt.equals("java.time.LocalDate") || dtt.equalsIgnoreCase("LocalDate")) {
+					filterOptionsArray = Arrays.asList(numSelection);
+					unhidden = "QUE_FILTER_VALUE_DATE";
 
-				} else if (dtt.equals("java.time.LocalDateTime") || dtt.equalsIgnoreCase("LocalDateTime")
-							|| dtt.equals("java.time.LocalDate") || dtt.equalsIgnoreCase("LocalDate")
-							|| dtt.equals("java.time.LocalTime") || dtt.equalsIgnoreCase("LocalTime")) {
-					BaseEntity greaterThan = beUtils.getBaseEntityByCode("SEL_GREATER_THAN");
-					BaseEntity lessThan = beUtils.getBaseEntityByCode("SEL_LESS_THAN");
-					BaseEntity equalTo = beUtils.getBaseEntityByCode("SEL_EQUAL_TO");
-					BaseEntity notEqualTo = beUtils.getBaseEntityByCode("SEL_NOT_EQUAL_TO");
-					filterOptionsArray.add(greaterThan);
-					filterOptionsArray.add(lessThan);
-					filterOptionsArray.add(equalTo);
-					filterOptionsArray.add(notEqualTo);
+				} else if (dtt.equals("java.time.LocalDateTime") || dtt.equalsIgnoreCase("LocalDateTime")) {
+					filterOptionsArray = Arrays.asList(numSelection);
+					unhidden = "QUE_FILTER_VALUE_DATETIME";
 
-					/* Hide all except Date Field */
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[2].setHidden(true);
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[3].setHidden(false);
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[4].setHidden(true);
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[5].setHidden(true);
-					/* Disable Submit */
-					filterGrpAsk.getChildAsks()[0].getChildAsks()[6].setDisabled(true);
+				} else if (dtt.equals("java.time.LocalTime") || dtt.equalsIgnoreCase("LocalTime")) {
+					filterOptionsArray = Arrays.asList(numSelection);
+					unhidden = "QUE_FILTER_VALUE_TIME";
+
 				}
+
+				Ask filterGrpAsk = VertxUtils.getObject(serviceToken.getRealm(), "", "QUE_FILTER_GRP_"+targetCode, Ask.class, serviceToken.getToken());
+
+				for (Ask childAsk : filterGrpAsk.getChildAsks()[0].getChildAsks()) {
+
+					if (childAsk.getQuestionCode().contains("QUE_FILTER_VALUE")) {
+						if (childAsk.getQuestionCode().equals(unhidden)) {
+							childAsk.setHidden(false);
+						} else {
+							childAsk.setHidden(true);
+						}
+
+					} else if (childAsk.getQuestionCode().equals("QUE_SUBMIT")) {
+						childAsk.setDisabled(submitEnabled);
+					}
+				}
+
 
 				BaseEntity optionGrp = new BaseEntity("GRP_FILTER_OPTIONS", "Filter Options");
 				Attribute attributeLink = new Attribute("LNK_CORE", "LNK_CORE", new DataType(String.class));
