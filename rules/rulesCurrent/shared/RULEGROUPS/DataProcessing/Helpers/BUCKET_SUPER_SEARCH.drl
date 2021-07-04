@@ -61,7 +61,7 @@ rule "BUCKET_SUPER_SEARCH"
 						} else {
 
 							String[] entityCodes = beUtils.cleanUpAttributeValue(targetBE.getValue(relationship, "")).split(",");
-							System.out.println("entityCode 0 = " + entityCodes[0];
+							System.out.println("entityCode 0 = " + entityCodes[0]);
 							for (String entityCode : entityCodes) {
 								BaseEntity be = beUtils.getBaseEntityByCode(entityCode);
 								if (be != null) {
