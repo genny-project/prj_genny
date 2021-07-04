@@ -90,10 +90,14 @@ rule "BUCKET_QUICK_SEARCH"
 								if (ea.getAttributeCode().startsWith("PRI_") || ea.getAttributeCode().startsWith("LNK_")
 									&& !(ea.getAttributeCode().equals("PRI_CODE"))) {
 
+									System.out.println("ea = " + ea.getAttributeCode());
+
 									Optional<EntityAttribute> optEA = targetBE.findEntityAttribute(ea.getAttributeCode());
 
 									Boolean valueBoolean = null;
+									System.out.println("valueBoolean = " + valueBoolean);
 									String valueString = null;
+									System.out.println("valueString = " + valueString);
 
 									if (optEA.isPresent()) {
 										valueBoolean = optEA.get().getValueBoolean();
