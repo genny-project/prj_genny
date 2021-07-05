@@ -30,6 +30,49 @@ rule "HC_VALIDATION"
  	    /* Construct answer with Source, Target, Attribute Code, Value */
  		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
  		
+ 		/* Create Host company validation Document */
+ 		
+ 		/* send Loading TOAST msg */
+ 		
+					QCmdMessage toastMsg = new QCmdMessage("TOAST", "INFO");
+					toastMsg.setMessage("Please wait while we prepare your Document!");
+					toastMsg.setToken(beUtils.getGennyToken().getToken());
+					toastMsg.setSend(true);
+					VertxUtils.writeMsg("webcmds", toastMsg);
+					
+					System.out.println("Generating Document from the system");
+					
+					String docCode = hcBe.getValue("DOC_HCV_CODE",null);
+					System.out.println("docCode   ::   " + docCode);
+					if(docCode != null){
+				
+						BaseEntity docBe = beUtils.getBaseEntityByCode(docCode);
+						System.out.println("docBe   ::   " + docBe);
+						
+						if(docBe == null){
+							System.out.println("docBe is null ");
+							return;
+						}
+						
+						String template = "https://raw.githubusercontent.com/genny-project/layouts/master/internmatch-new/document_templates/HostCompanyValidation.html";
+					
+						BaseEntity project = beUtils.getBaseEntityByCode( "PRJ_" + serviceToken.getRealm().toUpperCase());
+						if(project != null){
+							
+							/* get the template url from project if possible */
+							template = project.getValue("PRI_HC_VALIDATION_URL", template);
+		
+						}
+						
+						HashMap<String, Object> contextMap = new HashMap<String, Object>();
+						contextMap.put("HCVDoc", docBe);
+						contextMap.put("HC", hcBe);
+						pdfUrl = PDFHelper.getDownloadablePdfLinkForHtml(template, contextMap);
+						System.out.println("PDF url :: " + pdfUrl);
+						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hcBe.getCode() ,"PRI_HC_VALIDATION_DOC_URL", pdfUrl));
+					}else{
+						System.out.println("docCode is not present in companyBe");
+ 		
 		
 		/* Check Validation Status of HC */
 		
@@ -43,7 +86,7 @@ rule "HC_VALIDATION"
 				if (validationStatus.equals("Ready")) {
 						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hcBe.getCode() ,"PRI_VALIDATION", "Validated"));
 						System.out.println("PRI_VALIDATION set to: Validated"); 	
-				} 
+		
 		} else {
 			System.out.println("ERROR: Null validationStatus");
 		}
