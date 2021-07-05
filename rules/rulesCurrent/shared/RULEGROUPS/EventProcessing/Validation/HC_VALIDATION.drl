@@ -72,7 +72,7 @@ rule "HC_VALIDATION"
 						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hcBe.getCode() ,"PRI_HC_VALIDATION_DOC_URL", pdfUrl));
 					}else{
 						System.out.println("docCode is not present in companyBe");
- 		
+ 					}
 		
 		/* Check Validation Status of HC */
 		
@@ -86,7 +86,7 @@ rule "HC_VALIDATION"
 				if (validationStatus.equals("Ready")) {
 						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hcBe.getCode() ,"PRI_VALIDATION", "Validated"));
 						System.out.println("PRI_VALIDATION set to: Validated"); 	
-		
+				}
 		} else {
 			System.out.println("ERROR: Null validationStatus");
 		}
