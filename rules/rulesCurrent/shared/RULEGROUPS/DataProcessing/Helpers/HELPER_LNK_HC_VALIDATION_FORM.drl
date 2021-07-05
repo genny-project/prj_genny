@@ -55,9 +55,9 @@ rule "HELPER_LNK_HC_VALIDATION_FORM"
 			if(name != null){
 				/* replaces all occurrences of "LNK" to "PRI" */
 				String saveAttributeName = code.replace("LNK","PRI");  
-				Answer answer = new Answer(sourceCode, targetCode, saveAttributeName , name);
-				beUtils.saveAnswer(answer);
-				VertxUtils.sendToFrontEnd(userToken, answer);
+				Answer saveAttribute = new Answer(sourceCode, targetCode, saveAttributeName , name);
+				beUtils.saveAnswer(saveAttribute);
+				VertxUtils.sendToFrontEnd(userToken, saveAttribute);
 			}
 		}
 end
