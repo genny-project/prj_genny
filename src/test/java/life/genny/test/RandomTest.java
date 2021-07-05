@@ -123,12 +123,32 @@ public class RandomTest {
 		}
 		
 		QEventDropdownMessage message = null;
-		message = new QEventDropdownMessage("LNK_PERSON");
-		message.setAttributeCode("LNK_PERSON");
-		message.getData().setCode("QUE_SELECT_INTERN");
-		message.getData().setParentCode("QUE_BUCKET_INTERNS_GRP");
-		message.getData().setTargetCode("BKT_APPLICATIONS");
+		
+		// get an intern
+		SearchEntity searchBE2 = new SearchEntity("SBE_INTERN", "Get An INTERN")
+				.addFilter("PRI_IS_INTERN", true)
+				.addColumn("PRI_IS_INTERN", "Name");
+
+		searchBE2.setRealm(realm);
+		searchBE2.setPageStart(0);
+		searchBE2.setPageSize(1);
+
+		List<BaseEntity> interns = beUtils.getBaseEntitys(searchBE2);
+		BaseEntity intern = interns.get(0);
+		
+		message = new QEventDropdownMessage("LNK_SELECT_COUNTRY");
+		message.setAttributeCode("LNK_SELECT_COUNTRY");
+		message.getData().setCode("QUE_SELECT_COUNTRY");
+		message.getData().setParentCode("QUE_COUNTRY_GRP");
+		message.getData().setTargetCode(intern.getCode());
 		message.getData().setValue("");
+
+//		message = new QEventDropdownMessage("LNK_PERSON");
+//		message.setAttributeCode("LNK_PERSON");
+//		message.getData().setCode("QUE_SELECT_INTERN");
+//		message.getData().setParentCode("QUE_BUCKET_INTERNS_GRP");
+//		message.getData().setTargetCode("BKT_APPLICATIONS");
+//		message.getData().setValue("");
 
 //		message = new QEventDropdownMessage("LNK_EDU_PROVIDER");
 //		message.setAttributeCode("LNK_EDU_PROVIDER");
@@ -146,6 +166,15 @@ public class RandomTest {
 //		message.getData().setTargetCode("PER_086CDF1F-A98F-4E73-9825-0A4CFE2BB943");
 //		message.getData().setValue("Wor");
 
+		if ("LNK_SELECT_COUNTRY".equalsIgnoreCase(message.getAttributeCode())) {
+			QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message,GennySettings.defaultDropDownPageSize);
+			System.out.println(msg);
+			msg.setToken(userToken.getToken());
+			
+			VertxUtils.writeMsg("webcmds", msg);			
+		}
+
+		
 		
 		if ("LNK_PERSON".equalsIgnoreCase(message.getAttributeCode())) {
 			QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message,GennySettings.defaultDropDownPageSize);
