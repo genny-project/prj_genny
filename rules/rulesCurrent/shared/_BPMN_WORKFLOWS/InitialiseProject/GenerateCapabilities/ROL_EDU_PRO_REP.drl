@@ -69,6 +69,10 @@ rule "ROL_EDU_PRO_REP"
 			 capabilityUtils.addCapabilityToRole(role,"SBE_SUMMARY_EPRS",CapabilityMode.VIEW);
 			 capabilityUtils.addCapabilityToRole(role,"SBE_SUMMARY_INTERNS",CapabilityMode.VIEW);
 
+			 /* A Cap For Handling Other Roles and Items */
+			 capabilityUtils.addCapabilityToRole(role,"TYPE_EDU_PRO_REP",CapabilityMode.ADD);
+			 capabilityUtils.addCapabilityToRole(role,"TYPE_APPLICATION",CapabilityMode.ADD);
+
 			role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
 			beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_WEIGHT", 600.0,false,true));
 
