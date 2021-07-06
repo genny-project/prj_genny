@@ -69,11 +69,13 @@ rule "HC_VALIDATION"
 						for (EntityAttribute ea : hcBe.getBaseEntityAttributes()) {
 							if (ea.getAttributeCode().startsWith("LNK_")) {
 								String beCode = ea.getValueString();
-								beCode = beUtils.cleanUpAttributeValue(beCode);
-								BaseEntity linkedBe = beUtils.getBaseEntityByCode(beCode);
-								String name = linkedBe.getValue("PRI_NAME", null);
-								if (name != null) {
-									ea.setValueString(name);
+								if(beCode != null){
+									beCode = beUtils.cleanUpAttributeValue(beCode);
+									BaseEntity linkedBe = beUtils.getBaseEntityByCode(beCode);
+									String name = linkedBe.getValue("PRI_NAME", null);
+									if (name != null) {
+										ea.setValueString(name);
+									}
 								}
 							}
 						}
