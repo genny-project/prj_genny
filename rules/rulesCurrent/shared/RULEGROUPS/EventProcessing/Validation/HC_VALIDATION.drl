@@ -65,12 +65,12 @@ rule "HC_VALIDATION"
 							template = project.getValue("PRI_HC_VALIDATION_URL", template);
 		
 						}
+						ArrayList attibuteCode = {"LNK_TYPE_ENVIRO","LNK_ORGANISED"};
 						for (EntityAttribute ea : docBe.getBaseEntityAttributes()) {
 							System.out.println("1" + ea);
-							if (ea.getAttributeCode().startsWith("LNK_")) {
+							if (attibuteCode.contains(ea.getAttributeCode())) {
 								System.out.println("2");
 								String beCode = ea.getValueString();
-								if(beCode != null && beCode != ""){
 								System.out.println("3" + beCode);
 									beCode = beUtils.cleanUpAttributeValue(beCode);
 									BaseEntity linkedBe = beUtils.getBaseEntityByCode(beCode);
@@ -78,7 +78,6 @@ rule "HC_VALIDATION"
 									if (name != null) {
 										ea.setValueString(name);
 									}
-								}
 							}
 						}
 						HashMap<String, Object> contextMap = new HashMap<String, Object>();
