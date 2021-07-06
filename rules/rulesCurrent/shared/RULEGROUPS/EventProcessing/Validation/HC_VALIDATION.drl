@@ -65,6 +65,18 @@ rule "HC_VALIDATION"
 							template = project.getValue("PRI_HC_VALIDATION_URL", template);
 		
 						}
+
+						for (EntityAttribute ea : hcBe.getBaseEntityAttributes()) {
+							if (ea.getAttributeCode().startsWith("LNK_")) {
+								String beCode = ea.getValueString();
+								beCode = beUtils.cleanUpAttributeValue(beCode);
+								BaseEntity linkedBe = beUtils.getBaseEntityByCode(beCode);
+								String name = linkedBe.getValue("PRI_NAME", null);
+								if (name != null) {
+									ea.setValueString(name);
+								}
+							}
+						}
 						
 						HashMap<String, Object> contextMap = new HashMap<String, Object>();
 						contextMap.put("HCVDoc", docBe);
