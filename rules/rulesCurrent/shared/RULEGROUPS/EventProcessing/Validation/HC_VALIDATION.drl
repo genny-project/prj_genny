@@ -65,13 +65,12 @@ rule "HC_VALIDATION"
 							template = project.getValue("PRI_HC_VALIDATION_URL", template);
 		
 						}
-						
 						for (EntityAttribute ea : docBe.getBaseEntityAttributes()) {
 							System.out.println("1" + ea);
 							if (ea.getAttributeCode().startsWith("LNK_")) {
 								System.out.println("2");
 								String beCode = ea.getValueString();
-								if(beCode != null){
+								if(beCode != null && beCode != ""){
 								System.out.println("3" + beCode);
 									beCode = beUtils.cleanUpAttributeValue(beCode);
 									BaseEntity linkedBe = beUtils.getBaseEntityByCode(beCode);
