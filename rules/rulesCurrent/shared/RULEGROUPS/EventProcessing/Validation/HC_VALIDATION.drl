@@ -65,7 +65,7 @@ rule "HC_VALIDATION"
 							template = project.getValue("PRI_HC_VALIDATION_URL", template);
 		
 						}
-						ArrayList attibuteCode = {"LNK_TYPE_ENVIRO","LNK_ORGANISED"};
+						String[] attibuteCode = {"LNK_TYPE_ENVIRO","LNK_ORGANISED"};
 						for (EntityAttribute ea : docBe.getBaseEntityAttributes()) {
 							System.out.println("1" + ea);
 							if (attibuteCode.contains(ea.getAttributeCode())) {
