@@ -69,7 +69,7 @@ rule "HC_VALIDATION"
 												"LNK_AMENITIES","LNK_WALKWAYS","LNK_EVIDENCE","LNK_TERMS","LNK_SITE_INSPECTION"};
 												
 						ArrayList<String> attrNameLst = new ArrayList<String>();
-						attrNameLst.addAll(Array.asList(attrName));					
+						attrNameLst.addAll(Arrays.asList(attrName));					
 						
 						for (EntityAttribute ea : docBe.getBaseEntityAttributes()) {
 							System.out.println("1" + ea);
