@@ -95,7 +95,7 @@ rule "HC_VALIDATION"
 						DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd MMM yyyy");
 						LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
 						String docValidationDate = dtf.format(now);
-						beUtils.saveAnswer(new Answer(userToken.getUserCode(),docBe.getCode(), "PRI_VALIDATION_DATE", docValidationDate))
+						beUtils.saveAnswer(new Answer(userToken.getUserCode(),docBe.getCode(), "PRI_VALIDATION_DATE", docValidationDate));
 						HashMap<String, Object> contextMap = new HashMap<String, Object>();
 						contextMap.put("HCVDoc", docBe);
 						contextMap.put("HC", hcBe);
