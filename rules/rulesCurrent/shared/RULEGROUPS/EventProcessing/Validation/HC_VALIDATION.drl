@@ -65,7 +65,7 @@ rule "HC_VALIDATION"
 							template = project.getValue("PRI_HC_VALIDATION_URL", template);
 		
 						}
-						String[] attrName = {"LNK_TYPE_ENVIRO","LNK_TYPE_ENVIRO","LNK_ORGANISED","LNK_VENTILATED","LNK_DESK_AREA",
+						String[] attrName = {"LNK_TYPE_ENVIRO","LNK_EXITS","LNK_ORGANISED","LNK_VENTILATED","LNK_DESK_AREA",
 												"LNK_AMENITIES","LNK_WALKWAYS","LNK_EVIDENCE","LNK_TERMS","LNK_SITE_INSPECTION"};
 												
 						ArrayList<String> attrNameLst = new ArrayList<String>();
