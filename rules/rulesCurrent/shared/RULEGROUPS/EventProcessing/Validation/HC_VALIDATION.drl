@@ -12,6 +12,11 @@ import life.genny.qwanda.message.QCmdMessage;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.time.ZoneOffset;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 
 rule "HC_VALIDATION"
     ruleflow-group 'Validation'
@@ -87,6 +92,10 @@ rule "HC_VALIDATION"
 								}
 							}
 						}
+						DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd MMM yyyy");
+						LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+						String docValidationDate = dtf.format(now);
+						beUtils.saveAnswer(new Answer(userToken.getUserCode(),docBe.getCode(), "PRI_VALIDATION_DATE", docValidationDate))
 						HashMap<String, Object> contextMap = new HashMap<String, Object>();
 						contextMap.put("HCVDoc", docBe);
 						contextMap.put("HC", hcBe);
