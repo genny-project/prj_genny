@@ -97,6 +97,6 @@ rule "HELPER_SIGNATURE_COMPLETE"
 	
 		beUtils.saveAnswers(answers);
 
-		retract(answer);
+		/* retract(answer); */
 		
 end
