@@ -36,7 +36,7 @@ rule "SEND_ADD_ITEMS"
 		/* get the addItems ask from cache */
 		LinkedHashMap<String, String> addItemsMap = VertxUtils.getObject(serviceToken.getRealm(), "", "ADD_ITEMS", LinkedHashMap.class, serviceToken.getToken());
 
-		if (addItemsMap != null && !addItemsMap.isEmpty()) {
+		if (addItemsMap = null || addItemsMap.isEmpty()) {
 			System.out.println("addItemsMap is NULL or EMPTY");
 
 		} else {
