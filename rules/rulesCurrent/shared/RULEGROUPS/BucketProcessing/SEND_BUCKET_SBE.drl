@@ -59,12 +59,8 @@ rule "SEND_BUCKET_SBE"
 			System.out.println(sbeSessionCodes);
 
 			/* Send summary arrayCodes */
-			QCmdMessage msg = new QCmdMessage("BUCKET_CODES", "BUCKET_CODES");
-			msg.setTargetCodes(sbeSessionCodes);
-			msg.setToken(beUtils.getGennyToken().getToken());
-			msg.setSend(true);  		
 			if (!sbeSessionCodes.isEmpty()) {
-				VertxUtils.writeMsg("webcmds",msg);
+				VertxUtils.sendCmdMsg(beUtils, "BUCKET_CODES", "BUCKET_CODES", sbeSessionCodes);
 			}
 
 			for (String code : sendCodes) {

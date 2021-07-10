@@ -56,12 +56,8 @@ rule "SEND_SUMMARY_SBE"
 			System.out.println(sbeSessionCodes);
 
 			/* Send summary arrayCodes */
-			QCmdMessage msg = new QCmdMessage("SUMMARY_CODES", "SUMMARY_CODES");
-			msg.setTargetCodes(sbeSessionCodes);
-			msg.setToken(beUtils.getGennyToken().getToken());
-			msg.setSend(true); 
 			if (!sbeSessionCodes.isEmpty()) {
-				VertxUtils.writeMsg("webcmds",msg);
+				VertxUtils.sendCmdMsg(beUtils, "SUMMARY_CODES", "SUMMARY_CODES", sbeSessionCodes);
 			}
 
 			System.out.println("2. Sending summary SBES !");
