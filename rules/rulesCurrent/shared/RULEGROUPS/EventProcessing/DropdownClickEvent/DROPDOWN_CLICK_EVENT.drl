@@ -80,7 +80,7 @@ rule "DROPDOWN_CLICK_EVENT"
 			try {
 				defDropdownExists = beUtils.hasDropdown(dropdownCode, defBe);
 			} catch (Exception e) {
-				System.out.println(ruleDetails+" "+drools.getRule().getName()+" check for has Dropdown failed "+dropdownCode);
+				System.out.println(ruleDetails+" "+drools.getRule().getName()+" check for has Dropdown failed "+dropdownCode+" for defBe.code = "+defBe.getCode());
 			}
 		
 			if (defDropdownExists )
@@ -99,7 +99,11 @@ rule "DROPDOWN_CLICK_EVENT"
 						output.setResultCode("NONE");  /* don't display anything new */
 						update(output);
 
+			} else {
+				System.out.println(ruleDetails+" "+drools.getRule().getName()+" No dropdown exists target "+message.getData().getTargetCode());
 			}
+		} else {
+			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Target DEF NOT identified for target "+message.getData().getTargetCode());
 		}
 		
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" End Dropdown Rule");
