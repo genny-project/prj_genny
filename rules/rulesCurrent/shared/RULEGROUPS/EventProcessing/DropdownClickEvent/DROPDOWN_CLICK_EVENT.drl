@@ -100,7 +100,7 @@ rule "DROPDOWN_CLICK_EVENT"
 						update(output);
 
 			} else {
-				System.out.println(ruleDetails+" "+drools.getRule().getName()+" No dropdown exists target "+message.getData().getTargetCode());
+				System.out.println(ruleDetails+" "+drools.getRule().getName()+" No dropdown exists target "+message.getData().getTargetCode()+" and def "+defBe.getCode());
 			}
 		} else {
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Target DEF NOT identified for target "+message.getData().getTargetCode());
