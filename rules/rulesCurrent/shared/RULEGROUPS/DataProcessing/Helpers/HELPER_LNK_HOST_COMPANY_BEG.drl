@@ -62,7 +62,6 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 											.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
 											.addFilter("PRI_IS_HOST_CPY_REP", true)
 											.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "ACTIVE")
-											.addOr("PRI_STATUS",SearchEntity.StringFilter.EQUAL, "AVAILABLE")
 											.addFilter("LNK_HOST_COMPANY", SearchEntity.StringFilter.EQUAL, value)
 											.setPageStart(0)
 											.setPageSize(1000);
