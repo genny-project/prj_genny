@@ -84,6 +84,7 @@ rule "HELPER_LNK_HOST_COMPANY_APP"
 											.addFilter("PRI_IS_INTERNSHIP", true)
 											.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%")
 											.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "ACTIVE")
+											.addOr("PRI_STATUS",SearchEntity.StringFilter.EQUAL, "AVAILABLE")
 											.addFilter("LNK_HOST_COMPANY", SearchEntity.StringFilter.EQUAL, value)
 											.addFilter("PRI_ADDRESS_STATE", SearchEntity.StringFilter.LIKE, "%")
 											.addFilter("PRI_ASSOC_INDUSTRY", SearchEntity.StringFilter.LIKE, "%")
