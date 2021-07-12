@@ -66,6 +66,7 @@ rule "HELPER_SIGNATURE_COMPLETE"
 		if (value != null && !value.equals("null")) {
 			
 			String internSignature = targetBe.getValue("PRI_AGR_DOC_INT_SIGNATURE", null);
+			System.out.println("internSignature :: " + internSignature);
 			String hcrSignature = targetBe.getValue("PRI_AGR_DOC_HC_SIGNATURE", null);
 			String outcomeSignature = targetBe.getValue("PRI_AGR_DOC_OUTCOME_SIGNATURE", null);
 			
