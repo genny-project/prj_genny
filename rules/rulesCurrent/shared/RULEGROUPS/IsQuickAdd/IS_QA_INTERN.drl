@@ -61,9 +61,41 @@ rule "IS_QA_INTERN"
 
 		BaseEntity targetBe = beUtils.getBaseEntityByCode(target);
 		System.out.println("targetBe = " +targetBe);
+
+		String intern = targetBe.getValue("PRI_NAME", null);
+		System.out.println("intern = " + intern);
+		String state = targetBe.getValue("PRI_ADDRESS_STATE", null);
+		System.out.println("state = " + state);
+		LocalDate startDate = targetBe.getValue("PRI_START_DATE", null);
+		System.out.println("startDate = " + startDate);
+
+		/* GET EDU PRO NAME */
+		BaseEntity eduPro = beUtils.getBaseEntityFromLNKAttr(targetBe, "LNK_EDU_PROVIDER");
+		System.out.println("eduPro = " + eduPro);
+		String eduProName = null;
+		if (eduPro != null) {
+			eduProName = eduPro.getValue("PRI_NAME", null);
+		}
+		/* GET INDUSTRY NAME */
+		BaseEntity industry = beUtils.getBaseEntityFromLNKAttr(targetBe, "LNK_INDUSTRY");
+		System.out.println("industry = " + industry);
+		String industryName = null;
+		if (industry != null) {
+			industryName = industry.getValue("PRI_NAME", null);
+		}
+		/* GET INDUSTRY NAME */
+		BaseEntity occupation = beUtils.getBaseEntityFromLNKAttr(targetBe, "LNK_OCCUPATION");
+		System.out.println("occupation = " + occupation);
+		String occupationName = null;
+		if (occupation != null) {
+			occupationName = occupation.getValue("PRI_NAME", null);
+		}
 		
+		/* GET AGENT DATA */
 		String lnkAgent = targetBe.getValue("LNK_AGENT", null);
 		System.out.println("lnkAgent = " +lnkAgent);
+		String agentEmail = null;
+		String agent = null;
 		if (lnkAgent != null) {
 				answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_AGENT", lnkAgent));
 		
@@ -74,8 +106,9 @@ rule "IS_QA_INTERN"
 				System.out.println("agentBe = " + agentBe);
 				
 				if (agentBe != null) {
-						String agent = agentBe.getValue("PRI_NAME", null);
+						agent = agentBe.getValue("PRI_NAME", null);
 						System.out.println("agent = " +agent);
+						agentEmail = agentBe.getValue("PRI_EMAIL", null);
 						
 						if (agent !=null ) {
 							answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_AGENT_NAME", agent));
@@ -154,8 +187,6 @@ rule "IS_QA_INTERN"
 				}
 			}
 		}
-			
-			
 
 		String endPoint = GennySettings.projectUrl + "/v7/notes";
 		/*String endPoint = "https://internmatch-cyrus.gada.io/v7/notes";*/
@@ -175,33 +206,35 @@ rule "IS_QA_INTERN"
 		
 		String rawSendEmail = user.getValue("LNK_SEND_EMAIL",null);
 		System.out.println("rawSendEmail: " +rawSendEmail);
+
+		List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
+
+		BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
+	
+		String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, email, serviceToken.getToken());
+		System.out.println("token: " + token);
+	
+		String url = GennySettings.projectUrl+"/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9JTlRFUk4=";
+		System.out.println("url: " + url);
+		
+		url = url +"?token=" + token;
+		System.out.println("url: " + url);
+		
+		String subject = "You have been registered on InternMatch";
+		String template_id = "d-94f647d38d7745a1b925300df2208279";
+		
+		System.out.println("email: " + email);
+		System.out.println("subject: " + subject);
+		System.out.println("template_id: " + template_id);
+					
+		HashMap<String, String> templateData = new HashMap<String, String>();
+		templateData.put("intern", firstname);
+		templateData.put("password", password);
+		templateData.put("url", url);
 		
 		if (rawSendEmail.equals("SEL_YES")) {
 	 
-			BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
-		
-			String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, email, serviceToken.getToken());
-			System.out.println("token: " + token);
-		
-			String url = GennySettings.projectUrl+"/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9JTlRFUk4=";
-			System.out.println("url: " + url);
 			
-			url = url +"?token=" + token;
-			System.out.println("url: " + url);
-			
-			String subject = "You have been registered on InternMatch";
-			String template_id = "d-94f647d38d7745a1b925300df2208279";
-			
-			System.out.println("email: " + email);
-			System.out.println("subject: " + subject);
-			System.out.println("template_id: " + template_id);
-						
-			HashMap<String, String> templateData = new HashMap<String, String>();
-			templateData.put("intern", firstname);
-			templateData.put("password", password);
-			templateData.put("url", url);
-			
-			List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
 			
 			EmailHelper.sendGrid(beUtils, email, null, bccList, subject, template_id, templateData, true);
  
@@ -212,10 +245,33 @@ rule "IS_QA_INTERN"
 			smsHelper.deliverSmsMsg(mobile, smsBody);
 			*/
 		
-			} else {
-				System.out.println("rawSendEmail is not Yes: " + rawSendEmail);
-			}
+		} else {
+			System.out.println("rawSendEmail is not Yes: " + rawSendEmail);
+		}
 	
+		if (agentEmail != null) {
+
+			token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, agentEmail, serviceToken.getToken());
+			System.out.println("token: " + token);
+
+			String urlParentCode = "SBE_INTERNS"+userToken.getSessionCode().toUpperCase();
+			url = EmailHelper.encodeUrl(GennySettings.projectUrl+"/home", urlParentCode, "ACT_PRI_EVENT_VIEW", newBe.getCode());
+			System.out.println("url: " + url);
+			
+			url = url +"?token=" + token;
+			System.out.println("url: " + url);
+
+			templateData.put("agent", agent);
+			templateData.put("intern", intern);
+			templateData.put("state", state);
+			templateData.put("educationProvider", eduProName);
+			templateData.put("industry", industryName);
+			templateData.put("specialisation", occupationName);
+			templateData.put("startDate", startDate.toString());
+			templateData.put("url", url);
+
+			EmailHelper.sendGrid(beUtils, agentEmail, null, bccList, "", "d-88c1ac4df5ff42409be2347cbccde424", templateData, true);
+		}
 		
 		System.out.println("################## START Shleemy ##################");
 		

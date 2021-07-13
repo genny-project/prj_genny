@@ -34,17 +34,23 @@ import org.jbpm.services.api.utils.KieServiceConfigurator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import io.vertx.core.json.JsonArray;
+
+
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
 import life.genny.models.GennyToken;
 import life.genny.qwanda.Answer;
+import life.genny.qwanda.attribute.Attribute;
 import life.genny.qwanda.attribute.EntityAttribute;
+import life.genny.qwanda.datatype.DataType;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwanda.message.QBulkMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventDropdownMessage;
+import life.genny.qwanda.validation.Validation;
 import life.genny.qwandautils.GennyCacheInterface;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.KeycloakUtils;
@@ -90,8 +96,40 @@ public class JasperTest {
 	public JasperTest() {
 		super();
 	}
-
+	
 	@Test
+	public void ArrayTest() {
+		System.out.println("Detail View Test");
+
+		VertxUtils.cachedEnabled = false;
+
+		if (beUtils == null) {
+			return;
+		}
+		BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
+		
+		Attribute attribute = RulesUtils.getAttribute("LNK_EDU_PROVIDER", userToken);
+			// Get Group Code
+		DataType dt = attribute.getDataType();
+		// log.info("DATATYPE IS " + dt);
+		String groupCode = null;
+		List<Validation> vl = dt.getValidationList();
+		System.out.println("vl = " + vl);
+
+		if ((vl != null) && (!vl.isEmpty())) {
+			Validation val = vl.get(0);
+			if ((val.getSelectionBaseEntityGroupList() != null)
+					&& (!val.getSelectionBaseEntityGroupList().isEmpty())) {
+				groupCode = val.getSelectionBaseEntityGroupList().get(0);
+				System.out.println("GroupCode = " + groupCode);
+			}
+			System.out.println("val = " + val);
+		}
+
+	}
+
+
+	//@Test
 	public void DetailViewTest() {
 		System.out.println("Detail View Test");
 
