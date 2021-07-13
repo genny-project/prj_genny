@@ -135,6 +135,7 @@ rule "FIX_USER_STATUS"
 
 			}
 			System.out.println("Number of Changed Intern Status' = " + changeCount.toString());
+			System.out.println("Number of Changed Intern DISABLED' = " + disCount.toString());
 
 			retract(message);
 			output.setTypeOfResult("NONE");
