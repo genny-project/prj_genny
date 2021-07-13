@@ -77,7 +77,7 @@ rule "FIX_USER_STATUS"
 				System.out.println("Intern Code = " + intern.getCode());
 				String status = intern.getValue("PRI_STATUS", null);
 				/* System.out.println("Intern Status = " + status); */
-				String disabled = intern.getValue("PRI_DISABLED", null);
+				Boolean disabled = intern.getValue("PRI_DISABLED", null);
 				/* System.out.println("Intern Status = " + status); */
 				
 				SearchEntity appSearchBE = new SearchEntity("SBE_LINKED_APPLICATIONS", "Linked Applications")
