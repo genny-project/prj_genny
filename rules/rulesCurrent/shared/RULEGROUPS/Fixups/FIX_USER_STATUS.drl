@@ -58,6 +58,7 @@ rule "FIX_USER_STATUS"
 
 			System.out.println("Fixing All User Status'");
 
+			List<Answer> answers = new ArrayList<>();
 
 			SearchEntity searchBE = new SearchEntity("SBE_GET_INTERNS", "Get All Interns")
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
@@ -71,10 +72,13 @@ rule "FIX_USER_STATUS"
 			System.out.println("Found " + internBaseEntitys.size() + " Intern BEs");
 
 			Integer changeCount = 0;
+			Integer disCount = 0;
 			for (BaseEntity intern : internBaseEntitys) {
 				System.out.println("Intern Code = " + intern.getCode());
 				String status = intern.getValue("PRI_STATUS", null);
-				System.out.println("Intern Status = " + status);
+				/* System.out.println("Intern Status = " + status); */
+				String disabled = intern.getValue("PRI_DISABLED", null);
+				/* System.out.println("Intern Status = " + status); */
 				
 				SearchEntity appSearchBE = new SearchEntity("SBE_LINKED_APPLICATIONS", "Linked Applications")
 					.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
@@ -90,6 +94,7 @@ rule "FIX_USER_STATUS"
 						/* Otherwise we find the most progressed app status and save it to the person */
 						String[] statusArray = { "AVAILABLE", "APPLIED", "SHORTLISTED", "INTERVIEWED", "OFFERED", "PLACED", "PROGRESS", "COMPLETED" };
 						int index = 0;
+						Boolean statusOverLim = false;
 						for (BaseEntity app : linkedApps) {
 							/* FIND MOST PROGRESSED STATUS */
 							String appStatus = app.getValue("PRI_STATUS", null);
@@ -99,6 +104,9 @@ rule "FIX_USER_STATUS"
 									if (pos > index) {
 										index = pos;
 									}
+									if (pos > 4) {
+										statusOverLim = true;
+									}
 								}
 							} else {
 								System.out.println("PRI_STATUS is null for " + app.getCode());
@@ -107,7 +115,18 @@ rule "FIX_USER_STATUS"
 						System.out.println("new status = " + statusArray[index]);
 						if (!status.equals(statusArray[index])) {
 							changeCount += 1;
-							beUtils.saveAnswer(new Answer(userToken.getUserCode(), intern.getCode() , "PRI_STATUS", statusArray[index]));
+							/* answers.add(new Answer(userToken.getUserCode(), intern.getCode() , "PRI_STATUS", statusArray[index])); */
+						}
+						if (statusOverLim) {
+							/* answers.add(new Answer(userToken.getUserCode(), intern.getCode() , "PRI_DISABLED", true)); */
+							if (disabled != null && !disabled) {
+								disCount += 1;
+							}
+						} else {
+							/* answers.add(new Answer(userToken.getUserCode(), intern.getCode() , "PRI_DISABLED", false)); */
+							if (disabled != null && disabled) {
+								disCount += 1;
+							}
 						}
 					}
 				} else {
