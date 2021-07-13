@@ -72,10 +72,18 @@ rule "DROPDOWN_CLICK_EVENT"
 		if (defBe != null) {
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Target DEF identified as "+defBe.getCode()+"!! "+defBe.getName());
 		
-			if (("LNK_EDU_PROVIDER".equals(message.getAttributeCode()) && "DEF_INTERN".equals(defBe.getCode()))
-			|| ("LNK_SELECT_COUNTRY".equals(message.getAttributeCode()) && "DEF_INTERN".equals(defBe.getCode()))
-				|| ("LNK_PERSON".equals(message.getAttributeCode()) && "DEF_BUCKET_PAGE".equals(defBe.getCode()))
-			)
+			Boolean defDropdownExists = false;
+			String dropdownCode = message.getAttributeCode();
+			/* Determine whether there is a DEF attribute and target type that has a new DEF
+			   search for this combination
+			   */
+			try {
+				defDropdownExists = beUtils.hasDropdown(dropdownCode, defBe);
+			} catch (Exception e) {
+				System.out.println(ruleDetails+" "+drools.getRule().getName()+" check for has Dropdown failed "+dropdownCode+" for defBe.code = "+defBe.getCode());
+			}
+		
+			if (defDropdownExists )
 			{
 						System.out.println(ruleDetails+" "+drools.getRule().getName()+" INVOKING DEF DROPDOWN RULE");
 						QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message,dropdownSize);
@@ -91,7 +99,11 @@ rule "DROPDOWN_CLICK_EVENT"
 						output.setResultCode("NONE");  /* don't display anything new */
 						update(output);
 
+			} else {
+				System.out.println(ruleDetails+" "+drools.getRule().getName()+" No dropdown exists target "+message.getData().getTargetCode()+" and def "+defBe.getCode());
 			}
+		} else {
+			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Target DEF NOT identified for target "+message.getData().getTargetCode());
 		}
 		
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" End Dropdown Rule");

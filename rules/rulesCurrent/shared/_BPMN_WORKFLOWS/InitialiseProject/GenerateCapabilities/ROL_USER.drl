@@ -44,7 +44,7 @@ rule "ROL_USER"
    	     capabilityUtils.addCapabilityToRole(role,"LOGOUT",CapabilityMode.VIEW);
  	     capabilityUtils.addCapabilityToRole(role,"READ_USER",CapabilityMode.SELF);
   	     capabilityUtils.addCapabilityToRole(role,"READ_PROJECT",CapabilityMode.VIEW);
-     	     capabilityUtils.addCapabilityToRole(role,"EDIT_ACCOUNT",CapabilityMode.SELF);
+     	 capabilityUtils.addCapabilityToRole(role,"EDIT_ACCOUNT",CapabilityMode.SELF);
  	 
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
   	     beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_WEIGHT", 100.0,false,true));

@@ -29,7 +29,7 @@ rule "PRI_EMAIL"
 	  	serviceToken : GennyToken( code == "PER_SERVICE")
 	 	userToken : GennyToken( code != "PER_SERVICE")
 	  	output : OutputParam( )
-	  	allowed: Allowed(code == "AGENT" || code == "INTERN" || code == "EDU_PRO_REP" || code == "HOST_CPY_REP")
+	  	allowed: Allowed((code == "USER") || (code == "EDIT_INTERN") || (code == "EDIT_HCR") || (code == "EDIT_EPR") || (code == "EDIT_REF_PART_REP") || (code == "EDIT_AGENT"))	  	
      then
  		System.out.println("Rule -> PRI_EMAIL :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
  		
@@ -64,8 +64,44 @@ rule "PRI_EMAIL"
 			
 			if (resultJsonStr.equals("0")) {
 				System.out.println("This email "+answer.getValue()+" is unique");
+				/* Now sync to their keycloak account */
+				if (answer.getValue().startsWith("adamcrow")) {
+				BaseEntity target = beUtils.getBaseEntityByCode(answer.getTargetCode());
+				if ((answer.getTargetCode().startsWith("PER_")) && (target != null)) {
+				
+					Boolean allowedToChange = false;
+					String keycloakUUID = answer.getTargetCode().substring("PER_".length());
+					if (userToken.getUserCode().equals(answer.getTargetCode())) {
+						allowedToChange = true;
+					}
+				
+				/* check if capability to change passwords is there */
+					switch (allowed.code) {
+					case "EDIT_INTERN":
+					      if (target.is("INTERN")) {allowedToChange = true;} break;
+					case "EDIT_AGENT":
+					      if (target.is("AGENT")) {allowedToChange = true;} break;
+					case "EDIT_HCR":
+					      if (target.is("HOST_CPY_REP")) {allowedToChange = true;} break;
+					case "EDIT_EPR":
+					      if (target.is("EDU_PROV_REP")) {allowedToChange = true;} break;
+					case "EDIT_REF_PART_REP":
+					      if (target.is("REF_PART_REP")) {allowedToChange = true;} break;
+					}
+				
+					if (allowedToChange) {
+						int statusCode =  KeycloakUtils.updateUserEmail(keycloakUUID,serviceToken.getToken(), userToken.getRealm(),answer.getValue());
+						System.out.println("Changing email for "+answer.getTargetCode()+" to "+answer.getValue()+" statusCode="+statusCode);
+						if (statusCode > 204) {
+							System.out.println("Error in setting email."+answer.getTargetCode()+" to "+answer.getValue()+" statusCode="+statusCode);
+						}
+					}
+					
+				}
+			}	
+				
 			} else {
-					if(allowed.code.equals("AGENT")) {
+					if(true /*allowed.code.equals("AGENT")*/) { /* TODO , why limit this to agents??? */
 						List<BaseEntity> duplicateBes = beUtils.getBaseEntitys(searchBE);
 						System.out.println("duplicateBE's: " + duplicateBes);
 						
