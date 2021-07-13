@@ -115,15 +115,15 @@ rule "FIX_USER_STATUS"
 						System.out.println("new status = " + statusArray[index]);
 						if (!status.equals(statusArray[index])) {
 							changeCount += 1;
-							/* answers.add(new Answer(userToken.getUserCode(), intern.getCode() , "PRI_STATUS", statusArray[index])); */
+							answers.add(new Answer(userToken.getUserCode(), intern.getCode() , "PRI_STATUS", statusArray[index]));
 						}
 						if (statusOverLim) {
-							/* answers.add(new Answer(userToken.getUserCode(), intern.getCode() , "PRI_DISABLED", true)); */
+							answers.add(new Answer(userToken.getUserCode(), intern.getCode() , "PRI_DISABLED", true));
 							if (disabled != null && !disabled) {
 								disCount += 1;
 							}
 						} else {
-							/* answers.add(new Answer(userToken.getUserCode(), intern.getCode() , "PRI_DISABLED", false)); */
+							answers.add(new Answer(userToken.getUserCode(), intern.getCode() , "PRI_DISABLED", false));
 							if (disabled != null && disabled) {
 								disCount += 1;
 							}
