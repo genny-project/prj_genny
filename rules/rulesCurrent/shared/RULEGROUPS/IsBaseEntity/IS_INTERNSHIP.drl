@@ -277,14 +277,14 @@ rule "IS_INTERNSHIP"
 		msg.setSend(true);
 		VertxUtils.writeMsg("webcmds", msg);
 
-		String body = "{\"blocks\": [{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\","
-			+ "\"text\": \":party-parrot: *New Internship Opportunity Added!* :party-parrot:\"}},"
-			+ "{\"type\": \"section\",\"fields\": [{\"type\": \"mrkdwn\",\"text\": \"*Host Company:* "+assocHC+"\"},"
-			+ "{\"type\": \"mrkdwn\",\"text\": \"*Internship Name:* "+internshipName+"\"},"
-			+ "{\"type\": \"mrkdwn\",\"text\": \"*Start Date:* "+startDateStr+"\"},"
-			+ "{\"type\": \"mrkdwn\",\"text\": \"*Added on:* "+addedOn+"\"}]},{\"type\": \"divider\"}]}";
+		/* String body = "{\"blocks\": [{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\"," */
+		/* 	+ "\"text\": \":party-parrot: *New Internship Opportunity Added!* :party-parrot:\"}}," */
+		/* 	+ "{\"type\": \"section\",\"fields\": [{\"type\": \"mrkdwn\",\"text\": \"*Host Company:* "+assocHC+"\"}," */
+		/* 	+ "{\"type\": \"mrkdwn\",\"text\": \"*Internship Name:* "+internshipName+"\"}," */
+		/* 	+ "{\"type\": \"mrkdwn\",\"text\": \"*Start Date:* "+startDateStr+"\"}," */
+		/* 	+ "{\"type\": \"mrkdwn\",\"text\": \"*Added on:* "+addedOn+"\"}]},{\"type\": \"divider\"}]}"; */
 		
-		NotificationHelper.slackNotification(body, "T6NKG982D/B025LQM7ZMM/K0W6J1GUagiyRivmSIvAfOAz");
+		/* NotificationHelper.slackNotification(body, "T6NKG982D/B025LQM7ZMM/K0W6J1GUagiyRivmSIvAfOAz"); */
 		
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
