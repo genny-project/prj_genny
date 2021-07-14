@@ -249,6 +249,7 @@ rule "IS_QA_INTERN"
 			System.out.println("rawSendEmail is not Yes: " + rawSendEmail);
 		}
 	
+		System.out.println("agentEmail = " + agentEmail);
 		if (agentEmail != null) {
 
 			token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, agentEmail, serviceToken.getToken());
