@@ -1,6 +1,7 @@
 package life.genny.rules;
 
 import life.genny.qwandautils.QwandaUtils;
+import life.genny.utils.ShleemyUtils;
 
 import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
@@ -87,12 +88,11 @@ rule "HELPER_SIGNATURE_COMPLETE"
 				answers.add(answerSignatures);
 				System.out.println("Answer done" +answerSignatures);
 
-				output.setTypeOfResult("SIGNAL");
-				output.setResultCode("START_PLACED");
-				output.setTargetCode(targetBe.getCode());
+				String scheduleMsgCode = targetBe.getCode() + "_MOVE_PLACED";
+
+				ShleemyUtils.scheduleMessage(userToken, "ACT_PRI_EVENT_PLACE_APPLICATION", scheduleMsgCode, LocalDateTime.now(ZoneOffset.UTC).plusSeconds(10), targetBe.getCode());
 			} else {
-				output.setTypeOfResult("NONE");
-				output.setResultCode("NONE");  
+				System.out.println("Not all signatures complete!");
 			}
 		}
 	
