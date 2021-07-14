@@ -269,10 +269,15 @@ rule "IS_QA_INTERN"
 			templateData.put("educationProvider", eduProName);
 			templateData.put("industry", industryName);
 			templateData.put("specialisation", occupationName);
-			templateData.put("startDate", startDate.toString());
 			templateData.put("url", url);
 
-			EmailHelper.sendGrid(beUtils, agentEmail, null, null, "", "d-88c1ac4df5ff42409be2347cbccde424", templateData, true);
+			if (startDate != null) {
+				templateData.put("startDate", startDate.toString());
+			} else {
+				System.out.println("startDate is NULL");
+			}
+
+			EmailHelper.sendGrid(beUtils, agentEmail, "", "d-88c1ac4df5ff42409be2347cbccde424", templateData, true);
 		}
 		
 		System.out.println("################## START Shleemy ##################");
