@@ -109,6 +109,7 @@ rule "IS_QA_INTERN"
 						agent = agentBe.getValue("PRI_NAME", null);
 						System.out.println("agent = " +agent);
 						agentEmail = agentBe.getValue("PRI_EMAIL", null);
+						System.out.println("agentEmail = " + agentEmail);
 						
 						if (agent !=null ) {
 							answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_AGENT_NAME", agent));
@@ -271,7 +272,7 @@ rule "IS_QA_INTERN"
 			templateData.put("startDate", startDate.toString());
 			templateData.put("url", url);
 
-			EmailHelper.sendGrid(beUtils, agentEmail, null, bccList, "", "d-88c1ac4df5ff42409be2347cbccde424", templateData, true);
+			EmailHelper.sendGrid(beUtils, agentEmail, null, null, "", "d-88c1ac4df5ff42409be2347cbccde424", templateData, true);
 		}
 		
 		System.out.println("################## START Shleemy ##################");
