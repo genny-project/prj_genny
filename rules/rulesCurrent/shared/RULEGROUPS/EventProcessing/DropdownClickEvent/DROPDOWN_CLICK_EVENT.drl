@@ -62,7 +62,7 @@ rule "DROPDOWN_CLICK_EVENT"
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + message );
 
 
-		System.out.println(ruleDetails+" "+drools.getRule().getName()+" attributeCode = "+message.getAttributeCode()+" question:"+message.getQuestionCode() + " code: " + message.getData().getCode());
+		System.out.println(ruleDetails+" "+drools.getRule().getName() + " code: " + message.getData().getCode());
 		Integer dropdownSize = GennySettings.defaultDropDownPageSize;
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" dropdownsize = "+dropdownSize);
 
@@ -73,13 +73,21 @@ rule "DROPDOWN_CLICK_EVENT"
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Target DEF identified as "+defBe.getCode()+"!! "+defBe.getName());
 		
 			Boolean defDropdownExists = false;
-			String dropdownCode = message.getAttributeCode();
+			QDataAskMessage askMsg = null;
+			String dropdownCode = null;
+			try {
+				askMsg = QuestionUtils.getAsks(userToken.getUserCode(), targetBe.getCode(), message.getData().getCode(), beUtils.getGennyToken().getToken());
+
+				Ask ask = askMsg.getItems()[0];
+				dropdownCode = ask.getAttributeCode();
 			/* Determine whether there is a DEF attribute and target type that has a new DEF
 			   search for this combination
 			   */
-			try {
 				defDropdownExists = beUtils.hasDropdown(dropdownCode, defBe);
 			} catch (Exception e) {
+				if (askMsg == null) {
+					System.out.println("NULL when fetching ask");
+				}
 				System.out.println(ruleDetails+" "+drools.getRule().getName()+" check for has Dropdown failed "+dropdownCode+" for defBe.code = "+defBe.getCode());
 			}
 		
