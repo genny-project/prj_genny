@@ -87,8 +87,7 @@ rule "PRI_SUBMIT_FILTER"
 					valLong = Long.valueOf(val);
 					System.out.println("valLong = " + valLong);
 				} else if (dtt.equals("java.time.LocalDateTime") || dtt.equals("LocalDateTime")) {
-					String dateTimeString = val.split("\\.")[0];
-					valDateTime = LocalDateTime.parse(dateTimeString);
+					valDateTime = LocalDateTime.parse(val);
 					System.out.println("valDateTime = " + valDateTime);
 				} else if (dtt.equals("java.time.LocalDate") || dtt.equals("LocalDate")) {
 					String dateTimeString = val.split("\\.")[0];
@@ -112,9 +111,9 @@ rule "PRI_SUBMIT_FILTER"
 					filtType = SearchEntity.Filter.GREATER_THAN;
 				} else if (filterOptionCode.equals("SEL_LESS_THAN")) {
 					filtType = SearchEntity.Filter.LESS_THAN;
-				} else if (filterOptionCode.equals("SEL_GREATER_THAN_OR_EQUAL")) {
+				} else if (filterOptionCode.equals("SEL_GREATER_THAN_OR_EQUAL_TO")) {
 					filtType = SearchEntity.Filter.GREATER_THAN_AND_EQUAL;
-				} else if (filterOptionCode.equals("SEL_LESS_THAN_OR_EQUAL")) {
+				} else if (filterOptionCode.equals("SEL_LESS_THAN_OR_EQUAL_TO")) {
 					filtType = SearchEntity.Filter.LESS_THAN_AND_EQUAL;
 				} else if (filterOptionCode.equals("SEL_EQUAL_TO")) {
 					if (valString != null) {
