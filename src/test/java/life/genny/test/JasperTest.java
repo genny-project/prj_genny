@@ -42,21 +42,26 @@ import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
 import life.genny.models.GennyToken;
 import life.genny.qwanda.Answer;
+import life.genny.qwanda.Ask;
 import life.genny.qwanda.attribute.Attribute;
 import life.genny.qwanda.attribute.EntityAttribute;
 import life.genny.qwanda.datatype.DataType;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwanda.message.QBulkMessage;
+import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.message.QEventDropdownMessage;
 import life.genny.qwanda.validation.Validation;
 import life.genny.qwandautils.GennyCacheInterface;
 import life.genny.qwandautils.GennySettings;
+import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.KeycloakUtils;
+import life.genny.qwandautils.MergeUtil;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.DetailViewUtils;
+import life.genny.utils.QuestionUtils;
 import life.genny.utils.RulesUtils;
 import life.genny.utils.SearchUtils;
 import life.genny.utils.VertxUtils;
@@ -95,6 +100,34 @@ public class JasperTest {
 
 	public JasperTest() {
 		super();
+	}
+	
+	@Test
+	public void MergeTest() {
+		System.out.println("Merge Test");
+
+		VertxUtils.cachedEnabled = false;
+
+		if (beUtils == null) {
+			return;
+		}
+		BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
+		
+		String url = "https://raw.githubusercontent.com/genny-project/layouts/master/internmatch-new/document_templates/TestAgreementDocView.html";
+		
+		
+		BaseEntity app = beUtils.getBaseEntityByCode("APP_34F9E0DD-8628-4C52-8653-DA27DB10541D");
+		
+        HashMap<String, Object> contextMap = new HashMap<String, Object>();
+        
+        contextMap.put("APPLICATION", app);
+        
+		QDataAskMessage askMessage = QuestionUtils.getAsks("PER_SOURCE", "SBE_INTERNS_046382629", "QUE_ADD_FILTER_GRP", beUtils.getGennyToken().getToken());
+
+		System.out.println(JsonUtils.toJson(askMessage));
+		
+		Ask addFilterGrpAsk = askMessage.getItems()[0];
+
 	}
 	
 	@Test
