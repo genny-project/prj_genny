@@ -38,6 +38,14 @@ rule "CHECK_FILTER_SUBMIT"
 
 		boolean isFilled = Arrays.asList(newFilterArray).stream().allMatch(val -> val != null);
 
+		/* Used to store the option such as SEL_LIKE or SEL_EQUAL_TO */
+		String optionSelection = newFilterArray[1];
+
+		/* Allow Submit if it is a Boolean Selection */
+		if (!isFilled && (optionSelection.equals("SEL_IS_TRUE") || optionSelection.equals("SEL_IS_FALSE"))) {
+			isFilled = true;
+		}
+
 		/* If all are answered */
 		if (isFilled) {
 			/* Disable Submit */
