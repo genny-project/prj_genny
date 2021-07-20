@@ -46,7 +46,7 @@ rule "CHECK_FILTER_SUBMIT"
 			shouldEnable = true;
 		}
 
-		System.out.println((shouldEnable ? "ENABLING" : "DISABLING") + " Submit Button!");
+		System.out.println("" + (shouldEnable ? "ENABLING" : "DISABLING") + " Submit Button!");
 		/* Disable Submit */
 		Ask filterGrpAsk = VertxUtils.getObject(serviceToken.getRealm(), "", "QUE_FILTER_GRP_"+targetCode, Ask.class, serviceToken.getToken());
 
