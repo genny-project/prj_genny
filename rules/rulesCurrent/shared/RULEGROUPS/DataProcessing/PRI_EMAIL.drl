@@ -65,7 +65,7 @@ rule "PRI_EMAIL"
 			if (resultJsonStr.equals("0")) {
 				System.out.println("This email "+answer.getValue()+" is unique");
 				/* Now sync to their keycloak account */
-				if (answer.getValue().startsWith("adamcrow")) {
+			/*	if (answer.getValue().startsWith("adamcrow")) { */
 				BaseEntity target = beUtils.getBaseEntityByCode(answer.getTargetCode());
 				if ((answer.getTargetCode().startsWith("PER_")) && (target != null)) {
 				
@@ -77,16 +77,11 @@ rule "PRI_EMAIL"
 				
 				/* check if capability to change passwords is there */
 					switch (allowed.code) {
-					case "EDIT_INTERN":
-					      if (target.is("INTERN")) {allowedToChange = true;} break;
-					case "EDIT_AGENT":
-					      if (target.is("AGENT")) {allowedToChange = true;} break;
-					case "EDIT_HCR":
-					      if (target.is("HOST_CPY_REP")) {allowedToChange = true;} break;
-					case "EDIT_EPR":
-					      if (target.is("EDU_PROV_REP")) {allowedToChange = true;} break;
-					case "EDIT_REF_PART_REP":
-					      if (target.is("REF_PART_REP")) {allowedToChange = true;} break;
+					case "EDIT_INTERN": {allowedToChange = true;} break;
+					case "EDIT_AGENT":  {allowedToChange = true;} break;
+					case "EDIT_HCR":    {allowedToChange = true;} break;
+					case "EDIT_EPR":    {allowedToChange = true;} break;
+					case "EDIT_REF_PART_REP": {allowedToChange = true;} break;
 					}
 				
 					if (allowedToChange) {
@@ -97,7 +92,7 @@ rule "PRI_EMAIL"
 						}
 					}
 					
-				}
+				/*}*/
 			}	
 				
 			} else {
