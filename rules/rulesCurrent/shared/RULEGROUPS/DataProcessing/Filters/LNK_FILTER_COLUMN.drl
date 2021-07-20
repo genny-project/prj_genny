@@ -64,7 +64,7 @@ rule "LNK_FILTER_COLUMN"
 		/* Define dropdown items selector */
 		String dropdownCode = null;
 		String unhidden = null;
-		Boolean submitEnabled = false;
+		Boolean submitDisabled = true;
 
 		/* Get associated Attribute */
 		Attribute attr = RulesUtils.getAttribute(attributeCode, serviceToken);
@@ -108,7 +108,7 @@ rule "LNK_FILTER_COLUMN"
 					
 				} else if (dtt.equals("java.lang.Boolean") || dtt.equalsIgnoreCase("Boolean")) {
 					filterOptionsArray = Arrays.asList(booleanSelection);
-					submitEnabled = true;
+					submitDisabled = false;
 
 				} else if (dtt.equals("java.lang.Double") || dtt.equalsIgnoreCase("Double")
 							|| dtt.equals("java.lang.Integer") || dtt.equalsIgnoreCase("Integer")
@@ -142,8 +142,8 @@ rule "LNK_FILTER_COLUMN"
 							childAsk.setHidden(true);
 						}
 
-					} else if (childAsk.getQuestionCode().equals("QUE_SUBMIT")) {
-						childAsk.setDisabled(submitEnabled);
+					} else if (childAsk.getQuestionCode().contains("QUE_SUBMIT")) {
+						childAsk.setDisabled(submitDisabled);
 					}
 				}
 
