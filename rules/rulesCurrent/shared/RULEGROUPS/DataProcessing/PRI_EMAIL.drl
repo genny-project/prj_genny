@@ -31,7 +31,7 @@ rule "PRI_EMAIL"
 	  	output : OutputParam( )
 	  	allowed: Allowed((code == "USER") || (code == "EDIT_INTERN") || (code == "EDIT_HCR") || (code == "EDIT_EPR") || (code == "EDIT_REF_PART_REP") || (code == "EDIT_AGENT"))	  	
      then
- 		System.out.println("Rule -> PRI_EMAIL :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
+ 		System.out.println(ruleDetails+" "+drools.getRule().getName()+"   user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
  		
  		String sourceCode = beUtils.getGennyToken().getUserCode();
 		String targetCode = answer.getTargetCode();
@@ -60,10 +60,10 @@ rule "PRI_EMAIL"
 					GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql ,
 					beUtils.getServiceToken().getToken(), 120);
 
-			System.out.println("Search EMAIL result is "+resultJsonStr);
+			System.out.println(ruleDetails+" "+drools.getRule().getName()+"  Search EMAIL result is "+resultJsonStr);
 			
 			if (resultJsonStr.equals("0")) {
-				System.out.println("This email "+answer.getValue()+" is unique");
+				System.out.println(ruleDetails+" "+drools.getRule().getName()+"  This email "+answer.getValue()+" is unique");
 				/* Now sync to their keycloak account */
 			/*	if (answer.getValue().startsWith("adamcrow")) { */
 				BaseEntity target = beUtils.getBaseEntityByCode(answer.getTargetCode());
@@ -74,7 +74,7 @@ rule "PRI_EMAIL"
 					if (userToken.getUserCode().equals(answer.getTargetCode())) {
 						allowedToChange = true;
 					}
-				
+				System.out.println(ruleDetails+" "+drools.getRule().getName()+" the allowed.code is "+allowed.code);
 				/* check if capability to change passwords is there */
 					switch (allowed.code) {
 					case "EDIT_INTERN": {allowedToChange = true;} break;
@@ -86,9 +86,9 @@ rule "PRI_EMAIL"
 				
 					if (allowedToChange) {
 						int statusCode =  KeycloakUtils.updateUserEmail(keycloakUUID,serviceToken.getToken(), userToken.getRealm(),answer.getValue());
-						System.out.println("Changing email for "+answer.getTargetCode()+" to "+answer.getValue()+" statusCode="+statusCode);
+						System.out.println(ruleDetails+" "+drools.getRule().getName()+"  Changing email for "+answer.getTargetCode()+" to "+answer.getValue()+" statusCode="+statusCode);
 						if (statusCode > 204) {
-							System.out.println("Error in setting email."+answer.getTargetCode()+" to "+answer.getValue()+" statusCode="+statusCode);
+							System.out.println(ruleDetails+" "+drools.getRule().getName()+"  Error in setting email."+answer.getTargetCode()+" to "+answer.getValue()+" statusCode="+statusCode);
 						}
 					}
 					
@@ -98,7 +98,7 @@ rule "PRI_EMAIL"
 			} else {
 					if(true /*allowed.code.equals("AGENT")*/) { /* TODO , why limit this to agents??? */
 						List<BaseEntity> duplicateBes = beUtils.getBaseEntitys(searchBE);
-						System.out.println("duplicateBE's: " + duplicateBes);
+						System.out.println(ruleDetails+" "+drools.getRule().getName()+"  duplicateBE's: " + duplicateBes);
 						
 						QDataBaseEntityMessage msg = new QDataBaseEntityMessage(duplicateBes);
 						msg.setToken(userToken.getToken());
@@ -106,13 +106,13 @@ rule "PRI_EMAIL"
 						VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 						
 						for (BaseEntity duplicateBe : duplicateBes) {
-								System.out.println("duplicateBe: " + duplicateBe);
+								System.out.println(ruleDetails+" "+drools.getRule().getName()+"  duplicateBe: " + duplicateBe);
 								duplicateCodes = duplicateCodes + "," + duplicateBe.getCode();
-								System.out.println("duplicateCodes: " + duplicateCodes);
+								System.out.println(ruleDetails+" "+drools.getRule().getName()+"  duplicateCodes: " + duplicateCodes);
 						}
 						
 						duplicateCodes = duplicateCodes.substring(5);
-						System.out.println("Final duplicateCodes: " + duplicateCodes);
+						System.out.println(ruleDetails+" "+drools.getRule().getName()+"  Final duplicateCodes: " + duplicateCodes);
 						
 						QCmdMessage duplicateEmailMsg = new QCmdMessage("DUPLICATE_EMAILS", duplicateCodes);
 						duplicateEmailMsg.setMessage(number);
@@ -136,10 +136,10 @@ rule "PRI_EMAIL"
 					
 					retract(answer);
 					String message = "Email Address "+answer.getValue()+" is already taken. Please delete any unwanted copies or merge data with an existing";
-					System.out.println(message);
+					System.out.println(ruleDetails+" "+drools.getRule().getName()+" "+message);
 					Answer feedbackAnswer = new Answer(answer.getSourceCode(),answer.getTargetCode(),answer.getAttributeCode(),"");
 					VertxUtils.sendFeedbackError(beUtils.getGennyToken(),feedbackAnswer,message);
-					System.out.println("Sent error message back to frontend");
+					System.out.println(ruleDetails+" "+drools.getRule().getName()+" Sent error message back to frontend");
 			
 			}
 		} catch (Exception e) {
