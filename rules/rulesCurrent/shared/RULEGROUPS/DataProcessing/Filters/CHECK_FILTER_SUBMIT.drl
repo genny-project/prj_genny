@@ -42,7 +42,12 @@ rule "CHECK_FILTER_SUBMIT"
 		if (isFilled) {
 			/* Disable Submit */
 			Ask filterGrpAsk = VertxUtils.getObject(serviceToken.getRealm(), "", "QUE_FILTER_GRP_"+targetCode, Ask.class, serviceToken.getToken());
-			filterGrpAsk.getChildAsks()[0].getChildAsks()[6].setDisabled(false);
+
+			for (Ask childAsk : filterGrpAsk.getChildAsks()[0].getChildAsks()) {
+				if (childAsk.getQuestionCode().contains("QUE_SUBMIT")) {
+					childAsk.setDisabled(false);
+				}
+			}
 
 			/* Cache changes */
 			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", filterGrpAsk.getQuestionCode(), filterGrpAsk, serviceToken.getToken());
