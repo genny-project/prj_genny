@@ -142,6 +142,7 @@ rule "HELPER_SIGNATURE_NOTIFY"
 			templateData.put("internshipName", internshipName);
 			templateData.put("hostCompanyName", hostCompanyName);
 			templateData.put("hostCompanyRepName", supervisorName);
+			templateData.put("supervisorName", supervisorName);
 			templateData.put("agentName", agentName);
 
 			String templateId = null;
