@@ -44,10 +44,12 @@ import life.genny.models.GennyToken;
 import life.genny.qwanda.Answer;
 import life.genny.qwanda.Ask;
 import life.genny.qwanda.attribute.Attribute;
+import life.genny.qwanda.attribute.AttributeText;
 import life.genny.qwanda.attribute.EntityAttribute;
 import life.genny.qwanda.datatype.DataType;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.SearchEntity;
+import life.genny.qwanda.exception.BadDataException;
 import life.genny.qwanda.message.QBulkMessage;
 import life.genny.qwanda.message.QDataAskMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
@@ -60,7 +62,6 @@ import life.genny.qwandautils.KeycloakUtils;
 import life.genny.qwandautils.MergeUtil;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.utils.BaseEntityUtils;
-import life.genny.utils.DetailViewUtils;
 import life.genny.utils.QuestionUtils;
 import life.genny.utils.RulesUtils;
 import life.genny.utils.SearchUtils;
@@ -162,7 +163,7 @@ public class JasperTest {
 	}
 
 
-	//@Test
+	@Test
 	public void DetailViewTest() {
 		System.out.println("Detail View Test");
 
@@ -173,19 +174,28 @@ public class JasperTest {
 		}
 		BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
 		
-		SearchEntity searchBE = new SearchEntity("SBE_DEF", "DEF check")
+		SearchEntity searchBE = new SearchEntity("SBE_APP", "App search")
 				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "DEF_%")
-
-				.addColumn("PRI_CODE", "Name");
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.EQUAL, "APP_0D6C7105-AE01-47DA-B90B-7205AC7149CA")
+				
+				.addColumn("_PRI_INTERN_CODE", "INTERN");
 
 		searchBE.setRealm(realm);
 		searchBE.setPageStart(0);
 		searchBE.setPageSize(1000);
 		
+		AttributeText attribute = new AttributeText("SCH_QUESTION_CODE", "Question Code");
+		try {
+			searchBE.addAttribute(attribute, 1.0, "QUE_APPLICATION_DETAIL_VIEW_GRP");
+		} catch (BadDataException e) {
+			log.error("Bad Question Code!");
+		}
+		
 		BaseEntity target = beUtils.getBaseEntityByCode("APP_0D6C7105-AE01-47DA-B90B-7205AC7149CA");
 		
-		DetailViewUtils.sendDetailView(beUtils, "APPLICATION_DETAIL_VIEW", target);
+		QBulkMessage bulk = SearchUtils.getAskEntityData(beUtils, searchBE, target); 
+		
+		System.out.println(JsonUtils.toJson(bulk));
 
 	}
 
