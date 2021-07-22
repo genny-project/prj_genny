@@ -34,16 +34,24 @@ rule "LNK_PERSON"
 
 		BaseEntity availableIntern = beUtils.getBaseEntityByCode(cleanCode);
 
+		Boolean disabled = availableIntern.getValue("PRI_DISABLED", false);
+
+		QDataBaseEntityMessage msg = new QDataBaseEntityMessage();
+		Long total = Long.valueOf(0);
+		if (!disabled) {
+			msg = new QDataBaseEntityMessage(availableIntern);
+			total = Long.valueOf(1);
+		}
+
 		/* Send Available Card */
-		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(availableIntern);
 		msg.setToken(userToken.getToken());
 		msg.setReplace(true);
-		msg.setTotal(Long.valueOf(1));
+		msg.setTotal(total);
 		msg.setParentCode("SBE_AVAILABLE_INTERNS_"+userToken.getSessionCode().toUpperCase());
 		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 
 		SearchEntity availableSearch = VertxUtils.getObject(serviceToken.getRealm(), "", "SBE_AVAILABLE_INTERNS_"+userToken.getSessionCode().toUpperCase(), SearchEntity.class, serviceToken.getToken());
-		tableUtils.updateBaseEntity(availableSearch, "PRI_TOTAL_RESULTS", Long.valueOf(1) + "");
+		tableUtils.updateBaseEntity(availableSearch, "PRI_TOTAL_RESULTS", total + "");
 
 		QDataBaseEntityMessage availableSearchMsg = new QDataBaseEntityMessage(availableSearch);
 		availableSearchMsg.setToken(userToken.getToken());
