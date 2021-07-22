@@ -184,7 +184,31 @@ public class JasperTest {
 		searchBE.setPageStart(0);
 		searchBE.setPageSize(1000);
 		
-		AttributeText attribute = new AttributeText("SCH_QUESTION_CODE", "Question Code");
+		AttributeText attribute = new AttributeText("ALS_" + "PRI_INTERN_CODE", "INTERN");
+		try {
+			searchBE.addAttribute(attribute, 1.0);
+
+		} catch (BadDataException e) {
+			log.error("Bad Alias Initialisation");
+		}
+		
+		attribute = new AttributeText("ALS_" + "LNK_INTERNSHIP", "INTERNSHIP");
+		try {
+			searchBE.addAttribute(attribute, 1.0);
+
+		} catch (BadDataException e) {
+			log.error("Bad Alias Initialisation");
+		}
+
+		attribute = new AttributeText("ALS_" + "LNK_INTERNSHIP.LNK_INTERN_SUPERVISOR", "HCR");
+		try {
+			searchBE.addAttribute(attribute, 1.0);
+
+		} catch (BadDataException e) {
+			log.error("Bad Alias Initialisation");
+		}
+		
+		attribute = new AttributeText("SCH_QUESTION_CODE", "Question Code");
 		try {
 			searchBE.addAttribute(attribute, 1.0, "QUE_APPLICATION_DETAIL_VIEW_GRP");
 		} catch (BadDataException e) {
