@@ -50,6 +50,9 @@ rule "INIT_GENERATE_CAPABILITIES"
 		capabilityUtils.addCapability( "LOGIN", "Login");
 		capabilityUtils.addCapability( "LOGOUT", "Logout");
 
+		/* Dev Mode */
+		capabilityUtils.addCapability( "DEV_PORTAL", "Developer Portal");
+
 		/* A Cap For Handling Other Roles */
 		capabilityUtils.addCapability( "TYPE_AGENT", "Agent");
 		capabilityUtils.addCapability( "TYPE_HOST_CPY_REP", "Host Company Rep");

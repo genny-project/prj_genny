@@ -42,6 +42,7 @@ rule "ROL_DEV"
    	     
    	     capabilityUtils.addCapabilityToRole(role,"SHOW_DEV_INFO",CapabilityMode.DELETE);
   		 capabilityUtils.addCapabilityToRole(role,"RULE_TIMINGS",CapabilityMode.DELETE);
+  		 capabilityUtils.addCapabilityToRole(role,"DEV_PORTAL",CapabilityMode.VIEW);
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
   	     
   	     beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_WEIGHT", 1000.0,false,true));
