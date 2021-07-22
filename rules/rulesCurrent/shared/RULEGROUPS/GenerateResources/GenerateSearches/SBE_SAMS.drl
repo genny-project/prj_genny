@@ -41,6 +41,8 @@ rule "SBE_SAMS"
 
 			.addFilter("PRI_CODE",SearchEntity.StringFilter.LIKE,"PER_%")
 
+			.addAction("EDIT", "Edit")
+
 			.addColumn("*", "Wildcard")
 			.setPageStart(0)
 			.setPageSize(10000);
