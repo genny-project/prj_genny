@@ -36,36 +36,40 @@ rule "CHECK_FILTER_SUBMIT"
 		/* Get filter array from cache */
 		String[] newFilterArray = VertxUtils.getObject(serviceToken.getRealm(), "", "FLT_"+targetCode, String[].class, serviceToken.getToken());
 
-		boolean shouldEnable = Arrays.asList(newFilterArray).stream().allMatch(val -> val != null);
+		if (newFilterArray != null) {
+			boolean shouldEnable = Arrays.asList(newFilterArray).stream().allMatch(val -> val != null);
 
-		/* Used to store the option such as SEL_LIKE or SEL_EQUAL_TO */
-		String optionSelection = newFilterArray[1];
+			/* Used to store the option such as SEL_LIKE or SEL_EQUAL_TO */
+			String optionSelection = newFilterArray[1];
 
-		/* Allow Submit if it is a Boolean Selection */
-		if (!shouldEnable && (optionSelection.equals("SEL_IS_TRUE") || optionSelection.equals("SEL_IS_FALSE"))) {
-			shouldEnable = true;
-		}
-
-		String logStr = (shouldEnable ? "ENABLING" : "DISABLING") + " Submit Button!";
-		System.out.println(logStr);
-		/* Disable Submit */
-		Ask filterGrpAsk = VertxUtils.getObject(serviceToken.getRealm(), "", "QUE_FILTER_GRP_"+targetCode, Ask.class, serviceToken.getToken());
-
-		for (Ask childAsk : filterGrpAsk.getChildAsks()[0].getChildAsks()) {
-			if (childAsk.getQuestionCode().contains("QUE_SUBMIT")) {
-				childAsk.setDisabled(!shouldEnable);
+			/* Allow Submit if it is a Boolean Selection */
+			if (!shouldEnable && (optionSelection.equals("SEL_IS_TRUE") || optionSelection.equals("SEL_IS_FALSE"))) {
+				shouldEnable = true;
 			}
+
+			String logStr = (shouldEnable ? "ENABLING" : "DISABLING") + " Submit Button!";
+			System.out.println(logStr);
+			/* Disable Submit */
+			Ask filterGrpAsk = VertxUtils.getObject(serviceToken.getRealm(), "", "QUE_FILTER_GRP_"+targetCode, Ask.class, serviceToken.getToken());
+
+			for (Ask childAsk : filterGrpAsk.getChildAsks()[0].getChildAsks()) {
+				if (childAsk.getQuestionCode().contains("QUE_SUBMIT")) {
+					childAsk.setDisabled(!shouldEnable);
+				}
+			}
+
+			/* Cache changes */
+			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", filterGrpAsk.getQuestionCode(), filterGrpAsk, serviceToken.getToken());
+
+			/* Send Asks to FE */
+			QDataAskMessage askMsg = new QDataAskMessage(filterGrpAsk);
+			askMsg.setToken(beUtils.getGennyToken().getToken());
+			askMsg.setReplace(true);
+			VertxUtils.writeMsg("webcmds", askMsg);
+			System.out.println(" Asks sent to FE");
+		} else {
+			System.out.println("newFilterArray is NULL");
 		}
-
-		/* Cache changes */
-		VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", filterGrpAsk.getQuestionCode(), filterGrpAsk, serviceToken.getToken());
-
-		/* Send Asks to FE */
-		QDataAskMessage askMsg = new QDataAskMessage(filterGrpAsk);
-		askMsg.setToken(beUtils.getGennyToken().getToken());
-		askMsg.setReplace(true);
-		VertxUtils.writeMsg("webcmds", askMsg);
-		System.out.println(" Asks sent to FE");
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
