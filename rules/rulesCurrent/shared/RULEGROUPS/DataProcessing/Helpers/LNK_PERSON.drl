@@ -34,16 +34,24 @@ rule "LNK_PERSON"
 
 		BaseEntity availableIntern = beUtils.getBaseEntityByCode(cleanCode);
 
+		Boolean disabled = availableIntern.getValue("PRI_DISABLED", false);
+
+		QDataBaseEntityMessage msg = new QDataBaseEntityMessage();
+		Long total = Long.valueOf(0);
+		if (!disabled) {
+			msg = new QDataBaseEntityMessage(availableIntern);
+			total = Long.valueOf(1);
+		}
+
 		/* Send Available Card */
-		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(availableIntern);
 		msg.setToken(userToken.getToken());
 		msg.setReplace(true);
-		msg.setTotal(Long.valueOf(1));
+		msg.setTotal(total);
 		msg.setParentCode("SBE_AVAILABLE_INTERNS_"+userToken.getSessionCode().toUpperCase());
 		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 
 		SearchEntity availableSearch = VertxUtils.getObject(serviceToken.getRealm(), "", "SBE_AVAILABLE_INTERNS_"+userToken.getSessionCode().toUpperCase(), SearchEntity.class, serviceToken.getToken());
-		tableUtils.updateBaseEntity(availableSearch, "PRI_TOTAL_RESULTS", Long.valueOf(1) + "");
+		tableUtils.updateBaseEntity(availableSearch, "PRI_TOTAL_RESULTS", total + "");
 
 		QDataBaseEntityMessage availableSearchMsg = new QDataBaseEntityMessage(availableSearch);
 		availableSearchMsg.setToken(userToken.getToken());
@@ -65,10 +73,27 @@ rule "LNK_PERSON"
 
 		for (int i = 0; i < codes.length; i++) {
 			String searchCode = codes[i]+"_"+userToken.getSessionCode().toUpperCase();
+			SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", searchCode, SearchEntity.class, serviceToken.getToken());
 			List<BaseEntity> bucketApps = new ArrayList<>();
 			for (BaseEntity application : internApplications) {
 				String appStatus = application.getValue("PRI_STATUS", null);
 				if (appStatus != null && appStatus.equals(statusCodes[i])) {
+
+					/* Get Assoc Cols and add them to the BE */
+					for (EntityAttribute ea : searchBE.getBaseEntityAttributes()) {
+						if (ea.getAttributeCode().startsWith("COL__")) {
+							Answer ans = TableUtils.getAssociatedColumnValue(beUtils, application, ea.getAttributeCode(), serviceToken);
+
+							if (ans != null) {
+								try {
+									application.addAnswer(ans);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+						}
+					}
+
 					bucketApps.add(application);
 				}
 			}
@@ -79,7 +104,6 @@ rule "LNK_PERSON"
 			appMsg.setParentCode(searchCode);
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(appMsg));
 
-			SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", searchCode, SearchEntity.class, serviceToken.getToken());
 			tableUtils.updateBaseEntity(searchBE, "PRI_TOTAL_RESULTS", Long.valueOf(bucketApps.size()) + ""); 
 
 			QDataBaseEntityMessage searchMsg = new QDataBaseEntityMessage(searchBE);
