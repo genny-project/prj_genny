@@ -47,7 +47,7 @@ rule "DEV_PORTAL_CLICK_EVENT"
 		salience 2
     no-loop
     when
-			message : QEventMessage(data.code matches "QUE_DEV_PORTAL" )
+			message : QEventMessage(data.code matches "QUE_DEV_PORTAL_ACCESS" )
 			userToken : GennyToken (code != "PER_SERVICE" )
 			serviceToken : GennyToken( code == "PER_SERVICE")
 			output : OutputParam( )

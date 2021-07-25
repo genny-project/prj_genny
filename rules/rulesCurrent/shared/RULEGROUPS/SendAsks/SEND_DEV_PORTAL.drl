@@ -41,10 +41,10 @@ rule "SEND_DEV_PORTAL"
 		Attribute eventAttribute = new Attribute("PRI_EVENT", "link", new DataType(String.class));
 
 		/* ADD ITEMS group */
-		Question devPortalGrpQues = new Question("QUE_DEV_PORTAL_GRP", "Dev Portal", questionAttribute, true);
+		Question devPortalGrpQues = new Question("QUE_DEV_PORTAL_ACCESS_GRP", "Dev Portal", questionAttribute, true);
 		Ask devPortalGrpAsk = new Ask(devPortalGrpQues, sourceCode, targetCode);
 
-		Question devPortalQues = new Question("QUE_DEV_PORTAL", "Go to Dev Portal", eventAttribute, true);
+		Question devPortalQues = new Question("QUE_DEV_PORTAL_ACCESS", "Go to Dev Portal", eventAttribute, true);
 		Ask devPortalAsk = new Ask(devPortalQues, sourceCode, targetCode);
 
 
