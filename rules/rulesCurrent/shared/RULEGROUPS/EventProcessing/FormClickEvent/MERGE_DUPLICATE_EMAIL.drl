@@ -14,13 +14,15 @@ rule "MERGE_DUPLICATE_EMAIL"
     no-loop
     when
 		$message : QEventMessage(data.code matches "merge" && data.parentCode matches "DUPLICATE_EMAILS" )
-		userToken : GennyToken (code != "PER_SERVICE" )
-		serviceToken : GennyToken (code == "PER_SERVICE" )
-		output : OutputParam( )
+			userToken : GennyToken (code != "PER_SERVICE" )
+			serviceToken : GennyToken( code == "PER_SERVICE")
+			output : OutputParam( )
+			ruleDetails : RuleDetails()
+			beUtils : BaseEntityUtils()
     then
-		System.out.println("MERGE_DUPLICATE_EMAIL fired");
+					System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
+
 		
-		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 		/*
 		CPY_1
 		Name: ABC
@@ -42,17 +44,18 @@ rule "MERGE_DUPLICATE_EMAIL"
 		Num interns: 6
 		Profile pic: ajhasdjha
 		*/
-		String user = userToken.getUserCode();
-		System.out.println("user: " + user);
+		
+		String userCode = userToken.getUserCode();
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" user: " + userCode);
 		
 		String code = $message.getData().getCode();
-		System.out.println("code: "+code);
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" code: "+code);
 		
 		String sourceCode = $message.getData().getRootCode();
-		System.out.println("sourceCode :: " + sourceCode);
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" sourceCode :: " + sourceCode);
 		
 		String targetCode = $message.getData().getTargetCode();
-		System.out.println("targetCode :: " + targetCode);
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" targetCode :: " + targetCode);
 		
 		/*
 		code: merge
@@ -63,26 +66,26 @@ rule "MERGE_DUPLICATE_EMAIL"
 		
 		BaseEntity sourceBe = beUtils.getBaseEntityByCode(sourceCode);
 		BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
-		System.out.println("sourceBe :: " + sourceBe);
-		System.out.println("targetBe :: " + targetBe);
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" sourceBe :: " + sourceBe);
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" targetBe :: " + targetBe);
 		
 		if (sourceBe != null && targetBe != null) {
 		
-			System.out.println("Duplicating attributes");
+			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Duplicating attributes");
 			beUtils.duplicateAttributes(sourceBe, targetBe);
 			
 			targetBe = beUtils.getBaseEntityByCode(targetCode);
-			System.out.println("targetBe :: " + targetBe);
+			System.out.println(ruleDetails+" "+drools.getRule().getName()+" targetBe :: " + targetBe);
 			
 			String type = beUtils.whoAreYou(targetCode);
-			System.out.println("type :: " + type);
+			System.out.println(ruleDetails+" "+drools.getRule().getName()+" type :: " + type);
 			
 			String key = type.substring(7);
-			System.out.println("key :: " + key);
+			System.out.println(ruleDetails+" "+drools.getRule().getName()+" key :: " + key);
 			switch (type) {
 				case "PRI_IS_EDU_PROVIDER":
 				key = "EDU_PRO";
-				System.out.println("key :: " + key);
+				System.out.println(ruleDetails+" "+drools.getRule().getName()+" key :: " + key);
 				break;
 			
 			}
@@ -90,17 +93,17 @@ rule "MERGE_DUPLICATE_EMAIL"
 			output.setTypeOfResult("SIGNAL");
 			output.setResultCode("START_ADD_ENTITY");
 			output.setSuitCase(key);
-			output.setAskSourceCode(user);	
+			output.setAskSourceCode(userCode);	
 			output.setTargetCode(targetCode);
 		
 		
-			System.out.println("**************************************************");
-			System.out.println("TypeOfResult: "  + output.getTypeOfResult());
-			System.out.println("ResultCode: "    + output.getResultCode());
-			System.out.println("SuitCase: "      + output.getSuitCase());
-			System.out.println("AskSourceCode: " + output.getAskSourceCode());
-			System.out.println("TargetCode: "    + output.getTargetCode());
-			System.out.println("**************************************************");
+			System.out.println(ruleDetails+" "+drools.getRule().getName()+" **************************************************");
+			System.out.println(ruleDetails+" "+drools.getRule().getName()+" TypeOfResult: "  + output.getTypeOfResult());
+			System.out.println(ruleDetails+" "+drools.getRule().getName()+" ResultCode: "    + output.getResultCode());
+			System.out.println(ruleDetails+" "+drools.getRule().getName()+" SuitCase: "      + output.getSuitCase());
+			System.out.println(ruleDetails+" "+drools.getRule().getName()+" AskSourceCode: " + output.getAskSourceCode());
+			System.out.println(ruleDetails+" "+drools.getRule().getName()+" TargetCode: "    + output.getTargetCode());
+			System.out.println(ruleDetails+" "+drools.getRule().getName()+" **************************************************");
 			
 			
 			QDataBaseEntityMessage msg = new QDataBaseEntityMessage(targetBe);
@@ -115,7 +118,7 @@ rule "MERGE_DUPLICATE_EMAIL"
 			VertxUtils.writeMsg("webcmds", toastMsg);
 			
 		} else {
-			System.out.println("ERROR: Null sourceBe or targetBe. Merging failed");
+			System.out.println(ruleDetails+" "+drools.getRule().getName()+" ERROR: Null sourceBe or targetBe. Merging failed");
 			
 			QCmdMessage msg = new QCmdMessage("TOAST", "INFO");
 			msg.setMessage("Merging failed!");
