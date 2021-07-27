@@ -79,15 +79,15 @@ rule "HELPER_LNK_INDUSTRY"
 		}
 
 		/* dropdown search here */
-		DropdownUtils dropdown = new DropdownUtils(serviceToken);
-		dropdown.setNewSearch("Dropdown", "Fetch Dropdown Items")
-											.addColumn("PRI_NAME","Name")
-											.setSourceCode(code)
-											.setPageStart(0)
-											.setPageSize(1000);
+		/* DropdownUtils dropdown = new DropdownUtils(serviceToken); */
+		/* dropdown.setNewSearch("Dropdown", "Fetch Dropdown Items") */
+		/* 									.addColumn("PRI_NAME","Name") */
+		/* 									.setSourceCode(code) */
+		/* 									.setPageStart(0) */
+		/* 									.setPageSize(1000); */
 
-		/* Send the dropdown options */
-		dropdown.sendSearchResults("GRP_OCCUPATION_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
+		/* /1* Send the dropdown options *1/ */
+		/* dropdown.sendSearchResults("GRP_OCCUPATION_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false); */
 end
 
 
