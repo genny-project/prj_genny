@@ -200,9 +200,12 @@ public class RemoteServiceTest {
         if (beUtils == null) {
             return;
         }
+
+//        Set up the defs
         setUpDefs();
 
-        System.out.println("This is going to create a Remote Service BE");
+        // Use this bit to test creation of BEs by using their DEF_ names
+        // For example im creating an Appointment BE
         BaseEntity remoteJobBE = create("DEF_APPOINTMENT");
         System.out.println(remoteJobBE);
         for(EntityAttribute ea : remoteJobBE.getBaseEntityAttributes()){
