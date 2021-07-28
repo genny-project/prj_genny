@@ -5,6 +5,7 @@ import java.io.StringReader;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
 import java.sql.SQLException;
+import java.text.AttributedString;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
@@ -14,6 +15,8 @@ import java.util.stream.Collectors;
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
+import life.genny.qwanda.attribute.AttributeBoolean;
+import life.genny.qwanda.attribute.AttributeText;
 import life.genny.qwandautils.*;
 import life.genny.utils.*;
 import org.apache.commons.lang.StringUtils;
@@ -223,11 +226,10 @@ public class RemoteServiceTest {
 
     }
 
-    public void setUpDefs(){
+    public void setUpDefs() throws BadDataException {
         SearchEntity searchBE = new SearchEntity("SBE_DEF", "DEF check")
                 .addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
                 .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "DEF_%")
-
                 .addColumn("PRI_CODE", "Name");
 
         searchBE.setRealm(realm);
@@ -240,6 +242,19 @@ public class RemoteServiceTest {
         RulesUtils.defs.put(realm,new ConcurrentHashMap<String,BaseEntity>());
 
         for (BaseEntity item : items) {
+//            if the item is a def appointment, then add a default datetime for the start (Mandatory)
+            if (item.getCode().equals("DEF_APPOINTMENT")){
+                Attribute attribute = new AttributeText("DFT_PRI_START_DATETIME", "Default Start Time");
+                attribute.setRealm(realm);
+                EntityAttribute newEA = new EntityAttribute(item, attribute, 1.0, "2021-07-28 00:00:00");
+                item.addAttribute(newEA);
+
+                Optional<EntityAttribute> ea = item.findEntityAttribute("ATT_PRI_START_DATETIME");
+                if (ea.isPresent()){
+                    ea.get().setValue(true);
+                }
+            }
+
             item.setFastAttributes(true); // make fast
             RulesUtils.defs.get(realm).put(item.getCode(),item);
             log.info("Saving ("+realm+") DEF "+item.getCode());
@@ -291,16 +306,20 @@ public class RemoteServiceTest {
             // Establish all mandatory base entity attributes
             for(EntityAttribute ea : defBE.getBaseEntityAttributes()){
                 if (ea.getAttribute().getCode().startsWith("ATT_")){
-                    String attrCode = ea.getAttributeCode().substring("ATT_".length());
-                    Attribute attribute = RulesUtils.getAttribute(attrCode, localBeUtils.getGennyToken().getToken());
+//                    Only process mandatory attributes
+                    if(ea.getValueBoolean()){
+                        String attrCode = ea.getAttributeCode().substring("ATT_".length());
+                        Attribute attribute = RulesUtils.getAttribute(attrCode, localBeUtils.getGennyToken().getToken());
 
-                    String defaultDefValue = "DFT_" + attrCode;
+                        String defaultDefValue = "DFT_" + attrCode;
 
-                    String value = defBE.getValue(defaultDefValue, attribute.getDefaultValue());
+                        String value = defBE.getValue(defaultDefValue, attribute.getDefaultValue());
 
-                    EntityAttribute newEA = new EntityAttribute(item, attribute, ea.getWeight(),value);
+                        EntityAttribute newEA = new EntityAttribute(item, attribute, ea.getWeight(),value);
 
-                    item.addAttribute(newEA);
+                        item.addAttribute(newEA);
+                    }
+
                 }
             }
 
