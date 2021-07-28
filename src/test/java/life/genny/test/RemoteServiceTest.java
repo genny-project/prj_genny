@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
+import life.genny.qwanda.*;
 import life.genny.qwanda.attribute.AttributeBoolean;
 import life.genny.qwanda.attribute.AttributeText;
 import life.genny.qwandautils.*;
@@ -32,13 +33,6 @@ import life.genny.models.Theme;
 import life.genny.models.ThemeAttribute;
 import life.genny.models.ThemeAttributeType;
 import life.genny.models.ThemePosition;
-import life.genny.qwanda.Answer;
-import life.genny.qwanda.Ask;
-import life.genny.qwanda.Context;
-import life.genny.qwanda.ContextList;
-import life.genny.qwanda.ContextType;
-import life.genny.qwanda.Question;
-import life.genny.qwanda.VisualControlType;
 import life.genny.qwanda.attribute.Attribute;
 import life.genny.qwanda.attribute.EntityAttribute;
 import life.genny.qwanda.datatype.DataType;
@@ -207,10 +201,17 @@ public class RemoteServiceTest {
 //        Set up the defs
         setUpDefs();
 
+        BaseEntity previousItem = beUtils.getBaseEntityByCode("APT_289F4E9B-264E-4E25-B43C-118BE6B0");
+
+        if (previousItem!=null){
+            System.out.println(previousItem);
+        }
+
         // Use this bit to test creation of BEs by using their DEF_ names
         // For example im creating an Appointment BE
-        BaseEntity remoteJobBE = create("DEF_APPOINTMENT");
+        BaseEntity remoteJobBE = create("DEF_INTERN");
         System.out.println(remoteJobBE);
+        remoteJobBE.setStatus(EEntityStatus.PENDING);
         for(EntityAttribute ea : remoteJobBE.getBaseEntityAttributes()){
             System.out.println(ea);
         }
@@ -255,6 +256,7 @@ public class RemoteServiceTest {
                 }
             }
 
+//            Save the BaseEntity created
             item.setFastAttributes(true); // make fast
             RulesUtils.defs.get(realm).put(item.getCode(),item);
             log.info("Saving ("+realm+") DEF "+item.getCode());
@@ -282,7 +284,7 @@ public class RemoteServiceTest {
 
     public BaseEntity create(final BaseEntityUtils localBeUtils, final BaseEntity defBE, String name, String code) throws Exception{
         BaseEntity item = null;
-        Optional<EntityAttribute> uuidEA = defBE.findEntityAttribute("PRI_UUID");
+        Optional<EntityAttribute> uuidEA = defBE.findEntityAttribute("ATT_PRI_UUID");
         if (uuidEA.isPresent()){
             // if the defBE is a user without an email provided, create a keycloak acc using a unique random uuid
             String randomEmail = "random+" + UUID.randomUUID().toString().substring(0,20) + "@gada.io";
@@ -295,13 +297,13 @@ public class RemoteServiceTest {
                 throw new Exception("No prefix set for the def: "+ defBE.getCode());
             }
             if (StringUtils.isBlank(code)){
-                code = prefix + "_" + UUID.randomUUID().toString().substring(0,32);
+                code = prefix + "_" + UUID.randomUUID().toString().substring(0,32).toUpperCase();
             }
 
             if (StringUtils.isBlank(name)){
                 name = defBE.getName();
             }
-            item = new BaseEntity(code, name);
+            item = new BaseEntity(code.toUpperCase(), name);
 
             // Establish all mandatory base entity attributes
             for(EntityAttribute ea : defBE.getBaseEntityAttributes()){
@@ -324,12 +326,14 @@ public class RemoteServiceTest {
             }
 
         }
+        localBeUtils.saveBaseEntity(item);
         return item;
     }
 
-    public BaseEntity createUser(final BaseEntityUtils localBeUtils, final BaseEntity defBE, final String email){
+    public BaseEntity createUser(final BaseEntityUtils localBeUtils, final BaseEntity defBE, final String email) throws Exception {
         BaseEntity item = null;
-        Optional<EntityAttribute> uuidEA = defBE.findEntityAttribute("PRI_UUID");
+        String uuid = null;
+        Optional<EntityAttribute> uuidEA = defBE.findEntityAttribute("ATT_PRI_UUID");
         if (uuidEA.isPresent()){
 
             if (!StringUtils.isBlank(email)){
@@ -341,9 +345,30 @@ public class RemoteServiceTest {
                 }
             }
         // this is a user, generate keycloak id
+        uuid = KeycloakUtils.createDummyUser(serviceToken.getToken(), serviceToken.getRealm());
+            Optional<String> optCode = defBE.getValue("PRI_PREFIX");
+            if (optCode.isPresent()){
+                String name = defBE.getName();
+                item = new BaseEntity(optCode.get() + "_" + uuid.toUpperCase(), name);
+                //Add PRI_UUID
+                //Add Email
+                if (!email.startsWith("random+")){
+                    //  Check to see if the email exists
+//                    TODO: check to see if the email exists in the database and keycloak
+                    Attribute emailAttribute = RulesUtils.getAttribute("PRI_EMAIL", localBeUtils.getGennyToken().getToken());
+                    item.addAnswer(new Answer(item, item, emailAttribute, email));
+                }
 
+                Attribute uuidAttribute = RulesUtils.getAttribute("PRI_UUID", localBeUtils.getGennyToken().getToken());
+                item.addAnswer(new Answer(item, item, uuidAttribute, uuid.toUpperCase()));
+
+            }else{
+                log.error("Prefix not provided");
+                throw new Exception("Prefix not provided" + defBE.getCode());
+            }
         }else{
-            log.warn("Passed defBE is not a user def!");
+            log.error("Passed defBE is not a user def!");
+            throw new Exception("Passed defBE is not a user def!" + defBE.getCode());
         }
 
         return item;
