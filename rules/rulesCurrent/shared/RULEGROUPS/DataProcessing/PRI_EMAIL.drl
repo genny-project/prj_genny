@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 rule "PRI_EMAIL"
     ruleflow-group 'DataProcessing'
         salience 5000 
+        no-loop true
     when
       	beUtils : BaseEntityUtils()
 	  	answer : Answer( attributeCode == "PRI_EMAIL" )
@@ -90,7 +91,14 @@ rule "PRI_EMAIL"
 						System.out.println(ruleDetails+" "+drools.getRule().getName()+"  Changing email for "+answer.getTargetCode()+" to "+answer.getValue()+" statusCode="+statusCode);
 						if (statusCode > 204) {
 							System.out.println(ruleDetails+" "+drools.getRule().getName()+"  Error in setting email."+answer.getTargetCode()+" to "+answer.getValue()+" statusCode="+statusCode);
+						} else {
+							System.out.println(ruleDetails+" "+drools.getRule().getName()+"  Saving the good email");
+							Answer goodEmail = new Answer(answer.getSourceCode(), answer.getTargetCode(), "PRI_EMAIL", answer.getValue());
+							beUtils.saveAnswer(goodEmail);
 						}
+						
+						
+						retract(answer);
 					}
 					
 				/*}*/
