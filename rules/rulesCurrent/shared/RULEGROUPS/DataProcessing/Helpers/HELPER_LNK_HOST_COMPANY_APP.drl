@@ -71,34 +71,34 @@ rule "HELPER_LNK_HOST_COMPANY_APP"
 		}
 		
 		/* dropdown search here For internship */
-		DropdownUtils dropdownInternship = new DropdownUtils(serviceToken);
-		dropdownInternship.setNewSearch("Internship Dropdown", "Fetch Internship Dropdown Items")
-											/* Sorts */
-											.addSort("PRI_NAME","Name",SearchEntity.Sort.ASC)
-											/* .addSort("PRI_STATUS","Status",SearchEntity.Sort.ASC) */
-											/* .addSort("PRI_ASSOC_INDUSTRY","Industry",SearchEntity.Sort.ASC) */
-											/* .addSort("PRI_ASSOC_HC","Host Company",SearchEntity.Sort.ASC) */
-											/* .addSort("PRI_INTERNSHIP_START_DATE","Start Date",SearchEntity.Sort.ASC) */
+		/* DropdownUtils dropdownInternship = new DropdownUtils(serviceToken); */
+		/* dropdownInternship.setNewSearch("Internship Dropdown", "Fetch Internship Dropdown Items") */
+		/* 									/1* Sorts *1/ */
+		/* 									.addSort("PRI_NAME","Name",SearchEntity.Sort.ASC) */
+		/* 									/1* .addSort("PRI_STATUS","Status",SearchEntity.Sort.ASC) *1/ */
+		/* 									/1* .addSort("PRI_ASSOC_INDUSTRY","Industry",SearchEntity.Sort.ASC) *1/ */
+		/* 									/1* .addSort("PRI_ASSOC_HC","Host Company",SearchEntity.Sort.ASC) *1/ */
+		/* 									/1* .addSort("PRI_INTERNSHIP_START_DATE","Start Date",SearchEntity.Sort.ASC) *1/ */
 
-											/* Filters */
-											.addFilter("PRI_IS_INTERNSHIP", true)
-											.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%")
-											.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "ACTIVE")
-											.addFilter("LNK_HOST_COMPANY", SearchEntity.StringFilter.EQUAL, value)
-											.addFilter("PRI_ADDRESS_STATE", SearchEntity.StringFilter.LIKE, "%")
-											.addFilter("PRI_ASSOC_INDUSTRY", SearchEntity.StringFilter.LIKE, "%")
+		/* 									/1* Filters *1/ */
+		/* 									.addFilter("PRI_IS_INTERNSHIP", true) */
+		/* 									.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%") */
+		/* 									.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "ACTIVE") */
+		/* 									.addFilter("LNK_HOST_COMPANY", SearchEntity.StringFilter.EQUAL, value) */
+		/* 									.addFilter("PRI_ADDRESS_STATE", SearchEntity.StringFilter.LIKE, "%") */
+		/* 									.addFilter("PRI_ASSOC_INDUSTRY", SearchEntity.StringFilter.LIKE, "%") */
 											
-												/* Table Columns */
-											.addColumn("PRI_IMAGE_URL", "Company Logo")
-											.addColumn("PRI_NAME", "Name")
-											.addColumn("PRI_STATUS", "Status")
-											.addColumn("PRI_ASSOC_HC", "Host Company")
-											.addColumn("PRI_ADDRESS_FULL", "Address")
-											.addColumn("PRI_INTERNSHIP_START_DATE", "Proposed Start Date")
-											.addColumn("PRI_ASSOC_INDUSTRY", "Industry")
-											.setPageStart(0)
-											.setPageSize(1000);
+		/* 										/1* Table Columns *1/ */
+		/* 									.addColumn("PRI_IMAGE_URL", "Company Logo") */
+		/* 									.addColumn("PRI_NAME", "Name") */
+		/* 									.addColumn("PRI_STATUS", "Status") */
+		/* 									.addColumn("PRI_ASSOC_HC", "Host Company") */
+		/* 									.addColumn("PRI_ADDRESS_FULL", "Address") */
+		/* 									.addColumn("PRI_INTERNSHIP_START_DATE", "Proposed Start Date") */
+		/* 									.addColumn("PRI_ASSOC_INDUSTRY", "Industry") */
+		/* 									.setPageStart(0) */
+		/* 									.setPageSize(1000); */
 		
 		/* Send the dropdown options */
-		dropdownInternship.sendSearchResults("GRP_INTERNSHIP_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false);
+		/* dropdownInternship.sendSearchResults("GRP_INTERNSHIP_SELECTION", "LNK_ITEM", "ITEM", true, false, userToken, false); */
 end
