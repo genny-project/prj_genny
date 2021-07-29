@@ -73,7 +73,8 @@ rule "IS_QA_EDU_PRO_REP"
 
 			String uuid = UUID.randomUUID().toString().toUpperCase();
 			String cpyCode = "CPY_"+uuid;
-			beUtils.create(cpyCode, cpyCode);
+			BaseEntity defBE = beUtils.getDEFByCode("DEF_COMPANY");
+			beUtils.create(defBE, cpyCode, cpyCode);
 
 			answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_EDU_PROVIDER", "[\""+cpyCode+"\"]"));
 			answers.add(new Answer(userToken.getUserCode(), cpyCode, "PRI_PROFILE", "Incomplete"));

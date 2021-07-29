@@ -64,7 +64,8 @@ rule "PRI_JOURNAL_DATE"
 			System.out.println("NiceName="+niceName);
 			beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_NAME", niceName,false,true)); 
 			
-			journal = beUtils.create(targetCode, niceName);
+			BaseEntity defBE = beUtils.getDEFByCode("DEF_JOURNAL");
+			journal = beUtils.create(defBE, niceName, targetCode);
 			beUtils.saveAnswer(new Answer(sourceCode, targetCode, "LNK_INTERN", "[\""+sourceCode+"\"]",false,true));
 			beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_SYNC", "TRUE",false,true)); /* set to have synced */
 			

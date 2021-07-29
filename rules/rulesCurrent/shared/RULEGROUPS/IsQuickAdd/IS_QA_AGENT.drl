@@ -59,7 +59,8 @@ rule "IS_QA_AGENT"
 
 			String uuid = UUID.randomUUID().toString().toUpperCase();
 			String cpyCode = "CPY_"+uuid;
-			beUtils.create(cpyCode, cpyCode);
+			BaseEntity defBE = beUtils.getDEFByCode("DEF_COMPANY");
+			beUtils.create(defBE, cpyCode, cpyCode);
 
 			answers.add(new Answer(userToken.getUserCode(), user.getCode(), "LNK_AGENCY", "[\""+cpyCode+"\"]"));
 			answers.add(new Answer(userToken.getUserCode(), cpyCode, "PRI_PROFILE", "Incomplete"));

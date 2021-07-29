@@ -100,7 +100,8 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_HC"
 		 	/* check if already there */
 		 	BaseEntity be = beUtils.getBaseEntityByCode(beImport.getCode());
 		 	if (be == null) {
-			 	be = beUtils.create(beImport.getCode(), beImport.getName());
+				BaseEntity defBE = beUtils.getDEFByCode("DEF_COMPANY");
+			 	be = beUtils.create(defBE, beImport.getName(), beImport.getCode());
 			 	System.out.println("Host Company being created :"+be.getCode()+":"+be.getName());
 			 } 
 			Map<String,String> kv = new HashMap<String,String>();

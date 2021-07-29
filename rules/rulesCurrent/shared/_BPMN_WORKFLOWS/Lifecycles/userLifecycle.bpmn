@@ -266,7 +266,8 @@ System.out.println(&quot;userLifeCycle: entered: pid &quot;+kcontext.getProcessI
         <bpmn2:outgoing>SequenceFlow_38</bpmn2:outgoing>
         <bpmn2:script>userToken = (GennyToken)userToken;
 BaseEntityUtils beUtils = new BaseEntityUtils(userToken, serviceToken);
-newUser = beUtils.create(((GennyToken)userToken).getUserCode(), ((GennyToken)userToken).getUserCode());
+BaseEntity defBE = beUtils.getDEFByCode("DEF_USER");
+newUser = beUtils.create(defBE, ((GennyToken)userToken).getUserCode(), ((GennyToken)userToken).getUserCode());
 /* copy from userToken */
 List&lt;Answer> answers = new CopyOnWriteArrayList&lt;Answer>();
 Answer firstNameAnswer = new Answer(beUtils.getGennyToken().getUserCode(),newUser.getCode(), &quot;PRI_FIRSTNAME&quot;, userToken.getString(&quot;given_name&quot;));

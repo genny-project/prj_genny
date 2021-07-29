@@ -73,7 +73,8 @@ rule "IS_QA_HOST_CPY_REP"
 
 				String uuid = UUID.randomUUID().toString().toUpperCase();
 				String cpyCode = "CPY_"+uuid;
-				beUtils.create(cpyCode, cpyCode);
+				BaseEntity defBE = beUtils.getDEFByCode("DEF_COMPANY");
+				beUtils.create(defBE, cpyCode, cpyCode);
 
 				answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_HOST_COMPANY", "[\""+cpyCode+"\"]"));
 				answers.add(new Answer(userToken.getUserCode(), cpyCode, "PRI_IS_HOST_CPY", true));

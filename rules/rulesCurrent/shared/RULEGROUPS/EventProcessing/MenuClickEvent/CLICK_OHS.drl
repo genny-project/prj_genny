@@ -36,7 +36,7 @@ rule "CLICK_OHS"
 		String hcCode = "";
 		String ohsCode = "";
 		
-		BaseEntity newBe = beUtils.create("temp", "temp");
+		BaseEntity newBe = new BaseEntity("temp", "temp");
 		
 		
 		if(user != null) {
@@ -71,7 +71,8 @@ rule "CLICK_OHS"
 										ohsCode = ohsCode.toUpperCase();
 										System.out.println("OHS: ohsCode = " + ohsCode);
 										
-										newBe = beUtils.create(ohsCode, ohsCode);
+										BaseEntity defBE = beUtils.getDEFByCode("DEF_OHS_DOCUMENT");
+										newBe = beUtils.create(defBE, ohsCode, ohsCode);
 										System.out.println("OHS: newBe = " + newBe);
 										System.out.println(">>>>>>>>>>>> " + newBe.getName() + " <<<<<<<<<<<<");
 										

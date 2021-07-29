@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.1.Final-v20190425-2005-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.3.Final-v20210519-2007-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
   <bpmn2:itemDefinition id="ItemDefinition_9" isCollection="false" structureRef="java.lang.String"/>
   <bpmn2:itemDefinition id="ItemDefinition_556" isCollection="false" structureRef="life.genny.models.GennyToken"/>
   <bpmn2:itemDefinition id="ItemDefinition_576" isCollection="false" structureRef="life.genny.utils.CallingProcessToken"/>
@@ -51,6 +51,8 @@
   <bpmn2:itemDefinition id="ItemDefinition_621" isCollection="false"/>
   <bpmn2:itemDefinition id="ItemDefinition_622" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_5" isCollection="false" structureRef="Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_243" isCollection="false" structureRef="java.time.format.DateTimeFormatter"/>
+  <bpmn2:itemDefinition id="ItemDefinition_245" isCollection="false" structureRef="java.time.LocalDateTime"/>
   <bpmn2:signal id="Signal_1" name="createBE"/>
   <bpmn2:signal id="Signal_2" name="makeBe"/>
   <bpmn2:signal id="Signal_3" name="START_QUICK_ADD"/>
@@ -79,6 +81,8 @@
       <drools:import name="life.genny.utils.TableUtils"/>
       <drools:import name="java.util.ArrayList"/>
       <drools:import name="java.util.List"/>
+      <drools:import name="java.time.format.DateTimeFormatter"/>
+      <drools:import name="java.time.LocalDateTime"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_556" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_556" name="serviceToken"/>
@@ -93,17 +97,11 @@
     <bpmn2:property id="baseEntityType" itemSubjectRef="ItemDefinition_9" name="baseEntityType"/>
     <bpmn2:property id="dropDownGroup" itemSubjectRef="ItemDefinition_9" name="dropDownGroup"/>
     <bpmn2:property id="eventMsg" itemSubjectRef="ItemDefinition_3346" name="eventMsg"/>
-    <bpmn2:property id="hold_str" itemSubjectRef="ItemDefinition_9" name="hold_str"/>
-    <bpmn2:property id="intEP" itemSubjectRef="ItemDefinition_9" name="intEP"/>
-    <bpmn2:property id="intEPBe" itemSubjectRef="ItemDefinition_1076" name="intEPBe"/>
-    <bpmn2:property id="intIndustry" itemSubjectRef="ItemDefinition_9" name="intIndustry"/>
-    <bpmn2:property id="intIndustryBe" itemSubjectRef="ItemDefinition_1076" name="intIndustryBe"/>
-    <bpmn2:property id="intOccupation" itemSubjectRef="ItemDefinition_9" name="intOccupation"/>
-    <bpmn2:property id="intOccupationBe" itemSubjectRef="ItemDefinition_1076" name="intOccupationBe"/>
     <bpmn2:property id="isLive" itemSubjectRef="ItemDefinition_129" name="isLive"/>
     <bpmn2:property id="questionCode" itemSubjectRef="ItemDefinition_9" name="questionCode"/>
     <bpmn2:property id="key" itemSubjectRef="ItemDefinition_9" name="key"/>
     <bpmn2:property id="source" itemSubjectRef="ItemDefinition_9" name="source"/>
+    <bpmn2:property id="beUtils" itemSubjectRef="ItemDefinition_1926" name="beUtils"/>
     <bpmn2:subProcess id="SubProcess_1" name="Intern Builder">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -140,7 +138,7 @@
             <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% EXIT Ask Question Task %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
           </drools:onExit-script>
         </bpmn2:extensionElements>
-        <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
+        <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
         <bpmn2:ioSpecification id="InputOutputSpecification_2">
           <bpmn2:dataInput id="DataInput_8" itemSubjectRef="ItemDefinition_556" name="userToken"/>
@@ -286,131 +284,91 @@
           </drools:metaData>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
-        <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
+        <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
         <bpmn2:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% START Create Quick Add Entity WORKFLOW %%%%%%%%%%%%%%%%%%%&quot;);
-System.out.println(&quot;WORKFLOW CHANGE - DRIVING WITH DOM&quot;);
 
-/* Gather Session Facts and Tokens */
-	SessionFacts sessionFacts2 = (SessionFacts)sessionFacts;
+serviceToken = (GennyToken)sessionFacts.getServiceToken();
+userToken = (GennyToken)sessionFacts.getUserToken();
+beUtils = new BaseEntityUtils(userToken);
 
-	serviceToken = (GennyToken)sessionFacts2.getServiceToken();
-	userToken = (GennyToken)sessionFacts2.getUserToken();
+kcontext.setVariable(&quot;serviceToken&quot;, serviceToken);
+kcontext.setVariable(&quot;userToken&quot;, userToken);
+kcontext.setVariable(&quot;beUtils&quot;, beUtils);
 
-	kcontext.setVariable(&quot;serviceToken&quot;, serviceToken);
-	kcontext.setVariable(&quot;userToken&quot;, userToken);
-
-	System.out.println(&quot;QUICK_ADD_ENTITY: userToken = &quot; +userToken.getCode());
-	System.out.println(&quot;QUICK_ADD_ENTITY: serviceToken = &quot; +serviceToken.getCode());
-
-	BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
-
+System.out.println(&quot;QUICK_ADD_ENTITY: userToken = &quot; +userToken.getCode());
+System.out.println(&quot;QUICK_ADD_ENTITY: serviceToken = &quot; +serviceToken.getCode());
 
 /* Gather Key and construct Question Code */
-	OutputParam data = (OutputParam)sessionFacts.getMessage();
-	key = data.getSuitCase();
-	kcontext.setVariable(&quot;key&quot;, key);
-	System.out.println(&quot;QUICK_ADD_ENTITY: key = &quot; + key);
+OutputParam data = (OutputParam)sessionFacts.getMessage();
+key = data.getSuitCase();
+kcontext.setVariable(&quot;key&quot;, key);
+System.out.println(&quot;QUICK_ADD_ENTITY: key = &quot; + key);
 
-  questionCode = &quot;QUE_&quot; +key + &quot;_GRP&quot;;
+questionCode = &quot;QUE_&quot; +key + &quot;_GRP&quot;;
 
-	kcontext.setVariable(&quot;questionCode&quot;, questionCode);
-	System.out.println(&quot;QUICK_ADD_ENTITY: questionCode: &quot; + questionCode);
+kcontext.setVariable(&quot;questionCode&quot;, questionCode);
+System.out.println(&quot;QUICK_ADD_ENTITY: questionCode: &quot; + questionCode);
 
-	if (key.startsWith(&quot;FRESH_&quot;)) {
-		key = key.substring(&quot;FRESH_&quot;.length());
+if (key.startsWith(&quot;FRESH_&quot;)) {
+	key = key.substring(&quot;FRESH_&quot;.length());
+}
+
+baseEntityType = key;
+kcontext.setVariable(&quot;baseEntityType&quot;, baseEntityType);
+System.out.println(&quot;QUICK_ADD_ENTITY: baseEntityType = &quot; + baseEntityType);
+
+
+String entityCode = null;
+String defCode = &quot;DEF_&quot; + key;
+
+if (key.equals(&quot;LOGBOOK&quot;)) {
+	defCode = &quot;DEF_JOURNAL&quot;;
+	String userID = beUtils.getGennyToken().getUserCode().substring(&quot;PER_&quot;.length());
+
+	LocalDateTime dateTime = LocalDateTime.now();  
+	String pattern = &quot;yyyyMMddHHmmss&quot;;
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+
+	String dateTimeString = dateTime.format(formatter);
+	System.out.println(&quot;DateTime code :: &quot; + dateTimeString);  
+
+	entityCode = &quot;JNL_&quot; + userID + dateTimeString;
+	System.out.println(&quot;journalCode  ::  &quot; + entityCode);
+}
+
+String typeAttribute = &quot;PRI_IS_&quot; + key.split(&quot;QA_&quot;)[1];
+if (key.equals(&quot;QA_EDU_PRO&quot;)) {
+	typeAttribute = &quot;PRI_IS_EDU_PROVIDER&quot;;
+	defCode = &quot;DEF_EDU_PROVIDER&quot;;
+}
+
+
+/* CREATE BE FROM DEF */
+BaseEntity defBE = beUtils.getDEFByCode(defCode);
+if (defBE == null) {
+	System.out.println(&quot;ERROR: could not find DEF for code &quot; + defCode);
+
+} else {
+	if (entityCode != null) {
+		beUtils.create(defBE, entityCode, entityCode);
+	} else {
+		beUtils.create(defBE);
 	}
 
-
-/* Generate UUID */
-	uuid = KeycloakUtils.createDummyUser(serviceToken.getToken(), serviceToken.getRealm());
-	kcontext.setVariable(&quot;uuid&quot;, uuid);
-	System.out.println(&quot;QUICK_ADD_ENTITY: uuid = &quot; + uuid);
-
-	baseEntityType = key;
-	kcontext.setVariable(&quot;baseEntityType&quot;, baseEntityType);
-	System.out.println(&quot;QUICK_ADD_ENTITY: baseEntityType = &quot; + baseEntityType);
-
-
-/* Create Entity */
-	userToken = (GennyToken)userToken;
-	String newCode = &quot;PER_&quot;+uuid;
-	newCode = newCode.toUpperCase();
-	newBe = beUtils.create(newCode, newCode);
+	newBe = beUtils.getBaseEntityByCode(entityCode);
 	kcontext.setVariable(&quot;newBe&quot;, newBe);
+
 	System.out.println(&quot;QUICK_ADD_ENTITY: newBe = &quot; + newBe);
 	System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);
 
-	String typeAttribute = &quot;PRI_IS_&quot; + key.split("QA_")[1];
-	if (key.equals(&quot;QA_EDU_PRO&quot;)) {
-		typeAttribute = &quot;PRI_IS_EDU_PROVIDER&quot;;
-	}
 	List&lt;Answer> answers = new ArrayList&lt;Answer>();
-	answers.add(new Answer(userToken.getUserCode(), newCode, typeAttribute, &quot;true&quot;));
+	answers.add(new Answer(userToken.getUserCode(), entityCode, typeAttribute, &quot;true&quot;));
 	beUtils.saveAnswers(answers);
-
-
-	String templateCode = &quot;TEMPLATE_&quot; + baseEntityType;
-	TableUtils.searchTable(beUtils, templateCode, true);
-
-
-
+}
 </bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_8" drools:priority="1" sourceRef="StartEvent_1" targetRef="ScriptTask_1"/>
-      <bpmn2:task id="Task_1" drools:taskName="RuleFlowGroup" drools:displayName="RunRuleFlowGroup" drools:icon="icons/icon-info.gif" name="Tag Type">
-        <bpmn2:extensionElements>
-          <drools:metaData name="elementname">
-            <drools:metaValue><![CDATA[Tag Type]]></drools:metaValue>
-          </drools:metaData>
-        </bpmn2:extensionElements>
-        <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
-        <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
-        <bpmn2:ioSpecification id="InputOutputSpecification_1">
-          <bpmn2:dataInput id="DataInput_5" itemSubjectRef="ItemDefinition_556" name="serviceToken"/>
-          <bpmn2:dataInput id="DataInput_6" itemSubjectRef="ItemDefinition_556" name="userToken"/>
-          <bpmn2:dataInput id="DataInput_7" name="ruleFlowGroup"/>
-          <bpmn2:dataInput id="DataInput_11" name="callingWorkflow"/>
-          <bpmn2:dataInput id="DataInput_12" itemSubjectRef="ItemDefinition_9" name="key"/>
-          <bpmn2:dataInput id="DataInput_13" itemSubjectRef="ItemDefinition_1076" name="newBe"/>
-          <bpmn2:inputSet id="_InputSet_132">
-            <bpmn2:dataInputRefs>DataInput_5</bpmn2:dataInputRefs>
-            <bpmn2:dataInputRefs>DataInput_6</bpmn2:dataInputRefs>
-            <bpmn2:dataInputRefs>DataInput_7</bpmn2:dataInputRefs>
-            <bpmn2:dataInputRefs>DataInput_11</bpmn2:dataInputRefs>
-            <bpmn2:dataInputRefs>DataInput_12</bpmn2:dataInputRefs>
-            <bpmn2:dataInputRefs>DataInput_13</bpmn2:dataInputRefs>
-          </bpmn2:inputSet>
-          <bpmn2:outputSet id="OutputSet_2" name="Output Set 2"/>
-        </bpmn2:ioSpecification>
-        <bpmn2:dataInputAssociation id="_DataInputAssociation_590">
-          <bpmn2:sourceRef>serviceToken</bpmn2:sourceRef>
-          <bpmn2:targetRef>DataInput_5</bpmn2:targetRef>
-        </bpmn2:dataInputAssociation>
-        <bpmn2:dataInputAssociation id="_DataInputAssociation_591">
-          <bpmn2:sourceRef>userToken</bpmn2:sourceRef>
-          <bpmn2:targetRef>DataInput_6</bpmn2:targetRef>
-        </bpmn2:dataInputAssociation>
-        <bpmn2:dataInputAssociation id="_DataInputAssociation_592">
-          <bpmn2:targetRef>DataInput_7</bpmn2:targetRef>
-          <bpmn2:assignment id="Assignment_1">
-            <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_3">IsTypeTag</bpmn2:from>
-            <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_1">DataInput_7</bpmn2:to>
-          </bpmn2:assignment>
-        </bpmn2:dataInputAssociation>
-        <bpmn2:dataInputAssociation id="_DataInputAssociation_593">
-          <bpmn2:targetRef>DataInput_11</bpmn2:targetRef>
-        </bpmn2:dataInputAssociation>
-        <bpmn2:dataInputAssociation id="DataInputAssociation_6">
-          <bpmn2:sourceRef>key</bpmn2:sourceRef>
-          <bpmn2:targetRef>DataInput_12</bpmn2:targetRef>
-        </bpmn2:dataInputAssociation>
-        <bpmn2:dataInputAssociation id="DataInputAssociation_7">
-          <bpmn2:sourceRef>newBe</bpmn2:sourceRef>
-          <bpmn2:targetRef>DataInput_13</bpmn2:targetRef>
-        </bpmn2:dataInputAssociation>
-      </bpmn2:task>
-      <bpmn2:sequenceFlow id="SequenceFlow_2" drools:priority="1" sourceRef="ScriptTask_1" targetRef="Task_1"/>
-      <bpmn2:sequenceFlow id="SequenceFlow_3" drools:priority="1" sourceRef="Task_1" targetRef="Task_2"/>
+      <bpmn2:sequenceFlow id="SequenceFlow_5" drools:priority="1" sourceRef="ScriptTask_1" targetRef="Task_2"/>
     </bpmn2:subProcess>
     <bpmn2:endEvent id="EndEvent_2" name="End Intern Builder">
       <bpmn2:extensionElements>
@@ -443,7 +401,7 @@ System.out.println(&quot;WORKFLOW CHANGE - DRIVING WITH DOM&quot;);
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Process Diagram">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="QUICK_ADD_ENTITY">
       <bpmndi:BPMNShape id="BPMNShape_SubProcess_1" bpmnElement="SubProcess_1" isExpanded="true">
-        <dc:Bounds height="143.0" width="895.0" x="310.0" y="286.0"/>
+        <dc:Bounds height="144.0" width="711.0" x="310.0" y="286.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1">
           <dc:Bounds height="11.0" width="54.0" x="316.0" y="289.0"/>
         </bpmndi:BPMNLabel>
@@ -455,9 +413,9 @@ System.out.println(&quot;WORKFLOW CHANGE - DRIVING WITH DOM&quot;);
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_2" bpmnElement="EndEvent_1">
-        <dc:Bounds height="36.0" width="36.0" x="1104.0" y="340.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="920.0" y="340.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_3" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="65.0" x="1090.0" y="376.0"/>
+          <dc:Bounds height="11.0" width="65.0" x="906.0" y="376.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_1" bpmnElement="ScriptTask_1" isExpanded="true">
@@ -467,9 +425,9 @@ System.out.println(&quot;WORKFLOW CHANGE - DRIVING WITH DOM&quot;);
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_1" bpmnElement="EndEvent_2">
-        <dc:Bounds height="36.0" width="36.0" x="1254.0" y="340.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="1080.0" y="340.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_5" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="73.0" x="1236.0" y="376.0"/>
+          <dc:Bounds height="11.0" width="73.0" x="1062.0" y="376.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_2" bpmnElement="StartEvent_3">
@@ -479,45 +437,39 @@ System.out.println(&quot;WORKFLOW CHANGE - DRIVING WITH DOM&quot;);
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_2" bpmnElement="Task_2" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="794.0" y="334.0"/>
+        <dc:Bounds height="50.0" width="110.0" x="590.0" y="333.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_8">
-          <dc:Bounds height="11.0" width="86.0" x="806.0" y="353.0"/>
+          <dc:Bounds height="11.0" width="86.0" x="602.0" y="352.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_4" bpmnElement="Task_4" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="944.0" y="334.0"/>
+        <dc:Bounds height="50.0" width="110.0" x="742.0" y="334.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_12">
-          <dc:Bounds height="11.0" width="56.0" x="971.0" y="353.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_Task_1" bpmnElement="Task_1" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="590.0" y="333.0"/>
-        <bpmndi:BPMNLabel>
-          <dc:Bounds height="11.0" width="37.0" x="626.0" y="352.0"/>
+          <dc:Bounds height="11.0" width="56.0" x="769.0" y="353.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="SequenceFlow_4" sourceElement="BPMNShape_SubProcess_1" targetElement="BPMNShape_EndEvent_1">
-        <di:waypoint xsi:type="dc:Point" x="1205.0" y="357.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1229.0" y="357.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1254.0" y="358.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1021.0" y="358.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1050.0" y="358.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1080.0" y="358.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_9"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="BPMNShape_StartEvent_2" targetElement="BPMNShape_SubProcess_1">
         <di:waypoint xsi:type="dc:Point" x="256.0" y="358.0"/>
         <di:waypoint xsi:type="dc:Point" x="283.0" y="358.0"/>
-        <di:waypoint xsi:type="dc:Point" x="310.0" y="357.0"/>
+        <di:waypoint xsi:type="dc:Point" x="310.0" y="358.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_11"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="BPMNShape_Task_2" targetElement="BPMNShape_Task_4">
-        <di:waypoint xsi:type="dc:Point" x="904.0" y="359.0"/>
-        <di:waypoint xsi:type="dc:Point" x="924.0" y="359.0"/>
-        <di:waypoint xsi:type="dc:Point" x="944.0" y="359.0"/>
+        <di:waypoint xsi:type="dc:Point" x="700.0" y="358.0"/>
+        <di:waypoint xsi:type="dc:Point" x="721.0" y="358.0"/>
+        <di:waypoint xsi:type="dc:Point" x="742.0" y="359.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_13"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_7" bpmnElement="SequenceFlow_7" sourceElement="BPMNShape_Task_4" targetElement="BPMNShape_2">
-        <di:waypoint xsi:type="dc:Point" x="1054.0" y="359.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1079.0" y="359.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1104.0" y="358.0"/>
+        <di:waypoint xsi:type="dc:Point" x="852.0" y="359.0"/>
+        <di:waypoint xsi:type="dc:Point" x="886.0" y="359.0"/>
+        <di:waypoint xsi:type="dc:Point" x="920.0" y="358.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_7"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_8" bpmnElement="SequenceFlow_8" sourceElement="BPMNShape_1" targetElement="BPMNShape_ScriptTask_1">
@@ -526,16 +478,10 @@ System.out.println(&quot;WORKFLOW CHANGE - DRIVING WITH DOM&quot;);
         <di:waypoint xsi:type="dc:Point" x="430.0" y="358.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_10"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_Task_1">
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_5" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_Task_2">
         <di:waypoint xsi:type="dc:Point" x="540.0" y="358.0"/>
         <di:waypoint xsi:type="dc:Point" x="565.0" y="358.0"/>
         <di:waypoint xsi:type="dc:Point" x="590.0" y="358.0"/>
-        <bpmndi:BPMNLabel/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_Task_2">
-        <di:waypoint xsi:type="dc:Point" x="700.0" y="358.0"/>
-        <di:waypoint xsi:type="dc:Point" x="747.0" y="359.0"/>
-        <di:waypoint xsi:type="dc:Point" x="794.0" y="359.0"/>
         <bpmndi:BPMNLabel/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

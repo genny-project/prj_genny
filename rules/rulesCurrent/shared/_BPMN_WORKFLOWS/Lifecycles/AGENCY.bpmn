@@ -151,7 +151,8 @@ BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 
 String newCode = &quot;CPY_&quot;+uuid;
 newCode = newCode.toUpperCase();
-newBe = beUtils.create(newCode, newCode);
+BaseEntity defBE = beUtils.getDEFByCode("DEF_AGENCY");
+newBe = beUtils.create(defBE, newCode, newCode);
 kcontext.setVariable(&quot;newBe&quot;, newBe);
 
 System.out.println(&quot;AGENCY: newBe = &quot; + newBe);

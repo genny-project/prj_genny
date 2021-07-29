@@ -95,7 +95,8 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_APPS"
 
 		 	BaseEntity be = beUtils.getBaseEntityByCode(beImport.getCode());
 		 	if (be == null) {
-			 	be = beUtils.create(beImport.getCode(), beImport.getName());
+				BaseEntity defBE = beUtils.getDEFByCode("DEF_APPLICATION");
+			 	be = beUtils.create(defBE, beImport.getName(), beImport.getCode());
 			 } 
 			List<Answer> answers = new ArrayList<Answer>();
 		    Integer count=0;
@@ -196,7 +197,8 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_APPS"
 			 String appCode = "APP_"+beImport.getCode().substring(4);
 			BaseEntity app = beUtils.getBaseEntityByCode(appCode);
 		 	if (app == null) {
-			 	app = beUtils.create(appCode, "APPLICATION");
+				BaseEntity defBE = beUtils.getDEFByCode("DEF_APPLICATION");
+			 	app = beUtils.create(defBE, "APPLICATION", appCode);
 			 } 
 			List<Answer> answers2 = new ArrayList<Answer>();
 			

@@ -97,7 +97,8 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_INTERNS"
 
 		 	BaseEntity be = beUtils.getBaseEntityByCode(beImport.getCode());
 		 	if (be == null) {
-			 	be = beUtils.create(beImport.getCode(), beImport.getName());
+				BaseEntity defBE = beUtils.getDEFByCode("DEF_INTERN");
+			 	be = beUtils.create(defBE, beImport.getName(), beImport.getCode());
 			 } 
 			 List<Answer> answers = new ArrayList<Answer>();
 		     Integer count=0;

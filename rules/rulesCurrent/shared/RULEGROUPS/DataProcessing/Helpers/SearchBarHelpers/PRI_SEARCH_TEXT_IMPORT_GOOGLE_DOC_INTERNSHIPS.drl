@@ -103,7 +103,8 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_INTERNSHIPS"
 			
 		 /*	BaseEntity be = beUtils.getBaseEntityByCode(beImport.getCode()); */
 		 	if (be == null) {
-			 	be = beUtils.create(beImport.getCode(), beImport.getName());
+				BaseEntity defBE = beUtils.getDEFByCode("DEF_INTERNSHIP");
+			 	be = beUtils.create(defBE, beImport.getName(), beImport.getCode());
 			 } 
 			 
 			 

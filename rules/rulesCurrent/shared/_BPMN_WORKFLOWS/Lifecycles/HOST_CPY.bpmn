@@ -141,7 +141,8 @@ kcontext.setVariable(&quot;beUtils&quot;, beUtils);
 
 String newCode = &quot;CPY_&quot;+uuid;
 newCode = newCode.toUpperCase();
-newBe = beUtils.create(newCode, newCode);
+BaseEntity defBE = beUtils.getDEFByCode("DEF_HOST_CPY");
+newBe = beUtils.create(defBE, newCode, newCode);
 kcontext.setVariable(&quot;newBe&quot;, newBe);
 System.out.println(&quot;HOST_CPY: newBe = &quot; + newBe);
 System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);

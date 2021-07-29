@@ -103,7 +103,8 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_USERS"
 				 	/* check if already there */
 				 	BaseEntity be = beUtils.getBaseEntityByCode(beImport.getCode());
 				 	if (be == null) {
-					 	be = beUtils.create(beImport.getCode(), beImport.getName());
+						BaseEntity defBE = beUtils.getDEFByCode("DEF_USER");
+					 	be = beUtils.create(defBE, beImport.getName(), beImport.getCode());
 					 } 
 					Map<String,String> kv = new HashMap<String,String>();
 					 
