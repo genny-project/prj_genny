@@ -38,7 +38,7 @@ rule "ROL_AGENT"
      	System.out.println("   Generate "+drools.getRule().getName() );
  		 
 		 BaseEntity defBE = beUtils.getDEFByCode("DEF_ROLE");
-		 BaseEntity role = capabilityUtils.getBeUtils().create(defBE, drools.getRule().getName(),WordUtils.capitalize(drools.getRule().getName().substring(4)));
+   	     BaseEntity role = capabilityUtils.getBeUtils().create(defBE, WordUtils.capitalize(drools.getRule().getName().substring(4)), drools.getRule().getName());
   
     	 beUtils.saveAnswer(new Answer(beUtils.getGennyToken().getUserCode(), role.getCode(), "PRI_COLOR", "#1183C8",false,true));
  
