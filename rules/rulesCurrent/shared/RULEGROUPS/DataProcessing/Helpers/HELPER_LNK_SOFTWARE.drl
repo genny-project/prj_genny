@@ -76,7 +76,8 @@ rule "HELPER_LNK_SOFTWARE"
 					System.out.println("softwareCode :: " + softwareCode);
 
 					/* create BE */
-					BaseEntity software = beUtils.create(softwareCode, softwareName);
+					BaseEntity defBE = beUtils.getDEFByCode("DEF_SELECTION");
+					BaseEntity software = beUtils.create(defBE, softwareName, softwareCode);
 
 					if(software != null){
 						/* save the software name */

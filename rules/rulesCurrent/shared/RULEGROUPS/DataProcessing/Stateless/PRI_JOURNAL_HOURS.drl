@@ -39,7 +39,8 @@ rule "PRI_JOURNAL_HOURS"
 		BaseEntity journal = beUtils.getBaseEntityByCode(targetCode);
 		if (journal == null) {
 			System.out.println(drools.getRule().getName()+" Creating new journal be "+targetCode);
-			journal = beUtils.create(targetCode, targetCode);
+			BaseEntity defBE = beUtils.getDEFByCode("DEF_JOURNAL");
+			journal = beUtils.create(defBE, targetCode, targetCode);
 			beUtils.saveAnswer(new Answer(sourceCode, targetCode, "LNK_INTERN", "[\""+sourceCode+"\"]",false,true));
 			beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_SYNC", "TRUE",false,true)); /* set to have synced */
 

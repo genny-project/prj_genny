@@ -40,7 +40,7 @@ rule "CLICK_HC_VALIDATION"
 	
 		String hcvCode = "";
 		
-		BaseEntity newBe = beUtils.create("temp", "temp");
+		BaseEntity newBe = new BaseEntity("temp", "temp");
 		
 		
 						
@@ -103,7 +103,8 @@ rule "CLICK_HC_VALIDATION"
 										hcvCode = hcvCode.toUpperCase();
 										System.out.println("HCV: hcvCode = " + hcvCode);
 										
-										newBe = beUtils.create(hcvCode, hcvCode);
+										BaseEntity defBE = beUtils.getDEFByCode("DEF_HCV_DOCUMENT");
+										newBe = beUtils.create(defBE, hcvCode, hcvCode);
 										System.out.println("HCV: newBe = " + newBe);
 										System.out.println(">>>>>>>>>>>> " + newBe.getName() + " <<<<<<<<<<<<");
 				
@@ -188,7 +189,8 @@ rule "CLICK_HC_VALIDATION"
 						hcvCode = hcvCode.toUpperCase();
 						System.out.println("HCV: hcvCode = " + hcvCode);
 						
-						newBe = beUtils.create(hcvCode, hcvCode);
+						BaseEntity defBE = beUtils.getDEFByCode("DEF_HCV_DOCUMENT");
+						newBe = beUtils.create(defBE, hcvCode, hcvCode);
 						System.out.println("HCV: newBe = " + newBe);
 						System.out.println(">>>>>>>>>>>> " + newBe.getName() + " <<<<<<<<<<<<");
 

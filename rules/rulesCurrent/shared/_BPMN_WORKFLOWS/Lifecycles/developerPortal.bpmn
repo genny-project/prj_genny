@@ -170,7 +170,8 @@ kcontext.setVariable(&quot;entityCode&quot;, entityCode);
       <bpmn2:script>/* CREATE BASEENTITY */
 
 if (!entityCode.equals(&quot;NONE&quot;)) {
-	beUtils.create(entityCode, entityCode);
+	BaseEntity defBE = beUtils.getDEFByCode("DEF_SAM");
+	beUtils.create(defBE, entityCode, entityCode);
 }
 
 /* SEND CMD MESSAGE */

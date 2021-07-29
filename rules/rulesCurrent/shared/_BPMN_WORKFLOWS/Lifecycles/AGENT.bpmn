@@ -154,7 +154,8 @@ BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 
 String newCode = &quot;PER_&quot;+uuid;
 newCode = newCode.toUpperCase();
-newBe = beUtils.create(newCode, newCode);
+BaseEntity defBE = beUtils.getDEFByCode("DEF_AGENT");
+newBe = beUtils.create(defBE, newCode, newCode);
 kcontext.setVariable(&quot;newBe&quot;, newBe);
 
 System.out.println(&quot;AGENT: newBe = &quot; + newBe);

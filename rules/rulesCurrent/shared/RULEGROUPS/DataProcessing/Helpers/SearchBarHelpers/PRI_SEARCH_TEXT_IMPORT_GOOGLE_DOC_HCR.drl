@@ -104,7 +104,8 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_HCR"
 				 	/* check if already there */
 				 	BaseEntity be = beUtils.getBaseEntityByCode(beImport.getCode());
 				 	if (be == null) {
-					 	be = beUtils.create(beImport.getCode(), beImport.getName());
+						BaseEntity defBE = beUtils.getDEFByCode("DEF_HOST_CPY_REP");
+					 	be = beUtils.create(defBE, beImport.getName(), beImport.getCode());
 					 } 
 					Map<String,String> kv = new HashMap<String,String>();
 					 
