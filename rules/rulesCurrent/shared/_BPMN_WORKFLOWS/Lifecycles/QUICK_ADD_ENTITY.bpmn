@@ -319,7 +319,7 @@ System.out.println(&quot;QUICK_ADD_ENTITY: baseEntityType = &quot; + baseEntityT
 
 
 String entityCode = null;
-String defCode = &quot;DEF_&quot; + key;
+String defCode = &quot;DEF_&quot; + key.split(&quot;QA_&quot;)[1];
 
 if (key.equals(&quot;LOGBOOK&quot;)) {
 	defCode = &quot;DEF_JOURNAL&quot;;
