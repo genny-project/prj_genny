@@ -127,6 +127,8 @@ rule "IS_INTERNSHIP"
 		String addedOn = dtf.format(updateTime);
 		String assocHC = newBe.getValue("PRI_ASSOC_HC", null);
 		String internshipName = newBe.getValue("PRI_NAME", null);
+		String internshipIndustry = newBe.getValue("PRI_ASSOC_INDUSTRY", null);
+		String internshipOcc = newBe.getValue("PRI_ASSOC_OCCUPATION", null);
 		LocalDate internshipStartDate = newBe.getValue("PRI_INTERNSHIP_START_DATE", null);
 		String startDateStr = dtf.format(internshipStartDate);
 		
@@ -135,6 +137,8 @@ rule "IS_INTERNSHIP"
 		payloadDataMap.put("*Start Date:* ", startDateStr);
 		payloadDataMap.put("*Internship Name:* ",internshipName);
 		payloadDataMap.put("*Host Company:* ",assocHC);
+		payloadDataMap.put("*Industry:* ",internshipIndustry);
+		payloadDataMap.put("*Specialisation:* ",internshipOcc);
 		
 		JsonArray jsonArray2 = new JsonArray();
 		for(String key : payloadDataMap.keySet())	
