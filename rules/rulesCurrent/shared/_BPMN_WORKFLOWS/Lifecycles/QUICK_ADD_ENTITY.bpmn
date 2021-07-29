@@ -289,7 +289,7 @@
 
 serviceToken = (GennyToken)sessionFacts.getServiceToken();
 userToken = (GennyToken)sessionFacts.getUserToken();
-beUtils = new BaseEntityUtils(userToken);
+beUtils = new BaseEntityUtils(serviceToken, userToken);
 
 kcontext.setVariable(&quot;serviceToken&quot;, serviceToken);
 kcontext.setVariable(&quot;userToken&quot;, userToken);
