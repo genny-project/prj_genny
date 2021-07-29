@@ -91,6 +91,62 @@ public class RahulTest {
 	}
 
 	@Test
+	public void AnotherRandoise() {
+		System.out.println("Randomise test");
+		VertxUtils.cachedEnabled = false;
+		if (beUtils == null) {
+			return;
+		}
+		BaseEntity project = beUtils.getBaseEntityByCode("PRJ_" + serviceToken.getRealm().toUpperCase());
+		SearchEntity searchBE = new SearchEntity("SBE_DEF", "DEF check")
+				.addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "DEF_%")
+				.addColumn("PRI_CODE", "Name");
+		searchBE.setRealm(realm);
+		searchBE.setPageStart(0);
+		searchBE.setPageSize(1000);
+		List<BaseEntity> items = beUtils.getBaseEntitys(searchBE);
+		// Load up RuleUtils.defs
+		RulesUtils.defs.put(realm,new ConcurrentHashMap<String,BaseEntity>());
+		for (BaseEntity item : items) {
+			item.setFastAttributes(true); // make fast
+			RulesUtils.defs.get(realm).put(item.getCode(),item);
+			//log.info("Saving ("+realm+") DEF "+item.getCode());
+		}
+		QEventDropdownMessage message = null;
+		// get an intern
+//		SearchEntity searchBE2 = new SearchEntity("SBE_INTERN", "Get An INTERN")
+//				.addFilter("PRI_IS_INTERN", true)
+//				.addColumn("PRI_IS_INTERN", "Name");
+//		SearchEntity searchBE2 = new SearchEntity("SBE_INTERNSHIP", "Get An INTERNSHIP")
+//				.addFilter("PRI_IS_INTERNSHIP", true)
+//				.addColumn("PRI_IS_INTERNSHIP", "Name");
+		SearchEntity searchBE2 = new SearchEntity("SBE_APPS", "Get An INTERNSHIP")
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%")
+				.addFilter("PRI_STATUS", SearchEntity.StringFilter.EQUAL, "APPLIED");
+		searchBE2.setRealm(realm);
+		searchBE2.setPageStart(0);
+		searchBE2.setPageSize(1);
+		List<BaseEntity> interns = beUtils.getBaseEntitys(searchBE2);
+		BaseEntity intern = interns.get(0);
+		log.info("BE CODE = " + intern.getCode());
+		String code = "LNK_HOST_COMPANY";
+		message = new QEventDropdownMessage(code);
+		message.setAttributeCode(code);
+		message.getData().setCode("QUE_SELECT_HOST_COMPANY");
+		message.getData().setParentCode("QUE_INTERNSHIP_GRP");
+		message.getData().setTargetCode(intern.getCode());
+		message.getData().setValue("");
+		QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message,GennySettings.defaultDropDownPageSize);
+		//				System.out.println(msg);
+		//				msg.setToken(userToken.getToken());
+		//
+		//				VertxUtils.writeMsg("webcmds", msg);
+		QDataBaseEntityMessage q = new QDataBaseEntityMessage();
+		int g = q.getItems().length + 1;
+	}
+
+	// @Test
 	public void Randoise() {
 		System.out.println("Randomise test");
 
@@ -125,9 +181,10 @@ public class RahulTest {
 		QEventDropdownMessage message = null;
 
 		// get an intern
-		SearchEntity searchBE2 = new SearchEntity("SBE_INTERN", "Get An INTERN")
-				.addFilter("PRI_IS_INTERN", true)
-				.addColumn("PRI_IS_INTERN", "Name");
+		SearchEntity searchBE2 = new SearchEntity("SBE_INTERNSHIP", "Get An Internship")
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%")
+				.addFilter("PRI_IS_INTERNSHIP", true)
+				.addColumn("PRI_IS_INTERNSHIP", "Name");
 
 		searchBE2.setRealm(realm);
 		searchBE2.setPageStart(0);
@@ -136,37 +193,14 @@ public class RahulTest {
 		List<BaseEntity> interns = beUtils.getBaseEntitys(searchBE2);
 		BaseEntity intern = interns.get(0);
 
-		message = new QEventDropdownMessage("LNK_SELECT_COUNTRY");
-		message.setAttributeCode("LNK_SELECT_COUNTRY");
-		message.getData().setCode("QUE_SELECT_COUNTRY");
-		message.getData().setParentCode("QUE_COUNTRY_GRP");
-		message.getData().setTargetCode(intern.getCode());
-		message.getData().setValue("");
+		message = new QEventDropdownMessage("LNK_HOST_COMPANY");
+		message.setAttributeCode("LNK_HOST_COMPANY");
+		message.setQuestionCode("QUE_SELECT_HOST_COMPANY");
+		message.getData().setParentCode("GRP_HOST_COMPANY_SELECTION");
+		message.getData().setTargetCode("BEG_0B143C19-8395-4784-A7D5-B4295A7D2EC2");
+		message.getData().setValue("111");
 
-//		message = new QEventDropdownMessage("LNK_PERSON");
-//		message.setAttributeCode("LNK_PERSON");
-//		message.getData().setCode("QUE_SELECT_INTERN");
-//		message.getData().setParentCode("QUE_BUCKET_INTERNS_GRP");
-//		message.getData().setTargetCode("BKT_APPLICATIONS");
-//		message.getData().setValue("");
-
-//		message = new QEventDropdownMessage("LNK_EDU_PROVIDER");
-//		message.setAttributeCode("LNK_EDU_PROVIDER");
-//		message.setQuestionCode("QUE_EDU_PROVIDER");
-//		message.getData().setParentCode("GRP_EDU_PROVIDER_SELECTION");
-//		message.getData().setTargetCode("PER_086CDF1F-A98F-4E73-9825-0A4CFE2BB943");
-//		message.getData().setValue("Melb");
-
-
-
-//		message = new QEventDropdownMessage("LNK_CURRENT_SOFTWARE");
-//		message.setAttributeCode("LNK_CURRENT_SOFTWARE");
-//		message.setQuestionCode("QUE_CURRENT_SOFTWARE");
-//		message.getData().setParentCode("GRP_CURRENT_SOFTWARE_SELECTION");
-//		message.getData().setTargetCode("PER_086CDF1F-A98F-4E73-9825-0A4CFE2BB943");
-//		message.getData().setValue("Wor");
-
-		if ("LNK_SELECT_COUNTRY".equalsIgnoreCase(message.getAttributeCode())) {
+		if ("LNK_HOST_COMPANY".equalsIgnoreCase(message.getAttributeCode())) {
 			QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message,GennySettings.defaultDropDownPageSize);
 			System.out.println(msg);
 			msg.setToken(userToken.getToken());
@@ -176,7 +210,7 @@ public class RahulTest {
 
 
 
-		if ("LNK_PERSON".equalsIgnoreCase(message.getAttributeCode())) {
+		/*if ("LNK_PERSON".equalsIgnoreCase(message.getAttributeCode())) {
 			QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message,GennySettings.defaultDropDownPageSize);
 			System.out.println(msg);
 			msg.setToken(userToken.getToken());
@@ -200,7 +234,7 @@ public class RahulTest {
 			msg.setToken(userToken.getToken());
 
 			VertxUtils.writeMsg("webcmds", msg);
-		}
+		}*/
 
 		QDataBaseEntityMessage q = new QDataBaseEntityMessage();
 		int g = q.getItems().length + 1;
@@ -233,14 +267,14 @@ public class RahulTest {
 		List<BaseEntity> items = beUtils.getBaseEntitys(searchBE);
 
 
-		QEventDropdownMessage message = new QEventDropdownMessage("LNK_EDU_PROVIDER");
-		message.setAttributeCode("LNK_EDU_PROVIDER");
-		message.setQuestionCode("QUE_EDU_PROVIDER_SELECTION");
-		message.getData().setParentCode("GRP_EDU_PROVIDER_SELECTION");
-		message.getData().setTargetCode("PER_086CDF1F-A98F-4E73-9825-0A4CFE2BB943");
-		message.getData().setValue("Mel");
+		QEventDropdownMessage message = new QEventDropdownMessage("LNK_HOST_COMPANY");
+		message.setAttributeCode("LNK_HOST_COMPANY");
+		message.setQuestionCode("QUE_SELECT_HOST_COMPANY");
+		message.getData().setParentCode("GRP_HOST_COMPANY_SELECTION");
+		message.getData().setTargetCode("BEG_0B143C19-8395-4784-A7D5-B4295A7D2EC2");
+		message.getData().setValue("111");
 
-		if ("LNK_EDU_PROVIDER".equalsIgnoreCase(message.getAttributeCode())) {
+		if ("LNK_HOST_COMPANY".equalsIgnoreCase(message.getAttributeCode())) {
 
 			QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message);
 			System.out.println(msg);
