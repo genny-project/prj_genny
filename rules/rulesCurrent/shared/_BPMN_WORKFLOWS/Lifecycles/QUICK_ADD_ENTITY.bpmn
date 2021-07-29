@@ -342,6 +342,7 @@ if (key.equals(&quot;QA_EDU_PRO&quot;)) {
 	defCode = &quot;DEF_EDU_PROVIDER&quot;;
 }
 
+System.out.println(&quot;defCode = &quot; + defCode);
 
 /* CREATE BE FROM DEF */
 BaseEntity defBE = beUtils.getDEFByCode(defCode);
@@ -350,12 +351,12 @@ if (defBE == null) {
 
 } else {
 	if (entityCode != null) {
-		beUtils.create(defBE, entityCode, entityCode);
+		newBe = beUtils.create(defBE, entityCode, entityCode);
 	} else {
-		beUtils.create(defBE);
+		newBe = beUtils.create(defBE);
 	}
 
-	newBe = beUtils.getBaseEntityByCode(entityCode);
+	newBe = beUtils.getBaseEntityByCode(newBe.getCode());
 	kcontext.setVariable(&quot;newBe&quot;, newBe);
 
 	System.out.println(&quot;QUICK_ADD_ENTITY: newBe = &quot; + newBe);
