@@ -152,6 +152,8 @@ if (key.equals(&quot;EDU_PRO&quot;)) {
 	defCode = &quot;DEF_EDU_PROVIDER&quot;;
 }
 
+System.out.println(&quot;defCode = &quot; + defCode);
+
 /* CREATE BE FROM DEF */
 BaseEntity defBE = beUtils.getDEFByCode(defCode);
 if (defBE == null) {
@@ -159,20 +161,22 @@ if (defBE == null) {
 
 } else {
 	if (entityCode != null) {
-		beUtils.create(defBE, entityCode, entityCode);
+		newBe = beUtils.create(defBE, entityCode, entityCode);
 	} else {
-		beUtils.create(defBE);
+		newBe = beUtils.create(defBE);
 	}
 
-	newBe = beUtils.getBaseEntityByCode(entityCode);
+	newBe = beUtils.getBaseEntityByCode(newBe.getCode());
 	kcontext.setVariable(&quot;newBe&quot;, newBe);
 
 	System.out.println(&quot;ADD_ENTITY: newBe = &quot; + newBe);
 	System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);
 
+	/*
 	List&lt;Answer> answers = new ArrayList&lt;Answer>();
-	answers.add(new Answer(userToken.getUserCode(), entityCode, typeAttribute, &quot;true&quot;));
+	answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), typeAttribute, &quot;true&quot;));
 	beUtils.saveAnswers(answers);
+	*/
 }
 
 </bpmn2:script>
@@ -342,7 +346,7 @@ System.out.println(&quot;%%%%%%%%%%%%%%%%%%% newBe: &quot; + newBe);</drools:scr
 
 	serviceToken = (GennyToken)sessionFacts.getServiceToken();
 	userToken = (GennyToken)sessionFacts.getUserToken();
-	beUtils = new BaseEntityUtils(userToken);
+	beUtils = new BaseEntityUtils(serviceToken, userToken);
 
 	kcontext.setVariable(&quot;serviceToken&quot;, serviceToken);
 	kcontext.setVariable(&quot;userToken&quot;, userToken);
