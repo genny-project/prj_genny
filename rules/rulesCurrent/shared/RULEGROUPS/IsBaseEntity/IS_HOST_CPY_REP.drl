@@ -37,8 +37,8 @@ rule "IS_HOST_CPY_REP"
 
  		List<Answer> answers = new ArrayList<>();
  		
- 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_HOST_CPY_REP", "true"));
- 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));		
+ 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_HOST_CPY_REP", "true")); */
+ 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE")); */		
 		
 		
 		/* Refresh the BaseEntity because reasons... */

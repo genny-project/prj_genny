@@ -43,11 +43,11 @@ rule "IS_QA_INTERN"
  		
  		List<Answer> answers = new ArrayList<>();
 
- 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_INTERN", "true"));
- 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_DISABLED", "false"));
- 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS_COLOR", "#5cb85c"));
- 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_PROFILE", "Incomplete"));
- 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "PENDING"));
+ 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_INTERN", "true")); */
+ 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_DISABLED", "false")); */
+ 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS_COLOR", "#5cb85c")); */
+ 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_PROFILE", "Incomplete")); */
+ 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "PENDING")); */
 
  		/* Record who added them */
 		BaseEntity userBe = beUtils.getBaseEntityByCode(userToken.getUserCode());

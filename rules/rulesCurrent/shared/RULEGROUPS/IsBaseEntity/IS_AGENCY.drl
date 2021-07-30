@@ -32,8 +32,8 @@ rule "IS_AGENCY"
 
  		List<Answer> answers = new ArrayList<>();
  		
- 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_AGENCY", "true"));
- 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
+ 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_AGENCY", "true")); */
+ 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE")); */
 		
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
 		String name = user.getValue("PRI_NAME",null);
