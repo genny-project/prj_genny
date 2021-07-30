@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 rule "PRI_EMAIL"
     ruleflow-group 'DataProcessing'
         salience 5000 
+		no-loop true
     when
       	beUtils : BaseEntityUtils()
 	  	answer : Answer( attributeCode == "PRI_EMAIL" )
