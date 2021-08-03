@@ -80,6 +80,9 @@ rule "DROPDOWN_CLICK_EVENT"
 
 				Ask ask = askMsg.getItems()[0];
 				dropdownCode = ask.getAttributeCode();
+				if (dropdownCode != null) {
+					message.setAttributeCode(dropdownCode);
+				}
 			/* Determine whether there is a DEF attribute and target type that has a new DEF
 			   search for this combination
 			   */
