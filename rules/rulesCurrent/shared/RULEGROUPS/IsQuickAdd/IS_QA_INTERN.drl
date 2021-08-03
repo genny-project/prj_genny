@@ -125,7 +125,7 @@ rule "IS_QA_INTERN"
 		String lnkBatch = targetBe.getValue("LNK_SELECT_BATCH", null);
 		System.out.println("lnkBatch = " +lnkBatch);
 		if (lnkBatch != null) {
-				answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), " LNK_BATCH", lnkBatch));
+				answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_BATCH", lnkBatch));
 		
 				lnkBatch = lnkBatch.replace("\"", "").replace("[", "").replace("]", "");
 				System.out.println("lnkBatch = " +lnkBatch);
