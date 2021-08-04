@@ -40,10 +40,10 @@ rule "IS_HOST_CPY"
  		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
  		String OHSDocAvailable = null;
  		OHSDocAvailable  = newBe.getValue("PRI_OHS_DOC", null);
- 		System.out.println("OHSDocAvailable" + OHSDocAvailable);
+ 		System.out.println("OHSDocAvailable :: " + OHSDocAvailable);
+ 		
  		if(OHSDocAvailable != null)
  		{
- 			System.out.println("OHSDocAvailable" + OHSDocAvailable);
  			answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_VALIDATION", "OHS"));
  		}
  		
