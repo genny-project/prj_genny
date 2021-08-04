@@ -75,14 +75,14 @@ rule "HELPER_SIGNATURE_COMPLETE"
 			if (!internSignature.equals("https://bit.ly/3A2xdjI")) {
 				System.out.println("internSignature present");
 			}
-			if (!hcrSignature.equals("https://bit.ly/3A2xdjI") {
+			if (!hcrSignature.equals("https://bit.ly/3A2xdjI")) {
 				System.out.println("hcrSignature present");
 			}
-			if (!outcomeSignature.equals("https://bit.ly/3A2xdjI") {
+			if (!outcomeSignature.equals("https://bit.ly/3A2xdjI")) {
 				System.out.println("outcomeSignature present");
 			}
 
-			if (!internSignature.equals("https://bit.ly/3A2xdjI" && !hcrSignature.equals("https://bit.ly/3A2xdjI" && !outcomeSignature.equals("https://bit.ly/3A2xdjI") {
+			if (!internSignature.equals("https://bit.ly/3A2xdjI") && !hcrSignature.equals("https://bit.ly/3A2xdjI") && !outcomeSignature.equals("https://bit.ly/3A2xdjI")) {
 				System.out.println("All signatures present");
 
 				Answer answerSignatures = new Answer(serviceToken.getUserCode(), targetCode, "PRI_AGREEMENT_SIGNATURES", "Complete");
