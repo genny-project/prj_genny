@@ -32,9 +32,9 @@ rule "IS_ADMIN"
 
  		List<Answer> answers = new ArrayList<>();
 
- 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_ADMIN", "true"));
- 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "REGISTERED"));
- 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_STATUS_COLOR","#5cb85c"));
+ 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_ADMIN", "true")); */
+ 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "REGISTERED")); */
+ 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_STATUS_COLOR","#5cb85c")); */
 
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
 		String userCode = newBe.getCode().split("_")[1];

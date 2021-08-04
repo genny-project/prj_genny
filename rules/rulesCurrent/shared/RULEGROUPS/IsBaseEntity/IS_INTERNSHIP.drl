@@ -37,11 +37,11 @@ rule "IS_INTERNSHIP"
  		
  		/* Construct answer with Source, Target, Attribute Code, Value */
  		
- 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_INTERNSHIP", "true"));
-		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
-		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_FULL", "false"));
-		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_CURRENT_INTERNS", "0"));
-		beUtils.saveAnswers(answers);
+ 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_INTERNSHIP", "true")); */
+		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE")); */
+		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_FULL", "false")); */
+		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_CURRENT_INTERNS", "0")); */
+		/* beUtils.saveAnswers(answers); */
  				
 		/* Refresh the BaseEntity because reasons... */
  		newBe = beUtils.getBaseEntityByCode(newBe.getCode());

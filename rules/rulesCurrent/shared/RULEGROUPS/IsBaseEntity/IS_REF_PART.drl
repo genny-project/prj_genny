@@ -32,8 +32,8 @@ rule "IS_REF_PART"
 
  		List<Answer> answers = new ArrayList<>();
  		
- 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_REF_PART", "true"));
- 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
+ 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_REF_PART", "true")); */
+ 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE")); */
 		
 		
 		

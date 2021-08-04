@@ -35,8 +35,8 @@ rule "IS_LOGBOOK"
 
 		List<Answer> answers = new ArrayList<Answer>();
 
- 		answers.add(new Answer(userToken.getUserCode(), journalBe.getCode() ,"PRI_STATUS", "UNAPPROVED"));
- 		answers.add(new Answer(userToken.getUserCode(), journalBe.getCode() ,"PRI_SYNC", "true"));
+ 		/* answers.add(new Answer(userToken.getUserCode(), journalBe.getCode() ,"PRI_STATUS", "UNAPPROVED")); */
+ 		/* answers.add(new Answer(userToken.getUserCode(), journalBe.getCode() ,"PRI_SYNC", "true")); */
 		answers.add(new Answer(userToken.getUserCode(), journalBe.getCode() ,"LNK_INTERN", "[\"" + userToken.getUserCode() + "\"]"));
 
 		/* need to save the appCode to JNL */

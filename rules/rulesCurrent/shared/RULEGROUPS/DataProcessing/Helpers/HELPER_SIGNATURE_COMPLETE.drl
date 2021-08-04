@@ -34,9 +34,9 @@ rule "HELPER_SIGNATURE_COMPLETE"
 			salience 5000
 	when
 		beUtils : BaseEntityUtils()
-		answer : Answer( attributeCode == "PRI_AGR_DOC_INT_SIGNATURE" 
-						|| attributeCode == "PRI_AGR_DOC_HC_SIGNATURE" 
-						|| attributeCode == "PRI_AGR_DOC_OUTCOME_SIGNATURE" 
+		answer : Answer( attributeCode == "PRI_AGR_DOC_INT_SIGNATURE"
+						|| attributeCode == "PRI_AGR_DOC_HC_SIGNATURE"
+						|| attributeCode == "PRI_AGR_DOC_OUTCOME_SIGNATURE"
 						|| attributeCode == "PRI_HCS_AGR_SIGNATURE"
 						|| attributeCode == "PRI_OHS_SIGNATURE")
 		answersToSave : Answers()
@@ -47,15 +47,15 @@ rule "HELPER_SIGNATURE_COMPLETE"
 
 	then
 		System.out.println(drools.getRule().getName() + " fired");
-		
+
 		/* Save the actual AGREEMENT_SIGNATURE answer */
-		
+
 		ArrayList<Answer> answers = new ArrayList<>();
-		
-		String sourceCode = beUtils.getGennyToken().getUserCode();	
+
+		String sourceCode = beUtils.getGennyToken().getUserCode();
 		System.out.println("sourceCode :: " + sourceCode);
-		
-		String targetCode = answer.getTargetCode();					
+
+		String targetCode = answer.getTargetCode();
 		System.out.println("targetCode :: " + targetCode);
 
 		String value = answer.getValue();
@@ -65,24 +65,26 @@ rule "HELPER_SIGNATURE_COMPLETE"
 		System.out.println("targetBe = " + targetBe);
 
 		if (value != null && !value.equals("null")) {
-			
+
 			String internSignature = targetBe.getValue("PRI_AGR_DOC_INT_SIGNATURE", null);
 			String hcrSignature = targetBe.getValue("PRI_AGR_DOC_HC_SIGNATURE", null);
 			String outcomeSignature = targetBe.getValue("PRI_AGR_DOC_OUTCOME_SIGNATURE", null);
-			
-			if (internSignature != null) {
+
+			/*This is a temp white backgrounf URL I (Rahul) added becuase it was defualting to an image icon on the document*/
+
+			if (!internSignature.equals("https://bit.ly/3A2xdjI")) {
 				System.out.println("internSignature present");
 			}
-			if (hcrSignature != null) {
+			if (!hcrSignature.equals("https://bit.ly/3A2xdjI")) {
 				System.out.println("hcrSignature present");
 			}
-			if (outcomeSignature != null) {
+			if (!outcomeSignature.equals("https://bit.ly/3A2xdjI")) {
 				System.out.println("outcomeSignature present");
 			}
-			
-			if (internSignature != null && hcrSignature != null && outcomeSignature != null) {
+
+			if (!internSignature.equals("https://bit.ly/3A2xdjI") && !hcrSignature.equals("https://bit.ly/3A2xdjI") && !outcomeSignature.equals("https://bit.ly/3A2xdjI")) {
 				System.out.println("All signatures present");
-				
+
 				Answer answerSignatures = new Answer(serviceToken.getUserCode(), targetCode, "PRI_AGREEMENT_SIGNATURES", "Complete");
 				answers.add(answerSignatures);
 				System.out.println("Answer done" +answerSignatures);
@@ -94,9 +96,9 @@ rule "HELPER_SIGNATURE_COMPLETE"
 				System.out.println("Not all signatures complete!");
 			}
 		}
-	
+
 		beUtils.saveAnswers(answers);
 
 		/* retract(answer); */
-		
+
 end

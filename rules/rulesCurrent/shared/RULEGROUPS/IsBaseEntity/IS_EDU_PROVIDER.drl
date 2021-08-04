@@ -32,8 +32,8 @@ rule "IS_EDU_PROVIDER"
 
 		List<Answer> answers = new ArrayList<>();
 
- 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_EDU_PROVIDER", "true"));
- 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
+ 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_EDU_PROVIDER", "true")); */
+ 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE")); */
 
 		/* beUtils.createLink("GRP_EDU_PROVIDER_SELECTION", newBe.getCode(), "LNK_CORE", "OPTION", 1.0); */
 		
