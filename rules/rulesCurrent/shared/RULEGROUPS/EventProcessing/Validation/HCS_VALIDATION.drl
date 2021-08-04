@@ -19,7 +19,7 @@ rule "HCS_VALIDATION"
 	 	userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam()
-		baseEntityType : String(baseEntityType.equals("HCS"))
+		baseEntityType : String(baseEntityType.equals("HOST_CPY"))
 		hcBe : BaseEntity()
 
 	  
