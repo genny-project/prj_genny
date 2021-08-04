@@ -34,8 +34,18 @@ rule "IS_HOST_CPY"
  		
  	 	/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_HOST_CPY", "true")); */	
  		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE")); */
- 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_VALIDATION", "Incomplete")); */
+ 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_VALIDATION", "Ready"));*/
+ 		/* Check document OH&S and HCS document status*/
  		
+ 		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
+ 		String OHSDocAvailable = null;
+ 		OHSDocAvailable  = newBe.getValue("PRI_OHS_DOC", null);
+ 		System.out.println("OHSDocAvailable :: " + OHSDocAvailable);
+ 		
+ 		if(OHSDocAvailable != null)
+ 		{
+ 			answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_VALIDATION", "OHS"));
+ 		}
  		
 		
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());

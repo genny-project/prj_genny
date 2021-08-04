@@ -77,12 +77,9 @@ rule "HC_VALIDATION"
 						attrNameLst.addAll(Arrays.asList(attrName));					
 						
 						for (EntityAttribute ea : docBe.getBaseEntityAttributes()) {
-							System.out.println("1" + ea);
 							if (attrNameLst.contains(ea.getAttributeCode())) {
-								System.out.println("2");
 								String beCode = ea.getValueString();
 								if(beCode != null && beCode != ""){
-								System.out.println("3" + beCode);
 									beCode = beUtils.cleanUpAttributeValue(beCode);
 									BaseEntity linkedBe = beUtils.getBaseEntityByCode(beCode);
 									String name = linkedBe.getValue("PRI_NAME", null);
