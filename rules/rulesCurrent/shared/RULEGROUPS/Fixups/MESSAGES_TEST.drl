@@ -18,6 +18,8 @@ import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwanda.Ask;
 import life.genny.qwanda.message.QDataAskMessage;
+import life.genny.qwanda.message.QMessageGennyMSG;
+import life.genny.qwanda.message.QBaseMSGMessageType;
 import life.genny.utils.OutputParam;
 import java.util.List;
 import java.util.ArrayList;
