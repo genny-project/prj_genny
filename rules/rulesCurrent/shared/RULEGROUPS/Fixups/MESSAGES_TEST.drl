@@ -48,6 +48,7 @@ rule "MESSAGES_TEST"
 			QMessageGennyMSG msg = new QMessageGennyMSG(QBaseMSGMessageType.SLACK);
 			msg.setTemplateCode("MSG_TEST_SLACK");
 			msg.addContext("INTERN", intern);
+			msg.addRecipient("TOL_TEST_SLACK_HOOK");
 			msg.setToken(beUtils.getGennyToken().getToken());
 			
 			VertxUtils.writeMsg("messages", msg);
