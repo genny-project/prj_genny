@@ -17,7 +17,7 @@ rule "CLEAR_DEPENDANTS"
 	when
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
-		answer : Answer( attributeCode matches "LNK_.*" && value != "[]" )
+		answer : Answer( attributeCode matches "LNK_.*" && ( value == "[]" || value == "" ) )
 		answersToSave : Answers()
 		output : OutputParam()
 		beUtils : BaseEntityUtils()
@@ -58,8 +58,10 @@ rule "CLEAR_DEPENDANTS"
 		if (dependants != null) {
 			for (String dep : dependants) {
 				/* Clear Dependant Attributes */
-				answersToSave.add(new Answer(userToken.getUserCode(), targetCode, dep, ""));
+				Answer ans = new Answer(userToken.getUserCode(), targetCode, dep, "");
+				answersToSave.add(ans);
+				VertxUtils.sendToFrontEnd(userToken, ans);
 			}
-		}
 
+		}
 end
