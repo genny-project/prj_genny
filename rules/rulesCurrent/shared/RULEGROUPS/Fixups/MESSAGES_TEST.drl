@@ -38,9 +38,16 @@ rule "MESSAGES_TEST"
     then
 			System.out.println(drools.getRule().getName()+" Processings : " + message );
 
-			QMessageGennyMSG msg = new QMessageGennyMSG(QBaseMSGMessageType.SMS);
-			msg.addContext("BODY", "This is a test SMS");
-			msg.addRecipient("0468434324");
+			/* QMessageGennyMSG msg = new QMessageGennyMSG(QBaseMSGMessageType.SMS); */
+			/* msg.addContext("BODY", "This is a test SMS"); */
+			/* msg.addRecipient("0468434324"); */
+			/* msg.setToken(beUtils.getGennyToken().getToken()); */
+
+			BaseEntity intern = beUtils.getBaseEntityByCode("PER_6518983B-1B29-48F1-B2BD-B2D84354B614");
+
+			QMessageGennyMSG msg = new QMessageGennyMSG(QBaseMSGMessageType.SLACK);
+			msg.setTemplateCode("MSG_TEST_SLACK");
+			msg.addContext("INTERN", intern);
 			msg.setToken(beUtils.getGennyToken().getToken());
 			
 			VertxUtils.writeMsg("messages", msg);
