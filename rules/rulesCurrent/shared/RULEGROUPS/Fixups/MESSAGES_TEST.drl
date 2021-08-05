@@ -44,7 +44,7 @@ rule "MESSAGES_TEST"
 			msg.setToken(beUtils.getGennyToken().getToken());
 			
 			VertxUtils.writeMsg("messages", msg);
-			log.info("SENT!!!");
+			System.out.println("SENT!!!");
 
 			retract(message);
 			output.setTypeOfResult("NONE");
