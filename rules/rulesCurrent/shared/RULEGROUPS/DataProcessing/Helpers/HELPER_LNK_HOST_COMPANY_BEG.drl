@@ -29,7 +29,7 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 	no-loop
 	when
 		beUtils : BaseEntityUtils()
-		answer : Answer( attributeCode == "LNK_HOST_COMPANY" && targetCode matches "BEG_.*")
+		answer : Answer( attributeCode == "LNK_HOST_COMPANY" && targetCode matches "BEG_.*" && value != "[]" && value != "")
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		userToken : GennyToken( code != "PER_SERVICE")
 
