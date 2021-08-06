@@ -38,23 +38,21 @@ rule "IS_HOST_CPY"
  		/* Check document OH&S and HCS document status*/
  		
  		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
- 		String OHSDocAvailable = null;
- 		String TCDocAvailable = null;
- 		OHSDocAvailable  = newBe.getValue("PRI_OHS_DOC", null);
- 		TCDocAvailable  = newBe.getValue("PRI_TC_DOC", null);
- 		System.out.println("OHSDocAvailable :: " + OHSDocAvailable);
- 		System.out.println("TCDocAvailable :: " + TCDocAvailable);
- 		if(OHSDocAvailable != null && TCDocAvailable != null)
+ 		String OHSDocAvailable  = newBe.getValue("PRI_OHS_DOC", null);
+ 		String TCDocAvailable  = newBe.getValue("PRI_TC_DOC", null);
+ 		System.out.println("OHSDocAvailable :: " + OHSDocAvailable.isEmpty());
+ 		System.out.println("TCDocAvailable :: " + TCDocAvailable.isEmpty());
+ 		if(!(OHSDocAvailable.isEmpty()) && !(TCDocAvailable.isEmpty()))
  		{
  			System.out.println("1 :: ");
  			answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_VALIDATION", "Ready"));
  		}
- 		else if (OHSDocAvailable != null && TCDocAvailable == null)
+ 		else if (!(OHSDocAvailable.isEmpty() && (TCDocAvailable.isEmpty()))
  		{
  			System.out.println("2 :: ");
  			answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_VALIDATION", "OHS"));
  		}
- 		else if (OHSDocAvailable == null && TCDocAvailable != null)
+ 		else if ((OHSDocAvailable.isEmpty() && !(TCDocAvailable.isEmpty()))
  		{
  			System.out.println("3 :: ");
  			answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_VALIDATION", "HCS"));
