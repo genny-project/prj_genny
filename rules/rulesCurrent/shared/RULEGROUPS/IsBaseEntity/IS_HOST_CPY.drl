@@ -46,17 +46,21 @@ rule "IS_HOST_CPY"
  		System.out.println("TCDocAvailable :: " + TCDocAvailable);
  		if(OHSDocAvailable != null && TCDocAvailable != null)
  		{
+ 			System.out.println("1 :: ");
  			answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_VALIDATION", "Ready"));
  		}
  		else if (OHSDocAvailable != null && TCDocAvailable == null)
  		{
+ 			System.out.println("2 :: ");
  			answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_VALIDATION", "OHS"));
  		}
  		else if (OHSDocAvailable == null && TCDocAvailable != null)
  		{
+ 			System.out.println("3 :: ");
  			answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_VALIDATION", "HCS"));
  		}
 		else {
+			System.out.println("4 :: ");
 			answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_VALIDATION", "Incomplete"));
 		}
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
