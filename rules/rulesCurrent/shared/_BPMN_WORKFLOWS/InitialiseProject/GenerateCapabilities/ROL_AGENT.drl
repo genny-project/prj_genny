@@ -123,6 +123,15 @@ rule "ROL_AGENT"
 		 capabilityUtils.addCapabilityToRole(role,"TYPE_INTERNSHIP",CapabilityMode.ADD);
 		 capabilityUtils.addCapabilityToRole(role,"TYPE_APPLICATION",CapabilityMode.ADD);
 
+		 capabilityUtils.addCapabilityToRole(role,"EXTERNAL_AGENT", CapabilityMode.ADD);
+		 capabilityUtils.addCapabilityToRole(role,"EXTERNAL_HOST_CPY_REP", CapabilityMode.ADD);
+		 capabilityUtils.addCapabilityToRole(role,"EXTERNAL_EDU_PRO_REP", CapabilityMode.ADD);
+		 capabilityUtils.addCapabilityToRole(role,"EXTERNAL_INTERN", CapabilityMode.ADD);
+
+		 capabilityUtils.addCapabilityToRole(role,"EXTERNAL_AGENCY", CapabilityMode.ADD);
+		 capabilityUtils.addCapabilityToRole(role,"EXTERNAL_HOST_CPY", CapabilityMode.ADD);
+		 capabilityUtils.addCapabilityToRole(role,"EXTERNAL_EDU_PRO", CapabilityMode.ADD);
+
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
   	     
   	    beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_WEIGHT", 700.0,false,true));
