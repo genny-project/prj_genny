@@ -38,7 +38,7 @@ rule "IS_EDU_PRO_REP"
 		List<Answer> answers = new ArrayList<>();
     
 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_EDU_PRO_REP", "true")); */
- 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE")); */
+ 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE"));
 		
 		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
 		
