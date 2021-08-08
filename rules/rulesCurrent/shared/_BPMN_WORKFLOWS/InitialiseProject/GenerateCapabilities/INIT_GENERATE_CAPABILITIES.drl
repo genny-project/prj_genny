@@ -66,6 +66,20 @@ rule "INIT_GENERATE_CAPABILITIES"
 		capabilityUtils.addCapability( "TYPE_INTERNSHIP", "Internship");
 		capabilityUtils.addCapability( "TYPE_APPLICATION", "Application");
 
+		capabilityUtils.addCapability( "TYPE_JOURNAL", "Journal");
+
+
+		/* Handle Roles External to Current Group */
+		capabilityUtils.addCapability( "EXTERNAL_AGENT", "External Agent");
+		capabilityUtils.addCapability( "EXTERNAL_HOST_CPY_REP", "External Host Company Rep");
+		capabilityUtils.addCapability( "EXTERNAL_EDU_PRO_REP", "External Education Provider Rep");
+		capabilityUtils.addCapability( "EXTERNAL_INTERN", "External Education Provider Rep");
+
+		capabilityUtils.addCapability( "EXTERNAL_AGENCY", "External Host Company Rep");
+		capabilityUtils.addCapability( "EXTERNAL_HOST_CPY", "External Host Company Rep");
+		capabilityUtils.addCapability( "EXTERNAL_EDU_PRO", "External Education Provider");
+
+
 		/* BUCKETS SEARCHES */
 		capabilityUtils.addCapability("SBE_AVAILABLE_INTERNS","Available");
 		capabilityUtils.addCapability("SBE_APPLIED_APPLICATIONS","Applied");
