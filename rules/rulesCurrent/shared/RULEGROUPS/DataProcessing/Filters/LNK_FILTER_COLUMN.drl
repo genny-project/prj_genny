@@ -165,7 +165,8 @@ rule "LNK_FILTER_COLUMN"
 
 				/* Send filter option dropdown items */
 				QDataBaseEntityMessage filterOptionsMsg = new QDataBaseEntityMessage(filterOptionsArray);
-				filterOptionsMsg.setParentCode(optionGrp.getCode());
+				columnItems.setParentCode("QUE_ADD_FILTER_GRP");
+				columnItems.setQuestionCode("QUE_FILTER_OPTIONS");
 				filterOptionsMsg.setToken(beUtils.getGennyToken().getToken());
 				filterOptionsMsg.setReplace(true);
 				VertxUtils.writeMsg("webcmds", filterOptionsMsg);
