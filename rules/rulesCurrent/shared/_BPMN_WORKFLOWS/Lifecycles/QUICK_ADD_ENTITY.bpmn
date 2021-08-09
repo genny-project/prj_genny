@@ -71,6 +71,7 @@
       <drools:import name="life.genny.qwanda.entity.SearchEntity.Sort"/>
       <drools:import name="life.genny.qwanda.entity.SearchEntity.StringFilter"/>
       <drools:import name="life.genny.qwanda.entity.SearchEntity.Filter"/>
+      <drools:import name="life.genny.qwanda.EEntityStatus"/>
       <drools:import name="org.json.JSONArray"/>
       <drools:import name="life.genny.qwanda.message.QEventBtnClickMessage"/>
       <drools:import name="life.genny.utils.VertxUtils"/>
@@ -361,6 +362,12 @@ if (defBE == null) {
 
 	System.out.println(&quot;QUICK_ADD_ENTITY: newBe = &quot; + newBe);
 	System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);
+
+	if (newBe != null) {
+		/* Set Status to Pending */
+		newBe.setStatus(EEntityStatus.PENDING);
+        beUtils.saveBaseEntity(newBe);
+	}
 
 	/*
 	List&lt;Answer> answers = new ArrayList&lt;Answer>();

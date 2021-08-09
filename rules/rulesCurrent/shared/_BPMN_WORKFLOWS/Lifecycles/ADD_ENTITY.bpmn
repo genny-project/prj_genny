@@ -54,6 +54,7 @@
       <drools:import name="life.genny.qwandautils.KeycloakUtils"/>
       <drools:import name="life.genny.qwanda.message.QEventMessage"/>
       <drools:import name="life.genny.qwanda.message.MessageData"/>
+      <drools:import name="life.genny.qwanda.EEntityStatus"/>
       <drools:import name="life.genny.utils.VertxUtils"/>
       <drools:import name="life.genny.utils.VertxUtils.ESubscriptionType"/>
       <drools:import name="java.time.format.DateTimeFormatter"/>
@@ -172,6 +173,11 @@ if (defBE == null) {
 	System.out.println(&quot;ADD_ENTITY: newBe = &quot; + newBe);
 	System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);
 
+	if (newBe != null) {
+		/* Set Status to Pending */
+		newBe.setStatus(EEntityStatus.PENDING);
+		beUtils.saveBaseEntity(newBe);
+	}
 	/*
 	List&lt;Answer> answers = new ArrayList&lt;Answer>();
 	answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), typeAttribute, &quot;true&quot;));
