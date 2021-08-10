@@ -207,7 +207,9 @@ rule "CLICK_HC_VALIDATION"
 				beUtils.saveAnswer(new Answer(userToken.getUserCode(), HCBe.getCode(), "DOC_HCV_CODE", hcvCode));
 				
 				/* Save HC answers against newBe */
-				String legalName = beUtils.getValueSaveAnswer(userToken.getUserCode(), newBe.getCode(), HCBe.getCode(), "PRI_LEGAL_NAME", "PRI_LEGAL_NAME", "legalName");
+				
+				String legalName = HCBe.getValue("PRI_LEGAL_NAME", null);
+				beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_LEGAL_NAME", legalName));
 				String abn = beUtils.getValueSaveAnswer(userToken.getUserCode(), newBe.getCode(), HCBe.getCode(), "PRI_ABN", "PRI_ABN", "abn");
 				String addressFull = beUtils.getValueSaveAnswer(userToken.getUserCode(), newBe.getCode(), HCBe.getCode(), "PRI_ADDRESS_FULL", "PRI_ADDRESS_FULL", "addressFull");
 				String mobile = beUtils.getValueSaveAnswer(userToken.getUserCode(), newBe.getCode(), HCBe.getCode(), "PRI_MOBILE", "PRI_MOBILE", "mobile");
