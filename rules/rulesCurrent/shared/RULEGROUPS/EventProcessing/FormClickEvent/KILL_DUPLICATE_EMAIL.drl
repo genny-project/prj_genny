@@ -70,11 +70,11 @@ rule "KILL_DUPLICATE_EMAIL"
 		
 		/* Kill the target email*/
 		if (type == null) {
-			beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetCode, "PRI_EMAIL", "dummy@gada.io"));
+			beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetCode, "PRI_EMAIL", "NULL"));
 		} else {
 			beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetCode, type, false));
 			beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetCode, "PRI_IS_DELETED", true));
-			beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetCode, "PRI_EMAIL", "dummy@gada.io"));
+			beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetCode, "PRI_EMAIL", "NULL"));
 		}
 		System.out.println("Killed the target email :: " + targetCode);
 		
