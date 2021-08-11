@@ -47,11 +47,11 @@ rule "CLICK_HC_VALIDATION"
 		if(hcCode != null) { 
 		
 				
-				BaseEntity HCBe = beUtils.getBaseEntityByCode(hcCode);
-				System.out.println("HCBe = " + HCBe);
+				BaseEntity hcbe = beUtils.getBaseEntityByCode(hcCode);
+				System.out.println("hcbe = " + hcbe);
 				
 				/*
-				String validationStatus = HCBe.getValue("PRI_VALIDATION", null);
+				String validationStatus = hcbe.getValue("PRI_VALIDATION", null);
 				System.out.println("validationStatus = " + validationStatus);
 				if (validationStatus != null) {
 				
@@ -89,7 +89,7 @@ rule "CLICK_HC_VALIDATION"
 								System.out.println("PRI_VALIDATION set to: Validated"); 	
 								
 								
-								hcvCode = HCBe.getValue("DOC_HCV_CODE", null);
+								hcvCode = hcbe.getValue("DOC_HCV_CODE", null);
 								System.out.println("hcvCode = " + hcvCode);
 								
 								if (hcvCode == null) {
@@ -118,16 +118,16 @@ rule "CLICK_HC_VALIDATION"
 								}
 								
 								
-								beUtils.saveAnswer(new Answer(userToken.getUserCode(), HCBe.getCode(), "DOC_HCV_CODE", hcvCode));
+								beUtils.saveAnswer(new Answer(userToken.getUserCode(), hcbe.getCode(), "DOC_HCV_CODE", hcvCode));
 								
 								
-								String legalName = beUtils.getValueSaveAnswer(userToken.getUserCode(), newBe.getCode(), HCBe.getCode(), "PRI_LEGAL_NAME", "PRI_LEGAL_NAME", "legalName");
-								String abn = beUtils.getValueSaveAnswer(userToken.getUserCode(), newBe.getCode(), HCBe.getCode(), "PRI_ABN", "PRI_ABN", "abn");
-								String addressFull = beUtils.getValueSaveAnswer(userToken.getUserCode(), newBe.getCode(), HCBe.getCode(), "PRI_ADDRESS_FULL", "PRI_ADDRESS_FULL", "addressFull");
-								String mobile = beUtils.getValueSaveAnswer(userToken.getUserCode(), newBe.getCode(), HCBe.getCode(), "PRI_MOBILE", "PRI_MOBILE", "mobile");
-								String website = beUtils.getValueSaveAnswer(userToken.getUserCode(), newBe.getCode(), HCBe.getCode(), "PRI_COMPANY_WEBSITE_URL", "PRI_COMPANY_WEBSITE_URL", "website");
-								String numStaff = beUtils.getValueSaveAnswer(userToken.getUserCode(), newBe.getCode(), HCBe.getCode(), "LNK_NUMBER_STAFF", "LNK_NUMBER_STAFF", "numStaff");
-								String cpyINC = beUtils.getValueSaveAnswer(userToken.getUserCode(), newBe.getCode(), HCBe.getCode(), "LNK_COMPANY_INC", "LNK_COMPANY_INC", "cpyINC");
+								String legalName = beUtils.getValueSaveAnswer(userToken.getUserCode(), newBe.getCode(), hcbe.getCode(), "PRI_LEGAL_NAME", "PRI_LEGAL_NAME", "legalName");
+								String abn = beUtils.getValueSaveAnswer(userToken.getUserCode(), newBe.getCode(), hcbe.getCode(), "PRI_ABN", "PRI_ABN", "abn");
+								String addressFull = beUtils.getValueSaveAnswer(userToken.getUserCode(), newBe.getCode(), hcbe.getCode(), "PRI_ADDRESS_FULL", "PRI_ADDRESS_FULL", "addressFull");
+								String mobile = beUtils.getValueSaveAnswer(userToken.getUserCode(), newBe.getCode(), hcbe.getCode(), "PRI_MOBILE", "PRI_MOBILE", "mobile");
+								String website = beUtils.getValueSaveAnswer(userToken.getUserCode(), newBe.getCode(), hcbe.getCode(), "PRI_COMPANY_WEBSITE_URL", "PRI_COMPANY_WEBSITE_URL", "website");
+								String numStaff = beUtils.getValueSaveAnswer(userToken.getUserCode(), newBe.getCode(), hcbe.getCode(), "LNK_NUMBER_STAFF", "LNK_NUMBER_STAFF", "numStaff");
+								String cpyINC = beUtils.getValueSaveAnswer(userToken.getUserCode(), newBe.getCode(), hcbe.getCode(), "LNK_COMPANY_INC", "LNK_COMPANY_INC", "cpyINC");
 								
 								System.out.println("legalName: " + legalName);
 								System.out.println("abn: " + abn);
@@ -175,11 +175,11 @@ rule "CLICK_HC_VALIDATION"
 				System.out.println("PRI_VALIDATION set to: Validated"); 	
 									
 				/* Check whether DOC_OHS_CODE exists or not */
-				hcvCode = HCBe.getValue("DOC_HCV_CODE", null);
+				hcvCode = hcbe.getValue("LNK_HCV_DOC", null);
 				System.out.println("hcvCode = " + hcvCode);
 				
 				if (hcvCode == null) {
-						System.out.println("DOC_HCV_CODE does not exist yet. Creating now!");
+						System.out.println("LNK_HCV_DOC does not exist yet. Creating now!");
 						
 						String uuid = UUID.randomUUID().toString();
 						System.out.println("uuid: " +uuid);
@@ -196,7 +196,7 @@ rule "CLICK_HC_VALIDATION"
 
 						
 				} else {
-					System.out.println("DOC_HCV_CODE already exists: hcvCode = " + hcvCode);
+					System.out.println("LNK_HCV_DOC already exists: hcvCode = " + hcvCode);
 					
 					newBe = beUtils.getBaseEntityByCode(hcvCode);
 					System.out.println("newBe = " + newBe);
@@ -204,27 +204,8 @@ rule "CLICK_HC_VALIDATION"
 				}
 				
 				/* Save DOC_OHS_CODE against HC */
-				beUtils.saveAnswer(new Answer(userToken.getUserCode(), HCBe.getCode(), "DOC_HCV_CODE", hcvCode));
 				
-				/* Save HC answers against newBe */
-				
-				String legalName = HCBe.getValue("PRI_LEGAL_NAME", null);
-				System.out.println("legalName: " + legalName);
-				beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_LEGAL_NAME", legalName));
-				String abn = beUtils.getValueSaveAnswer(userToken.getUserCode(), newBe.getCode(), HCBe.getCode(), "PRI_ABN", "PRI_ABN", "abn");
-				String addressFull = beUtils.getValueSaveAnswer(userToken.getUserCode(), newBe.getCode(), HCBe.getCode(), "PRI_ADDRESS_FULL", "PRI_ADDRESS_FULL", "addressFull");
-				String mobile = beUtils.getValueSaveAnswer(userToken.getUserCode(), newBe.getCode(), HCBe.getCode(), "PRI_MOBILE", "PRI_MOBILE", "mobile");
-				String website = beUtils.getValueSaveAnswer(userToken.getUserCode(), newBe.getCode(), HCBe.getCode(), "PRI_COMPANY_WEBSITE_URL", "PRI_COMPANY_WEBSITE_URL", "website");
-				String numStaff = beUtils.getValueSaveAnswer(userToken.getUserCode(), newBe.getCode(), HCBe.getCode(), "LNK_NUMBER_STAFF", "LNK_NUMBER_STAFF", "numStaff");
-				String cpyINC = beUtils.getValueSaveAnswer(userToken.getUserCode(), newBe.getCode(), HCBe.getCode(), "LNK_COMPANY_INC", "LNK_COMPANY_INC", "cpyINC");
-				
-				System.out.println("abn: " + abn);
-				System.out.println("addressFull: " + addressFull);
-				System.out.println("mobile: " + mobile);
-				System.out.println("website: " + website);
-				System.out.println("numStaff: " + numStaff);
-				System.out.println("cpyINC: " + cpyINC);
-				
+				hcbe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), hcbe.getCode(), "LNK_HCV_DOC", hcvCode));
 				
 				/* Set Parameters */
  		
