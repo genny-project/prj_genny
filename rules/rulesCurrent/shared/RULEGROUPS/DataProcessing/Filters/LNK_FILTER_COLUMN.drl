@@ -158,7 +158,7 @@ rule "LNK_FILTER_COLUMN"
 					index += 1.0;
 				}
 				optionGrp.setLinks(childLinks);
-				filterOptionsArray.add(optionGrp);
+				/* filterOptionsArray.add(optionGrp); */
 
 				/* Cache changes to filter grp */
 				VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", filterGrpAsk.getQuestionCode(), filterGrpAsk, serviceToken.getToken());
