@@ -70,14 +70,9 @@ rule "HC_VALIDATION"
 							template = project.getValue("PRI_HC_VALIDATION_URL", template);
 		
 						}
-						String[] attrName = {"LNK_TYPE_ENVIRO","LNK_EXITS","LNK_ORGANISED","LNK_VENTILATED","LNK_DESK_AREA",
-												"LNK_AMENITIES","LNK_WALKWAYS","LNK_EVIDENCE","LNK_TERMS","LNK_SITE_INSPECTION"};
-												
-						ArrayList<String> attrNameLst = new ArrayList<String>();
-						attrNameLst.addAll(Arrays.asList(attrName));					
 						
 						for (EntityAttribute ea : docBe.getBaseEntityAttributes()) {
-							if (attrNameLst.contains(ea.getAttributeCode())) {
+							if (ea.getAttributeCode() == 'LNK_TYPE_ENVIRO') {
 								String beCode = ea.getValueString();
 								if(beCode != null && beCode != ""){
 									beCode = beUtils.cleanUpAttributeValue(beCode);
@@ -92,7 +87,7 @@ rule "HC_VALIDATION"
 						DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd MMM yyyy");
 						LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
 						String docValidationDate = dtf.format(now);
-						beUtils.saveAnswer(new Answer(userToken.getUserCode(),docBe.getCode(), "PRI_VALIDATION_DATE", docValidationDate));
+						beUtils.saveAnswer(new Answer(userToken.getUserCode(),docBe.getCode(), "PRI_SIGNATURE_DATE", docValidationDate));
 						HashMap<String, Object> contextMap = new HashMap<String, Object>();
 						contextMap.put("HCVDoc", docBe);
 						contextMap.put("HC", hcBe);
