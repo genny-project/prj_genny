@@ -54,6 +54,7 @@
       <drools:import name="life.genny.qwandautils.KeycloakUtils"/>
       <drools:import name="life.genny.qwanda.message.QEventMessage"/>
       <drools:import name="life.genny.qwanda.message.MessageData"/>
+      <drools:import name="life.genny.qwanda.EEntityStatus"/>
       <drools:import name="life.genny.utils.VertxUtils"/>
       <drools:import name="life.genny.utils.VertxUtils.ESubscriptionType"/>
       <drools:import name="java.time.format.DateTimeFormatter"/>
@@ -172,6 +173,11 @@ if (defBE == null) {
 	System.out.println(&quot;ADD_ENTITY: newBe = &quot; + newBe);
 	System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);
 
+	if (newBe != null) {
+		/* Set Status to Pending */
+		newBe.setStatus(EEntityStatus.PENDING);
+		beUtils.saveBaseEntity(newBe);
+	}
 	/*
 	List&lt;Answer> answers = new ArrayList&lt;Answer>();
 	answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), typeAttribute, &quot;true&quot;));
@@ -279,7 +285,13 @@ System.out.println(&quot;%%%%%%%%%%%%%%%%%%% key: &quot; + key);
 System.out.println(&quot;%%%%%%%%%%%%%%%%%%% newBe: &quot; + newBe);</drools:script>
           </drools:onEntry-script>
           <drools:onExit-script scriptFormat="http://www.java.com/java">
-            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% EXIT Create Entity IS BASE ENTITY %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
+            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% EXIT Create Entity IS BASE ENTITY %%%%%%%%%%%%%%%%%%%&quot;);
+
+if (newBe != null) {
+	/* Set Status to Pending */
+	newBe.setStatus(EEntityStatus.ACTIVE);
+	beUtils.saveBaseEntity(newBe);
+}</drools:script>
           </drools:onExit-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_12</bpmn2:incoming>
@@ -688,7 +700,7 @@ System.out.println(&quot;beExists = &quot; + beExists);</bpmn2:script>
         <di:waypoint xsi:type="dc:Point" x="603.0" y="299.0"/>
         <di:waypoint xsi:type="dc:Point" x="626.0" y="299.0"/>
         <di:waypoint xsi:type="dc:Point" x="650.0" y="300.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_21"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
