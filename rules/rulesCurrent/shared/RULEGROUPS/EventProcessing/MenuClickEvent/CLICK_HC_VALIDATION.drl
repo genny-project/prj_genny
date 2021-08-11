@@ -205,7 +205,7 @@ rule "CLICK_HC_VALIDATION"
 				
 				/* Save DOC_OHS_CODE against HC */
 				
-				hcbe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), hcbe.getCode(), "LNK_HCV_DOC", hcvCode));
+				hcbe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), hcbe.getCode(), "ATT_LNK_HCV_DOC", hcvCode));
 				
 				/* Set Parameters */
  		
