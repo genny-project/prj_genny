@@ -51,6 +51,7 @@ rule "HELPER_LNK_INDUSTRY"
 		if(be != null){
 			String name = be.getValue("PRI_NAME", null);		
 			if(name != null){
+				System.out.println("name: " + name);
 				Answer assocIndustryAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_INDUSTRY", name);
 				beUtils.saveAnswer(assocIndustryAnswer);
 				VertxUtils.sendToFrontEnd(userToken, assocIndustryAnswer);
