@@ -48,6 +48,7 @@ rule "HELPER_LNK_INDUSTRY"
 		System.out.println("code  :: " + code);
 
 		BaseEntity be = beUtils.getBaseEntityByCode(code);
+		System.out.println("be " + be);
 		if(be != null){
 			String name = be.getValue("PRI_NAME", null);		
 			if(name != null){
