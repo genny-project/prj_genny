@@ -40,6 +40,13 @@ rule "OHS_VALIDATION"
 		
 		String validationStatus = HCBe.getValue("PRI_VALIDATION", "Incomplete");
 		
+		String ohsDocCode = HCBe.getValue("DOC_OHS_CODE", null);
+		System.out.println("OHS_VALIDATION: HCBe = " + ohsDocCode); 
+		BaseEntity ohsDocBe = beUtils.getBaseEntityByCode(ohsDocCode);	
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd MMM yyyy");
+		LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+		String docValidationDate = dtf.format(now);
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(),docBe.getCode(), "PRI_OHS_SIGNING_DATE", docValidationDate));
 		if (validationStatus.equals("Incomplete")) {
 				beUtils.saveAnswer(new Answer(userToken.getUserCode(), HCBe.getCode() ,"PRI_VALIDATION", "OHS"));
 				OHS = true;
