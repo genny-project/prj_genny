@@ -48,7 +48,7 @@ rule "HELPER_LNK_INDUSTRY"
 		System.out.println("code  :: " + code);
 
 		BaseEntity be = beUtils.getBaseEntityByCode(code);
-		System.out.println("be " + be);
+		System.out.println("be: " + be);
 		if(be != null){
 			String name = be.getValue("PRI_NAME", null);		
 			if(name != null){
@@ -63,6 +63,7 @@ rule "HELPER_LNK_INDUSTRY"
 		BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
 		if(targetBe != null){
 			String occupation = targetBe.getValue("LNK_OCCUPATION", null);
+			System.out.println("occupation: " + occupation);
 			if(occupation != null){
 				Answer occupationAnswer = new Answer(sourceCode, targetCode, "LNK_OCCUPATION", "", false, true);
 				Answer assocOccupationAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_OCCUPATION", "", false, true);
