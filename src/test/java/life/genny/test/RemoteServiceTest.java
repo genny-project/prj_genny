@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import life.genny.bootxport.bootx.DEFBaseentityAttribute;
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
@@ -201,29 +202,32 @@ public class RemoteServiceTest {
 //        Set up the defs
         setUpDefs();
 
-        BaseEntity previousItem = beUtils.getBaseEntityByCode("APT_289F4E9B-264E-4E25-B43C-118BE6B0");
+        BaseEntity remoteServiceBE = beUtils.getBaseEntityByCode("RMS_JNL_PROCESS_001");
 
-        if (previousItem!=null){
-            System.out.println(previousItem);
+        if (remoteServiceBE!=null){
+            System.out.println(remoteServiceBE);
+            for(EntityAttribute ea : remoteServiceBE.getBaseEntityAttributes()){
+                System.out.println(ea);
+            }
         }
 
         // Use this bit to test creation of BEs by using their DEF_ names
         // For example im creating an Appointment BE
-        BaseEntity remoteJobBE = create("DEF_INTERN");
+        BaseEntity remoteJobDef = beUtils.getDEFByCode("DEF_REMOTE_JOB");
+        BaseEntity remoteJobBE = beUtils.create(remoteJobDef);
         System.out.println(remoteJobBE);
         remoteJobBE.setStatus(EEntityStatus.PENDING);
         for(EntityAttribute ea : remoteJobBE.getBaseEntityAttributes()){
             System.out.println(ea);
         }
 
+        BaseEntity remoteServiceDef = beUtils.getDEFByCode("DEF_REMOTE_SERVICE");
+        BaseEntity remoteServiceBEFromDef = beUtils.create(remoteServiceDef);
+        for(EntityAttribute ea : remoteServiceBEFromDef.getBaseEntityAttributes()){
+            System.out.println(ea);
+        }
 
-//        List<BaseEntity> searchItems = beUtils.getBaseEntitys(searchBE);
-//        System.out.println(searchItems);
 
-//        String remoteServiceID = "Python-Job-1";
-//        String remoteServiceUUID = RemoteServiceUtils.InvokeRemoteService(remoteServiceID, searchItems);
-//
-//        System.out.println(remoteServiceUUID);
 
     }
 
