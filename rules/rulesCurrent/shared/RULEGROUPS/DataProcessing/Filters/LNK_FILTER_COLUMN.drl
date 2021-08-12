@@ -158,7 +158,7 @@ rule "LNK_FILTER_COLUMN"
 					index += 1.0;
 				}
 				optionGrp.setLinks(childLinks);
-				filterOptionsArray.add(optionGrp);
+				/* filterOptionsArray.add(optionGrp); */
 
 				/* Cache changes to filter grp */
 				VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", filterGrpAsk.getQuestionCode(), filterGrpAsk, serviceToken.getToken());
@@ -166,7 +166,7 @@ rule "LNK_FILTER_COLUMN"
 				/* Send filter option dropdown items */
 				QDataBaseEntityMessage filterOptionsMsg = new QDataBaseEntityMessage(filterOptionsArray);
 				filterOptionsMsg.setParentCode("QUE_ADD_FILTER_GRP");
-				filterOptionsMsg.setQuestionCode("QUE_FILTER_OPTIONS");
+				filterOptionsMsg.setQuestionCode("QUE_FILTER_OPTION");
 				filterOptionsMsg.setLinkCode("LNK_CORE");
 				filterOptionsMsg.setLinkValue("LNK_ITEMS");
 				filterOptionsMsg.setToken(beUtils.getGennyToken().getToken());

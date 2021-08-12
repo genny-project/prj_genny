@@ -72,17 +72,17 @@ rule "HELPER_SIGNATURE_COMPLETE"
 
 			/*This is a temp white backgrounf URL I (Rahul) added becuase it was defualting to an image icon on the document*/
 
-			if (!internSignature.equals("https://bit.ly/3A2xdjI")) {
+			if (internSignature != null) {
 				System.out.println("internSignature present");
 			}
-			if (!hcrSignature.equals("https://bit.ly/3A2xdjI")) {
+			if (hcrSignature != null) {
 				System.out.println("hcrSignature present");
 			}
-			if (!outcomeSignature.equals("https://bit.ly/3A2xdjI")) {
+			if (outcomeSignature != null) {
 				System.out.println("outcomeSignature present");
 			}
 
-			if (!internSignature.equals("https://bit.ly/3A2xdjI") && !hcrSignature.equals("https://bit.ly/3A2xdjI") && !outcomeSignature.equals("https://bit.ly/3A2xdjI")) {
+			if (internSignature != null && hcrSignature != null && outcomeSignature != null) {
 				System.out.println("All signatures present");
 
 				Answer answerSignatures = new Answer(serviceToken.getUserCode(), targetCode, "PRI_AGREEMENT_SIGNATURES", "Complete");
