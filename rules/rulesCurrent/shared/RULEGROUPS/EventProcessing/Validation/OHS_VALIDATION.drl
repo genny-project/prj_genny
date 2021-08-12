@@ -46,7 +46,7 @@ rule "OHS_VALIDATION"
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd MMM yyyy");
 		LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
 		String docValidationDate = dtf.format(now);
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(),docBe.getCode(), "PRI_OHS_SIGNING_DATE", docValidationDate));
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(),ohsDocCode, "PRI_OHS_SIGNING_DATE", docValidationDate));
 		if (validationStatus.equals("Incomplete")) {
 				beUtils.saveAnswer(new Answer(userToken.getUserCode(), HCBe.getCode() ,"PRI_VALIDATION", "OHS"));
 				OHS = true;
