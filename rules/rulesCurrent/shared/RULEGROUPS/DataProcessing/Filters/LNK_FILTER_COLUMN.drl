@@ -189,14 +189,14 @@ rule "LNK_FILTER_COLUMN"
 					QEventDropdownMessage ddMsg = new QEventDropdownMessage(questionCode);
 					ddMsg.setQuestionCode(questionCode);
 					ddMsg.setAttributeCode(dropdownCode);
-					ddMsg.setParentCode("QUE_ADD_FILTER_GRP");
+					ddMsg.getData().setParentCode("QUE_ADD_FILTER_GRP");
 					ddMsg.setTargetCode(targetCode);
 					ddMsg.setSourceCode(userToken.getUserCode());
-					ddMsg.setValue("");
+					ddMsg.getData().setValue("");
 
-					QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message,dropdownSize);
+					QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,ddMsg,200);
 
-					System.out.println(ruleDetails+" "+drools.getRule().getName()+" "+msg);
+					System.out.println(drools.getRule().getName()+" "+msg);
 					msg.setToken(userToken.getToken());
 					VertxUtils.writeMsg("webcmds",msg);
 
