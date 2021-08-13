@@ -103,6 +103,8 @@ rule "HC_VALIDATION"
 						HashMap<String, Object> contextMap = new HashMap<String, Object>();
 						contextMap.put("HCVDoc", docBe);
 						contextMap.put("HC", hcBe);
+						
+						System.out.println(" template " + templatePdf);
 						String pdfUrl = PDFHelper.getDownloadablePdfLinkForHtml(templatePdf, contextMap);
 						System.out.println("PDF url :: " + pdfUrl);
 						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hcBe.getCode() ,"PRI_HC_VALIDATION_DOC_URL", pdfUrl));
