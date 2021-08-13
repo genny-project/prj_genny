@@ -63,6 +63,7 @@ rule "LNK_FILTER_COLUMN"
 
 		/* Define dropdown items selector */
 		String dropdownCode = null;
+		String questionCode = null;
 		String unhidden = null;
 
 		/* Get associated Attribute */
@@ -95,11 +96,13 @@ rule "LNK_FILTER_COLUMN"
 					filterOptionsArray = Arrays.asList(equalSelection);
 					unhidden = "QUE_FILTER_VALUE_COUNTRY";
 					dropdownCode = "LNK_SELECT_COUNTRY";
+					questionCode = "QUE_FILTER_VALUE_COUNTRY";
 
 				} else if (attr.getCode().equals("PRI_ADDRESS_STATE")) {
 					filterOptionsArray = Arrays.asList(equalSelection);
 					unhidden = "QUE_FILTER_VALUE_STATE";
 					dropdownCode = "LNK_SELECT_STATE";
+					questionCode = "QUE_FILTER_VALUE_STATE";
 				
 				} else if (dtt.equals("java.lang.String") || dtt.equals("String") || dtt.equalsIgnoreCase("Text")) {
 					filterOptionsArray = Arrays.asList(stringSelection);
@@ -181,8 +184,23 @@ rule "LNK_FILTER_COLUMN"
 				VertxUtils.writeMsg("webcmds", askMsg);
 				System.out.println("Asks sent to FE");
 
-				if (dropdownCode != null) {
-					ShowFrame.sendSelectionItems(dropdownCode, userToken, serviceToken, false, targetCode);												
+				if (dropdownCode != null && questionCode != null) {
+
+					QEventDropdownMessage ddMsg = new QEventDropdownMessage(questionCode);
+					ddMsg.setQuestionCode(questionCode);
+					ddMsg.setAttributeCode(dropdownCode);
+					ddMsg.setParentCode("QUE_ADD_FILTER_GRP");
+					ddMsg.setTargetCode(targetCode);
+					ddMsg.setSourceCode(userToken.getUserCode());
+					ddMsg.setValue("");
+
+					QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message,dropdownSize);
+
+					System.out.println(ruleDetails+" "+drools.getRule().getName()+" "+msg);
+					msg.setToken(userToken.getToken());
+					VertxUtils.writeMsg("webcmds",msg);
+
+					System.out.println("Dropdown items sent to FE");
 				}
 
 			} else {
