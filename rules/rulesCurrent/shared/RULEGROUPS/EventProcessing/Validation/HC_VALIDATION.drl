@@ -70,10 +70,10 @@ rule "HC_VALIDATION"
 							templatePdf = project.getValue("PRI_HC_VALIDATION_URL", templatePdf);
 		
 						}
-					/*	String[] attrName = {"LNK_TYPE_ENVIRO","LNK_EXITS","LNK_ORGANISED","LNK_VENTILATED","LNK_DESK_AREA",
-												"LNK_AMENITIES","LNK_WALKWAYS","LNK_EVIDENCE","LNK_TERMS","LNK_SITE_INSPECTION"}; */
+						String[] attrName = {"LNK_TYPE_ENVIRO","LNK_EXITS","LNK_ORGANISED","LNK_VENTILATED","LNK_DESK_AREA",
+												"LNK_AMENITIES","LNK_WALKWAYS","LNK_EVIDENCE","LNK_TERMS","LNK_SITE_INSPECTION"}; 
 												
-					/*	ArrayList<String> attrNameLst = new ArrayList<String>();
+						ArrayList<String> attrNameLst = new ArrayList<String>();
 						attrNameLst.addAll(Arrays.asList(attrName));					
 						
 						for (EntityAttribute ea : docBe.getBaseEntityAttributes()) {
@@ -88,7 +88,7 @@ rule "HC_VALIDATION"
 									}
 								}
 							}
-						} */
+						} 
 						System.out.println(" HC Name = " + hcBe.getValue("PRI_LEGAL_NAME",null));
 						System.out.println(" HC ABN = " + hcBe.getValue("PRI_ABN",null));
 						System.out.println(" HC Website = " + hcBe.getValue("PRI_COMPANY_WEBSITE_URL",null));
