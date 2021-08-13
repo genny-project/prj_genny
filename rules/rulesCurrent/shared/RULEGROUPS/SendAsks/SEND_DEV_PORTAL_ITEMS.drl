@@ -16,7 +16,7 @@ import org.drools.core.spi.KnowledgeHelper;
 import life.genny.qwanda.datatype.Allowed;
 
 
-rule "SEND_DEV_PORTAL"
+rule "SEND_DEV_PORTAL_ITEMS"
 	ruleflow-group 'SendAsks'
 	salience 8
 	no-loop true
@@ -32,6 +32,13 @@ rule "SEND_DEV_PORTAL"
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 		CapabilityUtils capabilityUtils = new CapabilityUtils(beUtils);
 
+		long totalTime = TableUtils.searchTable(beUtils, "SBE_SAMS", true);
+		System.out.println("total took " + (totalTime) + " ms"); 
+
+		long totalTime = TableUtils.searchTable(beUtils, "SBE_DEFS", true);
+		System.out.println("total took " + (totalTime) + " ms"); 
+
+		/*
 		System.out.println("userCode   ::   " + userToken.getUserCode());
 
 		String sourceCode = "PER_SERVICE";
@@ -40,7 +47,6 @@ rule "SEND_DEV_PORTAL"
 		Attribute questionAttribute = new Attribute("QQQ_QUESTION_GROUP", "link", new DataType(String.class));
 		Attribute eventAttribute = new Attribute("PRI_EVENT", "link", new DataType(String.class));
 
-		/* ADD ITEMS group */
 		Question devPortalGrpQues = new Question("QUE_DEV_PORTAL_ACCESS_GRP", "Dev Portal", questionAttribute, true);
 		Ask devPortalGrpAsk = new Ask(devPortalGrpQues, sourceCode, targetCode);
 
@@ -58,5 +64,6 @@ rule "SEND_DEV_PORTAL"
 		QDataAskMessage askMsg = new QDataAskMessage(devPortalGrpAsk);
 		askMsg.setToken(userToken.getToken());
 		VertxUtils.writeMsg("webcmds", askMsg);
+		*/
 
 end
