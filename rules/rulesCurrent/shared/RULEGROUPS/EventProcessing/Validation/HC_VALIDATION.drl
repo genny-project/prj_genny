@@ -67,7 +67,7 @@ rule "HC_VALIDATION"
 						if(project != null){
 							
 							/* get the template url from project if possible */
-							template = project.getValue("PRI_HC_VALIDATION_URL", templatePdf);
+							templatePdf = project.getValue("PRI_HC_VALIDATION_URL", templatePdf);
 		
 						}
 					/*	String[] attrName = {"LNK_TYPE_ENVIRO","LNK_EXITS","LNK_ORGANISED","LNK_VENTILATED","LNK_DESK_AREA",
