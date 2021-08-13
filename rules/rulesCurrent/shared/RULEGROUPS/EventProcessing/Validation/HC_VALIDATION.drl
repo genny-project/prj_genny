@@ -108,13 +108,14 @@ rule "HC_VALIDATION"
 						String pdfUrl = PDFHelper.getDownloadablePdfLinkForHtml(templatePdf, contextMap);
 						System.out.println("PDF url :: " + pdfUrl);
 						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hcBe.getCode() ,"PRI_HC_VALIDATION_DOC_URL", pdfUrl));
+						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hcBe.getCode() ,"PRI_VALIDATION", "Validated"));
 					}else{
 						System.out.println("docCode is not present in companyBe");
  					}
 		
 		/* Check Validation Status of HC */
 		
-		String validationStatus = hcBe.getValue("PRI_VALIDATION", null);
+		/*String validationStatus = hcBe.getValue("PRI_VALIDATION", null);
 		if (validationStatus != null) {
 		
 				if (validationStatus.equals("Incomplete") || validationStatus.equals("HCS") || validationStatus.equals("OHS")) {
@@ -128,6 +129,6 @@ rule "HC_VALIDATION"
 		} else {
 			System.out.println("ERROR: Null validationStatus");
 		}
-		
+		*/
 	
 end
