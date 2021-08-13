@@ -21,15 +21,14 @@ rule "IS_HOST_CPY"
 		output : OutputParam()
 		baseEntityType : String(baseEntityType.equals("HOST_CPY"))
 		newBe : BaseEntity()
-
+		beUtils : BaseEntityUtils()
 	  
      then
  		System.out.println("IS_HOST_CPY: Rule fired" );
  		System.out.println("IS_HOST_CPY: newBe = " + newBe.getCode()); 
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
- 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
-
+ 
  		List<Answer> answers = new ArrayList<>();
  		
  	 	/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_HOST_CPY", "true")); */	
@@ -45,24 +44,23 @@ rule "IS_HOST_CPY"
  		if(!(OHSDocAvailable.isEmpty()) && !(TCDocAvailable.isEmpty()))
  		{
  			System.out.println("1 :: ");
- 			answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_VALIDATION", "Ready"));
+ 			newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_VALIDATION", "Ready"));
  		}
  		else if (!(OHSDocAvailable.isEmpty()) && (TCDocAvailable.isEmpty()))
  		{
  			System.out.println("2 :: ");
- 			answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_VALIDATION", "OHS"));
+ 			newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_VALIDATION", "OHS"));
  		}
  		else if ((OHSDocAvailable.isEmpty()) && !(TCDocAvailable.isEmpty()))
  		{
  			System.out.println("3 :: ");
- 			answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_VALIDATION", "HCS"));
+ 			newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_VALIDATION", "HCS"));
  		}
 		else {
 			System.out.println("4 :: ");
-			answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_VALIDATION", "Incomplete"));
+			newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_VALIDATION", "Incomplete"));
 		}
-		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
-		String name = user.getValue("PRI_NAME",null);
+		String name = newBe.getValue("PRI_NAME",null);
 	
 	
 	
@@ -83,15 +81,14 @@ rule "IS_HOST_CPY"
 /* 		long totalTime = TableUtils.searchTable(beUtils,"HOST_CPY", true, "PRI_CODE", newBe.getCode());
 		System.out.println("total took " + (totalTime) + " ms");  */
 
-		BaseEntity cpyBe = beUtils.getBaseEntityByCode(newBe.getCode());
 		
-		if(cpyBe != null){
+		if(newBe != null){
 			
-			QDataBaseEntityMessage cpyBeMsg = new QDataBaseEntityMessage(cpyBe);
+			QDataBaseEntityMessage cpyBeMsg = new QDataBaseEntityMessage(newBe);
 			cpyBeMsg.setToken(userToken.getToken());
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(cpyBeMsg));
 
-			String hcName = cpyBe.getValue("PRI_NAME", null);
+			String hcName = newBe.getValue("PRI_NAME", null);
 
 			if (hcName != null) {
 
@@ -107,7 +104,7 @@ rule "IS_HOST_CPY"
 
 				for (BaseEntity hcr : linkedHCRs) {
 					System.out.println("Saving PRI_ASSOC_HC = " + hcName + " for be with code " + hcr.getCode());
-					answers.add(new Answer(userToken.getUserCode(), hcr.getCode(), "PRI_ASSOC_HC", hcName));
+					beUtils.saveAnswer(new Answer(userToken.getUserCode(), hcr.getCode(), "PRI_ASSOC_HC", hcName));
 				}
 
 			} else{
@@ -121,8 +118,6 @@ rule "IS_HOST_CPY"
 	
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
-
-		beUtils.saveAnswers(answers);
 		
 		retract(newBe)
 	
