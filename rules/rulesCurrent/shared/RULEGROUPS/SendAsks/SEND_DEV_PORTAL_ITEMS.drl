@@ -35,7 +35,7 @@ rule "SEND_DEV_PORTAL_ITEMS"
 		long totalTime = TableUtils.searchTable(beUtils, "SBE_SAMS", true);
 		System.out.println("total took " + (totalTime) + " ms"); 
 
-		long totalTime = TableUtils.searchTable(beUtils, "SBE_DEFS", true);
+		totalTime = TableUtils.searchTable(beUtils, "SBE_DEFS", true);
 		System.out.println("total took " + (totalTime) + " ms"); 
 
 		/*
