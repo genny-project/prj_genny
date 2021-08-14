@@ -38,8 +38,8 @@ rule "CREATE_SAM_TEST"
     then
 		System.out.println(drools.getRule().getName()+" Processings : " + message );
 
-		BaseEntity defBe = beUtils.getDefByCode("DEF_STANDARD_ASSOCIATED_MAPPING");
-		newBe = beUtils.create(defBE, "Sam Mapping Test 2", "SAM_TEST_2");
+		BaseEntity defBe = beUtils.getDEFByCode("DEF_STANDARD_ASSOCIATED_MAPPING");
+		beUtils.create(defBe, "Sam Mapping Test 2", "SAM_TEST_2");
 
 		retract(message);
 		output.setTypeOfResult("NONE");
