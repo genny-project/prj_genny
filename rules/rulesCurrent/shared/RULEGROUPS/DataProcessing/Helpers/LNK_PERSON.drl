@@ -34,11 +34,12 @@ rule "LNK_PERSON"
 
 		BaseEntity availableIntern = beUtils.getBaseEntityByCode(cleanCode);
 
-		Boolean disabled = availableIntern.getValue("PRI_DISABLED", false);
+		Boolean disabled = availableIntern.getValue("PRI_DISABLED", false) ;
+		String personStatus = availableIntern.getValue("PRI_STATUS", "");
 
 		QDataBaseEntityMessage msg = new QDataBaseEntityMessage();
 		Long total = Long.valueOf(0);
-		if (!disabled) {
+		if ((!disabled)&&(!personStatus.equals("PROGRESS"))&&(!personStatus.equals("PLACED"))) {
 			msg = new QDataBaseEntityMessage(availableIntern);
 			total = Long.valueOf(1);
 		}
