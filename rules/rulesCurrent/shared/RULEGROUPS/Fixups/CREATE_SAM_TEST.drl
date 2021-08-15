@@ -1,0 +1,47 @@
+package life.genny.rules;
+
+import org.apache.commons.lang3.StringUtils;
+import life.genny.qwanda.message.QDataAnswerMessage;
+import life.genny.models.GennyToken;
+import life.genny.rules.QRules;
+import life.genny.utils.BaseEntityUtils;
+import life.genny.qwanda.Answer;
+import io.vertx.core.json.JsonObject;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
+import life.genny.qwandautils.JsonUtils;
+import life.genny.utils.VertxUtils;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.entity.SearchEntity;
+import life.genny.qwanda.Ask;
+import life.genny.qwanda.message.QDataAskMessage;
+import life.genny.qwanda.message.QMessageGennyMSG;
+import life.genny.qwanda.message.QBaseMSGMessageType;
+import life.genny.utils.OutputParam;
+import java.util.List;
+import java.util.ArrayList;
+
+rule "CREATE_SAM_TEST"
+    ruleflow-group 'EventProcessing'
+	salience 2
+    no-loop
+    when
+		message : QEventMessage(data.code == "CREATE_SAM_TEST" && data.parentCode == "CREATE_SAM_TEST_GRP" )
+		userToken : GennyToken (code != "PER_SERVICE" )
+		serviceToken : GennyToken( code == "PER_SERVICE")
+		output : OutputParam( )
+		ruleDetails : RuleDetails()
+		beUtils : BaseEntityUtils()
+    then
+		System.out.println(drools.getRule().getName()+" Processings : " + message );
+
+		BaseEntity defBe = beUtils.getDEFByCode("DEF_STANDARD_ASSOCIATED_MAPPING");
+		beUtils.create(defBe, "Sam Mapping Test 2", "SAM_TEST_2");
+
+		retract(message);
+		output.setTypeOfResult("NONE");
+		output.setResultCode("NONE");  /* dont display anything new */
+	end
