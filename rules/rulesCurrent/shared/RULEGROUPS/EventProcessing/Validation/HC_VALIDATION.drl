@@ -42,7 +42,7 @@ rule "HC_VALIDATION"
  		/* send Loading TOAST msg */
  		
 					QCmdMessage toastMsg = new QCmdMessage("TOAST", "INFO");
-					toastMsg.setMessage("Please wait while we prepare your Document!");
+					toastMsg.setMessage("Host Company validation document ready to download!");
 					toastMsg.setToken(beUtils.getGennyToken().getToken());
 					toastMsg.setSend(true);
 					VertxUtils.writeMsg("webcmds", toastMsg);
@@ -108,7 +108,6 @@ rule "HC_VALIDATION"
 						String pdfUrl = PDFHelper.getDownloadablePdfLinkForHtml(templatePdf, contextMap);
 						System.out.println("PDF url :: " + pdfUrl);
 						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hcBe.getCode() ,"PRI_HC_VALIDATION_DOC_URL", pdfUrl));
-						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hcBe.getCode() ,"PRI_VALIDATION", "Validated"));
 					}else{
 						System.out.println("docCode is not present in companyBe");
  					}
