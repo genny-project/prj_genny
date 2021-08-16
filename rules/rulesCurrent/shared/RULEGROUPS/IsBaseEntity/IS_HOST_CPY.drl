@@ -43,21 +43,17 @@ rule "IS_HOST_CPY"
  		System.out.println("TCDocAvailable :: " + TCDocAvailable.isEmpty());
  		if(!(OHSDocAvailable.isEmpty()) && !(TCDocAvailable.isEmpty()))
  		{
- 			System.out.println("1 :: ");
  			newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_VALIDATION", "Ready"));
  		}
  		else if (!(OHSDocAvailable.isEmpty()) && (TCDocAvailable.isEmpty()))
  		{
- 			System.out.println("2 :: ");
  			newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_VALIDATION", "OHS"));
  		}
  		else if ((OHSDocAvailable.isEmpty()) && !(TCDocAvailable.isEmpty()))
  		{
- 			System.out.println("3 :: ");
  			newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_VALIDATION", "HCS"));
  		}
 		else {
-			System.out.println("4 :: ");
 			newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_VALIDATION", "Incomplete"));
 		}
 		String name = newBe.getValue("PRI_NAME",null);
