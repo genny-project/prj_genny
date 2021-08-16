@@ -73,8 +73,7 @@ rule "PRI_ADDRESS_FULL"
 				}
 
 				Answer addressFull = new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", address, false, false);
-				answersToSave.add(addressFull);
-				
+				answersToSave.add(addressFull);				
 				VertxUtils.sendToFrontEnd(userToken, addressFull);	
 				
 				/*answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_JSON", answer.getValue(),false,true));	
