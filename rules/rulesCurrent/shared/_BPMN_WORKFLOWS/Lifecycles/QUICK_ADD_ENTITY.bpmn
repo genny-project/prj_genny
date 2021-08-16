@@ -218,7 +218,7 @@
           <drools:onExit-script scriptFormat="http://www.java.com/java">
             <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% EXIT IS BASE ENTITY baseEntityType: &quot; + baseEntityType + &quot; %%%%%%%%%%%%%%%%%%%&quot;);
 if (newBe != null) {
-	/* Set Status to Pending */
+	/* Set Status to Active */
 	newBe = beUtils.getBaseEntityByCode(newBe.getCode());
 	newBe.setStatus(EEntityStatus.ACTIVE);
 	beUtils.saveBaseEntity(newBe);
