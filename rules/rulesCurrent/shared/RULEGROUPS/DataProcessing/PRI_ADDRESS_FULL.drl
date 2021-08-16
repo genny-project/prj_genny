@@ -84,7 +84,8 @@ rule "PRI_ADDRESS_FULL"
 				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", addressDataJson.getString("state"),false,true));
 				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_ADDRESS1", addressDataJson.getString("street_address"),false,true));
 				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", addressDataJson.getString("full_address"),false,true));
-					*/		
+					*/	
+				VertxUtils.sendToFrontEnd(userToken, addressFull);	
 		
 				Double latitude = addressDataJson.getDouble("latitude");
 				Double longitude = addressDataJson.getDouble("longitude");
