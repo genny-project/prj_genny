@@ -21,6 +21,7 @@ rule "PRI_ADDRESS_FULL"
     when
       beUtils : BaseEntityUtils()
 	  serviceToken : GennyToken( code == "PER_SERVICE") 
+	  userToken : GennyToken( code != "PER_SERVICE") 
 	  answer : Answer( attributeCode == "PRI_ADDRESS_FULL" )
 	  output : OutputParam( )
      then
