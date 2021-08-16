@@ -219,6 +219,7 @@
             <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% EXIT IS BASE ENTITY baseEntityType: &quot; + baseEntityType + &quot; %%%%%%%%%%%%%%%%%%%&quot;);
 if (newBe != null) {
 	/* Set Status to Pending */
+	newBe = beUtils.getBaseEntityByCode(newBe.getCode());
 	newBe.setStatus(EEntityStatus.ACTIVE);
 	beUtils.saveBaseEntity(newBe);
 }</drools:script>
