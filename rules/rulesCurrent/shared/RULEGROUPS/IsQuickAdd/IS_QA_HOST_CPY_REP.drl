@@ -79,6 +79,7 @@ rule "IS_QA_HOST_CPY_REP"
 				answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_HOST_COMPANY", "[\""+cpyCode+"\"]"));
 				answers.add(new Answer(userToken.getUserCode(), cpyCode, "PRI_IS_HOST_CPY", true));
 				answers.add(new Answer(userToken.getUserCode(), cpyCode, "PRI_PROFILE", "Incomplete"));
+				answers.add(new Answer(userToken.getUserCode(), cpyCode, "PRI_NAME", "No Host Company Selected"));
 				
 				companyBe = beUtils.getBaseEntityByCode(cpyCode);
 			}
