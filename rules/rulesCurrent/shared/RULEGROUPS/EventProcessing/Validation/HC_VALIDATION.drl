@@ -42,14 +42,14 @@ rule "HC_VALIDATION"
  		/* send Loading TOAST msg */
  		
 					QCmdMessage toastMsg = new QCmdMessage("TOAST", "INFO");
-					toastMsg.setMessage("Please wait while we prepare your Document!");
+					toastMsg.setMessage("Host Company validation document ready to download!");
 					toastMsg.setToken(beUtils.getGennyToken().getToken());
 					toastMsg.setSend(true);
 					VertxUtils.writeMsg("webcmds", toastMsg);
 					
 					System.out.println("Generating Document from the system");
 					
-					String docCode = hcBe.getValue("DOC_HCV_CODE",null);
+					String docCode = hcBe.getValue("LNK_HCV_DOC",null);
 					System.out.println("docCode   ::   " + docCode);
 					if(docCode != null){
 				
@@ -61,28 +61,25 @@ rule "HC_VALIDATION"
 							return;
 						}
 						
-						String template = "https://raw.githubusercontent.com/genny-project/layouts/master/internmatch-new/document_templates/HostCompanyValidation.html";
+						String templatePdf = "https://raw.githubusercontent.com/genny-project/layouts/master/internmatch-new/document_templates/HostCompanyValidation.html";
 					
 						BaseEntity project = beUtils.getBaseEntityByCode( "PRJ_" + serviceToken.getRealm().toUpperCase());
 						if(project != null){
 							
 							/* get the template url from project if possible */
-							template = project.getValue("PRI_HC_VALIDATION_URL", template);
+							templatePdf = project.getValue("PRI_HC_VALIDATION_URL", templatePdf);
 		
 						}
 						String[] attrName = {"LNK_TYPE_ENVIRO","LNK_EXITS","LNK_ORGANISED","LNK_VENTILATED","LNK_DESK_AREA",
-												"LNK_AMENITIES","LNK_WALKWAYS","LNK_EVIDENCE","LNK_TERMS","LNK_SITE_INSPECTION"};
+												"LNK_AMENITIES","LNK_WALKWAYS","LNK_EVIDENCE","LNK_TERMS","LNK_SITE_INSPECTION"}; 
 												
 						ArrayList<String> attrNameLst = new ArrayList<String>();
 						attrNameLst.addAll(Arrays.asList(attrName));					
 						
 						for (EntityAttribute ea : docBe.getBaseEntityAttributes()) {
-							System.out.println("1" + ea);
 							if (attrNameLst.contains(ea.getAttributeCode())) {
-								System.out.println("2");
 								String beCode = ea.getValueString();
 								if(beCode != null && beCode != ""){
-								System.out.println("3" + beCode);
 									beCode = beUtils.cleanUpAttributeValue(beCode);
 									BaseEntity linkedBe = beUtils.getBaseEntityByCode(beCode);
 									String name = linkedBe.getValue("PRI_NAME", null);
@@ -91,15 +88,24 @@ rule "HC_VALIDATION"
 									}
 								}
 							}
-						}
+						} 
+						System.out.println(" HC Name = " + hcBe.getValue("PRI_LEGAL_NAME",null));
+						System.out.println(" HC ABN = " + hcBe.getValue("PRI_ABN",null));
+						System.out.println(" HC Website = " + hcBe.getValue("PRI_COMPANY_WEBSITE_URL",null));
+						System.out.println(" HC Staff = " + hcBe.getValue("PRI_NUMBER_STAFF",null));
+						System.out.println(" HC Name = " + hcBe.getValue("LNK_SELECT_COUNTRY",null));
+						System.out.println(" HCV Name = " + docBe.getValue("LNK_ADDRESS_AVAIL",null));
+					
 						DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd MMM yyyy");
 						LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
 						String docValidationDate = dtf.format(now);
-						beUtils.saveAnswer(new Answer(userToken.getUserCode(),docBe.getCode(), "PRI_VALIDATION_DATE", docValidationDate));
+						beUtils.saveAnswer(new Answer(userToken.getUserCode(),docBe.getCode(), "PRI_SIGNATURE_DATE", docValidationDate));
 						HashMap<String, Object> contextMap = new HashMap<String, Object>();
 						contextMap.put("HCVDoc", docBe);
 						contextMap.put("HC", hcBe);
-						String pdfUrl = PDFHelper.getDownloadablePdfLinkForHtml(template, contextMap);
+						
+						System.out.println(" template " + templatePdf);
+						String pdfUrl = PDFHelper.getDownloadablePdfLinkForHtml(templatePdf, contextMap);
 						System.out.println("PDF url :: " + pdfUrl);
 						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hcBe.getCode() ,"PRI_HC_VALIDATION_DOC_URL", pdfUrl));
 					}else{
@@ -108,7 +114,7 @@ rule "HC_VALIDATION"
 		
 		/* Check Validation Status of HC */
 		
-		String validationStatus = hcBe.getValue("PRI_VALIDATION", null);
+		/*String validationStatus = hcBe.getValue("PRI_VALIDATION", null);
 		if (validationStatus != null) {
 		
 				if (validationStatus.equals("Incomplete") || validationStatus.equals("HCS") || validationStatus.equals("OHS")) {
@@ -122,6 +128,6 @@ rule "HC_VALIDATION"
 		} else {
 			System.out.println("ERROR: Null validationStatus");
 		}
-		
+		*/
 	
 end
