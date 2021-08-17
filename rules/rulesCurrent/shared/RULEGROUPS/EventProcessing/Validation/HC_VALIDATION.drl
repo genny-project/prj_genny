@@ -65,15 +65,14 @@ rule "HC_VALIDATION"
 							return;
 						}
 						
-						String docFName = hcBe.getValue("PRI_FIRSTNAME",null);
-						
-						if(docFName == null)
+						String docName = null;
+						docName = docBe.getValue("PRI_FIRSTNAME",null);
+						System.out.println("docFName" + docName);
+						if(docName == null)
 						{
-							String userFName = userBe.getValue("PRI_FIRSTNAME",null);
-							String userLName = userBe.getValue("PRI_LASTNAME",null);
+							String name = userBe.getValue("PRI_NAME",null);
 							String userJobTitle = userBe.getValue("PRI_JOB_TITLE",'OutcomeLife Agent');
-							beUtils.saveAnswer(new Answer(userToken.getUserCode(),docBe.getCode(), "PRI_FIRSTNAME", userFName));
-							beUtils.saveAnswer(new Answer(userToken.getUserCode(),docBe.getCode(), "PRI_LASTNAME", userLName));
+							beUtils.saveAnswer(new Answer(userToken.getUserCode(),docBe.getCode(), "PRI_FIRSTNAME", name));
 							beUtils.saveAnswer(new Answer(userToken.getUserCode(),docBe.getCode(), "PRI_JOB_TITLE", userJobTitle));
 						}
 						
