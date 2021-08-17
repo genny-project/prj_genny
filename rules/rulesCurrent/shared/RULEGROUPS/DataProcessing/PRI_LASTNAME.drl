@@ -25,6 +25,7 @@ rule "PRI_LASTNAME"
 		beUtils : BaseEntityUtils()
 	  answer : Answer( attributeCode == "PRI_LASTNAME" )
 	  output : OutputParam( )
+	  answersToSave : Answers()
 		userToken : GennyToken( code != "PER_SERVICE")
 
 	then
