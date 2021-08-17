@@ -37,6 +37,10 @@ rule "HC_VALIDATION"
  	    /* Construct answer with Source, Target, Attribute Code, Value */
  		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
  		
+ 		/* Get user name and job title*/
+ 		
+ 		BaseEntity userBe = beUtils.getBaseEntityByCode(userToken.getUserCode());
+ 		
  		/* Create Host company validation Document */
  		
  		/* send Loading TOAST msg */
@@ -60,6 +64,19 @@ rule "HC_VALIDATION"
 							System.out.println("docBe is null ");
 							return;
 						}
+						
+						String docFName = hcBe.getValue("PRI_FIRSTNAME",null);
+						
+						if(docFName == null)
+						{
+							String userFName = userBe.getValue("PRI_FIRSTNAME",null);
+							String userLName = userBe.getValue("PRI_LASTNAME",null);
+							String userJobTitle = userBe.getValue("PRI_JOB_TITLE",'OutcomeLife Agent');
+							beUtils.saveAnswer(new Answer(userToken.getUserCode(),docBe.getCode(), "PRI_FIRSTNAME", userFName));
+							beUtils.saveAnswer(new Answer(userToken.getUserCode(),docBe.getCode(), "PRI_LASTNAME", userLName));
+							beUtils.saveAnswer(new Answer(userToken.getUserCode(),docBe.getCode(), "PRI_JOB_TITLE", userJobTitle));
+						}
+						
 						
 						String templatePdf = "https://raw.githubusercontent.com/genny-project/layouts/master/internmatch-new/document_templates/HostCompanyValidation.html";
 					
@@ -114,7 +131,7 @@ rule "HC_VALIDATION"
 		
 		/* Check Validation Status of HC */
 		
-		/*String validationStatus = hcBe.getValue("PRI_VALIDATION", null);
+		String validationStatus = hcBe.getValue("PRI_VALIDATION", null);
 		if (validationStatus != null) {
 		
 				if (validationStatus.equals("Incomplete") || validationStatus.equals("HCS") || validationStatus.equals("OHS")) {
@@ -128,6 +145,4 @@ rule "HC_VALIDATION"
 		} else {
 			System.out.println("ERROR: Null validationStatus");
 		}
-		*/
-	
 end
