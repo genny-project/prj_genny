@@ -25,6 +25,7 @@ rule "PRI_LASTNAME"
 		beUtils : BaseEntityUtils()
 	  answer : Answer( attributeCode == "PRI_LASTNAME" )
 	  output : OutputParam( )
+	  answersToSave : Answers()
 		userToken : GennyToken( code != "PER_SERVICE")
 
 	then
@@ -39,7 +40,7 @@ rule "PRI_LASTNAME"
 		BaseEntity person = beUtils.getBaseEntityByCode(targetCode);
 		String firstname = person.getValue("PRI_FIRSTNAME","");
 		System.out.println("Rule -> PRI_LASTNAME 1 lastname="+lastname);	
-		beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_LASTNAME", lastname,false,false));	
+		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_LASTNAME", lastname,false,false));	
 			
 		String name = firstname + " "+lastname;
 		name = name.trim();	
