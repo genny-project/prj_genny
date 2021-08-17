@@ -39,7 +39,7 @@ rule "SBE_SAMS"
 		SearchEntity searchBE = new SearchEntity(drools.getRule().getName(),"Standard Association Mappings")
 			.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
 
-			.addFilter("PRI_CODE",SearchEntity.StringFilter.LIKE,"PER_%")
+			.addFilter("PRI_CODE",SearchEntity.StringFilter.LIKE,"SAM_%")
 
 			.addAction("EDIT", "Edit")
 

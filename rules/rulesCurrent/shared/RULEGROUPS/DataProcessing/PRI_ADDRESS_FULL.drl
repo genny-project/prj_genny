@@ -21,6 +21,7 @@ rule "PRI_ADDRESS_FULL"
     when
       beUtils : BaseEntityUtils()
 	  serviceToken : GennyToken( code == "PER_SERVICE") 
+	  userToken : GennyToken( code != "PER_SERVICE") 
 	  answer : Answer( attributeCode == "PRI_ADDRESS_FULL" )
 	  answersToSave : Answers()
 	  output : OutputParam( )
@@ -73,17 +74,19 @@ rule "PRI_ADDRESS_FULL"
 
 				Answer addressFull = new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", address, false, false);
 				answersToSave.add(addressFull);
+				VertxUtils.sendToFrontEnd(userToken, addressFull);
 				
 				
-				/*beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_ADDRESS_JSON", answer.getValue(),false,true));	
-				beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_ADDRESS_COUNTRY", addressDataJson.getString("country"),false,true));
-				beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_ADDRESS_POSTCODE",postcode,false,true));
-				beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_ADDRESS_SUBURB", addressDataJson.getString("suburb"),false,true));
-				beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_ADDRESS_CITY", addressDataJson.getString("suburb"),false,true));
-				beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", addressDataJson.getString("state"),false,true));
-				beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_ADDRESS_ADDRESS1", addressDataJson.getString("street_address"),false,true));
-				beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", addressDataJson.getString("full_address"),false,true));
-					*/		
+				/*answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_JSON", answer.getValue(),false,true));	
+				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_COUNTRY", addressDataJson.getString("country"),false,true));
+				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_POSTCODE",postcode,false,true));
+				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_SUBURB", addressDataJson.getString("suburb"),false,true));
+				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_CITY", addressDataJson.getString("suburb"),false,true));
+				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", addressDataJson.getString("state"),false,true));
+				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_ADDRESS1", addressDataJson.getString("street_address"),false,true));
+				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_FULL", addressDataJson.getString("full_address"),false,true));
+					*/	
+					
 		
 				Double latitude = addressDataJson.getDouble("latitude");
 				Double longitude = addressDataJson.getDouble("longitude");
@@ -93,8 +96,23 @@ rule "PRI_ADDRESS_FULL"
 				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_LONGITUDE", longitude+"",false,true));
 				
 				
-				/*beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_ADDRESS_LATITUDE", latitude+"",false,true));
-				beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_ADDRESS_LONGITUDE", longitude+"",false,true));*/
+				/*answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_LATITUDE", latitude+"",false,true));
+				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_LONGITUDE", longitude+"",false,true));*/
+				
+				/* update timezone from GPS */
+						BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+serviceToken.getRealm().toUpperCase());
+							String googleApiKey = project.getValueAsString("ENV_GOOGLE_MAPS_APIKEY");
+							String url = "https://maps.googleapis.com/maps/api/timezone/json?location="+latitude+","+longitude+"&timestamp="+java.time.Instant.now().getEpochSecond()+"&key="+googleApiKey;
+							String timezoneJsonStr =  QwandaUtils.apiGet(url , null);
+							JsonObject json = new JsonObject(timezoneJsonStr);
+							String timezoneID = json.getString("timeZoneId");
+							Answer fixedTimezone = new Answer(sourceCode,targetCode, "PRI_TIMEZONE_ID", timezoneID,false,true);			
+							answersToSave.add(fixedTimezone);
+							Answer fixedTimezoneOld = new Answer(sourceCode,targetCode, "PRI_TIME_ZONE", timezoneID,false,true);			
+							answersToSave.add(fixedTimezoneOld);
+							VertxUtils.sendToFrontEnd(userToken, fixedTimezone);
+							VertxUtils.sendToFrontEnd(userToken, fixedTimezoneOld);
+				
 				
 			} catch (Exception e) {
 				System.out.println("BAD JSON => "+answer.getValue());
@@ -105,9 +123,6 @@ rule "PRI_ADDRESS_FULL"
 		output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */
 		
-		
-
 		retract(answer);
-		update(answersToSave);
 	
 end
