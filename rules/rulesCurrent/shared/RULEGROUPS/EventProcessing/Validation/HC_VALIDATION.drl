@@ -105,6 +105,20 @@ rule "HC_VALIDATION"
 								}
 							}
 						} 
+						for (EntityAttribute ea : hcBe.getBaseEntityAttributes()) {
+							if (ea.getAttributeCode() == "LNK_COMPANY_INDUSTRY") {
+								String beCode = ea.getValueString();
+								if(beCode != null && beCode != ""){
+									beCode = beUtils.cleanUpAttributeValue(beCode);
+									BaseEntity linkedBe = beUtils.getBaseEntityByCode(beCode);
+									String name = linkedBe.getValue("PRI_NAME", null);
+									if (name != null) {
+										ea.setValueString(name);
+									}
+								}
+							}
+						} 
+						
 						System.out.println(" HC Name = " + hcBe.getValue("PRI_LEGAL_NAME",null));
 						System.out.println(" HC ABN = " + hcBe.getValue("PRI_ABN",null));
 						System.out.println(" HC Website = " + hcBe.getValue("PRI_COMPANY_WEBSITE_URL",null));
