@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.datatype.jsonorg.JSONArrayDeserializer;
 import life.genny.bootxport.bootx.DEFBaseentityAttribute;
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
@@ -48,6 +49,7 @@ import life.genny.qwanda.validation.Validation;
 import life.genny.qwanda.validation.ValidationList;
 import life.genny.rules.QRules;
 
+import org.apache.http.message.BasicNameValuePair;
 import org.jboss.logging.Logger;
 import org.jbpm.services.api.DefinitionService;
 import org.jbpm.services.api.ProcessService;
@@ -57,8 +59,10 @@ import org.jbpm.services.api.admin.ProcessInstanceAdminService;
 import org.jbpm.services.api.model.DeploymentUnit;
 import org.jbpm.services.api.query.QueryService;
 import org.jbpm.services.api.utils.KieServiceConfigurator;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.mortbay.util.ajax.JSON;
 
 import javax.json.Json;
 import javax.json.JsonReader;
@@ -203,13 +207,12 @@ public class RemoteServiceTest {
         setUpDefs();
 
         BaseEntity remoteServiceBE = beUtils.getBaseEntityByCode("RMS_JNL_PROCESS_001");
-
-        if (remoteServiceBE!=null){
-            System.out.println(remoteServiceBE);
-            for(EntityAttribute ea : remoteServiceBE.getBaseEntityAttributes()){
-                System.out.println(ea);
-            }
-        }
+//        if (remoteServiceBE!=null){
+//            System.out.println(remoteServiceBE);
+//            for(EntityAttribute ea : remoteServiceBE.getBaseEntityAttributes()){
+//                System.out.println(ea);
+//            }
+//        }
 
         // Use this bit to test creation of BEs by using their DEF_ names
         // For example im creating an Appointment BE
@@ -217,21 +220,54 @@ public class RemoteServiceTest {
         BaseEntity remoteJobBE = beUtils.create(remoteJobDef);
         System.out.println(remoteJobBE);
         remoteJobBE.setStatus(EEntityStatus.PENDING);
-        for(EntityAttribute ea : remoteJobBE.getBaseEntityAttributes()){
-            System.out.println(ea);
-        }
+//        for(EntityAttribute ea : remoteJobBE.getBaseEntityAttributes()){
+//            System.out.println(ea);
+//        }
 
-        BaseEntity remoteServiceDef = beUtils.getDEFByCode("DEF_REMOTE_SERVICE");
-        BaseEntity remoteServiceBEFromDef = beUtils.create(remoteServiceDef);
-        for(EntityAttribute ea : remoteServiceBEFromDef.getBaseEntityAttributes()){
-            System.out.println(ea);
-        }
+
+//      Use a search BE for the api test
+        SearchEntity searchBEForApi = new SearchEntity("SBE_DEF", "DEF check")
+                .addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
+                .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "DEF_%")
+                .addColumn("PRI_CODE", "Name");
+        searchBEForApi.setRealm(realm);
+        searchBEForApi.setPageStart(0);
+        searchBEForApi.setPageSize(1000);
+//        System.out.print(searchBEForApi);
+//      Declare the api route
+        String apiRoute = "http://localhost:5000/api/response";
+//       Get an authentication token
+        String authToken = userToken.getToken();
+//        System.out.println(authToken);
+//      Make the remote service base entity
+        BaseEntity remoteServiceTestDef = beUtils.getDEFByCode("DEF_REMOTE_SERVICE");
+        BaseEntity remoteServiceTest = beUtils.create(remoteServiceTestDef);
+        remoteServiceTest.setValue("PRI_NAME", "Remote Service API Test");
+        remoteServiceTest.setValue("PRI_URL", apiRoute);
+        remoteServiceTest.setValue("LNK_SEARCH_BES", searchBEForApi.toString());
+
+//       beUtils.saveBaseEntity(remoteServiceTest);
+
+//      Make the api call
+        String apiPostRequest = QwandaUtils.apiPostEntity2(apiRoute, remoteServiceTest.getValueAsString("LNK_SEARCH_BES"), authToken , null);
+        System.out.println(apiPostRequest);
+
 
 
 
     }
 
     public void setUpDefs() throws BadDataException {
+        BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+        beUtils.setServiceToken(serviceToken);
+//        BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
+//                org.codehaus.plexus.util.StringUtils.capitaliseAllWords(serviceToken.getRealm()));
+//        project.setRealm(serviceToken.getRealm());
+//        VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
+//                JsonUtils.toJson(project), serviceToken.getToken());
+//        VertxUtils.writeCachedJson(realm,  ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(),JsonUtils.toJson(project), serviceToken.getToken());
+
+
         SearchEntity searchBE = new SearchEntity("SBE_DEF", "DEF check")
                 .addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
                 .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "DEF_%")
