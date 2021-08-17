@@ -26,7 +26,6 @@ rule "PRI_FIRSTNAME"
 		beUtils : BaseEntityUtils()
 	  serviceToken : GennyToken( code == "PER_SERVICE") 
 	  answer : Answer( attributeCode == "PRI_FIRSTNAME" )
-	  answersToSave : Answers()
 	  output : OutputParam( )
 		userToken : GennyToken( code != "PER_SERVICE")
 
@@ -40,7 +39,7 @@ rule "PRI_FIRSTNAME"
 		firstname = firstname.toLowerCase().trim();
 		firstname = WordUtils.capitalize(firstname);
 					
-		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_FIRSTNAME", firstname,false,false));	
+		beUtils.saveAnswer(new Answer(sourceCode, targetCode, "PRI_FIRSTNAME", firstname,false,false));	
 			
 		BaseEntity person = beUtils.getBaseEntityByCode(targetCode);
 		String lastname = person.getValue("PRI_LASTNAME","");
@@ -62,6 +61,5 @@ rule "PRI_FIRSTNAME"
 		output.setResultCode("NONE");  /* dont display anything new */
 	
 		retract(answer); 
-		update(answersToSave);
 	
 end

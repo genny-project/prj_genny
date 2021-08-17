@@ -37,12 +37,16 @@ rule "HC_VALIDATION"
  	    /* Construct answer with Source, Target, Attribute Code, Value */
  		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
  		
+ 		/* Get user name and job title*/
+ 		
+ 		BaseEntity userBe = beUtils.getBaseEntityByCode(userToken.getUserCode());
+ 		
  		/* Create Host company validation Document */
  		
  		/* send Loading TOAST msg */
  		
 					QCmdMessage toastMsg = new QCmdMessage("TOAST", "INFO");
-					toastMsg.setMessage("Please wait while we prepare your Document!");
+					toastMsg.setMessage("Host Company validation document ready to download!");
 					toastMsg.setToken(beUtils.getGennyToken().getToken());
 					toastMsg.setSend(true);
 					VertxUtils.writeMsg("webcmds", toastMsg);
@@ -61,18 +65,36 @@ rule "HC_VALIDATION"
 							return;
 						}
 						
-						String template = "https://raw.githubusercontent.com/genny-project/layouts/master/internmatch-new/document_templates/HostCompanyValidation.html";
+						String docFName = hcBe.getValue("PRI_FIRSTNAME",null);
+						
+						if(docFName == null)
+						{
+							String userFName = userBe.getValue("PRI_FIRSTNAME",null);
+							String userLName = userBe.getValue("PRI_LASTNAME",null);
+							String userJobTitle = userBe.getValue("PRI_JOB_TITLE",'OutcomeLife Agent');
+							beUtils.saveAnswer(new Answer(userToken.getUserCode(),docBe.getCode(), "PRI_FIRSTNAME", userFName));
+							beUtils.saveAnswer(new Answer(userToken.getUserCode(),docBe.getCode(), "PRI_LASTNAME", userLName));
+							beUtils.saveAnswer(new Answer(userToken.getUserCode(),docBe.getCode(), "PRI_JOB_TITLE", userJobTitle));
+						}
+						
+						
+						String templatePdf = "https://raw.githubusercontent.com/genny-project/layouts/master/internmatch-new/document_templates/HostCompanyValidation.html";
 					
 						BaseEntity project = beUtils.getBaseEntityByCode( "PRJ_" + serviceToken.getRealm().toUpperCase());
 						if(project != null){
 							
 							/* get the template url from project if possible */
-							template = project.getValue("PRI_HC_VALIDATION_URL", template);
+							templatePdf = project.getValue("PRI_HC_VALIDATION_URL", templatePdf);
 		
 						}
+						String[] attrName = {"LNK_TYPE_ENVIRO","LNK_EXITS","LNK_ORGANISED","LNK_VENTILATED","LNK_DESK_AREA",
+												"LNK_AMENITIES","LNK_WALKWAYS","LNK_EVIDENCE","LNK_TERMS","LNK_SITE_INSPECTION"}; 
+												
+						ArrayList<String> attrNameLst = new ArrayList<String>();
+						attrNameLst.addAll(Arrays.asList(attrName));					
 						
 						for (EntityAttribute ea : docBe.getBaseEntityAttributes()) {
-							if (ea.getAttributeCode() == 'LNK_TYPE_ENVIRO') {
+							if (attrNameLst.contains(ea.getAttributeCode())) {
 								String beCode = ea.getValueString();
 								if(beCode != null && beCode != ""){
 									beCode = beUtils.cleanUpAttributeValue(beCode);
@@ -83,7 +105,14 @@ rule "HC_VALIDATION"
 									}
 								}
 							}
-						}
+						} 
+						System.out.println(" HC Name = " + hcBe.getValue("PRI_LEGAL_NAME",null));
+						System.out.println(" HC ABN = " + hcBe.getValue("PRI_ABN",null));
+						System.out.println(" HC Website = " + hcBe.getValue("PRI_COMPANY_WEBSITE_URL",null));
+						System.out.println(" HC Staff = " + hcBe.getValue("PRI_NUMBER_STAFF",null));
+						System.out.println(" HC Name = " + hcBe.getValue("LNK_SELECT_COUNTRY",null));
+						System.out.println(" HCV Name = " + docBe.getValue("LNK_ADDRESS_AVAIL",null));
+					
 						DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd MMM yyyy");
 						LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
 						String docValidationDate = dtf.format(now);
@@ -91,7 +120,9 @@ rule "HC_VALIDATION"
 						HashMap<String, Object> contextMap = new HashMap<String, Object>();
 						contextMap.put("HCVDoc", docBe);
 						contextMap.put("HC", hcBe);
-						String pdfUrl = PDFHelper.getDownloadablePdfLinkForHtml(template, contextMap);
+						
+						System.out.println(" template " + templatePdf);
+						String pdfUrl = PDFHelper.getDownloadablePdfLinkForHtml(templatePdf, contextMap);
 						System.out.println("PDF url :: " + pdfUrl);
 						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hcBe.getCode() ,"PRI_HC_VALIDATION_DOC_URL", pdfUrl));
 					}else{
@@ -114,6 +145,4 @@ rule "HC_VALIDATION"
 		} else {
 			System.out.println("ERROR: Null validationStatus");
 		}
-		
-	
 end

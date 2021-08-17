@@ -22,10 +22,11 @@ rule "PRI_ADDRESS_JSON"
         salience 500 
     when
       beUtils : BaseEntityUtils()
-	  serviceToken : GennyToken( code == "PER_SERVICE") 
+	  serviceToken : GennyToken( code == "PER_SERVICE")
+	  userToken : GennyToken( code != "PER_SERVICE")  
 	  answer : Answer( attributeCode == "PRI_ADDRESS_JSON" )
-	  answersToSave : Answers()
 	  output : OutputParam( )
+	  answersToSave : Answers()
      then
  		System.out.println("Rule -> PRI_ADDRESS_JSON :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
 		String sourceCode = beUtils.getGennyToken().getUserCode();
@@ -67,7 +68,7 @@ rule "PRI_ADDRESS_JSON"
 							String timezoneID = json.getString("timeZoneId");
 							Answer fixedTimezone = new Answer(sourceCode,targetCode, "PRI_TIMEZONE_ID", timezoneID,false,true);			
 							answersToSave.add(fixedTimezone);
-				
+							VertxUtils.sendToFrontEnd(userToken, fixedTimezone);
 				
 			} catch (Exception e) {
 				System.out.println("BAD JSON => "+answer.getValue());
@@ -81,6 +82,6 @@ rule "PRI_ADDRESS_JSON"
 		
 
 		retract(answer);
-		update(answersToSave);
+
 	
 end
