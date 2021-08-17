@@ -94,7 +94,7 @@ rule "PRI_ADDRESS_FULL"
 				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_LONGITUDE", longitude+"",false,true));
 				
 				
-					/* update timezone from GPS */
+				/* update timezone from GPS */
 						BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+serviceToken.getRealm().toUpperCase());
 							String googleApiKey = project.getValueAsString("ENV_GOOGLE_MAPS_APIKEY");
 							String url = "https://maps.googleapis.com/maps/api/timezone/json?location="+latitude+","+longitude+"&timestamp="+java.time.Instant.now().getEpochSecond()+"&key="+googleApiKey;
@@ -103,7 +103,10 @@ rule "PRI_ADDRESS_FULL"
 							String timezoneID = json.getString("timeZoneId");
 							Answer fixedTimezone = new Answer(sourceCode,targetCode, "PRI_TIMEZONE_ID", timezoneID,false,true);			
 							answersToSave.add(fixedTimezone);
+							Answer fixedTimezoneOld = new Answer(sourceCode,targetCode, "PRI_TIME_ZONE", timezoneID,false,true);			
+							answersToSave.add(fixedTimezoneOld);
 							VertxUtils.sendToFrontEnd(userToken, fixedTimezone);
+							VertxUtils.sendToFrontEnd(userToken, fixedTimezoneOld);
 				
 			} catch (Exception e) {
 				System.out.println("BAD JSON => "+answer.getValue());
