@@ -116,6 +116,6 @@ rule "PRI_JOURNAL_HOURS"
   	    output.setResultCode("NONE");  /* dont display anything new */
 		
 		retract(answer); 
-
+		update(answersToSave);
 	
 end

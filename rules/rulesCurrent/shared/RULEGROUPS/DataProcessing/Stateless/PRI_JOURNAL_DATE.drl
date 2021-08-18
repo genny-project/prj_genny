@@ -281,6 +281,7 @@ rule "PRI_JOURNAL_DATE"
 		output.setResultCode("NONE");  /* dont display anything new */
 		
 		retract(answer); 
+		update(answersToSave);
 
 	
 end

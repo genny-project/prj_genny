@@ -159,6 +159,6 @@ rule "PRI_EMAIL"
 			
 		output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */
-		
+		update(answersToSave);
 	
 end

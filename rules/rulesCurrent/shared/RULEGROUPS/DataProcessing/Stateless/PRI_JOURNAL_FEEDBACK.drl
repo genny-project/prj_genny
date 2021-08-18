@@ -59,6 +59,6 @@ rule "PRI_FEEDBACK"
   	    output.setResultCode("NONE");  /* dont display anything new */
 		
 		retract(answer); 
-	
+		update(answersToSave);
 	
 end
