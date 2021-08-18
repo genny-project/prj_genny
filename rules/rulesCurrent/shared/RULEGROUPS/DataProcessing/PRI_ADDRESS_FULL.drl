@@ -108,7 +108,10 @@ rule "PRI_ADDRESS_FULL"
 							String timezoneID = json.getString("timeZoneId");
 							Answer fixedTimezone = new Answer(sourceCode,targetCode, "PRI_TIMEZONE_ID", timezoneID,false,true);			
 							answersToSave.add(fixedTimezone);
+							Answer fixedTimezoneOld = new Answer(sourceCode,targetCode, "PRI_TIME_ZONE", timezoneID,false,true);			
+							answersToSave.add(fixedTimezoneOld);
 							VertxUtils.sendToFrontEnd(userToken, fixedTimezone);
+							VertxUtils.sendToFrontEnd(userToken, fixedTimezoneOld);
 				
 				
 			} catch (Exception e) {
