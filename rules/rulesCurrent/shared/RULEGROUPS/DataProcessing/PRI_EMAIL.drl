@@ -29,6 +29,7 @@ rule "PRI_EMAIL"
 	  	answer : Answer( attributeCode == "PRI_EMAIL" )
 	  	serviceToken : GennyToken( code == "PER_SERVICE")
 	 	userToken : GennyToken( code != "PER_SERVICE")
+	 	answersToSave : Answers()
 	  	output : OutputParam( )
 	  	ruleDetails : RuleDetails()
 	  	allowed: Allowed((code == "USER") || (code == "EDIT_INTERN") || (code == "EDIT_HCR") || (code == "EDIT_EPR") || (code == "EDIT_REF_PART_REP") || (code == "EDIT_AGENT"))	  	
@@ -94,7 +95,7 @@ rule "PRI_EMAIL"
 						} else {
 							System.out.println(ruleDetails+" "+drools.getRule().getName()+"  Saving the good email");
 							Answer goodEmail = new Answer(answer.getSourceCode(), answer.getTargetCode(), "PRI_EMAIL", answer.getValue());
-							beUtils.saveAnswer(goodEmail);
+							answersToSave.add(goodEmail);
 						}
 						
 						
