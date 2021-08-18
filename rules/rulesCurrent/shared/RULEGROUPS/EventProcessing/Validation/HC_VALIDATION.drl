@@ -105,20 +105,24 @@ rule "HC_VALIDATION"
 								}
 							}
 						} 
+						
 						String industry = hcBe.getValue("LNK_COMPANY_INDUSTRY",null);
+						String industryInc = hcBe.getValue("LNK_COMPANY_INC",null);
 						
 						System.out.println(" industry " + industry);
+						System.out.println(" industryInc " + industryInc);
 						if(industry != null)
 						{
 							industry = beUtils.cleanUpAttributeValue(industry);
 							BaseEntity linkedBe = beUtils.getBaseEntityByCode(industry);
 							industry = linkedBe.getValue("PRI_NAME", null);
 						}
-						System.out.println(" HC Name = " + hcBe.getValue("PRI_LEGAL_NAME",null));
-						System.out.println(" HC ABN = " + hcBe.getValue("PRI_ABN",null));
-						System.out.println(" HC Website = " + hcBe.getValue("PRI_COMPANY_WEBSITE_URL",null));
-						System.out.println(" HC Staff = " + hcBe.getValue("PRI_NUMBER_STAFF",null));
-						System.out.println(" HC Name = " + hcBe.getValue("LNK_SELECT_COUNTRY",null));
+						if(industryInc != null)
+						{	
+							industryInc = str.substring(0, 5);
+							
+						}
+						System.out.println(" industryInc " + industryInc);
 						System.out.println("industry = " + industry);
 					
 						DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd MMM yyyy");
@@ -129,6 +133,7 @@ rule "HC_VALIDATION"
 						contextMap.put("HCVDoc", docBe);
 						contextMap.put("HC", hcBe);
 						contextMap.put("Industry", industry);
+						contextMap.put("IndustryInc", industryInc);
 						
 						System.out.println(" template " + templatePdf);
 						String pdfUrl = PDFHelper.getDownloadablePdfLinkForHtml(templatePdf, contextMap);
