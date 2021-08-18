@@ -215,7 +215,6 @@ public class RemoteServiceTest {
 //        }
 
         // Use this bit to test creation of BEs by using their DEF_ names
-        // For example im creating an Appointment BE
         BaseEntity remoteJobDef = beUtils.getDEFByCode("DEF_REMOTE_JOB");
         BaseEntity remoteJobBE = beUtils.create(remoteJobDef);
         System.out.println(remoteJobBE);
