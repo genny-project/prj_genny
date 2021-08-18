@@ -110,13 +110,13 @@ rule "PRI_JOURNAL_LEARNING_OUTCOMES"
 		}
 					
 		Answer ans = new Answer(sourceCode, targetCode, "PRI_JOURNAL_LEARNING_OUTCOMES", answer.getValue(),false,true);	
-		beUtils.saveAnswer(ans);	
+		answersToSave.add(ans);	
 		VertxUtils.sendToFrontEnd(userToken, ans);
 
 		output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */
 		
 		retract(answer); 
-		update(answersToSave);
+	
 	
 end

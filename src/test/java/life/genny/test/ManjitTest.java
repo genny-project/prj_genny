@@ -54,7 +54,7 @@ import life.genny.utils.RulesUtils;
 import life.genny.utils.SearchUtils;
 import life.genny.utils.VertxUtils;
 
-public class RandomTest {
+public class ManjitTest {
 	private static final Logger log = Logger.getLogger(RandomTest.class);
 
 	protected static String realm = GennySettings.mainrealm;

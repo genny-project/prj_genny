@@ -27,7 +27,7 @@ rule "PRI_JOURNAL_HOURS"
     when
       beUtils : BaseEntityUtils()
 	  serviceToken : GennyToken( code == "PER_SERVICE")
-		userToken : GennyToken( code != "PER_SERVICE")
+	  userToken : GennyToken( code != "PER_SERVICE")
 	  answer : Answer( attributeCode == "PRI_JOURNAL_HOURS" )
 	  answersToSave : Answers()
 	  output : OutputParam( )
@@ -108,7 +108,7 @@ rule "PRI_JOURNAL_HOURS"
 		}
 		
 		Answer ans = new Answer(sourceCode, targetCode, "PRI_JOURNAL_HOURS", answer.getValue(),false,true);		
-		beUtils.saveAnswer(ans);	
+		answersToSave.add(ans);	
 		VertxUtils.sendToFrontEnd(userToken, ans);
 
 
@@ -116,6 +116,6 @@ rule "PRI_JOURNAL_HOURS"
   	    output.setResultCode("NONE");  /* dont display anything new */
 		
 		retract(answer); 
-		update(answersToSave);
+
 	
 end
