@@ -40,7 +40,7 @@ rule "PRI_SEARCH_TEXT_SAVE_ANSWER"
         no-loop true
     when
  	  beUtils : BaseEntityUtils()
- 	  allowed : Allowed(code == "TEST" || code == SUPERUSER || code == "DEV")
+ 	  allowed : Allowed(code == "TEST" || code == "SUPERUSER" || code == "DEV")
 	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" && (value.startsWith("!saveanswer:")) )
 	  serviceToken : GennyToken (code == "PER_SERVICE")
 	  userToken : GennyToken( code != "PER_SERVICE")
