@@ -63,7 +63,7 @@ rule "HELPER_LNK_WHICH_DAYS"
 			VertxUtils.sendToFrontEnd(userToken, ans);
 		}
 
-		if (targetCode.startsWith("BEG_")) {
+		if (!targetCode.startsWith("BEG_")) {
 			if (!value.equals("")) {
 				targetBe = beUtils.getBaseEntityByCode(targetCode);
 				System.out.println("targetBe = " +targetBe);
