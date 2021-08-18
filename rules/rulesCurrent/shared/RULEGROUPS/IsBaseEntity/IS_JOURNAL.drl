@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.ArrayList;
 import org.json.JSONArray;
 
-rule "IS_LOGBOOK"
+rule "IS_JOURNAL"
   ruleflow-group 'IsBaseEntity'
   no-loop true
   salience 1 
@@ -22,7 +22,7 @@ rule "IS_LOGBOOK"
 	 	userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam()
-		baseEntityType : String(baseEntityType.equals("LOGBOOK"))
+		baseEntityType : String(baseEntityType.equals("LOGBOOK") || baseEntityType.equals("JOURNAL"))
 		journalBe : BaseEntity()
 	  
   then
