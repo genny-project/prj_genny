@@ -119,8 +119,7 @@ rule "HC_VALIDATION"
 						}
 						if(industryInc != null)
 						{	
-							industryInc = industryInc.substring(0, 5);
-							
+							industryInc = industryInc.substring(0, 4);
 						}
 						System.out.println(" industryInc " + industryInc);
 						System.out.println("industry = " + industry);
