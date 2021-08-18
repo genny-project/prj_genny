@@ -48,6 +48,9 @@ rule "PRI_PHONE"
 
 				Answer phone = new Answer(answer.getSourceCode(), answer.getTargetCode(), answer.getAttributeCode(), phonenumber);
 				answersToSave.add(phone);
+				if (!answer.getAttributeCode().equals("PRI_PHONE")) {
+					answersToSave.add(new Answer(answer.getSourceCode(), answer.getTargetCode(), "PRI_PHONE", phonenumber));
+				}
 				System.out.println("Saving a Phone Number! Type: " + answer.getAttributeCode() + " with phone number: " + phonenumber);
 			} else {
 					message = "Phone number is empty!";
@@ -59,7 +62,7 @@ rule "PRI_PHONE"
 
 
 
-			/* OLD METHOD - PUTTING IN EASE OF USE POLICY */
+			/* OLD METHOD - PUTTING IN EASE OF USE POLICY TODO - FIX */
 			/* convert to E164 */
 			/*
 			if (phonenumber != null) {
