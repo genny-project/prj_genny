@@ -67,8 +67,7 @@ rule "OHS_VALIDATION"
 		msg.setReplace(true);
 		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 		
-
-
+		
 		/* SEND EMAIL TO AGENT */	
 						
 		String user = userToken.getUserCode();
@@ -79,6 +78,9 @@ rule "OHS_VALIDATION"
 		
 		BaseEntity hcrBe = beUtils.getBaseEntityByCode(user);
 		if (hcrBe != null) {
+			String docCode = HCBe.getValue("DOC_OHS_CODE", null);
+			beUtils.saveAnswer(new Answer(userToken.getUserCode(), docCode ,"LNK_HOST_COMPANY_REP", hcrBe.getCode()));
+			
 			String hcrEmail = hcrBe.getValue("PRI_EMAIL", null);
 			System.out.println("user: " + user);
 			
