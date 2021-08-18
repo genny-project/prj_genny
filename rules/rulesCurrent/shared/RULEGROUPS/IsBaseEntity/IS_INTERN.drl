@@ -41,7 +41,7 @@ rule "IS_INTERN"
  		List<Answer> answers = new ArrayList<>();
 
  		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_INTERN", "true")); */
- 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "AVAILABLE")); */
+ 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "AVAILABLE"));
  		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_DISABLED", "false")); */
  		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS_COLOR", "default")); */
  		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_NUM_JOURNALS", "0")); */
@@ -187,9 +187,9 @@ rule "IS_INTERN"
 							templateData.put("name", firstname);
 							templateData.put("password", password);
 							templateData.put("url", url);
-								
+
 							List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
-							
+
 							EmailHelper.sendGrid(beUtils, email, null, bccList, "", "d-100adae110bb46eb999cd8b48666cad0", templateData, true);
 						}
 					} else {
@@ -207,9 +207,9 @@ rule "IS_INTERN"
 		String tag = "System";
 		String userName = "System";
 		String userImage = "";
-		
+
 		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), newBe.getCode(), "Completed profile for Intern account", tag, userName, userImage, serviceToken.getToken());
-		
+
 		System.out.println("I just posted the note");
 		System.out.println("Note endPoint: " +endPoint);
 		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
