@@ -287,8 +287,9 @@ System.out.println(&quot;%%%%%%%%%%%%%%%%%%% newBe: &quot; + newBe);</drools:scr
           <drools:onExit-script scriptFormat="http://www.java.com/java">
             <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% EXIT Create Entity IS BASE ENTITY %%%%%%%%%%%%%%%%%%%&quot;);
 
+System.out.println(&quot;IS_BASE_ENTITY bpmn -> newBe is &quot;+(newBe==null?&quot;NULL&quot;:&quot;NOT NULL&quot;));
 if (newBe != null) {
-	/* Set Status to Pending */
+	/* Set Status to Active*/
          newBe = beUtils.getBaseEntityByCode(newBe.getCode());
 	newBe.setStatus(EEntityStatus.ACTIVE);
 	beUtils.saveBaseEntity(newBe);
