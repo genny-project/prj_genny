@@ -49,7 +49,7 @@ rule "PRI_PHONE"
 				Answer phone = new Answer(answer.getSourceCode(), answer.getTargetCode(), answer.getAttributeCode(), phonenumber);
 				answersToSave.add(phone);
 				if (!answer.getAttributeCode().equals("PRI_PHONE")) {
-					answersToSave.add(new Answer(answer.getSourceCode(), answer.getTargetCode(), "PRI_PHONE", phonenumber));
+					answersToSave.add(new Answer(answer.getSourceCode(), answer.getTargetCode(), "PRI_PHONE", phonenumber, false,true));
 					System.out.println("Saving a Phone Number! Type: PRI_PHONE  with phone number: " + phonenumber);
 				}
 				System.out.println("Saving a Phone Number! Type: " + answer.getAttributeCode() + " with phone number: " + phonenumber);
