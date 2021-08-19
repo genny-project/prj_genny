@@ -62,7 +62,6 @@ rule "LNK_FILTER_COLUMN"
 		VertxUtils.putObject(serviceToken.getRealm(), "", "FLT_"+targetCode, newFilterArray, serviceToken.getToken());
 
 		/* Define dropdown items selector */
-		String dropdownCode = null;
 		String unhidden = null;
 
 		/* Get associated Attribute */
@@ -94,12 +93,10 @@ rule "LNK_FILTER_COLUMN"
 				if (attr.getCode().equals("PRI_ADDRESS_COUNTRY")) {
 					filterOptionsArray = Arrays.asList(equalSelection);
 					unhidden = "QUE_FILTER_VALUE_COUNTRY";
-					dropdownCode = "LNK_SELECT_COUNTRY";
 
 				} else if (attr.getCode().equals("PRI_ADDRESS_STATE")) {
 					filterOptionsArray = Arrays.asList(equalSelection);
 					unhidden = "QUE_FILTER_VALUE_STATE";
-					dropdownCode = "LNK_SELECT_STATE";
 				
 				} else if (dtt.equals("java.lang.String") || dtt.equals("String") || dtt.equalsIgnoreCase("Text")) {
 					filterOptionsArray = Arrays.asList(stringSelection);
@@ -181,8 +178,41 @@ rule "LNK_FILTER_COLUMN"
 				VertxUtils.writeMsg("webcmds", askMsg);
 				System.out.println("Asks sent to FE");
 
-				if (dropdownCode != null) {
-					ShowFrame.sendSelectionItems(dropdownCode, userToken, serviceToken, false, targetCode);												
+				if (unhidden != null) {
+
+					/* Init Blank Search */
+					SearchEntity itemSearch = new SearchEntity("SBE_FILTER_ITEMS", "Filter Items")
+						.addColumn("PRI_CODE", "Code")
+						.addColumn("PRI_NAME", "Name")
+						.setLinkCode("LNK_CORE");
+
+					Boolean searchTrigger = false;
+
+					if (unhidden.equals("QUE_FILTER_VALUE_COUNTRY")) {
+						itemSearch.setLinkValue("COUNTRY");
+						searchTrigger = true;
+
+					} else if (unhidden.equals("QUE_FILTER_VALUE_STATE")) {
+						itemSearch.setLinkValue("AUS_STATE");
+						searchTrigger = true;
+
+					}
+
+					/* Basically, don't search if no linkVal is set */
+					if (searchTrigger) {
+						/* Fetch Countries */
+						List<BaseEntity> items = beUtils.getBaseEntitys(itemSearch);
+						/* Package and send */
+						QDataBaseEntityMessage itemMsg = new QDataBaseEntityMessage(items);
+						itemMsg.setQuestionCode(unhidden);
+						itemMsg.setParentCode("QUE_ADD_FILTER_GRP");
+						itemMsg.setLinkCode("LNK_CORE");
+						itemMsg.setLinkValue("LNK_ITEMS");
+						itemMsg.setToken(beUtils.getGennyToken().getToken());
+						itemMsg.setReplace(true);
+						itemMsg.setToken(userToken.getToken());
+						VertxUtils.writeMsg("webcmds", itemMsg);
+					}
 				}
 
 			} else {
