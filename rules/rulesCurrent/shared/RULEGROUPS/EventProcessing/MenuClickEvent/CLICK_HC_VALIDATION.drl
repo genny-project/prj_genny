@@ -85,11 +85,11 @@ rule "CLICK_HC_VALIDATION"
 				
 				hcbe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), hcbe.getCode(), "LNK_HCV_DOC", hcvCode));
 				String legalName = beUtils.getValueSaveAnswer(userToken.getUserCode(), newBe.getCode(), hcbe.getCode(), "PRI_LEGAL_NAME", "PRI_LEGAL_NAME", "legalName");
-				
+				newBe = beUtils.getBaseEntityByCode(hcvCode);
 				/* Set Parameters */
  		
 				output.setAskSourceCode(user);
-				output.setTargetCode(hcvCode);
+				output.setTargetCode(newBe.getCode());
 				output.setTypeOfResult("SIGNAL");
 				output.setResultCode("START_HC_VAL");	
 				output.setSuitCase(hcCode);
