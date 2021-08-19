@@ -184,7 +184,8 @@ rule "LNK_FILTER_COLUMN"
 					SearchEntity itemSearch = new SearchEntity("SBE_FILTER_ITEMS", "Filter Items")
 						.addColumn("PRI_CODE", "Code")
 						.addColumn("PRI_NAME", "Name")
-						.setLinkCode("LNK_CORE");
+						.setLinkCode("LNK_CORE")
+						.setPageSize(250);
 
 					Boolean searchTrigger = false;
 
