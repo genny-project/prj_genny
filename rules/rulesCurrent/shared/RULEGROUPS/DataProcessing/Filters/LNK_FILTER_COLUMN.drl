@@ -1,20 +1,14 @@
 package life.genny.rules;
-import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.models.GennyToken;
 import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.qwanda.Answer;
-import io.vertx.core.json.JsonObject;
 import java.util.Map;
 import java.util.HashMap;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import com.google.gson.reflect.TypeToken;
-import life.genny.qwandautils.JsonUtils;
 import life.genny.utils.VertxUtils;
-import life.genny.utils.TableUtils;
-import life.genny.models.TableData;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.SearchEntity;
@@ -25,6 +19,7 @@ import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 import life.genny.qwanda.message.QCmdMessage;
 import life.genny.qwanda.attribute.EntityAttribute;
 import life.genny.qwanda.Link;
+import life.genny.qwanda.attribute.AttributeText;
 
 
 rule "LNK_FILTER_COLUMN"
@@ -55,11 +50,11 @@ rule "LNK_FILTER_COLUMN"
 
 		/* Add Filter Column */
 		AttributeText attributeFilterColumn = new AttributeText("SCH_FILTER_COLUMN", "Filter Column");
-		try {
-			searchBE.addAttribute(attributeTitle, 5.0, attributeCode);
-		} catch (BadDataException e) {
-			log.error("Bad Filter Column");
-		}
+		AttributeText attributeFilterOption = new AttributeText("SCH_FILTER_OPTION", "Filter Option");
+		AttributeText attributeFilterValue = new AttributeText("SCH_FILTER_VALUE", "Filter Value");
+		searchBE.addAttribute(attributeFilterColumn, 5.0, attributeCode);
+		searchBE.addAttribute(attributeFilterOption, 5.0, "");
+		searchBE.addAttribute(attributeFilterValue, 5.0, "");
 
 		/* Update Search in Cache */
 		VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken.getToken());

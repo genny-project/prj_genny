@@ -7,6 +7,7 @@ import life.genny.qwanda.Answer;
 import life.genny.qwanda.Answers;
 import java.util.List;
 import java.util.ArrayList;
+import life.genny.qwanda.attribute.AttributeText;
 
 rule "PRI_FILTER_VALUE"
     ruleflow-group 'DataProcessing'
@@ -76,12 +77,8 @@ rule "PRI_FILTER_VALUE"
 		SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", targetCode, SearchEntity.class, serviceToken.getToken());
 
 		/* Add Filter Column */
-		AttributeText attributeFilterColumn = new AttributeText("SCH_FILTER_VALUE", "Filter Value");
-		try {
-			searchBE.addAttribute(attributeTitle, 5.0, value);
-		} catch (BadDataException e) {
-			log.error("Bad Filter Value");
-		}
+		AttributeText attributeFilterValue = new AttributeText("SCH_FILTER_VALUE", "Filter Value");
+		searchBE.addAttribute(attributeFilterValue, 5.0, value);
 
 		/* Update Search in Cache */
 		VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken.getToken());

@@ -53,9 +53,9 @@ rule "PRI_SUBMIT_FILTER"
 				/* String filterOptionCode = filterDetailArray[1]; */
 				/* String val = filterDetailArray[2]; */
 
-				String filterAttributeCode = searchBE.findEntityAttribute("SCH_FILTER_COLUMN").orElse(null);
-				String filterOptionCode = searchBE.findEntityAttribute("SCH_FILTER_OPTION").orElse(null);
-				String val = searchBE.findEntityAttribute("SCH_FILTER_VALUE").orElse(null);
+				String filterAttributeCode = searchBE.findEntityAttribute("SCH_FILTER_COLUMN").orElse(null).getValue();
+				String filterOptionCode = searchBE.findEntityAttribute("SCH_FILTER_OPTION").orElse(null).getValue();
+				String val = searchBE.findEntityAttribute("SCH_FILTER_VALUE").orElse(null).getValue();
 				
 				System.out.println("filterAttributeCode = " + filterAttributeCode);
 				System.out.println("filterOptionCode = " + filterOptionCode);
