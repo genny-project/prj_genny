@@ -43,15 +43,19 @@ rule "PRI_SUBMIT_FILTER"
 	
 			/* Retrieve the target SBE */
 			SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", targetCode, SearchEntity.class, serviceToken.getToken());
-			searchBE.setFilterIndex(searchBE.getMaximumFilterWeight() + 1.0);
 
 			/* Get filter details from cache */
 			String[] filterDetailArray = VertxUtils.getObject(serviceToken.getRealm(), "", "FLT_"+targetCode, String[].class, serviceToken.getToken());
-			if (filterDetailArray != null) {
+			if (searchBE != null) {
+				searchBE.setFilterIndex(searchBE.getMaximumFilterWeight() + 1.0);
 	 
-				String filterAttributeCode = filterDetailArray[0];
-				String filterOptionCode = filterDetailArray[1];
-				String val = filterDetailArray[2];
+				/* String filterAttributeCode = filterDetailArray[0]; */
+				/* String filterOptionCode = filterDetailArray[1]; */
+				/* String val = filterDetailArray[2]; */
+
+				String filterAttributeCode = searchBE.findEntityAttribute("SCH_FILTER_COLUMN").orElse(null).getValue();
+				String filterOptionCode = searchBE.findEntityAttribute("SCH_FILTER_OPTION").orElse(null).getValue();
+				String val = searchBE.findEntityAttribute("SCH_FILTER_VALUE").orElse(null).getValue();
 				
 				System.out.println("filterAttributeCode = " + filterAttributeCode);
 				System.out.println("filterOptionCode = " + filterOptionCode);
