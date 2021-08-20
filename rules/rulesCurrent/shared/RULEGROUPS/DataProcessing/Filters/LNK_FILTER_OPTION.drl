@@ -30,28 +30,16 @@ rule "LNK_FILTER_OPTION"
 		/* Fetch Search from Cache */
 		SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", targetCode, SearchEntity.class, serviceToken.getToken());
 
+		/* Save the new filter items in cache */
+		value = beUtils.cleanUpAttributeValue(value);
+		System.out.println("clean value = " + value);
+
 		/* Add Filter Column */
 		AttributeText attributeFilterOption = new AttributeText("SCH_FILTER_OPTION", "Filter Option");
 		searchBE.addAttribute(attributeFilterOption, 5.0, value);
 
 		/* Update Search in Cache */
 		VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken.getToken());
-
-		/* Get filter array from cache */
-		String[] newFilterArray = VertxUtils.getObject(serviceToken.getRealm(), "", "FLT_"+targetCode, String[].class, serviceToken.getToken());
-
-		/* Create if it doesn't exist */
-		if (newFilterArray == null) {
-			newFilterArray = new String[3];
-		}
-
-		/* Save the new filter items in cache */
-		value = beUtils.cleanUpAttributeValue(value);
-		System.out.println("clean value = " + value);
-
-		newFilterArray[1] = value;
-
-		VertxUtils.putObject(serviceToken.getRealm(), "", "FLT_"+targetCode, newFilterArray, serviceToken.getToken());
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */

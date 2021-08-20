@@ -33,10 +33,8 @@ rule "CHECK_FILTER_SUBMIT"
 		String targetCode = answer.getTargetCode();
 		System.out.println("targetCode = " + targetCode);
 
-		/* Get filter array from cache */
-		/* String[] newFilterArray = VertxUtils.getObject(serviceToken.getRealm(), "", "FLT_"+targetCode, String[].class, serviceToken.getToken()); */
-
 		SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", targetCode, SearchEntity.class, serviceToken.getToken());
+
 		if (searchBE != null) {
 			String filterAttributeCode = searchBE.findEntityAttribute("SCH_FILTER_COLUMN").orElse(null).getValue();
 			String filterOptionCode = searchBE.findEntityAttribute("SCH_FILTER_OPTION").orElse(null).getValue();
@@ -50,16 +48,6 @@ rule "CHECK_FILTER_SUBMIT"
 					shouldEnable = true;
 				}
 			}
-
-			/* boolean shouldEnable = Arrays.asList(newFilterArray).stream().allMatch(val -> val != null); */
-
-			/* Used to store the option such as SEL_LIKE or SEL_EQUAL_TO */
-			/* String optionSelection = newFilterArray[1]; */
-
-			/* Allow Submit if it is a Boolean Selection */
-			/* if (!shouldEnable && (optionSelection.equals("SEL_IS_TRUE") || optionSelection.equals("SEL_IS_FALSE"))) { */
-			/* 	shouldEnable = true; */
-			/* } */
 
 			String logStr = (shouldEnable ? "ENABLING" : "DISABLING") + " Submit Button!";
 			System.out.println(logStr);
