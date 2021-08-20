@@ -171,12 +171,7 @@ hcBe = beUtils. getBaseEntityByCode(source);
 kcontext.setVariable(&quot;hcBe&quot;, hcBe);
 System.out.println(&quot;HC_Validation hcBe: &quot; + hcBe);
 
-String industry = hcBe.getValue(&quot;PRI_LEGAL_NAME&quot;,null);
-beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,&quot;PRI_LEGAL_NAME&quot;, industry));
-
-newBe = beUtils. getBaseEntityByCode(codes);
-kcontext.setVariable(&quot;newBe&quot;, newBe);
-System.out.println(&quot;HC_Validation newBe After: &quot; + newBe);</bpmn2:script>
+</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_2" drools:priority="1" sourceRef="StartEvent_1" targetRef="ScriptTask_1"/>
       <bpmn2:task id="Task_2" drools:taskName="AskQuestionTask" drools:displayName="Ask Question Task" drools:icon="icons/icon-info.gif" name="QUE_HOST_CPY_VAL_GRP">
