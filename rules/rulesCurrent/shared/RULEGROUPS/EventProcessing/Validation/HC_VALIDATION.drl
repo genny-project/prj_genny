@@ -106,18 +106,18 @@ rule "HC_VALIDATION"
 							}
 						} 
 						
-						String industry = hcBe.getValue("LNK_COMPANY_INDUSTRY",null);
-						String industryInc = hcBe.getValue("LNK_COMPANY_INC",null);
+						String industry = hcBe.getValue("LNK_COMPANY_INDUSTRY","");
+						String industryInc = hcBe.getValue("LNK_COMPANY_INC","");
 						
 						System.out.println(" industry " + industry);
 						System.out.println(" industryInc " + industryInc);
-						if(industry != null)
+						if(industry != "")
 						{
 							industry = beUtils.cleanUpAttributeValue(industry);
 							BaseEntity linkedBe = beUtils.getBaseEntityByCode(industry);
 							industry = linkedBe.getValue("PRI_NAME", null);
 						}
-						if(industryInc != null)
+						if(industryInc != "")
 						{	
 							industryInc = industryInc.substring(0, 4);
 						}
