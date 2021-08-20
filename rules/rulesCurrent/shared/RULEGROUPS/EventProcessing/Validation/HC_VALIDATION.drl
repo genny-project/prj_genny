@@ -118,14 +118,14 @@ rule "HC_VALIDATION"
 						
 						System.out.println(" industry " + industry);
 						System.out.println(" industryInc " + industryInc);
-						if(industry != "")
+						if(industry != null)
 						{
 							industry = beUtils.cleanUpAttributeValue(industry);
 							BaseEntity linkedBe = beUtils.getBaseEntityByCode(industry);
 							industry = linkedBe.getValue("PRI_NAME", null);
 							contextMap.put("Industry", industry);
 						}
-						if(industryInc != "")
+						if(industryInc != null)
 						{	
 							industryInc = industryInc.substring(0, 4);
 							contextMap.put("IndustryInc", industryInc);
