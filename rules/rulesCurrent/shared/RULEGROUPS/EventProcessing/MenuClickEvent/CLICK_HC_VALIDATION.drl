@@ -113,10 +113,10 @@ rule "CLICK_HC_VALIDATION"
 				msg.setSend(true);  	
 				VertxUtils.writeMsg("webcmds",msg);
 				
-				QDataBaseEntityMessage msg = new QDataBaseEntityMessage(newBe);
-				msg.setToken(userToken.getToken());
-				msg.setReplace(true);
-				VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+				QDataBaseEntityMessage beMsg = new QDataBaseEntityMessage(newBe);
+				beMsg.setToken(userToken.getToken());
+				beMsg.setReplace(true);
+				VertxUtils.writeMsg("webcmds", JsonUtils.toJson(beMsg));
 				
 				
 		} else {
