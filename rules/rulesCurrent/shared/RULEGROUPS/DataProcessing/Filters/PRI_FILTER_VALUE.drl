@@ -72,6 +72,21 @@ rule "PRI_FILTER_VALUE"
 
 		}
 
+		/* Fetch Search from Cache */
+		SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", targetCode, SearchEntity.class, serviceToken.getToken());
+
+		/* Add Filter Column */
+		AttributeText attributeFilterColumn = new AttributeText("SCH_FILTER_VALUE", "Filter Value");
+		try {
+			searchBE.addAttribute(attributeTitle, 5.0, value);
+		} catch (BadDataException e) {
+			log.error("Bad Filter Value");
+		}
+
+		/* Update Search in Cache */
+		VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken.getToken());
+
+
 		/* Save the new filter items in cache */
 		newFilterArray[2] = value;
 		VertxUtils.putObject(serviceToken.getRealm(), "", "FLT_"+targetCode, newFilterArray, serviceToken.getToken());
