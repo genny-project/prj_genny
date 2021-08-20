@@ -7,6 +7,7 @@ import life.genny.qwanda.Answer;
 import life.genny.qwanda.Answers;
 import java.util.List;
 import java.util.ArrayList;
+import life.genny.qwanda.attribute.AttributeText;
 
 rule "PRI_FILTER_VALUE"
     ruleflow-group 'DataProcessing'
@@ -36,14 +37,6 @@ rule "PRI_FILTER_VALUE"
 		String value = answer.getValue();
 		System.out.println("value = " + value);
 
-		/* Get filter array from cache */
-		String[] newFilterArray = VertxUtils.getObject(serviceToken.getRealm(), "", "FLT_"+targetCode, String[].class, serviceToken.getToken());
-
-		/* Create if it doesn't exist */
-		if (newFilterArray == null) {
-			newFilterArray = new String[3];
-		}
-
 		/* Get Asks from cache */
 		Ask filterGrpAsk = VertxUtils.getObject(serviceToken.getRealm(), "", "QUE_FILTER_GRP_"+targetCode, Ask.class, serviceToken.getToken());
 
@@ -58,23 +51,20 @@ rule "PRI_FILTER_VALUE"
 				if (selName != null) {
 					value = selName;
 				}
-				/* String selectionName = selectionEntity.getValue("PRI_NAME", null); */
-				/* System.out.println("selectionName = " + selectionName); */
-
-				/* if (selectionName != null) { */
-				/* 	value = selectionName; */
-				/* } else { */
-				/* 	System.out.println("selectionName is NULL"); */
-				/* } */
 			} else {
 				System.out.println("selectionEntity is NULL");
 			}
-
 		}
 
-		/* Save the new filter items in cache */
-		newFilterArray[2] = value;
-		VertxUtils.putObject(serviceToken.getRealm(), "", "FLT_"+targetCode, newFilterArray, serviceToken.getToken());
+		/* Fetch Search from Cache */
+		SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", targetCode, SearchEntity.class, serviceToken.getToken());
+
+		/* Add Filter Column */
+		AttributeText attributeFilterValue = new AttributeText("SCH_FILTER_VALUE", "Filter Value");
+		searchBE.addAttribute(attributeFilterValue, 5.0, value);
+
+		/* Update Search in Cache */
+		VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken.getToken());
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
