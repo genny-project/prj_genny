@@ -397,6 +397,8 @@ System.out.println(&quot;EDIT_ENTITY : Setting PRI_PROFILE to Complete for &quot
 beUtils = new BaseEntityUtils(userToken);
 beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetBe.getCode(), &quot;PRI_PROFILE&quot;, &quot;Complete&quot;));
 
+/* This is temporary. Needs to be done generically.*/
+
 Boolean userRole = targetBe.getValue(&quot;PRI_IS_INTERN&quot;, null);
 
 if (userRole == true) {
