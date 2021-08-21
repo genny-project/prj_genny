@@ -43,15 +43,12 @@ rule "PRI_SUBMIT_FILTER"
 	
 			/* Retrieve the target SBE */
 			SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", targetCode, SearchEntity.class, serviceToken.getToken());
-			searchBE.setFilterIndex(searchBE.getMaximumFilterWeight() + 1.0);
-
-			/* Get filter details from cache */
-			String[] filterDetailArray = VertxUtils.getObject(serviceToken.getRealm(), "", "FLT_"+targetCode, String[].class, serviceToken.getToken());
-			if (filterDetailArray != null) {
+			if (searchBE != null) {
+				searchBE.setFilterIndex(searchBE.getMaximumFilterWeight() + 1.0);
 	 
-				String filterAttributeCode = filterDetailArray[0];
-				String filterOptionCode = filterDetailArray[1];
-				String val = filterDetailArray[2];
+				String filterAttributeCode = searchBE.findEntityAttribute("SCH_FILTER_COLUMN").orElse(null).getValue();
+				String filterOptionCode = searchBE.findEntityAttribute("SCH_FILTER_OPTION").orElse(null).getValue();
+				String val = searchBE.findEntityAttribute("SCH_FILTER_VALUE").orElse(null).getValue();
 				
 				System.out.println("filterAttributeCode = " + filterAttributeCode);
 				System.out.println("filterOptionCode = " + filterOptionCode);
@@ -176,13 +173,17 @@ rule "PRI_SUBMIT_FILTER"
 					}
 				}
 				
+				/* Clear filter options */
+				AttributeText attributeFilterColumn = new AttributeText("SCH_FILTER_COLUMN", "Filter Column");
+				AttributeText attributeFilterOption = new AttributeText("SCH_FILTER_OPTION", "Filter Option");
+				AttributeText attributeFilterValue = new AttributeText("SCH_FILTER_VALUE", "Filter Value");
+				searchBE.addAttribute(attributeFilterColumn, 5.0, "");
+				searchBE.addAttribute(attributeFilterOption, 5.0, "");
+				searchBE.addAttribute(attributeFilterValue, 5.0, "");
 
 				VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
 					beUtils.getGennyToken().getToken());
 				System.out.println("Performing search...");
-
-				/* Remove the filter array from cache */
-				VertxUtils.putObject(serviceToken.getRealm(), "", "FLT_"+targetCode, null, serviceToken.getToken());
 
 				long totalTime = TableUtils.searchTable(beUtils, searchBE, true);
 				System.out.println("total took " + (totalTime) + " ms"); 

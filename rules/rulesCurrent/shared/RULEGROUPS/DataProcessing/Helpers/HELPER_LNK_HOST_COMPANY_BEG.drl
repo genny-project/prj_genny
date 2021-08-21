@@ -118,7 +118,7 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 
 		
 		if(timeZone != null) {
-			Answer timeZoneAnswer = new Answer(sourceCode, targetCode, "PRI_TIME_ZONE", timeZone, false, true);
+			Answer timeZoneAnswer = new Answer(sourceCode, targetCode, "PRI_TIMEZONE_ID", timeZone, false, true);
 			answers.add(timeZoneAnswer);
 			VertxUtils.sendToFrontEnd(userToken, timeZoneAnswer);
 		}

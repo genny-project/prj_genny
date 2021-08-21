@@ -53,8 +53,12 @@ rule "IS_QA_INTERN"
 		BaseEntity userBe = beUtils.getBaseEntityByCode(userToken.getUserCode());
 		if (userBe != null) {
 			String addedBy = userBe.getValue("PRI_NAME", null);
+			if (StringUtils.isBlank(addedBy)) {
+				addedBy = userBe.getCode();
+			}
 			System.out.println("addedBy: " + addedBy);
 			answers.add(new Answer(userToken.getCode(), newBe.getCode(), "PRI_ADDED_BY", addedBy));
+			answers.add(new Answer(userToken.getCode(), newBe.getCode(), "LNK_AUTHOR", "[\""+userBe.getCode()+"\"]"));
 		}
 
 		String target = newBe.getCode();	

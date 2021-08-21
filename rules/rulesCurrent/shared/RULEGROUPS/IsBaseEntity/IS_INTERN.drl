@@ -41,13 +41,12 @@ rule "IS_INTERN"
  		List<Answer> answers = new ArrayList<>();
 
  		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_INTERN", "true")); */
- 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "AVAILABLE"));
+ 		newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "AVAILABLE"));
  		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_DISABLED", "false")); */
  		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS_COLOR", "default")); */
  		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_NUM_JOURNALS", "0")); */
 
 
-		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
 
 		/* LNK_INTERNSHIP_DURATION */
 
@@ -64,7 +63,7 @@ rule "IS_INTERN"
 						assoc_duration = assoc_durationBe.getValue("PRI_NAME", null);
 						System.out.println("assoc_duration = " +assoc_duration);
 
-						answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASSOC_DURATION", assoc_duration));
+						newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASSOC_DURATION", assoc_duration));
 
 				} else {
 					System.out.println("ERROR: Null assoc_durationBe");
@@ -74,7 +73,7 @@ rule "IS_INTERN"
 		}
 
 		/* ANZCO */
-		answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ANZCO", "NA"));
+		newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ANZCO", "NA"));
 
 		String lnkIndustry = newBe.getValue("LNK_INDUSTRY", null);
 		System.out.println("lnkIndustry : " + lnkIndustry);
@@ -105,7 +104,7 @@ rule "IS_INTERN"
 								System.out.println("anzcoCode: " + anzcoCode);
 
 								if(anzcoCode != null) {
-										answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ANZCO", anzcoCode));
+										newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ANZCO", anzcoCode));
 										System.out.println("Reached the holy land - anzcoCode: " + anzcoCode);
 								} else {
 									System.out.println("ERROR: Null anzcoCode");
@@ -137,7 +136,7 @@ rule "IS_INTERN"
 						System.out.println("ep_name: " + ep_name);
 
 						if(ep_name != null) {
-								answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASSOC_EP", ep_name));
+								newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASSOC_EP", ep_name));
 						} else {
 							System.out.println("ERROR: Null ep_name");
 						}
@@ -173,7 +172,7 @@ rule "IS_INTERN"
 							userId = KeycloakUtils.updateUser(userCode,serviceToken.getToken(), serviceToken.getRealm(), email, firstname, lastname,  email, null, "user", "users");
 							userId = userId.toUpperCase();
 							Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),newBe.getCode(),"PRI_UUID",userId);
-							answers.add(keycloakId);
+							newBe = beUtils.saveAnswer(keycloakId);
 							System.out.println("Created User "+email+" in Keycloak with id = "+userId);
 
 							/* Generate a random 15 char password */
@@ -364,8 +363,6 @@ rule "IS_INTERN"
 
 			newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHED_INTERNSHIPS", results));
 
-			newBe = beUtils.getBaseEntityByCode(newBe.getCode());
-
 			/* Send BE to the FE */
 			QDataBaseEntityMessage msg = new QDataBaseEntityMessage(newBe);
 			msg.setToken(userToken.getToken());
@@ -385,7 +382,6 @@ rule "IS_INTERN"
 		/* ================================================================= */
 
 
-		beUtils.saveAnswers(answers);
 
 		retract(newBe);
 

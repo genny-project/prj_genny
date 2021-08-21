@@ -37,7 +37,7 @@ rule "EDIT_INTERN"
  		
 
  		answers.add(new Answer(userToken.getUserCode(), targetBe.getCode() ,"PRI_PROFILE", "Complete"));  
-		
+		answers.add(new Answer(userToken.getUserCode(), targetBe.getCode() ,"PRI_STATUS", "AVAILABLE"));  /* TODO THIS NEEDS TO MATCH THE MANDATORY FIELDS */
 
 		targetBe = beUtils.getBaseEntityByCode(targetBe.getCode());
 		

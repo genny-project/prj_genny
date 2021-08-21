@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 rule "HELPER_PRI_FIRSTNAME.drl"
     ruleflow-group 'DataProcessing'
-        salience 5000 
+        salience 15000 
     when
       beUtils : BaseEntityUtils()
       not Answer( attributeCode == "LNK_GENDER_SELECT" )

@@ -84,12 +84,10 @@ rule "CLICK_HC_VALIDATION"
 				/* Save DOC_OHS_CODE against HC */
 				
 				hcbe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), hcbe.getCode(), "LNK_HCV_DOC", hcvCode));
-				String legalName = beUtils.getValueSaveAnswer(userToken.getUserCode(), newBe.getCode(), hcbe.getCode(), "PRI_LEGAL_NAME", "PRI_LEGAL_NAME", "legalName");
-				
 				/* Set Parameters */
  		
 				output.setAskSourceCode(user);
-				output.setTargetCode(hcvCode);
+				output.setTargetCode(newBe.getCode());
 				output.setTypeOfResult("SIGNAL");
 				output.setResultCode("START_HC_VAL");	
 				output.setSuitCase(hcCode);
@@ -112,6 +110,11 @@ rule "CLICK_HC_VALIDATION"
 				msg.setToken(beUtils.getGennyToken().getToken());
 				msg.setSend(true);  	
 				VertxUtils.writeMsg("webcmds",msg);
+				
+				QDataBaseEntityMessage beMsg = new QDataBaseEntityMessage(hcbe);
+				beMsg.setToken(userToken.getToken());
+				beMsg.setReplace(true);
+				VertxUtils.writeMsg("webcmds", JsonUtils.toJson(beMsg));
 				
 				
 		} else {

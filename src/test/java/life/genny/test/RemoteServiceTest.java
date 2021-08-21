@@ -12,6 +12,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.datatype.jsonorg.JSONArrayDeserializer;
+import life.genny.bootxport.bootx.DEFBaseentityAttribute;
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
@@ -47,6 +49,7 @@ import life.genny.qwanda.validation.Validation;
 import life.genny.qwanda.validation.ValidationList;
 import life.genny.rules.QRules;
 
+import org.apache.http.message.BasicNameValuePair;
 import org.jboss.logging.Logger;
 import org.jbpm.services.api.DefinitionService;
 import org.jbpm.services.api.ProcessService;
@@ -56,8 +59,10 @@ import org.jbpm.services.api.admin.ProcessInstanceAdminService;
 import org.jbpm.services.api.model.DeploymentUnit;
 import org.jbpm.services.api.query.QueryService;
 import org.jbpm.services.api.utils.KieServiceConfigurator;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.mortbay.util.ajax.JSON;
 
 import javax.json.Json;
 import javax.json.JsonReader;
@@ -173,17 +178,17 @@ public class RemoteServiceTest {
 
         // VertxUtils.cachedEnabled = false;
         VertxUtils.cachedEnabled = false;
-//				eventBusMock = new EventBusMock();
-//				vertxCache = new JunitCache(); // MockCache
-//				VertxUtils.init(eventBusMock, vertxCache);
+//          eventBusMock = new EventBusMock();
+//          vertxCache = new JunitCache(); // MockCache
+//          VertxUtils.init(eventBusMock, vertxCache);
 //
-//				qRules = GennyJbpmBaseTest.setupLocalService();
-//				userToken = new GennyToken("userToken", qRules.getToken());
-//				serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
+//          qRules = GennyJbpmBaseTest.setupLocalService();
+//          userToken = new GennyToken("userToken", qRules.getToken());
+//          serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
 
         beUtils = new BaseEntityUtils(userToken);
         beUtils.setServiceToken(serviceToken);
-//	        }
+//         }
 
         // System.out.println("serviceToken=" + serviceToken.getToken());
 
@@ -201,33 +206,71 @@ public class RemoteServiceTest {
 //        Set up the defs
         setUpDefs();
 
-        BaseEntity previousItem = beUtils.getBaseEntityByCode("APT_289F4E9B-264E-4E25-B43C-118BE6B0");
-
-        if (previousItem!=null){
-            System.out.println(previousItem);
-        }
+        BaseEntity remoteServiceBE = beUtils.getBaseEntityByCode("RMS_JNL_PROCESS_001");
+//        if (remoteServiceBE!=null){
+//            System.out.println(remoteServiceBE);
+//            for(EntityAttribute ea : remoteServiceBE.getBaseEntityAttributes()){
+//                System.out.println(ea);
+//            }
+//        }
 
         // Use this bit to test creation of BEs by using their DEF_ names
-        // For example im creating an Appointment BE
-        BaseEntity remoteJobBE = create("DEF_INTERN");
+        BaseEntity remoteJobDef = beUtils.getDEFByCode("DEF_REMOTE_JOB");
+        BaseEntity remoteJobBE = beUtils.create(remoteJobDef);
         System.out.println(remoteJobBE);
         remoteJobBE.setStatus(EEntityStatus.PENDING);
-        for(EntityAttribute ea : remoteJobBE.getBaseEntityAttributes()){
-            System.out.println(ea);
-        }
+//        for(EntityAttribute ea : remoteJobBE.getBaseEntityAttributes()){
+//            System.out.println(ea);
+//        }
 
 
-//        List<BaseEntity> searchItems = beUtils.getBaseEntitys(searchBE);
-//        System.out.println(searchItems);
+//      Use a search BE for the api test
+        SearchEntity searchBEForApi = new SearchEntity("SBE_JNL", "JNL Search")
+                .addSort("PRI_JOURNAL_DATE", "Created", SearchEntity.Sort.ASC)
+                .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
+                .addColumn("PRI_CODE", "Name")
+                .addColumn("PRI_JOURNAL_LEARNING_OUTCOMES", "LearningOutcomes")
+                .addColumn("PRI_JOURNAL_TASKS","JournalTasks")
+                .addColumn("LNK_INTERN","InternID")
+                .addColumn("PRI_STATUS","Status");
+        searchBEForApi.setRealm(realm);
+        searchBEForApi.setPageStart(0);
+        searchBEForApi.setPageSize(1000);
+//        System.out.print(searchBEForApi);
+//      Declare the api route
+        String apiRoute = "http://localhost:5000/api/response";
+//       Get an authentication token
+        String authToken = userToken.getToken();
+//        System.out.println(authToken);
+//      Make the remote service base entity
+        BaseEntity remoteServiceTestDef = beUtils.getDEFByCode("DEF_REMOTE_SERVICE");
+        BaseEntity remoteServiceTest = beUtils.create(remoteServiceTestDef);
+        remoteServiceTest.setValue("PRI_NAME", "Remote Service API Test");
+        remoteServiceTest.setValue("PRI_URL", apiRoute);
+        remoteServiceTest.setValue("LNK_SEARCH_BES", searchBEForApi.toString());
 
-//        String remoteServiceID = "Python-Job-1";
-//        String remoteServiceUUID = RemoteServiceUtils.InvokeRemoteService(remoteServiceID, searchItems);
-//
-//        System.out.println(remoteServiceUUID);
+//       beUtils.saveBaseEntity(remoteServiceTest);
+
+//      Make the api call
+        String apiPostRequest = QwandaUtils.apiPostEntity2(apiRoute, remoteServiceTest.getValueAsString("LNK_SEARCH_BES"), authToken , null);
+        System.out.println(apiPostRequest);
+
+
+
 
     }
 
     public void setUpDefs() throws BadDataException {
+        BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
+        beUtils.setServiceToken(serviceToken);
+//        BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
+//                org.codehaus.plexus.util.StringUtils.capitaliseAllWords(serviceToken.getRealm()));
+//        project.setRealm(serviceToken.getRealm());
+//        VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
+//                JsonUtils.toJson(project), serviceToken.getToken());
+//        VertxUtils.writeCachedJson(realm,  ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(),JsonUtils.toJson(project), serviceToken.getToken());
+
+
         SearchEntity searchBE = new SearchEntity("SBE_DEF", "DEF check")
                 .addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
                 .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "DEF_%")
@@ -344,8 +387,8 @@ public class RemoteServiceTest {
 //                    TODO: check to see if the email exists in the database and keycloak
                 }
             }
-        // this is a user, generate keycloak id
-        uuid = KeycloakUtils.createDummyUser(serviceToken.getToken(), serviceToken.getRealm());
+            // this is a user, generate keycloak id
+            uuid = KeycloakUtils.createDummyUser(serviceToken.getToken(), serviceToken.getRealm());
             Optional<String> optCode = defBE.getValue("PRI_PREFIX");
             if (optCode.isPresent()){
                 String name = defBE.getName();
