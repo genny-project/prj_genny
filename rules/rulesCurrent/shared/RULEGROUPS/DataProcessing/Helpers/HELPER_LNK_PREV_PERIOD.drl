@@ -83,8 +83,9 @@ rule "HELPER_LNK_PREV_PERIOD"
 				System.out.println("HELPER_LNK_PREV_PERIOD endDate is:: " + endDate);
 
 				if (startDate != null) {
-					String[] startDateSplit = startDate.split("T", 0);
+					String[] startDateSplit = startDate.split("T");
 					startDate = startDateSplit[0];
+					System.out.println("HELPER_LNK_PREV_PERIOD startDate from tartDateSplit[0] is:: " + startDate);
 					startDate = (LocalDate.parse(startDate, dateFormat)).toString();
 				} else {
 					startDate = "";
