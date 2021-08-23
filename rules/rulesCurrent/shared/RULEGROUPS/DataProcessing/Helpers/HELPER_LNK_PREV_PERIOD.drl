@@ -72,8 +72,6 @@ rule "HELPER_LNK_PREV_PERIOD"
 			JsonObject tenureJson = null;
 			DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MMM-yy");
 
-			LocalDate startDateLocalDate = null;
-
 			if(prevPeriodStr != null) {
 				System.out.println("prevPeriodStr is:: " + prevPeriodStr);
 
@@ -88,10 +86,8 @@ rule "HELPER_LNK_PREV_PERIOD"
 				if (startDate != null) {
 					String[] startDateSplit = startDate.split("T");
 					startDate = startDateSplit[0];
-					System.out.println("HELPER_LNK_PREV_PERIOD startDate from tartDateSplit[0] is:: " + startDate);
-					startDateLocalDate = (LocalDate.parse(startDate, dateFormat));
-
-					System.out.println("HELPER_LNK_PREV_PERIOD startDateLocalDate is:: " + startDateLocalDate);
+					System.out.println("HELPER_LNK_PREV_PERIOD startDate from startDateSplit[0] is:: " + startDate);
+					startDate = (LocalDate.parse(""+startDate+"", dateFormat)).toString();
 				} else {
 					startDate = "";
 					System.out.println("startDate is empty!");
