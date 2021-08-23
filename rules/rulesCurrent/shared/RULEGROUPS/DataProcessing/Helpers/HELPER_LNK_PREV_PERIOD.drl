@@ -72,9 +72,15 @@ rule "HELPER_LNK_PREV_PERIOD"
 			DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MMM-yy");
 
 			if(prevPeriodStr != null) {
+				System.out.println("prevPeriodStr is:: " + prevPeriodStr);
+
 				tenureJson = new JsonObject(prevPeriodStr);
 				startDate = (String) tenureJson.getString("startDate");
 				endDate = (String) tenureJson.getString("endDate");
+
+				System.out.println("HELPER_LNK_PREV_PERIOD tenureJson is:: " + tenureJson);
+				System.out.println("HELPER_LNK_PREV_PERIOD startDate is:: " + startDate);
+				System.out.println("HELPER_LNK_PREV_PERIOD endDate is:: " + endDate);
 
 				if (startDate != null) {
 					String[] startDateSplit = startDate.split("T");
