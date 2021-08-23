@@ -22,6 +22,7 @@ import java.io.UnsupportedEncodingException;
 import life.genny.utils.DropdownUtils;
 import java.util.List;
 import java.util.ArrayList;
+import java.time.format.DateTimeFormatter;
 
 rule "HELPER_LNK_PREV_PERIOD"
 	ruleflow-group 'DataProcessing'
@@ -46,7 +47,7 @@ rule "HELPER_LNK_PREV_PERIOD"
 
 		BaseEntity be = beUtils.getBaseEntityByCode(targetCode);
 
-		if(be != null){
+		/*if(be != null){
 			String prevPeriodStr = be.getValue("LNK_PREV_PERIOD", null);
 
 			if(prevPeriodStr != null) {
@@ -57,7 +58,55 @@ rule "HELPER_LNK_PREV_PERIOD"
 				VertxUtils.sendToFrontEnd(userToken, ans);
 
 			} else {
-				System.out.println("prevPeriodStr is empty. ");
+				System.out.println("prevPeriodStr is empty.");
 			}
+		} else {
+			System.out.println("ERROR! be is null.");
+		}*/
+
+		if(be != null) {
+			String prevPeriodStr = be.getValue("LNK_PREV_PERIOD", null);
+			String startDate = null;
+			String endDate = null;
+			JsonObject tenureJson = null;
+			DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MMM-yy");
+
+			if(prevPeriodStr != null) {
+				tenureJson = new JsonObject(prevPeriodStr);
+				startDate = (String) tenureJson.getString("startDate");
+				endDate = (String) tenureJson.getString("endDate");
+
+				if (startDate != null) {
+					String[] startDateSplit = startDate.split("T");
+					startDate = startDateSplit[0];
+					startDate = (LocalDate.parse(startDate, dateFormat)).toString();
+				} else {
+					startDate = "";
+					System.out.println("startDate is empty!");
+				}
+
+				if (endDate != null) {
+					String[] endDateSplit = endDate.split("T");
+					endDate = endDateSplit[0];
+					endDate = (LocalDate.parse(endDate, dateFormat)).toString();
+				} else {
+					endDate = "";
+					System.out.println("endDate is empty!");
+				}
+
+				prevPeriodStr = startDate + " - " + endDate;
+				System.out.println("prevPeriodStr:: " + prevPeriodStr);
+
+
+				System.out.println("prevPeriodStr  :: " + prevPeriodStr);
+				Answer ans = new Answer(sourceCode, targetCode, "PRI_PREV_PERIOD", prevPeriodStr);
+				beUtils.saveAnswer(ans);
+				VertxUtils.sendToFrontEnd(userToken, ans);
+
+			} else {
+				System.out.println("prevPeriodStr is empty.");
+			}
+		} else {
+			System.out.println("ERROR! be is null.");
 		}
 end
