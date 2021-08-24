@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.3.Final-v20210519-2007-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.2.SNAPSHOT-v20200602-1600-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
   <bpmn2:itemDefinition id="ItemDefinition_9" isCollection="false" structureRef="java.lang.String"/>
   <bpmn2:itemDefinition id="ItemDefinition_556" isCollection="false" structureRef="life.genny.models.GennyToken"/>
   <bpmn2:itemDefinition id="ItemDefinition_576" isCollection="false" structureRef="life.genny.utils.CallingProcessToken"/>
@@ -103,6 +103,7 @@
     <bpmn2:property id="key" itemSubjectRef="ItemDefinition_9" name="key"/>
     <bpmn2:property id="source" itemSubjectRef="ItemDefinition_9" name="source"/>
     <bpmn2:property id="beUtils" itemSubjectRef="ItemDefinition_1926" name="beUtils"/>
+    <bpmn2:property id="defBE" itemSubjectRef="ItemDefinition_1076" name="defBE"/>
     <bpmn2:subProcess id="SubProcess_1" name="Intern Builder">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -221,7 +222,7 @@ if (newBe != null) {
 	/* Set Status to Pending */
 	newBe = beUtils.getBaseEntityByCode(newBe.getCode());
 	newBe.setStatus(EEntityStatus.ACTIVE);
-	beUtils.saveBaseEntity(newBe);
+	beUtils.saveBaseEntity(defBE,newBe);
 }</drools:script>
           </drools:onExit-script>
         </bpmn2:extensionElements>
@@ -353,9 +354,10 @@ System.out.println(&quot;defCode = &quot; + defCode);
 
 /* CREATE BE FROM DEF */
 BaseEntity defBE = beUtils.getDEFByCode(defCode);
+kcontext.setVariable(&quot;defBE&quot;, defBE);
 if (defBE == null) {
 	System.out.println(&quot;ERROR: could not find DEF for code &quot; + defCode);
-
+	
 } else {
 	if (entityCode != null) {
 		newBe = beUtils.create(defBE, entityCode, entityCode);
