@@ -48,7 +48,7 @@ rule "HELPER_LNK_PREV_PERIOD"
 
 		BaseEntity be = beUtils.getBaseEntityByCode(targetCode);
 
-		/*if(be != null){
+		if(be != null){
 			String prevPeriodStr = value;
 
 			if(prevPeriodStr != null) {
@@ -63,9 +63,9 @@ rule "HELPER_LNK_PREV_PERIOD"
 			}
 		} else {
 			System.out.println("ERROR! be is null.");
-		}*/
+		}
 
-		if(be != null && value != null) {
+		/*if(be != null && value != null) {
 			String prevPeriodStr = value;
 			String startDate = null;
 			String endDate = null;
@@ -123,5 +123,5 @@ rule "HELPER_LNK_PREV_PERIOD"
 			}
 		} else {
 			System.out.println("ERROR! be is null.");
-		}
+		} */
 end
