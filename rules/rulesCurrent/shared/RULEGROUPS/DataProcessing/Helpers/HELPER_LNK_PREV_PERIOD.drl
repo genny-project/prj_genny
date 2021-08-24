@@ -53,7 +53,7 @@ rule "HELPER_LNK_PREV_PERIOD"
 
 			if(prevPeriodStr != null) {
 				prevPeriodStr = beUtils.extractTenureDates(prevPeriodStr);
-				System.out.println("prevPeriodStr  :: " + prevPeriodStr);
+				System.out.println(drools.getRule().getName() + "prevPeriodStr  :: " + prevPeriodStr);
 				Answer ans = new Answer(sourceCode, targetCode, "PRI_PREV_PERIOD", prevPeriodStr);
 				beUtils.saveAnswer(ans);
 				VertxUtils.sendToFrontEnd(userToken, ans);
