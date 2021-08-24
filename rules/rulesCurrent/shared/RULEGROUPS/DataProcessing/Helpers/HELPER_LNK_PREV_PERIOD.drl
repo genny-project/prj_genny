@@ -72,6 +72,7 @@ rule "HELPER_LNK_PREV_PERIOD"
 			JsonObject tenureJson = null;
 			DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MMM-yy");
 			LocalDate startDateLD = null;
+			LocalDate endDateLD = null;
 
 			if(prevPeriodStr != null) {
 				System.out.println("prevPeriodStr is:: " + prevPeriodStr);
@@ -80,34 +81,37 @@ rule "HELPER_LNK_PREV_PERIOD"
 				startDate = (String) tenureJson.getString("startDate");
 				endDate = (String) tenureJson.getString("endDate");
 
-				System.out.println("HELPER_LNK_PREV_PERIOD tenureJson is:: " + tenureJson);
-				System.out.println("HELPER_LNK_PREV_PERIOD startDate is:: " + startDate);
-				System.out.println("HELPER_LNK_PREV_PERIOD endDate is:: " + endDate);
-
 				if (startDate != null) {
 					String[] startDateSplit = startDate.split("T");
 					startDate = startDateSplit[0];
 					startDateLD = LocalDate.parse(startDate);
-					System.out.println("HELPER_LNK_PREV_PERIOD startDateLD from startDateSplit[0] is:: " + startDateLD);
-					startDate = (String) startDateLD.format(dateFormat);
-					System.out.println("HELPER_LNK_PREV_PERIOD formatted startDate is:: " + startDate);
+
+					if (startDateLD != null) {
+						startDate = (String) startDateLD.format(dateFormat);
+					} else {
+						System.out.println("startDateLD is null! ");
+					}
 				} else {
 					startDate = "";
-					System.out.println("startDate is empty!");
+					System.out.println("startDate is null!");
 				}
 
 				if (endDate != null) {
 					String[] endDateSplit = endDate.split("T");
 					endDate = endDateSplit[0];
-					endDate = (LocalDate.parse(endDate, dateFormat)).toString();
+					endDateLD = LocalDate.parse(endDate);
+
+					if (endDateLD != null) {
+						endDate = (String) endDateLD.format(dateFormat);
+					} else {
+						System.out.println("endDateLD is null! ");
+					}
 				} else {
 					endDate = "";
-					System.out.println("endDate is empty!");
+					System.out.println("endDate is null!");
 				}
 
 				prevPeriodStr = startDate + " - " + endDate;
-				System.out.println("prevPeriodStr:: " + prevPeriodStr);
-
 
 				System.out.println("prevPeriodStr  :: " + prevPeriodStr);
 				Answer ans = new Answer(sourceCode, targetCode, "PRI_PREV_PERIOD", prevPeriodStr);
