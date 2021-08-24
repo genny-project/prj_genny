@@ -157,7 +157,7 @@ if (key.equals(&quot;EDU_PRO&quot;)) {
 System.out.println(&quot;defCode = &quot; + defCode);
 
 /* CREATE BE FROM DEF */
-BaseEntity defBE = beUtils.getDEFByCode(defCode);
+defBE = beUtils.getDEFByCode(defCode);
 kcontext.setVariable(&quot;defBE&quot;, defBE);
 if (defBE == null) {
 	System.out.println(&quot;ERROR: could not find DEF for code &quot; + defCode);
