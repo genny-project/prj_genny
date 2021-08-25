@@ -133,7 +133,7 @@ rule "IS_QA_AGENT"
 				System.out.println("rawSendEmail: " +rawSendEmail);
 		}
 		
-		if (rawSendEmail.equals("SEL_YES")) {
+		if (rawSendEmail.contains("SEL_YES")) {
 		
 			BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
 			

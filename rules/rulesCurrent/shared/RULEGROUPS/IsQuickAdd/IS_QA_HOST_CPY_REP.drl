@@ -175,7 +175,7 @@ rule "IS_QA_HOST_CPY_REP"
 				answers.add(new Answer(userToken.getUserCode(), user.getCode(), "PRI_EMAIL_FLAG", allEmailsBool));
 		}
 		
-		if (allEmails.equals("SEL_YES")) {
+		if (allEmails.contains("SEL_YES")) {
 
 				String superEmail = user.getValue("PRI_EMAIL", null);
 				System.out.println("superEmail: " +superEmail);

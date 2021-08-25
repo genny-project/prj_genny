@@ -237,7 +237,7 @@ rule "IS_QA_INTERN"
 		templateData.put("password", password);
 		templateData.put("url", url);
 		
-		if (rawSendEmail.equals("SEL_YES")) {
+		if (rawSendEmail.contains("SEL_YES")) {
 	 
 			
 			
