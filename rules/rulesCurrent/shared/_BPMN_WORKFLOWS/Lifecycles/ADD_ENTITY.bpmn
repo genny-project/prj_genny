@@ -290,7 +290,7 @@ if (newBe != null) {
 	/* Set Status to Active*/
          newBe = beUtils.getBaseEntityByCode(newBe.getCode());
 	newBe.setStatus(EEntityStatus.ACTIVE);
-	beUtils.saveBaseEntity(newBe);
+	beUtils.saveBaseEntity(defBE,newBe);
 }</drools:script>
           </drools:onExit-script>
         </bpmn2:extensionElements>

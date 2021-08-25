@@ -374,7 +374,7 @@ if (defBE == null) {
 	if (newBe != null) {
 		/* Set Status to Pending */
 		newBe.setStatus(EEntityStatus.PENDING);
-        beUtils.saveBaseEntity(newBe);
+        		beUtils.saveBaseEntity(defBE,newBe);
 	}
 
 	/*
