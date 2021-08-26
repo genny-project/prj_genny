@@ -53,6 +53,7 @@
       <drools:import name="life.genny.qwanda.message.MessageData"/>
       <drools:import name="life.genny.utils.VertxUtils"/>
       <drools:import name="life.genny.utils.VertxUtils.ESubscriptionType"/>
+      <drools:import name="life.genny.qwanda.EEntityStatus"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_2" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_2" name="serviceToken"/>
@@ -399,12 +400,15 @@ beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetBe.getCode(), &quot
 
 /* This is temporary. Needs to be done generically.*/
 
-Boolean userRole = targetBe.getValue(&quot;PRI_IS_INTERN&quot;, null);
+Boolean userRole = targetBe.getValue(&quot;PRI_IS_INTERN&quot;, false);
 
 if (userRole == true) {
-    beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetBe.getCode(), &quot;PRI_STATUS&quot;, &quot;AVAILABLE&quot;));
+ System.out.println(&quot;EDIT_ENTITY BPM: &quot;+targetBe.getCode() + &quot; setting &quot;+targetBe.getCode()+&quot; PRI_STATUS to AVAILABLE&quot;);
+    targetBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetBe.getCode(), &quot;PRI_STATUS&quot;, &quot;AVAILABLE&quot;));
+    targetBe.setStatus(EEntityStatus.ACTIVE);
+   beUtils.saveBaseEntity(targetBe);
 } else {
-    System.out.println(targetBe.getCode() + &quot; is not an intern base entity.&quot;);
+    System.out.println(&quot;EDIT_ENTITY BPM: &quot;+targetBe.getCode() + &quot; is not an intern base entity.&quot;);
 }</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_3" drools:priority="1" sourceRef="Task_2" targetRef="ScriptTask_1"/>
