@@ -37,7 +37,6 @@ rule "FRM_FORM"
     when
       not  Frame3(code == "FRM_FORM")
       serviceToken : GennyToken( code == "PER_SERVICE")
-      test:Frame3(code == "NEVER HAPPEN")
 
     then
         System.out.println("   Generate FRM_FORM  RULE TEST (PRJ_GENNY)" + serviceToken.getUserCode());
