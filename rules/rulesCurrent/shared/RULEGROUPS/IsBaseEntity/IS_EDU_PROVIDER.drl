@@ -60,7 +60,7 @@ rule "IS_EDU_PROVIDER"
 
 		beUtils.saveAnswers(answers);
 		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
-		newBe.setStatus(EEntityStatus.ACTIVE);
+		newBe.setSearchStatus(EEntityStatus.ACTIVE);
 		newBe = beUtils.saveBaseEntity(newBe);
 		retract(newBe)
 	
