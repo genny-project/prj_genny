@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.2.SNAPSHOT-v20200602-1600-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.3.Final-v20210519-2007-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
   <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false" structureRef="life.genny.models.GennyToken"/>
   <bpmn2:itemDefinition id="ItemDefinition_954" isCollection="false" structureRef="life.genny.utils.SessionFacts"/>
   <bpmn2:itemDefinition id="ItemDefinition_1346" isCollection="false" structureRef="life.genny.utils.CallingProcessToken"/>
@@ -483,6 +483,24 @@ beUtils = new BaseEntityUtils(userToken);
 if(!newBe.getCode().startsWith(&quot;JNL_&quot;)){
   beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), &quot;PRI_PROFILE&quot;, &quot;Complete&quot;));
 }
+
+
+/* Fix up name and initials */
+/* HACK HACK HACK: The issue that this is temporarily fixing is caused by slowness in saving/fetching data */
+
+BaseEntity newBe = beUtils.getBaseEntityByCode(newBe.getCode());
+String firstname = person.getValue(&quot;PRI_FIRSTNAME&quot;,&quot;&quot;);
+String firstname = person.getValue(&quot;PRI_FIRSTNAME&quot;,&quot;&quot;);
+			
+String name = firstname + &quot; &quot; + lastname;
+name = name.trim();	
+name = WordUtils.capitalize(name);
+String initials = 	WordUtils.initials(name).toUpperCase();
+
+System.out.println(&quot;Fixing Name -> Name = &quot;+name+&quot;, Initials=&quot;+initials);
+
+answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), &quot;PRI_NAME&quot;, name));
+answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), &quot;PRI_INITIALS&quot;, initials));
 
 </bpmn2:script>
       </bpmn2:scriptTask>
