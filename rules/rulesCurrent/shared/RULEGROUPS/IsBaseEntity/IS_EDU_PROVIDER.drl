@@ -25,7 +25,7 @@ rule "IS_EDU_PROVIDER"
 		beUtils : BaseEntityUtils()
 	  
      then
- 		System.out.println("IS_EDU_PROVIDER: Rule fired" );
+ 		System.out.println("IS_EDU_PROVIDER: Rule fired !!" );
  		System.out.println("IS_EDU_PROVIDER: newBe = " + newBe.getCode()); 
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
