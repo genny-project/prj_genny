@@ -101,7 +101,7 @@ rule "IS_QA_INTERN"
 		String agentEmail = null;
 		String agent = null;
 		if (lnkAgent != null) {
-			if (!lnkAgent.startswith("[")) {
+			if (!lnkAgent.startsWith("[")) {
 				lnkAgent = "[\""+lnkAgent+"\"]";
 			}
 				answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_AGENT", lnkAgent));
