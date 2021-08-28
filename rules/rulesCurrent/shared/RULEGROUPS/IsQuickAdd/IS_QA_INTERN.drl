@@ -101,9 +101,12 @@ rule "IS_QA_INTERN"
 		String agentEmail = null;
 		String agent = null;
 		if (lnkAgent != null) {
+			if (!lnkAgent.startswith("[")) {
+				lnkAgent = "[\""+lnkAgent+"\"]";
+			}
 				answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_AGENT", lnkAgent));
 		
-				lnkAgent = lnkAgent.replace("\"", "").replace("[", "").replace("]", "");
+				/*lnkAgent = lnkAgent.replace("\"", "").replace("[", "").replace("]", "");*/
 				System.out.println("lnkAgent = " +lnkAgent);
 				
 				BaseEntity agentBe = beUtils.getBaseEntityByCode(lnkAgent);
@@ -131,7 +134,7 @@ rule "IS_QA_INTERN"
 		if (lnkBatch != null) {
 				answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_BATCH", lnkBatch));
 		
-				lnkBatch = lnkBatch.replace("\"", "").replace("[", "").replace("]", "");
+				/*lnkBatch = lnkBatch.replace("\"", "").replace("[", "").replace("]", "");*/
 				System.out.println("lnkBatch = " +lnkBatch);
 				
 				BaseEntity batchBe = beUtils.getBaseEntityByCode(lnkBatch);
