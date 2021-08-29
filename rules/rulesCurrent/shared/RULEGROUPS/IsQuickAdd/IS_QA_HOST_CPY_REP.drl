@@ -60,6 +60,7 @@ rule "IS_QA_HOST_CPY_REP"
 		BaseEntity companyBe = null;
 		if (linkedHC != null && !linkedHC.isEmpty()) {
 			System.out.println("LNK_HOST_COMPANY present!");
+			
 		} else {
 			if (isHostCpyRep != null && isHostCpyRep) {
 				/* If HostCpyRep adding another HostCpyRep, then set same company */
@@ -95,6 +96,16 @@ rule "IS_QA_HOST_CPY_REP"
 					Answer answerHC = new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ASSOC_HC", hcName);
 					answers.add(answerHC);
 					VertxUtils.sendToFrontEnd(userToken, answerHC);
+
+					/* copy across all the address and timezone TODO , this needs to be done upon a host company select */
+					answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ADDRESS_ADDRESS1",companyBe.getValue("PRI_ADDRESS_ADDRESS1",null)));
+					answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ADDRESS_CITY",companyBe.getValue("PRI_ADDRESS_CITY",null)));
+					answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ADDRESS_COUNTRY",companyBe.getValue("PRI_ADDRESS_COUNTRY",null)));
+					answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ADDRESS_FULL",companyBe.getValue("PRI_ADDRESS_FULL",null)));
+					answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ADDRESS_JSON",companyBe.getValue("PRI_ADDRESS_JSON",null)));
+					answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ADDRESS_POSTCODE",companyBe.getValue("PRI_ADDRESS_POSTCODE",null)));
+					answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ADDRESS_STATE",companyBe.getValue("PRI_ADDRESS_STATE",null)));
+					answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_TIMEZONE_ID",companyBe.getValue("PRI_TIMEZONE_ID",null)));
 
 				} else {
 					System.out.println("hcName is NULL");
