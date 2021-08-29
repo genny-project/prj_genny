@@ -98,14 +98,14 @@ rule "IS_QA_HOST_CPY_REP"
 					VertxUtils.sendToFrontEnd(userToken, answerHC);
 
 					/* copy across all the address and timezone TODO , this needs to be done upon a host company select */
-					answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ADDRESS_ADDRESS1",companyBe.getValueAsString("PRI_ADDRESS_ADDRESS1",null)));
-					answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ADDRESS_CITY",companyBe.getValueAsString("PRI_ADDRESS_CITY",null)));
-					answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ADDRESS_COUNTRY",companyBe.getValueAsString("PRI_ADDRESS_COUNTRY",null)));
-					answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ADDRESS_FULL",companyBe.getValueAsString("PRI_ADDRESS_FULL",null)));
-					answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ADDRESS_JSON",companyBe.getValueAsString("PRI_ADDRESS_JSON",null)));
-					answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ADDRESS_POSTCODE",companyBe.getValueAsString("PRI_ADDRESS_POSTCODE",null)));
-					answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ADDRESS_STATE",companyBe.getValueAsString("PRI_ADDRESS_STATE",null)));
-					answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_TIMEZONE_ID",companyBe.getValueAsString("PRI_TIMEZONE_ID",null)));
+					answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ADDRESS_ADDRESS1",companyBe.getValueAsString("PRI_ADDRESS_ADDRESS1")));
+					answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ADDRESS_CITY",companyBe.getValueAsString("PRI_ADDRESS_CITY")));
+					answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ADDRESS_COUNTRY",companyBe.getValueAsString("PRI_ADDRESS_COUNTRY")));
+					answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ADDRESS_FULL",companyBe.getValueAsString("PRI_ADDRESS_FULL")));
+					answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ADDRESS_JSON",companyBe.getValueAsString("PRI_ADDRESS_JSON")));
+					answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ADDRESS_POSTCODE",companyBe.getValueAsString("PRI_ADDRESS_POSTCODE")));
+					answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_ADDRESS_STATE",companyBe.getValueAsString("PRI_ADDRESS_STATE")));
+					answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_TIMEZONE_ID",companyBe.getValueAsString("PRI_TIMEZONE_ID")));
 
 				} else {
 					System.out.println("hcName is NULL");
