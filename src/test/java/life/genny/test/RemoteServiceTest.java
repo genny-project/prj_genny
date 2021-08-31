@@ -2,54 +2,28 @@ package life.genny.test;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
-import java.lang.invoke.MethodHandles;
-import java.lang.reflect.Type;
 import java.sql.SQLException;
-import java.text.AttributedString;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.datatype.jsonorg.JSONArrayDeserializer;
-import life.genny.bootxport.bootx.DEFBaseentityAttribute;
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
 import life.genny.qwanda.*;
-import life.genny.qwanda.attribute.AttributeBoolean;
 import life.genny.qwanda.attribute.AttributeText;
 import life.genny.qwandautils.*;
 import life.genny.utils.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.ClientProtocolException;
 
-import com.google.gson.reflect.TypeToken;
-
-import io.vertx.core.json.JsonObject;
-import life.genny.models.Frame3;
 import life.genny.models.GennyToken;
-import life.genny.models.TableData;
-import life.genny.models.Theme;
-import life.genny.models.ThemeAttribute;
-import life.genny.models.ThemeAttributeType;
-import life.genny.models.ThemePosition;
 import life.genny.qwanda.attribute.Attribute;
 import life.genny.qwanda.attribute.EntityAttribute;
-import life.genny.qwanda.datatype.DataType;
 import life.genny.qwanda.entity.BaseEntity;
-import life.genny.qwanda.entity.EntityEntity;
 import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwanda.exception.BadDataException;
-import life.genny.qwanda.message.QBulkMessage;
-import life.genny.qwanda.message.QDataAskMessage;
-import life.genny.qwanda.message.QDataBaseEntityMessage;
-import life.genny.qwanda.validation.Validation;
-import life.genny.qwanda.validation.ValidationList;
-import life.genny.rules.QRules;
 
-import org.apache.http.message.BasicNameValuePair;
+import org.dmg.pmml.True;
 import org.jboss.logging.Logger;
 import org.jbpm.services.api.DefinitionService;
 import org.jbpm.services.api.ProcessService;
@@ -59,10 +33,8 @@ import org.jbpm.services.api.admin.ProcessInstanceAdminService;
 import org.jbpm.services.api.model.DeploymentUnit;
 import org.jbpm.services.api.query.QueryService;
 import org.jbpm.services.api.utils.KieServiceConfigurator;
-import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.mortbay.util.ajax.JSON;
 
 import javax.json.Json;
 import javax.json.JsonReader;
@@ -196,7 +168,7 @@ public class RemoteServiceTest {
 
 
     @Test
-    public void createRemoteService() throws Exception {
+    public void remoteServicesTest() throws Exception {
         VertxUtils.cachedEnabled = false;
 
         if (beUtils == null) {
@@ -206,70 +178,122 @@ public class RemoteServiceTest {
 //        Set up the defs
         setUpDefs();
 
-        BaseEntity remoteServiceBE = beUtils.getBaseEntityByCode("RMS_JNL_PROCESS_001");
-//        if (remoteServiceBE!=null){
-//            System.out.println(remoteServiceBE);
-//            for(EntityAttribute ea : remoteServiceBE.getBaseEntityAttributes()){
-//                System.out.println(ea);
-//            }
-//        }
-
-        // Use this bit to test creation of BEs by using their DEF_ names
-        BaseEntity remoteJobDef = beUtils.getDEFByCode("DEF_REMOTE_JOB");
-        BaseEntity remoteJobBE = beUtils.create(remoteJobDef);
-        System.out.println(remoteJobBE);
-        remoteJobBE.setStatus(EEntityStatus.PENDING);
-//        for(EntityAttribute ea : remoteJobBE.getBaseEntityAttributes()){
-//            System.out.println(ea);
-//        }
-
-
 //      Use a search BE for the api test
-        SearchEntity searchBEForApi = new SearchEntity("SBE_JNL", "JNL Search")
+        SearchEntity searchBEForApi = new SearchEntity("SBE_AI_JOURNAL", "JNL Search")
                 .addSort("PRI_JOURNAL_DATE", "Created", SearchEntity.Sort.ASC)
                 .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
-                .addColumn("PRI_CODE", "Name")
+                .addColumn("PRI_CODE", "Code")
                 .addColumn("PRI_JOURNAL_LEARNING_OUTCOMES", "LearningOutcomes")
                 .addColumn("PRI_JOURNAL_TASKS","JournalTasks")
-                .addColumn("LNK_INTERN","InternID")
+                .addAssociatedColumn("LNK_INTERN", "Intern Name", "PRI_NAME")
                 .addColumn("PRI_STATUS","Status");
         searchBEForApi.setRealm(realm);
         searchBEForApi.setPageStart(0);
         searchBEForApi.setPageSize(1000);
-//        System.out.print(searchBEForApi);
-//      Declare the api route
-        String apiRoute = "http://localhost:5000/api/response";
+
+        beUtils.saveBaseEntity(searchBEForApi);
+
 //       Get an authentication token
         String authToken = userToken.getToken();
-//        System.out.println(authToken);
-//      Make the remote service base entity
-        BaseEntity remoteServiceTestDef = beUtils.getDEFByCode("DEF_REMOTE_SERVICE");
-        BaseEntity remoteServiceTest = beUtils.create(remoteServiceTestDef);
-        remoteServiceTest.setValue("PRI_NAME", "Remote Service API Test");
-        remoteServiceTest.setValue("PRI_URL", apiRoute);
-        remoteServiceTest.setValue("LNK_SEARCH_BES", searchBEForApi.toString());
 
-//       beUtils.saveBaseEntity(remoteServiceTest);
+        // create 5 remote services
+        BaseEntity remoteServiceTest1 = createRemoteService("RMS_JNL_NLP_01", "NLP Journals", "http://localhost:5000/api/response","SBE_AI_JOURNAL");
+        BaseEntity remoteServiceTest2 = createRemoteService("RMS_HC_RECSYS_01", "Recommended Host Companies", "http://localhost:5001/api/response","SBE_AI_HC_RECSYS");
+        BaseEntity remoteServiceTest3 = createRemoteService("RMS_JNL_NLP_02", "NLP Journals Sub Research", "http://10.12.13.1:5002/api/response","SBE_AI_JOURNAL_2");
+        BaseEntity remoteServiceTest4 = createRemoteService("RMS_INTERN_RECSYS_02", "Recommended Interns", "http://10.12.13.1:5003/api/response","SBE_AI_INTERN_RECSYS2");
+        BaseEntity remoteServiceTest5 = createRemoteService("RMS_INTERN_CRED_01", "ID Intern Credentials", "http://ai.gada.io/interns/cred/api/response","SBE_AI_INTERN_CRED");
+
+//      Search Entity to be displayed as a table
+        SearchEntity searchRemoteServices = new SearchEntity("SBE_REMOTE_SERVICES", "Remote AI Services")
+                .addSort("PRI_NAME","Name", SearchEntity.Sort.ASC)
+                .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "RMS_%")
+                .addColumn("PRI_NAME", "Name")
+                .addColumn("PRI_URL", "URL")
+                .addAssociatedColumn("LNK_AUTHOR", "Author Name", "PRI_NAME");
+        searchRemoteServices.setRealm(realm);
+        searchRemoteServices.setPageStart(0);
+        searchRemoteServices.setPageSize(1000);
+
+        beUtils.saveBaseEntity(searchRemoteServices);
+
+        List<BaseEntity> remoteServiceBES = beUtils.getBaseEntitys(searchRemoteServices);
+
+// Display this table search on Alysson
+        String searchCode = "SBE_REMOTE_SERVICES";
+        System.out.println("searchCode  ::  " + searchCode);
+        TableUtils tableUtils = new TableUtils(beUtils);
+        SearchEntity searchBE = tableUtils.getSessionSearch(searchCode);
+        if(searchBE != null) {
+            /* Reset page to start */
+            Answer pageAnswer = new Answer(beUtils.getGennyToken().getUserCode(), searchBE.getCode(),
+                    "SCH_PAGE_START", "0");
+            Answer pageNumberAnswer = new Answer(beUtils.getGennyToken().getUserCode(), searchBE.getCode(),
+                    "PRI_INDEX", "1");
+
+            searchBE = beUtils.updateBaseEntity(searchBE, pageAnswer, SearchEntity.class);
+            searchBE = beUtils.updateBaseEntity(searchBE, pageNumberAnswer, SearchEntity.class);
+
+            VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
+                    beUtils.getGennyToken().getToken());
+            long totalTime = TableUtils.searchTable(beUtils,searchBE, true);
+            System.out.println("total took " + (totalTime) + " ms");
+            /* Send out the Filter question group */
+//            TableUtils.sendFilterQuestions(beUtils, searchBE.getCode());
+
+        }else{
+            System.out.println("searchBE is null");
+        }
+
+
+
+//  Create Remote Service Jobs
+
+
+
+//  List Remote Service Jobs
+
+
+
+
+//  Trigger one of the Remote Service Jobs
+
+
+
+//  Progress Status
+
+
+
+
+//  Fetch results from remote service
+
+
+
+//  Send the results to Alysson - Table of results
+
+
+
+
+
 
 //      Make the api call
-        String apiPostRequest = QwandaUtils.apiPostEntity2(apiRoute, remoteServiceTest.getValueAsString("LNK_SEARCH_BES"), authToken , null);
-        System.out.println(apiPostRequest);
+//        String apiPostRequest = QwandaUtils.apiPostEntity2(apiRoute, remoteServiceTest.getValueAsString("LNK_SEARCH_BES"), authToken , null);
+//        System.out.println(apiPostRequest);
+    }
 
 
+    public BaseEntity createRemoteService(String code, String name, String url, String... searchBECodes) throws Exception {
 
-
+        // Use this bit to test creation of BEs by using their DEF_ names
+        BaseEntity remoteServiceDef = beUtils.getDEFByCode("DEF_REMOTE_SERVICE");
+        BaseEntity remoteServiceBE = beUtils.create(remoteServiceDef, name, code);
+        remoteServiceBE.setStatus(EEntityStatus.ACTIVE);
+        beUtils.saveBaseEntity(remoteServiceBE);
+        return remoteServiceBE;
     }
 
     public void setUpDefs() throws BadDataException {
         BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
         beUtils.setServiceToken(serviceToken);
-//        BaseEntity project = new BaseEntity("PRJ_" + serviceToken.getRealm().toUpperCase(),
-//                org.codehaus.plexus.util.StringUtils.capitaliseAllWords(serviceToken.getRealm()));
-//        project.setRealm(serviceToken.getRealm());
-//        VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
-//                JsonUtils.toJson(project), serviceToken.getToken());
-//        VertxUtils.writeCachedJson(realm,  ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(),JsonUtils.toJson(project), serviceToken.getToken());
-
 
         SearchEntity searchBE = new SearchEntity("SBE_DEF", "DEF check")
                 .addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
@@ -305,118 +329,5 @@ public class RemoteServiceTest {
             log.info("Saving ("+realm+") DEF "+item.getCode());
         }
     }
-
-    public BaseEntity create(final String defCode) throws Exception{
-        return create(beUtils, defCode);
-    }
-
-    public BaseEntity create(final BaseEntityUtils localBeUtils, final String defCode) throws Exception{
-        String localRealm = localBeUtils.getGennyToken().getRealm();
-        BaseEntity defBE = RulesUtils.defs.get(localRealm).get(defCode);
-        return create(localBeUtils, defBE);
-    }
-
-    public BaseEntity create(final BaseEntityUtils localBeUtils, final BaseEntity defBE) throws Exception{
-        return create(localBeUtils, defBE, null, null);
-    }
-
-    public BaseEntity create(final BaseEntityUtils localBeUtils, final BaseEntity defBE, String name) throws Exception{
-        return create(localBeUtils, defBE, name, null);
-    }
-
-
-    public BaseEntity create(final BaseEntityUtils localBeUtils, final BaseEntity defBE, String name, String code) throws Exception{
-        BaseEntity item = null;
-        Optional<EntityAttribute> uuidEA = defBE.findEntityAttribute("ATT_PRI_UUID");
-        if (uuidEA.isPresent()){
-            // if the defBE is a user without an email provided, create a keycloak acc using a unique random uuid
-            String randomEmail = "random+" + UUID.randomUUID().toString().substring(0,20) + "@gada.io";
-            item = createUser(localBeUtils, defBE, randomEmail);
-        }
-        if (item == null){
-            String prefix = defBE.getValueAsString("PRI_PREFIX");
-            if (StringUtils.isBlank(prefix)){
-                log.error("No prefix set for the def: "+ defBE.getCode());
-                throw new Exception("No prefix set for the def: "+ defBE.getCode());
-            }
-            if (StringUtils.isBlank(code)){
-                code = prefix + "_" + UUID.randomUUID().toString().substring(0,32).toUpperCase();
-            }
-
-            if (StringUtils.isBlank(name)){
-                name = defBE.getName();
-            }
-            item = new BaseEntity(code.toUpperCase(), name);
-
-            // Establish all mandatory base entity attributes
-            for(EntityAttribute ea : defBE.getBaseEntityAttributes()){
-                if (ea.getAttribute().getCode().startsWith("ATT_")){
-//                    Only process mandatory attributes
-                    if(ea.getValueBoolean()){
-                        String attrCode = ea.getAttributeCode().substring("ATT_".length());
-                        Attribute attribute = RulesUtils.getAttribute(attrCode, localBeUtils.getGennyToken().getToken());
-
-                        String defaultDefValue = "DFT_" + attrCode;
-
-                        String value = defBE.getValue(defaultDefValue, attribute.getDefaultValue());
-
-                        EntityAttribute newEA = new EntityAttribute(item, attribute, ea.getWeight(),value);
-
-                        item.addAttribute(newEA);
-                    }
-
-                }
-            }
-
-        }
-        localBeUtils.saveBaseEntity(item);
-        return item;
-    }
-
-    public BaseEntity createUser(final BaseEntityUtils localBeUtils, final BaseEntity defBE, final String email) throws Exception {
-        BaseEntity item = null;
-        String uuid = null;
-        Optional<EntityAttribute> uuidEA = defBE.findEntityAttribute("ATT_PRI_UUID");
-        if (uuidEA.isPresent()){
-
-            if (!StringUtils.isBlank(email)){
-//                TODO: run a regexp check to see if the email is valid
-
-                if (!email.startsWith("random+")){
-                    //  Check to see if the email exists
-//                    TODO: check to see if the email exists in the database and keycloak
-                }
-            }
-            // this is a user, generate keycloak id
-            uuid = KeycloakUtils.createDummyUser(serviceToken.getToken(), serviceToken.getRealm());
-            Optional<String> optCode = defBE.getValue("PRI_PREFIX");
-            if (optCode.isPresent()){
-                String name = defBE.getName();
-                item = new BaseEntity(optCode.get() + "_" + uuid.toUpperCase(), name);
-                //Add PRI_UUID
-                //Add Email
-                if (!email.startsWith("random+")){
-                    //  Check to see if the email exists
-//                    TODO: check to see if the email exists in the database and keycloak
-                    Attribute emailAttribute = RulesUtils.getAttribute("PRI_EMAIL", localBeUtils.getGennyToken().getToken());
-                    item.addAnswer(new Answer(item, item, emailAttribute, email));
-                }
-
-                Attribute uuidAttribute = RulesUtils.getAttribute("PRI_UUID", localBeUtils.getGennyToken().getToken());
-                item.addAnswer(new Answer(item, item, uuidAttribute, uuid.toUpperCase()));
-
-            }else{
-                log.error("Prefix not provided");
-                throw new Exception("Prefix not provided" + defBE.getCode());
-            }
-        }else{
-            log.error("Passed defBE is not a user def!");
-            throw new Exception("Passed defBE is not a user def!" + defBE.getCode());
-        }
-
-        return item;
-    }
-
-
 
 }
