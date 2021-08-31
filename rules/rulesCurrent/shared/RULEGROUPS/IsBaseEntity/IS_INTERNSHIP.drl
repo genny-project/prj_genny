@@ -149,119 +149,38 @@ rule "IS_INTERNSHIP"
 			jsonArray2.add(jsonChildObj);
 		}
 				
-				JsonObject parent2 = new JsonObject();
-				parent2.put("type", "section");
-				parent2.put("fields", jsonArray2);
-				
-				JsonObject child = new JsonObject();
-				child.put("type", "mrkdwn");
-				child.put("text", ":new: *New Internship Opportunity Added!*");
-				
-				JsonObject parent = new JsonObject();
-				parent.put("type", "section");
-				parent.put("text", child);
-				
-				JsonObject parent3 = new JsonObject();
-				parent3.put("type", "divider");
-				
-				JsonArray jsonArray = new JsonArray();
-				jsonArray.add(parent);
-				jsonArray.add(parent2);
-				jsonArray.add(parent3);
-				
-				JsonObject msgPayload = new JsonObject();
-     			msgPayload.put("blocks", jsonArray);
-				
-				System.out.println("Payload is" + msgPayload.toString()); 
-				
-				try {
-					QwandaUtils.apiPostEntity(webhookURL, msgPayload.toString(), serviceToken.getToken());
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+		JsonObject parent2 = new JsonObject();
+		parent2.put("type", "section");
+		parent2.put("fields", jsonArray2);
+		
+		JsonObject child = new JsonObject();
+		child.put("type", "mrkdwn");
+		child.put("text", ":new: *New Internship Opportunity Added!*");
+		
+		JsonObject parent = new JsonObject();
+		parent.put("type", "section");
+		parent.put("text", child);
+		
+		JsonObject parent3 = new JsonObject();
+		parent3.put("type", "divider");
+		
+		JsonArray jsonArray = new JsonArray();
+		jsonArray.add(parent);
+		jsonArray.add(parent2);
+		jsonArray.add(parent3);
+		
+		JsonObject msgPayload = new JsonObject();
+		msgPayload.put("blocks", jsonArray);
+		
+		System.out.println("Payload is" + msgPayload.toString()); 
+		
+		try {
+			QwandaUtils.apiPostEntity(webhookURL, msgPayload.toString(), serviceToken.getToken());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 		
-		/* Construct Business Hours */
-		String lnkBH = newBe.getValue("LNK_BUSINESS_HOURS", null);
-		if(!(lnkBH.isEmpty()))
-		{
-			System.out.println("lnkBH = " + lnkBH);
-			
-	        
-	        String input = lnkBH.replace("[","").replace("]","");
-	      
-	        String[] splt = input.split(",");
-	        
-	        String startStr = splt[0];
-	        String endStr = splt[1];
-	    
-	    	String minStart = "";
-	    	String minEnd = "";
-	    
-	    	int lenStart = startStr.length();
-	    	int lenEnd = endStr.length();    
-	    
-	    	if (startStr.contains(".5")) {  
-	          	minStart = ":30";
-	          	startStr = startStr.substring(0, lenStart - 2);
-	        } else {
-	            minStart = ":00"; 
-	        }
-	        
-	        if (endStr.contains(".5")) {
-	            minEnd = ":30";
-	          	endStr = endStr.substring(0, lenEnd - 2);
-	        } else {
-	            minEnd = ":00";
-	        }
-	    
-	    
-	    	double startD = Double.parseDouble(startStr);
-	        double endD = Double.parseDouble(endStr);
-	    
-	    	String startMeridiem = "";
-	        String endMeridiem = "";
-	    	
-	    
-	        if (startD < 12.0) {
-	            startMeridiem = "AM";
-	        } else {
-	            startMeridiem = "PM";
-	            startD = startD - 12.0;
-	        }
-	        
-	        if (endD < 12.0) {
-	            endMeridiem = "AM";
-	        } else {
-	            endMeridiem = "PM";
-	          	endD = endD - 12.0;
-	        }
-	    
-	    	String newStartStr = String.valueOf(startD);
-	    	String newEndStr = String.valueOf(endD);
-	    
-	    	int lenNewStart = newStartStr.length();
-	    	int lenNewEnd = newEndStr.length();   
-	    
-	    	String trimStartStr = newStartStr.substring(0, lenNewStart - 2);
-	    	String trimEndStr = newEndStr.substring(0, lenNewEnd - 2);
-	    
-	    	String startTime = trimStartStr + minStart + " "+ startMeridiem;
-	    	String endTime = trimEndStr + minEnd + " "+ endMeridiem;
-	    
-	    	System.out.println("Start time = " + startTime);
-	        System.out.println("End time = " + endTime);
-	    
-	    	String businessHours = startTime + " - " + endTime;
-	    	System.out.println("Business hours = " + businessHours);
-			
-			if (businessHours != null) {
-					answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_BUSINESS_HOURS", businessHours));
-					System.out.println("businessHours: " + businessHours);	
-			} else {
-				System.out.println("ERROR: Null businessHours"); 
-			}
-		}	
 		/* DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd MMM yyyy");
     	LocalDateTime created = newBe.getCreated();
 		System.out.println("created = " +created);
