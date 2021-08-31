@@ -83,7 +83,7 @@ rule "LNK_PERSON"
 					/* Get Assoc Cols and add them to the BE */
 					for (EntityAttribute ea : searchBE.getBaseEntityAttributes()) {
 						if (ea.getAttributeCode().startsWith("COL__")) {
-							Answer ans = TableUtils.getAssociatedColumnValue(beUtils, application, ea.getAttributeCode(), serviceToken);
+							Answer ans = SearchUtils.getAssociatedColumnValue(beUtils, application, ea.getAttributeCode(), serviceToken);
 
 							if (ans != null) {
 								try {
