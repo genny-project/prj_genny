@@ -59,10 +59,10 @@ rule "HELPER_PRI_START_DATE"
 					beUtils.saveAnswer(ans);
 					VertxUtils.sendToFrontEnd(userToken, ans);
 				} else {
-					System.out.println("be is appInternBe!");
+					System.out.println("appInternBe is null!");
 				}
 			} else {
-				System.out.println("be is not an application.");
+				System.out.println("targetCode is not an application.");
 			}
 		} else {
 			System.out.println("be is null!");

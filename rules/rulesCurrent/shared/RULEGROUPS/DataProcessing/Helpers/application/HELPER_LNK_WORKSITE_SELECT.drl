@@ -44,7 +44,7 @@ rule "HELPER_LNK_WORKSITE_SELECT"
 
 		String value = answer.getValue();
 		System.out.println("value :: " + value);
-		
+
 		if(targetCode != null){
 			if (targetCode.startsWith("APP_")) {
 				BaseEntity appInternshipBe = beUtils.getBaseEntityFromLNKAttr(targetCode, "LNK_INTERNSHIP");
@@ -53,10 +53,10 @@ rule "HELPER_LNK_WORKSITE_SELECT"
 					beUtils.saveAnswer(ans);
 					VertxUtils.sendToFrontEnd(userToken, ans);
 				} else {
-					System.out.println("be is appInternshipBe!");
+					System.out.println("appInternshipBe is null!");
 				}
 			} else {
-				System.out.println("be is not an application.");
+				System.out.println("targetCode is not an application.");
 			}
 		} else {
 			System.out.println("be is null!");
