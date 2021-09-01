@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import io.vertx.core.json.JsonObject;
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
@@ -22,6 +23,7 @@ import life.genny.qwanda.attribute.EntityAttribute;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwanda.exception.BadDataException;
+import life.genny.qwanda.message.QCmdTableMessage;
 
 import org.dmg.pmml.True;
 import org.jboss.logging.Logger;
@@ -33,6 +35,7 @@ import org.jbpm.services.api.admin.ProcessInstanceAdminService;
 import org.jbpm.services.api.model.DeploymentUnit;
 import org.jbpm.services.api.query.QueryService;
 import org.jbpm.services.api.utils.KieServiceConfigurator;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -209,7 +212,7 @@ public class RemoteServiceTest {
                 .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "RMS_%")
                 .addColumn("PRI_NAME", "Name")
                 .addColumn("PRI_URL", "URL")
-                .addAssociatedColumn("LNK_AUTHOR", "Author Name", "PRI_NAME");
+                .addAssociatedColumn("LNK_AUTHOR", "PRI_NAME", "Author Name");
         searchRemoteServices.setRealm(realm);
         searchRemoteServices.setPageStart(0);
         searchRemoteServices.setPageSize(1000);
@@ -243,6 +246,19 @@ public class RemoteServiceTest {
         }else{
             System.out.println("searchBE is null");
         }
+
+        QCmdTableMessage msg = new QCmdTableMessage("SBE_TEST","RemoteServiceTest");
+        JsonObject msgJson = new JsonObject();
+        msgJson.put("cmd_type","DISPLAY");
+        msgJson.put("code","TABLE");
+        msgJson.put("exec",true);
+        msgJson.put("msg_type","CMD_MSG");
+        msgJson.put("option","EXEC");
+        msgJson.put("send",true);
+        msgJson.put("token",beUtils.getGennyToken().getToken());
+        VertxUtils.writeMsg("webcmds",msgJson.toString());
+
+
 
 
 
