@@ -51,12 +51,12 @@ rule "HELPER_LNK_WORKSITE_SELECT"
 
 		BaseEntity be = beUtils.getBaseEntityByCode(code);
 		if(be != null){
-			String name = be.getValue("PRI_NAME", null);
+			/*String name = be.getValue("PRI_NAME", null);
 			if(name != null){
 				Answer ans = new Answer(sourceCode, targetCode, "PRI_WORKSITE", name);
 				beUtils.saveAnswer(ans);
 				VertxUtils.sendToFrontEnd(userToken, ans);
-			}
+			}*/
 
 			if ((be.getCode()).startsWith("APP_")) {
 				BaseEntity appInternshipBe = beUtils.getBaseEntityFromLNKAttr(be, "LNK_INTERNSHIP");
