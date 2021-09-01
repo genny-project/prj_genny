@@ -43,7 +43,13 @@ rule "HELPER_PRI_START_DATE"
 		System.out.println("targetCode :: " + targetCode);
 
 		String value = answer.getValue();
-		System.out.println("value :: " + value);
+		if (!value.isEmpty()) {
+			String[] valueArr = value.split("T");
+			value = valueArr[0];
+			System.out.println("value :: " + value);
+		} else {
+			System.out.println("value is empty.");
+		}
 
 		if(targetCode != null){
 			if (targetCode.startsWith("APP_")) {
