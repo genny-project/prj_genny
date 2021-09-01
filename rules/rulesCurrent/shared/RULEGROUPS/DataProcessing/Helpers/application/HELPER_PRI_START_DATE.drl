@@ -55,6 +55,7 @@ rule "HELPER_PRI_START_DATE"
 			if (targetCode.startsWith("APP_")) {
 				BaseEntity appInternBe = beUtils.getBaseEntityFromLNKAttr(targetCode, "LNK_INTERN");
 				if (appInternBe != null) {
+					System.out.println("appInternBe is :: " + appInternBe.getCode());
 					Answer ans = new Answer(sourceCode, appInternBe.getCode(), "PRI_START_DATE", value);
 					beUtils.saveAnswer(ans);
 					VertxUtils.sendToFrontEnd(userToken, ans);
