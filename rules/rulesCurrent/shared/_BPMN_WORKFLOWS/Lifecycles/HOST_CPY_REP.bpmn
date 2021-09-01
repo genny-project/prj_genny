@@ -56,7 +56,7 @@
       <drools:import name="life.genny.qwanda.message.QCmdMessage"/>
       <drools:import name="java.util.Map"/>
       <drools:import name="java.util.Map.Entry"/>
-      <drools:import name="life.genny.qwand.EEntityStatus"/>
+      <drools:import name="life.genny.qwanda.EEntityStatus"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_556" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_556" name="serviceToken"/>
