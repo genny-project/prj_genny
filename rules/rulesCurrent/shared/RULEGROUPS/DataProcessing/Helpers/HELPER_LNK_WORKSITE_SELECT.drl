@@ -38,23 +38,38 @@ rule "HELPER_LNK_WORKSITE_SELECT"
 
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		System.out.println("sourceCode :: " + sourceCode);
-		
+
 		String targetCode = answer.getTargetCode();
 		System.out.println("targetCode :: " + targetCode);
-		
+
 		String value = answer.getValue();
 		System.out.println("value :: " + value);
-		
+
 		String code = beUtils.cleanUpAttributeValue(value);
 		System.out.println("code  :: " + code);
 
 		BaseEntity be = beUtils.getBaseEntityByCode(code);
 		if(be != null){
-			String name = be.getValue("PRI_NAME", null);		
+			String name = be.getValue("PRI_NAME", null);
 			if(name != null){
 				Answer ans = new Answer(sourceCode, targetCode, "PRI_WORKSITE", name);
 				beUtils.saveAnswer(ans);
 				VertxUtils.sendToFrontEnd(userToken, ans);
 			}
+
+			if ((be.getCode()).startsWith("APP_")) {
+				BaseEntity appInternshipBe = beUtils.getBaseEntityFromLNKAttr(be, "LNK_INTERNSHIP");
+				if (appInternshipBe != null) {
+					Answer ans = new Answer(sourceCode, appInternshipBe, "LNK_WORKSITE_SELECT", value);
+					beUtils.saveAnswer(ans);
+					VertxUtils.sendToFrontEnd(userToken, ans);
+				} else {
+					System.out.println("be is appInternshipBe!");
+				}
+			} else {
+				System.out.println("be is not an application.");
+			}
+		} else {
+			System.out.println("be is null!");
 		}
 end
