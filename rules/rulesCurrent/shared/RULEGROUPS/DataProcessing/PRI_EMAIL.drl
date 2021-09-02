@@ -26,7 +26,7 @@ rule "PRI_EMAIL"
         no-loop true
     when
       	beUtils : BaseEntityUtils()
-	  	answer : Answer( attributeCode == "PRI_EMAIL" )
+	  	answer : Answer( attributeCode == "PRI_EMAIL" && value != "")
 	  	serviceToken : GennyToken( code == "PER_SERVICE")
 	 	userToken : GennyToken( code != "PER_SERVICE")
 	 	answersToSave : Answers()
