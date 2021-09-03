@@ -1,7 +1,6 @@
 package life.genny.rules;
-import life.genny.qwanda.message.QDataAnswerMessage;
+
 import life.genny.models.GennyToken;
-import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.qwanda.Answer;
 import life.genny.qwanda.entity.BaseEntity;
@@ -9,18 +8,13 @@ import life.genny.utils.OutputParam;
 import life.genny.qwandautils.KeycloakUtils;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.qwandautils.GennySettings;
-import java.util.UUID;
-import life.genny.notifications.EmailHelper;
 import life.genny.qwanda.message.QScheduleMessage;
-import life.genny.notifications.SmsHelper;
-import java.util.Arrays;
 import java.time.ZoneOffset;
-
-import java.security.SecureRandom;
-import java.util.stream.Collectors;
-
 import java.util.List;
 import java.util.ArrayList;
+import life.genny.qwanda.message.QMessageGennyMSG;
+import life.genny.qwanda.message.QBaseMSGMessageType;
+import life.genny.qwandautils.MessageUtils;
 
 rule "IS_QA_INTERN"
     ruleflow-group 'IsQuickAdd'
@@ -36,18 +30,13 @@ rule "IS_QA_INTERN"
 		answersToSave : Answers()
 	  
      then
- 		System.out.println("IS_QA_INTERN: Rule fired" );
- 		System.out.println("IS_QA_INTERN: newBe = " + newBe.getCode()); 
- 		
- 	/*  Construct answer with Source, Target, Attribute Code, Value */
+ 		System.out.println("IS_QA_INTERN: Rule fired :: newBe = " + newBe.getCode()); 
+
+		String keycloakUrl = serviceToken.getKeycloakUrl();
+		String realm = serviceToken.getRealm();
+		String token = serviceToken.getToken();
  		
  		List<Answer> answers = new ArrayList<>();
-
- 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_INTERN", "true")); */
- 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_DISABLED", "false")); */
- 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS_COLOR", "#5cb85c")); */
- 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_PROFILE", "Incomplete")); */
- 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "PENDING")); */
 
  		/* Record who added them */
 		BaseEntity userBe = beUtils.getBaseEntityByCode(userToken.getUserCode());
@@ -61,322 +50,92 @@ rule "IS_QA_INTERN"
 			answers.add(new Answer(userToken.getCode(), newBe.getCode(), "LNK_AUTHOR", "[\""+userBe.getCode()+"\"]"));
 		}
 
-		String target = newBe.getCode();	
-
-		BaseEntity targetBe = beUtils.getBaseEntityByCode(target);
-		System.out.println("targetBe = " +targetBe);
-
-		String intern = targetBe.getValue("PRI_NAME", null);
-		System.out.println("intern = " + intern);
-		String state = targetBe.getValue("PRI_ADDRESS_STATE", null);
-		System.out.println("state = " + state);
-		LocalDate startDate = targetBe.getValue("PRI_START_DATE", null);
-		System.out.println("startDate = " + startDate);
-
-		/* GET EDU PRO NAME */
-		BaseEntity eduPro = beUtils.getBaseEntityFromLNKAttr(targetBe, "LNK_EDU_PROVIDER");
+		/* GET REQUIRED DATA */
+		BaseEntity eduPro = beUtils.getBaseEntityFromLNKAttr(newBe, "LNK_EDU_PROVIDER");
+		BaseEntity agent = beUtils.getBaseEntityFromLNKAttr(newBe, "LNK_AGENT");
+		BaseEntity batch = beUtils.getBaseEntityFromLNKAttr(newBe, "LNK_SELECT_BATCH");
 		System.out.println("eduPro = " + eduPro);
-		String eduProName = null;
-		if (eduPro != null) {
-			eduProName = eduPro.getValue("PRI_NAME", null);
-		}
-		/* GET INDUSTRY NAME */
-		BaseEntity industry = beUtils.getBaseEntityFromLNKAttr(targetBe, "LNK_INDUSTRY");
-		System.out.println("industry = " + industry);
-		String industryName = null;
-		if (industry != null) {
-			industryName = industry.getValue("PRI_NAME", null);
-		}
-		/* GET INDUSTRY NAME */
-		BaseEntity occupation = beUtils.getBaseEntityFromLNKAttr(targetBe, "LNK_OCCUPATION");
-		System.out.println("occupation = " + occupation);
-		String occupationName = null;
-		if (occupation != null) {
-			occupationName = occupation.getValue("PRI_NAME", null);
-		}
-		
-		/* GET AGENT DATA */
-		String lnkAgent = targetBe.getValue("LNK_AGENT", null);
-		System.out.println("lnkAgent = " +lnkAgent);
-		String agentEmail = null;
-		String agent = null;
-		if (lnkAgent != null) {
-			if (!lnkAgent.startsWith("[")) {
-				lnkAgent = "[\""+lnkAgent+"\"]";
-			}
-				answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_AGENT", lnkAgent));
-		
-				/*lnkAgent = lnkAgent.replace("\"", "").replace("[", "").replace("]", "");*/
-				System.out.println("lnkAgent = " +lnkAgent);
-				
-				BaseEntity agentBe = beUtils.getBaseEntityByCode(lnkAgent);
-				System.out.println("agentBe = " + agentBe);
-				
-				if (agentBe != null) {
-						agent = agentBe.getValue("PRI_NAME", null);
-						System.out.println("agent = " +agent);
-						agentEmail = agentBe.getValue("PRI_EMAIL", null);
-						System.out.println("agentEmail = " + agentEmail);
-						
-						if (agent !=null ) {
-							answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_AGENT_NAME", agent));
-						}
-				} else {
-					System.out.println("ERROR: Null agentBe"); 
-				}
-		} else {
-			System.out.println("ERROR: Null lnkAgent"); 
-		}
-		
-		
-		String lnkBatch = targetBe.getValue("LNK_SELECT_BATCH", null);
-		System.out.println("lnkBatch = " +lnkBatch);
-		if (lnkBatch != null) {
-				answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_BATCH", lnkBatch));
-		
-				/*lnkBatch = lnkBatch.replace("\"", "").replace("[", "").replace("]", "");*/
-				System.out.println("lnkBatch = " +lnkBatch);
-				
-				BaseEntity batchBe = beUtils.getBaseEntityByCode(lnkBatch);
-				System.out.println("batchBe = " + batchBe);
-				
-				if (batchBe != null) {
-						String batch = batchBe.getValue("PRI_NAME", null);
-						System.out.println("batch = " +batch);
-						
-						if (batch !=null ) {
-							answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_BATCH", batch));
-						}
-				} else {
-					System.out.println("ERROR: Null batchBe"); 
-				}
-		} else {
-			System.out.println("ERROR: Null lnkBatch"); 
-		}
-		
+		System.out.println("agent = " + agent);
+		System.out.println("batch = " + batch);
 
+		if (agent != null) {
+			String agentName = agent.getValue("PRI_NAME", null);
+			System.out.println("agentName = " + agentName);
+			if (agentName != null) {
+				answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_AGENT_NAME", agentName));
+			}
+		}
 		
+		if (batch != null) {
+			String batchName = batch.getValue("PRI_NAME", null);
+			System.out.println("batch = " +batch);
+			if (batchName != null) {
+				answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_BATCH", batchName));
+			}
+		}
+
+		/* Save Data */
+		beUtils.saveAnswers(answers);
 		
-		/* Set up in Keycloak */
+		/* Update Email and Name, and set Random Password in Keycloak */
+		KeycloakUtils.updateUserDetails(beUtils, newBe);
+		String password = KeycloakUtils.generateRandomPassword(beUtils, newBe);
 	
-		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
-		String userStr = newBe.getCode();
-		String[] userSplit = userStr.split("_");
-		String userCode = userSplit[1];
-		System.out.println("User "+user+" with userCode = "+userCode);
+		/* Create Access URL */
+		BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
+		String internToken = KeycloakUtils.getImpersonatedToken(keycloakUrl, realm, project, newBe, token);
+		String internUrl = MessageUtils.encodeUrl(GennySettings.projectUrl+"/home", "QUE_FAKE_PARENT", "QUE_FINISH_INTERN", null, internToken);
+	
+		/* Init Sendgrid Msg */
+		QMessageGennyMSG msg = new QMessageGennyMSG(QBaseMSGMessageType.SENDGRID);
+		msg.setTemplateCode("MSG_INT1_REGISTER");
+		msg.addRecipient(newBe);
+		msg.addContext("PASSWORD", password);
+		msg.addContext("URL", internUrl);
+		msg.addContext("BCC", "PRJ_INTERNMATCH");
 		
-		String userId = "";
-		String email = "";
-		/* NOTE: THIS IS ONLY A BACKUP PASSWORD */
-		String password = "password1";
-		
-		String firstname = user.getValue("PRI_FIRSTNAME",null);
-		if (firstname != null) {
-			String lastname = user.getValue("PRI_LASTNAME",null);
-			if (lastname != null) {
-				email = user.getValue("PRI_EMAIL",null);
-				if (email != null) {
-					/* TODO HACK */
-					if (true) {
-						userId = KeycloakUtils.updateUser(userCode,serviceToken.getToken(), serviceToken.getRealm(), email, firstname, lastname,  email, null, "user", "users");
-						userId = userId.toUpperCase();
-						Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),newBe.getCode(),"PRI_UUID",userId);
-						answers.add(keycloakId);
-						System.out.println("Created User "+email+" in Keycloak with id = "+userId);
-
-						/* Generate a random 15 char password */
-						char[] allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGJKLMNPRSTUVWXYZ0123456789^$?!@#%&".toCharArray();
-						password = new SecureRandom().ints(15, 0, allowed.length).mapToObj(i -> String.valueOf(allowed[i])).collect(Collectors.joining());
-						KeycloakUtils.setPassword(serviceToken.getToken(), serviceToken.getRealm(), userId, password, true);
-
-					} else {
-					     System.out.println("KEYCLOAK QUICK ADD USER CREATION DISABLED IN RULE IS_INTERN");
-					}
-				}
-			}
-		}
-
-		String endPoint = GennySettings.projectUrl + "/v7/notes";
-		/*String endPoint = "https://internmatch-cyrus.gada.io/v7/notes";*/
-		
-		String tag = "System";
-		String userName = "System";
-		String userImage = "";
-		
-		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), newBe.getCode(), "Added as an Intern", tag, userName, userImage, serviceToken.getToken());
-		
-		System.out.println("I just posted the note");
-		System.out.println("Note endPoint: " +endPoint);
-		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
-
-
-		/* Send email to Intern */
-		
-		String rawSendEmail = user.getValue("LNK_SEND_EMAIL",null);
+		String rawSendEmail = newBe.getValue("LNK_SEND_EMAIL",null);
 		System.out.println("rawSendEmail: " +rawSendEmail);
 
-		List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
-
-		BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
-	
-		String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, email, serviceToken.getToken());
-		System.out.println("token: " + token);
-	
-		String url = GennySettings.projectUrl+"/home/UVVFX0ZBS0VfUEFSRU5U/UVVFX0ZJTklTSF9JTlRFUk4=";
-		System.out.println("url: " + url);
-		
-		url = url +"?token=" + token;
-		System.out.println("url: " + url);
-		
-		String subject = "You have been registered on InternMatch";
-		String template_id = "d-94f647d38d7745a1b925300df2208279";
-		
-		System.out.println("email: " + email);
-		System.out.println("subject: " + subject);
-		System.out.println("template_id: " + template_id);
-					
-		HashMap<String, String> templateData = new HashMap<String, String>();
-		templateData.put("intern", firstname);
-		templateData.put("password", password);
-		templateData.put("url", url);
-		
 		if (rawSendEmail.contains("SEL_YES")) {
-	 
-			
-			
-			EmailHelper.sendGrid(beUtils, email, null, bccList, subject, template_id, templateData, true);
- 
-			/* 
- 			String mobile = "0433501177";
-			String smsBody = "You have been recommended for an internship on Internmatch. Login to take a look!";
-			SmsHelper smsHelper = new SmsHelper();
-			smsHelper.deliverSmsMsg(mobile, smsBody);
-			*/
-		
+			MessageUtils.sendMessage(beUtils, msg);
 		} else {
 			System.out.println("rawSendEmail is not Yes: " + rawSendEmail);
 		}
-	
-		System.out.println("agentEmail = " + agentEmail);
-		if (agentEmail != null) {
 
-			token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, agentEmail, serviceToken.getToken());
-			System.out.println("token: " + token);
+		if (agent != null) {
 
+			String agentToken = KeycloakUtils.getImpersonatedToken(keycloakUrl, realm, project, agent, token);
 			String urlParentCode = "SBE_INTERNS"+userToken.getSessionCode().toUpperCase();
-			url = EmailHelper.encodeUrl(GennySettings.projectUrl+"/home", urlParentCode, "ACT_PRI_EVENT_VIEW", newBe.getCode());
-			System.out.println("url: " + url);
-			
-			url = url +"?token=" + token;
-			System.out.println("url: " + url);
+			String agentUrl = MessageUtils.encodeUrl(GennySettings.projectUrl+"/home", urlParentCode, "ACT_PRI_EVENT_VIEW", newBe.getCode(), agentToken);
 
-			templateData.put("agent", agent);
-			templateData.put("intern", intern);
-			templateData.put("state", state);
-			templateData.put("educationProvider", eduProName);
-			templateData.put("industry", industryName);
-			templateData.put("specialisation", occupationName);
-			templateData.put("url", url);
+			/* Init Sendgrid to Agent Msg */
+			msg = new QMessageGennyMSG(QBaseMSGMessageType.SENDGRID);
+			msg.setTemplateCode("MSG_AGT2_REGISTER");
+			msg.addRecipient(agent);
+			msg.addContext("INTERN", newBe);
+			msg.addContext("EDU_PRO", eduPro);
+			msg.addContext("URL", agentUrl);
 
-			if (startDate != null) {
-				templateData.put("startDate", startDate.toString());
-			} else {
-				System.out.println("startDate is NULL");
-			}
-
-			EmailHelper.sendGrid(beUtils, agentEmail, "", "d-88c1ac4df5ff42409be2347cbccde424", templateData, true);
+			MessageUtils.sendMessage(beUtils, msg);
 		}
-		
-		System.out.println("################## START Shleemy ##################");
-		
-		String shleemyEndPoint = GennySettings.projectUrl+"/api/schedule";
-		System.out.println("shleemyEndPoint: "+shleemyEndPoint);
-	
-		QEventMessage msgQAInternOrange = null;
-		QEventMessage msgQAInternRed = null;
 
-		
-		System.out.println("Setting schedule");
-		
-		msgQAInternOrange = new QEventMessage("TEST_EVT", "SCHEDULE_INTERN_COMPLETE_PROFILE_48HR");
-		msgQAInternOrange.getData().setTargetCode(newBe.getCode());
-		msgQAInternOrange.setToken(userToken.getToken());
-		String[] rxList = new String[2];
-		rxList[0] = "SUPERUSER";
-		rxList[1] = userToken.getUserCode();
-		msgQAInternOrange.setRecipientCodeArray(rxList);
-		
-		msgQAInternRed = new QEventMessage("TEST_EVT", "SCHEDULE_INTERN_COMPLETE_PROFILE_96HR");
-		msgQAInternRed.getData().setTargetCode(newBe.getCode());
-		msgQAInternRed.setToken(userToken.getToken());
-		msgQAInternRed.setRecipientCodeArray(rxList);
-		
-		
-		
-		/* Set trigger times */
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("hh:mm:ss a, E, dd MMM yyyy");
-    
+		/* Schedule Reminder Messages */
+		System.out.println("################## Scheduleing Shleemy Messages ##################");
+
    	 	LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-    	String prettyNow = dtf.format(now);
-    	System.out.println("The current date and time is ~ " + prettyNow);
+		String code48HR = newBe.getCode() + "_INTERN_COMPLETE_PROFILE_48HR";
+		String code96HR = newBe.getCode() + "_INTERN_COMPLETE_PROFILE_96HR";
 		
-    	LocalDateTime orangeTimer = now.plusHours(48);
-		String prettyOrange = dtf.format(orangeTimer);
-		System.out.println("The Orange timer is set for ~ " + prettyOrange);
+		ShleemyUtils.scheduleMessage(userToken, "SCHEDULE_INTERN_COMPLETE_PROFILE_48HR", code48HR, now.plusHours(48), newBe.getCode());
+		ShleemyUtils.scheduleMessage(userToken, "SCHEDULE_INTERN_COMPLETE_PROFILE_96HR", code96HR, now.plusHours(96), newBe.getCode());
 		
-		String orangeCode = newBe.getCode() + "_INTERN_COMPLETE_PROFILE_48HR";
-		System.out.println("orangeCode " + orangeCode);
-		
-		LocalDateTime redTimer = now.plusHours(96);
-		String prettyRed = dtf.format(redTimer);
-		System.out.println("The Red timer is set for ~ " + prettyRed);
-		
-		String redCode = newBe.getCode() + "_INTERN_COMPLETE_PROFILE_96HR";
-		System.out.println("redCode " + redCode);
-		
-		
-		System.out.println("Orange schedule set: " +msgQAInternOrange);
-		System.out.println("Red schedule set: " +msgQAInternRed);
+		/* Post Note */
+		String endPoint = GennySettings.projectUrl + "/v7/notes";
+		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), newBe.getCode(), "Added as an Intern", "System", "System", "", serviceToken.getToken());
 
-
-		System.out.println("################## Schedule Orange Shleemy ##################");
-		
-		QScheduleMessage scheduleOrange = new QScheduleMessage(orangeCode, JsonUtils.toJson(msgQAInternOrange), userToken.getUserCode(), "project", orangeTimer, userToken.getRealm());
-		System.out.println("msgQAInternOrange" + scheduleOrange);
-		
-		try {
-			QwandaUtils.apiPostEntity(shleemyEndPoint, JsonUtils.toJson(scheduleOrange), userToken.getToken());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}		
-		
-		System.out.println("################## Schedule Red Shleemy ##################");
-		
-		QScheduleMessage scheduleRed = new QScheduleMessage(redCode, JsonUtils.toJson(msgQAInternRed), userToken.getUserCode(), "project", redTimer, userToken.getRealm());
-		System.out.println("msgQAInternRed" + scheduleRed);
-		
-		try {
-			QwandaUtils.apiPostEntity(shleemyEndPoint, JsonUtils.toJson(scheduleRed), userToken.getToken());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}			
-		
-		System.out.println("################## END Shleemy ##################");
-	
-		
-		System.out.println("I just posted the note");
-		System.out.println("Note endPoint: " +endPoint);
-		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
-		
-		
-		
 		output.setTypeOfResult("NONE");
-		output.setResultCode("NONE");  /* don't display anything new */
-
+		output.setResultCode("NONE");
 		
-
-		beUtils.saveAnswers(answers);
-
-		retract(newBe)
-	
+		retract(newBe);
 end
