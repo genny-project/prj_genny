@@ -100,10 +100,8 @@ rule "IS_QA_INTERN"
 		String sendEmail = newBe.getValue("LNK_SEND_EMAIL",null);
 		System.out.println("sendEmail = " + sendEmail);
 
-		if (sendEmail != null && rawSendEmail.contains("SEL_YES")) {
+		if (sendEmail != null && sendEmail.contains("SEL_YES")) {
 			MessageUtils.sendMessage(beUtils, msg);
-		} else {
-			System.out.println("rawSendEmail is not Yes: " + rawSendEmail);
 		}
 
 		if (agent != null) {
