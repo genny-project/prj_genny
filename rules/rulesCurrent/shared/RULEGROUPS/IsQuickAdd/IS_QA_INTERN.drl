@@ -32,6 +32,9 @@ rule "IS_QA_INTERN"
      then
  		System.out.println("IS_QA_INTERN: Rule fired :: newBe = " + newBe.getCode()); 
 
+		/* Update The BE */
+		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
+
 		String keycloakUrl = serviceToken.getKeycloakUrl();
 		String realm = serviceToken.getRealm();
 		String token = serviceToken.getToken();
@@ -94,10 +97,10 @@ rule "IS_QA_INTERN"
 		msg.addContext("URL", internUrl);
 		msg.addContext("BCC", "PRJ_INTERNMATCH");
 		
-		String rawSendEmail = newBe.getValue("LNK_SEND_EMAIL",null);
-		System.out.println("rawSendEmail: " +rawSendEmail);
+		String sendEmail = newBe.getValue("LNK_SEND_EMAIL",null);
+		System.out.println("sendEmail = " + sendEmail);
 
-		if (rawSendEmail.contains("SEL_YES")) {
+		if (sendEmail != null && rawSendEmail.contains("SEL_YES")) {
 			MessageUtils.sendMessage(beUtils, msg);
 		} else {
 			System.out.println("rawSendEmail is not Yes: " + rawSendEmail);
