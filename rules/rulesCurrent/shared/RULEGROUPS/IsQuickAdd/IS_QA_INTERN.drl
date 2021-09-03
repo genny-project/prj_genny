@@ -71,7 +71,7 @@ rule "IS_QA_INTERN"
 		
 		if (batch != null) {
 			String batchName = batch.getValue("PRI_NAME", null);
-			System.out.println("batch = " +batch);
+			System.out.println("batchName = " + batchName);
 			if (batchName != null) {
 				answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_BATCH", batchName));
 			}
@@ -112,7 +112,7 @@ rule "IS_QA_INTERN"
 
 			/* Init Sendgrid to Agent Msg */
 			msg = new QMessageGennyMSG(QBaseMSGMessageType.SENDGRID);
-			msg.setTemplateCode("MSG_AGT2_REGISTER");
+			msg.setTemplateCode("MSG_AGT2_ASSIGNED");
 			msg.addRecipient(agent);
 			msg.addContext("INTERN", newBe);
 			msg.addContext("EDU_PRO", eduPro);
