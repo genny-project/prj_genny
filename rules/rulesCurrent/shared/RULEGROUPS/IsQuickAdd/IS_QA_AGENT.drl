@@ -44,7 +44,7 @@ rule "IS_QA_AGENT"
 		msg.addContext("BCC", "PRJ_INTERNMATCH");
 		
 		/* Boolean sendEmail = newBe.getValue("PRI_EMAIL_FLAG", false); */
-		String sendEmail = newBe.getValue("LNK_ALL_EMAILS", "");
+		String sendEmail = newBe.getValue("LNK_SEND_EMAIL", "");
 		System.out.println("sendEmail = " + sendEmail);
 
 		/* if (sendEmail) { */
