@@ -23,35 +23,14 @@ rule "IS_QA_INTERN"
     when
 	 	userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
-		output : OutputParam()
 		baseEntityType : String(baseEntityType.equals("QA_INTERN"))
 		newBe : BaseEntity()
 		beUtils: BaseEntityUtils()
-		answersToSave : Answers()
 	  
      then
  		System.out.println("IS_QA_INTERN: Rule fired :: newBe = " + newBe.getCode()); 
-
-		/* Update The BE */
-		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
-
-		String keycloakUrl = serviceToken.getKeycloakUrl();
-		String realm = serviceToken.getRealm();
-		String token = serviceToken.getToken();
  		
  		List<Answer> answers = new ArrayList<>();
-
- 		/* Record who added them */
-		BaseEntity userBe = beUtils.getBaseEntityByCode(userToken.getUserCode());
-		if (userBe != null) {
-			String addedBy = userBe.getValue("PRI_NAME", null);
-			if (StringUtils.isBlank(addedBy)) {
-				addedBy = userBe.getCode();
-			}
-			System.out.println("addedBy: " + addedBy);
-			answers.add(new Answer(userToken.getCode(), newBe.getCode(), "PRI_ADDED_BY", addedBy));
-			answers.add(new Answer(userToken.getCode(), newBe.getCode(), "LNK_AUTHOR", "[\""+userBe.getCode()+"\"]"));
-		}
 
 		/* GET REQUIRED DATA */
 		BaseEntity eduPro = beUtils.getBaseEntityFromLNKAttr(newBe, "LNK_EDU_PROVIDER");
@@ -86,7 +65,7 @@ rule "IS_QA_INTERN"
 	
 		/* Create Access URL */
 		BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
-		String internToken = KeycloakUtils.getImpersonatedToken(keycloakUrl, realm, project, newBe, token);
+		String internToken = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, newBe, serviceToken.getToken());
 		String internUrl = MessageUtils.encodeUrl(GennySettings.projectUrl+"/home", "QUE_FAKE_PARENT", "QUE_FINISH_INTERN", null, internToken);
 	
 		/* Init Sendgrid Msg */
@@ -97,16 +76,18 @@ rule "IS_QA_INTERN"
 		msg.addContext("URL", internUrl);
 		msg.addContext("BCC", "PRJ_INTERNMATCH");
 		
-		String sendEmail = newBe.getValue("LNK_SEND_EMAIL",null);
+		/* Boolean sendEmail = newBe.getValue("PRI_EMAIL_FLAG", false); */
+		String sendEmail = newBe.getValue("LNK_ALL_EMAILS", "");
 		System.out.println("sendEmail = " + sendEmail);
 
-		if (sendEmail != null && sendEmail.contains("SEL_YES")) {
+		/* if (sendEmail) { */
+		if (sendEmail.contains("SEL_YES")) {
 			MessageUtils.sendMessage(beUtils, msg);
 		}
 
 		if (agent != null) {
 
-			String agentToken = KeycloakUtils.getImpersonatedToken(keycloakUrl, realm, project, agent, token);
+			String agentToken = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, agent, serviceToken.getToken());
 			String urlParentCode = "SBE_INTERNS"+userToken.getSessionCode().toUpperCase();
 			String agentUrl = MessageUtils.encodeUrl(GennySettings.projectUrl+"/home", urlParentCode, "ACT_PRI_EVENT_VIEW", newBe.getCode(), agentToken);
 
@@ -135,8 +116,5 @@ rule "IS_QA_INTERN"
 		String endPoint = GennySettings.projectUrl + "/v7/notes";
 		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), newBe.getCode(), "Added as an Intern", "System", "System", "", serviceToken.getToken());
 
-		output.setTypeOfResult("NONE");
-		output.setResultCode("NONE");
-		
 		retract(newBe);
 end

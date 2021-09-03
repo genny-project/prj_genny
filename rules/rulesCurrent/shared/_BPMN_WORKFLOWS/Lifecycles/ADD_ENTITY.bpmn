@@ -282,7 +282,10 @@ if (defBE == null) {
           <drools:onEntry-script scriptFormat="http://www.java.com/java">
             <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% ENTER Create Entity IS BASE ENTITY %%%%%%%%%%%%%%%%%%%&quot;);
 System.out.println(&quot;%%%%%%%%%%%%%%%%%%% key: &quot; + key);
-System.out.println(&quot;%%%%%%%%%%%%%%%%%%% newBe: &quot; + newBe);</drools:script>
+System.out.println(&quot;%%%%%%%%%%%%%%%%%%% newBe: &quot; + newBe);
+
+newBe = beUtils.getBaseEntityByCode(newBe.getCode());
+kcontext.setVariable(&quot;newBe&quot;, newBe);</drools:script>
           </drools:onEntry-script>
           <drools:onExit-script scriptFormat="http://www.java.com/java">
             <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% EXIT Create Entity IS BASE ENTITY %%%%%%%%%%%%%%%%%%%&quot;);
