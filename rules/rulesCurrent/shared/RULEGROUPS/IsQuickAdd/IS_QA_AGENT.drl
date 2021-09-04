@@ -24,7 +24,7 @@ rule "IS_QA_AGENT"
 		beUtils : BaseEntityUtils()
 	  
      then
- 		System.out.println("IS_QA_AGENT: Rule fired :: newBe = " + newBe.getCode()); 
+ 		System.out.println(drools.getRule().getName() + ": Rule fired :: newBe = " + newBe.getCode()); 
 
 		/* Update Email and Name, and set Random Password in Keycloak */
 		KeycloakUtils.updateUserDetails(beUtils, newBe);

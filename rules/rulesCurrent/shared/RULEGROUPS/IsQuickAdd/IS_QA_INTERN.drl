@@ -28,7 +28,7 @@ rule "IS_QA_INTERN"
 		beUtils: BaseEntityUtils()
 	  
      then
- 		System.out.println("IS_QA_INTERN: Rule fired :: newBe = " + newBe.getCode()); 
+ 		System.out.println(drools.getRule().getName() + ": Rule fired :: newBe = " + newBe.getCode()); 
  		
  		List<Answer> answers = new ArrayList<>();
 

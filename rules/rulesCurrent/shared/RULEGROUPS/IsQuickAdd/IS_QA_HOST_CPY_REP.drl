@@ -27,7 +27,7 @@ rule "IS_QA_HOST_CPY_REP"
 		beUtils : BaseEntityUtils()
 	  
      then
- 		System.out.println("IS_QA_HOST_CPY_REP: Rule fired :: newBe = " + newBe.getCode()); 
+ 		System.out.println(drools.getRule().getName() + ": Rule fired :: newBe = " + newBe.getCode()); 
 
  		List<Answer> answers = new ArrayList<>();
  		
