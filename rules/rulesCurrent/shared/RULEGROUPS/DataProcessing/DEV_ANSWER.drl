@@ -18,7 +18,7 @@ rule "DEV_ANSWER"
 		beUtils : BaseEntityUtils()
 		serviceToken : GennyToken( code == "PER_SERVICE") 
 		userToken : GennyToken( code != "PER_SERVICE")
-		answer : Answer( code matches "QUE_DEV_EDIT_.*" )
+		answer : Answer( attributeCode matches "QUE_DEV_EDIT_.*" )
 
 	then
  		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
