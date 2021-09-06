@@ -47,7 +47,8 @@ rule "DEV_PORTAL_REQ_EVENT"
 	salience 2
     no-loop
     when
-		message : QEventMessage( data.parentCode == "QUE_DEV_PORTAL_GRP" && data.code matches "QUE_DEV_PORTAL__.*" )
+		message : QEventMessage( data.code matches "QUE_DEV_PORTAL__.*" )
+		/* message : QEventMessage( data.parentCode == "QUE_DEV_PORTAL_GRP" && data.code matches "QUE_DEV_PORTAL__.*" ) */
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		beUtils : BaseEntityUtils()
@@ -66,7 +67,7 @@ rule "DEV_PORTAL_REQ_EVENT"
 		Question devPortalGrpQues = new Question("QUE_DEV_PORTAL_EDIT_GRP", "Dev Portal", questionAttribute, true);
 		Ask devPortalGrpAsk = new Ask(devPortalGrpQues, sourceCode, targetCode);
 
-		Question devPortalQues = new Question("QUE_EDIT_"+attribute.getCode(), "Edit Value", attribute, true);
+		Question devPortalQues = new Question("QUE_DEV_EDIT_"+attribute.getCode(), "Edit Value", attribute, true);
 		Ask devPortalAsk = new Ask(devPortalQues, sourceCode, targetCode);
 
 		Ask[] childAsks = { devPortalAsk };
