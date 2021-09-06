@@ -96,6 +96,9 @@ rule "ROL_AGENT"
 		 capabilityUtils.addCapabilityToRole(role,"ACCESS_NOTES_HCR",CapabilityMode.VIEW);
 		 capabilityUtils.addCapabilityToRole(role,"ASSIGN_AGENT_TO_INTERN",CapabilityMode.ADD);
 
+		 /* CACHED SEARCHES */
+		 capabilityUtils.addCapabilityToRole(role,"USE_CACHE",CapabilityMode.VIEW);
+
 		 /* BUCKETS SEARCHES */
    	     capabilityUtils.addCapabilityToRole(role,"SBE_AVAILABLE_INTERNS",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"SBE_APPLIED_APPLICATIONS",CapabilityMode.VIEW);

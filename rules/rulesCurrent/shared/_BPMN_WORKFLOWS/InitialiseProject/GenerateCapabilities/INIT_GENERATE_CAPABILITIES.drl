@@ -79,6 +79,9 @@ rule "INIT_GENERATE_CAPABILITIES"
 		capabilityUtils.addCapability( "EXTERNAL_HOST_CPY", "External Host Company Rep");
 		capabilityUtils.addCapability( "EXTERNAL_EDU_PRO", "External Education Provider");
 
+		/* CACHED SEARCHES */
+		capabilityUtils.addCapability("USE_CACHE","Use Cache");
+
 
 		/* BUCKETS SEARCHES */
 		capabilityUtils.addCapability("SBE_AVAILABLE_INTERNS","Available");
