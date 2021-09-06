@@ -47,7 +47,8 @@ rule "DEV_PORTAL_REQ_EVENT"
 	salience 2
     no-loop
     when
-		message : QEventMessage( data.parentCode == "QUE_DEV_PORTAL_GRP" && data.code matches "QUE_DEV_PORTAL__.*" )
+		message : QEventMessage( data.code matches "QUE_DEV_PORTAL__.*" )
+		/* message : QEventMessage( data.parentCode == "QUE_DEV_PORTAL_GRP" && data.code matches "QUE_DEV_PORTAL__.*" ) */
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		beUtils : BaseEntityUtils()
