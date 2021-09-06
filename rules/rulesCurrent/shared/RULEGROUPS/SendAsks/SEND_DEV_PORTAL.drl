@@ -61,7 +61,7 @@ rule "SEND_DEV_PORTAL"
 		VertxUtils.writeMsg("webcmds", askMsg);
 
 		TableUtils.searchTable(beUtils, "SBE_DEFS", true);
-		TableUtils.searchTable(beUtils, "SBE_SAMS", true);
+		/* TableUtils.searchTable(beUtils, "SBE_SAMS", true); */
 
 
 end
