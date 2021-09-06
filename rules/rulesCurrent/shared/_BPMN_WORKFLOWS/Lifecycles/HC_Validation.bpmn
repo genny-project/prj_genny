@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.1.Final-v20190425-2005-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.2.SNAPSHOT-v20200602-1600-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
   <bpmn2:itemDefinition id="ItemDefinition_9" isCollection="false" structureRef="java.lang.String"/>
   <bpmn2:itemDefinition id="ItemDefinition_556" isCollection="false" structureRef="life.genny.models.GennyToken"/>
   <bpmn2:itemDefinition id="ItemDefinition_576" isCollection="false" structureRef="life.genny.utils.CallingProcessToken"/>
@@ -156,6 +156,7 @@ kcontext.setVariable(&quot;newBe&quot;, newBe);
 System.out.println(&quot;HC_Validation newBe: &quot; + newBe);
 
 
+
 baseEntityType = &quot;VALID&quot;;
 kcontext.setVariable(&quot;baseEntityType&quot;, baseEntityType);
 System.out.println(&quot;HC_Validation: baseEntityType = &quot; + baseEntityType);
@@ -168,7 +169,9 @@ System.out.println(&quot;source: &quot; + source);
 
 hcBe = beUtils. getBaseEntityByCode(source);
 kcontext.setVariable(&quot;hcBe&quot;, hcBe);
-System.out.println(&quot;HC_Validation hcBe: &quot; + hcBe);</bpmn2:script>
+System.out.println(&quot;HC_Validation hcBe: &quot; + hcBe);
+
+</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_2" drools:priority="1" sourceRef="StartEvent_1" targetRef="ScriptTask_1"/>
       <bpmn2:task id="Task_2" drools:taskName="AskQuestionTask" drools:displayName="Ask Question Task" drools:icon="icons/icon-info.gif" name="QUE_HOST_CPY_VAL_GRP">
@@ -419,7 +422,7 @@ System.out.println(&quot;HC_Validation hcBe: &quot; + hcBe);</bpmn2:script>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_1" bpmnElement="Task_1" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="715.0" y="328.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_7">
           <dc:Bounds height="11.0" width="67.0" x="736.0" y="347.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -459,13 +462,13 @@ System.out.println(&quot;HC_Validation hcBe: &quot; + hcBe);</bpmn2:script>
         <di:waypoint xsi:type="dc:Point" x="640.0" y="353.0"/>
         <di:waypoint xsi:type="dc:Point" x="677.0" y="353.0"/>
         <di:waypoint xsi:type="dc:Point" x="715.0" y="353.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_12"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_ScriptTask_3">
         <di:waypoint xsi:type="dc:Point" x="825.0" y="353.0"/>
         <di:waypoint xsi:type="dc:Point" x="892.0" y="353.0"/>
         <di:waypoint xsi:type="dc:Point" x="960.0" y="353.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_13"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">

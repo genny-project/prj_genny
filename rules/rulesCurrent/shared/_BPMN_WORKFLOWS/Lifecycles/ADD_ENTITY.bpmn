@@ -33,6 +33,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_8" isCollection="false" structureRef="life.genny.utils.VertxUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_17" isCollection="false" structureRef="java.lang.Short"/>
   <bpmn2:itemDefinition id="ItemDefinition_340" isCollection="false" structureRef="java.lang.Boolean"/>
+  <bpmn2:itemDefinition id="ItemDefinition_16" isCollection="false" structureRef="org.apache.commons.lang3.text.WordUtils"/>
   <bpmn2:signal id="Signal_7" name="START_ADD_ENTITY"/>
   <bpmn2:signal id="Signal_1" name="START_POST_CREATION"/>
   <bpmn2:process id="ADD_ENTITY" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="Default Process" isExecutable="true">
@@ -62,6 +63,7 @@
       <drools:import name="org.apache.commons.lang3.StringUtils"/>
       <drools:import name="java.util.ArrayList"/>
       <drools:import name="java.util.List"/>
+      <drools:import name="org.apache.commons.lang3.text.WordUtils"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_2" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_2" name="serviceToken"/>
@@ -77,6 +79,7 @@
     <bpmn2:property id="sourceCode" itemSubjectRef="ItemDefinition_2733" name="sourceCode"/>
     <bpmn2:property id="targetCode" itemSubjectRef="ItemDefinition_2733" name="targetCode"/>
     <bpmn2:property id="submitCode" itemSubjectRef="ItemDefinition_2733" name="submitCode"/>
+    <bpmn2:property id="defBE" itemSubjectRef="ItemDefinition_2016" name="defBE"/>
     <bpmn2:endEvent id="EndEvent_2" name="START_POST_CREATION">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
@@ -156,7 +159,8 @@ if (key.equals(&quot;EDU_PRO&quot;)) {
 System.out.println(&quot;defCode = &quot; + defCode);
 
 /* CREATE BE FROM DEF */
-BaseEntity defBE = beUtils.getDEFByCode(defCode);
+defBE = beUtils.getDEFByCode(defCode);
+kcontext.setVariable(&quot;defBE&quot;, defBE);
 if (defBE == null) {
 	System.out.println(&quot;ERROR: could not find DEF for code &quot; + defCode);
 
@@ -176,13 +180,9 @@ if (defBE == null) {
 	if (newBe != null) {
 		/* Set Status to Pending */
 		newBe.setStatus(EEntityStatus.PENDING);
-		beUtils.saveBaseEntity(newBe);
+		beUtils.saveBaseEntity(defBE,newBe);
 	}
-	/*
-	List&lt;Answer> answers = new ArrayList&lt;Answer>();
-	answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), typeAttribute, &quot;true&quot;));
-	beUtils.saveAnswers(answers);
-	*/
+
 }
 
 </bpmn2:script>
@@ -287,12 +287,36 @@ System.out.println(&quot;%%%%%%%%%%%%%%%%%%% newBe: &quot; + newBe);</drools:scr
           <drools:onExit-script scriptFormat="http://www.java.com/java">
             <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% EXIT Create Entity IS BASE ENTITY %%%%%%%%%%%%%%%%%%%&quot;);
 
+System.out.println(&quot;IS_BASE_ENTITY bpmn -> newBe is &quot;+(newBe==null?&quot;NULL&quot;:&quot;NOT NULL&quot;));
 if (newBe != null) {
-	/* Set Status to Pending */
-	newBe = beUtils.getBaseEntityByCode(newBe.getCode());
+	/* Set Status to Active*/
+         newBe = beUtils.getBaseEntityByCode(newBe.getCode());
 	newBe.setStatus(EEntityStatus.ACTIVE);
-	beUtils.saveBaseEntity(newBe);
-}</drools:script>
+	beUtils.saveBaseEntity(defBE,newBe);
+
+
+	/* Fix up name and initials */
+	/* HACK HACK HACK: The issue that this is temporarily fixing is caused by slowness in saving/fetching data */
+
+	if (newBe.getCode().startsWith(&quot;PER_&quot;)) {
+
+		String firstname = newBe.getValue(&quot;PRI_FIRSTNAME&quot;,&quot;&quot;);
+		String lastname = newBe.getValue(&quot;PRI_LASTNAME&quot;,&quot;&quot;);
+			
+		String name = firstname + &quot; &quot; + lastname;
+		name = name.trim();	
+		name = WordUtils.capitalize(name);
+		String initials = WordUtils.initials(name).toUpperCase();
+
+		System.out.println(&quot;Fixing Name -> Name = &quot;+name+&quot;, Initials=&quot;+initials);
+
+		List&lt;Answer> answers = new ArrayList&lt;>();
+		answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), &quot;PRI_NAME&quot;, name));
+		answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), &quot;PRI_INITIALS&quot;, initials));
+		beUtils.saveAnswers(answers);
+	}
+}
+</drools:script>
           </drools:onExit-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_12</bpmn2:incoming>
@@ -484,7 +508,6 @@ beUtils = new BaseEntityUtils(userToken);
 if(!newBe.getCode().startsWith(&quot;JNL_&quot;)){
   beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), &quot;PRI_PROFILE&quot;, &quot;Complete&quot;));
 }
-
 </bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:sequenceFlow id="SequenceFlow_1" drools:priority="1" sourceRef="Task_2" targetRef="ScriptTask_5"/>

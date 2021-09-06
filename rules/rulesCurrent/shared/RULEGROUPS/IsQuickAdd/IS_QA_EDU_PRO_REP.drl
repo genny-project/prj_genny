@@ -136,7 +136,7 @@ rule "IS_QA_EDU_PRO_REP"
 				System.out.println("rawSendEmail: " +rawSendEmail);
 		}
 		
-		if (rawSendEmail.equals("SEL_YES")) {
+		if (rawSendEmail.contains("SEL_YES")) {
 			String epEmail = newBe.getValue("PRI_EMAIL", null);
 			System.out.println("epEmail = " +epEmail);					
 			

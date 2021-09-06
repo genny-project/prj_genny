@@ -49,7 +49,7 @@ rule "HELPER_LNK_BUSINESS_HOURS"
 
 		BaseEntity be = beUtils.getBaseEntityByCode(code);
 		if(be != null){
-			String name = be.getValue("PRI_NAME", null);		
+			String name = be.getValue("PRI_NAME", null);
 			if(name != null){
 				Answer ans = new Answer(sourceCode, targetCode, "LNK_BUSINESS_HOURS", name);
 				beUtils.saveAnswer(ans);
@@ -82,40 +82,109 @@ rule "HELPER_LNK_BUSINESS_HOURS"
         /* Days per week */
         String dpwStr = targetBe.getValue("PRI_DAYS_PER_WEEK", null);
         System.out.println("dpwStr = " + dpwStr);	
-        
-        Double dpwDbl = Double.parseDouble(dpwStr);
-        System.out.println("dpwDbl = " + dpwDbl);
-        
-        /* Hours per week */
-        Double hpwDbl = dpwDbl * businessHrs;
-        System.out.println("hpwDbl = " + hpwDbl);
 
-		/* Save Answer */
-		Answer hoursAnswer = new Answer(sourceCode, targetCode, "PRI_HOURS_PER_WEEK", hpwDbl);
-		beUtils.saveAnswer(hoursAnswer);
-		
-		/* Prepare Question and Ask */
-		Attribute attr = RulesUtils.getAttribute("PRI_HOURS_PER_WEEK", serviceToken);
-		
-		Question hoursQues = new Question("QUE_INTERNSHIP_HOURS_PER_WEEK", "Internship Hours per week", attr, true);
-		Ask hoursAsk = new Ask(hoursQues, sourceCode, targetCode);
-		
-		/* Send Disable for this Ask */
-		hoursAsk.setDisabled(true);
-		
-		QDataAskMessage hoursAskMsgDisable = new QDataAskMessage(hoursAsk);
-		hoursAskMsgDisable.setToken(userToken.getToken());
-		VertxUtils.writeMsg("webcmds", hoursAskMsgDisable);
-		
-		/* Send Answer to Front End */
-		VertxUtils.sendToFrontEnd(userToken, hoursAnswer);
+		if (dpwStr != null) {
+			Double dpwDbl = Double.parseDouble(dpwStr);
+			System.out.println("dpwDbl = " + dpwDbl);
 
-		/* Send enable for this Ask */
-		hoursAsk.setDisabled(false);
-	
-		QDataAskMessage hoursAskMsgEnable = new QDataAskMessage(hoursAsk);
-		hoursAskMsgEnable.setToken(userToken.getToken());
-		VertxUtils.writeMsg("webcmds", hoursAskMsgEnable);
+			/* Hours per week */
+			Double hpwDbl = dpwDbl * businessHrs;
+			System.out.println("hpwDbl = " + hpwDbl);
 
+			/* Save Answer */
+			Answer hoursAnswer = new Answer(sourceCode, targetCode, "PRI_HOURS_PER_WEEK", hpwDbl);
+			beUtils.saveAnswer(hoursAnswer);
+
+			/* Prepare Question and Ask */
+			Attribute attr = RulesUtils.getAttribute("PRI_HOURS_PER_WEEK", serviceToken);
+
+			Question hoursQues = new Question("QUE_INTERNSHIP_HOURS_PER_WEEK", "Internship Hours per week", attr, true);
+			Ask hoursAsk = new Ask(hoursQues, sourceCode, targetCode);
+
+			/* Send Disable for this Ask */
+			hoursAsk.setDisabled(true);
+
+			QDataAskMessage hoursAskMsgDisable = new QDataAskMessage(hoursAsk);
+			hoursAskMsgDisable.setToken(userToken.getToken());
+			VertxUtils.writeMsg("webcmds", hoursAskMsgDisable);
+
+			/* Send Answer to Front End */
+			VertxUtils.sendToFrontEnd(userToken, hoursAnswer);
+
+			/* Send enable for this Ask */
+			hoursAsk.setDisabled(false);
+
+			QDataAskMessage hoursAskMsgEnable = new QDataAskMessage(hoursAsk);
+			hoursAskMsgEnable.setToken(userToken.getToken());
+			VertxUtils.writeMsg("webcmds", hoursAskMsgEnable);
+		}
+
+		/* Process PRI_BUSINESS_HOURS */
+		String minStart = "";
+		String minEnd = "";
+
+		int lenStart = startStr.length();
+		int lenEnd = endStr.length();    
+
+		if (startStr.contains(".5")) {  
+			minStart = ":30";
+			startStr = startStr.substring(0, lenStart - 2);
+		} else {
+			minStart = ":00"; 
+		}
+
+		if (endStr.contains(".5")) {
+			minEnd = ":30";
+			endStr = endStr.substring(0, lenEnd - 2);
+		} else {
+			minEnd = ":00";
+		}
+
+
+		double startD = Double.parseDouble(startStr);
+		double endD = Double.parseDouble(endStr);
+
+		String startMeridiem = "";
+		String endMeridiem = "";
+
+
+		if (startD < 12.0) {
+			startMeridiem = "AM";
+		} else {
+			startMeridiem = "PM";
+			startD = startD - 12.0;
+		}
+
+		if (endD < 12.0) {
+			endMeridiem = "AM";
+		} else {
+			endMeridiem = "PM";
+			endD = endD - 12.0;
+		}
+
+		String newStartStr = String.valueOf(startD);
+		String newEndStr = String.valueOf(endD);
+
+		int lenNewStart = newStartStr.length();
+		int lenNewEnd = newEndStr.length();   
+
+		String trimStartStr = newStartStr.substring(0, lenNewStart - 2);
+		String trimEndStr = newEndStr.substring(0, lenNewEnd - 2);
+
+		String startTime = trimStartStr + minStart + " "+ startMeridiem;
+		String endTime = trimEndStr + minEnd + " "+ endMeridiem;
+
+		System.out.println("Start time = " + startTime);
+		System.out.println("End time = " + endTime);
+
+		String businessHours = startTime + " - " + endTime;
+		System.out.println("Business hours = " + businessHours);
+
+		if (businessHours != null) {
+			beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetCode, "PRI_BUSINESS_HOURS", businessHours));
+			System.out.println("businessHours: " + businessHours);	
+		} else {
+			System.out.println("ERROR: Null businessHours"); 
+		}
 		
 end

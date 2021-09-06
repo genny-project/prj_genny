@@ -105,25 +105,6 @@ rule "HC_VALIDATION"
 								}
 							}
 						} 
-						
-						String industry = hcBe.getValue("LNK_COMPANY_INDUSTRY",null);
-						String industryInc = hcBe.getValue("LNK_COMPANY_INC",null);
-						
-						System.out.println(" industry " + industry);
-						System.out.println(" industryInc " + industryInc);
-						if(industry != null)
-						{
-							industry = beUtils.cleanUpAttributeValue(industry);
-							BaseEntity linkedBe = beUtils.getBaseEntityByCode(industry);
-							industry = linkedBe.getValue("PRI_NAME", null);
-						}
-						if(industryInc != null)
-						{	
-							industryInc = industryInc.substring(0, 4);
-						}
-						System.out.println(" industryInc " + industryInc);
-						System.out.println("industry = " + industry);
-					
 						DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd MMM yyyy");
 						LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
 						String docValidationDate = dtf.format(now);
@@ -131,9 +112,24 @@ rule "HC_VALIDATION"
 						HashMap<String, Object> contextMap = new HashMap<String, Object>();
 						contextMap.put("HCVDoc", docBe);
 						contextMap.put("HC", hcBe);
-						contextMap.put("Industry", industry);
-						contextMap.put("IndustryInc", industryInc);
 						
+						String industry = hcBe.getValue("LNK_COMPANY_INDUSTRY",null);
+						String industryInc = hcBe.getValue("LNK_COMPANY_INC",null);
+						
+						System.out.println(" industry " + industry);
+						System.out.println(" industryInc " + industryInc);
+						if(!(industry.isEmpty()))
+						{
+							industry = beUtils.cleanUpAttributeValue(industry);
+							BaseEntity linkedBe = beUtils.getBaseEntityByCode(industry);
+							industry = linkedBe.getValue("PRI_NAME", null);
+							contextMap.put("Industry", industry);
+						}
+						if(!(industryInc.isEmpty()))
+						{	
+							industryInc = industryInc.substring(0, 4);
+							contextMap.put("IndustryInc", industryInc);
+						}
 						System.out.println(" template " + templatePdf);
 						String pdfUrl = PDFHelper.getDownloadablePdfLinkForHtml(templatePdf, contextMap);
 						System.out.println("PDF url :: " + pdfUrl);

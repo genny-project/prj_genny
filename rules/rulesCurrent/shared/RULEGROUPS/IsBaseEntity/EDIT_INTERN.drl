@@ -25,19 +25,18 @@ rule "EDIT_INTERN"
 		output : OutputParam()
 		baseEntityType : String(baseEntityType.equals("EDIT_INTERN"))
 		targetBe : BaseEntity()
-	  
+	  	beUtils : BaseEntityUtils()
      then
  		System.out.println("EDIT_INTERN: Rule fired" );
  		System.out.println("EDIT_INTERN: targetBe = " + targetBe.getCode()); 
  		
  	/*  Construct answer with Source, Target, Attribute Code, Value */
- 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
-
+ 
  		List<Answer> answers = new ArrayList<>();
  		
 
  		answers.add(new Answer(userToken.getUserCode(), targetBe.getCode() ,"PRI_PROFILE", "Complete"));  
-		
+		answers.add(new Answer(userToken.getUserCode(), targetBe.getCode() ,"PRI_STATUS", "AVAILABLE"));  /* TODO THIS NEEDS TO MATCH THE MANDATORY FIELDS */
 
 		targetBe = beUtils.getBaseEntityByCode(targetBe.getCode());
 		

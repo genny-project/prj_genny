@@ -120,5 +120,6 @@ rule "PRI_ADDRESS_FULL"
 		
 
 		retract(answer);
+		update(answersToSave);
 	
 end

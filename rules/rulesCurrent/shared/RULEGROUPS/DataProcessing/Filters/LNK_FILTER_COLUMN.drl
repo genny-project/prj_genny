@@ -1,20 +1,14 @@
 package life.genny.rules;
-import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.models.GennyToken;
 import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.qwanda.Answer;
-import io.vertx.core.json.JsonObject;
 import java.util.Map;
 import java.util.HashMap;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import com.google.gson.reflect.TypeToken;
-import life.genny.qwandautils.JsonUtils;
 import life.genny.utils.VertxUtils;
-import life.genny.utils.TableUtils;
-import life.genny.models.TableData;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.SearchEntity;
@@ -25,6 +19,7 @@ import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 import life.genny.qwanda.message.QCmdMessage;
 import life.genny.qwanda.attribute.EntityAttribute;
 import life.genny.qwanda.Link;
+import life.genny.qwanda.attribute.AttributeText;
 
 
 rule "LNK_FILTER_COLUMN"
@@ -50,19 +45,21 @@ rule "LNK_FILTER_COLUMN"
 		String attributeCode = beUtils.cleanUpAttributeValue(value).substring("SEL_FILTER_COLUMN_SRT_".length());
 		System.out.println("attributeCode = " + attributeCode);
 
-		/* Get filter array from cache */
-		String[] newFilterArray = VertxUtils.getObject(serviceToken.getRealm(), "", "FLT_"+targetCode, String[].class, serviceToken.getToken());
+		/* Fetch Search from Cache */
+		SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", targetCode, SearchEntity.class, serviceToken.getToken());
 
-		/* Create if it doesn't exist */
-		if (newFilterArray == null) {
-			newFilterArray = new String[3];
-		}
+		/* Add Filter Column */
+		AttributeText attributeFilterColumn = new AttributeText("SCH_FILTER_COLUMN", "Filter Column");
+		AttributeText attributeFilterOption = new AttributeText("SCH_FILTER_OPTION", "Filter Option");
+		AttributeText attributeFilterValue = new AttributeText("SCH_FILTER_VALUE", "Filter Value");
+		searchBE.addAttribute(attributeFilterColumn, 5.0, attributeCode);
+		searchBE.addAttribute(attributeFilterOption, 5.0, "");
+		searchBE.addAttribute(attributeFilterValue, 5.0, "");
 
-		newFilterArray[0] = attributeCode;
-		VertxUtils.putObject(serviceToken.getRealm(), "", "FLT_"+targetCode, newFilterArray, serviceToken.getToken());
+		/* Update Search in Cache */
+		VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken.getToken());
 
 		/* Define dropdown items selector */
-		String dropdownCode = null;
 		String unhidden = null;
 
 		/* Get associated Attribute */
@@ -94,12 +91,10 @@ rule "LNK_FILTER_COLUMN"
 				if (attr.getCode().equals("PRI_ADDRESS_COUNTRY")) {
 					filterOptionsArray = Arrays.asList(equalSelection);
 					unhidden = "QUE_FILTER_VALUE_COUNTRY";
-					dropdownCode = "LNK_SELECT_COUNTRY";
 
 				} else if (attr.getCode().equals("PRI_ADDRESS_STATE")) {
 					filterOptionsArray = Arrays.asList(equalSelection);
 					unhidden = "QUE_FILTER_VALUE_STATE";
-					dropdownCode = "LNK_SELECT_STATE";
 				
 				} else if (dtt.equals("java.lang.String") || dtt.equals("String") || dtt.equalsIgnoreCase("Text")) {
 					filterOptionsArray = Arrays.asList(stringSelection);
@@ -181,8 +176,42 @@ rule "LNK_FILTER_COLUMN"
 				VertxUtils.writeMsg("webcmds", askMsg);
 				System.out.println("Asks sent to FE");
 
-				if (dropdownCode != null) {
-					ShowFrame.sendSelectionItems(dropdownCode, userToken, serviceToken, false, targetCode);												
+				if (unhidden != null) {
+
+					/* Init Blank Search */
+					SearchEntity itemSearch = new SearchEntity("SBE_FILTER_ITEMS", "Filter Items")
+						.addColumn("PRI_CODE", "Code")
+						.addColumn("PRI_NAME", "Name")
+						.setLinkCode("LNK_CORE")
+						.setPageSize(250);
+
+					Boolean searchTrigger = false;
+
+					if (unhidden.equals("QUE_FILTER_VALUE_COUNTRY")) {
+						itemSearch.setLinkValue("COUNTRY");
+						searchTrigger = true;
+
+					} else if (unhidden.equals("QUE_FILTER_VALUE_STATE")) {
+						itemSearch.setLinkValue("AUS_STATE");
+						searchTrigger = true;
+
+					}
+
+					/* Basically, don't search if no linkVal is set */
+					if (searchTrigger) {
+						/* Fetch Countries */
+						List<BaseEntity> items = beUtils.getBaseEntitys(itemSearch);
+						/* Package and send */
+						QDataBaseEntityMessage itemMsg = new QDataBaseEntityMessage(items);
+						itemMsg.setQuestionCode(unhidden);
+						itemMsg.setParentCode("QUE_ADD_FILTER_GRP");
+						itemMsg.setLinkCode("LNK_CORE");
+						itemMsg.setLinkValue("LNK_ITEMS");
+						itemMsg.setToken(beUtils.getGennyToken().getToken());
+						itemMsg.setReplace(true);
+						itemMsg.setToken(userToken.getToken());
+						VertxUtils.writeMsg("webcmds", itemMsg);
+					}
 				}
 
 			} else {
