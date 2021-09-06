@@ -24,7 +24,7 @@ rule "SEND_DEV_PORTAL"
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
-		# allowed: Allowed(code == "DEV_PORTAL" && mode == CapabilityMode.VIEW)
+		/* allowed: Allowed(code == "DEV_PORTAL" && mode == CapabilityMode.VIEW) */
 		allowed: Allowed(code == "DEV")
 
 	then
