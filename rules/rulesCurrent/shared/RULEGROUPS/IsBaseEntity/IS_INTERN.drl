@@ -313,7 +313,7 @@ rule "IS_INTERN"
 					lnk_HC = lnk_HC.replace("\"", "").replace("[", "").replace("]", "");
 					System.out.println("lnk_HC: " +lnk_HC);
 
-					if (lnk_HC !=null){ 
+					if (lnk_HC !=null || lnk_HC != ""){ 
 						BaseEntity hcBe = beUtils.getBaseEntityByCode(lnk_HC);
 
 					    String rocket = hcBe.getValue("PRI_NAME", null);
