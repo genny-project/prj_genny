@@ -511,8 +511,8 @@ System.out.println(&quot;ADD_ENTITY : Setting PRI_PROFILE to Complete for &quot;
 beUtils = new BaseEntityUtils(userToken);
 if(!newBe.getCode().startsWith(&quot;JNL_&quot;)){
   newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), &quot;PRI_PROFILE&quot;, &quot;Complete&quot;));
-/* Re generate cached applications */
- SearchUtils.regenerateCaches(beUtils, newBe);
+BaseEntity defBe = beUtils.getDEFByCode("DEF_INTERN");
+ SearchUtils.regenerateCaches(beUtils, defBe);
 
 }
 </bpmn2:script>
