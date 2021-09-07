@@ -35,14 +35,14 @@ import life.genny.utils.TableUtils;
 
 
 
-rule "PRI_SEARCH_TEXT_BUCKET_ASSIST"
+rule "PRI_SEARCH_TEXT_BUCKET_ASSIST_TYPE"
 	ruleflow-group 'DataProcessing'
 	salience 500
 	no-loop true
 	when
  	  beUtils : BaseEntityUtils()
  	  allowed : Allowed(code == "USER") 
-	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" && (value.startsWith("!@")) && answer.getTargetCode().startsWith("["))   /* this is a pure assist search */
+	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" && (value.startsWith("!#")) && answer.getTargetCode().startsWith("["))   /* this is a pure assist search */
 	  serviceToken : GennyToken (code == "PER_SERVICE")
 	  output : OutputParam( )
 	then
@@ -50,6 +50,24 @@ rule "PRI_SEARCH_TEXT_BUCKET_ASSIST"
 		retract(answer);
 
 		String value = answer.getValue().substring(2);
+		if (!StringUtils.isBlank(value)) {
+		
+		String internshipType = "SEL_COURSE_CREDIT";
+		
+		value = value.trim();
+		if ("WRP".equalsIgnoreCase(value)) 
+			{internshipType = "SEL_OA_WRP";}
+		 else if ("WIL".equalsIgnoreCase(value)) 
+			{internshipType = "SEL_OA_WIL";}
+		 else if ("CB".equalsIgnoreCase(value)) 
+			{internshipType = "SEL_OA_CARRERBOX";}   /* yes, bad spelling */
+		 else if ("PYP".equalsIgnoreCase(value)) 
+			{internshipType = "SEL_PROFESSIONAL_YEAR";}
+		 else if ("CC".equalsIgnoreCase(value)) 
+			{internshipType = "SEL_COURSE_CREDIT";}
+		 else if ("VG".equalsIgnoreCase(value)) 
+			{internshipType = "SEL_DIGITAL_JOBS";}
+		
 
 		/* get current search */
 		TableUtils tableUtils = new TableUtils(beUtils);
@@ -58,7 +76,7 @@ rule "PRI_SEARCH_TEXT_BUCKET_ASSIST"
 		SearchEntity availableSearchBE = new SearchEntity("SBE_AVAILABLE_INTERNS", "Wildcard Available")
 							.addFilter("PRI_IS_INTERN", true)
 							.addFilter("PRI_STATUS", SearchEntity.StringFilter.NOT_LIKE,"P%")
-							.setWildcard(value)
+							.addFilter("LNK_COMP_INTERNSHIP", SearchEntity.StringFilter.LIKE,"%"+internshipType+"%")
 							.setPageStart(0)
 							.setPageSize(10000);
 
@@ -96,7 +114,7 @@ rule "PRI_SEARCH_TEXT_BUCKET_ASSIST"
 			/* Fetch All Applications */
 		SearchEntity appSearchBE = new SearchEntity("SBE_BUCKET_WILDCARD", "Wildcard Applications")
 							.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
-							.setWildcard(value);
+							.addFilter("LNK_COMP_INTERNSHIP", SearchEntity.StringFilter.LIKE,"%"+internshipType+"%");
 
 		List<BaseEntity> internApplications = beUtils.getBaseEntitys(appSearchBE);
 		System.out.println("found " + internApplications + " applications");
@@ -148,7 +166,7 @@ rule "PRI_SEARCH_TEXT_BUCKET_ASSIST"
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(searchMsg));
 */
 		}
-
+	}
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");
 		retract(answer);
