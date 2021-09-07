@@ -137,6 +137,7 @@ rule "PRI_SEARCH_TEXT_BUCKET_ASSIST"
 			appMsg.setToken(beUtils.getGennyToken().getToken());
 			appMsg.setReplace(true);
 			appMsg.setParentCode(searchCode);
+			appMsg.setTotal(bucketApps.size());
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(appMsg));
 
 		/*	tableUtils.updateBaseEntity(searchBE, "PRI_TOTAL_RESULTS", Long.valueOf(bucketApps.size()) + ""); 
