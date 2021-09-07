@@ -42,6 +42,10 @@ rule "ROL_ADMIN"
    	     
    	     capabilityUtils.inheritRole(role,user);
  
+ 		 /* CACHED SEARCHES */
+		 capabilityUtils.addCapabilityToRole(role,"USE_CACHE",CapabilityMode.VIEW);
+ 
+ 
    	     capabilityUtils.addCapabilityToRole(role,"VERIFY_EMAIL",CapabilityMode.DELETE);
       	 capabilityUtils.addCapabilityToRole(role,"LOGIN",CapabilityMode.EDIT);
    	     capabilityUtils.addCapabilityToRole(role,"LOGOUT",CapabilityMode.EDIT);

@@ -48,6 +48,7 @@
       <drools:import name="org.json.JSONArray"/>
       <drools:import name="life.genny.qwanda.Answer"/>
       <drools:import name="life.genny.utils.TableUtils"/>
+      <drools:import name="life.genny.utils.SearchUtils"/>
       <drools:import name="life.genny.qwandautils.KeycloakUtils"/>
       <drools:import name="life.genny.qwanda.message.QEventMessage"/>
       <drools:import name="life.genny.qwanda.message.MessageData"/>
@@ -408,6 +409,9 @@ if (userRole == true) {
     targetBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetBe.getCode(), &quot;PRI_STATUS&quot;, &quot;AVAILABLE&quot;));
     targetBe.setStatus(EEntityStatus.ACTIVE);
    beUtils.saveBaseEntity(targetBe);
+/* Re generate cached applications */
+BaseEntity defBe = beUtils.getDEFByCode("DEF_INTERN");
+ SearchUtils.regenerateCaches(beUtils, defBe);
 } else {
     System.out.println(&quot;EDIT_ENTITY BPM: &quot;+targetBe.getCode() + &quot; is not an intern base entity.&quot;);
 }</bpmn2:script>

@@ -42,26 +42,42 @@ import life.genny.utils.SearchCallable;
 import life.genny.utils.TableFrameCallable;
 import life.genny.utils.CacheSearchUtils;
 
-rule "DEV_PORTAL_CLICK_EVENT"
-    ruleflow-group 'EventProcessing'
-		salience 2
+rule "DEV_PORTAL_REQ_EVENT"
+	ruleflow-group 'EventProcessing'
+	salience 2
     no-loop
     when
-			message : QEventMessage(data.code matches "QUE_DEV_PORTAL_ACCESS" )
-			userToken : GennyToken (code != "PER_SERVICE" )
-			serviceToken : GennyToken( code == "PER_SERVICE")
-			output : OutputParam( )
-			ruleDetails : RuleDetails()
-			beUtils : BaseEntityUtils()
-    then
-			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processings : " + message );
-			
-			VertxUtils.sendCmdMsg(beUtils, "DISPLAY", "DEV_PORTAL");
+		message : QEventMessage( data.code matches "QUE_DEV_PORTAL__.*" )
+		/* message : QEventMessage( data.parentCode == "QUE_DEV_PORTAL_GRP" && data.code matches "QUE_DEV_PORTAL__.*" ) */
+		userToken : GennyToken (code != "PER_SERVICE" )
+		serviceToken : GennyToken( code == "PER_SERVICE")
+		beUtils : BaseEntityUtils()
+	then
+		System.out.println(drools.getRule().getName() + " Processings : " + message);
 
-			long totalTime = TableUtils.searchTable(beUtils, "SBE_SAMS", true);
-			System.out.println("total took " + (totalTime) + " ms"); 
+		String code = message.getData().getCode();
 
-			retract(message);
-			output.setTypeOfResult("NONE");
-			output.setResultCode("NONE");  /* dont display anything new */
-		end
+		String sourceCode = "PER_SERVICE";
+		String targetCode = "PER_SERVICE";
+
+		Attribute questionAttribute = new Attribute("QQQ_QUESTION_GROUP", "link", new DataType(String.class));
+		Attribute attribute = RulesUtils.getAttribute(code.substring("QUE_DEV_PORTAL__".length()), userToken.getToken());
+
+
+		Question devPortalGrpQues = new Question("QUE_DEV_PORTAL_EDIT_GRP", "Dev Portal", questionAttribute, true);
+		Ask devPortalGrpAsk = new Ask(devPortalGrpQues, sourceCode, targetCode);
+
+		Question devPortalQues = new Question("QUE_DEV_EDIT_"+attribute.getCode(), "Edit Value", attribute, true);
+		Ask devPortalAsk = new Ask(devPortalQues, sourceCode, targetCode);
+
+		Ask[] childAsks = { devPortalAsk };
+		devPortalGrpAsk.setChildAsks(childAsks);
+
+		String json = JsonUtils.toJson(devPortalGrpAsk);
+		json = json.replaceAll("PER_SERVICE", userToken.getUserCode());
+
+		devPortalGrpAsk = JsonUtils.fromJson(json, Ask.class);
+		VertxUtils.sendAskMsg(beUtils, devPortalGrpAsk);
+
+		retract(message);
+	end

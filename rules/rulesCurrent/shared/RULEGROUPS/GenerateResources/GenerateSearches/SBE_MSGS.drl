@@ -8,11 +8,11 @@ import life.genny.models.GennyToken;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.qwandautils.GennySettings;
 
-rule "SBE_SAMS"
+rule "SBE_MSGS"
 	ruleflow-group 'GenerateSearches'
 	no-loop true
 	when
-		not  SearchEntity (code == "SBE_SAMS")
+		not  SearchEntity (code == "SBE_MSGS")
 		serviceToken : GennyToken( code == "PER_SERVICE")
 	then
 		System.out.println("   Generate "+drools.getRule().getName() );
@@ -23,10 +23,10 @@ rule "SBE_SAMS"
 
 		BaseEntity project = beUtils.getBaseEntityByCode(projectCode);
 
-		SearchEntity searchBE = new SearchEntity(drools.getRule().getName(),"Standard Association Mappings")
+		SearchEntity searchBE = new SearchEntity(drools.getRule().getName(),"Message Templates")
 			.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
 
-			.addFilter("PRI_CODE",SearchEntity.StringFilter.LIKE,"PER_%")
+			.addFilter("PRI_CODE",SearchEntity.StringFilter.LIKE,"MSG_%")
 
 			.addAction("EDIT", "Edit")
 
