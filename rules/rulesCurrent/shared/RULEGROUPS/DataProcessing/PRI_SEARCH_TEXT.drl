@@ -55,7 +55,7 @@ rule "PRI_SEARCH_TEXT"
  
  	    /* Reset page to start */
   	    
-  	    	long totalTime = TableUtils.searchTable(beUtils,searchBE.getCode().substring("SBE_".length()), true);
+  	    	long totalTime = TableUtils.searchTable(beUtils,searchBE, true);
 
 			retract(answer);
 			System.out.println("total took " + (totalTime) + " ms"); 

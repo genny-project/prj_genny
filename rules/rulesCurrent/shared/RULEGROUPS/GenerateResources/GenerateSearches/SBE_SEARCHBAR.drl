@@ -54,7 +54,7 @@ rule "SBE_SEARCHBAR"
 
  		 insert(searchBE);
 		 beUtils.saveSearchEntity(searchBE);
-  		/* VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken.getToken()); */
+  		VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken.getToken()); 
 
    		 } else {
    		 	System.out.println("PROJECT is not in cache "+projectCode);
