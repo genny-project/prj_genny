@@ -220,8 +220,8 @@ public class RemoteServiceTest {
                 .addColumn("PRI_URL", "URL")
                 .addColumn("PRI_DESCRIPTION", "Description")
                 .addAssociatedColumn("LNK_AUTHOR", "PRI_NAME", "Author Name")
-                /* Row Action */
-                .addRowAction("PRI_EVENT_VIEW_REMOTE_JOBS", "View Remote Jobs");
+                /* Add Action */
+                .addAction("PRI_EVENT_VIEW_REMOTE_JOBS", "View Remote Jobs");
         searchRemoteServices.setRealm(realm);
         searchRemoteServices.setPageStart(0);
         searchRemoteServices.setPageSize(1000);
