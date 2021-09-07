@@ -376,6 +376,7 @@ rule "IS_INTERN"
 			msgMatches.setReplace(true);
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msgMatches));
 
+		}
 		} catch (Exception e) {
         	e.printStackTrace();
     	}
