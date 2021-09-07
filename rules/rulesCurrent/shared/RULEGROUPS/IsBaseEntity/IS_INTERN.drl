@@ -344,9 +344,9 @@ rule "IS_INTERN"
 
 				/*matchedInternships.add(randomElement);*/
 
-				if(i == 0) {results = '[\"' + beCode + '\", ';}
-				if(i == 1) {results = results + '\"' + beCode + '\", ';}
-				if(i == 2) {results = results + '\"' + beCode + '\"]';}
+				if(i == 0) {results = "[\"" + beCode + "\", ";}
+				if(i == 1) {results = results + "\"" + beCode + "\", ";}
+				if(i == 2) {results = results + '\"' + beCode + "\"]";}
 
 				beCodes[i] = beCode;
 				beCodez[i] = randomElement;
