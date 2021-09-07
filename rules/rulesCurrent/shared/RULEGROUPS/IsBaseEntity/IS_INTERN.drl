@@ -308,8 +308,6 @@ rule "IS_INTERN"
 					System.out.println("Matching internship: = " +internship);
 
 					String lnk_HC = internship.getValue("LNK_HOST_COMPANY", null);
-					System.out.println("internship: " +internship);
-					System.out.println("lnk_HC: " +lnk_HC);
 					lnk_HC = lnk_HC.replace("\"", "").replace("[", "").replace("]", "");
 					System.out.println("lnk_HC: " +lnk_HC);
 
