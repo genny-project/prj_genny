@@ -139,13 +139,13 @@ rule "PRI_SEARCH_TEXT_BUCKET_ASSIST"
 			appMsg.setParentCode(searchCode);
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(appMsg));
 
-			tableUtils.updateBaseEntity(searchBE, "PRI_TOTAL_RESULTS", Long.valueOf(bucketApps.size()) + ""); 
+		/*	tableUtils.updateBaseEntity(searchBE, "PRI_TOTAL_RESULTS", Long.valueOf(bucketApps.size()) + ""); 
 
 			QDataBaseEntityMessage searchMsg = new QDataBaseEntityMessage(searchBE);
 			searchMsg.setToken(beUtils.getGennyToken().getToken());
 			searchMsg.setReplace(true);
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(searchMsg));
-
+*/
 		}
 
 		output.setTypeOfResult("NONE");
