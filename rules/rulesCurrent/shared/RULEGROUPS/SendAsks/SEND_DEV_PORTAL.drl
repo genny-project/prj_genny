@@ -24,7 +24,8 @@ rule "SEND_DEV_PORTAL"
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
-		allowed: Allowed(code == "DEV_PORTAL" && mode == CapabilityMode.VIEW)
+		/* allowed: Allowed(code == "DEV_PORTAL" && mode == CapabilityMode.VIEW) */
+		allowed: Allowed(code == "DEV")
 
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
@@ -58,5 +59,10 @@ rule "SEND_DEV_PORTAL"
 		QDataAskMessage askMsg = new QDataAskMessage(devPortalGrpAsk);
 		askMsg.setToken(userToken.getToken());
 		VertxUtils.writeMsg("webcmds", askMsg);
+
+		TableUtils.searchTable(beUtils, "SBE_DEFS", true);
+		TableUtils.searchTable(beUtils, "SBE_MSGS", true);
+		/* TableUtils.searchTable(beUtils, "SBE_SAMS", true); */
+
 
 end

@@ -1,22 +1,19 @@
 package life.genny.rules;
+
 import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.models.GennyToken;
-import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.qwanda.Answer;
 import life.genny.qwanda.entity.BaseEntity;
-import life.genny.utils.OutputParam;
 import life.genny.qwandautils.KeycloakUtils;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.qwandautils.GennySettings;
 import java.util.UUID;
-import life.genny.notifications.EmailHelper;
-
-import java.security.SecureRandom;
-import java.util.stream.Collectors;
-
 import java.util.List;
 import java.util.ArrayList;
+import life.genny.qwanda.message.QMessageGennyMSG;
+import life.genny.qwanda.message.QBaseMSGMessageType;
+import life.genny.qwandautils.MessageUtils;
 
 rule "IS_QA_HOST_CPY_REP"
     ruleflow-group 'IsQuickAdd'
@@ -25,37 +22,18 @@ rule "IS_QA_HOST_CPY_REP"
     when
 	 	userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
-		output : OutputParam()
 		baseEntityType : String(baseEntityType.equals("QA_HOST_CPY_REP"))
 		newBe : BaseEntity()
+		beUtils : BaseEntityUtils()
 	  
      then
- 		System.out.println("IS_QA_HOST_CPY_REP: Rule fired" );
- 		System.out.println("IS_QA_HOST_CPY_REP: newBe = " + newBe.getCode()); 
- 		
- 	/*  Construct answer with Source, Target, Attribute Code, Value */
- 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+ 		System.out.println(drools.getRule().getName() + ": Rule fired :: newBe = " + newBe.getCode()); 
 
  		List<Answer> answers = new ArrayList<>();
  		
- 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_HOST_CPY_REP", "true")); */
- 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS_COLOR", "#FF9100")); */
-		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_PROFILE", "Incomplete")); */
-		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE")); */
-
-		/* Record who added them */
-		BaseEntity userBe = beUtils.getBaseEntityByCode(userToken.getUserCode());
-		if (userBe != null) {
-			String addedBy = userBe.getValue("PRI_NAME", null);
-			System.out.println("addedBy: " + addedBy);
-			answers.add(new Answer(userToken.getCode(), newBe.getCode(), "PRI_ADDED_BY", addedBy));
-		}
-		
 		Boolean isHostCpyRep = (Boolean) beUtils.getBaseEntityValue(userToken.getUserCode(), "PRI_IS_HOST_CPY_REP");
 
-		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
-		
-		String linkedHC = user.getValue("LNK_HOST_COMPANY", null);
+		String linkedHC = newBe.getValue("LNK_HOST_COMPANY", null);
 		System.out.println("linkedHC = " + linkedHC);
 		BaseEntity companyBe = null;
 		if (linkedHC != null && !linkedHC.isEmpty()) {
@@ -74,7 +52,7 @@ rule "IS_QA_HOST_CPY_REP"
 
 				String uuid = UUID.randomUUID().toString().toUpperCase();
 				String cpyCode = "CPY_"+uuid;
-				BaseEntity defBE = beUtils.getDEFByCode("DEF_COMPANY");
+				BaseEntity defBE = beUtils.getDEFByCode("DEF_HOST_CPY");
 				beUtils.create(defBE, cpyCode, cpyCode);
 
 				answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_HOST_COMPANY", "[\""+cpyCode+"\"]"));
@@ -114,120 +92,38 @@ rule "IS_QA_HOST_CPY_REP"
 				System.out.println("companyBe is NULL");
 			}
 		}
-		
-		
-		/* Set up in Keycloak */
-		
-		String userId = "";
-		
-		String userStr = newBe.getCode();
-		String[] userSplit = userStr.split("_");
-		String userCode = userSplit[1];
-		System.out.println("User "+user+" with userCode = "+userCode);
-		
-		String email = "stephenie.pulis-cassar@outcomelife.com.au";
-		/* NOTE: THIS IS ONLY A BACKUP PASSWORD */
-		String password = "password1";
-		
-		String firstname = user.getValue("PRI_FIRSTNAME",null);
-		if (firstname != null) {
-			String lastname = user.getValue("PRI_LASTNAME",null);
-			if (lastname != null) {
-				email = user.getValue("PRI_EMAIL",null);
-				if (email != null) {
-					/* TODO HACK */
-					if (true) {
-						userId = KeycloakUtils.updateUser(userCode,serviceToken.getToken(), serviceToken.getRealm(), email, firstname, lastname,  email, null, "user", "users");
-						userId = userId.toUpperCase();
-						Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),newBe.getCode(),"PRI_UUID",userId);
-						answers.add(keycloakId);
-						System.out.println("Created User "+email+" in Keycloak with id = "+userId);
-
-						/* Generate a random 15 char password */
-						char[] allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGJKLMNPRSTUVWXYZ0123456789^$?!@#%&".toCharArray();
-						password = new SecureRandom().ints(15, 0, allowed.length).mapToObj(i -> String.valueOf(allowed[i])).collect(Collectors.joining());
-						KeycloakUtils.setPassword(serviceToken.getToken(), serviceToken.getRealm(), userId, password, true);
-
-					} else {
-					     System.out.println("KEYCLOAK QUICK ADD USER CREATION DISABLED IN RULE IS_INTERN");
-					}
-				}
-			}
-		}
-		
-
-
-		String endPoint = GennySettings.projectUrl + "/v7/notes";
-		/*String endPoint = "https://internmatch-cyrus.gada.io/v7/notes";*/
-		
-		String tag = "System";
-		String userName = "System";
-		String userImage = "";
-		
-		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), newBe.getCode(), "Added as a Host Company Rep", tag, userName, userImage, serviceToken.getToken());
-		
-		System.out.println("I just posted the note");
-		System.out.println("Note endPoint: " +endPoint);
-		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
-
-
-		/* Send email to HCR? */
-		
-		String allEmails = "";
-		
-		if (user != null) {
-				allEmails = user.getValue("LNK_ALL_EMAILS",null);
-				System.out.println("allEmails: " +allEmails);
-
-				Boolean allEmailsBool = false;
-				if (allEmails != null && allEmails.contains("SEL_YES")) {
-					allEmailsBool = true;
-				}
-				answers.add(new Answer(userToken.getUserCode(), user.getCode(), "PRI_EMAIL_FLAG", allEmailsBool));
-		}
-		
-		if (allEmails.contains("SEL_YES")) {
-
-				String superEmail = user.getValue("PRI_EMAIL", null);
-				System.out.println("superEmail: " +superEmail);
-		
-				BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
-				
-				String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, superEmail, serviceToken.getToken());
-				System.out.println("token: " + token);
-				
-				String url = GennySettings.projectUrl + "/home";
-				System.out.println("url: " + url);
-				
-				url = url +"?token=" + token;
-				System.out.println("url: " + url);
-		
-				String subject = "You have been registered on InternMatch";
-				String template_id = "d-6c43211b9b934cb6abaceea171f32e09";
-		
-				System.out.println("email: " + superEmail);
-				System.out.println("subject: " + subject);
-				System.out.println("template_id: " + template_id);
-				
-				
-				HashMap<String, String> templateData = new HashMap<String, String>();
-		    	templateData.put("HostCompanyRep", firstname);
-				templateData.put("password", password);
-		    	templateData.put("url", url);
-		
-		
-				List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
-				
-				EmailHelper.sendGrid(beUtils, superEmail, null, bccList, subject, template_id, templateData, true);
-		}
-		
-		
-		
-		output.setTypeOfResult("NONE");
-		output.setResultCode("NONE");  /* dont display anything new */
 
 		beUtils.saveAnswers(answers);
 		
-		retract(newBe)
+		/* Update Email and Name, and set Random Password in Keycloak */
+		KeycloakUtils.updateUserDetails(beUtils, newBe);
+		String password = KeycloakUtils.generateRandomPassword(beUtils, newBe);
+
+		/* Create Access URL */
+		BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
+		String accessToken = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, newBe, serviceToken.getToken());
+		String url = MessageUtils.encodeUrl(GennySettings.projectUrl+"/home", "QUE_FAKE_PARENT", "QUE_FINISH_HOST_CPY_REP", null, accessToken);
 	
+		/* Init Sendgrid Msg */
+		QMessageGennyMSG msg = new QMessageGennyMSG(QBaseMSGMessageType.SENDGRID);
+		msg.setTemplateCode("MSG_HCR1_REGISTER");
+		msg.addRecipient(newBe);
+		msg.addContext("PASSWORD", password);
+		msg.addContext("URL", url);
+		msg.addContext("BCC", "PRJ_INTERNMATCH");
+		
+		/* Boolean sendEmail = newBe.getValue("PRI_EMAIL_FLAG", false); */
+		String sendEmail = newBe.getValue("LNK_ALL_EMAILS", "");
+		System.out.println("sendEmail = " + sendEmail);
+
+		/* if (sendEmail) { */
+		if (sendEmail.contains("SEL_YES")) {
+			MessageUtils.sendMessage(beUtils, msg);
+		}
+		
+		/* Post Note */
+		String endPoint = GennySettings.projectUrl + "/v7/notes";
+		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), newBe.getCode(), "Added as a Host Company Rep", "System", "System", "", serviceToken.getToken());
+		
+		retract(newBe)
 end

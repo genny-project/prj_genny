@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.3.Final-v20210519-2007-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.2.SNAPSHOT-v20200602-1600-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
   <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false" structureRef="life.genny.models.GennyToken"/>
   <bpmn2:itemDefinition id="ItemDefinition_954" isCollection="false" structureRef="life.genny.utils.SessionFacts"/>
   <bpmn2:itemDefinition id="ItemDefinition_1346" isCollection="false" structureRef="life.genny.utils.CallingProcessToken"/>
@@ -49,6 +49,7 @@
       <drools:import name="java.util.HashMap"/>
       <drools:import name="java.util.UUID"/>
       <drools:import name="life.genny.utils.BaseEntityUtils"/>
+      <drools:import name="life.genny.utils.SearchUtils"/>
       <drools:import name="org.json.JSONArray"/>
       <drools:import name="life.genny.qwanda.Answer"/>
       <drools:import name="life.genny.utils.TableUtils"/>
@@ -282,7 +283,10 @@ if (defBE == null) {
           <drools:onEntry-script scriptFormat="http://www.java.com/java">
             <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% ENTER Create Entity IS BASE ENTITY %%%%%%%%%%%%%%%%%%%&quot;);
 System.out.println(&quot;%%%%%%%%%%%%%%%%%%% key: &quot; + key);
-System.out.println(&quot;%%%%%%%%%%%%%%%%%%% newBe: &quot; + newBe);</drools:script>
+System.out.println(&quot;%%%%%%%%%%%%%%%%%%% newBe: &quot; + newBe);
+
+newBe = beUtils.getBaseEntityByCode(newBe.getCode());
+kcontext.setVariable(&quot;newBe&quot;, newBe);</drools:script>
           </drools:onEntry-script>
           <drools:onExit-script scriptFormat="http://www.java.com/java">
             <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% EXIT Create Entity IS BASE ENTITY %%%%%%%%%%%%%%%%%%%&quot;);
@@ -506,7 +510,10 @@ System.out.println(&quot;ADD_ENTITY : Setting PRI_PROFILE to Complete for &quot;
 
 beUtils = new BaseEntityUtils(userToken);
 if(!newBe.getCode().startsWith(&quot;JNL_&quot;)){
-  beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), &quot;PRI_PROFILE&quot;, &quot;Complete&quot;));
+  newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), &quot;PRI_PROFILE&quot;, &quot;Complete&quot;));
+BaseEntity defBe = beUtils.getDEFByCode("DEF_INTERN");
+ SearchUtils.regenerateCaches(beUtils, defBe);
+
 }
 </bpmn2:script>
       </bpmn2:scriptTask>

@@ -216,7 +216,10 @@
             <drools:metaValue><![CDATA[is_Quick_Add]]></drools:metaValue>
           </drools:metaData>
           <drools:onEntry-script scriptFormat="http://www.java.com/java">
-            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% ENTER IS BASE ENTITY baseEntityType: &quot; + baseEntityType + &quot; %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
+            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% ENTER IS BASE ENTITY baseEntityType: &quot; + baseEntityType + &quot; %%%%%%%%%%%%%%%%%%%&quot;);
+
+newBe = beUtils.getBaseEntityByCode(newBe.getCode());
+kcontext.setVariable(&quot;newBe&quot;, newBe);</drools:script>
           </drools:onEntry-script>
           <drools:onExit-script scriptFormat="http://www.java.com/java">
             <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% EXIT IS BASE ENTITY baseEntityType: &quot; + baseEntityType + &quot; %%%%%%%%%%%%%%%%%%%&quot;);

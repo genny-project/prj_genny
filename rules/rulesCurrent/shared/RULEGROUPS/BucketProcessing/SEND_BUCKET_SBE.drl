@@ -23,13 +23,13 @@ rule "SEND_BUCKET_SBE"
 	when
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
+		beUtils : BaseEntityUtils()
 		output : OutputParam( )
 		/* allowed: Allowed(code == "BUCKETS" && mode == CapabilityMode.VIEW) */
 
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
 
-		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 		CapabilityUtils capabilityUtils = new CapabilityUtils(beUtils);
   
 		String sessionCode = beUtils.getGennyToken().getSessionCode().toUpperCase();
