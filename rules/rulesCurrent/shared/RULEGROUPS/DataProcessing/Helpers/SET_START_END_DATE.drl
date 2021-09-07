@@ -98,13 +98,15 @@ rule "SET_START_END_DATE"
 				String nullValue = null;
 				
 				if (start_date == null || durationStr == null || wdsStr == null) {
-					if (start_date == null) {nullValue = "Start Date";} 	if (durationStr == null) {nullValue = "Duration";}  	if (wdsStr == null) {nullValue = "Which Days";}
+					if (start_date == null) {nullValue = "Start Date";} 	
+					if (durationStr == null) {nullValue = "Duration";}  	
+					if (wdsStr == null) {nullValue = "Which Days";}
 					System.out.println("Required value is Null. Can't continue");
-					QCmdMessage msg = new QCmdMessage("TOAST", "ERROR");
+					/*QCmdMessage msg = new QCmdMessage("TOAST", "ERROR");
 					msg.setMessage("Sorry can't calculate the End Date as we are missing: " + nullValue);
 					msg.setToken(beUtils.getGennyToken().getToken());
 					msg.setSend(true);
-					VertxUtils.writeMsg("webcmds", msg);
+					VertxUtils.writeMsg("webcmds", msg);*/
 					
 				} else {
 				
