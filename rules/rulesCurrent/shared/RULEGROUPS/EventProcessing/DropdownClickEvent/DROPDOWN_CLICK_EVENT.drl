@@ -98,13 +98,13 @@ rule "DROPDOWN_CLICK_EVENT"
 			{
 						System.out.println(ruleDetails+" "+drools.getRule().getName()+" INVOKING DEF DROPDOWN RULE");
 						QDataBaseEntityMessage msg = SearchUtils.getDropdownData(beUtils,message,dropdownSize);
-
+						msg.setToken(beUtils.getGennyToken().getToken());
 						System.out.println(ruleDetails+" "+drools.getRule().getName()+" "+msg);
 						VertxUtils.writeMsg("webcmds",msg);
 						System.out.println(ruleDetails+" "+drools.getRule().getName()+" Sent dropdown message2 with "+msg.getItems().length+" items");
 
 						retract(message);
-						System.out.println("Retracted message");
+						
 						output.setTypeOfResult("NONE");
 						output.setResultCode("NONE");  /* don't display anything new */
 					/* 	update(output); */
