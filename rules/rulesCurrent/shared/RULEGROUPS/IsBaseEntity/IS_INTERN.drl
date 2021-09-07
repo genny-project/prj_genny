@@ -311,17 +311,18 @@ rule "IS_INTERN"
 					lnk_HC = lnk_HC.replace("\"", "").replace("[", "").replace("]", "");
 					System.out.println("lnk_HC: " +lnk_HC);
 
-					BaseEntity hcBe = beUtils.getBaseEntityByCode(lnk_HC);
+					if (lnk_HC.startsWith("CPY_")){ 
+						BaseEntity hcBe = beUtils.getBaseEntityByCode(lnk_HC);
 
-				    String rocket = hcBe.getValue("PRI_NAME", null);
-				    System.out.println("rocket: " +rocket);
+					    String rocket = hcBe.getValue("PRI_NAME", null);
+					    System.out.println("rocket: " +rocket);
 
-				    String image = hcBe.getValue("PRI_IMAGE_URL", null);
-				    System.out.println("image: " +image);
+					    String image = hcBe.getValue("PRI_IMAGE_URL", null);
+					    System.out.println("image: " +image);
 
-				    if (rocket.equals("Rocket Coders") || image == null || image.equals("") || image.equals(" ")) {
-				    	eligbleInternships.remove(internship);
-				    	System.out.println("Gone!!");
+					    if (rocket.equals("Rocket Coders") || image == null || image.equals("") || image.equals(" ")) {
+					    	eligbleInternships.remove(internship);
+					    	System.out.println("Gone!!");
 				    }
 
 				}
@@ -345,8 +346,8 @@ rule "IS_INTERN"
 				/*matchedInternships.add(randomElement);*/
 
 				if(i == 0) {results = '[\"' + beCode + '\", ';}
-				if(i == 1) {results = results + '\"' + beCode + '\", ';}
-				if(i == 2) {results = results + '\"' + beCode + '\"]';}
+                if(i == 1) {results = results + '\"' + beCode + '\", ';}
+                if(i == 2) {results = results + '\"' + beCode + '\"]';}
 
 				beCodes[i] = beCode;
 				beCodez[i] = randomElement;
@@ -375,6 +376,7 @@ rule "IS_INTERN"
 			msgMatches.setReplace(true);
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msgMatches));
 
+		}
 		} catch (Exception e) {
         	e.printStackTrace();
     	}
