@@ -93,6 +93,12 @@ rule "IS_QA_HOST_CPY_REP"
 			}
 		}
 
+		/* Boolean sendEmail = newBe.getValue("PRI_EMAIL_FLAG", false); */
+		String sendEmail = newBe.getValue("LNK_ALL_EMAILS", "");
+		System.out.println("sendEmail = " + sendEmail);
+		Boolean flag = sendEmail.contains("SEL_YES") ? true : false;
+		answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_EMAIL_FLAG", flag));
+
 		beUtils.saveAnswers(answers);
 		
 		/* Update Email and Name, and set Random Password in Keycloak */
@@ -112,12 +118,7 @@ rule "IS_QA_HOST_CPY_REP"
 		msg.addContext("URL", url);
 		msg.addContext("BCC", "PRJ_INTERNMATCH");
 		
-		/* Boolean sendEmail = newBe.getValue("PRI_EMAIL_FLAG", false); */
-		String sendEmail = newBe.getValue("LNK_ALL_EMAILS", "");
-		System.out.println("sendEmail = " + sendEmail);
-
-		/* if (sendEmail) { */
-		if (sendEmail.contains("SEL_YES")) {
+		if (flag) {
 			MessageUtils.sendMessage(beUtils, msg);
 		}
 		
