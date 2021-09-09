@@ -47,11 +47,13 @@ import java.time.LocalDate;
 
 rule "PRI_SEARCH_TEXT_REGEN_CACHES"
     ruleflow-group 'DataProcessing'
-        salience 600
+        salience 7000
         no-loop true
     when
  	  beUtils : BaseEntityUtils()
- 	  allowed : Allowed(code == "SEARCHBAR_CMDS" /*|| code == "TEST"*/) 
+ 	  allowed : Allowed(code == "TEST" || code == "SUPERUSER" || code == "DEV")
+
+
 	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" && (value.startsWith("!regen:")) )   /* this is a pure search */
 	  serviceToken : GennyToken (code == "PER_SERVICE")
 	  output : OutputParam( )
