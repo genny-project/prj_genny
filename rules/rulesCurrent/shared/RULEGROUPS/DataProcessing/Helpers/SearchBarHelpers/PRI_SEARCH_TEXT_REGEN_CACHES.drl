@@ -52,7 +52,7 @@ rule "PRI_SEARCH_TEXT_REGEN_CACHES"
     when
  	  beUtils : BaseEntityUtils()
  	  allowed : Allowed(code == "SEARCHBAR_CMDS" || code == "TEST") 
-	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" && (value.startsWith("regen:")) )   /* this is a pure search */
+	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" && (value.startsWith("!regen:")) )   /* this is a pure search */
 	  serviceToken : GennyToken (code == "PER_SERVICE")
 	  output : OutputParam( )
     then
