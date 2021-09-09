@@ -47,7 +47,7 @@ import java.time.LocalDate;
 
 rule "PRI_SEARCH_TEXT_REGEN_CACHES"
     ruleflow-group 'DataProcessing'
-        salience 500
+        salience 600
         no-loop true
     when
  	  beUtils : BaseEntityUtils()
@@ -56,7 +56,7 @@ rule "PRI_SEARCH_TEXT_REGEN_CACHES"
 	  serviceToken : GennyToken (code == "PER_SERVICE")
 	  output : OutputParam( )
     then
-  		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer);
+  		System.out.println("DEBUG:Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer);
    		retract(answer);
   
     		String sourceCode = beUtils.getGennyToken().getUserCode();
