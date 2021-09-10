@@ -187,8 +187,8 @@ rule "HELPER_LNK_BUSINESS_HOURS"
 			System.out.println("ERROR: Null businessHours");
 		}
 
-		System.out.println("HELPER_LNK_BUSINESS_HOURS is complete.");
-
 		/* Re generate cached applications */
-		SearchUtils.regenerateCaches(beUtils, targetCode);
+		SearchUtils.regenerateCaches(beUtils, targetBe);
+
+		System.out.println("HELPER_LNK_BUSINESS_HOURS is complete.");
 end
