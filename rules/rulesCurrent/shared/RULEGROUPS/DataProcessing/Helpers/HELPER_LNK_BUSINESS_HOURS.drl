@@ -37,13 +37,13 @@ rule "HELPER_LNK_BUSINESS_HOURS"
 
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		System.out.println("sourceCode :: " + sourceCode);
-		
+
 		String targetCode = answer.getTargetCode();
 		System.out.println("targetCode :: " + targetCode);
-		
+
 		String value = answer.getValue();
 		System.out.println("value :: " + value);
-		
+
 		String code = beUtils.cleanUpAttributeValue(value);
 		System.out.println("code  :: " + code);
 
@@ -58,30 +58,30 @@ rule "HELPER_LNK_BUSINESS_HOURS"
 		}
 
  		BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
- 		
+
  		/* Business hours */
  		String lnkBH = targetBe.getValue("LNK_BUSINESS_HOURS", null);
         lnkBH = lnkBH.replace("[","").replace("]","");
-        System.out.println("lnkBH = " + lnkBH);	
-      
+        System.out.println("lnkBH = " + lnkBH);
+
         String[] splt = code.split(",");
-        
+
         String startStr = splt[0];
         String endStr = splt[1];
-        
-        Double startDbl = Double.parseDouble(startStr);  
+
+        Double startDbl = Double.parseDouble(startStr);
         Double endDbl = Double.parseDouble(endStr);
-        
+
         System.out.println("startDbl = " + startDbl);
         System.out.println("endDbl = " + endDbl);
-        
+
         Double businessHrs = endDbl - startDbl;
         System.out.println("businessHrs = " + businessHrs);
-        
-        
+
+
         /* Days per week */
         String dpwStr = targetBe.getValue("PRI_DAYS_PER_WEEK", null);
-        System.out.println("dpwStr = " + dpwStr);	
+        System.out.println("dpwStr = " + dpwStr);
 
 		if (dpwStr != null) {
 			Double dpwDbl = Double.parseDouble(dpwStr);
@@ -124,13 +124,13 @@ rule "HELPER_LNK_BUSINESS_HOURS"
 		String minEnd = "";
 
 		int lenStart = startStr.length();
-		int lenEnd = endStr.length();    
+		int lenEnd = endStr.length();
 
-		if (startStr.contains(".5")) {  
+		if (startStr.contains(".5")) {
 			minStart = ":30";
 			startStr = startStr.substring(0, lenStart - 2);
 		} else {
-			minStart = ":00"; 
+			minStart = ":00";
 		}
 
 		if (endStr.contains(".5")) {
@@ -166,7 +166,7 @@ rule "HELPER_LNK_BUSINESS_HOURS"
 		String newEndStr = String.valueOf(endD);
 
 		int lenNewStart = newStartStr.length();
-		int lenNewEnd = newEndStr.length();   
+		int lenNewEnd = newEndStr.length();
 
 		String trimStartStr = newStartStr.substring(0, lenNewStart - 2);
 		String trimEndStr = newEndStr.substring(0, lenNewEnd - 2);
@@ -182,9 +182,9 @@ rule "HELPER_LNK_BUSINESS_HOURS"
 
 		if (businessHours != null) {
 			beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetCode, "PRI_BUSINESS_HOURS", businessHours));
-			System.out.println("businessHours: " + businessHours);	
+			System.out.println("Saved businessHours: " + businessHours);
 		} else {
-			System.out.println("ERROR: Null businessHours"); 
+			System.out.println("ERROR: Null businessHours");
 		}
-		
+
 end
