@@ -9,7 +9,7 @@
 	<groupId>life.genny.jbpm</groupId>
 	<artifactId>prj_genny</artifactId>
 	<version>9.7.0</version>
-	<packaging>pom</packaging>
+	<!-- <packaging>pom</packaging> -->
 
 	<distributionManagement>
 		<repository>
@@ -186,12 +186,12 @@
 			<version>${testcontainers.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
+<!-- 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>junit-jupiter</artifactId>
 			<version>1.12.2</version>
 		</dependency>
-		<dependency>
+ -->		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>mysql</artifactId>
 			<version>${testcontainers.version}</version>
@@ -256,6 +256,19 @@
 	</dependencies>
 	<build>
 		<plugins>
+		<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-compiler-plugin</artifactId>
+    <version>3.0</version>
+    <!--This version will happily build successfully when the code fails to compile-->
+    <!--<version>3.1</version>-->
+          <configuration>
+                <skipMain>true</skipMain>
+                <skip>true</skip>
+                <source>11</source>
+                <target>11</target>
+            </configuration>
+</plugin>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${surefire.version}</version>
@@ -265,34 +278,6 @@
 						<maven.home>${maven.home}</maven.home>
 						<keycloak.version>${keycloak.version}</keycloak.version>
 					</systemPropertyVariables>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>io.fabric8</groupId>
-				<artifactId>docker-maven-plugin</artifactId>
-				<version>${docker-plugin.version}</version>
-				<executions>
-					<execution>
-						<id>start</id>
-						<phase>generate-test-resources</phase>
-						<goals>
-							<goal>stop</goal>
-							<goal>start</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>stop</id>
-						<phase>post-integration-test</phase>
-						<goals>
-							<goal>stop</goal>
-							<goal>remove</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<skip>${skipTests}</skip>
-					<autoPull>true</autoPull>
-					<images></images>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -307,7 +292,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
+<!-- 			<plugin>
 				<groupId>org.jboss.jandex</groupId>
 				<artifactId>jandex-maven-plugin</artifactId>
 				<version>${jandex.version}</version>
@@ -320,7 +305,8 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
+ -->	
+ 		<plugin>
 				<groupId>pl.project13.maven</groupId>
 				<artifactId>git-commit-id-plugin</artifactId>
 				<version>2.2.3</version>
