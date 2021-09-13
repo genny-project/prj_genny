@@ -44,7 +44,7 @@ rule "IS_QA_INTERN"
 			String agentName = agent.getValue("PRI_NAME", null);
 			System.out.println("agentName = " + agentName);
 			if (agentName != null) {
-				answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_AGENT_NAME", agentName));
+				newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_AGENT_NAME", agentName));
 			}
 		}
 		
@@ -52,12 +52,11 @@ rule "IS_QA_INTERN"
 			String batchName = batch.getValue("PRI_NAME", null);
 			System.out.println("batchName = " + batchName);
 			if (batchName != null) {
-				answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_BATCH", batchName));
+				newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_BATCH", batchName));
 			}
 		}
 
-		/* Save Data */
-		beUtils.saveAnswers(answers);
+
 		
 		/* Update Email and Name, and set Random Password in Keycloak */
 		KeycloakUtils.updateUserDetails(beUtils, newBe);
