@@ -61,7 +61,7 @@ rule "PRI_SEARCH_TEXT_SET_BE_STATUS"
 		String targetCode = "";
 		String status = "";
 		
-		if (split.length == 4) {
+		if (split.length == 3) {
 			targetCode = split[1].trim();
 			status = split[2].trim();
 			
