@@ -280,7 +280,7 @@ rule "IS_INTERN"
 				.addColumn("PRI_SPECIFIC_LEARNING_OUTCOMES", "Technical Skills Learning Outcomes")
 				.addColumn("PRI_SOFTWARE", "Software")
 				.addColumn("PRI_WHICH_DAYS_STRIPPED", "Which Days")
-				.addColumn("PRI_WORKSITE", "Worksite")
+				/*.addColumn("PRI_WORKSITE", "Worksite")*/
 				.addColumn("PRI_ASSOC_NUM_INTERNS", "No of Interns")
 				.addColumn("PRI_VIDEO_URL", "Video")
 
@@ -311,7 +311,7 @@ rule "IS_INTERN"
 					lnk_HC = lnk_HC.replace("\"", "").replace("[", "").replace("]", "");
 					System.out.println("lnk_HC: " +lnk_HC);
 
-					if (lnk_HC.startsWith("CPY_")){ 
+					if (lnk_HC.startsWith("CPY_")){
 						BaseEntity hcBe = beUtils.getBaseEntityByCode(lnk_HC);
 
 					    String rocket = hcBe.getValue("PRI_NAME", null);
