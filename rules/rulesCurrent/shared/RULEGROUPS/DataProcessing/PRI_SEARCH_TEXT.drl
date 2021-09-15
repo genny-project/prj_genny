@@ -31,31 +31,45 @@ rule "PRI_SEARCH_TEXT"
 	salience 450
 	no-loop true
     when
-    	$message : QEventMessage(data.code matches "ACT_SEARCH_DASHBOARD")
-		userToken : GennyToken (code != "PER_SERVICE" )
-		serviceToken : GennyToken (code == "PER_SERVICE" )
-		output : OutputParam()
-		beUtils : BaseEntityUtils()
+ 	  beUtils : BaseEntityUtils()
+ 	  allowed : Allowed(code == "USER") 
+	  answer : Answer( code == "ACT_SEARCH_DASHBOARD" )   /* this is a pure assist search */
+	  serviceToken : GennyToken (code == "PER_SERVICE")
+	  output : OutputParam( )
+	then
+		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer);
+		retract(answer);
 
-     then
-
-  		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode());
-
+		String value = answer.getValue().substring(1);
 
 		/* get current search */
 		TableUtils tableUtils = new TableUtils(beUtils);
 
-		
- 		/* send the table display message out  */
-			QCmdMessage msg = new QCmdMessage("DISPLAY", "PROCESS");
-			msg.setToken(beUtils.getGennyToken().getToken());
-			msg.setSend(true);
-			VertxUtils.writeMsg("webcmds",msg);
+		SearchEntity searchBE = null;
+		List<SearchEntity> searchBeList = new ArrayList<SearchEntity>();
 
 		
+			System.out.println("Rule -> "+drools.getRule().getName()+" LAST-SEARCH");
+			searchBeList.add(VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "LAST-SEARCH", beUtils.getGennyToken().getSessionCode(), SearchEntity.class));
+		
+		for (SearchEntity sbe : searchBeList) {
+			System.out.println(drools.getRule().getName()+" ASSIST for "+sbe.getCode()); 
+
+			/* Reset the pageNumber to 1 */
+			Answer pageNumberAnswer = new Answer(beUtils.getGennyToken().getUserCode(), sbe.getCode(), "PRI_INDEX", "1");
+
+			/* update the sbe object */
+			sbe = beUtils.updateBaseEntity(sbe, pageNumberAnswer,SearchEntity.class);
+			sbe.setWildcard(value);
+			sbe.setPageStart(0);
+			
+			/* cache the updated sbe  */
+			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", sbe.getCode(), sbe, beUtils.getGennyToken().getToken());
+
+			/* send the data */
+			TableUtils.searchTable(beUtils,sbe, true);
+		}
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
-		retract($message);
-		update(output);
 end
