@@ -51,7 +51,6 @@ rule "PRI_SEARCH_TEXT"
 			msg.setToken(beUtils.getGennyToken().getToken());
 			msg.setSend(true);
 			VertxUtils.writeMsg("webcmds",msg);
-			long totalTime = null'
 
 			System.out.println("total took " + (totalTime) + " ms");
 		retract($message);
