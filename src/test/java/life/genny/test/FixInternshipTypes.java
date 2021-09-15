@@ -111,7 +111,7 @@ public void appProgressFixTest() throws Exception {
     
 
     Boolean ok = true;
-    Integer index = 0;
+    Integer index = 400;
     Integer fixedInterns = 0;
     Integer fixedApps = 0;
     searchBE.setPageStart(index);
@@ -126,6 +126,8 @@ public void appProgressFixTest() throws Exception {
 	Attribute internCodeAttribute = RulesUtils.getAttribute("PRI_INTERN_CODE", serviceToken.getToken());	
 	Attribute applicantCodeAttribute = RulesUtils.getAttribute("PRI_APPLICANT_CODE", serviceToken.getToken());
 		 
+	BaseEntity defIntern = beUtils.getDEFByCode("DEF_INTERN");
+	
     while (ok) {
     	List<BaseEntity> interns = beUtils.getBaseEntitys(searchBE); // load 100 at a time
     	if (interns.isEmpty() || (index > 5000)) {
@@ -175,13 +177,27 @@ public void appProgressFixTest() throws Exception {
     		applications.addAll(apps);	
     		
      		// ok, we should have all the apps now..
-    		if (index == 85) {
+    		if (index == 422) {
     			System.out.println("here");
     		}
     		System.out.println(index+" of "+total+" Intern -> "+intern.getCode()+" "+intern.getName()+" "+(applications.isEmpty()?"No APPS":(""+applications.size()+" APPS")));
     		if (applications.isEmpty()) {
-    			intern = beUtils.saveAnswer(new Answer(intern,intern,statusAttribute,"AVAILABLE"));
-    			intern = beUtils.saveAnswer(new Answer(intern,intern,deletedAttribute,"FALSE"));
+    			
+    			String email = intern.getValue("PRI_EMAIL", null);
+    			String firstname = intern.getValue("PRI_FIRSTNAME", null);
+    			if (((!StringUtils.isBlank(email))&&(!StringUtils.isBlank(firstname)))) { // must have both
+    			
+    				intern = beUtils.saveAnswer(new Answer(intern,intern,statusAttribute,"AVAILABLE"));
+    				intern = beUtils.saveAnswer(new Answer(intern,intern,deletedAttribute,"FALSE"));
+    			} else {
+    				if (!intern.getStatus().equals(EEntityStatus.PENDING)) {
+    					intern = beUtils.saveAnswer(new Answer(intern,intern,statusAttribute,"DODGY"));
+    					intern = beUtils.saveAnswer(new Answer(intern,intern,deletedAttribute,"TRUE"));  
+    					intern.setStatus(EEntityStatus.DELETED);
+    					beUtils.saveBaseEntity(defIntern, intern);
+    					System.out.println(index+" of "+total+" Intern -> DELETED "+intern.getCode()+" firstname "+firstname+" email "+email);
+    				}
+    			}
     			continue;
     		}
     		
@@ -203,8 +219,16 @@ public void appProgressFixTest() throws Exception {
     		
     		for (BaseEntity app : applications) {
     			String status = app.getValue("PRI_STATUS", null);
+    			if (status == null) {
+    				status = "REJECT";
+    				app = beUtils.saveAnswer(new Answer(app,app,statusAttribute,status));
+    			}
     			if (status != null) {
     				if (mostAdvancedApp == null) {
+    					if ("REJECTED".equals(status)) {
+    						status = "REJECT"; //fix
+    						app = beUtils.saveAnswer(new Answer(app,app,statusAttribute,"REJECT"));
+    					}
     					mostAdvancedApp = app;
     					
     					maxScore = statusValueMap.get(status);
@@ -213,7 +237,14 @@ public void appProgressFixTest() throws Exception {
     				Integer appScore = -1;
     				
     				try {
+    					if ("REJECTED".equals(status)) {
+    						status = "REJECT"; //fix
+    						app = beUtils.saveAnswer(new Answer(app,app,statusAttribute,"REJECT"));
+    					}
 						appScore = statusValueMap.get(status);
+						if (appScore == null) {
+							System.out.println(index+" of "+total+" appScore is null - status="+status);
+						}
 					} catch (Exception e) {
 						System.out.println("NULL STATUS!");
 					}
@@ -222,6 +253,8 @@ public void appProgressFixTest() throws Exception {
     					maxScore = appScore;
     					mostAdvancedApp = app;
     				}
+    				
+    			} else {
     				
     			}
     			// Force the name for each App
