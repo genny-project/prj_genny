@@ -35,6 +35,7 @@ rule "PRI_SEARCH_TEXT"
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam()
+		beUtils : BaseEntityUtils()
 
      then
   		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode() + " ");
@@ -76,7 +77,7 @@ rule "PRI_SEARCH_TEXT"
 			msg.setToken(beUtils.getGennyToken().getToken());
 			msg.setSend(true);
 			VertxUtils.writeMsg("webcmds",msg);
-
+			long totalTime = null'
 
 			System.out.println("total took " + (totalTime) + " ms");
 		retract($message);
