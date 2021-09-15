@@ -111,7 +111,7 @@ public void appProgressFixTest() throws Exception {
     
 
     Boolean ok = true;
-    Integer index = 400;
+    Integer index = 0;
     Integer fixedInterns = 0;
     Integer fixedApps = 0;
     searchBE.setPageStart(index);
