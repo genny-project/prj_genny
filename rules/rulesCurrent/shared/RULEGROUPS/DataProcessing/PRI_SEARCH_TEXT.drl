@@ -52,10 +52,10 @@ rule "PRI_SEARCH_TEXT"
 			msg.setSend(true);
 			VertxUtils.writeMsg("webcmds",msg);
 
-			System.out.println("total took " + (totalTime) + " ms");
-		retract($message);
+		
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
+		retract($message);
 		update(output);
 end
