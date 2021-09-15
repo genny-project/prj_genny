@@ -43,6 +43,7 @@ rule "GENERATE_DISPLAY_CODES"
 		/* dashboard and process */
 		displayCodes.put("QUE_DASHBOARD_VIEW", "DASHBOARD");		
 		displayCodes.put("QUE_TAB_BUCKET_VIEW", "PROCESS");
+		displayCodes.put("ACT_SEARCH_DASHBOARD", "PROCESS");
 
 		/* detail */
 		displayCodes.put("ACT_PRI_EVENT_VIEW", "DETAIL");
