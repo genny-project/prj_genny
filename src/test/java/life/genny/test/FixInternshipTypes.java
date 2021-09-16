@@ -99,6 +99,14 @@ public void appProgressFixTest() throws Exception {
     }
 
     setUpDefs();
+    
+    
+    BaseEntity app2 = beUtils.getBaseEntityByCode("APP_353CA584-6ECA-41C7-9BAF-7A2A022A23C5");
+    Attribute errorColorAttribute = RulesUtils.getAttribute("PRI_INTERNSHIP_DETAILS", serviceToken.getToken());
+    String details = app2.getValueAsString("PRI_INTERNSHIP_DETAILS");
+    app2 = beUtils.saveAnswer(new Answer(app2,app2,errorColorAttribute,"<p>"+details));
+    
+    
 
     SearchEntity searchBE = new SearchEntity("SBE_INTERNS", "Intern Search")
             .addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
@@ -137,6 +145,10 @@ public void appProgressFixTest() throws Exception {
     	
     	for (BaseEntity intern : interns) {
     		index++;
+    		
+    		
+    		intern = beUtils.getBaseEntityByCode("PER_4E30351C-F86F-4A79-8B35-FF5503A9E5D9");
+    		
     		Set<BaseEntity> applications = new HashSet<>();
     		
     		// ok, now get the intern's applications
