@@ -37,7 +37,7 @@ rule "VIEW_REMOTE_JOBS_CLICK_EVENT"
 	no-loop
 	when
 		$message : QEventMessage(
-			data.code == "ROW_ACT_PRI_EVENT_VIEW_REMOTE_JOBS"
+			data.code == "ACT_PRI_EVENT_VIEW_REMOTE_JOBS"
 		)
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
