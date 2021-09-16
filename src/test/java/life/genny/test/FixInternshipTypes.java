@@ -144,7 +144,7 @@ public void appProgressFixTest() throws Exception {
     		index++;
     		
     		
-    		intern = beUtils.getBaseEntityByCode("PER_4E30351C-F86F-4A79-8B35-FF5503A9E5D9");
+    		//intern = beUtils.getBaseEntityByCode("PER_D620320A-EF19-451E-8E45-0DCBD8F3232D"); //
     		
     		Set<BaseEntity> applications = new HashSet<>();
     		
