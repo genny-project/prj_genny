@@ -37,7 +37,7 @@ rule "VIEW_REMOTE_JOBS_CLICK_EVENT"
 	no-loop
 	when
 		$message : QEventMessage(
-			data.code == "ROW_ACT_PRI_EVENT_VIEW_REMOTE_JOBS"
+			data.code == "ACT_PRI_EVENT_VIEW_REMOTE_JOBS"
 		)
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
@@ -50,7 +50,7 @@ rule "VIEW_REMOTE_JOBS_CLICK_EVENT"
         TableUtils tableUtils = new TableUtils(beUtils);
         SearchEntity searchBE = tableUtils.getSessionSearch(searchCode);
 		if(searchBE != null) {
-
+                System.out.println(drools.getRule().getName() + " " + searchBE);
 				/* cache the session search */
 				VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE, beUtils.getGennyToken().getToken());
 
@@ -63,7 +63,7 @@ rule "VIEW_REMOTE_JOBS_CLICK_EVENT"
                 VertxUtils.writeMsg("webcmds",msg);
                 */
 
-                /* get current search */
+                /* send out the display message */
                 JsonObject msgJson = new JsonObject();
                 msgJson.put("cmd_type","DISPLAY");
                 msgJson.put("code","TABLE");

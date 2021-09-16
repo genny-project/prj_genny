@@ -226,6 +226,9 @@ public class RemoteServiceTest {
         searchRemoteServices.setPageStart(0);
         searchRemoteServices.setPageSize(1000);
 
+        System.out.println(searchRemoteServices);
+
+
         VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchRemoteServices.getCode(), searchRemoteServices,
                 beUtils.getGennyToken().getToken());
 //        beUtils.saveBaseEntity(searchRemoteServices);

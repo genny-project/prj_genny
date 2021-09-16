@@ -31,57 +31,36 @@ rule "PRI_SEARCH_TEXT"
 	salience 450
 	no-loop true
     when
-    	$message : QEventMessage(data.code matches "ACT_SEARCH_DASHBOARD")
-		userToken : GennyToken (code != "PER_SERVICE" )
-		serviceToken : GennyToken (code == "PER_SERVICE" )
-		output : OutputParam()
+      beUtils : BaseEntityUtils()
+	  serviceToken : GennyToken( code == "PER_SERVICE")
+	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" && (!value.contains(":")) )   /* this is a pure search */
+	  output : OutputParam( )
 
      then
-  		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+");
+  		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer);
 
-		/* get current search */
-		TableUtils tableUtils = new TableUtils(beUtils);
-		
-		String value = $message.getData().getValue();
-		System.out.println("value :: " + value);
-		
-		SearchEntity searchBE = null;
-		List<SearchEntity> searchBeList = new ArrayList<SearchEntity>();
-
-		System.out.println("Rule -> "+drools.getRule().getName()+" LAST-SEARCH");
-		searchBeList.add(VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "LAST-SEARCH", beUtils.getGennyToken().getSessionCode(), SearchEntity.class));
-		
-		
-		for (SearchEntity sbe : searchBeList) {
-			System.out.println(drools.getRule().getName()+" ASSIST for "+sbe.getCode()); 
-
-			/* Reset the pageNumber to 1 */
-			Answer pageNumberAnswer = new Answer(beUtils.getGennyToken().getUserCode(), sbe.getCode(), "PRI_INDEX", "1");
-
-			/* update the sbe object */
-			sbe = beUtils.updateBaseEntity(sbe, pageNumberAnswer,SearchEntity.class);
-			sbe.setWildcard(value);
-			sbe.setPageStart(0);
-			
-			/* cache the updated sbe  */
-			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", sbe.getCode(), sbe, beUtils.getGennyToken().getToken());
-
-			/* send the data */
-			TableUtils.searchTable(beUtils,sbe, true);
-		}
-		
-				
- 		/* send the table display message out  */
-			QCmdMessage msg = new QCmdMessage("DISPLAY", "PROCESS");
+			/* send the table display message out  */
+			QCmdMessage msg = new QCmdMessage("DISPLAY", "TABLE");
 			msg.setToken(beUtils.getGennyToken().getToken());
 			msg.setSend(true);  	
 			VertxUtils.writeMsg("webcmds",msg);
-			
-			
-			System.out.println("total took " + (totalTime) + " ms"); 
-		retract($message);
 
-		output.setTypeOfResult("NONE");
-		output.setResultCode("NONE");  /* dont display anything new */
-		update(output);
+ 	    /* get current search */
+ 	    TableUtils tableUtils = new TableUtils(beUtils);
+
+		SearchEntity searchBE = tableUtils.getSessionSearch("SBE_SEARCHBAR");
+		searchBE.setWildcard(answer.getValue());
+ 			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
+				beUtils.getGennyToken().getToken());
+ 
+ 	    /* Reset page to start */
+  	    
+  	    	long totalTime = TableUtils.searchTable(beUtils,searchBE, true);
+
+			retract(answer);
+			System.out.println("total took " + (totalTime) + " ms"); 
+			output.setTypeOfResult("NONE");
+			output.setResultCode("NONE");  /* dont display anything new */
+  	    
+
 end
