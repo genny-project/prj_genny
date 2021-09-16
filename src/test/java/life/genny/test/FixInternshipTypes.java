@@ -529,7 +529,7 @@ public void hcrFixTest() throws Exception {
 }
 
 
-//@Test
+@Test
 public void internshipFixTest() throws Exception {
     VertxUtils.cachedEnabled = false;
 
@@ -541,7 +541,7 @@ public void internshipFixTest() throws Exception {
 
 //  Use a search BE for the api test
     SearchEntity searchBE = new SearchEntity("SBE_APPS", "APP Search")
-            .addSort("PRI_CREATED", "Created", SearchEntity.Sort.ASC)
+            .addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
             .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
             .addColumn("PRI_CODE", "Code")
             .addColumn("LNK_INTERN", "Link Intern")
@@ -565,6 +565,8 @@ public void internshipFixTest() throws Exception {
 	Attribute lnkCompInternshipAttribute = RulesUtils.getAttribute("LNK_COMP_INTERNSHIP", serviceToken.getToken());
 	Attribute lnkInternAttribute = RulesUtils.getAttribute("LNK_INTERN", serviceToken.getToken());
 		 
+	BaseEntity defIntern = beUtils.getDEFByCode("DEF_INTERN");
+	
     while (ok) {
     	List<BaseEntity> bes = beUtils.getBaseEntitys(searchBE); // load 100 at a time
     	if (bes.isEmpty() || (index > 5000)) {
@@ -615,7 +617,7 @@ public void internshipFixTest() throws Exception {
     			internInternshipType = intern.getValue("LNK_COMP_INTERNSHIP",null);
     		
     			if (StringUtils.isBlank(internInternshipType)) {
-    				intern = beUtils.saveAnswer(new Answer(intern,intern,lnkCompInternshipAttribute,"[\"SEL_COURSE_CREDIT\"]"));
+    				intern = beUtils.saveAnswer(defIntern,new Answer(intern,intern,lnkCompInternshipAttribute,"[\"SEL_COURSE_CREDIT\"]"));
     				fixedInterns++;
     				fixedIntern = "Fixed Intern";
     			}
