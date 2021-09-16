@@ -52,6 +52,7 @@ import life.genny.utils.RulesUtils;
 import life.genny.utils.VertxUtils;
 
 
+
 public class FixInternshipTypes {
 
     private static final org.jboss.logging.Logger log = Logger.getLogger(FixInternshipTypes.class);
@@ -101,10 +102,6 @@ public void appProgressFixTest() throws Exception {
     setUpDefs();
     
     
-    BaseEntity app2 = beUtils.getBaseEntityByCode("APP_353CA584-6ECA-41C7-9BAF-7A2A022A23C5");
-    Attribute errorColorAttribute = RulesUtils.getAttribute("PRI_INTERNSHIP_DETAILS", serviceToken.getToken());
-    String details = app2.getValueAsString("PRI_INTERNSHIP_DETAILS");
-    app2 = beUtils.saveAnswer(new Answer(app2,app2,errorColorAttribute,"<p>"+details));
     
     
 
@@ -303,7 +300,7 @@ public void appProgressFixTest() throws Exception {
     	  			String status = app.getValue("PRI_STATUS", null);
     	  			if (status != null) {
     	  				if (!mostAdvancedApp.getValueAsString("PRI_STATUS").equalsIgnoreCase(status)) {
-    	  					if (!"REJECTED".equalsIgnoreCase(app.getValueAsString("PRI_STATUS"))) {
+    	  					if (!"REJECT".equalsIgnoreCase(app.getValueAsString("PRI_STATUS"))) {
     	  					 app = beUtils.saveAnswer(new Answer(app,app,statusAttribute,"WITHDRAWN"));
     	  					}
     	  				}
