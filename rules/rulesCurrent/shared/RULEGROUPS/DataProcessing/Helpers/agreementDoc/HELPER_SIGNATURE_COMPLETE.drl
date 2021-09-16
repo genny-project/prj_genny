@@ -89,9 +89,14 @@ rule "HELPER_SIGNATURE_COMPLETE"
 				answers.add(answerSignatures);
 				System.out.println("Answer done" +answerSignatures);
 
+				/* I know this is bad but fuck me if I know why the shleemy won't fire */
+				Answer answerPlaced = new Answer(serviceToken.getUserCode(), targetCode, "PRI_STATUS", "PLACED");
+				answers.add(answerPlaced);
+				System.out.println("Answer done" +answerPlaced);
+
 				String scheduleMsgCode = targetBe.getCode() + "_MOVE_PLACED";
 
-				ShleemyUtils.scheduleMessage(userToken, "ACT_PRI_EVENT_PLACE_APPLICATION", scheduleMsgCode, LocalDateTime.now(ZoneOffset.UTC).plusSeconds(10), targetBe.getCode());
+				ShleemyUtils.scheduleMessage(userToken, "ACT_PRI_EVENT_PLACE_APPLICATION", scheduleMsgCode, LocalDateTime.now(ZoneOffset.UTC).plusSeconds(1), targetBe.getCode());
 			} else {
 				System.out.println("Not all signatures complete!");
 			}
