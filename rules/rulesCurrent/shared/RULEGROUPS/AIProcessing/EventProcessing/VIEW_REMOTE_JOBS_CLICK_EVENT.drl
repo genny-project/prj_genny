@@ -52,7 +52,7 @@ rule "VIEW_REMOTE_JOBS_CLICK_EVENT"
 		if(searchBE != null) {
 
 		        /* set RMSCode as the parentCode of the SBE */
-		        searchBE.setParentCode(targetCode);
+		        searchBE.addFilter("LNK_REMOTE_SERVICE", SearchEntity.StringFilter.LIKE, %targetCode%);
 
 				/* cache the session search */
 				VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE, beUtils.getGennyToken().getToken());
@@ -77,7 +77,7 @@ rule "VIEW_REMOTE_JOBS_CLICK_EVENT"
 
                 VertxUtils.writeMsg("webcmds",msgJson.toString());
 
-                long totalTime = TableUtils.searchTable(beUtils,searchBE, true, "PRI_CODE", targetCode, true);
+                long totalTime = TableUtils.searchTable(beUtils,searchBE,true);
                 VertxUtils.writeMsgEnd(beUtils.getGennyToken());
 			}else{
 				System.out.println("searchBE is null");

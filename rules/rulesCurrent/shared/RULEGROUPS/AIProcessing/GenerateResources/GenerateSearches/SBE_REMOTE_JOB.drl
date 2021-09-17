@@ -33,8 +33,10 @@ rule "SBE_REMOTE_JOB"
       SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Remote AI Jobs")
                               .addSort("PRI_NAME","Name", SearchEntity.Sort.ASC)
                               .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "RJB_%")
+                              .addColumn("PRI_CODE","Job Code")
                               .addColumn("PRI_NAME","Job Name")
-                              .addColumn("PRI_STATUS","Status");
+                              .addColumn("PRI_STATUS","Status")
+                              .addAssociatedColumn("LNK_REMOTE_SERVICE", "PRI_CODE", "Remote Service Code");
       searchBE.setRealm(serviceToken.getRealm());
       searchBE.setPageStart(0);
       searchBE.setPageSize(1000);
