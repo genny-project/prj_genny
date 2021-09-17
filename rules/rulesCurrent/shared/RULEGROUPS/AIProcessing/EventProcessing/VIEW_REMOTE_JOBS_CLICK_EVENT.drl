@@ -45,12 +45,15 @@ rule "VIEW_REMOTE_JOBS_CLICK_EVENT"
 
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
-
+		String targetCode = $message.getData().getTargetCode();
         String searchCode = "SBE_REMOTE_JOB";
         TableUtils tableUtils = new TableUtils(beUtils);
         SearchEntity searchBE = tableUtils.getSessionSearch(searchCode);
 		if(searchBE != null) {
-                System.out.println(drools.getRule().getName() + " " + searchBE);
+
+		        /* set RMSCode as the parentCode of the SBE */
+		        searchBE.setParentCode(targetCode);
+
 				/* cache the session search */
 				VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE, beUtils.getGennyToken().getToken());
 
@@ -75,7 +78,7 @@ rule "VIEW_REMOTE_JOBS_CLICK_EVENT"
 
                 VertxUtils.writeMsg("webcmds",msgJson.toString());
 
-                long totalTime = TableUtils.searchTable(beUtils,searchBE, true);
+                long totalTime = TableUtils.searchTable(beUtils,searchBE, true, "PRI_CODE", targetCode, true);
                 VertxUtils.writeMsgEnd(beUtils.getGennyToken());
 			}else{
 				System.out.println("searchBE is null");

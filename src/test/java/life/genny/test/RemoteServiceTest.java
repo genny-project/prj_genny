@@ -268,21 +268,21 @@ public class RemoteServiceTest {
 
 //  List Remote Service Jobs
         //      Search Entity to be displayed as a table
-        SearchEntity searchRemoteJobs = new SearchEntity("SBE_REMOTE_JOB", "Remote AI Jobs")
-                .addSort("PRI_NAME","Name", SearchEntity.Sort.ASC)
-                .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "RJB_%")
-                .addColumn("PRI_NAME","Job Name")
-                .addColumn("PRI_STATUS","Status")
-                .addAssociatedColumn("LNK_REMOTE_SERVICE", "PRI_CODE", "RemoteServiceCode");
-        searchRemoteJobs.setRealm(realm);
-        searchRemoteJobs.setPageStart(0);
-        searchRemoteJobs.setPageSize(1000);
-
-        VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchRemoteJobs.getCode(), searchRemoteJobs,
-                beUtils.getGennyToken().getToken());
-//        beUtils.saveBaseEntity(searchRemoteJobs);
-
-        List<BaseEntity> remoteJobBES = beUtils.getBaseEntitys(searchRemoteJobs);
+//        SearchEntity searchRemoteJobs = new SearchEntity("SBE_REMOTE_JOB", "Remote AI Jobs")
+//                .addSort("PRI_NAME","Name", SearchEntity.Sort.ASC)
+//                .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "RJB_%")
+//                .addColumn("PRI_NAME","Job Name")
+//                .addColumn("PRI_STATUS","Status")
+//                .addAssociatedColumn("LNK_REMOTE_SERVICE", "PRI_CODE", "RemoteServiceCode");
+//        searchRemoteJobs.setRealm(realm);
+//        searchRemoteJobs.setPageStart(0);
+//        searchRemoteJobs.setPageSize(1000);
+//
+//        VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchRemoteJobs.getCode(), searchRemoteJobs,
+//                beUtils.getGennyToken().getToken());
+////        beUtils.saveBaseEntity(searchRemoteJobs);
+//
+//        List<BaseEntity> remoteJobBES = beUtils.getBaseEntitys(searchRemoteJobs);
 
 // Send the display table data
         QCmdTableMessage msg = new QCmdTableMessage("SBE_TEST","RemoteServiceTest");
