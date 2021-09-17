@@ -34,17 +34,17 @@ rule "HELPER_LNK_OCCUPATION_BEG"
 		userToken : GennyToken( code != "PER_SERVICE")
 	then
 		System.out.println(drools.getRule().getName() + " fired");
-		
+
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		System.out.println("sourceCode :: " + sourceCode);
-		
+
 		String targetCode = answer.getTargetCode();
 		System.out.println("targetCode :: " + targetCode);
-		
+
 		String value = answer.getValue();
 		System.out.println("value :: " + value);
 
-		if(value != null){
+		if(value != null && !value.isEmpty()){
 			String codes = beUtils.cleanUpAttributeValue(value);
 
 			List<String> occupationList = new ArrayList<>();
@@ -53,33 +53,33 @@ rule "HELPER_LNK_OCCUPATION_BEG"
 			List<String> specificOutcomesList = new ArrayList<>();
 
 			for (String code : codes.split(",")) {
-				
+
 				BaseEntity be = beUtils.getBaseEntityByCode(code);
 				if(be != null){
-					String name = be.getValue("PRI_NAME", null);		
+					String name = be.getValue("PRI_NAME", null);
 					if(name!=null) occupationList.add(name);
 
 					String roles = be.getValue("PRI_ROLES_AND_RESPONSIBILITIES", null);
 					if(roles!=null) rolesList.add(roles);
-					
-					String baseOutcomes = be.getValue("PRI_BASE_LEARNING_OUTCOMES", null);	
+
+					String baseOutcomes = be.getValue("PRI_BASE_LEARNING_OUTCOMES", null);
 					if(baseOutcomes!=null) baseOutcomesList.add(baseOutcomes);
-					
+
 					String specificOutcomes = be.getValue("PRI_SPECIFIC_LEARNING_OUTCOMES", null);
-					if(specificOutcomes!=null) specificOutcomesList.add(specificOutcomes);		
+					if(specificOutcomes!=null) specificOutcomesList.add(specificOutcomes);
 				}
 			}
 
 			String occupations = occupationList.toString().replaceAll("[\\[\\](){}]","");
-      String roles = rolesList.toString().replaceAll("[\\[\\](){}]","");
-      String baseOutcomes = baseOutcomesList.toString().replaceAll("[\\[\\](){}]","");
-      String specificOutcomes = specificOutcomesList.toString().replaceAll("[\\[\\](){}]","");
+			String roles = rolesList.toString().replaceAll("[\\[\\](){}]","");
+			String baseOutcomes = baseOutcomesList.toString().replaceAll("[\\[\\](){}]","");
+			String specificOutcomes = specificOutcomesList.toString().replaceAll("[\\[\\](){}]","");
 
 			Answer assocOccupationAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_OCCUPATION", occupations, false, true);
 			Answer rolesAnswer = new Answer(sourceCode, targetCode, "PRI_ROLES_AND_RESPONSIBILITIES", roles, false, true);
 			Answer baseOutcomesAnswer = new Answer(sourceCode, targetCode, "PRI_BASE_LEARNING_OUTCOMES", baseOutcomes, false, true);
 			Answer specificOutcomesAnswer = new Answer(sourceCode, targetCode, "PRI_SPECIFIC_LEARNING_OUTCOMES", specificOutcomes, false, true);
-			
+
 			List<Answer> answers = new ArrayList<Answer>();
 			answers.add(assocOccupationAnswer);
 			answers.add(rolesAnswer);
