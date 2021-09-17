@@ -52,7 +52,7 @@ rule "VIEW_REMOTE_JOBS_CLICK_EVENT"
 		if(searchBE != null) {
 
 		        /* set RMSCode as the parentCode of the SBE */
-		        searchBE.addFilter("LNK_REMOTE_SERVICE", SearchEntity.StringFilter.LIKE, %targetCode%);
+		        searchBE.addFilter("LNK_REMOTE_SERVICE", SearchEntity.StringFilter.LIKE, "%" + targetCode + "%");
 
 				/* cache the session search */
 				VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE, beUtils.getGennyToken().getToken());
