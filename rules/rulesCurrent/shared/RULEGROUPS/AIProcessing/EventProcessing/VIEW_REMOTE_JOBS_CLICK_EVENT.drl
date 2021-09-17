@@ -58,7 +58,6 @@ rule "VIEW_REMOTE_JOBS_CLICK_EVENT"
 				VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE, beUtils.getGennyToken().getToken());
 
 				/* send the table display message out  */
-
                 /*
                 QCmdMessage msg = new QCmdMessage("DISPLAY", "TABLE");
                 msg.setToken(beUtils.getGennyToken().getToken());

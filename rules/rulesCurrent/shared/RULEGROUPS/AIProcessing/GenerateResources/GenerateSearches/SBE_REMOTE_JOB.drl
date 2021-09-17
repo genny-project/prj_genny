@@ -35,14 +35,9 @@ rule "SBE_REMOTE_JOB"
                               .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "RJB_%")
                               .addColumn("PRI_NAME","Job Name")
                               .addColumn("PRI_STATUS","Status")
-                              .addAssociatedColumn("LNK_REMOTE_SERVICE", "PRI_CODE", "Remote Service Code")
-                              .setDisplayMode("row_data")
-                              /* Actions */
-                              .addAction("PRI_EVENT_VIEW_ACTIONS", "View Actions")
-                              .setPageStart(0).setPageSize(20);
       searchBE.setRealm(serviceToken.getRealm());
-
-      insert(searchBE);
+      searchBE.setPageStart(0);
+      searchBE.setPageSize(1000);
       VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken.getToken());
 
 end
