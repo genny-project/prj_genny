@@ -132,6 +132,10 @@ rule "IS_INTERNSHIP"
 		LocalDate internshipStartDate = newBe.getValue("PRI_INTERNSHIP_START_DATE", null);
 		String startDateStr = dtf.format(internshipStartDate);
 		
+		/* Refresh the BaseEntity because reasons... */
+ 		BaseEntity userBe = beUtils.getBaseEntityByCode(userToken.getUserCode());
+		String userName = userBe.getValue("PRI_NAME", null);
+		
 		HashMap<String, String> payloadDataMap = new HashMap<String, String>();
 		payloadDataMap.put("*Added on:* ", addedOn);
 		payloadDataMap.put("*Start Date:* ", startDateStr);
@@ -139,6 +143,7 @@ rule "IS_INTERNSHIP"
 		payloadDataMap.put("*Host Company:* ",assocHC);
 		payloadDataMap.put("*Industry:* ",internshipIndustry);
 		payloadDataMap.put("*Specialisation:* ",internshipOcc);
+		payloadDataMap.put("*Added By:* ",userName);
 		
 		JsonArray jsonArray2 = new JsonArray();
 		for(String key : payloadDataMap.keySet())	
