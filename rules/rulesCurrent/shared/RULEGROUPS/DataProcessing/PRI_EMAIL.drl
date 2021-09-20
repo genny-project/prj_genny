@@ -98,8 +98,7 @@ rule "PRI_EMAIL"
 							answersToSave.add(goodEmail);
 						}
 						
-						
-						retract(answer);
+					
 					}
 					
 				/*}*/
@@ -144,7 +143,7 @@ rule "PRI_EMAIL"
 						VertxUtils.writeMsg("webcmds", toastMsg);
 					}
 					
-					retract(answer);
+					
 					String message = "Email Address "+answer.getValue()+" is already taken. Please delete any unwanted copies or merge data with an existing";
 					System.out.println(ruleDetails+" "+drools.getRule().getName()+" "+message);
 					Answer feedbackAnswer = new Answer(answer.getSourceCode(),answer.getTargetCode(),answer.getAttributeCode(),"");
@@ -156,7 +155,7 @@ rule "PRI_EMAIL"
 		
 		}
 		
-			
+		retract(answer);
 		output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */
 		update(answersToSave);
