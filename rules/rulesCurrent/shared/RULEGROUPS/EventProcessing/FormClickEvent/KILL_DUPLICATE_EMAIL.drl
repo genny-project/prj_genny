@@ -7,6 +7,7 @@ import io.vertx.core.json.JsonObject;
 import life.genny.utils.OutputParam;
 import life.genny.qwanda.rule.RuleDetails;
 import org.apache.commons.lang3.StringUtils;
+import life.genny.qwandautils.KeycloakUtils;
 
 rule "KILL_DUPLICATE_EMAIL"
     ruleflow-group 'EventProcessing'
@@ -18,11 +19,10 @@ rule "KILL_DUPLICATE_EMAIL"
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam( )
 		allowed: Allowed(code == "AGENT")
+		beUtils : BaseEntityUtils()
     then
 		System.out.println("KILL_DUPLICATE_EMAIL fired");
-		
-		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
-		
+				
 		String sourceCode = $message.getData().getSourceCode();
 		System.out.println("sourceCode :: " + sourceCode);
 		
@@ -72,9 +72,19 @@ rule "KILL_DUPLICATE_EMAIL"
 		if (type == null) {
 			beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetCode, "PRI_EMAIL", "dummy@gada.io"));
 		} else {
+					/* change any keycloak associated email */
+			Integer atPosition = rootCode.indexOf("@");
+			String newEmail = rootCode.substring(0,atPosition)+"DED"+rootCode.substring(atPosition);
+			
+			String keycloakUUID = targetCode.substring("PER_".length());
+			System.out.println("New 'DED' email in keycloak is "+newEmail+" for uuid "+keycloakUUID);
+			KeycloakUtils.updateUserEmail(keycloakUUID,serviceToken.getToken(), serviceToken.getRealm(),newEmail);
+		
 			beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetCode, type, false));
 			beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetCode, "PRI_IS_DELETED", true));
-			beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetCode, "PRI_EMAIL", "dummy@gada.io"));
+			beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetCode, "PRI_EMAIL", newEmail));
+			
+			
 		}
 		System.out.println("Killed the target email :: " + targetCode);
 		

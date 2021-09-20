@@ -37,7 +37,7 @@ rule "VIEW_REMOTE_JOBS_CLICK_EVENT"
 	no-loop
 	when
 		$message : QEventMessage(
-			data.code == "ROW_ACT_PRI_EVENT_VIEW_REMOTE_JOBS"
+			data.code == "ACT_PRI_EVENT_VIEW_REMOTE_JOBS"
 		)
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
@@ -45,17 +45,19 @@ rule "VIEW_REMOTE_JOBS_CLICK_EVENT"
 
 	then
 		System.out.println(drools.getRule().getName() + " triggered");
-
+		String targetCode = $message.getData().getTargetCode();
         String searchCode = "SBE_REMOTE_JOB";
         TableUtils tableUtils = new TableUtils(beUtils);
         SearchEntity searchBE = tableUtils.getSessionSearch(searchCode);
 		if(searchBE != null) {
 
+		        /* set RMSCode as the parentCode of the SBE */
+		        searchBE.addFilter("LNK_REMOTE_SERVICE", SearchEntity.StringFilter.LIKE, "%" + targetCode + "%");
+
 				/* cache the session search */
 				VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE, beUtils.getGennyToken().getToken());
 
 				/* send the table display message out  */
-
                 /*
                 QCmdMessage msg = new QCmdMessage("DISPLAY", "TABLE");
                 msg.setToken(beUtils.getGennyToken().getToken());
@@ -63,7 +65,7 @@ rule "VIEW_REMOTE_JOBS_CLICK_EVENT"
                 VertxUtils.writeMsg("webcmds",msg);
                 */
 
-                /* get current search */
+                /* send out the display message */
                 JsonObject msgJson = new JsonObject();
                 msgJson.put("cmd_type","DISPLAY");
                 msgJson.put("code","TABLE");
@@ -75,7 +77,7 @@ rule "VIEW_REMOTE_JOBS_CLICK_EVENT"
 
                 VertxUtils.writeMsg("webcmds",msgJson.toString());
 
-                long totalTime = TableUtils.searchTable(beUtils,searchBE, true);
+                long totalTime = TableUtils.searchTable(beUtils,searchBE,true);
                 VertxUtils.writeMsgEnd(beUtils.getGennyToken());
 			}else{
 				System.out.println("searchBE is null");
