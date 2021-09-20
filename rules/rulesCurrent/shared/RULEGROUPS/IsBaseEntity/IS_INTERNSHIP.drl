@@ -134,7 +134,7 @@ rule "IS_INTERNSHIP"
 		
 		/* Refresh the BaseEntity because reasons... */
  		BaseEntity userBe = beUtils.getBaseEntityByCode(userToken.getUserCode());
-		String userName = userBe.getValue("PRI_NAME", null);
+		String userNameStr = userBe.getValue("PRI_NAME", null);
 		
 		HashMap<String, String> payloadDataMap = new HashMap<String, String>();
 		payloadDataMap.put("*Added on:* ", addedOn);
@@ -143,7 +143,7 @@ rule "IS_INTERNSHIP"
 		payloadDataMap.put("*Host Company:* ",assocHC);
 		payloadDataMap.put("*Industry:* ",internshipIndustry);
 		payloadDataMap.put("*Specialisation:* ",internshipOcc);
-		payloadDataMap.put("*Added By:* ",userName);
+		payloadDataMap.put("*Added By:* ",userNameStr);
 		
 		JsonArray jsonArray2 = new JsonArray();
 		for(String key : payloadDataMap.keySet())	
