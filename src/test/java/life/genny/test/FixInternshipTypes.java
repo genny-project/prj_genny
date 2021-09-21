@@ -45,6 +45,7 @@ import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwanda.exception.BadDataException;
 import life.genny.qwandautils.GennyCacheInterface;
 import life.genny.qwandautils.GennySettings;
+import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.KeycloakUtils;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.utils.BaseEntityUtils;
@@ -102,8 +103,7 @@ public void appProgressFixTest() throws Exception {
     setUpDefs();
     
     
-    
-    
+     
 
     SearchEntity searchBE = new SearchEntity("SBE_INTERNS", "Intern Search")
             .addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
@@ -186,7 +186,7 @@ public void appProgressFixTest() throws Exception {
     		applications.addAll(apps);	
     		
      		// ok, we should have all the apps now..
-    		if (index == 422) {
+    		if (index == 6) {
     			System.out.println("here");
     		}
     		System.out.println(index+" of "+total+" Intern -> "+intern.getCode()+" "+intern.getName()+" "+(applications.isEmpty()?"No APPS":(""+applications.size()+" APPS")));
@@ -215,6 +215,7 @@ public void appProgressFixTest() throws Exception {
     		BaseEntity mostAdvancedApp = null;
     		Integer maxScore = -2;
     		Map<String,Integer> statusValueMap = new HashMap<>();
+    		statusValueMap.put("INACTIVE", -2);
     		statusValueMap.put("REJECT", -1);
     		statusValueMap.put("WITHDRAWN", 0);
     		
