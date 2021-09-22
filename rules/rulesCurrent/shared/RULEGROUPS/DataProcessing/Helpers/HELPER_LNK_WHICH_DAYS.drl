@@ -59,6 +59,7 @@ rule "HELPER_LNK_WHICH_DAYS"
 			}
 			String days = beUtils.cleanUpAttributeValue(daysList.toString());
 			Answer ans = new Answer(sourceCode, targetCode, "PRI_WHICH_DAYS_STRIPPED", days,false,true);
+			System.out.println("Saved Days of Week: " + days + " targetCode: " + targetCode);
 			beUtils.saveAnswer(ans);
 			VertxUtils.sendToFrontEnd(userToken, ans);
 		}
@@ -80,8 +81,8 @@ rule "HELPER_LNK_WHICH_DAYS"
 				String nullValue = null;
 
 				if (start_date == null || durationStr == null || wdsStr == null) {
-					if (start_date == null) {nullValue = "Start Date";} 	
-					if (durationStr == null) {nullValue = "Duration";}  	
+					if (start_date == null) {nullValue = "Start Date";}
+					if (durationStr == null) {nullValue = "Duration";}
 					if (wdsStr == null) {nullValue = "Which Days";}
 					System.out.println("Required value is Null. Can't continue");
 					/*QCmdMessage msg = new QCmdMessage("TOAST", "ERROR");
