@@ -29,7 +29,7 @@ rule "HELPER_LNK_BUSINESS_HOURS"
 	no-loop
 	when
 		beUtils : BaseEntityUtils()
-		answer : Answer( attributeCode == "LNK_BUSINESS_HOURS" )
+		answer : Answer( attributeCode == "LNK_BUSINESS_HOURS" && !StringUtils.isBlank(value))
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		userToken : GennyToken( code != "PER_SERVICE")
 	then
