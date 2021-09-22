@@ -23,7 +23,7 @@ rule "EDIT_INTERN"
 	 	userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam()
-		baseEntityType : String(baseEntityType.equals("EDIT_INTERN"))
+		baseEntityType : String("EDIT_INTERN".equals(baseEntityType))
 		targetBe : BaseEntity()
 	  	beUtils : BaseEntityUtils()
      then

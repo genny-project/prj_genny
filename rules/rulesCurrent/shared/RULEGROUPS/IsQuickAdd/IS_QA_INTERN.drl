@@ -23,7 +23,7 @@ rule "IS_QA_INTERN"
     when
 	 	userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
-		baseEntityType : String(baseEntityType.equals("QA_INTERN"))
+		baseEntityType : String("QA_INTERN".equals(baseEntityType))
 		newBe : BaseEntity()
 		beUtils: BaseEntityUtils()
 	  

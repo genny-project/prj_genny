@@ -24,7 +24,7 @@ rule "IS_EDU_PRO_REP"
 	 	userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam()
-		baseEntityType : String(baseEntityType.equals("EDU_PRO_REP"))
+		baseEntityType : String("EDU_PRO_REP".equals(baseEntityType))
 		newBe : BaseEntity()
 
 	  

@@ -22,7 +22,7 @@ rule "IS_JOURNAL"
 	 	userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam()
-		baseEntityType : String(baseEntityType.equals("LOGBOOK") || baseEntityType.equals("JOURNAL"))
+		baseEntityType : String("LOGBOOK".equals(baseEntityType) || "JOURNAL".equals(baseEntityType))
 		journalBe : BaseEntity()
 	  
   then

@@ -19,7 +19,7 @@ rule "IS_HOST_CPY"
 	 	userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam()
-		baseEntityType : String(baseEntityType.equals("HOST_CPY"))
+		baseEntityType : String("HOST_CPY".equals(baseEntityType))
 		newBe : BaseEntity()
 		beUtils : BaseEntityUtils()
 	  

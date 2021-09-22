@@ -22,7 +22,7 @@ rule "IS_AGENT"
 	 	userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam()
-		baseEntityType : String(baseEntityType.equals("AGENT"))
+		baseEntityType : String("AGENT".equals(baseEntityType))
 		newBe : BaseEntity()
 
 	  

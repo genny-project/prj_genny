@@ -28,7 +28,7 @@ rule "IS_INTERN"
 	 	userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam()
-		baseEntityType : String(baseEntityType.equals("INTERN"))
+		baseEntityType : String("INTERN".equals(baseEntityType))
 		newBe : BaseEntity()
 
      then

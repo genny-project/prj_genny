@@ -22,7 +22,7 @@ rule "IS_ADMIN"
 	 	userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam()
-		baseEntityType : String(baseEntityType.equals("ADMIN"))
+		baseEntityType : String("ADMIN".equals(baseEntityType))
 		newBe : BaseEntity()
 		beUtils : BaseEntityUtils()
 	  

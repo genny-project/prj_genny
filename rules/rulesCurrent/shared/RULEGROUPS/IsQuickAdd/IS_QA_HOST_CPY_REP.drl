@@ -22,7 +22,7 @@ rule "IS_QA_HOST_CPY_REP"
     when
 	 	userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
-		baseEntityType : String(baseEntityType.equals("QA_HOST_CPY_REP"))
+		baseEntityType : String("QA_HOST_CPY_REP".equals(baseEntityType))
 		newBe : BaseEntity()
 		beUtils : BaseEntityUtils()
 	  

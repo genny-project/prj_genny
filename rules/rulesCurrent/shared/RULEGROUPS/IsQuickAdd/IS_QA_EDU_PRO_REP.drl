@@ -17,7 +17,7 @@ rule "IS_QA_EDU_PRO_REP"
     when
 	 	userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
-		baseEntityType : String(baseEntityType.equals("QA_EDU_PRO_REP"))
+		baseEntityType : String("QA_EDU_PRO_REP".equals(baseEntityType))
 		newBe : BaseEntity()
 		beUtils : BaseEntityUtils()
 	  
