@@ -14,7 +14,7 @@ import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
 import life.genny.qwanda.*;
 import life.genny.qwanda.attribute.AttributeText;
-import life.genny.qwanda.message.QEventBtnClickMessage;
+import life.genny.qwanda.message.*;
 import life.genny.qwandautils.*;
 import life.genny.utils.*;
 import org.apache.commons.lang.StringUtils;
@@ -26,7 +26,6 @@ import life.genny.qwanda.attribute.EntityAttribute;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwanda.exception.BadDataException;
-import life.genny.qwanda.message.QCmdTableMessage;
 
 import org.dmg.pmml.Entity;
 import org.dmg.pmml.True;
@@ -174,6 +173,59 @@ public class RemoteServiceTest {
         // System.out.println("serviceToken=" + serviceToken.getToken());
 
     }
+
+    @Test
+    public void formsTest() throws Exception {
+        VertxUtils.cachedEnabled = false;
+
+        if (beUtils == null) {
+            return;
+        }
+
+//        Set up the defs
+        setUpDefs();
+
+
+        QCmdMessage msg = new QCmdMessage("DISPLAY","FORM");
+        msg.setToken(beUtils.getGennyToken().getToken());
+        VertxUtils.writeMsg("webcmds",msg);
+
+        String aSourceCode = beUtils.getGennyToken().getUserCode();
+        BaseEntity be = createRemoteService("RMS_JNL_NLP_02", "NLP Journals 02", "http://localhost:5000/api/response",aSourceCode, "SBE_AI_JOURNAL");
+
+        /* We generate the question */
+        Attribute attr = RulesUtils.getAttribute("QQQ_QUESTION_GROUP",beUtils.getGennyToken().getToken());
+        Attribute nameAttr = RulesUtils.getAttribute("PRI_NAME",beUtils.getGennyToken().getToken());
+        Question groupQuestion = new Question("QUE_REMOTE_SERVICE_GRP", "Sub\'s Test Questions", attr, false);
+//        Use TaskUtils.getQuestion(questionCode, userToken);
+        Question childQuestion = new Question("QUE_REMOTE_SERVICE_NAME","RMS NAME", nameAttr, false );
+        groupQuestion.addTarget(childQuestion,1.0);
+
+        /* We generate the ask */
+        Ask ask = new Ask(groupQuestion, aSourceCode, be.getCode(), false, 1.0, false, false, false);
+        Ask childAsk = new Ask(childQuestion, aSourceCode,be.getCode(), false, 1.0, false, false, false);
+        List<Ask> childAsksArray = new ArrayList<>();
+        childAsksArray.add(childAsk);
+        ask.setChildAsks(childAsksArray.toArray(new Ask[0]));
+        List<Ask> asksArray = new ArrayList<>();
+        asksArray.add(ask);
+
+        QDataBaseEntityMessage beMsg = new QDataBaseEntityMessage(be);
+        beMsg.setToken(beUtils.getGennyToken().getToken());
+        VertxUtils.writeMsg("webcmds",beMsg);
+
+        QDataAskMessage askMsg = new QDataAskMessage(ask);
+        askMsg.setToken(beUtils.getGennyToken().getToken());
+        askMsg.setAttributeCode("QQQ_QUESTION_GROUP");
+        askMsg.setQuestionCode("QUE_REMOTE_SERVICE_GRP");
+        askMsg.setSourceCode(aSourceCode);
+        askMsg.setTargetCode(be.getCode());
+        askMsg.setItems(asksArray.toArray(new Ask[0]));
+        VertxUtils.writeMsg("webcmds",askMsg);
+        VertxUtils.writeMsgEnd(beUtils.getGennyToken());
+
+    }
+
 
 
     @Test
