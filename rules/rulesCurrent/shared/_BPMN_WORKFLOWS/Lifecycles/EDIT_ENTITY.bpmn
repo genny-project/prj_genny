@@ -395,7 +395,7 @@ kcontext.setVariable(&quot;message&quot;,(QEventMessage)message); </bpmn2:script
 */
 
 System.out.println(&quot;EDIT_ENTITY : Setting PRI_PROFILE to Complete for &quot; + targetBe.getCode());
-System.out.println(&quot;EDIT_ENTITY : This is Adam testing &quot;);
+
 beUtils = new BaseEntityUtils(userToken);
 targetBe = beUtils.getBaseEntityByCode(targetBe.getCode());
 targetBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), targetBe.getCode(), &quot;PRI_PROFILE&quot;, &quot;Complete&quot;));
