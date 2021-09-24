@@ -921,10 +921,10 @@ kcontext.setVariable(&quot;dataMessage&quot;,(QDataMessage)dataMessage);
             </tns:metaData>
             <tns:onExit-script scriptFormat="http://www.java.com/java">
               <tns:script>if (answersToSave != null) {
-         System.out.println(&quot;userSession: Process Data Handler answersToSave is not null &quot;+answersToSave.getAnswers().size()+&quot; answers&quot;);
+        /* System.out.println(&quot;userSession: Process Data Handler answersToSave is not null &quot;+answersToSave.getAnswers().size()+&quot; answers&quot;);*/
 	kcontext.setVariable(&quot;answersToSave&quot;,answersToSave);
 
-	System.out.println(&quot;userSession: Process Data Handler output = &quot; + output+&quot;sending output to to sessionCode &quot;+sessionCode+&quot; , number of answers=&quot;+answersToSave.getAnswers().size());
+	/*System.out.println(&quot;userSession: Process Data Handler output = &quot; + output+&quot;sending output to to sessionCode &quot;+sessionCode+&quot; , number of answers=&quot;+answersToSave.getAnswers().size());*/
 	kcontext.setVariable(&quot;output&quot;,output);
 } else {
   System.out.println(&quot;userSession: Process Data Handler answersToSave is NULL&quot;);
@@ -1164,13 +1164,13 @@ if (message.getData().getCode().equals(&quot;AUTH_INIT&quot;)) {
               <tns:metaValue><![CDATA[ShowFrame]]></tns:metaValue>
             </tns:metaData>
             <tns:onEntry-script scriptFormat="http://www.java.com/java">
-              <tns:script>System.out.println(&quot;userSession: Show Page Handler - ShowFrame onentry : OutputParam &quot;+output);
+              <tns:script>/*System.out.println(&quot;userSession: Show Page Handler - ShowFrame onentry : OutputParam &quot;+output);*/
 
 
 </tns:script>
             </tns:onEntry-script>
             <tns:onExit-script scriptFormat="http://www.java.com/java">
-              <tns:script>System.out.println(&quot;userSession: ShowFrame -> Root Frame Code is &quot;+ output.getResultCode()+&quot; Target Frame Code is &quot; +output.getTargetCode());
+              <tns:script>/*System.out.println(&quot;userSession: ShowFrame -> Root Frame Code is &quot;+ output.getResultCode()+&quot; Target Frame Code is &quot; +output.getTargetCode());*/
 VertxUtils.writeMsgEnd(userToken);</tns:script>
             </tns:onExit-script>
           </bpmn2:extensionElements>
@@ -1370,7 +1370,7 @@ if (dom == null) {
 	kcontext.setVariable(&quot;dom&quot;,dom);
 }
 if (output == null) {
-  System.out.println(&quot;userSession: ShowPageHandler - Update DOM - output is null&quot;);
+  /*System.out.println(&quot;userSession: ShowPageHandler - Update DOM - output is null&quot;);*/
 }  else {
    kcontext.setVariable(&quot;output&quot;,output);
 }
@@ -1381,7 +1381,7 @@ if (output.getTypeOfResult().equals(&quot;NONE&quot;)) {
 
 
 if (message.getData().getCode()!=null) {
-	System.out.println(&quot;userSession:  Show Page Handler - incoming output &quot;+output+&quot;:&quot;+(message.getData().getCode().equals(&quot;AUTH_INIT&quot;)?&quot;AUTH_INIT&quot;:&quot;&quot;));
+	/*System.out.println(&quot;userSession:  Show Page Handler - incoming output &quot;+output+&quot;:&quot;+(message.getData().getCode().equals(&quot;AUTH_INIT&quot;)?&quot;AUTH_INIT&quot;:&quot;&quot;));*/
 }
 dom.add(output);
 kcontext.setVariable(&quot;dom&quot;,dom);
