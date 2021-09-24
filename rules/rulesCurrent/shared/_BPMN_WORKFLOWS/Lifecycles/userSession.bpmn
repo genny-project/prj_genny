@@ -273,7 +273,7 @@ kcontext.setVariable(&quot;sessionFacts&quot;,sessionFacts);
           </bpmn2:extensionElements>
           <bpmn2:incoming>SequenceFlow_65</bpmn2:incoming>
           <bpmn2:outgoing>SequenceFlow_138</bpmn2:outgoing>
-          <bpmn2:script>System.out.println(&quot;userSession: Event Message received by Process Event Handler&quot;);
+          <bpmn2:script>/*System.out.println(&quot;userSession: Event Message received by Process Event Handler&quot;);*/
 if (((SessionFacts)sessionFacts).getMessage() instanceof QEventMessage) {
 message = (QEventMessage)((SessionFacts)sessionFacts).getMessage();
 } else {
@@ -292,7 +292,7 @@ kcontext.setVariable(&quot;serviceToken&quot;,((GennyToken)serviceToken));
             </tns:metaData>
             <tns:onEntry-script scriptFormat="http://www.java.com/java">
               <tns:script>/*kcontext.setVariable(&quot;message&quot;,((QEventMessage)sessionFacts).getMessage());*/
-System.out.println(&quot;userSession: Custom Process Event - Rules Finished Event Message = &quot; + message);
+/*System.out.println(&quot;userSession: Custom Process Event - Rules Finished Event Message = &quot; + message);*/
 </tns:script>
             </tns:onEntry-script>
             <tns:onExit-script scriptFormat="http://www.java.com/java">
@@ -300,7 +300,7 @@ System.out.println(&quot;userSession: Custom Process Event - Rules Finished Even
 /* HACK - ACC */
 if (message.getData().getCode() != null) {
 	if (message.getData().getCode().startsWith(&quot;QUE_TREE_ITEM_&quot;)) {
- 		System.out.println(&quot;userSession: ProcessEvent eexit: ADAM HACK&quot;);
+ 		/* System.out.println(&quot;userSession: ProcessEvent eexit: ADAM HACK&quot;); */
   		output = new OutputParam(&quot;NONE&quot;,&quot;NONE&quot;,&quot;NONE&quot;);
 		kcontext.setVariable(&quot;output&quot;,output);
 	} 
@@ -1143,7 +1143,7 @@ if (message.getData().getCode().equals(&quot;AUTH_INIT&quot;)) {
             <tns:metaValue><![CDATA[Show Page Handler]]></tns:metaValue>
           </tns:metaData>
           <tns:onEntry-script scriptFormat="http://www.java.com/java">
-            <tns:script>System.out.println(&quot;userSession: Show Page Handler processId = &quot;+kcontext.getProcessInstance().getId());
+            <tns:script>/*System.out.println(&quot;userSession: Show Page Handler processId = &quot;+kcontext.getProcessInstance().getId());*/
 </tns:script>
           </tns:onEntry-script>
           <tns:metaData name="customAsync">
@@ -1376,7 +1376,7 @@ if (output == null) {
 }
 
 if (output.getTypeOfResult().equals(&quot;NONE&quot;)) {
-System.out.println(&quot;userSession:  Show Page Handler -> output.getTypeOfResult = NONE&quot;);
+    /*System.out.println(&quot;userSession:  Show Page Handler -> output.getTypeOfResult = NONE&quot;);*/
 } else {
 
 
