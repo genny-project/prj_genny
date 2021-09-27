@@ -287,10 +287,11 @@ rule "HELPER_PRI_START_DATE"
 						System.out.println("Application code:: " + targetCode + "endDate = " + endDate);
 						answers.add(new Answer(userToken.getUserCode(), targetCode, "PRI_END_DATE", endDate));
 						Answer ans = new Answer(sourceCode, targetCode, "PRI_END_DATE", endDate);
+
+						beUtils.saveAnswers(answers);
+						VertxUtils.sendToFrontEnd(userToken, ans);
 					}
 
-					beUtils.saveAnswers(answers);
-					VertxUtils.sendToFrontEnd(userToken, ans);
 				} else {
 					System.out.println("appInternBe is null!");
 				}
