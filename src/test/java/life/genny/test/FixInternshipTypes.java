@@ -99,15 +99,14 @@ public class FixInternshipTypes {
 		SearchEntity searchBE = new SearchEntity("SBE_INTERNS", "Intern Archived Search")
 				.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%").addFilter("PRI_IS_INTERN", true)
-				.addFilter("PRI_STATUS", SearchEntity.StringFilter.LIKE, "ARCHIVED")
-				.addColumn("PRI_CODE", "Code");
+				.addFilter("PRI_STATUS", SearchEntity.StringFilter.LIKE, "%ARCHIVED%")
+				.addColumn("PRI_CODE", "Code")
+				.addColumn("PRI_STATUS", "Status");
 		// .addAssociatedColumn("LNK_INTERN", "Intern Name", "LNK_COMP_INTERNSHIP")
 		searchBE.setRealm(realm);
 
 		Boolean ok = true;
 		Integer index = 0;
-		Integer fixedInterns = 0;
-		Integer fixedApps = 0;
 		searchBE.setPageStart(index);
 		Integer pageSize = 100;
 		searchBE.setPageSize(pageSize);
@@ -126,18 +125,120 @@ public class FixInternshipTypes {
 
 			for (BaseEntity intern : interns) {
 				index++;
-				intern.setStatus(EEntityStatus.ARCHIVED);
-				beUtils.saveBaseEntity(defIntern, intern);
+				String status = intern.getValueAsString("PRI_STATUS");
+				if (("ARCHIVED".equals(status))||("WITHDRAWN".equals(status))||("REJECTED".equals(status))||("INACTIVE".equals(status))) {
+					intern.setStatus(EEntityStatus.ARCHIVED);
+					beUtils.saveBaseEntity(defIntern, intern);
+					System.out.println("Fixing "+index +" of "+total+" ---> "+status);
+				} else {
+					System.out.println("Fixing "+index +" of "+total+" ---> ["+status+"]");
+				}
 			}
 			searchBE.setPageStart(index);
 		}
 		
-		
-		
+//		searchBE = new SearchEntity("SBE_INTERNS", "Intern Archived Search")
+//				.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
+//				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%").addFilter("PRI_IS_INTERN", true)
+//				.addFilter("PRI_STATUS", SearchEntity.StringFilter.LIKE, "%WITHDRAWN%")
+//				.addColumn("PRI_CODE", "Code");
+//		// .addAssociatedColumn("LNK_INTERN", "Intern Name", "LNK_COMP_INTERNSHIP")
+//		searchBE.setRealm(realm);
+//
+//		ok = true;
+//		index = 0;
+//		searchBE.setPageStart(index);
+//		searchBE.setPageSize(pageSize);
+//		total = beUtils.getCount(searchBE);
+//
+//
+//		while (ok) {
+//			List<BaseEntity> interns = beUtils.getBaseEntitys(searchBE); // load 100 at a time
+//			if (interns.isEmpty() || (index > 5000)) {
+//				ok = false;
+//				break;
+//			}
+//
+//			for (BaseEntity intern : interns) {
+//				index++;
+//				intern.setStatus(EEntityStatus.ARCHIVED);
+//				beUtils.saveBaseEntity(defIntern, intern);
+//				System.out.println("Fixing "+index +" of "+total);
+//			}
+//			searchBE.setPageStart(index);
+//		}
+//		
+//		
+//		searchBE = new SearchEntity("SBE_INTERNS", "Intern Archived Search")
+//				.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
+//				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%").addFilter("PRI_IS_INTERN", true)
+//				.addFilter("PRI_STATUS", SearchEntity.StringFilter.LIKE, "%REJECTED%")
+//				.addColumn("PRI_CODE", "Code");
+//		// .addAssociatedColumn("LNK_INTERN", "Intern Name", "LNK_COMP_INTERNSHIP")
+//		searchBE.setRealm(realm);
+//
+//		ok = true;
+//		index = 0;
+//		searchBE.setPageStart(index);
+//		searchBE.setPageSize(pageSize);
+//		total = beUtils.getCount(searchBE);
+//
+//
+//		while (ok) {
+//			List<BaseEntity> interns = beUtils.getBaseEntitys(searchBE); // load 100 at a time
+//			if (interns.isEmpty() || (index > 5000)) {
+//				ok = false;
+//				break;
+//			}
+//
+//			for (BaseEntity intern : interns) {
+//				index++;
+//				intern.setStatus(EEntityStatus.ARCHIVED);
+//				beUtils.saveBaseEntity(defIntern, intern);
+//				System.out.println("Fixing "+index +" of "+total);
+//			}
+//			searchBE.setPageStart(index);
+//		}
+//		
+//		
+//		searchBE = new SearchEntity("SBE_INTERNS", "Intern Archived Search")
+//				.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
+//				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%").addFilter("PRI_IS_INTERN", true)
+//				.addFilter("PRI_STATUS", SearchEntity.StringFilter.LIKE, "INACTIVE")
+//				.addColumn("PRI_CODE", "Code");
+//		// .addAssociatedColumn("LNK_INTERN", "Intern Name", "LNK_COMP_INTERNSHIP")
+//		searchBE.setRealm(realm);
+//
+//		ok = true;
+//		index = 0;
+//		searchBE.setPageStart(index);
+//		searchBE.setPageSize(pageSize);
+//		total = beUtils.getCount(searchBE);
+//
+//
+//		while (ok) {
+//			List<BaseEntity> interns = beUtils.getBaseEntitys(searchBE); // load 100 at a time
+//			if (interns.isEmpty() || (index > 5000)) {
+//				ok = false;
+//				break;
+//			}
+//
+//			for (BaseEntity intern : interns) {
+//				index++;
+//				intern.setStatus(EEntityStatus.ARCHIVED);
+//				beUtils.saveBaseEntity(defIntern, intern);
+//				System.out.println("Fixing "+index +" of "+total);
+//			}
+//			searchBE.setPageStart(index);
+//		}
+//		
+//		
 		return;
 		
 		
-		
+//		Integer fixedInterns = 0;
+//		Integer fixedApps = 0;
+	
 		
 		
 		
