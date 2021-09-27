@@ -17,6 +17,7 @@ import life.genny.utils.BucketUtils;
 import life.genny.models.ThemePosition;
 import life.genny.models.ThemeAttributeType;
 import life.genny.model.NodeStatus;
+import life.genny.qwanda.EEntityStatus;
 
 rule "EASY_SET_STATUS_AS_ARCHIVE"
     ruleflow-group 'EventProcessing'
@@ -56,9 +57,12 @@ rule "EASY_SET_STATUS_AS_ARCHIVE"
 				
 				System.out.println("Got through strainer with key = " + key);
 				
-				Answer answer = new Answer(userToken.getUserCode(), targetCode, "PRI_STATUS", "ARCHIVED");
+			/*	Answer answer = new Answer(userToken.getUserCode(), targetCode, "PRI_STATUS", "ARCHIVED"); */
  				BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
- 				beUtils.saveAnswer(answer);
+ 			/*	beUtils.saveAnswer(answer); */
+ 			    BaseEntity target = beUtils.getBaseEntityByCode(targetCode);
+ 			    target.setStatus(EEntityStatus.ARCHIVED);
+ 			    beUtils.saveBaseEntity(target);
  				
  				TableUtils.moveEntity(targetCode, "SBE_INTERNSHIPS_ACTIVE", null, beUtils);
  				

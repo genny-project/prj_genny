@@ -81,7 +81,7 @@ rule "PRI_SEARCH_TEXT_SET_BE_STATUS"
 					case "TEMPORARY": target.setStatus(EEntityStatus.TEMPORARY); break;
 				
 				}
-				beUtils.updateBaseEntity(target);
+				beUtils.saveBaseEntity(target);
 				
 				System.out.println("Saved Status!!");
 			} else {
