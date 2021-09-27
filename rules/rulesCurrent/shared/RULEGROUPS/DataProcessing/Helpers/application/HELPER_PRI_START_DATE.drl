@@ -175,8 +175,8 @@ rule "HELPER_PRI_START_DATE"
 
 					String lastDay = "Friday";
 					int lastDayKey = 0;
-					System.out.println("Test log 1 ");
 					if (wdsStr != null && !wdsStr.isEmpty()) {
+						System.out.println("Test log 1 " + wdsStr);
 						String[] whichDays = wdsStr.split(", ");
 						for (int i = 0; i < whichDays.length; i++) {
 							/*System.out.println("Day = " + whichDays[i] + " with key = " + daysOfWeek.get(whichDays[i]));*/
@@ -193,10 +193,6 @@ rule "HELPER_PRI_START_DATE"
 					} else {
 						System.out.println("ERROR: Null wdsStr");
 					}
-
-					System.out.println("Test log 2 ");
-					/*int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
-					System.out.println("dayOfWeek = " + dayOfWeek);*/
 
 					int year = 0;
 					int month = 0;
