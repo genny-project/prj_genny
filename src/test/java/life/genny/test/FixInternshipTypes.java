@@ -96,9 +96,10 @@ public class FixInternshipTypes {
 
 		setUpDefs();
 
-		SearchEntity searchBE = new SearchEntity("SBE_INTERNS", "Intern Search")
+		SearchEntity searchBE = new SearchEntity("SBE_INTERNS", "Intern Archived Search")
 				.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%").addFilter("PRI_IS_INTERN", true)
+				.addFilter("PRI_STATUS", SearchEntity.StringFilter.LIKE, "ARCHIVED")
 				.addColumn("PRI_CODE", "Code");
 		// .addAssociatedColumn("LNK_INTERN", "Intern Name", "LNK_COMP_INTERNSHIP")
 		searchBE.setRealm(realm);
@@ -112,51 +113,7 @@ public class FixInternshipTypes {
 		searchBE.setPageSize(pageSize);
 		Long total = beUtils.getCount(searchBE);
 
-		Attribute statusAttribute = RulesUtils.getAttribute("PRI_STATUS", serviceToken.getToken());
-		Attribute deletedAttribute = RulesUtils.getAttribute("PRI_DISABLED", serviceToken.getToken());
-		Attribute lnkInternAttribute = RulesUtils.getAttribute("LNK_INTERN", serviceToken.getToken());
-		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken.getToken());
-		Attribute internCodeAttribute = RulesUtils.getAttribute("PRI_INTERN_CODE", serviceToken.getToken());
-		Attribute applicantCodeAttribute = RulesUtils.getAttribute("PRI_APPLICANT_CODE", serviceToken.getToken());
 
-		Attribute internNameAttribute = RulesUtils.getAttribute("PRI_INTERN_NAME", serviceToken.getToken());
-		Attribute internMobileAttribute = RulesUtils.getAttribute("PRI_INTERN_MOBILE", serviceToken.getToken());
-		Attribute internEmailAttribute = RulesUtils.getAttribute("PRI_INTERN_EMAIL", serviceToken.getToken());
-		Attribute internStudentIdAttribute = RulesUtils.getAttribute("PRI_INTERN_STUDENT_ID", serviceToken.getToken());
-		Attribute assocHCAttribute = RulesUtils.getAttribute("PRI_ASSOC_HC", serviceToken.getToken());
-		Attribute abnAttribute = RulesUtils.getAttribute("PRI_ABN", serviceToken.getToken());
-		Attribute addressFullAttribute = RulesUtils.getAttribute("PRI_ADDRESS_FULL", serviceToken.getToken());
-		Attribute superNameAttribute = RulesUtils.getAttribute("PRI_SUPER_NAME", serviceToken.getToken());
-		Attribute superJobTitleAttribute = RulesUtils.getAttribute("PRI_SUPER_JOB_TITLE", serviceToken.getToken());
-		Attribute superMobileAttribute = RulesUtils.getAttribute("PRI_SUPER_MOBILE", serviceToken.getToken());
-		Attribute superEmailAttribute = RulesUtils.getAttribute("PRI_SUPER_EMAIL", serviceToken.getToken());
-		Attribute assocWorksiteAttribute = RulesUtils.getAttribute("PRI_ASSOC_WORKSITE", serviceToken.getToken());
-		Attribute startDateAttribute = RulesUtils.getAttribute("PRI_START_DATE", serviceToken.getToken());
-		Attribute endDateAttribute = RulesUtils.getAttribute("PRI_END_DATE", serviceToken.getToken());
-		Attribute assocDurationAttribute = RulesUtils.getAttribute("PRI_ASSOC_DURATION", serviceToken.getToken());
-		Attribute businessHoursAttribute = RulesUtils.getAttribute("PRI_BUSINESS_HOURS", serviceToken.getToken());
-		Attribute hoursPerWeekAttribute = RulesUtils.getAttribute("PRI_HOURS_PER_WEEK", serviceToken.getToken());
-		Attribute daysPerWeekAttribute = RulesUtils.getAttribute("PRI_DAYS_PER_WEEK", serviceToken.getToken());
-		Attribute whichDaysStrippedAttribute = RulesUtils.getAttribute("PRI_WHICH_DAYS_STRIPPED",
-				serviceToken.getToken());
-		Attribute dressCodeAttribute = RulesUtils.getAttribute("PRI_DRESS_CODE", serviceToken.getToken());
-		Attribute agDocNotesAttribute = RulesUtils.getAttribute("PRI_AG_DOC_NOTES", serviceToken.getToken());
-		Attribute outcomeLifeRepNameAttribute = RulesUtils.getAttribute("PRI_OUTCOME_LIFE_REP_NAME",
-				serviceToken.getToken());
-
-		Attribute agrDocHcSignatureAttribute = RulesUtils.getAttribute("PRI_AGR_DOC_HC_SIGNATURE",
-				serviceToken.getToken());
-		Attribute agrDocIntSignatureAttribute = RulesUtils.getAttribute("PRI_AGR_DOC_INT_SIGNATURE",
-				serviceToken.getToken());
-		Attribute agrDocOutcomeSignatureAttribute = RulesUtils.getAttribute("PRI_AGR_DOC_OUTCOME_SIGNATURE",
-				serviceToken.getToken());
-
-		Attribute agrDocHcSignDateAttribute = RulesUtils.getAttribute("PRI_AGR_DOC_HC_SIGN_DATE",
-				serviceToken.getToken());
-		Attribute agrDocIntSignDateAttribute = RulesUtils.getAttribute("PRI_AGR_DOC_INT_SIGN_DATE",
-				serviceToken.getToken());
-		Attribute agrDocOutcomeSignDateAttribute = RulesUtils.getAttribute("PRI_AGR_DOC_OUTCOME_SIGN_DATE",
-				serviceToken.getToken());
 
 		BaseEntity defIntern = beUtils.getDEFByCode("DEF_INTERN");
 
@@ -169,239 +126,345 @@ public class FixInternshipTypes {
 
 			for (BaseEntity intern : interns) {
 				index++;
-
-			//	intern = beUtils.getBaseEntityByCode("PER_CD81FE03-9DF4-4104-A575-9CF5C60639B3");
-
-				// intern =
-				// beUtils.getBaseEntityByCode("PER_D620320A-EF19-451E-8E45-0DCBD8F3232D"); //
-
-				Set<BaseEntity> applications = new HashSet<>();
-
-				// ok, now get the intern's applications
-				// First look for LNK_INTERN
-				SearchEntity searchAppsBE = new SearchEntity("SBE_INTERN_APPS", "Intern Apps Search")
-						.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
-						.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
-						.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, intern.getCode())
-						.addColumn("PRI_CODE", "Code");
-				// .addAssociatedColumn("LNK_INTERN", "Intern Name", "LNK_COMP_INTERNSHIP")
-				searchAppsBE.setRealm(realm);
-				List<BaseEntity> apps = beUtils.getBaseEntitys(searchAppsBE); // load 100 at a time
-
-				applications.addAll(apps);
-
-				// Now look for PRI_INTERN_CODE
-				searchAppsBE = new SearchEntity("SBE_INTERN_APPS", "Intern Apps Search")
-						.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
-						.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
-						.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.LIKE, intern.getCode())
-						.addColumn("PRI_CODE", "Code");
-				// .addAssociatedColumn("LNK_INTERN", "Intern Name", "LNK_COMP_INTERNSHIP")
-				searchAppsBE.setRealm(realm);
-				apps = beUtils.getBaseEntitys(searchAppsBE); // load 100 at a time
-
-				applications.addAll(apps);
-
-				// Now look for PRI_APPLICANT_CODE
-				searchAppsBE = new SearchEntity("SBE_INTERN_APPS", "Intern Apps Search")
-						.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
-						.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
-						.addFilter("PRI_APPLICANT_CODE", SearchEntity.StringFilter.LIKE, intern.getCode())
-						.addColumn("PRI_CODE", "Code");
-				// .addAssociatedColumn("LNK_INTERN", "Intern Name", "LNK_COMP_INTERNSHIP")
-				searchAppsBE.setRealm(realm);
-				apps = beUtils.getBaseEntitys(searchAppsBE); // load 100 at a time
-
-				applications.addAll(apps);
-
-				// ok, we should have all the apps now..
-				if (index == 15) {
-					System.out.println("here");
-				}
-				System.out.println(index + " of " + total + " Intern -> " + intern.getCode() + " " + intern.getName()
-						+ " " + (applications.isEmpty() ? "No APPS" : ("" + applications.size() + " APPS")));
-				if (applications.isEmpty()) {
-
-					String email = intern.getValue("PRI_EMAIL", null);
-					String firstname = intern.getValue("PRI_FIRSTNAME", null);
-					if (((!StringUtils.isBlank(email)) && (!StringUtils.isBlank(firstname)))) { // must have both
-
-						intern = beUtils.saveAnswer(new Answer(intern, intern, statusAttribute, "AVAILABLE"));
-						intern = beUtils.saveAnswer(new Answer(intern, intern, deletedAttribute, "FALSE"));
-					} else {
-						if (!intern.getStatus().equals(EEntityStatus.PENDING)) {
-							intern = beUtils.saveAnswer(new Answer(intern, intern, statusAttribute, "DODGY"));
-							intern = beUtils.saveAnswer(new Answer(intern, intern, deletedAttribute, "TRUE"));
-							intern.setStatus(EEntityStatus.DELETED);
-							beUtils.saveBaseEntity(defIntern, intern);
-							System.out.println(index + " of " + total + " Intern -> DELETED " + intern.getCode()
-									+ " firstname " + firstname + " email " + email);
-						}
-					}
-					continue;
-				}
-
-				// Now check for the most progressed one
-				BaseEntity mostAdvancedApp = null;
-				Integer maxScore = -2;
-				Map<String, Integer> statusValueMap = new HashMap<>();
-				statusValueMap.put("INACTIVE", -2);
-				statusValueMap.put("REJECT", -1);
-				statusValueMap.put("WITHDRAWN", 0);
-
-				statusValueMap.put("APPLIED", 1);
-				statusValueMap.put("SHORTLISTED", 2);
-				statusValueMap.put("INTERVIEWED", 3);
-				statusValueMap.put("OFFERED", 4);
-				statusValueMap.put("PLACED", 5);
-				statusValueMap.put("PROGRESS", 6);
-				statusValueMap.put("COMPLETED", 7);
-
-				for (BaseEntity app : applications) {
-//					if (!"APP_71FDF68A-2638-4CF8-BB1B-389BEFAE7DC1".equals(app.getCode())) {
-//						continue;
-//					}
-					String status = app.getValue("PRI_STATUS", null);
-					if (status == null) {
-						status = "REJECT";
-						app = beUtils.saveAnswer(new Answer(app, app, statusAttribute, status));
-					}
-					if (status != null) {
-						if (mostAdvancedApp == null) {
-							if ("REJECTED".equals(status)) {
-								status = "REJECT"; // fix
-								app = beUtils.saveAnswer(new Answer(app, app, statusAttribute, "REJECT"));
-							}
-							mostAdvancedApp = app;
-
-							maxScore = statusValueMap.get(status);
-
-						}
-						Integer appScore = -1;
-
-						try {
-							if ("REJECTED".equals(status)) {
-								status = "REJECT"; // fix
-								app = beUtils.saveAnswer(new Answer(app, app, statusAttribute, "REJECT"));
-							}
-							appScore = statusValueMap.get(status);
-							if (appScore == null) {
-								System.out.println(index + " of " + total + " appScore is null - status=" + status);
-							}
-						} catch (Exception e) {
-							System.out.println("NULL STATUS!");
-						}
-
-						if (appScore > maxScore) {
-							maxScore = appScore;
-							mostAdvancedApp = app;
-						}
-
-					} else {
-
-					}
-					// Force the name for each App
-					app = beUtils.saveAnswer(new Answer(app, app, nameAttribute, intern.getName()));
-					app = beUtils
-							.saveAnswer(new Answer(app, app, lnkInternAttribute, "[\"" + intern.getCode() + "\"]"));
-					app = beUtils.saveAnswer(new Answer(app, app, internCodeAttribute, intern.getCode()));
-					app = beUtils.saveAnswer(new Answer(app, app, applicantCodeAttribute, intern.getCode()));
-
-					// fix up missing attributes
-					BaseEntity internship = beUtils.getBaseEntityFromLNKAttr(app, "LNK_INTERNSHIP");
-
-					BaseEntity internshipSupervisor = beUtils.getBaseEntityFromLNKAttr(internship,
-							"LNK_INTERN_SUPERVISOR");
-
-					app = appok("PRI_INTERN_NAME", "LNK_INTERN", "PRI_NAME", app);
-					app = appok("PRI_INTERN_MOBILE", "LNK_INTERN", "PRI_MOBILE", app);
-					app = appok("PRI_INTERN_EMAIL", "LNK_INTERN", "PRI_EMAIL", app);
-					app = appok("PRI_INTERN_STUDENT_ID", "LNK_INTERN", "PRI_STUDENT_ID", app);
-					app = appok("PRI_ASSOC_HC", "LNK_HOST_COMPANY", "PRI_NAME", app);
-					app = appok("PRI_ABN", "LNK_HOST_COMPANY", "PRI_ABN", app);
-					app = appok("PRI_ADDRESS_FULL", "LNK_INTERNSHIP", "PRI_ADDRESS_FULL", app);
-					app = appok("PRI_SUPER_NAME", "LNK_INTERNSHIP", "PRI_ASSOC_SUPERVISOR", app);
-					app = beUtils.saveAnswer(new Answer(app, app, superJobTitleAttribute,
-							internshipSupervisor.getValueAsString("PRI_JOB_TITLE")));
-					app = appok("PRI_SUPER_MOBILE", "LNK_INTERNSHIP", "PRI_SUPER_MOBILE", app);
-					app = appok("PRI_SUPER_EMAIL", "LNK_INTERNSHIP", "PRI_SUPER_EMAIL", app);
-					app = appok("PRI_ASSOC_WORKSITE", "LNK_INTERNSHIP", "PRI_WORKSITE", app);
-					app = appok("PRI_START_DATE", "LNK_INTERNSHIP", "PRI_INTERNSHIP_START_DATE", app);
-					app = appok("PRI_END_DATE", "LNK_INTERNSHIP", "PRI_INTERNSHIP_END_DATE", app);
-					app = appok("PRI_ASSOC_DURATION", "LNK_INTERN", "PRI_ASSOC_DURATION", app);
-					app = appok("PRI_BUSINESS_HOURS", "LNK_INTERNSHIP", "PRI_BUSINESS_HOURS", app);
-					BaseEntity daysPerWeek = beUtils.getBaseEntityFromLNKAttr(intern, "LNK_DAYS_PER_WEEK");
-					if (daysPerWeek != null) {
-						if (StringUtils.isBlank(app.getValueAsString("PRI_DAYS_PER_WEEK"))) {
-							app = beUtils.saveAnswer(new Answer(app, app, daysPerWeekAttribute, daysPerWeek.getName()));
-						}
-					}
-					BaseEntity hoursPerWeek = beUtils.getBaseEntityFromLNKAttr(intern, "LNK_HOURS_PER_WEEK");
-					if (hoursPerWeek != null) {
-						if ((StringUtils.isBlank(app.getValueAsString("PRI_HOURS_PER_WEEK")))||("0.0".equals(app.getValueAsString("PRI_HOURS_PER_WEEK")))) {
-							app = beUtils
-									.saveAnswer(new Answer(app, app, hoursPerWeekAttribute, hoursPerWeek.getName()));
-						}
-					} else {
-						if ((StringUtils.isBlank(app.getValueAsString("PRI_HOURS_PER_WEEK")))||("0.0".equals(app.getValueAsString("PRI_HOURS_PER_WEEK")))) {
-							if (daysPerWeek != null) {
-								Integer dpw = Integer.parseInt(daysPerWeek.getName());
-							app = beUtils
-									.saveAnswer(new Answer(app, app, hoursPerWeekAttribute, ""+(dpw*8)));
-							}
-						}
-					}
-
-					app = appok("PRI_HOURS_PER_WEEK", "LNK_INTERN", "PRI_HOURS_PER_WEEK", app);
-					app = appok("PRI_DAYS_PER_WEEK", "LNK_INTERN", "PRI_DAYS_PER_WEEK", app);
-					app = appok("PRI_WHICH_DAYS_STRIPPED", "LNK_INTERNSHIP", "PRI_WHICH_DAYS_STRIPPED", app);
-					app = appok("PRI_DRESS_CODE", "LNK_INTERNSHIP", "PRI_DRESS_CODE", app);
-					app = appok("PRI_OUTCOME_LIFE_REP_NAME", "LNK_AGENT", "PRI_NAME", app);
-					// app = appok("PRI_AG_DOC_NOTES","LNK_AGENT","PRI_NAME",app);
-
-					// beUtils.saveBaseEntity(beUtils.getDEFByCode("DEF_APPLICATION"), app);
-
-				}
-
-				// Fix up WITHDRAWN statuses
-
-				// Now if mostadvancedApp is in progress then withdraw the others
-				if (("PROGRESS".equalsIgnoreCase(mostAdvancedApp.getValueAsString("PRI_STATUS")))
-						|| ("PLACED".equalsIgnoreCase(mostAdvancedApp.getValueAsString("PRI_STATUS")))) {
-					// Now withdraw all the existing apps
-					// Now we do not want to lose the maximum stage reached for each application
-					// and we want to be able to show buckets with 'withdrawn' shown.
-					// So we essentially want to 'disable the buckets and not overwrite their normal
-					// status with a WITHDRAWN status
-
-					// set the intern status to reflect the latest
-					String maxstatus = mostAdvancedApp.getValueAsString("PRI_STATUS");
-					if (("REJECT".equalsIgnoreCase(maxstatus)) || ("WITHDRAWN".equalsIgnoreCase(maxstatus))) {
-						maxstatus = "AVAILABLE";
-					}
-					intern = beUtils.saveAnswer(new Answer(intern, intern, statusAttribute, maxstatus));
-					intern = beUtils.saveAnswer(new Answer(intern, intern, deletedAttribute, "FALSE"));
-					// Set all applications to WITHDRAWN
-
-					for (BaseEntity app : applications) {
-						String status = app.getValue("PRI_STATUS", null);
-						if (status != null) {
-							if (!mostAdvancedApp.getValueAsString("PRI_STATUS").equalsIgnoreCase(status)) {
-								if (!"REJECT".equalsIgnoreCase(app.getValueAsString("PRI_STATUS"))) {
-									app = beUtils.saveAnswer(new Answer(app, app, statusAttribute, "WITHDRAWN"));
-								}
-							}
-						}
-					}
-				}
-
-				System.out.println(index + " of " + total + " Intern -> " + intern.getCode() + " " + intern.getName()
-						+ " -> fixed up " + mostAdvancedApp.getValueAsString("PRI_STATUS"));
-
+				intern.setStatus(EEntityStatus.ARCHIVED);
+				beUtils.saveBaseEntity(defIntern, intern);
 			}
-
 			searchBE.setPageStart(index);
 		}
+		
+		
+		
+		return;
+		
+		
+		
+		
+		
+		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		SearchEntity searchBE = new SearchEntity("SBE_INTERNS", "Intern Search")
+//				.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
+//				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%").addFilter("PRI_IS_INTERN", true)
+//				.addColumn("PRI_CODE", "Code");
+//		// .addAssociatedColumn("LNK_INTERN", "Intern Name", "LNK_COMP_INTERNSHIP")
+//		searchBE.setRealm(realm);
+//
+//		Boolean ok = true;
+//		Integer index = 0;
+//		Integer fixedInterns = 0;
+//		Integer fixedApps = 0;
+//		searchBE.setPageStart(index);
+//		Integer pageSize = 100;
+//		searchBE.setPageSize(pageSize);
+//		Long total = beUtils.getCount(searchBE);
+//
+//		Attribute statusAttribute = RulesUtils.getAttribute("PRI_STATUS", serviceToken.getToken());
+//		Attribute deletedAttribute = RulesUtils.getAttribute("PRI_DISABLED", serviceToken.getToken());
+//		Attribute lnkInternAttribute = RulesUtils.getAttribute("LNK_INTERN", serviceToken.getToken());
+//		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken.getToken());
+//		Attribute internCodeAttribute = RulesUtils.getAttribute("PRI_INTERN_CODE", serviceToken.getToken());
+//		Attribute applicantCodeAttribute = RulesUtils.getAttribute("PRI_APPLICANT_CODE", serviceToken.getToken());
+//
+//		Attribute internNameAttribute = RulesUtils.getAttribute("PRI_INTERN_NAME", serviceToken.getToken());
+//		Attribute internMobileAttribute = RulesUtils.getAttribute("PRI_INTERN_MOBILE", serviceToken.getToken());
+//		Attribute internEmailAttribute = RulesUtils.getAttribute("PRI_INTERN_EMAIL", serviceToken.getToken());
+//		Attribute internStudentIdAttribute = RulesUtils.getAttribute("PRI_INTERN_STUDENT_ID", serviceToken.getToken());
+//		Attribute assocHCAttribute = RulesUtils.getAttribute("PRI_ASSOC_HC", serviceToken.getToken());
+//		Attribute abnAttribute = RulesUtils.getAttribute("PRI_ABN", serviceToken.getToken());
+//		Attribute addressFullAttribute = RulesUtils.getAttribute("PRI_ADDRESS_FULL", serviceToken.getToken());
+//		Attribute superNameAttribute = RulesUtils.getAttribute("PRI_SUPER_NAME", serviceToken.getToken());
+//		Attribute superJobTitleAttribute = RulesUtils.getAttribute("PRI_SUPER_JOB_TITLE", serviceToken.getToken());
+//		Attribute superMobileAttribute = RulesUtils.getAttribute("PRI_SUPER_MOBILE", serviceToken.getToken());
+//		Attribute superEmailAttribute = RulesUtils.getAttribute("PRI_SUPER_EMAIL", serviceToken.getToken());
+//		Attribute assocWorksiteAttribute = RulesUtils.getAttribute("PRI_ASSOC_WORKSITE", serviceToken.getToken());
+//		Attribute startDateAttribute = RulesUtils.getAttribute("PRI_START_DATE", serviceToken.getToken());
+//		Attribute endDateAttribute = RulesUtils.getAttribute("PRI_END_DATE", serviceToken.getToken());
+//		Attribute assocDurationAttribute = RulesUtils.getAttribute("PRI_ASSOC_DURATION", serviceToken.getToken());
+//		Attribute businessHoursAttribute = RulesUtils.getAttribute("PRI_BUSINESS_HOURS", serviceToken.getToken());
+//		Attribute hoursPerWeekAttribute = RulesUtils.getAttribute("PRI_HOURS_PER_WEEK", serviceToken.getToken());
+//		Attribute daysPerWeekAttribute = RulesUtils.getAttribute("PRI_DAYS_PER_WEEK", serviceToken.getToken());
+//		Attribute whichDaysStrippedAttribute = RulesUtils.getAttribute("PRI_WHICH_DAYS_STRIPPED",
+//				serviceToken.getToken());
+//		Attribute dressCodeAttribute = RulesUtils.getAttribute("PRI_DRESS_CODE", serviceToken.getToken());
+//		Attribute agDocNotesAttribute = RulesUtils.getAttribute("PRI_AG_DOC_NOTES", serviceToken.getToken());
+//		Attribute outcomeLifeRepNameAttribute = RulesUtils.getAttribute("PRI_OUTCOME_LIFE_REP_NAME",
+//				serviceToken.getToken());
+//
+//		Attribute agrDocHcSignatureAttribute = RulesUtils.getAttribute("PRI_AGR_DOC_HC_SIGNATURE",
+//				serviceToken.getToken());
+//		Attribute agrDocIntSignatureAttribute = RulesUtils.getAttribute("PRI_AGR_DOC_INT_SIGNATURE",
+//				serviceToken.getToken());
+//		Attribute agrDocOutcomeSignatureAttribute = RulesUtils.getAttribute("PRI_AGR_DOC_OUTCOME_SIGNATURE",
+//				serviceToken.getToken());
+//
+//		Attribute agrDocHcSignDateAttribute = RulesUtils.getAttribute("PRI_AGR_DOC_HC_SIGN_DATE",
+//				serviceToken.getToken());
+//		Attribute agrDocIntSignDateAttribute = RulesUtils.getAttribute("PRI_AGR_DOC_INT_SIGN_DATE",
+//				serviceToken.getToken());
+//		Attribute agrDocOutcomeSignDateAttribute = RulesUtils.getAttribute("PRI_AGR_DOC_OUTCOME_SIGN_DATE",
+//				serviceToken.getToken());
+//
+//		BaseEntity defIntern = beUtils.getDEFByCode("DEF_INTERN");
+//
+//		while (ok) {
+//			List<BaseEntity> interns = beUtils.getBaseEntitys(searchBE); // load 100 at a time
+//			if (interns.isEmpty() || (index > 5000)) {
+//				ok = false;
+//				break;
+//			}
+//
+//			for (BaseEntity intern : interns) {
+//				index++;
+//
+//				// intern =
+//				// beUtils.getBaseEntityByCode("PER_CD81FE03-9DF4-4104-A575-9CF5C60639B3");
+//
+//				// intern =
+//				// beUtils.getBaseEntityByCode("PER_D620320A-EF19-451E-8E45-0DCBD8F3232D"); //
+//
+//				Set<BaseEntity> applications = new HashSet<>();
+//
+//				// ok, now get the intern's applications
+//				// First look for LNK_INTERN
+//				SearchEntity searchAppsBE = new SearchEntity("SBE_INTERN_APPS", "Intern Apps Search")
+//						.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
+//						.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+//						.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, intern.getCode())
+//						.addColumn("PRI_CODE", "Code");
+//				// .addAssociatedColumn("LNK_INTERN", "Intern Name", "LNK_COMP_INTERNSHIP")
+//				searchAppsBE.setRealm(realm);
+//				List<BaseEntity> apps = beUtils.getBaseEntitys(searchAppsBE); // load 100 at a time
+//
+//				applications.addAll(apps);
+//
+//				// Now look for PRI_INTERN_CODE
+//				searchAppsBE = new SearchEntity("SBE_INTERN_APPS", "Intern Apps Search")
+//						.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
+//						.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+//						.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.LIKE, intern.getCode())
+//						.addColumn("PRI_CODE", "Code");
+//				// .addAssociatedColumn("LNK_INTERN", "Intern Name", "LNK_COMP_INTERNSHIP")
+//				searchAppsBE.setRealm(realm);
+//				apps = beUtils.getBaseEntitys(searchAppsBE); // load 100 at a time
+//
+//				applications.addAll(apps);
+//
+//				// Now look for PRI_APPLICANT_CODE
+//				searchAppsBE = new SearchEntity("SBE_INTERN_APPS", "Intern Apps Search")
+//						.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
+//						.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+//						.addFilter("PRI_APPLICANT_CODE", SearchEntity.StringFilter.LIKE, intern.getCode())
+//						.addColumn("PRI_CODE", "Code");
+//				// .addAssociatedColumn("LNK_INTERN", "Intern Name", "LNK_COMP_INTERNSHIP")
+//				searchAppsBE.setRealm(realm);
+//				apps = beUtils.getBaseEntitys(searchAppsBE); // load 100 at a time
+//
+//				applications.addAll(apps);
+//
+//				// ok, we should have all the apps now..
+//				if (index == 1098) {
+//					System.out.println("here");
+//				}
+//				System.out.println(index + " of " + total + " Intern -> " + intern.getCode() + " " + intern.getName()
+//						+ " " + (applications.isEmpty() ? "No APPS" : ("" + applications.size() + " APPS")));
+//				if (applications.isEmpty()) {
+//
+//					String email = intern.getValue("PRI_EMAIL", null);
+//					String firstname = intern.getValue("PRI_FIRSTNAME", null);
+//					if (((!StringUtils.isBlank(email)) && (!StringUtils.isBlank(firstname)))) { // must have both
+//
+//						intern = beUtils.saveAnswer(new Answer(intern, intern, statusAttribute, "AVAILABLE"));
+//						intern = beUtils.saveAnswer(new Answer(intern, intern, deletedAttribute, "FALSE"));
+//					} else {
+//						if (!intern.getStatus().equals(EEntityStatus.PENDING)) {
+//							intern = beUtils.saveAnswer(new Answer(intern, intern, statusAttribute, "DODGY"));
+//							intern = beUtils.saveAnswer(new Answer(intern, intern, deletedAttribute, "TRUE"));
+//							intern.setStatus(EEntityStatus.DELETED);
+//							beUtils.saveBaseEntity(defIntern, intern);
+//							System.out.println(index + " of " + total + " Intern -> DELETED " + intern.getCode()
+//									+ " firstname " + firstname + " email " + email);
+//						}
+//					}
+//					continue;
+//				}
+//
+//				// Now check for the most progressed one
+//				BaseEntity mostAdvancedApp = null;
+//				Integer maxScore = -2;
+//				Map<String, Integer> statusValueMap = new HashMap<>();
+//				statusValueMap.put("INACTIVE", -3);
+//				statusValueMap.put("REJECT", -2);
+//				statusValueMap.put("WITHDRAWN", -1);
+//				statusValueMap.put("ACTIVE", 0);
+//
+//				statusValueMap.put("APPLIED", 1);
+//				statusValueMap.put("SHORTLISTED", 2);
+//				statusValueMap.put("INTERVIEWED", 3);
+//				statusValueMap.put("OFFERED", 4);
+//				statusValueMap.put("PLACED", 5);
+//				statusValueMap.put("PROGRESS", 6);
+//				statusValueMap.put("COMPLETED", 7);
+//
+//				for (BaseEntity app : applications) {
+////					if (!"APP_71FDF68A-2638-4CF8-BB1B-389BEFAE7DC1".equals(app.getCode())) {
+////						continue;
+////					}
+//					String status = app.getValue("PRI_STATUS", null);
+//					if (status == null) {
+//						status = "REJECT";
+//						app = beUtils.saveAnswer(new Answer(app, app, statusAttribute, status));
+//					}
+//					if (status != null) {
+//						if (mostAdvancedApp == null) {
+//							if ("REJECTED".equals(status)) {
+//								status = "REJECT"; // fix
+//								app = beUtils.saveAnswer(new Answer(app, app, statusAttribute, "REJECT"));
+//							}
+//							mostAdvancedApp = app;
+//
+//							maxScore = statusValueMap.get(status);
+//
+//						}
+//						Integer appScore = -1;
+//
+//						try {
+//							if ("REJECTED".equals(status)) {
+//								status = "REJECT"; // fix
+//								app = beUtils.saveAnswer(new Answer(app, app, statusAttribute, "REJECT"));
+//							}
+//							appScore = statusValueMap.get(status);
+//							if (appScore == null) {
+//								System.out.println(index + " of " + total + " appScore is null - status=" + status);
+//							}
+//						} catch (Exception e) {
+//							System.out.println("NULL STATUS!");
+//						}
+//
+//						if (appScore > maxScore) {
+//							maxScore = appScore;
+//							mostAdvancedApp = app;
+//						}
+//
+//					} else {
+//
+//					}
+//					// Force the name for each App
+//					app = beUtils.saveAnswer(new Answer(app, app, nameAttribute, intern.getName()));
+//					app = beUtils
+//							.saveAnswer(new Answer(app, app, lnkInternAttribute, "[\"" + intern.getCode() + "\"]"));
+//					app = beUtils.saveAnswer(new Answer(app, app, internCodeAttribute, intern.getCode()));
+//					app = beUtils.saveAnswer(new Answer(app, app, applicantCodeAttribute, intern.getCode()));
+//
+//					// fix up missing attributes
+//					if (("OFFERED".equalsIgnoreCase(mostAdvancedApp.getValueAsString("PRI_STATUS")))) {
+//
+//						BaseEntity internship = beUtils.getBaseEntityFromLNKAttr(app, "LNK_INTERNSHIP");
+//
+//						BaseEntity internshipSupervisor = beUtils.getBaseEntityFromLNKAttr(internship,
+//								"LNK_INTERN_SUPERVISOR");
+//
+//						app = appok("PRI_INTERN_NAME", "LNK_INTERN", "PRI_NAME", app);
+//						app = appok("PRI_INTERN_MOBILE", "LNK_INTERN", "PRI_MOBILE", app);
+//						app = appok("PRI_INTERN_EMAIL", "LNK_INTERN", "PRI_EMAIL", app);
+//						app = appok("PRI_INTERN_STUDENT_ID", "LNK_INTERN", "PRI_STUDENT_ID", app);
+//						app = appok("PRI_ASSOC_HC", "LNK_HOST_COMPANY", "PRI_NAME", app);
+//						app = appok("PRI_ABN", "LNK_HOST_COMPANY", "PRI_ABN", app);
+//						app = appok("PRI_ADDRESS_FULL", "LNK_INTERNSHIP", "PRI_ADDRESS_FULL", app);
+//						app = appok("PRI_SUPER_NAME", "LNK_INTERNSHIP", "PRI_ASSOC_SUPERVISOR", app);
+//						if (internshipSupervisor!=null) {
+//							app = beUtils.saveAnswer(new Answer(app, app, superJobTitleAttribute,
+//								internshipSupervisor.getValueAsString("PRI_JOB_TITLE")));
+//						}
+//						app = appok("PRI_SUPER_MOBILE", "LNK_INTERNSHIP", "PRI_SUPER_MOBILE", app);
+//						app = appok("PRI_SUPER_EMAIL", "LNK_INTERNSHIP", "PRI_SUPER_EMAIL", app);
+//						app = appok("PRI_ASSOC_WORKSITE", "LNK_INTERNSHIP", "PRI_WORKSITE", app);
+//						app = appok("PRI_START_DATE", "LNK_INTERNSHIP", "PRI_INTERNSHIP_START_DATE", app);
+//						app = appok("PRI_END_DATE", "LNK_INTERNSHIP", "PRI_INTERNSHIP_END_DATE", app);
+//						app = appok("PRI_ASSOC_DURATION", "LNK_INTERN", "PRI_ASSOC_DURATION", app);
+//						app = appok("PRI_BUSINESS_HOURS", "LNK_INTERNSHIP", "PRI_BUSINESS_HOURS", app);
+//						BaseEntity daysPerWeek = beUtils.getBaseEntityFromLNKAttr(intern, "LNK_DAYS_PER_WEEK");
+//						if (daysPerWeek != null) {
+//							if (StringUtils.isBlank(app.getValueAsString("PRI_DAYS_PER_WEEK"))) {
+//								app = beUtils
+//										.saveAnswer(new Answer(app, app, daysPerWeekAttribute, daysPerWeek.getName()));
+//							}
+//						}
+//						BaseEntity hoursPerWeek = beUtils.getBaseEntityFromLNKAttr(intern, "LNK_HOURS_PER_WEEK");
+//						if (hoursPerWeek != null) {
+//							if ((StringUtils.isBlank(app.getValueAsString("PRI_HOURS_PER_WEEK")))
+//									|| ("0.0".equals(app.getValueAsString("PRI_HOURS_PER_WEEK")))) {
+//								app = beUtils.saveAnswer(
+//										new Answer(app, app, hoursPerWeekAttribute, hoursPerWeek.getName()));
+//							}
+//						} else {
+//							if ((StringUtils.isBlank(app.getValueAsString("PRI_HOURS_PER_WEEK")))
+//									|| ("0.0".equals(app.getValueAsString("PRI_HOURS_PER_WEEK")))) {
+//								if (daysPerWeek != null) {
+//									Integer dpw = Integer.parseInt(daysPerWeek.getName());
+//									app = beUtils
+//											.saveAnswer(new Answer(app, app, hoursPerWeekAttribute, "" + (dpw * 8)));
+//								}
+//							}
+//						}
+//
+//						app = appok("PRI_HOURS_PER_WEEK", "LNK_INTERN", "PRI_HOURS_PER_WEEK", app);
+//						app = appok("PRI_DAYS_PER_WEEK", "LNK_INTERN", "PRI_DAYS_PER_WEEK", app);
+//						app = appok("PRI_WHICH_DAYS_STRIPPED", "LNK_INTERNSHIP", "PRI_WHICH_DAYS_STRIPPED", app);
+//						app = appok("PRI_DRESS_CODE", "LNK_INTERNSHIP", "PRI_DRESS_CODE", app);
+//						app = appok("PRI_OUTCOME_LIFE_REP_NAME", "LNK_AGENT", "PRI_NAME", app);
+//						// app = appok("PRI_AG_DOC_NOTES","LNK_AGENT","PRI_NAME",app);
+//
+//						// beUtils.saveBaseEntity(beUtils.getDEFByCode("DEF_APPLICATION"), app);
+//					}
+//
+//				}
+//
+//				// Fix up WITHDRAWN statuses
+//
+//				// Now if mostadvancedApp is in progress then withdraw the others
+//				if (("PROGRESS".equalsIgnoreCase(mostAdvancedApp.getValueAsString("PRI_STATUS")))
+//						|| ("PLACED".equalsIgnoreCase(mostAdvancedApp.getValueAsString("PRI_STATUS")))) {
+//					// Now withdraw all the existing apps
+//					// Now we do not want to lose the maximum stage reached for each application
+//					// and we want to be able to show buckets with 'withdrawn' shown.
+//					// So we essentially want to 'disable the buckets and not overwrite their normal
+//					// status with a WITHDRAWN status
+//
+//					// set the intern status to reflect the latest
+//					String maxstatus = mostAdvancedApp.getValueAsString("PRI_STATUS");
+//					if (("REJECT".equalsIgnoreCase(maxstatus)) || ("WITHDRAWN".equalsIgnoreCase(maxstatus))) {
+//						maxstatus = "AVAILABLE";
+//					}
+//					intern = beUtils.saveAnswer(new Answer(intern, intern, statusAttribute, maxstatus));
+//					intern = beUtils.saveAnswer(new Answer(intern, intern, deletedAttribute, "FALSE"));
+//					// Set all applications to WITHDRAWN
+//
+//					for (BaseEntity app : applications) {
+//						String status = app.getValue("PRI_STATUS", null);
+//						if (status != null) {
+//							if (!mostAdvancedApp.getValueAsString("PRI_STATUS").equalsIgnoreCase(status)) {
+//								if (!"REJECT".equalsIgnoreCase(app.getValueAsString("PRI_STATUS"))) {
+//									app = beUtils.saveAnswer(new Answer(app, app, statusAttribute, "WITHDRAWN"));
+//								}
+//							}
+//						}
+//					}
+//				}
+//
+//				System.out.println(index + " of " + total + " Intern -> " + intern.getCode() + " " + intern.getName()
+//						+ " -> fixed up " + mostAdvancedApp.getValueAsString("PRI_STATUS"));
+//
+//				
+//			}
+//
+//			searchBE.setPageStart(index);
+//		}
 
 	}
 
