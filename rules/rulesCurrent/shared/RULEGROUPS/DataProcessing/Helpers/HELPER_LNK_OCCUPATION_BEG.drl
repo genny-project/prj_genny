@@ -89,4 +89,6 @@ rule "HELPER_LNK_OCCUPATION_BEG"
 
 			VertxUtils.sendToFrontEnd(userToken, assocOccupationAnswer, rolesAnswer, baseOutcomesAnswer, specificOutcomesAnswer);
 		}
+
+		System.out.println("End of " + drools.getRule().getName());
 end
