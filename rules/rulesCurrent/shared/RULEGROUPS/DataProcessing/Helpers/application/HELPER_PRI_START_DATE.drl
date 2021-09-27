@@ -56,11 +56,14 @@ rule "HELPER_PRI_START_DATE"
 		if(targetCode != null){
 			if (targetCode.startsWith("APP_")) {
 				BaseEntity appInternBe = beUtils.getBaseEntityFromLNKAttr(targetCode, "LNK_INTERN");
+				BaseEntity targetEntity = beUtils.getBaseEntityByCode(targetCode);
+
 				if (appInternBe != null) {
 					System.out.println("appInternBe is :: " + appInternBe.getCode());
+					System.out.println("targetEntity is :: " + targetEntity.getCode());
 
 					/* Getting Business hours */
-					String lnkBH = targetCode.getValue("LNK_BUSINESS_HOURS", null);
+					String lnkBH = targetEntity.getValue("LNK_BUSINESS_HOURS", null);
 					System.out.println("returned lnkBH:: " + lnkBH);
 
 					if (lnkBH != null) {
@@ -82,7 +85,7 @@ rule "HELPER_PRI_START_DATE"
 						double businessHrs = endDbl - startDbl;
 						System.out.println("businessHrs = " + businessHrs);
 
-						String dpwStr = targetCode.getValue("PRI_DAYS_PER_WEEK", null);
+						String dpwStr = targetEntity.getValue("PRI_DAYS_PER_WEEK", null);
 						System.out.println("dpwStr = " + dpwStr);
 
 						/* Days per week */
@@ -121,10 +124,10 @@ rule "HELPER_PRI_START_DATE"
 						System.out.println("ERROR: Null start_date");
 					}
 
-					String durationStr = targetCode.getValue("PRI_ASSOC_DURATION", null);
+					String durationStr = targetEntity.getValue("PRI_ASSOC_DURATION", null);
 					System.out.println("durationStr = " + durationStr);
 
-					String wdsStr = targetCode.getValue("PRI_WHICH_DAYS_STRIPPED", null);
+					String wdsStr = targetEntity.getValue("PRI_WHICH_DAYS_STRIPPED", null);
 					System.out.println("wdsStr = " + wdsStr);
 
 					int durationInt = 0;
