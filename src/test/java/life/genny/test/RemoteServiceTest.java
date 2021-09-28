@@ -5,10 +5,8 @@ import java.io.StringReader;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 import io.vertx.core.json.JsonObject;
-import life.genny.bootxport.bootx.DEFBaseentityAttribute;
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
@@ -27,9 +25,6 @@ import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwanda.exception.BadDataException;
 
-import org.dmg.pmml.Entity;
-import org.dmg.pmml.True;
-import org.infinispan.client.hotrod.Search;
 import org.jboss.logging.Logger;
 import org.jbpm.services.api.DefinitionService;
 import org.jbpm.services.api.ProcessService;
@@ -39,8 +34,6 @@ import org.jbpm.services.api.admin.ProcessInstanceAdminService;
 import org.jbpm.services.api.model.DeploymentUnit;
 import org.jbpm.services.api.query.QueryService;
 import org.jbpm.services.api.utils.KieServiceConfigurator;
-import org.json.JSONObject;
-import org.junit.Rule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -173,6 +166,40 @@ public class RemoteServiceTest {
         // System.out.println("serviceToken=" + serviceToken.getToken());
 
     }
+
+    @Test
+    public void tasksTest() throws Exception {
+        VertxUtils.cachedEnabled = false;
+
+        if (beUtils == null) {
+            return;
+        }
+
+//        Set up the defs
+        setUpDefs();
+
+        String aSourceCode = beUtils.getGennyToken().getUserCode();
+        String token = beUtils.getGennyToken().getToken();
+        BaseEntity be = createRemoteService("RMS_JNL_PROCESS_001", "Remote Journal Process", "http://localhost:5000/api/response",aSourceCode, "SBE_AI_JOURNAL");
+        QDataAskMessage askMsg = QuestionUtils.getAsks(aSourceCode,be.getCode(), "QUE_REMOTE_SERVICE_GRP", token);
+
+        QCmdMessage msg = new QCmdMessage("DISPLAY","FORM");
+        msg.setToken(beUtils.getGennyToken().getToken());
+        VertxUtils.writeMsg("webcmds",msg);
+
+        QDataBaseEntityMessage beMsg = new QDataBaseEntityMessage(be);
+        beMsg.setToken(beUtils.getGennyToken().getToken());
+        VertxUtils.writeMsg("webcmds",beMsg);
+
+        askMsg.setToken(beUtils.getGennyToken().getToken());
+        VertxUtils.writeMsg("webcmds",askMsg);
+        VertxUtils.writeMsgEnd(beUtils.getGennyToken());
+
+        TaskUtils.createTask(token, )
+
+
+    }
+
 
     @Test
     public void formsTest() throws Exception {
