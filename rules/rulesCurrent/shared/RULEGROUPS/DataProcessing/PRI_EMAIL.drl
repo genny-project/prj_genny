@@ -80,6 +80,7 @@ rule "PRI_EMAIL"
 				System.out.println(ruleDetails+" "+drools.getRule().getName()+" the allowed.code is "+allowed.code);
 				/* check if capability to change passwords is there */
 					switch (allowed.code) {
+					case "USER": {allowedToChange = true;} break;
 					case "EDIT_INTERN": {allowedToChange = true;} break;
 					case "EDIT_AGENT":  {allowedToChange = true;} break;
 					case "EDIT_HCR":    {allowedToChange = true;} break;
