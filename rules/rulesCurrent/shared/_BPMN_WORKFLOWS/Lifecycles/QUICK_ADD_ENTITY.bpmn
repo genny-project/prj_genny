@@ -227,7 +227,7 @@ if (newBe != null) {
 	/* Set Status to Pending */
 	newBe = beUtils.getBaseEntityByCode(newBe.getCode());
          BaseEntity defBe = beUtils.getDEF(newBe); 
-	if (&quot;DEF_INTERN&quot;.equals(defBe.getCode()) {
+	if (&quot;DEF_INTERN&quot;.equals(defBe.getCode())) {
 		newBe.setStatus(EEntityStatus.PENDING);
 	} else {
 		newBe.setStatus(EEntityStatus.ACTIVE);
