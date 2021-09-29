@@ -99,7 +99,7 @@ public class FixInternshipTypes {
 		SearchEntity searchBE = new SearchEntity("SBE_INTERNS", "Intern Archived Search")
 				.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%").addFilter("PRI_IS_INTERN", true)
-				.addFilter("PRI_STATUS", SearchEntity.StringFilter.LIKE, "%ARCHIVED%")
+				.addFilter("PRI_PROFILE", SearchEntity.StringFilter.LIKE, "%Incomplete%")
 				.addColumn("PRI_CODE", "Code")
 				.addColumn("PRI_STATUS", "Status");
 		// .addAssociatedColumn("LNK_INTERN", "Intern Name", "LNK_COMP_INTERNSHIP")
@@ -115,6 +115,7 @@ public class FixInternshipTypes {
 
 
 		BaseEntity defIntern = beUtils.getDEFByCode("DEF_INTERN");
+		Attribute statusAttribute = RulesUtils.getAttribute("PRI_STATUS", serviceToken.getToken());
 
 		while (ok) {
 			List<BaseEntity> interns = beUtils.getBaseEntitys(searchBE); // load 100 at a time
@@ -126,13 +127,11 @@ public class FixInternshipTypes {
 			for (BaseEntity intern : interns) {
 				index++;
 				String status = intern.getValueAsString("PRI_STATUS");
-				if (("ARCHIVED".equals(status))||("WITHDRAWN".equals(status))||("REJECTED".equals(status))||("INACTIVE".equals(status))) {
-					intern.setStatus(EEntityStatus.ARCHIVED);
+					intern.setStatus(EEntityStatus.PENDING);
+					
 					beUtils.saveBaseEntity(defIntern, intern);
+					intern = beUtils.saveAnswer(new Answer(intern, intern, statusAttribute, "PENDING"));
 					System.out.println("Fixing "+index +" of "+total+" ---> "+status);
-				} else {
-					System.out.println("Fixing "+index +" of "+total+" ---> ["+status+"]");
-				}
 			}
 			searchBE.setPageStart(index);
 		}
