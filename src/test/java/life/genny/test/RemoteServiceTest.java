@@ -195,7 +195,7 @@ public class RemoteServiceTest {
         VertxUtils.writeMsg("webcmds",askMsg);
         VertxUtils.writeMsgEnd(beUtils.getGennyToken());
 
-        TaskUtils.createTask(token, )
+//        TaskUtils.createTask(token, )
 
 
     }
@@ -321,18 +321,8 @@ public class RemoteServiceTest {
         SearchEntity searchBE = searchRemoteServices;
 //        SearchEntity searchBE = tableUtils.getSessionSearch(searchCode);
         if(searchBE != null) {
-            /* Reset page to start */
-//            Answer pageAnswer = new Answer(beUtils.getGennyToken().getUserCode(), searchBE.getCode(),
-//                    "SCH_PAGE_START", "0");
-//            Answer pageNumberAnswer = new Answer(beUtils.getGennyToken().getUserCode(), searchBE.getCode(),
-//                    "PRI_INDEX", "1");
-
-//            searchBE = beUtils.updateBaseEntity(searchBE, pageAnswer, SearchEntity.class);
-//            searchBE = beUtils.updateBaseEntity(searchBE, pageNumberAnswer, SearchEntity.class);
-
             VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
                     beUtils.getGennyToken().getToken());
-
         }else{
             System.out.println("searchBE is null");
         }

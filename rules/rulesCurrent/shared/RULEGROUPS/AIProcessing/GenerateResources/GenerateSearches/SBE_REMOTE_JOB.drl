@@ -35,8 +35,8 @@ rule "SBE_REMOTE_JOB"
                               .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "RJB_%")
                               .addColumn("PRI_CODE","Job Code")
                               .addColumn("PRI_NAME","Job Name")
-                              .addColumn("PRI_STATUS","Status")
-                              .addAssociatedColumn("LNK_REMOTE_SERVICE", "PRI_CODE", "Remote Service Code");
+                              .addColumn("PRI_STATUS","Status");
+
       searchBE.setRealm(serviceToken.getRealm());
       searchBE.setPageStart(0);
       searchBE.setPageSize(1000);

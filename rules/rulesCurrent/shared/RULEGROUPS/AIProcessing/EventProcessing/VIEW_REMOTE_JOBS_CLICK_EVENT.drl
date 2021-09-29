@@ -53,6 +53,7 @@ rule "VIEW_REMOTE_JOBS_CLICK_EVENT"
 
 		        /* set RMSCode as the parentCode of the SBE */
 		        searchBE.addFilter("LNK_REMOTE_SERVICE", SearchEntity.StringFilter.LIKE, "%" + targetCode + "%");
+		        searchBE.addAssociatedColumn("LNK_REMOTE_SERVICE", "PRI_CODE", "Remote Service Code");
 
 				/* cache the session search */
 				VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE, beUtils.getGennyToken().getToken());
@@ -61,7 +62,6 @@ rule "VIEW_REMOTE_JOBS_CLICK_EVENT"
                 /*
                 QCmdMessage msg = new QCmdMessage("DISPLAY", "TABLE");
                 msg.setToken(beUtils.getGennyToken().getToken());
-                msg.setSend(true);
                 VertxUtils.writeMsg("webcmds",msg);
                 */
 
