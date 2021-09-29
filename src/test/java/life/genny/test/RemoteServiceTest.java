@@ -195,7 +195,8 @@ public class RemoteServiceTest {
         VertxUtils.writeMsg("webcmds",askMsg);
         VertxUtils.writeMsgEnd(beUtils.getGennyToken());
 
-//        TaskUtils.createTask(token, )
+        TaskUtils.createTask(beUtils.getGennyToken(), "QUE_REMOTE_SERVICE_GRP");
+
 
 
     }
