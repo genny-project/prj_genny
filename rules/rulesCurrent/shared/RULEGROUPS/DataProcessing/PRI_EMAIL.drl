@@ -47,6 +47,7 @@ rule "PRI_EMAIL"
 		SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Email People")
 				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%") 
 				.addFilter("PRI_EMAIL", SearchEntity.StringFilter.EQUAL, answer.getValue()) 
+				.setSearchStatus(EEntityStatus.PENDING)
 				.addColumn("PRI_NAME", "Name")
 				.setPageStart(0)
 				.setPageSize(100);

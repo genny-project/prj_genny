@@ -30,6 +30,8 @@ import org.jbpm.services.api.utils.KieServiceConfigurator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import com.thoughtworks.xstream.mapper.SystemAttributeAliasingMapper;
+
 import io.vavr.Tuple2;
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
@@ -91,8 +93,81 @@ public class FixInternshipTypes {
     }
 
 
-
 @Test
+ public void signaturesFixTest() throws Exception {
+     VertxUtils.cachedEnabled = false;
+
+     if (beUtils == null) {
+         return;
+     }
+
+     setUpDefs();
+
+     SearchEntity searchBE = new SearchEntity("SBE_APPS", "APP Search")
+             .addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
+             .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+             .addFilter("PRI_AGR_DOC_INT_SIGNATURE", SearchEntity.StringFilter.LIKE, "https://bit.ly/3A2xdjI")
+             .addOr("PRI_AGR_DOC_HC_SIGNATURE", SearchEntity.StringFilter.LIKE, "https://bit.ly/3A2xdjI")
+             .addOr("PRI_AGR_DOC_OUTCOME_SIGNATURE", SearchEntity.StringFilter.LIKE, "https://bit.ly/3A2xdjI")
+             .addColumn("PRI_CODE", "Code")
+             .addColumn("LNK_INTERN", "Link Intern")
+             .addColumn("PRI_INTERN_CODE", "Code Intern")
+             .addColumn("PRI_JOURNAL_LEARNING_OUTCOMES", "LearningOutcomes")
+         //    .addAssociatedColumn("LNK_INTERN", "Intern Name", "LNK_COMP_INTERNSHIP")
+             .addColumn("PRI_STATUS","Status");
+     searchBE.setRealm(realm);
+     
+     
+
+     Boolean ok = true;
+     Integer index = 0;
+     Integer fixedInterns = 0;
+     Integer fixedApps = 0;
+     searchBE.setPageStart(index);
+     Integer pageSize = 100;
+     searchBE.setPageSize(pageSize);
+     Long total = beUtils.getCount(searchBE);
+     
+ 	Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken.getToken());
+ 	Attribute lnkInternAttribute = RulesUtils.getAttribute("LNK_INTERN", serviceToken.getToken());
+ 	Attribute lnkIntSigAttribute = RulesUtils.getAttribute("PRI_AGR_DOC_INT_SIGNATURE", serviceToken.getToken());
+ 	Attribute lnkHcrSigAttribute = RulesUtils.getAttribute("PRI_AGR_DOC_HC_SIGNATURE", serviceToken.getToken());
+ 	Attribute lnkOutcomeSigAttribute = RulesUtils.getAttribute("PRI_AGR_DOC_OUTCOME_SIGNATURE", serviceToken.getToken());
+ 	
+     while (ok) {
+     	List<BaseEntity> bes = beUtils.getBaseEntitys(searchBE); // load 100 at a time
+     	if (bes.isEmpty() || (index > 5000)) {
+     		ok = false;
+     		break;
+     	}
+     	
+     	for (BaseEntity be : bes) {
+     		String fixedApp = "";
+     		String fixedIntern = "";
+     		
+     		// ok, now get the intern's application type
+     		
+      			String hcrSigStr = be.getValueAsString("PRI_AGR_DOC_HC_SIGNATURE");
+      			if (!StringUtils.isBlank(hcrSigStr)) {
+      				System.out.println("HCR Signature = "+hcrSigStr);
+       			}
+
+      		
+      		
+        		System.out.println(index+" of "+total+" :BE: "+be.getCode()+":"+be.getName()+" --> "+fixedIntern+"   "+fixedApp+" "+be.getName() );
+        	 
+     		index++;
+     	}
+     	
+     	searchBE.setPageStart(index);
+     }
+
+
+
+ }
+
+
+//@Test
 public void appProgressFixTest() throws Exception {
     VertxUtils.cachedEnabled = false;
 
