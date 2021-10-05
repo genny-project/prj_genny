@@ -17,7 +17,7 @@ import java.util.ArrayList;
 rule "IS_AGENT"
     ruleflow-group 'IsBaseEntity'
     no-loop true
-    salience 1000 
+    salience 1000
     when
 	 	userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
@@ -25,31 +25,31 @@ rule "IS_AGENT"
 		baseEntityType : String(baseEntityType.equals("AGENT"))
 		newBe : BaseEntity()
 
-	  
+
      then
  		System.out.println("IS_AGENT: Rule fired" );
- 		System.out.println("IS_AGENT: newBe = " + newBe.getCode()); 
- 		
+ 		System.out.println("IS_AGENT: newBe = " + newBe.getCode());
+
  	/*  Construct answer with Source, Target, Attribute Code, Value */
  		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 
  		List<Answer> answers = new ArrayList<>();
- 		
+
  		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_IS_AGENT", "true")); */
- 		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE")); */
-		
+ 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE")); 
+
 		/* Set up in Keycloak */
-		
+
 		BaseEntity user = beUtils.getBaseEntityByCode(newBe.getCode());
 		String name = user.getValue("PRI_NAME",null);
-		
+
 		String userStr = newBe.getCode();
 		String[] userSplit = userStr.split("_");
 		String userCode = userSplit[1];
 		System.out.println("User "+user+" with userCode = "+userCode);
 
 		String userId = "";
-		
+
 		String firstname = user.getValue("PRI_FIRSTNAME",null);
 		if (firstname != null) {
 			String lastname = user.getValue("PRI_LASTNAME",null);
@@ -79,10 +79,10 @@ rule "IS_AGENT"
 							templateData.put("name", firstname);
 							templateData.put("password", password);
 							templateData.put("url", url);
-								
+
 							List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
-							
-							EmailHelper.sendGrid(beUtils, email, null, bccList, "", "d-100adae110bb46eb999cd8b48666cad0", templateData, true);		
+
+							EmailHelper.sendGrid(beUtils, email, null, bccList, "", "d-100adae110bb46eb999cd8b48666cad0", templateData, true);
 						}
 					} else {
 					     System.out.println("KEYCLOAK USER CREATION DISABLED IN RULE IS_AGENT");
@@ -90,24 +90,24 @@ rule "IS_AGENT"
 				}
 			}
 		}
-	
-	
+
+
 		String endPoint = GennySettings.projectUrl + "/v7/notes";
 		/*String endPoint = "https://internmatch-cyrus.gada.io/v7/notes";*/
-		
+
 		String tag = "System";
 		String userName = "System";
 		String userImage = "";
-		
+
 		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), newBe.getCode(), "Completed profile for Agent account", tag, userName, userImage, serviceToken.getToken());
-		
+
 		System.out.println("I just posted the note");
 		System.out.println("Note endPoint: " +endPoint);
 		System.out.println("Note userToken.getUserCode(): " +userToken.getUserCode());
 		System.out.println("Note newBe.getCode(): " +newBe.getCode());
 
 		beUtils.saveAnswers(answers);
-		
+
 		retract(newBe);
-	
+
 end
