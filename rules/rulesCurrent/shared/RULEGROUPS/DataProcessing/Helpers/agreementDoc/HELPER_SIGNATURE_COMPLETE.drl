@@ -82,7 +82,12 @@ rule "HELPER_SIGNATURE_COMPLETE"
 				System.out.println("outcomeSignature present");
 			}
 
-			if (internSignature != null && hcrSignature != null && outcomeSignature != null) {
+			/* Checks if the signature is blank or null */
+			Boolean internSigned = !StringUtils.isBlank(internSignature) && (!internSignature.equals("https://bit.ly/3A2xdjI"));
+			Boolean hcrSigned = !StringUtils.isBlank(hcrSignature) && (!hcrSignature.equals("https://bit.ly/3A2xdjI"));
+			Boolean outcomeSigned = !StringUtils.isBlank(outcomeSignature) && (!outcomeSignature.equals("https://bit.ly/3A2xdjI"));
+
+			if (internSigned && hcrSigned && outcomeSigned) {
 				System.out.println("All signatures present");
 
 				Answer answerSignatures = new Answer(serviceToken.getUserCode(), targetCode, "PRI_AGREEMENT_SIGNATURES", "Complete");
