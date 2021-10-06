@@ -234,7 +234,6 @@ rule "PRI_SUBMIT_FILTER"
 			filterOptionsMsg.setReplace(true);
 			VertxUtils.writeMsg("webcmds", filterOptionsMsg);
 			System.out.println("Filter Options cleared!");
-			VertxUtils.sendCmdMsg(beUtils, "DISPLAY", "TABLE" , "DISPLAY");
 
 		} else {
 			System.out.println(drools.getRule().getName()+" sourceCode ("+sourceCode+") not equal to answer.source ("+answer.getSourceCode()+")");
