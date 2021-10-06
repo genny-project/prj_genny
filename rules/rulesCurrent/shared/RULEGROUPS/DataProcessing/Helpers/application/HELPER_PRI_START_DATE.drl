@@ -23,6 +23,13 @@ import life.genny.utils.DropdownUtils;
 import java.util.List;
 import java.util.ArrayList;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.time.ZoneId;
+
 rule "HELPER_PRI_START_DATE"
 	ruleflow-group 'DataProcessing'
 	salience 5000
@@ -32,9 +39,8 @@ rule "HELPER_PRI_START_DATE"
 		answer : Answer( attributeCode == "PRI_START_DATE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		userToken : GennyToken( code != "PER_SERVICE")
-
 	then
-		System.out.println(drools.getRule().getName() + " fired");
+		System.out.println(drools.getRule().getName() + " triggered");
 
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		System.out.println("sourceCode :: " + sourceCode);
@@ -42,125 +48,74 @@ rule "HELPER_PRI_START_DATE"
 		String targetCode = answer.getTargetCode();
 		System.out.println("targetCode :: " + targetCode);
 
-		List<Answer> answers = new ArrayList<>();
-
 		String value = answer.getValue();
-		if (!value.isEmpty()) {
-			String[] valueArr = value.split("T");
-			value = valueArr[0];
-			System.out.println("value :: " + value);
-		} else {
-			System.out.println("value is empty.");
-		}
+		System.out.println("value :: " + value);
 
-		if(targetCode != null){
-			if (targetCode.startsWith("APP_")) {
-				BaseEntity appInternBe = beUtils.getBaseEntityFromLNKAttr(targetCode, "LNK_INTERN");
-				BaseEntity targetEntity = beUtils.getBaseEntityByCode(targetCode);
+		String attribute = answer.getAttributeCode();
+		System.out.println("attribute :: " + attribute);
 
-				if (appInternBe != null) {
-					System.out.println("appInternBe is :: " + appInternBe.getCode());
-					System.out.println("targetEntity is :: " + targetEntity.getCode());
+		if (!value.equals("")) {
+			String start_date = value.substring(0, 10);
+			System.out.println("start_date  :: " + start_date);
 
-					/* Getting Business hours */
-					String lnkBH = targetEntity.getValue("LNK_BUSINESS_HOURS", null);
-					System.out.println("returned lnkBH:: " + lnkBH);
+			if (attribute.equals("PRI_START_DATE")) {
+				value = start_date;
+				System.out.println("value :: " + value);
+			}
+			Answer startDateAnswer = new Answer(sourceCode, targetCode, attribute, value);
+			beUtils.saveAnswer(startDateAnswer);
+			VertxUtils.sendToFrontEnd(userToken, startDateAnswer);
 
-					if (lnkBH != null) {
-						System.out.println("before lnkBH = " + lnkBH);
-						lnkBH = lnkBH.replace("[","").replace("]","");
-						System.out.println("lnkBH = " + lnkBH);
 
-						String[] splt = lnkBH.split(",");
+			BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
+			if(targetBe != null){
 
-						String startStr = splt[0];
-						String endStr = splt[1];
+				/*String start_date = beUtils.getBaseEntityValueAsLocalDate(targetBe.getCode(), attributeStr).toString();
+				System.out.println("start_date = " +start_date);*/
 
-						double startDbl = Double.parseDouble(startStr);
-						double endDbl = Double.parseDouble(endStr);
+				String durationStr = targetBe.getValue("PRI_ASSOC_DURATION", null);
+				System.out.println("durationStr = " + durationStr);
 
-						System.out.println("startDbl = " + startDbl);
-						System.out.println("endDbl = " + endDbl);
+				String wdsStr = targetBe.getValue("PRI_WHICH_DAYS_STRIPPED", null);
+				System.out.println("wdsStr = " + wdsStr);
 
-						double businessHrs = endDbl - startDbl;
-						System.out.println("businessHrs = " + businessHrs);
+				String nullValue = null;
 
-						String dpwStr = targetEntity.getValue("PRI_DAYS_PER_WEEK", null);
-						System.out.println("dpwStr = " + dpwStr);
+				if (start_date == null || durationStr == null || wdsStr == null) {
+					if (start_date == null) {nullValue = "Start Date";}
+					if (durationStr == null) {nullValue = "Duration";}
+					if (wdsStr == null) {nullValue = "Which Days";}
+					System.out.println("Required value is Null. Can't continue");
+					/*QCmdMessage msg = new QCmdMessage("TOAST", "ERROR");
+					msg.setMessage("Sorry can't calculate the End Date as we are missing: " + nullValue);
+					msg.setToken(beUtils.getGennyToken().getToken());
+					msg.setSend(true);
+					VertxUtils.writeMsg("webcmds", msg);*/
 
-						/* Days per week */
+				} else {
 
-						if (dpwStr != null) {
-							Double dpwDbl = Double.parseDouble(dpwStr);
-							System.out.println("dpwDbl = " + dpwDbl);
+					int durationInt = Integer.parseInt(durationStr);
+					int dayz = 7 * durationInt;
+					System.out.println("dayz = " + dayz);
 
-							/* Hours per week */
-							Double hpwDbl = dpwDbl * businessHrs;
-							System.out.println("hpwDbl = " + hpwDbl);
-							answers.add(new Answer(userToken.getUserCode(), targetCode, "PRI_HOURS_PER_WEEK", hpwDbl));
-						} else {
-							System.out.println("ERROR: Null dpwDbl");
-						}
-					} else {
-						System.out.println("ERROR: Null lnkBH");
-					}
-
-					LocalDate local_start_date = null;
-					String start_date = null;
-
-					if (appInternBe.getCode() != null && !appInternBe.getCode().isEmpty()) {
-						System.out.println("HELPER_PRI_START_DATE:: appInternBe:: " + appInternBe.getCode());
-						local_start_date = beUtils.getBaseEntityValueAsLocalDate(targetCode, "PRI_START_DATE");
-						start_date = null;
-
-					} else {
-						System.out.println("Error! appInternBe is empty:: " + appInternBe.getCode());
-					}
-
-					if (local_start_date != null) {
-						start_date = local_start_date.toString();
-						System.out.println("start_date = " +start_date);
-					} else {
-						System.out.println("ERROR: Null start_date");
-					}
-
-					String durationStr = targetEntity.getValue("PRI_ASSOC_DURATION", null);
-					System.out.println("durationStr = " + durationStr);
-
-					String wdsStr = targetEntity.getValue("PRI_WHICH_DAYS_STRIPPED", null);
-					System.out.println("wdsStr = " + wdsStr);
-
-					int durationInt = 0;
-					int dayz = 0;
-					int dayzAdj = 0;
-
-					if (durationStr != null) {
-						durationInt = Integer.parseInt(durationStr);
-						dayz = 7 * durationInt;
-						System.out.println("dayz = " + dayz);
-
-						dayzAdj = dayz - 7;
-						System.out.println("dayzAdj = " + dayzAdj);
-					} else {
-						System.out.println("ERROR: Null durationStr");
-					}
+					int dayzAdj = dayz - 7;
+					System.out.println("dayzAdj = " + dayzAdj);
 
 					Calendar c = Calendar.getInstance();
 					String DATE_FORMAT = "yyyy-MM-dd";
 					DateFormat df = new SimpleDateFormat(DATE_FORMAT);
 
-					if (start_date != null) {
-						Date startDate = df.parse(start_date.trim());
-						System.out.println("startDate = " + startDate);
+					Date startDate = df.parse(start_date.trim());
+					System.out.println("startDate = " + startDate);
 
-						c.setTime(startDate);
-						c.add(Calendar.DATE, dayz);
-					} else {
-						System.out.println("ERROR: Null start_date");
-					}
+					c.setTime(startDate);
+					c.add(Calendar.DATE, dayz);
 
 					String toDate = df.format(c.getTime());
 					System.out.println("endDate minus dayzAdj = " + toDate);
+
+
+					/*wdsStr = "Monday, Friday, Thursday, Wednesday";*/
 
 					HashMap<String, Integer> daysOfWeek = new HashMap<String, Integer>();
 						daysOfWeek.put("Monday", 1);
@@ -169,132 +124,145 @@ rule "HELPER_PRI_START_DATE"
 						daysOfWeek.put("Thursday", 4);
 						daysOfWeek.put("Friday", 5);
 						daysOfWeek.put("Open to any combination of days", 5);
-
-					System.out.println("daysOfWeek:: " + daysOfWeek);
+					System.out.println(daysOfWeek);
 
 
 					String lastDay = "Friday";
+					String[] whichDays = null;
 					int lastDayKey = 0;
-					if (wdsStr != null && !wdsStr.isEmpty() && !wdsStr.equals("Any")) {
-						System.out.println("Test log 1 " + wdsStr);
-						String[] whichDays = wdsStr.split(", ");
-						for (int i = 0; i < whichDays.length; i++) {
-							if (daysOfWeek.get(whichDays[i]) >= lastDayKey) {
-								lastDayKey = daysOfWeek.get(whichDays[i]);
-								lastDay = whichDays[i];
-								System.out.println("lastDayKey = " + lastDayKey);
-								System.out.println("lastDay = " +lastDay);
-							} else {
-								System.out.println("Not new day. lastDay = " +lastDay);
-						}
-						}
+
+					if (wdsStr.contains(", ")) {
+						whichDays = wdsStr.split(", ");
 					} else {
-						System.out.println("ERROR: Null wdsStr");
+						whichDays = wdsStr.split(",");
 					}
 
-					int year = 0;
-					int month = 0;
-					int day = 0;
+					for (int i = 0; i < whichDays.length; i++) {
+						/*System.out.println("Day = " + whichDays[i] + " with key = " + daysOfWeek.get(whichDays[i]));*/
 
-					if (toDate != null && !toDate.isEmpty()) {
-						String[] toDateSplt = toDate.split("-");
-						year = Integer.parseInt(toDateSplt[0]);
-						month = Integer.parseInt(toDateSplt[1]) -1;
-						day = Integer.parseInt(toDateSplt[2]);
-
-						System.out.println("endDate minus dayzAd :: year = " + year + " :: month = " + month + " :: day = " + day);
-					} else {
-						System.out.println("ERROR: Null toDate");
+						if (daysOfWeek.get(whichDays[i]) >= lastDayKey) {
+							lastDayKey = daysOfWeek.get(whichDays[i]);
+							lastDay = whichDays[i];
+							System.out.println("lastDayKey = " + lastDayKey);
+							System.out.println("lastDay = " +lastDay);
+						} else {
+							System.out.println("Not new day. lastDay = " +lastDay);
+					}
 					}
 
-					if (year != 0 && month != 0 && day != 0) {
-						Calendar date1 = Calendar.getInstance();
-						date1.set(year, month, day);
-						System.out.println("date1 = " + date1.getTime());
 
-						switch (lastDay) {
-							case "Monday":
+					/*int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+					System.out.println("dayOfWeek = " + dayOfWeek);*/
 
-							while (date1.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
-								date1.add(Calendar.DATE, 1);
-								System.out.println("Monday case: " +date1.getTime());
-							}
-							System.out.println("endDate = " + date1.getTime());
-							break;
+					String[] toDateSplt = toDate.split("-");
 
-							case "Tuesday":
+					int year = Integer.parseInt(toDateSplt[0]);
+					int month = Integer.parseInt(toDateSplt[1]) -1;
+					int day = Integer.parseInt(toDateSplt[2]);
 
-							while (date1.get(Calendar.DAY_OF_WEEK) != Calendar.TUESDAY) {
-								date1.add(Calendar.DATE, 1);
-								System.out.println("Tuesday case: " +date1.getTime());
-							}
-							System.out.println("endDate = " + date1.getTime());
-							break;
+					System.out.println("endDate minus dayzAd :: year = " + year + " :: month = " + month + " :: day = " + day);
 
-							case "Wednesday":
+					Calendar date1 = Calendar.getInstance();
+					date1.set(year, month, day);
+					System.out.println("date1 = " + date1.getTime());
 
-							while (date1.get(Calendar.DAY_OF_WEEK) != Calendar.WEDNESDAY) {
-								date1.add(Calendar.DATE, 1);
-								System.out.println("Wednesday case: " +date1.getTime());
-							}
-							System.out.println("endDate = " + date1.getTime());
-							break;
+					switch (lastDay) {
+						case "Monday":
 
-							case "Thursday":
-
-							while (date1.get(Calendar.DAY_OF_WEEK) != Calendar.THURSDAY) {
-								date1.add(Calendar.DATE, 1);
-								System.out.println("Thursday case: " +date1.getTime());
-							}
-							System.out.println("endDate = " + date1.getTime());
-							break;
-
-							case "Friday":
-
-							while (date1.get(Calendar.DAY_OF_WEEK) != Calendar.FRIDAY) {
-								date1.add(Calendar.DATE, 1);
-								System.out.println("Friday case: " +date1.getTime());
-							}
-							System.out.println("endDate = " + date1.getTime());
-							break;
-
-							case "Open to any combination of days":
-
-							while (date1.get(Calendar.DAY_OF_WEEK) != Calendar.FRIDAY) {
-								date1.add(Calendar.DATE, 1);
-								System.out.println("Friday case: " +date1.getTime());
-							}
-							System.out.println("endDate = " + date1.getTime());
-							break;
-
-							default:
-
-							while (date1.get(Calendar.DAY_OF_WEEK) != Calendar.FRIDAY) {
-								date1.add(Calendar.DATE, 1);
-								System.out.println("Default case: " +date1.getTime());
-							}
-							System.out.println("endDate = " + date1.getTime());
+						while (date1.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
+							date1.add(Calendar.DATE, 1);
+							System.out.println("Monday case: " +date1.getTime());
 						}
+						System.out.println("endDate = " + date1.getTime());
+						break;
 
-						/*Saving End Date*/
-						LocalDate endDate = date1.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-						System.out.println("Application code:: " + targetCode + "endDate = " + endDate);
-						answers.add(new Answer(userToken.getUserCode(), targetCode, "PRI_END_DATE", endDate));
-						Answer ans = new Answer(sourceCode, targetCode, "PRI_END_DATE", endDate);
+						case "Tuesday":
 
-						beUtils.saveAnswers(answers);
-						VertxUtils.sendToFrontEnd(userToken, ans);
+						while (date1.get(Calendar.DAY_OF_WEEK) != Calendar.TUESDAY) {
+							date1.add(Calendar.DATE, 1);
+							System.out.println("Tuesday case: " +date1.getTime());
+						}
+						System.out.println("endDate = " + date1.getTime());
+						break;
+
+						case "Wednesday":
+
+						while (date1.get(Calendar.DAY_OF_WEEK) != Calendar.WEDNESDAY) {
+							date1.add(Calendar.DATE, 1);
+							System.out.println("Wednesday case: " +date1.getTime());
+						}
+						System.out.println("endDate = " + date1.getTime());
+						break;
+
+						case "Thursday":
+
+						while (date1.get(Calendar.DAY_OF_WEEK) != Calendar.THURSDAY) {
+							date1.add(Calendar.DATE, 1);
+							System.out.println("Thursday case: " +date1.getTime());
+						}
+						System.out.println("endDate = " + date1.getTime());
+						break;
+
+						case "Friday":
+
+						while (date1.get(Calendar.DAY_OF_WEEK) != Calendar.FRIDAY) {
+							date1.add(Calendar.DATE, 1);
+							System.out.println("Friday case: " +date1.getTime());
+						}
+						System.out.println("endDate = " + date1.getTime());
+						break;
+
+						case "Open to any combination of days":
+
+						while (date1.get(Calendar.DAY_OF_WEEK) != Calendar.FRIDAY) {
+							date1.add(Calendar.DATE, 1);
+							System.out.println("Friday case: " +date1.getTime());
+						}
+						System.out.println("endDate = " + date1.getTime());
+						break;
+
+						default:
+
+						while (date1.get(Calendar.DAY_OF_WEEK) != Calendar.FRIDAY) {
+							date1.add(Calendar.DATE, 1);
+							System.out.println("Default case: " +date1.getTime());
+						}
+						System.out.println("endDate = " + date1.getTime());
 					}
 
-				} else {
-					System.out.println("appInternBe is null!");
+					/* Save Answer */
+					LocalDate endDate = date1.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+					Answer endDateAnswer = new Answer(sourceCode, targetCode, "PRI_END_DATE", endDate);
+					beUtils.saveAnswer(endDateAnswer);
+
+
+					/* Prepare Question and Ask */
+					Attribute attr = RulesUtils.getAttribute("PRI_END_DATE", serviceToken);
+
+					Question endDateQues = new Question("QUE_END_DATE", "End Date", attr, true);
+					Ask endDateAsk = new Ask(endDateQues, sourceCode, targetCode);
+
+					/* Send Disable for this Ask */
+					endDateAsk.setDisabled(true);
+
+					QDataAskMessage endDateAskMsgDisable = new QDataAskMessage(endDateAsk);
+					endDateAskMsgDisable.setToken(userToken.getToken());
+					VertxUtils.writeMsg("webcmds", endDateAskMsgDisable);
+
+					/* Send Answer to Front End */
+					VertxUtils.sendToFrontEnd(userToken, endDateAnswer);
+
+					/* Send enable for this Ask */
+					endDateAsk.setDisabled(false);
+
+					QDataAskMessage endDateAskMsgEnable = new QDataAskMessage(endDateAsk);
+					endDateAskMsgEnable.setToken(userToken.getToken());
+					VertxUtils.writeMsg("webcmds", endDateAskMsgEnable);
+
+
 				}
-			} else {
-				System.out.println("targetCode is not an application.");
 			}
 		} else {
-			System.out.println("be is null!");
+			System.out.println("Looks like you just cleared the start date");
 		}
-
-		System.out.println("End of " + drools.getRule().getName());
 end
