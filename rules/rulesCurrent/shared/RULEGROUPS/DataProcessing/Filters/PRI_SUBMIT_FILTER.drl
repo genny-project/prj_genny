@@ -242,7 +242,7 @@ rule "PRI_SUBMIT_FILTER"
 
 			
 		output.setTypeOfResult("NONE");
-  	    //output.setResultCode("NONE");  /* dont display anything new */
+  	    /*output.setResultCode("NONE");   dont display anything new */
 		
 		
 
