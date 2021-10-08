@@ -46,7 +46,7 @@
 		<testcontainers.version>1.15.1</testcontainers.version>
 		<version.moneta>1.4.2</version.moneta>
 		<graalvm.version>20.3.0</graalvm.version>
-		<activemq-junit-version>5.13.0</activemq-junit-version>
+		<activemq-junit-version>5.8.1</activemq-junit-version>
 		<activemq-version>5.13.0</activemq-version>
 		<version.jackson-jaxrs>1.9.13</version.jackson-jaxrs>
 		<spring.version>5.2.0.RELEASE</spring.version>
@@ -174,10 +174,15 @@
 			<groupId>io.quarkus</groupId>
 			<artifactId>quarkus-smallrye-health</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>io.quarkus</groupId>
 			<artifactId>quarkus-junit5</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>5.8.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -250,6 +255,12 @@
 			<groupId>org.jbpm</groupId>
 			<artifactId>jbpm-test</artifactId>
 			<version>7.34.0.Final</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>5.7.1</version>
 			<scope>test</scope>
 		</dependency>
 

@@ -10,6 +10,7 @@ import io.vertx.core.json.JsonObject;
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
+import life.genny.jbpm.customworkitemhandlers.AskQuestionTaskWorkItemHandler;
 import life.genny.qwanda.*;
 import life.genny.qwanda.attribute.AttributeText;
 import life.genny.qwanda.message.*;
@@ -168,6 +169,22 @@ public class RemoteServiceTest {
     }
 
     @Test
+    public void getAttributeTest() throws Exception {
+        VertxUtils.cachedEnabled = false;
+
+        if (beUtils == null) {
+            return;
+        }
+//        Set up the defs
+        setUpDefs();
+
+//        BaseEntity defBE = beUtils.getDEFByCode("DEF_REMOTE_SERVICE");
+//        Attribute attributeDEF = RulesUtils.getAttribute("PRI_IS_"+defBE.getCode().substring("DEF_".length()), beUtils.getGennyToken().getToken());
+
+    }
+
+
+    @Test
     public void tasksTest() throws Exception {
         VertxUtils.cachedEnabled = false;
 
@@ -266,6 +283,8 @@ public class RemoteServiceTest {
 
 //        Set up the defs
         setUpDefs();
+
+
 
 //      Use a search BE for the api test
         SearchEntity searchBEForApi = new SearchEntity("SBE_AI_JOURNAL", "JNL Search")
