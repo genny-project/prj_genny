@@ -38,7 +38,7 @@ rule "SEND_SUMMARY_SBE"
 		System.out.println("sessionCode   ::   " + sessionCode);
 
 		/* get SUMMARY_CODES from cache */
-		List<String> summaryCodes = VertxUtils.getObject(serviceToken.getRealm(), "", "SUMMARY_CODES", List.class);
+		List<String> summaryCodes = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", "SUMMARY_CODES", List.class);
 		List<String> sendCodes = new ArrayList<>();
 
 		if(summaryCodes!= null && summaryCodes.size() > 0){
