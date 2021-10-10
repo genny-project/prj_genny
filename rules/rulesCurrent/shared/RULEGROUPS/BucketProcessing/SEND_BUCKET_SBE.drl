@@ -37,7 +37,7 @@ rule "SEND_BUCKET_SBE"
 		System.out.println("sessionCode   ::   " + sessionCode);
 
 		/* get BUCKET_CODES from cache */
-		List<String> bucketCodes = VertxUtils.getObject(serviceToken.getRealm(), "", "BUCKET_CODES", List.class);
+		List<String> bucketCodes = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", "BUCKET_CODES", List.class);
 		List<String> sendCodes = new ArrayList<>();
 
 		System.out.println("bucketCodes:");
