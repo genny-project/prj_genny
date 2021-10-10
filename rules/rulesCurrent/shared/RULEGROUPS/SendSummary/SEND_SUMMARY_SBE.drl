@@ -45,7 +45,7 @@ rule "SEND_SUMMARY_SBE"
 
 			for (String code : summaryCodes) {
 				if (capabilityUtils.hasCapabilityThroughPriIs(code, CapabilityMode.VIEW)) {
-					System.out.println("Has Permission for " + code);
+					System.out.println(drools.getRule().getName()+" Has Permission for " + code);
 					sendCodes.add(code);
 				}
 			}
