@@ -11,13 +11,13 @@ import life.genny.qwanda.attribute.AttributeText;
 
 rule "PRI_FILTER_VALUE"
     ruleflow-group 'DataProcessing'
-    salience 500 
+    salience 500
     no-loop true
     when
 		beUtils : BaseEntityUtils()
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		userToken : GennyToken( code != "PER_SERVICE")
-		answer : Answer( 
+		answer : Answer(
 			(
 				attributeCode matches "PRI_FILTER_VALUE_.*" ||
 				attributeCode == "LNK_SELECT_COUNTRY" ||
@@ -28,7 +28,7 @@ rule "PRI_FILTER_VALUE"
 		output : OutputParam( )
 		answersToSave : Answers()
 	then
-		System.out.println("Rule -> PRI_FILTER_VALUE : "+answer); 
+		System.out.println("Rule -> PRI_FILTER_VALUE : "+answer);
 
 		String targetCode = answer.getTargetCode();
 		System.out.println("targetCode = " + targetCode);
@@ -71,4 +71,5 @@ rule "PRI_FILTER_VALUE"
 
 		update(output);
 
+		System.out.println("End of " + drools.getRule().getName());
 end
