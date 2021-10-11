@@ -58,7 +58,7 @@ rule "HELPER_LNK_WHICH_DAYS"
 				}
 			}
 			System.out.println("daysList " + daysList.toString() + " targetCode: " + targetCode);
-			String days = beUtils.cleanUpAttributeValue(daysList.toString());
+			String days = beUtils.cleanUpSymbols(daysList.toString());
 			Answer ans = new Answer(sourceCode, targetCode, "PRI_WHICH_DAYS_STRIPPED", days,false,true);
 			System.out.println("Saved Days of Week: " + days + " targetCode: " + targetCode);
 			beUtils.saveAnswer(ans);
