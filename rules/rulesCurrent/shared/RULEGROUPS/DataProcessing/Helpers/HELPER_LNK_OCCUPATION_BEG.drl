@@ -88,7 +88,8 @@ rule "HELPER_LNK_OCCUPATION_BEG"
 			beUtils.saveAnswers(answers);
 
 			System.out.println(drools.getRule().getName() + ":: Sending to FE...");
-			VertxUtils.sendToFrontEnd(userToken, assocOccupationAnswer, rolesAnswer, baseOutcomesAnswer, specificOutcomesAnswer);
+			/*VertxUtils.sendToFrontEnd(userToken, assocOccupationAnswer, rolesAnswer, baseOutcomesAnswer, specificOutcomesAnswer);*/
+			VertxUtils.sendToFrontEnd(userToken, answers);
 		} else {
 			System.out.println("Value is Empty.");
 		}
