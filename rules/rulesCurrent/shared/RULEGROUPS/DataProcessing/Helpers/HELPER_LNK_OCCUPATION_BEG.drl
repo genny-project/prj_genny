@@ -88,6 +88,11 @@ rule "HELPER_LNK_OCCUPATION_BEG"
 			beUtils.saveAnswers(answers);
 
 			System.out.println(drools.getRule().getName() + ":: Sending to FE...");
+			System.out.println(drools.getRule().getName() + ":: answers:: assocOccupationAnswer:: " + assocOccupationAnswer);
+			System.out.println(drools.getRule().getName() + ":: answers:: rolesAnswer:: " + rolesAnswer);
+			System.out.println(drools.getRule().getName() + ":: answers:: baseOutcomesAnswer:: " + baseOutcomesAnswer);
+			System.out.println(drools.getRule().getName() + ":: answers:: specificOutcomesAnswer:: " + specificOutcomesAnswer);
+
 			VertxUtils.sendToFrontEnd(userToken, assocOccupationAnswer, rolesAnswer, baseOutcomesAnswer, specificOutcomesAnswer);
 		} else {
 			System.out.println("Value is Empty.");
