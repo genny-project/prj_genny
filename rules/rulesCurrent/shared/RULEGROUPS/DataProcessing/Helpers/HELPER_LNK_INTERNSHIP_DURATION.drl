@@ -48,9 +48,9 @@ rule "HELPER_LNK_INTERNSHIP_DURATION"
 		System.out.println("code  :: " + code);
 
 		String durationStr = "";
-		
+		BaseEntity targetBe = null;
 		if (!code.isEmpty()) {
-			BaseEntity targetBe = beUtils.getBaseEntityByCode(code);
+			targetBe = beUtils.getBaseEntityByCode(code);
 			if(targetBe != null){
 				durationStr = targetBe.getValue("PRI_NAME", null);
 				System.out.println("durationStr = " +durationStr);
