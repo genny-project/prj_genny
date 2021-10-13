@@ -47,23 +47,28 @@ rule "HELPER_LNK_INTERNSHIP_DURATION"
 		String code = beUtils.cleanUpAttributeValue(value);
 		System.out.println("code  :: " + code);
 
-		BaseEntity targetBe = beUtils.getBaseEntityByCode(code);
 		String durationStr = "";
-		if(targetBe != null){
-			durationStr = targetBe.getValue("PRI_NAME", null);
-			System.out.println("durationStr = " +durationStr);
-			if(durationStr != null){
-				Answer ans = new Answer(sourceCode, targetCode, "PRI_ASSOC_DURATION", durationStr);
-				beUtils.saveAnswer(ans);
-				VertxUtils.sendToFrontEnd(userToken, ans);
+		BaseEntity targetBe = null;
+		if (!code.isEmpty()) {
+			targetBe = beUtils.getBaseEntityByCode(code);
+			if(targetBe != null){
+				durationStr = targetBe.getValue("PRI_NAME", null);
+				System.out.println("durationStr = " +durationStr);
+				if(durationStr != null){
+					Answer ans = new Answer(sourceCode, targetCode, "PRI_ASSOC_DURATION", durationStr);
+					beUtils.saveAnswer(ans);
+					VertxUtils.sendToFrontEnd(userToken, ans);
+				}
 			}
+		} else {
+			System.out.println("code is empty");
 		}
 
-		if (!value.equals("")) {
+		if (!value.equals("[]")) {
 			targetBe = beUtils.getBaseEntityByCode(targetCode);
 			System.out.println("targetBe = " +targetBe);
 
-			LocalDate sdc = beUtils.getBaseEntityValueAsLocalDate(targetCode, "PRI_WORD_START_DATE");
+			LocalDate sdc = beUtils.getBaseEntityValueAsLocalDate(targetCode, "PRI_START_DATE");
 			System.out.println("sdc = " +sdc);
 
 			String start_date = sdc.toString();
