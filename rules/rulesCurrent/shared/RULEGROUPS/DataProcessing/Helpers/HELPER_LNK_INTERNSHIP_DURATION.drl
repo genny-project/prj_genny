@@ -64,7 +64,7 @@ rule "HELPER_LNK_INTERNSHIP_DURATION"
 			System.out.println("code is empty");
 		}
 
-		if (!value.equals("")) {
+		if (!value.equals("[]")) {
 			targetBe = beUtils.getBaseEntityByCode(targetCode);
 			System.out.println("targetBe = " +targetBe);
 
