@@ -40,7 +40,7 @@ rule "PRI_SEARCH_TEXT_RUN_RULE_FLOW_GROUP"
         no-loop true
     when
  	  beUtils : BaseEntityUtils()
- 	  /*allowed : Allowed(code == "TEST")*/
+ 	  allowed : Allowed(code == "TEST" || code == "SUPERUSER" || code == "DEV")
 	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" && (value.startsWith("!runRuleFlowGroup:")) )
 	  serviceToken : GennyToken (code == "PER_SERVICE")
 	  userToken : GennyToken( code != "PER_SERVICE")
