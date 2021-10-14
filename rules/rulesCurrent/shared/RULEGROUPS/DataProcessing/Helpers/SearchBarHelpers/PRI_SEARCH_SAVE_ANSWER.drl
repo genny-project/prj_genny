@@ -48,42 +48,48 @@ rule "PRI_SEARCH_TEXT_SAVE_ANSWER"
     then
   		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer);
    		retract(answer);
-   		
+
    		String sourceCode = beUtils.getGennyToken().getUserCode();
 		System.out.println("sourceCode :: " + sourceCode);
-		
-		
+
+
 		/* saveanswer:PER_XXX:PRI_STATUS:APPLIED */
-		
+
 		String[] split = answer.getValue().split(":");
-		
+
 		String targetCode = "";
 		String attribute = "";
 		String input = "";
-		
+
 		if (split.length == 4) {
 			targetCode = split[1].trim();
 			attribute = split[2].trim();
 			input = split[3].trim();
-			
+
 			System.out.println("targetCode :: " + targetCode);
 			System.out.println("attribute :: " + attribute);
 			System.out.println("input :: " + input);
-			
-			if (targetCode != null && attribute != null && input != null) {
+
+			if (input.equals("empty")) {
+				Answer saveThisAnswer = new Answer(sourceCode, targetCode, attribute, "");
+				beUtils.saveAnswer(saveThisAnswer);
+				System.out.println("Saved Empty Answer!!");
+
+			} else if (targetCode != null && attribute != null && input != null) {
 				Answer saveThisAnswer = new Answer(sourceCode, targetCode, attribute, input);
 				beUtils.saveAnswer(saveThisAnswer);
 				System.out.println("Saved Answer!!");
+
 			} else {
 				System.out.println("One of your dudes was null");
 			}
 		} else {
 			System.out.println("length was incorrect for saveanswser: " +split.length);
 		}
-		
-	
+
+
 		output.setTypeOfResult("NO_PROCESSING");
   	    output.setResultCode("NONE");  /* dont display anything new */
-		
-		
+
+
 end
