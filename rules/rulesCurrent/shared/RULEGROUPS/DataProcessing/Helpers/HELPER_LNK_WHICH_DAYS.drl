@@ -57,7 +57,7 @@ rule "HELPER_LNK_WHICH_DAYS"
 					if(wdsStr != null) daysList.add(wdsStr);
 				}
 			}
-			String days = beUtils.cleanUpAttributeValue(daysList.toString());
+			String days = beUtils.cleanUpSymbols(daysList.toString());
 			Answer ans = new Answer(sourceCode, targetCode, "PRI_WHICH_DAYS_STRIPPED", days,false,true);
 			beUtils.saveAnswer(ans);
 			VertxUtils.sendToFrontEnd(userToken, ans);
