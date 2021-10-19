@@ -36,7 +36,7 @@ import java.util.UUID;
 
 rule "PRI_SEARCH_TEXT_RUN_WORKFLOW"
     ruleflow-group 'DataProcessing'
-        salience 600
+        salience 550
         no-loop true
     when
  	  beUtils : BaseEntityUtils()
