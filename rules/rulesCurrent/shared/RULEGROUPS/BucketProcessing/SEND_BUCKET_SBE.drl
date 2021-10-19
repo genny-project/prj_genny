@@ -47,11 +47,7 @@ rule "SEND_BUCKET_SBE"
 
 			for (String code : bucketCodes) {
 				if (capabilityUtils.hasCapabilityThroughPriIs(code, CapabilityMode.VIEW)) {
-<<<<<<< HEAD
-					System.out.println("Has Permission for " + code);
-=======
 					System.out.println(drools.getRule().getName()+" Has Permission for " + code);
->>>>>>> 9.8.0
 					sendCodes.add(code);
 				}
 			}
