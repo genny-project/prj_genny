@@ -34,30 +34,47 @@ import java.util.UUID;
 
 
 
-rule "PRI_SEARCH_TEXT_RUN_RULE_FLOW_GROUP"
+rule "PRI_SEARCH_TEXT_RUN_WORKFLOW"
     ruleflow-group 'DataProcessing'
-        salience 5000
+        salience 600
         no-loop true
     when
  	  beUtils : BaseEntityUtils()
- 	  allowed : Allowed(code == "TEST" || code == "SUPERUSER" || code == "DEV")
-	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" && (value.startsWith("!runRuleFlowGroup:")) )
+ 	  /*allowed : Allowed(code == "TEST" || code == "SUPERUSER" || code == "DEV")*/
+	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" && (value.startsWith("!workflow:")) )
 	  serviceToken : GennyToken (code == "PER_SERVICE")
 	  userToken : GennyToken( code != "PER_SERVICE")
 	  output : OutputParam( )
     then
+  		/*
   		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer);
-   		retract(answer);
-   		
+  		*/
+   		System.out.println("PRI_SEARCH_TEXT_RUN_WORKFLOW FIRED!");
    		String sourceCode = beUtils.getGennyToken().getUserCode();
 		System.out.println("sourceCode :: " + sourceCode);
 		
-		/* Run a Rule Group */
-		String ruleFlowGroup = answer.getValue().split(":")[1];
-		drools.setFocus(ruleFlowGroup);
-	
-		output.setTypeOfResult("NO_PROCESSING");
-  	    output.setResultCode("NONE");  /* dont display anything new */
-		
+		/* Run a Workflow */
+		String workflowCode = answer.getValue().split(":")[1];
+		System.out.println(workflowCode);
+
+		output.setTypeOfResult("SIGNAL");
+        output.setResultCode(workflowCode);
+
+        String questionCode = "QUE_REMOTE_SERVICE_GRP";
+        output.setSuitCase(questionCode);
+        output.setAskSourceCode(userToken.getUserCode());
+        output.setTargetCode("NONE");
+
+        System.out.println("**************************************************");
+        System.out.println("TypeOfResult: "  + output.getTypeOfResult());
+        System.out.println("ResultCode: "    + output.getResultCode());
+        System.out.println("SuitCase: "      + output.getSuitCase());
+        System.out.println("AskSourceCode: " + output.getAskSourceCode());
+        System.out.println("TargetCode: "    + output.getTargetCode());
+        System.out.println("**************************************************");
+
+
+        retract(answer);
+
 		
 end

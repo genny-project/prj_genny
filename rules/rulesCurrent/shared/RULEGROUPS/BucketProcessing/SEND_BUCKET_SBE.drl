@@ -37,7 +37,7 @@ rule "SEND_BUCKET_SBE"
 		System.out.println("sessionCode   ::   " + sessionCode);
 
 		/* get BUCKET_CODES from cache */
-		List<String> bucketCodes = VertxUtils.getObject(serviceToken.getRealm(), "", "BUCKET_CODES", List.class);
+		List<String> bucketCodes = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", "BUCKET_CODES", List.class);
 		List<String> sendCodes = new ArrayList<>();
 
 		System.out.println("bucketCodes:");
@@ -47,7 +47,11 @@ rule "SEND_BUCKET_SBE"
 
 			for (String code : bucketCodes) {
 				if (capabilityUtils.hasCapabilityThroughPriIs(code, CapabilityMode.VIEW)) {
+<<<<<<< HEAD
 					System.out.println("Has Permission for " + code);
+=======
+					System.out.println(drools.getRule().getName()+" Has Permission for " + code);
+>>>>>>> 9.8.0
 					sendCodes.add(code);
 				}
 			}

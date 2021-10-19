@@ -38,7 +38,7 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC"
     when
  	  beUtils : BaseEntityUtils()
  	  $capabilityUtils : CapabilityUtils( )
- 	/* ( Allowed(code == "IMPORT" && mode == CapabilityMode.EDIT) or eval(beUtils.getGennyToken().hasRole("admin")) ) */
+ 	allowed : Allowed(code == "TEST" || code == "SUPERUSER" || code == "DEV")
  	/*  eval($capabilityUtils.hasCapability("IMPORT",CapabilityMode.DELETE)) */
 	  answer : Answer( attributeCode == "PRI_SEARCH_TEXT" && (value.startsWith("googleid:atmc")) )   /* this is a pure search */
 	  

@@ -58,7 +58,7 @@ rule "SEND_ADD_ITEMS"
 
 				if (capabilityUtils.hasCapabilityThroughPriIs("TYPE_"+(key.replace("QA_","")), CapabilityMode.ADD)) {
 
-					System.out.println("Has Permission for " + key);
+					System.out.println(drools.getRule().getName()+" Has Permission for " + key);
 
 					Question itemQues = new Question("QUE_"+key+"_MENU", name, eventAttribute, true);
 					Ask itemAsk = new Ask(itemQues, sourceCode, targetCode);
