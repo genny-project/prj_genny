@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import life.genny.qwanda.message.QMessageGennyMSG;
 import life.genny.qwanda.message.QBaseMSGMessageType;
 import life.genny.qwandautils.MessageUtils;
+import life.genny.qwanda.EEntityStatus;
 
 rule "IS_QA_INTERN"
     ruleflow-group 'IsQuickAdd'
@@ -29,6 +30,15 @@ rule "IS_QA_INTERN"
 	  
      then
  		System.out.println(drools.getRule().getName() + ": Rule fired :: newBe = " + newBe.getCode()); 
+ 		
+ 		
+ 		/* check if new intern has already got an agent assigned to them , which says they have been sent an email already */
+ 		BaseEntity item = beUtils.getBaseEntityByCode(newBe.getCode());
+ 		Optional<String> existingAgentName = item.getValue("PRI_AGENT_NAME");
+ 		/* if blank then ok */
+ 		if (!existingAgentName.isPresent()) {
+ 		
+ 		
  		
  		List<Answer> answers = new ArrayList<>();
 
@@ -113,6 +123,7 @@ rule "IS_QA_INTERN"
 		/* Post Note */
 		String endPoint = GennySettings.projectUrl + "/v7/notes";
 		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), newBe.getCode(), "Added as an Intern", "System", "System", "", serviceToken.getToken());
-
+		}
+		
 		retract(newBe);
 end
