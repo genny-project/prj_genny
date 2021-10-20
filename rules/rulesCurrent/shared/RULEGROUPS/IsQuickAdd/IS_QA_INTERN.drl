@@ -34,10 +34,10 @@ rule "IS_QA_INTERN"
  		
  		/* check if new intern has already got an agent assigned to them , which says they have been sent an email already */
  		BaseEntity item = beUtils.getBaseEntityByCode(newBe.getCode());
- 		Optional<String> existingAgentName = item.getValue("PRI_AGENT_NAME");
- 		/* if blank then ok */
- 		if (!existingAgentName.isPresent()) {
- 		
+ 		Optional<String> existingStageStatus = item.getValue("PRI_STATUS");
+ 		EEntityStatus existingStatus = item.getStatus();
+ 		if (existingStageStatus.isPresent()) {
+ 		if ("PENDING".equals(existingStageStatus.get()) && (existingStatus.equals(EEntityStatus.ACTIVE))) {
  		
  		
  		List<Answer> answers = new ArrayList<>();
@@ -124,6 +124,6 @@ rule "IS_QA_INTERN"
 		String endPoint = GennySettings.projectUrl + "/v7/notes";
 		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), newBe.getCode(), "Added as an Intern", "System", "System", "", serviceToken.getToken());
 		}
-		
+		}
 		retract(newBe);
 end
