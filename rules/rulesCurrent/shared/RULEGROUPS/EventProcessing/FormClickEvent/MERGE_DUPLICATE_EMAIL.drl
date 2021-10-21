@@ -53,7 +53,7 @@ rule "MERGE_DUPLICATE_EMAIL"
 		
 		String sourceCode = $message.getData().getSourceCode();
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" sourceCode :: " + sourceCode);
-		
+
 		String targetCode = $message.getData().getTargetCode();
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" targetCode :: " + targetCode);
 		
