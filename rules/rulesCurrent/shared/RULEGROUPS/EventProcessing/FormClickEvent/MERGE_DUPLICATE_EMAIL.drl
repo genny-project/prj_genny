@@ -52,10 +52,8 @@ rule "MERGE_DUPLICATE_EMAIL"
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" code: "+code);
 		
 		String sourceCode = $message.getData().getSourceCode();
-		// Existing Baseentity, will copy value from new Baseentity below
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" sourceCode :: " + sourceCode);
 
-		// New Baseentity
 		String targetCode = $message.getData().getTargetCode();
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" targetCode :: " + targetCode);
 		
