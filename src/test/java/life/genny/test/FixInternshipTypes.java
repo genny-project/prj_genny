@@ -93,7 +93,7 @@ public class FixInternshipTypes {
     }
 
 
-@Test
+//@Test
  public void signaturesFixTest() throws Exception {
      VertxUtils.cachedEnabled = false;
 
@@ -167,7 +167,7 @@ public class FixInternshipTypes {
  }
 
 
-//@Test
+@Test
 public void appProgressFixTest() throws Exception {
     VertxUtils.cachedEnabled = false;
 
