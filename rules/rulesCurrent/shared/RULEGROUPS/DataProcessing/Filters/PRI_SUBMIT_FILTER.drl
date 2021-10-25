@@ -231,7 +231,7 @@ rule "PRI_SUBMIT_FILTER"
 			QDataBaseEntityMessage filterOptionsMsg = new QDataBaseEntityMessage(filterOptionsArray);
 			filterOptionsMsg.setParentCode(optionGrp.getCode());
 			filterOptionsMsg.setToken(beUtils.getGennyToken().getToken());
-			filterOptionsMsg.setReplace(true);
+			filterOptionsMsg.setReplace(false);
 			VertxUtils.writeMsg("webcmds", filterOptionsMsg);
 			System.out.println("Filter Options cleared!");
 
