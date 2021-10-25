@@ -215,7 +215,7 @@ rule "PRI_SUBMIT_FILTER"
 					}
 				}
 				QDataBaseEntityMessage msg = new QDataBaseEntityMessage(be);
-				msg.setReplace(true);
+				msg.setReplace(false);
 				msg.setToken(userToken.getToken());
 				VertxUtils.writeMsg("webcmds", msg);
 			}
@@ -231,7 +231,7 @@ rule "PRI_SUBMIT_FILTER"
 			QDataBaseEntityMessage filterOptionsMsg = new QDataBaseEntityMessage(filterOptionsArray);
 			filterOptionsMsg.setParentCode(optionGrp.getCode());
 			filterOptionsMsg.setToken(beUtils.getGennyToken().getToken());
-			filterOptionsMsg.setReplace(false);
+			filterOptionsMsg.setReplace(true);
 			VertxUtils.writeMsg("webcmds", filterOptionsMsg);
 			System.out.println("Filter Options cleared!");
 
