@@ -92,6 +92,124 @@ public class FixInternshipTypes {
         super();
     }
 
+  @Test
+    public void removeTestsTest() throws Exception {
+        VertxUtils.cachedEnabled = false;
+
+        if (beUtils == null) {
+            return;
+        }
+
+        setUpDefs();
+        
+        
+         
+
+        SearchEntity searchBE = new SearchEntity("SBE_INTERNS", "Intern Search")
+                .addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
+                .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
+                .addFilter("PRI_IS_INTERN", true)
+                .addColumn("PRI_CODE", "Code");
+             //    .addAssociatedColumn("LNK_INTERN", "Intern Name", "LNK_COMP_INTERNSHIP")
+         searchBE.setRealm(realm);
+        
+        
+
+        Boolean ok = true;
+        Integer index = 0;
+        Integer fixedInterns = 0;
+        Integer fixedApps = 0;
+        searchBE.setPageStart(index);
+        Integer pageSize = 100;
+        searchBE.setPageSize(pageSize);
+        Long total = beUtils.getCount(searchBE);
+        
+    	Attribute statusAttribute = RulesUtils.getAttribute("PRI_STATUS", serviceToken.getToken());
+    	Attribute deletedAttribute = RulesUtils.getAttribute("PRI_DISABLED", serviceToken.getToken());
+    	Attribute lnkInternAttribute = RulesUtils.getAttribute("LNK_INTERN", serviceToken.getToken());
+    	Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken.getToken());	
+    	Attribute internCodeAttribute = RulesUtils.getAttribute("PRI_INTERN_CODE", serviceToken.getToken());	
+    	Attribute applicantCodeAttribute = RulesUtils.getAttribute("PRI_APPLICANT_CODE", serviceToken.getToken());
+    		 
+    	BaseEntity defIntern = beUtils.getDEFByCode("DEF_INTERN");
+    	
+        while (ok) {
+        	List<BaseEntity> interns = beUtils.getBaseEntitys(searchBE); // load 100 at a time
+        	if (interns.isEmpty() || (index > 5000)) {
+        		ok = false;
+        		break;
+        	}
+        	
+        	for (BaseEntity intern : interns) {
+        		index++;
+        		
+        		Boolean remove = false;
+        		
+        		String name = intern.getValueAsString("PRI_NAME");
+        		if (!StringUtils.isBlank(name)) {
+        			if (name.contains("test")) {
+        				remove = true;
+        			} 
+        			if (name.contains("Test")) {
+        				remove = true;
+        			} 
+        			if (name.contains("Fake ")) {
+        				remove = true;
+        			} 
+        			if (name.contains("Console")) {
+        				remove = true;
+        			} 
+        			if (name.contains("Chris Pyke")) {
+        				remove = true;
+        			}
+        		} 
+        		
+        		String email = intern.getValueAsString("PRI_EMAIL");
+        		if (!StringUtils.isBlank(email)) {
+        			if (email.contains("adamcrow63")) {
+        				remove = true;
+        			}
+        			if (email.contains("christopher.pyke")) {
+        				remove = true;
+        			}
+        			
+        			if (email.contains("console")) {
+        				remove = true;
+        			}
+        			if (email.contains("test.com")) {
+        				remove = true;
+        			}
+        			if (email.contains("testing.com")) {
+        				remove = true;
+        			}
+        			if (email.contains("byron.co")) {
+        				remove = true;
+        			}
+        		}
+        		
+        		if ("Lindsey Shema".equalsIgnoreCase(name)) {
+        			System.out.println("test");
+        		}
+        		if (email != null) {
+        		if (email.equalsIgnoreCase("wijesinghe345@gmail.com")) {
+        			remove = false;
+        		}
+        		}
+        		if (remove) {
+        			System.out.println(index+" of "+total+" "+name+":"+email+" REMOVED @@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        			intern.setStatus(EEntityStatus.DELETED);
+					beUtils.saveBaseEntity(defIntern, intern);
+        		} else {
+        			System.out.println(index+" of "+total+" "+name+":"+email);
+        		}
+        	}
+        	
+        	searchBE.setPageStart(index);
+        }
+
+
+
+    }
 
 //@Test
  public void signaturesFixTest() throws Exception {
@@ -167,7 +285,7 @@ public class FixInternshipTypes {
  }
 
 
-@Test
+//@Test
 public void appProgressFixTest() throws Exception {
     VertxUtils.cachedEnabled = false;
 
