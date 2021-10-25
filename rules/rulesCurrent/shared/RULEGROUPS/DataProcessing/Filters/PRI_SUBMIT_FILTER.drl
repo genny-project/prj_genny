@@ -215,7 +215,7 @@ rule "PRI_SUBMIT_FILTER"
 					}
 				}
 				QDataBaseEntityMessage msg = new QDataBaseEntityMessage(be);
-				msg.setReplace(true);
+				msg.setReplace(false);
 				msg.setToken(userToken.getToken());
 				VertxUtils.writeMsg("webcmds", msg);
 			}
