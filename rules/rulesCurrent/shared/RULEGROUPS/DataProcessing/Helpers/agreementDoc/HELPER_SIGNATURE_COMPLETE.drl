@@ -38,7 +38,8 @@ rule "HELPER_SIGNATURE_COMPLETE"
 						|| attributeCode == "PRI_AGR_DOC_HC_SIGNATURE"
 						|| attributeCode == "PRI_AGR_DOC_OUTCOME_SIGNATURE"
 						|| attributeCode == "PRI_HCS_AGR_SIGNATURE"
-						|| attributeCode == "PRI_OHS_SIGNATURE")
+						|| attributeCode == "PRI_OHS_SIGNATURE"
+						&& attributeCode == "PRI_SUBMIT")
 		answersToSave : Answers()
 		ruleDetails : RuleDetails()
 		output : OutputParam( )
@@ -70,6 +71,10 @@ rule "HELPER_SIGNATURE_COMPLETE"
 			String hcrSignature = targetBe.getValue("PRI_AGR_DOC_HC_SIGNATURE", null);
 			String outcomeSignature = targetBe.getValue("PRI_AGR_DOC_OUTCOME_SIGNATURE", null);
 
+            System.out.println("internSignature: " + internSignature);
+            System.out.println("hcrSignature: " + hcrSignature);
+            System.out.println("outcomeSignature: " + outcomeSignature);
+
 			/*This is a temp white backgrounf URL I (Rahul) added becuase it was defualting to an image icon on the document*/
 
 			if (internSignature != null) {
@@ -86,6 +91,10 @@ rule "HELPER_SIGNATURE_COMPLETE"
 			Boolean internSigned = !StringUtils.isBlank(internSignature) && (!internSignature.equals("https://bit.ly/3A2xdjI"));
 			Boolean hcrSigned = !StringUtils.isBlank(hcrSignature) && (!hcrSignature.equals("https://bit.ly/3A2xdjI"));
 			Boolean outcomeSigned = !StringUtils.isBlank(outcomeSignature) && (!outcomeSignature.equals("https://bit.ly/3A2xdjI"));
+
+            System.out.println("InternSigned: " + internSigned);
+            System.out.println("HCRSigned: " + hcrSigned);
+            System.out.println("OutcomeSigned: " + outcomeSigned);
 
 			/* Gets current status to ensure APP is in OFFERED */
 			String currentAppStatus = targetBe.getValue("PRI_STATUS", null);
