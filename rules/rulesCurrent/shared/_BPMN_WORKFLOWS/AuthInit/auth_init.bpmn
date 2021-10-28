@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmn20="http://www.omg.org/bpmn20" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="_rgjd0GkSEeGLXa7Rf4_OXA" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.1.Final-v20190425-2005-B1" name="auth_init" targetNamespace="http://www.omg.org/bpmn20">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmn20="http://www.omg.org/bpmn20" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="_rgjd0GkSEeGLXa7Rf4_OXA" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.3.Final-v20210519-2007-B1" name="auth_init" targetNamespace="http://www.omg.org/bpmn20">
   <bpmn2:itemDefinition id="ItemDefinition_1" isCollection="false" structureRef="life.genny.qwanda.message.QEventMessage"/>
   <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false" structureRef="life.genny.rules.QRules"/>
   <bpmn2:itemDefinition id="ItemDefinition_3" isCollection="false" structureRef="java.lang.String"/>
@@ -248,6 +248,11 @@ currentUser.forcePrivate(&quot;PRI_SUBSCRIPTIONS&quot;,new Boolean(false));
 VertxUtils.publish(currentUser,&quot;webcmds&quot;,currentUser, &quot;USER&quot;, userToken.getToken());
 currentUser.forcePrivate(&quot;PRI_SUBSCRIPTIONS&quot;,new Boolean(true));
 
+/* Check if role is test and if so then save token to cache for junit testing */
+if (userToken.hasRole(&quot;test&quot;)) {
+    VertxUtils.writeCachedJson(userToken.getRealm(), &quot;TOKEN:&quot; + userToken.getUserCode(), userToken.getToken(),
+                                            userToken.getToken(),28800);  /* 8 hours expiry TODO */
+}
 /* Send the Roles */
 List&lt;BaseEntity> roles = beUtils.getRoles();
 
@@ -731,7 +736,7 @@ System.out.println(&quot;authinit: exit SetSubscriptions - &quot;+currentUser.ge
         <di:waypoint xsi:type="dc:Point" x="720.0" y="122.0"/>
         <di:waypoint xsi:type="dc:Point" x="745.0" y="122.0"/>
         <di:waypoint xsi:type="dc:Point" x="770.0" y="122.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_14"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
