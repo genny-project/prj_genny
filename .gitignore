@@ -30,3 +30,4 @@ eclipse/
 .DS_Store
 
 .idea/
+prj_genny-git.properties
