@@ -61,7 +61,7 @@ rule "TEST_REGEX"
 			String wildcardValue = " Hello There test@test () ; | \" 'hello' / - Hi. Yes";
 			System.out.println(wildcardValue);
 
-			wildcardValue = wildcardValue.replaceAll("[^A-zA-Z0-9 .,'/@-\\\\()]", "");
+			wildcardValue = wildcardValue.replaceAll("[^A-zA-Z0-9 .,'/@\\-\\\\()]", "");
 
 			System.out.println(wildcardValue);
 			System.out.println("Done!");
