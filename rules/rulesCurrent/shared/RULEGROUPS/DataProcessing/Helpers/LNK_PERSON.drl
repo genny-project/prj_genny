@@ -27,24 +27,32 @@ rule "LNK_PERSON"
 		/* Get Target User BE */
  		String value = answer.getValue();
  		System.out.println("value = " + value); 
-		String cleanCode = beUtils.cleanUpAttributeValue(value);
-		System.out.println("cleanCode = " + cleanCode);
+		String cleanCodes = beUtils.cleanUpAttributeValue(value);
+		System.out.println("cleanCodes = " + cleanCodes);
+
+		String[] codeArray = cleanCodes.split(",");
 
 		TableUtils tableUtils = new TableUtils(beUtils);
 
-		BaseEntity availableIntern = beUtils.getBaseEntityByCode(cleanCode);
+		List<BaseEntity> availableCol = new ArrayList<>();
 
-		Boolean disabled = availableIntern.getValue("PRI_DISABLED", false);
-		String personStatus = availableIntern.getValue("PRI_STATUS", "");
+		/* Check if each intern can be shown in available col */
+		for (String code : codeArray) {
 
-		QDataBaseEntityMessage msg = new QDataBaseEntityMessage();
-		Long total = Long.valueOf(0);
-		if ((!disabled)&&(!personStatus.equals("PROGRESS"))&&(!personStatus.equals("PLACED"))) {
-			msg = new QDataBaseEntityMessage(availableIntern);
-			total = Long.valueOf(1);
+			BaseEntity availableIntern = beUtils.getBaseEntityByCode(code);
+
+			Boolean disabled = availableIntern.getValue("PRI_DISABLED", false);
+			String personStatus = availableIntern.getValue("PRI_STATUS", "");
+
+			if ((!disabled)&&(!personStatus.equals("PROGRESS"))&&(!personStatus.equals("PLACED"))) {
+				availableCol.add(availableIntern);
+			}
 		}
 
+		Long total = Long.valueOf(availableCol.size());
+
 		/* Send Available Card */
+		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(availableCol);
 		msg.setToken(userToken.getToken());
 		msg.setReplace(true);
 		msg.setTotal(total);
@@ -62,7 +70,14 @@ rule "LNK_PERSON"
 		/* Fetch All Applications */
 		SearchEntity appSearchBE = new SearchEntity("SBE_INTERN_APPLICATIONS", "Intern Applications")
 							.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
-							.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.EQUAL, cleanCode);
+							.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.EQUAL, codeArray[0]);
+
+		/* Add OR filter for every other code */
+		if (codeArray.length > 1) {
+			for (int i = 1; i < codeArray.length; i++) {
+				appSearchBE.addOr("PRI_INTERN_CODE", SearchEntity.StringFilter.EQUAL, codeArray[i]);
+			}
+		}
 
 		List<BaseEntity> internApplications = beUtils.getBaseEntitys(appSearchBE);
 		System.out.println("found " + internApplications + " applications");
