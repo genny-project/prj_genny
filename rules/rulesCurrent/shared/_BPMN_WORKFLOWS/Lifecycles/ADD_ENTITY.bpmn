@@ -309,9 +309,9 @@ if (newBe != null) {
 
 	/* Fix up name and initials */
 	/* HACK HACK HACK: The issue that this is temporarily fixing is caused by slowness in saving/fetching data */
-	System.out.println(&quot;debug log 1&quot;);
+	System.out.println(&quot;debug log 5&quot;);
 	if (newBe.getCode().startsWith(&quot;PER_&quot;)) {
-		System.out.println(&quot;debug log 1&quot;);
+		System.out.println(&quot;debug log 6&quot;);
 		String firstname = newBe.getValue(&quot;PRI_FIRSTNAME&quot;,&quot;&quot;);
 		String lastname = newBe.getValue(&quot;PRI_LASTNAME&quot;,&quot;&quot;);
 
@@ -329,8 +329,7 @@ if (newBe != null) {
 	}
 }
 
-System.out.println(&quot;debug log 5&quot;);
-</drools:script>
+System.out.println(&quot;debug log 7&quot;);</drools:script>
           </drools:onExit-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_12</bpmn2:incoming>
