@@ -249,7 +249,9 @@
             <drools:metaValue><![CDATA[IS_BASE_ENTITY]]></drools:metaValue>
           </drools:metaData>
           <drools:onEntry-script scriptFormat="http://www.java.com/java">
-            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% ENTER Create Entity IS BASE ENTITY %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
+            <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% ENTER Create Entity IS BASE ENTITY %%%%%%%%%%%%%%%%%%%&quot;);
+System.out.println(&quot;%%%%%%%%%%%%%%%%%%% Clean: &quot; + clean);
+System.out.println(&quot;%%%%%%%%%%%%%%%%%%% newBe: &quot; + newBe);</drools:script>
           </drools:onEntry-script>
           <drools:onExit-script scriptFormat="http://www.java.com/java">
             <drools:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% EXIT Create Entity IS BASE ENTITY %%%%%%%%%%%%%%%%%%%&quot;);</drools:script>
@@ -262,7 +264,7 @@
           <bpmn2:dataInput id="DataInput_2" itemSubjectRef="ItemDefinition_2" name="userToken"/>
           <bpmn2:dataInput id="DataInput_3" name="ruleFlowGroup"/>
           <bpmn2:dataInput id="DataInput_10" name="callingWorkflow"/>
-          <bpmn2:dataInput id="DataInput_11" itemSubjectRef="ItemDefinition_2733" name="key"/>
+          <bpmn2:dataInput id="DataInput_11" itemSubjectRef="ItemDefinition_2733" name="clean"/>
           <bpmn2:dataInput id="DataInput_12" itemSubjectRef="ItemDefinition_2016" name="newBe"/>
           <bpmn2:inputSet id="_InputSet_123">
             <bpmn2:dataInputRefs>DataInput_1</bpmn2:dataInputRefs>
@@ -297,7 +299,7 @@
           </bpmn2:assignment>
         </bpmn2:dataInputAssociation>
         <bpmn2:dataInputAssociation id="DataInputAssociation_1">
-          <bpmn2:sourceRef>key</bpmn2:sourceRef>
+          <bpmn2:sourceRef>clean</bpmn2:sourceRef>
           <bpmn2:targetRef>DataInput_11</bpmn2:targetRef>
         </bpmn2:dataInputAssociation>
         <bpmn2:dataInputAssociation id="DataInputAssociation_2">
@@ -391,7 +393,6 @@ kcontext.setVariable(&quot;message&quot;,(QEventMessage)message); </bpmn2:script
         <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
         <bpmn2:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% START Create Entity WORKFLOW %%%%%%%%%%%%%%%%%%%&quot;);
 
-
 /* Gather Session Facts and Tokens */
 	SessionFacts sessionFacts2 = (SessionFacts)sessionFacts;
 
@@ -425,6 +426,32 @@ kcontext.setVariable(&quot;message&quot;,(QEventMessage)message); </bpmn2:script
 	questionCode = &quot;QUE_&quot; +clean + &quot;_GRP&quot;;
 	kcontext.setVariable(&quot;questionCode&quot;, questionCode);
 	System.out.println(&quot;ADD_ENTITY: questionCode: &quot; + questionCode);
+
+
+	beUtilsTwo = new BaseEntityUtils(userToken);
+
+
+	System.out.println(&quot; key = YES &quot;);
+	OutputParam sauce = (OutputParam)sessionFacts.getMessage();
+	source = sauce.getAskSourceCode();
+	kcontext.setVariable(&quot;source&quot;, source);
+	System.out.println(&quot;source: &quot; + source);
+
+
+	newBe = beUtilsTwo. getBaseEntityByCode(source);
+	kcontext.setVariable(&quot;newBe&quot;, newBe);
+	System.out.println(&quot;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ newBe: &quot; + newBe);
+
+
+
+/* Do the template thing*/
+
+	if (clean.equals(&quot;HOST_CPY&quot;) || clean.equals(&quot;HOST_CPY_REP&quot;) || clean.equals(&quot;INTERNSHIP&quot;) || clean.equals(&quot;INTERN&quot;)) {
+			String templateCode = &quot;TEMPLATE_&quot; + clean;
+			TableUtils.searchTable(beUtilsTwo, templateCode, true);
+
+	}
+
 
 
 
