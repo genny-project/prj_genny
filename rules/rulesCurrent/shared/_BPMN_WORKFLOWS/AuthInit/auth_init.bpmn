@@ -167,13 +167,13 @@ kcontext.setVariable(&quot;termsAndConditions&quot;, termsAndConditions);
       <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
       <bpmn2:script>System.out.println(&quot;authInit: Send Attributes!!&quot;);
 		try {
-			QDataAttributeMessage msg = RulesUtils.loadAllAttributesIntoCache(userToken.getToken());
+			QDataAttributeMessage msg = RulesUtils.defAttributesMap.get(userToken.getRealm());
 			msg.setToken(userToken.getToken());
 				if (userToken.getToken()==null) {
 						System.out.println(&quot;NULL TOKEN IN SENDING ATTRIBUTES&quot;);
 				}
 			VertxUtils.writeMsg(&quot;webcmds&quot;,JsonUtils.toJson(msg));
-			/*System.out.println(&quot;authInit: All the attributes sent &quot; + msg.getItems().length + &quot; of them&quot;);*/
+			System.out.println(&quot;authInit: All the attributes sent &quot; + msg.getItems().length + &quot; of them&quot;);
 
 		} catch (Exception e) {
 			System.out.println(&quot;authInit: No web browser to talk to!&quot;);
