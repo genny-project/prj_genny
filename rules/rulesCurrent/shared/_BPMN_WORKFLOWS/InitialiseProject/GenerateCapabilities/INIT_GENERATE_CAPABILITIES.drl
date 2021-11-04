@@ -165,6 +165,7 @@ rule "INIT_GENERATE_CAPABILITIES"
 		capabilityUtils.addCapability( "WITHDRAW_APPLICATION", "Withdraw Application");
 		capabilityUtils.addCapability( "FINISH_APPLICATION", "Finish Application");
 		capabilityUtils.addCapability( "START_INTERNSHIP", "Start Internship");
+		capabilityUtils.addCapability( "BADGE_MVP", "View Badges (Coming Soon)");
 		
 		capabilityUtils.addCapability( "ACCESS_NOTES_INTERN", "Access Notes");
 		capabilityUtils.addCapability( "ACCESS_NOTES_APPLICATION", "Access Notes");

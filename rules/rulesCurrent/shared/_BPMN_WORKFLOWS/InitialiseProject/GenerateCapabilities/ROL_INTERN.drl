@@ -54,6 +54,7 @@ rule "ROL_INTERN"
 		capabilityUtils.addCapabilityToRole(role,"VIEW_JOURNAL",CapabilityMode.VIEW);
 		capabilityUtils.addCapabilityToRole(role,"EDIT_JOURNAL",CapabilityMode.EDIT);
 		capabilityUtils.addCapabilityToRole(role,"ADD_JOURNAL",CapabilityMode.ADD);
+		capabilityUtils.addCapabilityToRole(role,"BADGE_MVP",CapabilityMode.VIEW);
 		capabilityUtils.addCapabilityToRole(role,"APPLY",CapabilityMode.VIEW);
 		capabilityUtils.addCapabilityToRole(role,"VIEW_AGREEMENT",CapabilityMode.VIEW);
 		capabilityUtils.addCapabilityToRole(role,"DOWNLOAD_INTERNSHIP_AGREEMENT_DOC",CapabilityMode.VIEW);
