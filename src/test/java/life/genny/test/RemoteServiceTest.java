@@ -40,6 +40,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.json.Json;
 import javax.json.JsonReader;
+import javax.json.bind.JsonbBuilder;
 import javax.persistence.EntityManagerFactory;
 
 
@@ -100,25 +101,25 @@ public class RemoteServiceTest {
         vertxCache = new VertxCache(); // MockCache
         VertxUtils.init(eventBusMock, vertxCache);
 
-        // QRules qRules = null;
-
         String apiUrl = GennySettings.projectUrl + "/api/events/init?url=" + GennySettings.projectUrl;
         System.out.println("Fetching setup info from " + apiUrl);
         try {
             javax.json.JsonObject projectParms = null;
             String keycloakJson = QwandaUtils.apiGet(apiUrl, null);
-            JsonReader jsonReader = Json.createReader(new StringReader(keycloakJson));
-            projectParms = jsonReader.readObject();
-            jsonReader.close();
+            javax.json.bind.Jsonb jsonb = JsonbBuilder.create();
+            // JsonReader jsonReader = Json.createReader(new StringReader(keycloakJson));
+            projectParms = jsonb.fromJson(keycloakJson, javax.json.JsonObject.class);
+            // jsonReader.close();
 
-            String authServer = projectParms.getString("auth-server-url");
+
+            String authServer = projectParms.getString("ENV_KEYCLOAK_REDIRECTURI");
             authServer = StringUtils.removeEnd(authServer, "/auth");
-            javax.json.JsonObject credentials = projectParms.getJsonObject("credentials");
-            String secret = credentials.getString("secret");
+            //    javax.json.JsonObject credentials = projectParms.getJsonObject("credentials");
+            //    String secret = credentials.getString("secret");
             String username = System.getenv("USERNAME");
             String password = System.getenv("PASSWORD");
 
-            String token = KeycloakUtils.getAccessToken(authServer, realm, realm, secret, username, password);
+            String token = KeycloakUtils.getAccessToken(authServer, realm, "alyson",null, username, password);
             GennyToken uToken = new GennyToken(token);
             // check if user token already exists
             String userCode = uToken.getUserCode();// "PER_"+QwandaUtils.getNormalisedUsername(username);
@@ -138,49 +139,32 @@ public class RemoteServiceTest {
                 return;
             }
 
-            String serviceTokenStr = KeycloakUtils.getAccessToken(authServer, realm, realm, secret, "service",
+            String serviceTokenStr = KeycloakUtils.getAccessToken(authServer, realm, "alyson", null, "service",
                     System.getenv("SERVICE_PASSWORD"));
             serviceToken = new GennyToken(serviceTokenStr);
 
         } catch (ClientProtocolException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (IOException e) {
             return;
         }
         serviceToken = new GennyToken("PER_SERVICE", serviceToken.getToken());
-
-        // VertxUtils.cachedEnabled = false;
         VertxUtils.cachedEnabled = false;
-//          eventBusMock = new EventBusMock();
-//          vertxCache = new JunitCache(); // MockCache
-//          VertxUtils.init(eventBusMock, vertxCache);
-//
-//          qRules = GennyJbpmBaseTest.setupLocalService();
-//          userToken = new GennyToken("userToken", qRules.getToken());
-//          serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
 
         beUtils = new BaseEntityUtils(userToken);
         beUtils.setServiceToken(serviceToken);
-//         }
-
-        // System.out.println("serviceToken=" + serviceToken.getToken());
 
     }
 
     @Test
-    public void getAttributeTest() throws Exception {
+    public void apiTest() throws Exception {
         VertxUtils.cachedEnabled = false;
-
+        RulesUtils.loadAllAttributesIntoCache(beUtils.getGennyToken().getToken());
         if (beUtils == null) {
             return;
         }
 //        Set up the defs
         setUpDefs();
-
-//        BaseEntity defBE = beUtils.getDEFByCode("DEF_REMOTE_SERVICE");
-//        Attribute attributeDEF = RulesUtils.getAttribute("PRI_IS_"+defBE.getCode().substring("DEF_".length()), beUtils.getGennyToken().getToken());
-
     }
 
 
