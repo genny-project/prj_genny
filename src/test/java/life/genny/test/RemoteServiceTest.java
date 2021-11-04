@@ -165,21 +165,6 @@ public class RemoteServiceTest {
         }
 //        Set up the defs
         setUpDefs();
-
-
-    @Test
-    public void getAttributeTest() throws Exception {
-        VertxUtils.cachedEnabled = false;
-
-        if (beUtils == null) {
-            return;
-        }
-//        Set up the defs
-        setUpDefs();
-
-//        BaseEntity defBE = beUtils.getDEFByCode("DEF_REMOTE_SERVICE");
-//        Attribute attributeDEF = RulesUtils.getAttribute("PRI_IS_"+defBE.getCode().substring("DEF_".length()), beUtils.getGennyToken().getToken());
-
     }
 
 
