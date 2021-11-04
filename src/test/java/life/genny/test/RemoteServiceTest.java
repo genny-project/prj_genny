@@ -166,23 +166,6 @@ public class RemoteServiceTest {
 //        Set up the defs
         setUpDefs();
 
-    @Test
-    public void apiTest() throws Exception {
-        VertxUtils.cachedEnabled = false;
-        RulesUtils.loadAllAttributesIntoCache(beUtils.getGennyToken().getToken());
-        if (beUtils == null) {
-            return;
-        }
-//        Set up the defs
-        setUpDefs();
-
-    }
-
-
-
-
-
-
 
     @Test
     public void getAttributeTest() throws Exception {
