@@ -83,9 +83,9 @@ rule "HELPER_SIGNATURE_COMPLETE"
 			}
 
 			/* Checks if the signature is blank or null */
-			Boolean internSigned = !StringUtils.isBlank(internSignature) && (!internSignature.equals("https://bit.ly/3A2xdjI"));
-			Boolean hcrSigned = !StringUtils.isBlank(hcrSignature) && (!hcrSignature.equals("https://bit.ly/3A2xdjI"));
-			Boolean outcomeSigned = !StringUtils.isBlank(outcomeSignature) && (!outcomeSignature.equals("https://bit.ly/3A2xdjI"));
+			Boolean internSigned = !StringUtils.isBlank(internSignature);
+			Boolean hcrSigned = !StringUtils.isBlank(hcrSignature);
+			Boolean outcomeSigned = !StringUtils.isBlank(outcomeSignature);
 
 			/* Gets current status to ensure APP is in OFFERED */
 			String currentAppStatus = targetBe.getValue("PRI_STATUS", null);
