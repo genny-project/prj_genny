@@ -104,6 +104,7 @@ public class RemoteServiceTest {
         String apiUrl = GennySettings.projectUrl + "/api/events/init?url=" + GennySettings.projectUrl;
         System.out.println("Fetching setup info from " + apiUrl);
         try {
+//            RulesUtils.loadAllAttributesIntoCache(beUtils.getGennyToken().getToken());
             javax.json.JsonObject projectParms = null;
             String keycloakJson = QwandaUtils.apiGet(apiUrl, null);
             javax.json.bind.Jsonb jsonb = JsonbBuilder.create();
@@ -159,12 +160,15 @@ public class RemoteServiceTest {
     @Test
     public void apiTest() throws Exception {
         VertxUtils.cachedEnabled = false;
-        RulesUtils.loadAllAttributesIntoCache(beUtils.getGennyToken().getToken());
+//        RulesUtils.loadAllAttributesIntoCache(beUtils.getGennyToken().getToken());
         if (beUtils == null) {
             return;
         }
 //        Set up the defs
         setUpDefs();
+
+
+
     }
 
 
