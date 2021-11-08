@@ -165,9 +165,7 @@ public class RemoteServiceTest {
             return;
         }
 //        Set up the defs
-        setUpDefs();
-
-
+        DefUtils.loadDEFS(realm, serviceToken);
 
     }
 
@@ -181,7 +179,7 @@ public class RemoteServiceTest {
         }
 
 //        Set up the defs
-        setUpDefs();
+        DefUtils.loadDEFS(realm, serviceToken);
 
         String aSourceCode = beUtils.getGennyToken().getUserCode();
         String token = beUtils.getGennyToken().getToken();
@@ -200,7 +198,7 @@ public class RemoteServiceTest {
         VertxUtils.writeMsg("webcmds",askMsg);
         VertxUtils.writeMsgEnd(beUtils.getGennyToken());
 
-        TaskUtils.createTask(beUtils.getGennyToken(), "QUE_REMOTE_SERVICE_GRP");
+//        TaskUtils.createTask(beUtils.getGennyToken(), "QUE_REMOTE_SERVICE_GRP");
 
 
 
@@ -216,7 +214,7 @@ public class RemoteServiceTest {
         }
 
 //        Set up the defs
-        setUpDefs();
+        DefUtils.loadDEFS(realm, serviceToken);
 
 
         QCmdMessage msg = new QCmdMessage("DISPLAY","FORM");
@@ -224,7 +222,7 @@ public class RemoteServiceTest {
         VertxUtils.writeMsg("webcmds",msg);
 
         String aSourceCode = beUtils.getGennyToken().getUserCode();
-        BaseEntity be = createRemoteService("RMS_JNL_NLP_02", "NLP Journals 02", "http://localhost:5000/api/response",aSourceCode, "SBE_AI_JOURNAL");
+        BaseEntity be = createRemoteService("RMS_JNL_NLP_0002", "NLP Journals 0002", "http://localhost:5000/api/response",aSourceCode, "SBE_AI_JOURNAL");
 
         /* We generate the question */
         Attribute attr = RulesUtils.getAttribute("QQQ_QUESTION_GROUP",beUtils.getGennyToken().getToken());
@@ -270,7 +268,7 @@ public class RemoteServiceTest {
         }
 
 //        Set up the defs
-        setUpDefs();
+        DefUtils.loadDEFS(realm, serviceToken);
 
 
 
@@ -343,36 +341,23 @@ public class RemoteServiceTest {
         BaseEntity remoteJob4 = createRemoteJob("RJB_REC_02","Rec Sys Intern Remote Job","RMS_INTERN_RECSYS_02");
         BaseEntity remoteJob5 = createRemoteJob("RJB_CRED_01","Intern CRED Remote Job","RMS_INTERN_CRED_01");
 
-//  List Remote Service Jobs
-        //      Search Entity to be displayed as a table
-//        SearchEntity searchRemoteJobs = new SearchEntity("SBE_REMOTE_JOB", "Remote AI Jobs")
-//                .addSort("PRI_NAME","Name", SearchEntity.Sort.ASC)
-//                .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "RJB_%")
-//                .addColumn("PRI_NAME","Job Name")
-//                .addColumn("PRI_STATUS","Status")
-//                .addAssociatedColumn("LNK_REMOTE_SERVICE", "PRI_CODE", "RemoteServiceCode");
-//        searchRemoteJobs.setRealm(realm);
-//        searchRemoteJobs.setPageStart(0);
-//        searchRemoteJobs.setPageSize(1000);
-//
-//        VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchRemoteJobs.getCode(), searchRemoteJobs,
-//                beUtils.getGennyToken().getToken());
-////        beUtils.saveBaseEntity(searchRemoteJobs);
-//
-//        List<BaseEntity> remoteJobBES = beUtils.getBaseEntitys(searchRemoteJobs);
 
 // Send the display table data
-        QCmdTableMessage msg = new QCmdTableMessage("SBE_TEST","RemoteServiceTest");
-        JsonObject msgJson = new JsonObject();
-        msgJson.put("cmd_type","DISPLAY");
-        msgJson.put("code","TABLE");
-        msgJson.put("exec",true);
-        msgJson.put("msg_type","CMD_MSG");
-        msgJson.put("option","EXEC");
-        msgJson.put("send",true);
-        msgJson.put("token",beUtils.getGennyToken().getToken());
+//        QCmdTableMessage msg = new QCmdTableMessage("SBE_TEST","RemoteServiceTest");
+//        JsonObject msgJson = new JsonObject();
+//        msgJson.put("cmd_type","DISPLAY");
+//        msgJson.put("code","TABLE");
+//        msgJson.put("exec",true);
+//        msgJson.put("msg_type","CMD_MSG");
+//        msgJson.put("option","EXEC");
+//        msgJson.put("send",true);
+//        msgJson.put("token",beUtils.getGennyToken().getToken());
 
-        VertxUtils.writeMsg("webcmds",msgJson.toString());
+        QCmdMessage msg = new QCmdMessage("DISPLAY","TABLE");
+        msg.setToken(beUtils.getGennyToken().getToken());
+        VertxUtils.writeMsg("webcmds",msg);
+
+//        VertxUtils.writeMsg("webcmds",msgJson.toString());
         long totalTime = TableUtils.searchTable(beUtils,searchBE, true);
         System.out.println("total took " + (totalTime) + " ms");
         /* Send out the Filter question group */
@@ -437,43 +422,5 @@ public class RemoteServiceTest {
 
     }
 
-    public void setUpDefs() throws BadDataException {
-        BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
-        beUtils.setServiceToken(serviceToken);
-
-        SearchEntity searchBE = new SearchEntity("SBE_DEF", "DEF check")
-                .addSort("PRI_NAME", "Created", SearchEntity.Sort.ASC)
-                .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "DEF_%")
-                .addColumn("PRI_CODE", "Name");
-
-        searchBE.setRealm(realm);
-        searchBE.setPageStart(0);
-        searchBE.setPageSize(1000);
-
-        List<BaseEntity> items = beUtils.getBaseEntitys(searchBE);
-        // Load up RuleUtils.defs
-
-        RulesUtils.defs.put(realm,new ConcurrentHashMap<String,BaseEntity>());
-
-        for (BaseEntity item : items) {
-//            if the item is a def appointment, then add a default datetime for the start (Mandatory)
-            if (item.getCode().equals("DEF_APPOINTMENT")){
-                Attribute attribute = new AttributeText("DFT_PRI_START_DATETIME", "Default Start Time");
-                attribute.setRealm(realm);
-                EntityAttribute newEA = new EntityAttribute(item, attribute, 1.0, "2021-07-28 00:00:00");
-                item.addAttribute(newEA);
-
-                Optional<EntityAttribute> ea = item.findEntityAttribute("ATT_PRI_START_DATETIME");
-                if (ea.isPresent()){
-                    ea.get().setValue(true);
-                }
-            }
-
-//            Save the BaseEntity created
-            item.setFastAttributes(true); // make fast
-            RulesUtils.defs.get(realm).put(item.getCode(),item);
-            log.info("Saving ("+realm+") DEF "+item.getCode());
-        }
-    }
 
 }
