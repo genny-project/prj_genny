@@ -128,7 +128,7 @@ rule "IS_INTERNSHIP"
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd MMM yyyy");
 		String addedOn = dtf.format(updateTime);
 		String assocHC = newBe.getValue("PRI_ASSOC_HC", null);
-		String internshipName = newBe.getValue("PRI_NAME", null);
+		String internshipName = newBe.getValue("PRI_INTERNSHIP_TITLE", null);
 		String internshipIndustry = newBe.getValue("PRI_ASSOC_INDUSTRY", null);
 		String internshipOcc = newBe.getValue("PRI_ASSOC_OCCUPATION", null);
 		LocalDate internshipStartDate = newBe.getValue("PRI_INTERNSHIP_START_DATE", null);
