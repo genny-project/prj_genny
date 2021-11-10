@@ -7,6 +7,7 @@ import io.vertx.core.json.JsonObject;
 import life.genny.utils.OutputParam;
 import life.genny.qwanda.rule.RuleDetails;
 import org.apache.commons.lang3.StringUtils;
+import life.genny.qwandautils.KeycloakUtils;
 
 rule "MERGE_DUPLICATE_EMAIL"
     ruleflow-group 'EventProcessing'
@@ -110,12 +111,15 @@ rule "MERGE_DUPLICATE_EMAIL"
 			msg.setToken(userToken.getToken());
 			msg.setReplace(true);
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+
 			
 			QCmdMessage toastMsg = new QCmdMessage("TOAST", "INFO");
 			toastMsg.setMessage("Merging " + sourceCode + " and " + targetCode);
 			toastMsg.setToken(beUtils.getGennyToken().getToken());
 			toastMsg.setSend(true);
 			VertxUtils.writeMsg("webcmds", toastMsg);
+
+			KeycloakUtils.updateUserDetails(beUtils, targetBe);
 			
 		} else {
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" ERROR: Null sourceBe or targetBe. Merging failed");
