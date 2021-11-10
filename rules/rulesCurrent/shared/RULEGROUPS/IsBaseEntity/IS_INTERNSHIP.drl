@@ -182,7 +182,8 @@ rule "IS_INTERNSHIP"
 		System.out.println("Payload is" + msgPayload.toString()); 
 		
 		try {
-			QwandaUtils.apiPostEntity(webhookURL, msgPayload.toString(), serviceToken.getToken());
+			NotificationHelper.slackNotification(msgPayload.toString(), "T6NKG982D/B025LQM7ZMM/K0W6J1GUagiyRivmSIvAfOAz");
+		/*	QwandaUtils.apiPostEntity(webhookURL, msgPayload.toString(), serviceToken.getToken()); */
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
