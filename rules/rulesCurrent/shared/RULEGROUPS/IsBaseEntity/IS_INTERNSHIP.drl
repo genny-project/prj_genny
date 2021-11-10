@@ -118,7 +118,7 @@ rule "IS_INTERNSHIP"
 		
 		/* ========== Sending Slack Notification ============ */
 		BaseEntity agent = beUtils.getBaseEntityByCode("CPY_OUTCOME_LIFE");
-		System.out.println("Staging mode ::" + System.getenv("GENNYSTAGING"));
+		System.out.println("Project URL mode ::" + GennySettings.projectUrl);
 		System.out.println("Slack Notification :: agent :: " + agent);
 		/*String webhookURL = agent.getValueAsString("PRI_SLACK_NEW_INTERNSHIP_URL");*/
 		String webhookURL = agent.getValueAsString("PRI_SLACK_NOTIFICATION_URL");
