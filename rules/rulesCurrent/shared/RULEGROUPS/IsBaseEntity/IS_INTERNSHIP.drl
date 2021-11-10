@@ -180,13 +180,13 @@ rule "IS_INTERNSHIP"
 		msgPayload.put("blocks", jsonArray);
 		
 		System.out.println("Payload is" + msgPayload.toString()); 
-		
-		try {
+		NotificationHelper.slackNotification(msgPayload.toString(), "T6NKG982D/B025LQM7ZMM/K0W6J1GUagiyRivmSIvAfOAz");
+		/*try {
 			NotificationHelper.slackNotification(msgPayload.toString(), "T6NKG982D/B025LQM7ZMM/K0W6J1GUagiyRivmSIvAfOAz");
-		/*	QwandaUtils.apiPostEntity(webhookURL, msgPayload.toString(), serviceToken.getToken()); */
+			QwandaUtils.apiPostEntity(webhookURL, msgPayload.toString(), serviceToken.getToken()); 
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
 		
 		
 		/* DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd MMM yyyy");
