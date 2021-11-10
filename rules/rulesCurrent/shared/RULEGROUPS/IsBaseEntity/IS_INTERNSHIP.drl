@@ -120,7 +120,8 @@ rule "IS_INTERNSHIP"
 		BaseEntity agent = beUtils.getBaseEntityByCode("CPY_OUTCOME_LIFE");
 		System.out.println("Staging mode ::" + System.getenv("GENNYSTAGING"));
 		System.out.println("Slack Notification :: agent :: " + agent);
-		String webhookURL = agent.getValueAsString("PRI_SLACK_NEW_INTERNSHIP_URL");
+		/*String webhookURL = agent.getValueAsString("PRI_SLACK_NEW_INTERNSHIP_URL");*/
+		String webhookURL = agent.getValueAsString("PRI_SLACK_NOTIFICATION_URL");
 		System.out.println("Slack Notification :: webhookURL :: " + webhookURL);
 		
 		LocalDateTime updateTime = LocalDateTime.now();
