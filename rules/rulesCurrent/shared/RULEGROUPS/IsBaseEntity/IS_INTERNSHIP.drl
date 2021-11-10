@@ -118,16 +118,17 @@ rule "IS_INTERNSHIP"
 		
 		/* ========== Sending Slack Notification ============ */
 		BaseEntity agent = beUtils.getBaseEntityByCode("CPY_OUTCOME_LIFE");
-		System.out.println("dev mode ::" + GennySettings.devMode);
+		String projectUrl = GennySettings.projectUrl;
 		System.out.println("Slack Notification :: agent :: " + agent);
-		String webhookURL = agent.getValueAsString("PRI_SLACK_NEW_INTERNSHIP_URL");
+		/*String webhookURL = agent.getValueAsString("PRI_SLACK_NEW_INTERNSHIP_URL");*/
+		String webhookURL = agent.getValueAsString("PRI_SLACK_NOTIFICATION_URL");
 		System.out.println("Slack Notification :: webhookURL :: " + webhookURL);
 		
 		LocalDateTime updateTime = LocalDateTime.now();
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd MMM yyyy");
 		String addedOn = dtf.format(updateTime);
 		String assocHC = newBe.getValue("PRI_ASSOC_HC", null);
-		String internshipName = newBe.getValue("PRI_NAME", null);
+		String internshipName = newBe.getValue("PRI_INTERNSHIP_TITLE", null);
 		String internshipIndustry = newBe.getValue("PRI_ASSOC_INDUSTRY", null);
 		String internshipOcc = newBe.getValue("PRI_ASSOC_OCCUPATION", null);
 		LocalDate internshipStartDate = newBe.getValue("PRI_INTERNSHIP_START_DATE", null);
@@ -179,20 +180,14 @@ rule "IS_INTERNSHIP"
 		msgPayload.put("blocks", jsonArray);
 		
 		System.out.println("Payload is" + msgPayload.toString()); 
-		
-		try {
-			QwandaUtils.apiPostEntity(webhookURL, msgPayload.toString(), serviceToken.getToken());
-		} catch (IOException e) {
-			e.printStackTrace();
+		if(projectUrl.contains("staging") || projectUrl.contains("dev") )
+		{
+			NotificationHelper.slackNotification(msgPayload.toString(), "T6NKG982D/B025LQM7ZMM/K0W6J1GUagiyRivmSIvAfOAz");
 		}
-		
-		
-		/* DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd MMM yyyy");
-    	LocalDateTime created = newBe.getCreated();
-		System.out.println("created = " +created);
-		String prettyCreated = dtf.format(created);
-    	System.out.println("prettyCreated ~ " + prettyCreated);
-		answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_CREATED_DATE", prettyCreated)); */
+		else
+		{
+			NotificationHelper.slackNotification(msgPayload.toString(), "T39561A7P/B027B423NJH/pa7gkQhLBfh1etDEMAgoeYvm");
+		}
 		
 		/* quantumCopy(sourceBE, sourceAtt, saveLink, strip, userToken, targetBE, targetAtt)*/
 		beUtils.quantumCopy(newBe, "LNK_NO_OF_INTERNS", false, true, userToken.getUserCode(), newBe.getCode(), "PRI_NO_OF_INTERNS");
