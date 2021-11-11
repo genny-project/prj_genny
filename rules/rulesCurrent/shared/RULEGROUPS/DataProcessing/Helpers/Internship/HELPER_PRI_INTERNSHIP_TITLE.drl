@@ -28,7 +28,7 @@ rule "HELPER_PRI_INTERNSHIP_TITLE"
 	salience 5000
 	when
 		beUtils : BaseEntityUtils()
-		answer : Answer( attributeCode == "PRI_INTERNSHIP_TITLE" && !(targetCode matches "BEG_.*"))
+		answer : Answer( attributeCode == "PRI_INTERNSHIP_TITLE" && (targetCode matches "BEG_.*"))
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		userToken : GennyToken( code != "PER_SERVICE")
 	then
