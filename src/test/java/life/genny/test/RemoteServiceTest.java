@@ -88,6 +88,7 @@ public class RemoteServiceTest {
         System.out.println("BridgeUrl=" + GennySettings.bridgeServiceUrl);
         System.out.println("QwandaUrl=" + GennySettings.qwandaServiceUrl);
 
+
         // Set up realm
         realms = new HashSet<String>();
         realms.add(realm);
@@ -154,6 +155,8 @@ public class RemoteServiceTest {
 
         beUtils = new BaseEntityUtils(userToken);
         beUtils.setServiceToken(serviceToken);
+        // Set up the defs
+        DefUtils.loadDEFS(realm,serviceToken);
 
     }
 
@@ -165,25 +168,26 @@ public class RemoteServiceTest {
             return;
         }
 //        Set up the defs
-        DefUtils.loadDEFS(realm, serviceToken);
+        DefUtils.loadDEFS(realm);
 
     }
 
 
     @Test
     public void tasksTest() throws Exception {
-        VertxUtils.cachedEnabled = false;
+//        VertxUtils.cachedEnabled = false;
 
         if (beUtils == null) {
             return;
         }
 
-//        Set up the defs
-        DefUtils.loadDEFS(realm, serviceToken);
+        // Set up the defs
+//        DefUtils.loadDEFS(realm,serviceToken);
+
 
         String aSourceCode = beUtils.getGennyToken().getUserCode();
         String token = beUtils.getGennyToken().getToken();
-        BaseEntity be = createRemoteService("RMS_JNL_PROCESS_001", "Remote Journal Process", "http://localhost:5000/api/response",aSourceCode, "SBE_AI_JOURNAL");
+        BaseEntity be = createRemoteService("RMS_REC_SYS_HC_001", "Recommendation System for HCs", "http://localhost:9003/api/response",aSourceCode, "SBE_REC_SYS_HC");
         QDataAskMessage askMsg = QuestionUtils.getAsks(aSourceCode,be.getCode(), "QUE_REMOTE_SERVICE_GRP", token);
 
         QCmdMessage msg = new QCmdMessage("DISPLAY","FORM");
@@ -214,7 +218,7 @@ public class RemoteServiceTest {
         }
 
 //        Set up the defs
-        DefUtils.loadDEFS(realm, serviceToken);
+        DefUtils.loadDEFS(realm);
 
 
         QCmdMessage msg = new QCmdMessage("DISPLAY","FORM");
@@ -268,7 +272,7 @@ public class RemoteServiceTest {
         }
 
 //        Set up the defs
-        DefUtils.loadDEFS(realm, serviceToken);
+        DefUtils.loadDEFS(realm);
 
 
 
