@@ -56,5 +56,5 @@ rule "HELPER_PRI_INTERNSHIP_TITLE"
 			System.out.println("No target BaseEntity found");
 		}
 
-		System.out.println("End of " + drools.getRule().getName();
+		System.out.println("End of " + drools.getRule().getName());
 end
