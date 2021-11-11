@@ -95,7 +95,7 @@ public class FixInternshipTypes {
         super();
     }
 
-  @Test
+ // @Test
     public void removeTestsTest() throws Exception {
         VertxUtils.cachedEnabled = false;
 
@@ -288,7 +288,7 @@ public class FixInternshipTypes {
  }
 
 
-//@Test
+@Test
 public void appProgressFixTest() throws Exception {
     VertxUtils.cachedEnabled = false;
 
@@ -626,7 +626,7 @@ public void appnameFixTest() throws Exception {
 }
 
 
-@Test
+//@Test
 public void hcrFixTest() throws Exception {
     VertxUtils.cachedEnabled = false;
 
@@ -726,7 +726,7 @@ public void hcrFixTest() throws Exception {
 }
 
 
-@Test
+//@Test
 public void internshipFixTest() throws Exception {
     VertxUtils.cachedEnabled = false;
 
