@@ -60,10 +60,8 @@ rule "ROL_EDU_PRO_REP"
 			capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_DASHBOARD", CapabilityMode.VIEW);
 			capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_TAB_BUCKET_VIEW", CapabilityMode.VIEW);
 			capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_TREE_ITEM_HOST_COMPANIES", CapabilityMode.VIEW);
-
-			capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_TREE_ITEM_CONTACTS_GRP", CapabilityMode.VIEW);
-			capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_TREE_ITEM_INTERNS", CapabilityMode.VIEW);
-			capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_TREE_ITEM_EPRS", CapabilityMode.VIEW);
+			capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_TABLE_INTERNS", CapabilityMode.VIEW);
+			capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_TABLE_EPRS", CapabilityMode.VIEW);
 
 			 /* BUCKETS SEARCHES */
 			 capabilityUtils.addCapabilityToRole(role,"SBE_AVAILABLE_INTERNS",CapabilityMode.VIEW);

@@ -62,6 +62,9 @@ rule "INIT_GENERATE_CAPABILITIES"
 	    capabilityUtils.addCapability( "SIDEBAR_QUE_TREE_ITEM_APPLICATIONS_APPLIED", "Sidebar My Applications");
 	    capabilityUtils.addCapability( "SIDEBAR_QUE_HOST_COMPANY_VIEW", "Sidebar My Host Company");
 	    capabilityUtils.addCapability( "SIDEBAR_QUE_TREE_ITEM_LOGBOOK_GRP", "Sidebar Logbook");
+	    capabilityUtils.addCapability( "SIDEBAR_QUE_TABLE_INTERNS", "Sidebar Interns Table");
+	    capabilityUtils.addCapability( "SIDEBAR_QUE_TABLE_HCRS", "Sidebar HCRS Table");
+	    capabilityUtils.addCapability( "SIDEBAR_QUE_TABLE_EPRS", "Sidebar EPRS Table");
 	    capabilityUtils.addCapability( "SIDEBAR_QUE_MESSAGES", "Sidebar Messages");
 
 	    capabilityUtils.addCapability( "SIDEBAR_QUE_TREE_ITEM_CONTACTS_GRP", "Sidebar Contacts");

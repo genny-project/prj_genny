@@ -76,9 +76,7 @@ rule "ROL_HOST_CPY_REP"
 	    capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_TAB_BUCKET_VIEW", CapabilityMode.VIEW);
 	    capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_TREE_ITEM_INTERNSHIPS", CapabilityMode.VIEW);
 	    capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_HOST_COMPANY_VIEW", CapabilityMode.VIEW);
-
-	    capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_TREE_ITEM_CONTACTS_GRP", CapabilityMode.VIEW);
-		capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_TREE_ITEM_HCRS", CapabilityMode.VIEW);
+		capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_TABLE_HCRS", CapabilityMode.VIEW);
   	     
 		 /* BUCKETS SEARCHES */
    	     capabilityUtils.addCapabilityToRole(role,"SBE_SHORTLISTED_APPLICATIONS",CapabilityMode.VIEW);
