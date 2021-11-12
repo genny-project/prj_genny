@@ -53,6 +53,24 @@ rule "INIT_GENERATE_CAPABILITIES"
 		/* Dev Mode */
 		capabilityUtils.addCapability( "DEV_PORTAL", "Developer Portal");
 
+		/* Sidebar Capabilities */
+	    capabilityUtils.addCapability( "SIDEBAR_QUE_DASHBOARD", "Sidebar Dashboard");
+	    capabilityUtils.addCapability( "SIDEBAR_QUE_TAB_BUCKET_VIEW", "Sidebar Bucket View");
+	    capabilityUtils.addCapability( "SIDEBAR_QUE_TREE_ITEM_INTERNSHIPS", "Sidebar Internships");
+	    capabilityUtils.addCapability( "SIDEBAR_QUE_TREE_ITEM_HOST_COMPANIES", "Sidebar Host Companies");
+	    capabilityUtils.addCapability( "SIDEBAR_QUE_TREE_ITEM_EDU_PROVIDERS", "Sidebar Edu Providers");
+	    capabilityUtils.addCapability( "SIDEBAR_QUE_TREE_ITEM_APPLICATIONS_APPLIED", "Sidebar My Applications");
+	    capabilityUtils.addCapability( "SIDEBAR_QUE_HOST_COMPANY_VIEW", "Sidebar My Host Company");
+	    capabilityUtils.addCapability( "SIDEBAR_QUE_TREE_ITEM_LOGBOOK_GRP", "Sidebar Logbook");
+	    capabilityUtils.addCapability( "SIDEBAR_QUE_MESSAGES", "Sidebar Messages");
+
+	    capabilityUtils.addCapability( "SIDEBAR_QUE_TREE_ITEM_CONTACTS_GRP", "Sidebar Contacts");
+		capabilityUtils.addCapability( "SIDEBAR_QUE_TREE_ITEM_INTERNS", "Sidebar Contacts Interns");
+		capabilityUtils.addCapability( "SIDEBAR_QUE_TREE_ITEM_HCRS", "Sidebar Contacts Host Company Reps");
+		capabilityUtils.addCapability( "SIDEBAR_QUE_TREE_ITEM_EPRS", "Sidebar Contacts Edu Pro Reps");
+		capabilityUtils.addCapability( "SIDEBAR_QUE_TREE_ITEM_AGENTS", "Sidebar Contacts Agents");
+		capabilityUtils.addCapability( "SIDEBAR_QUE_TREE_ITEM_REFERRERS", "Sidebar Contacts Referrers");
+
 		/* A Cap For Handling Other Roles */
 		capabilityUtils.addCapability( "TYPE_AGENT", "Agent");
 		capabilityUtils.addCapability( "TYPE_HOST_CPY_REP", "Host Company Rep");

@@ -99,6 +99,21 @@ rule "ROL_AGENT"
 		 /* CACHED SEARCHES */
 		 capabilityUtils.addCapabilityToRole(role,"USE_CACHE",CapabilityMode.VIEW);
 
+		 /* SIDEBAR */
+	    capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_DASHBOARD", CapabilityMode.VIEW);
+	    capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_TAB_BUCKET_VIEW", CapabilityMode.VIEW);
+	    capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_TREE_ITEM_INTERNSHIPS", CapabilityMode.VIEW);
+	    capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_TREE_ITEM_HOST_COMPANIES", CapabilityMode.VIEW);
+	    capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_TREE_ITEM_EDU_PROVIDERS", CapabilityMode.VIEW);
+	    /* capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_TREE_ITEM_LOGBOOK_GRP", CapabilityMode.VIEW); */
+
+	    capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_TREE_ITEM_CONTACTS_GRP", CapabilityMode.VIEW);
+		capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_TREE_ITEM_INTERNS", CapabilityMode.VIEW);
+		capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_TREE_ITEM_HCRS", CapabilityMode.VIEW);
+		capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_TREE_ITEM_EPRS", CapabilityMode.VIEW);
+		capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_TREE_ITEM_AGENTS", CapabilityMode.VIEW);
+		/* capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_TREE_ITEM_REFERRERS", CapabilityMode.VIEW); */
+
 		 /* BUCKETS SEARCHES */
    	     capabilityUtils.addCapabilityToRole(role,"SBE_AVAILABLE_INTERNS",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"SBE_APPLIED_APPLICATIONS",CapabilityMode.VIEW);

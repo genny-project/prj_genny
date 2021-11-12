@@ -58,6 +58,13 @@ rule "ROL_INTERN"
 		capabilityUtils.addCapabilityToRole(role,"VIEW_AGREEMENT",CapabilityMode.VIEW);
 		capabilityUtils.addCapabilityToRole(role,"DOWNLOAD_INTERNSHIP_AGREEMENT_DOC",CapabilityMode.VIEW);
 
+		/* SIDEBAR */
+	    capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_DASHBOARD", CapabilityMode.VIEW);
+	    capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_TAB_BUCKET_VIEW", CapabilityMode.VIEW);
+	    capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_TREE_ITEM_INTERNSHIPS", CapabilityMode.VIEW);
+	    capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_TREE_ITEM_APPLICATIONS_APPLIED", CapabilityMode.VIEW);
+	    /* capabilityUtils.addCapabilityToRole(role,"SIDEBAR_QUE_TREE_ITEM_LOGBOOK_GRP", CapabilityMode.VIEW); */
+
 		 /* BUCKETS SEARCHES */
    	     capabilityUtils.addCapabilityToRole(role,"SBE_APPLIED_APPLICATIONS",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"SBE_SHORTLISTED_APPLICATIONS",CapabilityMode.VIEW);

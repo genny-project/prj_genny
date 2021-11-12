@@ -23,14 +23,20 @@ rule "SBE_MSGS"
 
 		BaseEntity project = beUtils.getBaseEntityByCode(projectCode);
 
-		SearchEntity searchBE = new SearchEntity(drools.getRule().getName(),"Message Templates")
+		SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Message Templates")
 			.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
 
 			.addFilter("PRI_CODE",SearchEntity.StringFilter.LIKE,"MSG_%")
 
+			.addColumn("PRI_CODE", "Code")
+			.addColumn("PRI_NAME", "Name")
+			.addColumn("PRI_DESCRIPTION", "Description")
+			.addColumn("PRI_DEFAULT_MSG_TYPE", "Default Message Type")
+			.addColumn("PRI_CONTEXT_LIST", "Context List")
+			.addColumn("PRI_CONTEXT_ASSOCIATIONS", "Context Associations")
+
 			.addAction("EDIT", "Edit")
 
-			.addColumn("*", "Wildcard")
 			.setPageStart(0)
 			.setPageSize(10000);
 
