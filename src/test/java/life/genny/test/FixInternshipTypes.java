@@ -53,6 +53,7 @@ import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.KeycloakUtils;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.utils.BaseEntityUtils;
+import life.genny.utils.DefUtils;
 import life.genny.utils.RulesUtils;
 import life.genny.utils.VertxUtils;
 
@@ -95,6 +96,68 @@ public class FixInternshipTypes {
         super();
     }
 
+    
+    @Test
+    public void fixInternshipTitleTest() throws Exception {
+ 
+        if (beUtils == null) {
+            return;
+        }
+        
+        
+         
+
+        SearchEntity searchBE = new SearchEntity("SBE_BES", "InternshipTitle Search")
+                .addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
+                .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%")
+                .addColumn("PRI_CODE", "Code");
+             //    .addAssociatedColumn("LNK_INTERN", "Intern Name", "LNK_COMP_INTERNSHIP")
+         searchBE.setRealm(realm);
+        
+        
+
+        Boolean ok = true;
+        Integer index = 0;
+        Integer fixedInterns = 0;
+        Integer fixedApps = 0;
+        searchBE.setPageStart(index);
+        Integer pageSize = 100;
+        searchBE.setPageSize(pageSize);
+        Long total = beUtils.getCount(searchBE);
+        
+    	Attribute statusAttribute = RulesUtils.getAttribute("PRI_STATUS", serviceToken.getToken());
+    	Attribute deletedAttribute = RulesUtils.getAttribute("PRI_DISABLED", serviceToken.getToken());
+    	Attribute lnkInternAttribute = RulesUtils.getAttribute("LNK_INTERN", serviceToken.getToken());
+    	Attribute internshipTitleAttribute = RulesUtils.getAttribute("PRI_INTERNSHIP_TITLE", serviceToken.getToken());	
+    	Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken.getToken());	
+    	Attribute internCodeAttribute = RulesUtils.getAttribute("PRI_INTERN_CODE", serviceToken.getToken());	
+    	Attribute applicantCodeAttribute = RulesUtils.getAttribute("PRI_APPLICANT_CODE", serviceToken.getToken());
+    		 
+    	BaseEntity defInternship = beUtils.getDEFByCode("DEF_INTERNSHIP");
+    	
+        while (ok) {
+        	List<BaseEntity> items = beUtils.getBaseEntitys(searchBE); // load 100 at a time
+        	if (items.isEmpty() || (index > 5000)) {
+        		ok = false;
+        		break;
+        	}
+        	
+        	for (BaseEntity item : items) {
+        		index++;
+        
+       	  		System.out.println(index+" of "+total+" BEs -> "+item.getCode()+" "+item.getName());
+       	  	 
+        	}
+        	
+        	searchBE.setPageStart(index);
+        }
+
+
+
+    }
+
+    
+    
  // @Test
     public void removeTestsTest() throws Exception {
         VertxUtils.cachedEnabled = false;
@@ -900,7 +963,8 @@ public void internshipFixTest() throws Exception {
         vertxCache = new VertxCache(); // MockCache
         VertxUtils.init(eventBusMock, vertxCache);
 
-         String apiUrl = GennySettings.projectUrl + "/api/events/init?url=" + GennySettings.projectUrl;
+
+        String apiUrl = GennySettings.projectUrl + "/api/events/init?url=" + GennySettings.projectUrl;
         System.out.println("Fetching setup info from " + apiUrl);
         try {
             javax.json.JsonObject projectParms = null;
@@ -953,7 +1017,8 @@ public void internshipFixTest() throws Exception {
         beUtils = new BaseEntityUtils(userToken);
         beUtils.setServiceToken(serviceToken);
 
-       
+
+        DefUtils.loadDEFS(realm, serviceToken);
     }
 
  
