@@ -154,6 +154,13 @@ public class FixInternshipTypes {
             				item = beUtils.saveAnswer(new Answer(item,item,nameAttribute,title));
             				System.out.println("FIXED *************** NAME IS BEG but title is "+title);
             			}
+ 
+        			} else {
+           				if (!StringUtils.isBlank(title)) {
+            				item = beUtils.saveAnswer(new Answer(item,item,nameAttribute,title));
+            				System.out.println("FIXED *************** NAME IS BEG but title is "+title);
+            			}
+
         			}
         		} else {
         			
