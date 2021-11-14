@@ -145,6 +145,39 @@ public class FixInternshipTypes {
         	for (BaseEntity item : items) {
         		index++;
         
+        		// check if PRI_INTERNSHIP_TITLE is there
+        		String title = item.getValue("PRI_INTERNSHIP_TITLE", null);
+        		String name = item.getValue("PRI_NAME", null);
+        		if ((!StringUtils.isBlank(name))) {
+        			if (name.startsWith("BEG_")) {
+        				if (!StringUtils.isBlank(title)) {
+            				item = beUtils.saveAnswer(new Answer(item,item,nameAttribute,title));
+            				System.out.println("FIXED *************** NAME IS BEG but title is "+title);
+            			}
+        			}
+        		} else {
+        			
+        			if (!StringUtils.isBlank(title)) {
+        				item = beUtils.saveAnswer(new Answer(item,item,nameAttribute,title));
+        				System.out.println("FIXED *************** NAME IS NULL but title is "+title);
+        			} else {
+        				
+        				String industry = item.getValue("PRI_ASSOC_INDUSTRY", null);
+        				if (!StringUtils.isBlank(industry)) {
+        					item = beUtils.saveAnswer(new Answer(item,item,nameAttribute,industry));  // give the name of the internship the industry name
+        					System.out.println("FIXED ************** NAME AND TITLE ARE NULL using industry "+item.getCode());
+        				} else {
+        					String companyname = item.getValue("PRI_ASSOC_HC", null);
+        					if (!StringUtils.isBlank(companyname)) {
+        						item = beUtils.saveAnswer(new Answer(item,item,nameAttribute,companyname));  // give the name of the internship the company name
+        						System.out.println("FIXED ************** NAME AND TITLE ARE NULL using company "+item.getCode());
+        					} else {
+        						
+        					}
+        				}
+        			}
+        		}
+        		
        	  		System.out.println(index+" of "+total+" BEs -> "+item.getCode()+" "+item.getName());
        	  	 
         	}
