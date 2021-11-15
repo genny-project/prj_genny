@@ -52,20 +52,25 @@ rule "HELPER_LNK_OCCUPATION_BEG"
 			List<String> baseOutcomesList = new ArrayList<>();
 			List<String> specificOutcomesList = new ArrayList<>();
 
+			String name = "";
+			String roles = "";
+			String baseOutcomes = "";
+			String specificOutcomes = "";
+
 			for (String code : codes.split(",")) {
 
 				BaseEntity be = beUtils.getBaseEntityByCode(code);
 				if(be != null){
-					String name = be.getValue("PRI_NAME", null);
+					name = be.getValue("PRI_NAME", null);
 					if(name!=null) occupationList.add(name);
 
-					String roles = be.getValue("PRI_ROLES_AND_RESPONSIBILITIES", null);
+					roles = be.getValue("PRI_ROLES_AND_RESPONSIBILITIES", null);
 					if(roles!=null) rolesList.add(roles);
 
-					String baseOutcomes = be.getValue("PRI_BASE_LEARNING_OUTCOMES", null);
+					baseOutcomes = be.getValue("PRI_BASE_LEARNING_OUTCOMES", null);
 					if(baseOutcomes!=null) baseOutcomesList.add(baseOutcomes);
 
-					String specificOutcomes = be.getValue("PRI_SPECIFIC_LEARNING_OUTCOMES", null);
+					specificOutcomes = be.getValue("PRI_SPECIFIC_LEARNING_OUTCOMES", null);
 					if(specificOutcomes!=null) specificOutcomesList.add(specificOutcomes);
 				}
 			}
