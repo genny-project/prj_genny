@@ -71,7 +71,7 @@ rule "PRI_SEARCH_TEXT_SAVE_ANSWER"
 			System.out.println("input :: " + input);
 
 			if (input.equals("empty")) {
-				Answer saveThisAnswer = new Answer(sourceCode, targetCode, attribute, null);
+				Answer saveThisAnswer = new Answer(sourceCode, targetCode, attribute, "");
 				beUtils.saveAnswer(saveThisAnswer);
 				System.out.println("Saved Empty Answer!!");
 
