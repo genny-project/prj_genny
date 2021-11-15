@@ -82,8 +82,8 @@ rule "HELPER_LNK_OCCUPATION_BEG"
 
 			String occupations = occupationList.toString().replaceAll("[\\[\\](){}]","");
 			String roles = rolesList.toString().replaceAll("[\\[\\](){}]","");
-			String baseOutcomes = baseOutcomesList.toString().replaceAll("[\\[\\](){}]","");
-			String specificOutcomes = specificOutcomesList.toString().replaceAll("[\\[\\](){}]","");
+			baseOutcomes = baseOutcomesList.toString().replaceAll("[\\[\\](){}]","");
+			specificOutcomes = specificOutcomesList.toString().replaceAll("[\\[\\](){}]","");
 
 			Answer assocOccupationAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_OCCUPATION", occupations, false, true);
 			Answer rolesAnswer = new Answer(sourceCode, targetCode, "PRI_ROLES_AND_RESPONSIBILITIES", roles, false, true);
