@@ -12,7 +12,7 @@ import life.genny.qwanda.message.QScheduleMessage;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.ArrayList;
-import life.genny.message.QMessageGennyMSG;
+import life.genny.qwanda.message.QMessageGennyMSG;
 import life.genny.qwanda.message.QBaseMSGMessageType;
 import life.genny.qwandautils.MessageUtils;
 import life.genny.qwanda.EEntityStatus;
