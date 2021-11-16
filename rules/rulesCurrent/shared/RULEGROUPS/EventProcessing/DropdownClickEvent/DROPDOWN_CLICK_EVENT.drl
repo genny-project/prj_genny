@@ -61,7 +61,7 @@ rule "DROPDOWN_CLICK_EVENT"
     then
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + message );
 
-		if (true) {
+		if (false) {
 
 		System.out.println(ruleDetails+" "+drools.getRule().getName() + " code: " + message.getData().getCode());
 		Integer dropdownSize = GennySettings.defaultDropDownPageSize;
