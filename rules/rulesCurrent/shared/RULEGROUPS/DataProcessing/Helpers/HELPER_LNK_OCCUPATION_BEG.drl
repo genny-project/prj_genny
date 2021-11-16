@@ -52,28 +52,38 @@ rule "HELPER_LNK_OCCUPATION_BEG"
 			List<String> baseOutcomesList = new ArrayList<>();
 			List<String> specificOutcomesList = new ArrayList<>();
 
+			String name = "";
+			String roles = "";
+			String baseOutcomes = "";
+			String specificOutcomes = "";
+
 			for (String code : codes.split(",")) {
 
 				BaseEntity be = beUtils.getBaseEntityByCode(code);
 				if(be != null){
-					String name = be.getValue("PRI_NAME", null);
+					name = be.getValue("PRI_NAME", null);
 					if(name!=null) occupationList.add(name);
 
-					String roles = be.getValue("PRI_ROLES_AND_RESPONSIBILITIES", null);
+					roles = be.getValue("PRI_ROLES_AND_RESPONSIBILITIES", null);
 					if(roles!=null) rolesList.add(roles);
 
-					String baseOutcomes = be.getValue("PRI_BASE_LEARNING_OUTCOMES", null);
+					baseOutcomes = be.getValue("PRI_BASE_LEARNING_OUTCOMES", null);
 					if(baseOutcomes!=null) baseOutcomesList.add(baseOutcomes);
 
-					String specificOutcomes = be.getValue("PRI_SPECIFIC_LEARNING_OUTCOMES", null);
+					specificOutcomes = be.getValue("PRI_SPECIFIC_LEARNING_OUTCOMES", null);
 					if(specificOutcomes!=null) specificOutcomesList.add(specificOutcomes);
 				}
 			}
 
+			System.out.println(drools.getRule().getName() + ":: name: " + name);
+			System.out.println(drools.getRule().getName() + ":: name: " + roles);
+			System.out.println(drools.getRule().getName() + ":: name: " + baseOutcomes);
+			System.out.println(drools.getRule().getName() + ":: name: " + specificOutcomes);
+
 			String occupations = occupationList.toString().replaceAll("[\\[\\](){}]","");
-			String roles = rolesList.toString().replaceAll("[\\[\\](){}]","");
-			String baseOutcomes = baseOutcomesList.toString().replaceAll("[\\[\\](){}]","");
-			String specificOutcomes = specificOutcomesList.toString().replaceAll("[\\[\\](){}]","");
+			roles = rolesList.toString().replaceAll("[\\[\\](){}]","");
+			baseOutcomes = baseOutcomesList.toString().replaceAll("[\\[\\](){}]","");
+			specificOutcomes = specificOutcomesList.toString().replaceAll("[\\[\\](){}]","");
 
 			Answer assocOccupationAnswer = new Answer(sourceCode, targetCode, "PRI_ASSOC_OCCUPATION", occupations, false, true);
 			Answer rolesAnswer = new Answer(sourceCode, targetCode, "PRI_ROLES_AND_RESPONSIBILITIES", roles, false, true);
