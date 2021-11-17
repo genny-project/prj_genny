@@ -52,16 +52,14 @@ rule "DROPDOWN_CLICK_EVENT"
 	salience 2000
     no-loop
     when
-			message : QEventDropdownMessage(	)
-			userToken : GennyToken (code != "PER_SERVICE" )
-			serviceToken : GennyToken( code == "PER_SERVICE")
-			output : OutputParam( )
-			ruleDetails : RuleDetails()
-			beUtils : BaseEntityUtils()
+		message : QEventDropdownMessage(	)
+		userToken : GennyToken (code != "PER_SERVICE" )
+		serviceToken : GennyToken( code == "PER_SERVICE")
+		output : OutputParam( )
+		ruleDetails : RuleDetails()
+		beUtils : BaseEntityUtils()
     then
-			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + message );
-
-		if (false) {
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + message );
 
 		System.out.println(ruleDetails+" "+drools.getRule().getName() + " code: " + message.getData().getCode());
 		Integer dropdownSize = GennySettings.defaultDropDownPageSize;
@@ -84,10 +82,14 @@ rule "DROPDOWN_CLICK_EVENT"
 				if (dropdownCode != null) {
 					message.setAttributeCode(dropdownCode);
 				}
-			/* Determine whether there is a DEF attribute and target type that has a new DEF
-			   search for this combination
-			   */
-				defDropdownExists = beUtils.hasDropdown(dropdownCode, defBe);
+				/* 
+				Determine whether there is a DEF attribute and target type that has a new DEF
+				   search for this combination
+
+				   NOTE: Only allows capability dependant dropdowns in rulesservice now, others handeld by dropkick
+				*/
+				/* defDropdownExists = beUtils.hasDropdown(dropdownCode, defBe); */
+				defDropdownExists = beUtils.hasCapabilityDependantDropdown(dropdownCode, defBe);
 			} catch (Exception e) {
 				if (askMsg == null) {
 					System.out.println("NULL when fetching ask");
@@ -121,5 +123,4 @@ rule "DROPDOWN_CLICK_EVENT"
 		}
 		
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" End Dropdown Rule");
-		}
 	end
