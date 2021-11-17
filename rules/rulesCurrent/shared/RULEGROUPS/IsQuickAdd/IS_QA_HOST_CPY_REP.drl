@@ -25,12 +25,12 @@ rule "IS_QA_HOST_CPY_REP"
 		baseEntityType : String(baseEntityType.equals("QA_HOST_CPY_REP"))
 		newBe : BaseEntity()
 		beUtils : BaseEntityUtils()
-	  
+
      then
- 		System.out.println(drools.getRule().getName() + ": Rule fired :: newBe = " + newBe.getCode()); 
+ 		System.out.println(drools.getRule().getName() + ": Rule fired :: newBe = " + newBe.getCode());
 
  		List<Answer> answers = new ArrayList<>();
- 		
+
 		Boolean isHostCpyRep = (Boolean) beUtils.getBaseEntityValue(userToken.getUserCode(), "PRI_IS_HOST_CPY_REP");
 
 		String linkedHC = newBe.getValue("LNK_HOST_COMPANY", null);
@@ -38,7 +38,7 @@ rule "IS_QA_HOST_CPY_REP"
 		BaseEntity companyBe = null;
 		if (linkedHC != null && !linkedHC.isEmpty()) {
 			System.out.println("LNK_HOST_COMPANY present!");
-			
+
 		} else {
 			if (isHostCpyRep != null && isHostCpyRep) {
 				/* If HostCpyRep adding another HostCpyRep, then set same company */
@@ -59,15 +59,15 @@ rule "IS_QA_HOST_CPY_REP"
 				answers.add(new Answer(userToken.getUserCode(), cpyCode, "PRI_IS_HOST_CPY", true));
 				answers.add(new Answer(userToken.getUserCode(), cpyCode, "PRI_PROFILE", "Incomplete"));
 				answers.add(new Answer(userToken.getUserCode(), cpyCode, "PRI_NAME", "Not selected yet"));
-				
+
 				companyBe = beUtils.getBaseEntityByCode(cpyCode);
 			}
 
 			/* Save the CPY name to the rep BE */
 			if(companyBe != null) {
 				/* get the name attribute of the company */
-				String hcName = companyBe.getValue("PRI_NAME", null);	
-				System.out.println("hcName  :: " + hcName);	
+				String hcName = companyBe.getValue("PRI_NAME", null);
+				System.out.println("hcName  :: " + hcName);
 
 				/* save the company's name as PRI_ASSOC_HC attribute for person baseentity */
 				if(hcName != null){
@@ -100,7 +100,7 @@ rule "IS_QA_HOST_CPY_REP"
 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_EMAIL_FLAG", flag));
 
 		beUtils.saveAnswers(answers);
-		
+
 		/* Update Email and Name, and set Random Password in Keycloak */
 		KeycloakUtils.updateUserDetails(beUtils, newBe);
 		String password = KeycloakUtils.generateRandomPassword(beUtils, newBe);
@@ -109,7 +109,7 @@ rule "IS_QA_HOST_CPY_REP"
 		BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
 		String accessToken = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, newBe, serviceToken.getToken());
 		String url = MessageUtils.encodeUrl(GennySettings.projectUrl+"/home", "QUE_FAKE_PARENT", "QUE_FINISH_HOST_CPY_REP", null, accessToken);
-	
+
 		/* Init Sendgrid Msg */
 		QMessageGennyMSG msg = new QMessageGennyMSG(QBaseMSGMessageType.SENDGRID);
 		msg.setTemplateCode("MSG_HCR1_REGISTER");
@@ -117,14 +117,14 @@ rule "IS_QA_HOST_CPY_REP"
 		msg.addContext("PASSWORD", password);
 		msg.addContext("URL", url);
 		msg.addContext("BCC", "PRJ_INTERNMATCH");
-		
+
 		if (flag) {
 			MessageUtils.sendMessage(beUtils, msg);
 		}
-		
+
 		/* Post Note */
 		String endPoint = GennySettings.projectUrl + "/v7/notes";
 		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), newBe.getCode(), "Added as a Host Company Rep", "System", "System", "", serviceToken.getToken());
-		
+
 		retract(newBe)
 end

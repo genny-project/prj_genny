@@ -53,6 +53,7 @@ import life.genny.qwandautils.JsonUtils;
 import life.genny.qwandautils.KeycloakUtils;
 import life.genny.qwandautils.QwandaUtils;
 import life.genny.utils.BaseEntityUtils;
+import life.genny.utils.DefUtils;
 import life.genny.utils.RulesUtils;
 import life.genny.utils.VertxUtils;
 
@@ -95,7 +96,109 @@ public class FixInternshipTypes {
         super();
     }
 
-  @Test
+    
+    @Test
+    public void fixInternshipTitleTest() throws Exception {
+ 
+        if (beUtils == null) {
+            return;
+        }
+        
+        
+         
+
+        SearchEntity searchBE = new SearchEntity("SBE_BES", "InternshipTitle Search")
+                .addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
+                .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%")
+                .addColumn("PRI_CODE", "Code");
+             //    .addAssociatedColumn("LNK_INTERN", "Intern Name", "LNK_COMP_INTERNSHIP")
+         searchBE.setRealm(realm);
+        
+        
+
+        Boolean ok = true;
+        Integer index = 0;
+        Integer fixedInterns = 0;
+        Integer fixedApps = 0;
+        searchBE.setPageStart(index);
+        Integer pageSize = 100;
+        searchBE.setPageSize(pageSize);
+        Long total = beUtils.getCount(searchBE);
+        
+    	Attribute statusAttribute = RulesUtils.getAttribute("PRI_STATUS", serviceToken.getToken());
+    	Attribute deletedAttribute = RulesUtils.getAttribute("PRI_DISABLED", serviceToken.getToken());
+    	Attribute lnkInternAttribute = RulesUtils.getAttribute("LNK_INTERN", serviceToken.getToken());
+    	Attribute internshipTitleAttribute = RulesUtils.getAttribute("PRI_INTERNSHIP_TITLE", serviceToken.getToken());	
+    	Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken.getToken());	
+    	Attribute internCodeAttribute = RulesUtils.getAttribute("PRI_INTERN_CODE", serviceToken.getToken());	
+    	Attribute applicantCodeAttribute = RulesUtils.getAttribute("PRI_APPLICANT_CODE", serviceToken.getToken());
+    		 
+    	BaseEntity defInternship = beUtils.getDEFByCode("DEF_INTERNSHIP");
+    	
+        while (ok) {
+        	List<BaseEntity> items = beUtils.getBaseEntitys(searchBE); // load 100 at a time
+        	if (items.isEmpty() || (index > 5000)) {
+        		ok = false;
+        		break;
+        	}
+        	
+        	for (BaseEntity item : items) {
+        		index++;
+        
+        		// check if PRI_INTERNSHIP_TITLE is there
+        		String title = item.getValue("PRI_INTERNSHIP_TITLE", null);
+        		String name = item.getValue("PRI_NAME", null);
+        		if ((!StringUtils.isBlank(name))) {
+        			if (name.startsWith("BEG_")) {
+        				if (!StringUtils.isBlank(title)) {
+            				item = beUtils.saveAnswer(new Answer(item,item,nameAttribute,title));
+            				System.out.println("FIXED *************** NAME IS BEG but title is "+title);
+            			}
+ 
+        			} else {
+           				if (!StringUtils.isBlank(title)) {
+            				item = beUtils.saveAnswer(new Answer(item,item,nameAttribute,title));
+            				System.out.println("FIXED *************** NAME IS BEG but title is "+title);
+            			}
+
+        			}
+        		} else {
+        			
+        			if (!StringUtils.isBlank(title)) {
+        				item = beUtils.saveAnswer(new Answer(item,item,nameAttribute,title));
+        				System.out.println("FIXED *************** NAME IS NULL but title is "+title);
+        			} else {
+        				
+        				String industry = item.getValue("PRI_ASSOC_INDUSTRY", null);
+        				if (!StringUtils.isBlank(industry)) {
+        					item = beUtils.saveAnswer(new Answer(item,item,nameAttribute,industry));  // give the name of the internship the industry name
+        					System.out.println("FIXED ************** NAME AND TITLE ARE NULL using industry "+item.getCode());
+        				} else {
+        					String companyname = item.getValue("PRI_ASSOC_HC", null);
+        					if (!StringUtils.isBlank(companyname)) {
+        						item = beUtils.saveAnswer(new Answer(item,item,nameAttribute,companyname));  // give the name of the internship the company name
+        						System.out.println("FIXED ************** NAME AND TITLE ARE NULL using company "+item.getCode());
+        					} else {
+        						
+        					}
+        				}
+        			}
+        		}
+        		
+       	  		System.out.println(index+" of "+total+" BEs -> "+item.getCode()+" "+item.getName());
+       	  	 
+        	}
+        	
+        	searchBE.setPageStart(index);
+        }
+
+
+
+    }
+
+    
+    
+ // @Test
     public void removeTestsTest() throws Exception {
         VertxUtils.cachedEnabled = false;
 
@@ -288,7 +391,7 @@ public class FixInternshipTypes {
  }
 
 
-//@Test
+@Test
 public void appProgressFixTest() throws Exception {
     VertxUtils.cachedEnabled = false;
 
@@ -626,7 +729,7 @@ public void appnameFixTest() throws Exception {
 }
 
 
-@Test
+//@Test
 public void hcrFixTest() throws Exception {
     VertxUtils.cachedEnabled = false;
 
@@ -726,7 +829,7 @@ public void hcrFixTest() throws Exception {
 }
 
 
-@Test
+//@Test
 public void internshipFixTest() throws Exception {
     VertxUtils.cachedEnabled = false;
 
@@ -900,7 +1003,8 @@ public void internshipFixTest() throws Exception {
         vertxCache = new VertxCache(); // MockCache
         VertxUtils.init(eventBusMock, vertxCache);
 
-         String apiUrl = GennySettings.projectUrl + "/api/events/init?url=" + GennySettings.projectUrl;
+
+        String apiUrl = GennySettings.projectUrl + "/api/events/init?url=" + GennySettings.projectUrl;
         System.out.println("Fetching setup info from " + apiUrl);
         try {
             javax.json.JsonObject projectParms = null;
@@ -953,7 +1057,8 @@ public void internshipFixTest() throws Exception {
         beUtils = new BaseEntityUtils(userToken);
         beUtils.setServiceToken(serviceToken);
 
-       
+
+        DefUtils.loadDEFS(realm, serviceToken);
     }
 
  

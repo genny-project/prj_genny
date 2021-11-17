@@ -52,16 +52,14 @@ rule "DROPDOWN_CLICK_EVENT"
 	salience 2000
     no-loop
     when
-			message : QEventDropdownMessage(	)
-			userToken : GennyToken (code != "PER_SERVICE" )
-			serviceToken : GennyToken( code == "PER_SERVICE")
-			output : OutputParam( )
-			ruleDetails : RuleDetails()
-			beUtils : BaseEntityUtils()
+		message : QEventDropdownMessage(	)
+		userToken : GennyToken (code != "PER_SERVICE" )
+		serviceToken : GennyToken( code == "PER_SERVICE")
+		output : OutputParam( )
+		ruleDetails : RuleDetails()
+		beUtils : BaseEntityUtils()
     then
-			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + message );
-
-		if (false) {
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + message );
 
 		System.out.println(ruleDetails+" "+drools.getRule().getName() + " code: " + message.getData().getCode());
 		Integer dropdownSize = GennySettings.defaultDropDownPageSize;
@@ -84,10 +82,50 @@ rule "DROPDOWN_CLICK_EVENT"
 				if (dropdownCode != null) {
 					message.setAttributeCode(dropdownCode);
 				}
-			/* Determine whether there is a DEF attribute and target type that has a new DEF
-			   search for this combination
-			   */
-				defDropdownExists = beUtils.hasDropdown(dropdownCode, defBe);
+				/* 
+				Determine whether there is a DEF attribute and target type that has a new DEF
+				   search for this combination
+
+				   NOTE: Only allows capability dependant dropdowns in rulesservice now, others handeld by dropkick
+				*/
+				/* defDropdownExists = beUtils.hasDropdown(dropdownCode, defBe); */
+				/* defDropdownExists = beUtils.hasCapabilityDropdown(dropdownCode, defBe); */
+
+
+				if (!defBe.getCode().startsWith("DEF_")) {
+					System.out.println("Cannot determine if dropdown exists , Not a DEF! " + defBe.getCode());
+					defDropdownExists = false;
+				}
+
+				Optional<EntityAttribute> searchAtt = defBe.findEntityAttribute("SER_" + dropdownCode);
+				if (searchAtt.isPresent()) {
+					String serValue = searchAtt.get().getValueString();
+					System.out.println("Attribute exists in " + defBe.getCode() + " for SER_" + dropdownCode + " --> " + serValue);
+					JsonObject serJson = new JsonObject(serValue);
+
+					Boolean isConditional = serValue.contains("conditions");
+
+					Boolean isEnabled = true;
+					if (serJson.containsKey("enabled")) {
+						isEnabled = serJson.getBoolean("enabled");
+					} else {
+						System.out.println("Attribute exists in " + defBe.getCode() + " for SER_" + dropdownCode
+								+ " --> but NOT enabled!");
+					}
+
+					if (isConditional && isEnabled) {
+						defDropdownExists = true;
+					} else {
+						defDropdownExists = false;
+					}
+				} else {
+					defDropdownExists = false;
+					System.out.println("No attribute exists in " + defBe.getCode() + " for SER_" + dropdownCode);
+				}
+
+
+
+
 			} catch (Exception e) {
 				if (askMsg == null) {
 					System.out.println("NULL when fetching ask");
@@ -121,7 +159,4 @@ rule "DROPDOWN_CLICK_EVENT"
 		}
 		
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" End Dropdown Rule");
-		} else {
-			System.out.println("ERROR: This dropdown event should not be getting to here ");
-		}
 	end
