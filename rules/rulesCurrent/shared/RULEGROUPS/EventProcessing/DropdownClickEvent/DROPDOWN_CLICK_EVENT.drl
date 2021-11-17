@@ -89,7 +89,43 @@ rule "DROPDOWN_CLICK_EVENT"
 				   NOTE: Only allows capability dependant dropdowns in rulesservice now, others handeld by dropkick
 				*/
 				/* defDropdownExists = beUtils.hasDropdown(dropdownCode, defBe); */
-				defDropdownExists = beUtils.hasCapabilityDependantDropdown(dropdownCode, defBe);
+				/* defDropdownExists = beUtils.hasCapabilityDropdown(dropdownCode, defBe); */
+
+
+				if (!defBe.getCode().startsWith("DEF_")) {
+					System.out.println("Cannot determine if dropdown exists , Not a DEF! " + defBe.getCode());
+					defDropdownExists = false;
+				}
+
+				Optional<EntityAttribute> searchAtt = defBe.findEntityAttribute("SER_" + dropdownCode);
+				if (searchAtt.isPresent()) {
+					String serValue = searchAtt.get().getValueString();
+					System.out.println("Attribute exists in " + defBe.getCode() + " for SER_" + dropdownCode + " --> " + serValue);
+					JsonObject serJson = new JsonObject(serValue);
+
+					Boolean isConditional = serValue.contains("conditions");
+
+					Boolean isEnabled = true;
+					if (serJson.containsKey("enabled")) {
+						isEnabled = serJson.getBoolean("enabled");
+					} else {
+						System.out.println("Attribute exists in " + defBe.getCode() + " for SER_" + dropdownCode
+								+ " --> but NOT enabled!");
+					}
+
+					if (isConditional && isEnabled) {
+						defDropdownExists = true;
+					} else {
+						defDropdownExists = false;
+					}
+				} else {
+					defDropdownExists = false;
+					System.out.println("No attribute exists in " + defBe.getCode() + " for SER_" + dropdownCode);
+				}
+
+
+
+
 			} catch (Exception e) {
 				if (askMsg == null) {
 					System.out.println("NULL when fetching ask");
