@@ -17,7 +17,7 @@ rule "LNK_PERSON"
 	when
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
-		answer : Answer( attributeCode == "LNK_PERSON" && value != "[]" )
+		answer : Answer( attributeCode == "LNK_INTERN" && value != "[]" )
 		output : OutputParam()
 		beUtils : BaseEntityUtils()
 
