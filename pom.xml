@@ -263,8 +263,14 @@
 			<version>5.7.1</version>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>life.genny</groupId>
+            <artifactId>genny-verticle-rules</artifactId>
+            <version>9.0.0</version>
+            <scope>test</scope>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 	<build>
 		<plugins>
 		<plugin>
