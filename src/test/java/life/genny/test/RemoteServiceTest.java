@@ -10,7 +10,7 @@ import io.vertx.core.json.JsonObject;
 import life.genny.eventbus.EventBusInterface;
 import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
-import life.genny.jbpm.customworkitemhandlers.AskQuestionTaskWorkItemHandler;
+
 import life.genny.qwanda.*;
 import life.genny.qwanda.attribute.AttributeText;
 import life.genny.qwanda.message.*;
@@ -88,7 +88,6 @@ public class RemoteServiceTest {
         System.out.println("BridgeUrl=" + GennySettings.bridgeServiceUrl);
         System.out.println("QwandaUrl=" + GennySettings.qwandaServiceUrl);
 
-
         // Set up realm
         realms = new HashSet<String>();
         realms.add(realm);
@@ -102,10 +101,10 @@ public class RemoteServiceTest {
         vertxCache = new VertxCache(); // MockCache
         VertxUtils.init(eventBusMock, vertxCache);
 
+
         String apiUrl = GennySettings.projectUrl + "/api/events/init?url=" + GennySettings.projectUrl;
         System.out.println("Fetching setup info from " + apiUrl);
         try {
-//            RulesUtils.loadAllAttributesIntoCache(beUtils.getGennyToken().getToken());
             javax.json.JsonObject projectParms = null;
             String keycloakJson = QwandaUtils.apiGet(apiUrl, null);
             javax.json.bind.Jsonb jsonb = JsonbBuilder.create();
@@ -155,8 +154,8 @@ public class RemoteServiceTest {
 
         beUtils = new BaseEntityUtils(userToken);
         beUtils.setServiceToken(serviceToken);
-        // Set up the defs
-        DefUtils.loadDEFS(realm,serviceToken);
+
+        DefUtils.loadDEFS(realm, serviceToken);
 
     }
 

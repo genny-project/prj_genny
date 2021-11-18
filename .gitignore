@@ -22,7 +22,7 @@ eclipse/
 /.apt_generated_tests/
 /bin/
 /ActiveMQData/
-
+pom.xml
 #ignore eclipse settings
 .settings/
 .classpath
