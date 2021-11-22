@@ -22,6 +22,9 @@ rule "CREATE_INTERN"
     no-loop
     when
 		$message : QEventMessage(data.code matches "CREATE_INTERN")
+
+		/* Add capability permissions to this - Agent or Dev or Superuser */
+
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken (code == "PER_SERVICE" )
 		output : OutputParam( )

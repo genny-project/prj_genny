@@ -78,6 +78,7 @@ rule "PRI_SEARCH_TEXT_RUN_WORKFLOW"
 
         /*construct a signal event that runs the ASK_QUESTION workflow*/
         QEventWorkflowMessage workflowMsg = new QEventWorkflowMessage("ASK_QUESTIONS");
+        workflowMsg.setMessageData(output);
         workflowMsg.setToken(userToken.getToken());
         VertxUtils.writeMsg("events", workflowMsg);
         retract(answer);
