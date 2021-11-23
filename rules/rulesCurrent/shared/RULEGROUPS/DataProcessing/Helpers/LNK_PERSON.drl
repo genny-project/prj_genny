@@ -23,6 +23,9 @@ rule "LNK_PERSON"
 
 	then
 		System.out.println(drools.getRule().getName()+": Rule fired");
+
+		/* Ensure frontend has updated dropdown value */
+		VertxUtils.sendToFrontEnd(userToken, answer);
  		
 		/* Get Target User BE */
  		String value = answer.getValue();
