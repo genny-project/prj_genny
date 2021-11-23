@@ -14,7 +14,7 @@ import org.json.JSONObject;
 import io.vertx.core.json.JsonObject;
 import life.genny.utils.VertxUtils;
 import life.genny.utils.TableUtils;
-import life.genny.utils.OutputParam;
+import life.genny.qwanda.utils.OutputParam;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.QuestionUtils;
 import life.genny.qwandautils.JsonUtils;
@@ -28,7 +28,7 @@ import life.genny.models.TableData;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwanda.Ask;
-import life.genny.utils.OutputParam;
+import life.genny.qwanda.utils.OutputParam;
 import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 
 rule "VIEW_REMOTE_JOBS_CLICK_EVENT"

@@ -74,7 +74,7 @@
 	<bpmn2:itemDefinition id="ItemDefinition_3"
 		isCollection="false" structureRef="Object" />
 	<bpmn2:itemDefinition id="ItemDefinition_1081"
-		isCollection="false" structureRef="life.genny.utils.OutputParam" />
+		isCollection="false" structureRef="life.genny.qwanda.utils.OutputParam" />
 	<bpmn2:itemDefinition id="ItemDefinition_16"
 		isCollection="false" structureRef="life.genny.utils.SessionFacts" />
 	<bpmn2:itemDefinition id="ItemDefinition_7"
@@ -130,7 +130,7 @@
 			<tns:import name="java.time.OffsetDateTime" />
 			<tns:import name="life.genny.qwanda.Answer" />
 			<tns:import name="io.vertx.core.json.JsonObject" />
-			<tns:import name="life.genny.utils.OutputParam" />
+			<tns:import name="life.genny.qwanda.utils.OutputParam" />
 			<tns:import name="life.genny.utils.SessionFacts" />
 			<tns:import
 				name="org.kie.api.definition.process.WorkflowProcess" />

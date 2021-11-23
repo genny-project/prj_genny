@@ -7,7 +7,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_2122" isCollection="false" structureRef="java.lang.Long"/>
   <bpmn2:itemDefinition id="ItemDefinition_2436" isCollection="false" structureRef="life.genny.utils.CallingProcessToken"/>
   <bpmn2:itemDefinition id="ItemDefinition_53" isCollection="false" structureRef="java.lang.String"/>
-  <bpmn2:itemDefinition id="ItemDefinition_569" isCollection="false" structureRef="life.genny.utils.OutputParam"/>
+  <bpmn2:itemDefinition id="ItemDefinition_569" isCollection="false" structureRef="life.genny.qwanda.utils.OutputParam"/>
   <bpmn2:itemDefinition id="ItemDefinition_922" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_923" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_924" isCollection="false" structureRef="Object"/>
@@ -69,7 +69,7 @@
       <drools:import name="life.genny.utils.BaseEntityUtils"/>
       <drools:import name="life.genny.qwanda.entity.BaseEntity"/>
       <drools:import name="life.genny.utils.CallingProcessToken"/>
-      <drools:import name="life.genny.utils.OutputParam"/>
+      <drools:import name="life.genny.qwanda.utils.OutputParam"/>
       <drools:import name="java.util.HashMap"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_102" name="serviceToken"/>

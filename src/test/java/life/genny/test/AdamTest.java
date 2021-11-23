@@ -146,7 +146,7 @@
 //import life.genny.utils.GennyKieSession;
 //import life.genny.utils.ImportUtils;
 //import life.genny.utils.JunitCache;
-//import life.genny.utils.OutputParam;
+//import life.genny.qwanda.utils.OutputParam;
 //import life.genny.utils.RulesUtils;
 //import life.genny.utils.SearchCallable;
 //import life.genny.utils.SessionFacts;

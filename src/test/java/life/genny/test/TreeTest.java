@@ -52,7 +52,7 @@ package life.genny.test;
 //import life.genny.utils.BucketUtilsTest;
 //import life.genny.utils.FrameUtils2;
 //import life.genny.utils.GennyJbpmBaseTest;
-//import life.genny.utils.OutputParam;
+//import life.genny.qwanda.utils.OutputParam;
 //import life.genny.utils.RulesUtils;
 //import life.genny.utils.SearchUtilsTest;
 //import life.genny.utils.TableUtils;

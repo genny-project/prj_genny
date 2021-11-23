@@ -4,7 +4,7 @@ import life.genny.qwanda.message.QEventMessage;
 import life.genny.models.GennyToken;
 import life.genny.utils.VertxUtils;
 import io.vertx.core.json.JsonObject;
-import life.genny.utils.OutputParam;
+import life.genny.qwanda.utils.OutputParam;
 import life.genny.qwanda.rule.RuleDetails;
 
 rule "DEFAULTPAGE"

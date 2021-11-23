@@ -5,7 +5,7 @@ import life.genny.qwanda.message.QEventDropdownMessage;
 import life.genny.models.GennyToken;
 import life.genny.utils.VertxUtils;
 import io.vertx.core.json.JsonObject;
-import life.genny.utils.OutputParam;
+import life.genny.qwanda.utils.OutputParam;
 import org.apache.commons.lang3.StringUtils;
 
 rule "EMAIL_FLAG_EVENT"

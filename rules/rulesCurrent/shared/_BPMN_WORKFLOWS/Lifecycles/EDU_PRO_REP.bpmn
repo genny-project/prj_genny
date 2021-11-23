@@ -13,7 +13,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_1" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false"/>
   <bpmn2:itemDefinition id="ItemDefinition_3" isCollection="false"/>
-  <bpmn2:itemDefinition id="ItemDefinition_462" isCollection="false" structureRef="life.genny.utils.OutputParam"/>
+  <bpmn2:itemDefinition id="ItemDefinition_462" isCollection="false" structureRef="life.genny.qwanda.utils.OutputParam"/>
   <bpmn2:itemDefinition id="ItemDefinition_1814" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_6" isCollection="false" structureRef="org.json.JSONArray"/>
   <bpmn2:itemDefinition id="ItemDefinition_111" isCollection="false" structureRef="life.genny.qwandautils.KeycloakUtils"/>
@@ -32,7 +32,7 @@
       <drools:import name="java.util.HashMap"/>
       <drools:import name="life.genny.utils.SessionFacts"/>
       <drools:import name="java.util.UUID"/>
-      <drools:import name="life.genny.utils.OutputParam"/>
+      <drools:import name="life.genny.qwanda.utils.OutputParam"/>
       <drools:import name="org.json.JSONArray"/>
       <drools:import name="life.genny.qwandautils.KeycloakUtils"/>
       <drools:import name="life.genny.qwanda.Answer"/>

@@ -12,7 +12,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_362" isCollection="false" structureRef="life.genny.utils.QuestionUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_364" isCollection="false" structureRef="life.genny.qwandautils.QwandaMessage"/>
   <bpmn2:itemDefinition id="ItemDefinition_366" isCollection="false" structureRef="life.genny.qwanda.Ask"/>
-  <bpmn2:itemDefinition id="ItemDefinition_2310" isCollection="false" structureRef="life.genny.utils.OutputParam"/>
+  <bpmn2:itemDefinition id="ItemDefinition_2310" isCollection="false" structureRef="life.genny.qwanda.utils.OutputParam"/>
   <bpmn2:itemDefinition id="ItemDefinition_2315" isCollection="false" structureRef="org.codehaus.plexus.util.StringUtils"/>
   <bpmn2:signal id="Signal_1" name="START_UNITY_EVENT"/>
   <bpmn2:signal id="Signal_2" name="START_MAIN"/>
@@ -27,7 +27,7 @@
       <drools:import name="life.genny.utils.QuestionUtils"/>
       <drools:import name="life.genny.qwandautils.QwandaMessage"/>
       <drools:import name="life.genny.qwanda.Ask"/>
-      <drools:import name="life.genny.utils.OutputParam"/>
+      <drools:import name="life.genny.qwanda.utils.OutputParam"/>
       <drools:import name="org.codehaus.plexus.util.StringUtils"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_132" name="userToken"/>

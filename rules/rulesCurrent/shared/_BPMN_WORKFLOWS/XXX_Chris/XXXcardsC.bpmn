@@ -7,7 +7,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_1678" isCollection="false" structureRef="life.genny.qwanda.entity.BaseEntity"/>
   <bpmn2:itemDefinition id="ItemDefinition_1994" isCollection="false" structureRef="java.lang.Long"/>
   <bpmn2:itemDefinition id="ItemDefinition_2359" isCollection="false" structureRef="java.lang.String"/>
-  <bpmn2:itemDefinition id="ItemDefinition_2813" isCollection="false" structureRef="life.genny.utils.OutputParam"/>
+  <bpmn2:itemDefinition id="ItemDefinition_2813" isCollection="false" structureRef="life.genny.qwanda.utils.OutputParam"/>
   <bpmn2:itemDefinition id="ItemDefinition_8398" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_8399" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_8400" isCollection="false" structureRef="Object"/>
@@ -25,7 +25,7 @@
       <drools:import name="life.genny.utils.SessionFacts"/>
       <drools:import name="life.genny.utils.CallingProcessToken"/>
       <drools:import name="life.genny.qwanda.entity.BaseEntity"/>
-      <drools:import name="life.genny.utils.OutputParam"/>
+      <drools:import name="life.genny.qwanda.utils.OutputParam"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_2" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_2" name="serviceToken"/>

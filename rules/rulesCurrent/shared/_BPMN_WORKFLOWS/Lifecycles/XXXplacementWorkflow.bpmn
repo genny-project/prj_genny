@@ -5,7 +5,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_521" isCollection="false" structureRef="java.lang.String"/>
   <bpmn2:itemDefinition id="ItemDefinition_1021" isCollection="false" structureRef="life.genny.models.GennyToken"/>
   <bpmn2:itemDefinition id="ItemDefinition_1986" isCollection="false" structureRef="life.genny.qwanda.entity.BaseEntity"/>
-  <bpmn2:itemDefinition id="ItemDefinition_2906" isCollection="false" structureRef="life.genny.utils.OutputParam"/>
+  <bpmn2:itemDefinition id="ItemDefinition_2906" isCollection="false" structureRef="life.genny.qwanda.utils.OutputParam"/>
   <bpmn2:itemDefinition id="ItemDefinition_8371" isCollection="false" structureRef="life.genny.qwanda.message.QBaseMSGMessageType"/>
   <bpmn2:itemDefinition id="ItemDefinition_3" isCollection="false" structureRef="java.util.HashMap"/>
   <bpmn2:itemDefinition id="ItemDefinition_3187" isCollection="false" structureRef="org.kie.api.runtime.KieSession"/>
@@ -21,7 +21,7 @@
       <drools:import name="life.genny.utils.SessionFacts"/>
       <drools:import name="life.genny.models.GennyToken"/>
       <drools:import name="life.genny.qwanda.entity.BaseEntity"/>
-      <drools:import name="life.genny.utils.OutputParam"/>
+      <drools:import name="life.genny.qwanda.utils.OutputParam"/>
       <drools:import name="life.genny.qwanda.message.QBaseMSGMessageType"/>
       <drools:import name="java.util.HashMap"/>
       <drools:import name="org.kie.api.runtime.KieSession"/>

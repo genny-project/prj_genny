@@ -4,7 +4,7 @@ import life.genny.rules.QRules;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.qwanda.Answer;
 import life.genny.qwanda.entity.BaseEntity;
-import life.genny.utils.OutputParam;
+import life.genny.qwanda.utils.OutputParam;
 import life.genny.utils.TaskUtils;
 import java.util.List;
 import java.util.ArrayList;

@@ -1,7 +1,7 @@
 package life.genny.rules;
 import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.models.GennyToken;
-import life.genny.utils.OutputParam;
+import life.genny.qwanda.utils.OutputParam;
 
 
 rule "ADD_COMPANY_ATTRIBUTES"

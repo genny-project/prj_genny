@@ -5,7 +5,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_1116" isCollection="false" structureRef="life.genny.models.GennyToken"/>
   <bpmn2:itemDefinition id="ItemDefinition_2169" isCollection="false" structureRef="life.genny.utils.SessionFacts"/>
   <bpmn2:itemDefinition id="ItemDefinition_2378" isCollection="false" structureRef="java.lang.String"/>
-  <bpmn2:itemDefinition id="ItemDefinition_804" isCollection="false" structureRef="life.genny.utils.OutputParam"/>
+  <bpmn2:itemDefinition id="ItemDefinition_804" isCollection="false" structureRef="life.genny.qwanda.utils.OutputParam"/>
   <bpmn2:itemDefinition id="ItemDefinition_823" isCollection="false" structureRef="life.genny.utils.BaseEntityUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_825" isCollection="false" structureRef="life.genny.qwanda.entity.BaseEntity"/>
   <bpmn2:itemDefinition id="ItemDefinition_828" isCollection="false" structureRef="life.genny.utils.VertxUtils.ESubscriptionType"/>
@@ -45,7 +45,7 @@
       <drools:import name="java.util.HashMap"/>
       <drools:import name="life.genny.models.GennyToken"/>
       <drools:import name="life.genny.utils.SessionFacts"/>
-      <drools:import name="life.genny.utils.OutputParam"/>
+      <drools:import name="life.genny.qwanda.utils.OutputParam"/>
       <drools:import name="life.genny.utils.BaseEntityUtils"/>
       <drools:import name="life.genny.qwanda.entity.BaseEntity"/>
       <drools:import name="life.genny.utils.VertxUtils"/>

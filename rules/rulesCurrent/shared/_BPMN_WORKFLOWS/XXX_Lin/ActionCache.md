@@ -24,7 +24,7 @@ The signal should attached the theme with frame once initialised frame at the fr
         2. "Name" fill in `ActionCacheProcessName`
 
     2. "Definitions" tag,
-        1. "Imports" panel add life.genny.utils.OutputParam
+        1. "Imports" panel add life.genny.qwanda.utils.OutputParam;
         2. "Imports" panel add life.genny.models.GennyToken
         3. "Imports" panel add life.genny.qwanda.message.QEventMessage
         4. "Imports" panel add life.genny.qwanda.message.QCmdMessageToggleFrame
@@ -34,7 +34,7 @@ The signal should attached the theme with frame once initialised frame at the fr
 
     3. "Data Items" tag, "Local Variable List" panel add
 
-        1. `outputMsg` -> life.genny.utils.OutputParam;
+        1. `outputMsg` -> life.genny.qwanda.utils.OutputParam;;
         2. `userToken` -> life.genny.models.GennyToken
         3. `serviceToken` -> life.genny.models.GennyToken
         4. `qMessage` -> life.genny.qwanda.message.QEventMessage
@@ -47,7 +47,7 @@ The signal should attached the theme with frame once initialised frame at the fr
 
     1. In the "I/O Parameters" tag,
 
-        1. "Output Data Mapping" add a new mapping from name "output", Data Type "life.genny.utils.OutputParam" -> To Data Item `outputMsg`, the from keyword "output" is the system default variable which cannot change, "outputMsg" declare an object that will content the output object from Drools, then allow BPMN process to reuse
+        1. "Output Data Mapping" add a new mapping from name "output", Data Type "life.genny.qwanda.utils.OutputParam" -> To Data Item `outputMsg`, the from keyword "output" is the system default variable which cannot change, "outputMsg" declare an object that will content the output object from Drools, then allow BPMN process to reuse
         2. "Input Data Mapping" add From Data Type "qMessage" To Name "qMessage" Data Type "life.genny.qwanda.message.QEventMessage"
 
     2. In the "Custom Task" tag
@@ -68,7 +68,7 @@ import life.genny.qwanda.message.QEventMessage;
 import life.genny.models.GennyToken;
 import life.genny.utils.VertxUtils;
 import io.vertx.core.json.JsonObject;
-import life.genny.utils.OutputParam;
+import life.genny.qwanda.utils.OutputParam;
 
 rule "DEFAULT 1"
     ruleflow-group 'RulesActionCacheDefault'

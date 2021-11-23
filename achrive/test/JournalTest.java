@@ -57,7 +57,7 @@ import life.genny.utils.TableUtils;
 import life.genny.utils.TableUtilsTest;
 import life.genny.utils.FrameUtils2;
 import life.genny.utils.GennyJbpmBaseTest;
-import life.genny.utils.OutputParam;
+import life.genny.qwanda.utils.OutputParam;
 import life.genny.utils.RulesUtils;
 import life.genny.utils.SearchUtils;
 import life.genny.utils.SearchUtilsTest;

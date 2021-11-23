@@ -13,7 +13,7 @@ import life.genny.rules.QRules;
 import life.genny.models.GennyToken;
 import life.genny.utils.VertxUtils;
 import io.vertx.core.json.JsonObject;
-import life.genny.utils.OutputParam;
+import life.genny.qwanda.utils.OutputParam;
 
 rule "RulesNotificaitonTemplate_Shortlist_Default_1"
     ruleflow-group 'RulesNotificaitonHubGroup'

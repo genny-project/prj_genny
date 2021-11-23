@@ -17,7 +17,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_1506" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_1507" isCollection="false" structureRef="Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_1509" isCollection="false" structureRef="Object"/>
-  <bpmn2:itemDefinition id="ItemDefinition_2368" isCollection="false" structureRef="life.genny.utils.OutputParam"/>
+  <bpmn2:itemDefinition id="ItemDefinition_2368" isCollection="false" structureRef="life.genny.qwanda.utils.OutputParam"/>
   <bpmn2:itemDefinition id="ItemDefinition_16" isCollection="false" structureRef="life.genny.utils.DropdownUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_19" isCollection="false" structureRef="life.genny.qwanda.entity.SearchEntity.Sort"/>
   <bpmn2:itemDefinition id="ItemDefinition_21" isCollection="false" structureRef="life.genny.qwanda.entity.SearchEntity.StringFilter"/>
@@ -51,7 +51,7 @@
       <drools:import name="java.util.HashMap"/>
       <drools:import name="life.genny.utils.SessionFacts"/>
       <drools:import name="java.util.UUID"/>
-      <drools:import name="life.genny.utils.OutputParam"/>
+      <drools:import name="life.genny.qwanda.utils.OutputParam"/>
       <drools:import name="life.genny.utils.DropdownUtils"/>
       <drools:import name="life.genny.qwanda.entity.SearchEntity"/>
       <drools:import name="life.genny.qwanda.entity.SearchEntity.Sort"/>

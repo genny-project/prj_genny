@@ -70,7 +70,7 @@ import life.genny.utils.BaseEntityUtils;
 import life.genny.utils.BucketUtils;
 import life.genny.utils.GennyJbpmBaseTest;
 import life.genny.utils.GennyKieSession;
-import life.genny.utils.OutputParam;
+import life.genny.qwanda.utils.OutputParam;
 import life.genny.utils.RulesUtils;
 import life.genny.utils.SearchUtils;
 import life.genny.utils.SessionFacts;
