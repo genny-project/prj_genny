@@ -77,7 +77,7 @@ rule "IS_QA_INTERN"
 
 				/* Create Access URL */
 				BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
-				String accessToken = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, newBe, serviceToken.getToken());
+				String accessToken = KeycloakUtils.getImpersonatedToken(userToken.getKeycloakUrl(), userToken.getRealm(), project, newBe, userToken.getToken());
 				String url = MessageUtils.encodeUrl(GennySettings.projectUrl+"/home", "QUE_FAKE_PARENT", "QUE_FINISH_INTERN", null, accessToken);
 				QMessageGennyMSG msg = new QMessageGennyMSG.Builder("MSG_INT1_REGISTER")
 					.addRecipient(newBe)
