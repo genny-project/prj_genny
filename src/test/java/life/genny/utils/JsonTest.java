@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
+
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
@@ -26,11 +29,25 @@ import life.genny.qwanda.entity.Person;
 import life.genny.qwanda.exception.BadDataException;
 import life.genny.qwanda.message.QBulkMessage;
 import life.genny.qwanda.message.QDataAnswerMessage;
+import life.genny.qwanda.message.QDataB2BMessage;
 import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwanda.validation.Validation;
 import life.genny.qwandautils.JsonUtils;
 
 public class JsonTest {
+	
+@Test
+public void b2bJsonTest()
+{
+	String b2bStr = "{\"msg_type\":\"DATA_MSG\",\"option\":\"EXEC\",\"aliasCode\":\"STATELESS\",\"data_type\":\"GennyItem\",\"delete\":false,\"replace\":false,\"items\":[{\"b2bdata\":[{\"attributeCode\":\"PRI_FIRSTNAME\",\"value\":\"Kevin\"},{\"attributeCode\":\"PRI_MOBILE\",\"value\":\"0434321230\"},{\"attributeCode\":\"PRI_EMAIL\",\"value\":\"adamcrow63+km@gmail.com\"},{\"attributeCode\":\"PRI_LASTNAME\",\"value\":\"Murray\"},{\"attributeCode\":\"PRI_USERNAME\",\"value\":\"testuser@gada.io\"},{\"attributeCode\":\"PRI_USERCODE\",\"value\":\"PER_086CDF1F-A98F-4E73-9825-0A4CFE2BB943\"}]}]}";
+	  QDataB2BMessage dataB2BMsg = null;
+      try {
+      	Jsonb jsonb = JsonbBuilder.create();
+          dataB2BMsg = jsonb.fromJson(b2bStr, QDataB2BMessage.class);
+          System.out.println(dataB2BMsg);
+      } catch (com.google.gson.JsonSyntaxException e) {
+      }
+}
 	
 @Test
 public void stringTest()
