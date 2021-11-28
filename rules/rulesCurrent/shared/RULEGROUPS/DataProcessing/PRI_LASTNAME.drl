@@ -38,10 +38,16 @@ rule "PRI_LASTNAME"
 		lastname = lastname.toLowerCase().trim();
 		lastname = StringUtils.capitalize(lastname);
 		BaseEntity person = beUtils.getBaseEntityByCode(targetCode);
-		String firstname = person.getValue("PRI_FIRSTNAME","");
+		
+		
 		System.out.println("Rule -> PRI_LASTNAME 1 lastname="+lastname);	
 		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_LASTNAME", lastname,false,false));	
 			
+		String firstname = firstname = answersToSave.getValue("PRI_FIRSTNAME");
+		if (StringUtils.isBlank(firstname)) {
+			/* check if sitting in existing be */
+			firstname = person.getValue("PRI_FIRSTNAME","");
+		}
 		String name = firstname + " "+lastname;
 		name = name.trim();	
 		name = WordUtils.capitalize(name);
