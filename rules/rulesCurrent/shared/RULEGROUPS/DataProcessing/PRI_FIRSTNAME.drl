@@ -44,6 +44,11 @@ rule "PRI_FIRSTNAME"
 			
 		BaseEntity person = beUtils.getBaseEntityByCode(targetCode);
 		String lastname = person.getValue("PRI_LASTNAME","");
+		if (StringUtils.isBlank(lastname)) {
+			/* check if sitting in answersToSave */
+			lastname = answersToSave.getValue("PRI_LASTNAME");
+		
+		}
 			
 		String name = firstname  + " "+lastname;
 		name = name.trim();	
