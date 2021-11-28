@@ -37,92 +37,76 @@ rule "IS_QA_INTERN"
  		Optional<String> existingAgentName = item.getValue("PRI_AGENT_NAME");
  		/* if blank then ok */
  		if (!existingAgentName.isPresent()) {
- 		
- 		
- 		
- 		List<Answer> answers = new ArrayList<>();
 
-		/* GET REQUIRED DATA */
-		BaseEntity eduPro = beUtils.getBaseEntityFromLNKAttr(newBe, "LNK_EDU_PROVIDER");
-		BaseEntity agent = beUtils.getBaseEntityFromLNKAttr(newBe, "LNK_AGENT");
-		BaseEntity batch = beUtils.getBaseEntityFromLNKAttr(newBe, "LNK_SELECT_BATCH");
-		System.out.println("eduPro = " + eduPro);
-		System.out.println("agent = " + agent);
-		System.out.println("batch = " + batch);
+			List<Answer> answers = new ArrayList<>();
 
-		if (agent != null) {
-			String agentName = agent.getValue("PRI_NAME", null);
-			System.out.println("agentName = " + agentName);
-			if (agentName != null) {
-				newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_AGENT_NAME", agentName));
+			/* GET REQUIRED DATA */
+			BaseEntity eduPro = beUtils.getBaseEntityFromLNKAttr(newBe, "LNK_EDU_PROVIDER");
+			BaseEntity agent = beUtils.getBaseEntityFromLNKAttr(newBe, "LNK_AGENT");
+			BaseEntity batch = beUtils.getBaseEntityFromLNKAttr(newBe, "LNK_SELECT_BATCH");
+			System.out.println("eduPro = " + eduPro);
+			System.out.println("agent = " + agent);
+			System.out.println("batch = " + batch);
+
+			if (agent != null) {
+				String agentName = agent.getValue("PRI_NAME", null);
+				System.out.println("agentName = " + agentName);
+				if (agentName != null) {
+					newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_AGENT_NAME", agentName));
+				}
 			}
-		}
-		
-		if (batch != null) {
-			String batchName = batch.getValue("PRI_NAME", null);
-			System.out.println("batchName = " + batchName);
-			if (batchName != null) {
-				newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_BATCH", batchName));
+
+			if (batch != null) {
+				String batchName = batch.getValue("PRI_NAME", null);
+				System.out.println("batchName = " + batchName);
+				if (batchName != null) {
+					newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_BATCH", batchName));
+				}
 			}
-		}
 
-		
-		/* Update Email and Name, and set Random Password in Keycloak */
-		KeycloakUtils.updateUserDetails(beUtils, newBe);
-		String password = KeycloakUtils.generateRandomPassword(beUtils, newBe);
-	
-		/* Create Access URL */
-		BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
-		String internToken = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, newBe, serviceToken.getToken());
-		String internUrl = MessageUtils.encodeUrl(GennySettings.projectUrl+"/home", "QUE_FAKE_PARENT", "QUE_FINISH_INTERN", null, internToken);
-	
-		/* Init Sendgrid Msg */
-		QMessageGennyMSG msg = new QMessageGennyMSG(QBaseMSGMessageType.SENDGRID);
-		msg.setTemplateCode("MSG_INT1_REGISTER");
-		msg.addRecipient(newBe);
-		msg.addContext("PASSWORD", password);
-		msg.addContext("URL", internUrl);
-		msg.addContext("BCC", "PRJ_INTERNMATCH");
-		
-		/* Boolean sendEmail = newBe.getValue("PRI_EMAIL_FLAG", false); */
-		String sendEmail = newBe.getValue("LNK_SEND_EMAIL", "");
-		System.out.println("sendEmail = " + sendEmail);
+			/* Update Email and Name, and set Random Password in Keycloak */
+			KeycloakUtils.updateUserDetails(beUtils, newBe);
+			String password = KeycloakUtils.generateRandomPassword(beUtils, newBe);
 
-		/* if (sendEmail) { */
-		if (sendEmail.contains("SEL_YES")) {
-			MessageUtils.sendMessage(beUtils, msg);
-		}
+			/* Boolean sendEmail = newBe.getValue("PRI_EMAIL_FLAG", false); */
+			String sendEmail = newBe.getValue("LNK_SEND_EMAIL", "");
+			System.out.println("sendEmail = " + sendEmail);
 
-		if (agent != null) {
+			if (sendEmail.contains("SEL_YES")) {
+				/* Init Sendgrid Msg */
+				QMessageGennyMSG msg = new QMessageGennyMSG.Builder("MSG_INT1_REGISTER")
+					.addRecipient(newBe)
+					.addContext("PASSWORD", password)
+					.addContext("URL:ENCODE", "QUE_FAKE_PARENT/QUE_FINISH_INTERN")
+					.addContext("BCC", "PRJ_INTERNMATCH")
+					.setUtils(beUtils)
+					.send();
+			}
 
-			String agentToken = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, agent, serviceToken.getToken());
-			String urlParentCode = "SBE_INTERNS"+userToken.getSessionCode().toUpperCase();
-			String agentUrl = MessageUtils.encodeUrl(GennySettings.projectUrl+"/home", urlParentCode, "ACT_PRI_EVENT_VIEW", newBe.getCode(), agentToken);
+			if (agent != null) {
+				/* Init Sendgrid to Agent Msg */
+				QMessageGennyMSG msg = new QMessageGennyMSG.Builder("MSG_AGT2_ASSIGNED")
+					.addRecipient(agent)
+					.addContext("INTERN", newBe)
+					.addContext("EDU_PRO", eduPro)
+					.addContext("URL:ENCODE", "SBE_INTERNS"+userToken.getSessionCode().toUpperCase()+"/ACT_PRI_EVENT_VIEW/"+newBe.getCode())
+					.setUtils(beUtils)
+					.send();
+			}
 
-			/* Init Sendgrid to Agent Msg */
-			msg = new QMessageGennyMSG(QBaseMSGMessageType.SENDGRID);
-			msg.setTemplateCode("MSG_AGT2_ASSIGNED");
-			msg.addRecipient(agent);
-			msg.addContext("INTERN", newBe);
-			msg.addContext("EDU_PRO", eduPro);
-			msg.addContext("URL", agentUrl);
+			/* Schedule Reminder Messages */
+			System.out.println("################## Scheduling Shleemy Messages ##################");
 
-			MessageUtils.sendMessage(beUtils, msg);
-		}
+			LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+			String code48HR = newBe.getCode() + "_INTERN_COMPLETE_PROFILE_48HR";
+			String code96HR = newBe.getCode() + "_INTERN_COMPLETE_PROFILE_96HR";
 
-		/* Schedule Reminder Messages */
-		System.out.println("################## Scheduling Shleemy Messages ##################");
+			ShleemyUtils.scheduleMessage(userToken, "SCHEDULE_INTERN_COMPLETE_PROFILE_48HR", code48HR, now.plusHours(48), newBe.getCode());
+			ShleemyUtils.scheduleMessage(userToken, "SCHEDULE_INTERN_COMPLETE_PROFILE_96HR", code96HR, now.plusHours(96), newBe.getCode());
 
-   	 	LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-		String code48HR = newBe.getCode() + "_INTERN_COMPLETE_PROFILE_48HR";
-		String code96HR = newBe.getCode() + "_INTERN_COMPLETE_PROFILE_96HR";
-		
-		ShleemyUtils.scheduleMessage(userToken, "SCHEDULE_INTERN_COMPLETE_PROFILE_48HR", code48HR, now.plusHours(48), newBe.getCode());
-		ShleemyUtils.scheduleMessage(userToken, "SCHEDULE_INTERN_COMPLETE_PROFILE_96HR", code96HR, now.plusHours(96), newBe.getCode());
-		
-		/* Post Note */
-		String endPoint = GennySettings.projectUrl + "/v7/notes";
-		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), newBe.getCode(), "Added as an Intern", "System", "System", "", serviceToken.getToken());
+			/* Post Note */
+			String endPoint = GennySettings.projectUrl + "/v7/notes";
+			QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), newBe.getCode(), "Added as an Intern", "System", "System", "", serviceToken.getToken());
 		}
 		
 		retract(newBe);
