@@ -30,7 +30,7 @@ rule "PROCESS_TEST_USER"
         String email = dataMsg.getValue("PRI_EMAIL");
         String phone = dataMsg.getValue("PRI_MOBILE");
         String entityCode = null;
-        String defBECode = "DEF_PERSON";
+        String defBECode = "DEF_USER";
 
 	 System.out.println("GOT TO HERE "+firstname+":"+lastname+":"+name+":"+email+":"+phone);
 
