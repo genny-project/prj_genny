@@ -88,7 +88,7 @@ rule "IS_QA_INTERN"
 				QMessageGennyMSG msg = new QMessageGennyMSG.Builder("MSG_AGT2_ASSIGNED")
 					.addRecipient(agent)
 					.addContext("INTERN", newBe)
-					.addContext("EDU_PRO", eduPro)
+					/* .addContext("EDU_PRO", eduPro) */
 					.addContext("URL:ENCODE", "SBE_INTERNS"+userToken.getSessionCode().toUpperCase()+"/ACT_PRI_EVENT_VIEW/"+newBe.getCode())
 					.setUtils(beUtils)
 					.send();
