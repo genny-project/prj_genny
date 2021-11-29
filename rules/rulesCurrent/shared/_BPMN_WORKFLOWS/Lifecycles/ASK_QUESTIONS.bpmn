@@ -64,6 +64,8 @@
       <drools:import name="java.util.ArrayList"/>
       <drools:import name="java.util.List"/>
       <drools:import name="org.apache.commons.lang3.text.WordUtils"/>
+      <drools:import name="life.genny.qwanda.message.QEventWorkflowMessage"/>
+      <drools:import name="life.genny.qwanda.utils.OutputParam"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_2" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_2" name="serviceToken"/>
@@ -129,7 +131,7 @@
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_11</bpmn2:outgoing>
-        <bpmn2:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% START Create Entity WORKFLOW %%%%%%%%%%%%%%%%%%%&quot;);
+        <bpmn2:script>System.out.println(&quot;%%%%%%%%%%%%%%%%%%% START WF-EVENT WORKFLOW %%%%%%%%%%%%%%%%%%%&quot;);
 
 /* Gather Tokens */
 
@@ -141,12 +143,13 @@
 	kcontext.setVariable(&quot;userToken&quot;, userToken);
 	kcontext.setVariable(&quot;beUtils&quot;, beUtils);
 
-	System.out.println(&quot;ASK_QUESTIONS: userToken = &quot; +userToken.getCode());
+	System.out.println(&quot;ASK_QUESTIONS: userToken = &quot; +userToken.getCode() + &quot; user name= &quot; + userToken.getUsername() + &quot; user email= &quot; + userToken.getEmail());
 	System.out.println(&quot;ASK_QUESTIONS: serviceToken = &quot; +serviceToken.getCode());
 
 
 /* Gather Key and construct Question Code */
-	OutputParam data = (OutputParam)sessionFacts.getMessage();
+	QEventWorkflowMessage workflowMsg = (QEventWorkflowMessage)sessionFacts.getMessage();
+	OutputParam data = (OutputParam)workflowMsg.getOutputParam();
 
 	questionCode = data.getSuitCase();
 	targetCode = data.getTargetCode();
@@ -224,7 +227,7 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_3" bpmnElement="EndEvent_3">
         <dc:Bounds height="36.0" width="36.0" x="1200.0" y="470.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_4">
           <dc:Bounds height="22.0" width="48.0" x="1194.0" y="506.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -244,13 +247,13 @@
         <di:waypoint xsi:type="dc:Point" x="693.0" y="430.0"/>
         <di:waypoint xsi:type="dc:Point" x="693.0" y="488.0"/>
         <di:waypoint xsi:type="dc:Point" x="1200.0" y="488.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_5"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_11" bpmnElement="SequenceFlow_11" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_EndEvent_6">
         <di:waypoint xsi:type="dc:Point" x="270.0" y="299.0"/>
         <di:waypoint xsi:type="dc:Point" x="522.0" y="299.0"/>
         <di:waypoint xsi:type="dc:Point" x="775.0" y="299.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_7"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
