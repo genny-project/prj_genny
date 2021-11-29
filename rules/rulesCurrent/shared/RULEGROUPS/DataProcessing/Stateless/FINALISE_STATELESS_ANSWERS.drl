@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.ArrayList;
 import life.genny.model.OutputParamTreeSet;
 import java.util.Iterator;
+import life.genny.qwanda.ESessionType;
 
 rule "FINALISE_STATELESS_ANSWERS"
     ruleflow-group 'DataProcessing'
@@ -22,6 +23,7 @@ rule "FINALISE_STATELESS_ANSWERS"
 	  beUtils : BaseEntityUtils()
 	  eval(beUtils.getGennyToken().hasRole("b2b")) 
 	  eval(answersToSave.getAnswers().size()>0) 
+	  ESessionType(this == ESessionType.B2B)
     then
  		System.out.println("Rule -> FINALISE_STATELESS_ANSWERS Processing Answer/Data!! :  user=" + userToken.getUserCode()); 
  
