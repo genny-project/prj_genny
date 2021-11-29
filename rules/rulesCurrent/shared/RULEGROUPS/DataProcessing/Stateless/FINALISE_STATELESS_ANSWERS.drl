@@ -23,7 +23,7 @@ rule "FINALISE_STATELESS_ANSWERS"
 	  beUtils : BaseEntityUtils()
 	  eval(beUtils.getGennyToken().hasRole("b2b")) 
 	  eval(answersToSave.getAnswers().size()>0) 
-	  ESessionType(this == ESessionType.B2B)
+	 /* ESessionType(this == ESessionType.B2B) */
     then
  		System.out.println("Rule -> FINALISE_STATELESS_ANSWERS Processing Answer/Data!! :  user=" + userToken.getUserCode()); 
  
