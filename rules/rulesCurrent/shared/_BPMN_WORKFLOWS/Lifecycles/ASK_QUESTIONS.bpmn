@@ -65,7 +65,6 @@
       <drools:import name="java.util.List"/>
       <drools:import name="org.apache.commons.lang3.text.WordUtils"/>
       <drools:import name="life.genny.qwanda.message.QEventWorkflowMessage"/>
-      <drools:import name="life.genny.qwanda.utils.OutputParam"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_2" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_2" name="serviceToken"/>
@@ -149,8 +148,10 @@
 
 /* Gather Key and construct Question Code */
 	QEventWorkflowMessage workflowMsg = (QEventWorkflowMessage)sessionFacts.getMessage();
-	OutputParam data = (OutputParam)workflowMsg.getOutputParam();
+	System.out.println(workflowMsg);
+	System.out.println(workflowMsg.getOutputParam());
 
+	OutputParam data = workflowMsg.getOutputParam();
 	questionCode = data.getSuitCase();
 	targetCode = data.getTargetCode();
 	sourceCode = data.getAskSourceCode();
