@@ -11,7 +11,7 @@ rule "WORKFLOW_EVENT"
     no-loop
     salience 10000
     when 
-		$message : QEventWorkflowMessage()
+		$message : QEventMessage( (event_type == "WF") )
 		/*userToken : GennyToken (code != "PER_SERVICE" )*/
 		output : OutputParam( )
 		ruleDetails : RuleDetails()
