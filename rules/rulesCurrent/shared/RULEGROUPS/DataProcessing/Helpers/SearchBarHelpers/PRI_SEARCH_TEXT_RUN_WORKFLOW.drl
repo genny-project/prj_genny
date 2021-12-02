@@ -56,6 +56,7 @@ rule "PRI_SEARCH_TEXT_RUN_WORKFLOW"
 		
 		/* Run a Workflow */
 		String workflowCode = answer.getValue().split(":")[1];
+		String targetCode = answer.getValue().split(":")[2];
 		System.out.println(workflowCode);
 
 		output.setTypeOfResult("SIGNAL");
@@ -64,7 +65,7 @@ rule "PRI_SEARCH_TEXT_RUN_WORKFLOW"
         String questionCode = "QUE_REMOTE_SERVICE_GRP";
         output.setSuitCase(questionCode);
         output.setAskSourceCode(userToken.getUserCode());
-        output.setTargetCode("NONE");
+        output.setTargetCode(targetCode);
 
         System.out.println("**************************************************");
         System.out.println("TypeOfResult: "  + output.getTypeOfResult());
