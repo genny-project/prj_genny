@@ -297,7 +297,7 @@ System.out.println(&quot;userSession: Custom Process Event - Rules Finished Even
             </tns:onEntry-script>
             <tns:onExit-script scriptFormat="http://www.java.com/java">
               <tns:script>System.out.println(&quot;userSession: Process Event Handler Event Message Processed = &quot; + message);
-OutputParam output = (OutputParam)kcontext.getVariable(&quot;output&quot;);
+output = (OutputParam)kcontext.getVariable(&quot;output&quot;);
 /* HACK - ACC */
 if (message.getData().getCode() != null) {
 	if (message.getData().getCode().startsWith(&quot;QUE_TREE_ITEM_&quot;)) {
