@@ -16,19 +16,9 @@ rule "WORKFLOW_EVENT"
     		output : OutputParam( )
     		ruleDetails : RuleDetails()
     then
-		System.out.println( ruleDetails + " " + drools.getRule().getName() + " Processing DEFAULT : " + $message );
-
-		/*
-		output.setTypeOfResult("SIGNAL");
-		output.setResultCode($message.getData().getCode()); 
-		output.setAskTargetCode($message.getData().getTargetCode()); 
-		output.setAskSourceCode($message.getData().getSourceCode()); 
-		output.setSuitCase($message.getData().getParentCode()); 
-        */
-
-        /*
+		System.out.println( ruleDetails + " " + drools.getRule().getName() + " Processing WORKFLOW : " + $message );
         output = (OutputParam)$message.getOutputParam();
 		update(output);
-		*/
+
 		retract($message); 
 end
