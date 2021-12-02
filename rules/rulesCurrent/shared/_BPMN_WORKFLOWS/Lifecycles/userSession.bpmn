@@ -297,6 +297,7 @@ System.out.println(&quot;userSession: Custom Process Event - Rules Finished Even
             </tns:onEntry-script>
             <tns:onExit-script scriptFormat="http://www.java.com/java">
               <tns:script>System.out.println(&quot;userSession: Process Event Handler Event Message Processed = &quot; + message);
+System.out.println(&quot;WF Got till here&quot;);
 output = (OutputParam)kcontext.getVariable(&quot;output&quot;);
 /* HACK - ACC */
 if (message.getData().getCode() != null) {
