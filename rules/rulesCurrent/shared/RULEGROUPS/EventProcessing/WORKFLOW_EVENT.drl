@@ -17,16 +17,16 @@ rule "WORKFLOW_EVENT"
     		output : OutputParam( )
     		ruleDetails : RuleDetails()
     then
-		System.out.println( ruleDetails + " " + drools.getRule().getName() + " Processing WORKFLOW 2: " + message );
+		System.out.println( ruleDetails + " " + drools.getRule().getName() + " Processing WORKFLOW 3 : " + message );
         output = message.getOutputParam();
 
-        System.out.println("**************************************************");
+        System.out.println("********************** Processing WORKFLOW 3 : ****************************");
                 System.out.println("TypeOfResult: "  + output.getTypeOfResult());
                 System.out.println("ResultCode: "    + output.getResultCode());
                 System.out.println("SuitCase: "      + output.getSuitCase());
                 System.out.println("AskSourceCode: " + output.getAskSourceCode());
                 System.out.println("TargetCode: "    + output.getTargetCode());
-                System.out.println("**************************************************");
+                System.out.println("********************** Processing WORKFLOW 3 : ****************************");
 
         System.out.println("Workflow Output : " + output);
 		update(output);

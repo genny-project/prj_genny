@@ -59,7 +59,7 @@ rule "PRI_SEARCH_TEXT_RUN_WORKFLOW"
 		String targetCode = answer.getValue().split(":")[2];
 		System.out.println(workflowCode);
 
-		output.setTypeOfResult("SIGNAL");
+		output.setTypeOfResult("DISPLAY");
         output.setResultCode(workflowCode);
 
         String questionCode = "QUE_REMOTE_SERVICE_GRP";
