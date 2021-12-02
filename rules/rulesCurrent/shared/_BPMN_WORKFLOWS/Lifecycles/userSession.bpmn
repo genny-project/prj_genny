@@ -297,8 +297,9 @@ System.out.println(&quot;userSession: Custom Process Event - Rules Finished Even
             </tns:onEntry-script>
             <tns:onExit-script scriptFormat="http://www.java.com/java">
               <tns:script>System.out.println(&quot;userSession: Process Event Handler Event Message Processed = &quot; + message);
-System.out.println(&quot;WF Got till here&quot;);
+System.out.println(&quot;WF2 Got till here&quot;);
 output = (OutputParam)kcontext.getVariable(&quot;output&quot;);
+if (output != null){
 /* HACK - ACC */
 if (message.getData().getCode() != null) {
 	if (message.getData().getCode().startsWith(&quot;QUE_TREE_ITEM_&quot;)) {
@@ -320,6 +321,7 @@ if (output.getTypeOfResult().equals(&quot;LOGOUT&quot;)) {
 	System.out.println(&quot;userSession: Process Event Handler: sending sessionFacts to signal listener &quot;+output);
 	sessionFacts = new SessionFacts(serviceToken,userToken,output);
 	kcontext.setVariable(&quot;sessionFacts&quot;,sessionFacts);
+}
 }</tns:script>
             </tns:onExit-script>
           </bpmn2:extensionElements>
