@@ -29,6 +29,7 @@ rule "WORKFLOW_EVENT"
                 System.out.println("********************** Processing WORKFLOW 3 : ****************************");
 
         System.out.println("Workflow Output : " + output);
-		update(output);
+		
 		retract(message);
+		update(output);
 end
