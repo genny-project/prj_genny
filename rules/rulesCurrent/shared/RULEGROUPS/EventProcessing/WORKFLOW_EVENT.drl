@@ -12,14 +12,13 @@ rule "WORKFLOW_EVENT"
     no-loop
     salience -20000
     when 
-    		$message : QEventMessage((data.code != "QUE_LOGOUT") && (data.code != "LOGOUT") && (event_type == "WF"))
+    		$message : QEventWorkflowMessage((data.code != "QUE_LOGOUT") && (data.code != "LOGOUT") && (event_type == "WF"))
     		userToken : GennyToken (code != "PER_SERVICE" )
     		output : OutputParam( )
     		ruleDetails : RuleDetails()
     then
 		System.out.println( ruleDetails + " " + drools.getRule().getName() + " Processing WORKFLOW : " + $message );
-		QEventWorkflowMessage workflowMsg = (QEventMessage)$message;
-        output = workflowMsg.getOutputParam();
+        OutputParam output = $message.getOutputParam();
 		update(output);
 
 		retract($message); 
