@@ -16,8 +16,7 @@ rule "DEFAULT_EVENT"
 		output : OutputParam( )
 		ruleDetails : RuleDetails()   
     then
-		System.out.println( ruleDetails + " " + drools.getRule().getName() + " Processing DEFAULT : " + $message );
-
+		System.out.println( ruleDetails + " " + drools.getRule().getName() + " Processing DEFAULT 2: " + $message );
 		output.setTypeOfResult("SIGNAL");
 		output.setResultCode($message.getData().getCode()); 
 		output.setAskTargetCode($message.getData().getTargetCode()); 
