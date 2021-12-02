@@ -18,7 +18,7 @@ rule "WORKFLOW_EVENT"
     		ruleDetails : RuleDetails()
     then
 		System.out.println( ruleDetails + " " + drools.getRule().getName() + " Processing WORKFLOW : " + $message );
-        OutputParam output = $message.getOutputParam();
+        output = $message.getOutputParam();
 		update(output);
 
 		retract($message); 
