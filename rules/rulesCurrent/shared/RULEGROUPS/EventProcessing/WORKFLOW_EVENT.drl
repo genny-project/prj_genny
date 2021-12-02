@@ -9,13 +9,13 @@ import life.genny.qwanda.rule.RuleDetails;
 rule "WORKFLOW_EVENT"
     ruleflow-group 'EventProcessing'
     no-loop
-    salience 1000
+    salience 10000
     when 
 		$message : QEventWorkflowMessage()
-		userToken : GennyToken (code != "PER_SERVICE" )
+		/*userToken : GennyToken (code != "PER_SERVICE" )*/
 		output : OutputParam( )
 		ruleDetails : RuleDetails()
-		beUtils: BaseEntityUtils()
+		/*beUtils: BaseEntityUtils()*/
     then
 		System.out.println( ruleDetails + " " + drools.getRule().getName() + " Processing DEFAULT : " + $message );
 
