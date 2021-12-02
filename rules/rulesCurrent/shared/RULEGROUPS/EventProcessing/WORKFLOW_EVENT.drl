@@ -11,11 +11,10 @@ rule "WORKFLOW_EVENT"
     no-loop
     salience 10000
     when 
-		$message : QEventMessage( (event_type == "WF") )
-		/*userToken : GennyToken (code != "PER_SERVICE" )*/
-		output : OutputParam( )
-		ruleDetails : RuleDetails()
-		/*beUtils: BaseEntityUtils()*/
+    		$message : QEventMessage((data.code != "QUE_LOGOUT") && (data.code != "LOGOUT"))
+    		userToken : GennyToken (code != "PER_SERVICE" )
+    		output : OutputParam( )
+    		ruleDetails : RuleDetails()
     then
 		System.out.println( ruleDetails + " " + drools.getRule().getName() + " Processing DEFAULT : " + $message );
 
