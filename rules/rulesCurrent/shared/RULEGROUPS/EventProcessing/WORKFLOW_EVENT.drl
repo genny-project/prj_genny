@@ -30,9 +30,8 @@ rule "WORKFLOW_EVENT"
                 System.out.println("SuitCase: "      + output.getSuitCase());
                 System.out.println("AskSourceCode: " + output.getAskSourceCode());
                 System.out.println("TargetCode: "    + output.getTargetCode());
-                System.out.println("********************** Processing WORKFLOW 3 : ****************************");
-        System.out.println("Workflow Output : " + output);
-        update(output);
+                System.out.println("********************** END Processing WORKFLOW 3 : ****************************");
+        /*update(output);*/
         }
 
 		retract(message);
