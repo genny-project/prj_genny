@@ -20,6 +20,10 @@ rule "WORKFLOW_EVENT"
 		System.out.println( ruleDetails + " " + drools.getRule().getName() + " Processing WORKFLOW 3 : " + message );
         output = message.getOutputParam();
 
+        if (output == null)
+        {
+        System.out.println("OUTPUT IS NULL!!!!!!!!");
+        }else{
         System.out.println("********************** Processing WORKFLOW 3 : ****************************");
                 System.out.println("TypeOfResult: "  + output.getTypeOfResult());
                 System.out.println("ResultCode: "    + output.getResultCode());
@@ -27,9 +31,10 @@ rule "WORKFLOW_EVENT"
                 System.out.println("AskSourceCode: " + output.getAskSourceCode());
                 System.out.println("TargetCode: "    + output.getTargetCode());
                 System.out.println("********************** Processing WORKFLOW 3 : ****************************");
-
         System.out.println("Workflow Output : " + output);
-		
+        update(output);
+        }
+
 		retract(message);
-		update(output);
+
 end
