@@ -81,15 +81,15 @@ rule "SEND_ADD_ITEMS"
 			VertxUtils.writeMsg("webcmds", askMsg);
 		}
 
-		SearchEntity searchBE = new SearchEntity("SBE_TEST_INTERNS", "Interns")
-			.addSort("PRI_NAME","Name", SearchEntity.Sort.ASC)
-			.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
-			.addFilter("PRI_IS_INTERN", true)
-			.addColumn("PRI_NAME", "Name")
-			.setPageStart(0).setPageSize(20);
+		/* SearchEntity searchBE = new SearchEntity("SBE_TEST_INTERNS", "Interns") */
+		/* 	.addSort("PRI_NAME","Name", SearchEntity.Sort.ASC) */
+		/* 	.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%") */
+		/* 	.addFilter("PRI_IS_INTERN", true) */
+		/* 	.addColumn("PRI_NAME", "Name") */
+		/* 	.setPageStart(0).setPageSize(20); */
 
 
-		String resultJsonStr = QwandaUtils.apiPostEntity2("http://erstwhile-wolf-genny-fyodor-svc:4242/api/search", JsonUtils.toJson(searchBE), serviceToken.getToken(), null);
-		System.out.println("RESULT = " + resultJsonStr);
+		/* String resultJsonStr = QwandaUtils.apiPostEntity2("http://erstwhile-wolf-genny-fyodor-svc:4242/api/search", JsonUtils.toJson(searchBE), serviceToken.getToken(), null); */
+		/* System.out.println("RESULT = " + resultJsonStr); */
 
 end
