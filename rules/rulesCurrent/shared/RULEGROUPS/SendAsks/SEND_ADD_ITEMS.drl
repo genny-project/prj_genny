@@ -82,7 +82,7 @@ rule "SEND_ADD_ITEMS"
 		}
 
 
-		resultJsonStr = QwandaUtils.apiPostEntity2("http://erstwhile-wolf-genny-fyodor-svc:4242/api/search", JsonUtils.toJson(searchBE), serviceToken.getToken(), null);
+		String resultJsonStr = QwandaUtils.apiPostEntity2("http://erstwhile-wolf-genny-fyodor-svc:4242/api/search", JsonUtils.toJson(searchBE), serviceToken.getToken(), null);
 		System.out.println("RESULT = " + resultJsonStr);
 
 end
