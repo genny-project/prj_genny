@@ -382,17 +382,19 @@ System.out.println(&quot;defCode = &quot; + defCode);
 
 /* CREATE BE FROM DEF */
 defBE = beUtils.getDEFByCode(defCode);
-kcontext.setVariable(&quot;defBE&quot;, defBE);
+
 if (defBE == null) {
 	System.out.println(&quot;ERROR: could not find DEF for code &quot; + defCode);
 	
 } else {
+         kcontext.setVariable(&quot;defBE&quot;, defBE);
 	if (entityCode != null) {
 		newBe = beUtils.create(defBE, entityCode, entityCode);
 	} else {
+                  System.out.println(&quot;creating new entity with no code and name initially &quot;);
 		newBe = beUtils.create(defBE);
 	}
-
+	System.out.println(&quot;newBE is &quot;+newBe);
 	newBe = beUtils.getBaseEntityByCode(newBe.getCode());
 	kcontext.setVariable(&quot;newBe&quot;, newBe);
 
@@ -401,7 +403,7 @@ if (defBE == null) {
 
 	if (newBe != null) {
 		/* Set Status to Pending */
-		newBe.setStatus(EEntityStatus.PENDING);
+ 		 newBe.setStatus(EEntityStatus.PENDING);
         beUtils.saveBaseEntity(defBE,newBe);
 	}
 
