@@ -97,7 +97,96 @@ public class FixInternshipTypes {
     }
 
     
-    @Test
+
+
+ @Test
+ public void createPriStageTest() throws Exception {
+     VertxUtils.cachedEnabled = false;
+
+     if (beUtils == null) {
+         return;
+     }
+
+     setUpDefs();
+
+     SearchEntity searchBE = new SearchEntity("SBE_APPS", "APP Search")
+             .addSort("PRI_CREATED", "Created", SearchEntity.Sort.ASC)
+             .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+             .addColumn("PRI_CODE", "Code")
+              .addColumn("PRI_STATUS","Status");
+     searchBE.setRealm(realm);
+     
+     
+
+     Boolean ok = true;
+     Integer index = 0;
+     Integer fixedInterns = 0;
+     Integer fixedApps = 0;
+     searchBE.setPageStart(index);
+     Integer pageSize = 100;
+     searchBE.setPageSize(pageSize);
+     Long total = beUtils.getCount(searchBE);
+     
+ 	Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken.getToken());
+ 	Attribute statusAttribute = RulesUtils.getAttribute("PRI_STATUS", serviceToken.getToken());
+ 	Attribute stageAttribute = RulesUtils.getAttribute("PRI_STAGE", serviceToken.getToken());
+ 		 
+ 	Integer stage = 0;
+ 	Integer status = 0;
+ 	
+     while (ok) {
+     	List<BaseEntity> bes = beUtils.getBaseEntitys(searchBE); // load 100 at a time
+     	if (bes.isEmpty() || (index > 5000)) {
+     		ok = false;
+     		break;
+     	}
+     	
+     	for (BaseEntity be : bes) {
+     		
+     		// ok, now get the intern's application type
+     		
+      			String statusStr = be.getValueAsString("PRI_STATUS");
+      			String stageStr = be.getValueAsString("PRI_STAGE");
+      			if (!StringUtils.isBlank(statusStr)) {
+      				switch (statusStr) {
+      				case "AVAILABLE":
+      				case "APPLIED":
+      				case "SHORTLISTED":
+      				case "INTERVIEWED":
+      				case "OFFERED":
+      				case "PLACED":
+      				case "PROGRESS":
+      				case "COMPLETED":
+      					stageStr = statusStr;
+      					statusStr = "ACTIVE";
+      					be = beUtils.saveAnswer(new Answer(be,be,stageAttribute,stageStr));
+      					be = beUtils.saveAnswer(new Answer(be,be,statusAttribute,statusStr));
+      					stage++;
+      					break;
+      				default:
+      					stageStr = "TBD";
+      					status++;
+      					be = beUtils.saveAnswer(new Answer(be,be,stageAttribute,stageStr));
+      				}
+     				
+
+     			}
+
+     		
+        		System.out.println(index+" of "+total+" stage:"+stage+" status:"+status+" :BE: "+be.getCode()+":"+be.getName()+" --> "+statusStr+ " "+stageStr );
+        	 
+     		index++;
+     	}
+     	
+     	searchBE.setPageStart(index);
+     }
+
+
+
+ }
+
+    
+ //   @Test
     public void fixInternshipTitleTest() throws Exception {
  
         if (beUtils == null) {
