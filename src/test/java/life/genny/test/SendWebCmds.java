@@ -113,7 +113,7 @@ public class SendWebCmds {
         }
 
         try {
-            sendWebCmd("PCM_TEST1");
+            sendWebCmd("PCM_TEST2");
     	} catch (Exception e) {
     		// TODO Auto-generated catch block
     		e.printStackTrace();
