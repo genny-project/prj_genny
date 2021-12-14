@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -40,13 +41,18 @@ import life.genny.eventbus.EventBusMock;
 import life.genny.eventbus.VertxCache;
 import life.genny.models.GennyToken;
 import life.genny.qwanda.Answer;
+import life.genny.qwanda.Ask;
 import life.genny.qwanda.EEntityStatus;
+import life.genny.qwanda.Question;
 import life.genny.qwanda.attribute.Attribute;
 import life.genny.qwanda.attribute.AttributeText;
 import life.genny.qwanda.attribute.EntityAttribute;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwanda.entity.SearchEntity;
 import life.genny.qwanda.exception.BadDataException;
+import life.genny.qwanda.message.QCmdMessage;
+import life.genny.qwanda.message.QDataAskMessage;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
 import life.genny.qwandautils.GennyCacheInterface;
 import life.genny.qwandautils.GennySettings;
 import life.genny.qwandautils.JsonUtils;
@@ -97,9 +103,117 @@ public class FixInternshipTypes {
     }
 
     
+    @Test
+    public void createPCMs()  
+    {
+        VertxUtils.cachedEnabled = false;
+
+        if (beUtils == null) {
+            return;
+        }
+
+        try {
+            DefUtils.loadDEFS(realm,serviceToken);
+            moreCreatePCMs();
+    	} catch (Exception e) {
+    		// TODO Auto-generated catch block
+    		e.printStackTrace();
+    	}
+    }
+    
+
+public void moreCreatePCMs() throws Exception 
+{
+	
 
 
- @Test
+    	BaseEntity defBeIntern = beUtils.getDEFByCode("DEF_INTERN");
+    	BaseEntity intern = beUtils.create(defBeIntern,"Domenic");
+
+
+	BaseEntity defBe = beUtils.getDEFByCode("DEF_PCM");
+	Attribute attTpl = RulesUtils.getAttribute("PRI_TEMPLATE_CODE", serviceToken);
+
+	Attribute attLoc1 = RulesUtils.getAttribute("PRI_LOC1", serviceToken);
+	Attribute attLoc2 = RulesUtils.getAttribute("PRI_LOC2", serviceToken);
+	
+	
+	BaseEntity pcmTest1 = beUtils.create(defBe,"PCM Test1","PCM_TEST1");
+		
+	beUtils.saveAnswer(new Answer(pcmTest1, pcmTest1, attTpl, "TPL_CARD1"));	
+	beUtils.saveAnswer(new Answer(pcmTest1, pcmTest1, attLoc1, "PRI_FIRSTNAME"));	
+	beUtils.saveAnswer(new Answer(pcmTest1, pcmTest1, attLoc2, "PRI_LASTNAME"));			
+//	beUtils.saveBaseEntity(defBe,pcmTest1);
+	
+	BaseEntity pcmTest2 = beUtils.create(defBe,"PCM Test2","PCM_TEST2");
+		
+
+	beUtils.saveAnswer(new Answer(pcmTest2, pcmTest2, attTpl, "TPL_CARD1"));	
+	beUtils.saveAnswer(new Answer(pcmTest2, pcmTest2, attLoc1, "PRI_LASTNAME"));	
+	beUtils.saveAnswer(new Answer(pcmTest2, pcmTest2, attLoc2, "PRI_FIRSTNAME"));			
+	
+//	beUtils.saveBaseEntity(defBe,pcmTest2);
+	
+    SearchEntity searchBE = new SearchEntity("SBE_PCMS", "PCM Search")
+            .addSort("PRI_CREATED", "Created", SearchEntity.Sort.ASC)
+            .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PCM_%")
+            .addColumn("PRI_CODE", "Code")
+            .addColumn("PRI_STATUS","Status");
+    	searchBE.setRealm(userToken.getRealm());
+    	
+    	List<BaseEntity> pcms = beUtils.getBaseEntitys(searchBE);
+    	
+    	/* Now send to frontend user client */
+    	
+    	QDataBaseEntityMessage beMsg = new QDataBaseEntityMessage(pcms);
+		beMsg.setToken(userToken.getToken());
+		beMsg.setReplace(true);
+		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(beMsg));
+		
+	      QCmdMessage msg = new QCmdMessage("DISPLAY","FORM");
+	      msg.setToken(beUtils.getGennyToken().getToken());
+	      VertxUtils.writeMsg("webcmds",msg);
+
+	      
+	        /* We generate the question */
+	        Attribute attr = RulesUtils.getAttribute("QQQ_QUESTION_GROUP",beUtils.getGennyToken().getToken());
+	        Attribute firstnameAttr = RulesUtils.getAttribute("PRI_FIRSTNAME",beUtils.getGennyToken().getToken());
+	        Attribute lastnameAttr = RulesUtils.getAttribute("PRI_LASTNAME",beUtils.getGennyToken().getToken());
+	        Question groupQuestion = new Question("QUE_TEST_PCM_GRP", "Adam\'s Test Questions", attr, false);
+//	        Use TaskUtils.getQuestion(questionCode, userToken);
+	        Question childQuestion = new Question("QUE_PCM_TEST_FIRSTNAME","TEST PCM", firstnameAttr, false );
+	        groupQuestion.addTarget(childQuestion,1.0);
+	        Question childQuestion2 = new Question("QUE_PCM_TEST2_LASTNAME","TEST PCM2", lastnameAttr, false );
+	        groupQuestion.addTarget(childQuestion2,2.0);
+
+	        /* We generate the ask */
+	        Ask ask = new Ask(groupQuestion, userToken.getCode(), intern.getCode(), false, 1.0, false, false, false);
+	        Ask childAsk = new Ask(childQuestion, userToken.getCode(),intern.getCode(), false, 1.0, false, false, false);
+	        List<Ask> childAsksArray = new ArrayList<>();
+	        childAsksArray.add(childAsk);
+	        ask.setChildAsks(childAsksArray.toArray(new Ask[0]));
+	        List<Ask> asksArray = new ArrayList<>();
+	        asksArray.add(ask);
+
+	        QDataBaseEntityMessage beMsg2 = new QDataBaseEntityMessage(intern);
+	        beMsg2.setToken(beUtils.getGennyToken().getToken());
+	        VertxUtils.writeMsg("webcmds",beMsg2);
+
+	        QDataAskMessage askMsg = new QDataAskMessage(ask);
+	        askMsg.setToken(beUtils.getGennyToken().getToken());
+	        askMsg.setAttributeCode("QQQ_QUESTION_GROUP");
+	        askMsg.setQuestionCode("QUE_TEST_PCM_GRP");
+	        askMsg.setSourceCode(userToken.getCode());
+	        askMsg.setTargetCode(intern.getCode());
+	        askMsg.setItems(asksArray.toArray(new Ask[0]));
+	        VertxUtils.writeMsg("webcmds",askMsg);
+	        VertxUtils.writeMsgEnd(beUtils.getGennyToken());
+
+
+}
+    
+
+ //@Test
  public void createPriStageTest() throws Exception {
      VertxUtils.cachedEnabled = false;
 
