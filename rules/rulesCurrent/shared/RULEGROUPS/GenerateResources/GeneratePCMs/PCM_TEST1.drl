@@ -26,6 +26,9 @@ import life.genny.models.Theme;
 import life.genny.utils.FrameUtils2;
 import life.genny.models.FramePosition;
 import life.genny.qwanda.VisualControlType;
+import life.genny.utils.RulesUtils;
+import life.genny.qwanda.Answer;
+import life.genny.qwanda.attribute.Attribute;
 
 rule "PCM_TEST1"
     ruleflow-group 'GeneratePCMs'
@@ -41,17 +44,42 @@ rule "PCM_TEST1"
 		BaseEntity defBe = beUtils.getDEFByCode("DEF_PCM");
 		
 		BaseEntity pcmTest1 = beUtils.create(defBe,"PCM Test1","PCM_TEST1");
-			
-		pcmTest1.addAnswer(new Answer(serviceToken.getUserCode(), pcmTest1.getCode(), "PRI_TEMPLATE_CODE", "TPL_CARD1",false,true));	
-		pcmTest1.addAnswer(new Answer(serviceToken.getUserCode(), pcmTest1.getCode(), "PRI_LOC1", "PRI_FIRSTNAME",false,true));	
-		pcmTest1.addAnswer(new Answer(serviceToken.getUserCode(), pcmTest1.getCode(), "PRI_LOC2", "PRI_LASTNAME",false,true));			
+
+		Answer answer =  new Answer(serviceToken.getUserCode(), pcmTest1.getCode(), "PRI_TEMPLATE_CODE", "TPL_CARD1",false,true);
+		Attribute attribute = RulesUtils.getAttribute("PRI_TEMPLATE_CODE", serviceToken);
+		answer.setAttribute(attribute);
+		pcmTest1.addAnswer(answer);
+
+		answer = new Answer(serviceToken.getUserCode(), pcmTest1.getCode(), "PRI_LOC1", "PRI_FIRSTNAME",false,true);
+		attribute = RulesUtils.getAttribute("PRI_LOC1", serviceToken);
+		answer.setAttribute(attribute);
+		pcmTest1.addAnswer(answer);
+
+		answer = new Answer(serviceToken.getUserCode(), pcmTest1.getCode(), "PRI_LOC2", "PRI_LASTNAME",false,true);
+		attribute = RulesUtils.getAttribute("PRI_LOC2", serviceToken);
+		answer.setAttribute(attribute);
+		pcmTest1.addAnswer(answer);
+
 		beUtils.saveBaseEntity(defBe,pcmTest1);
 		
 		BaseEntity pcmTest2 = beUtils.create(defBe,"PCM Test2","PCM_TEST2");
-			
-		pcmTest2.addAnswer(new Answer(serviceToken.getUserCode(), pcmTest2.getCode(), "PRI_TEMPLATE_CODE", "TPL_CARD1",false,true));	
-		pcmTest2.addAnswer(new Answer(serviceToken.getUserCode(), pcmTest2.getCode(), "PRI_LOC1", "PRI_LASTNAME",false,true));	
-		pcmTest2.addAnswer(new Answer(serviceToken.getUserCode(), pcmTest2.getCode(), "PRI_LOC2", "PRI_FIRSTNAME",false,true));			
+
+		answer = new Answer(serviceToken.getUserCode(), pcmTest2.getCode(), "PRI_TEMPLATE_CODE", "TPL_CARD1",false,true);
+		attribute = RulesUtils.getAttribute("PRI_TEMPLATE_CODE", serviceToken);
+		answer.setAttribute(attribute);
+		pcmTest2.addAnswer(answer);
+
+
+		answer = new Answer(serviceToken.getUserCode(), pcmTest2.getCode(), "PRI_LOC1", "PRI_LASTNAME",false,true);
+		attribute = RulesUtils.getAttribute("PRI_LOC1", serviceToken);
+		answer.setAttribute(attribute);
+		pcmTest2.addAnswer(answer);
+
+		answer = new Answer(serviceToken.getUserCode(), pcmTest2.getCode(), "PRI_LOC2", "PRI_FIRSTNAME",false,true);
+		attribute = RulesUtils.getAttribute("PRI_LOC2", serviceToken);
+		answer.setAttribute(attribute);
+		pcmTest2.addAnswer(answer);
+
 		beUtils.saveBaseEntity(defBe,pcmTest2);
 		
  
