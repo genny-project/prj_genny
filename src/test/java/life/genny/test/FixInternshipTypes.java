@@ -113,7 +113,7 @@ public class FixInternshipTypes {
         }
 
         try {
-            DefUtils.loadDEFS(realm,serviceToken);
+        //    DefUtils.loadDEFS(realm,serviceToken);
             moreCreatePCMs();
     	} catch (Exception e) {
     		// TODO Auto-generated catch block
