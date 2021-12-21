@@ -23,6 +23,7 @@ rule "LNK_PERSON"
 
 	then
 		System.out.println(drools.getRule().getName()+": Rule fired");
+		
 
 		/* Ensure frontend has updated dropdown value */
 		VertxUtils.sendToFrontEnd(userToken, answer);
@@ -35,14 +36,70 @@ rule "LNK_PERSON"
 
 		String[] codeArray = cleanCodes.split(",");
 
+		List<BaseEntity> beList = Arrays.stream(codeArray).map(x -> beUtils.getBaseEntityByCode(x)).collect(Collectors.toList());
+
 		TableUtils tableUtils = new TableUtils(beUtils);
+
+		/* Currently only works for one */
+		BaseEntity target = beList.get(0);
+
+		if (target == null) {
+			System.out.println("TARGET BE IS NULL!");
+			return;
+		}
+
+		Boolean isHostCpyRep = target.getValue("PRI_IS_HOST_CPY_REP", false);
+		Boolean isEduProRep = target.getValue("PRI_IS_EDU_PRO_REP", false);
+		Boolean isAgent = target.getValue("PRI_IS_AGENT", false);
+		Boolean isHC = target.getValue("PRI_IS_HOST_CPY", false);
+		Boolean isEduPro = target.getValue("PRI_IS_EDU_PROVIDER", false);
+
+		SearchEntity availableSearch = null;
+
+		/* Fetch All Applications */
+		SearchEntity appSearchBE = new SearchEntity("SBE_INTERN_APPLICATIONS", "Intern Applications")
+			.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+			.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.EQUAL, target.getCode());
+
+		if (isHostCpyRep) {
+			/* Fetch All Applications */
+			appSearchBE = new SearchEntity("SBE_INTERN_APPLICATIONS", "Intern Applications")
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+				.addFilter("LNK_INTERNSHIP.LNK_HOST_COMPANY_REP", SearchEntity.StringFilter.EQUAL, target.getCode());
+
+		} else if (isEduProRep) {
+			/* Fetch All Applications */
+			String eduProv = beUtils.getBaseEntityByCode(target.getCode()).getValue("LNK_EDU_PROVIDER");
+			appSearchBE = new SearchEntity("SBE_INTERN_APPLICATIONS", "Intern Applications")
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+				.addFilter("PRI_INTERN_CODE.LNK_EDU_PROVIDER", SearchEntity.StringFilter.EQUAL, eduProv);
+		} else if (isAgent) {
+			/* Fetch All Applications */
+			appSearchBE = new SearchEntity("SBE_INTERN_APPLICATIONS", "Intern Applications")
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+				.addFilter("PRI_INTERN_CODE.LNK_AGENT", SearchEntity.StringFilter.EQUAL, target.getCode());
+		} else if (isHC) {
+			/* Fetch All Applications */
+			appSearchBE = new SearchEntity("SBE_INTERN_APPLICATIONS", "Intern Applications")
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+				.addFilter("LNK_INTERNSHIP.LNK_HOST_COMPANY", SearchEntity.StringFilter.EQUAL, target.getCode());
+		} else if (isEduPro) {
+			/* Fetch All Applications */
+			appSearchBE = new SearchEntity("SBE_INTERN_APPLICATIONS", "Intern Applications")
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
+				.addFilter("PRI_INTERN_CODE.LNK_EDU_PROVIDER", SearchEntity.StringFilter.EQUAL, target.getCode());
+		}
+
+		if (availableSearch != null) {
+			beList = beUtils.getBaseEntitys(availableSearch);
+		}
 
 		List<BaseEntity> availableCol = new ArrayList<>();
 
 		/* Check if each intern can be shown in available col */
-		for (String code : codeArray) {
+		for (BaseEntity availableIntern : beList) {
 
-			BaseEntity availableIntern = beUtils.getBaseEntityByCode(code);
+			/* BaseEntity availableIntern = beUtils.getBaseEntityByCode(code); */
 
 			Boolean disabled = availableIntern.getValue("PRI_DISABLED", false);
 			String personStatus = availableIntern.getValue("PRI_STATUS", "");
@@ -69,11 +126,6 @@ rule "LNK_PERSON"
 		availableSearchMsg.setToken(userToken.getToken());
 		availableSearchMsg.setReplace(true);
 		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(availableSearchMsg));
-
-		/* Fetch All Applications */
-		SearchEntity appSearchBE = new SearchEntity("SBE_INTERN_APPLICATIONS", "Intern Applications")
-							.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "APP_%")
-							.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.EQUAL, codeArray[0]);
 
 		/* Add OR filter for every other code */
 		if (codeArray.length > 1) {
