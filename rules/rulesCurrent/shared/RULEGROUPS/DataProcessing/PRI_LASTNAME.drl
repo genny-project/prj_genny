@@ -20,16 +20,19 @@ import org.apache.commons.lang3.StringUtils;
 
 rule "PRI_LASTNAME"
 	ruleflow-group 'DataProcessing'
-	salience 50 
+	salience 5000
 	when
 		beUtils : BaseEntityUtils()
-	  answer : Answer( attributeCode == "PRI_LASTNAME" )
-	  answersToSave : Answers()
-	  output : OutputParam( )
+		answer : Answer( attributeCode == "PRI_LASTNAME" )
+		answersToSave : Answers()
+		output : OutputParam( )
+		serviceToken : GennyToken( code == "PER_SERVICE")
 		userToken : GennyToken( code != "PER_SERVICE")
+		ruleDetails : RuleDetails()
+		allowed: Allowed((code == "USER") || (code == "EDIT_INTERN") || (code == "EDIT_HCR") || (code == "EDIT_EPR") || (code == "EDIT_REF_PART_REP") || (code == "EDIT_AGENT"))
 
 	then
- 		System.out.println("Rule -> PRI_LASTNAME :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
+		System.out.println("Rule -> PRI_LASTNAME :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		String targetCode = answer.getTargetCode();
 		
@@ -38,11 +41,34 @@ rule "PRI_LASTNAME"
 		lastname = lastname.toLowerCase().trim();
 		lastname = StringUtils.capitalize(lastname);
 		BaseEntity person = beUtils.getBaseEntityByCode(targetCode);
-		
+		String fieldName = "lastName";
 		
 		System.out.println("Rule -> PRI_LASTNAME 1 lastname="+lastname);	
-		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_LASTNAME", lastname,false,false));	
+
+		boolean allowedToChange = false;
+		System.out.println("Rule -> PRI_LASTNAME, the allowed.code is "+allowed.code);
+		/* check if capability to change last name there */
+		switch (allowed.code) {
+			case "USER":        {allowedToChange = true;} break;
+			case "EDIT_INTERN": {allowedToChange = true;} break;
+			case "EDIT_AGENT":  {allowedToChange = true;} break;
+			case "EDIT_HCR":    {allowedToChange = true;} break;
+			case "EDIT_EPR":    {allowedToChange = true;} break;
+			case "EDIT_REF_PART_REP": {allowedToChange = true;} break;
+		}
+
+		if (allowedToChange) {
+			String keycloakUUID = answer.getTargetCode().substring("PER_".length());
+			int statusCode = KeycloakUtils.updateUserField(keycloakUUID, serviceToken.getToken(), userToken.getRealm(), fieldName, lastname);
+			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Changing "+fieldName+" for "+answer.getTargetCode()+" to "+answer.getValue()+" statusCode="+statusCode);
+			if (statusCode > 204) {
+				System.out.println(ruleDetails+" "+drools.getRule().getName()+" Error in setting"+fieldName+" for "+answer.getTargetCode()+" to "+answer.getValue()+" statusCode="+statusCode);
+			} else {
+				System.out.println(ruleDetails+" "+drools.getRule().getName()+"  Saving the good "+fieldName);
+			}
+		}
 			
+		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_LASTNAME", lastname, false, false));	
 		String firstname = firstname = answersToSave.getValue("PRI_FIRSTNAME");
 		if (StringUtils.isBlank(firstname)) {
 			/* check if sitting in existing be */
@@ -58,9 +84,9 @@ rule "PRI_LASTNAME"
 		System.out.println("Rule -> PRI_LASTNAME 3 initials="+initials);
 		
 		Answer answerName = new Answer(sourceCode,targetCode,"PRI_NAME",name,false,true);
- 		answersToSave.add(answerName);
+		answersToSave.add(answerName);
 		Answer answerInitials = new Answer(sourceCode,targetCode,"PRI_INITIALS",initials,false,true);
- 		answersToSave.add(answerInitials);
+		answersToSave.add(answerInitials);
 
 		VertxUtils.sendToFrontEnd(userToken, answerName);
 			

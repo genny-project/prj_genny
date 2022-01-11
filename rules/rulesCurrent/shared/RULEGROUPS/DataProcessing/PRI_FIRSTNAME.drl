@@ -24,14 +24,16 @@ rule "PRI_FIRSTNAME"
 	no-loop
 	when
 		beUtils : BaseEntityUtils()
-	  serviceToken : GennyToken( code == "PER_SERVICE") 
-	  answer : Answer( attributeCode == "PRI_FIRSTNAME" )
-	  answersToSave : Answers()
-	  output : OutputParam( )
+		answer : Answer( attributeCode == "PRI_FIRSTNAME" )
+		answersToSave : Answers()
+		output : OutputParam( )
+		serviceToken : GennyToken( code == "PER_SERVICE")
 		userToken : GennyToken( code != "PER_SERVICE")
+		ruleDetails : RuleDetails()
+		allowed: Allowed((code == "USER") || (code == "EDIT_INTERN") || (code == "EDIT_HCR") || (code == "EDIT_EPR") || (code == "EDIT_REF_PART_REP") || (code == "EDIT_AGENT"))
 
 	then
- 		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
+		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		String targetCode = answer.getTargetCode();
 		
@@ -39,27 +41,48 @@ rule "PRI_FIRSTNAME"
 		String firstname = answer.getValue();
 		firstname = firstname.toLowerCase().trim();
 		firstname = WordUtils.capitalize(firstname);
-					
+
+		String fieldName = "firstName";
+		boolean allowedToChange = false;
+		System.out.println("Rule -> PRI_LASTNAME, the allowed.code is "+allowed.code);
+		/* check if capability to change last name there */
+		switch (allowed.code) {
+			case "USER":        {allowedToChange = true;} break;
+			case "EDIT_INTERN": {allowedToChange = true;} break;
+			case "EDIT_AGENT":  {allowedToChange = true;} break;
+			case "EDIT_HCR":    {allowedToChange = true;} break;
+			case "EDIT_EPR":    {allowedToChange = true;} break;
+			case "EDIT_REF_PART_REP": {allowedToChange = true;} break;
+		}
+
+		if (allowedToChange) {
+			String keycloakUUID = answer.getTargetCode().substring("PER_".length());
+			int statusCode =  KeycloakUtils.updateUserField(keycloakUUID, serviceToken.getToken(), userToken.getRealm(), fieldName, firstname);
+			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Changing "+fieldName+" for "+answer.getTargetCode()+" to "+answer.getValue()+" statusCode="+statusCode);
+			if (statusCode > 204) {
+				System.out.println(ruleDetails+" "+drools.getRule().getName()+" Error in setting"+fieldName+" for "+answer.getTargetCode()+" to "+answer.getValue()+" statusCode="+statusCode);
+			} else {
+				System.out.println(ruleDetails+" "+drools.getRule().getName()+"  Saving the good "+fieldName);
+			}
+		}
+
 		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_FIRSTNAME", firstname,false,false));	
-			
 		BaseEntity person = beUtils.getBaseEntityByCode(targetCode);
 		String lastname = answersToSave.getValue("PRI_LASTNAME");
 		if (StringUtils.isBlank(lastname)) {
 			/* check if sitting in existing be */
 			lastname = person.getValue("PRI_LASTNAME","");
-		
 		}
 			
 		String name = firstname  + " "+lastname;
 		name = name.trim();	
 			
 		String initials = 	WordUtils.initials(name).toUpperCase();
-		
 	
 		Answer answerName = new Answer(sourceCode,targetCode,"PRI_NAME",name,false,true);
  		answersToSave.add(answerName);
 		Answer answerInitials = new Answer(sourceCode,targetCode,"PRI_INITIALS",initials,false,true);
- 		answersToSave.add(answerInitials);
+		answersToSave.add(answerInitials);
 		
 		VertxUtils.sendToFrontEnd(userToken, answerName);
 
