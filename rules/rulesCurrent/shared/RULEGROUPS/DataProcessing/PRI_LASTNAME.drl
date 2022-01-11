@@ -23,6 +23,7 @@ rule "PRI_LASTNAME"
 	salience 50 
 	when
 		beUtils : BaseEntityUtils()
+		serviceToken : GennyToken( code == "PER_SERVICE")
 		answer : Answer( attributeCode == "PRI_LASTNAME" )
 		answersToSave : Answers()
 		output : OutputParam( )
