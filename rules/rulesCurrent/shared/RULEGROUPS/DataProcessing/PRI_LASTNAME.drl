@@ -27,6 +27,7 @@ rule "PRI_LASTNAME"
 		answersToSave : Answers()
 		output : OutputParam( )
 		userToken : GennyToken( code != "PER_SERVICE")
+		ruleDetails : RuleDetails()
 		allowed: Allowed((code == "USER") || (code == "EDIT_INTERN") || (code == "EDIT_HCR") || (code == "EDIT_EPR") || (code == "EDIT_REF_PART_REP") || (code == "EDIT_AGENT"))
 
 	then
@@ -56,16 +57,16 @@ rule "PRI_LASTNAME"
 		}
 
 		if (allowedToChange) {
-			int statusCode =  KeycloakUtils.updateUserField(keycloakUUID, serviceToken.getToken(), userToken.getRealm(), fieldName, answer.getValue());
+			int statusCode = KeycloakUtils.updateUserField(keycloakUUID, serviceToken.getToken(), userToken.getRealm(), fieldName, lastname);
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Changing "+fieldName+" for "+answer.getTargetCode()+" to "+answer.getValue()+" statusCode="+statusCode);
 			if (statusCode > 204) {
 				System.out.println(ruleDetails+" "+drools.getRule().getName()+" Error in setting"+fieldName+" for "+answer.getTargetCode()+" to "+answer.getValue()+" statusCode="+statusCode);
 			} else {
 				System.out.println(ruleDetails+" "+drools.getRule().getName()+"  Saving the good "+fieldName);
-				answersToSave.add(new Answer(sourceCode, targetCode, "PRI_LASTNAME", lastname, false, false));	
 			}
 		}
 			
+		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_LASTNAME", lastname, false, false));	
 		String firstname = firstname = answersToSave.getValue("PRI_FIRSTNAME");
 		if (StringUtils.isBlank(firstname)) {
 			/* check if sitting in existing be */
