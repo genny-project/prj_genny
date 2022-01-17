@@ -161,14 +161,41 @@ public class RemoteServiceTest {
 
     @Test
     public void apiTest() throws Exception {
-        VertxUtils.cachedEnabled = false;
-//        RulesUtils.loadAllAttributesIntoCache(beUtils.getGennyToken().getToken());
         if (beUtils == null) {
             return;
         }
-//        Set up the defs
-        DefUtils.loadDEFS(realm);
 
+        SearchEntity jnlSearch = new SearchEntity("SBE_AI_JOURNAL", "JNL SEARCH")
+                .addSort("PRI_JOURNAL_DATE", "Created", SearchEntity.Sort.ASC)
+                .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
+                .addColumn("PRI_CODE", "Code")
+                .addColumn("PRI_JOURNAL_LEARNING_OUTCOMES", "LearningOutcomes")
+                .addColumn("PRI_JOURNAL_TASKS","JournalTasks")
+                .addAssociatedColumn("LNK_INTERN", "Intern Name", "PRI_NAME")
+                .addColumn("PRI_STATUS","Status");
+        jnlSearch.setRealm(realm);
+        jnlSearch.setPageStart(0);
+        jnlSearch.setPageSize(1000);
+
+        SearchEntity internSearch = new SearchEntity("SBE_INTERNS", "INTERN SEARCH")
+                .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
+                .addFilter("PRI_IS_INTERN", true)
+                .addColumn("PRI_CODE", "Intern Code")
+                .addAssociatedColumn("LNK_EDU_PROVIDER", "EDU PROVIDER", "PRI_NAME")
+                .addColumn("PRI_STATUS","Status");
+        internSearch.setRealm(realm);
+        internSearch.setPageStart(0);
+        internSearch.setPageSize(1000);
+
+        String apiRoute = "http://127.0.0.1:5000/api/response";
+//        String authToken = beUtils.getGennyToken().getToken();
+        String authToken = beUtils.getServiceToken().getToken();
+
+//      Make the api call
+        String apiJnlPostRequest = QwandaUtils.apiPostEntity2(apiRoute, "[\""+jnlSearch+"\"]", authToken , null);
+        System.out.println(apiJnlPostRequest);
+//        String apiInternPostRequest = QwandaUtils.apiPostEntity2(apiRoute, "[\""+internSearch+"\"]", authToken , null);
+//        System.out.println(apiInternPostRequest);
     }
 
 
@@ -269,6 +296,7 @@ public class RemoteServiceTest {
         if (beUtils == null) {
             return;
         }
+
 
 //        Set up the defs
         DefUtils.loadDEFS(realm);
