@@ -70,10 +70,12 @@ rule "IS_QA_INTERN"
 
 			/* Boolean sendEmail = newBe.getValue("PRI_EMAIL_FLAG", false); */
 
-/*			String sendEmail = newBe.getValue("LNK_SEND_EMAIL", "");
+			String sendEmail = newBe.getValue("LNK_SEND_EMAIL", "");
 			System.out.println("sendEmail = " + sendEmail);
+            Boolean containsSelYes = sendEmail.contains("SEL_YES");
+            containsSelYes = true; /* always send required */
 
-			if (sendEmail.contains("SEL_YES")) {*/
+			if (containsSelYes) {
 				/* Init Sendgrid Msg */
 				QMessageGennyMSG msg = new QMessageGennyMSG.Builder("MSG_INT1_REGISTER")
 					.addRecipient(newBe)
@@ -82,7 +84,7 @@ rule "IS_QA_INTERN"
 					.addContext("BCC", "PRJ_INTERNMATCH")
 					.setUtils(beUtils)
 					.send();
-		/*	}*/
+			}
 
 			if (agent != null) {
 				/* Init Sendgrid to Agent Msg */
