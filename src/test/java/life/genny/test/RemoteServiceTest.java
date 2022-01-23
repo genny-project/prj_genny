@@ -172,7 +172,7 @@ public class RemoteServiceTest {
                 .addColumn("PRI_JOURNAL_LEARNING_OUTCOMES", "LearningOutcomes")
                 .addColumn("PRI_JOURNAL_TASKS","JournalTasks")
                 .addAssociatedColumn("LNK_INTERN", "PRI_CODE", "InternCode")
-                .addFilter("LNK_INTERN.LNK_EDU_PROVIDER.PRI_CODE", SearchEntity.StringFilter.EQUAL, "CPY_9D998907-4A2E-44B9-956F-B0FB6645C1AD")
+                .addFilter("LNK_INTERN.LNK_EDU_PROVIDER", SearchEntity.StringFilter.EQUAL, "[\"CPY_9D998907-4A2E-44B9-956F-B0FB6645C1AD\"]")
                 .addColumn("PRI_STATUS","Status");
         jnlSearch.setRealm(realm);
         jnlSearch.setPageStart(0);
