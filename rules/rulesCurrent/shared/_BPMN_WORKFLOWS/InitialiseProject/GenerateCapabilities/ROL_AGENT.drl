@@ -150,6 +150,8 @@ rule "ROL_AGENT"
 		 capabilityUtils.addCapabilityToRole(role,"EXTERNAL_HOST_CPY", CapabilityMode.ADD);
 		 capabilityUtils.addCapabilityToRole(role,"EXTERNAL_EDU_PRO", CapabilityMode.ADD);
 
+		 capabilityUtils.addCapabilityToRole(role,"QUICK_SEARCH_ALL", CapabilityMode.VIEW);
+
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
   	     
   	    beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_WEIGHT", 700.0,false,true));
