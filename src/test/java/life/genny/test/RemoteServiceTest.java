@@ -164,25 +164,36 @@ public class RemoteServiceTest {
         if (beUtils == null) {
             return;
         }
-
-        SearchEntity jnlSearch = new SearchEntity("SBE_AI_JOURNAL", "JNL SEARCH")
-                .addSort("PRI_JOURNAL_DATE", "Created", SearchEntity.Sort.ASC)
-                .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
-                .addColumn("PRI_CODE", "Code")
-                .addColumn("PRI_JOURNAL_LEARNING_OUTCOMES", "LearningOutcomes")
-                .addColumn("PRI_JOURNAL_TASKS","JournalTasks")
-                .addAssociatedColumn("LNK_INTERN", "PRI_CODE", "InternCode")
-                .addFilter("LNK_INTERN.LNK_EDU_PROVIDER", SearchEntity.StringFilter.EQUAL, "[\"CPY_9D998907-4A2E-44B9-956F-B0FB6645C1AD\"]")
+        SearchEntity internSearch = new SearchEntity("SBE_INTERNS", "INTERN SEARCH")
+                .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
+                .addFilter("PRI_IS_INTERN", true)
+                .addFilter("LNK_EDU_PROVIDER", SearchEntity.StringFilter.EQUAL, "[\"CPY_9D998907-4A2E-44B9-956F-B0FB6645C1AD\"]")
+                .addColumn("PRI_CODE", "Intern Code")
+                .addColumn("PRI_ASSOC_CURRENT_SOFTWARE", "CurrentSoftware")
+                .addColumn("PRI_ASSOC_FUTURE_SOFTWARE", "FutureSoftware")
                 .addColumn("PRI_STATUS","Status");
-        jnlSearch.setRealm(realm);
-        jnlSearch.setPageStart(0);
-        jnlSearch.setPageSize(24885);
+        internSearch.setRealm(realm);
+        internSearch.setPageStart(0);
+        internSearch.setPageSize(24885);
+
+//        SearchEntity jnlSearch = new SearchEntity("SBE_AI_JOURNAL", "JNL SEARCH")
+//                .addSort("PRI_JOURNAL_DATE", "Created", SearchEntity.Sort.ASC)
+//                .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "JNL_%")
+//                .addColumn("PRI_CODE", "Code")
+//                .addColumn("PRI_JOURNAL_LEARNING_OUTCOMES", "LearningOutcomes")
+//                .addColumn("PRI_JOURNAL_TASKS","JournalTasks")
+//                .addAssociatedColumn("LNK_INTERN", "PRI_CODE", "InternCode")
+//                .addFilter("LNK_INTERN.LNK_EDU_PROVIDER", SearchEntity.StringFilter.EQUAL, "[\"CPY_9D998907-4A2E-44B9-956F-B0FB6645C1AD\"]")
+//                .addColumn("PRI_STATUS","Status");
+//        jnlSearch.setRealm(realm);
+//        jnlSearch.setPageStart(0);
+//        jnlSearch.setPageSize(24885);
 
 //        SearchEntity internSearch = new SearchEntity("SBE_INTERNS", "INTERN SEARCH")
 //                .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
 //                .addFilter("PRI_IS_INTERN", true)
 //                .addColumn("PRI_CODE", "Intern Code")
-//                .addFilter("LNK_EDU_PROVIDER.PRI_LEGAL_NAME", SearchEntity.StringFilter.EQUAL, "University of Surrey")
+//                .addFilter("LNK_EDU_PROVIDER", SearchEntity.StringFilter.EQUAL, "[\"CPY_9D998907-4A2E-44B9-956F-B0FB6645C1AD\"]")
 //                .addColumn("PRI_STATUS","Status");
 //        internSearch.setRealm(realm);
 //        internSearch.setPageStart(0);
@@ -193,10 +204,10 @@ public class RemoteServiceTest {
         String authToken = beUtils.getServiceToken().getToken();
 
 //      Make the api call
-        String apiJnlPostRequest = QwandaUtils.apiPostEntity2(apiRoute, "[\""+jnlSearch+"\"]", authToken , null);
-        System.out.println(apiJnlPostRequest);
-//        String apiInternPostRequest = QwandaUtils.apiPostEntity2(apiRoute, "[\""+internSearch+"\"]", authToken , null);
-//        System.out.println(apiInternPostRequest);
+//        String apiJnlPostRequest = QwandaUtils.apiPostEntity2(apiRoute, "[\""+jnlSearch+"\"]", authToken , null);
+//        System.out.println(apiJnlPostRequest);
+        String apiInternPostRequest = QwandaUtils.apiPostEntity2(apiRoute, "[\""+internSearch+"\"]", authToken , null);
+        System.out.println(apiInternPostRequest);
     }
 
 
