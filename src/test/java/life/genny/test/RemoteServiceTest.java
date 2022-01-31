@@ -231,7 +231,7 @@ public class RemoteServiceTest {
 
 //        TaskUtils.createTask(beUtils.getGennyToken(), "QUE_REMOTE_SERVICE_GRP");
 
-
+       // BaseEntity test1 = beUtils.getBaseEntityByCode("PER_SERVICE");
 
     }
 
