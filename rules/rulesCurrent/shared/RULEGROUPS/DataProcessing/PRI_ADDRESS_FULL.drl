@@ -99,6 +99,7 @@ rule "PRI_ADDRESS_FULL"
 							String googleApiKey = project.getValueAsString("ENV_GOOGLE_MAPS_APIKEY");
 							String url = "https://maps.googleapis.com/maps/api/timezone/json?location="+latitude+","+longitude+"&timestamp="+java.time.Instant.now().getEpochSecond()+"&key="+googleApiKey;
 							String timezoneJsonStr =  QwandaUtils.apiGet(url , null);
+							System.out.println("timezoneJsonStr :: " + timezoneJsonStr);
 							JsonObject json = new JsonObject(timezoneJsonStr);
 							String timezoneID = json.getString("timeZoneId");
 							System.out.println("timezoneID :: " + timezoneID);
