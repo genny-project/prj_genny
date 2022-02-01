@@ -98,8 +98,11 @@ rule "PRI_ADDRESS_FULL"
 						BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+serviceToken.getRealm().toUpperCase());
 							String googleApiKey = project.getValueAsString("ENV_GOOGLE_MAPS_APIKEY");
 							String url = "https://maps.googleapis.com/maps/api/timezone/json?location="+latitude+","+longitude+"&timestamp="+java.time.Instant.now().getEpochSecond()+"&key="+googleApiKey;
-							String timezoneJsonStr =  QwandaUtils.apiGet(url , null);
-							System.out.println("timezoneJsonStr :: " + timezoneJsonStr);
+							
+							url = GennySettings.projectUrl+"/googleapi/v1/timezone?location="+latitude+","+longitude+"&timestamp="+java.time.Instant.now().getEpochSecond();
+							System.out.println("GennyProxy url = "+url);
+							String timezoneJsonStr =  QwandaUtils.apiGet(url , userToken.getToken());
+							
 							JsonObject json = new JsonObject(timezoneJsonStr);
 							String timezoneID = json.getString("timeZoneId");
 							System.out.println("timezoneID :: " + timezoneID);
