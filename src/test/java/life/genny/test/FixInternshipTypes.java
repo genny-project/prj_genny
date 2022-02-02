@@ -649,7 +649,7 @@ public class FixInternshipTypes {
 
 	}
 
-	// @Test
+	@Test
 	public void fixInternshipTitleTest() throws Exception {
 
 		if (beUtils == null) {
@@ -675,6 +675,7 @@ public class FixInternshipTypes {
 		Attribute deletedAttribute = RulesUtils.getAttribute("PRI_DISABLED", serviceToken.getToken());
 		Attribute lnkInternAttribute = RulesUtils.getAttribute("LNK_INTERN", serviceToken.getToken());
 		Attribute internshipTitleAttribute = RulesUtils.getAttribute("PRI_INTERNSHIP_TITLE", serviceToken.getToken());
+		Attribute titleAttribute = RulesUtils.getAttribute("PRI_TITLE", serviceToken.getToken());
 		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken.getToken());
 		Attribute internCodeAttribute = RulesUtils.getAttribute("PRI_INTERN_CODE", serviceToken.getToken());
 		Attribute applicantCodeAttribute = RulesUtils.getAttribute("PRI_APPLICANT_CODE", serviceToken.getToken());
@@ -694,55 +695,15 @@ public class FixInternshipTypes {
 				// check if PRI_INTERNSHIP_TITLE is there
 				String title = item.getValue("PRI_INTERNSHIP_TITLE", null);
 				String name = item.getValue("PRI_NAME", null);
-				if ((!StringUtils.isBlank(name))) {
-					if (name.startsWith("BEG_")) {
-						if (!StringUtils.isBlank(title)) {
-							item = beUtils.saveAnswer(new Answer(item, item, nameAttribute, title));
+				if (StringUtils.isBlank(name)) {
+					name = item.getName();
+					item = beUtils.saveAnswer(new Answer(item, item, nameAttribute, name));
+				}
+				if ((StringUtils.isBlank(title))) {
+							item = beUtils.saveAnswer(new Answer(item, item, internshipTitleAttribute, name));
+							item = beUtils.saveAnswer(new Answer(item, item, titleAttribute, name));
 							System.out.println("FIXED *************** NAME IS BEG but title is " + title);
-						}
-
-					} else {
-						if (!StringUtils.isBlank(title)) {
-							item = beUtils.saveAnswer(new Answer(item, item, nameAttribute, title));
-							System.out.println("FIXED *************** NAME IS BEG but title is " + title);
-						}
-
-					}
-				} else {
-
-					if (!StringUtils.isBlank(title)) {
-						item = beUtils.saveAnswer(new Answer(item, item, nameAttribute, title));
-						System.out.println("FIXED *************** NAME IS NULL but title is " + title);
-					} else {
-
-						String industry = item.getValue("PRI_ASSOC_INDUSTRY", null);
-						if (!StringUtils.isBlank(industry)) {
-							item = beUtils.saveAnswer(new Answer(item, item, nameAttribute, industry)); // give the name
-																										// of the
-																										// internship
-																										// the industry
-																										// name
-							System.out.println(
-									"FIXED ************** NAME AND TITLE ARE NULL using industry " + item.getCode());
-						} else {
-							String companyname = item.getValue("PRI_ASSOC_HC", null);
-							if (!StringUtils.isBlank(companyname)) {
-								item = beUtils.saveAnswer(new Answer(item, item, nameAttribute, companyname)); // give
-																												// the
-																												// name
-																												// of
-																												// the
-																												// internship
-																												// the
-																												// company
-																												// name
-								System.out.println(
-										"FIXED ************** NAME AND TITLE ARE NULL using company " + item.getCode());
-							} else {
-
-							}
-						}
-					}
+	
 				}
 
 				System.out.println(index + " of " + total + " BEs -> " + item.getCode() + " " + item.getName());
