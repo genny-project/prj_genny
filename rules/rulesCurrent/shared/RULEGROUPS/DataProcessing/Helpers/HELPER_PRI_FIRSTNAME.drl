@@ -35,7 +35,7 @@ rule "HELPER_PRI_FIRSTNAME.drl"
 	  answersToSave : Answers()
 	  ruleDetails : RuleDetails()
 	  output : OutputParam( )
-    then
+     then
  		System.out.println(ruleDetails+" "+drools.getRule().getName()+"Processing Helper Answer/Data : " + answer );
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		String targetCode = answer.getTargetCode();
@@ -45,65 +45,65 @@ rule "HELPER_PRI_FIRSTNAME.drl"
 		String firstnameRaw = answer.getValue();
 		String encodedFirstname = firstnameRaw;
 		if (!StringUtils.isBlank(firstnameRaw)) {
-            try {
-                encodedFirstname =  URLEncoder.encode(firstnameRaw, StandardCharsets.UTF_8.toString());
-            } catch (Exception ex) {
+		try {
+            encodedFirstname =  URLEncoder.encode(firstnameRaw, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException ex) {
 
-            }
-            System.out.println("HELPER FIRSTNAME: raw="+firstnameRaw+" : encoded="+encodedFirstname);
+        }
+		System.out.println("HELPER FIRSTNAME: raw="+firstnameRaw+" : encoded="+encodedFirstname);
 
-            /*JsonObject genderObj = new JsonObject( QwandaUtils.apiGet("https://api.genderize.io/?name=" +encodedFirstname , null));
-            String gender = genderObj.getString("gender");
-            Double weight = genderObj.getDouble("probability");
+        JsonObject genderObj = new JsonObject( QwandaUtils.apiGet("https://api.genderize.io/?name=" +encodedFirstname , null));
+        String gender = genderObj.getString("gender");
+        Double weight = genderObj.getDouble("probability");
 
-            System.out.println("GENDER OBJECT   ::   "+genderObj.toString());
-            System.out.println("gender   ::   " + gender);
-            System.out.println("weight   ::   " + weight);*/
-            String gender = "male";
+        System.out.println("GENDER OBJECT   ::   "+genderObj.toString());
+        System.out.println("gender   ::   " + gender);
+        System.out.println("weight   ::   " + weight);
 
-            Answer genderAnswer = null;
-            if(gender !=null ) {
+		Answer genderAnswer = null;
+        if(gender !=null ) {
 
-                switch (gender) {
-                    case "male":
-                        genderAnswer = new Answer(sourceCode, targetCode, "LNK_GENDER_SELECT", "[\"SEL_GENDER_MALE\"]",false,true);
-                        answersToSave.add(genderAnswer);
-                        answersToSave.add(new Answer(sourceCode, targetCode, "PRI_GENDER", "MALE",false,true));
-                        break;
-                    case "female":
-                        genderAnswer = new Answer(sourceCode, targetCode, "LNK_GENDER_SELECT", "[\"SEL_GENDER_FEMALE\"]",false,true);
-                        answersToSave.add(genderAnswer);
-                        answersToSave.add(new Answer(sourceCode, targetCode, "PRI_GENDER", "FEMALE",false,true));
-                        break;
-                    default:
-                        genderAnswer = new Answer(sourceCode, targetCode, "LNK_GENDER_SELECT", "[\"SEL_GENDER_UNKNOWN\"]",false,true);
-                        answersToSave.add(genderAnswer);
-                        answersToSave.add(new Answer(sourceCode, targetCode, "PRI_GENDER", "UNKNOWN",false,true));
+            switch (gender) {
+            	case "male":
+            		genderAnswer = new Answer(sourceCode, targetCode, "LNK_GENDER_SELECT", "[\"SEL_GENDER_MALE\"]",false,true);
+            		answersToSave.add(genderAnswer);
+            		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_GENDER", "MALE",false,true));
+            		break;
+            	case "female":
+           			genderAnswer = new Answer(sourceCode, targetCode, "LNK_GENDER_SELECT", "[\"SEL_GENDER_FEMALE\"]",false,true);
+            		answersToSave.add(genderAnswer);
+            		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_GENDER", "FEMALE",false,true));
+            		break;
+           		default:
+           			genderAnswer = new Answer(sourceCode, targetCode, "LNK_GENDER_SELECT", "[\"SEL_GENDER_UNKNOWN\"]",false,true);
+            		answersToSave.add(genderAnswer);
+            		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_GENDER", "UNKNOWN",false,true));
 
-                }
-
-                genderAnswer.setWeight(1D);
-                genderAnswer.setInferred(true);
-                System.out.println(genderAnswer);
-                insert(genderAnswer); /* push this inferred answer into the rules to prevent refiring of this rule and to possibly invoke others */
+		    }
+            genderAnswer.setWeight(weight);
+            genderAnswer.setInferred(true);
+            System.out.println(genderAnswer);
+            insert(genderAnswer); /* push this inferred answer into the rules to prevent refiring of this rule and to possibly invoke others */
 
 
-                BaseEntity baseEntity = beUtils.updateBaseEntity(targetCode,genderAnswer);
-                beUtils.updateBaseEntity(targetCode,answer); /* send back the updated firstname */
-                QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
-                msg.setToken(beUtils.getGennyToken().getToken());
-                msg.setReplace(true);
+			BaseEntity baseEntity = beUtils.updateBaseEntity(targetCode,genderAnswer);
+			beUtils.updateBaseEntity(targetCode,answer); /* send back the updated firstname */
+			QDataBaseEntityMessage msg = new QDataBaseEntityMessage(baseEntity);
+			msg.setToken(beUtils.getGennyToken().getToken());
+			msg.setReplace(true);
 
-                VertxUtils.writeMsg("webcmds",JsonUtils.toJson(msg));		  /* push out to frontend */
+			VertxUtils.writeMsg("webcmds",JsonUtils.toJson(msg));		  /* push out to frontend */
 
-                update(answersToSave);
+ 			update(answersToSave);
 
-            } else {
-                System.out.println("Sorry, No Inferred Rule was executed ");
-            }
+        }else {
+            System.out.println("Sorry, No Inferred Rule was executed ");
+        }
+
 
 		output.setTypeOfResult("NONE");
   	    output.setResultCode("NONE");  /* dont display anything new */
+		}
 
-        }
+
 end
