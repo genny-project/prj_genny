@@ -81,7 +81,7 @@
     </bpmn2:extensionElements>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_2" name="userToken"/>
     <bpmn2:property id="serviceToken" itemSubjectRef="ItemDefinition_2" name="serviceToken"/>
-    <bpmn2:property id="sessionFacts" name="sessionFacts"/>
+    <bpmn2:property id="sessionFacts" itemSubjectRef="ItemDefinition_954" name="sessionFacts"/>
     <bpmn2:property id="results" itemSubjectRef="ItemDefinition_1240" name="results"/>
     <bpmn2:property id="newBe" itemSubjectRef="ItemDefinition_2016" name="newBe"/>
     <bpmn2:property id="key" itemSubjectRef="ItemDefinition_2733" name="key"/>
