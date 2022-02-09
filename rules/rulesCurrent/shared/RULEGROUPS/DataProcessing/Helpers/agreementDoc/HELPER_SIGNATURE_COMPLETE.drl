@@ -64,7 +64,7 @@ rule "HELPER_SIGNATURE_COMPLETE"
 		BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
 		System.out.println("targetBe = " + targetBe);
 
-		if (value != null && !value.equals("null")) {
+		if (value != null && !value.equals("null") && value.startsWith("data:image/png;base64")) {
 
 			String internSignature = targetBe.getValue("PRI_AGR_DOC_INT_SIGNATURE", null);
 			String hcrSignature = targetBe.getValue("PRI_AGR_DOC_HC_SIGNATURE", null);
