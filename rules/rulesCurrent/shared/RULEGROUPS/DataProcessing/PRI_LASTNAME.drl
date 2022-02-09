@@ -57,7 +57,7 @@ rule "PRI_LASTNAME"
 			case "EDIT_REF_PART_REP": {allowedToChange = true;} break;
 		}
 
-		if (allowedToChange) {
+		if (allowedToChange && !StringUtils.isEmpty(lastname)) {
 			String keycloakUUID = answer.getTargetCode().substring("PER_".length());
 			int statusCode = KeycloakUtils.updateUserField(keycloakUUID, serviceToken.getToken(), userToken.getRealm(), fieldName, lastname);
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Changing "+fieldName+" for "+answer.getTargetCode()+" to "+answer.getValue()+" statusCode="+statusCode);
