@@ -57,7 +57,7 @@ rule "HELPER_LNK_SELECT_COUNTRY"
 				/* Prepare mobile ask */
 				Attribute mobileAttr = RulesUtils.getAttribute("PRI_MOBILE", serviceToken);
 				Question mobileQues = new Question("QUE_MOBILE", "Phone", mobileAttr, true);
-				Ask mobileAsk = new Ask(mobileQues, sourceCode, targetCode);
+				Ask mobileAsk = new Ask(mobileQues, sourceCode, targetCode, true);
 
 				/* Send the ask as DISABLE = true */
 				mobileAsk.setDisabled(true);	
@@ -69,7 +69,7 @@ rule "HELPER_LNK_SELECT_COUNTRY"
 				/* Prepare landline ask */
 				Attribute landlineAttr = RulesUtils.getAttribute("PRI_LANDLINE", serviceToken);
 				Question landlineQues = new Question("QUE_PHONE", "Landline Phone Number", landlineAttr, true);
-				Ask landlineAsk = new Ask(landlineQues, sourceCode, targetCode);
+				Ask landlineAsk = new Ask(landlineQues, sourceCode, targetCode, true);
 				landlineAsk.setDisabled(true);
 
 				QDataAskMessage disableLandline = new QDataAskMessage(landlineAsk);
