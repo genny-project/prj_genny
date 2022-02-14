@@ -16,7 +16,6 @@ import life.genny.message.QMessageGennyMSG;
 import life.genny.qwanda.message.QBaseMSGMessageType;
 import life.genny.qwandautils.MessageUtils;
 import life.genny.qwanda.EEntityStatus;
-import java.time.LocalDateTime;
 
 rule "IS_QA_INTERN"
     ruleflow-group 'IsQuickAdd'
@@ -105,8 +104,8 @@ rule "IS_QA_INTERN"
 			String code48HR = newBe.getCode() + "_INTERN_COMPLETE_PROFILE_48HR";
 			String code96HR = newBe.getCode() + "_INTERN_COMPLETE_PROFILE_96HR";
 
-			ShleemyUtils.scheduleMessage(userToken, "SCHEDULE_INTERN_COMPLETE_PROFILE_48HR", code48HR, LocalDateTime.now(), newBe.getCode());
-			ShleemyUtils.scheduleMessage(userToken, "SCHEDULE_INTERN_COMPLETE_PROFILE_96HR", code96HR, LocalDateTime.now(), newBe.getCode());
+			ShleemyUtils.scheduleMessage(userToken, "SCHEDULE_INTERN_COMPLETE_PROFILE_48HR", code48HR, now.plusHours(48), newBe.getCode());
+			ShleemyUtils.scheduleMessage(userToken, "SCHEDULE_INTERN_COMPLETE_PROFILE_96HR", code96HR, now.plusHours(96), newBe.getCode());
 
 			/* Post Note */
 			String endPoint = GennySettings.projectUrl + "/v7/notes";
