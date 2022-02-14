@@ -1,4 +1,5 @@
 package life.genny.rules;
+
 import life.genny.qwanda.message.QDataAnswerMessage;
 import life.genny.models.GennyToken;
 import life.genny.rules.QRules;
@@ -12,7 +13,12 @@ import java.security.SecureRandom;
 import java.util.stream.Collectors;
 
 import java.util.List;
-import java.util.ArrayList;
+import java.util.ArrayList
+import life.genny.message.QMessageGennyMSG
+import life.genny.qwandautils.KeycloakUtils
+import java.util.HashMap;
+import life.genny.qwandautils.JsonUtils;
+import java.util.Arrays;
 
 rule "IS_ADMIN"
     ruleflow-group 'IsBaseEntity'
@@ -26,7 +32,7 @@ rule "IS_ADMIN"
 		newBe : BaseEntity()
 		beUtils : BaseEntityUtils()
 	  
-     then
+    then
  		System.out.println("IS_ADMIN: Rule fired" );
  		System.out.println("IS_ADMIN: newBe = " + newBe.getCode());
 
@@ -62,16 +68,17 @@ rule "IS_ADMIN"
 						String password = new SecureRandom().ints(15, 0, allowed.length).mapToObj(i -> String.valueOf(allowed[i])).collect(Collectors.joining());
 						KeycloakUtils.setPassword(serviceToken.getToken(), serviceToken.getRealm(), userId, password, true);
 
-						/* Send them an email with their password */
-						String url = GennySettings.projectUrl + "/home";
-						HashMap<String, String> templateData = new HashMap<String, String>();
-						templateData.put("name", firstname);
-						templateData.put("password", password);
-						templateData.put("url", url);
-							
-						List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
-						
-						EmailHelper.sendGrid(beUtils, email, null, bccList, "", "d-100adae110bb46eb999cd8b48666cad0", templateData, false);		
+                        /* Init Sendgrid to Admin Msg d-100adae110bb46eb999cd8b48666cad0 */
+                        QMessageGennyMSG msg = new QMessageGennyMSG.Builder("MSG_NEW_REGISTER")
+                            .addRecipient(user)
+                            .addContext("PASSWORD", password)
+                            .addContext("URL:ENCODE", "")
+                            .addContext("BCC", "PRJ_INTERNMATCH")
+                            .setUtils(beUtils)
+                            .send();
+
+                        System.out.println("Sendgrid msg: "+ JsonUtils.toJson(msg));
+                        System.out.println("Sendgrid email sent to admin!!");
 					} else {
 					     System.out.println("KEYCLOAK USER CREATION DISABLED IN RULE IS_ADMIN");
 					}

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import life.genny.message.QMessageGennyMSG;
 import life.genny.qwanda.message.QBaseMSGMessageType;
 import life.genny.qwandautils.MessageUtils;
+import life.genny.qwandautils.JsonUtils;
 
 rule "IS_QA_HOST_CPY_REP"
     ruleflow-group 'IsQuickAdd'
@@ -26,7 +27,7 @@ rule "IS_QA_HOST_CPY_REP"
 		newBe : BaseEntity()
 		beUtils : BaseEntityUtils()
 
-     then
+    then
  		System.out.println(drools.getRule().getName() + ": Rule fired :: newBe = " + newBe.getCode());
 
  		List<Answer> answers = new ArrayList<>();
@@ -105,21 +106,18 @@ rule "IS_QA_HOST_CPY_REP"
 		KeycloakUtils.updateUserDetails(beUtils, newBe);
 		String password = KeycloakUtils.generateRandomPassword(beUtils, newBe);
 
-		/* Create Access URL */
-		BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
-		String accessToken = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, newBe, serviceToken.getToken());
-		String url = MessageUtils.encodeUrl(GennySettings.projectUrl+"/home", "QUE_FAKE_PARENT", "QUE_FINISH_HOST_CPY_REP", null, accessToken);
-
-		/* Init Sendgrid Msg */
-		QMessageGennyMSG msg = new QMessageGennyMSG(QBaseMSGMessageType.SENDGRID);
-		msg.setTemplateCode("MSG_HCR1_REGISTER");
-		msg.addRecipient(newBe);
-		msg.addContext("PASSWORD", password);
-		msg.addContext("URL", url);
-		msg.addContext("BCC", "PRJ_INTERNMATCH");
-
 		if (flag) {
-			MessageUtils.sendMessage(beUtils, msg);
+            /* Init Sendgrid to HCR Msg */
+            QMessageGennyMSG msg = new QMessageGennyMSG.Builder("MSG_HCR1_REGISTER")
+                .addRecipient(newBe)
+                .addContext("PASSWORD", password)
+                .addContext("URL:ENCODE", "QUE_FAKE_PARENT/QUE_FINISH_HOST_CPY_REP")
+                .addContext("BCC", "PRJ_INTERNMATCH")
+                .setUtils(beUtils)
+                .send();
+
+            System.out.println("Sendgrid msg: "+ JsonUtils.toJson(msg));
+            System.out.println("Sendgrid email sent to hcr!!");
 		}
 
 		/* Post Note */

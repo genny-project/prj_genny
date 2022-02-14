@@ -10,6 +10,7 @@ import life.genny.qwandautils.GennySettings;
 
 import java.util.List;
 import java.util.ArrayList;
+import life.genny.qwandautils.QwandaUtils;
 
 rule "IS_REF_PART"
     ruleflow-group 'IsBaseEntity'
