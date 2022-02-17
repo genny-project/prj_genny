@@ -17,7 +17,8 @@ import life.genny.qwanda.attribute.Attribute;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwandautils.JsonUtils;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.ArrayList
+import org.apache.commons.lang3.StringUtils;
 
 rule "HELPER_SIGNATURE_NOTIFY"
 	ruleflow-group 'DataProcessing'
@@ -54,8 +55,8 @@ rule "HELPER_SIGNATURE_NOTIFY"
 
 		String value = answer.getValue();
 		System.out.println("value = " + value);
-		
-		if (value != null && !value.equals("null")) {
+
+		if (value != null && value.startsWith("data:image/png;base64,")) {
 				
 			/* Get Intern BE, Name and Email */
 			BaseEntity internBE = beUtils.getBaseEntityFromLNKAttr(targetBe, "PRI_INTERN_CODE");

@@ -64,7 +64,7 @@ rule "HELPER_SIGNATURE_COMPLETE"
 		BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
 		System.out.println("targetBe = " + targetBe);
 
-		if (value != null && !value.equals("null")) {
+		if (value != null && value.startsWith("data:image/png;base64,")) {
 
 			String internSignature = targetBe.getValue("PRI_AGR_DOC_INT_SIGNATURE", null);
 			String hcrSignature = targetBe.getValue("PRI_AGR_DOC_HC_SIGNATURE", null);
@@ -73,8 +73,6 @@ rule "HELPER_SIGNATURE_COMPLETE"
             System.out.println("internSignature: " + internSignature);
             System.out.println("hcrSignature: " + hcrSignature);
             System.out.println("outcomeSignature: " + outcomeSignature);
-
-			/*This is a temp white backgrounf URL I (Rahul) added becuase it was defualting to an image icon on the document*/
 
 			if (internSignature != null) {
 				System.out.println("internSignature present");
@@ -87,10 +85,9 @@ rule "HELPER_SIGNATURE_COMPLETE"
 			}
 
 			/* Checks if the signature is blank or null */
-            Boolean internSigned = !StringUtils.isBlank(internSignature) && (!internSignature.equals("https://bit.ly/3A2xdjI")) && internSignature.startsWith("data:image/png;base64,");
-            Boolean hcrSigned = !StringUtils.isBlank(hcrSignature) && (!hcrSignature.equals("https://bit.ly/3A2xdjI")) && hcrSignature.startsWith("data:image/png;base64,");
-            Boolean outcomeSigned = !StringUtils.isBlank(outcomeSignature) && (!outcomeSignature.equals("https://bit.ly/3A2xdjI")) && outcomeSignature.startsWith("data:image/png;base64,");
-
+            Boolean internSigned = internSignature != null && internSignature.startsWith("data:image/png;base64,");
+            Boolean hcrSigned = hcrSignature != null && hcrSignature.startsWith("data:image/png;base64,");
+            Boolean outcomeSigned = outcomeSignature!=null && outcomeSignature.startsWith("data:image/png;base64,");
 
             System.out.println("InternSigned: " + internSigned);
             System.out.println("HCRSigned: " + hcrSigned);
