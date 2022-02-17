@@ -17,7 +17,7 @@ import life.genny.qwanda.attribute.Attribute;
 import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwandautils.JsonUtils;
 import java.util.List;
-import java.util.ArrayList
+import java.util.ArrayList;
 import org.apache.commons.lang3.StringUtils;
 
 rule "HELPER_SIGNATURE_NOTIFY"
