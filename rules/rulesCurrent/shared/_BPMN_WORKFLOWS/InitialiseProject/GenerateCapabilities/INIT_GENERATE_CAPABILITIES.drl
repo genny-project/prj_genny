@@ -89,6 +89,10 @@ rule "INIT_GENERATE_CAPABILITIES"
 
 		capabilityUtils.addCapability( "TYPE_JOURNAL", "Journal");
 
+		capabilityUtils.addCapability( "TYPE_PROPERTY", "Property");
+		capabilityUtils.addCapability( "TYPE_TENANT_APPLICATION", "Tenant Application")
+
+
 
 		/* Handle Roles External to Current Group */
 		capabilityUtils.addCapability( "EXTERNAL_AGENT", "External Agent");
