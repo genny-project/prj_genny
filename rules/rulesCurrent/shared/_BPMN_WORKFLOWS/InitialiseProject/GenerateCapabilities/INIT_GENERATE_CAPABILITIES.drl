@@ -90,7 +90,9 @@ rule "INIT_GENERATE_CAPABILITIES"
 		capabilityUtils.addCapability( "TYPE_JOURNAL", "Journal");
 
 		capabilityUtils.addCapability( "TYPE_PROPERTY", "Property");
-		capabilityUtils.addCapability( "TYPE_TENANT_APPLICATION", "Tenant Application")
+		capabilityUtils.addCapability( "TYPE_TENANT_APPLICATION", "Tenant Application");
+		capabilityUtils.addCapability( "TYPE_CUSTOMER", "Customer");
+		capabilityUtils.addCapability( "TYPE_DEVELOPER", "Developer");
 
 
 
