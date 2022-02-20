@@ -69,12 +69,14 @@ rule "PRI_FIRSTNAME"
 		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_FIRSTNAME", firstname,false,false));	
 		BaseEntity person = beUtils.getBaseEntityByCode(targetCode);
 		String lastname = answersToSave.getValue("PRI_LASTNAME");
-		if (StringUtils.isBlank(lastname)) {
+		if (lastname != null && StringUtils.isBlank(lastname)) {
 			/* check if sitting in existing be */
 			lastname = person.getValue("PRI_LASTNAME","");
+		} else {
+			lastname = "";
 		}
 			
-		String name = firstname  + " "+lastname;
+		String name = firstname  + " "+ lastname;
 		name = name.trim();	
 			
 		String initials = 	WordUtils.initials(name).toUpperCase();

@@ -70,9 +70,11 @@ rule "PRI_LASTNAME"
 			
 		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_LASTNAME", lastname, false, false));	
 		String firstname = firstname = answersToSave.getValue("PRI_FIRSTNAME");
-		if (StringUtils.isBlank(firstname)) {
+		if (firstname != null && StringUtils.isBlank(firstname)) {
 			/* check if sitting in existing be */
 			firstname = person.getValue("PRI_FIRSTNAME","");
+		} else {
+			firstname = "";
 		}
 		String name = firstname + " "+lastname;
 		name = name.trim();	
