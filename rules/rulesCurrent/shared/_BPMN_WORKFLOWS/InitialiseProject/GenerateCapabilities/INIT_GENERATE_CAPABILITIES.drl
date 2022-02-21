@@ -44,16 +44,16 @@ rule "INIT_GENERATE_CAPABILITIES"
 		/* ============== PRJ_LOJING CAPABILITIES ================== */
 
 			/* User Creation */	
-			capabiliyUtils.addCapability("CREATE_SUPER_ADMIN", "Create Super Admin");
-			capabiliyUtils.addCapability("CREATE_ADMIN", "Create Admin");
-			capabiliyUtils.addCapability("CREATE_TENANT", "Create Tenant");
-			capabiliyUtils.addCapability("CREATE_REFERRAL_PARTNER", "Create Referral Partner");
-			capabiliyUtils.addCapability("CREATE_DEVELOPER", "Create Developer");
+			capabilityUtils.addCapability("CREATE_SUPER_ADMIN", "Create Super Admin");
+			capabilityUtils.addCapability("CREATE_ADMIN", "Create Admin");
+			capabilityUtils.addCapability("CREATE_TENANT", "Create Tenant");
+			capabilityUtils.addCapability("CREATE_REFERRAL_PARTNER", "Create Referral Partner");
+			capabilityUtils.addCapability("CREATE_DEVELOPER", "Create Developer");
 			
 			/* User Management */
 			capabilityUtils.addCapability("ARCHIVE_USER", "Archive User");
 			capabilityUtils.addCapability("BLOCK_USER", "Block User");
-			capabiltiyUtils.addCapability("DELETE_USER", "Delete User");
+			capabilityUtils.addCapability("DELETE_USER", "Delete User");
 			capabilityUtils.addCapability("RESET_PASS_OWN", "Reset Own Password");
 			capabilityUtils.addCapability("RESET_PASS_OTHER", "Reset User Password");
 
