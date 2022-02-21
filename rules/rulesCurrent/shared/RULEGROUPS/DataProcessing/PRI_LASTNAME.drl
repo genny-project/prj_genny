@@ -43,7 +43,7 @@ rule "PRI_LASTNAME"
 		BaseEntity person = beUtils.getBaseEntityByCode(targetCode);
 		String fieldName = "lastName";
 		
-		System.out.println("Rule -> PRI_LASTNAME 1 lastname="+lastname);	
+		System.out.println("Rule -> PRI_LASTNAME lastname = " + lastname);	
 
 		boolean allowedToChange = false;
 		System.out.println("Rule -> PRI_LASTNAME, the allowed.code is "+allowed.code);
@@ -69,21 +69,15 @@ rule "PRI_LASTNAME"
 		}
 			
 		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_LASTNAME", lastname, false, false));	
-		String firstname = firstname = answersToSave.getValue("PRI_FIRSTNAME");
-		if (firstname != null && StringUtils.isBlank(firstname)) {
-			/* check if sitting in existing be */
-			firstname = person.getValue("PRI_FIRSTNAME","");
-		} else {
-			firstname = "";
-		}
+
+		String firstname = person.getValue("PRI_FIRSTNAME", "");
 		String name = firstname + " " + lastname;
 		name = name.trim();	
 		name = WordUtils.capitalize(name);
-		System.out.println("Rule -> PRI_LASTNAME 2 Name="+name);
-	
+		System.out.println("Rule -> PRI_LASTNAME Name = " + name);
 			
-		String initials = 	WordUtils.initials(name).toUpperCase();
-		System.out.println("Rule -> PRI_LASTNAME 3 initials="+initials);
+		String initials = WordUtils.initials(name).toUpperCase();
+		System.out.println("Rule -> PRI_LASTNAME initials = " + initials);
 		
 		Answer answerName = new Answer(sourceCode,targetCode,"PRI_NAME",name,false,true);
 		answersToSave.add(answerName);

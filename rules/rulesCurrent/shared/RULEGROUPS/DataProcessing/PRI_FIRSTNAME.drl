@@ -36,6 +36,7 @@ rule "PRI_FIRSTNAME"
 		System.out.println("Rule -> "+drools.getRule().getName()+" :  user=" + beUtils.getGennyToken().getUserCode()+" : "+answer); 
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		String targetCode = answer.getTargetCode();
+		BaseEntity person = beUtils.getBaseEntityByCode(targetCode);
 		
 		/* Parse json answer and save the individual answers */
 		String firstname = answer.getValue();
@@ -67,17 +68,14 @@ rule "PRI_FIRSTNAME"
 		}
 
 		answersToSave.add(new Answer(sourceCode, targetCode, "PRI_FIRSTNAME", firstname,false,false));	
-		BaseEntity person = beUtils.getBaseEntityByCode(targetCode);
-		String lastname = answersToSave.getValue("PRI_LASTNAME");
-		if (StringUtils.isBlank(lastname)) {
-			/* check if sitting in existing be */
-			lastname = person.getValue("PRI_LASTNAME","");
-		}
-			
+
+		String lastname = person.getValue("PRI_LASTNAME","");
 		String name = firstname  + " " + lastname;
 		name = name.trim();	
+		System.out.println("Rule -> PRI_FIRSTNAME Name = " + name);
 			
-		String initials = 	WordUtils.initials(name).toUpperCase();
+		String initials = WordUtils.initials(name).toUpperCase();
+		System.out.println("Rule -> PRI_FIRSTNAME initials = " + initials);
 	
 		Answer answerName = new Answer(sourceCode,targetCode,"PRI_NAME",name,false,true);
  		answersToSave.add(answerName);
