@@ -41,6 +41,82 @@ rule "INIT_GENERATE_CAPABILITIES"
 
  		BaseEntity project = beUtils.getBaseEntityByCode(projectCode);
 
+		/* ============== PRJ_LOJING CAPABILITIES ================== */
+
+			/* User Creation */	
+			capabilityUtils.addCapability("CREATE_SUPER_ADMIN", "Create Super Admin");
+			capabilityUtils.addCapability("CREATE_ADMIN", "Create Admin");
+			capabilityUtils.addCapability("CREATE_TENANT", "Create Tenant");
+			capabilityUtils.addCapability("CREATE_REFERRAL_PARTNER", "Create Referral Partner");
+			capabilityUtils.addCapability("CREATE_DEVELOPER", "Create Developer");
+			
+			/* User Management */
+			capabilityUtils.addCapability("ARCHIVE_USER", "Archive User");
+			capabilityUtils.addCapability("BLOCK_USER", "Block User");
+			capabilityUtils.addCapability("DELETE_USER", "Delete User");
+			capabilityUtils.addCapability("RESET_PASS_OWN", "Reset Own Password");
+			capabilityUtils.addCapability("RESET_PASS_OTHER", "Reset User Password");
+
+			/* Property Management */
+			capabilityUtils.addCapability("CREATE_LISTING", "Create Property Listing");
+			capabilityUtils.addCapability("EDIT_LISTING", "Edit Property Listing");
+			capabilityUtils.addCapability("DELETE_LISTING", "Delete a Property Listing");
+			/* TODO: Unsure whether or not to merge these two capabilities */
+			capabilityUtils.addCapability("ARCHIVE_LISTING", "Archive Property Listing");
+			capabilityUtils.addCapability("WITHDRAW_LISTING", "Withdraw Property Listing");
+			capabilityUtils.addCapability("VIEW_LISTINGS", "View Property Listings");
+			capabilityUtils.addCapability("APPLY_TO_LISTING", "Apply for a Property Listing");
+
+			/* Application Management */
+			capabilityUtils.addCapability("CREATE_TENANCY_APP", "Create a Tenancy Application");
+			capabilityUtils.addCapability("UPLOAD_TENANCY_APP_OTHER", "Upload a Tenancy Application on behalf of a Tenant");
+			capabilityUtils.addCapability("EDIT_TENANCY_APP_OTHER", "Edit a Tenancy Application");
+			capabilityUtils.addCapability("EDIT_TENANCY_APP_OWN", "Edit own Tenancy Application");
+			capabilityUtils.addCapability("ARCHIVE_TENANCY_APP_OTHER", "Archive a Tenancy Application");
+			capabilityUtils.addCapability("DELETE_TENANCY_APP_OTHER", "Delete a Tenancy Application");
+			capabilityUtils.addCapability("DELETE_TENANCY_APP_OWN", "Delete own Tenancy Application");
+
+			/* Application Approval */
+			capabilityUtils.addCapability("APPROVE_TENANCY_APP", "Approve a Tenancy Application");
+			capabilityUtils.addCapability("DECLINE_TENANCY_APP", "Decline a Tenancy Application");
+			capabilityUtils.addCapability("VIEW_TENANT_DOCUMENTS", "View a Tenant's uploaded documents");
+			capabilityUtils.addCapability("VIEW_TENANT_DETAILS", "View a Tenant's personal details");
+
+			/* Payment Capabilities */
+			capabilityUtils.addCapability("EDIT_CREDIT_CARD_DETAILS_OTHER", "Edit a Tenant's Credit Card details");
+			capabilityUtils.addCapability("EDIT_CREDIT_CARD_DETAILS_OWN", "Edit own Credit Card details");
+			capabilityUtils.addCapability("VIEW_PAYMENT_STATUS_OF_TENANT", "View the payment status of a potential Tenant");
+			/* No one should have this perm */
+			capabilityUtils.addCapability("VIEW_CREDIT_CARD_DETAILS", "View Card Details of a Tenant"); 
+
+			/* Profile Management */
+			capabilityUtils.addCapability("VIEW_PROFILE_AGENT", "View Agent Profiles");
+			capabilityUtils.addCapability("VIEW_PROFILE_TENANT", "View Tenant Profiles");
+			capabilityUtils.addCapability("VIEW_PROFILE_REFERRAL_PARTNER", "View Referral Partner Profiles");
+			capabilityUtils.addCapability("VIEW_PROFILE_DEVELOPER", "View Developer Profiles");
+
+			/* Tenant Management */ 
+			capabilityUtils.addCapability("VIEW_TENANT_MANAGEMENT_PORTAL", "View Tenant Management Portal");
+			capabilityUtils.addCapability("EDIT_TENANT_MANAGEMENT_PORTAL", "Edit Tenant Management Portal");
+			capabilityUtils.addCapability("DELETE_TENANT_MANAGEMENT_PORTAL", "Delete Tenant Management Portal");
+
+			/* Communication */
+			capabilityUtils.addCapability("WRITE_NOTES", "Write Notes");
+			capabilityUtils.addCapability("RESEND_SYS_MSG_EMAIL", "Resend System Email Message");
+			capabilityUtils.addCapability("RESEND_SYS_MSG_SMS", "Resend System SMS Message");
+			capabilityUtils.addCapability("RESEND_SYS_MSG_WHATSAPP", "Resend System WhatsApp Message");
+			capabilityUtils.addCapability("SEND_CUSTOM_MSG_EMAIL", "Send a Custom Email Message");
+			capabilityUtils.addCapability("SEND_CUSTOM_MSG_SMS", "Send a Custom SMS Message");
+			capabilityUtils.addCapability("SEND_CUSTOM_MSG_WHATSAPP", "Send a Custom WhatsApp Message");
+
+			/* Views */
+			capabilityUtils.addCapability("VIEW_VIEW_TENANT_PROCESS", "View Tenant Process View");
+			capabilityUtils.addCapability("VIEW_VIEW_TENANT_TABLE", "View Tenant Table View");
+
+			/* Super Admin Tools */
+			capabilityUtils.addCapability("CONFIG_SYSTEM_SETTINGS", "Configure System Settings");
+			
+
 
 	/*	CapabilityUtils capabilityUtils = new CapabilityUtils(beUtils); */
 
