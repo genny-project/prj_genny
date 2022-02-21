@@ -98,7 +98,7 @@ rule "INIT_GENERATE_CAPABILITIES"
 			/* Tenant Management */ 
 			capabilityUtils.addCapability("VIEW_TENANT_MANAGEMENT_PORTAL", "View Tenant Management Portal");
 			capabilityUtils.addCapability("EDIT_TENANT_MANAGEMENT_PORTAL", "Edit Tenant Management Portal");
-			capabilityUtils.addCapability("DELETE_TENANT_MANAGEMENT_PORTAL" "Delete Tenant Management Portal");
+			capabilityUtils.addCapability("DELETE_TENANT_MANAGEMENT_PORTAL", "Delete Tenant Management Portal");
 
 			/* Communication */
 			capabilityUtils.addCapability("WRITE_NOTES", "Write Notes");
@@ -112,7 +112,7 @@ rule "INIT_GENERATE_CAPABILITIES"
 			/* Views */
 			capabilityUtils.addCapability("VIEW_VIEW_TENANT_PROCESS", "View Tenant Process View");
 			capabilityUtils.addCapability("VIEW_VIEW_TENANT_TABLE", "View Tenant Table View");
-			
+
 			/* Super Admin Tools */
 			capabilityUtils.addCapability("CONFIG_SYSTEM_SETTINGS", "Configure System Settings");
 			
