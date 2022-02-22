@@ -31,16 +31,16 @@ rule "IS_QA_AGENT"
 		String password = KeycloakUtils.generateRandomPassword(beUtils, newBe);
 
 		/* Create Access URL */
-		BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
-		String accessToken = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, newBe, serviceToken.getToken());
-		String url = MessageUtils.encodeUrl(GennySettings.projectUrl+"/home", "QUE_FAKE_PARENT", "QUE_FINISH_AGENT", null, accessToken);
+		/* BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase()); */
+		/* String accessToken = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, newBe, serviceToken.getToken()); */
+		/* String url = MessageUtils.encodeUrl(GennySettings.projectUrl+"/home", "QUE_FAKE_PARENT", "QUE_FINISH_AGENT", null, accessToken); */
 	
 		/* Init Sendgrid Msg */
 		QMessageGennyMSG msg = new QMessageGennyMSG(QBaseMSGMessageType.SENDGRID);
 		msg.setTemplateCode("MSG_AGT1_REGISTER");
 		msg.addRecipient(newBe);
 		msg.addContext("PASSWORD", password);
-		msg.addContext("URL", url);
+		msg.addContext("URL:ENCODE", "QUE_FAKE_PARENT/QUE_FINISH_AGENT");
 		msg.addContext("BCC", "PRJ_INTERNMATCH");
 		
 		/* Boolean sendEmail = newBe.getValue("PRI_EMAIL_FLAG", false); */
