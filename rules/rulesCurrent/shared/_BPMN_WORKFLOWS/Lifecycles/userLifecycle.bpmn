@@ -177,13 +177,13 @@ kcontext.setVariable(&quot;serviceToken&quot;, serviceToken);
 CallingProcessToken cpt = (CallingProcessToken)callingProcessToken;
 callingProcessId = cpt.getProcessId();
 kcontext.setVariable(&quot;callingProcessId&quot;,callingProcessId);
-kcontext.setVariable(&quot;sessionCode&quot;, userToken.getSessionCode());
+kcontext.setVariable(&quot;sessionCode&quot;, userToken.getJTI());
 QEventMessage defaultPage = new QEventMessage(&quot;EVT_MSG&quot;, &quot;DEFAULTPAGE&quot;);
 defaultPageSessionFacts = new SessionFacts(userToken, userToken, defaultPage);
 kcontext.setVariable(&quot;defaultPageSessionFacts&quot;, defaultPageSessionFacts);
 results = new HashMap&lt;String,Object>();
 kcontext.setVariable(&quot;results&quot;,results);
-inputSessionCode = userToken.getSessionCode();
+inputSessionCode = userToken.getJTI();
 kcontext.setVariable(&quot;inputSessionCode&quot;, inputSessionCode);
 System.out.println(&quot;userLifeCycle: entered: pid &quot;+kcontext.getProcessInstance().getId()+&quot;:&quot;+((GennyToken)userToken).getUserCode()+&quot;:inputSessionCode = &quot;+inputSessionCode); </bpmn2:script>
       </bpmn2:scriptTask>

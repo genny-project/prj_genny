@@ -215,10 +215,10 @@ userToken = (GennyToken)((SessionFacts)sessionFacts).getUserToken();
 timeout = userToken.getSecondsUntilExpiry();
 
 message.getData().setValue(&quot;NEW_SESSION&quot;);   
-sessionCode = userToken.getSessionCode();
+sessionCode = userToken.getJTI();
 kcontext.setVariable(&quot;timeout&quot;,timeout);
 kcontext.setVariable(&quot;message&quot;,message); 
-kcontext.setVariable(&quot;session_state&quot;,userToken.getSessionCode()); 
+kcontext.setVariable(&quot;session_state&quot;,userToken.getJTI()); 
 kcontext.setVariable(&quot;serviceToken&quot;,serviceToken); 
 kcontext.setVariable(&quot;userToken&quot;,userToken); 
 kcontext.setVariable(&quot;sessionCode&quot;, sessionCode);
@@ -1500,8 +1500,8 @@ kcontext.setVariable(&quot;currentUser&quot;,currentUser);
 QCmdMessage msgLogout = new QCmdMessage(&quot;LOGOUT&quot;, &quot;LOGOUT&quot;);
 msgLogout.setToken(userToken.getToken());
 VertxUtils.writeMsg(&quot;webcmds&quot;,JsonUtils.toJson(msgLogout));
-System.out.println(&quot;userSession: Deleting userSession &quot;+userToken.getSessionCode()+&quot; from processId map&quot;);
-VertxUtils.writeCachedJson(userToken.getRealm(),userToken.getSessionCode(),null,userToken.getToken());
+System.out.println(&quot;userSession: Deleting userSession &quot;+userToken.getJTI()+&quot; from processId map&quot;);
+VertxUtils.writeCachedJson(userToken.getRealm(),userToken.getJTI(),null,userToken.getToken());
 System.out.println(&quot;userSession: Exiting userSession for &quot;+currentUser.getCode());
 </bpmn2:script>
       </bpmn2:scriptTask>

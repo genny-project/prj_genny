@@ -92,7 +92,7 @@ rule "OHS_VALIDATION"
 			System.out.println("token: " + token);
 		}
 					
-		String urlParentCode = "SBE_HCRS_"+userToken.getSessionCode().toUpperCase();
+		String urlParentCode = "SBE_HCRS_"+userToken.getJTI().toUpperCase();
 		String urlCode = "ACT_PRI_EVENT_VIEW";
 		String urlTargetCode = HCBe.getCode();
 		

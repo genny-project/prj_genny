@@ -29,7 +29,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_12" isCollection="false" structureRef="org.apache.logging.log4j.Logger"/>
   <bpmn2:itemDefinition id="ItemDefinition_17" isCollection="false" structureRef="life.genny.models.GennyToken"/>
   <bpmn2:signal id="Signal_1" name="newSession"/>
-  <bpmn2:signal id="Signal_3" name="userLogout_#{userToken.getSessionCode()}"/>
+  <bpmn2:signal id="Signal_3" name="userLogout_#{userToken.getJTI()}"/>
   <bpmn2:process id="session_lifecycle" drools:packageName="life.genny.jbpm" name="Session LifeCycle" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.qwanda.message.QEventMessage"/>
@@ -119,7 +119,7 @@
             <drools:metaValue><![CDATA[Starting User Life Cycle]]></drools:metaValue>
           </drools:metaData>
           <drools:onEntry-script scriptFormat="http://www.java.com/java">
-            <drools:script>System.out.println(&quot;Starting the Session Lifecycle with Session Id :: &quot; + ((GennyToken)userToken).getSessionCode());</drools:script>
+            <drools:script>System.out.println(&quot;Starting the Session Lifecycle with Session Id :: &quot; + ((GennyToken)userToken).getJTI());</drools:script>
           </drools:onEntry-script>
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>

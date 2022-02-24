@@ -49,7 +49,7 @@ rule "QUE_TABLE_FIRST_BTN"
  		} else {
  			System.out.println("Rule -> "+drools.getRule().getName()+" LAST-SEARCH");
  			searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "LAST-SEARCH",
-				userToken.getSessionCode(), SearchEntity.class);
+				userToken.getJTI(), SearchEntity.class);
 		}
 		
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" NEXT for "+searchBE.getCode()); 
@@ -91,7 +91,7 @@ rule "QUE_TABLE_FIRST_BTN"
 		
 			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
 				beUtils.getGennyToken().getToken());
-			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "LAST-SEARCH", userToken.getSessionCode(), searchBE,
+			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "LAST-SEARCH", userToken.getJTI(), searchBE,
 				userToken.getToken());
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" FIRST for "+searchBE.getCode()+" About to go into search! "); 
 		
