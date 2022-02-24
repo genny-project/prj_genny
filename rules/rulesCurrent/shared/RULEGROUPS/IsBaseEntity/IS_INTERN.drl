@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 
 import java.security.SecureRandom;
 import java.util.stream.Collectors;
+import java.util.Collections;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -328,39 +329,25 @@ rule "IS_INTERN"
 				}
 			}
 
+			/* shuffle and grab first three */
+			Collections.shuffle(eligbleInternships);
 			System.out.println("Eligble internships: = " +eligbleInternships);
 
-			Random rand = new Random();
-			String results = "";
-			String beCode = "";
-			String[] beCodes = new String[3];
-			BaseEntity[] beCodez = new BaseEntity[3];
+			String results = "[]";
+			List<BaseEntity> entities = new ArrayList<>();
 
-		    for (int i = 0; i < 3; i++) {
-		        BaseEntity randomElement = eligbleInternships.get(rand.nextInt(eligbleInternships.size()));
-		        System.out.println("Random internships: = " +randomElement);
-
-		        beCode = randomElement.getCode();
-		        System.out.println("beCode: = " +beCode);
-
-				/*matchedInternships.add(randomElement);*/
-
-				if(i == 0) {results = '[\"' + beCode + '\", ';}
-                if(i == 1) {results = results + '\"' + beCode + '\", ';}
-                if(i == 2) {results = results + '\"' + beCode + '\"]';}
-
-				beCodes[i] = beCode;
-				beCodez[i] = randomElement;
-				System.out.println("results::  " + results);
-			 }
-
+			if (eligbleInternships.size() >= 3) {
+				results = "[\"" + eligbleInternships.get(0) + "\", " + eligbleInternships.get(1) + "\", " + eligbleInternships.get(2) + "\"]";
+				entities = eligbleInternships.subList(0, 3);
+			} else if (eligbleInternships.size() == 2) {
+				results = "[\"" + eligbleInternships.get(0) + "\", " + eligbleInternships.get(1) + "\"]";
+				entities = eligbleInternships.subList(0, 2);
+			} else if (eligbleInternships.size() == 1) {
+				results = "[\"" + eligbleInternships.get(0) + "\"]";
+				entities = eligbleInternships.subList(0, 1);
+			}
 
 			System.out.println("Results::  " + results);
-			System.out.println("results::  " + beCodes[0]);
-			System.out.println("results::  " + beCodes[1]);
-			System.out.println("results::  " + beCodes[2]);
-
-
 
 			newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHED_INTERNSHIPS", results));
 
@@ -371,7 +358,7 @@ rule "IS_INTERN"
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 
 
-			QDataBaseEntityMessage msgMatches = new QDataBaseEntityMessage(beCodez);
+			QDataBaseEntityMessage msgMatches = new QDataBaseEntityMessage(entities);
 			msgMatches.setToken(userToken.getToken());
 			msgMatches.setReplace(true);
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msgMatches));
