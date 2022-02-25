@@ -63,10 +63,11 @@ rule "USER_SUBSCRIPTION"
  		}
  		
  		Optional<String> hcompany = user.getValue("LNK_HOST_COMPANY");
- 		if (hcompany.isPresent()) {
+ 		// Empty and null Host company will be ignored
+ 		if (hcompany.isPresent() && !StringUtils.isEmpty(hcompany.get())) {
  			String companyCode = hcompany.get().substring(2,hcompany.get().length()-2);
  			stringSet.add(EncryptionUtils.getEncryptedString(companyCode,securityKey,userToken));
- 		}	
+ 		}
 
 		List<BaseEntity> childBEs = beUtils.getLinkedBaseEntities(user.getCode());
 		for (BaseEntity entity : childBEs) {
