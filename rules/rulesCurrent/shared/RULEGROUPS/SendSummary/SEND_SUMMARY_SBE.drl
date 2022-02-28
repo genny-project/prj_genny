@@ -33,7 +33,7 @@ rule "SEND_SUMMARY_SBE"
 		TableUtils tableUtils = new TableUtils(beUtils);
 		CapabilityUtils capabilityUtils = new CapabilityUtils(beUtils);
   
-		String sessionCode = beUtils.getGennyToken().getSessionCode().toUpperCase();
+		String sessionCode = beUtils.getGennyToken().getJTI().toUpperCase();
 		System.out.println("userCode   ::   " + userToken.getUserCode());
 		System.out.println("sessionCode   ::   " + sessionCode);
 

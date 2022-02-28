@@ -92,7 +92,7 @@ rule "PRI_SEARCH_TEXT_BUCKET_ASSIST_TYPE"
 		msg.setToken(beUtils.getGennyToken().getToken());
 		msg.setReplace(true);
 		msg.setTotal(total);
-		msg.setParentCode("SBE_AVAILABLE_INTERNS_"+beUtils.getGennyToken().getSessionCode().toUpperCase());
+		msg.setParentCode("SBE_AVAILABLE_INTERNS_"+beUtils.getGennyToken().getJTI().toUpperCase());
 		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 
 
@@ -128,7 +128,7 @@ rule "PRI_SEARCH_TEXT_BUCKET_ASSIST_TYPE"
 		String[] statusCodes = { "APPLIED", "SHORTLISTED", "INTERVIEWED", "OFFERED", "PLACED", "PROGRESS" };
 
 		for (int i = 0; i < codes.length; i++) {
-			String searchCode = codes[i]+"_"+beUtils.getGennyToken().getSessionCode().toUpperCase();
+			String searchCode = codes[i]+"_"+beUtils.getGennyToken().getJTI().toUpperCase();
 			SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", searchCode, SearchEntity.class, serviceToken.getToken());
 			List<BaseEntity> bucketApps = new ArrayList<>();
 			for (BaseEntity application : internApplications) {

@@ -41,10 +41,8 @@ rule "IS_QA_INTERN"
 			List<Answer> answers = new ArrayList<>();
 
 			/* GET REQUIRED DATA */
-			/* BaseEntity eduPro = beUtils.getBaseEntityFromLNKAttr(newBe, "LNK_EDU_PROVIDER"); */
 			BaseEntity agent = beUtils.getBaseEntityFromLNKAttr(newBe, "LNK_AGENT");
 			BaseEntity batch = beUtils.getBaseEntityFromLNKAttr(newBe, "LNK_SELECT_BATCH");
-			/* System.out.println("eduPro = " + eduPro); */
 			System.out.println("agent = " + agent);
 			System.out.println("batch = " + batch);
 
@@ -68,12 +66,12 @@ rule "IS_QA_INTERN"
 			KeycloakUtils.updateUserDetails(beUtils, newBe);
 			String password = KeycloakUtils.generateRandomPassword(beUtils, newBe);
 
-			/* Boolean sendEmail = newBe.getValue("PRI_EMAIL_FLAG", false); */
-
 			String sendEmail = newBe.getValue("LNK_SEND_EMAIL", "");
 			System.out.println("sendEmail = " + sendEmail);
             Boolean containsSelYes = sendEmail.contains("SEL_YES");
-            containsSelYes = true; /* always send required */
+
+			/* always send required */
+            containsSelYes = true;
 
 			if (containsSelYes) {
 				/* Init Sendgrid Msg */
@@ -91,8 +89,7 @@ rule "IS_QA_INTERN"
 				QMessageGennyMSG msg = new QMessageGennyMSG.Builder("MSG_AGT2_ASSIGNED")
 					.addRecipient(agent)
 					.addContext("INTERN", newBe)
-					/* .addContext("EDU_PRO", eduPro) */
-					.addContext("URL:ENCODE", "SBE_INTERNS"+userToken.getSessionCode().toUpperCase()+"/ACT_PRI_EVENT_VIEW/"+newBe.getCode())
+					.addContext("URL:ENCODE", "SBE_INTERNS"+userToken.getJTI().toUpperCase()+"/ACT_PRI_EVENT_VIEW/"+newBe.getCode())
 					.setUtils(beUtils)
 					.send();
 			}

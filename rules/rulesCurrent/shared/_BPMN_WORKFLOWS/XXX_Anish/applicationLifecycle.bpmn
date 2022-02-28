@@ -270,13 +270,13 @@
 					((QEventMessage)message).getData().setValue(&quot;NEW_SESSION&quot;);
 					/* Flag the incoming message as NEW! */
 					kcontext.setVariable(&quot;message&quot;,(QEventMessage)message);
-					kcontext.setVariable(&quot;session_state&quot;,((GennyToken)userToken).getSessionCode());
+					kcontext.setVariable(&quot;session_state&quot;,((GennyToken)userToken).getJTI());
 					kcontext.setVariable(&quot;serviceToken&quot;,((GennyToken)serviceToken));
 
 
-					String sessionCode = userToken.getSessionCode();
+					String sessionCode = userToken.getJTI();
 					kcontext.setVariable(&quot;sessionCode&quot;,
-					userToken.getSessionCode());
+					userToken.getJTI());
 					System.out.println(&quot;userSession: Session Code = &quot;+ sessionCode);
 				</bpmn2:script>
 			</bpmn2:scriptTask>
@@ -648,8 +648,8 @@
 					msgLogout.setToken(userToken.getToken());
 					VertxUtils.writeMsg(&quot;webcmds&quot;,JsonUtils.toJson(msgLogout));
 					System.out.println(&quot;userSession: Deleting userSession
-					&quot;+userToken.getSessionCode()+&quot; from processId map&quot;);
-					VertxUtils.writeCachedJson(userToken.getRealm(),userToken.getSessionCode(),null,userToken.getToken());
+					&quot;+userToken.getJTI()+&quot; from processId map&quot;);
+					VertxUtils.writeCachedJson(userToken.getRealm(),userToken.getJTI(),null,userToken.getToken());
 					System.out.println(&quot;userSession: Exiting userSession for
 					&quot;+currentUser.getCode());
 				</bpmn2:script>
@@ -937,8 +937,8 @@
 						<tns:onEntry-script
 							scriptFormat="http://www.java.com/java">
 							<tns:script>System.out.println(&quot;userSession: Rules finished
-								with userToken = &quot;+userToken.getSessionCode()+&quot; and
-								key = &quot;+userToken.getSessionCode()+&quot;:page&quot;);
+								with userToken = &quot;+userToken.getJTI()+&quot; and
+								key = &quot;+userToken.getJTI()+&quot;:page&quot;);
 								System.out.println(&quot;userSession: Rules generated and Root
 								Frame Code is &quot;+ output.getResultCode());
 								System.out.println(&quot;userSession: Rules generated and Target

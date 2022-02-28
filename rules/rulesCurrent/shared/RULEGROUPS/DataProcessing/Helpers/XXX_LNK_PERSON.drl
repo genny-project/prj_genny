@@ -116,10 +116,10 @@ rule "LNK_PERSON"
 		msg.setToken(userToken.getToken());
 		msg.setReplace(true);
 		msg.setTotal(total);
-		msg.setParentCode("SBE_AVAILABLE_INTERNS_"+userToken.getSessionCode().toUpperCase());
+		msg.setParentCode("SBE_AVAILABLE_INTERNS_"+userToken.getJTI().toUpperCase());
 		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 
-		SearchEntity availableSearch = VertxUtils.getObject(serviceToken.getRealm(), "", "SBE_AVAILABLE_INTERNS_"+userToken.getSessionCode().toUpperCase(), SearchEntity.class, serviceToken.getToken());
+		SearchEntity availableSearch = VertxUtils.getObject(serviceToken.getRealm(), "", "SBE_AVAILABLE_INTERNS_"+userToken.getJTI().toUpperCase(), SearchEntity.class, serviceToken.getToken());
 		tableUtils.updateBaseEntity(availableSearch, "PRI_TOTAL_RESULTS", total + "");
 
 		QDataBaseEntityMessage availableSearchMsg = new QDataBaseEntityMessage(availableSearch);
@@ -143,7 +143,7 @@ rule "LNK_PERSON"
 		String[] statusCodes = { "APPLIED", "SHORTLISTED", "INTERVIEWED", "OFFERED", "PLACED", "PROGRESS" };
 
 		for (int i = 0; i < codes.length; i++) {
-			String searchCode = codes[i]+"_"+userToken.getSessionCode().toUpperCase();
+			String searchCode = codes[i]+"_"+userToken.getJTI().toUpperCase();
 			SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", searchCode, SearchEntity.class, serviceToken.getToken());
 			List<BaseEntity> bucketApps = new ArrayList<>();
 			for (BaseEntity application : internApplications) {

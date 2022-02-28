@@ -230,7 +230,7 @@ public class LinTestActionCache extends JbpmJUnitBaseTestCase {
 	    serviceToken = new GennyToken("PER_SERVICE", qRules.getServiceToken());
 	}
 
-	System.out.println("session     =" + userToken.getSessionCode());
+	System.out.println("session     =" + userToken.getJTI());
 	System.out.println("userToken   =" + userToken.getToken());
 	System.out.println("serviceToken=" + serviceToken.getToken());
 
