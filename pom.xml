@@ -31,19 +31,19 @@
 		<jackson-datatype-money>1.2.0</jackson-datatype-money>
 		<jandex.version>1.0.8</jandex.version>
 		<keycloak.test.port>8180</keycloak.test.port>
-		<keycloak.version>11.0.3</keycloak.version>
+		<keycloak.version>15.0.2</keycloak.version>
 		<maven.compiler.parameters>true</maven.compiler.parameters>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		<mysql.test.port>3333</mysql.test.port>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<quarkus-plugin.version>1.10.5.Final</quarkus-plugin.version>
+		<quarkus-plugin.version>2.7.2.Final</quarkus-plugin.version>
 		<quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
 		<quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
-		<quarkus.platform.version>1.10.5.Final</quarkus.platform.version>
+		<quarkus.platform.version>2.7.2.Final</quarkus.platform.version>
 		<surefire.version>3.0.0-M5</surefire.version>
-		<testcontainers.version>1.15.1</testcontainers.version>
+		<testcontainers.version>1.16.0</testcontainers.version>
 		<version.moneta>1.4.2</version.moneta>
 		<graalvm.version>20.3.0</graalvm.version>
 		<activemq-junit-version>5.8.1</activemq-junit-version>
