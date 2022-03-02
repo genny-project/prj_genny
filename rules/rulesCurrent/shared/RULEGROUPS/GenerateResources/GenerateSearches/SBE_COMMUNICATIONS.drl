@@ -8,11 +8,11 @@ import life.genny.models.GennyToken;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.qwandautils.GennySettings;
 
-rule "SBE_MSGS"
+rule "SBE_COMMUNICATIONS"
 	ruleflow-group 'GenerateSearches'
 	no-loop true
 	when
-		not  SearchEntity (code == "SBE_MSGS")
+		not  SearchEntity (code == "SBE_COMMUNICATIONS")
 		serviceToken : GennyToken( code == "PER_SERVICE")
 	then
 		System.out.println("   Generate "+drools.getRule().getName() );
@@ -23,7 +23,7 @@ rule "SBE_MSGS"
 
 		BaseEntity project = beUtils.getBaseEntityByCode(projectCode);
 
-		SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Message Templates")
+		SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Communcations Templates")
 			.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
 
 			.addFilter("PRI_CODE",SearchEntity.StringFilter.LIKE,"MSG_%")
@@ -34,6 +34,9 @@ rule "SBE_MSGS"
 			.addColumn("PRI_DEFAULT_MSG_TYPE", "Default Message Type")
 			.addColumn("PRI_CONTEXT_LIST", "Context List")
 			.addColumn("PRI_CONTEXT_ASSOCIATIONS", "Context Associations")
+			.addColumn("PRI_CC", "CC")
+			.addColumn("PRI_BCC", "BCC")
+			.addColumn("PRI_BODY", "Body")
 
 			.addAction("EDIT", "Edit")
 
