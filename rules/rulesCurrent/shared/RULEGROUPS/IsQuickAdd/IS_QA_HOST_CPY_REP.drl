@@ -26,13 +26,14 @@ rule "IS_QA_HOST_CPY_REP"
 		newBe : BaseEntity()
 		beUtils : BaseEntityUtils()
 
-     then
+    then
  		System.out.println(drools.getRule().getName() + ": Rule fired :: newBe = " + newBe.getCode());
 
  		List<Answer> answers = new ArrayList<>();
 
 		Boolean isHostCpyRep = (Boolean) beUtils.getBaseEntityValue(userToken.getUserCode(), "PRI_IS_HOST_CPY_REP");
-
+        BaseEntity hcBe = beUtils.getBaseEntityFromLNKAttr(newBe, "LNK_HOST_COMPANY");
+        System.out.println("hcBe = "+hcBe);
 		String linkedHC = newBe.getValue("LNK_HOST_COMPANY", null);
 		System.out.println("linkedHC = " + linkedHC);
 		BaseEntity companyBe = null;
@@ -46,6 +47,11 @@ rule "IS_QA_HOST_CPY_REP"
 				answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_HOST_COMPANY", userHostCpy));
 
 				companyBe = beUtils.getBaseEntityByCode(beUtils.cleanUpAttributeValue(userHostCpy));
+
+                /** Link hc with hcr **/
+              /*  beUtils.saveAnswer(new Answer(userToken.getUserCode(), hcBe.getCode(), "LNK_HOST_COMPANY_REP", "[\""+newBe.getCode()+"\"]"));
+                BaseEntity hcrBe = beUtils.getBaseEntityFromLNKAttr(newBe, "LNK_HOST_COMPANY_REP");
+                System.out.println("hcrBe = "+ hcrBe);*/
 			} else {
 				/* CREATE EMPTY CPY FOR THE USER */
 				System.out.println("NO HOST COMPANY SELECTED, CREATING ONE...");

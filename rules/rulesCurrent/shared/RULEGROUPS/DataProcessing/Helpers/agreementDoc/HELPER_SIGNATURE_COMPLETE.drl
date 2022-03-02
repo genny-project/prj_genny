@@ -128,4 +128,5 @@ rule "HELPER_SIGNATURE_COMPLETE"
 
 		/* retract(answer); */
 
+	System.out.println("End of " + drools.getRule().getName());
 end
