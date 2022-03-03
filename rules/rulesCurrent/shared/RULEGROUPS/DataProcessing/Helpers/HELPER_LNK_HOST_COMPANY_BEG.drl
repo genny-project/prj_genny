@@ -22,6 +22,7 @@ import java.io.UnsupportedEncodingException;
 import life.genny.utils.DropdownUtils;
 import java.util.List;
 import java.util.ArrayList;
+import life.genny.qwandautils.GennySettings;
 
 rule "HELPER_LNK_HOST_COMPANY_BEG"
 	ruleflow-group 'DataProcessing'
@@ -117,11 +118,30 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		if(state != null) answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", state, false, true));
 
 		
-		if(timeZone != null) {
-			Answer timeZoneAnswer = new Answer(sourceCode, targetCode, "PRI_TIMEZONE_ID", timeZone, false, true);
-			answers.add(timeZoneAnswer);
-			VertxUtils.sendToFrontEnd(userToken, timeZoneAnswer);
-		}
+        if(timeZone != null) {
+            /* update timezone from GPS */
+            BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+serviceToken.getRealm().toUpperCase());
+            String googleApiKey = project.getValueAsString("ENV_GOOGLE_MAPS_APIKEY");
+            String url = "https://maps.googleapis.com/maps/api/timezone/json?location="+latitude+","+longitude+"&timestamp="+java.time.Instant.now().getEpochSecond()+"&key="+googleApiKey;
+
+            url = GennySettings.projectUrl+"/googleapi/v1/timezone?location="+latitude+","+longitude+"&timestamp="+java.time.Instant.now().getEpochSecond();
+            System.out.println("GennyProxy url = "+url);
+            String timezoneJsonStr =  QwandaUtils.apiGet(url , userToken.getToken());
+            System.out.println("timezoneJsonStr = " + timezoneJsonStr);
+            /*JsonObject json = new JsonObject(timezoneJsonStr);
+            String timezoneID = json.getString("timeZoneId");
+            System.out.println("timezoneID :: " + timezoneID);*/
+            Answer fixedTimezone = new Answer(sourceCode,targetCode, "PRI_TIMEZONE_ID", timezoneJsonStr,false,true);
+            answers.add(fixedTimezone);
+            Answer fixedTimezoneOld = new Answer(sourceCode,targetCode, "PRI_TIME_ZONE", timezoneJsonStr,false,true);
+            answers.add(fixedTimezoneOld);
+            VertxUtils.sendToFrontEnd(userToken, fixedTimezone);
+            VertxUtils.sendToFrontEnd(userToken, fixedTimezoneOld);
+
+        /*			Answer timeZoneAnswer = new Answer(sourceCode, targetCode, "PRI_TIMEZONE_ID", timeZone, false, true);
+                answers.add(timeZoneAnswer);
+                VertxUtils.sendToFrontEnd(userToken, timeZoneAnswer);*/
+        }
 
 		BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
 		if(targetBe != null){
