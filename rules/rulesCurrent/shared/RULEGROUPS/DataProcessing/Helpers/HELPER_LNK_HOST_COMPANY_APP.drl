@@ -69,6 +69,10 @@ rule "HELPER_LNK_HOST_COMPANY_APP"
 				VertxUtils.sendToFrontEnd(userToken, internshipAnswer, titleAnswer);
 			}
 		}
+
+		/* This does not seem to be saving otherwise */
+		beUtils.saveAnswer(answer);
+		VertxUtils.sendToFrontEnd(userToken, answer);
 		
 		/* dropdown search here For internship */
 		/* DropdownUtils dropdownInternship = new DropdownUtils(serviceToken); */
