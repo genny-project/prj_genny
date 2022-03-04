@@ -23,7 +23,7 @@ rule "SBE_COMMUNICATIONS"
 
 		BaseEntity project = beUtils.getBaseEntityByCode(projectCode);
 
-		SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Communcations Templates")
+		SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Communications Templates")
 			.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
 
 			.addFilter("PRI_CODE",SearchEntity.StringFilter.LIKE,"MSG_%")
