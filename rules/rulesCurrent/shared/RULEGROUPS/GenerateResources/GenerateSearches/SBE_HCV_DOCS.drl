@@ -8,32 +8,28 @@ import life.genny.models.GennyToken;
 import life.genny.utils.BaseEntityUtils;
 import life.genny.qwandautils.GennySettings;
 
-rule "SBE_COMMUNICATIONS"
+rule "SBE_HCV_DOCS"
 	ruleflow-group 'GenerateSearches'
 	no-loop true
 	when
-		not  SearchEntity (code == "SBE_COMMUNICATIONS")
+		not  SearchEntity (code == "SBE_HCV_DOCS")
 		serviceToken : GennyToken( code == "PER_SERVICE")
 	then
 		System.out.println("   Generate "+drools.getRule().getName() );
 
-		SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Communications Templates")
+		SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "HCV Docs")
 			.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
 
-			.addFilter("PRI_CODE",SearchEntity.StringFilter.LIKE,"MSG_%")
+			/* Filters */
+			.addFilter("PRI_CODE",SearchEntity.StringFilter.LIKE,"DOC_%")
+			.addFilter("PRI_IS_HCV_DOCUMENT", true)
 
-			.addColumn("PRI_CODE", "Code")
-			.addColumn("PRI_NAME", "Name")
-			.addColumn("PRI_DESCRIPTION", "Description")
-			.addColumn("PRI_DEFAULT_MSG_TYPE", "Default Message Type")
-			.addColumn("PRI_CONTEXT_LIST", "Context List")
-			.addColumn("PRI_CONTEXT_ASSOCIATIONS", "Context Associations")
-			.addColumn("PRI_CC", "CC")
-			.addColumn("PRI_BCC", "BCC")
-			.addColumn("PRI_BODY", "Body")
+			/* Columns */
+			.addColumn("PRI_LEGAL_NAME", "Legal Name")
+			.addAssociatedColumn("LNK_SIGNEE", "PRI_NAME", "Signee")
 
-			.addAction("EDIT", "Edit")
-
+			/* Actions */
+            .addAction("EDIT", "Edit")
 			.setPageStart(0)
 			.setPageSize(10000);
 
