@@ -29,7 +29,7 @@ rule "SBE_APPOINTMENTS"
             .addColumn("PRI_START_DATETIME", "Start Date")
             .addColumn("PRI_ACTUAL_START_DATETIME", "Actual Start Date")
             .addColumn("PRI_GENERIC_URL", "URL (Optional)")
-            // .addColumn("LNK_SELECT_TOOL", "Select Tool")
+            /* .addColumn("LNK_SELECT_TOOL", "Select Tool") */
 			.addColumn("LNK_RESOURCES", "Resources")
             .addColumn("LNK_RESOURCES_ACCEPTED", "Accepted Resources")
             
