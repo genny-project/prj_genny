@@ -22,7 +22,7 @@ import java.io.UnsupportedEncodingException;
 import life.genny.utils.DropdownUtils;
 import java.util.List;
 import java.util.ArrayList;
-import life.genny.qwandautils.GennySettings
+import life.genny.qwandautils.GennySettings;
 import org.json.JSONObject;
 
 rule "HELPER_LNK_HOST_COMPANY_BEG"
