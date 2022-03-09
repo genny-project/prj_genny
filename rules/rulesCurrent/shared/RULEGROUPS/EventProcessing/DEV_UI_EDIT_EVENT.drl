@@ -62,12 +62,12 @@ rule "DEV_UI_EDIT_EVENT"
 		msg.setSend(true);  		
 		VertxUtils.writeMsg("webcmds", msg);
 
-		Ask ask = QuestionUtils.generateAskGroupUsingBaseEntity(target, beUtils);
+		/* Ask ask = QuestionUtils.generateAskGroupUsingBaseEntity(target, beUtils); */
 
-		QDataAskMessage askMsg = new QDataAskMessage(ask);
-		askMsg.setToken(userToken.getToken());
-		askMsg.setReplace(true);
-		VertxUtils.writeMsg("webdata", askMsg);
+		/* QDataAskMessage askMsg = new QDataAskMessage(ask); */
+		/* askMsg.setToken(userToken.getToken()); */
+		/* askMsg.setReplace(true); */
+		/* VertxUtils.writeMsg("webdata", askMsg); */
 
 		retract(message);
 	end
