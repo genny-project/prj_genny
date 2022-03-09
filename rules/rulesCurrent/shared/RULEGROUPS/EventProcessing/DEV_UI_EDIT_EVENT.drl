@@ -42,42 +42,32 @@ import life.genny.utils.SearchCallable;
 import life.genny.utils.TableFrameCallable;
 import life.genny.utils.CacheSearchUtils;
 
-rule "DEV_PORTAL_REQ_EVENT"
+rule "DEV_UI_EDIT_EVENT"
 	ruleflow-group 'EventProcessing'
 	salience 2
     no-loop
     when
-		message : QEventMessage( data.code matches "QUE_DEV_PORTAL__.*" )
-		/* message : QEventMessage( data.parentCode == "QUE_DEV_PORTAL_GRP" && data.code matches "QUE_DEV_PORTAL__.*" ) */
+		message : QEventMessage( data.parentCode == "SBE_DEV_UI.*" && data.code matches "ACT_EDIT" )
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		beUtils : BaseEntityUtils()
 	then
 		System.out.println(drools.getRule().getName() + " Processings : " + message);
 
-		String code = message.getData().getCode();
+		String targetCode = message.getData().getCode();
+		BaseEntity target = beUtils.getBaseEntityByCode(targetCode);
 
-		String sourceCode = "PER_SERVICE";
-		String targetCode = "PER_SERVICE";
+		QCmdMessage msg = new QCmdMessage("DISPLAY", "FORM");
+		msg.setToken(beUtils.getGennyToken().getToken());
+		msg.setSend(true);  		
+		VertxUtils.writeMsg("webcmds", msg);
 
-		Attribute questionAttribute = new Attribute("QQQ_QUESTION_GROUP", "link", new DataType(String.class));
-		Attribute attribute = RulesUtils.getAttribute(code.substring("QUE_DEV_PORTAL__".length()), userToken.getToken());
+		Ask ask = QuestionUtils.generateAskGroupUsingBaseEntity(target, beUtils);
 
-
-		Question devPortalGrpQues = new Question("QUE_DEV_PORTAL_EDIT_GRP", "Dev Portal", questionAttribute, true);
-		Ask devPortalGrpAsk = new Ask(devPortalGrpQues, sourceCode, targetCode);
-
-		Question devPortalQues = new Question("QUE_DEV_EDIT_"+attribute.getCode(), "Edit Value", attribute, true);
-		Ask devPortalAsk = new Ask(devPortalQues, sourceCode, targetCode);
-
-		Ask[] childAsks = { devPortalAsk };
-		devPortalGrpAsk.setChildAsks(childAsks);
-
-		String json = JsonUtils.toJson(devPortalGrpAsk);
-		json = json.replaceAll("PER_SERVICE", userToken.getUserCode());
-
-		devPortalGrpAsk = JsonUtils.fromJson(json, Ask.class);
-		VertxUtils.sendAskMsg(beUtils, devPortalGrpAsk);
+		QDataAskMessage askMsg = new QDataAskMessage(ask);
+		askMsg.setToken(userToken.getToken());
+		askMsg.setReplace(true);
+		VertxUtils.writeMsg("webdata", askMsg);
 
 		retract(message);
 	end
