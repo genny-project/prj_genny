@@ -18,16 +18,17 @@ rule "SBE_DEV_UI"
 		System.out.println("   Generate "+drools.getRule().getName() );
 
 		SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Dev UI")
-			.addSort("PRI_CODE", "Created", SearchEntity.Sort.DESC)
+			.addSort("PRI_CODE", "Code", SearchEntity.Sort.ASC)
 
 			.addColumn("PRI_CODE", "Code")
 			.addColumn("PRI_NAME", "Name")
 
 			.addAction("EDIT", "Edit")
 
+			.setSearchStatus(EEntityStatus.DELETED)
+
 			.setPageStart(0)
 			.setPageSize(50);
-
 
 		searchBE.setRealm(serviceToken.getRealm());
 
