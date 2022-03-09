@@ -135,6 +135,7 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
             answers.add(fixedTimezoneOld);
             Answer fixedTimezone = new Answer(sourceCode,targetCode, "PRI_TIMEZONE_ID", timezoneId,false,true);
             answers.add(fixedTimezone);
+            VertxUtils.sendToFrontEnd(userToken, fixedTimezone);
             VertxUtils.sendToFrontEnd(userToken, fixedTimezoneOld);
         }
 
