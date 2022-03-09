@@ -54,7 +54,7 @@ rule "DEV_UI_EDIT_EVENT"
 	then
 		System.out.println(drools.getRule().getName() + " Processings : " + message);
 
-		String targetCode = message.getData().getCode();
+		String targetCode = message.getData().getTargetCode();
 		BaseEntity target = beUtils.getBaseEntityByCode(targetCode);
 
 		QCmdMessage msg = new QCmdMessage("DISPLAY", "FORM");
