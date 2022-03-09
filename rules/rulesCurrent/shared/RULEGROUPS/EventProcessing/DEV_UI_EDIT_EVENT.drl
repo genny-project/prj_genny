@@ -47,7 +47,7 @@ rule "DEV_UI_EDIT_EVENT"
 	salience 2
     no-loop
     when
-		message : QEventMessage( data.parentCode == "SBE_DEV_UI.*" && data.code matches "ACT_EDIT" )
+		message : QEventMessage( data.parentCode matches "SBE_DEV_UI.*" && data.code == "ACT_EDIT" )
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		beUtils : BaseEntityUtils()
