@@ -62,6 +62,11 @@ rule "DEV_UI_EDIT_EVENT"
 		msg.setSend(true);  		
 		VertxUtils.writeMsg("webcmds", msg);
 
+		QDataBaseEntityMessage beMsg = new QDataBaseEntityMessage(target);
+		beMsg.setToken(userToken.getToken());
+		beMsg.setReplace(true);
+		VertxUtils.writeMsg("webdata", beMsg);
+
 		Ask ask = QuestionUtils.generateAskGroupUsingBaseEntity(target, beUtils);
 
 		QDataAskMessage askMsg = new QDataAskMessage(ask);
