@@ -99,6 +99,225 @@ public class FixInternshipTypes {
 	}
 
 	@Test
+	public void fixInternshipCountTest() throws Exception {
+		VertxUtils.cachedEnabled = false;
+
+		if (beUtils == null) {
+			return;
+		}
+
+	//	setUpDefs();
+
+		SearchEntity searchBE = new SearchEntity("SBE_INTERNSHIPS", "Internship Search")
+				.addSort("PRI_CREATED_DATE", "Created", SearchEntity.Sort.DESC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%")
+				.addFilter("PRI_STATUS", SearchEntity.StringFilter.LIKE, "ACTIVE")
+				.addColumn("PRI_CODE", "Code");
+		// .addAssociatedColumn("LNK_INTERN", "Intern Name", "LNK_COMP_INTERNSHIP")
+		searchBE.setRealm(realm);
+		
+		searchBE = new SearchEntity("SBE_INTERNSHIPS", "Internships")
+				/* Sorts */
+				.addSort("PRI_CREATED_DATE", "Date Created", SearchEntity.Sort.DESC)
+				/*.addSort("PRI_CREATED", "Date Created", SearchEntity.Sort.DESC) */
+				/* .addSort("PRI_STATUS","Status",SearchEntity.Sort.ASC) */
+				/* .addSort("PRI_ASSOC_INDUSTRY","Industry",SearchEntity.Sort.ASC) */
+				/* .addSort("PRI_ASSOC_HC","Host Company",SearchEntity.Sort.ASC) */
+				/* .addSort("PRI_INTERNSHIP_START_DATE","Start Date",SearchEntity.Sort.ASC) */
+
+				/* Filters */
+				.addFilter("PRI_IS_INTERNSHIP", true)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%")
+				.addFilter("PRI_STATUS", SearchEntity.StringFilter.LIKE, "ACTIVE")
+				/* Table Columns */
+				.addColumn("PRI_IMAGE_URL", "Company Logo")
+				.addColumn("PRI_NAME", "Title")
+				/*.addColumn("PRI_INTERNSHIP_TITLE", "Title")*/
+				.addColumn("PRI_CREATED", "Date Created")
+				.addColumn("PRI_STATUS", "Status")
+				/* .addColumn("PRI_ASSOC_HC", "Host Company") */
+				.addAssociatedColumn("LNK_HOST_COMPANY", "PRI_NAME", "Host Company")
+				.addColumn("PRI_ADDRESS_FULL", "Address")
+				.addColumn("PRI_ADDRESS_STATE", "State")
+				.addColumn("PRI_ADDRESS_COUNTRY", "Country")
+				.addColumn("PRI_INTERNSHIP_START_DATE", "Proposed Start Date")
+				.addColumn("PRI_ASSOC_INDUSTRY", "Industry")
+				.addColumn("PRI_NO_OF_INTERNS", "Number of allowed Interns")
+				.addAssociatedColumn("LNK_SOFTWARE", "PRI_NAME", "Software")
+				.addAssociatedColumn("LNK_WORKSITE_SELECT", "PRI_NAME", "Worksite")
+				.addColumn("PRI_ASSOC_OCCUPATION", "Specialisation")
+
+				/* Filterable Columns */
+				.addFilterableColumn("PRI_NAME", "Title")
+				.addFilterableColumn("PRI_STATUS", "Status")
+				.addFilterableColumn("PRI_ASSOC_INDUSTRY", "Industry")
+				.addFilterableColumn("PRI_ASSOC_HC", "Host Company")
+				.addFilterableColumn("PRI_ADDRESS_STATE", "State")
+				.addFilterableColumn("PRI_ADDRESS_COUNTRY", "Country")
+				.addFilterableColumn("PRI_CREATED_DATE", "Date Created")
+
+				/* Wildcard blacklist */
+				/* .addBlacklist("PRI_ROLES_AND_RESPONSIBILITIES") */
+				/* .addBlacklist("PRI_BASE_LEARNING_OUTCOMES") */
+
+				/* Wildcard Whitelisted Attributes */
+				.addWhitelist("PRI_NAME")
+				/* .addWhitelist("PRI_ASSOC_HC") */
+				.setWildcardDepth(1)
+
+				/* Row Actions */
+				.addAction("PRI_EVENT_VIEW", "View")
+
+				/* Table Actions */
+				.addSearchAction("PRI_EVENT_MAP_VIEW", "Map View")
+
+				.setPageStart(0).setPageSize(30);
+
+
+		Boolean ok = true;
+		Integer index = 0;
+		Integer fixedInterns = 0;
+		Integer fixedApps = 0;
+		searchBE.setPageStart(index);
+		Integer pageSize = 100;
+		searchBE.setPageSize(pageSize);
+		Long total = beUtils.getCount(searchBE);
+
+		Attribute lnkNoOfInternsAttribute = RulesUtils.getAttribute("LNK_NO_OF_INTERNS", serviceToken.getToken());
+		Attribute noOfInternsAttribute = RulesUtils.getAttribute("PRI_NO_OF_INTERNS", serviceToken.getToken());
+
+		BaseEntity defInternship = beUtils.getDEFByCode("DEF_INTERNSHIP");
+
+		while (ok) {
+			List<BaseEntity> internships = beUtils.getBaseEntitys(searchBE); // load 100 at a time
+			if (internships.isEmpty() || (index > 5000)) {
+				ok = false;
+				break;
+			}
+
+			for (BaseEntity internship : internships) {
+				index++;
+				String tableValue = internship.getName();
+				System.out.println(index+" BEG: "+internship.getCode()+" "+tableValue);
+				if ("BEG_4D129B50-D014-4CF2-8DA6-B8732931".equals(internship.getCode())) {
+					System.out.println("debug");
+				}
+				Optional<Integer> optNumOfInterns = internship.getValue("PRI_NO_OF_INTERNS");
+				if (!optNumOfInterns.isPresent()) {
+					Optional<String> selection = internship.getValue("LNK_NO_OF_INTERNS");
+					Integer noOfInterns = 1; // default as spc says 1
+					if (selection.isPresent()) {
+						String sel = selection.get();
+						if (!StringUtils.isEmpty(sel)) {
+							if (sel.length() > 4) {
+								sel = sel.substring(2);
+								sel = sel.substring(0, sel.length() - 2);
+
+								switch (sel) {
+								case "SEL_NO_OF_INTERNS_ONE":
+									noOfInterns = 1;
+									break;
+								case "SEL_NO_OF_INTERNS_TWO":
+									noOfInterns = 2;
+									break;
+								case "SEL_NO_OF_INTERNS_THREE":
+									noOfInterns = 3;
+									break;
+								case "SEL_NO_OF_INTERNS_FOUR":
+									noOfInterns = 4;
+									break;
+								case "SEL_NO_OF_INTERNS_FIVE":
+									noOfInterns = 5;
+									break;
+								case "SEL_NO_OF_INTERNS_SIX":
+									noOfInterns = 6;
+									break;
+								case "SEL_NO_OF_INTERNS_SEVEN":
+									noOfInterns = 7;
+									break;
+								case "SEL_NO_OF_INTERNS_EIGHT":
+									noOfInterns = 8;
+									break;
+								case "SEL_NO_OF_INTERNS_NINE":
+									noOfInterns = 9;
+									break;
+								case "SEL_NO_OF_INTERNS_TEN":
+									noOfInterns = 10;
+									break;
+								case "SEL_NO_OF_INTERNS_ELEVEN":
+									noOfInterns = 11;
+									break;
+								case "SEL_NO_OF_INTERNS_TWELVE":
+									noOfInterns = 12;
+									break;
+								case "SEL_NO_OF_INTERNS_13":
+									noOfInterns = 13;
+									break;
+								case "SEL_NO_OF_INTERNS_14":
+									noOfInterns = 14;
+									break;
+								case "SEL_NO_OF_INTERNS_15":
+									noOfInterns = 15;
+									break;
+								case "SEL_NO_OF_INTERNS_16":
+									noOfInterns = 16;
+									break;
+								case "SEL_NO_OF_INTERNS_17":
+									noOfInterns = 17;
+									break;
+								case "SEL_NO_OF_INTERNS_18":
+									noOfInterns = 18;
+									break;
+								case "SEL_NO_OF_INTERNS_19":
+									noOfInterns = 19;
+									break;
+								case "SEL_NO_OF_INTERNS_20":
+									noOfInterns = 20;
+									break;
+								default:
+									System.out.println("ERROR - UNKNOWN SEL " + sel + " or " + selection.get());
+									try {
+										noOfInterns = Integer.parseInt(sel);
+									} catch (Exception e) {
+										noOfInterns = 1;
+									}
+								}
+							} else {
+								System.out.println("ERROR - UNKNOWN SEL LENGTH < 4 " + sel + " or " + selection.get());
+								try {
+									noOfInterns = Integer.parseInt(sel);
+								} catch (Exception e) {
+									noOfInterns = 1;
+								}
+							}
+							internship = beUtils.saveAnswer(
+									new Answer(internship, internship, noOfInternsAttribute, "" + noOfInterns));
+						} else {
+							// let's make it default to 1
+							internship = beUtils.saveAnswer(new Answer(internship, internship, noOfInternsAttribute, "1"));
+							internship = beUtils.saveAnswer(new Answer(internship, internship, lnkNoOfInternsAttribute, "[\"SEL_NO_OF_INTERNS_ONE\"]"));
+						}
+//						System.out.println(index + " of " + total + " Internship -> " + internship.getCode() + " "
+//								+ internship.getName() + " SET TO NoInterns " + noOfInterns);
+					} else {
+						// let's make it default to 1
+						internship = beUtils.saveAnswer(new Answer(internship, internship, noOfInternsAttribute, "1"));
+						internship = beUtils.saveAnswer(new Answer(internship, internship, lnkNoOfInternsAttribute, "[\"SEL_NO_OF_INTERNS_ONE\"]"));
+
+					}
+
+				} else {
+//					System.out.println(index + " of " + total + " Internship -> " + internship.getCode() + " "
+//							+ internship.getName() + " with count of " + optNumOfInterns.get());
+				}
+			}
+
+			searchBE.setPageStart(index);
+		}
+		System.out.println("Completed!!!!!");
+	}
+
+	@Test
 	public void setAllInternshipsActiveIfPending() throws Exception {
 		VertxUtils.cachedEnabled = false;
 
@@ -142,11 +361,11 @@ public class FixInternshipTypes {
 					internship.setStatus(EEntityStatus.ACTIVE);
 					beUtils.saveBaseEntity(defInternship, internship);
 					System.out.println(index + " of " + total + " Internship -> " + internship.getCode() + " "
-							+ internship.getName() + " SET TO ACTIVE FROm PENDING");	
+							+ internship.getName() + " SET TO ACTIVE FROm PENDING");
 
 				} else {
-				System.out.println(index + " of " + total + " Internship -> " + internship.getCode() + " "
-						+ internship.getName() + "");	
+					System.out.println(index + " of " + total + " Internship -> " + internship.getCode() + " "
+							+ internship.getName() + "");
 				}
 			}
 
@@ -195,7 +414,9 @@ public class FixInternshipTypes {
 			for (BaseEntity internship : internships) {
 				index++;
 
-				/*if ("BEG_E14E9BFF-7BF5-4AAC-99AE-6CE98E7C85CA".equals(internship.getCode()))*/ {
+				/*
+				 * if ("BEG_E14E9BFF-7BF5-4AAC-99AE-6CE98E7C85CA".equals(internship.getCode()))
+				 */ {
 
 					String title = internship.getValue("PRI_INTERNSHIP_TITLE", null);
 					String name = internship.getValue("PRI_NAME", null);
@@ -221,7 +442,7 @@ public class FixInternshipTypes {
 						}
 					}
 
-				} 
+				}
 //				else {
 //					System.out.println(index + " of " + total + " Internship -> " + internship.getCode() + " "
 //							+ internship.getName() + "");
@@ -386,8 +607,8 @@ public class FixInternshipTypes {
 				// Now if mostadvancedApp is in progress then withdraw the others
 				if ("PROGRESS".equalsIgnoreCase(mostAdvancedApp.getValueAsString("PRI_STAGE"))
 						|| "PLACED".equalsIgnoreCase(mostAdvancedApp.getValueAsString("PRI_STAGE"))
-								||  "COMPLETED".equalsIgnoreCase(mostAdvancedApp.getValueAsString("PRI_STAGE"))
-										||  "ARCHIVED".equalsIgnoreCase(mostAdvancedApp.getValueAsString("PRI_STAGE"))) {
+						|| "COMPLETED".equalsIgnoreCase(mostAdvancedApp.getValueAsString("PRI_STAGE"))
+						|| "ARCHIVED".equalsIgnoreCase(mostAdvancedApp.getValueAsString("PRI_STAGE"))) {
 					// Now withdraw all the existing apps
 					// Now we do not want to lose the maximum stage reached for each application
 					// and we want to be able to show buckets with 'withdrawn' shown.
@@ -399,7 +620,8 @@ public class FixInternshipTypes {
 					if (("REJECT".equalsIgnoreCase(maxstage)) || ("WITHDRAWN".equalsIgnoreCase(maxstage))) {
 						maxstage = "AVAILABLE";
 					}
-					intern = beUtils.saveAnswer(new Answer(intern, intern, statusAttribute, maxstage)); // THIS IS ANNOYING
+					intern = beUtils.saveAnswer(new Answer(intern, intern, statusAttribute, maxstage)); // THIS IS
+																										// ANNOYING
 					intern = beUtils.saveAnswer(new Answer(intern, intern, stageAttribute, maxstage));
 					intern = beUtils.saveAnswer(new Answer(intern, intern, deletedAttribute, "TRUE"));
 					// Set all applications to WITHDRAWN
@@ -417,7 +639,8 @@ public class FixInternshipTypes {
 				}
 
 				System.out.println(index + " of " + total + " Intern -> " + intern.getCode() + " " + intern.getName()
-						+ " -> fixed up " + mostAdvancedApp.getValueAsString("PRI_STAGE")+ " and status= "+mostAdvancedApp.getValueAsString("PRI_STATUS"));
+						+ " -> fixed up " + mostAdvancedApp.getValueAsString("PRI_STAGE") + " and status= "
+						+ mostAdvancedApp.getValueAsString("PRI_STATUS"));
 
 			}
 
@@ -984,7 +1207,7 @@ public class FixInternshipTypes {
 
 				Set<BaseEntity> applications = new HashSet<>();
 
-				getApplications(intern, applications);
+			//	getApplications(intern, applications);
 
 				// ok, we should have all the apps now..
 				if (index == 6) {

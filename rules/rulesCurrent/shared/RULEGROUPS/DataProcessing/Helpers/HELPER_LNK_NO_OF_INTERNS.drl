@@ -54,6 +54,10 @@ rule "HELPER_LNK_NO_OF_INTERNS"
 				Answer ans = new Answer(sourceCode, targetCode, "PRI_ASSOC_NUM_INTERNS", name);
 				beUtils.saveAnswer(ans);
 				VertxUtils.sendToFrontEnd(userToken, ans);
+				ans = new Answer(sourceCode, targetCode, "PRI_NO_OF_INTERNS", name);
+				beUtils.saveAnswer(ans);
+				VertxUtils.sendToFrontEnd(userToken, ans);
+				
 			}
 		}
 end
