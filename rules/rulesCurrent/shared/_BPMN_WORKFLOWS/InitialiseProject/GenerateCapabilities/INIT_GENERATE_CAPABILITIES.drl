@@ -43,13 +43,13 @@ rule "INIT_GENERATE_CAPABILITIES"
 
 		/* ============== PRJ_LOJING CAPABILITIES ================== */
 
-			/* User Creation */	
+			/* User Creation */
 			capabilityUtils.addCapability("CREATE_SUPER_ADMIN", "Create Super Admin");
 			capabilityUtils.addCapability("CREATE_ADMIN", "Create Admin");
 			capabilityUtils.addCapability("CREATE_TENANT", "Create Tenant");
 			capabilityUtils.addCapability("CREATE_REFERRAL_PARTNER", "Create Referral Partner");
 			capabilityUtils.addCapability("CREATE_DEVELOPER", "Create Developer");
-			
+
 			/* User Management */
 			capabilityUtils.addCapability("ARCHIVE_USER", "Archive User");
 			capabilityUtils.addCapability("BLOCK_USER", "Block User");
@@ -87,7 +87,7 @@ rule "INIT_GENERATE_CAPABILITIES"
 			capabilityUtils.addCapability("EDIT_CREDIT_CARD_DETAILS_OWN", "Edit own Credit Card details");
 			capabilityUtils.addCapability("VIEW_PAYMENT_STATUS_OF_TENANT", "View the payment status of a potential Tenant");
 			/* No one should have this perm */
-			capabilityUtils.addCapability("VIEW_CREDIT_CARD_DETAILS", "View Card Details of a Tenant"); 
+			capabilityUtils.addCapability("VIEW_CREDIT_CARD_DETAILS", "View Card Details of a Tenant");
 
 			/* Profile Management */
 			capabilityUtils.addCapability("VIEW_PROFILE_AGENT", "View Agent Profiles");
@@ -95,7 +95,7 @@ rule "INIT_GENERATE_CAPABILITIES"
 			capabilityUtils.addCapability("VIEW_PROFILE_REFERRAL_PARTNER", "View Referral Partner Profiles");
 			capabilityUtils.addCapability("VIEW_PROFILE_DEVELOPER", "View Developer Profiles");
 
-			/* Tenant Management */ 
+			/* Tenant Management */
 			capabilityUtils.addCapability("VIEW_TENANT_MANAGEMENT_PORTAL", "View Tenant Management Portal");
 			capabilityUtils.addCapability("EDIT_TENANT_MANAGEMENT_PORTAL", "Edit Tenant Management Portal");
 			capabilityUtils.addCapability("DELETE_TENANT_MANAGEMENT_PORTAL", "Delete Tenant Management Portal");
@@ -115,7 +115,7 @@ rule "INIT_GENERATE_CAPABILITIES"
 
 			/* Super Admin Tools */
 			capabilityUtils.addCapability("CONFIG_SYSTEM_SETTINGS", "Configure System Settings");
-			
+
 
 
 	/*	CapabilityUtils capabilityUtils = new CapabilityUtils(beUtils); */
@@ -134,6 +134,7 @@ rule "INIT_GENERATE_CAPABILITIES"
 	    capabilityUtils.addCapability( "SIDEBAR_QUE_TAB_BUCKET_VIEW", "Sidebar Bucket View");
 	    capabilityUtils.addCapability( "SIDEBAR_QUE_TREE_ITEM_INTERNSHIPS", "Sidebar Internships");
 	    capabilityUtils.addCapability( "SIDEBAR_QUE_TREE_ITEM_HOST_COMPANIES", "Sidebar Host Companies");
+		capabilityUtils.addCapability( "SIDEBAR_QUE_TREE_ITEM_DOCUMENTS_GRP", "Sidebar Documents");
 	    capabilityUtils.addCapability( "SIDEBAR_QUE_TREE_ITEM_EDU_PROVIDERS", "Sidebar Edu Providers");
 	    capabilityUtils.addCapability( "SIDEBAR_QUE_TREE_ITEM_APPLICATIONS_APPLIED", "Sidebar My Applications");
 	    capabilityUtils.addCapability( "SIDEBAR_QUE_HOST_COMPANY_VIEW", "Sidebar My Host Company");
@@ -269,7 +270,7 @@ rule "INIT_GENERATE_CAPABILITIES"
 		capabilityUtils.addCapability( "WITHDRAW_APPLICATION", "Withdraw Application");
 		capabilityUtils.addCapability( "FINISH_APPLICATION", "Finish Application");
 		capabilityUtils.addCapability( "START_INTERNSHIP", "Start Internship");
-		
+
 		capabilityUtils.addCapability( "ACCESS_NOTES_INTERN", "Access Notes");
 		capabilityUtils.addCapability( "ACCESS_NOTES_APPLICATION", "Access Notes");
 		capabilityUtils.addCapability( "ACCESS_NOTES_INTERNSHIP", "Access Notes");
