@@ -330,6 +330,7 @@ if (newBe != null &amp;&amp; defBE != null) {
 	System.out.println(&quot;defBE code is &quot; + defBE.getCode() + &quot; newBe code is &quot; + newBe.getCode());
 	beUtils.saveBaseEntity(defBE, newBe);
 
+	System.out.println(&quot;New baseEntity status &quot; + newBe.getStatus().name());
 
 	/* Fix up name and initials */
 	/* HACK HACK HACK: The issue that this is temporarily fixing is caused by slowness in saving/fetching data */
@@ -349,6 +350,8 @@ if (newBe != null &amp;&amp; defBE != null) {
 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), &quot;PRI_INITIALS&quot;, initials));
 		beUtils.saveAnswers(answers);
 	}
+} else {
+	System.out.println(&quot;newBe: &quot; + newBe + &quot; or defBE: &quot; + defBE + &quot; is null&quot;);
 }</drools:script>
           </drools:onExit-script>
         </bpmn2:extensionElements>
