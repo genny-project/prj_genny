@@ -87,9 +87,9 @@ rule "HELPER_SIGNATURE_COMPLETE"
 			}
 
 			/* Checks if the signature is blank or null */
-			Boolean internSigned = internSignature.startsWith("data:image/png;base64") && !StringUtils.isBlank(internSignature) && (!internSignature.equals("https://bit.ly/3A2xdjI"));
-			Boolean hcrSigned = hcrSignature.startsWith("data:image/png;base64") &&  !StringUtils.isBlank(hcrSignature) && (!hcrSignature.equals("https://bit.ly/3A2xdjI"));
-			Boolean outcomeSigned = outcomeSignature.startsWith("data:image/png;base64") &&  !StringUtils.isBlank(outcomeSignature) && (!outcomeSignature.equals("https://bit.ly/3A2xdjI"));
+			Boolean internSigned =!StringUtils.isBlank(internSignature) && (!internSignature.equals("https://bit.ly/3A2xdjI")) && internSignature.startsWith("data:image/png;base64") ;
+			Boolean hcrSigned = !StringUtils.isBlank(hcrSignature) && (!hcrSignature.equals("https://bit.ly/3A2xdjI")) &&  hcrSignature.startsWith("data:image/png;base64") ;
+			Boolean outcomeSigned = !StringUtils.isBlank(outcomeSignature) && (!outcomeSignature.equals("https://bit.ly/3A2xdjI")) &&  outcomeSignature.startsWith("data:image/png;base64");
 
             System.out.println("InternSigned: " + internSigned);
             System.out.println("HCRSigned: " + hcrSigned);
