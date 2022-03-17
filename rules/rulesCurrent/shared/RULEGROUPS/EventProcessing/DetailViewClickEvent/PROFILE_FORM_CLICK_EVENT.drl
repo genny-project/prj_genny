@@ -46,6 +46,7 @@ rule "PROFILE_FORM_CLICK_EVENT"
 				Boolean isAdmin 	= sourceBe.is("PRI_IS_ADMIN");
 				Boolean isDev 		= sourceBe.is("PRI_IS_DEV");
 				Boolean isMentee 	= sourceBe.is("PRI_IS_MENTEE");
+				Boolean isMentor 	= sourceBe.is("PRI_IS_MENTOR");
 
 				if(isIntern) 		{role = "INTERN"; }
 				if(isStudent) 		{role = "STUDENT"; }
@@ -54,8 +55,9 @@ rule "PROFILE_FORM_CLICK_EVENT"
        			if(isRPR)    		{role = "REF_PART_REP"; }
        			if(isAgent)  		{role = "AGENT"; }
        			if(isAdmin)  		{role = "ADMIN"; }
-       			if(isDev)    		{role = "DEV"; } 
+       			if(isDev)    		{role = "DEV"; }
        			if(isMentee)    	{role = "MENTEE"; }
+       			if(isMentor)    	{role = "MENTOR"; }
        	}
 
 		output.setTypeOfResult("SIGNAL");
