@@ -298,12 +298,21 @@ rule "INIT_GENERATE_CAPABILITIES"
 		capabilityUtils.addCapability( "EDIT_HOST_COMPANY", "Edit Host Company");
 		capabilityUtils.addCapability( "EDIT_EDU_PROVIDER", "Edit Education Provider");
 		capabilityUtils.addCapability( "EDIT_AGENCY", "Edit Agency");
+
+
+        /*Mentormatch Capabilities*/
    		capabilityUtils.addCapability( "ON_SHORE_APPLICATION", "Move to on-shore");
    		capabilityUtils.addCapability( "TRAINING_APPLICATION", "Training");
    		capabilityUtils.addCapability( "MATCHED_APPLICATION", "Matched");
    		capabilityUtils.addCapability( "MENTORING_APPLICATION", "Mentoring");
 		capabilityUtils.addCapability( "ALUMNI_APPLICATION", "Alumni");
-
+		 /*Mentormatch Bucket Capabilities*/
+		capabilityUtils.addCapability("SBE_REGISTERED", "Registered");
+		capabilityUtils.addCapability("SBE_MATCHING", "Matching");
+		capabilityUtils.addCapability("SBE_MEET_AND_GREET", "Meet and Greet");
+		capabilityUtils.addCapability("SBE_ACCEPTANCE", "Acceptance");
+		capabilityUtils.addCapability("SBE_IN_PROGRESS", "In Progress");
+		capabilityUtils.addCapability("SBE_COMPLETION", "Completion");
 
 		capabilityUtils.addCapability( "WEB_ONLY", "Public Web Use");
 
