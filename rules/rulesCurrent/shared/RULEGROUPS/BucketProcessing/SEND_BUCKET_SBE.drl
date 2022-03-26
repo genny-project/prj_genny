@@ -46,10 +46,10 @@ rule "SEND_BUCKET_SBE"
 		if(bucketCodes!= null && bucketCodes.size() > 0){
 
 			for (String code : bucketCodes) {
-		/*		if (capabilityUtils.hasCapabilityThroughPriIs(code, CapabilityMode.VIEW)) {*/
+				if (capabilityUtils.hasCapabilityThroughPriIs(code, CapabilityMode.VIEW)) {
 					System.out.println(drools.getRule().getName()+" Has Permission for " + code);
 					sendCodes.add(code);
-				/*}*/
+				}
 			}
 			System.out.println("Adding sessionCode");
 
