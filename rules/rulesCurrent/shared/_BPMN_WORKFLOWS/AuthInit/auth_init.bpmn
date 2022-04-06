@@ -168,19 +168,20 @@ kcontext.setVariable(&quot;termsAndConditions&quot;, termsAndConditions);
 
 String realm = &quot;internmatch&quot;;
 String key = &quot;attributes&quot;;
-		try {
-			// String jsonAttribute = (String) CacheUtils.readCache(realm, key);
-			QDataAttributeMessage msg = VertxUtils.getObject(userToken.getRealm(), &quot;&quot;, key, QDataAttributeMessage.class);
-			msg.setToken(userToken.getToken());
-				if (userToken.getToken()==null) {
-						System.out.println(&quot;NULL TOKEN IN SENDING ATTRIBUTES&quot;);
-				}
-			VertxUtils.writeMsg(&quot;webcmds&quot;,JsonUtils.toJson(msg));
-			System.out.println(&quot;authInit: All the def attributes sent &quot; + msg.getItems().length + &quot; of them&quot;);
 
-		} catch (Exception e) {
-			System.out.println(&quot;authInit: No web browser to talk to!&quot;);
-		}</bpmn2:script>
+try {
+	/* String jsonAttribute = (String) CacheUtils.readCache(realm, key); */
+	QDataAttributeMessage msg = VertxUtils.getObject(userToken.getRealm(), &quot;&quot;, key, QDataAttributeMessage.class);
+	msg.setToken(userToken.getToken());
+		if (userToken.getToken()==null) {
+				System.out.println(&quot;NULL TOKEN IN SENDING ATTRIBUTES&quot;);
+		}
+	VertxUtils.writeMsg(&quot;webcmds&quot;,JsonUtils.toJson(msg));
+	System.out.println(&quot;authInit: All the def attributes sent &quot; + msg.getItems().length + &quot; of them&quot;);
+
+} catch (Exception e) {
+	System.out.println(&quot;authInit: No web browser to talk to!&quot;);
+}</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:scriptTask id="ScriptTask_1" name="SendProject" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>
