@@ -40,7 +40,7 @@ rule "SEND_ADD_ITEMS"
 			System.out.println("addItemsMap is NULL or EMPTY");
 
 		} else {
-							
+			System.out.println("[!]" + drools.getRule().getName() + ": Found " + addItemsMap.size() + " ADD ITEM Display Codes");
 			String sourceCode = "PER_SERVICE";
 			String targetCode = "PER_SERVICE";
 
