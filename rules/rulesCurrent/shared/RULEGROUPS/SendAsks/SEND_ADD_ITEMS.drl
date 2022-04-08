@@ -26,6 +26,8 @@ rule "SEND_ADD_ITEMS"
 		output : OutputParam( )
 
 	then
+
+		String LOG_STRING = "[!] " + drools.getRule().getName();
 		System.out.println(drools.getRule().getName() + " triggered");
 
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
@@ -37,10 +39,13 @@ rule "SEND_ADD_ITEMS"
 		LinkedHashMap<String, String> addItemsMap = VertxUtils.getObject(serviceToken.getRealm(), "", "ADD_ITEMS", LinkedHashMap.class, serviceToken.getToken());
 
 		if (addItemsMap == null || addItemsMap.isEmpty()) {
-			System.out.println("addItemsMap is NULL or EMPTY");
+			System.out.println(LOG_STRING + "addItemsMap is NULL or EMPTY");
 
 		} else {
-			System.out.println("[!]" + drools.getRule().getName() + ": Found " + addItemsMap.size() + " ADD ITEM Display Codes");
+			System.out.println(LOG_STRING + ": Found " + addItemsMap.size() + " ADD ITEM Display Codes");
+			for(String item : addItemsMap.keySet()) {
+				System.out.println(LOG_STRING + " sending " + item + ":" + addItemsMap.get(item));
+			}
 			String sourceCode = "PER_SERVICE";
 			String targetCode = "PER_SERVICE";
 
