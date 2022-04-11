@@ -78,11 +78,12 @@ rule "ROL_INTERN"
    	     capabilityUtils.addCapabilityToRole(role,"SBE_SUMMARY_MY_APPLICATIONS",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"SBE_SUMMARY_INTERVIEWS_INTERN",CapabilityMode.VIEW);
    	     capabilityUtils.addCapabilityToRole(role,"SBE_SUMMARY_INPROGRESS_APPLICATION",CapabilityMode.VIEW);
+		 capabilityUtils.addCapabilityToRole(role,"SBE_INTERN",CapabilityMode.VIEW);
 
 		role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
 		beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_WEIGHT", 200.0,false,true));
 
 		insert(role);
-		
+
 		VertxUtils.writeCachedJson(capabilityUtils.getBeUtils().getServiceToken().getRealm(), role.getCode(), JsonUtils.toJson(role), capabilityUtils.getBeUtils().getServiceToken().getToken());
 end
