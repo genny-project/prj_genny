@@ -59,6 +59,8 @@ rule "PRI_SEARCH_SORT"
 
 					if (sortEA.getAttributeCode().equals(answer.getAttributeCode())) {
                         System.out.println("sortEA attr equals answer attr, setting sort value");
+                        System.out.println("answer value: " + answer.getValue());
+
 						sortEA.setWeight(0.0);
 						sortEA.setValue(answer.getValue());
 					}
