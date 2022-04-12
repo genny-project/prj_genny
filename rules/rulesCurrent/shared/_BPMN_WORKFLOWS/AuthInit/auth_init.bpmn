@@ -346,7 +346,7 @@ if (currentUser != null) {
 		Optional&lt;EntityAttribute> role = currentUser.getHighestEA(&quot;PRI_IS_&quot;);
 		if (role.isPresent()) {
 			String roleName = role.get().getAttributeCode();
-			String roleName = roleName.substring(&quot;PRI_IS_&quot;.length());
+			roleName = roleName.substring(&quot;PRI_IS_&quot;.length());
 			roleName = roleName.replaceAll(&quot;_&quot;, &quot; &quot;);
 			String beType = StringUtils.capitalize(roleName.toLowerCase());
 			System.out.println(&quot;beType = &quot; + beType);
@@ -356,7 +356,7 @@ if (currentUser != null) {
 				System.out.println(&quot;agentCode = &quot; + agentCode);
 
 				if (agentCode != null) {
-					System.out.println(&quot;aCode  :: &quot; + agentCode);
+					System.out.println(&quot;agentCode  :: &quot; + agentCode);
 					/*String aCode = agentCode.replace(&quot;\&quot;&quot;, &quot;&quot;).replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;);
 					System.out.println(&quot;aCode  :: &quot; + aCode);*/
 
@@ -376,6 +376,11 @@ if (currentUser != null) {
 			}
 		}
 }
+
+
+
+
+
 
 </bpmn2:script>
     </bpmn2:scriptTask>
