@@ -362,7 +362,7 @@ if (currentUser != null) {
 					System.out.println(&quot;agentBe :: &quot; + agentBe);
 
 					if (agentBe != null) {
-						VertxUtils.publish(currentUser,&quot;webcmds&quot;, agentBe, &quot;LINKED_AGENT&quot;, userToken.getToken());
+						VertxUtils.publish(currentUser,&quot;webcmds&quot;, agentBe, &quot;AGENT&quot;, userToken.getToken());
 					} else {
 						System.out.println(&quot;ERROR: Null agentBe&quot;);
 					}
