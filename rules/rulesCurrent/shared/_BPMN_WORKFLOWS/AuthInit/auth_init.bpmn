@@ -41,6 +41,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_39" isCollection="false" structureRef="java.util.Set"/>
   <bpmn2:itemDefinition id="ItemDefinition_41" isCollection="false" structureRef="life.genny.qwanda.attribute.Attribute"/>
   <bpmn2:itemDefinition id="ItemDefinition_37" isCollection="false" structureRef="life.genny.qwanda.message.QCmdMessage"/>
+  <bpmn2:itemDefinition id="ItemDefinition_40" isCollection="false" structureRef="life.genny.qwanda.attribute.EntityAttribute"/>
   <bpmn2:process id="auth_init" drools:packageName="life.genny.jbpm" name="Auth Init" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.qwanda.message.QEventMessage"/>
@@ -83,6 +84,7 @@
       <drools:import name="java.util.Set"/>
       <drools:import name="life.genny.qwanda.attribute.Attribute"/>
       <drools:import name="life.genny.qwanda.message.QCmdMessage"/>
+      <drools:import name="life.genny.qwanda.attribute.EntityAttribute"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_1" name="message"/>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_17" name="userToken"/>
@@ -223,7 +225,7 @@ VertxUtils.publish(currentUser,&quot;webcmds&quot;,project, &quot;PROJECT&quot;,
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
-      <bpmn2:script>BaseEntityUtils beUtils = new BaseEntityUtils(userToken); 
+      <bpmn2:script>BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 System.out.println(&quot;authInit: Sending user - &quot;+currentUser);
 System.out.println(&quot;authinit: Sending user subs - &quot;+currentUser.getValue(&quot;PRI_SUBSCRIPTIONS&quot;,&quot;&quot;));
 
@@ -261,36 +263,36 @@ if (!roles.isEmpty()) {
 BaseEntity mainRole = null;
 Double highestWeight = -1000.0;
 for (BaseEntity role : roles) {
-	
+
          if (role.getValue(&quot;PRI_WEIGHT&quot;,0.0) > highestWeight) {
 		highestWeight = role.getValue(&quot;PRI_WEIGHT&quot;,0.0);
-		role  = VertxUtils.privacyFilter(role, filterArray);	
+		role  = VertxUtils.privacyFilter(role, filterArray);
 		mainRole = role;
-	}	
-	
+	}
+
 }
 		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(mainRole);
 		msg.setToken(beUtils.getGennyToken().getToken());
 		msg.setReplace(true);
-		msg.setAliasCode(&quot;ROLE&quot;);	
+		msg.setAliasCode(&quot;ROLE&quot;);
 		VertxUtils.writeMsg(&quot;webcmds&quot;,JsonUtils.toJson(msg));
 
 }
 
 /* Send Linked Companies */
 if (currentUser != null) {
-        
+
         /* Try Host Cpy */
         String hostCompanyCode = currentUser.getValue(&quot;LNK_HOST_COMPANY&quot;, null);
         System.out.println(&quot;hostCompanyCode = &quot; + hostCompanyCode);
-                        
+
         if (hostCompanyCode != null) {
                 String hcCode = hostCompanyCode.replace(&quot;\&quot;&quot;, &quot;&quot;).replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;);
                 System.out.println(&quot;hcCode  :: &quot; + hcCode);
-                
+
                 BaseEntity hostCompanyBe = beUtils.getBaseEntityByCode(hcCode);
                 System.out.println(&quot;hostCompanyBe :: &quot; + hostCompanyBe);
-            
+
                 if (hostCompanyBe != null) {
                         VertxUtils.publish(currentUser,&quot;webcmds&quot;,hostCompanyBe, &quot;COMPANY&quot;, userToken.getToken());
                 } else {
@@ -302,14 +304,14 @@ if (currentUser != null) {
         /* Try Edu Pro */
         String eduProviderCode = currentUser.getValue(&quot;LNK_EDU_PROVIDER&quot;, null);
         System.out.println(&quot;eduProviderCode = &quot; + eduProviderCode);
-                        
+
         if (eduProviderCode != null) {
                 String epCode = eduProviderCode.replace(&quot;\&quot;&quot;, &quot;&quot;).replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;);
                 System.out.println(&quot;epCode  :: &quot; + epCode);
-                
+
                 BaseEntity eduProviderBe = beUtils.getBaseEntityByCode(epCode);
                 System.out.println(&quot;eduProviderBe :: &quot; + eduProviderBe);
-            
+
                 if (eduProviderBe != null) {
                         VertxUtils.publish(currentUser,&quot;webcmds&quot;,eduProviderBe, &quot;COMPANY&quot;, userToken.getToken());
                 } else {
@@ -321,14 +323,14 @@ if (currentUser != null) {
         /* Try Agency */
         String agencyCode = currentUser.getValue(&quot;LNK_AGENCY&quot;, null);
         System.out.println(&quot;agencyCode = &quot; + agencyCode);
-                        
+
         if (agencyCode != null) {
                 String aCode = agencyCode.replace(&quot;\&quot;&quot;, &quot;&quot;).replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;);
                 System.out.println(&quot;aCode  :: &quot; + aCode);
-                
+
                 BaseEntity agencyBe = beUtils.getBaseEntityByCode(aCode);
                 System.out.println(&quot;agencyBe :: &quot; + agencyBe);
-            
+
                 if (agencyBe != null) {
                         VertxUtils.publish(currentUser,&quot;webcmds&quot;,agencyBe, &quot;COMPANY&quot;, userToken.getToken());
                 } else {
@@ -337,6 +339,40 @@ if (currentUser != null) {
         } else {
             System.out.println(&quot;ERROR: Null agencyCode&quot;);
         }
+
+		/* Check if user is an Intern and send the connected Agent */
+		Optional&lt;EntityAttribute> role = currentUser.getHighestEA(&quot;PRI_IS_&quot;);
+		if (role.isPresent()) {
+			String roleName = role.get().getAttributeCode();
+			String roleName = roleName.substring(&quot;PRI_IS_&quot;.length());
+			roleName = roleName.replaceAll(&quot;_&quot;, &quot; &quot;);
+			String beType = StringUtils.capitalize(roleName.toLowerCase());
+			System.out.println(&quot;beType = &quot; + beType);
+
+			if (beType == &quot;INTERN&quot;) {
+				String agentCode = currentUser.getValue(&quot;LNK_AGENT&quot;, null);
+				System.out.println(&quot;agentCode = &quot; + agentCode);
+
+				if (agentCode != null) {
+					System.out.println(&quot;aCode  :: &quot; + agentCode);
+					/*String aCode = agentCode.replace(&quot;\&quot;&quot;, &quot;&quot;).replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;);
+					System.out.println(&quot;aCode  :: &quot; + aCode);*/
+
+					BaseEntity agentBe = beUtils.getBaseEntityByCode(agentCode);
+					System.out.println(&quot;agentBe :: &quot; + agentBe);
+
+					if (agentBe != null) {
+						VertxUtils.publish(currentUser,&quot;webcmds&quot;, agentBe, &quot;LINKED_AGENT&quot;, userToken.getToken());
+					} else {
+						System.out.println(&quot;ERROR: Null agentBe&quot;);
+					}
+				} else {
+					System.out.println(&quot;ERROR: Null agentCode&quot;);
+				}
+			} else {
+				System.out.println(&quot;Not an Intern. Role is &quot; + roleName);
+			}
+		}
 }
 
 
@@ -410,12 +446,6 @@ if (qp != null) {
         <drools:metaData name="elementname">
           <drools:metaValue><![CDATA[Send Asks]]></drools:metaValue>
         </drools:metaData>
-        <drools:onEntry-script scriptFormat="http://www.java.com/java">
-          <drools:script>System.out.println(&quot;==========Send Asks begin==========&quot;);</drools:script>
-        </drools:onEntry-script>
-        <drools:onExit-script scriptFormat="http://www.java.com/java">
-          <drools:script>System.out.println(&quot;==========Send Asks end==========&quot;);</drools:script>
-        </drools:onExit-script>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
