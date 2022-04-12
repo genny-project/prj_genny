@@ -213,7 +213,7 @@ rule "INIT_GENERATE_CAPABILITIES"
 		capabilityUtils.addCapability("SBE_SUMMARY_INTERNS", "Interns Summary");
 		capabilityUtils.addCapability("SBE_SUMMARY_AGENCY", "Agency Summary");
 		capabilityUtils.addCapability("SBE_SUMMARY_AGENTS", "Agents Summary");
-		capabilityUtils.addCapability("SBE_INTERN", "Intern Search");
+		capabilityUtils.addCapability("SBE_INTERNS", "Intern Search");
 
   	   	capabilityUtils.addCapability( "NOTES", "Notes");
 		capabilityUtils.addCapability( "NOTES_USER_OWN", "Notes Users Own");
