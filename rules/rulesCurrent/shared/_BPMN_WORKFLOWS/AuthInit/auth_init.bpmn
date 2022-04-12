@@ -349,7 +349,7 @@ if (currentUser != null) {
 			roleName = roleName.substring(&quot;PRI_IS_&quot;.length());
 			roleName = roleName.replaceAll(&quot;_&quot;, &quot; &quot;);
 
-			if (roleName == &quot;INTERN&quot;) {
+			if (roleName.equals(&quot;INTERN&quot;)) {
 				System.out.println(&quot;roleName = &quot; + roleName);
 				String agentCode = currentUser.getValue(&quot;LNK_AGENT&quot;, null);
 				System.out.println(&quot;agentCode = &quot; + agentCode);
