@@ -352,14 +352,13 @@ if (currentUser != null) {
 			if (roleName.equals(&quot;INTERN&quot;)) {
 				System.out.println(&quot;roleName = &quot; + roleName);
 				String agentCode = currentUser.getValue(&quot;LNK_AGENT&quot;, null);
-				System.out.println(&quot;agentCode = &quot; + agentCode);
 
 				if (agentCode != null) {
 					System.out.println(&quot;agentCode  :: &quot; + agentCode);
-					/*String aCode = agentCode.replace(&quot;\&quot;&quot;, &quot;&quot;).replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;);
-					System.out.println(&quot;aCode  :: &quot; + aCode);*/
+					String aCode = agentCode.replace(&quot;\&quot;&quot;, &quot;&quot;).replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;);
+					System.out.println(&quot;aCode  :: &quot; + aCode);
 
-					BaseEntity agentBe = beUtils.getBaseEntityByCode(agentCode);
+					BaseEntity agentBe = beUtils.getBaseEntityByCode(aCode);
 					System.out.println(&quot;agentBe :: &quot; + agentBe);
 
 					if (agentBe != null) {
