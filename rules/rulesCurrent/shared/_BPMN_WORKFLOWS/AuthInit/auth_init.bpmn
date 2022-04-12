@@ -348,10 +348,9 @@ if (currentUser != null) {
 			String roleName = role.get().getAttributeCode();
 			roleName = roleName.substring(&quot;PRI_IS_&quot;.length());
 			roleName = roleName.replaceAll(&quot;_&quot;, &quot; &quot;);
-			String beType = StringUtils.capitalize(roleName.toLowerCase());
-			System.out.println(&quot;beType = &quot; + beType);
 
-			if (beType == &quot;INTERN&quot;) {
+			if (roleName == &quot;INTERN&quot;) {
+				System.out.println(&quot;roleName = &quot; + roleName);
 				String agentCode = currentUser.getValue(&quot;LNK_AGENT&quot;, null);
 				System.out.println(&quot;agentCode = &quot; + agentCode);
 
@@ -375,14 +374,7 @@ if (currentUser != null) {
 				System.out.println(&quot;Not an Intern. Role is &quot; + roleName);
 			}
 		}
-}
-
-
-
-
-
-
-</bpmn2:script>
+}</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:task id="Task_1" drools:taskName="RuleFlowGroup" drools:displayName="RunRuleFlowGroup" drools:icon="icons/icon-info.gif" name="SendActionCaches">
       <bpmn2:extensionElements>
