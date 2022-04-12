@@ -42,6 +42,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_41" isCollection="false" structureRef="life.genny.qwanda.attribute.Attribute"/>
   <bpmn2:itemDefinition id="ItemDefinition_37" isCollection="false" structureRef="life.genny.qwanda.message.QCmdMessage"/>
   <bpmn2:itemDefinition id="ItemDefinition_40" isCollection="false" structureRef="life.genny.qwanda.attribute.EntityAttribute"/>
+  <bpmn2:itemDefinition id="ItemDefinition_43" isCollection="false" structureRef="org.apache.commons.lang3.StringUtils"/>
   <bpmn2:process id="auth_init" drools:packageName="life.genny.jbpm" name="Auth Init" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.qwanda.message.QEventMessage"/>
@@ -85,6 +86,7 @@
       <drools:import name="life.genny.qwanda.attribute.Attribute"/>
       <drools:import name="life.genny.qwanda.message.QCmdMessage"/>
       <drools:import name="life.genny.qwanda.attribute.EntityAttribute"/>
+      <drools:import name="org.apache.commons.lang3.StringUtils"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_1" name="message"/>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_17" name="userToken"/>
