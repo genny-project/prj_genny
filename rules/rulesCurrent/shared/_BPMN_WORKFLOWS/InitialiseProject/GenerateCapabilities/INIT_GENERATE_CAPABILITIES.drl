@@ -318,6 +318,7 @@ rule "INIT_GENERATE_CAPABILITIES"
 		/* A Cap For Handling Other Roles */
         capabilityUtils.addCapability( "TYPE_MENTEE", "Mentee");
         capabilityUtils.addCapability( "TYPE_MENTOR", "Mentor");
+        capabilityUtils.addCapability( "TYPE_CLUB_PRESIDENT", "Club President");
 
 		capabilityUtils.addCapability( "WEB_ONLY", "Public Web Use");
 
