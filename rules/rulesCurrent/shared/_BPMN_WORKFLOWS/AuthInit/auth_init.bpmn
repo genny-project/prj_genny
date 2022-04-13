@@ -341,7 +341,51 @@ if (currentUser != null) {
         } else {
             System.out.println(&quot;ERROR: Null agencyCode&quot;);
         }
-}</bpmn2:script>
+
+		/* Check if  is an Intern and send the connected Agent */
+	Optional&lt;EntityAttribute> role = current.getHighestEA(&quot;PRI_IS_&quot;);
+	if (role.isPresent()) {
+		String roleName = role.get().getAttributeCode();
+		roleName = roleName.substring(&quot;PRI_IS_&quot;.length());
+		roleName = roleName.replaceAll(&quot;_&quot;, &quot; &quot;);
+
+		if (roleName.equals(&quot;INTERN&quot;)) {
+			System.out.println(&quot;roleName = &quot; + roleName);
+			String agentCode = current.getValue(&quot;LNK_AGENT&quot;, null);
+
+			if (agentCode != null) {
+				System.out.println(&quot;agentCode  :: &quot; + agentCode);
+				String aCode = agentCode.replace(&quot;\&quot;&quot;, &quot;&quot;).replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;);
+				System.out.println(&quot;aCode  :: &quot; + aCode);
+
+				BaseEntity agentBe = beUtils.getBaseEntityByCode(aCode);
+				System.out.println(&quot;agentBe :: &quot; + agentBe);
+
+				if (agentBe != null) {
+					/* VertxUtils.publish(current,&quot;webcmds&quot;, agentBe, &quot;AGENT&quot;, Token.getToken()); */
+
+					QDataBaseEntityMessage agentBeMsg = new QDataBaseEntityMessage(agentBe);
+					agentBeMsg.setToken(userToken.getToken());
+					VertxUtils.writeMsg(&quot;webcmds&quot;, JsonUtils.toJson(agentBeMsg));
+
+				} else {
+					System.out.println(&quot;ERROR: Null agentBe&quot;);
+				}
+			} else {
+				System.out.println(&quot;ERROR: Null agentCode&quot;);
+			}
+		} else {
+			System.out.println(&quot;Not an Intern. Role is &quot; + roleName);
+		}
+	}
+}
+
+
+
+
+
+
+</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:task id="Task_1" drools:taskName="RuleFlowGroup" drools:displayName="RunRuleFlowGroup" drools:icon="icons/icon-info.gif" name="SendActionCaches">
       <bpmn2:extensionElements>
