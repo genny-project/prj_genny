@@ -227,35 +227,35 @@ VertxUtils.publish(currentUser,&quot;webcmds&quot;,project, &quot;PROJECT&quot;,
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
-      <bpmn2:script>BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
-System.out.println(&quot;authInit: Sending user - &quot;+currentUser);
-System.out.println(&quot;authinit: Sending user subs - &quot;+currentUser.getValue(&quot;PRI_SUBSCRIPTIONS&quot;,&quot;&quot;));
+      <bpmn2:script>BaseEntityUtils beUtils = new BaseEntityUtils(Token);
+System.out.println(&quot;authInit: Sending  - &quot;+current);
+System.out.println(&quot;authinit: Sending  subs - &quot;+current.getValue(&quot;PRI_SUBSCRIPTIONS&quot;,&quot;&quot;));
 
 
-/* Check if this user has logged in */
+/* Check if this  has logged in */
 /*
-Optional&lt;Boolean> optHasLoggedIn = currentUser.getValue(&quot;PRI_HAS_LOGGED_IN&quot;);
+Optional&lt;Boolean> optHasLoggedIn = current.getValue(&quot;PRI_HAS_LOGGED_IN&quot;);
 if ((!optHasLoggedIn.isPresent()) || (!optHasLoggedIn.get())) {
-         System.out.println(&quot;auth_init: currentUser has never logged in before&quot;);
+         System.out.println(&quot;auth_init: current has never logged in before&quot;);
 	List&lt;Answer> answers = new CopyOnWriteArrayList&lt;Answer>();
-	Answer hasLoggedInAnswer = new Answer(beUtils.getGennyToken().getUserCode(),currentUser.getCode(), &quot;PRI_HAS_LOGGED_IN&quot;, &quot;TRUE&quot;);
-	currentUser = beUtils.updateBaseEntity(currentUser, hasLoggedInAnswer,BaseEntity.class);
+	Answer hasLoggedInAnswer = new Answer(beUtils.getGennyToken().getCode(),current.getCode(), &quot;PRI_HAS_LOGGED_IN&quot;, &quot;TRUE&quot;);
+	current = beUtils.updateBaseEntity(current, hasLoggedInAnswer,BaseEntity.class);
 	answers.add(hasLoggedInAnswer);
 	beUtils.saveAnswers(answers,false);
-	kcontext.setVariable(&quot;currentUser&quot;,currentUser);
+	kcontext.setVariable(&quot;current&quot;,current);
  }
 */
-/* BaseEntity currentUser = QwandaUtils.getBaseEntityByCodeWithAttributes(userToken.getUserCode(), userToken.getToken()); */
+/* BaseEntity current = QwandaUtils.getBaseEntityByCodeWithAttributes(Token.getCode(), Token.getToken()); */
 
 
-currentUser.forcePrivate(&quot;PRI_SUBSCRIPTIONS&quot;,new Boolean(false));
-VertxUtils.publish(currentUser,&quot;webcmds&quot;,currentUser, &quot;USER&quot;, userToken.getToken());
-currentUser.forcePrivate(&quot;PRI_SUBSCRIPTIONS&quot;,new Boolean(true));
+current.forcePrivate(&quot;PRI_SUBSCRIPTIONS&quot;,new Boolean(false));
+VertxUtils.publish(current,&quot;webcmds&quot;,current, &quot;&quot;, Token.getToken());
+current.forcePrivate(&quot;PRI_SUBSCRIPTIONS&quot;,new Boolean(true));
 
 /* Check if role is test and if so then save token to cache for junit testing */
-if (userToken.hasRole(&quot;test&quot;)) {
-    VertxUtils.writeCachedJson(userToken.getRealm(), &quot;TOKEN:&quot; + userToken.getUserCode(), userToken.getToken(),
-                                            userToken.getToken(),28800);  /* 8 hours expiry TODO */
+if (Token.hasRole(&quot;test&quot;)) {
+    VertxUtils.writeCachedJson(Token.getRealm(), &quot;TOKEN:&quot; + Token.getCode(), Token.getToken(),
+                                            Token.getToken(),28800);  /* 8 hours expiry TODO */
 }
 /* Send the Roles */
 List&lt;BaseEntity> roles = beUtils.getRoles();
@@ -282,10 +282,10 @@ for (BaseEntity role : roles) {
 }
 
 /* Send Linked Companies */
-if (currentUser != null) {
+if (current != null) {
 
         /* Try Host Cpy */
-        String hostCompanyCode = currentUser.getValue(&quot;LNK_HOST_COMPANY&quot;, null);
+        String hostCompanyCode = current.getValue(&quot;LNK_HOST_COMPANY&quot;, null);
         System.out.println(&quot;hostCompanyCode = &quot; + hostCompanyCode);
 
         if (hostCompanyCode != null) {
@@ -296,7 +296,7 @@ if (currentUser != null) {
                 System.out.println(&quot;hostCompanyBe :: &quot; + hostCompanyBe);
 
                 if (hostCompanyBe != null) {
-                        VertxUtils.publish(currentUser,&quot;webcmds&quot;,hostCompanyBe, &quot;COMPANY&quot;, userToken.getToken());
+                        VertxUtils.publish(current,&quot;webcmds&quot;,hostCompanyBe, &quot;COMPANY&quot;, Token.getToken());
                 } else {
                     System.out.println(&quot;ERROR: Null hostCompanyBe&quot;);
                 }
@@ -304,7 +304,7 @@ if (currentUser != null) {
             System.out.println(&quot;ERROR: Null hostCompanyCode&quot;);
         }
         /* Try Edu Pro */
-        String eduProviderCode = currentUser.getValue(&quot;LNK_EDU_PROVIDER&quot;, null);
+        String eduProviderCode = current.getValue(&quot;LNK_EDU_PROVIDER&quot;, null);
         System.out.println(&quot;eduProviderCode = &quot; + eduProviderCode);
 
         if (eduProviderCode != null) {
@@ -315,7 +315,7 @@ if (currentUser != null) {
                 System.out.println(&quot;eduProviderBe :: &quot; + eduProviderBe);
 
                 if (eduProviderBe != null) {
-                        VertxUtils.publish(currentUser,&quot;webcmds&quot;,eduProviderBe, &quot;COMPANY&quot;, userToken.getToken());
+                        VertxUtils.publish(current,&quot;webcmds&quot;,eduProviderBe, &quot;COMPANY&quot;, Token.getToken());
                 } else {
                     System.out.println(&quot;ERROR: Null eduProviderBe&quot;);
                 }
@@ -323,7 +323,7 @@ if (currentUser != null) {
             System.out.println(&quot;ERROR: Null eduProviderCode&quot;);
         }
         /* Try Agency */
-        String agencyCode = currentUser.getValue(&quot;LNK_AGENCY&quot;, null);
+        String agencyCode = current.getValue(&quot;LNK_AGENCY&quot;, null);
         System.out.println(&quot;agencyCode = &quot; + agencyCode);
 
         if (agencyCode != null) {
@@ -334,7 +334,7 @@ if (currentUser != null) {
                 System.out.println(&quot;agencyBe :: &quot; + agencyBe);
 
                 if (agencyBe != null) {
-                        VertxUtils.publish(currentUser,&quot;webcmds&quot;,agencyBe, &quot;COMPANY&quot;, userToken.getToken());
+                        VertxUtils.publish(current,&quot;webcmds&quot;,agencyBe, &quot;COMPANY&quot;, Token.getToken());
                 } else {
                     System.out.println(&quot;ERROR: Null agencyBe&quot;);
                 }
@@ -342,8 +342,8 @@ if (currentUser != null) {
             System.out.println(&quot;ERROR: Null agencyCode&quot;);
         }
 
-		/* Check if user is an Intern and send the connected Agent */
-		Optional&lt;EntityAttribute> role = currentUser.getHighestEA(&quot;PRI_IS_&quot;);
+		/* Check if  is an Intern and send the connected Agent */
+		Optional&lt;EntityAttribute> role = current.getHighestEA(&quot;PRI_IS_&quot;);
 		if (role.isPresent()) {
 			String roleName = role.get().getAttributeCode();
 			roleName = roleName.substring(&quot;PRI_IS_&quot;.length());
@@ -351,7 +351,7 @@ if (currentUser != null) {
 
 			if (roleName.equals(&quot;INTERN&quot;)) {
 				System.out.println(&quot;roleName = &quot; + roleName);
-				String agentCode = currentUser.getValue(&quot;LNK_AGENT&quot;, null);
+				String agentCode = current.getValue(&quot;LNK_AGENT&quot;, null);
 
 				if (agentCode != null) {
 					System.out.println(&quot;agentCode  :: &quot; + agentCode);
@@ -362,7 +362,12 @@ if (currentUser != null) {
 					System.out.println(&quot;agentBe :: &quot; + agentBe);
 
 					if (agentBe != null) {
-						VertxUtils.publish(currentUser,&quot;webcmds&quot;, agentBe, &quot;AGENT&quot;, userToken.getToken());
+						/* VertxUtils.publish(current,&quot;webcmds&quot;, agentBe, &quot;AGENT&quot;, Token.getToken()); */
+
+						QDataBaseEntityMessage agentBeMsg = new QDataBaseEntityMessage(agentBe);
+						agentBeMsg.setToken(userToken.getToken());
+						VertxUtils.writeMsg(&quot;webcmds&quot;, JsonUtils.toJson(agentBeMsg));
+
 					} else {
 						System.out.println(&quot;ERROR: Null agentBe&quot;);
 					}
@@ -373,7 +378,10 @@ if (currentUser != null) {
 				System.out.println(&quot;Not an Intern. Role is &quot; + roleName);
 			}
 		}
-}</bpmn2:script>
+}
+
+
+</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:task id="Task_1" drools:taskName="RuleFlowGroup" drools:displayName="RunRuleFlowGroup" drools:icon="icons/icon-info.gif" name="SendActionCaches">
       <bpmn2:extensionElements>
