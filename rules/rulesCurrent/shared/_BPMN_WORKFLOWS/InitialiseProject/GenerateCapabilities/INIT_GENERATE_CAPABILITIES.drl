@@ -315,6 +315,10 @@ rule "INIT_GENERATE_CAPABILITIES"
 		capabilityUtils.addCapability("SBE_IN_PROGRESS", "In Progress");
 		capabilityUtils.addCapability("SBE_COMPLETION", "Completion");
 
+		/* A Cap For Handling Other Roles */
+        capabilityUtils.addCapability( "TYPE_MENTEE", "Mentee");
+        capabilityUtils.addCapability( "TYPE_MENTOR", "Mentor");
+
 		capabilityUtils.addCapability( "WEB_ONLY", "Public Web Use");
 
 		capabilityUtils.addCapability( "DOWNLOAD_OHNS_AGREEMENT_DOC", "Download OHNS Agreement Document");
