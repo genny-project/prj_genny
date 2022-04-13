@@ -228,33 +228,33 @@ VertxUtils.publish(currentUser,&quot;webcmds&quot;,project, &quot;PROJECT&quot;,
       <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
       <bpmn2:script>BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
-System.out.println(&quot;authInit: Sending  - &quot;+currentUser);
-System.out.println(&quot;authinit: Sending  subs - &quot;+currentUser.getValue(&quot;PRI_SUBSCRIPTIONS&quot;,&quot;&quot;));
+System.out.println(&quot;authInit: Sending user - &quot;+currentUser);
+System.out.println(&quot;authinit: Sending user subs - &quot;+currentUser.getValue(&quot;PRI_SUBSCRIPTIONS&quot;,&quot;&quot;));
 
 
-/* Check if this  has logged in */
+/* Check if this user has logged in */
 /*
 Optional&lt;Boolean> optHasLoggedIn = currentUser.getValue(&quot;PRI_HAS_LOGGED_IN&quot;);
 if ((!optHasLoggedIn.isPresent()) || (!optHasLoggedIn.get())) {
          System.out.println(&quot;auth_init: currentUser has never logged in before&quot;);
 	List&lt;Answer> answers = new CopyOnWriteArrayList&lt;Answer>();
-	Answer hasLoggedInAnswer = new Answer(beUtils.getGennyToken().getCode(),currentUser.getCode(), &quot;PRI_HAS_LOGGED_IN&quot;, &quot;TRUE&quot;);
+	Answer hasLoggedInAnswer = new Answer(beUtils.getGennyToken().getUserCode(),currentUser.getCode(), &quot;PRI_HAS_LOGGED_IN&quot;, &quot;TRUE&quot;);
 	currentUser = beUtils.updateBaseEntity(currentUser, hasLoggedInAnswer,BaseEntity.class);
 	answers.add(hasLoggedInAnswer);
 	beUtils.saveAnswers(answers,false);
 	kcontext.setVariable(&quot;currentUser&quot;,currentUser);
  }
 */
-/* BaseEntity currentUser = QwandaUtils.getBaseEntityByCodeWithAttributes(userToken.getCode(), userToken.getToken()); */
+/* BaseEntity currentUser = QwandaUtils.getBaseEntityByCodeWithAttributes(userToken.getUserCode(), userToken.getToken()); */
 
 
 currentUser.forcePrivate(&quot;PRI_SUBSCRIPTIONS&quot;,new Boolean(false));
-VertxUtils.publish(currentUser,&quot;webcmds&quot;,currentUser, &quot;&quot;, userToken.getToken());
+VertxUtils.publish(currentUser,&quot;webcmds&quot;,currentUser, &quot;USER&quot;, userToken.getToken());
 currentUser.forcePrivate(&quot;PRI_SUBSCRIPTIONS&quot;,new Boolean(true));
 
-/* Check if role is test and if so then save userToken to cache for junit testing */
+/* Check if role is test and if so then save token to cache for junit testing */
 if (userToken.hasRole(&quot;test&quot;)) {
-    VertxUtils.writeCachedJson(userToken.getRealm(), &quot;userToken:&quot; + userToken.getCode(), userToken.getToken(),
+    VertxUtils.writeCachedJson(userToken.getRealm(), &quot;TOKEN:&quot; + userToken.getUserCode(), userToken.getToken(),
                                             userToken.getToken(),28800);  /* 8 hours expiry TODO */
 }
 /* Send the Roles */
@@ -341,43 +341,6 @@ if (currentUser != null) {
         } else {
             System.out.println(&quot;ERROR: Null agencyCode&quot;);
         }
-
-		/* Check if  is an Intern and send the connected Agent */
-		Optional&lt;EntityAttribute> role = currentUser.getHighestEA(&quot;PRI_IS_&quot;);
-		if (role.isPresent()) {
-			String roleName = role.get().getAttributeCode();
-			roleName = roleName.substring(&quot;PRI_IS_&quot;.length());
-			roleName = roleName.replaceAll(&quot;_&quot;, &quot; &quot;);
-
-			if (roleName.equals(&quot;INTERN&quot;)) {
-				System.out.println(&quot;roleName = &quot; + roleName);
-				String agentCode = currentUser.getValue(&quot;LNK_AGENT&quot;, null);
-
-				if (agentCode != null) {
-					System.out.println(&quot;agentCode  :: &quot; + agentCode);
-					String aCode = agentCode.replace(&quot;\&quot;&quot;, &quot;&quot;).replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;);
-					System.out.println(&quot;aCode  :: &quot; + aCode);
-
-					BaseEntity agentBe = beUtils.getBaseEntityByCode(aCode);
-					System.out.println(&quot;agentBe :: &quot; + agentBe);
-
-					if (agentBe != null) {
-						/* VertxUtils.publish(currentUser,&quot;webcmds&quot;, agentBe, &quot;AGENT&quot;, userToken.getToken()); */
-
-						QDataBaseEntityMessage agentBeMsg = new QDataBaseEntityMessage(agentBe);
-						agentBeMsg.setToken(userToken.getToken());
-						VertxUtils.writeMsg(&quot;webcmds&quot;, JsonUtils.toJson(agentBeMsg));
-
-					} else {
-						System.out.println(&quot;ERROR: Null agentBe&quot;);
-					}
-				} else {
-					System.out.println(&quot;ERROR: Null agentCode&quot;);
-				}
-			} else {
-				System.out.println(&quot;Not an Intern. Role is &quot; + roleName);
-			}
-		}
 }</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:task id="Task_1" drools:taskName="RuleFlowGroup" drools:displayName="RunRuleFlowGroup" drools:icon="icons/icon-info.gif" name="SendActionCaches">
