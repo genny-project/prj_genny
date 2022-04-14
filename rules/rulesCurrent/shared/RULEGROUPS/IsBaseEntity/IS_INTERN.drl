@@ -355,7 +355,7 @@ rule "IS_INTERN"
 				counter ++;
 				if (eligbleInternship.getCode != null) {
 					System.out.println(counter + " -> eligbleInternship.getCode: " +eligbleInternship.getCode());
-					results.add(eligbleInternship.getCode);
+					results.add(eligbleInternship.getCode());
 				} else {
 					System.out.println(counter + " -> eligbleInternship.getCode is NULL");
 				}
