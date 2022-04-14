@@ -347,7 +347,7 @@ rule "IS_INTERN"
 				entities = eligbleInternships.subList(0, 1);
 			}
 
-			System.out.println("Results::  " + results);
+			System.out.println("Results to save on PRI_MATCHED_INTERNSHIPS::  " + results);
 
 			newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHED_INTERNSHIPS", results));
 
