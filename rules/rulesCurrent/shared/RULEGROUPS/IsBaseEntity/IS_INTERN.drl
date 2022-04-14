@@ -360,16 +360,16 @@ rule "IS_INTERN"
 				}
 			}*/
 
-			/*for (int i = 0; i < eligbleInternships.size(); i++) {
+			for (int i = 0; i < eligbleInternships.size(); i++) {
 				if (eligbleInternships[i].getCode != null) {
 					System.out.println(i + " -> eligbleInternships.getCode: " +eligbleInternships[i].getCode());
-					results.add(eligbleInternships[i].getCode);
+					/*results.add(eligbleInternships[i].getCode);*/
 				} else {
 					System.out.println(i + " -> eligbleInternships.getCode is NULL");
 				}
 			}
 
-			System.out.println("Results to save on PRI_MATCHED_INTERNSHIPS::  " + results);
+			/*System.out.println("Results to save on PRI_MATCHED_INTERNSHIPS::  " + results);
 
 			newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHED_INTERNSHIPS", results.toString()));*/
 
