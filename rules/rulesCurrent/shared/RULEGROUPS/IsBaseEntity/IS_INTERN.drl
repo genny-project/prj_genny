@@ -350,7 +350,7 @@ rule "IS_INTERN"
 
 
 			/* Getting Be codes from eligbleInternships */
-			Int counter = 0;
+			Integer counter = 0;
 			for (BaseEntity eligbleInternship : eligbleInternships) {
 				counter ++;
 				if (!eligbleInternship.getCode().isEmpty() || eligbleInternship.getCode() != null) {
@@ -361,7 +361,7 @@ rule "IS_INTERN"
 				}
 			}
 
-			/*for (int i = 0; i < eligbleInternships.size(); i++) {
+			/*for (Integer i = 0; i < eligbleInternships.size(); i++) {
 				if (eligbleInternships[i].getCode != null) {
 					System.out.println(i + " -> eligbleInternships.getCode: " +eligbleInternships[i].getCode());
 					results.add(eligbleInternships[i].getCode);
