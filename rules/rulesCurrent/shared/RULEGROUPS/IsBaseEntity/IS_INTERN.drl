@@ -360,7 +360,7 @@ rule "IS_INTERN"
 				}
 			}*/
 
-			for (int i = 0; i < eligbleInternships.size(); i++) {
+			/*for (int i = 0; i < eligbleInternships.size(); i++) {
 				if (eligbleInternships[i].getCode != null) {
 					System.out.println(i + " -> eligbleInternships.getCode: " +eligbleInternships[i].getCode());
 					results.add(eligbleInternships[i].getCode);
@@ -371,7 +371,7 @@ rule "IS_INTERN"
 
 			System.out.println("Results to save on PRI_MATCHED_INTERNSHIPS::  " + results);
 
-			newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHED_INTERNSHIPS", results.toString()));
+			newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHED_INTERNSHIPS", results.toString()));*/
 
 			/* Send BE to the FE */
 			QDataBaseEntityMessage msg = new QDataBaseEntityMessage(newBe);
