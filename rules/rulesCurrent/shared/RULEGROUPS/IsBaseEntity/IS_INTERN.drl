@@ -376,7 +376,7 @@ rule "IS_INTERN"
 
 			System.out.println("Results to save on PRI_MATCHED_INTERNSHIPS::  " + results);
 
-			newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHED_INTERNSHIPS", results));
+			newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHED_INTERNSHIPS", results.toString()));
 
 			System.out.println("Sending newBe msg via VertxUtils...");
 
