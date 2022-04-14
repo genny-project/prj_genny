@@ -335,7 +335,7 @@ rule "IS_INTERN"
 
 			/*String results = "[]";*/
 			ArrayList<String> results = new ArrayList<String>();
-			ArrayList<BaseEntity> entities = new ArrayList<>();
+			ArrayList<BaseEntity> entities = new ArrayList<BaseEntity>();
 
 			/*if (eligbleInternships.size() >= 3) {
 				results = "[\"" + eligbleInternships.get(0) + "\", " + eligbleInternships.get(1) + "\", " + eligbleInternships.get(2) + "\"]";
@@ -360,7 +360,7 @@ rule "IS_INTERN"
 				}
 			}*/
 
-			for (int i = 0; i < eligbleInternships.length; i++) {
+			for (int i = 0; i < eligbleInternships.size(); i++) {
 				if (eligbleInternships[i].getCode != null) {
 					System.out.println(i + " -> eligbleInternships.getCode: " +eligbleInternships[i].getCode());
 					results.add(eligbleInternships[i].getCode);
