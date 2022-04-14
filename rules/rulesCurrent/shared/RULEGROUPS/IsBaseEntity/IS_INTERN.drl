@@ -299,8 +299,8 @@ rule "IS_INTERN"
 
 		/* Print out nice things*/
 
-		ArrayList<BaseEntity> internships = beUtils.getBaseEntitys(internshipMatch);
-		ArrayList<BaseEntity> eligbleInternships = beUtils.getBaseEntitys(internshipMatch);
+		List<BaseEntity> internships = beUtils.getBaseEntitys(internshipMatch);
+		List<BaseEntity> eligbleInternships = beUtils.getBaseEntitys(internshipMatch);
 
 		try {
 	        System.out.println("The number of matching internships is " + (internships == null ? "NULL" : internships.size()));
@@ -334,8 +334,8 @@ rule "IS_INTERN"
 			System.out.println("Eligble internships: = " +eligbleInternships);
 
 			/*String results = "[]";*/
-			ArrayList<String> results = new ArrayList<String>();
-			ArrayList<BaseEntity> entities = new ArrayList<BaseEntity>();
+			List<String> results = new List<String>();
+			List<BaseEntity> entities = new List<BaseEntity>();
 
 			/*if (eligbleInternships.size() >= 3) {
 				results = "[\"" + eligbleInternships.get(0) + "\", " + eligbleInternships.get(1) + "\", " + eligbleInternships.get(2) + "\"]";
