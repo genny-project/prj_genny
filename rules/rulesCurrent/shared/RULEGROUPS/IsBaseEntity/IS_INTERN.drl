@@ -350,24 +350,25 @@ rule "IS_INTERN"
 
 
 			/* Getting Be codes from eligbleInternships */
-
-			/*for (BaseEntity eligbleInternship : eligbleInternships) {
+			Int counter = 0;
+			for (BaseEntity eligbleInternship : eligbleInternships) {
+				counter ++;
 				if (eligbleInternship.getCode != null) {
-					System.out.println("eligbleInternship.getCode: " +eligbleInternship.getCode());
+					System.out.println(counter + " -> eligbleInternship.getCode: " +eligbleInternship.getCode());
 					results.add(eligbleInternship.getCode);
 				} else {
-					System.out.println("eligbleInternship.getCode is NULL");
+					System.out.println(counter + " -> eligbleInternship.getCode is NULL");
 				}
-			}*/
+			}
 
-			for (int i = 0; i < eligbleInternships.size(); i++) {
+			/*for (int i = 0; i < eligbleInternships.size(); i++) {
 				if (eligbleInternships[i].getCode != null) {
 					System.out.println(i + " -> eligbleInternships.getCode: " +eligbleInternships[i].getCode());
-					/*results.add(eligbleInternships[i].getCode);*/
+					results.add(eligbleInternships[i].getCode);
 				} else {
 					System.out.println(i + " -> eligbleInternships.getCode is NULL");
 				}
-			}
+			}*/
 
 			/*System.out.println("Results to save on PRI_MATCHED_INTERNSHIPS::  " + results);
 
