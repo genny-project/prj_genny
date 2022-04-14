@@ -334,8 +334,8 @@ rule "IS_INTERN"
 			System.out.println("Eligble internships: = " +eligbleInternships);
 
 			/*String results = "[]";*/
-			List<String> results = new List<String>();
-			List<BaseEntity> entities = new List<BaseEntity>();
+			ArrayList<String> results = new ArrayList<String>();
+			ArrayList<BaseEntity> entities = new ArrayList<BaseEntity>();
 
 			/*if (eligbleInternships.size() >= 3) {
 				results = "[\"" + eligbleInternships.get(0) + "\", " + eligbleInternships.get(1) + "\", " + eligbleInternships.get(2) + "\"]";
