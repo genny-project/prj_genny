@@ -353,7 +353,7 @@ rule "IS_INTERN"
 			Int counter = 0;
 			for (BaseEntity eligbleInternship : eligbleInternships) {
 				counter ++;
-				if (eligbleInternship.getCode != null) {
+				if (!eligbleInternship.getCode().isEmpty() || eligbleInternship.getCode() != null) {
 					System.out.println(counter + " -> eligbleInternship.getCode: " +eligbleInternship.getCode());
 					results.add(eligbleInternship.getCode());
 				} else {
