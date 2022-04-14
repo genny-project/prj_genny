@@ -337,7 +337,7 @@ rule "IS_INTERN"
 			ArrayList<String> results = new ArrayList<String>();
 			ArrayList<BaseEntity> entities = new ArrayList<BaseEntity>();
 
-			/*if (eligbleInternships.size() >= 3) {
+			if (eligbleInternships.size() >= 3) {
 				results = "[\"" + eligbleInternships.get(0) + "\", " + eligbleInternships.get(1) + "\", " + eligbleInternships.get(2) + "\"]";
 				entities = eligbleInternships.subList(0, 3);
 			} else if (eligbleInternships.size() == 2) {
@@ -346,14 +346,14 @@ rule "IS_INTERN"
 			} else if (eligbleInternships.size() == 1) {
 				results = "[\"" + eligbleInternships.get(0) + "\"]";
 				entities = eligbleInternships.subList(0, 1);
-			}*/
+			}
 
 
 			/* Getting Be codes from eligbleInternships */
 			Integer counter = 0;
 			for (BaseEntity eligbleInternship : eligbleInternships) {
 				counter ++;
-				if (counter >= 3) {
+				if (counter >= 4) {
 					break;
 				} else {
 					if (!eligbleInternship.getCode().isEmpty() || eligbleInternship.getCode() != null) {
