@@ -338,13 +338,13 @@ rule "IS_INTERN"
 			ArrayList<BaseEntity> entities = new ArrayList<BaseEntity>();
 
 			if (eligbleInternships.size() >= 3) {
-				results = "[\"" + eligbleInternships.get(0) + "\", " + eligbleInternships.get(1) + "\", " + eligbleInternships.get(2) + "\"]";
+				/*results = "[\"" + eligbleInternships.get(0) + "\", " + eligbleInternships.get(1) + "\", " + eligbleInternships.get(2) + "\"]";*/
 				entities = eligbleInternships.subList(0, 3);
 			} else if (eligbleInternships.size() == 2) {
-				results = "[\"" + eligbleInternships.get(0) + "\", " + eligbleInternships.get(1) + "\"]";
+				/*results = "[\"" + eligbleInternships.get(0) + "\", " + eligbleInternships.get(1) + "\"]";*/
 				entities = eligbleInternships.subList(0, 2);
 			} else if (eligbleInternships.size() == 1) {
-				results = "[\"" + eligbleInternships.get(0) + "\"]";
+				/*results = "[\"" + eligbleInternships.get(0) + "\"]";*/
 				entities = eligbleInternships.subList(0, 1);
 			}
 
