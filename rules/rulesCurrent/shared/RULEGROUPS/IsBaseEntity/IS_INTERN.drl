@@ -378,12 +378,15 @@ rule "IS_INTERN"
 
 			newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHED_INTERNSHIPS", results.toString()));
 
+			System.out.println("Sending newBe msg via VertxUtils...");
+
 			/* Send BE to the FE */
 			QDataBaseEntityMessage msg = new QDataBaseEntityMessage(newBe);
 			msg.setToken(userToken.getToken());
 			msg.setReplace(true);
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 
+			System.out.println("Sending entities msg via VertxUtils...");
 
 			QDataBaseEntityMessage msgMatches = new QDataBaseEntityMessage(entities);
 			msgMatches.setToken(userToken.getToken());
