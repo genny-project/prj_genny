@@ -335,7 +335,7 @@ rule "IS_INTERN"
 
 			/*String results = "[]";*/
 			ArrayList<String> results = new ArrayList<String>();
-			ArrayList<BaseEntity> entities = new ArrayList<BaseEntity>();
+			List<BaseEntity> entities = new ArrayList<>();
 
 			if (eligbleInternships.size() >= 3) {
 				/*results = "[\"" + eligbleInternships.get(0) + "\", " + eligbleInternships.get(1) + "\", " + eligbleInternships.get(2) + "\"]";*/
