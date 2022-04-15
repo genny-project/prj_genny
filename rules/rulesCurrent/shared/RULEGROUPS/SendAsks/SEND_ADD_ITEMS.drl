@@ -53,9 +53,9 @@ rule "SEND_ADD_ITEMS"
 			List<Ask> sendCodes = new ArrayList<>();
 
 			for (String key : addItemsMap.keySet()) {
-
+                System.out.println("Key: "+ key);
 				String name = addItemsMap.get(key);
-
+                System.out.println("name: "+ name);
 				if (capabilityUtils.hasCapabilityThroughPriIs("TYPE_"+(key.replace("QA_","")), CapabilityMode.ADD)) {
 
 					System.out.println(drools.getRule().getName()+" Has Permission for " + key);
