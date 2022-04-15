@@ -66,6 +66,8 @@ rule "SEND_ADD_ITEMS"
 
 					sendCodes.add(itemAsk);
 
+				}else{
+                    System.out.println(drools.getRule().getName()+" Doesn't Has Permission for " + key);
 				}
 			}
 
