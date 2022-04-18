@@ -91,8 +91,14 @@ rule "SEND_ADD_ITEMS"
 			QDataAskMessage askMsg = new QDataAskMessage(addItemsAsk);
 			askMsg.setToken(userToken.getToken());
 			VertxUtils.writeMsg("webcmds", askMsg);
-		}
 
+            System.out.println("THREAD SLEEP STARTED");
+
+            Thread.sleep(5000);
+
+            System.out.println("THREAD SLEEP ENDED");
+		}
+		System.out.println(drools.getRule().getName() + " triggered finished");
 		/* SearchEntity searchBE = new SearchEntity("SBE_TEST_INTERNS", "Interns") */
 		/* 	.addSort("PRI_NAME","Name", SearchEntity.Sort.ASC) */
 		/* 	.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%") */
