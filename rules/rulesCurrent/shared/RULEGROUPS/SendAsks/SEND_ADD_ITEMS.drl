@@ -91,6 +91,8 @@ rule "SEND_ADD_ITEMS"
 			QDataAskMessage askMsg = new QDataAskMessage(addItemsAsk);
 			askMsg.setToken(userToken.getToken());
 			VertxUtils.writeMsg("webcmds", askMsg);
+
+
 		}
 		System.out.println(drools.getRule().getName() + " triggered finished");
 		/* SearchEntity searchBE = new SearchEntity("SBE_TEST_INTERNS", "Interns") */
