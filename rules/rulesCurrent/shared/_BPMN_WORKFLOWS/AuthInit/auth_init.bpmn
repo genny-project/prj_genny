@@ -496,7 +496,7 @@ Set&lt;String> subscriptions = (Set&lt;String>)kcontext.getVariable(&quot;string
 System.out.println(&quot;authinit: exit SetSubscriptions - &quot;+subscriptions);
 String jsonSubscriptions = JsonUtils.toJson(subscriptions);
 Attribute attribute = RulesUtils.getAttribute(&quot;PRI_SUBSCRIPTIONS&quot;, userToken.getToken());
-currentUser.addAnswer(new Answer(currentUser,currentUser,attribute,jsonSubscriptions));
+/*currentUser.addAnswer(new Answer(currentUser,currentUser,attribute,jsonSubscriptions));*/
 kcontext.setVariable(&quot;currentUser&quot;,currentUser);
 System.out.println(&quot;authinit: exit SetSubscriptions - &quot;+currentUser.getValue(&quot;PRI_SUBSCRIPTIONS&quot;,&quot;&quot;));
 
