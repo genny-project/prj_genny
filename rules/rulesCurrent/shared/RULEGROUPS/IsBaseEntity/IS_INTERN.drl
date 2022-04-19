@@ -302,9 +302,11 @@ rule "IS_INTERN"
 		List<BaseEntity> internships = beUtils.getBaseEntitys(internshipMatch);
 		List<BaseEntity> eligbleInternships = beUtils.getBaseEntitys(internshipMatch);
 
+		Integer matchingInternshipsCount = 0;
 		try {
 	        System.out.println("The number of matching internships is " + (internships == null ? "NULL" : internships.size()));
 	        if ((internships != null) && (internships.size() > 0)) {
+				matchingInternshipsCount = internships.size();
 		        for (BaseEntity internship : internships) {
 					System.out.println("Matching internship: = " +internship);
 
@@ -377,6 +379,7 @@ rule "IS_INTERN"
 			System.out.println("Results to save on PRI_MATCHED_INTERNSHIPS::  " + results);
 
 			newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHED_INTERNSHIPS", results.toString()));
+			newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHING_INTERNSHIPS_COUNT", matchingInternshipsCount));
 
 			System.out.println("Sending newBe msg via VertxUtils...");
 
