@@ -384,18 +384,32 @@ if (currentUser != null) {
             System.out.println(&quot;Sending MATCHED_INTERNSHIPS list...&quot;);
 
             try {
-                QDataMessage msg = VertxUtils.getObject(userToken.getRealm(), &quot;&quot;, &quot;MATCHED_INTERNSHIPS&quot;, QDataAttributeMessage.class);
+                String matchedInternships = currentUser.getValue(&quot;PRI_MATCHED_INTERNSHIPS&quot;, null);
 
-                if (userToken.getToken()==null) {
-                    System.out.println(&quot;NULL TOKEN IN SENDING ATTRIBUTES&quot;);
+                if (matchedInternships != null) {
+                    System.out.println(&quot;authInit: matchedInternships &quot; + matchedInternships);
+
+                    String[] matchedInternshipsArray = {&quot;BEG_5A7CE1AE-B63F-4492-82FE-136842BFFD07&quot;, &quot;BEG_74599AF2-20CD-47B9-A44C-6F0C8B4ACBF2&quot;, &quot;BEG_9B8206B8-F0B1-48B5-9A07-0CC3DED4&quot;};
+
+                    for (int i = 0; i &lt; matchedInternshipsArray.length; i++) {
+                        BaseEntity matchedInternshipBe = beUtils.getBaseEntityByCode(matchedInternshipsArray[i]);
+                        System.out.println(&quot;authInit: matchedInternshipBe &quot; + matchedInternshipBe);
+
+                        if (matchedInternshipBe != null) {
+                            System.out.println(&quot;authInit: matchedInternshipBeCode &quot; + i + &quot;:: &quot; + matchedInternshipBe.getCode());
+                            VertxUtils.publish(currentUser,&quot;webcmds&quot;, matchedInternshipBe, &quot;MATCHED_INTERNSHIP_&quot; + i.toString(), userToken.getToken());
+                        } else {
+                            System.out.println(&quot;ERROR: Null matchedInternshipBe&quot;);
+                        }
+                    }
+
+                    /*msg.setToken(beUtils.getGennyToken().getToken());
+                    msg.setReplace(true);
+                    msg.setAliasCode(&quot;MATCHED_INTERNSHIPS&quot;);
+                    VertxUtils.writeMsg(&quot;webcmds&quot;,JsonUtils.toJson(msg));*/
                 }
+                /*QDataMessage msg = VertxUtils.getObject(userToken.getRealm(), &quot;&quot;, &quot;MATCHED_INTERNSHIPS&quot;, QDataAttributeMessage.class);*/
 
-                msg.setToken(beUtils.getGennyToken().getToken());
-                msg.setReplace(true);
-                msg.setAliasCode(&quot;MATCHED_INTERNSHIPS&quot;);
-                VertxUtils.writeMsg(&quot;webcmds&quot;,JsonUtils.toJson(msg));
-
-                System.out.println(&quot;authInit: MATCHED_INTERNSHIPS sent &quot; + msg);
 
             } catch (Exception e) {
                 System.out.println(&quot;MATCHED_INTERNSHIPS:: authInit: error! &quot; + e.getMessage());
