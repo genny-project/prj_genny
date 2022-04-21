@@ -386,7 +386,7 @@ if (currentUser != null) {
                 if (userToken.getToken()==null) {
                         System.out.println(&quot;NULL TOKEN IN SENDING ATTRIBUTES&quot;);
                 }*/
-                VertxUtils.publish(currentUser,&quot;webcmds&quot;,agencyBe, &quot;COMPANY&quot;, userToken.getToken());
+                /*VertxUtils.publish(currentUser,&quot;webcmds&quot;,agencyBe, &quot;COMPANY&quot;, userToken.getToken());*/
                 VertxUtils.publish(currentUser, &quot;webcmds&quot;, matchedInternShipsObject, &quot;MATCHED_INTERNSHIPS&quot;, userToken.getToken());
 
                 System.out.println(&quot;authInit: matchedInternShipsMsg:: &quot; + matchedInternShipsObject);
