@@ -397,7 +397,7 @@ if (currentUser != null) {
 
                         if (matchedInternshipBe != null) {
                             System.out.println(&quot;authInit: matchedInternshipBeCode &quot; + i + &quot;:: &quot; + matchedInternshipBe.getCode());
-                            VertxUtils.publish(currentUser,&quot;webcmds&quot;, matchedInternshipBe, &quot;MATCHED_INTERNSHIP_&quot; + i.toString(), userToken.getToken());
+                            VertxUtils.publish(currentUser,&quot;webcmds&quot;, matchedInternshipBe, &quot;MATCHED_INTERNSHIP_&quot; + i, userToken.getToken());
                         } else {
                             System.out.println(&quot;ERROR: Null matchedInternshipBe&quot;);
                         }
