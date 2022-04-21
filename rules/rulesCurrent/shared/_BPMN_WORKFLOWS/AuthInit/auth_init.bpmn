@@ -374,6 +374,22 @@ if (currentUser != null) {
 			} else {
 				System.out.println(&quot;ERROR: Null agentCode&quot;);
 			}
+
+            try {
+                /* String jsonAttribute = (String) CacheUtils.readCache(realm, key); */
+                QDataAttributeMessage msg = VertxUtils.getObject(userToken.getRealm(), &quot;&quot;, &quot;MATCHED_INTERNSHIPS&quot;, QDataAttributeMessage.class);
+                msg.setToken(userToken.getToken());
+                    if (userToken.getToken()==null) {
+                            System.out.println(&quot;NULL TOKEN IN SENDING ATTRIBUTES&quot;);
+                    }
+                msg.setAliasCode(&quot;MATCHED_INTERNSHIPS&quot;);
+                VertxUtils.writeMsg(&quot;webcmds&quot;,JsonUtils.toJson(msg));
+                System.out.println(&quot;authInit: All the def attributes sent &quot; + msg.getItems().length + &quot; of them&quot;);
+
+            } catch (Exception e) {
+                System.out.println(&quot;authInit: No web browser to talk to!&quot;);
+            }
+
 		} else {
 			System.out.println(&quot;Not an Intern. Role is &quot; + roleName);
 		}
