@@ -45,6 +45,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_43" isCollection="false" structureRef="org.apache.commons.lang3.StringUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_42" isCollection="false" structureRef="java.lang.Object"/>
   <bpmn2:itemDefinition id="ItemDefinition_45" isCollection="false" structureRef="io.vertx.core.json.JsonObject"/>
+  <bpmn2:itemDefinition id="ItemDefinition_47" isCollection="false" structureRef="life.genny.qwanda.message.QDataMessage"/>
   <bpmn2:process id="auth_init" drools:packageName="life.genny.jbpm" name="Auth Init" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.qwanda.message.QEventMessage"/>
@@ -91,6 +92,7 @@
       <drools:import name="org.apache.commons.lang3.StringUtils"/>
       <drools:import name="java.lang.Object"/>
       <drools:import name="io.vertx.core.json.JsonObject"/>
+      <drools:import name="life.genny.qwanda.message.QDataMessage"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_1" name="message"/>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_17" name="userToken"/>
@@ -382,21 +384,21 @@ if (currentUser != null) {
             System.out.println(&quot;Sending MATCHED_INTERNSHIPS list...&quot;);
 
             try {
-                QDataAttributeMessage msg = VertxUtils.getObject(userToken.getRealm(), &quot;&quot;, &quot;MATCHED_INTERNSHIPS&quot;, QDataAttributeMessage.class);
+                QDataMessage msg = VertxUtils.getObject(userToken.getRealm(), &quot;&quot;, &quot;MATCHED_INTERNSHIPS&quot;, QDataAttributeMessage.class);
 
                 if (userToken.getToken()==null) {
                     System.out.println(&quot;NULL TOKEN IN SENDING ATTRIBUTES&quot;);
                 }
 
-                msg.setToken(userToken.getToken());
+                msg.setToken(beUtils.getGennyToken().getToken());
                 msg.setReplace(true);
                 msg.setAliasCode(&quot;MATCHED_INTERNSHIPS&quot;);
                 VertxUtils.writeMsg(&quot;webcmds&quot;,JsonUtils.toJson(msg));
-                
+
                 System.out.println(&quot;authInit: MATCHED_INTERNSHIPS sent &quot; + msg.getItems().length + &quot; of them&quot;);
 
             } catch (Exception e) {
-                System.out.println(&quot;MATCHED_INTERNSHIPS:: authInit: No web browser to talk to!&quot; + e.getMessage());
+                System.out.println(&quot;MATCHED_INTERNSHIPS:: authInit: error! &quot; + e.getMessage());
             }
 
 		} else {
