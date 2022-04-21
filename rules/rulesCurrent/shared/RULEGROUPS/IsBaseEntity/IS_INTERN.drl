@@ -378,7 +378,10 @@ rule "IS_INTERN"
 
 			String resultsString = "";
 
-			resultsString = "[\\"" + results.get(0) + "\", " + results.get(1) + "\", " + results.get(2) + "\"]";
+			resultsString = "[\" + "\\"" + results.get(0) + "\", " + results.get(1) + "\", " + results.get(2) + "\"]";
+
+			resultsString = "[\" + BEG_F871E2F9-FF30-4B42-82AC-0D4781B407C1 + "\", " + BEG_CE9440C8-B56D-4FE2-BBE9-7F490C41 + "\", " + BEG_B28E783F-077D-4F89-831C-54E49A9C279D + "\"]";
+
 
 			System.out.println("Results to save on PRI_MATCHED_INTERNSHIPS::  " + resultsString);
 
