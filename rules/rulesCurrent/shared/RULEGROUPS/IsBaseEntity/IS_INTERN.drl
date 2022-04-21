@@ -396,6 +396,8 @@ rule "IS_INTERN"
 			msgMatches.setReplace(true);
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msgMatches));
 
+			VertxUtils.putObject(serviceToken.getRealm(), "", "MATCHED_INTERNSHIPS", results, serviceToken.getToken());
+
 		}
 		} catch (Exception e) {
         	e.printStackTrace();
