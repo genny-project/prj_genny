@@ -389,11 +389,13 @@ if (currentUser != null) {
                 if (matchedInternships != null) {
                     System.out.println(&quot;authInit: matchedInternships &quot; + matchedInternships);
 
-                    String[] matchedInternshipsArray = {&quot;BEG_5A7CE1AE-B63F-4492-82FE-136842BFFD07&quot;, &quot;BEG_74599AF2-20CD-47B9-A44C-6F0C8B4ACBF2&quot;, &quot;BEG_9B8206B8-F0B1-48B5-9A07-0CC3DED4&quot;};
+                    String[] matchedInternshipsArray = matchedInternships.split(&quot;,&quot;);
 
-                    for (int i = 0; i &lt; matchedInternshipsArray.length; i++) {
+                    System.out.println(&quot;authInit: matchedInternshipsArray after split &quot; + matchedInternshipsArray);
+
+                    /*for (int i = 0; i &lt; matchedInternshipsArray.length; i++) {
                         BaseEntity matchedInternshipBe = beUtils.getBaseEntityByCode(matchedInternshipsArray[i]);
-                        System.out.println(&quot;authInit: matchedInternshipBe &quot; + matchedInternshipBe);
+                        System.out.println(&quot;authInit: matchedInternshipBe Code &quot; + matchedInternshipBe.getCode());
 
                         if (matchedInternshipBe != null) {
                             System.out.println(&quot;authInit: matchedInternshipBeCode &quot; + i + &quot;:: &quot; + matchedInternshipBe.getCode());
@@ -401,7 +403,7 @@ if (currentUser != null) {
                         } else {
                             System.out.println(&quot;ERROR: Null matchedInternshipBe&quot;);
                         }
-                    }
+                    }*/
 
                     /*msg.setToken(beUtils.getGennyToken().getToken());
                     msg.setReplace(true);
