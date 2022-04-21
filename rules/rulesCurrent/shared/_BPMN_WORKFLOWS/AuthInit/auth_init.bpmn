@@ -382,20 +382,18 @@ if (currentUser != null) {
             System.out.println(&quot;Sending MATCHED_INTERNSHIPS list...&quot;);
 
             try {
-                /* String jsonAttribute = (String) CacheUtils.readCache(realm, key); */
-                Object matchedInternShipsObject = VertxUtils.getObject(userToken.getRealm(), &quot;&quot;, &quot;MATCHED_INTERNSHIPS&quot;, QDataAttributeMessage.class);
-                /*matchedInternShipsMsg.setToken(userToken.getToken());
+                QDataAttributeMessage msg = VertxUtils.getObject(userToken.getRealm(), &quot;&quot;, &quot;MATCHED_INTERNSHIPS&quot;, QDataAttributeMessage.class);
+
                 if (userToken.getToken()==null) {
-                        System.out.println(&quot;NULL TOKEN IN SENDING ATTRIBUTES&quot;);
-                }*/
-                /*VertxUtils.publish(currentUser,&quot;webcmds&quot;,agencyBe, &quot;COMPANY&quot;, userToken.getToken());*/
-                JsonObject res = VertxUtils.publish(currentUser, &quot;webcmds&quot;, matchedInternShipsObject, &quot;MATCHED_INTERNSHIPS&quot;, userToken.getToken());
+                    System.out.println(&quot;NULL TOKEN IN SENDING ATTRIBUTES&quot;);
+                }
 
-                System.out.println(&quot;authInit: matchedInternShipsMsg:: &quot; + matchedInternShipsObject + &quot; res: &quot; + res);
-
-                /*matchedInternShipsMsg.setAliasCode(&quot;MATCHED_INTERNSHIPS&quot;);
-                VertxUtils.writeMsg(&quot;webcmds&quot;, JsonUtils.toJson(matchedInternShipsMsg));
-                System.out.println(&quot;authInit: MATCHED_INTERNSHIPS sent &quot; + matchedInternShipsMsg.getItems().length + &quot; of them&quot;);*/
+                msg.setToken(userToken.getToken());
+                msg.setReplace(true);
+                msg.setAliasCode(&quot;MATCHED_INTERNSHIPS&quot;);
+                VertxUtils.writeMsg(&quot;webcmds&quot;,JsonUtils.toJson(msg));
+                
+                System.out.println(&quot;authInit: MATCHED_INTERNSHIPS sent &quot; + msg.getItems().length + &quot; of them&quot;);
 
             } catch (Exception e) {
                 System.out.println(&quot;MATCHED_INTERNSHIPS:: authInit: No web browser to talk to!&quot; + e.getMessage());
