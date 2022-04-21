@@ -393,18 +393,19 @@ if (currentUser != null) {
 
                     for (int i = 0; i &lt; matchedInternshipsArray.length; i++) {
                         System.out.println(&quot;authInit: matchedInternshipsArray after split &quot; + i + &quot; &lt;-> &quot; + matchedInternshipsArray[i]);
-
-                        BaseEntity matchedInternshipBe = beUtils.getBaseEntityByCode(matchedInternshipsArray[i]);
-                        System.out.println(&quot;authInit: matchedInternshipBe Code &quot; + i + &quot; &quot; + matchedInternshipBe.getCode());
-
-
-                        /*if (matchedInternshipBe != null) {
-                            System.out.println(&quot;authInit: matchedInternshipBeCode &quot; + i + &quot;:: &quot; + matchedInternshipBe.getCode());
-                            VertxUtils.publish(currentUser,&quot;webcmds&quot;, matchedInternshipBe, &quot;MATCHED_INTERNSHIP_&quot; + i, userToken.getToken());
-                        } else {
-                            System.out.println(&quot;ERROR: Null matchedInternshipBe&quot;);
-                        }*/
                     }
+
+                    BaseEntity matchedInternshipBe1 = beUtils.getBaseEntityByCode(matchedInternshipsArray[0]);
+                    System.out.println(&quot;authInit: MATCHED_INTERNSHIP_1 &quot; + matchedInternshipBe1.getCode());
+                    VertxUtils.publish(currentUser,&quot;webcmds&quot;, matchedInternshipBe1, &quot;MATCHED_INTERNSHIP_1&quot;, userToken.getToken());
+
+                    BaseEntity matchedInternshipBe2 = beUtils.getBaseEntityByCode(matchedInternshipsArray[1]);
+                    System.out.println(&quot;authInit: MATCHED_INTERNSHIP_2 &quot; + matchedInternshipBe2.getCode());
+                    VertxUtils.publish(currentUser,&quot;webcmds&quot;, matchedInternshipBe2, &quot;MATCHED_INTERNSHIP_2&quot;, userToken.getToken());
+
+                    BaseEntity matchedInternshipBe3 = beUtils.getBaseEntityByCode(matchedInternshipsArray[2]);
+                    System.out.println(&quot;authInit: MATCHED_INTERNSHIP_3 &quot; + matchedInternshipBe3.getCode());
+                    VertxUtils.publish(currentUser,&quot;webcmds&quot;, matchedInternshipBe3, &quot;MATCHED_INTERNSHIP_3&quot;, userToken.getToken());
 
                     /*msg.setToken(beUtils.getGennyToken().getToken());
                     msg.setReplace(true);
