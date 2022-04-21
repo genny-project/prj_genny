@@ -378,7 +378,7 @@ rule "IS_INTERN"
 
 			String resultsString = "";
 
-			resultsString = "[\"" + results.get(0) + "\", " + results.get(1) + "\", " + results.get(2) + "\"]";
+			resultsString = "[\\"" + results.get(0) + "\", " + results.get(1) + "\", " + results.get(2) + "\"]";
 
 			System.out.println("Results to save on PRI_MATCHED_INTERNSHIPS::  " + resultsString);
 
