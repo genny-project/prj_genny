@@ -302,9 +302,11 @@ rule "IS_INTERN"
 		List<BaseEntity> internships = beUtils.getBaseEntitys(internshipMatch);
 		List<BaseEntity> eligbleInternships = beUtils.getBaseEntitys(internshipMatch);
 
+		Integer matchingInternshipsCount = 0;
 		try {
 	        System.out.println("The number of matching internships is " + (internships == null ? "NULL" : internships.size()));
 	        if ((internships != null) && (internships.size() > 0)) {
+				matchingInternshipsCount = internships.size();
 		        for (BaseEntity internship : internships) {
 					System.out.println("Matching internship: = " +internship);
 
@@ -333,24 +335,57 @@ rule "IS_INTERN"
 			Collections.shuffle(eligbleInternships);
 			System.out.println("Eligble internships: = " +eligbleInternships);
 
-			String results = "[]";
+			/*String results = "[]";*/
+			ArrayList<String> results = new ArrayList<String>();
 			List<BaseEntity> entities = new ArrayList<>();
 
 			if (eligbleInternships.size() >= 3) {
-				results = "[\"" + eligbleInternships.get(0) + "\", " + eligbleInternships.get(1) + "\", " + eligbleInternships.get(2) + "\"]";
+				/*results = "[\"" + eligbleInternships.get(0) + "\", " + eligbleInternships.get(1) + "\", " + eligbleInternships.get(2) + "\"]";*/
 				entities = eligbleInternships.subList(0, 3);
 			} else if (eligbleInternships.size() == 2) {
-				results = "[\"" + eligbleInternships.get(0) + "\", " + eligbleInternships.get(1) + "\"]";
+				/*results = "[\"" + eligbleInternships.get(0) + "\", " + eligbleInternships.get(1) + "\"]";*/
 				entities = eligbleInternships.subList(0, 2);
 			} else if (eligbleInternships.size() == 1) {
-				results = "[\"" + eligbleInternships.get(0) + "\"]";
+				/*results = "[\"" + eligbleInternships.get(0) + "\"]";*/
 				entities = eligbleInternships.subList(0, 1);
 			}
 
-			System.out.println("Results::  " + results);
 
-			newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHED_INTERNSHIPS", results));
-			newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHING_INTERNSHIPS_COUNT", internships.size()));
+			/* Getting Be codes from eligbleInternships */
+			Integer counter = 0;
+			for (BaseEntity eligbleInternship : eligbleInternships) {
+				counter ++;
+				if (counter >= 4) {
+					break;
+				} else {
+					if (!eligbleInternship.getCode().isEmpty() || eligbleInternship.getCode() != null) {
+						System.out.println(counter + " -> eligbleInternship.getCode: " +eligbleInternship.getCode());
+						results.add(eligbleInternship.getCode());
+					} else {
+						System.out.println(counter + " -> eligbleInternship.getCode is NULL");
+					}
+				}
+			}
+
+			/*for (Integer i = 0; i < eligbleInternships.size(); i++) {
+				if (eligbleInternships[i].getCode != null) {
+					System.out.println(i + " -> eligbleInternships.getCode: " +eligbleInternships[i].getCode());
+					results.add(eligbleInternships[i].getCode);
+				} else {
+					System.out.println(i + " -> eligbleInternships.getCode is NULL");
+				}
+			}*/
+
+			String resultsString = "";
+
+			resultsString = "[\"" + results.get(0) + "\", " + results.get(1) + "\", " + results.get(2) + "\"]";
+
+			System.out.println("Results to save on PRI_MATCHED_INTERNSHIPS::  " + resultsString);
+
+			newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHED_INTERNSHIPS", resultsString));
+			newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHING_INTERNSHIPS_COUNT", matchingInternshipsCount));
+
+			System.out.println("Sending newBe msg via VertxUtils...");
 
 			/* Send BE to the FE */
 			QDataBaseEntityMessage msg = new QDataBaseEntityMessage(newBe);
@@ -358,11 +393,14 @@ rule "IS_INTERN"
 			msg.setReplace(true);
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
 
+			System.out.println("Sending entities msg via VertxUtils... -> " + entities);
 
 			QDataBaseEntityMessage msgMatches = new QDataBaseEntityMessage(entities);
 			msgMatches.setToken(userToken.getToken());
 			msgMatches.setReplace(true);
 			VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msgMatches));
+
+			VertxUtils.putObject(serviceToken.getRealm(), "", "MATCHED_INTERNSHIPS", results, serviceToken.getToken());
 
 		}
 		} catch (Exception e) {
@@ -371,8 +409,7 @@ rule "IS_INTERN"
 
 		/* ================================================================= */
 
-
-
 		retract(newBe);
 
+		System.out.println("End of " + drools.getRule().getName());
 end
