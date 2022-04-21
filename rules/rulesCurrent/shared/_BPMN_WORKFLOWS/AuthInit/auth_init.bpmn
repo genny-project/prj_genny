@@ -375,6 +375,8 @@ if (currentUser != null) {
 				System.out.println(&quot;ERROR: Null agentCode&quot;);
 			}
 
+            System.out.println(&quot;Sending MATCHED_INTERNSHIPS list...&quot;);
+
             try {
                 /* String jsonAttribute = (String) CacheUtils.readCache(realm, key); */
                 QDataAttributeMessage matchedInternShipsMsg = VertxUtils.getObject(userToken.getRealm(), &quot;&quot;, &quot;MATCHED_INTERNSHIPS&quot;, QDataAttributeMessage.class);
@@ -383,12 +385,14 @@ if (currentUser != null) {
                         System.out.println(&quot;NULL TOKEN IN SENDING ATTRIBUTES&quot;);
                 }
 
+                VertxUtils.publish(currentUser, &quot;webcmds&quot;, matchedInternShipsMsg, &quot;MATCHED_INTERNSHIPS&quot;, userToken.getToken());
+
                 matchedInternShipsMsg.setAliasCode(&quot;MATCHED_INTERNSHIPS&quot;);
                 VertxUtils.writeMsg(&quot;webcmds&quot;, JsonUtils.toJson(matchedInternShipsMsg));
                 System.out.println(&quot;authInit: MATCHED_INTERNSHIPS sent &quot; + matchedInternShipsMsg.getItems().length + &quot; of them&quot;);
 
             } catch (Exception e) {
-                System.out.println(&quot;authInit: No web browser to talk to!&quot;);
+                System.out.println(&quot;MATCHED_INTERNSHIPS:: authInit: No web browser to talk to!&quot; + e.getMessage());
             }
 
 		} else {
