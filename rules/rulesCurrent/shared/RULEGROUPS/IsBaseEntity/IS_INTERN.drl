@@ -376,9 +376,13 @@ rule "IS_INTERN"
 				}
 			}*/
 
-			System.out.println("Results to save on PRI_MATCHED_INTERNSHIPS::  " + results);
+			String resultsString = "";
 
-			newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHED_INTERNSHIPS", results.toString()));
+			resultsString = "[\"" + results.get(0) + "\", " + results.get(1) + "\", " + results.get(2) + "\"]";
+
+			System.out.println("Results to save on PRI_MATCHED_INTERNSHIPS::  " + resultsString);
+
+			newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHED_INTERNSHIPS", resultsString));
 			newBe = beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_MATCHING_INTERNSHIPS_COUNT", matchingInternshipsCount));
 
 			System.out.println("Sending newBe msg via VertxUtils...");
