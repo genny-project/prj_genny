@@ -389,16 +389,14 @@ if (currentUser != null) {
                 if (matchedInternships != null) {
                     System.out.println(&quot;authInit: matchedInternships &quot; + matchedInternships);
 
-                    String[] matchedInternshipsArray = matchedInternships.split(&quot;,&quot;);
+                    String[] matchedInternshipsArray = matchedInternships.replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;).split(&quot;,&quot;);
 
                     for (int i = 0; i &lt; matchedInternshipsArray.length; i++) {
                         System.out.println(&quot;authInit: matchedInternshipsArray after split &quot; + i + &quot; &lt;-> &quot; + matchedInternshipsArray[i]);
 
-                    }
-
-                    /*for (int i = 0; i &lt; matchedInternshipsArray.length; i++) {
                         BaseEntity matchedInternshipBe = beUtils.getBaseEntityByCode(matchedInternshipsArray[i]);
                         System.out.println(&quot;authInit: matchedInternshipBe Code &quot; + matchedInternshipBe.getCode());
+
 
                         if (matchedInternshipBe != null) {
                             System.out.println(&quot;authInit: matchedInternshipBeCode &quot; + i + &quot;:: &quot; + matchedInternshipBe.getCode());
@@ -406,7 +404,7 @@ if (currentUser != null) {
                         } else {
                             System.out.println(&quot;ERROR: Null matchedInternshipBe&quot;);
                         }
-                    }*/
+                    }
 
                     /*msg.setToken(beUtils.getGennyToken().getToken());
                     msg.setReplace(true);
