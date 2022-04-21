@@ -391,7 +391,10 @@ if (currentUser != null) {
 
                     String[] matchedInternshipsArray = matchedInternships.split(&quot;,&quot;);
 
-                    System.out.println(&quot;authInit: matchedInternshipsArray after split &quot; + matchedInternshipsArray);
+                    for (int i = 0; i &lt; matchedInternshipsArray.length; i++) {
+                        System.out.println(&quot;authInit: matchedInternshipsArray after split &quot; + i + &quot; &lt;-> &quot; + matchedInternshipsArray[i]);
+
+                    }
 
                     /*for (int i = 0; i &lt; matchedInternshipsArray.length; i++) {
                         BaseEntity matchedInternshipBe = beUtils.getBaseEntityByCode(matchedInternshipsArray[i]);
