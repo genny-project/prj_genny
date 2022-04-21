@@ -44,6 +44,7 @@
   <bpmn2:itemDefinition id="ItemDefinition_40" isCollection="false" structureRef="life.genny.qwanda.attribute.EntityAttribute"/>
   <bpmn2:itemDefinition id="ItemDefinition_43" isCollection="false" structureRef="org.apache.commons.lang3.StringUtils"/>
   <bpmn2:itemDefinition id="ItemDefinition_42" isCollection="false" structureRef="java.lang.Object"/>
+  <bpmn2:itemDefinition id="ItemDefinition_45" isCollection="false" structureRef="io.vertx.core.json.JsonObject"/>
   <bpmn2:process id="auth_init" drools:packageName="life.genny.jbpm" name="Auth Init" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.qwanda.message.QEventMessage"/>
@@ -89,6 +90,7 @@
       <drools:import name="life.genny.qwanda.attribute.EntityAttribute"/>
       <drools:import name="org.apache.commons.lang3.StringUtils"/>
       <drools:import name="java.lang.Object"/>
+      <drools:import name="io.vertx.core.json.JsonObject"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="message" itemSubjectRef="ItemDefinition_1" name="message"/>
     <bpmn2:property id="userToken" itemSubjectRef="ItemDefinition_17" name="userToken"/>
@@ -387,9 +389,9 @@ if (currentUser != null) {
                         System.out.println(&quot;NULL TOKEN IN SENDING ATTRIBUTES&quot;);
                 }*/
                 /*VertxUtils.publish(currentUser,&quot;webcmds&quot;,agencyBe, &quot;COMPANY&quot;, userToken.getToken());*/
-                VertxUtils.publish(currentUser, &quot;webcmds&quot;, matchedInternShipsObject, &quot;MATCHED_INTERNSHIPS&quot;, userToken.getToken());
+                JsonObject res = VertxUtils.publish(currentUser, &quot;webcmds&quot;, matchedInternShipsObject, &quot;MATCHED_INTERNSHIPS&quot;, userToken.getToken());
 
-                System.out.println(&quot;authInit: matchedInternShipsMsg:: &quot; + matchedInternShipsObject);
+                System.out.println(&quot;authInit: matchedInternShipsMsg:: &quot; + matchedInternShipsObject + &quot; res: &quot; + res);
 
                 /*matchedInternShipsMsg.setAliasCode(&quot;MATCHED_INTERNSHIPS&quot;);
                 VertxUtils.writeMsg(&quot;webcmds&quot;, JsonUtils.toJson(matchedInternShipsMsg));
