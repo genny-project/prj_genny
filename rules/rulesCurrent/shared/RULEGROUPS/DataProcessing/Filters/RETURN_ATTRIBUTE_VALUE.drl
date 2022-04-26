@@ -41,13 +41,13 @@ rule "RETURN_ATTRIBUTE_VALUE"
 		System.out.println("value = " + value);
 
 		BaseEntity be = VertxUtils.getObject(userToken.getRealm(), "", targetCode, BaseEntity.class,
-				userToken.getToken());
+				userToken);
 		if (be != null) {
 
 			be.setRealm(userToken.getRealm());
 
 			try {
-				Attribute att = RulesUtils.getAttribute(attributeCode, userToken.getToken());
+				Attribute att = RulesUtils.getAttribute(attributeCode, userToken);
 				be.addAttribute(att);
 				be.setValue(att, value);
 			} catch (Exception e) {

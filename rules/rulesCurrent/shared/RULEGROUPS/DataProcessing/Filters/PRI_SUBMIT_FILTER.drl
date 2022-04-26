@@ -42,7 +42,7 @@ rule "PRI_SUBMIT_FILTER"
 			System.out.println("targetCode = " + targetCode);
 	
 			/* Retrieve the target SBE */
-			SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", targetCode, SearchEntity.class, serviceToken.getToken());
+			SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", targetCode, SearchEntity.class, serviceToken);
 			if (searchBE != null) {
 				searchBE.setFilterIndex(searchBE.getMaximumFilterWeight() + 1.0);
 	 
@@ -182,7 +182,7 @@ rule "PRI_SUBMIT_FILTER"
 				searchBE.addAttribute(attributeFilterValue, 5.0, "");
 
 				VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
-					beUtils.getGennyToken().getToken());
+					beUtils.getGennyToken());
 				System.out.println("Performing search...");
 
 				long totalTime = TableUtils.searchTable(beUtils, searchBE, true);
@@ -200,14 +200,14 @@ rule "PRI_SUBMIT_FILTER"
 			String[] clearAttributes = { "LNK_FILTER_COLUMN", "LNK_FILTER_OPTION", "PRI_FILTER_VALUE_TEXT", "PRI_FILTER_VALUE_DATETIME", "LNK_SELECT_COUNTRY", "LNK_SELECT_STATE" };
 
 			BaseEntity be = VertxUtils.getObject(userToken.getRealm(), "", targetCode, BaseEntity.class,
-					userToken.getToken());
+					userToken);
 			if (be != null) {
 
 				be.setRealm(userToken.getRealm());
 
 				for (String attributeCode : clearAttributes) {
 					try {
-						Attribute att = RulesUtils.getAttribute(attributeCode, userToken.getToken());
+						Attribute att = RulesUtils.getAttribute(attributeCode, userToken);
 						be.addAttribute(att);
 						be.setValue(att, "");
 					} catch (Exception e) {
