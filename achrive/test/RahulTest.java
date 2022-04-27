@@ -298,7 +298,7 @@ public void testTableHeader() {
 
 	 	     searchBE.setRealm(serviceToken.getRealm());
 	  	     
-	  		 VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken.getToken());
+	  		 VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken);
 	 
 		  Answer answer = new Answer(userToken.getUserCode(),userToken.getUserCode(),"PRI_SEARCH_TEXT",searchBarString);
 		  			TableUtils tableUtils = new TableUtils(beUtils);

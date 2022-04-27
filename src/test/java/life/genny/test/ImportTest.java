@@ -392,7 +392,7 @@
 //		int fixed = 0;
 //		try {
 //			resultJson = QwandaUtils.apiPostEntity(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search",
-//					jsonSearchBE, serviceToken.getToken());
+//					jsonSearchBE, serviceToken);
 //			searchtime = System.currentTimeMillis();
 //			QDataBaseEntityMessage resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
 //			/*

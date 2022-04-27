@@ -2255,7 +2255,7 @@ public class AdamTest {
         QDataBaseEntityMessage resultMsg = null;
         try {
             resultJson = QwandaUtils.apiPostEntity(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search",
-                    jsonSearchBE, serviceToken.getToken());
+                    jsonSearchBE, serviceToken);
             resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
             /*
              * System.out.println(drools.getRule().getName()
@@ -2978,7 +2978,7 @@ public class AdamTest {
         BaseEntity result = null;
         try {
             resultJson = QwandaUtils.apiPostEntity(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search",
-                    jsonSearchBE, serviceToken.getToken());
+                    jsonSearchBE, serviceToken);
             searchtime = System.currentTimeMillis();
             QDataBaseEntityMessage resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
             /*
@@ -3034,7 +3034,7 @@ public class AdamTest {
         // try {
         // resultJson = QwandaUtils.apiPostEntity(GennySettings.qwandaServiceUrl +
         // "/qwanda/baseentitys/search",
-        // jsonSearchBE, serviceToken.getToken());
+        // jsonSearchBE, serviceToken);
         // QDataBaseEntityMessage resultMsg = JsonUtils.fromJson(resultJson,
         // QDataBaseEntityMessage.class);
         // BaseEntity[] bes = resultMsg.getItems();
@@ -3139,7 +3139,7 @@ public class AdamTest {
         // try {
         // resultJson = QwandaUtils.apiPostEntity(GennySettings.qwandaServiceUrl +
         // "/qwanda/baseentitys/search",
-        // jsonSearchBE, serviceToken.getToken());
+        // jsonSearchBE, serviceToken);
         // QDataBaseEntityMessage resultMsg = JsonUtils.fromJson(resultJson,
         // QDataBaseEntityMessage.class);
         // BaseEntity[] bes = resultMsg.getItems();
@@ -5557,7 +5557,7 @@ public class AdamTest {
 
             searchBE.setRealm(serviceToken.getRealm());
 
-            VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken.getToken());
+            VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken);
 
             Answer answer = new Answer(userToken.getUserCode(), userToken.getUserCode(), "PRI_SEARCH_TEXT",
                     searchBarString);
