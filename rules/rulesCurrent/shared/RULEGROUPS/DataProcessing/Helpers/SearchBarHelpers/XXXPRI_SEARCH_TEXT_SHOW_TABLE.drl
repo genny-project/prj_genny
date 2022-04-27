@@ -68,7 +68,7 @@ rule "PRI_SEARCH_TEXT_SHOW_TABLE"
 			System.out.println("Got to here 3");
 
 			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
-			beUtils.getGennyToken().getToken());
+			beUtils.getGennyToken());
 			System.out.println("Got to here 4");
 
 			/* show tab-view first */

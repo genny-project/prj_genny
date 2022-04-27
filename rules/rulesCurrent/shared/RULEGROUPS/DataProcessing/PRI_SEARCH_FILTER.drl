@@ -53,7 +53,7 @@ rule "PRI_SEARCH_FILTER"
 	
 			/* Retrieve the target SBE */
 			SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", targetCode, SearchEntity.class,
-				beUtils.getGennyToken().getToken());
+				beUtils.getGennyToken());
 			searchBE.setFilterIndex(searchBE.getMaximumFilterWeight() + 1.0);
 
 			String val = answer.getValue();
@@ -203,7 +203,7 @@ rule "PRI_SEARCH_FILTER"
 			}
 
 			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
-				beUtils.getGennyToken().getToken());
+				beUtils.getGennyToken());
 			System.out.println("Performing search...");
 
 			long totalTime = TableUtils.searchTable(beUtils, searchBE, true);

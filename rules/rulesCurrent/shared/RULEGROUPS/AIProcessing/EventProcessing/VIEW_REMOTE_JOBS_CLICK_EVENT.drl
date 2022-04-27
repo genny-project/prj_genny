@@ -56,7 +56,7 @@ rule "VIEW_REMOTE_JOBS_CLICK_EVENT"
 		        searchBE.addAssociatedColumn("LNK_REMOTE_SERVICE", "PRI_CODE", "Remote Service Code");
 
 				/* cache the session search */
-				VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE, beUtils.getGennyToken().getToken());
+				VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE, beUtils.getGennyToken());
 
 				/* send the table display message out  */
                 /*
@@ -73,7 +73,7 @@ rule "VIEW_REMOTE_JOBS_CLICK_EVENT"
                 msgJson.put("msg_type","CMD_MSG");
                 msgJson.put("option","EXEC");
                 msgJson.put("send",true);
-                msgJson.put("token",beUtils.getGennyToken().getToken());
+                msgJson.put("token",beUtils.getGennyToken());
 
                 VertxUtils.writeMsg("webcmds",msgJson.toString());
 

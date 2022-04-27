@@ -51,7 +51,7 @@ rule "PRI_SEARCH_TEXT_BUCKET_ASSIST_TYPE"
 				TableUtils tableUtils = new TableUtils(beUtils);
 
 				/* Handle Available Intern Search */
-				SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", "SBE_AVAILABLE_INTERNS", SearchEntity.class, beUtils.getGennyToken().getToken());
+				SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", "SBE_AVAILABLE_INTERNS", SearchEntity.class, beUtils.getGennyToken());
 				searchBE.addFilter("LNK_COMP_INTERNSHIP", SearchEntity.StringFilter.EQUAL, "[\""+internshipType+"\"]");
 
 				TableUtils.searchTable(beUtils, searchBE, true);
@@ -63,7 +63,7 @@ rule "PRI_SEARCH_TEXT_BUCKET_ASSIST_TYPE"
 				for (int i = 0; i < codes.length; i++) {
 
 					String searchCode = codes[i];
-					searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", searchCode, SearchEntity.class, beUtils.getGennyToken().getToken());
+					searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", searchCode, SearchEntity.class, beUtils.getGennyToken());
 					searchBE.addFilter("PRI_INTERN_CODE.LNK_COMP_INTERNSHIP", SearchEntity.StringFilter.EQUAL, "[\""+internshipType+"\"]");
 
 					TableUtils.searchTable(beUtils, searchBE, true);

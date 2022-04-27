@@ -37,7 +37,7 @@ rule "FILTER_EVENT"
 		System.out.println("attributeCode = " + attributeCode);
 
 		SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", targetCode, SearchEntity.class,
-				beUtils.getGennyToken().getToken());
+				beUtils.getGennyToken());
 
 		searchBE.removeAttribute(attributeCode);
 

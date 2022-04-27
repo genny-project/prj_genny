@@ -191,7 +191,7 @@ if (!searchCode.equals(&quot;NONE&quot;)) {
 
 String sourceCode = &quot;PER_SOURCE&quot;;
 String targetCode = &quot;PER_TARGET&quot;;
-String token = beUtils.getGennyToken().getToken();
+String token = beUtils.getGennyToken();
 
 if (!askCode.equals(&quot;NONE&quot;)) {
 	QDataAskMessage askMsg = QuestionUtils.getAsks(sourceCode, targetCode, askCode, token);

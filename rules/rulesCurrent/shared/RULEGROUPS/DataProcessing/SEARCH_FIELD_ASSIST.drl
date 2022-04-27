@@ -89,7 +89,7 @@ rule "SEARCH_FIELD_ASSIST"
  		searchBE.setValue(attributeCode,filterValue);
  		System.out.println("About to save searchBE to cache");
 		VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchCode, searchBE,
-				beUtils.getGennyToken().getToken());
+				beUtils.getGennyToken());
 		
 		System.out.println("About to search");
 		long totalTime = TableUtils.searchTable(beUtils,searchBE, true,null,null,false);

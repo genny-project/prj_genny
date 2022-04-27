@@ -86,7 +86,7 @@ rule "QUE_TABLE_PREVIOUS_BTN"
 		searchBE = beUtils.updateBaseEntity(searchBE, pageNumberAnswer,SearchEntity.class);
 			
 		VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
-				beUtils.getGennyToken().getToken());
+				beUtils.getGennyToken());
 		VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "LAST-SEARCH", userToken.getJTI(), searchBE,
 				userToken.getToken());
 		

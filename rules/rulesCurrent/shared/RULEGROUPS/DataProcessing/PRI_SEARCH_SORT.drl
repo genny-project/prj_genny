@@ -44,7 +44,7 @@ rule "PRI_SEARCH_SORT"
 		
 	 
 			SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", targetCode, SearchEntity.class,
-				beUtils.getGennyToken().getToken());
+				beUtils.getGennyToken());
 			
 			
 			/* Update the sorts */
@@ -60,7 +60,7 @@ rule "PRI_SEARCH_SORT"
 				}
 			}
 			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
-				beUtils.getGennyToken().getToken());
+				beUtils.getGennyToken());
 		
 			long totalTime = TableUtils.searchTable(beUtils,searchBE,true, null,null,true);
 			VertxUtils.writeMsgEnd(beUtils.getGennyToken());

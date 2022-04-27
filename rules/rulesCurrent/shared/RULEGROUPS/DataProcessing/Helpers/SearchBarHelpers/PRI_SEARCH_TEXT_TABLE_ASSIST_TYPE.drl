@@ -53,7 +53,7 @@ rule "PRI_SEARCH_TEXT_TABLE_ASSIST_TYPE"
 				TableUtils tableUtils = new TableUtils(beUtils);
 
 				/* Handle Available Intern Search */
-				SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", targetCode, SearchEntity.class, beUtils.getGennyToken().getToken());
+				SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", targetCode, SearchEntity.class, beUtils.getGennyToken());
 				searchBE.addFilter("LNK_COMP_INTERNSHIP", SearchEntity.StringFilter.EQUAL, "[\""+internshipType+"\"]");
 
 				TableUtils.searchTable(beUtils, searchBE, true);

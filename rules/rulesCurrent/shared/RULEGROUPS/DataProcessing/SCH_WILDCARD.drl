@@ -38,10 +38,10 @@ rule "SCH_WILDCARD"
 		
 	
 			SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", targetCode, SearchEntity.class,
-				beUtils.getGennyToken().getToken());
+				beUtils.getGennyToken());
 			searchBE.setWildcard(answer.getValue());
 			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
-				beUtils.getGennyToken().getToken());
+				beUtils.getGennyToken());
 		
 			long totalTime = TableUtils.searchTable(beUtils,searchBE, true);
 
