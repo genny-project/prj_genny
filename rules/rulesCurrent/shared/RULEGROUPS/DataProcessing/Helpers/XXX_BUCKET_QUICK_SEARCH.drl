@@ -77,7 +77,7 @@ rule "BUCKET_QUICK_SEARCH"
 
 						String searchCode = code + "_" + userToken.getJTI().toUpperCase();
 
-						SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", searchCode, SearchEntity.class, serviceToken.getToken());
+						SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", searchCode, SearchEntity.class, serviceToken);
 
 						List<BaseEntity> satisfiedEntityList = new ArrayList<>();
 						

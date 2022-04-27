@@ -25,7 +25,7 @@ rule "SEND_SIDEBAR"
   
 		System.out.println("userCode   ::   " + userToken.getUserCode());
 
-		QDataAskMessage sidebarAsk = QuestionUtils.getAsks("PER_SOURCE", "PER_TARGET", "QUE_PROJECT_SIDEBAR_GRP", serviceToken.getToken());
+		QDataAskMessage sidebarAsk = QuestionUtils.getAsks("PER_SOURCE", "PER_TARGET", "QUE_PROJECT_SIDEBAR_GRP", serviceToken);
 
 		if (sidebarAsk == null) {
 			System.out.println("sidebarAsk is not in cache");

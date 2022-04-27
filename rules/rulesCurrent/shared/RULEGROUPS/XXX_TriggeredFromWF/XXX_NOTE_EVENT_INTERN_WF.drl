@@ -36,7 +36,7 @@ rule "NOTE_EVENT_INTERN_WF"
 				String url = endPoint + "/"+targetCode + "?tags=&pageIndex=0&pageSize=100";
 				System.out.println("url :: " + url);
 
-				String notes = QwandaUtils.sendGET(url, serviceToken.getToken());
+				String notes = QwandaUtils.sendGET(url, serviceToken);
 				System.out.println("notes :: " + notes);
 				
 				

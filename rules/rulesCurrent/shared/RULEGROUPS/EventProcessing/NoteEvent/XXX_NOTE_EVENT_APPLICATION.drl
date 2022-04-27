@@ -112,8 +112,8 @@ rule "NOTE_EVENT_APPLICATION"
 				System.out.println("url :: " + url);
 				System.out.println("url2 :: " + url2);
 
-				String notes = QwandaUtils.sendGET(url, serviceToken.getToken());				
-				String notes2 = QwandaUtils.sendGET(url2, serviceToken.getToken());
+				String notes = QwandaUtils.sendGET(url, serviceToken);				
+				String notes2 = QwandaUtils.sendGET(url2, serviceToken);
 				System.out.println("notes :: " + notes);
 				System.out.println("notes2 :: " + notes2);
 				
