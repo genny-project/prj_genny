@@ -47,6 +47,6 @@ rule "THM_CARD_HEADER_INPUT_FIELD_INTERN"
 		
 		insert(theme);
 
-		VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
+		VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken);
 	 
 end

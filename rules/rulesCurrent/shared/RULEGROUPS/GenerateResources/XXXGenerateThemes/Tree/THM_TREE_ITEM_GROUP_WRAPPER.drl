@@ -47,5 +47,5 @@ rule "THM_TREE_ITEM_GROUP_WRAPPER"
     insert (theme);
 
     VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, 
-    serviceToken.getToken());
+    serviceToken);
 end

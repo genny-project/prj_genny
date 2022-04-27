@@ -47,5 +47,5 @@ rule "THM_DASHBOARD_ITEM_BEHAVIOUR"
 
 			insert(theme);
 
-			VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
+			VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken);
 end

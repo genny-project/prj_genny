@@ -36,7 +36,7 @@ rule "SEND_ADD_ITEMS"
 		System.out.println("userCode   ::   " + userToken.getUserCode());
 
 		/* get the addItems ask from cache */
-		LinkedHashMap<String, String> addItemsMap = VertxUtils.getObject(serviceToken.getRealm(), "", "ADD_ITEMS", LinkedHashMap.class, serviceToken.getToken());
+		LinkedHashMap<String, String> addItemsMap = VertxUtils.getObject(serviceToken.getRealm(), "", "ADD_ITEMS", LinkedHashMap.class, serviceToken);
 
 		if (addItemsMap == null || addItemsMap.isEmpty()) {
 			System.out.println(LOG_STRING + "addItemsMap is NULL or EMPTY");
@@ -94,7 +94,7 @@ rule "SEND_ADD_ITEMS"
 		/* 	.setPageStart(0).setPageSize(20); */
 
 
-		/* String resultJsonStr = QwandaUtils.apiPostEntity2("http://erstwhile-wolf-genny-fyodor-svc:4242/api/search", JsonUtils.toJson(searchBE), serviceToken.getToken(), null); */
+		/* String resultJsonStr = QwandaUtils.apiPostEntity2("http://erstwhile-wolf-genny-fyodor-svc:4242/api/search", JsonUtils.toJson(searchBE), serviceToken, null); */
 		/* System.out.println("RESULT = " + resultJsonStr); */
 
 end

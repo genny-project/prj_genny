@@ -92,7 +92,7 @@ rule "PRI_SEARCH_TEXT_TABLE_ASSIST"
 			sbe.setPageStart(0);
 			
 			/* cache the updated sbe  */
-			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", sbe.getCode(), sbe, beUtils.getGennyToken().getToken());
+			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", sbe.getCode(), sbe, beUtils.getGennyToken());
 
 			/* send the data */
 			TableUtils.searchTable(beUtils,sbe, true);

@@ -61,7 +61,7 @@ rule "DELETE_NOTE_CLICK_EVENT"
 			String url = endPoint + "/"+targetCode + "?tags=&pageIndex=0&pageSize=100";
 			System.out.println("url :: " + url);
 			
-			QwandaUtils.apiPostNote(endPoint, sourceCode, targetCode, tags, userName, userImage, content, serviceToken.getToken());
+			QwandaUtils.apiPostNote(endPoint, sourceCode, targetCode, tags, userName, userImage, content, serviceToken);
 			System.out.println("Note saved against " + targetCode + " with content: " + content);
 		
 			String toastName = targetBe.getValue("PRI_NAME", null);

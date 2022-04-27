@@ -89,7 +89,7 @@ rule "PRI_SEARCH_TEXT_BUCKET_ASSIST"
 
 			for (String sbeCode : sbeCodes.split(",")) {
 				System.out.println("sbeCode  :: " + sbeCode);
-				searchBeList.add(VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", sbeCode, SearchEntity.class));
+				searchBeList.add(VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", sbeCode, SearchEntity.class, serviceToken));
 			}
 
 	
@@ -108,7 +108,7 @@ rule "PRI_SEARCH_TEXT_BUCKET_ASSIST"
 
 		for (int i = 0; i < codes.length; i++) {
 			String searchCode = codes[i]+"_"+beUtils.getGennyToken().getJTI().toUpperCase();
-			SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", searchCode, SearchEntity.class, serviceToken.getToken());
+			SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", searchCode, SearchEntity.class, serviceToken);
 			List<BaseEntity> bucketApps = new ArrayList<>();
 			for (BaseEntity application : internApplications) {
 				String appStatus = application.getValue("PRI_STATUS", null);

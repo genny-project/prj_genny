@@ -131,7 +131,7 @@ rule "FIX_KEYCLOAK_USER_UUIDS"
 		QDataBaseEntityMessage resultMsg = null;
 		try {
 			resultJson = QwandaUtils.apiPostEntity(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search",
-					jsonSearchBE, serviceToken.getToken());
+					jsonSearchBE, serviceToken);
 			resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
 	
 			BaseEntity[] bes = resultMsg.getItems();
@@ -165,21 +165,21 @@ rule "FIX_KEYCLOAK_USER_UUIDS"
 	    		try {
 	    			String encodedsql = encodeValue("update baseentity_attribute set baseentityCode='"+newCode+"' where baseentityCode='"+user.getCode()+"'");
 	    			resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/"+encodedsql,
-	    					serviceToken.getToken());
+	    					serviceToken);
 	    			encodedsql = encodeValue("update baseentity_attribute set valueString='[\""+newCode+"]\"' where valueString='\"["+user.getCode()+"\"]'");
 	    			resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/"+encodedsql,
-	    					serviceToken.getToken());
+	    					serviceToken);
 	    			encodedsql = encodeValue("update baseentity_attribute set valueString='[\""+newCode+"]\"' where valueString='"+user.getCode()+"'");
 	    			resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/"+encodedsql,
-	    					serviceToken.getToken());
+	    					serviceToken);
 
 	    			encodedsql = encodeValue("update baseentity set code='"+newCode+"' where code='"+user.getCode()+"'");
 	    			resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/"+encodedsql,
-	    					serviceToken.getToken());
+	    					serviceToken);
 
 	    			encodedsql = encodeValue("update baseentity set code='"+newAppCode+"' where code='"+appCode+"'");
 	    			resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/service/executesql/"+encodedsql,
-	    					serviceToken.getToken());
+	    					serviceToken);
 
 	    		} catch (Exception e) {
 	    			

@@ -50,5 +50,5 @@ rule "THM_PANEL_CONTENT_FIT"
     insert (theme);
 
     VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, 
-    serviceToken.getToken());
+    serviceToken);
 end

@@ -49,7 +49,7 @@ rule "SBE_DROPDOWN"
 
  		 insert(searchBE);
 		 beUtils.saveSearchEntity(searchBE);
-  		/* VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken.getToken()); */
+  		/* VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken); */
 
    		 } else {
    		 	System.out.println("PROJECT is not in cache "+projectCode);

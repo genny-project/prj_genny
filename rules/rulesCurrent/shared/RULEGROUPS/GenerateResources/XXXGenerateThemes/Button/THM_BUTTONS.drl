@@ -40,7 +40,7 @@ rule "THM_BUTTONS"
      	String projectCode = "PRJ_"+serviceToken.getRealm().toUpperCase();
      	
  	    BaseEntity project = VertxUtils.getObject(serviceToken.getRealm(), "", projectCode,
-				BaseEntity.class, serviceToken.getToken());
+				BaseEntity.class, serviceToken);
      	
  
 		Theme theme = Theme.builder("THM_BUTTONS")
@@ -54,5 +54,5 @@ rule "THM_BUTTONS"
 		
 		insert(theme);
 
-		VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
+		VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken);
 end

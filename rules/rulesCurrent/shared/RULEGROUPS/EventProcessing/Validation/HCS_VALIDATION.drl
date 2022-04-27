@@ -87,7 +87,7 @@ rule "HCS_VALIDATION"
 			System.out.println("hcrName: " + hcrName);
 
 			BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
-			token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, hcrEmail, serviceToken.getToken());
+			token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, hcrEmail, serviceToken);
 			System.out.println("token: " + token);
 		}
 

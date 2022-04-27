@@ -61,7 +61,7 @@ rule "GENERATE_BE_PREFIX"
 
 		for (String entity : prefixMap.keySet()) {
             System.out.println("Saving pefix PRF_" + entity + " : " + prefixMap.get(entity));
-			VertxUtils.putObject(serviceToken.getRealm(), "", "PRF_" + entity, prefixMap.get(entity), serviceToken.getToken());
+			VertxUtils.putObject(serviceToken.getRealm(), "", "PRF_" + entity, prefixMap.get(entity), serviceToken);
 		}
 
 end

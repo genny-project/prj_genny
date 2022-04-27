@@ -28,7 +28,7 @@ rule "LNK_FILTER_OPTION"
 		System.out.println("value = " + value);
 
 		/* Fetch Search from Cache */
-		SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", targetCode, SearchEntity.class, serviceToken.getToken());
+		SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", targetCode, SearchEntity.class, serviceToken);
 
 		/* Save the new filter items in cache */
 		value = beUtils.cleanUpAttributeValue(value);
@@ -39,7 +39,7 @@ rule "LNK_FILTER_OPTION"
 		searchBE.addAttribute(attributeFilterOption, 5.0, value);
 
 		/* Update Search in Cache */
-		VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken.getToken());
+		VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken);
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */

@@ -44,6 +44,6 @@ rule "THM_DISPLAY_VERTICAL"
 		
 		insert(theme);
 
-		VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
+		VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken);
 	 
 end

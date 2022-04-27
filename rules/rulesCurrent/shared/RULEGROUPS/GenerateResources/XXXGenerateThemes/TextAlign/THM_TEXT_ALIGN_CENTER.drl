@@ -46,5 +46,5 @@ rule "THM_TEXT_ALIGN_CENTER"
     insert (theme);
 
     VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, 
-    serviceToken.getToken());
+    serviceToken);
 end

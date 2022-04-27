@@ -47,5 +47,5 @@ rule "THM_FLEX_ONE"
     insert (theme);
 
     VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme,
-    serviceToken.getToken());
+    serviceToken);
 end

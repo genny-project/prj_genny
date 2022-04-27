@@ -54,7 +54,7 @@ rule "PRI_SEARCH_TEXT_VERIFY_EMAIL"
 				if (split.length == 2) {
 					email = split[1];
 					
-					KeycloakUtils.sendVerifyEmail(email,serviceToken.getToken());
+					KeycloakUtils.sendVerifyEmail(email,serviceToken);
 					System.out.println("Sent verification Email to "+email);
 				} 
 		output.setTypeOfResult("NO_PROCESSING");

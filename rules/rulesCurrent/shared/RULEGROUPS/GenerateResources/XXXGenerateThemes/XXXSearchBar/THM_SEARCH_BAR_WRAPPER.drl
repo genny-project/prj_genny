@@ -47,5 +47,5 @@ rule "THM_SEARCH_BAR_WRAPPER"
     insert (theme);
 
     VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, 
-    serviceToken.getToken());
+    serviceToken);
 end

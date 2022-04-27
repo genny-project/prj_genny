@@ -68,7 +68,7 @@ rule "HELPER_LNK_INTERNSHIP_APP"
 					}
 	
 					/* check if the intern has applied to this internship before */	
-					SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", "SBE_APPLICATIONS_APPLIED",SearchEntity.class, serviceToken.getToken());
+					SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", "SBE_APPLICATIONS_APPLIED",SearchEntity.class, serviceToken);
 					if(searchBE != null){
 						searchBE.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.EQUAL, internCode);
 	

@@ -69,8 +69,8 @@ rule "FRM_COMPANY_DETAIL_VIEW"
 		
 		FrameUtils2.toMessage(frame, serviceToken,askSet,contextListMap);
 		
-		VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode(), frame, serviceToken.getToken());
+		VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode(), frame, serviceToken);
 		System.out.println("Writing to cache");
-		VertxUtils.writeCachedJson(serviceToken.getRealm(),"ASK_" + frame.getCode(), JsonUtils.toJson(askSet.toArray()),serviceToken.getToken());
+		VertxUtils.writeCachedJson(serviceToken.getRealm(),"ASK_" + frame.getCode(), JsonUtils.toJson(askSet.toArray()),serviceToken);
 	
 	end

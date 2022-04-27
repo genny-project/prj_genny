@@ -43,5 +43,5 @@ rule "THM_CONTAINER"
 
 			insert(theme);
 
-			VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
+			VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken);
 end

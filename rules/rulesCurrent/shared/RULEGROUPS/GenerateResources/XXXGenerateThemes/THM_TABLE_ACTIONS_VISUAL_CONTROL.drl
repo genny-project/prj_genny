@@ -49,5 +49,5 @@ rule "THM_TABLE_ACTIONS_VISUAL_CONTROL"
 
 		insert(theme);
 
-		VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
+		VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken);
 end

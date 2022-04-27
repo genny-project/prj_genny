@@ -44,5 +44,5 @@ rule "THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY"
     insert (theme);
 
     VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, 
-    serviceToken.getToken());
+    serviceToken);
 end

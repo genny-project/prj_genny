@@ -44,5 +44,5 @@ rule "THM_JUSTIFY_CONTENT_SPACE_AROUND"
     insert (theme);
 
     VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, 
-    serviceToken.getToken());
+    serviceToken);
 end

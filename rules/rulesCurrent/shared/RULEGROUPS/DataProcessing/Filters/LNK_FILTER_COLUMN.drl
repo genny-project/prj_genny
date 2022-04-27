@@ -46,7 +46,7 @@ rule "LNK_FILTER_COLUMN"
 		System.out.println("attributeCode = " + attributeCode);
 
 		/* Fetch Search from Cache */
-		SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", targetCode, SearchEntity.class, serviceToken.getToken());
+		SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", targetCode, SearchEntity.class, serviceToken);
 
 		/* Add Filter Column */
 		AttributeText attributeFilterColumn = new AttributeText("SCH_FILTER_COLUMN", "Filter Column");
@@ -57,7 +57,7 @@ rule "LNK_FILTER_COLUMN"
 		searchBE.addAttribute(attributeFilterValue, 5.0, "");
 
 		/* Update Search in Cache */
-		VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken.getToken());
+		VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken);
 
 		/* Define dropdown items selector */
 		String unhidden = null;
@@ -123,7 +123,7 @@ rule "LNK_FILTER_COLUMN"
 
 				}
 
-				Ask filterGrpAsk = VertxUtils.getObject(serviceToken.getRealm(), "", "QUE_FILTER_GRP_"+targetCode, Ask.class, serviceToken.getToken());
+				Ask filterGrpAsk = VertxUtils.getObject(serviceToken.getRealm(), "", "QUE_FILTER_GRP_"+targetCode, Ask.class, serviceToken);
 
 				System.out.println("Unhiding " + unhidden);
 				for (Ask childAsk : filterGrpAsk.getChildAsks()[0].getChildAsks()) {
@@ -156,7 +156,7 @@ rule "LNK_FILTER_COLUMN"
 				/* filterOptionsArray.add(optionGrp); */
 
 				/* Cache changes to filter grp */
-				VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", filterGrpAsk.getQuestionCode(), filterGrpAsk, serviceToken.getToken());
+				VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", filterGrpAsk.getQuestionCode(), filterGrpAsk, serviceToken);
 
 				/* Send filter option dropdown items */
 				QDataBaseEntityMessage filterOptionsMsg = new QDataBaseEntityMessage(filterOptionsArray);

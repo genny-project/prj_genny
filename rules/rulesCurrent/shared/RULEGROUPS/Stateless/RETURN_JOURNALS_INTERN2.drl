@@ -76,7 +76,7 @@ rule "RETURN_JOURNALS_INTERN2"
 		String resultJson;
 		QDataBaseEntityMessage resultMsg = null;
 		try {
-			resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search22/"+hql, serviceToken.getToken(),120);
+			resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search22/"+hql, serviceToken,120);
 			searchtime = System.currentTimeMillis();
 			resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
 			payload.add(resultMsg);

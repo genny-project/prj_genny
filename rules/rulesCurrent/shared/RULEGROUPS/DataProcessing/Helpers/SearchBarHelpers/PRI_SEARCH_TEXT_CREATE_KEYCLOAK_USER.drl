@@ -65,8 +65,8 @@ rule "PRI_SEARCH_TEXT_CREATE_KEYCLOAK_USER"
 				String lastname = user.getValue("PER_LASTNAME",null);
 				if (lastname != null) {
 					if (!(StringUtils.isBlank(userPassword))) {
-						/* System.out.println(" keycloak token is "+serviceToken.getToken()); */
-						String userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(),email , firstname, lastname,  email, userPassword,"user", "user");
+						/* System.out.println(" keycloak token is "+serviceToken); */
+						String userId = KeycloakUtils.createUser(serviceToken, serviceToken.getRealm(),email , firstname, lastname,  email, userPassword,"user", "user");
 						Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),user.getCode(),"PRI_UUID",userId);
 						beUtils.saveAnswer(keycloakId);
 						System.out.println("Created User "+email+" in Keycloak with id = "+userId);

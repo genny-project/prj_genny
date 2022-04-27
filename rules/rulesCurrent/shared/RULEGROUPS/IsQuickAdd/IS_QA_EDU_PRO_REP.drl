@@ -58,7 +58,7 @@ rule "IS_QA_EDU_PRO_REP"
 		}
 		
 		String endPoint = GennySettings.projectUrl + "/v7/notes";
-		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), newBe.getCode(), "Added as an Education Provider Rep", "System", "System", "", serviceToken.getToken());
+		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), newBe.getCode(), "Added as an Education Provider Rep", "System", "System", "", serviceToken);
 
 		/* TESTING TOASTS */
 		QMessageGennyMSG msg2 = new QMessageGennyMSG(QBaseMSGMessageType.TOAST);

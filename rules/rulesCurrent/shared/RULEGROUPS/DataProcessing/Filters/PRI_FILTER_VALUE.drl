@@ -38,7 +38,7 @@ rule "PRI_FILTER_VALUE"
 		System.out.println("value = " + value);
 
 		/* Get Asks from cache */
-		Ask filterGrpAsk = VertxUtils.getObject(serviceToken.getRealm(), "", "QUE_FILTER_GRP_"+targetCode, Ask.class, serviceToken.getToken());
+		Ask filterGrpAsk = VertxUtils.getObject(serviceToken.getRealm(), "", "QUE_FILTER_GRP_"+targetCode, Ask.class, serviceToken);
 
 		/* Translate any dropdown items to text */
 		if (attributeCode.startsWith("LNK_SELECT_")) {
@@ -57,14 +57,14 @@ rule "PRI_FILTER_VALUE"
 		}
 
 		/* Fetch Search from Cache */
-		SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", targetCode, SearchEntity.class, serviceToken.getToken());
+		SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", targetCode, SearchEntity.class, serviceToken);
 
 		/* Add Filter Column */
 		AttributeText attributeFilterValue = new AttributeText("SCH_FILTER_VALUE", "Filter Value");
 		searchBE.addAttribute(attributeFilterValue, 5.0, value);
 
 		/* Update Search in Cache */
-		VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken.getToken());
+		VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken);
 
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */

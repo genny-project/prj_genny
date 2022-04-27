@@ -44,6 +44,6 @@ rule "SBE_TEMPLATE_ADMIN"
 
 		searchBE.setRealm(serviceToken.getRealm());
 		insert(searchBE);
-		VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken.getToken());
+		VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken);
 
 end

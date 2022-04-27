@@ -74,7 +74,7 @@ rule "RETURN_JOURNALS_SUPERVISOR"
 		BaseEntity result = null; 
 		try {
 			resultJson = QwandaUtils.apiPostEntity(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search",
-					jsonSearchBE, serviceToken.getToken());
+					jsonSearchBE, serviceToken);
 					searchtime = System.currentTimeMillis();
 				QDataBaseEntityMessage resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
 				/* System.out.println(drools.getRule().getName()+" Got to here in RETURN JOURNALS "+resultJson);*/

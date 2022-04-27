@@ -47,5 +47,5 @@ rule "THM_PANEL_ALIGN_TOP_LEFT"
     insert (theme);
 
     VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, 
-    serviceToken.getToken());
+    serviceToken);
 end

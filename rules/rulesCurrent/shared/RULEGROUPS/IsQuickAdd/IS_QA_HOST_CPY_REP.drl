@@ -125,7 +125,7 @@ rule "IS_QA_HOST_CPY_REP"
 
 		/* Post Note */
 		String endPoint = GennySettings.projectUrl + "/v7/notes";
-		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), newBe.getCode(), "Added as a Host Company Rep", "System", "System", "", serviceToken.getToken());
+		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), newBe.getCode(), "Added as a Host Company Rep", "System", "System", "", serviceToken);
 
 		retract(newBe)
 end

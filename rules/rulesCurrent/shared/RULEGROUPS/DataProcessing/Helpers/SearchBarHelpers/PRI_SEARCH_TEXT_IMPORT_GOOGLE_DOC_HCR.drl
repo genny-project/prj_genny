@@ -154,8 +154,8 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_HCR"
 					try {
 						String email = kv.get("PRI_EMAIL");
 						String userPassword = UUID.randomUUID().toString().substring(0,10);
-						/*System.out.println(" keycloak token is "+serviceToken.getToken());*/
-						String userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(),email , firstname, lastname,  email, userPassword,"user", "user");
+						/*System.out.println(" keycloak token is "+serviceToken);*/
+						String userId = KeycloakUtils.createUser(serviceToken, serviceToken.getRealm(),email , firstname, lastname,  email, userPassword,"user", "user");
 						Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_UUID",userId);
 						answersImmediate.add(keycloakId);
 						String supervisorCode = "PER_"+QwandaUtils.getNormalisedUsername(email);

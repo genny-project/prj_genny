@@ -49,5 +49,5 @@ rule "THM_PROGRESS_VCL_INPUT"
 
 			insert(theme);
 
-			VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
+			VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken);
 end

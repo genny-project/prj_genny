@@ -47,5 +47,5 @@ rule "THM_WIDTH_100_PERCENT_NO_INHERIT"
     insert (theme);
 
     VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, 
-    serviceToken.getToken());
+    serviceToken);
 end

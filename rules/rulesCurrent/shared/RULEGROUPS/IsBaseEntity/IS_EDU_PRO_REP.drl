@@ -79,7 +79,7 @@ rule "IS_EDU_PRO_REP"
 					if (profile != null && profile.equals("Incomplete")) {
 						System.out.println("User was already Quick added, not setting new Password!");
 					} else {
-						userId = KeycloakUtils.updateUser(userCode,serviceToken.getToken(), serviceToken.getRealm(), email, firstname, lastname,  email, null, "user", "users");
+						userId = KeycloakUtils.updateUser(userCode,serviceToken, serviceToken.getRealm(), email, firstname, lastname,  email, null, "user", "users");
 						userId = userId.toUpperCase();
 						Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),newBe.getCode(),"PRI_UUID",userId);
 						answers.add(keycloakId);
@@ -88,7 +88,7 @@ rule "IS_EDU_PRO_REP"
 						/* Generate a random 15 char password */
 						char[] allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGJKLMNPRSTUVWXYZ0123456789^$?!@#%&".toCharArray();
 						String password = new SecureRandom().ints(15, 0, allowed.length).mapToObj(i -> String.valueOf(allowed[i])).collect(Collectors.joining());
-						KeycloakUtils.setPassword(serviceToken.getToken(), serviceToken.getRealm(), userId, password, true);
+						KeycloakUtils.setPassword(serviceToken, serviceToken.getRealm(), userId, password, true);
 
 						/* Send them an email with their password */
 						String url = GennySettings.projectUrl + "/home";
@@ -112,7 +112,7 @@ rule "IS_EDU_PRO_REP"
 		String userName = "System";
 		String userImage = "";
 		
-		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), newBe.getCode(), "Completed profile for Education Provider Rep account", tag, userName, userImage, serviceToken.getToken());
+		QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), newBe.getCode(), "Completed profile for Education Provider Rep account", tag, userName, userImage, serviceToken);
 		
 		System.out.println("I just posted the note");
 		System.out.println("Note endPoint: " +endPoint);

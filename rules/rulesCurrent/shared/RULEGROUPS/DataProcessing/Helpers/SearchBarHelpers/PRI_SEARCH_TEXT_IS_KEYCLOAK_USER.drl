@@ -57,7 +57,7 @@ rule "PRI_SEARCH_TEXT_IS_KEYCLOAK_USER"
 		}
 		try {
 			
-						String userId = KeycloakUtils.getKeycloakUserId(serviceToken.getToken(), serviceToken.getRealm(),email);
+						String userId = KeycloakUtils.getKeycloakUserId(serviceToken, serviceToken.getRealm(),email);
 						System.out.println("User "+email+" in Keycloak with id = "+userId);
 
 					

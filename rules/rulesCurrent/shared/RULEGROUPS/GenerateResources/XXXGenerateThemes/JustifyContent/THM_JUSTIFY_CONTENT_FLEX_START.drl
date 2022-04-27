@@ -43,5 +43,5 @@ rule "THM_JUSTIFY_CONTENT_FLEX_START"
     theme.setRealm(serviceToken.getRealm());
     insert (theme);
 
-    VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
+    VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken);
 end

@@ -49,5 +49,5 @@ rule "THM_SCROLL_HORIZONTAL"
 
 			insert(theme);
 
-			VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
+			VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken);
 end

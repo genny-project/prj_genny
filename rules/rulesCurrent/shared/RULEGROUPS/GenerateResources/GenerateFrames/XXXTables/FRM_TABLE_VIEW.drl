@@ -47,7 +47,7 @@ rule "FRM_TABLE_VIEW"
         frame.setRealm(serviceToken.getRealm());
 
         /* cache the frame */
-			  VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode(), frame, serviceToken.getToken());
+			  VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode(), frame, serviceToken);
 			
         insert (frame);
 end

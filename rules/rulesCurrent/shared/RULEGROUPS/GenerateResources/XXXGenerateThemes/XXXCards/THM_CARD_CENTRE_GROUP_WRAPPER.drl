@@ -46,6 +46,6 @@ rule "THM_CARD_CENTRE_GROUP_WRAPPER"
 		
 		insert(theme);
 
-		VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
+		VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken);
 	 
 end

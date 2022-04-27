@@ -42,7 +42,7 @@ rule "IS_JOURNAL"
 		/* need to save the appCode to JNL */
 
 		/* get the app from inprogress bucket */
-		SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", "SBE_APPLICATIONS_INPROGRESS",SearchEntity.class, serviceToken.getToken());
+		SearchEntity searchBE = VertxUtils.getObject(serviceToken.getRealm(), "", "SBE_APPLICATIONS_INPROGRESS",SearchEntity.class, serviceToken);
 		if(searchBE != null){
 			searchBE.addFilter("PRI_INTERN_CODE", SearchEntity.StringFilter.EQUAL, userToken.getUserCode());
 
@@ -186,7 +186,7 @@ rule "IS_JOURNAL"
 						try {
 							String resultJsonStr = QwandaUtils.apiGet(
 											GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2,
-											serviceToken.getToken(), 120);
+											serviceToken, 120);
 							completedJournals = completedJournals + Integer.decode(resultJsonStr);
 
 						} catch (Exception e1) {

@@ -129,7 +129,7 @@ rule "HELPER_SIGNATURE_NOTIFY"
 			String urlParentCode = "SBE_OFFERED_APPLICATIONS_"+userToken.getJTI().toUpperCase();
 			String cleanUrl = EmailHelper.encodeUrl(GennySettings.projectUrl+"/home", urlParentCode, "ACT_PRI_EVENT_VIEW_APPLICATION", targetBe.getCode());
 
-			String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, agentEmail, serviceToken.getToken());
+			String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, agentEmail, serviceToken);
 			System.out.println("token: " + token);
 
 			String url = cleanUrl +"?token=" + token;
@@ -165,7 +165,7 @@ rule "HELPER_SIGNATURE_NOTIFY"
 				List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
 				
 				/* SEND TO SUPERVISOR */
-				String hcrToken = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, supervisorEmail, serviceToken.getToken());
+				String hcrToken = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, supervisorEmail, serviceToken);
 				System.out.println("hcrToken = " + hcrToken);
 				url = cleanUrl +"?token=" + hcrToken;
 				templateData.put("url", url);
@@ -177,7 +177,7 @@ rule "HELPER_SIGNATURE_NOTIFY"
 				}
 
 				/* SEND TO INTERN */
-				String internToken = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, internEmail, serviceToken.getToken());
+				String internToken = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, internEmail, serviceToken);
 				System.out.println("internToken = " + internToken);
 				url = cleanUrl +"?token=" + internToken;
 				templateData.put("url", url);

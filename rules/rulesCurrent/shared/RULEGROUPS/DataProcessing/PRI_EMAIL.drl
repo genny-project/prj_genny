@@ -90,7 +90,7 @@ rule "PRI_EMAIL"
 					}
 				
 					if (allowedToChange) {
-						int statusCode =  KeycloakUtils.updateUserEmail(keycloakUUID,serviceToken.getToken(), userToken.getRealm(),answer.getValue());
+						int statusCode =  KeycloakUtils.updateUserEmail(keycloakUUID,serviceToken, userToken.getRealm(),answer.getValue());
 						System.out.println(ruleDetails+" "+drools.getRule().getName()+"  Changing email for "+answer.getTargetCode()+" to "+answer.getValue()+" statusCode="+statusCode);
 						if (statusCode > 204) {
 							System.out.println(ruleDetails+" "+drools.getRule().getName()+"  Error in setting email."+answer.getTargetCode()+" to "+answer.getValue()+" statusCode="+statusCode);

@@ -130,10 +130,10 @@ rule "SYS_GENERATE_CARD"
 			
 			/* Writing frameCard to the cache*/
 			
-			VertxUtils.putObject(serviceToken.getRealm(), "", frameCard.getCode(), frameCard, serviceToken.getToken());
+			VertxUtils.putObject(serviceToken.getRealm(), "", frameCard.getCode(), frameCard, serviceToken);
 			
 			/*Printing the frameCard just saved to cache */
-			BaseEntity be = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_CARD", BaseEntity.class, serviceToken.getToken());
+			BaseEntity be = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_CARD", BaseEntity.class, serviceToken);
 			System.out.println("CREATED CARD BASEENTITY   :::  " + be.getCode());
   
 	end

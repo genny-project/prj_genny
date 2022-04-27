@@ -72,7 +72,7 @@ rule "SEND_SUMMARY_SBE"
 						trimmedCode = trimmedCode.substring(4);
 					}
 					/* Get SBE from cache */
-					SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", trimmedCode, SearchEntity.class, beUtils.getGennyToken().getToken());
+					SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", trimmedCode, SearchEntity.class, beUtils.getGennyToken());
 
 					/* Find any linked searches */
 					for (EntityAttribute ea : searchBE.getBaseEntityAttributes()) {

@@ -106,7 +106,7 @@ rule "IS_QA_INTERN"
 
 			/* Post Note */
 			String endPoint = GennySettings.projectUrl + "/v7/notes";
-			QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), newBe.getCode(), "Added as an Intern", "System", "System", "", serviceToken.getToken());
+			QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), newBe.getCode(), "Added as an Intern", "System", "System", "", serviceToken);
 		}
 		
 		retract(newBe);

@@ -40,6 +40,6 @@ rule "SBE_REMOTE_JOB"
       searchBE.setRealm(serviceToken.getRealm());
       searchBE.setPageStart(0);
       searchBE.setPageSize(1000);
-      VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken.getToken());
+      VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken);
 
 end

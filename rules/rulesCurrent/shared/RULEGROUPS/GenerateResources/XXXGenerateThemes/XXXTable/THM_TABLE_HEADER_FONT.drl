@@ -50,5 +50,5 @@ rule "THM_TABLE_HEADER_FONT"
     insert (theme);
 
     VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme,
-    serviceToken.getToken());
+    serviceToken);
 end

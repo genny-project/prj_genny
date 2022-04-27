@@ -52,5 +52,5 @@ rule "THM_TITLE_LABEL"
 
 			insert(theme);
 
-			VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
+			VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken);
 end

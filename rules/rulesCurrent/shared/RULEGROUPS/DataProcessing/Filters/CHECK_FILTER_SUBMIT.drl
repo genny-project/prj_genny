@@ -33,7 +33,7 @@ rule "CHECK_FILTER_SUBMIT"
 		String targetCode = answer.getTargetCode();
 		System.out.println("targetCode = " + targetCode);
 
-		SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", targetCode, SearchEntity.class, serviceToken.getToken());
+		SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", targetCode, SearchEntity.class, serviceToken);
 
 		if (searchBE != null) {
 			String filterAttributeCode = searchBE.findEntityAttribute("SCH_FILTER_COLUMN").orElse(null).getValue();
@@ -52,7 +52,7 @@ rule "CHECK_FILTER_SUBMIT"
 			String logStr = (shouldEnable ? "ENABLING" : "DISABLING") + " Submit Button!";
 			System.out.println(logStr);
 			/* Disable Submit */
-			Ask filterGrpAsk = VertxUtils.getObject(serviceToken.getRealm(), "", "QUE_FILTER_GRP_"+targetCode, Ask.class, serviceToken.getToken());
+			Ask filterGrpAsk = VertxUtils.getObject(serviceToken.getRealm(), "", "QUE_FILTER_GRP_"+targetCode, Ask.class, serviceToken);
 
 			for (Ask childAsk : filterGrpAsk.getChildAsks()[0].getChildAsks()) {
 				if (childAsk.getQuestionCode().contains("QUE_SUBMIT")) {
@@ -61,7 +61,7 @@ rule "CHECK_FILTER_SUBMIT"
 			}
 
 			/* Cache changes */
-			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", filterGrpAsk.getQuestionCode(), filterGrpAsk, serviceToken.getToken());
+			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", filterGrpAsk.getQuestionCode(), filterGrpAsk, serviceToken);
 
 			/* Send Asks to FE */
 			QDataAskMessage askMsg = new QDataAskMessage(filterGrpAsk);

@@ -50,6 +50,6 @@ rule "THM_FORM_IMAGE_RESTRICTIONS_DIMENSION"
 		
 		insert(theme);
 
-		VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
+		VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken);
 	 
 end

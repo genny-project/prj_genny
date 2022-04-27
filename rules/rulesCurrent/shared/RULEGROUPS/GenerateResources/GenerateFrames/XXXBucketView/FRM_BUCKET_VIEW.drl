@@ -68,7 +68,7 @@ rule "FRM_BUCKET_VIEW"
 			/* --------------  ADD BUCKETS HERE  -------------- */
 			/*
 			SearchEntity SBE_BUCKET_ONE = VertxUtils.getObject(serviceToken.getRealm(), "",
-							"SBE_BUCKET_ONE", SearchEntity.class, serviceToken.getToken());
+							"SBE_BUCKET_ONE", SearchEntity.class, serviceToken);
 
 			searchBeList.add(SBE_BUCKET_ONE);
 			*/
@@ -78,19 +78,19 @@ rule "FRM_BUCKET_VIEW"
 			System.out.println("size   ::    " + searchBeList.size());
 
 			Theme THM_DISPLAY_VERTICAL = VertxUtils.getObject(serviceToken.getRealm(), "",
-						"THM_DISPLAY_VERTICAL", Theme.class, serviceToken.getToken());
+						"THM_DISPLAY_VERTICAL", Theme.class, serviceToken);
 			Theme THM_QUESTION_GRP_LABEL = VertxUtils.getObject(serviceToken.getRealm(), "",
-						"THM_QUESTION_GRP_LABEL", Theme.class, serviceToken.getToken());
+						"THM_QUESTION_GRP_LABEL", Theme.class, serviceToken);
 			Theme THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
-						"THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER", Theme.class, serviceToken.getToken());
+						"THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER", Theme.class, serviceToken);
 			Theme THM_WIDTH_100_PERCENT_NO_INHERIT = VertxUtils.getObject(serviceToken.getRealm(), "",
-						"THM_WIDTH_100_PERCENT_NO_INHERIT", Theme.class, serviceToken.getToken());
+						"THM_WIDTH_100_PERCENT_NO_INHERIT", Theme.class, serviceToken);
 			Theme THM_BUCKET_HEADER_GROUP_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
-						"THM_BUCKET_HEADER_GROUP_WRAPPER", Theme.class, serviceToken.getToken());
+						"THM_BUCKET_HEADER_GROUP_WRAPPER", Theme.class, serviceToken);
 			Theme THM_BUCKET_HEADER_GROUP_HEADER_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
-						"THM_BUCKET_HEADER_GROUP_HEADER_WRAPPER", Theme.class, serviceToken.getToken());
+						"THM_BUCKET_HEADER_GROUP_HEADER_WRAPPER", Theme.class, serviceToken);
 			Theme THM_BUCKET_HEADER_GROUP_LABEL = VertxUtils.getObject(serviceToken.getRealm(), "",
-						"THM_BUCKET_HEADER_GROUP_LABEL", Theme.class, serviceToken.getToken());
+						"THM_BUCKET_HEADER_GROUP_LABEL", Theme.class, serviceToken);
                 
 			/* bucket-header label context  */
 			Context bucketHeaderLabelContext = new Context(ContextType.THEME, bucketUtils.getThemeBe(THM_QUESTION_GRP_LABEL), VisualControlType.GROUP, 1.0);
@@ -167,12 +167,12 @@ rule "FRM_BUCKET_VIEW"
 			QDataBaseEntityMessage frameMsg = FrameUtils2.toMessage(frame, serviceToken, askSet, contextListMap, virtualAskMap);
 
 			/* cache the frame */
-			VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode(), frame, serviceToken.getToken());
+			VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode(), frame, serviceToken);
 
 			/* cache the QDataBaseEntityMessage */
-			VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode() + "_MSG", frameMsg, serviceToken.getToken());
+			VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode() + "_MSG", frameMsg, serviceToken);
 			
 			/* cache the ask */
-			VertxUtils.writeCachedJson(serviceToken.getRealm(),"ASK_" + frame.getCode(), JsonUtils.toJson(askSet.toArray()),serviceToken.getToken());
+			VertxUtils.writeCachedJson(serviceToken.getRealm(),"ASK_" + frame.getCode(), JsonUtils.toJson(askSet.toArray()),serviceToken);
 
 end

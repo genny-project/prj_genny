@@ -182,15 +182,15 @@ rule "PRI_SEARCH_TEXT_IMPORT_GOOGLE_DOC_USERS"
 						String email = kv.get("PRI_EMAIL");
 						String userPassword = kv.get("PRI_PASSWORD");
 						String userId = "";
-						/*System.out.println(" keycloak token is "+serviceToken.getToken());*/
+						/*System.out.println(" keycloak token is "+serviceToken);*/
 						if (kv.get("PRI_ROLES").contains("DEV")) {
-							userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(),email , kv.get("PRI_FIRSTNAME"), kv.get("PRI_LASTNAME"),  email, userPassword,"dev,admin,test,user", "dev,test,admin,user");
+							userId = KeycloakUtils.createUser(serviceToken, serviceToken.getRealm(),email , kv.get("PRI_FIRSTNAME"), kv.get("PRI_LASTNAME"),  email, userPassword,"dev,admin,test,user", "dev,test,admin,user");
 						} else
 
 						if (kv.get("PRI_ROLES").contains("ADMIN")) {
-							userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(),email , kv.get("PRI_FIRSTNAME"), kv.get("PRI_LASTNAME"),  email, userPassword,"admin,user", "admin,user");
+							userId = KeycloakUtils.createUser(serviceToken, serviceToken.getRealm(),email , kv.get("PRI_FIRSTNAME"), kv.get("PRI_LASTNAME"),  email, userPassword,"admin,user", "admin,user");
 						} else if (kv.get("PRI_ROLES").contains("AGENT")) {
-							userId = KeycloakUtils.createUser(serviceToken.getToken(), serviceToken.getRealm(),email , kv.get("PRI_FIRSTNAME"), kv.get("PRI_LASTNAME"),  email, userPassword,"user", "user");
+							userId = KeycloakUtils.createUser(serviceToken, serviceToken.getRealm(),email , kv.get("PRI_FIRSTNAME"), kv.get("PRI_LASTNAME"),  email, userPassword,"user", "user");
 							
 						}
 						Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(),be.getCode(),"PRI_UUID",userId);

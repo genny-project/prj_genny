@@ -39,5 +39,5 @@ rule "THM_BUCKET_HEADER_GROUP_HEADER_WRAPPER"
 
       theme.setRealm(serviceToken.getRealm());
       insert(theme);
-      VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
+      VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken);
 end

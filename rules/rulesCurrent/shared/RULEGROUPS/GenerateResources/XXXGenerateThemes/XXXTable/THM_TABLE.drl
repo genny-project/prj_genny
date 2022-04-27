@@ -41,7 +41,7 @@ rule "THM_TABLE"
     String projectCode = "PRJ_"+serviceToken.getRealm().toUpperCase();
      	
  	BaseEntity project = VertxUtils.getObject(serviceToken.getRealm(), "", projectCode,
-				BaseEntity.class, serviceToken.getToken());
+				BaseEntity.class, serviceToken);
     
 
     Theme theme = Theme.builder("THM_TABLE")
@@ -56,5 +56,5 @@ rule "THM_TABLE"
     insert (theme);
 
     VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, 
-    serviceToken.getToken());
+    serviceToken);
 end

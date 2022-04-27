@@ -46,5 +46,5 @@ rule "THM_BORDER_RADIUS_50"
     insert (theme);
 
     VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, 
-    serviceToken.getToken());
+    serviceToken);
 end

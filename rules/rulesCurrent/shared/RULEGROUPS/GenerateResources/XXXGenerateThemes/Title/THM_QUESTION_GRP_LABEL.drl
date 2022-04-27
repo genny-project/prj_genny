@@ -44,5 +44,5 @@ rule "THM_QUESTION_GRP_LABEL"
     insert (theme);
 
     VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, 
-    serviceToken.getToken());
+    serviceToken);
 end

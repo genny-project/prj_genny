@@ -84,7 +84,7 @@ rule "RETURN_SUPERVISOR_INTERNSHIP_DETAILS"
 		String resultJson;
 		try {
 			resultJson = QwandaUtils.apiPostEntity(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search",
-					jsonSearchBE, serviceToken.getToken());
+					jsonSearchBE, serviceToken);
 			try {
 			
 				List<String> existingBes = new ArrayList<String>();

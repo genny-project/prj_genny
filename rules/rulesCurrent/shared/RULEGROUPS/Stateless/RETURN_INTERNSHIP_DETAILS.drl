@@ -84,7 +84,7 @@ rule "RETURN_INTERNSHIP_DETAILS"
 		BaseEntity result = null; 
 		try {
 			resultJson = QwandaUtils.apiPostEntity(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search",
-					jsonSearchBE, serviceToken.getToken());
+					jsonSearchBE, serviceToken);
 			try {
 				QDataBaseEntityMessage resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
 			/*	System.out.println(drools.getRule().getName()+" Got to here in RETURN INTERNSHIP DETAILS "+resultJson); */

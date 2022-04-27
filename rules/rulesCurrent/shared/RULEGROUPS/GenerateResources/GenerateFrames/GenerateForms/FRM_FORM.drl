@@ -46,7 +46,7 @@ rule "FRM_FORM"
 				List<String> questionCodes = new ArrayList<String>();
 
 				if (!VertxUtils.cachedEnabled) {  /* Not running junit mode */
-					jsonFormCodes = QwandaUtils.apiGet(apiUrl, serviceToken.getToken());
+					jsonFormCodes = QwandaUtils.apiGet(apiUrl, serviceToken);
 					System.out.println("jsonFormCodes=["+jsonFormCodes+"]");
 
 					Type type = new TypeToken<List<String>>() {

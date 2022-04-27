@@ -59,7 +59,7 @@ rule "PRI_LASTNAME"
 
 		if (allowedToChange && !StringUtils.isEmpty(lastname)) {
 			String keycloakUUID = answer.getTargetCode().substring("PER_".length());
-			int statusCode = KeycloakUtils.updateUserField(keycloakUUID, serviceToken.getToken(), userToken.getRealm(), fieldName, lastname);
+			int statusCode = KeycloakUtils.updateUserField(keycloakUUID, serviceToken, userToken.getRealm(), fieldName, lastname);
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Changing "+fieldName+" for "+answer.getTargetCode()+" to "+answer.getValue()+" statusCode="+statusCode);
 			if (statusCode > 204) {
 				System.out.println(ruleDetails+" "+drools.getRule().getName()+" Error in setting"+fieldName+" for "+answer.getTargetCode()+" to "+answer.getValue()+" statusCode="+statusCode);

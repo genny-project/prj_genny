@@ -45,5 +45,5 @@ rule "THM_DETAIL_VIEW_IMAGE_SIZE"
 		theme.setRealm(serviceToken.getRealm());
 		insert(theme);
 
-		VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken.getToken());
+		VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme, serviceToken);
 	end

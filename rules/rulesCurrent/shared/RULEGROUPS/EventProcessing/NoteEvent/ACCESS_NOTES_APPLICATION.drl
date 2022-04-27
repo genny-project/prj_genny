@@ -98,11 +98,11 @@ rule "ACCESS_NOTES_APPLICATION"
 			System.out.println("urlHC :: " + urlHC);
 			System.out.println("urlSuper :: " + urlSuper);
 
-			String appNotes = QwandaUtils.sendGET(urlApp, serviceToken.getToken());
-			String internNotes = QwandaUtils.sendGET(urlIntern, serviceToken.getToken());
-			String internshipNotes = QwandaUtils.sendGET(urlInternship, serviceToken.getToken());
-			String hcNotes = QwandaUtils.sendGET(urlHC, serviceToken.getToken());
-			String superNotes = QwandaUtils.sendGET(urlSuper, serviceToken.getToken());
+			String appNotes = QwandaUtils.sendGET(urlApp, serviceToken);
+			String internNotes = QwandaUtils.sendGET(urlIntern, serviceToken);
+			String internshipNotes = QwandaUtils.sendGET(urlInternship, serviceToken);
+			String hcNotes = QwandaUtils.sendGET(urlHC, serviceToken);
+			String superNotes = QwandaUtils.sendGET(urlSuper, serviceToken);
 
 			System.out.println("appNotes :: " + appNotes);
 			System.out.println("internNotes :: " + internNotes);

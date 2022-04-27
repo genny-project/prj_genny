@@ -48,5 +48,5 @@ rule "THM_TABLE_ROW_CELL_VIEW_JOURNAL"
     insert (theme);
 
     VertxUtils.putObject(serviceToken.getRealm(), "", theme.getCode(), theme,
-    serviceToken.getToken());
+    serviceToken);
 end
