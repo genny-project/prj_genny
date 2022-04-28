@@ -900,7 +900,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			} else {
 
 				QDataBaseEntityMessage FRM_MSG = VertxUtils.getObject(userToken.getRealm(), "", rootFrameCode + "_MSG",
-						QDataBaseEntityMessage.class, userToken.getToken());
+						QDataBaseEntityMessage.class, userToken);
 
 				if (FRM_MSG != null) {
 
@@ -909,7 +909,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 					}
 
 					QDataBaseEntityMessage TARGET_FRM_MSG = VertxUtils.getObject(userToken.getRealm(), "",
-							targetFrameCode + "_MSG", QDataBaseEntityMessage.class, userToken.getToken());
+							targetFrameCode + "_MSG", QDataBaseEntityMessage.class, userToken);
 
 					for (BaseEntity targetFrame : TARGET_FRM_MSG.getItems()) {
 						if (targetFrame.getCode().equals(targetFrameCode)) {
@@ -949,7 +949,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 					}.getType();
 
 					String askMsgs2Str = VertxUtils.getObject(userToken.getRealm(), "", rootFrameCode + "_ASKS",
-							String.class, userToken.getToken());
+							String.class, userToken);
 
 					Set<QDataAskMessage> askMsgs2 = JsonUtils.fromJson(askMsgs2Str, setType);
 
@@ -1318,7 +1318,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 				log.info("Sending root Frame Code sent to display  = " + rootFrameCode);
 
 				QDataBaseEntityMessage FRM_MSG = VertxUtils.getObject(userToken.getRealm(), "", rootFrameCode + "_MSG",
-						QDataBaseEntityMessage.class, userToken.getToken());
+						QDataBaseEntityMessage.class, userToken);
 
 				if (FRM_MSG != null) {
 
@@ -1513,7 +1513,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	private BaseEntity createTestGroup(String realm, String code, String name, GennyToken serviceToken) {
 		BaseEntity group = createTestBaseEntity(realm, code, serviceToken);
 		// save the new group
-		VertxUtils.writeCachedJson(serviceToken.getRealm(), code, JsonUtils.toJson(group), serviceToken.getToken());
+		VertxUtils.writeCachedJson(serviceToken.getRealm(), code, JsonUtils.toJson(group), serviceToken);
 		Group JbpmGroup = (Group) TaskModelProvider.getFactory().newGroup(code);
 		return group;
 
@@ -1523,7 +1523,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			GennyToken serviceToken) {
 		BaseEntity user = createTestBaseEntity(realm, code, serviceToken);
 		// Link to each group
-		Attribute linkAttribute = RulesUtils.getAttribute("LNK_CORE", serviceToken.getToken());
+		Attribute linkAttribute = RulesUtils.getAttribute("LNK_CORE", serviceToken);
 
 		for (String groupCode : groups) {
 			BaseEntity group = VertxUtils.getObject(serviceToken.getRealm(), "", groupCode, BaseEntity.class,
@@ -1544,7 +1544,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			realmGroups.add(realm + "+" + str);
 		}
 		String newGroupString = JsonUtils.toJson(realmGroups);
-		Attribute groupsAttribute = RulesUtils.getAttribute("PRI_GROUPS", serviceToken.getToken());
+		Attribute groupsAttribute = RulesUtils.getAttribute("PRI_GROUPS", serviceToken);
 		try {
 			user.addAnswer(new Answer(user, user, groupsAttribute, newGroupString));
 		} catch (BadDataException e) {
@@ -1552,7 +1552,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 			e.printStackTrace();
 		}
 		// save the new user
-		VertxUtils.writeCachedJson(serviceToken.getRealm(), code, JsonUtils.toJson(user), serviceToken.getToken());
+		VertxUtils.writeCachedJson(serviceToken.getRealm(), code, JsonUtils.toJson(user), serviceToken);
 
 		User JbpmUser = (User) TaskModelProvider.getFactory().newUser(code);
 
@@ -1564,7 +1564,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 		code = code.toUpperCase();
 		BaseEntity be = new BaseEntity(code, StringUtils.capitaliseAllWords(serviceToken.getRealm()));
 		be.setRealm(serviceToken.getRealm());
-		VertxUtils.writeCachedJson(serviceToken.getRealm(), code, JsonUtils.toJson(be), serviceToken.getToken());
+		VertxUtils.writeCachedJson(serviceToken.getRealm(), code, JsonUtils.toJson(be), serviceToken);
 		// VertxUtils.writeCachedJson(realm, ":" + code,JsonUtils.toJson(be),
 		// serviceToken.getToken());
 		return be;
@@ -1641,7 +1641,7 @@ public class GennyKieSession extends JbpmJUnitBaseTestCase implements AutoClosea
 	}
 
 	private <T extends BaseEntity> void createCacheBE(String code, T be) {
-		VertxUtils.writeCachedJson(serviceToken.getRealm(), code, JsonUtils.toJson(be), serviceToken.getToken());
+		VertxUtils.writeCachedJson(serviceToken.getRealm(), code, JsonUtils.toJson(be), serviceToken);
 
 	}
 

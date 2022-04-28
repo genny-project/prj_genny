@@ -100,7 +100,7 @@ public class RahulTest {
 			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 			userToken2 = GennyJbpmBaseTest.createGennyToken(realm, "user2", "Barry2 Allan2", "user");
 			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules = new QRules(eventBusMock, userToken);
 			qRules.set("realm", userToken.getRealm());
 			qRules.setServiceToken(serviceToken.getToken());
 			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -158,10 +158,10 @@ public class RahulTest {
 				StringUtils.capitaliseAllWords(serviceToken.getRealm()));
 		project.setRealm(serviceToken.getRealm());
 		VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
-				JsonUtils.toJson(project), serviceToken.getToken());
-		VertxUtils.writeCachedJson(realm,  ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(),JsonUtils.toJson(project), serviceToken.getToken());
+				JsonUtils.toJson(project), serviceToken);
+		VertxUtils.writeCachedJson(realm,  ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(),JsonUtils.toJson(project), serviceToken);
 		 BaseEntity project2 = VertxUtils.getObject(serviceToken.getRealm(), "", "PRJ_" + serviceToken.getRealm().toUpperCase(),
-				BaseEntity.class, serviceToken.getToken());
+				BaseEntity.class, serviceToken);
 
 
 
@@ -191,7 +191,7 @@ public class RahulTest {
 				
 				icn_sort.addAttribute(RulesUtils.getAttribute("PRI_ICON_CODE", serviceToken.getToken()), 1.0, "sort");
 				icn_sort.setRealm(realm);
-				VertxUtils.writeCachedJson(realm,   "ICN_SORT",JsonUtils.toJson(icn_sort), serviceToken.getToken());
+				VertxUtils.writeCachedJson(realm,   "ICN_SORT",JsonUtils.toJson(icn_sort), serviceToken);
 
 			} catch (BadDataException e1) {
 				// TODO Auto-generated catch block
@@ -210,7 +210,7 @@ public class RahulTest {
 			gks.advanceSeconds(5, false);
 			
 			BaseEntity user = VertxUtils.getObject(serviceToken.getRealm(), "", userToken.getUserCode(),
-					BaseEntity.class, serviceToken.getToken());
+					BaseEntity.class, serviceToken);
 
 			gks.injectEvent(searchMsg); // This sends a search bar request
 			
@@ -244,7 +244,7 @@ public void testTableHeader() {
 		userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 		userToken2 = GennyJbpmBaseTest.createGennyToken(realm, "user2", "Barry2 Allan2", "user");
 		serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-		qRules = new QRules(eventBusMock, userToken.getToken());
+		qRules = new QRules(eventBusMock, userToken);
 		qRules.set("realm", userToken.getRealm());
 		qRules.setServiceToken(serviceToken.getToken());
 		VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -329,7 +329,7 @@ public void testTableHeader() {
 			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 			userToken2 = GennyJbpmBaseTest.createGennyToken(realm, "user2", "Barry2 Allan2", "user");
 			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules = new QRules(eventBusMock, userToken);
 			qRules.set("realm", userToken.getRealm());
 			qRules.setServiceToken(serviceToken.getToken());
 			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -392,13 +392,13 @@ public void testTableHeader() {
 		Frame3 FRM_ROOT = null;
 		try {
 			Frame3 FRM_HEADER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_HEADER",
-						Frame3.class, serviceToken.getToken());//generateHeader();
+						Frame3.class, serviceToken);//generateHeader();
 			  Frame3 FRM_SIDEBAR = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_SIDEBAR",
-						Frame3.class, serviceToken.getToken());//generateHeader();
+						Frame3.class, serviceToken);//generateHeader();
 			   Frame3 FRM_CONTENT = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_CONTENT",
-						Frame3.class, serviceToken.getToken());//generateHeader();
+						Frame3.class, serviceToken);//generateHeader();
 			  Frame3 FRM_FOOTER = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_FOOTER",
-						Frame3.class, serviceToken.getToken());//generateHeader();
+						Frame3.class, serviceToken);//generateHeader();
 			  Frame3 FRM_APP = Frame3.builder("FRM_APP")
 			          .addTheme("THM_PROJECT", ThemePosition.FRAME, serviceToken).end()
 			          .addFrame(FRM_HEADER, FramePosition.NORTH).end()
@@ -425,7 +425,7 @@ public void testTableHeader() {
 
 		  // Test sending a page
 			QDataBaseEntityMessage msg2 = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_QUE_DASHBOARD_VIEW_MSG",
-					QDataBaseEntityMessage.class, serviceToken.getToken());
+					QDataBaseEntityMessage.class, serviceToken);
 
 			msg2.setToken(userToken.getToken());
 			/* send message */
@@ -476,7 +476,7 @@ public void testTableHeader() {
 			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 			userToken2 = GennyJbpmBaseTest.createGennyToken(realm, "user2", "Barry2 Allan2", "user");
 			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules = new QRules(eventBusMock, userToken);
 			qRules.set("realm", userToken.getRealm());
 			qRules.setServiceToken(serviceToken.getToken());
 			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -527,10 +527,10 @@ public void testTableHeader() {
 				StringUtils.capitaliseAllWords(serviceToken.getRealm()));
 		project.setRealm(serviceToken.getRealm());
 		VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
-				JsonUtils.toJson(project), serviceToken.getToken());
-		VertxUtils.writeCachedJson(realm,  ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(),JsonUtils.toJson(project), serviceToken.getToken());
+				JsonUtils.toJson(project), serviceToken);
+		VertxUtils.writeCachedJson(realm,  ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(),JsonUtils.toJson(project), serviceToken);
 		 BaseEntity project2 = VertxUtils.getObject(serviceToken.getRealm(), "", "PRJ_" + serviceToken.getRealm().toUpperCase(),
-				BaseEntity.class, serviceToken.getToken());
+				BaseEntity.class, serviceToken);
 
 
 
@@ -558,7 +558,7 @@ public void testTableHeader() {
 				
 				icn_sort.addAttribute(RulesUtils.getAttribute("PRI_ICON_CODE", serviceToken.getToken()), 1.0, "sort");
 				icn_sort.setRealm(realm);
-				VertxUtils.writeCachedJson(realm,   "ICN_SORT",JsonUtils.toJson(icn_sort), serviceToken.getToken());
+				VertxUtils.writeCachedJson(realm,   "ICN_SORT",JsonUtils.toJson(icn_sort), serviceToken);
 
 			} catch (BadDataException e1) {
 				// TODO Auto-generated catch block
@@ -579,7 +579,7 @@ public void testTableHeader() {
 			gks.advanceSeconds(5, false);
 			
 			BaseEntity user = VertxUtils.getObject(serviceToken.getRealm(), "", userToken.getUserCode(),
-					BaseEntity.class, serviceToken.getToken());
+					BaseEntity.class, serviceToken);
 
 			gks.injectEvent(searchMsg); // This sends a search bar request
 			
@@ -609,7 +609,7 @@ public void testTableHeader() {
 		if (true) {
 			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules = new QRules(eventBusMock, userToken);
 			qRules.set("realm", userToken.getRealm());
 			qRules.setServiceToken(serviceToken.getToken());
 			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -643,7 +643,7 @@ public void testTableHeader() {
 				StringUtils.capitaliseAllWords(serviceToken.getRealm()));
 		project.setRealm(serviceToken.getRealm());
 		VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
-				JsonUtils.toJson(project), serviceToken.getToken());
+				JsonUtils.toJson(project), serviceToken);
 		
 		// Log out to begin
 		VertxUtils.writeCachedJson(userToken.getRealm(),userToken.getSessionCode(),null,userToken.getToken());
@@ -716,7 +716,7 @@ public void testTableHeader() {
 		if (false) {
 			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules = new QRules(eventBusMock, userToken);
 			qRules.set("realm", userToken.getRealm());
 			qRules.setServiceToken(serviceToken.getToken());
 			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -798,7 +798,7 @@ public void testTableHeader() {
 		if (true) {
 			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules = new QRules(eventBusMock, userToken);
 			qRules.set("realm", userToken.getRealm());
 			qRules.setServiceToken(serviceToken.getToken());
 			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -831,7 +831,7 @@ public void testTableHeader() {
 				StringUtils.capitaliseAllWords(serviceToken.getRealm()));
 		project.setRealm(serviceToken.getRealm());
 		VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
-				JsonUtils.toJson(project), serviceToken.getToken());
+				JsonUtils.toJson(project), serviceToken);
 		
 		// Log out to begin
 		VertxUtils.writeCachedJson(userToken.getRealm(),userToken.getSessionCode(),null,userToken.getToken());
@@ -872,7 +872,7 @@ public void testTableHeader() {
 		if (true) {
 			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules = new QRules(eventBusMock, userToken);
 			qRules.set("realm", userToken.getRealm());
 			qRules.setServiceToken(serviceToken.getToken());
 			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -895,7 +895,7 @@ public void testTableHeader() {
 				StringUtils.capitaliseAllWords(serviceToken.getRealm()));
 		project.setRealm(serviceToken.getRealm());
 		VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
-				JsonUtils.toJson(project), serviceToken.getToken());
+				JsonUtils.toJson(project), serviceToken);
 		
 		// Log out to begin
 		VertxUtils.writeCachedJson(userToken.getRealm(),userToken.getSessionCode(),null,userToken.getToken());
@@ -921,7 +921,7 @@ public void testTableHeader() {
 			gks.injectEvent(msgLogout);
 
 			BaseEntity user = VertxUtils.getObject(serviceToken.getRealm(), "", userToken.getUserCode(),
-					BaseEntity.class, serviceToken.getToken());
+					BaseEntity.class, serviceToken);
 			System.out.println("final user created " + user);
 			System.out.println("Sent");
 
@@ -1072,7 +1072,7 @@ public void testTableHeader() {
 	public void simpleTest() {
 		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-		QRules qRules = new QRules(eventBusMock, userToken.getToken());
+		QRules qRules = new QRules(eventBusMock, userToken);
 		qRules.set("realm", userToken.getRealm());
 		qRules.setServiceToken(serviceToken.getToken());
 
@@ -1094,7 +1094,7 @@ public void testTableHeader() {
 
 		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-		QRules qRules = new QRules(eventBusMock, userToken.getToken());
+		QRules qRules = new QRules(eventBusMock, userToken);
 		qRules.set("realm", userToken.getRealm());
 		qRules.setServiceToken(serviceToken.getToken());
 
@@ -1129,7 +1129,7 @@ public void testTableHeader() {
 		VertxUtils.cachedEnabled = true; // don't try and use any local services
 		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "userToken");
 		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "serviceToken");
-		QRules qRules = new QRules(eventBusMock, userToken.getToken());
+		QRules qRules = new QRules(eventBusMock, userToken);
 		qRules.set("realm", userToken.getRealm());
 		qRules.setServiceToken(serviceToken.getToken());
 
@@ -1175,27 +1175,27 @@ public void testTableHeader() {
 //				.end().maxWidth(600).padding(10).end().addAttribute() /* defaults to ThemeAttributeType.PRI_CONTENT */
 //				.justifyContent("flex-start").end().build();
 		Theme THM_DISPLAY_VERTICAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_VERTICAL",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 
 //		Theme THM_DISPLAY_HORIZONTAL = Theme.builder("THM_DISPLAY_HORIZONTAL").addAttribute().flexDirection("row").end()
 //				.build();
 		Theme THM_DISPLAY_HORIZONTAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_HORIZONTAL",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 
 //		Theme THM_BACKGROUND_WHITE = Theme.builder("THM_BACKGROUND_WHITE").addAttribute().backgroundColor("white").end()
 //				.build();
 		Theme THM_BACKGROUND_WHITE = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BACKGROUND_WHITE",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 
 //		Theme THM_BACKGROUND_GREEN = Theme.builder("THM_BACKGROUND_GREEN").addAttribute().backgroundColor("green").end()
 //				.build();
 		Theme THM_BACKGROUND_GREEN = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BACKGROUND_GREEN",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 
 //		Theme THM_BACKGROUND_YELLOW = Theme.builder("THM_BACKGROUND_YELLOW").addAttribute().backgroundColor("yellow")
 //				.end().build();
 		Theme THM_BACKGROUND_YELLOW = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BACKGROUND_YELLOW",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 
 //		Theme THM_BACKGROUND_RED = Theme.builder("THM_BACKGROUND_RED").addAttribute().backgroundColor("red").end()
 //				.build();
@@ -1205,7 +1205,7 @@ public void testTableHeader() {
 //		Theme THM_BACKGROUND_GRAY = Theme.builder("THM_BACKGROUND_GRAY").addAttribute().backgroundColor("gray").end()
 //				.build();
 		Theme THM_BACKGROUND_GRAY = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BACKGROUND_GRAY",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 
 		Theme THM_BACKGROUND_ORANGE = Theme.builder("THM_BACKGROUND_ORANGE").addAttribute().backgroundColor("orange")
 				.end().build();
@@ -1216,7 +1216,7 @@ public void testTableHeader() {
 //		Theme THM_BACKGROUND_BLUE = Theme.builder("THM_BACKGROUND_BLUE").addAttribute().backgroundColor("blue").end()
 //				.build();
 		Theme THM_BACKGROUND_BLUE = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BACKGROUND_BLUE",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 
 		Theme THM_BACKGROUND_INTERNMATCH = Theme.builder("THM_BACKGROUND_INTERNMATCH").addAttribute()
 				.backgroundColor("#233a4e").end().build();
@@ -1232,23 +1232,23 @@ public void testTableHeader() {
 //				.addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).borderColor("red").color("red").end().build();
 
 		Theme THM_FORM_INPUT_DEFAULT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_FORM_INPUT_DEFAULT",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 
 //		Theme THM_FORM_LABEL_DEFAULT = Theme.builder("THM_FORM_LABEL_DEFAULT").addAttribute().bold(true).size("md")
 //				.end().build();
 		Theme THM_FORM_LABEL_DEFAULT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_FORM_LABEL_DEFAULT",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 
 //		Theme THM_FORM_WRAPPER_DEFAULT = Theme.builder("THM_FORM_WRAPPER_DEFAULT").addAttribute().marginBottom(10)
 //				.padding(10).end().addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).backgroundColor("#fc8e6").end()
 //				.build();
 		Theme THM_FORM_WRAPPER_DEFAULT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_FORM_WRAPPER_DEFAULT",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 
 //		Theme THM_FORM_ERROR_DEFAULT = Theme.builder("THM_FORM_ERROR_DEFAULT").addAttribute().color("red").end()
 //				.build();
 		Theme THM_FORM_ERROR_DEFAULT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_FORM_ERROR_DEFAULT",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 
 //		Theme THM_FORM_DEFAULT = Theme.builder("THM_FORM_DEFAULT").addAttribute().backgroundColor("none").end()
 //				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_TITLE, true).end()
@@ -1267,14 +1267,14 @@ public void testTableHeader() {
 //				.addAttribute(ThemeAttributeType.PRI_HAS_QUESTION_GRP_DESCRIPTION, true).end()
 //				.addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, true).end().build();
 		Theme THM_FORM_CONTAINER_DEFAULT = VertxUtils.getObject(serviceToken.getRealm(), "",
-				"THM_FORM_CONTAINER_DEFAULT", Theme.class, serviceToken.getToken());
+				"THM_FORM_CONTAINER_DEFAULT", Theme.class, serviceToken);
 
 //		Frame3 FRM_DUMMY2 = Frame3.builder("FRM_DUMMY").addTheme(THM_DUMMY).end().build();
 //		String td2 = JsonUtils.toJson(THM_DUMMY);
 //		ThemeDouble td = new ThemeDouble(THM_DUMMY,1.0);
 //		String js2 = JsonUtils.toJson(td);
 //		String js = JsonUtils.toJson(FRM_DUMMY2);
-//		VertxUtils.putObject(serviceToken.getRealm(), "", FRM_DUMMY2.getCode(), FRM_DUMMY2, serviceToken.getToken());
+//		VertxUtils.putObject(serviceToken.getRealm(), "", FRM_DUMMY2.getCode(), FRM_DUMMY2, serviceToken);
 
 		Frame3 FRM_DUMMY = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_DUMMY", Frame3.class,
 				serviceToken.getToken());
@@ -1367,17 +1367,17 @@ public void testTableHeader() {
 
 		QDataBaseEntityMessage msg = FrameUtils2.toMessage(FRM_ROOT, serviceToken, askMsgs);
 
-//		VertxUtils.putObject(serviceToken.getRealm(), "", "FRM_ROOT_MSG", msg, serviceToken.getToken());
+//		VertxUtils.putObject(serviceToken.getRealm(), "", "FRM_ROOT_MSG", msg, serviceToken);
 
 		QDataBaseEntityMessage msg2 = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_ROOT_MSG",
-				QDataBaseEntityMessage.class, serviceToken.getToken());
+				QDataBaseEntityMessage.class, serviceToken);
 
 		msg2.setToken(userToken.getToken());
 		/* send message */
 		// rules.publishCmd(msg2); // Send QDataBaseEntityMessage
 		VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg2));
 //		String askMsgsStr = JsonUtils.toJson(askMsgs);
-//		VertxUtils.putObject(serviceToken.getRealm(), "", "DESKTOP_ASKS", askMsgsStr, serviceToken.getToken());
+//		VertxUtils.putObject(serviceToken.getRealm(), "", "DESKTOP_ASKS", askMsgsStr, serviceToken);
 
 		Type setType = new TypeToken<Set<QDataAskMessage>>() {
 		}.getType();
@@ -1406,7 +1406,7 @@ public void testTableHeader() {
 		System.out.println("Starting");
 
 		QDataBaseEntityMessage msg2 = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_ROOT_MSG",
-				QDataBaseEntityMessage.class, serviceToken.getToken());
+				QDataBaseEntityMessage.class, serviceToken);
 
 		/* send message */
 		rules.publishCmd(msg2); // Send QDataBaseEntityMessage
@@ -1444,7 +1444,7 @@ public void testTableHeader() {
 		System.out.println("Fetching setup info from " + apiUrl);
 		System.out.println("userToken (ensure user has test role) = " + userToken);
 		try {
-			String jsonFormCodes = QwandaUtils.apiGet(apiUrl, userToken.getToken());
+			String jsonFormCodes = QwandaUtils.apiGet(apiUrl, userToken);
 			if (!"You need to be a test.".equals(jsonFormCodes)) {
 				Type type = new TypeToken<List<String>>() {
 				}.getType();

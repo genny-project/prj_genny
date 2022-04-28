@@ -220,7 +220,7 @@
 //			String exchangedToken = serviceTokenStr;
 //			BaseEntity projectBe = new BaseEntity("PRJ_INTERNMATCH");
 //			String userToken = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(),
-//			serviceToken.getRealm(),projectBe,uuid, serviceToken.getToken());
+//			serviceToken.getRealm(),projectBe,uuid, serviceToken);
 //
 ////			HttpClient httpClient = new DefaultHttpClient();
 ////
@@ -355,7 +355,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -427,7 +427,7 @@
 ////        if (false) {
 ////            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 ////            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-////            qRules = new QRules(eventBusMock, userToken.getToken());
+////            qRules = new QRules(eventBusMock, userToken);
 ////            qRules.set("realm", userToken.getRealm());
 ////            qRules.setServiceToken(serviceToken.getToken());
 ////            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -502,12 +502,12 @@
 ////            if (useLocalDocker) { // using local docker
 ////                // uniqueCode =
 ////                // QwandaUtils.apiPostEntity("http://internmatch.genny.life:8299/api/schedule",
-////                // JsonUtils.toJson(scheduleMessage), userToken.getToken());
+////                // JsonUtils.toJson(scheduleMessage), userToken);
 ////                uniqueCode = QwandaUtils.apiPostEntity("https://internmatch-adam2.gada.io/api/schedule",
-////                        JsonUtils.toJson(scheduleMessage), userToken.getToken());
+////                        JsonUtils.toJson(scheduleMessage), userToken);
 ////            } else { // using local dev
 ////                uniqueCode = QwandaUtils.apiPostEntity("http://localhost:8095/api/schedule",
-////                        JsonUtils.toJson(scheduleMessage), userToken.getToken());
+////                        JsonUtils.toJson(scheduleMessage), userToken);
 ////            }
 ////        } catch (IOException e) {
 ////            // TODO Auto-generated catch block
@@ -527,7 +527,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -663,7 +663,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -808,7 +808,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -897,7 +897,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -934,7 +934,7 @@
 //        try {
 //            String resultJsonStr = QwandaUtils.apiGet(
 //                    GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql,
-//                    beUtils.getServiceToken().getToken(), 120);
+//                    beUtils.getServiceToken(), 120);
 //
 //            System.out.println("Search EMAIL result is " + resultJsonStr);
 //            if (resultJsonStr.equals("0")) {
@@ -959,7 +959,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -1033,7 +1033,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -1107,7 +1107,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -1160,7 +1160,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -1202,7 +1202,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -1244,7 +1244,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -1322,7 +1322,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -1432,7 +1432,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -1477,7 +1477,7 @@
 //            String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
 //            try {
 //                String resultJsonStr = QwandaUtils.apiGet(
-//                        GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2, serviceToken.getToken(),
+//                        GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2, serviceToken,
 //                        120);
 //
 //                Integer count = Integer.decode(resultJsonStr);
@@ -1506,7 +1506,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -1619,7 +1619,7 @@
 //            String resultJsonStr = QwandaUtils.apiGet(
 //                    GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search24/" + hql + "/"
 //                            + searchBE.getPageStart(0) + "/" + searchBE.getPageSize(GennySettings.defaultPageSize),
-//                    serviceToken.getToken(), 120);
+//                    serviceToken, 120);
 //
 //            JsonObject resultJson = null;
 //
@@ -1768,7 +1768,7 @@
 //                    String firstname = person.getValueAsString("PRI_FIRSTNAME");
 //                    String lastname = person.getValueAsString("PRI_LASTNAME");
 //                    newPerCode = "PER_" + uuid.toUpperCase();
-//                    String userId = KeycloakUtils.updateUser(uuid, serviceToken.getToken(), serviceToken.getRealm(),
+//                    String userId = KeycloakUtils.updateUser(uuid, serviceToken, serviceToken.getRealm(),
 //                            email, firstname, lastname, email, userPassword, "user", "users");
 //                    userId = userId.toUpperCase();
 //                    Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(), person.getCode(), "PRI_UUID",
@@ -1784,7 +1784,7 @@
 //                String encodedsql = encodeValue("update baseentity_attribute set valueString='" + newPerCode
 //                        + "' where valueString='" + perCode + "'");
 //                String resultJson = QwandaUtils.apiGet(
-//                        GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql, serviceToken.getToken());
+//                        GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql, serviceToken);
 //
 //                encodedsql = encodeValue("update baseentity_attribute set valueString='[\"" + newPerCode
 //                        + "\"]' where valueString='[\"" + perCode + "\"]'");
@@ -1839,7 +1839,7 @@
 //                        if (email.startsWith("gerard")) {
 //                            String firstname = "Gerard";
 //                            String lastname = "Holland";
-//                            uuid = KeycloakUtils.updateUser(uuid, serviceToken.getToken(), serviceToken.getRealm(),
+//                            uuid = KeycloakUtils.updateUser(uuid, serviceToken, serviceToken.getRealm(),
 //                                    email, firstname, lastname, email, userPassword, "user", "users");
 //                            String userId = uuid.toUpperCase();
 //                            person = beUtils.create("PER_" + userId, "Gerard Holland");
@@ -1858,7 +1858,7 @@
 //                        if (email.startsWith("spc")) {
 //                            String firstname = "Stephenie";
 //                            String lastname = "Pulis-Cassar";
-//                            uuid = KeycloakUtils.updateUser(uuid, serviceToken.getToken(), serviceToken.getRealm(),
+//                            uuid = KeycloakUtils.updateUser(uuid, serviceToken, serviceToken.getRealm(),
 //                                    email, firstname, lastname, email, userPassword, "user", "users");
 //                            String userId = uuid.toUpperCase();
 //                            person = beUtils.create("PER_" + userId, "aStephenie Pulis-Cassar");
@@ -1934,7 +1934,7 @@
 //                    String firstname = person.getValueAsString("PRI_FIRSTNAME");
 //                    String lastname = person.getValueAsString("PRI_LASTNAME");
 //                    newPerCode = "PER_" + uuid.toUpperCase();
-//                    String userId = KeycloakUtils.updateUser(uuid, serviceToken.getToken(), serviceToken.getRealm(),
+//                    String userId = KeycloakUtils.updateUser(uuid, serviceToken, serviceToken.getRealm(),
 //                            email, firstname, lastname, email, userPassword, "user", "users");
 //                    userId = userId.toUpperCase();
 //                    Answer keycloakId = new Answer(beUtils.getGennyToken().getUserCode(), person.getCode(), "PRI_UUID",
@@ -1950,7 +1950,7 @@
 //                String encodedsql = encodeValue("update baseentity_attribute set valueString='" + newPerCode
 //                        + "' where valueString='" + perCode + "'");
 //                String resultJson = QwandaUtils.apiGet(
-//                        GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql, serviceToken.getToken());
+//                        GennySettings.qwandaServiceUrl + "/service/executesql/" + encodedsql, serviceToken);
 //
 //                encodedsql = encodeValue("update baseentity_attribute set valueString='[\"" + newPerCode
 //                        + "\"]' where valueString='[\"" + perCode + "\"]'");
@@ -2067,7 +2067,7 @@
 //            String resultJsonStr = QwandaUtils.apiGet(
 //                    GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search24/" + emailhql + "/"
 //                            + searchBE.getPageStart(0) + "/" + searchBE.getPageSize(GennySettings.defaultPageSize),
-//                    serviceToken.getToken(), 120);
+//                    serviceToken, 120);
 //
 //            JsonObject resultJson = null;
 //            resultJson = new JsonObject(resultJsonStr);
@@ -2103,7 +2103,7 @@
 //                String resultJsonStr = QwandaUtils.apiGet(
 //                        GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search24/" + emailhql + "/"
 //                                + searchBE.getPageStart(0) + "/" + searchBE.getPageSize(GennySettings.defaultPageSize),
-//                        serviceToken.getToken(), 120);
+//                        serviceToken, 120);
 //
 //                JsonObject resultJson = null;
 //                resultJson = new JsonObject(resultJsonStr);
@@ -2135,7 +2135,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -2180,7 +2180,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -2354,7 +2354,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -2387,7 +2387,7 @@
 //        String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
 //        try {
 //            String resultJsonStr = QwandaUtils.apiGet(
-//                    GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2, serviceToken.getToken(),
+//                    GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2, serviceToken,
 //                    120);
 //
 //            System.out.println("Count = " + resultJsonStr);
@@ -2409,7 +2409,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -2497,7 +2497,7 @@
 //        JsonObject resultJson;
 //        try {
 //            String resultJsonStr = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search24/"
-//                    + hql2 + "/" + pageStart + "/" + pageSize, serviceToken.getToken(), 120);
+//                    + hql2 + "/" + pageStart + "/" + pageSize, serviceToken, 120);
 //
 //            resultJson = new JsonObject(resultJsonStr);
 //            Long total = resultJson.getLong("total");
@@ -2534,7 +2534,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -2650,7 +2650,7 @@
 //            System.out.println("Payload is" + msgpayload.toString());
 //
 //            try {
-//                QwandaUtils.apiPostEntity(webhookURL, msgpayload.toString(), serviceToken.getToken());
+//                QwandaUtils.apiPostEntity(webhookURL, msgpayload.toString(), serviceToken);
 //            } catch (IOException e) {
 //                e.printStackTrace();
 //            }
@@ -2668,7 +2668,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -2715,7 +2715,7 @@
 //        QDataBaseEntityMessage resultMsg = null;
 //        try {
 //            resultJson = QwandaUtils.apiGet(GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search22/" + hql,
-//                    serviceToken.getToken(), 120);
+//                    serviceToken, 120);
 //            searchtime = System.currentTimeMillis();
 //            resultMsg = JsonUtils.fromJson(resultJson, QDataBaseEntityMessage.class);
 //
@@ -2740,7 +2740,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -2932,7 +2932,7 @@
 ////        if (false) {
 ////            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 ////            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-////            qRules = new QRules(eventBusMock, userToken.getToken());
+////            qRules = new QRules(eventBusMock, userToken);
 ////            qRules.set("realm", userToken.getRealm());
 ////            qRules.setServiceToken(serviceToken.getToken());
 ////            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -3264,7 +3264,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -3564,7 +3564,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -3776,7 +3776,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -3936,7 +3936,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -4092,7 +4092,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            ;
 //            qRules.setServiceToken(serviceToken.getToken());
@@ -4305,7 +4305,7 @@
 //        // "user");
 //        // serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service
 //        // User", "service");
-//        // qRules = new QRules(eventBusMock, userToken.getToken());
+//        // qRules = new QRules(eventBusMock, userToken);
 //        // qRules.set("realm", userToken.getRealm());
 //        // qRules.setServiceToken(serviceToken.getToken());
 //        // VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -4437,7 +4437,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -4630,7 +4630,7 @@
 //        if (true) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -4672,9 +4672,9 @@
 //                WordUtils.capitalizeFully(serviceToken.getRealm()));
 //        project.setRealm(serviceToken.getRealm());
 //        VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
-//                JsonUtils.toJson(project), serviceToken.getToken());
+//                JsonUtils.toJson(project), serviceToken);
 //        VertxUtils.writeCachedJson(realm, ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(),
-//                JsonUtils.toJson(project), serviceToken.getToken());
+//                JsonUtils.toJson(project), serviceToken);
 //
 //        GennyKieSession gks = null;
 //
@@ -4984,7 +4984,7 @@
 //        if (true) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "PER_SERVICE", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -5012,10 +5012,10 @@
 //                WordUtils.capitalizeFully(serviceToken.getRealm()));
 //        project.setRealm(serviceToken.getRealm());
 //        VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
-//                JsonUtils.toJson(project), serviceToken.getToken());
+//                JsonUtils.toJson(project), serviceToken);
 //        VertxUtils.writeCachedJson(realm, ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(),
-//                JsonUtils.toJson(project), serviceToken.getToken());
-//        VertxUtils.writeCachedJson(GennySettings.GENNY_REALM, "TOKEN" + realm.toUpperCase(), serviceToken.getToken());
+//                JsonUtils.toJson(project), serviceToken);
+//        VertxUtils.writeCachedJson(GennySettings.GENNY_REALM, "TOKEN" + realm.toUpperCase(), serviceToken);
 //        JsonObject tokenObj = VertxUtils.readCachedJson(GennySettings.GENNY_REALM, "TOKEN" + realm.toUpperCase());
 //        String token = tokenObj.getString("value");
 //
@@ -5044,7 +5044,7 @@
 //
 //                icn_sort.addAttribute(RulesUtils.getAttribute("PRI_ICON_CODE", serviceToken.getToken()), 1.0, "sort");
 //                icn_sort.setRealm(realm);
-//                VertxUtils.writeCachedJson(realm, "ICN_SORT", JsonUtils.toJson(icn_sort), serviceToken.getToken());
+//                VertxUtils.writeCachedJson(realm, "ICN_SORT", JsonUtils.toJson(icn_sort), serviceToken);
 //
 //            } catch (BadDataException e1) {
 //                e1.printStackTrace();
@@ -5147,7 +5147,7 @@
 //            gks.advanceSeconds(5, false);
 //
 //            BaseEntity user = VertxUtils.getObject(serviceToken.getRealm(), "", userToken.getUserCode(),
-//                    BaseEntity.class, serviceToken.getToken());
+//                    BaseEntity.class, serviceToken);
 //
 //            // Ok, let's close the PER_USER1 task and see if the workflow continues....
 //            System.out.println("CLosing adam_user2 task");
@@ -5246,7 +5246,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -5374,7 +5374,7 @@
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            userToken2 = GennyJbpmBaseTest.createGennyToken(realm, "user2", "Barry2 Allan2", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -5437,11 +5437,11 @@
 //                WordUtils.capitalizeFully(serviceToken.getRealm()));
 //        project.setRealm(serviceToken.getRealm());
 //        VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
-//                JsonUtils.toJson(project), serviceToken.getToken());
+//                JsonUtils.toJson(project), serviceToken);
 //        VertxUtils.writeCachedJson(realm, ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(),
-//                JsonUtils.toJson(project), serviceToken.getToken());
+//                JsonUtils.toJson(project), serviceToken);
 //        BaseEntity project2 = VertxUtils.getObject(serviceToken.getRealm(), "",
-//                "PRJ_" + serviceToken.getRealm().toUpperCase(), BaseEntity.class, serviceToken.getToken());
+//                "PRJ_" + serviceToken.getRealm().toUpperCase(), BaseEntity.class, serviceToken);
 //
 //        GennyKieSession gks = null;
 //
@@ -5463,7 +5463,7 @@
 //
 //                icn_sort.addAttribute(RulesUtils.getAttribute("PRI_ICON_CODE", serviceToken.getToken()), 1.0, "sort");
 //                icn_sort.setRealm(realm);
-//                VertxUtils.writeCachedJson(realm, "ICN_SORT", JsonUtils.toJson(icn_sort), serviceToken.getToken());
+//                VertxUtils.writeCachedJson(realm, "ICN_SORT", JsonUtils.toJson(icn_sort), serviceToken);
 //
 //            } catch (BadDataException e1) {
 //                // TODO Auto-generated catch block
@@ -5481,7 +5481,7 @@
 //            gks.advanceSeconds(5, false);
 //
 //            BaseEntity user = VertxUtils.getObject(serviceToken.getRealm(), "", userToken.getUserCode(),
-//                    BaseEntity.class, serviceToken.getToken());
+//                    BaseEntity.class, serviceToken);
 //
 //            gks.injectEvent(searchMsg); // This sends a search bar request
 //
@@ -5516,7 +5516,7 @@
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            userToken2 = GennyJbpmBaseTest.createGennyToken(realm, "user2", "Barry2 Allan2", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -5584,7 +5584,7 @@
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            userToken2 = GennyJbpmBaseTest.createGennyToken(realm, "user2", "Barry2 Allan2", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -5671,7 +5671,7 @@
 //
 //        // Test sending a page
 //        QDataBaseEntityMessage msg2 = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_QUE_DASHBOARD_VIEW_MSG",
-//                QDataBaseEntityMessage.class, serviceToken.getToken());
+//                QDataBaseEntityMessage.class, serviceToken);
 //
 //        msg2.setToken(userToken.getToken());
 //        /* send message */
@@ -5717,7 +5717,7 @@
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            userToken2 = GennyJbpmBaseTest.createGennyToken(realm, "user2", "Barry2 Allan2", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -5772,11 +5772,11 @@
 //                WordUtils.capitalizeFully(serviceToken.getRealm()));
 //        project.setRealm(serviceToken.getRealm());
 //        VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
-//                JsonUtils.toJson(project), serviceToken.getToken());
+//                JsonUtils.toJson(project), serviceToken);
 //        VertxUtils.writeCachedJson(realm, ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(),
-//                JsonUtils.toJson(project), serviceToken.getToken());
+//                JsonUtils.toJson(project), serviceToken);
 //        BaseEntity project2 = VertxUtils.getObject(serviceToken.getRealm(), "",
-//                "PRJ_" + serviceToken.getRealm().toUpperCase(), BaseEntity.class, serviceToken.getToken());
+//                "PRJ_" + serviceToken.getRealm().toUpperCase(), BaseEntity.class, serviceToken);
 //
 //        GennyKieSession gks = null;
 //
@@ -5793,7 +5793,7 @@
 //
 //                icn_sort.addAttribute(RulesUtils.getAttribute("PRI_ICON_CODE", serviceToken.getToken()), 1.0, "sort");
 //                icn_sort.setRealm(realm);
-//                VertxUtils.writeCachedJson(realm, "ICN_SORT", JsonUtils.toJson(icn_sort), serviceToken.getToken());
+//                VertxUtils.writeCachedJson(realm, "ICN_SORT", JsonUtils.toJson(icn_sort), serviceToken);
 //
 //            } catch (BadDataException e1) {
 //                // TODO Auto-generated catch block
@@ -5813,7 +5813,7 @@
 //            gks.advanceSeconds(5, false);
 //
 //            BaseEntity user = VertxUtils.getObject(serviceToken.getRealm(), "", userToken.getUserCode(),
-//                    BaseEntity.class, serviceToken.getToken());
+//                    BaseEntity.class, serviceToken);
 //
 //            gks.injectEvent(searchMsg); // This sends a search bar request
 //
@@ -5839,7 +5839,7 @@
 //        if (true) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -5872,10 +5872,10 @@
 //                WordUtils.capitalizeFully(serviceToken.getRealm()));
 //        project.setRealm(serviceToken.getRealm());
 //        VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
-//                JsonUtils.toJson(project), serviceToken.getToken());
+//                JsonUtils.toJson(project), serviceToken);
 //
 //        // Log out to begin
-//        VertxUtils.writeCachedJson(userToken.getRealm(), userToken.getSessionCode(), null, userToken.getToken());
+//        VertxUtils.writeCachedJson(userToken.getRealm(), userToken.getSessionCode(), null, userToken);
 //
 //        GennyKieSession gks = null;
 //
@@ -5938,7 +5938,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -6008,7 +6008,7 @@
 //        if (true) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -6031,10 +6031,10 @@
 //                WordUtils.capitalizeFully(serviceToken.getRealm()));
 //        project.setRealm(serviceToken.getRealm());
 //        VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
-//                JsonUtils.toJson(project), serviceToken.getToken());
+//                JsonUtils.toJson(project), serviceToken);
 //
 //        // Log out to begin
-//        VertxUtils.writeCachedJson(userToken.getRealm(), userToken.getSessionCode(), null, userToken.getToken());
+//        VertxUtils.writeCachedJson(userToken.getRealm(), userToken.getSessionCode(), null, userToken);
 //
 //        GennyKieSession gks = null;
 //
@@ -6052,7 +6052,7 @@
 //            gks.injectEvent(msgLogout);
 //
 //            BaseEntity user = VertxUtils.getObject(serviceToken.getRealm(), "", userToken.getUserCode(),
-//                    BaseEntity.class, serviceToken.getToken());
+//                    BaseEntity.class, serviceToken);
 //            System.out.println("final user created " + user);
 //            System.out.println("Sent");
 //
@@ -6203,7 +6203,7 @@
 //    public void simpleTest() {
 //        GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //        GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//        QRules qRules = new QRules(eventBusMock, userToken.getToken());
+//        QRules qRules = new QRules(eventBusMock, userToken);
 //        qRules.set("realm", userToken.getRealm());
 //        qRules.setServiceToken(serviceToken.getToken());
 //
@@ -6225,7 +6225,7 @@
 //
 //        GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //        GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//        QRules qRules = new QRules(eventBusMock, userToken.getToken());
+//        QRules qRules = new QRules(eventBusMock, userToken);
 //        qRules.set("realm", userToken.getRealm());
 //        qRules.setServiceToken(serviceToken.getToken());
 //
@@ -6260,7 +6260,7 @@
 //        VertxUtils.cachedEnabled = true; // don't try and use any local services
 //        GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "userToken");
 //        GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "serviceToken");
-//        QRules qRules = new QRules(eventBusMock, userToken.getToken());
+//        QRules qRules = new QRules(eventBusMock, userToken);
 //        qRules.set("realm", userToken.getRealm());
 //        qRules.setServiceToken(serviceToken.getToken());
 //
@@ -6308,31 +6308,31 @@
 //        // ThemeAttributeType.PRI_CONTENT */
 //        // .justifyContent("flex-start").end().build();
 //        Theme THM_DISPLAY_VERTICAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_VERTICAL",
-//                Theme.class, serviceToken.getToken());
+//                Theme.class, serviceToken);
 //
 //        // Theme THM_DISPLAY_HORIZONTAL =
 //        // Theme.builder("THM_DISPLAY_HORIZONTAL").addAttribute().flexDirection("row").end()
 //        // .build();
 //        Theme THM_DISPLAY_HORIZONTAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_HORIZONTAL",
-//                Theme.class, serviceToken.getToken());
+//                Theme.class, serviceToken);
 //
 //        // Theme THM_BACKGROUND_WHITE =
 //        // Theme.builder("THM_BACKGROUND_WHITE").addAttribute().backgroundColor("white").end()
 //        // .build();
 //        Theme THM_BACKGROUND_WHITE = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BACKGROUND_WHITE",
-//                Theme.class, serviceToken.getToken());
+//                Theme.class, serviceToken);
 //
 //        // Theme THM_BACKGROUND_GREEN =
 //        // Theme.builder("THM_BACKGROUND_GREEN").addAttribute().backgroundColor("green").end()
 //        // .build();
 //        Theme THM_BACKGROUND_GREEN = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BACKGROUND_GREEN",
-//                Theme.class, serviceToken.getToken());
+//                Theme.class, serviceToken);
 //
 //        // Theme THM_BACKGROUND_YELLOW =
 //        // Theme.builder("THM_BACKGROUND_YELLOW").addAttribute().backgroundColor("yellow")
 //        // .end().build();
 //        Theme THM_BACKGROUND_YELLOW = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BACKGROUND_YELLOW",
-//                Theme.class, serviceToken.getToken());
+//                Theme.class, serviceToken);
 //
 //        // Theme THM_BACKGROUND_RED =
 //        // Theme.builder("THM_BACKGROUND_RED").addAttribute().backgroundColor("red").end()
@@ -6344,7 +6344,7 @@
 //        // Theme.builder("THM_BACKGROUND_GRAY").addAttribute().backgroundColor("gray").end()
 //        // .build();
 //        Theme THM_BACKGROUND_GRAY = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BACKGROUND_GRAY",
-//                Theme.class, serviceToken.getToken());
+//                Theme.class, serviceToken);
 //
 //        Theme THM_BACKGROUND_ORANGE = Theme.builder("THM_BACKGROUND_ORANGE").addAttribute().backgroundColor("orange")
 //                .end().build();
@@ -6356,7 +6356,7 @@
 //        // Theme.builder("THM_BACKGROUND_BLUE").addAttribute().backgroundColor("blue").end()
 //        // .build();
 //        Theme THM_BACKGROUND_BLUE = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BACKGROUND_BLUE",
-//                Theme.class, serviceToken.getToken());
+//                Theme.class, serviceToken);
 //
 //        Theme THM_BACKGROUND_INTERNMATCH = Theme.builder("THM_BACKGROUND_INTERNMATCH").addAttribute()
 //                .backgroundColor("#233a4e").end().build();
@@ -6374,26 +6374,26 @@
 //        // .addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).borderColor("red").color("red").end().build();
 //
 //        Theme THM_FORM_INPUT_DEFAULT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_FORM_INPUT_DEFAULT",
-//                Theme.class, serviceToken.getToken());
+//                Theme.class, serviceToken);
 //
 //        // Theme THM_FORM_LABEL_DEFAULT =
 //        // Theme.builder("THM_FORM_LABEL_DEFAULT").addAttribute().bold(true).size("md")
 //        // .end().build();
 //        Theme THM_FORM_LABEL_DEFAULT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_FORM_LABEL_DEFAULT",
-//                Theme.class, serviceToken.getToken());
+//                Theme.class, serviceToken);
 //
 //        // Theme THM_FORM_WRAPPER_DEFAULT =
 //        // Theme.builder("THM_FORM_WRAPPER_DEFAULT").addAttribute().marginBottom(10)
 //        // .padding(10).end().addAttribute(ThemeAttributeType.PRI_CONTENT_ERROR).backgroundColor("#fc8e6").end()
 //        // .build();
 //        Theme THM_FORM_WRAPPER_DEFAULT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_FORM_WRAPPER_DEFAULT",
-//                Theme.class, serviceToken.getToken());
+//                Theme.class, serviceToken);
 //
 //        // Theme THM_FORM_ERROR_DEFAULT =
 //        // Theme.builder("THM_FORM_ERROR_DEFAULT").addAttribute().color("red").end()
 //        // .build();
 //        Theme THM_FORM_ERROR_DEFAULT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_FORM_ERROR_DEFAULT",
-//                Theme.class, serviceToken.getToken());
+//                Theme.class, serviceToken);
 //
 //        // Theme THM_FORM_DEFAULT =
 //        // Theme.builder("THM_FORM_DEFAULT").addAttribute().backgroundColor("none").end()
@@ -6416,7 +6416,7 @@
 //        // true).end()
 //        // .addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, true).end().build();
 //        Theme THM_FORM_CONTAINER_DEFAULT = VertxUtils.getObject(serviceToken.getRealm(), "",
-//                "THM_FORM_CONTAINER_DEFAULT", Theme.class, serviceToken.getToken());
+//                "THM_FORM_CONTAINER_DEFAULT", Theme.class, serviceToken);
 //
 //        // Frame3 FRM_DUMMY2 =
 //        // Frame3.builder("FRM_DUMMY").addTheme(THM_DUMMY).end().build();
@@ -6425,7 +6425,7 @@
 //        // String js2 = JsonUtils.toJson(td);
 //        // String js = JsonUtils.toJson(FRM_DUMMY2);
 //        // VertxUtils.putObject(serviceToken.getRealm(), "", FRM_DUMMY2.getCode(),
-//        // FRM_DUMMY2, serviceToken.getToken());
+//        // FRM_DUMMY2, serviceToken);
 //
 //        Frame3 FRM_DUMMY = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_DUMMY", Frame3.class,
 //                serviceToken.getToken());
@@ -6530,7 +6530,7 @@
 //        // serviceToken.getToken());
 //
 //        QDataBaseEntityMessage msg2 = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_ROOT_MSG",
-//                QDataBaseEntityMessage.class, serviceToken.getToken());
+//                QDataBaseEntityMessage.class, serviceToken);
 //
 //        msg2.setToken(userToken.getToken());
 //        /* send message */
@@ -6567,7 +6567,7 @@
 //        System.out.println("Starting");
 //
 //        QDataBaseEntityMessage msg2 = VertxUtils.getObject(serviceToken.getRealm(), "", "FRM_ROOT_MSG",
-//                QDataBaseEntityMessage.class, serviceToken.getToken());
+//                QDataBaseEntityMessage.class, serviceToken);
 //
 //        /* send message */
 //        rules.publishCmd(msg2); // Send QDataBaseEntityMessage
@@ -6605,7 +6605,7 @@
 //        System.out.println("Fetching setup info from " + apiUrl);
 //        System.out.println("userToken (ensure user has test role) = " + userToken);
 //        try {
-//            String jsonFormCodes = QwandaUtils.apiGet(apiUrl, userToken.getToken());
+//            String jsonFormCodes = QwandaUtils.apiGet(apiUrl, userToken);
 //            if (!"You need to be a test.".equals(jsonFormCodes)) {
 //                Type type = new TypeToken<List<String>>() {
 //                }.getType();
@@ -6735,7 +6735,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -6823,7 +6823,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -6916,7 +6916,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -7018,7 +7018,7 @@
 //                                try {
 //                                    String resultJsonStr = QwandaUtils.apiGet(
 //                                            GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2,
-//                                            serviceToken.getToken(), 120);
+//                                            serviceToken, 120);
 //
 //                                    completedJournals = Integer.decode(resultJsonStr);
 //
@@ -7090,7 +7090,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -7263,7 +7263,7 @@
 //                                    try {
 //                                        String resultJsonStr = QwandaUtils.apiGet(
 //                                                GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2,
-//                                                serviceToken.getToken(), 120);
+//                                                serviceToken, 120);
 //
 //                                        completedJournals = Integer.decode(resultJsonStr);
 //
@@ -7413,7 +7413,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -7512,7 +7512,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -7658,7 +7658,7 @@
 //                                    try {
 //                                        String resultJsonStr = QwandaUtils.apiGet(
 //                                                GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2,
-//                                                serviceToken.getToken(), 120);
+//                                                serviceToken, 120);
 //
 //                                        completedJournals = Integer.decode(resultJsonStr);
 //
@@ -7745,7 +7745,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -7831,7 +7831,7 @@
 //                            try {
 //                                String resultJsonStr = QwandaUtils.apiGet(
 //                                        GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2,
-//                                        serviceToken.getToken(), 120);
+//                                        serviceToken, 120);
 //
 //                                completedJournals = Integer.decode(resultJsonStr);
 //
@@ -7931,7 +7931,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -8081,7 +8081,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -8270,7 +8270,7 @@
 //        if (false) {
 //            userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //            serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//            qRules = new QRules(eventBusMock, userToken.getToken());
+//            qRules = new QRules(eventBusMock, userToken);
 //            qRules.set("realm", userToken.getRealm());
 //            qRules.setServiceToken(serviceToken.getToken());
 //            VertxUtils.cachedEnabled = true; // don't send to local Service Cache

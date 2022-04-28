@@ -131,7 +131,7 @@ rule "HELPER_LNK_INTERNSHIP_APP"
 					/* set QUE_SUBMIT disable=true and send question */
 					boolean enabled = canApplyToInternship;
 	
-					QDataAskMessage askMsg = QuestionUtils.getAsks(userToken.getUserCode(), targetCode, "QUE_ADD_APPLICATION_GRP", userToken.getToken());
+					QDataAskMessage askMsg = QuestionUtils.getAsks(userToken.getRealm(),userToken.getUserCode(), targetCode, "QUE_ADD_APPLICATION_GRP", userToken);
 	
 					if (askMsg != null) {
 						/* SET REPLACE TRUE */

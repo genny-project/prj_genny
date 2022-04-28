@@ -125,12 +125,12 @@ public class ShannonTest {
 		searchBE.setPageSize(pageSize);
 		Long total = beUtils.getCount(searchBE);
 
-		Attribute statusAttribute = RulesUtils.getAttribute("PRI_STATUS", serviceToken.getToken());
-		Attribute deletedAttribute = RulesUtils.getAttribute("PRI_DISABLED", serviceToken.getToken());
-		Attribute lnkInternAttribute = RulesUtils.getAttribute("LNK_INTERN", serviceToken.getToken());
-		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken.getToken());
-		Attribute internCodeAttribute = RulesUtils.getAttribute("PRI_INTERN_CODE", serviceToken.getToken());
-		Attribute applicantCodeAttribute = RulesUtils.getAttribute("PRI_APPLICANT_CODE", serviceToken.getToken());
+		Attribute statusAttribute = RulesUtils.getAttribute("PRI_STATUS", serviceToken);
+		Attribute deletedAttribute = RulesUtils.getAttribute("PRI_DISABLED", serviceToken);
+		Attribute lnkInternAttribute = RulesUtils.getAttribute("LNK_INTERN", serviceToken);
+		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken);
+		Attribute internCodeAttribute = RulesUtils.getAttribute("PRI_INTERN_CODE", serviceToken);
+		Attribute applicantCodeAttribute = RulesUtils.getAttribute("PRI_APPLICANT_CODE", serviceToken);
 
 		BaseEntity defIntern = beUtils.getDEFByCode("DEF_INTERN");
 
@@ -346,8 +346,8 @@ public class ShannonTest {
 		searchBE.setPageSize(pageSize);
 		Long total = beUtils.getCount(searchBE);
 
-		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken.getToken());
-		Attribute lnkInternAttribute = RulesUtils.getAttribute("LNK_INTERN", serviceToken.getToken());
+		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken);
+		Attribute lnkInternAttribute = RulesUtils.getAttribute("LNK_INTERN", serviceToken);
 
 		while (ok) {
 			List<BaseEntity> bes = beUtils.getBaseEntitys(searchBE); // load 100 at a time
@@ -446,8 +446,8 @@ public class ShannonTest {
 		searchBE.setPageSize(pageSize);
 		Long total = beUtils.getCount(searchBE);
 
-		Attribute lnkHCAttribute = RulesUtils.getAttribute("LNK_HOST_COMPANY", serviceToken.getToken());
-		Attribute timezoneAttribute = RulesUtils.getAttribute("PRI_TIMEZONE_ID", serviceToken.getToken());
+		Attribute lnkHCAttribute = RulesUtils.getAttribute("LNK_HOST_COMPANY", serviceToken);
+		Attribute timezoneAttribute = RulesUtils.getAttribute("PRI_TIMEZONE_ID", serviceToken);
 
 		while (ok) {
 			List<BaseEntity> bes = beUtils.getBaseEntitys(searchBE); // load 100 at a time
@@ -537,8 +537,8 @@ public class ShannonTest {
 		searchBE.setPageSize(pageSize);
 		Long total = beUtils.getCount(searchBE);
 
-		Attribute lnkCompInternshipAttribute = RulesUtils.getAttribute("LNK_COMP_INTERNSHIP", serviceToken.getToken());
-		Attribute lnkInternAttribute = RulesUtils.getAttribute("LNK_INTERN", serviceToken.getToken());
+		Attribute lnkCompInternshipAttribute = RulesUtils.getAttribute("LNK_COMP_INTERNSHIP", serviceToken);
+		Attribute lnkInternAttribute = RulesUtils.getAttribute("LNK_INTERN", serviceToken);
 
 		BaseEntity defIntern = beUtils.getDEFByCode("DEF_INTERN");
 
@@ -720,7 +720,7 @@ public class ShannonTest {
 		} catch (IOException e) {
 			return;
 		}
-		serviceToken = new GennyToken("PER_SERVICE", serviceToken.getToken());
+		serviceToken = new GennyToken("PER_SERVICE", serviceToken);
 		VertxUtils.cachedEnabled = false;
 
 		beUtils = new BaseEntityUtils(userToken);

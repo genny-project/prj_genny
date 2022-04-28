@@ -121,7 +121,7 @@ rule "NOTE_EVENT_APPLICATION"
 				
 				if(notes != null){
 					JsonObject json = new JsonObject(notes);
-					json.put("token", userToken.getToken());
+					json.put("token", userToken);
 					
 					JsonObject jsonApplication = new JsonObject();
 					jsonApplication.put("code", targetCode);
@@ -173,7 +173,7 @@ rule "NOTE_EVENT_APPLICATION"
 				
 				if(notes2 != null){
 					JsonObject json2 = new JsonObject(notes2);
-					json2.put("token", userToken.getToken());
+					json2.put("token", userToken);
 					
 					JsonObject jsonApplication2 = new JsonObject();
 					jsonApplication2.put("code", targetCode);

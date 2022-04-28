@@ -101,7 +101,7 @@ rule "ACCESS_NOTES"
 				
 				JsonObject json = new JsonObject(notes);
 				if(notes != null){
-					json.put("token", userToken.getToken());
+					json.put("token", userToken);
 					json.put("code", targetCode);
 					json.put("title", targetName);
 					json.put("image", targetImage);

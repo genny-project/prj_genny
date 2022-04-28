@@ -88,7 +88,7 @@ rule "QUE_TABLE_PREVIOUS_BTN"
 		VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
 				beUtils.getGennyToken());
 		VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "LAST-SEARCH", userToken.getJTI(), searchBE,
-				userToken.getToken());
+				userToken);
 		
 		long totalTime = TableUtils.searchTable(beUtils,searchBE, cache);
 

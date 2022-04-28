@@ -80,7 +80,7 @@ rule "NOTE_EVENT_INTERN_WF"
 				
 				if(notes != null){
 					JsonObject json = new JsonObject(notes);
-					json.put("token", userToken.getToken());
+					json.put("token", userToken);
 					
 					JsonObject jsonIntern = new JsonObject();
 					jsonIntern.put("code", targetCode);

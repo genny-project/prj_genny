@@ -162,21 +162,21 @@ public class Tree extends GennyJbpmBaseTest {
 		Ask[] hcRepSidebar = { dashboardAsk, processViewAsk, internshipsAsk, hcrAsk };
 		
 		sidebarAsk.setChildAsks(agentSidebar);
-		VertxUtils.putObject(serviceToken.getRealm(), "", "SIDEBAR_AGENT", sidebarAsk, serviceToken.getToken());
+		VertxUtils.putObject(serviceToken.getRealm(), "", "SIDEBAR_AGENT", sidebarAsk, serviceToken);
 
 		sidebarAsk.setChildAsks(internSidebar);
-		VertxUtils.putObject(serviceToken.getRealm(), "", "SIDEBAR_INTERN", sidebarAsk, serviceToken.getToken());
+		VertxUtils.putObject(serviceToken.getRealm(), "", "SIDEBAR_INTERN", sidebarAsk, serviceToken);
 
 		sidebarAsk.setChildAsks(eduProRepSidebar);
-		VertxUtils.putObject(serviceToken.getRealm(), "", "SIDEBAR_EDU_PRO_REP", sidebarAsk, serviceToken.getToken());
+		VertxUtils.putObject(serviceToken.getRealm(), "", "SIDEBAR_EDU_PRO_REP", sidebarAsk, serviceToken);
 
 		sidebarAsk.setChildAsks(hcRepSidebar);
-		VertxUtils.putObject(serviceToken.getRealm(), "", "SIDEBAR_HOST_CPY_REP", sidebarAsk, serviceToken.getToken());
+		VertxUtils.putObject(serviceToken.getRealm(), "", "SIDEBAR_HOST_CPY_REP", sidebarAsk, serviceToken);
 		
-		Ask askAgent = VertxUtils.getObject(serviceToken.getRealm(), "", "SIDEBAR_AGENT", Ask.class, serviceToken.getToken());
-		Ask askIntern = VertxUtils.getObject(serviceToken.getRealm(), "", "SIDEBAR_INTERN", Ask.class, serviceToken.getToken());
-		Ask askEduRep = VertxUtils.getObject(serviceToken.getRealm(), "", "SIDEBAR_EDU_PRO_REP", Ask.class, serviceToken.getToken());
-		Ask askHcr = VertxUtils.getObject(serviceToken.getRealm(), "", "SIDEBAR_HOST_CPY_REP", Ask.class, serviceToken.getToken());
+		Ask askAgent = VertxUtils.getObject(serviceToken.getRealm(), "", "SIDEBAR_AGENT", Ask.class, serviceToken);
+		Ask askIntern = VertxUtils.getObject(serviceToken.getRealm(), "", "SIDEBAR_INTERN", Ask.class, serviceToken);
+		Ask askEduRep = VertxUtils.getObject(serviceToken.getRealm(), "", "SIDEBAR_EDU_PRO_REP", Ask.class, serviceToken);
+		Ask askHcr = VertxUtils.getObject(serviceToken.getRealm(), "", "SIDEBAR_HOST_CPY_REP", Ask.class, serviceToken);
 		
 		Ask[] asks = new Ask[1];
 		asks[0] = askAgent;

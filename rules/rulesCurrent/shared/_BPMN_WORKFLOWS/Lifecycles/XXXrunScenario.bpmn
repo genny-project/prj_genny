@@ -159,17 +159,17 @@ userBe = beUtils.getBaseEntityByCode(userToken.getUserCode());
 kcontext.setVariable(&quot;userBe&quot;, userBe);
 
 
-QwandaMessage askMsgA = QuestionUtils.getQuestions(userToken.getUserCode(), userToken.getUserCode(), &quot;QUE_STT_S&quot; + scenario + &quot;_A_GRP&quot;, serviceToken.getToken());
+QwandaMessage askMsgA = QuestionUtils.getQuestions(userToken.getUserCode(), userToken.getUserCode(), &quot;QUE_STT_S&quot; + scenario + &quot;_A_GRP&quot;, serviceToken);
 groupALength = askMsgA.asks.getItems()[0].getChildAsks().length;
 kcontext.setVariable(&quot;groupALength&quot;, groupALength);
 System.out.println(&quot;Number of group A asks: &quot; + groupALength);
 
-QwandaMessage askMsgB= QuestionUtils.getQuestions(userToken.getUserCode(), userToken.getUserCode(), &quot;QUE_STT_S&quot; + scenario + &quot;_B_GRP&quot;, serviceToken.getToken());
+QwandaMessage askMsgB= QuestionUtils.getQuestions(userToken.getUserCode(), userToken.getUserCode(), &quot;QUE_STT_S&quot; + scenario + &quot;_B_GRP&quot;, serviceToken);
 groupBLength = askMsgB.asks.getItems()[0].getChildAsks().length;
 kcontext.setVariable(&quot;groupBLength&quot;, groupBLength);
 System.out.println(&quot;Number of group B asks: &quot; + groupBLength);
 
-QwandaMessage askMsgC= QuestionUtils.getQuestions(userToken.getUserCode(), userToken.getUserCode(), &quot;QUE_STT_S&quot; + scenario + &quot;_C_GRP&quot;, serviceToken.getToken());
+QwandaMessage askMsgC= QuestionUtils.getQuestions(userToken.getUserCode(), userToken.getUserCode(), &quot;QUE_STT_S&quot; + scenario + &quot;_C_GRP&quot;, serviceToken);
 groupCLength = askMsgC.asks.getItems()[0].getChildAsks().length;
 kcontext.setVariable(&quot;groupCLength&quot;, groupCLength);
 System.out.println(&quot;Number of group C asks: &quot; + groupCLength);</bpmn2:script>
@@ -204,7 +204,7 @@ kcontext.setVariable(&quot;loop&quot;, loop);
 
 System.out.println(&quot;scenario1: retrieving child asks for QUE_STT_S&quot; + scenario + &quot;_&quot; + group + &quot;_GRP&quot;);
 
-QwandaMessage askMsg= QuestionUtils.getQuestions(userToken.getUserCode(), userToken.getUserCode(), &quot;QUE_STT_S&quot; + scenario + &quot;_&quot; + group + &quot;_GRP&quot;, serviceToken.getToken());
+QwandaMessage askMsg= QuestionUtils.getQuestions(userToken.getUserCode(), userToken.getUserCode(), &quot;QUE_STT_S&quot; + scenario + &quot;_&quot; + group + &quot;_GRP&quot;, serviceToken);
 Ask[] childAsks = askMsg.asks.getItems()[0].getChildAsks();
 
 questionGroup = childAsks[counter-1].getQuestionCode();

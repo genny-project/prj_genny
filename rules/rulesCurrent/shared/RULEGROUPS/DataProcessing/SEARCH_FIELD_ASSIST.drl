@@ -79,7 +79,7 @@ rule "SEARCH_FIELD_ASSIST"
 		TableUtils tableUtils = new TableUtils(beUtils);
 		System.out.println("Realm is "+beUtils.getGennyToken().getRealm());
  		SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "",
-				searchCode, SearchEntity.class,userToken.getToken());
+				searchCode, SearchEntity.class,userToken);
 		/* System.out.println("SearchBE  is  "+searchBE); */
 		
 		System.out.println(drools.getRule().getName()+" SEARCH ASSIST for "+searchBE.getCode() + " with attribute Code "+attributeCode+" and value "+filterValue); 

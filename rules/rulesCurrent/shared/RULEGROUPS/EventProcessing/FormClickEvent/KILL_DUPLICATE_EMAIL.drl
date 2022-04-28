@@ -113,7 +113,7 @@ rule "KILL_DUPLICATE_EMAIL"
 		try {
 					String resultJsonStr = QwandaUtils.apiGet(
 					GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql ,
-					beUtils.getServiceToken().getToken(), 120);
+					beUtils.getServiceToken(), 120);
 
 					System.out.println("Search EMAIL result is "+resultJsonStr);
 			

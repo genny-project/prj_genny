@@ -26,7 +26,7 @@ public class TimerTest extends GennyJbpmBaseTest {
 		VertxUtils.cachedEnabled = true; // don't try and use any local services
 		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "userToken");
 		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "serviceToken");
-		QRules qRules = new QRules(eventBusMock, userToken.getToken());
+		QRules qRules = new QRules(eventBusMock, userToken);
 		
 		
 		GennyKieSession gks = GennyKieSession.builder(serviceToken)
@@ -53,7 +53,7 @@ public class TimerTest extends GennyJbpmBaseTest {
 		VertxUtils.cachedEnabled = true; // don't try and use any local services
 		GennyToken userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "userToken");
 		GennyToken serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "serviceToken");
-		QRules qRules = new QRules(eventBusMock, userToken.getToken());
+		QRules qRules = new QRules(eventBusMock, userToken);
 		
 		GennyKieSession gks = GennyKieSession.builder(serviceToken)
 				.addJbpm("example_timer_start.bpmn")

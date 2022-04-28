@@ -115,7 +115,7 @@ public class JasperTest {
         if (false) {
             userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
             serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-            qRules = new QRules(eventBusMock, userToken.getToken());
+            qRules = new QRules(eventBusMock, userToken);
             qRules.set("realm", userToken.getRealm());
             qRules.setServiceToken(serviceToken.getToken());
             VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -181,7 +181,7 @@ public class JasperTest {
         if (false) {
             userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
             serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-            qRules = new QRules(eventBusMock, userToken.getToken());
+            qRules = new QRules(eventBusMock, userToken);
             qRules.set("realm", userToken.getRealm());
             qRules.setServiceToken(serviceToken.getToken());
             VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -277,7 +277,7 @@ public class JasperTest {
         if (false) {
             userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
             serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-            qRules = new QRules(eventBusMock, userToken.getToken());
+            qRules = new QRules(eventBusMock, userToken);
             qRules.set("realm", userToken.getRealm());
             qRules.setServiceToken(serviceToken.getToken());
             VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -333,7 +333,7 @@ public class JasperTest {
         if (false) {
             userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
             serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-            qRules = new QRules(eventBusMock, userToken.getToken());
+            qRules = new QRules(eventBusMock, userToken);
             qRules.set("realm", userToken.getRealm());
             qRules.setServiceToken(serviceToken.getToken());
             VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -387,7 +387,7 @@ public class JasperTest {
         if (false) {
             userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
             serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-            qRules = new QRules(eventBusMock, userToken.getToken());
+            qRules = new QRules(eventBusMock, userToken);
             qRules.set("realm", userToken.getRealm());
             qRules.setServiceToken(serviceToken.getToken());
             VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -417,7 +417,7 @@ public class JasperTest {
         if (false) {
             userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
             serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-            qRules = new QRules(eventBusMock, userToken.getToken());
+            qRules = new QRules(eventBusMock, userToken);
             qRules.set("realm", userToken.getRealm());
             qRules.setServiceToken(serviceToken.getToken());
             VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -440,43 +440,43 @@ public class JasperTest {
 		
 		
 		SearchEntity SBE_COUNT_INTERN_ALL = VertxUtils.getObject(serviceToken.getRealm(), "",
-						"SBE_COUNT_INTERN_ALL", SearchEntity.class, serviceToken.getToken());
+						"SBE_COUNT_INTERN_ALL", SearchEntity.class, serviceToken);
 		SearchEntity SBE_COUNT_INTERN_AVAILABLE = VertxUtils.getObject(serviceToken.getRealm(), "",
-						"SBE_COUNT_INTERN_AVAILABLE", SearchEntity.class, serviceToken.getToken());
+						"SBE_COUNT_INTERN_AVAILABLE", SearchEntity.class, serviceToken);
 		SearchEntity SBE_COUNT_INTERN_APPLIED = VertxUtils.getObject(serviceToken.getRealm(), "",
-						"SBE_COUNT_INTERN_APPLIED", SearchEntity.class, serviceToken.getToken());
+						"SBE_COUNT_INTERN_APPLIED", SearchEntity.class, serviceToken);
 		SearchEntity SBE_COUNT_INTERN_SHORTLISTED = VertxUtils.getObject(serviceToken.getRealm(), "",
-						"SBE_COUNT_INTERN_SHORTLISTED", SearchEntity.class, serviceToken.getToken());
+						"SBE_COUNT_INTERN_SHORTLISTED", SearchEntity.class, serviceToken);
 		SearchEntity SBE_COUNT_INTERN_INTERVIEWED = VertxUtils.getObject(serviceToken.getRealm(), "",
-						"SBE_COUNT_INTERN_INTERVIEWED", SearchEntity.class, serviceToken.getToken());
+						"SBE_COUNT_INTERN_INTERVIEWED", SearchEntity.class, serviceToken);
 		SearchEntity SBE_COUNT_INTERN_OFFERED = VertxUtils.getObject(serviceToken.getRealm(), "",
-						"SBE_COUNT_INTERN_OFFERED", SearchEntity.class, serviceToken.getToken());
+						"SBE_COUNT_INTERN_OFFERED", SearchEntity.class, serviceToken);
 		SearchEntity SBE_COUNT_INTERN_PLACED = VertxUtils.getObject(serviceToken.getRealm(), "",
-						"SBE_COUNT_INTERN_PLACED", SearchEntity.class, serviceToken.getToken());
+						"SBE_COUNT_INTERN_PLACED", SearchEntity.class, serviceToken);
 		SearchEntity SBE_COUNT_INTERN_IN_PROGRESS = VertxUtils.getObject(serviceToken.getRealm(), "",
-						"SBE_COUNT_INTERN_IN_PROGRESS", SearchEntity.class, serviceToken.getToken());
+						"SBE_COUNT_INTERN_IN_PROGRESS", SearchEntity.class, serviceToken);
 		SearchEntity SBE_COUNT_INTERN_COMPLETED = VertxUtils.getObject(serviceToken.getRealm(), "",
-						"SBE_COUNT_INTERN_COMPLETED", SearchEntity.class, serviceToken.getToken());
+						"SBE_COUNT_INTERN_COMPLETED", SearchEntity.class, serviceToken);
 						
 						
 		SearchEntity SBE_COUNT_INTERNSHIP_ALL = VertxUtils.getObject(serviceToken.getRealm(), "",
-						"SBE_COUNT_INTERNSHIP_ALL", SearchEntity.class, serviceToken.getToken());
+						"SBE_COUNT_INTERNSHIP_ALL", SearchEntity.class, serviceToken);
 		SearchEntity SBE_COUNT_INTERNSHIP_AVAILABLE = VertxUtils.getObject(serviceToken.getRealm(), "",
-						"SBE_COUNT_INTERNSHIP_AVAILABLE", SearchEntity.class, serviceToken.getToken());
+						"SBE_COUNT_INTERNSHIP_AVAILABLE", SearchEntity.class, serviceToken);
 		SearchEntity SBE_COUNT_INTERNSHIP_APPLIED = VertxUtils.getObject(serviceToken.getRealm(), "",
-						"SBE_COUNT_INTERNSHIP_APPLIED", SearchEntity.class, serviceToken.getToken());
+						"SBE_COUNT_INTERNSHIP_APPLIED", SearchEntity.class, serviceToken);
 		SearchEntity SBE_COUNT_INTERNSHIP_SHORTLISTED = VertxUtils.getObject(serviceToken.getRealm(), "",
-						"SBE_COUNT_INTERNSHIP_SHORTLISTED", SearchEntity.class, serviceToken.getToken());
+						"SBE_COUNT_INTERNSHIP_SHORTLISTED", SearchEntity.class, serviceToken);
 		SearchEntity SBE_COUNT_INTERNSHIP_INTERVIEWED = VertxUtils.getObject(serviceToken.getRealm(), "",
-						"SBE_COUNT_INTERNSHIP_INTERVIEWED", SearchEntity.class, serviceToken.getToken());
+						"SBE_COUNT_INTERNSHIP_INTERVIEWED", SearchEntity.class, serviceToken);
 		SearchEntity SBE_COUNT_INTERNSHIP_OFFERED = VertxUtils.getObject(serviceToken.getRealm(), "",
-						"SBE_COUNT_INTERNSHIP_OFFERED", SearchEntity.class, serviceToken.getToken());
+						"SBE_COUNT_INTERNSHIP_OFFERED", SearchEntity.class, serviceToken);
 		SearchEntity SBE_COUNT_INTERNSHIP_PLACED = VertxUtils.getObject(serviceToken.getRealm(), "",
-						"SBE_COUNT_INTERNSHIP_PLACED", SearchEntity.class, serviceToken.getToken());
+						"SBE_COUNT_INTERNSHIP_PLACED", SearchEntity.class, serviceToken);
 		SearchEntity SBE_COUNT_INTERNSHIP_IN_PROGRESS = VertxUtils.getObject(serviceToken.getRealm(), "",
-						"SBE_COUNT_INTERNSHIP_IN_PROGRESS", SearchEntity.class, serviceToken.getToken());
+						"SBE_COUNT_INTERNSHIP_IN_PROGRESS", SearchEntity.class, serviceToken);
 		SearchEntity SBE_COUNT_INTERNSHIP_COMPLETED = VertxUtils.getObject(serviceToken.getRealm(), "",
-						"SBE_COUNT_INTERNSHIP_COMPLETED", SearchEntity.class, serviceToken.getToken());
+						"SBE_COUNT_INTERNSHIP_COMPLETED", SearchEntity.class, serviceToken);
 						
 						
 		searchMap.put("PRI_COUNT_ALL_INTERNS", SBE_COUNT_INTERN_ALL);
@@ -512,7 +512,7 @@ public class JasperTest {
 	        			String resultJsonStr = QwandaUtils.apiGet(
 	        					GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/search24/" + hql + "/"
 	        							+ searchBE.getPageStart(0) + "/" + searchBE.getPageSize(GennySettings.defaultPageSize),
-	        					serviceToken.getToken(), 120);
+	        					serviceToken, 120);
 	        			
 	        			JSONObject json = new JSONObject(resultJsonStr);
 	        			
@@ -539,7 +539,7 @@ public class JasperTest {
         if (false) {
             userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
             serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-            qRules = new QRules(eventBusMock, userToken.getToken());
+            qRules = new QRules(eventBusMock, userToken);
             qRules.set("realm", userToken.getRealm());
             qRules.setServiceToken(serviceToken.getToken());
             VertxUtils.cachedEnabled = true; // don't send to local Service Cache

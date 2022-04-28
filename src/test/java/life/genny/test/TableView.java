@@ -191,10 +191,10 @@
 ////          // QDataBaseEntityMessage frameMsg = FrameUtils2.toMessage(frame, serviceToken, askSet, contextListMap, virtualAskMap);
 ////
 ////          // /* cache the frame */
-////          // VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode(), frame, serviceToken.getToken());
+////          // VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode(), frame, serviceToken);
 ////
 ////          // /* cache the QDataBaseEntityMessage */
-////          // VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode() + "_MSG", frameMsg, serviceToken.getToken());
+////          // VertxUtils.putObject(serviceToken.getRealm(), "", frame.getCode() + "_MSG", frameMsg, serviceToken);
 ////
 ////          // /* cache the ask */
 ////          // VertxUtils.writeCachedJson(serviceToken.getRealm(),"ASK_" + frame.getCode(), JsonUtils.toJson(askSet.toArray()),serviceToken.getToken());
@@ -704,31 +704,31 @@
 //		TableUtilsTest bucketUtils = new TableUtilsTest(beUtils);
 //
 //		Theme THM_QUESTION_GRP_LABEL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_QUESTION_GRP_LABEL",
-//				Theme.class, serviceToken.getToken());
+//				Theme.class, serviceToken);
 //		Theme THM_DISPLAY_VERTICAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_VERTICAL",
-//				Theme.class, serviceToken.getToken());
+//				Theme.class, serviceToken);
 //		Theme THM_DISPLAY_HORIZONTAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_HORIZONTAL",
-//				Theme.class, serviceToken.getToken());
+//				Theme.class, serviceToken);
 //		Theme THM_WIDTH_100_PERCENT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_WIDTH_100_PERCENT",
-//				Theme.class, serviceToken.getToken());
+//				Theme.class, serviceToken);
 //		Theme THM_BH_ROW_ONE_GRP_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
-//				"THM_BH_ROW_ONE_GRP_WRAPPER", Theme.class, serviceToken.getToken());
+//				"THM_BH_ROW_ONE_GRP_WRAPPER", Theme.class, serviceToken);
 //		Theme THM_BH_ROW_ONE_GRP_LABEL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_ROW_ONE_GRP_LABEL",
-//				Theme.class, serviceToken.getToken());
+//				Theme.class, serviceToken);
 //		Theme THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
-//				"THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER", Theme.class, serviceToken.getToken());
+//				"THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER", Theme.class, serviceToken);
 //		Theme THM_BH_ROW_ONE_VCL_INPUT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_ROW_ONE_VCL_INPUT",
-//				Theme.class, serviceToken.getToken());
+//				Theme.class, serviceToken);
 //		Theme THM_BH_ROW_TWO_VCL_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
-//				"THM_BH_ROW_TWO_VCL_WRAPPER", Theme.class, serviceToken.getToken());
+//				"THM_BH_ROW_TWO_VCL_WRAPPER", Theme.class, serviceToken);
 //		Theme THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
-//				"THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER", Theme.class, serviceToken.getToken());
+//				"THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER", Theme.class, serviceToken);
 //		Theme THM_BH_ROW_TWO_INPUT_FIELD = VertxUtils.getObject(serviceToken.getRealm(), "",
-//				"THM_BH_ROW_TWO_INPUT_FIELD", Theme.class, serviceToken.getToken());
+//				"THM_BH_ROW_TWO_INPUT_FIELD", Theme.class, serviceToken);
 //		Theme THM_ICON = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_ICON", Theme.class,
 //				serviceToken.getToken());
 //		Theme THM_BH_GROUP_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_GROUP_WRAPPER",
-//				Theme.class, serviceToken.getToken());
+//				Theme.class, serviceToken);
 //
 //		BaseEntity ICN_SORT = beUtils.getBaseEntityByCode("ICN_SORT");
 //
@@ -788,14 +788,14 @@
 //		ValidationList searchValidationList = new ValidationList();
 //		searchValidationList.setValidationList(validations);
 //
-//		Attribute countAttribute = RulesUtils.getAttribute("PRI_TOTAL_RESULTS", serviceToken.getToken());
-//		Attribute sortAttribute = RulesUtils.getAttribute("PRI_SORT", serviceToken.getToken());
-//		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken.getToken());
+//		Attribute countAttribute = RulesUtils.getAttribute("PRI_TOTAL_RESULTS", serviceToken);
+//		Attribute sortAttribute = RulesUtils.getAttribute("PRI_SORT", serviceToken);
+//		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken);
 //
 //		Attribute searchAttribute = new Attribute("PRI_NAME", "Search",
 //				new DataType("Text", searchValidationList, "Text"));
 //
-//		Attribute questionAttribute = RulesUtils.getAttribute("QQQ_QUESTION_GROUP", serviceToken.getToken());
+//		Attribute questionAttribute = RulesUtils.getAttribute("QQQ_QUESTION_GROUP", serviceToken);
 //		Attribute tableCellAttribute = RulesUtils.getAttribute("QQQ_QUESTION_GROUP_TABLE_CELL",
 //				serviceToken.getToken());
 //
@@ -844,9 +844,9 @@
 //
 //		/* get the themes */
 //		Theme THM_DISPLAY_HORIZONTAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_HORIZONTAL",
-//				Theme.class, serviceToken.getToken());
+//				Theme.class, serviceToken);
 //		Theme THM_WIDTH_100_PERCENT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_WIDTH_100_PERCENT",
-//				Theme.class, serviceToken.getToken());
+//				Theme.class, serviceToken);
 //		Theme THM_ICON = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_ICON", Theme.class,
 //				serviceToken.getToken());
 //		Theme THM_JUSTIFY_CONTENT_SPACE_AROUND = Theme.builder("THM_JUSTIFY_CONTENT_SPACE_AROUND").addAttribute()
@@ -913,7 +913,7 @@
 //
 //		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
 //
-//		Attribute questionAttribute = RulesUtils.getAttribute("QQQ_QUESTION_GROUP", serviceToken.getToken());
+//		Attribute questionAttribute = RulesUtils.getAttribute("QQQ_QUESTION_GROUP", serviceToken);
 //		Question bucketContentQuestion = new Question("QUE_BUCKET_CONTENT_GRP", "", questionAttribute, true);
 //		Ask bucketContentAsk = new Ask(bucketContentQuestion, beUtils.getGennyToken().getUserCode(), "SBE_DUMMY");
 //		return bucketContentAsk;

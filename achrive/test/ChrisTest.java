@@ -119,7 +119,7 @@ public class ChrisTest {
 		if (true) {
 			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules = new QRules(eventBusMock, userToken);
 			qRules.set("realm", userToken.getRealm());
 			qRules.setServiceToken(serviceToken.getToken());
 			eventBusMock = new EventBusMock();
@@ -167,8 +167,8 @@ public class ChrisTest {
 				StringUtils.capitaliseAllWords(serviceToken.getRealm()));
 		project.setRealm(serviceToken.getRealm());
 		VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
-				JsonUtils.toJson(project), serviceToken.getToken());
-		VertxUtils.writeCachedJson(realm,  ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(),JsonUtils.toJson(project), serviceToken.getToken());
+				JsonUtils.toJson(project), serviceToken);
+		VertxUtils.writeCachedJson(realm,  ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(),JsonUtils.toJson(project), serviceToken);
 
 
 		GennyKieSession gks = null;
@@ -229,7 +229,7 @@ public class ChrisTest {
 		if (true) {
 			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules = new QRules(eventBusMock, userToken);
 			qRules.set("realm", userToken.getRealm());
 			qRules.setServiceToken(serviceToken.getToken());
 			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -269,8 +269,8 @@ public class ChrisTest {
 				StringUtils.capitaliseAllWords(serviceToken.getRealm()));
 		project.setRealm(serviceToken.getRealm());
 		VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
-				JsonUtils.toJson(project), serviceToken.getToken());
-		VertxUtils.writeCachedJson(realm,  ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(),JsonUtils.toJson(project), serviceToken.getToken());
+				JsonUtils.toJson(project), serviceToken);
+		VertxUtils.writeCachedJson(realm,  ":" + "PRJ_" + serviceToken.getRealm().toUpperCase(),JsonUtils.toJson(project), serviceToken);
 
 
 		GennyKieSession gks = null;
@@ -325,7 +325,7 @@ public class ChrisTest {
         if (true) {
             userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
             serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-            qRules = new QRules(eventBusMock, userToken.getToken());
+            qRules = new QRules(eventBusMock, userToken);
             qRules.set("realm", userToken.getRealm());
             qRules.setServiceToken(serviceToken.getToken());
             VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -362,7 +362,7 @@ public class ChrisTest {
                 StringUtils.capitaliseAllWords(serviceToken.getRealm()));
         project.setRealm(serviceToken.getRealm());
         VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
-                JsonUtils.toJson(project), serviceToken.getToken());
+                JsonUtils.toJson(project), serviceToken);
         
         // Log out to begin
         VertxUtils.writeCachedJson(userToken.getRealm(),userToken.getSessionCode(),null,userToken.getToken());
@@ -420,7 +420,7 @@ public class ChrisTest {
 			userToken = GennyJbpmBaseTest.createGennyToken(realm, "user13", "Barry Allan", "user");
 			userToken2 = GennyJbpmBaseTest.createGennyToken(realm, "user2", "Barry2 Allan2", "user");
 			serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-			qRules = new QRules(eventBusMock, userToken.getToken());
+			qRules = new QRules(eventBusMock, userToken);
 			qRules.set("realm", userToken.getRealm());
 			qRules.setServiceToken(serviceToken.getToken());
 			VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -479,7 +479,7 @@ public class ChrisTest {
 				StringUtils.capitaliseAllWords(serviceToken.getRealm()));
 		project.setRealm(serviceToken.getRealm());
 		VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
-				JsonUtils.toJson(project), serviceToken.getToken());
+				JsonUtils.toJson(project), serviceToken);
 
 		GennyKieSession gks = null;
 

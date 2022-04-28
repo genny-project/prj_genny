@@ -38,7 +38,7 @@ public class JunitCache implements WildflyCacheInterface {
 		GennyToken userToken = new GennyToken(token);
 		try {
 			askMsgs2Str = QwandaUtils.apiGet(GennySettings.ddtUrl + "/read/" + userToken.getRealm() + "/" + key,
-					userToken.getToken());
+					userToken);
 			askMsgs2Str = askMsgs2Str.replaceAll(token, "");
 
 			String jsonStr = VertxUtils.fixJson(askMsgs2Str);
@@ -75,7 +75,7 @@ public class JunitCache implements WildflyCacheInterface {
 			String askMsgs2Str = "";
 			GennyToken userToken = new GennyToken(token);
 			try {
-				askMsgs2Str = QwandaUtils.apiPostEntity(GennySettings.ddtUrl + "/write/", value, userToken.getToken());
+				askMsgs2Str = QwandaUtils.apiPostEntity(GennySettings.ddtUrl + "/write/", value, userToken);
 				JsonObject json = new JsonObject(askMsgs2Str);
 				askMsgs2Str = json.getString("value"); // TODO - assumes always works.....not always case
 			} catch (ClientProtocolException e) {

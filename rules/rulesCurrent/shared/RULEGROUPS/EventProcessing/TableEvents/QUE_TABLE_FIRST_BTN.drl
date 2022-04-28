@@ -92,7 +92,7 @@ rule "QUE_TABLE_FIRST_BTN"
 			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", searchBE.getCode(), searchBE,
 				beUtils.getGennyToken());
 			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "LAST-SEARCH", userToken.getJTI(), searchBE,
-				userToken.getToken());
+				userToken);
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" FIRST for "+searchBE.getCode()+" About to go into search! "); 
 		
 			long totalTime = TableUtils.searchTable(beUtils,searchBE, cache);

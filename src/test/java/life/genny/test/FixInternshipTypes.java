@@ -123,8 +123,8 @@ public class FixInternshipTypes {
 		searchBE.setPageSize(pageSize);
 		Long total = beUtils.getCount(searchBE);
 
-		Attribute lnkNoOfInternsAttribute = RulesUtils.getAttribute("LNK_NO_OF_INTERNS", serviceToken.getToken());
-		Attribute noOfInternsAttribute = RulesUtils.getAttribute("PRI_NO_OF_INTERNS", serviceToken.getToken());
+		Attribute lnkNoOfInternsAttribute = RulesUtils.getAttribute("LNK_NO_OF_INTERNS", serviceToken);
+		Attribute noOfInternsAttribute = RulesUtils.getAttribute("PRI_NO_OF_INTERNS", serviceToken);
 
 		BaseEntity defInternship = beUtils.getDEFByCode("DEF_INTERNSHIP");
 
@@ -252,8 +252,8 @@ public class FixInternshipTypes {
 		searchBE.setPageSize(pageSize);
 		Long total = beUtils.getCount(searchBE);
 
-		Attribute titleAttribute = RulesUtils.getAttribute("PRI_INTERNSHIP_TITLE", serviceToken.getToken());
-		Attribute hostCompanyAttribute = RulesUtils.getAttribute("LNK_HOST_COMPANY", serviceToken.getToken());
+		Attribute titleAttribute = RulesUtils.getAttribute("PRI_INTERNSHIP_TITLE", serviceToken);
+		Attribute hostCompanyAttribute = RulesUtils.getAttribute("LNK_HOST_COMPANY", serviceToken);
 
 		BaseEntity defInternship = beUtils.getDEFByCode("DEF_INTERNSHIP");
 
@@ -309,8 +309,8 @@ public class FixInternshipTypes {
 		searchBE.setPageSize(pageSize);
 		Long total = beUtils.getCount(searchBE);
 
-		Attribute titleAttribute = RulesUtils.getAttribute("PRI_INTERNSHIP_TITLE", serviceToken.getToken());
-		Attribute hostCompanyAttribute = RulesUtils.getAttribute("LNK_HOST_COMPANY", serviceToken.getToken());
+		Attribute titleAttribute = RulesUtils.getAttribute("PRI_INTERNSHIP_TITLE", serviceToken);
+		Attribute hostCompanyAttribute = RulesUtils.getAttribute("LNK_HOST_COMPANY", serviceToken);
 
 		BaseEntity defInternship = beUtils.getDEFByCode("DEF_INTERNSHIP");
 
@@ -390,13 +390,13 @@ public class FixInternshipTypes {
 		searchBE.setPageSize(pageSize);
 		Long total = beUtils.getCount(searchBE);
 
-		Attribute statusAttribute = RulesUtils.getAttribute("PRI_STATUS", serviceToken.getToken());
-		Attribute stageAttribute = RulesUtils.getAttribute("PRI_STAGE", serviceToken.getToken());
-		Attribute deletedAttribute = RulesUtils.getAttribute("PRI_DISABLED", serviceToken.getToken());
-		Attribute lnkInternAttribute = RulesUtils.getAttribute("LNK_INTERN", serviceToken.getToken());
-		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken.getToken());
-		Attribute internCodeAttribute = RulesUtils.getAttribute("PRI_INTERN_CODE", serviceToken.getToken());
-		Attribute applicantCodeAttribute = RulesUtils.getAttribute("PRI_APPLICANT_CODE", serviceToken.getToken());
+		Attribute statusAttribute = RulesUtils.getAttribute("PRI_STATUS", serviceToken);
+		Attribute stageAttribute = RulesUtils.getAttribute("PRI_STAGE", serviceToken);
+		Attribute deletedAttribute = RulesUtils.getAttribute("PRI_DISABLED", serviceToken);
+		Attribute lnkInternAttribute = RulesUtils.getAttribute("LNK_INTERN", serviceToken);
+		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken);
+		Attribute internCodeAttribute = RulesUtils.getAttribute("PRI_INTERN_CODE", serviceToken);
+		Attribute applicantCodeAttribute = RulesUtils.getAttribute("PRI_APPLICANT_CODE", serviceToken);
 
 		BaseEntity defIntern = beUtils.getDEFByCode("DEF_INTERN");
 
@@ -727,9 +727,9 @@ public class FixInternshipTypes {
 		searchBE.setPageSize(pageSize);
 		Long total = beUtils.getCount(searchBE);
 
-		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken.getToken());
-		Attribute statusAttribute = RulesUtils.getAttribute("PRI_STATUS", serviceToken.getToken());
-		Attribute stageAttribute = RulesUtils.getAttribute("PRI_STAGE", serviceToken.getToken());
+		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken);
+		Attribute statusAttribute = RulesUtils.getAttribute("PRI_STATUS", serviceToken);
+		Attribute stageAttribute = RulesUtils.getAttribute("PRI_STAGE", serviceToken);
 
 		Integer stage = 0;
 		Integer status = 0;
@@ -804,14 +804,14 @@ public class FixInternshipTypes {
 		searchBE.setPageSize(pageSize);
 		Long total = beUtils.getCount(searchBE);
 
-		Attribute statusAttribute = RulesUtils.getAttribute("PRI_STATUS", serviceToken.getToken());
-		Attribute deletedAttribute = RulesUtils.getAttribute("PRI_DISABLED", serviceToken.getToken());
-		Attribute lnkInternAttribute = RulesUtils.getAttribute("LNK_INTERN", serviceToken.getToken());
-		Attribute internshipTitleAttribute = RulesUtils.getAttribute("PRI_INTERNSHIP_TITLE", serviceToken.getToken());
-		Attribute titleAttribute = RulesUtils.getAttribute("PRI_TITLE", serviceToken.getToken());
-		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken.getToken());
-		Attribute internCodeAttribute = RulesUtils.getAttribute("PRI_INTERN_CODE", serviceToken.getToken());
-		Attribute applicantCodeAttribute = RulesUtils.getAttribute("PRI_APPLICANT_CODE", serviceToken.getToken());
+		Attribute statusAttribute = RulesUtils.getAttribute("PRI_STATUS", serviceToken);
+		Attribute deletedAttribute = RulesUtils.getAttribute("PRI_DISABLED", serviceToken);
+		Attribute lnkInternAttribute = RulesUtils.getAttribute("LNK_INTERN", serviceToken);
+		Attribute internshipTitleAttribute = RulesUtils.getAttribute("PRI_INTERNSHIP_TITLE", serviceToken);
+		Attribute titleAttribute = RulesUtils.getAttribute("PRI_TITLE", serviceToken);
+		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken);
+		Attribute internCodeAttribute = RulesUtils.getAttribute("PRI_INTERN_CODE", serviceToken);
+		Attribute applicantCodeAttribute = RulesUtils.getAttribute("PRI_APPLICANT_CODE", serviceToken);
 
 		BaseEntity defInternship = beUtils.getDEFByCode("DEF_INTERNSHIP");
 
@@ -874,12 +874,12 @@ public class FixInternshipTypes {
 		searchBE.setPageSize(pageSize);
 		Long total = beUtils.getCount(searchBE);
 
-		Attribute statusAttribute = RulesUtils.getAttribute("PRI_STATUS", serviceToken.getToken());
-		Attribute deletedAttribute = RulesUtils.getAttribute("PRI_DISABLED", serviceToken.getToken());
-		Attribute lnkInternAttribute = RulesUtils.getAttribute("LNK_INTERN", serviceToken.getToken());
-		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken.getToken());
-		Attribute internCodeAttribute = RulesUtils.getAttribute("PRI_INTERN_CODE", serviceToken.getToken());
-		Attribute applicantCodeAttribute = RulesUtils.getAttribute("PRI_APPLICANT_CODE", serviceToken.getToken());
+		Attribute statusAttribute = RulesUtils.getAttribute("PRI_STATUS", serviceToken);
+		Attribute deletedAttribute = RulesUtils.getAttribute("PRI_DISABLED", serviceToken);
+		Attribute lnkInternAttribute = RulesUtils.getAttribute("LNK_INTERN", serviceToken);
+		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken);
+		Attribute internCodeAttribute = RulesUtils.getAttribute("PRI_INTERN_CODE", serviceToken);
+		Attribute applicantCodeAttribute = RulesUtils.getAttribute("PRI_APPLICANT_CODE", serviceToken);
 
 		BaseEntity defIntern = beUtils.getDEFByCode("DEF_INTERN");
 
@@ -992,10 +992,10 @@ public class FixInternshipTypes {
 		searchBE.setPageSize(pageSize);
 		Long total = beUtils.getCount(searchBE);
 
-		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken.getToken());
-		Attribute lnkInternAttribute = RulesUtils.getAttribute("LNK_INTERN", serviceToken.getToken());
-		Attribute lnkIntSigAttribute = RulesUtils.getAttribute("PRI_AGR_DOC_INT_SIGNATURE", serviceToken.getToken());
-		Attribute lnkHcrSigAttribute = RulesUtils.getAttribute("PRI_AGR_DOC_HC_SIGNATURE", serviceToken.getToken());
+		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken);
+		Attribute lnkInternAttribute = RulesUtils.getAttribute("LNK_INTERN", serviceToken);
+		Attribute lnkIntSigAttribute = RulesUtils.getAttribute("PRI_AGR_DOC_INT_SIGNATURE", serviceToken);
+		Attribute lnkHcrSigAttribute = RulesUtils.getAttribute("PRI_AGR_DOC_HC_SIGNATURE", serviceToken);
 		Attribute lnkOutcomeSigAttribute = RulesUtils.getAttribute("PRI_AGR_DOC_OUTCOME_SIGNATURE",
 				serviceToken.getToken());
 
@@ -1054,12 +1054,12 @@ public class FixInternshipTypes {
 		searchBE.setPageSize(pageSize);
 		Long total = beUtils.getCount(searchBE);
 
-		Attribute statusAttribute = RulesUtils.getAttribute("PRI_STATUS", serviceToken.getToken());
-		Attribute deletedAttribute = RulesUtils.getAttribute("PRI_DISABLED", serviceToken.getToken());
-		Attribute lnkInternAttribute = RulesUtils.getAttribute("LNK_INTERN", serviceToken.getToken());
-		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken.getToken());
-		Attribute internCodeAttribute = RulesUtils.getAttribute("PRI_INTERN_CODE", serviceToken.getToken());
-		Attribute applicantCodeAttribute = RulesUtils.getAttribute("PRI_APPLICANT_CODE", serviceToken.getToken());
+		Attribute statusAttribute = RulesUtils.getAttribute("PRI_STATUS", serviceToken);
+		Attribute deletedAttribute = RulesUtils.getAttribute("PRI_DISABLED", serviceToken);
+		Attribute lnkInternAttribute = RulesUtils.getAttribute("LNK_INTERN", serviceToken);
+		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken);
+		Attribute internCodeAttribute = RulesUtils.getAttribute("PRI_INTERN_CODE", serviceToken);
+		Attribute applicantCodeAttribute = RulesUtils.getAttribute("PRI_APPLICANT_CODE", serviceToken);
 
 		BaseEntity defIntern = beUtils.getDEFByCode("DEF_INTERN");
 
@@ -1241,8 +1241,8 @@ public class FixInternshipTypes {
 		searchBE.setPageSize(pageSize);
 		Long total = beUtils.getCount(searchBE);
 
-		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken.getToken());
-		Attribute lnkInternAttribute = RulesUtils.getAttribute("LNK_INTERN", serviceToken.getToken());
+		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken);
+		Attribute lnkInternAttribute = RulesUtils.getAttribute("LNK_INTERN", serviceToken);
 
 		while (ok) {
 			List<BaseEntity> bes = beUtils.getBaseEntitys(searchBE); // load 100 at a time
@@ -1341,8 +1341,8 @@ public class FixInternshipTypes {
 		searchBE.setPageSize(pageSize);
 		Long total = beUtils.getCount(searchBE);
 
-		Attribute lnkHCAttribute = RulesUtils.getAttribute("LNK_HOST_COMPANY", serviceToken.getToken());
-		Attribute timezoneAttribute = RulesUtils.getAttribute("PRI_TIMEZONE_ID", serviceToken.getToken());
+		Attribute lnkHCAttribute = RulesUtils.getAttribute("LNK_HOST_COMPANY", serviceToken);
+		Attribute timezoneAttribute = RulesUtils.getAttribute("PRI_TIMEZONE_ID", serviceToken);
 
 		while (ok) {
 			List<BaseEntity> bes = beUtils.getBaseEntitys(searchBE); // load 100 at a time
@@ -1432,8 +1432,8 @@ public class FixInternshipTypes {
 		searchBE.setPageSize(pageSize);
 		Long total = beUtils.getCount(searchBE);
 
-		Attribute lnkCompInternshipAttribute = RulesUtils.getAttribute("LNK_COMP_INTERNSHIP", serviceToken.getToken());
-		Attribute lnkInternAttribute = RulesUtils.getAttribute("LNK_INTERN", serviceToken.getToken());
+		Attribute lnkCompInternshipAttribute = RulesUtils.getAttribute("LNK_COMP_INTERNSHIP", serviceToken);
+		Attribute lnkInternAttribute = RulesUtils.getAttribute("LNK_INTERN", serviceToken);
 
 		BaseEntity defIntern = beUtils.getDEFByCode("DEF_INTERN");
 
@@ -1617,7 +1617,7 @@ public class FixInternshipTypes {
 		} catch (IOException e) {
 			return;
 		}
-		serviceToken = new GennyToken("PER_SERVICE", serviceToken.getToken());
+		serviceToken = new GennyToken("PER_SERVICE", serviceToken);
 		VertxUtils.cachedEnabled = false;
 
 		beUtils = new BaseEntityUtils(userToken);

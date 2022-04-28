@@ -243,7 +243,7 @@ public class MessageTest {
 		} catch (IOException e) {
 			return;
 		}
-		serviceToken = new GennyToken("PER_SERVICE", serviceToken.getToken());
+		serviceToken = new GennyToken("PER_SERVICE", serviceToken);
 		VertxUtils.cachedEnabled = false;
 
 		beUtils = new BaseEntityUtils(userToken);

@@ -334,7 +334,7 @@ public class GennyJbpmBaseTest extends JbpmJUnitBaseTestCase {
 
 	protected static QRules createQRules(final GennyToken userToken,final GennyToken serviceToken, EventBusInterface eventBusMock) {
 
-		QRules qRules = new QRules(eventBusMock, userToken.getToken());
+		QRules qRules = new QRules(eventBusMock, userToken);
 		qRules.set("realm", userToken.getRealm());
 		qRules.setServiceToken(serviceToken.getToken());
 		return qRules;

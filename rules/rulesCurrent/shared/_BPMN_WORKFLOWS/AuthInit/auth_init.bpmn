@@ -194,12 +194,12 @@ kcontext.setVariable(&quot;termsAndConditions&quot;, termsAndConditions);
       <bpmn2:script>System.out.println(&quot;authInit: SendProject&quot;);
 BaseEntityUtils beUtils = new BaseEntityUtils(userToken);
 String projectCode = &quot;PRJ_&quot;+userToken.getRealm().toUpperCase();
-/* BaseEntity project = QwandaUtils.getBaseEntityByCodeWithAttributes(projectCode, userToken.getToken()); */
+/* BaseEntity project = QwandaUtils.getBaseEntityByCodeWithAttributes(projectCode, userToken); */
 project = beUtils.getBaseEntityByCode(projectCode);
 kcontext.setVariable(&quot;project&quot;, project);
 
 System.out.println(&quot;authInit: Sending &quot;+project);
-VertxUtils.publish(currentUser,&quot;webcmds&quot;,project, &quot;PROJECT&quot;, userToken.getToken()); 
+VertxUtils.publish(currentUser,&quot;webcmds&quot;,project, &quot;PROJECT&quot;, userToken); 
 
 
 
@@ -241,11 +241,11 @@ if ((!optHasLoggedIn.isPresent()) || (!optHasLoggedIn.get())) {
 	kcontext.setVariable(&quot;currentUser&quot;,currentUser);
  }
 */
-/* BaseEntity currentUser = QwandaUtils.getBaseEntityByCodeWithAttributes(userToken.getUserCode(), userToken.getToken()); */
+/* BaseEntity currentUser = QwandaUtils.getBaseEntityByCodeWithAttributes(userToken.getUserCode(), userToken); */
 
 
 currentUser.forcePrivate(&quot;PRI_SUBSCRIPTIONS&quot;,new Boolean(false));
-VertxUtils.publish(currentUser,&quot;webcmds&quot;,currentUser, &quot;USER&quot;, userToken.getToken());
+VertxUtils.publish(currentUser,&quot;webcmds&quot;,currentUser, &quot;USER&quot;, userToken);
 currentUser.forcePrivate(&quot;PRI_SUBSCRIPTIONS&quot;,new Boolean(true));
 
 /* Check if role is test and if so then save token to cache for junit testing */
@@ -292,7 +292,7 @@ if (currentUser != null) {
                 System.out.println(&quot;hostCompanyBe :: &quot; + hostCompanyBe);
             
                 if (hostCompanyBe != null) {
-                        VertxUtils.publish(currentUser,&quot;webcmds&quot;,hostCompanyBe, &quot;COMPANY&quot;, userToken.getToken());
+                        VertxUtils.publish(currentUser,&quot;webcmds&quot;,hostCompanyBe, &quot;COMPANY&quot;, userToken);
                 } else {
                     System.out.println(&quot;ERROR: Null hostCompanyBe&quot;);
                 }
@@ -311,7 +311,7 @@ if (currentUser != null) {
                 System.out.println(&quot;eduProviderBe :: &quot; + eduProviderBe);
             
                 if (eduProviderBe != null) {
-                        VertxUtils.publish(currentUser,&quot;webcmds&quot;,eduProviderBe, &quot;COMPANY&quot;, userToken.getToken());
+                        VertxUtils.publish(currentUser,&quot;webcmds&quot;,eduProviderBe, &quot;COMPANY&quot;, userToken);
                 } else {
                     System.out.println(&quot;ERROR: Null eduProviderBe&quot;);
                 }
@@ -330,7 +330,7 @@ if (currentUser != null) {
                 System.out.println(&quot;agencyBe :: &quot; + agencyBe);
             
                 if (agencyBe != null) {
-                        VertxUtils.publish(currentUser,&quot;webcmds&quot;,agencyBe, &quot;COMPANY&quot;, userToken.getToken());
+                        VertxUtils.publish(currentUser,&quot;webcmds&quot;,agencyBe, &quot;COMPANY&quot;, userToken);
                 } else {
                     System.out.println(&quot;ERROR: Null agencyBe&quot;);
                 }
@@ -461,7 +461,7 @@ if (qp != null) {
 Set&lt;String> subscriptions = (Set&lt;String>)kcontext.getVariable(&quot;stringSet&quot;);
 System.out.println(&quot;authinit: exit SetSubscriptions - &quot;+subscriptions);
 String jsonSubscriptions = JsonUtils.toJson(subscriptions);
-Attribute attribute = RulesUtils.getAttribute(&quot;PRI_SUBSCRIPTIONS&quot;, userToken.getToken());
+Attribute attribute = RulesUtils.getAttribute(&quot;PRI_SUBSCRIPTIONS&quot;, userToken);
 currentUser.addAnswer(new Answer(currentUser,currentUser,attribute,jsonSubscriptions));
 kcontext.setVariable(&quot;currentUser&quot;,currentUser);
 System.out.println(&quot;authinit: exit SetSubscriptions - &quot;+currentUser.getValue(&quot;PRI_SUBSCRIPTIONS&quot;,&quot;&quot;));

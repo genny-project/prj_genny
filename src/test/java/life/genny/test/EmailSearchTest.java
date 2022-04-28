@@ -143,7 +143,7 @@ public void emailTest() throws Exception {
 	try {
 		String resultJsonStr = QwandaUtils.apiGet(
 				GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql ,
-				beUtils.getServiceToken().getToken(), 120);
+				beUtils.getServiceToken(), 120);
 
 		System.out.println("  Search EMAIL result is "+resultJsonStr);
 		
@@ -350,7 +350,7 @@ public void emailTest() throws Exception {
         } catch (IOException e) {
             return;
         }
-        serviceToken = new GennyToken("PER_SERVICE", serviceToken.getToken());
+        serviceToken = new GennyToken("PER_SERVICE", serviceToken);
         VertxUtils.cachedEnabled = false;
 
         beUtils = new BaseEntityUtils(userToken);

@@ -77,41 +77,41 @@ public class TableUtilsTest {
 
 			/* table-header themes */
 			Theme THM_QUESTION_GRP_LABEL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_QUESTION_GRP_LABEL",
-					Theme.class, serviceToken.getToken());
+					Theme.class, serviceToken);
 
 			Theme THM_WIDTH_100_PERCENT_NO_INHERIT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_WIDTH_100_PERCENT_NO_INHERIT",
-					Theme.class, serviceToken.getToken());
+					Theme.class, serviceToken);
 
 			Theme THM_DISPLAY_HORIZONTAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_HORIZONTAL",
-					Theme.class, serviceToken.getToken());
+					Theme.class, serviceToken);
 
 			Theme THM_TABLE_HEADER_CELL_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TABLE_HEADER_CELL_WRAPPER",
-					Theme.class, serviceToken.getToken());
+					Theme.class, serviceToken);
 
 			Theme THM_TABLE_HEADER_CELL_GROUP_LABEL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TABLE_HEADER_CELL_GROUP_LABEL",
-					Theme.class, serviceToken.getToken());
+					Theme.class, serviceToken);
 
 			Theme THM_DISPLAY_VERTICAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_VERTICAL",
-					Theme.class, serviceToken.getToken());
+					Theme.class, serviceToken);
 
 					
 
 			/* table-content themes */
 			
 			Theme THM_TABLE_BORDER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TABLE_BORDER",
-					Theme.class, serviceToken.getToken());
+					Theme.class, serviceToken);
 
 			Theme THM_TABLE_ROW_CONTENT_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TABLE_ROW_CONTENT_WRAPPER",
-					Theme.class, serviceToken.getToken());
+					Theme.class, serviceToken);
 
 			Theme THM_TABLE_ROW = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TABLE_ROW",
-					Theme.class, serviceToken.getToken());
+					Theme.class, serviceToken);
 
 			Theme THM_TABLE_CONTENT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TABLE_CONTENT",
-					Theme.class, serviceToken.getToken());
+					Theme.class, serviceToken);
 
 			Theme THM_TABLE_ROW_CELL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TABLE_ROW_CELL",
-					Theme.class, serviceToken.getToken());
+					Theme.class, serviceToken);
 
 				
 			/* prepare context for progress bar */
@@ -223,10 +223,10 @@ public class TableUtilsTest {
 
 			// get the themes from cache
 			Theme THM_DISPLAY_VERTICAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_VERTICAL",
-					Theme.class, serviceToken.getToken());
+					Theme.class, serviceToken);
 
 			Theme THM_JUSTIFY_CONTENT_FLEX_START = VertxUtils.getObject(serviceToken.getRealm(), "",
-					"THM_JUSTIFY_CONTENT_FLEX_START", Theme.class, serviceToken.getToken());
+					"THM_JUSTIFY_CONTENT_FLEX_START", Theme.class, serviceToken);
 
 			Theme THM_CARD = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_CARD", Theme.class,
 					serviceToken.getToken());
@@ -235,37 +235,37 @@ public class TableUtilsTest {
 					.end().addAttribute(ThemeAttributeType.PRI_IS_INHERITABLE, false).end().build();
 
 			Theme THM_DROPDOWN_ICON_ALT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DROPDOWN_ICON_ALT",
-					Theme.class, serviceToken.getToken());
+					Theme.class, serviceToken);
 
 			Theme THM_DROPDOWN_BEHAVIOUR_GENNY = VertxUtils.getObject(serviceToken.getRealm(), "",
-					"THM_DROPDOWN_BEHAVIOUR_GENNY", Theme.class, serviceToken.getToken());
+					"THM_DROPDOWN_BEHAVIOUR_GENNY", Theme.class, serviceToken);
 
 			Theme THM_BACKGROUND_NONE = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BACKGROUND_NONE",
-					Theme.class, serviceToken.getToken());
+					Theme.class, serviceToken);
 
 			Theme THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY = VertxUtils.getObject(serviceToken.getRealm(), "",
-					"THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY", Theme.class, serviceToken.getToken());
+					"THM_DROPDOWN_PROFILE_BEHAVIOUR_GENNY", Theme.class, serviceToken);
 
 			Theme THM_DROPDOWN_HEADER_WRAPPER_GENNY = VertxUtils.getObject(serviceToken.getRealm(), "",
-					"THM_DROPDOWN_HEADER_WRAPPER_GENNY", Theme.class, serviceToken.getToken());
+					"THM_DROPDOWN_HEADER_WRAPPER_GENNY", Theme.class, serviceToken);
 
 			Theme THM_DROPDOWN_GROUP_LABEL_GENNY = VertxUtils.getObject(serviceToken.getRealm(), "",
-					"THM_DROPDOWN_GROUP_LABEL_GENNY", Theme.class, serviceToken.getToken());
+					"THM_DROPDOWN_GROUP_LABEL_GENNY", Theme.class, serviceToken);
 
 			Theme THM_DROPDOWN_CONTENT_WRAPPER_GENNY = VertxUtils.getObject(serviceToken.getRealm(), "",
-					"THM_DROPDOWN_CONTENT_WRAPPER_GENNY", Theme.class, serviceToken.getToken());
+					"THM_DROPDOWN_CONTENT_WRAPPER_GENNY", Theme.class, serviceToken);
 
 			Theme THM_BOX_SHADOW_SM = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BOX_SHADOW_SM",
-					Theme.class, serviceToken.getToken());
+					Theme.class, serviceToken);
 
 			Theme THM_DROPDOWN_VCL_GENNY = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DROPDOWN_VCL_GENNY",
-					Theme.class, serviceToken.getToken());
+					Theme.class, serviceToken);
 
 			Theme THM_IMAGE_PLACEHOLDER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_IMAGE_PLACEHOLDER",
-					Theme.class, serviceToken.getToken());
+					Theme.class, serviceToken);
 					
 			Theme THM_HEADER_PROFILE_PICTURE = VertxUtils.getObject(serviceToken.getRealm(), "",
-					"THM_HEADER_PROFILE_PICTURE", Theme.class, serviceToken.getToken());
+					"THM_HEADER_PROFILE_PICTURE", Theme.class, serviceToken);
 					
 			Theme THM_PROGRESS_VCL_INPUT = Theme.builder("THM_PROGRESS_VCL_INPUT")
 					.addAttribute()
@@ -295,19 +295,19 @@ public class TableUtilsTest {
 					serviceToken.getToken());
 					
 			Theme THM_WIDTH_100_PERCENT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_WIDTH_100_PERCENT",
-					Theme.class, serviceToken.getToken());
+					Theme.class, serviceToken);
 					
 			Theme THM_JUSTIFY_CONTENT_CENTRE = VertxUtils.getObject(serviceToken.getRealm(), "",
-					"THM_JUSTIFY_CONTENT_CENTRE", Theme.class, serviceToken.getToken());
+					"THM_JUSTIFY_CONTENT_CENTRE", Theme.class, serviceToken);
 					
 			Theme THM_IMAGE_PLACEHOLDER_PERSON = VertxUtils.getObject(serviceToken.getRealm(), "",
-					"THM_IMAGE_PLACEHOLDER_PERSON", Theme.class, serviceToken.getToken());
+					"THM_IMAGE_PLACEHOLDER_PERSON", Theme.class, serviceToken);
 					
 			Theme THM_PROFILE_IMAGE = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_PROFILE_IMAGE",
-					Theme.class, serviceToken.getToken());
+					Theme.class, serviceToken);
 					
 			// Theme THM_PROJECT_COLOR_SURFACE = VertxUtils.getObject(serviceToken.getRealm(), "",
-			// 		"THM_PROJECT_COLOR_SURFACE", Theme.class, serviceToken.getToken());
+			// 		"THM_PROJECT_COLOR_SURFACE", Theme.class, serviceToken);
 			
 			Theme THM_PROJECT_COLOR_SURFACE = Theme.builder("THM_PROJECT_COLOR_SURFACE")
 					.addAttribute()
@@ -323,13 +323,13 @@ public class TableUtilsTest {
 					serviceToken.getToken());
 					
 			Theme THM_FLEX_ONE_INHERITABLE = VertxUtils.getObject(serviceToken.getRealm(), "",
-					"THM_FLEX_ONE_INHERITABLE", Theme.class, serviceToken.getToken());
+					"THM_FLEX_ONE_INHERITABLE", Theme.class, serviceToken);
 
 			Theme THM_DROPDOWN_ICON_MORE_HORIZ = VertxUtils.getObject(serviceToken.getRealm(), "",
-					"THM_DROPDOWN_ICON_MORE_HORIZ", Theme.class, serviceToken.getToken());
+					"THM_DROPDOWN_ICON_MORE_HORIZ", Theme.class, serviceToken);
 			
 			Theme THM_EXPANDABLE_ICON = VertxUtils.getObject(serviceToken.getRealm(), "",
-					"THM_EXPANDABLE_ICON", Theme.class, serviceToken.getToken());
+					"THM_EXPANDABLE_ICON", Theme.class, serviceToken);
 
 
 			/* prepare context for progress bar */
@@ -512,19 +512,19 @@ public class TableUtilsTest {
 
 		try {
 			SearchEntity SBE_AVAILABLE_INTERNS = VertxUtils.getObject(serviceToken.getRealm(), "",
-							"SBE_AVAILABLE_INTERNS", SearchEntity.class, serviceToken.getToken());
+							"SBE_AVAILABLE_INTERNS", SearchEntity.class, serviceToken);
 			SearchEntity SBE_APPLIED_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
-					"SBE_APPLIED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
+					"SBE_APPLIED_APPLICATIONS", SearchEntity.class, serviceToken);
 			SearchEntity SBE_SHORTLISTED_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
-					"SBE_SHORTLISTED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
+					"SBE_SHORTLISTED_APPLICATIONS", SearchEntity.class, serviceToken);
 			SearchEntity SBE_INTERVIEWED_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
-					"SBE_INTERVIEWED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
+					"SBE_INTERVIEWED_APPLICATIONS", SearchEntity.class, serviceToken);
 			SearchEntity SBE_OFFERED_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
-					"SBE_OFFERED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
+					"SBE_OFFERED_APPLICATIONS", SearchEntity.class, serviceToken);
 			SearchEntity SBE_PLACED_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
-					"SBE_PLACED_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
+					"SBE_PLACED_APPLICATIONS", SearchEntity.class, serviceToken);
 			SearchEntity SBE_INPROGRESS_APPLICATIONS = VertxUtils.getObject(serviceToken.getRealm(), "",
-					"SBE_INPROGRESS_APPLICATIONS", SearchEntity.class, serviceToken.getToken());
+					"SBE_INPROGRESS_APPLICATIONS", SearchEntity.class, serviceToken);
 
 			bucketSearchBeList.add(SBE_AVAILABLE_INTERNS);
 			bucketSearchBeList.add(SBE_APPLIED_APPLICATIONS);
@@ -563,7 +563,7 @@ public class TableUtilsTest {
 	/* generates the bucket-content ask */
 	public Ask getBucketContentAsk(Map<String, ContextList> contextListMap, GennyToken serviceToken) {
 
-		Attribute questionAttribute = RulesUtils.getAttribute("QQQ_QUESTION_GROUP", serviceToken.getToken());
+		Attribute questionAttribute = RulesUtils.getAttribute("QQQ_QUESTION_GROUP", serviceToken);
 		Question bucketContentQuestion = new Question("QUE_BUCKET_CONTENT_GRP", "", questionAttribute, true);
 		Ask bucketContentAsk = new Ask(bucketContentQuestion, beUtils.getGennyToken().getUserCode(), "SBE_DUMMY");
 		return bucketContentAsk;
@@ -587,12 +587,12 @@ public class TableUtilsTest {
 		searchValidationList.setValidationList(validations);
 
 		/* get the attributes */
-		Attribute eventAttribute = RulesUtils.getAttribute("PRI_SORT", serviceToken.getToken());
-		Attribute questionAttribute = RulesUtils.getAttribute("QQQ_QUESTION_GROUP", serviceToken.getToken());
-		Attribute tableCellAttribute = RulesUtils.getAttribute("QQQ_QUESTION_GROUP_TABLE_CELL", serviceToken.getToken());
+		Attribute eventAttribute = RulesUtils.getAttribute("PRI_SORT", serviceToken);
+		Attribute questionAttribute = RulesUtils.getAttribute("QQQ_QUESTION_GROUP", serviceToken);
+		Attribute tableCellAttribute = RulesUtils.getAttribute("QQQ_QUESTION_GROUP_TABLE_CELL", serviceToken);
 
 		/* get the sort icon */
-		Theme THM_ICON = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_ICON", Theme.class, serviceToken.getToken());
+		Theme THM_ICON = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_ICON", Theme.class, serviceToken);
 		BaseEntity ICN_SORT = beUtils.getBaseEntityByCode("ICN_SORT");
 
 		/* loop through columns */
@@ -650,31 +650,31 @@ public class TableUtilsTest {
 
 		/* get the themes */
 		Theme THM_QUESTION_GRP_LABEL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_QUESTION_GRP_LABEL",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 		Theme THM_DISPLAY_VERTICAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_VERTICAL",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 		Theme THM_DISPLAY_HORIZONTAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_HORIZONTAL",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 		Theme THM_WIDTH_100_PERCENT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_WIDTH_100_PERCENT",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 		Theme THM_BH_ROW_ONE_GRP_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
-				"THM_BH_ROW_ONE_GRP_WRAPPER", Theme.class, serviceToken.getToken());
+				"THM_BH_ROW_ONE_GRP_WRAPPER", Theme.class, serviceToken);
 		Theme THM_BH_ROW_ONE_GRP_LABEL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_ROW_ONE_GRP_LABEL",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 		Theme THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
-				"THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER", Theme.class, serviceToken.getToken());
+				"THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER", Theme.class, serviceToken);
 		Theme THM_BH_ROW_ONE_VCL_INPUT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_ROW_ONE_VCL_INPUT",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 		Theme THM_BH_ROW_TWO_VCL_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
-				"THM_BH_ROW_TWO_VCL_WRAPPER", Theme.class, serviceToken.getToken());
+				"THM_BH_ROW_TWO_VCL_WRAPPER", Theme.class, serviceToken);
 		Theme THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
-				"THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER", Theme.class, serviceToken.getToken());
+				"THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER", Theme.class, serviceToken);
 		Theme THM_BH_ROW_TWO_INPUT_FIELD = VertxUtils.getObject(serviceToken.getRealm(), "",
-				"THM_BH_ROW_TWO_INPUT_FIELD", Theme.class, serviceToken.getToken());
+				"THM_BH_ROW_TWO_INPUT_FIELD", Theme.class, serviceToken);
 		Theme THM_ICON = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_ICON", Theme.class,
 				serviceToken.getToken());
 		Theme THM_BH_GROUP_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_GROUP_WRAPPER",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 
 		/* get the sort icon */
 		BaseEntity ICN_SORT = beUtils.getBaseEntityByCode("ICN_SORT");
@@ -737,10 +737,10 @@ public class TableUtilsTest {
 				new DataType("Text", searchValidationList, "Text"));
 
 		/* get the attributes */
-		Attribute countAttribute = RulesUtils.getAttribute("PRI_TOTAL_RESULTS", serviceToken.getToken());
-		Attribute sortAttribute = RulesUtils.getAttribute("PRI_SORT", serviceToken.getToken());
-		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken.getToken());
-		Attribute questionAttribute = RulesUtils.getAttribute("QQQ_QUESTION_GROUP", serviceToken.getToken());
+		Attribute countAttribute = RulesUtils.getAttribute("PRI_TOTAL_RESULTS", serviceToken);
+		Attribute sortAttribute = RulesUtils.getAttribute("PRI_SORT", serviceToken);
+		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken);
+		Attribute questionAttribute = RulesUtils.getAttribute("QQQ_QUESTION_GROUP", serviceToken);
 		Attribute tableCellAttribute = RulesUtils.getAttribute("QQQ_QUESTION_GROUP_TABLE_CELL",
 				serviceToken.getToken());
 
@@ -789,9 +789,9 @@ public class TableUtilsTest {
 
 		/* get the themes */
 		Theme THM_DISPLAY_HORIZONTAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_HORIZONTAL",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 		Theme THM_WIDTH_100_PERCENT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_WIDTH_100_PERCENT",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 		Theme THM_ICON = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_ICON", Theme.class,
 				serviceToken.getToken());
 		Theme THM_JUSTIFY_CONTENT_SPACE_AROUND = Theme.builder("THM_JUSTIFY_CONTENT_SPACE_AROUND").addAttribute()
@@ -883,7 +883,7 @@ public class TableUtilsTest {
 
 		/* get the themes */
 		Theme THM_WIDTH_100_PERCENT_NO_INHERIT = VertxUtils.getObject(userToken.getRealm(), "", "THM_WIDTH_100_PERCENT_NO_INHERIT",
-				Theme.class, userToken.getToken());
+				Theme.class, userToken);
 
 		/* bucketContent context */
 		List<Context> bucketContentContext = new ArrayList<>();

@@ -220,7 +220,7 @@ public class LinTestActionCache extends JbpmJUnitBaseTestCase {
 	if (isCreateToken) {
 	    userToken = GennyJbpmBaseTest.createGennyToken(realm, "user13", "Barry Allan", "user");
 	    serviceToken = GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-	    qRules = new QRules(eventBusMock, userToken.getToken());
+	    qRules = new QRules(eventBusMock, userToken);
 	    qRules.set("realm", userToken.getRealm());
 	    qRules.setServiceToken(serviceToken.getToken());
 	    VertxUtils.cachedEnabled = true; // don't send to local Service Cache
@@ -248,7 +248,7 @@ public class LinTestActionCache extends JbpmJUnitBaseTestCase {
 		StringUtils.capitaliseAllWords(serviceToken.getRealm()));
 	project.setRealm(serviceToken.getRealm());
 	VertxUtils.writeCachedJson(serviceToken.getRealm(), "PRJ_" + serviceToken.getRealm().toUpperCase(),
-		JsonUtils.toJson(project), serviceToken.getToken());
+		JsonUtils.toJson(project), serviceToken);
 
 	GennyKieSession gks = null;
 

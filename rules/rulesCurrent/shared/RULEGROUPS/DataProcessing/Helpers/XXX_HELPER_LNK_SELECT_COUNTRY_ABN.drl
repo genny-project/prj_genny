@@ -42,7 +42,7 @@ rule "HELPER_LNK_SELECT_COUNTRY_ABN"
 					/* if the country is Australia, enable the abn questions */
 					isAbnEnabled = true;
 				}
-				QDataAskMessage askMsg = QuestionUtils.getAsks(userToken.getUserCode(), targetCode, "QUE_HOST_CPY_GRP", userToken.getToken());
+				QDataAskMessage askMsg = QuestionUtils.getAsks(userToken.getRealm(),userToken.getUserCode(), targetCode, "QUE_HOST_CPY_GRP", userToken);
 
 				if (askMsg != null) {
 					/* SET REPLACE TRUE */

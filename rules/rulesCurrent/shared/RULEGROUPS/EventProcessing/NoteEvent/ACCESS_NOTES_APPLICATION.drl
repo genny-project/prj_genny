@@ -136,15 +136,15 @@ rule "ACCESS_NOTES_APPLICATION"
 			
 			/* Send notes to FE */
 			JsonObject jsonApplication = new JsonObject(appNotes);
-				jsonApplication.put("token", userToken.getToken());
+				jsonApplication.put("token", userToken);
 			JsonObject jsonIntern = new JsonObject(internNotes);
-				jsonIntern.put("token", userToken.getToken());
+				jsonIntern.put("token", userToken);
 			JsonObject jsonInternship = new JsonObject(internshipNotes);
-				jsonInternship.put("token", userToken.getToken());
+				jsonInternship.put("token", userToken);
 			JsonObject jsonHC = new JsonObject(hcNotes);
-				jsonHC.put("token", userToken.getToken());
+				jsonHC.put("token", userToken);
 			JsonObject jsonSuper = new JsonObject(superNotes);
-				jsonSuper.put("token", userToken.getToken());
+				jsonSuper.put("token", userToken);
 
 			if(appNotes == null || internNotes == null || internshipNotes == null || hcNotes == null || superNotes == null){
 		

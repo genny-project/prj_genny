@@ -109,12 +109,12 @@ public class NotesView extends GennyJbpmBaseTest {
 		Theme THM_TAB_HEADER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TAB_HEADER", Theme.class,
 				serviceToken.getToken());
 		Theme THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHT = VertxUtils.getObject(serviceToken.getRealm(), "",
-				"THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHT", Theme.class, serviceToken.getToken());
+				"THM_PROJECT_COLOR_PRIMARY_VARIANT_LIGHT", Theme.class, serviceToken);
 		Theme THM_FRAME_ALIGN_WEST = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_FRAME_ALIGN_WEST", Theme.class,
 				serviceToken.getToken());
 
 		/* tab item themes */
-		Theme THM_TAB = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TAB", Theme.class, serviceToken.getToken());
+		Theme THM_TAB = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TAB", Theme.class, serviceToken);
 		Theme THM_TAB_WIDTH = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_TAB_WIDTH", Theme.class,
 				serviceToken.getToken());
 
@@ -221,7 +221,7 @@ public class NotesView extends GennyJbpmBaseTest {
 		Theme THM_PROJECT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_PROJECT", Theme.class,
 				serviceToken.getToken());
 		Theme THM_FONT_FAMILY_ROBOTO = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_FONT_FAMILY_ROBOTO",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 
 		Frame3 FRM_NOTES = getNotes();
 
@@ -294,13 +294,13 @@ public class NotesView extends GennyJbpmBaseTest {
 		Theme THM_DISPLAY_VERTICAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_VERTICAL", Theme.class,
 				serviceToken.getToken());
 		Theme THM_QUESTION_GRP_LABEL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_QUESTION_GRP_LABEL",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 
 		Theme THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER = Theme.builder("THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER").addAttribute()
 				.justifyContent("center").alignItems("center").end().build();
 
 		Theme THM_WIDTH_100_PERCENT_NO_INHERIT = VertxUtils.getObject(serviceToken.getRealm(), "",
-				"THM_WIDTH_100_PERCENT_NO_INHERIT", Theme.class, serviceToken.getToken());
+				"THM_WIDTH_100_PERCENT_NO_INHERIT", Theme.class, serviceToken);
 
 		// NEW THEMES START HERE
 		Theme THM_BUCKET_HEADER_GROUP_WRAPPER = Theme.builder("THM_BUCKET_HEADER_GROUP_WRAPPER").addAttribute()
@@ -621,27 +621,27 @@ public class NotesView extends GennyJbpmBaseTest {
 		BucketUtilsTest bucketUtils = new BucketUtilsTest(beUtils);
 
 		Theme THM_QUESTION_GRP_LABEL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_QUESTION_GRP_LABEL",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 		Theme THM_DISPLAY_VERTICAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_VERTICAL", Theme.class,
 				serviceToken.getToken());
 		Theme THM_DISPLAY_HORIZONTAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_HORIZONTAL",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 		Theme THM_WIDTH_100_PERCENT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_WIDTH_100_PERCENT",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 		Theme THM_BH_ROW_ONE_GRP_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_ROW_ONE_GRP_WRAPPER",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 		Theme THM_BH_ROW_ONE_GRP_LABEL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_ROW_ONE_GRP_LABEL",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 		Theme THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
-				"THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER", Theme.class, serviceToken.getToken());
+				"THM_BH_ROW_ONE_GRP_CONTENT_WRAPPER", Theme.class, serviceToken);
 		Theme THM_BH_ROW_ONE_VCL_INPUT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_ROW_ONE_VCL_INPUT",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 		Theme THM_BH_ROW_TWO_VCL_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_ROW_TWO_VCL_WRAPPER",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 		Theme THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "",
-				"THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER", Theme.class, serviceToken.getToken());
+				"THM_BH_ROW_TWO_GRP_CONTENT_WRAPPER", Theme.class, serviceToken);
 		Theme THM_BH_ROW_TWO_INPUT_FIELD = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_ROW_TWO_INPUT_FIELD",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 		Theme THM_ICON = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_ICON", Theme.class,
 				serviceToken.getToken());
 		Theme THM_BH_GROUP_WRAPPER = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_BH_GROUP_WRAPPER", Theme.class,
@@ -723,14 +723,14 @@ public class NotesView extends GennyJbpmBaseTest {
 		searchValidationList.setValidationList(validations);
 
 		/* get the attributes */
-		Attribute countAttribute = RulesUtils.getAttribute("PRI_TOTAL_RESULTS", serviceToken.getToken());
-		Attribute sortAttribute = RulesUtils.getAttribute("PRI_SORT", serviceToken.getToken());
-		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken.getToken());
+		Attribute countAttribute = RulesUtils.getAttribute("PRI_TOTAL_RESULTS", serviceToken);
+		Attribute sortAttribute = RulesUtils.getAttribute("PRI_SORT", serviceToken);
+		Attribute nameAttribute = RulesUtils.getAttribute("PRI_NAME", serviceToken);
 
 		Attribute searchAttribute = new Attribute("PRI_NAME", "Search", new DataType("Text", searchValidationList, "Text"));
 
-		Attribute questionAttribute = RulesUtils.getAttribute("QQQ_QUESTION_GROUP", serviceToken.getToken());
-		Attribute tableCellAttribute = RulesUtils.getAttribute("QQQ_QUESTION_GROUP_TABLE_CELL", serviceToken.getToken());
+		Attribute questionAttribute = RulesUtils.getAttribute("QQQ_QUESTION_GROUP", serviceToken);
+		Attribute tableCellAttribute = RulesUtils.getAttribute("QQQ_QUESTION_GROUP_TABLE_CELL", serviceToken);
 
 		/* Initialize Bucket Header Ask group */
 		Question bucketHeaderQuestion = new Question("QUE_BUCKET_HEADER_GRP", "Bucket Header", questionAttribute, true);
@@ -777,9 +777,9 @@ public class NotesView extends GennyJbpmBaseTest {
 
 		/* get the themes */
 		Theme THM_DISPLAY_HORIZONTAL = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_DISPLAY_HORIZONTAL",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 		Theme THM_WIDTH_100_PERCENT = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_WIDTH_100_PERCENT",
-				Theme.class, serviceToken.getToken());
+				Theme.class, serviceToken);
 		Theme THM_ICON = VertxUtils.getObject(serviceToken.getRealm(), "", "THM_ICON", Theme.class,
 				serviceToken.getToken());
 		Theme THM_JUSTIFY_CONTENT_SPACE_AROUND = Theme.builder("THM_JUSTIFY_CONTENT_SPACE_AROUND").addAttribute()
@@ -844,7 +844,7 @@ public class NotesView extends GennyJbpmBaseTest {
 
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken);
 
-		Attribute questionAttribute = RulesUtils.getAttribute("QQQ_QUESTION_GROUP", serviceToken.getToken());
+		Attribute questionAttribute = RulesUtils.getAttribute("QQQ_QUESTION_GROUP", serviceToken);
 		Question bucketContentQuestion = new Question("QUE_BUCKET_CONTENT_GRP", "", questionAttribute, true);
 		Ask bucketContentAsk = new Ask(bucketContentQuestion, beUtils.getGennyToken().getUserCode(), "SBE_DUMMY");
 		return bucketContentAsk;

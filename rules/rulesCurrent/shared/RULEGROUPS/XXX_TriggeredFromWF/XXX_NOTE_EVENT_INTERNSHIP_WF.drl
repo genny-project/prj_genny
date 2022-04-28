@@ -80,7 +80,7 @@ rule "NOTE_EVENT_INTERNSHIP_WF"
 				
 				if(notes != null){
 					JsonObject json = new JsonObject(notes);
-					json.put("token", userToken.getToken());
+					json.put("token", userToken);
 					
 					JsonObject jsonInternship = new JsonObject();
 					jsonInternship.put("code", targetCode);

@@ -130,7 +130,7 @@
 //      userToken = GennyJbpmBaseTest.createGennyToken(realm, "user1", "Barry Allan", "user");
 //      serviceToken =
 //          GennyJbpmBaseTest.createGennyToken(realm, "service", "Service User", "service");
-//      qRules = new QRules(eventBusMock, userToken.getToken());
+//      qRules = new QRules(eventBusMock, userToken);
 //      qRules.set("realm", userToken.getRealm());
 //      qRules.setServiceToken(serviceToken.getToken());
 //      VertxUtils.cachedEnabled = true; // don't send to local Service Cache
