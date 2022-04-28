@@ -66,14 +66,14 @@
 
 	<repositories>
 		<repository>
-			<url>http://download.java.net/maven/2/</url>
+			<url>https://download.java.net/maven/2/</url>
 			<id>hibernate-support</id>
 			<layout>default</layout>
 			<name>Repository for Hibernate Support</name>
 		</repository>
 		<repository>
 			<id>JBoss repository</id>
-			<url>http://repository.jboss.org/nexus/content/groups/public/</url>
+			<url>https://repository.jboss.org/nexus/content/groups/public/</url>
 			<name>Repository for JBoss</name>
 		</repository>
 		<repository>
