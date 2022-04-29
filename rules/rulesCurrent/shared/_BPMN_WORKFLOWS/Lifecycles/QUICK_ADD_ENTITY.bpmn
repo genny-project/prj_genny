@@ -337,6 +337,8 @@ System.out.println(&quot;QUICK_ADD_ENTITY: serviceToken = &quot; +serviceToken.g
 /* Gather Key and construct Question Code */
 OutputParam data = (OutputParam)sessionFacts.getMessage();
 key = data.getSuitCase();
+String targetCode = data.getTargetCode();
+
 kcontext.setVariable(&quot;key&quot;, key);
 System.out.println(&quot;QUICK_ADD_ENTITY: key = &quot; + key);
 
@@ -353,6 +355,12 @@ baseEntityType = key;
 kcontext.setVariable(&quot;baseEntityType&quot;, baseEntityType);
 System.out.println(&quot;QUICK_ADD_ENTITY: baseEntityType = &quot; + baseEntityType);
 
+if (targetCode != null) {
+
+	newBe = beUtils.getBaseEntityByCode(targetCode);
+	kcontext.setVariable(&quot;newBe&quot;, newBe);
+
+} else {
 
 String entityCode = null;
 String defCode = &quot;DEF_&quot; + key.split(&quot;QA_&quot;)[1];
@@ -410,6 +418,8 @@ if (defBE == null) {
 	answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), typeAttribute, &quot;true&quot;));
 	beUtils.saveAnswers(answers);
 	*/
+}
+
 }
 </bpmn2:script>
       </bpmn2:scriptTask>
