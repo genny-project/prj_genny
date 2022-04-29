@@ -99,7 +99,7 @@ rule "PRI_EMAIL"
 								System.out.println("Checking remote server for " + targetCode);
 
 								String remoteBEJson = QwandaUtils.apiGet(
-										System.getenv("REMOTE_API_URL") + "/qwanda/baseentitys/code/" + targetCode, 
+										GennySettings.remoteServerUrl + "/qwanda/baseentitys/code/" + targetCode, 
 										userToken.getToken(), 
 										120
 										);
