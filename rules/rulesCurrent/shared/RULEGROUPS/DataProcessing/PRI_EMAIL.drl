@@ -41,7 +41,7 @@ rule "PRI_EMAIL"
 		JsonObject resultJson = null;
 		String duplicateCodes = null;
 		String number = null; 
-		
+
 		/* check if email is already in use for a person */
 		
 		SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "Email People")
@@ -69,43 +69,55 @@ rule "PRI_EMAIL"
 			if (resultJsonStr.equals("0")) {
 				System.out.println(ruleDetails+" "+drools.getRule().getName()+"  This email "+answer.getValue()+" is unique");
 				/* Now sync to their keycloak account */
-			/*	if (answer.getValue().startsWith("adamcrow")) { */
+				/*	if (answer.getValue().startsWith("adamcrow")) { */
 				BaseEntity target = beUtils.getBaseEntityByCode(answer.getTargetCode());
 				if ((answer.getTargetCode().startsWith("PER_")) && (target != null)) {
-				
+
 					Boolean allowedToChange = false;
 					String keycloakUUID = answer.getTargetCode().substring("PER_".length());
 					if (userToken.getUserCode().equals(answer.getTargetCode())) {
 						allowedToChange = true;
 					}
-				System.out.println(ruleDetails+" "+drools.getRule().getName()+" the allowed.code is "+allowed.code);
-				/* check if capability to change passwords is there */
+					System.out.println(ruleDetails+" "+drools.getRule().getName()+" the allowed.code is "+allowed.code);
+					/* check if capability to change passwords is there */
 					switch (allowed.code) {
-					case "USER": {allowedToChange = true;} break;
-					case "EDIT_INTERN": {allowedToChange = true;} break;
-					case "EDIT_AGENT":  {allowedToChange = true;} break;
-					case "EDIT_HCR":    {allowedToChange = true;} break;
-					case "EDIT_EPR":    {allowedToChange = true;} break;
-					case "EDIT_REF_PART_REP": {allowedToChange = true;} break;
+						case "USER": {allowedToChange = true;} break;
+						case "EDIT_INTERN": {allowedToChange = true;} break;
+						case "EDIT_AGENT":  {allowedToChange = true;} break;
+						case "EDIT_HCR":    {allowedToChange = true;} break;
+						case "EDIT_EPR":    {allowedToChange = true;} break;
+						case "EDIT_REF_PART_REP": {allowedToChange = true;} break;
 					}
-				
+
 					if (allowedToChange) {
-						int statusCode =  KeycloakUtils.updateUserEmail(keycloakUUID,serviceToken.getToken(), userToken.getRealm(),answer.getValue());
-						System.out.println(ruleDetails+" "+drools.getRule().getName()+"  Changing email for "+answer.getTargetCode()+" to "+answer.getValue()+" statusCode="+statusCode);
-						if (statusCode > 204) {
-							System.out.println(ruleDetails+" "+drools.getRule().getName()+"  Error in setting email."+answer.getTargetCode()+" to "+answer.getValue()+" statusCode="+statusCode);
+
+						String remoteBEJson = QwandaUtils.apiGet(
+								System.getenv("REMOTE_API_URL") + "/qwanda/baseentitys/code/" + targetCode, 
+								userToken.getToken(), 
+								120
+								);
+
+						System.out.println(remoteBEJson);
+						Boolean remoteUserExists = !"null".equals(remoteBEJson);
+
+						if (!remoteUserExists) {
+							int statusCode =  KeycloakUtils.updateUserEmail(keycloakUUID,serviceToken.getToken(), userToken.getRealm(),answer.getValue());
+							System.out.println(ruleDetails+" "+drools.getRule().getName()+"  Changing email for "+answer.getTargetCode()+" to "+answer.getValue()+" statusCode="+statusCode);
+							if (statusCode > 204) {
+								System.out.println(ruleDetails+" "+drools.getRule().getName()+"  Error in setting email."+answer.getTargetCode()+" to "+answer.getValue()+" statusCode="+statusCode);
+							} else {
+								System.out.println(ruleDetails+" "+drools.getRule().getName()+"  Saving the good email");
+								Answer goodEmail = new Answer(answer.getSourceCode(), answer.getTargetCode(), "PRI_EMAIL", answer.getValue());
+								answersToSave.add(goodEmail);
+							}
 						} else {
 							System.out.println(ruleDetails+" "+drools.getRule().getName()+"  Saving the good email");
 							Answer goodEmail = new Answer(answer.getSourceCode(), answer.getTargetCode(), "PRI_EMAIL", answer.getValue());
 							answersToSave.add(goodEmail);
 						}
-						
-					
 					}
-					
-				/*}*/
-			}	
-				
+				}	
+
 			} else {
 					if(true /*allowed.code.equals("AGENT")*/) { /* TODO , why limit this to agents??? */
 						List<BaseEntity> duplicateBes = beUtils.getBaseEntitys(searchBE);
