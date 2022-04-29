@@ -199,7 +199,7 @@ project = beUtils.getBaseEntityByCode(projectCode);
 kcontext.setVariable(&quot;project&quot;, project);
 
 System.out.println(&quot;authInit: Sending &quot;+project);
-VertxUtils.publish(currentUser,&quot;webcmds&quot;,project, &quot;PROJECT&quot;, userToken); 
+VertxUtils.publish(currentUser,&quot;webcmds&quot;,project, &quot;PROJECT&quot;, userToken.getToken()); 
 
 
 
@@ -245,13 +245,13 @@ if ((!optHasLoggedIn.isPresent()) || (!optHasLoggedIn.get())) {
 
 
 currentUser.forcePrivate(&quot;PRI_SUBSCRIPTIONS&quot;,new Boolean(false));
-VertxUtils.publish(currentUser,&quot;webcmds&quot;,currentUser, &quot;USER&quot;, userToken);
+VertxUtils.publish(currentUser,&quot;webcmds&quot;,currentUser, &quot;USER&quot;, userToken.getToken());
 currentUser.forcePrivate(&quot;PRI_SUBSCRIPTIONS&quot;,new Boolean(true));
 
 /* Check if role is test and if so then save token to cache for junit testing */
 if (userToken.hasRole(&quot;test&quot;)) {
     VertxUtils.writeCachedJson(userToken.getRealm(), &quot;TOKEN:&quot; + userToken.getUserCode(), userToken.getToken(),
-                                            userToken.getToken(),28800);  /* 8 hours expiry TODO */
+                                            userToken,28800);  /* 8 hours expiry TODO */
 }
 /* Send the Roles */
 List&lt;BaseEntity> roles = beUtils.getRoles();
@@ -292,7 +292,7 @@ if (currentUser != null) {
                 System.out.println(&quot;hostCompanyBe :: &quot; + hostCompanyBe);
             
                 if (hostCompanyBe != null) {
-                        VertxUtils.publish(currentUser,&quot;webcmds&quot;,hostCompanyBe, &quot;COMPANY&quot;, userToken);
+                        VertxUtils.publish(currentUser,&quot;webcmds&quot;,hostCompanyBe, &quot;COMPANY&quot;, userToken.getToken());
                 } else {
                     System.out.println(&quot;ERROR: Null hostCompanyBe&quot;);
                 }
@@ -311,7 +311,7 @@ if (currentUser != null) {
                 System.out.println(&quot;eduProviderBe :: &quot; + eduProviderBe);
             
                 if (eduProviderBe != null) {
-                        VertxUtils.publish(currentUser,&quot;webcmds&quot;,eduProviderBe, &quot;COMPANY&quot;, userToken);
+                        VertxUtils.publish(currentUser,&quot;webcmds&quot;,eduProviderBe, &quot;COMPANY&quot;, userToken.getToken());
                 } else {
                     System.out.println(&quot;ERROR: Null eduProviderBe&quot;);
                 }
@@ -330,7 +330,7 @@ if (currentUser != null) {
                 System.out.println(&quot;agencyBe :: &quot; + agencyBe);
             
                 if (agencyBe != null) {
-                        VertxUtils.publish(currentUser,&quot;webcmds&quot;,agencyBe, &quot;COMPANY&quot;, userToken);
+                        VertxUtils.publish(currentUser,&quot;webcmds&quot;,agencyBe, &quot;COMPANY&quot;, userToken.getToken());
                 } else {
                     System.out.println(&quot;ERROR: Null agencyBe&quot;);
                 }

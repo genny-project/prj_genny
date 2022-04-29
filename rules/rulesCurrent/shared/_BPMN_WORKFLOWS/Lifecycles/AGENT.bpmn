@@ -133,7 +133,7 @@ processId = kcontext.getProcessInstance().getId();
 kcontext.setVariable(&quot;processId&quot;,kcontext.getProcessInstance().getId());
 System.out.println(&quot;AGENT: processId = &quot; + processId);
 
-uuid = KeycloakUtils.createDummyUser(serviceToken.getToken(), serviceToken.getRealm());
+uuid = KeycloakUtils.createDummyUser(serviceToken, serviceToken.getRealm());
 kcontext.setVariable(&quot;uuid&quot;, uuid);
 System.out.println(&quot;AGENT: uuid = &quot; + uuid);
 

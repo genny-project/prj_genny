@@ -102,7 +102,7 @@ rule "AUTOFILL_NAME"
 			if(attributeCode.equals("PRI_NAME")) questionCode="QUE_TRADING_NAME";
 			if(attributeCode.equals("PRI_LEGAL_NAME")) questionCode="QUE_LEGAL_NAME";
 
-			QDataAskMessage askMsg = QuestionUtils.getAsks(userToken.getRealm(),userToken.getUserCode(), targetCode, "QUE_HOST_CPY_GRP", userToken);
+			QDataAskMessage askMsg = QuestionUtils.getAsks(userToken.getUserCode(), targetCode, "QUE_HOST_CPY_GRP", userToken);
 			if (askMsg != null) {
 				/* Find the ask */
 				for (Ask ask : askMsg.getItems()[0].getChildAsks()) {

@@ -414,7 +414,7 @@ RulesUtils.loadAllAttributesIntoCache(serviceToken);</bpmn2:script>
           <drools:script>System.out.println(&quot;initProject: Generate Capabilities - exit &quot;+capabilityUtils);
 String capabilityUtilsJson = JsonUtils.toJson(capabilityUtils);
 System.out.println(&quot;initProject: Generate Capabilities - exit - json= &quot;+capabilityUtilsJson);
-VertxUtils.writeCachedJson(serviceToken.getRealm(),&quot;CAPABILITIES&quot;, capabilityUtilsJson,serviceToken.getToken());
+VertxUtils.writeCachedJson(serviceToken.getRealm(),&quot;CAPABILITIES&quot;, capabilityUtilsJson,serviceToken);
 </drools:script>
         </drools:onExit-script>
         <drools:onEntry-script scriptFormat="http://www.java.com/java">

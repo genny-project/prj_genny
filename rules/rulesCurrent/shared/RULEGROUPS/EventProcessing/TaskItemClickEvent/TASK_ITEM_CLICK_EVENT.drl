@@ -35,7 +35,7 @@ rule "TASK_ITEM_CLICK_EVENT"
 		/* save this to cache */
 		String json = JsonUtils.toJson(output);
 		System.out.println("TASK_ITEM_CLICK_EVENT: outputJson="+json);
-		VertxUtils.writeCachedJson(userToken.getRealm(),"OUTPUT:"+code,json ,userToken.getToken());
+		VertxUtils.writeCachedJson(userToken.getRealm(),"OUTPUT:"+code,json ,userToken);
 		
 		retract( $message);
 		update(output); 

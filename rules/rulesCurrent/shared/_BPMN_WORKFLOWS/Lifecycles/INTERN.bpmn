@@ -146,7 +146,7 @@ kcontext.setVariable(&quot;processId&quot;,kcontext.getProcessInstance().getId()
 System.out.println(&quot;INTERN: processId = &quot; + processId);
 
 /* uuid = UUID.randomUUID(); */
-uuid = KeycloakUtils.createDummyUser(serviceToken.getToken(), serviceToken.getRealm());
+uuid = KeycloakUtils.createDummyUser(serviceToken, serviceToken.getRealm());
 kcontext.setVariable(&quot;uuid&quot;, uuid);
 System.out.println(&quot;internWF: uuid = &quot; + uuid);
 

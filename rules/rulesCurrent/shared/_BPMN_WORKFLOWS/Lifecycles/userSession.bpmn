@@ -1501,7 +1501,7 @@ QCmdMessage msgLogout = new QCmdMessage(&quot;LOGOUT&quot;, &quot;LOGOUT&quot;);
 msgLogout.setToken(userToken.getToken());
 VertxUtils.writeMsg(&quot;webcmds&quot;,JsonUtils.toJson(msgLogout));
 System.out.println(&quot;userSession: Deleting userSession &quot;+userToken.getJTI()+&quot; from processId map&quot;);
-VertxUtils.writeCachedJson(userToken.getRealm(),userToken.getJTI(),null,userToken.getToken());
+VertxUtils.writeCachedJson(userToken.getRealm(),userToken.getJTI(),null,userToken);
 System.out.println(&quot;userSession: Exiting userSession for &quot;+currentUser.getCode());
 </bpmn2:script>
       </bpmn2:scriptTask>
