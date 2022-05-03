@@ -91,52 +91,30 @@ rule "PRI_EMAIL"
 
 					if (allowedToChange) {
 
+						String remoteBEJson = QwandaUtils.apiGet(
+								System.getenv("REMOTE_API_URL") + "/qwanda/baseentitys/code/" + targetCode, 
+								userToken.getToken(), 
+								120
+								);
+
+						System.out.println(remoteBEJson);
+						Boolean remoteUserExists = !"null".equals(remoteBEJson);
+
+						if (!remoteUserExists) {
 							int statusCode =  KeycloakUtils.updateUserEmail(keycloakUUID,serviceToken.getToken(), userToken.getRealm(),answer.getValue());
 							System.out.println(ruleDetails+" "+drools.getRule().getName()+"  Changing email for "+answer.getTargetCode()+" to "+answer.getValue()+" statusCode="+statusCode);
 							if (statusCode > 204) {
 								System.out.println(ruleDetails+" "+drools.getRule().getName()+"  Error in setting email."+answer.getTargetCode()+" to "+answer.getValue()+" statusCode="+statusCode);
-
-								System.out.println("Checking remote server for " + targetCode);
-
-								String remoteBEJson = QwandaUtils.apiGet(
-										System.getenv("REMOTE_API_URL") + "/qwanda/baseentitys/code/" + targetCode, 
-										userToken.getToken(), 
-										120
-										);
-
-								BaseEntity remoteBE = JsonUtils.fromJson(remoteBEJson, BaseEntity.class);
-
-								List<EntityAttribute> isAs = target.findPrefixEntityAttributes("PRI_IS_MENTEE");
-
-								if (!isAs.isEmpty()) {
-
-									BaseEntity def = beUtils.getDEFByCode("DEF_MENTEE");
-									beUtils.create(def, remoteBE.getCode(), remoteBE.getName());
-
-									String firstname = target.getValue("PRI_FIRSTNAME", null);
-									String lastname = target.getValue("PRI_LASTNAME", null);
-									String email = remoteBE.getValue("PRI_EMAIL", null);
-
-									beUtils.saveAnswer(new Answer(userToken.getUserCode(), remoteBE.getCode(), "PRI_FIRSTNAME", firstname));
-									beUtils.saveAnswer(new Answer(userToken.getUserCode(), remoteBE.getCode(), "PRI_LASTNAME", lastname));
-									beUtils.saveAnswer(new Answer(userToken.getUserCode(), remoteBE.getCode(), "PRI_EMAIL", email));
-
-									output.setTypeOfResult("SIGNAL");
-									output.setResultCode("START_QUICK_ADD");
-									output.setSuitCase("MENTEE");
-									output.setTargetCode(remoteBE.getCode());
-								}
-
 							} else {
 								System.out.println(ruleDetails+" "+drools.getRule().getName()+"  Saving the good email");
 								Answer goodEmail = new Answer(answer.getSourceCode(), answer.getTargetCode(), "PRI_EMAIL", answer.getValue());
 								answersToSave.add(goodEmail);
 							}
-						/* } else { */
-						/* 	System.out.println(ruleDetails+" "+drools.getRule().getName()+"  Saving the good email"); */
-						/* 	Answer goodEmail = new Answer(answer.getSourceCode(), answer.getTargetCode(), "PRI_EMAIL", answer.getValue()); */
-						/* 	answersToSave.add(goodEmail); */
-						/* } */
+						} else {
+							System.out.println(ruleDetails+" "+drools.getRule().getName()+"  Saving the good email");
+							Answer goodEmail = new Answer(answer.getSourceCode(), answer.getTargetCode(), "PRI_EMAIL", answer.getValue());
+							answersToSave.add(goodEmail);
+						}
 					}
 				}	
 
