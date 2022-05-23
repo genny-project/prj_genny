@@ -126,7 +126,7 @@ baseEntityType = &quot;HOST_CPY&quot;;
 kcontext.setVariable(&quot;baseEntityType&quot;, baseEntityType);
 System.out.println(&quot;HOST_CPY: baseEntityType = &quot; + baseEntityType);
 
-String pending = &quot;PENDING_&quot; + baseEntityType;
+String pending = &quot;ACTIVE_&quot; + baseEntityType;
 kcontext.setVariable(&quot;pending&quot;, pending);
 System.out.println(&quot;HOST_CPY: pending = &quot; + pending);
 

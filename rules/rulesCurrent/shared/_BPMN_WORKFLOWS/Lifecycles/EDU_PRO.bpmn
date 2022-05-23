@@ -102,7 +102,7 @@ baseEntityType = &quot;EDU_PRO&quot;;
 kcontext.setVariable(&quot;baseEntityType&quot;, baseEntityType);
 System.out.println(&quot;EDU_PRO: baseEntityType = &quot; + baseEntityType);
 
-String pending = &quot;PENDING_&quot; + baseEntityType;
+String pending = &quot;ACTIVE_&quot; + baseEntityType;
 kcontext.setVariable(&quot;pending&quot;, pending);
 System.out.println(&quot;EDU_PRO: pending = &quot; + pending);
 

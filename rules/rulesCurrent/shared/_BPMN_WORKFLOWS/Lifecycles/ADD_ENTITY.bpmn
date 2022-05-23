@@ -192,8 +192,8 @@ if (defBE == null) {
 	System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);
 
 	if (newBe != null) {
-		/* Set Status to Pending */
-		newBe.setStatus(EEntityStatus.PENDING);
+		/* Set Status to Active */
+		newBe.setStatus(EEntityStatus.ACTIVE);
 		beUtils.saveBaseEntity(defBE,newBe);
 	}
 

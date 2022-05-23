@@ -181,9 +181,9 @@ baseEntityType = &quot;INTERNSHIP&quot;;
 kcontext.setVariable(&quot;baseEntityType&quot;, baseEntityType);
 System.out.println(&quot;INTERNSHIP: baseEntityType = &quot; + baseEntityType);
 
-String pending = &quot;PENDING_&quot; + baseEntityType;
-kcontext.setVariable(&quot;pending&quot;, pending);
-System.out.println(&quot;INTERNSHIP: pending = &quot; + pending);
+String active = &quot;ACTIVE_&quot; + baseEntityType;
+kcontext.setVariable(&quot;active&quot;, active);
+System.out.println(&quot;INTERNSHIP: active = &quot; + active);
 
 callingProcessToken = new CallingProcessToken(userToken, processId, userToken.getUserCode());
 kcontext.setVariable(&quot;callingProcessToken&quot;, callingProcessToken);
@@ -199,7 +199,7 @@ kcontext.setVariable(&quot;newBe&quot;, newBe);
 System.out.println(&quot;INTERNSHIP: newBe = &quot; + newBe);
 System.out.println(&quot;>>>>>>>>>>>> &quot; + newBe.getName() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);
 
-Answer answer = new Answer(userToken.getUserCode(),  newBe.getCode() , &quot;PRI_STATUS&quot;, pending);
+Answer answer = new Answer(userToken.getUserCode(),  newBe.getCode() , &quot;PRI_STATUS&quot;, active);
 beUtils.saveAnswer(answer);
 
 kcontext.setVariable(&quot;isLive&quot;, true);
