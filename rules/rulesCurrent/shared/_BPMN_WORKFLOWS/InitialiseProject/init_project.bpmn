@@ -411,9 +411,9 @@ RulesUtils.loadAllAttributesIntoCache(serviceToken);</bpmn2:script>
           <drools:metaValue><![CDATA[Generate Capabilities]]></drools:metaValue>
         </drools:metaData>
         <drools:onExit-script scriptFormat="http://www.java.com/java">
-          <drools:script>System.out.println(&quot;initProject: Generate Capabilities - exit &quot;+capabilityUtils);
+          <drools:script>System.out.println(&quot;initProject: Generate Capabilities - exit &quot;);
 String capabilityUtilsJson = JsonUtils.toJson(capabilityUtils);
-System.out.println(&quot;initProject: Generate Capabilities - exit - json= &quot;+capabilityUtilsJson);
+System.out.println(&quot;initProject: Generate Capabilities - exit - json= &quot;);
 VertxUtils.writeCachedJson(serviceToken.getRealm(),&quot;CAPABILITIES&quot;, capabilityUtilsJson,serviceToken);
 </drools:script>
         </drools:onExit-script>
@@ -590,7 +590,7 @@ VertxUtils.answerBuffer = new ArrayList&lt;Answer>();</bpmn2:script>
     <bpmn2:task id="Task_8" drools:taskName="RuleFlowGroup" drools:displayName="RunRuleFlowGroup" drools:icon="icons/icon-info.gif" name="Generate PCMs">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Generate Searches]]></drools:metaValue>
+          <drools:metaValue><![CDATA[Generate PCMs]]></drools:metaValue>
         </drools:metaData>
         <drools:onEntry-script scriptFormat="http://www.java.com/java"/>
       </bpmn2:extensionElements>
@@ -729,7 +729,7 @@ VertxUtils.answerBuffer = new ArrayList&lt;Answer>();</bpmn2:script>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_Task_8" bpmnElement="Task_8" isExpanded="true">
         <dc:Bounds height="50.0" width="76.0" x="290.0" y="90.0"/>
-        <bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_16">
           <dc:Bounds height="11.0" width="65.0" x="295.0" y="109.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
@@ -826,13 +826,13 @@ VertxUtils.answerBuffer = new ArrayList&lt;Answer>();</bpmn2:script>
         <di:waypoint xsi:type="dc:Point" x="276.0" y="115.0"/>
         <di:waypoint xsi:type="dc:Point" x="283.0" y="115.0"/>
         <di:waypoint xsi:type="dc:Point" x="290.0" y="115.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_28"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_14" bpmnElement="SequenceFlow_14" sourceElement="BPMNShape_Task_8" targetElement="BPMNShape_Task_2">
         <di:waypoint xsi:type="dc:Point" x="366.0" y="115.0"/>
         <di:waypoint xsi:type="dc:Point" x="376.0" y="115.0"/>
         <di:waypoint xsi:type="dc:Point" x="385.0" y="115.0"/>
-        <bpmndi:BPMNLabel/>
+        <bpmndi:BPMNLabel id="BPMNLabel_29"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
