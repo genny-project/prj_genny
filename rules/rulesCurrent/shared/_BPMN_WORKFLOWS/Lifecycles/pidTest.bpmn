@@ -101,7 +101,7 @@
         </bpmn2:extensionElements>
         <bpmn2:incoming>SequenceFlow_11</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
-        <bpmn2:script>System.out.println(&quot;SessionFacts=&quot;+sessionFacts);
+        <bpmn2:script>/*System.out.println(&quot;SessionFacts=&quot;+sessionFacts);*/
 String code = (String)sessionFacts.getMessage();
 System.out.println(&quot;SessionFacts CODE=&quot;+code);
 kcontext.setVariable(&quot;workflowBeCode&quot;,code);
