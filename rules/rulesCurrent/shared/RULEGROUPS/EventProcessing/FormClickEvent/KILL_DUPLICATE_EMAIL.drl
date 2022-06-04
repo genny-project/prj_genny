@@ -106,14 +106,13 @@ rule "KILL_DUPLICATE_EMAIL"
 		searchBE.setRealm(beUtils.getServiceToken().getRealm());
 			
 		/* Check number of duplicates */
-		Tuple2<String, List<String>> data = beUtils.getHql(searchBE);
-		String hql = data._1;
-
-		hql = Base64.getUrlEncoder().encodeToString(hql.getBytes());
 		try {
-					String resultJsonStr = QwandaUtils.apiGet(
-					GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql ,
-					beUtils.getServiceToken(), 120);
+			String resultJsonStr =
+				QwandaUtils.apiPostEntity2(
+						GennySettings.fyodorServiceUrl + "/api/count",
+						JsonUtils.toJson(searchBE),
+						userToken,
+						null);
 
 					System.out.println("Search EMAIL result is "+resultJsonStr);
 			

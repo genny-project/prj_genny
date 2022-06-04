@@ -179,14 +179,16 @@ rule "IS_JOURNAL"
 																				.addFilter("LNK_INTERN", SearchEntity.StringFilter.LIKE, "%" + internCode + "%")
 																				.addColumn("PRI_CODE", "Name");
 
-						Tuple2<String, List<String>> results = beUtils.getHql(completedJnlSbe);
-						String hql = results._1;
-						String hql2 = Base64.getUrlEncoder().encodeToString(hql.getBytes());
-
 						try {
-							String resultJsonStr = QwandaUtils.apiGet(
-											GennySettings.qwandaServiceUrl + "/qwanda/baseentitys/count24/" + hql2,
-											serviceToken, 120);
+
+							String resultJsonStr =
+								QwandaUtils.apiPostEntity2(
+										GennySettings.fyodorServiceUrl + "/api/count",
+										JsonUtils.toJson(completedJnlSbe),
+										userToken,
+										null);
+
+
 							completedJournals = completedJournals + Integer.decode(resultJsonStr);
 
 						} catch (Exception e1) {
