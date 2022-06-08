@@ -154,7 +154,7 @@
 
 	if(code.contain(&quot;CPY&quot;))
 	{
-		System.out.println(&quot;targetBe is Host Company);
+		System.out.println(&quot;targetBe is Host Company&quot;);
 		String country = targetBe.getValue(&quot;PRI_ADDRESS_COUNTRY&quot;,null);
 		if(country != null)
 		{
