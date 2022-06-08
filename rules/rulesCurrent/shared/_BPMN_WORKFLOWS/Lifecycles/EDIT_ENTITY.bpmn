@@ -151,6 +151,8 @@
 	kcontext.setVariable(&quot;targetBe&quot;, targetBe);
 	System.out.println(&quot;EDIT_ENTITY: targetBe = &quot; + targetBe);
 	System.out.println(&quot;>>>>>>>>>>>> &quot; + targetBe.getName() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);
+	
+	Boolean isHostCpyRep = (Boolean) beUtils.getBaseEntityValue(userToken.getUserCode(), &quot;PRI_IS_HOST_CPY_REP&quot;);
 
 	if(code.contains(&quot;CPY&quot;))
 	{
@@ -158,11 +160,19 @@
 		String country = targetBe.getValue(&quot;PRI_ADDRESS_COUNTRY&quot;,null);
 		if(country != null)
 		{
-			if(country.equalsIgnoreCase(&quot;Australia&quot;))
-			{
-				questionCode = &quot;QUE_&quot; +key + &quot;_GRP1&quot;;
-				kcontext.setVariable(&quot;questionCode&quot;, questionCode);
-				System.out.println(&quot;EDIT_ENTITY: questionCode: &quot; + questionCode);
+			if(isHostCpyRep != null &amp;&amp; isHostCpyRep)
+				{
+					questionCode = &quot;QUE_&quot; +key + &quot;_GRP&quot;;
+					kcontext.setVariable(&quot;questionCode&quot;, questionCode);
+					System.out.println(&quot;EDIT_ENTITY: questionCode: &quot; + questionCode);
+				}
+			else{
+				if(country.equalsIgnoreCase(&quot;Australia&quot;))
+				{
+					questionCode = &quot;QUE_&quot; +key + &quot;_GRP1&quot;;
+					kcontext.setVariable(&quot;questionCode&quot;, questionCode);
+					System.out.println(&quot;EDIT_ENTITY: questionCode: &quot; + questionCode);
+				}
 			}
 		}
 	}
