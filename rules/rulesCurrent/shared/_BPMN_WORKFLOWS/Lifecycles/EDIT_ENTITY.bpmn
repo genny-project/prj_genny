@@ -160,7 +160,7 @@
 		{
 			if(country.equalsIgnoreCase(&quot;Australia&quot;))
 			{
-				questionCode = &quot;QUE_&quot; +key + &quot;_GRP2&quot;;
+				questionCode = &quot;QUE_&quot; +key + &quot;_GRP1&quot;;
 				kcontext.setVariable(&quot;questionCode&quot;, questionCode);
 				System.out.println(&quot;EDIT_ENTITY: questionCode: &quot; + questionCode);
 			}
