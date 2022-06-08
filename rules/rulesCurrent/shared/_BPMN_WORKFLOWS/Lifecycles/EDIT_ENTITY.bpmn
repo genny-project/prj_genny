@@ -152,7 +152,7 @@
 	System.out.println(&quot;EDIT_ENTITY: targetBe = &quot; + targetBe);
 	System.out.println(&quot;>>>>>>>>>>>> &quot; + targetBe.getName() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);
 
-	if(code.contain(&quot;CPY&quot;))
+	if(code.contains(&quot;CPY&quot;))
 	{
 		System.out.println(&quot;targetBe is Host Company&quot;);
 		String country = targetBe.getValue(&quot;PRI_ADDRESS_COUNTRY&quot;,null);
