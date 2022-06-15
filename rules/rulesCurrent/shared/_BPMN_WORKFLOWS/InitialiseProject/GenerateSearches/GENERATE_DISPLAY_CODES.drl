@@ -55,6 +55,10 @@ rule "GENERATE_DISPLAY_CODES"
 		
 		/* forms goes here */
 		displayCodes.put("ACT_PRI_EVENT_EDIT", "FORM");
+        displayCodes.put("ACT_PRI_EVENT_EDIT_MESSAGE", "FORM");
+
+        /* form detail */
+        displayCodes.put("QUE_MESSAGE_GRP", "FORM:DETAIL");
 
 		insert(displayCodes);
 		VertxUtils.putObject(serviceToken.getRealm(), "", "DISPLAY_CODES", displayCodes, serviceToken.getToken());

@@ -32,7 +32,7 @@ rule "SBE_COMMUNICATIONS"
 			.addColumn("PRI_BCC", "BCC")
 			.addColumn("PRI_BODY", "Body")
 
-			.addAction("EDIT", "Edit")
+		    .addAction("PRI_EVENT_EDIT_MESSAGE", "Edit")
 
 			.setPageStart(0)
 			.setPageSize(10000);
