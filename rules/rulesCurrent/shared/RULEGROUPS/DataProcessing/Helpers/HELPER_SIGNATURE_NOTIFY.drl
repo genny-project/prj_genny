@@ -18,6 +18,7 @@ import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwandautils.JsonUtils;
 import java.util.List;
 import java.util.ArrayList;
+import life.genny.message.QMessageGennyMSG;
 
 rule "HELPER_SIGNATURE_NOTIFY"
 	ruleflow-group 'DataProcessing'
@@ -34,7 +35,6 @@ rule "HELPER_SIGNATURE_NOTIFY"
 		output : OutputParam( )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		userToken : GennyToken( code != "PER_SERVICE")
-
 	then
 		System.out.println(drools.getRule().getName() + " - fired");
 
@@ -56,133 +56,76 @@ rule "HELPER_SIGNATURE_NOTIFY"
 		System.out.println("value = " + value);
 		
 		if (value != null && !value.equals("null") && value.startsWith("data:image/png;base64") && !value.equals("https://bit.ly/3A2xdjI")) {
-				
-			/* Get Intern BE, Name and Email */
+			/* Get Intern BE */
 			BaseEntity internBE = beUtils.getBaseEntityFromLNKAttr(targetBe, "PRI_INTERN_CODE");
-			String internName = null;
-			String internEmail = null;
-			String agentEmail = null;
-			String agentName = null;
-			
+            BaseEntity agent = null;
 			if (internBE != null) {
-				internName = internBE.getValue("PRI_FIRSTNAME", null);
-				internEmail = internBE.getValue("PRI_EMAIL", null);
-
-				BaseEntity agent = beUtils.getBaseEntityFromLNKAttr(internBE, "LNK_AGENT");
-				if (agent != null) {
-					agentEmail = agent.getValue("PRI_EMAIL", null);
-					System.out.println("agentEmail = " + agentEmail);
-					agentName = agent.getValue("PRI_NAME", null);
-					System.out.println("agentName = " + agentName);
-				}
+				agent = beUtils.getBaseEntityFromLNKAttr(internBE, "LNK_AGENT");
+                if (agent == null) {
+                    System.out.println("agent is NULL");
+                }
 			} else {
 				System.out.println("internBE is NULL");
 			}
-			System.out.println("internBE = " + internBE);
-			System.out.println("internName = " + internName);
-			System.out.println("internEmail = " + internEmail);
 			
-			/* Get Supervisor BE and Name */
+			/* Get Supervisor BE */
 			BaseEntity supervisorBE = beUtils.getBaseEntityFromLNKAttr(targetBe, "LNK_INTERN_SUPERVISOR");
-			String supervisorName = null;
-			String supervisorEmail = null;
 			Boolean sendToSupervisor = false;
-
 			if (supervisorBE != null) {
-				supervisorName = supervisorBE.getValue("PRI_FIRSTNAME", null);
-				supervisorEmail = supervisorBE.getValue("PRI_EMAIL", null);
 				sendToSupervisor = supervisorBE.getValue("PRI_EMAIL_FLAG", false);
 			} else {
 				System.out.println("supervisorBE is NULL");
 			}
-			System.out.println("supervisorBE = " + supervisorBE);
-			System.out.println("supervisorName = " + supervisorName);
-			System.out.println("supervisorEmail = " + supervisorEmail);
-			
-			/* Get Internship Entity */
-			BaseEntity internshipBE = beUtils.getBaseEntityFromLNKAttr(targetBe, "LNK_INTERNSHIP");
-			String internshipName = null;
 
-			if (internshipBE != null) {
-				internshipName = internshipBE.getValue("PRI_NAME", null);
-			} else {
-				System.out.println("internshipBE is NULL");
-			}
-			System.out.println("internshipBE = " + internshipBE);
-			System.out.println("internshipName = " + internshipName);
-
-			/* Gather Host Company details */
-			BaseEntity companyBE = beUtils.getBaseEntityFromLNKAttr(targetBe, "LNK_HOST_COMPANY");
-			String hostCompanyName = null;
-
-			if (companyBE != null) {
-				hostCompanyName = companyBE.getValue("PRI_NAME", null);
-			} else {
-				System.out.println("companyBE is NULL");
-			}
-			System.out.println("companyBE = " + companyBE);
-			System.out.println("hostCompanyName = " + hostCompanyName);
-
-			/* Init Data for Email */
-			BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
-
-			String urlParentCode = "SBE_OFFERED_APPLICATIONS_"+userToken.getJTI().toUpperCase();
-			String cleanUrl = EmailHelper.encodeUrl(GennySettings.projectUrl+"/home", urlParentCode, "ACT_PRI_EVENT_VIEW_APPLICATION", targetBe.getCode());
-
-			String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, agentEmail, serviceToken);
-			System.out.println("token: " + token);
-
-			String url = cleanUrl +"?token=" + token;
-			System.out.println("url = " + url);
-
-			/* Send Confirmation of HC Rep Signature to Agent */
-			HashMap<String, String> templateData = new HashMap<String, String>();
-			templateData.put("url", url);
-			templateData.put("intern", internName);
-			templateData.put("internshipName", internshipName);
-			templateData.put("hostCompanyName", hostCompanyName);
-			templateData.put("hostCompanyRepName", supervisorName);
-			templateData.put("supervisorName", supervisorName);
-			templateData.put("agentName", agentName);
-
-			String templateId = null;
+			String url = "SBE_OFFERED_APPLICATIONS_" + userToken.getJTI().toUpperCase() + "/ACT_PRI_EVENT_VIEW_APPLICATION/" + targetBe.getCode();
 
 			if (attributeCode.startsWith("PRI_AGR_DOC_INT_SIGNATURE")) {
-				/* Intern has signed */
-				templateId = "d-c0eb435cbc844647a20d6ecfe165998f";
-				/* Send Email to Agent notifying of Signature */
-				EmailHelper.sendGrid(beUtils, agentEmail, "", templateId, templateData, false);
+                QMessageGennyMSG agentInterSignedMsg = new QMessageGennyMSG.Builder("MSG_AGENT_INTERN_SIGNED_AGREEMENT")
+                    .addRecipient(agent)
+                    .addContext("INTERN", internBE)
+                    .addContext("URL:ENCODE", url)
+                    .addContext("BCC", "PRJ_INTERNMATCH")
+                    .setUtils(beUtils)
+                    .send();
 
+                System.out.println("Sendgrid msg: "+ JsonUtils.toJson(agentInterSignedMsg));
+                System.out.println("Sendgrid email sent to Agent for Intern signed Agreement!!");
 			} else if (attributeCode.startsWith("PRI_AGR_DOC_HC_SIGNATURE")) {
-				/* HC Rep has signed */
-				templateId = "d-550f8a48d8a1482889b4c547bf581552";
+                QMessageGennyMSG agentHCRSignedMsg = new QMessageGennyMSG.Builder("MSG_AGENT_HCR_SIGNED_AGREEMENT")
+                    .addRecipient(agent)
+                    .addContext("INTERN", internBE)
+                    .addContext("URL:ENCODE", url)
+                    .addContext("BCC", "PRJ_INTERNMATCH")
+                    .setUtils(beUtils)
+                    .send();
 
-				/* Send Email to Agent notifying of Signature */
-				EmailHelper.sendGrid(beUtils, agentEmail, "", templateId, templateData, false);
+                System.out.println("Sendgrid msg: "+ JsonUtils.toJson(agentHCRSignedMsg));
+                System.out.println("Sendgrid email sent to Agent for HCR signed Agreement!!");
 			} else if (attributeCode.startsWith("PRI_AGR_DOC_OUTCOME_")) {
-				/* Agent has signed */
-				System.out.println("Outcome Life Signature Detected. Sending email to HCR and INTERN to remind signature");
-				List<String> bccList = Arrays.asList("internmatch@outcomelife.com.au");
-				
-				/* SEND TO SUPERVISOR */
-				String hcrToken = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, supervisorEmail, serviceToken);
-				System.out.println("hcrToken = " + hcrToken);
-				url = cleanUrl +"?token=" + hcrToken;
-				templateData.put("url", url);
-			
 				if (sendToSupervisor) {
-					EmailHelper.sendGrid(beUtils, supervisorEmail, null, bccList, "", "d-64ef4bf7b18a4b65a9c7e02b1b8ce7df", templateData, false);
+                     QMessageGennyMSG supervisorAgentSignedMsg = new QMessageGennyMSG.Builder("MSG_INT_SUP_AGENT_SIGNED_AGREEMENT")
+                        .addRecipient(supervisorBE)
+                        .addContext("INTERN", internBE)
+                        .addContext("URL:ENCODE", url)
+                        .addContext("BCC", "PRJ_INTERNMATCH")
+                        .setUtils(beUtils)
+                        .send();
+
+                    System.out.println("Sendgrid msg: "+ JsonUtils.toJson(supervisorAgentSignedMsg));
+                    System.out.println("Sendgrid email sent to Intern supervisor for Agent signed Agreement!!");
 				} else {
-					System.out.println("Email Flag is FALSE, not sending to supervisor!");
+					System.out.println("Email Flag is FALSE, not sending to Intern supervisor!");
 				}
 
-				/* SEND TO INTERN */
-				String internToken = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, internEmail, serviceToken);
-				System.out.println("internToken = " + internToken);
-				url = cleanUrl +"?token=" + internToken;
-				templateData.put("url", url);
-			
-				EmailHelper.sendGrid(beUtils, internEmail, null, bccList, "", "d-501f81d3e2614c3b8691bf9777478fa6", templateData, false);
+                QMessageGennyMSG internAgentSignedMsg = new QMessageGennyMSG.Builder("MSG_INT_AGENT_SIGNED_AGREEMENT")
+                    .addRecipient(internBE)
+                    .addContext("URL:ENCODE", url)
+                    .addContext("BCC", "PRJ_INTERNMATCH")
+                    .setUtils(beUtils)
+                    .send();
+
+                System.out.println("Sendgrid msg: "+ JsonUtils.toJson(internAgentSignedMsg));
+                System.out.println("Sendgrid email sent to Intern for Agent signed Agreement!!");
 			}
 		
 		} else {
