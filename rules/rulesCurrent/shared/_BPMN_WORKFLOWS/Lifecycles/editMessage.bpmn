@@ -69,7 +69,7 @@
   <bpmn2:signal id="Signal_7" name="START_EDIT_MESSAGE"/>
   <bpmn2:signal id="Signal_8" name="signature"/>
   <bpmn2:signal id="Signal_9" name="START_MOVE"/>
-  <bpmn2:process id="editApplication" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="Default Process" isExecutable="true">
+  <bpmn2:process id="editMessage" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="Default Process" isExecutable="true">
     <bpmn2:extensionElements>
       <drools:import name="life.genny.models.GennyToken"/>
       <drools:import name="life.genny.utils.SessionFacts"/>
