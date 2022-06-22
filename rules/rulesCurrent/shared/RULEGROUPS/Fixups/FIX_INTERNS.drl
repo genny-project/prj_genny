@@ -88,14 +88,14 @@ rule "FIX_INTERNS"
 			for (BaseEntity intern : interns) {
 				index++;
 
-				String status = intern.getStatus().toString();
-				
+				String estatus = intern.getStatus().toString();
+				String status = intern.getValue("PRI_STATUS", null);
 					/*intern = intern.setStatus(EEntityStatus.ACTIVE);*/
 					/*intern = beUtils.saveAnswer(new Answer(intern, intern, statusAttribute, "ACTIVE"));*/
 					/*beUtils.saveBaseEntity(defIntern, intern);*/
 
 				System.out.println(index + " of " + total + " Interns -> " + intern.getCode() + " "
-						+ intern.getName() + ":"+status+" ("+intern.getCreated()+")");	
+						+ intern.getName() + ":"+estatus+":ea:"+status+" ("+intern.getCreated()+")");	
 		
 			}
 
