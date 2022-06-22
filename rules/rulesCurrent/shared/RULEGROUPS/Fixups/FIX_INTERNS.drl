@@ -88,17 +88,15 @@ rule "FIX_INTERNS"
 			for (BaseEntity intern : interns) {
 				index++;
 
-				if (intern.getStatus().equals(EEntityStatus.PENDING)) {
+				String status = intern.getStatus().toString();
+				
 					/*intern = intern.setStatus(EEntityStatus.ACTIVE);*/
 					/*intern = beUtils.saveAnswer(new Answer(intern, intern, statusAttribute, "ACTIVE"));*/
 					/*beUtils.saveBaseEntity(defIntern, intern);*/
-					System.out.println(index + " of " + total + " Intern -> " + intern.getCode() + " "
-							+ intern.getName() + " SET TO ACTIVE FROM PENDING");	
 
-				} else {
 				System.out.println(index + " of " + total + " Interns -> " + intern.getCode() + " "
-						+ intern.getName() + "");	
-				}
+						+ intern.getName() + ":"+status+" ("+intern.getCreated()+")");	
+		
 			}
 
 			searchBE.setPageStart(index);
