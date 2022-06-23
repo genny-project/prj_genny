@@ -57,7 +57,7 @@ rule "FIX_INTERNS"
 
 			List<Answer> answers = new ArrayList<>();
 
-			System.out.println("Fixing Interns'");
+			System.out.println("Fixing Interns batch process!");
 
 		SearchEntity searchBE = new SearchEntity("SBE_INTERNS", "Intern Search")
 				.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
@@ -100,9 +100,10 @@ rule "FIX_INTERNS"
 				/*intern.setStatus(EEntityStatus.ACTIVE);*/
 				/*intern = beUtils.saveAnswer(new Answer(intern, intern, statusAttribute, "ACTIVE"));*/
 				if ("PER_EF3D6143-3E7F-4E40-9835-F2625832C031".equals(intern.getCode())) {
+					System.out.println("Inside If!");
 					beUtils.saveAnswer(new Answer(userToken.getUserCode(), intern.getCode() ,"PRI_STATUS", "ACTIVE"));
 				}
-				
+
 				/*beUtils.saveBaseEntity(defIntern, intern);*/
 
 				System.out.println("AFTER:: " + index + " of " + total + " Interns -> " + intern.getCode() + " "
