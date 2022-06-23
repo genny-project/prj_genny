@@ -97,12 +97,10 @@ rule "FIX_INTERNS"
 						+ intern.getName() + ":"+estatus+":ea:"+status+" ("+intern.getCreated()+")");
 
 
-				/*intern.setStatus(EEntityStatus.ACTIVE);*/
+				intern.setStatus(EEntityStatus.ACTIVE);
 				/*intern = beUtils.saveAnswer(new Answer(intern, intern, statusAttribute, "ACTIVE"));*/
-				if ("PER_EF3D6143-3E7F-4E40-9835-F2625832C031".equals(intern.getCode())) {
-					System.out.println("Inside If!");
-					beUtils.saveAnswer(new Answer(userToken.getUserCode(), intern.getCode() ,"PRI_STATUS", "ACTIVE"));
-				}
+
+				beUtils.saveAnswer(new Answer(userToken.getUserCode(), intern.getCode() ,"PRI_STATUS", "ACTIVE"));
 
 				/*beUtils.saveBaseEntity(defIntern, intern);*/
 
