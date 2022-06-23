@@ -96,9 +96,14 @@ rule "FIX_INTERNS"
 				System.out.println("BEFORE:: " + index + " of " + total + " Interns -> " + intern.getCode() + " "
 						+ intern.getName() + ":"+estatus+":ea:"+status+" ("+intern.getCreated()+")");
 
-				intern.setStatus(EEntityStatus.ACTIVE);
-				intern = beUtils.saveAnswer(new Answer(intern, intern, statusAttribute, "ACTIVE"));
-				beUtils.saveBaseEntity(defIntern, intern);
+
+				/*intern.setStatus(EEntityStatus.ACTIVE);*/
+				/*intern = beUtils.saveAnswer(new Answer(intern, intern, statusAttribute, "ACTIVE"));*/
+				if ("PER_EF3D6143-3E7F-4E40-9835-F2625832C031".equals(intern.getCode())) {
+					beUtils.saveAnswer(new Answer(userToken.getUserCode(), intern.getCode() ,"PRI_STATUS", "ACTIVE"));
+				}
+				
+				/*beUtils.saveBaseEntity(defIntern, intern);*/
 
 				System.out.println("AFTER:: " + index + " of " + total + " Interns -> " + intern.getCode() + " "
 						+ intern.getName() + ":"+estatus+":ea:"+status+" ("+intern.getCreated()+")");
