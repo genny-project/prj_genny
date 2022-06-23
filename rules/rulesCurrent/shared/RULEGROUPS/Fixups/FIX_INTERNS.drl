@@ -77,6 +77,8 @@ rule "FIX_INTERNS"
 
 		Attribute statusAttribute = RulesUtils.getAttribute("PRI_STATUS", serviceToken.getToken());
 
+		BaseEntity defIntern = beUtils.getBaseEntityByCode("DEF_INTERN");
+		System.out.println("defIntern:: " + defIntern);
 
 		while (ok) {
 			List<BaseEntity> interns = beUtils.getBaseEntitys(searchBE); /* load 100 at a time */
@@ -94,7 +96,7 @@ rule "FIX_INTERNS"
 				System.out.println("BEFORE:: " + index + " of " + total + " Interns -> " + intern.getCode() + " "
 						+ intern.getName() + ":"+estatus+":ea:"+status+" ("+intern.getCreated()+")");
 
-				intern = intern.setStatus(EEntityStatus.ACTIVE);
+				intern.setStatus(EEntityStatus.ACTIVE);
 				intern = beUtils.saveAnswer(new Answer(intern, intern, statusAttribute, "ACTIVE"));
 				beUtils.saveBaseEntity(defIntern, intern);
 
