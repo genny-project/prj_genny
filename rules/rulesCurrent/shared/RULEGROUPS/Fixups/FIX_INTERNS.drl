@@ -90,18 +90,24 @@ rule "FIX_INTERNS"
 
 				String estatus = intern.getStatus().toString();
 				String status = intern.getValue("PRI_STATUS", null);
-					/*intern = intern.setStatus(EEntityStatus.ACTIVE);*/
-					/*intern = beUtils.saveAnswer(new Answer(intern, intern, statusAttribute, "ACTIVE"));*/
-					/*beUtils.saveBaseEntity(defIntern, intern);*/
 
-				System.out.println(index + " of " + total + " Interns -> " + intern.getCode() + " "
-						+ intern.getName() + ":"+estatus+":ea:"+status+" ("+intern.getCreated()+")");	
-		
+				System.out.println("BEFORE:: " + index + " of " + total + " Interns -> " + intern.getCode() + " "
+						+ intern.getName() + ":"+estatus+":ea:"+status+" ("+intern.getCreated()+")");
+
+				intern = intern.setStatus(EEntityStatus.ACTIVE);
+				intern = beUtils.saveAnswer(new Answer(intern, intern, statusAttribute, "ACTIVE"));
+				beUtils.saveBaseEntity(defIntern, intern);
+
+				System.out.println("AFTER:: " + index + " of " + total + " Interns -> " + intern.getCode() + " "
+						+ intern.getName() + ":"+estatus+":ea:"+status+" ("+intern.getCreated()+")");
+
 			}
 
 			searchBE.setPageStart(index);
 		}
 
-				output.setTypeOfResult("NONE");
+			output.setTypeOfResult("NONE");
 			output.setResultCode("NONE");  /* dont display anything new */
+
+			System.out.println("End of " + drools.getRule().getName());
 		end
