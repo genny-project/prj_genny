@@ -47,17 +47,17 @@ rule "FIX_INTERNS"
 	salience 2
     no-loop
     when
-			userToken : GennyToken (code != "PER_SERVICE" )
-			serviceToken : GennyToken( code == "PER_SERVICE")
-			output : OutputParam( )
-			ruleDetails : RuleDetails()
-			beUtils : BaseEntityUtils()
+		userToken : GennyToken (code != "PER_SERVICE" )
+		serviceToken : GennyToken( code == "PER_SERVICE")
+		output : OutputParam( )
+		ruleDetails : RuleDetails()
+		beUtils : BaseEntityUtils()
     then
-			System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processings : " );
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processings : " );
 
-			List<Answer> answers = new ArrayList<>();
+		List<Answer> answers = new ArrayList<>();
 
-			System.out.println("Fixing Interns batch process!");
+		System.out.println("Fixing Interns batch process!");
 
 		SearchEntity searchBE = new SearchEntity("SBE_INTERNS", "Intern Search")
 				.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
