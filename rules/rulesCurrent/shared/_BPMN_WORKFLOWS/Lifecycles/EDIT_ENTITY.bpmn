@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.2.SNAPSHOT-v20200602-1600-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xmlns:java="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.3.Final-v20210519-2007-B1" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
   <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false" structureRef="life.genny.models.GennyToken"/>
   <bpmn2:itemDefinition id="ItemDefinition_954" isCollection="false" structureRef="life.genny.utils.SessionFacts"/>
   <bpmn2:itemDefinition id="ItemDefinition_1346" isCollection="false" structureRef="life.genny.utils.CallingProcessToken"/>
@@ -151,6 +151,31 @@
 	kcontext.setVariable(&quot;targetBe&quot;, targetBe);
 	System.out.println(&quot;EDIT_ENTITY: targetBe = &quot; + targetBe);
 	System.out.println(&quot;>>>>>>>>>>>> &quot; + targetBe.getName() + &quot; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);
+	
+	Boolean isHostCpyRep = (Boolean) beUtils.getBaseEntityValue(userToken.getUserCode(), &quot;PRI_IS_HOST_CPY_REP&quot;);
+
+	if(code.contains(&quot;CPY&quot;))
+	{
+		System.out.println(&quot;targetBe is Host Company&quot;);
+		String country = targetBe.getValue(&quot;PRI_ADDRESS_COUNTRY&quot;,null);
+		if(country != null)
+		{
+			if(isHostCpyRep != null &amp;&amp; isHostCpyRep)
+				{
+					questionCode = &quot;QUE_&quot; +key + &quot;_GRP&quot;;
+					kcontext.setVariable(&quot;questionCode&quot;, questionCode);
+					System.out.println(&quot;EDIT_ENTITY: questionCode: &quot; + questionCode);
+				}
+			else{
+				if(country.equalsIgnoreCase(&quot;Australia&quot;))
+				{
+					questionCode = &quot;QUE_&quot; +key + &quot;_GRP1&quot;;
+					kcontext.setVariable(&quot;questionCode&quot;, questionCode);
+					System.out.println(&quot;EDIT_ENTITY: questionCode: &quot; + questionCode);
+				}
+			}
+		}
+	}
 
 /* Do the template thing*/
 
@@ -410,7 +435,7 @@ if (userRole == true) {
     targetBe.setStatus(EEntityStatus.ACTIVE);
    beUtils.saveBaseEntity(targetBe);
 /* Re generate cached applications */
-BaseEntity defBe = beUtils.getDEFByCode("DEF_INTERN");
+BaseEntity defBe = beUtils.getDEFByCode(&quot;DEF_INTERN&quot;);
  SearchUtils.regenerateCaches(beUtils, defBe);
 } else {
     System.out.println(&quot;EDIT_ENTITY BPM: &quot;+targetBe.getCode() + &quot; is not an intern base entity.&quot;);

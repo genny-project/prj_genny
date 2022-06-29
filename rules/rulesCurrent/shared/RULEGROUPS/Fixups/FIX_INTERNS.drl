@@ -1,0 +1,119 @@
+package life.genny.rules;
+
+import org.apache.commons.lang3.StringUtils;
+
+import life.genny.qwanda.message.QDataAnswerMessage;
+import life.genny.models.GennyToken;
+import life.genny.rules.QRules;
+import life.genny.utils.BaseEntityUtils;
+import life.genny.qwanda.Answer;
+import io.vertx.core.json.JsonObject;
+import java.util.Map;
+import java.util.HashMap;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import com.google.gson.reflect.TypeToken;
+import life.genny.qwandautils.JsonUtils;
+import life.genny.utils.VertxUtils;
+import life.genny.utils.TableUtils;
+import life.genny.models.TableData;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.entity.SearchEntity;
+import life.genny.qwanda.Ask;
+import life.genny.qwanda.message.QDataAskMessage;
+import life.genny.qwanda.utils.OutputParam;
+import life.genny.jbpm.customworkitemhandlers.ShowFrame;
+
+import java.util.List;
+import java.util.ArrayList;
+
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import life.genny.utils.SearchCallable;
+import life.genny.utils.TableFrameCallable;
+import life.genny.utils.CacheSearchUtils;
+
+rule "FIX_INTERNS"
+    ruleflow-group 'fixinterns'
+	salience 2
+    no-loop
+    when
+		userToken : GennyToken (code != "PER_SERVICE" )
+		serviceToken : GennyToken( code == "PER_SERVICE")
+		output : OutputParam( )
+		ruleDetails : RuleDetails()
+		beUtils : BaseEntityUtils()
+    then
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processings : " );
+
+		List<Answer> answers = new ArrayList<>();
+
+		System.out.println("Fixing Interns batch process!");
+
+		SearchEntity searchBE = new SearchEntity("SBE_INTERNS", "Intern Search")
+				.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%").addFilter("PRI_IS_INTERN", true)
+				.addFilter("PRI_STATUS", SearchEntity.StringFilter.LIKE, "PENDING")
+				.addColumn("PRI_CODE", "Code");
+		searchBE.setRealm("intermatch");
+
+		Boolean ok = true;
+		Integer index = 0;
+		Integer fixedInterns = 0;
+		Integer fixedApps = 0;
+		searchBE.setPageStart(index);
+		Integer pageSize = 100;
+		searchBE.setPageSize(pageSize);
+		Long total = beUtils.getCount(searchBE);
+
+		Attribute statusAttribute = RulesUtils.getAttribute("PRI_STATUS", serviceToken.getToken());
+
+		BaseEntity defIntern = beUtils.getBaseEntityByCode("DEF_INTERN");
+		System.out.println("defIntern:: " + defIntern);
+
+		while (ok) {
+			List<BaseEntity> interns = beUtils.getBaseEntitys(searchBE); /* load 100 at a time */
+			if (interns.isEmpty() || (index > 5000)) {
+				ok = false;
+				break;
+			}
+
+			for (BaseEntity intern : interns) {
+				index++;
+
+				String estatus = intern.getStatus().toString();
+				String status = intern.getValue("PRI_STATUS", null);
+
+				System.out.println("BEFORE:: " + index + " of " + total + " Interns -> " + intern.getCode() + " "
+						+ intern.getName() + ":"+estatus+":ea:"+status+" ("+intern.getCreated()+")");
+
+
+				intern.setStatus(EEntityStatus.ACTIVE);
+				/*intern = beUtils.saveAnswer(new Answer(intern, intern, statusAttribute, "ACTIVE"));*/
+
+				beUtils.saveAnswer(new Answer(userToken.getUserCode(), intern.getCode() ,"PRI_STATUS", "ACTIVE"));
+
+				/*beUtils.saveBaseEntity(defIntern, intern);*/
+
+				System.out.println("AFTER:: " + index + " of " + total + " Interns -> " + intern.getCode() + " "
+						+ intern.getName() + ":"+estatus+":ea:"+status+" ("+intern.getCreated()+")");
+
+			}
+
+			searchBE.setPageStart(index);
+		}
+
+			output.setTypeOfResult("NONE");
+			output.setResultCode("NONE");  /* dont display anything new */
+
+			System.out.println("End of " + drools.getRule().getName());
+		end

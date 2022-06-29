@@ -26,6 +26,9 @@ rule "EDIT_FORM_CLICK_EVENT"
 		System.out.println("Processing EDIT FORM CLICK EVENT : " + $message );
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
 		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+
+		System.out.println("userToken = " + userToken);
+    	System.out.println("userCode = " + userToken.getUserCode());
 		
 		/*
 			Example of the message
