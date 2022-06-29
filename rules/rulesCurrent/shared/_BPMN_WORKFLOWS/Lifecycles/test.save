@@ -1,0 +1,27 @@
+System.out.println("userSession: Process Event Handler Event Message Processed = " + message);
+System.out.println("WF2 Got till here");
+output = (OutputParam)kcontext.getVariable("output");
+if (output != null){
+/* HACK - ACC */
+if (message.getData().getCode() != null) {
+	if (message.getData().getCode().startsWith("QUE_TREE_ITEM_")) {
+ 		System.out.println("userSession: ProcessEvent eexit: ADAM HACK");
+  		output = new OutputParam("NONE","NONE","NONE");
+		kcontext.setVariable("output",output);
+	} 
+}
+
+System.out.println("userSession: Process Event Handler output =" + output);
+
+if (output.getTypeOfResult().equals("LOGOUT")) {
+	System.out.println("userSession: Process Event Handler - LOGOUT detected!");
+} else if (!output.getTypeOfResult().equals("SIGNAL"))  {
+	System.out.println("userSession: Process Event Handler: sending sessionFacts to DISPLAY "+displaySessionCode);
+	sessionFacts = new SessionFacts(serviceToken,userToken,output);
+	kcontext.setVariable("sessionFacts",sessionFacts);
+} else {
+	System.out.println("userSession: Process Event Handler: sending sessionFacts to signal listener "+output);
+	sessionFacts = new SessionFacts(serviceToken,userToken,output);
+	kcontext.setVariable("sessionFacts",sessionFacts);
+}
+}

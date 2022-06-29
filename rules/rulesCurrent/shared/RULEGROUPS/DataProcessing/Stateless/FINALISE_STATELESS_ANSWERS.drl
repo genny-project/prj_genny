@@ -34,7 +34,7 @@ rule "FINALISE_STATELESS_ANSWERS"
 		/*	iter.remove();*/
 		
 		}
-		answersToSave = new Answers(); /* clear */
-		update(answersToSave);
+		/*answersToSave = new Answers(); /* clear */
+		/* update(answersToSave); */
  
 end
