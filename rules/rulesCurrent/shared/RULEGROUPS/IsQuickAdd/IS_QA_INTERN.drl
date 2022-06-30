@@ -83,6 +83,9 @@ rule "IS_QA_INTERN"
 					.setUtils(beUtils)
 					.send();
 
+			}
+
+			if (containsSelYes) {
 				/* Init Genny Email service test Msg */
 				QMessageGennyMSG msg = new QMessageGennyMSG.Builder("MSG_INT1_REGISTER_MUQ_TEST")
 					.addRecipient(newBe)
