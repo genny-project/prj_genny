@@ -12,6 +12,9 @@ import life.genny.qwandautils.JsonUtils;
 import java.util.ArrayList;
 import java.util.List;
 import life.genny.utils.DropdownUtils;
+import life.genny.message.QMessageGennyMSG;
+import life.genny.qwanda.message.QBaseMSGMessageType;
+import life.genny.qwanda.entity.BaseEntity;
 
 rule "MESSAGE_EDIT_CLICK_EVENT"
     ruleflow-group 'EventProcessing'
@@ -25,9 +28,21 @@ rule "MESSAGE_EDIT_CLICK_EVENT"
 		ruleDetails : RuleDetails()
     then
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processing : " + $message );
+        BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
 
-		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+        BaseEntity internBe = beUtils.getBaseEntityByCode("PER_A6E2D19C-BBF1-4A14-BFF5-1BA7B654BEA9");
 
+
+        /* This is a test code just written for test purpose */
+        QMessageGennyMSG msg = new QMessageGennyMSG.Builder("MSG_INT1_REGISTER")
+            .addRecipient(internBe)
+            .addContext("PASSWORD", "WubbaLubbaDub-Dub")
+            .addContext("URL:ENCODE", "QUE_FAKE_PARENT/QUE_FINISH_INTERN")
+            .addContext("BCC", "PRJ_INTERNMATCH")
+            .setUtils(beUtils)
+            .send();
+
+        System.out.println("#### Sendgrid msg: "+ JsonUtils.toJson(msg));
 		String sourceCode = beUtils.getGennyToken().getUserCode();
 		System.out.println("sourceCode :: " + sourceCode);
 
