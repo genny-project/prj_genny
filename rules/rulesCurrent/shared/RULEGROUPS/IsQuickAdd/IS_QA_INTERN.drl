@@ -27,11 +27,11 @@ rule "IS_QA_INTERN"
 		baseEntityType : String(baseEntityType.equals("QA_INTERN"))
 		newBe : BaseEntity()
 		beUtils: BaseEntityUtils()
-	  
+
      then
- 		System.out.println(drools.getRule().getName() + ": Rule fired :: newBe = " + newBe.getCode()); 
- 		
- 		
+ 		System.out.println(drools.getRule().getName() + ": Rule fired :: newBe = " + newBe.getCode());
+
+
  		/* check if new intern has already got an agent assigned to them , which says they have been sent an email already */
  		BaseEntity item = beUtils.getBaseEntityByCode(newBe.getCode());
  		Optional<String> existingAgentName = item.getValue("PRI_AGENT_NAME");
@@ -82,6 +82,15 @@ rule "IS_QA_INTERN"
 					.addContext("BCC", "PRJ_INTERNMATCH")
 					.setUtils(beUtils)
 					.send();
+
+				/* Init Genny Email service test Msg */
+				QMessageGennyMSG msg = new QMessageGennyMSG.Builder("MSG_INT1_REGISTER_MUQ_TEST")
+					.addRecipient(newBe)
+					.addContext("PASSWORD", password)
+					.addContext("URL:ENCODE", "QUE_FAKE_PARENT/QUE_FINISH_INTERN")
+					.addContext("BCC", "PRJ_INTERNMATCH")
+					.setUtils(beUtils)
+					.send();
 			}
 
 			if (agent != null) {
@@ -108,6 +117,6 @@ rule "IS_QA_INTERN"
 			String endPoint = GennySettings.projectUrl + "/v7/notes";
 			QwandaUtils.apiPostNote(endPoint, userToken.getUserCode(), newBe.getCode(), "Added as an Intern", "System", "System", "", serviceToken.getToken());
 		}
-		
+
 		retract(newBe);
 end
