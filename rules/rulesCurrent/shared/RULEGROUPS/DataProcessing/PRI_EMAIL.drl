@@ -107,7 +107,7 @@ rule "PRI_EMAIL"
 			}	
 				
 			} else {
-				System.out.println(drools.getRule().getName()+"  Duplicate email found");
+			//	System.out.println(drools.getRule().getName()+"  Duplicate email found");
 					// if(true /*allowed.code.equals("AGENT")*/) { /* TODO , why limit this to agents??? */
 					// 	List<BaseEntity> duplicateBes = beUtils.getBaseEntitys(searchBE);
 					// 	System.out.println(ruleDetails+" "+drools.getRule().getName()+"  duplicateBE's: " + duplicateBes);
