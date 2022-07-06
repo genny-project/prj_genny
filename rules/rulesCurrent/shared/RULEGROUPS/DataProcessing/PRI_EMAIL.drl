@@ -110,7 +110,7 @@ rule "PRI_EMAIL"
 					
 					
 					
-					String message = "Email Address "+answer.getValue()+" is already taken. Please delete any unwanted copies or merge data with an existing";
+					String message = "Email Address "+answer.getValue()+" is already taken.";
 					System.out.println(ruleDetails+" "+drools.getRule().getName()+" "+message);
 					Answer feedbackAnswer = new Answer(answer.getSourceCode(),answer.getTargetCode(),answer.getAttributeCode(),"");
 					VertxUtils.sendFeedbackError(beUtils.getGennyToken(),feedbackAnswer,message);
