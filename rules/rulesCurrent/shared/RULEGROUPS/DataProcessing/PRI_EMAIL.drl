@@ -154,6 +154,7 @@ rule "PRI_EMAIL"
 					System.out.println(ruleDetails+" "+drools.getRule().getName()+" Sent error message back to frontend");
 			
 			}
+		}
 		} catch (Exception e) {
 		
 		}
