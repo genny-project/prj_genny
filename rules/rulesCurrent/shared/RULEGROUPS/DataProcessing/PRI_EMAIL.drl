@@ -107,44 +107,7 @@ rule "PRI_EMAIL"
 			}	
 				
 			} else {
-			//	System.out.println(drools.getRule().getName()+"  Duplicate email found");
-					// if(true /*allowed.code.equals("AGENT")*/) { /* TODO , why limit this to agents??? */
-					// 	List<BaseEntity> duplicateBes = beUtils.getBaseEntitys(searchBE);
-					// 	System.out.println(ruleDetails+" "+drools.getRule().getName()+"  duplicateBE's: " + duplicateBes);
-						
-					// 	QDataBaseEntityMessage msg = new QDataBaseEntityMessage(duplicateBes);
-					// 	msg.setToken(userToken.getToken());
-					// 	msg.setReplace(true);
-					// 	VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
-						
-					// 	for (BaseEntity duplicateBe : duplicateBes) {
-					// 			System.out.println(ruleDetails+" "+drools.getRule().getName()+"  duplicateBe: " + duplicateBe);
-					// 			duplicateCodes = duplicateCodes + "," + duplicateBe.getCode();
-					// 			System.out.println(ruleDetails+" "+drools.getRule().getName()+"  duplicateCodes: " + duplicateCodes);
-					// 	}
-						
-					// 	duplicateCodes = duplicateCodes.substring(5);
-					// 	System.out.println(ruleDetails+" "+drools.getRule().getName()+"  Final duplicateCodes: " + duplicateCodes);
-						
-					// 	QCmdMessage duplicateEmailMsg = new QCmdMessage("DUPLICATE_EMAILS", duplicateCodes);
-					// 	duplicateEmailMsg.setMessage(number);
-					// 	duplicateEmailMsg.setToken(beUtils.getGennyToken().getToken());
-					// 	duplicateEmailMsg.setSend(true);
-					// 	VertxUtils.writeMsg("webcmds", duplicateEmailMsg);
-						
-						
-					// 	if (resultJsonStr.equals("0")) {
-					// 		number = "There is 1 duplicate email";
-					// 	} else {
-					// 		number = "There are " + resultJsonStr + " duplicate emails";
-					// 	}
-						
-					// 	QCmdMessage toastMsg = new QCmdMessage("TOAST", "INFO");
-					// 	toastMsg.setMessage(number);
-					// 	toastMsg.setToken(beUtils.getGennyToken().getToken());
-					// 	toastMsg.setSend(true);
-					// 	VertxUtils.writeMsg("webcmds", toastMsg);
-					// }
+					
 					
 					
 					String message = "Email Address "+answer.getValue()+" is already taken. Please delete any unwanted copies or merge data with an existing";
@@ -154,7 +117,6 @@ rule "PRI_EMAIL"
 					System.out.println(ruleDetails+" "+drools.getRule().getName()+" Sent error message back to frontend");
 			
 			}
-		}
 		} catch (Exception e) {
 		
 		}
