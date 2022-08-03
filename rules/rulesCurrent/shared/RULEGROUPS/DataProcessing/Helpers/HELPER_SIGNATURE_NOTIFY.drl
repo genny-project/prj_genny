@@ -127,7 +127,7 @@ rule "HELPER_SIGNATURE_NOTIFY"
 			BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+ serviceToken.getRealm().toUpperCase());
 
 			String urlParentCode = "SBE_OFFERED_APPLICATIONS_"+userToken.getJTI().toUpperCase();
-			String cleanUrl = EmailHelper.encodeUrl(GennySettings.projectUrl+"/home", urlParentCode, "ACT_PRI_EVENT_VIEW_APPLICATION", targetBe.getCode());
+			String cleanUrl = EmailHelper.encodeUrl(GennySettings.projectUrl+"/home", urlParentCode, "ACT_PRI_EVENT_VIEW_AGREEMENT", targetBe.getCode());
 
 			String token = KeycloakUtils.getImpersonatedToken(serviceToken.getKeycloakUrl(), serviceToken.getRealm(), project, agentEmail, serviceToken.getToken());
 			System.out.println("token: " + token);
