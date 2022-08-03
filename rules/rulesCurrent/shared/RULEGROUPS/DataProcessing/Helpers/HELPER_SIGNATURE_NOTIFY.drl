@@ -182,7 +182,7 @@ rule "HELPER_SIGNATURE_NOTIFY"
 				url = cleanUrl +"?token=" + internToken;
 				templateData.put("url", url);
 			
-				EmailHelper.sendGrid(beUtils, internEmail, null, bccList, "", "d-501f81d3e2614c3b8691bf9777478fa6", templateData, false);
+				EmailHelper.sendGrid(beUtils, internEmail, null, bccList, "", "d-501f81d3e2614c3b8691bf9777478fa6", templateData, true);
 			}
 		
 		} else {
