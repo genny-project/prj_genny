@@ -77,7 +77,7 @@ rule "HELPER_SIGNATURE_NOTIFY"
 				System.out.println("supervisorBE is NULL");
 			}
 
-			String url = "SBE_OFFERED_APPLICATIONS_" + userToken.getJTI().toUpperCase() + "/ACT_PRI_EVENT_VIEW_APPLICATION/" + targetBe.getCode();
+			String url = "SBE_OFFERED_APPLICATIONS_" + userToken.getJTI().toUpperCase() + "/ACT_PRI_EVENT_VIEW_AGREEMENT/" + targetBe.getCode();
 
 			if (attributeCode.startsWith("PRI_AGR_DOC_INT_SIGNATURE")) {
                 QMessageGennyMSG agentInterSignedMsg = new QMessageGennyMSG.Builder("MSG_AGENT_INTERN_SIGNED_AGREEMENT")
