@@ -75,21 +75,23 @@ rule "HELPER_SIGNATURE_COMPLETE"
             System.out.println("outcomeSignature: " + outcomeSignature);
 
 			/*This is a temp white backgrounf URL I (Rahul) added becuase it was defualting to an image icon on the document*/
-
+            Boolean internSigned = false;
+            Boolean hcrSigned = false;
+            Boolean outcomeSigned = false;
 			if (internSignature != null) {
 				System.out.println("internSignature present");
+			    internSigned = internSignature.startsWith("data:image/png;base64") && !StringUtils.isBlank(internSignature) && (!internSignature.equals("https://bit.ly/3A2xdjI"));
 			}
 			if (hcrSignature != null) {
 				System.out.println("hcrSignature present");
+			    hcrSigned = hcrSignature.startsWith("data:image/png;base64") &&  !StringUtils.isBlank(hcrSignature) && (!hcrSignature.equals("https://bit.ly/3A2xdjI"));
 			}
 			if (outcomeSignature != null) {
 				System.out.println("outcomeSignature present");
+			    outcomeSigned = outcomeSignature.startsWith("data:image/png;base64") &&  !StringUtils.isBlank(outcomeSignature) && (!outcomeSignature.equals("https://bit.ly/3A2xdjI"));
 			}
 
 			/* Checks if the signature is blank or null */
-			Boolean internSigned = internSignature.startsWith("data:image/png;base64") && !StringUtils.isBlank(internSignature) && (!internSignature.equals("https://bit.ly/3A2xdjI"));
-			Boolean hcrSigned = hcrSignature.startsWith("data:image/png;base64") &&  !StringUtils.isBlank(hcrSignature) && (!hcrSignature.equals("https://bit.ly/3A2xdjI"));
-			Boolean outcomeSigned = outcomeSignature.startsWith("data:image/png;base64") &&  !StringUtils.isBlank(outcomeSignature) && (!outcomeSignature.equals("https://bit.ly/3A2xdjI"));
 
             System.out.println("InternSigned: " + internSigned);
             System.out.println("HCRSigned: " + hcrSigned);
