@@ -59,6 +59,7 @@ rule "GENERATE_DISPLAY_CODES"
 
         /* form detail */
         displayCodes.put("QUE_MESSAGE_GRP", "FORM:DETAIL");
+		displayCodes.put("SCH_ACT_PRI_EVENT_MESSAGE", "FORM:DETAIL");
 
 		insert(displayCodes);
 		VertxUtils.putObject(serviceToken.getRealm(), "", "DISPLAY_CODES", displayCodes, serviceToken.getToken());
