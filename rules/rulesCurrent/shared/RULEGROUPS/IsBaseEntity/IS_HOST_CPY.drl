@@ -37,7 +37,9 @@ rule "IS_HOST_CPY"
  		/* Check document OH&S and HCS document status*/
  		
  		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
- 		String OHSDocAvailable  = newBe.getValue("PRI_OHS_DOC", null);
+ 		String djpAgreeAnswer  = newBe.getValue("LNK_VIC_GOV_DIGITAL_JOBS", null);
+
+		String OHSDocAvailable  = newBe.getValue("PRI_OHS_DOC", null);
  		String TCDocAvailable  = newBe.getValue("PRI_TC_DOC", null);
  		System.out.println("OHSDocAvailable :: " + OHSDocAvailable.isEmpty());
  		System.out.println("TCDocAvailable :: " + TCDocAvailable.isEmpty());
