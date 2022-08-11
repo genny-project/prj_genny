@@ -41,7 +41,7 @@ rule "IS_HOST_CPY"
 		System.out.println("djpAgree.isEmpty() :: " + djpAgree.isEmpty());
 		if(djpAgree.isEmpty())
 		{
-			Answer djpAgreeAnswer = new Answer(sourceCode, targetCode, "PRI_DJP_AGREE", "No");
+			Answer djpAgreeAnswer = new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_DJP_AGREE", "No");
 			beUtils.saveAnswer(djpAgreeAnswer);
 		}
 
