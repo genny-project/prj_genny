@@ -37,7 +37,13 @@ rule "IS_HOST_CPY"
  		/* Check document OH&S and HCS document status*/
  		
  		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
- 		String djpAgreeAnswer  = newBe.getValue("LNK_VIC_GOV_DIGITAL_JOBS", null);
+ 		String djpAgree  = newBe.getValue("LNK_VIC_GOV_DIGITAL_JOBS", null);
+		System.out.println("djpAgree.isEmpty() :: " + djpAgree.isEmpty());
+		if(djpAgree.isEmpty())
+		{
+			Answer djpAgreeAnswer = new Answer(sourceCode, targetCode, "PRI_DJP_AGREE", "No");
+			beUtils.saveAnswer(djpAgreeAnswer);
+		}
 
 		String OHSDocAvailable  = newBe.getValue("PRI_OHS_DOC", null);
  		String TCDocAvailable  = newBe.getValue("PRI_TC_DOC", null);
