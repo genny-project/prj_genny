@@ -100,7 +100,6 @@ rule "IS_QA_HOST_CPY_REP"
 		}
 
 		/* Send email to HCR all time*/
-		answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_ALL_EMAILS", "true"));
 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_EMAIL_FLAG", true));
 
 		beUtils.saveAnswers(answers);
@@ -117,9 +116,7 @@ rule "IS_QA_HOST_CPY_REP"
 		msg.addContext("URL:ENCODE", "QUE_FAKE_PARENT/QUE_FINISH_HOST_CPY_REP");
 		msg.addContext("BCC", "PRJ_INTERNMATCH");
 
-		if (flag) {
-			MessageUtils.sendMessage(beUtils, msg);
-		}
+		MessageUtils.sendMessage(beUtils, msg);
 
 		/* Post Note */
 		String endPoint = GennySettings.projectUrl + "/v7/notes";
