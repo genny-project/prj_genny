@@ -99,11 +99,9 @@ rule "IS_QA_HOST_CPY_REP"
 			}
 		}
 
-		/* Boolean sendEmail = newBe.getValue("PRI_EMAIL_FLAG", false); */
-		String sendEmail = newBe.getValue("LNK_ALL_EMAILS", "");
-		System.out.println("sendEmail = " + sendEmail);
-		Boolean flag = sendEmail.contains("SEL_YES") ? true : false;
-		answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_EMAIL_FLAG", flag));
+		/* Send email to HCR all time*/
+		answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "LNK_ALL_EMAILS", "true"));
+		answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_EMAIL_FLAG", true));
 
 		beUtils.saveAnswers(answers);
 
