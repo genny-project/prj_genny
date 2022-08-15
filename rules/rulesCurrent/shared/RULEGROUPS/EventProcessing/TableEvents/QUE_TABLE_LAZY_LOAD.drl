@@ -97,7 +97,6 @@ rule "QUE_TABLE_LAZY_LOAD"
     		searchMsg.setToken(beUtils.getGennyToken().getToken());
     		searchMsg.setReplace(false);
 
-			// Send to frontend
 			String json = JsonUtils.toJson(searchMsg);
 			VertxUtils.writeMsg("webcmds", json);
 			System.out.println("total took " + (totalTime) + " ms"); 
