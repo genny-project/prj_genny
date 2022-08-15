@@ -92,7 +92,13 @@ rule "QUE_TABLE_LAZY_LOAD"
 			System.out.println(ruleDetails+" "+drools.getRule().getName()+" NEXT for "+searchBE.getCode()+" About to go into search! "); 
 		
 			long totalTime = TableUtils.searchTable(beUtils,searchBE, cache, false);
+			QDataBaseEntityMessage searchMsg = new QDataBaseEntityMessage(searchBE);
+    		searchMsg.setToken(this.beUtils.getGennyToken().getToken());
+    		searchMsg.setReplace(false);
 
+			// Send to frontend
+			String json = JsonUtils.toJson(searchMsg);
+			VertxUtils.writeMsg("webcmds", json);
 			System.out.println("total took " + (totalTime) + " ms"); 
 			}
   	       output.setTypeOfResult("NONE");
