@@ -94,7 +94,7 @@ rule "QUE_TABLE_LAZY_LOAD"
 		
 			long totalTime = TableUtils.searchTable(beUtils,searchBE, cache, false);
 			QDataBaseEntityMessage searchMsg = new QDataBaseEntityMessage(searchBE);
-    		searchMsg.setToken(this.beUtils.getGennyToken().getToken());
+    		searchMsg.setToken(beUtils.getGennyToken().getToken());
     		searchMsg.setReplace(false);
 
 			// Send to frontend
