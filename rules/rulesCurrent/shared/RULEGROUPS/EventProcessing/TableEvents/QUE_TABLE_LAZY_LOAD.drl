@@ -15,6 +15,7 @@ import life.genny.utils.CacheSearchUtils;
 import life.genny.qwandautils.GennySettings;
 import life.genny.jbpm.customworkitemhandlers.ShowFrame;
 import life.genny.qwanda.rule.RuleDetails;
+import life.genny.qwandautils.JsonUtils;
 
 
 rule "QUE_TABLE_LAZY_LOAD"
