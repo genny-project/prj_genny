@@ -99,7 +99,7 @@ rule "QUE_TABLE_LAZY_LOAD"
 
 			String json = JsonUtils.toJson(searchMsg);
 			VertxUtils.writeMsg("webcmds", json);
-			System.out.println("total took " + (totalTime) + " ms"); 
+			/*System.out.println("total took " + (totalTime) + " ms"); */
 			}
   	       output.setTypeOfResult("NONE");
   	       output.setResultCode("NONE");  /* dont display anything new */
