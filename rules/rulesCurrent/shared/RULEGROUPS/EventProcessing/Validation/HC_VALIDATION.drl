@@ -135,6 +135,7 @@ rule "HC_VALIDATION"
 							System.out.println(" industry " + industry);
 							contextMap.put("Industry", industry);
 						}
+						System.out.println(" industry " + industryInc.isEmpty());
 						if(!(industryInc.isEmpty()) && industryInc != null)
 						{	
 							System.out.println(" industryInc " + industryInc);
