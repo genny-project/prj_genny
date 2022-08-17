@@ -137,7 +137,7 @@ rule "HC_VALIDATION"
 							for (String industryStr : convertedIndustryArray) {
 								BaseEntity industryBe = beUtils.getBaseEntityByCode(industryStr);
 								industry = industryBe.getValue("PRI_NAME", null);
-								convertedIndustryList.add(industry)
+								convertedIndustryList.add(industry);
 								System.out.println(" industry " + industry);
 							}
 							contextMap.put("Industry", convertedIndustryList.toString());
