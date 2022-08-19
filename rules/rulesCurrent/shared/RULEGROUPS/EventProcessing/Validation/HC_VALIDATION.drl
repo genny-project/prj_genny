@@ -126,14 +126,21 @@ rule "HC_VALIDATION"
 
 						System.out.println(" industry " + industry);
 						System.out.println(" industryInc " + industryInc);
-						if(industry != null)
+						if(industry != null && !(industry.isEmpty()))
 						{	
 							System.out.println(" industry " + industry);
 							industry = beUtils.cleanUpAttributeValue(industry);
-							BaseEntity linkedBe = beUtils.getBaseEntityByCode(industry);
-							industry = linkedBe.getValue("PRI_NAME", null);
 							System.out.println(" industry " + industry);
-							contextMap.put("Industry", industry);
+							String[] convertedIndustryArray = industry.split(",");
+							List<String> convertedIndustryList = new ArrayList<String>();
+
+							for (String industryStr : convertedIndustryArray) {
+								BaseEntity industryBe = beUtils.getBaseEntityByCode(industryStr);
+								industry = industryBe.getValue("PRI_NAME", null);
+								convertedIndustryList.add(industry);
+								System.out.println(" industry " + industry);
+							}
+							contextMap.put("Industry", convertedIndustryList.toString());
 						}
 						if(industryInc != null)
 						{	
