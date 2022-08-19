@@ -126,7 +126,7 @@ rule "HC_VALIDATION"
 
 						System.out.println(" industry " + industry);
 						System.out.println(" industryInc " + industryInc);
-						if(industry != null)
+						if(industry != null && !(industry.isEmpty()))
 						{	
 							System.out.println(" industry " + industry);
 							industry = beUtils.cleanUpAttributeValue(industry);
