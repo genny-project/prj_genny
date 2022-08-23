@@ -126,27 +126,33 @@ rule "HC_VALIDATION"
 
 						System.out.println(" industry " + industry);
 						System.out.println(" industryInc " + industryInc);
-						if(industry != null && !(industry.isEmpty()))
+						if(industry != null)
 						{	
-							System.out.println(" industry " + industry);
-							industry = beUtils.cleanUpAttributeValue(industry);
-							System.out.println(" industry " + industry);
-							String[] convertedIndustryArray = industry.split(",");
-							List<String> convertedIndustryList = new ArrayList<String>();
-
-							for (String industryStr : convertedIndustryArray) {
-								BaseEntity industryBe = beUtils.getBaseEntityByCode(industryStr);
-								industry = industryBe.getValue("PRI_NAME", null);
-								convertedIndustryList.add(industry);
+							if(!(industry.isEmpty()))
+							{
 								System.out.println(" industry " + industry);
+								industry = beUtils.cleanUpAttributeValue(industry);
+								System.out.println(" industry " + industry);
+								String[] convertedIndustryArray = industry.split(",");
+								List<String> convertedIndustryList = new ArrayList<String>();
+
+								for (String industryStr : convertedIndustryArray) {
+									BaseEntity industryBe = beUtils.getBaseEntityByCode(industryStr);
+									industry = industryBe.getValue("PRI_NAME", null);
+									convertedIndustryList.add(industry);
+									System.out.println(" industry " + industry);
+								}
+								contextMap.put("Industry", convertedIndustryList.toString());
 							}
-							contextMap.put("Industry", convertedIndustryList.toString());
 						}
 						if(industryInc != null)
 						{	
-							System.out.println(" industryInc " + industryInc);
-							industryInc = industryInc.substring(0, 4);
-							contextMap.put("IndustryInc", industryInc);
+							if(!(industryInc.isEmpty()))
+							{
+								System.out.println(" industryInc " + industryInc);
+								industryInc = industryInc.substring(0, 4);
+								contextMap.put("IndustryInc", industryInc);
+							}
 						}
 						System.out.println(" template " + templatePdf);
 						String pdfUrl = PDFHelper.getDownloadablePdfLinkForHtml(templatePdf, contextMap);
