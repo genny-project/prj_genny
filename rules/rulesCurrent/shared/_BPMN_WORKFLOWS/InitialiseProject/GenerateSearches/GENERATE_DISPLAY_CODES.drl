@@ -43,6 +43,7 @@ rule "GENERATE_DISPLAY_CODES"
 		/* dashboard and process */
 		displayCodes.put("QUE_DASHBOARD_VIEW", "DASHBOARD");		
 		displayCodes.put("QUE_TAB_BUCKET_VIEW", "PROCESS");
+        displayCodes.put("QUE_MESSAGE_GRP", "DASHBOARD");
 		
 		/* detail */
 		displayCodes.put("ACT_PRI_EVENT_VIEW", "DETAIL");
@@ -58,7 +59,8 @@ rule "GENERATE_DISPLAY_CODES"
         displayCodes.put("ACT_PRI_EVENT_EDIT_MESSAGE", "FORM");
 
         /* form detail */
-        displayCodes.put("QUE_MESSAGE_GRP", "FORM:DETAIL");
+        displayCodes.put("QUE_MESSAGE_GRP_MENU", "FORM:DETAIL");
+		displayCodes.put("SCH_ACT_PRI_EVENT_MESSAGE", "FORM:DETAIL");
 
 		insert(displayCodes);
 		VertxUtils.putObject(serviceToken.getRealm(), "", "DISPLAY_CODES", displayCodes, serviceToken.getToken());
