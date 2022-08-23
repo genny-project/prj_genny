@@ -152,9 +152,6 @@ rule "ROL_AGENT"
 
 		 capabilityUtils.addCapabilityToRole(role,"QUICK_SEARCH_ALL", CapabilityMode.VIEW);
 
-		 /*Added for testing*/
-         capabilityUtils.addCapabilityToRole(role,"TYPE_MESSAGE",CapabilityMode.ADD);
-
   	     role = capabilityUtils.getBeUtils().getBaseEntityByCode(role.getCode());
   	     
   	    beUtils.saveAnswer(new Answer(capabilityUtils.getBeUtils().getServiceToken().getUserCode(), role.getCode(), "PRI_WEIGHT", 700.0,false,true));
