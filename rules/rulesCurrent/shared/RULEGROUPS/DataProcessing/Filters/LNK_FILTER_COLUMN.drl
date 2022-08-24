@@ -100,6 +100,14 @@ rule "LNK_FILTER_COLUMN"
 					filterOptionsArray = Arrays.asList(equalSelection);
 					unhidden = "QUE_FILTER_VALUE_INTERNSHIP_TYPE";
 				
+				} else if (attr.getCode().equals("PRI_ASSOC_COMP_INTERNSHIP")) {
+					filterOptionsArray = Arrays.asList(equalSelection);
+					unhidden = "QUE_FILTER_VALUE_ACADEMY";
+				
+				} else if (attr.getCode().equals("PRI_DJP_AGREE")) {
+					filterOptionsArray = Arrays.asList(equalSelection);
+					unhidden = "QUE_FILTER_VALUE_DJP_HC";
+				
 				} else if (dtt.equals("java.lang.String") || dtt.equals("String") || dtt.equalsIgnoreCase("Text")) {
 					filterOptionsArray = Arrays.asList(stringSelection);
 					unhidden = "QUE_FILTER_VALUE_TEXT";
@@ -125,7 +133,7 @@ rule "LNK_FILTER_COLUMN"
 					filterOptionsArray = Arrays.asList(numSelection);
 					unhidden = "QUE_FILTER_VALUE_TIME";
 
-				}
+				} 
 
 				Ask filterGrpAsk = VertxUtils.getObject(serviceToken.getRealm(), "", "QUE_FILTER_GRP_"+targetCode, Ask.class, serviceToken.getToken());
 
@@ -201,6 +209,14 @@ rule "LNK_FILTER_COLUMN"
 
 					} else if (unhidden.equals("QUE_FILTER_VALUE_INTERNSHIP_TYPE")) {
 						itemSearch.setLinkValue("INTERNSHIP_TYPE");
+						searchTrigger = true;
+
+					} else if (unhidden.equals("QUE_FILTER_VALUE_ACADEMY")) {
+						itemSearch.setLinkValue("COMPLETE_INTERNSHIP");
+						searchTrigger = true;
+
+					} else if (unhidden.equals("QUE_FILTER_VALUE_DJP_HC")) {
+						itemSearch.setLinkValue("YES_NO");
 						searchTrigger = true;
 
 					}
