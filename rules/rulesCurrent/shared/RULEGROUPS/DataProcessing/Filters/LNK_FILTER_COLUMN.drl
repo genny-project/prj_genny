@@ -207,8 +207,10 @@ rule "LNK_FILTER_COLUMN"
 
 					/* Basically, don't search if no linkVal is set */
 					if (searchTrigger) {
+						System.out.println("processing item search for "+ unhidden);
 						/* Fetch Countries */
 						List<BaseEntity> items = beUtils.getBaseEntitys(itemSearch);
+						System.out.println("items " + items.toString());
 						/* Package and send */
 						QDataBaseEntityMessage itemMsg = new QDataBaseEntityMessage(items);
 						itemMsg.setQuestionCode(unhidden);
