@@ -18,7 +18,7 @@
 		</repository>
 		<snapshotRepository>
 			<id>nexus-snapshots</id>
-			<url>http://nexus.outcome-hub.com/repository/snapshots</url>
+			<url>https://nexus.outcome-hub.com/repository/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
 
@@ -266,7 +266,7 @@
         <dependency>
             <groupId>life.genny</groupId>
             <artifactId>genny-verticle-rules</artifactId>
-            <version>9.0.0</version>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
 
