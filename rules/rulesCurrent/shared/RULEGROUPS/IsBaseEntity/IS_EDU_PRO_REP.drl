@@ -41,7 +41,7 @@ rule "IS_EDU_PRO_REP"
  		/* answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_STATUS", "ACTIVE")); */
 		
 		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
-		answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"LNK_ROLE", "ROL_VIC_GOV_DJP"));
+		
 		
 		String linkedEP = newBe.getValue("LNK_EDU_PROVIDER", null);
 		System.out.println("linkedEP = " +linkedEP);
