@@ -33,10 +33,7 @@ rule "IS_QA_EDU_PRO_REP"
 			answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_ASSOC_EP", assocEP));
 			
 			beUtils.createLink(eduPro.getCode(), newBe.getCode(), "LNK_CPY", "EDU_PRO_REP", 1.0);
-			if(eduPro.getCode().contains("CPY_VIC_GOV_DJP"))
-			{
-				answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"LNK_ROLE", "ROL_VIC_GOV_DJP"));
-			}
+			
 		}
 
 		/* Save Data */
