@@ -22,7 +22,10 @@ rule "RETURN_ATTRIBUTE_VALUE"
 				attributeCode == "LNK_FILTER_OPTION" ||
 				attributeCode matches "PRI_FILTER_VALUE_.*" ||
 				attributeCode == "LNK_SELECT_COUNTRY" ||
-				attributeCode == "LNK_SELECT_STATE"
+				attributeCode == "LNK_SELECT_STATE" ||
+                attributeCode == "LNK_INTERNSHIP_TYPE" ||
+                attributeCode == "LNK_COMP_INTERNSHIP" ||
+                attributeCode == "LNK_DJP_JOB_AGREE"
 			)
 			&& targetCode matches "SBE_.*" 
 			)

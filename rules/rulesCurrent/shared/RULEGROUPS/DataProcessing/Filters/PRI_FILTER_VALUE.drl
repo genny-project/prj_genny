@@ -8,6 +8,7 @@ import life.genny.qwanda.Answers;
 import java.util.List;
 import java.util.ArrayList;
 import life.genny.qwanda.attribute.AttributeText;
+import life.genny.qwanda.entity.BaseEntity;
 
 rule "PRI_FILTER_VALUE"
     ruleflow-group 'DataProcessing'
@@ -21,7 +22,10 @@ rule "PRI_FILTER_VALUE"
 			(
 				attributeCode matches "PRI_FILTER_VALUE_.*" ||
 				attributeCode == "LNK_SELECT_COUNTRY" ||
-				attributeCode == "LNK_SELECT_STATE"
+				attributeCode == "LNK_SELECT_STATE" ||
+				attributeCode == "LNK_INTERNSHIP_TYPE" ||
+				attributeCode == "LNK_COMP_INTERNSHIP" ||
+				attributeCode == "LNK_DJP_JOB_AGREE"
 			)
 			&& targetCode matches "SBE_.*"
 		)
@@ -41,16 +45,26 @@ rule "PRI_FILTER_VALUE"
 		Ask filterGrpAsk = VertxUtils.getObject(serviceToken.getRealm(), "", "QUE_FILTER_GRP_"+targetCode, Ask.class, serviceToken.getToken());
 
 		/* Translate any dropdown items to text */
-		if (attributeCode.startsWith("LNK_SELECT_")) {
+		if (attributeCode.startsWith("LNK_SELECT_") ||
+		    attributeCode.equals("LNK_INTERNSHIP_TYPE") ||
+		    attributeCode.equals("LNK_COMP_INTERNSHIP") ||
+		    attributeCode.equals("LNK_DJP_JOB_AGREE")) {
 			BaseEntity selectionEntity = beUtils.getBaseEntityByCode(beUtils.cleanUpAttributeValue(value));
 			System.out.println("selectionEntity = " + selectionEntity);
 
 			if (selectionEntity != null) {
 				String selName = selectionEntity.getName();
-				System.out.println("selName = " + selName);
-				if (selName != null) {
-					value = selName;
-				}
+                if (attributeCode.equals("LNK_COMP_INTERNSHIP")) {
+                    String acronym = selectionEntity.getValue("PRI_ACRONYM", null);
+                    if (acronym != null) {
+                        value = acronym;
+                    }
+                } else {
+                    if (selName != null) {
+                        value = selName;
+                    }
+                }
+                System.out.println("selName = " + selName);
 			} else {
 				System.out.println("selectionEntity is NULL");
 			}
