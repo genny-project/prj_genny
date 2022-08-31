@@ -150,7 +150,6 @@ rule "LNK_FILTER_COLUMN"
 						}
 					}
 				}
-                System.out.println("#### ask: "+ JsonUtils.toJson(filterGrpAsk.getChildAsks()[0].getChildAsks()));
 				filterOptionsArray = new ArrayList<>(filterOptionsArray);
 
 				BaseEntity optionGrp = new BaseEntity("GRP_FILTER_OPTIONS", "Filter Options");
