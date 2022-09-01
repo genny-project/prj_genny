@@ -7,6 +7,7 @@ import life.genny.qwanda.Answer;
 import life.genny.qwanda.Answers;
 import java.util.List;
 import java.util.ArrayList;
+import life.genny.qwandautils.JsonUtils;
 
 rule "CHECK_FILTER_SUBMIT"
     ruleflow-group 'DataProcessing'
@@ -71,9 +72,16 @@ rule "CHECK_FILTER_SUBMIT"
 					childAsk.setDisabled(!shouldEnable);
 				}
 			}
+            System.out.println("####  CHECK_FILTER_SUBMIT Before");
+            System.out.println("####  filterGrpAsk.getQuestionCode(): "+  filterGrpAsk.getQuestionCode());
+            System.out.println("####  filterGrpAsk: "+  JsonUtils.toJson(filterGrpAsk));
 
 			/* Cache changes */
 			VertxUtils.putObject(beUtils.getGennyToken().getRealm(), "", filterGrpAsk.getQuestionCode(), filterGrpAsk, serviceToken.getToken());
+
+            System.out.println("####  CHECK_FILTER_SUBMIT After");
+            System.out.println("####  filterGrpAsk.getQuestionCode(): "+  filterGrpAsk.getQuestionCode());
+            System.out.println("####  filterGrpAsk: "+  JsonUtils.toJson(filterGrpAsk));
 
 			/* Send Asks to FE */
 			QDataAskMessage askMsg = new QDataAskMessage(filterGrpAsk);

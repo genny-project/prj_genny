@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.ArrayList;
 import life.genny.qwanda.attribute.AttributeText;
 import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwandautils.JsonUtils;
 
 rule "PRI_FILTER_VALUE"
     ruleflow-group 'DataProcessing'
@@ -76,10 +77,14 @@ rule "PRI_FILTER_VALUE"
 		/* Add Filter Column */
 		AttributeText attributeFilterValue = new AttributeText("SCH_FILTER_VALUE", "Filter Value");
 		searchBE.addAttribute(attributeFilterValue, 5.0, value);
-
+        System.out.println("####  PRI_FILTER_VALUE Before");
+        System.out.println("####  searchBE: "+  JsonUtils.toJson(searchBE));
+        System.out.println("####  searchBE.getCode(): "+  searchBE.getCode());
 		/* Update Search in Cache */
 		VertxUtils.putObject(serviceToken.getRealm(), "", searchBE.getCode(), searchBE, serviceToken.getToken());
-
+        System.out.println("####  PRI_FILTER_VALUE After");
+        System.out.println("####  searchBE: "+  JsonUtils.toJson(searchBE));
+        System.out.println("####  searchBE.getCode(): "+  searchBE.getCode());
 		output.setTypeOfResult("NONE");
 		output.setResultCode("NONE");  /* dont display anything new */
 
