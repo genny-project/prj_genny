@@ -20,6 +20,7 @@ import life.genny.qwanda.message.QCmdMessage;
 import life.genny.qwanda.attribute.EntityAttribute;
 import life.genny.qwanda.Link;
 import life.genny.qwanda.attribute.AttributeText;
+import life.genny.qwandautils.JsonUtils;
 
 
 rule "LNK_FILTER_COLUMN"
@@ -96,6 +97,18 @@ rule "LNK_FILTER_COLUMN"
 					filterOptionsArray = Arrays.asList(equalSelection);
 					unhidden = "QUE_FILTER_VALUE_STATE";
 				
+				} else if (attr.getCode().equals("PRI_INTERNSHIP_TYPE")) {
+					filterOptionsArray = Arrays.asList(equalSelection);
+					unhidden = "QUE_FILTER_VALUE_INTERNSHIP_TYPE";
+				
+				} else if (attr.getCode().equals("PRI_ASSOC_COMP_INTERNSHIP")) {
+					filterOptionsArray = Arrays.asList(equalSelection);
+					unhidden = "QUE_FILTER_VALUE_ACADEMY";
+				
+				} else if (attr.getCode().equals("PRI_DJP_AGREE")) {
+					filterOptionsArray = Arrays.asList(equalSelection);
+					unhidden = "QUE_FILTER_VALUE_DJP_HC";
+				
 				} else if (dtt.equals("java.lang.String") || dtt.equals("String") || dtt.equalsIgnoreCase("Text")) {
 					filterOptionsArray = Arrays.asList(stringSelection);
 					unhidden = "QUE_FILTER_VALUE_TEXT";
@@ -121,11 +134,12 @@ rule "LNK_FILTER_COLUMN"
 					filterOptionsArray = Arrays.asList(numSelection);
 					unhidden = "QUE_FILTER_VALUE_TIME";
 
-				}
+				} 
 
 				Ask filterGrpAsk = VertxUtils.getObject(serviceToken.getRealm(), "", "QUE_FILTER_GRP_"+targetCode, Ask.class, serviceToken.getToken());
 
 				System.out.println("Unhiding " + unhidden);
+
 				for (Ask childAsk : filterGrpAsk.getChildAsks()[0].getChildAsks()) {
 
 					if (childAsk.getQuestionCode().contains("QUE_FILTER_VALUE")) {
@@ -136,7 +150,6 @@ rule "LNK_FILTER_COLUMN"
 						}
 					}
 				}
-
 				filterOptionsArray = new ArrayList<>(filterOptionsArray);
 
 				BaseEntity optionGrp = new BaseEntity("GRP_FILTER_OPTIONS", "Filter Options");
@@ -195,12 +208,26 @@ rule "LNK_FILTER_COLUMN"
 						itemSearch.setLinkValue("AUS_STATE");
 						searchTrigger = true;
 
+					} else if (unhidden.equals("QUE_FILTER_VALUE_INTERNSHIP_TYPE")) {
+						itemSearch.setLinkValue("INTERNSHIP_TYPE");
+						searchTrigger = true;
+
+					} else if (unhidden.equals("QUE_FILTER_VALUE_ACADEMY")) {
+						itemSearch.setLinkValue("COMPLETE_INTERNSHIP");
+						searchTrigger = true;
+
+					} else if (unhidden.equals("QUE_FILTER_VALUE_DJP_HC")) {
+						itemSearch.setLinkValue("YES_NO");
+						searchTrigger = true;
+
 					}
 
 					/* Basically, don't search if no linkVal is set */
 					if (searchTrigger) {
+						System.out.println("processing item search for "+ unhidden);
 						/* Fetch Countries */
 						List<BaseEntity> items = beUtils.getBaseEntitys(itemSearch);
+						System.out.println("items " + items.toString());
 						/* Package and send */
 						QDataBaseEntityMessage itemMsg = new QDataBaseEntityMessage(items);
 						itemMsg.setQuestionCode(unhidden);

@@ -21,7 +21,10 @@ rule "CHECK_FILTER_SUBMIT"
 				attributeCode == "LNK_FILTER_OPTION" ||
 				attributeCode matches "PRI_FILTER_VALUE_.*" ||
 				attributeCode == "LNK_SELECT_COUNTRY" ||
-				attributeCode == "LNK_SELECT_STATE"
+				attributeCode == "LNK_SELECT_STATE" ||
+				attributeCode == "LNK_INTERNSHIP_TYPE" ||
+				attributeCode == "LNK_COMP_INTERNSHIP" ||
+				attributeCode == "LNK_DJP_JOB_AGREE"
 			)
 			&& targetCode matches "SBE_.*" 
 			)
@@ -38,15 +41,23 @@ rule "CHECK_FILTER_SUBMIT"
 		if (searchBE != null) {
 			String filterAttributeCode = searchBE.findEntityAttribute("SCH_FILTER_COLUMN").orElse(null).getValue();
 			String filterOptionCode = searchBE.findEntityAttribute("SCH_FILTER_OPTION").orElse(null).getValue();
-			String val = searchBE.findEntityAttribute("SCH_FILTER_VALUE").orElse(null).getValue();
+			String filterValue = searchBE.findEntityAttribute("SCH_FILTER_VALUE").orElse(null).getValue();
+
+            System.out.println("filterAttributeCode: "+ filterAttributeCode);
+            System.out.println("filterOptionCode: "+ filterOptionCode);
+            System.out.println("filterValue: "+ filterValue);
 
 			boolean shouldEnable = false;
-			if (filterAttributeCode != null && filterOptionCode != null && val != null) {
+			if (filterAttributeCode != null && filterOptionCode != null && filterValue != null) {
 				if ((filterOptionCode.equals("SEL_IS_TRUE") || filterOptionCode.equals("SEL_IS_FALSE"))) {
+                    System.out.println("Filter Option is TRUE | FALSE");
 					shouldEnable = true;
-				} else if (!filterAttributeCode.isEmpty() && !filterOptionCode.isEmpty() && !val.isEmpty()) {
+				} else if (!filterAttributeCode.isEmpty() && !filterOptionCode.isEmpty() && !filterValue.isEmpty()) {
+                    System.out.println("Filter Option/Attribute Code is NOT EMPTY");
 					shouldEnable = true;
 				}
+			}else{
+                System.out.println("filterAttributeCode && filterOptionCode && val is NULL");
 			}
 
 			String logStr = (shouldEnable ? "ENABLING" : "DISABLING") + " Submit Button!";
@@ -56,6 +67,7 @@ rule "CHECK_FILTER_SUBMIT"
 
 			for (Ask childAsk : filterGrpAsk.getChildAsks()[0].getChildAsks()) {
 				if (childAsk.getQuestionCode().contains("QUE_SUBMIT")) {
+                   System.out.println("NOT shouldEnable: "+!shouldEnable);
 					childAsk.setDisabled(!shouldEnable);
 				}
 			}
