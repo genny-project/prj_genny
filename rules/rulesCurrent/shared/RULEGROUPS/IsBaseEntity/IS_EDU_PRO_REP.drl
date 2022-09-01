@@ -42,6 +42,7 @@ rule "IS_EDU_PRO_REP"
 		
 		newBe = beUtils.getBaseEntityByCode(newBe.getCode());
 		
+		
 		String linkedEP = newBe.getValue("LNK_EDU_PROVIDER", null);
 		System.out.println("linkedEP = " +linkedEP);
 		if (linkedEP != null) {

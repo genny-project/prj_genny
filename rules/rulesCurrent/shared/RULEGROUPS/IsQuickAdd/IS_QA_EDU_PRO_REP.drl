@@ -31,7 +31,9 @@ rule "IS_QA_EDU_PRO_REP"
 			String assocEP = eduPro.getValue("PRI_NAME", null);
 			System.out.println("assocEP: " + assocEP);
 			answers.add(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_ASSOC_EP", assocEP));
+			
 			beUtils.createLink(eduPro.getCode(), newBe.getCode(), "LNK_CPY", "EDU_PRO_REP", 1.0);
+			
 		}
 
 		/* Save Data */
@@ -63,7 +65,7 @@ rule "IS_QA_EDU_PRO_REP"
 		/* TESTING TOASTS */
 		QMessageGennyMSG msg2 = new QMessageGennyMSG(QBaseMSGMessageType.TOAST);
 		msg2.addRecipient(newBe);
-		msg2.addContext("BODY", "Hello, this is a test");
+		msg2.addContext("BODY", "Education Provider Rep created ");
 		msg2.addContext("STYLE", "INFO");
 		MessageUtils.sendMessage(beUtils, msg2);
 
