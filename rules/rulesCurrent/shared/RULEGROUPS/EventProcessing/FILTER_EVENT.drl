@@ -33,7 +33,7 @@ rule "FILTER_EVENT"
 		String code = message.getData().getCode();
 		System.out.println("code = " + code);
 
-		String attributeCode = code.substring("QUE_".length()).replace("AND_","");
+		String attributeCode = code.substring("QUE_".length());
 		System.out.println("attributeCode = " + attributeCode);
 
 		SearchEntity searchBE = VertxUtils.getObject(beUtils.getGennyToken().getRealm(), "", targetCode, SearchEntity.class,
