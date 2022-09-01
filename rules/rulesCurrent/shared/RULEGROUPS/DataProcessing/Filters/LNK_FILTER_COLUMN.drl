@@ -208,18 +208,6 @@ rule "LNK_FILTER_COLUMN"
 						itemSearch.setLinkValue("AUS_STATE");
 						searchTrigger = true;
 
-					} else if (unhidden.equals("QUE_FILTER_VALUE_INTERNSHIP_TYPE")) {
-						itemSearch.setLinkValue("INTERNSHIP_TYPE");
-						searchTrigger = true;
-
-					} else if (unhidden.equals("QUE_FILTER_VALUE_ACADEMY")) {
-						itemSearch.setLinkValue("COMPLETE_INTERNSHIP");
-						searchTrigger = true;
-
-					} else if (unhidden.equals("QUE_FILTER_VALUE_DJP_HC")) {
-						itemSearch.setLinkValue("YES_NO");
-						searchTrigger = true;
-
 					}
 
 					/* Basically, don't search if no linkVal is set */
