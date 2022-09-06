@@ -94,7 +94,7 @@ rule "HC_VALIDATION"
 							System.out.println("Project is null");
 						}
 
-						String[] attrName = {"LNK_TYPE_ENVIRO","LNK_EXITS","LNK_ORGANISED","LNK_VENTILATED","LNK_DESK_AREA",
+						/*String[] attrName = {"LNK_TYPE_ENVIRO","LNK_EXITS","LNK_ORGANISED","LNK_VENTILATED","LNK_DESK_AREA",
 												"LNK_AMENITIES","LNK_WALKWAYS","LNK_EVIDENCE","LNK_TERMS","LNK_SITE_INSPECTION"};
 
 						ArrayList<String> attrNameLst = new ArrayList<String>();
@@ -112,7 +112,7 @@ rule "HC_VALIDATION"
 									}
 								}
 							}
-						}
+						}*/
 						DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd MMM yyyy");
 						LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
 						String docValidationDate = dtf.format(now);
