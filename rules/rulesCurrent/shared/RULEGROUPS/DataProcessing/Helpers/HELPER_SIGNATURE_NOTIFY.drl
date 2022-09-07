@@ -18,6 +18,7 @@ import life.genny.qwanda.entity.BaseEntity;
 import life.genny.qwandautils.JsonUtils;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 rule "HELPER_SIGNATURE_NOTIFY"
 	ruleflow-group 'DataProcessing'
