@@ -1,0 +1,72 @@
+package life.genny.rules;
+
+import life.genny.qwanda.entity.SearchEntity;
+import life.genny.qwanda.entity.BaseEntity;
+import java.util.List;
+import life.genny.qwandautils.QwandaUtils;
+import life.genny.qwandautils.GennySettings;
+import life.genny.utils.BaseEntityUtils;
+import life.genny.qwanda.message.QEventMessage;
+import life.genny.qwanda.utils.OutputParam;
+import life.genny.models.GennyToken;
+
+rule "FIX_VIDEO"
+    ruleflow-group 'FixVideo'
+		salience 2
+    no-loop
+    when
+        userToken : GennyToken (code != "PER_SERVICE" )
+        serviceToken : GennyToken( code == "PER_SERVICE")
+        output : OutputParam( )
+        beUtils : BaseEntityUtils()
+    then
+        System.out.println("Start of "+drools.getRule().getName());
+
+        SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "INTERNS")
+            .addColumn("PRI_VIDEO_URL", "Video Url")
+            .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
+            .addFilter("PRI_IS_INTERN", true);
+
+        Boolean ok = true;
+        Integer index = 0;
+        searchBE.setPageStart(index);
+        Integer pageSize = 100;
+
+        Long total = beUtils.getCount(searchBE);
+
+	    while (ok) {
+            List<BaseEntity> bes = beUtils.getBaseEntitys(searchBE); // load 100
+
+            if (bes.isEmpty()) {
+                ok = false;
+                break;
+            }
+
+            System.out.println("BaseEntity Count: "+ bes.size());
+            for (BaseEntity be : bes) {
+
+                System.out.println("Processing video for "+ be.getCode());
+                String videoUrl = be.getValue("PRI_VIDEO_URL", null);
+                System.out.println("videoUrl: "+ videoUrl);
+                if(videoUrl != null){
+                    String response = QwandaUtils.apiGet(GennySettings.mediaProxyUrl + "/convert/"+ videoUrl, null);
+                    System.out.println("Response: "+ response);
+                    if(response != null){
+                        if(response.contains("Success")){
+                            System.out.println("Processing video for success for: "+ be.getCode());
+                        }else{
+                            System.out.println("Processing video for failed for: "+ be.getCode());
+                        }
+                    }else{
+                        System.out.println("Processing video for failed for: "+ be.getCode());
+                    }
+                }
+                index++;
+
+            }
+            searchBE.setPageStart(index);
+        }
+        output.setTypeOfResult("NONE");
+        output.setResultCode("NONE");
+        System.out.println("Start of "+drools.getRule().getName());
+    end
