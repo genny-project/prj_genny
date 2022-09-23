@@ -51,7 +51,7 @@ rule "FIX_VIDEO"
                 System.out.println("Processing video for "+ be.getCode());
                 String videoUrl = be.getValue("PRI_VIDEO_URL", null);
                 System.out.println("videoUrl: "+ videoUrl);
-                if(videoUrl != null){
+                if(videoUrl != null && !videoUrl.isEmpty()){
                     fileIdList.add(videoUrl);
                 }
                 index++;
