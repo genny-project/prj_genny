@@ -28,13 +28,14 @@ rule "FIX_VIDEO"
             .addColumn("PRI_VIDEO_URL", "Video Url")
             .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
             .addFilter("PRI_IS_INTERN", true);
-        /*
+
         Boolean ok = true;
         Integer index = 0;
         searchBE.setPageStart(index);
         Integer pageSize = 100;
 
         Long total = beUtils.getCount(searchBE);
+         /*
         List<String> fileIdList = new ArrayList<>();
 	    while (ok) {
             List<BaseEntity> bes = beUtils.getBaseEntitys(searchBE); // load 100
