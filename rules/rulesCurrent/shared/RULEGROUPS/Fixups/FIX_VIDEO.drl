@@ -19,12 +19,12 @@ rule "FIX_VIDEO"
     when
         userToken : GennyToken (code != "PER_SERVICE" )
         serviceToken : GennyToken( code == "PER_SERVICE")
-        output : OutputParam( )
+        output : OutputParam()
         beUtils : BaseEntityUtils()
     then
         System.out.println("Start of "+drools.getRule().getName());
 
-        SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "INTERNS")
+       /* SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "INTERNS")
             .addColumn("PRI_VIDEO_URL", "Video Url")
             .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
             .addFilter("PRI_IS_INTERN", true);
@@ -61,10 +61,8 @@ rule "FIX_VIDEO"
 
         String request = JsonUtils.toJson(fileIdList);
         System.out.println("Request: "+ request);
-/*        String response = QwandaUtils.apiPostEntity(GennySettings.mediaProxyUrl + "/video/convert/bulk", request, null);
-        System.out.println("Response: "+ response);*/
 
         output.setTypeOfResult("NONE");
-        output.setResultCode("NONE");
+        output.setResultCode("NONE");*/
         System.out.println("Start of "+drools.getRule().getName());
     end
