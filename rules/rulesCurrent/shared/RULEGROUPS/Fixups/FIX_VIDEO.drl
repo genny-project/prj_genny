@@ -35,10 +35,10 @@ rule "FIX_VIDEO"
         Integer pageSize = 100;
 
         Long total = beUtils.getCount(searchBE);
-         /*
+
         List<String> fileIdList = new ArrayList<>();
 	    while (ok) {
-            List<BaseEntity> bes = beUtils.getBaseEntitys(searchBE); // load 100
+            List<BaseEntity> bes = beUtils.getBaseEntitys(searchBE);
 
             if (bes.isEmpty()) {
                 ok = false;
@@ -64,6 +64,6 @@ rule "FIX_VIDEO"
         System.out.println("Request: "+ request);
 
         output.setTypeOfResult("NONE");
-        output.setResultCode("NONE");*/
+        output.setResultCode("NONE");
         System.out.println("Start of "+drools.getRule().getName());
     end
