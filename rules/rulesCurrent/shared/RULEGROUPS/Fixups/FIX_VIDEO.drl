@@ -9,6 +9,8 @@ import life.genny.utils.BaseEntityUtils;
 import life.genny.qwanda.message.QEventMessage;
 import life.genny.qwanda.utils.OutputParam;
 import life.genny.models.GennyToken;
+import java.util.ArrayList;
+import life.genny.qwandautils.JsonUtils;
 
 rule "FIX_VIDEO"
     ruleflow-group 'FixVideo'
@@ -33,7 +35,7 @@ rule "FIX_VIDEO"
         Integer pageSize = 100;
 
         Long total = beUtils.getCount(searchBE);
-
+        List<String> fileIdList = new ArrayList<>();
 	    while (ok) {
             List<BaseEntity> bes = beUtils.getBaseEntitys(searchBE); // load 100
 
@@ -49,23 +51,19 @@ rule "FIX_VIDEO"
                 String videoUrl = be.getValue("PRI_VIDEO_URL", null);
                 System.out.println("videoUrl: "+ videoUrl);
                 if(videoUrl != null){
-                    String response = QwandaUtils.apiGet(GennySettings.mediaProxyUrl + "/convert/"+ videoUrl, null);
-                    System.out.println("Response: "+ response);
-                    if(response != null){
-                        if(response.contains("Success")){
-                            System.out.println("Processing video for success for: "+ be.getCode());
-                        }else{
-                            System.out.println("Processing video for failed for: "+ be.getCode());
-                        }
-                    }else{
-                        System.out.println("Processing video for failed for: "+ be.getCode());
-                    }
+                    fileIdList.add(videoUrl);
                 }
                 index++;
 
             }
             searchBE.setPageStart(index);
         }
+
+        String request = JsonUtils.toJson(fileIdList);
+        System.out.println("Request: "+ request);
+/*        String response = QwandaUtils.apiPostEntity(GennySettings.mediaProxyUrl + "/video/convert/bulk", request, null);
+        System.out.println("Response: "+ response);*/
+
         output.setTypeOfResult("NONE");
         output.setResultCode("NONE");
         System.out.println("Start of "+drools.getRule().getName());
