@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import life.genny.qwandautils.JsonUtils;
 
 rule "FIX_VIDEO"
-    ruleflow-group 'FixVideo'
+    ruleflow-group 'fixvideo'
 		salience 2
     no-loop
     when
