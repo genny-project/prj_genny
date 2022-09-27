@@ -31,7 +31,8 @@ import io.vavr.Tuple2;
 import life.genny.utils.ImportUtils;
 import life.genny.qwanda.datatype.Allowed;
 import life.genny.utils.CapabilityUtils;
-import java.util.UUID;
+import java.util.UUID
+import life.genny.qwandautils.GennySettings;
 
 
 
@@ -58,6 +59,48 @@ rule "PRI_SEARCH_TEXT_RUN_WORKFLOW"
 		String workflowCode = answer.getValue().split(":")[1];
 		String targetCode = answer.getValue().split(":")[2];
 		System.out.println(workflowCode);
+		/* Hack since workflow not triggering */
+		if(workflowCode.equals("fixvideo")){
+            SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "INTERNS")
+                .addColumn("PRI_VIDEO_URL", "Video Url")
+                .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
+                .addFilter("PRI_IS_INTERN", true);
+
+            Boolean ok = true;
+            Integer index = 0;
+            searchBE.setPageStart(index);
+            Integer pageSize = 100;
+
+            Long total = beUtils.getCount(searchBE);
+            List<String> fileIdList = new ArrayList<>();
+            while (ok) {
+                List<BaseEntity> bes = beUtils.getBaseEntitys(searchBE);
+
+                if (bes.isEmpty()) {
+                    ok = false;
+                    break;
+                }
+
+                System.out.println("BaseEntity Count: "+ bes.size());
+                for (BaseEntity be : bes) {
+
+                    System.out.println("Processing video for "+ be.getCode());
+                    String videoUrl = be.getValue("PRI_VIDEO_URL", null);
+                    System.out.println("videoUrl: "+ videoUrl);
+                    if(videoUrl != null && !videoUrl.isEmpty()){
+                        fileIdList.add(videoUrl);
+                    }
+                    index++;
+
+                }
+                searchBE.setPageStart(index);
+            }
+            System.out.println("No of interns videos to convert: "+ fileIdList.size());
+            String request = JsonUtils.toJson(fileIdList);
+            System.out.println("Request: "+ request);
+            String response = QwandaUtils.apiPostEntity(GennySettings.videoConverterUrl + "/video/convert/bulk", request, null);
+            System.out.println("Response: "+ response);
+		}
 
 		output.setTypeOfResult("DISPLAY");
         output.setResultCode(workflowCode);
