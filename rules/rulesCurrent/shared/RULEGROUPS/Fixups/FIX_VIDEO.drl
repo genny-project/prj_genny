@@ -58,10 +58,10 @@ rule "FIX_VIDEO"
             }
             searchBE.setPageStart(index);
         }
-        System.out.println("### No of interns videos to convert: "+ fileIdList.size());
+        System.out.println("No of interns videos to convert: "+ fileIdList.size());
         String request = JsonUtils.toJson(fileIdList);
         System.out.println("Request: "+ request);
-/*        String response = QwandaUtils.apiPostEntity(GennySettings.mediaProxyUrl + "/video/convert/bulk", request, null);
+/*        String response = QwandaUtils.apiPostEntity(GennySettings.videoConverterUrl + "/video/convert/bulk", request, null);
         System.out.println("Response: "+ response);*/
 
         output.setTypeOfResult("NONE");
