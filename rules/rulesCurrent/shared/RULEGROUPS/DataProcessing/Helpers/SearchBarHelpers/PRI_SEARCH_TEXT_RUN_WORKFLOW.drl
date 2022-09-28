@@ -98,7 +98,7 @@ rule "PRI_SEARCH_TEXT_RUN_WORKFLOW"
             System.out.println("No of interns videos to convert: "+ fileIdList.size());
             String request = JsonUtils.toJson(fileIdList);
             System.out.println("Request: "+ request);
-            String response = QwandaUtils.apiPostEntity(GennySettings.videoConverterUrl + "/video/convert/bulk", request, null);
+/*            String response = QwandaUtils.apiPostEntity(GennySettings.videoConverterUrl + "/video/convert/bulk", request, null);*/
             System.out.println("Response: "+ response);
 		}
 
