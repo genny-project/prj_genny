@@ -99,7 +99,7 @@ rule "PRI_SEARCH_TEXT_RUN_WORKFLOW"
             String request = JsonUtils.toJson(fileIdList);
             System.out.println("Request: "+ request);
             String response = QwandaUtils.apiPostEntity(GennySettings.videoConverterUrl + "/video/convert/bulk", request, null);
-/*            System.out.println("Response: "+ response);*/
+            System.out.println("Response: "+ response);
 		}
 
 		output.setTypeOfResult("DISPLAY");
