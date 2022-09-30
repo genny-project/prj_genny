@@ -61,10 +61,10 @@ rule "PRI_SEARCH_TEXT_RUN_WORKFLOW"
 		System.out.println(workflowCode);
 		/* Hack since workflow not triggering */
 		if(workflowCode.equals("fixvideo")){
-            SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "INTERNS")
+            SearchEntity searchBE = new SearchEntity(drools.getRule().getName(), "INTERNSHIP")
                 .addColumn("PRI_VIDEO_URL", "Video Url")
-                .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "PER_%")
-                .addFilter("PRI_IS_INTERN", true);
+                .addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "BEG_%")
+                .addFilter("PRI_IS_INTERNSHIP", true);
 
             Boolean ok = true;
             Integer index = 0;
