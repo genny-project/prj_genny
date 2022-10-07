@@ -77,9 +77,7 @@ rule "FIX_HOST_COMPANY"
 
 		Attribute statusAttribute = RulesUtils.getAttribute("PRI_STATUS", serviceToken.getToken());
 
-		BaseEntity defIntern = beUtils.getBaseEntityByCode("DEF_INTERN");
-		System.out.println("defIntern:: " + defIntern);
-
+		
 		while (ok) {
 			List<BaseEntity> hostCompnies = beUtils.getBaseEntitys(searchBE); /* load 100 at a time */
 			if (hostCompnies.isEmpty() || (index > 5000)) {
@@ -91,14 +89,15 @@ rule "FIX_HOST_COMPANY"
 				index++;
 				Boolean ohsIsPresent = false;
 				String ohsDoc = hostCompany.getValue("DOC_OHS_CODE", null);
-				/* System.out.println("BEFORE:: " + index + " of " + total + " hostCompany -> " + hostCompany.getCode() + " "
-						+ hostCompany.getName() + ":"+estatus+":ea:"+status+" ("+intern.getCreated()+")");*/
+				System.out.println("BEFORE:: " + index + " of " + total + " hostCompany -> " + hostCompany.getCode() + " "
+						+ hostCompany.getName() + ": ohsDoc : "+ohsDoc);
 
 				beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_OHS_DOC", true));
 				if(ohsDoc != null)
 				{
 					ohsIsPresent = true;
 				}
+				System.out.println("ohsIsPresent :: "+ohsIsPresent);
 				if(ohsIsPresent)
 				{
 					beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_OHS_DOC_STATUS", "Complete"));
