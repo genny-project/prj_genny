@@ -116,7 +116,7 @@ rule "FIX_HOST_COMPANY"
 					Boolean hcsIsPresent = false;
 					String hcsDoc = hostCompany.getValue("PRI_HC_SERVICES_AGREEMENT_HTML", null);
 					System.out.println("BEFORE:: " + index + " of " + total + " hostCompany -> " + hostCompany.getCode() + " "
-							+ hostCompany.getName() + ": hcsDoc : "+hcsDoc);
+							+ hostCompany.getName());
 					beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_TC_DOC", true));
 					if(hcsDoc != null)
 					{
