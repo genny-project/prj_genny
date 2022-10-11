@@ -97,7 +97,7 @@ rule "FIX_HOST_COMPANY"
 					System.out.println("BEFORE:: " + index + " of " + total + " hostCompany -> " + hostCompany.getCode() + " "
 							+ hostCompany.getName() + ": ohsDoc : "+ohsDoc);
 
-					beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_OHS_DOC", true));
+					beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_OHS", true));
 					if(ohsDoc != null)
 					{
 						ohsIsPresent = true;
@@ -105,10 +105,10 @@ rule "FIX_HOST_COMPANY"
 					System.out.println("ohsIsPresent :: "+ohsIsPresent);
 					if(ohsIsPresent)
 					{
-						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_OHS_DOC_STATUS", "Complete"));
+						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_OHS_STATUS", "Complete"));
 					}else
 					{
-						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_OHS_DOC_STATUS", "Incomplete"));
+						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_OHS_STATUS", "Incomplete"));
 					}
 				}
 				if(fixHCSDoc)
@@ -117,7 +117,7 @@ rule "FIX_HOST_COMPANY"
 					String hcsDoc = hostCompany.getValue("PRI_HC_SERVICES_AGREEMENT_HTML", null);
 					System.out.println("BEFORE:: " + index + " of " + total + " hostCompany -> " + hostCompany.getCode() + " "
 							+ hostCompany.getName());
-					beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_TC_DOC", true));
+					beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_HCS", true));
 					if(hcsDoc != null)
 					{
 						hcsIsPresent = true;
@@ -125,10 +125,10 @@ rule "FIX_HOST_COMPANY"
 					System.out.println("hcsIsPresent"+ hcsIsPresent );
 					if(hcsIsPresent)
 					{
-						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_TC_DOC_STATUS", "Complete"));
+						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_HCS_STATUS", "Complete"));
 					}else
 					{
-						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_TC_DOC_STATUS", "Incomplete"));
+						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_HCS_STATUS", "Incomplete"));
 					}
 				}
 				
