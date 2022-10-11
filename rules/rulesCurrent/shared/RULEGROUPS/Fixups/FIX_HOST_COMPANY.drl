@@ -77,8 +77,8 @@ rule "FIX_HOST_COMPANY"
 
 		Attribute statusAttribute = RulesUtils.getAttribute("PRI_STATUS", serviceToken.getToken());
 
-		Boolean fixOHSDoc = true;
-		Boolean fixHCSDoc = false;
+		Boolean fixOHSDoc = false;
+		Boolean fixHCSDoc = true;
 
 		
 		while (ok) {
@@ -132,7 +132,20 @@ rule "FIX_HOST_COMPANY"
 					}
 				}
 				
-				
+				/*if (LNK_VIC_GOV_DIGITAL_JOBS.equalIgnoreCase("true")
+				{
+					PRI_DOC_DJP = true
+				}
+				LNK_DJP_DOC != null
+					LNK_DJP_DOC.LNK_DJP_DOC_ACCEPT
+				if (LNK_DJP_DOC_ACCEPT.contains("true"))
+				{
+					PRI_DOC_DJP_STATUS = Complete
+				}else
+				{
+					PRI_DOC_DJP_STATUS= false
+				}*/
+
 
 			}
 
