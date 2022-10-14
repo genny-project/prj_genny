@@ -40,7 +40,7 @@ rule "IS_QA_HOST_CPY_REP"
 		BaseEntity companyBe = null;
 		if (linkedHC != null && !linkedHC.isEmpty()) {
 			System.out.println("LNK_HOST_COMPANY present!");
-
+            companyBe = beUtils.getBaseEntityByCode(beUtils.cleanUpAttributeValue(linkedHC));
 		} else {
 			if (isHostCpyRep != null && isHostCpyRep) {
 				/* If HostCpyRep adding another HostCpyRep, then set same company */
@@ -102,6 +102,9 @@ rule "IS_QA_HOST_CPY_REP"
 
 		/* Send email to HCR all time*/
 		answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_EMAIL_FLAG", true));
+
+		/*Set TimeZone of HCR based on HC*/
+        answers.add(new Answer(userToken.getUserCode(), newBe.getCode(), "PRI_TIMEZONE_ID", companyBe.getValueAsString("PRI_TIMEZONE_ID")));
 
 		beUtils.saveAnswers(answers);
 
