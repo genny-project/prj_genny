@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import life.genny.message.QMessageGennyMSG;
 import life.genny.qwanda.message.QBaseMSGMessageType;
 import life.genny.qwandautils.MessageUtils;
+import life.genny.qwandautils.JsonUtils;
 
 rule "IS_QA_HOST_CPY_REP"
     ruleflow-group 'IsQuickAdd'
@@ -109,14 +110,15 @@ rule "IS_QA_HOST_CPY_REP"
 		String password = KeycloakUtils.generateRandomPassword(beUtils, newBe);
 
 		/* Init Sendgrid Msg */
-		QMessageGennyMSG msg = new QMessageGennyMSG(QBaseMSGMessageType.SENDGRID);
-		msg.setTemplateCode("MSG_HCR1_REGISTER");
-		msg.addRecipient(newBe);
-		msg.addContext("PASSWORD", password);
-		msg.addContext("URL:ENCODE", "QUE_FAKE_PARENT/QUE_FINISH_HOST_CPY_REP");
-		msg.addContext("BCC", "PRJ_INTERNMATCH");
+        QMessageGennyMSG emailMsg = new QMessageGennyMSG.Builder("MSG_HCR1_REGISTER")
+            .addRecipient(newBe)
+            .addContext("PASSWORD", password)
+            .addContext("URL:ENCODE", "QUE_FAKE_PARENT/QUE_FINISH_HOST_CPY_REP")
+            .addContext("BCC", "PRJ_INTERNMATCH")
+            .setUtils(beUtils)
+            .send();
 
-		MessageUtils.sendMessage(beUtils, msg);
+        System.out.println("MSG_HCR1_REGISTER: emailMsg " + JsonUtils.toJson(emailMsg));
 
 		/* Post Note */
 		String endPoint = GennySettings.projectUrl + "/v7/notes";
