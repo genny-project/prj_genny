@@ -74,7 +74,7 @@ rule "HELPER_SIGNATURE_DATE"
 				System.out.println("attributeCode - PRI_OHS_ :: " + attributeCode);
 			break;
 			case "PRI_SIGNATURE":
-				type = "PRI_SIGNING_DATE"; 
+				type = "PRI_SIGNATURE_DATE"; 
 				System.out.println("attributeCode :: " + attributeCode);
 			break;
 			
