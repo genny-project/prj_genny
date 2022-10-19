@@ -37,7 +37,8 @@ rule "HELPER_SIGNATURE_DATE"
 						|| attributeCode == "PRI_AGR_DOC_HC_SIGNATURE" 
 						|| attributeCode == "PRI_AGR_DOC_OUTCOME_SIGNATURE" 
 						|| attributeCode == "PRI_HCS_AGR_SIGNATURE"
-						|| attributeCode == "PRI_OHS_SIGNATURE")
+						|| attributeCode == "PRI_OHS_SIGNATURE"
+						|| attributeCode == "PRI_SIGNATURE")
 		answersToSave : Answers()
 		ruleDetails : RuleDetails()
 		output : OutputParam( )
@@ -71,6 +72,10 @@ rule "HELPER_SIGNATURE_DATE"
 			case "PRI_OHS_SIGNATURE":
 				type = "PRI_OHS_SIGNING_DATE"; 
 				System.out.println("attributeCode - PRI_OHS_ :: " + attributeCode);
+			break;
+			case "PRI_SIGNATURE":
+				type = "PRI_SIGNING_DATE"; 
+				System.out.println("attributeCode :: " + attributeCode);
 			break;
 			
 			case "PRI_HCS_AGR_SIGNATURE":
