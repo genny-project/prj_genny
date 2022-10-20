@@ -78,7 +78,9 @@ rule "FIX_HOST_COMPANY"
 		Attribute statusAttribute = RulesUtils.getAttribute("PRI_STATUS", serviceToken.getToken());
 
 		Boolean fixOHSDoc = false;
-		Boolean fixHCSDoc = true;
+		Boolean fixHCSDoc = false;
+		Boolean fixHCRIDOc = true;
+		Boolean fixDJPDoc = true;
 
 		
 		while (ok) {
@@ -98,6 +100,7 @@ rule "FIX_HOST_COMPANY"
 							+ hostCompany.getName() + ": ohsDoc : "+ohsDoc);
 
 					beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_OHS", true));
+					
 					if(ohsDoc != null)
 					{
 						ohsIsPresent = true;
@@ -131,22 +134,38 @@ rule "FIX_HOST_COMPANY"
 						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_HCS_STATUS", "Incomplete"));
 					}
 				}
-				
-				/*if (LNK_VIC_GOV_DIGITAL_JOBS.equalIgnoreCase("true")
+				if(fixHCRIDOc)
 				{
-					PRI_DOC_DJP = true
+					beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_HCRI", false));
 				}
-				LNK_DJP_DOC != null
-					LNK_DJP_DOC.LNK_DJP_DOC_ACCEPT
-				if (LNK_DJP_DOC_ACCEPT.contains("true"))
+				if(fixDJPDoc)
 				{
-					PRI_DOC_DJP_STATUS = Complete
-				}else
-				{
-					PRI_DOC_DJP_STATUS= false
-				}*/
+					Boolean djpIsPresent = false;
+					String djpDoc = hostCompany.getValue("LNK_VIC_GOV_DIGITAL_JOBS", null);
+					if(djpDoc != null)
+					{
+						if(djpDoc.contains("true"))
+						{
+							beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP", true));
+						}else{
+							beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP", false));
+						}
+					}else{
+						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP", false));
+					}
+					String docCode = hostCompany.getValue("LNK_DJP_DOC",null);
+					if(docCode != null)
+					{
+						BaseEntity docBe = beUtils.getBaseEntityByCode(docCode);
+						accepted = docBe.getValue("LNK_DJP_DOC_ACCEPT",null);
+						if(docCode != null && accepted.contains("true")){
+							beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Complete"));
+						}else{
+							beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
+						}
 
-
+					}
+				}
 			}
 
 			searchBE.setPageStart(index);
