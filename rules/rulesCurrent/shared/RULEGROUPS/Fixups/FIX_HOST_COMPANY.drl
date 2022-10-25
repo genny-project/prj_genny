@@ -77,10 +77,10 @@ rule "FIX_HOST_COMPANY"
 
 		Attribute statusAttribute = RulesUtils.getAttribute("PRI_STATUS", serviceToken.getToken());
 
-		Boolean fixOHSDoc = false;
+		Boolean fixOHSDoc = true;
 		Boolean fixHCSDoc = true;
-		Boolean fixHCRIDOc = false;
-		Boolean fixDJPDoc = false;
+		Boolean fixHCRIDOc = true;
+		Boolean fixDJPDoc = true;
 
 		
 		while (ok) {
