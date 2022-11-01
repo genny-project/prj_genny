@@ -174,11 +174,19 @@ rule "FIX_HOST_COMPANY"
 					{
 						BaseEntity docBe = beUtils.getBaseEntityByCode(docCode);
 						String accepted = docBe.getValue("LNK_DJP_DOC_ACCEPT",null);
-						if(docCode != null && accepted.contains("true")){
-							beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Complete"));
-						}else{
-							beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
-						}
+						System.out.println("accepted" + accepted);
+						if(docCode != null){
+							if(accepted.isEmpty())
+							{
+								beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
+								return;
+							}
+							if(accepted != null)
+							{
+								beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Complete"));
+							}else{
+								beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
+							}
 
 					}
 				}
