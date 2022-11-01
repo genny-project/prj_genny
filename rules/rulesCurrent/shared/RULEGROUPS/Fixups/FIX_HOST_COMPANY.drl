@@ -164,7 +164,7 @@ rule "FIX_HOST_COMPANY"
 						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP", false));
 					}
 					String docCode = hostCompany.getValue("LNK_DJP_DOC",null);
-					System.out.println("docCode" + djpDoc);
+					System.out.println("docCode" + docCode);
 					if(docCode.isEmpty())
 					{
 						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
@@ -172,12 +172,13 @@ rule "FIX_HOST_COMPANY"
 					}
 					if(docCode != null)
 					{
+						System.out.println("docCode is not null");
 						BaseEntity docBe = beUtils.getBaseEntityByCode(docCode);
 						if(docBe != null)
 						{
+							System.out.println("docBe is not null");
 							String accepted = docBe.getValue("LNK_DJP_DOC_ACCEPT",null);
 							System.out.println("accepted" + accepted);
-							if(docCode != null){
 								if(accepted.isEmpty())
 								{
 									beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
@@ -189,7 +190,6 @@ rule "FIX_HOST_COMPANY"
 								}else{
 									beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
 								}
-							}
 						}
 						
 					}
