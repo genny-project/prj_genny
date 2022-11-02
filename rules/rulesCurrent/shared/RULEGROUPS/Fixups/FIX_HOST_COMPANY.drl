@@ -181,10 +181,8 @@ rule "FIX_HOST_COMPANY"
 							beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP", false));
 							beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
 						}
-					}
 				}
-			}
-
+				}
 			searchBE.setPageStart(index);
 		}
 
