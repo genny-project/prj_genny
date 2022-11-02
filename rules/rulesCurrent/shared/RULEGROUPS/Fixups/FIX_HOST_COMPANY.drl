@@ -145,13 +145,6 @@ rule "FIX_HOST_COMPANY"
 					Boolean djpIsPresent = false;
 					String djpDoc = hostCompany.getValue("LNK_VIC_GOV_DIGITAL_JOBS", null);
 					System.out.println("djpDoc" + djpDoc);
-					if(djpDoc.isEmpty())
-					{
-						System.out.println("djpDoc is empty");
-						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP", false));
-						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
-					}
-					else{
 						if(djpDoc != null)
 						{
 							System.out.println("djpDoc is not null");
@@ -160,11 +153,6 @@ rule "FIX_HOST_COMPANY"
 								beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP", true));
 								String docCode = hostCompany.getValue("LNK_DJP_DOC",null);
 								System.out.println("docCode" + docCode);
-							/*	if(docCode.isEmpty())
-								{
-									beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
-								}
-								else{*/
 									if(docCode != null)
 									{
 										System.out.println("docCode is not null");
@@ -180,13 +168,14 @@ rule "FIX_HOST_COMPANY"
 									}
 									else{
 										System.out.println("docCode is null");
+										beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP", true));
 										beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
 									}
-								}
-							/*}else{
+							}else{
 								System.out.println("djpDoc is null");
 								beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP", false));
-							}*/
+								beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
+							}
 						}else{
 							System.out.println("djpDoc is null");
 							beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP", false));
