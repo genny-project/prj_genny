@@ -92,13 +92,13 @@ rule "FIX_HOST_COMPANY"
 
 			for (BaseEntity hostCompany : hostCompnies) {
 				index++;
+				System.out.println(index + " of " + total + " hostCompany -> " + hostCompany.getCode() + " "
+							+ hostCompany.getName() + " Fixed");
 				if(fixOHSDoc)
 				{
 					Boolean ohsIsPresent = false;
 					String ohsDoc = hostCompany.getValue("DOC_OHS_CODE", null);
-					System.out.println("BEFORE:: " + index + " of " + total + " hostCompany -> " + hostCompany.getCode() + " "
-							+ hostCompany.getName() + ": ohsDoc : "+ohsDoc);
-
+					
 					beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_OHS", true));
 					
 					if(ohsDoc != null)
@@ -118,8 +118,6 @@ rule "FIX_HOST_COMPANY"
 				{
 					Boolean hcsIsPresent = false;
 					String hcsDoc = hostCompany.getValue("PRI_HC_SERVICES_AGREEMENT_HTML", null);
-					System.out.println("BEFORE:: " + index + " of " + total + " hostCompany -> " + hostCompany.getCode() + " "
-							+ hostCompany.getName());
 					beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_HCS", true));
 					if(hcsDoc != null)
 					{
