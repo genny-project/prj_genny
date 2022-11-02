@@ -170,6 +170,7 @@ rule "FIX_HOST_COMPANY"
 						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
 						return;
 					}
+
 					if(docCode != null)
 					{
 						System.out.println("docCode is not null");
@@ -192,6 +193,9 @@ rule "FIX_HOST_COMPANY"
 								}
 						}
 						
+					}else
+					{
+						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));	
 					}
 				}
 			}
