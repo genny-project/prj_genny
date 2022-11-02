@@ -166,15 +166,9 @@ rule "FIX_HOST_COMPANY"
 					String docCode = hostCompany.getValue("LNK_DJP_DOC",null);
 					System.out.println("docCode" + docCode);
 					
-					if(docCode == null)
-					{
-						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
-						return;
-					}
 					if(docCode.isEmpty())
 					{
 						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
-						return;
 					}
 
 					if(docCode != null)
@@ -189,16 +183,17 @@ rule "FIX_HOST_COMPANY"
 								if(accepted.isEmpty())
 								{
 									beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
-									return;
-								}
-								if(accepted != null)
-								{
-									beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Complete"));
 								}else{
-									beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
+									if(accepted != null)
+									{
+										beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Complete"));
+									}else{
+										beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
+									}
 								}
-						}
-						
+						}		
+						}else{
+							beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
 					}
 				}
 			}
