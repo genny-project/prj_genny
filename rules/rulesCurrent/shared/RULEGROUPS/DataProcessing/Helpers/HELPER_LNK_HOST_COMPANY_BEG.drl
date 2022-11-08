@@ -95,12 +95,12 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 
 		VertxUtils.sendToFrontEnd(userToken, assocHcAnswer, imageAnswer, latitudeAnswer, longitudeAnswer, addressAnswer);
 
-		String timeZone = null;
+		/*String timeZone = null;*/
 			
 		String country = companyBe.getValue("PRI_ADDRESS_COUNTRY", null);
 		if(country != null) {
 			answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_COUNTRY", country, false, true));
-			timeZone = country;
+		/*	timeZone = country;*/
 		}
 			
 		String postcode = companyBe.getValue("PRI_ADDRESS_POSTCODE", null);	
@@ -112,7 +112,7 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		String city = companyBe.getValue("PRI_ADDRESS_CITY", null);	
 		if(city != null) {
 			answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_CITY", city, false, true));
-			timeZone = timeZone != null ? (timeZone + "/" +  city) : city;
+		/*	timeZone = timeZone != null ? (timeZone + "/" +  city) : city;*/
 		}
 		
 		String state = companyBe.getValue("PRI_ADDRESS_STATE", null);
