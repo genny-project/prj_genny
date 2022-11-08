@@ -119,10 +119,10 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		if(state != null) answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", state, false, true));
 
 		String timeZone = companyBe.getValue("PRI_TIME_ZONE",null);
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_TIME_ZONE", timeZone));
+		beUtils.saveAnswer(new Answer(sourceCode, targetCode ,"PRI_TIME_ZONE", timeZone));
 
 		String timeZoneId = companyBe.getValue("PRI_TIMEZONE_ID",null);
-		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_TIMEZONE_ID", timeZoneId));
+		beUtils.saveAnswer(new Answer(sourceCode, targetCode ,"PRI_TIMEZONE_ID", timeZoneId));
 		
 		/* update timezone from GPS */
         /*if(timeZone != null) {
