@@ -118,9 +118,15 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
 		String state = companyBe.getValue("PRI_ADDRESS_STATE", null);
 		if(state != null) answers.add(new Answer(sourceCode, targetCode, "PRI_ADDRESS_STATE", state, false, true));
 
+		String timeZone = companyBe.getValue("PRI_TIME_ZONE",null);
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_TIME_ZONE", timeZone));
+
+		String timeZoneId = companyBe.getValue("PRI_TIMEZONE_ID",null);
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), newBe.getCode() ,"PRI_TIMEZONE_ID", timeZoneId));
 		
-        if(timeZone != null) {
-            /* update timezone from GPS */
+		/* update timezone from GPS */
+        /*if(timeZone != null) {
+            
             BaseEntity project = beUtils.getBaseEntityByCode("PRJ_"+serviceToken.getRealm().toUpperCase());
             String googleApiKey = project.getValueAsString("ENV_GOOGLE_MAPS_APIKEY");
             String url = "https://maps.googleapis.com/maps/api/timezone/json?location="+latitude+","+longitude+"&timestamp="+java.time.Instant.now().getEpochSecond()+"&key="+googleApiKey;
@@ -137,7 +143,7 @@ rule "HELPER_LNK_HOST_COMPANY_BEG"
             answers.add(fixedTimezone);
             VertxUtils.sendToFrontEnd(userToken, fixedTimezone);
             VertxUtils.sendToFrontEnd(userToken, fixedTimezoneOld);
-        }
+        }*/
 
 		BaseEntity targetBe = beUtils.getBaseEntityByCode(targetCode);
 		if(targetBe != null){
