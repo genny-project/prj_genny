@@ -157,24 +157,12 @@
 	if(code.contains(&quot;CPY&quot;))
 	{
 		System.out.println(&quot;targetBe is Host Company&quot;);
-		String country = targetBe.getValue(&quot;PRI_ADDRESS_COUNTRY&quot;,null);
-		if(country != null)
-		{
 			if(isHostCpyRep != null &amp;&amp; isHostCpyRep)
 				{
-					questionCode = &quot;QUE_&quot; +key + &quot;_GRP&quot;;
+					questionCode = &quot;QUE_&quot; +key + &quot;_HCR_GRP&quot;;
 					kcontext.setVariable(&quot;questionCode&quot;, questionCode);
 					System.out.println(&quot;EDIT_ENTITY: questionCode: &quot; + questionCode);
 				}
-			else{
-				if(country.equalsIgnoreCase(&quot;Australia&quot;))
-				{
-					questionCode = &quot;QUE_&quot; +key + &quot;_GRP1&quot;;
-					kcontext.setVariable(&quot;questionCode&quot;, questionCode);
-					System.out.println(&quot;EDIT_ENTITY: questionCode: &quot; + questionCode);
-				}
-			}
-		}
 	}
 
 /* Do the template thing*/

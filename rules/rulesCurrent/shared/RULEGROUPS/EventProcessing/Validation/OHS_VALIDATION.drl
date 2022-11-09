@@ -29,36 +29,37 @@ rule "OHS_VALIDATION"
  		System.out.println("OHS_VALIDATION: HCBe = " + HCBe.getCode()); 
  		
  		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
+		beUtils.saveAnswer(new Answer(userToken.getUserCode(), HCBe.getCode() ,"PRI_DOC_OHS_STATUS", "Complete"));
  		
  		/* Set up email stuff */
-		String subject = null;
+		/*String subject = null;
 		String template_id = null;
 		String doc = null;
 		String todo = null;
 		Boolean OHS = false;
-		Boolean ready = false;
+		Boolean ready = false;*/
 		
 		
 		String validationStatus = HCBe.getValue("PRI_VALIDATION", "Incomplete");
 		
 		if (validationStatus.equals("Incomplete")) {
 				beUtils.saveAnswer(new Answer(userToken.getUserCode(), HCBe.getCode() ,"PRI_VALIDATION", "OHS"));
-				OHS = true;
+				/*OHS = true;
 				doc = "OHS document completed";
 				todo = "Please complete the Host Company Services Agreement";
 				subject = "New Host Company - OHS form completed";
 				template_id = "d-56a883c433ba4ce7a92d6ae8082a9dad";
-				System.out.println("PRI_VALIDATION set to OHS");
+				System.out.println("PRI_VALIDATION set to OHS");*/
 		}
 		
 		if (validationStatus.equals("HCS")) {
 				beUtils.saveAnswer(new Answer(userToken.getUserCode(), HCBe.getCode() ,"PRI_VALIDATION", "Ready"));
-				ready = true;
+				/*ready = true;
 				doc = "OHS and HC Services documents completed";
 				todo = "Please complete the HC Validation form";
 				subject = "Host Company Services form completed";
 				template_id = "d-95472fd28165474f80346ff9a1912a4b";	
-				System.out.println("PRI_VALIDATION set to Ready");  
+				System.out.println("PRI_VALIDATION set to Ready");  */
 		}				
 						
 		HCBe = beUtils.getBaseEntityByCode(HCBe.getCode());				
@@ -71,7 +72,7 @@ rule "OHS_VALIDATION"
 		
 		/* SEND EMAIL TO AGENT */	
 						
-		String user = userToken.getUserCode();
+		/*String user = userToken.getUserCode();
 		System.out.println("user: " + user);
 		
 		String token = "";
@@ -185,7 +186,7 @@ rule "OHS_VALIDATION"
 			EmailHelper.sendGrid(beUtils, agentEmail, null, bccList, subject, template_id, templateData, false);
 		}
 		
-		
+		*/
 		
 		retract(baseEntityType)
 		retract(HCBe)
