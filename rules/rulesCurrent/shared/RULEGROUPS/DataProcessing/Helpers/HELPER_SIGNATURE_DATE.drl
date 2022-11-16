@@ -38,6 +38,7 @@ rule "HELPER_SIGNATURE_DATE"
 						|| attributeCode == "PRI_AGR_DOC_OUTCOME_SIGNATURE" 
 						|| attributeCode == "PRI_HCS_AGR_SIGNATURE"
 						|| attributeCode == "PRI_OHS_SIGNATURE"
+						|| attributeCode == "LNK_DJP_DOC_ACCEPT"
 						|| attributeCode == "PRI_SIGNATURE")
 		answersToSave : Answers()
 		ruleDetails : RuleDetails()
@@ -95,6 +96,11 @@ rule "HELPER_SIGNATURE_DATE"
 			
 			case "PRI_AGR_DOC_OUTCOME_SIGNATURE":
 				type = "PRI_AGR_DOC_OUTCOME_SIGN_DATE"; 
+				System.out.println("attributeCode - PRI_OUTCOME :: " + attributeCode);
+			break;
+			
+			case "LNK_DJP_DOC_ACCEPT":
+				type = "PRI_SIGNATURE_DATE"; 
 				System.out.println("attributeCode - PRI_OUTCOME :: " + attributeCode);
 			break;
 		}
