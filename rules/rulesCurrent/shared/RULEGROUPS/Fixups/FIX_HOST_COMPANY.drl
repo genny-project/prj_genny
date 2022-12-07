@@ -47,6 +47,7 @@ rule "FIX_HOST_COMPANY"
 	salience 2
     no-loop
     when
+        message : QEventMessage()
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
@@ -57,11 +58,14 @@ rule "FIX_HOST_COMPANY"
 
 		List<Answer> answers = new ArrayList<>();
 
+		System.out.println(message.getData().getTargetCode());
+		System.out.println(message.getData().getParentCode());
+
 		System.out.println("Fixing Host company batch process!");
 
 		SearchEntity searchBE = new SearchEntity("SBE_HOST_COMPANIES", "Host companies")
 				.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
-				.addFilter("PRI_CODE", SearchEntity.StringFilter.EQUAL, "CPY_227E1786-5964-446D-93AE-6FBBC956")
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.EQUAL, "CPY_5CBF000E-9F85-4BA4-A3E1-E460CD12")
 				.addFilter("PRI_IS_HOST_CPY", true)
 				.addColumn("PRI_CODE", "Code");
 		searchBE.setRealm("intermatch");
@@ -142,11 +146,9 @@ rule "FIX_HOST_COMPANY"
 					Boolean djpIsPresent = false;
 					String djpDoc = hostCompany.getValue("LNK_VIC_GOV_DIGITAL_JOBS", null);
 					System.out.println("djpDoc" + djpDoc);
-						if(djpDoc != null)
-						{
+						if(djpDoc != null){
 							System.out.println("djpDoc is not null");
-							if(djpDoc.contains("true"))
-							{
+							if(djpDoc.contains("true")){
 								beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP", true));
 								String docCode = hostCompany.getValue("LNK_DJP_DOC",null);
 								System.out.println("docCode" + docCode);
