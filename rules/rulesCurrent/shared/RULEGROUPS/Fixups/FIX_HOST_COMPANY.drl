@@ -47,7 +47,6 @@ rule "FIX_HOST_COMPANY"
 	salience 2
     no-loop
     when
-        message : QEventMessage()
 		userToken : GennyToken (code != "PER_SERVICE" )
 		serviceToken : GennyToken( code == "PER_SERVICE")
 		output : OutputParam( )
@@ -57,9 +56,6 @@ rule "FIX_HOST_COMPANY"
 		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processings : " );
 
 		List<Answer> answers = new ArrayList<>();
-
-		System.out.println(message.getData().getTargetCode());
-		System.out.println(message.getData().getParentCode());
 
 		System.out.println("Fixing Host company batch process!");
 
