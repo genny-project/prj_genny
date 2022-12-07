@@ -157,13 +157,16 @@ rule "FIX_HOST_COMPANY"
                                                 String accepted = docBe.getValue("LNK_DJP_DOC_ACCEPT",null);
                                                 System.out.println("accepted" + accepted);
 
-                                                if(accepted == null || accepted.isEmpty()){
+                                                if(accepted == null){
                                                     beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
                                                 }
-                                                if(accepted.equals("true")){
+                                                if(accepted != null && accepted.isEmpty()){
+                                                    beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
+                                                }
+                                                if(accepted != null && accepted.equals("true")){
                                                      beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Complete"));
                                                 }
-                                                if(accepted.equals("false")){
+                                                if(accepted != null && accepted.equals("false")){
                                                      beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
                                                 }
                                             }else{
