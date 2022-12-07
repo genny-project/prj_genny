@@ -61,7 +61,7 @@ rule "FIX_HOST_COMPANY"
 
 		SearchEntity searchBE = new SearchEntity("SBE_HOST_COMPANIES", "Host companies")
 				.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
-				.addFilter("PRI_CODE", SearchEntity.StringFilter.EQUAL, "CPY_5CBF000E-9F85-4BA4-A3E1-E460CD12")
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "CPY_%")
 				.addFilter("PRI_IS_HOST_CPY", true)
 				.addColumn("PRI_CODE", "Code");
 		searchBE.setRealm("intermatch");
