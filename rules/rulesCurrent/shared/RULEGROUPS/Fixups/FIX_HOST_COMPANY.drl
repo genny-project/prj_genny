@@ -61,7 +61,7 @@ rule "FIX_HOST_COMPANY"
 
 		SearchEntity searchBE = new SearchEntity("SBE_HOST_COMPANIES", "Host companies")
 				.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
-				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "CPY_%")
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.EQUAL, "CPY_227E1786-5964-446D-93AE-6FBBC956")
 				.addFilter("PRI_IS_HOST_CPY", true)
 				.addColumn("PRI_CODE", "Code");
 		searchBE.setRealm("intermatch");
@@ -77,12 +77,12 @@ rule "FIX_HOST_COMPANY"
 
 		Attribute statusAttribute = RulesUtils.getAttribute("PRI_STATUS", serviceToken.getToken());
 
-		Boolean fixOHSDoc = true;
-		Boolean fixHCSDoc = true;
-		Boolean fixHCRIDOc = true;
+		Boolean fixOHSDoc = false;
+		Boolean fixHCSDoc = false;
+		Boolean fixHCRIDOc = false;
 		Boolean fixDJPDoc = true;
 
-		
+
 		while (ok) {
 			List<BaseEntity> hostCompnies = beUtils.getBaseEntitys(searchBE); /* load 100 at a time */
 			if (hostCompnies.isEmpty() || (index > 5000)) {
@@ -94,13 +94,13 @@ rule "FIX_HOST_COMPANY"
 				index++;
 				System.out.println(index + " of " + total + " hostCompany -> " + hostCompany.getCode() + " "
 							+ hostCompany.getName() + " Fixed");
-				if(fixOHSDoc)
+/*				if(fixOHSDoc)
 				{
 					Boolean ohsIsPresent = false;
 					String ohsDoc = hostCompany.getValue("DOC_OHS_CODE", null);
-					
+
 					beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_OHS", true));
-					
+
 					if(ohsDoc != null)
 					{
 						ohsIsPresent = true;
@@ -113,8 +113,8 @@ rule "FIX_HOST_COMPANY"
 					{
 						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_OHS_STATUS", "Incomplete"));
 					}
-				}
-				if(fixHCSDoc)
+				}*/
+		/*		if(fixHCSDoc)
 				{
 					Boolean hcsIsPresent = false;
 					String hcsDoc = hostCompany.getValue("PRI_HC_SERVICES_AGREEMENT_HTML", null);
@@ -131,14 +131,13 @@ rule "FIX_HOST_COMPANY"
 					{
 						beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_HCS_STATUS", "Incomplete"));
 					}
-				}
-				if(fixHCRIDOc)
-				{	
+				}*/
+			/*	if(fixHCRIDOc)
+				{
 					System.out.println("fixing HCRI PRI_DOC_HCRI");
 					beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_HCRI", false));
-				}
-				if(fixDJPDoc)
-				{
+				}*/
+				if(fixDJPDoc){
 					System.out.println("fixing DJP PRI_DOC_DJP");
 					Boolean djpIsPresent = false;
 					String djpDoc = hostCompany.getValue("LNK_VIC_GOV_DIGITAL_JOBS", null);
@@ -151,18 +150,20 @@ rule "FIX_HOST_COMPANY"
 								beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP", true));
 								String docCode = hostCompany.getValue("LNK_DJP_DOC",null);
 								System.out.println("docCode" + docCode);
-									if(docCode != null)
-									{
+									if(docCode != null){
 										System.out.println("docCode is not null");
 										BaseEntity docBe = beUtils.getBaseEntityByCode(docCode);
 										String accepted = docBe.getValue("LNK_DJP_DOC_ACCEPT",null);
 										System.out.println("accepted" + accepted);
-												if(accepted != null)
-												{
-													beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Complete"));
-												}else{
-													beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
-												}
+                                        if(accepted == null){
+                                            beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
+                                        }
+                                        if(accepted.equals("true")){
+                                             beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Complete"));
+                                        }
+                                        if(accepted.equals("false")){
+                                             beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
+                                        }
 									}
 									else{
 										System.out.println("docCode is null");
