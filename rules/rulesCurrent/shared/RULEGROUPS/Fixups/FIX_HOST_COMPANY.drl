@@ -153,7 +153,8 @@ rule "FIX_HOST_COMPANY"
 										BaseEntity docBe = beUtils.getBaseEntityByCode(docCode);
 										String accepted = docBe.getValue("LNK_DJP_DOC_ACCEPT",null);
 										System.out.println("accepted" + accepted);
-                                        if(accepted == null){
+                                        System.out.println("accepted" + accepted.length());
+                                        if(accepted == null || accepted.isEmpty()){
                                             beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
                                         }
                                         if(accepted.equals("true")){
