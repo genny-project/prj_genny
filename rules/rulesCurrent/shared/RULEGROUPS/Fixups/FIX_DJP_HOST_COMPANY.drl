@@ -1,0 +1,152 @@
+package life.genny.rules;
+
+import org.apache.commons.lang3.StringUtils;
+
+import life.genny.qwanda.message.QDataAnswerMessage;
+import life.genny.models.GennyToken;
+import life.genny.rules.QRules;
+import life.genny.utils.BaseEntityUtils;
+import life.genny.qwanda.Answer;
+import io.vertx.core.json.JsonObject;
+import java.util.Map;
+import java.util.HashMap;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import com.google.gson.reflect.TypeToken;
+import life.genny.qwandautils.JsonUtils;
+import life.genny.utils.VertxUtils;
+import life.genny.utils.TableUtils;
+import life.genny.models.TableData;
+import life.genny.qwanda.message.QDataBaseEntityMessage;
+import life.genny.qwanda.entity.BaseEntity;
+import life.genny.qwanda.entity.SearchEntity;
+import life.genny.qwanda.Ask;
+import life.genny.qwanda.message.QDataAskMessage;
+import life.genny.qwanda.utils.OutputParam;
+import life.genny.jbpm.customworkitemhandlers.ShowFrame;
+
+import java.util.List;
+import java.util.ArrayList;
+
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import life.genny.utils.SearchCallable;
+import life.genny.utils.TableFrameCallable;
+import life.genny.utils.CacheSearchUtils;
+
+rule "FIX_DJP_HOST_COMPANY"
+    ruleflow-group 'fixdjphostcompany'
+	salience 2
+    no-loop
+    when
+		userToken : GennyToken (code != "PER_SERVICE" )
+		serviceToken : GennyToken( code == "PER_SERVICE")
+		output : OutputParam( )
+		ruleDetails : RuleDetails()
+		beUtils : BaseEntityUtils()
+    then
+		System.out.println(ruleDetails+" "+drools.getRule().getName()+" Processings : " );
+
+		List<Answer> answers = new ArrayList<>();
+
+		System.out.println("Fixing Host company batch process!");
+
+		SearchEntity searchBE = new SearchEntity("SBE_HOST_COMPANIES", "Host companies")
+				.addSort("PRI_CREATED", "Created", SearchEntity.Sort.DESC)
+				.addFilter("PRI_CODE", SearchEntity.StringFilter.LIKE, "CPY_%")
+				.addFilter("PRI_IS_HOST_CPY", true)
+				.addColumn("PRI_CODE", "Code");
+		searchBE.setRealm("intermatch");
+
+		Boolean ok = true;
+		Integer index = 0;
+		Integer fixedInterns = 0;
+		Integer fixedApps = 0;
+		searchBE.setPageStart(index);
+		Integer pageSize = 100;
+		searchBE.setPageSize(pageSize);
+		Long total = beUtils.getCount(searchBE);
+
+		Attribute statusAttribute = RulesUtils.getAttribute("PRI_STATUS", serviceToken.getToken());
+
+		while (ok) {
+			List<BaseEntity> hostCompnies = beUtils.getBaseEntitys(searchBE); /* load 100 at a time */
+			if (hostCompnies.isEmpty() || (index > 5000)) {
+				ok = false;
+				break;
+			}
+
+			for (BaseEntity hostCompany : hostCompnies) {
+				index++;
+				System.out.println(index + " of " + total + " hostCompany -> " + hostCompany.getCode() + " "
+							+ hostCompany.getName() + " Fixed");
+
+				try{
+					System.out.println("fixing DJP PRI_DOC_DJP");
+					Boolean djpIsPresent = false;
+                    if(hostCompany != null){
+                        String djpDoc = hostCompany.getValue("LNK_VIC_GOV_DIGITAL_JOBS", null);
+                        System.out.println("djpDoc" + djpDoc);
+                            if(djpDoc != null){
+                                System.out.println("djpDoc is not null");
+                                if(djpDoc.contains("true")){
+                                    beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP", true));
+                                    String docCode = hostCompany.getValue("LNK_DJP_DOC",null);
+                                    System.out.println("docCode" + docCode);
+                                        if(docCode != null){
+                                            System.out.println("docCode is not null");
+                                            BaseEntity docBe = beUtils.getBaseEntityByCode(docCode);
+                                            if(docBe != null){
+                                                String accepted = docBe.getValue("LNK_DJP_DOC_ACCEPT",null);
+                                                System.out.println("accepted" + accepted);
+
+                                                if(accepted == null){
+                                                    beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
+                                                }
+                                                if(accepted != null && accepted.isEmpty()){
+                                                    beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
+                                                }
+                                                if(accepted != null && accepted.equals("true")){
+                                                     beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Complete"));
+                                                }
+                                                if(accepted != null && accepted.equals("false")){
+                                                     beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
+                                                }
+                                            }else{
+                                                beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
+                                            }
+                                        }
+                                        else{
+                                            System.out.println("docCode is null");
+                                            beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
+                                        }
+                                }else{
+                                    System.out.println("djpDoc is false");
+                                    beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
+                                }
+                            }else{
+                                System.out.println("djpDoc is null");
+                                beUtils.saveAnswer(new Answer(userToken.getUserCode(), hostCompany.getCode() ,"PRI_DOC_DJP_STATUS", "Incomplete"));
+                            }
+                    }
+                }catch (Exception ex){
+                    System.out.println("hc code: "+hostCompany.getCode());
+                    System.out.println("Exception: "+ ex.getMessage());
+                }
+            }
+			searchBE.setPageStart(index);
+		}
+
+			output.setTypeOfResult("NONE");
+			output.setResultCode("NONE");  /* dont display anything new */
+
+			System.out.println("End of " + drools.getRule().getName());
+		end
