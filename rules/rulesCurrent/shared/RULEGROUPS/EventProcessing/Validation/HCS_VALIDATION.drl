@@ -30,7 +30,7 @@ rule "HCS_VALIDATION"
 
  	    /* Construct answer with Source, Target, Attribute Code, Value */
  		BaseEntityUtils beUtils = new BaseEntityUtils(serviceToken, userToken);
-		beUtils.saveAnswer( new Answer( userToken.getUserCode(), hcBe.getCode(), "PRI_DOC_HCS_STATUS", "Complete"));
+		/*beUtils.saveAnswer( new Answer( userToken.getUserCode(), hcBe.getCode(), "PRI_DOC_HCS_STATUS", "Complete"));*/
 
 		/* Set up email stuff */
 		/*String subject = null;
