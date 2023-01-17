@@ -128,6 +128,11 @@ rule "HELPER_SIGNATURE_COMPLETE"
 
 		beUtils.saveAnswers(answers);
 
+		QDataBaseEntityMessage msg = new QDataBaseEntityMessage(targetBe);
+        msg.setToken(userToken.getToken());
+        msg.setReplace(true);
+        VertxUtils.writeMsg("webcmds", JsonUtils.toJson(msg));
+
 		/* retract(answer); */
 
 	System.out.println("End of " + drools.getRule().getName());
