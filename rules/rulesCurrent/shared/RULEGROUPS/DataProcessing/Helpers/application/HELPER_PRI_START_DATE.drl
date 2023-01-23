@@ -109,7 +109,7 @@ rule "HELPER_PRI_START_DATE"
 					System.out.println("startDate = " + startDate);
 
 					c.setTime(startDate);
-					c.add(Calendar.DATE, dayz);
+					c.add(Calendar.DATE, dayzAdj);
 
 					String toDate = df.format(c.getTime());
 					System.out.println("endDate minus dayzAdj = " + toDate);
