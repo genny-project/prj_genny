@@ -123,6 +123,7 @@ rule "HELPER_PRI_START_DATE"
 						daysOfWeek.put("Wednesday", 3);
 						daysOfWeek.put("Thursday", 4);
 						daysOfWeek.put("Friday", 5);
+						daysOfWeek.put("Any", 5);
 						daysOfWeek.put("Open to any combination of days", 5);
 					System.out.println(daysOfWeek);
 
