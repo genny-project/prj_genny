@@ -107,7 +107,7 @@ rule "HELPER_LNK_INTERNSHIP_DURATION"
 				System.out.println("startDate = " + startDate);
 
 				c.setTime(startDate);
-				c.add(Calendar.DATE, dayz);
+				c.add(Calendar.DATE, dayzAdj);
 
 				String toDate = df.format(c.getTime());
 				System.out.println("endDate minus dayzAdj = " + toDate);
@@ -121,6 +121,7 @@ rule "HELPER_LNK_INTERNSHIP_DURATION"
 					daysOfWeek.put("Wednesday", 3);
 					daysOfWeek.put("Thursday", 4);
 					daysOfWeek.put("Friday", 5);
+					daysOfWeek.put("Any", 5);
 					daysOfWeek.put("Open to any combination of days", 5);
 				System.out.println(daysOfWeek);
 
